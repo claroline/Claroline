@@ -84,7 +84,7 @@ You'll need to return the configuration form html to the kernel.
         </fieldset>
 
         {{ macros.flashBox() }}
-        <div class="form-actions">
+        <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
             <a href="{{ path('claro_workspace_list') }}">
                 <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>

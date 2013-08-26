@@ -67,7 +67,7 @@
                 html+= "<a href="+Routing.generate('claro_resource_open', {'resourceType': nodes[0].type, 'action': 'open', 'node': nodes[0].id})+">"+nodes[0].name+"</a> ";
                 html+="</li>";
 
-        
+
                 $("#sortable").append(html);
             },
         });
@@ -87,11 +87,13 @@
     </script>
 {% endblock %}
 {% block section_content %}
+<<<<<<< HEAD
     <a  href="{{ path('claro_activity_show_player', {'activity': _resource.getId()}) }}"
         class="btn btn-default pull-right"
     >
         {{ 'show_as_user'|trans({}, 'platform') }}
     </a>
+    <a href="{{ path('claro_activity_show_player', {'activity': _resource.getId()}) }}" class="btn btn-default pull-right"> {{ 'show_as_user'|trans({}, 'platform') }} </a>
     <h3>
         <b>{{ 'activity'|trans({}, 'resource') }} {{ _resource.getName() }}</b>
     </h3>

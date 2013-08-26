@@ -1,7 +1,6 @@
 {% if content != null %}
 
-<div class="content-element {{ size }}" data-id="{{ content.id }}" data-type="{{ type }}">
-    <div class="panel relative">
+    <div class="panel panel-default content-element relative {{ size }}" data-id="{{ content.id }}" data-type="{{ type }}">
         {% render controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'father': father  }) %}
 
         {% if content.title != "" %}
@@ -9,16 +8,17 @@
                 <h3 class="panel-title">{{ content.title }}</h3>
             </div>
         {% endif %}
-        <p class="text">{{ content.content | nl2br}}</p>
-        {% if content.generatedcontent != "" and content.generatedcontent != null %}
-        <div class="generated">
-            <div class="generated-content">
-                {{ content.generatedcontent | raw }}
+        <div class="panel-body">
+            <p class="text">{{ content.content | nl2br}}</p>
+            {% if content.generatedcontent != "" and content.generatedcontent != null %}
+            <div class="generated">
+                <div class="generated-content">
+                    {{ content.generatedcontent | raw }}
+                </div>
             </div>
+            {% endif %}
+            <i class="text-muted">{{ content.created | timeAgo }}</i>
         </div>
-        {% endif %}
-        <i class="text-muted">{{ content.created | timeAgo }}</i>
     </div>
-</div>
 
 {% endif %}

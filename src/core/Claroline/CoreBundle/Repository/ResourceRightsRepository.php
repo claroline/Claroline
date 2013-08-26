@@ -12,8 +12,8 @@ class ResourceRightsRepository extends EntityRepository
      * Returns the maximum rights on a given resource for a set of roles.
      * Used by the ResourceVoter.
      *
-     * @param array[string]    $rights
-     * @param ResourceNode     $resource
+     * @param array[string] $rights
+     * @param ResourceNode  $resource
      *
      * @return array
      */
@@ -52,8 +52,8 @@ class ResourceRightsRepository extends EntityRepository
      * Returns the resource types a set of roles is allowed to create in a given
      * directory.
      *
-     * @param array            $roles
-     * @param ResourceNode     $resource
+     * @param array        $roles
+     * @param ResourceNode $resource
      *
      * @return array
      */
@@ -126,7 +126,7 @@ class ResourceRightsRepository extends EntityRepository
      * Find ResourceRights for each descendant of a resource for a role.
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resource
-     * @param \Claroline\CoreBundle\Entity\Role                      $role
+     * @param \Claroline\CoreBundle\Entity\Role                  $role
      *
      * @return array
      */

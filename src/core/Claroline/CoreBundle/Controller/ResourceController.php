@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Claroline\CoreBundle\Event\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -241,14 +240,9 @@ class ResourceController
 
     /**
      * @EXT\Route(
-     *     "/custom/{resourceType}/{action}/{resourceId}",
+     *     "/custom/{action}/{node}",
      *     name="claro_resource_custom",
      *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *      "resource",
-     *      class="ClarolineCoreBundle:Resource\ResourceNode",
-     *      options={"id" = "resourceId", "strictId" = true}
      * )
      *
      * Handles any custom action (i.e. not defined in this controller) on a
@@ -261,19 +255,18 @@ class ResourceController
      * @throws \Exception
      * @return Response
      */
-    public function customAction($resourceType, $action, ResourceNode $node)
+    public function customAction($action, ResourceNode $node)
     {
+        $resourceType = $node->getResourceType()->getName();
         $eventName = $action . '_' . $resourceType;
-        //$collection = new ResourceCollection(array($resource));
+        $collection = new ResourceCollection(array($node));
+        $this->checkAccess('OPEN', $collection);
 
-        $event = new CustomActionResourceEvent($this->resourceManager->getResourceFromNode($node));
-        //$this->ed->dispatch($eventName, $event);
-
-        if (!$event->getResponse() instanceof Response) {
-            throw new \Exception(
-                "Custom event '{$eventName}' didn't return any Response."
-            );
-        }
+        $event = $this->dispatcher->dispatch(
+            $eventName,
+            'CustomActionResource',
+            array($this->resourceManager->getResourceFromNode($node))
+        );
 
         // TODO waiting for define CustomActions
         // $logevent = new ResourceLogEvent($ri, $action);
@@ -409,8 +402,8 @@ class ResourceController
      * Needs an array of ids to be functionnal (query string: "ids[]=1&ids[]=2" ...).
      *
      * @param ResourceNode $parent
-     * @param array            $resources
-     * @param User             $user
+     * @param array        $resources
+     * @param User         $user
      *
      * @return Response
      */
@@ -602,7 +595,7 @@ class ResourceController
      *
      * @throws AccessDeniedException
      */
-    private function checkAccess($permission, ResourceCollection $collection)
+    public function checkAccess($permission, ResourceCollection $collection)
     {
         if (!$this->sc->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());

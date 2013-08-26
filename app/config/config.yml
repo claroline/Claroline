@@ -10,7 +10,7 @@ framework:
     validation:      { enable_annotations: true }
     templating:      { engines: ['twig'] } #assets_version: SomeVersionScheme
     translator:      { fallback: en }
-    default_locale: %locale%
+    default_locale:  %locale%
     session: ~
       #cookie_lifetime: 15
 
@@ -76,9 +76,11 @@ jms_di_extra:
 stof_doctrine_extensions:
     orm:
         default:
-            tree: true   # listeners are not enabled by default
+            tree:          true
             timestampable: true
-            sluggable: true
+            sluggable:     true
+            translatable:  true
+            blameable:     true
 
 parameters:
     security.authentication.listener.anonymous.class: Claroline\CoreBundle\Listener\AnonymousAuthenticationListener
@@ -95,6 +97,7 @@ twig:
     form:
         resources:
             - 'ClarolineCoreBundle:Form:date_range.html.twig'
+            - 'ClarolineCoreBundle:Form:date_picker.html.twig'
             - 'ClarolineCoreBundle:Form:two_level_select.html.twig'
             - 'ClarolineCoreBundle:Form:simple_auto_complete.html.twig'
             - 'ClarolineCoreBundle:Form:button_group_select.html.twig'
@@ -103,10 +106,25 @@ twig:
 idci_exporter:
     entities:
         user:
-            class: 'Claroline\\CoreBundle\\Entity\\User'
+            class: 'Claroline\CoreBundle\Entity\User'
             formats:
                 jsonp:
                     transformer:
+                        options:
+                            template_name_format: 'export.json.twig'
+        group:
+            class: 'Claroline\CoreBundle\Entity\Group'
+            formats:
+                jsonp:
+                    transformer:
+                        options:
+                            template_name_format: 'export.json.twig'
+        badge:
+            class: 'Claroline\BadgeBundle\Entity\Badge'
+            formats:
+                jsonp:
+                    transformer:
+                        service: "claro.badge.exporter.transformer"
                         options:
                             template_name_format: 'export.json.twig'
 

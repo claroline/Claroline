@@ -14,61 +14,62 @@
             {{ 'admin_tags_add_remove_children_to'|trans({}, 'platform') }} [{{ tag.getName() }}]
         </h3>
     </div>
+    <div class="panel-body">
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'icon-tag',
+                    'name': 'admin_tags_management'|trans({}, 'platform'),
+                    'href': path('claro_workspace_manage_admin_tag')
+                },
+                {
+                    'name': 'admin_tags_organization'|trans({}, 'platform'),
+                    'href': path('claro_workspace_organize_admin_tag')
+                },
+                {
+                    'name': tag.getName(),
+                    'href': ''
+                }
+            ])
+        }}
 
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-tag',
-                'name': 'admin_tags_management'|trans({}, 'platform'),
-                'href': path('claro_workspace_manage_admin_tag')
-            },
-            {
-                'name': 'admin_tags_organization'|trans({}, 'platform'),
-                'href': path('claro_workspace_organize_admin_tag')
-            },
-            {
-                'name': tag.getName(),
-                'href': ''
-            }
-        ])
-    }}
+        <div id="twig-tag-id" data-tag-id="{{ tag.getId() }}">
+        </div>
 
-    <div id="twig-tag-id" data-tag-id="{{ tag.getId() }}">
+        <table class="table table-striped table-bordered table-condensed">
+            <tr>
+                <th>{{ 'admin_tag_potential_children_list'|trans({}, 'platform') }}</th>
+                <th>{{ 'admin_tag_children_list'|trans({}, 'platform') }}</th>
+            </tr>
+            <tr>
+                <td>
+                    <div>
+                        <ul id="possible-children-list">
+                            {% for possibleChild in possibleChildren %}
+                                <li>
+                                <input type="checkbox" name="tag-possible-child" value="{{possibleChild.getId()}}">
+                                {{ possibleChild.getName() }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <ul id="children-list">
+                            {% for child in children %}
+                                <li>
+                                <input type="checkbox" name="tag-child" value="{{child.getId()}}" checked>
+                                {{ child.getName() }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
-
-    <table class="table table-striped table-bordered table-condensed">
-        <tr>
-            <th>{{ 'admin_tag_potential_children_list'|trans({}, 'platform') }}</th>
-            <th>{{ 'admin_tag_children_list'|trans({}, 'platform') }}</th>
-        </tr>
-        <tr>
-            <td>
-                <div>
-                    <ul id="possible-children-list">
-                        {% for possibleChild in possibleChildren %}
-                            <li>
-                            <input type="checkbox" name="tag-possible-child" value="{{possibleChild.getId()}}">
-                            {{ possibleChild.getName() }}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </td>
-            <td>
-                <div>
-                    <ul id="children-list">
-                        {% for child in children %}
-                            <li>
-                            <input type="checkbox" name="tag-child" value="{{child.getId()}}" checked>
-                            {{ child.getName() }}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </td>
-        </tr>
-    </table>
-    <div>
+    <div class="panel-footer">
         <button id="admin-tag-hierarchy-children-button" type="submit" class="btn btn-primary">
             {{ 'ok'|trans({}, 'platform') }}
         </button>

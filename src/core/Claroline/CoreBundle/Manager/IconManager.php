@@ -6,7 +6,6 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Repository\ResourceIconRepository;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Utilities\ThumbnailCreator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

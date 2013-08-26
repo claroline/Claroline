@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
-use \Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 
@@ -314,5 +313,3 @@ class RolesControllerTest extends MockeryTestCase
         );
     }
 }
-
-

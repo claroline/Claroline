@@ -1,4 +1,4 @@
-<div class="col-lg-3">
+<div class="col-md-3">
     <div class="list-group menu">
         <div class="list-group-item disabled">
             {{ workspace.getName() }} <em>({{ workspace.getCode() }})</em>
@@ -9,7 +9,6 @@
                 <i class="icon-eye-open"></i>
                 {{ 'show_as'|trans({}, 'platform') }}
             </a>
-
             <div id="collapse" class="collapse">
                  {% if has_role_access_to_workspace('ROLE_ANONYMOUS', workspace.getId()) %}
                     <a class="list-group-item" href="?view_as=ROLE_ANONYMOUS_{{ workspace.getId() }}">{{ 'anonymous'|trans({}, 'platform') }}</a>

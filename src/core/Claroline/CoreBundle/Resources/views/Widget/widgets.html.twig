@@ -1,49 +1,49 @@
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {{ macros.flashBox() }}
 
-{% for widget in widgets %}
-
-    <div class="accordion">
-        <div class="accordion-group">
-            <div class="accordion-heading relative">
-                <a class="accordion-toggle" data-toggle="collapse" href="#collapse{{ widget.id }}">
-                    {{ widget.title|trans({}, 'widget') }}
-                </a>
+<div class="panel-group">
+    {% for widget in widgets %}
+        <div class="panel panel-default">
+            <div class="panel-heading relative">
+                <div class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" href="#collapse{{ widget.id }}">
+                        {{ widget.title|trans({}, 'widget') }}
+                    </a>
+                </div>
                 {% if widget.configurable %}
                     {% if isDesktop %}
-                        <a data-url="{{ path('claro_desktop_widget_configuration', {'widget': widget.id}) }}" class="btn btn-primary btn-sm hide">
+                        <a data-url="{{ path('claro_desktop_widget_configuration', {'widget': widget.id}) }}" class="btn btn-primary hide">
                             <i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}
                         </a>
                     {% else %}
-                        <a data-url="{{ path('claro_workspace_widget_configuration', {'workspace': workspaceId, 'widget': widget.id}) }}" class="btn btn-primary btn-sm hide">
+                        <a data-url="{{ path('claro_workspace_widget_configuration', {'workspace': workspaceId, 'widget': widget.id}) }}" class="btn btn-primary hide">
                             <i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}
                         </a>
                     {% endif %}
                 {% endif %}
             </div>
-            <div id="collapse{{ widget.id }}" class="accordion-body collapse in">
-                <div class="accordion-inner view clearfix">
+            <div id="collapse{{ widget.id }}" class="collapse-widget collapse in">
+                <div class="panel-body view">
                    {{ widget.content|raw }}
                </div>
-               <div class="accordion-inner edition hide"></div>
+               <div class="edition hide"></div>
             </div>
         </div>
-    </div>
-
-{% endfor %}
+    {% endfor %}
+</div>
 
 <script type="text/javascript">
     $(document).ready(function () {
     'use strict';
-        $('body').on('mouseenter', '.accordion', function () {
-            $('.accordion-heading', this).find('.btn').removeClass('hide');
+        $('body').on('mouseenter', '.panel-group > .panel', function () {
+            $('.panel-heading', this).find('.btn').removeClass('hide');
         });
 
-        $('body').on('mouseleave', '.accordion', function () {
-            $('.accordion-heading', this).find('.btn').addClass('hide');
+        $('body').on('mouseleave', '.panel-group > .panel', function () {
+            $('.panel-heading', this).find('.btn').addClass('hide');
         });
 
-        $('body').on('click', '.accordion .accordion-heading .btn', function (event) {
+        $('body').on('click', '.panel-group > .panel .panel-heading .btn', function (event) {
             event.preventDefault();
 
             var accordionGroup = $(this).parent().parent();
@@ -53,40 +53,40 @@
                 $(this).removeClass('btn-danger editing');
                 $(this).addClass('btn-primary');
                 $(this).html('<i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}');
-                $('.accordion-body .view', accordionGroup).removeClass('hide');
-                $('.accordion-body .edition', accordionGroup).addClass('hide');
+                $('.view', accordionGroup).removeClass('hide');
+                $('.edition', accordionGroup).addClass('hide');
 
             } else {
 
-                if ($('.accordion-body .edition', accordionGroup).html() == '') {
+                if ($('.edition', accordionGroup).html() == '') {
                     $.get($(this).data('url'))
                     .done(function (data) {
-                        $('.accordion-body .edition', accordionGroup).html(data);
+                        $('.edition', accordionGroup).html(data);
                     });
                 }
 
                 $(this).removeClass('btn-primary');
                 $(this).addClass('btn-danger editing');
                 $(this).html('<i class="icon-ban-circle"></i> {{ 'cancel'|trans({}, 'platform') }}');
-                $('.accordion-body .view', accordionGroup).addClass('hide');
-                $('.accordion-body .edition', accordionGroup).removeClass('hide');
+                $('.view', accordionGroup).addClass('hide');
+                $('.edition', accordionGroup).removeClass('hide');
             }
 
-            if(!$('.accordion-body', accordionGroup).hasClass('collapse in')){
-                $('.accordion-body', accordionGroup).collapse('show'); //show if is hide
+            if(!$('.collapse-widget', accordionGroup).hasClass('collapse in')){
+                $('.collapse-widget', accordionGroup).collapse('show'); //show if is hide
             }
         });
 
-        $('body').on('click', '.accordion .accordion-group .claro-widget-form-cancel', function (event) {
+        $('body').on('click', '.panel-group > .panel .panel-group .claro-widget-form-cancel', function (event) {
             event.preventDefault();
 
-            var accordionGroup = $(this).parents('.accordion-group');
+            var accordionGroup = $(this).parents('.panel-group');
 
-            $('.accordion-heading .btn', accordionGroup).removeClass('btn-danger editing');
-            $('.accordion-heading .btn', accordionGroup).addClass('btn-primary');
-            $('.accordion-heading .btn', accordionGroup).html('<i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}');
-            $('.accordion-body .view', accordionGroup).removeClass('hide');
-            $('.accordion-body .edition', accordionGroup).addClass('hide');
+            $('.panel-heading .btn', accordionGroup).removeClass('btn-danger editing');
+            $('.panel-heading .btn', accordionGroup).addClass('btn-primary');
+            $('.panel-heading .btn', accordionGroup).html('<i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}');
+            $('.view', accordionGroup).removeClass('hide');
+            $('.edition', accordionGroup).addClass('hide');
         });
     });
 </script>

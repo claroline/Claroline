@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Event\Event\Log;
 
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 class LogRoleSubscribeEvent extends LogGenericEvent
 {
@@ -14,14 +13,14 @@ class LogRoleSubscribeEvent extends LogGenericEvent
     /**
      * Constructor.
      */
-    public function __construct(Role $role, AbstractRoleSubject $subject, AbstractWorkspace $workspace = null)
+    public function __construct(Role $role, AbstractRoleSubject $subject)
     {
         $receiver = null;
         $receiverGroup = null;
 
         $details = array('role' => array('name' => $role->getTranslationKey()));
 
-        if ($workspace) {
+        if ($role->getWorkspace()) {
             $details['workspace'] = array('name' => $role->getWorkspace()->getName());
         }
 

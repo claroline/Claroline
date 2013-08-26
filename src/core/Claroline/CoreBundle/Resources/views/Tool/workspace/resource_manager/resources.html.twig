@@ -26,6 +26,7 @@
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/js/jquery-ui-1.9.2.custom.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}" type="text/javascript"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager.js') }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'platform' }) }}"></script>
     <script type="text/javascript">
         $(function() {
             Claroline.ResourceManager.initialize({
@@ -43,8 +44,8 @@
                                 {% for customAction in resourceType.getCustomActions() %}
                                     "{{ customAction.getAction() }}": {
                                         "name": "{{ customAction.getAction() }}",
-                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'resourceId': '_nodeId' }) }}",
-                                        "async": {{ customAction.isAsync() }}
+                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'node': '_nodeId' }) }}",
+                                        "async": {% if customAction.isAsync() %} 1 {% else %} 0 {% endif %}
                                     }
                                     {% if loop.last != true %},{% endif %}
                                 {% endfor %}
@@ -56,4 +57,11 @@
             });
         });
     </script>
+
+    <script type="text/javascript">
+        var FileAPI = { debug: false, pingUrl: false }
+    </script>
+    <script type="text/javascript" src='{{ asset('bundles/frontend/FileAPI/FileAPI.min.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/frontend/FileAPI/FileAPI.exif.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/resource/dragndrop.js') }}'></script>
 {% endblock %}
