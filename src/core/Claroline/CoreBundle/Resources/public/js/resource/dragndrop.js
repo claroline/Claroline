@@ -83,26 +83,27 @@
                     files: { file: file },
                     upload: function () {
                         if (FU.index === 0) {
-                            $('.resources').after(
+                            $('.nodes').after(
                                 '<div class="resources-progress-bar"><div>' + Translator.get('platform:upload') +
-                                '<div class="progress progress-striped active"><div class="bar" style="width: 0%;">' +
+                                '<div class="progress progress-striped active">' +
+                                '<div class="progress-bar progress-bar-info" role="progressbar" style="width: 0%;" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">' +
                                 '</div></div><div id="progress-files">1/' + FU.files.length + '</div></div></div>'
                             );
                         }
                     },
                     progress: function (evt) {
                         var progress = ((evt.loaded / evt.total * (100 / FU.files.length)) +
-                            ((100 / FU.files.length) * FU.index)) + '%';
-                        console.log('progress: ' + progress);
-                        $('div.progress > div.bar').css('width', progress);
+                            ((100 / FU.files.length) * FU.index));
+                        $('div.progress > div.progress-bar').css('width', progress + '%');
+                        $('div.progress > div.progress-bar').attr('aria-valuenow', progress);
                     },
                     complete: function (err, xhr) {
                         FU.index++;
                         FU.active = false;
                         $('#progress-files').html(FU.index + '/' + FU.files.length);
                         var progress = (100 / FU.files.length) * FU.index;
-                        console.log('progress: '  + progress);
-                        $('div.progress > div.bar').css('width', progress + '%');
+                        $('div.progress > div.progress-bar').css('width', progress + '%');
+                        $('div.progress > div.progress-bar').attr('aria-valuenow', progress);
                         FU.start();
 
                         if (xhr.status === 200) {
