@@ -16,6 +16,8 @@ add_users: 'Add users'
 add_user_s_confirm_message: 'users(s) added'
 admin: Administrator
 admin_analytics: 'Platform analytics'
+administration: Administration
+administrative_code: 'Administrative code'
 admin_form_firstName : 'first name'
 admin_form_lastName : 'Lastname'
 admin_form_plainPassword_first : 'Paswword'
@@ -31,8 +33,6 @@ admin_tags_list: 'Admin tags list'
 admin_tags_management: 'Admin tags management'
 admin_tags_organization: 'Admin tags organization'
 admin_workspace_tag_form_name: Name
-administration: Administration
-administrative_code: 'Administrative code'
 advanced: Advanced
 agenda: Agenda
 all: All
@@ -45,6 +45,7 @@ analytics_resources: Resources
 analytics_top: Top
 apply: Apply
 available_workspaces: 'Available workspaces'
+badges_management: 'Badges management'
 by: by
 cancel: Cancel
 canCopy: 'Right to copy'
@@ -74,6 +75,8 @@ creation_date: 'Creation date'
 cut: Cut
 dashboard: Dashboard
 date: Date
+date_format: 'm-d-Y'
+date_form_format: 'MM-dd-yyyy'
 date_range.apply: 'Apply'
 date_range.clear: 'Clear'
 date_range.custom_range: 'Custom range'
@@ -108,10 +111,13 @@ display_options: 'Display options'
 done_on: 'done on'
 download: Download
 downloads: Downloads
+drag_file_here: Drag the file here
 Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the graph to zoom, double-click to cancel'
+drop_file: Drop the file
 edit: Edit
 editable: 'Editable'
 email_form_mail : 'Enter your email'
+empty_file: 'Empty file'
 enter_tag_name_message: 'Please enter a tag name'
 export: Export
 exportable: 'Exportable'
@@ -158,7 +164,7 @@ id: Id
 informations: Informations
 instructions: Instructions
 import: Import
-import_user_file_file: Import from a file
+import_user_file_file: Import from a csv file
 import_users: 'Import users'
 invalid_csv_file: 'Invalid CSV file'
 jqplot_date_output_format: '%m/%d/%Y'
@@ -295,7 +301,24 @@ log_widget_config_updateChild: 'News in the object'
 log_widget_config_delete: Delete
 log_widget_config_move: Move
 log_widget_config_subscribe: Subscribe
-log_widget_config_amount: 'Line number'
+log_widget_config_amount: Line number
+firstName: First name
+lastName: Last name
+canOpen: 'Right to open'
+canCopy: 'Right to copy'
+canDelete: 'Right to delete'
+canEdit: 'Right to edit'
+canExport: 'Right to export'
+canCreate: 'Create %type%'
+sharable: 'Sharable'
+deletable: 'Deletable'
+exportable: 'Exportable'
+copiable: 'Copiable'
+editable: 'Editable'
+yes: 'yes'
+no: 'no'
+no_email: "This email doesn't match a registered user"
+link_outdated : 'link is no more valid'
 login: Login
 login_failure: 'Login has failed. Check your username and password are correct.'
 logout: Logout
@@ -307,6 +330,7 @@ mail_click: 'Click on this link to reset your password'
 mail_sent : 'A email has been sent to your address , check your inbox mail and your spam box'
 manage_rights: 'Manage rights'
 manager: Manager
+max_size_25mb: 'The maximum size is 25mb'
 media_most_viewed: 'Most viewed media'
 messages_confirm_delete : 'Are your sure , you want to delete this file ?'
 messages_confirm_permanent_delete: 'Are you sure you want to permanently delete this(these) message(s) ?'
@@ -321,11 +345,24 @@ messages_removed: 'Messages removed'
 messages_sent: 'Messages sent'
 messages_sent_removed: 'Messages sent removed'
 misc: Miscellaneous
+month.january: "January"
+month.february: "February"
+month.march: "March"
+month.april: "April"
+month.may: "May"
+month.june: "June"
+month.july: "July"
+month.august: "August"
+month.september: "September"
+month.october: "October"
+month.november: "November"
+month.december: "December"
 move: Move
 my_account: 'My account'
 my_agenda: 'My agenda'
 my_contacts: 'My contacts'
 my_notes: 'My notes'
+my_badges: 'My badges'
 my_portfolio: 'My portfolio'
 my_resources: 'My resources'
 my_workspace: 'My workspace'
@@ -337,8 +374,10 @@ no_email: 'No email found, check the spelling'
 no_search_results: 'Your search hasn''t returned any result.'
 none: None
 note: Note
+none: None
 object: Object
 ok: Ok
+or: Or
 open: Open
 options: Options
 organize_admin_tags: 'Organize admin tags'
@@ -504,9 +543,15 @@ top_media_views: 'Top most viewed media'
 trash : Trash
 type: Type
 type_s: Type(s)
+unique connections: 'Nb unique Cnx.'
 unregister: Unregister
+unregistered: Unregistered
 unregistered_groups: 'Unregistered groups'
 unregistered_users: 'Unregistered users'
+unwritable_file_exception: "You don't have the permission to write in the file %path%."
+upload: 'upload'
+upload_denied: "Permission denied"
+upload_fail: 'Upload failed'
 url_invalid: 'the code is not correct, do no try to change the url'
 user: User
 user_accounts: 'User accounts'

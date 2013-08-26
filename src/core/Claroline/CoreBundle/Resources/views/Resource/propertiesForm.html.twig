@@ -12,7 +12,8 @@
         {{ form_row(form.resourceType) }}
         {{ form_row(form.creator) }}
         {{ form_rest(form) }}
-        <div class="panel-footer">
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
             <input type="submit" value="{{ 'ok'|trans({}, 'platform') }}"/>
         </div>
     </div>

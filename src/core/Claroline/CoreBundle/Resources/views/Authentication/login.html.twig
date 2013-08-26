@@ -6,19 +6,19 @@ same message when authentication has failed (no precise validation errors).
 #}
 
 {% block content %}
-    <div class="col-lg-offset-4 col-lg-4">
+    <div class="col-md-offset-4 col-md-4">
         {% if error %}
             <div class="alert alert-danger">
                 <button type="button" class="close" data-dismiss="alert">×</button>
                 {{ 'login_failure'|trans({}, 'platform') }}
             </div>
         {% endif %}
-        <div class='panel'>
+        <div class='content-element panel panel-default'>
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ 'login' | trans({}, "platform")}}</h3>
+            </div>
             <form action="{{ path('claro_security_login_check') }}" method="post">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{ 'login' | trans({}, "platform")}}</h3>
-                </div>
-                <fieldset>
+                <div class="panel-body">
                     <div class="form-group">
                         <label for="username">{{ 'username'|trans({}, 'platform') }}</label>
                         <input type="text" class="form-control" id="username" name="_username" placeholder="{{ 'username'|trans({}, 'platform') }}" tabindex="1" autofocus>
@@ -32,7 +32,7 @@ same message when authentication has failed (no precise validation errors).
                         </label>
                         <input type="password" class="form-control" id="password" name="_password" placeholder="{{ 'password'|trans({}, 'platform') }}" tabindex="2">
                     </div>
-                </fieldset>
+                </div>
                 <div class="panel-footer">
                     <button type="submit" class="btn btn-primary" tabindex="3">{{ 'login'|trans({}, 'platform') }}</button>
                 </div>

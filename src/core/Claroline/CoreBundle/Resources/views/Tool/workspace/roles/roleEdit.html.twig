@@ -1,40 +1,32 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
 {% block section_content %}
-
-    {{
-        macros.breadcrumbs([
-            {
-                'name': 'roles'|trans({}, 'platform'),
-                'href': path('claro_workspace_roles', {'workspace': workspace.getId()})
-            },
-            {
-                'name': role.getTranslationKey()|trans({}, 'platform'),
-                'href': '#'
-            },
-            {
-                'name': 'edit'|trans({}, 'platform'),
-                'href': ''
-            }
-        ])
-    }}
-
-    <h3>{{ 'role_edition'|trans({}, 'platform') }}</h3>
-    <h4>{{ 'role'|trans({}, 'platform') }} : {{ role.getName() }}</h4>
-    <br>
-
-    <div class="wrapper">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'role_edition'|trans({}, 'platform') }} ({{ role.getTranslationKey() | trans({}, "platform") }})</h3>
+    </div>
     <form class="form-horizontal"
           action="{{ path('claro_workspace_role_edit', {'workspace': workspace.getId(), 'role': role.getId()} ) }}"
           method="post" {{ form_enctype(form) }}
-          id="workspace-role-creation"
-      >
-        <fieldset>
+          id="workspace-role-creation">
+        <div class="panel-body">
+            {{
+                macros.breadcrumbs([
+                    {
+                        'name': 'roles'|trans({}, 'platform'),
+                        'href': path('claro_workspace_roles', {'workspace': workspace.getId()})
+                    },
+                    {
+                        'name': 'role_edition'|trans({}, 'platform'),
+                        'href': ''
+                    }
+                ])
+            }}
+
             {{ form_widget(form) }}
-            <div class="form-actions panel-footer">
-                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            </div>
-        </fieldset>
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a class="btn btn-default" href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()}) }}">{{ "cancel" | trans({}, "platform") }} </a>
+        </div>
     </form>
-    </div>
 {% endblock %}

@@ -120,7 +120,7 @@ class ActivityListener implements ContainerAwareInterface
             $ra->setActivity($copy);
             $em->persist($ra);
         }
-        
+
         $em->persist($copy);
         $event->setCopy($copy);
         $event->stopPropagation();

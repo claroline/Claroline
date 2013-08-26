@@ -19,17 +19,18 @@
     action="{{ path('claro_log_update_workspace_widget_config', {'isDefault': isDefault, 'workspaceId': workspace.id, 'redirectToHome': app.request.isXMLHttpRequest ? 1 : 0}) }}"
     class="form-horizontal"
     {{ form_enctype(form) }}>
-    {% if not isDefault %}
-        <legend>{{ 'Choose visible actions in the widget'|trans({}, 'platform') }}</legend>
-    {% endif %}
 
-    <fieldset>
+    <div class="panel-body">
+        {% if not isDefault %}
+            <legend>{{ 'Choose visible actions in the widget'|trans({}, 'platform') }}</legend>
+        {% endif %}
+
         {{ form_widget(form._token) }}
         {{ form_widget(form) }}
-    </fieldset>
+        {{ macros.flashBox() }}
+    </div>
 
-    {{ macros.flashBox() }}
-    <div class="form-actions">
+    <div class="panel-footer">
         <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
         {% if workspace is defined and workspace != null %}
             <a href="{{ path('claro_workspace_widget_properties', {'workspace': workspace.id}) }}">

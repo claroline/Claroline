@@ -7,44 +7,44 @@
 
 {% block section_content %}
 
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-cog',
-                'name': 'parameters'|trans({}, 'platform'),
-                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
-            },
-            {
-                'name': 'general'|trans({}, 'platform'),
-                'href': ''
-            }
-        ])
-    }}
-
-    <h3>{{ 'general_parameters'|trans({}, 'platform') }}</h3>
-    <br>
-
-    {% if is_granted('DELETE', workspace ) %}
-        <a href="#" class="workspace-delete-confirmation btn btn-default">
-            {{ 'workspace_delete'|trans({}, 'platform') }}
-        </a>
-    {% endif %}
-    <a href="{{ path('claro_workspace_export_form', {'workspace': workspace.getId() }) }}" class='btn btn-default'>
-        {{ 'save_as_template'|trans({}, 'platform') }}
-    </a>
-    <br>
-    <br>
-
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'general_parameters'|trans({}, 'platform') }}</h3>
+    </div>
     <form class="form-horizontal" action="{{ path('claro_workspace_edit', {'workspace': workspace.getId()}) }}" method="post" {{ form_enctype(form) }}>
-        <fieldset>
-            {{ form_widget(form) }}
-            <div class="form-actions panel-footer">
-                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-                <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
-                    <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+        <div class="panel-body">
+            {{
+                macros.breadcrumbs([
+                    {
+                        'icon': 'icon-cog',
+                        'name': 'parameters'|trans({}, 'platform'),
+                        'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+                    },
+                    {
+                        'name': 'general'|trans({}, 'platform'),
+                        'href': ''
+                    }
+                ])
+            }}
+
+            {% if is_granted('DELETE', workspace ) %}
+                <a href="#" class="workspace-delete-confirmation btn btn-default">
+                    <i class="icon-trash"></i> {{ 'workspace_delete'|trans({}, 'platform') }}
                 </a>
-            </div>
-        </fieldset>
+            {% endif %}
+            <a href="{{ path('claro_workspace_export_form', {'workspace': workspace.getId() }) }}" class='btn btn-default'>
+                <i class="icon-save"></i> {{ 'save_as_template'|trans({}, 'platform') }}
+            </a>
+            <hr>
+
+
+            {{ form_widget(form) }}
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
+                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+            </a>
+        </div>
     </form>
 
     <div id="twig-workspace-id" data-workspaceId="{{workspace.getId()}}">

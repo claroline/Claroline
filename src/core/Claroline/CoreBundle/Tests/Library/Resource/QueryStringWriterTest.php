@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Library\Resource;
 
-use \Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class QueryStringWriterTest extends MockeryTestCase

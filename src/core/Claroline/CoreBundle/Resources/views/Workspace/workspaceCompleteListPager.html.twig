@@ -17,23 +17,22 @@
 {% if nbPages > 1 %}
 {{ renderPager(workspaces) }}
 {% endif %}
-<ul>
     {% for workspace in workspaces.currentPageResults %}
-    <li class="row-workspace row-workspace-id-{{ workspace.getId() }}">
+    <a class="list-group-item row-workspace row-workspace-id-{{ workspace.getId() }}"
         {% set granted = has_access_to_workspace(workspace.getId(), app.security.getToken()) %}
         {% if granted == true %}
-        <a href="{{ path('claro_workspace_open',
+            href="{{ path('claro_workspace_open',
            {'workspaceId': workspace.getId()}) }}"
            id="link-home-{{ workspace.getId() }}"
-        >
+
         {% endif %}
+        >
         <i class="icon-book"></i>
         {{ workspace.getName() }}
         <span class="workspace-code">({{ workspace.getCode() }})</span>
-        {% if granted %}</a>{% endif %}
-    </li>
+
+    </a>
     {% endfor %}
-</ul>
 {% set nbPages = workspaces.getNbPages() %}
 {% if nbPages > 1 %}
 {{ renderPager(workspaces) }}

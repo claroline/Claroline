@@ -18,7 +18,7 @@ admin: Administrateur
 admin_analytics: 'Statistiques plateforme'
 administration: Administration
 administrative_code: 'Code administratif'
-admin_form_firstName : 'Prenom'
+admin_form_firstName : 'Prénom'
 admin_form_lastName : 'Nom de famille'
 admin_form_plainPassword_first : 'Mot de passe'
 admin_form_plainPassword_second : 'Répétez votre mot de passe'
@@ -45,6 +45,7 @@ analytics_resources: 'Contenu plateforme'
 analytics_top: 'Top des activités'
 apply: Appliquer
 available_workspaces: 'Espaces d''activités disponibles'
+badges_management: 'Gestion des badges'
 by: par
 cancel: Annuler
 canCopy: 'Droit de copier'
@@ -74,6 +75,8 @@ creation_date: 'Date de création'
 cut: Couper
 dashboard: 'Tableau de bord'
 date: Date
+date_format: 'd-m-Y'
+date_form_format: 'dd-MM-yyyy'
 date_range.apply: 'Appliquer'
 date_range.clear: 'Effacer'
 date_range.custom_range: 'Plage personnalisée'
@@ -108,10 +111,13 @@ display_options: 'Options d''affichage'
 done_on: 'effectuée sur'
 download: Télécharger
 downloads: 'Nb tchgr.'
+drag_file_here: Déplacez le fichier ici
 Draw an area on the graph to zoom, double-click to cancel: 'Tracez une zone sur le graphique pour zoomer; double cliquez pour annuler'
+drop_file: Déposez le fichier
 edit: Modifier
 editable: 'Modifiable'
 email_form_mail : 'Entrez votre adresse email'
+empty_file: 'Fichier vide'
 enter_tag_name_message: 'Veuillez entrer un nom de Tag'
 export: Exporter
 exportable: 'Exportable'
@@ -159,7 +165,7 @@ informations: Informations
 instructions: Consignes
 import: Importer
 import_users: 'Importer des utilisateurs'
-import_user_file_file: 'Importer depuis fichier'
+import_user_file_file: 'Importer depuis fichier csv'
 invalid_csv_file: 'Le fichier CSV n''est pas valide'
 jqplot_date_output_format: '%d-%m-%Y'
 last_30_days_activity: 'Activités des 30 derniers jours'
@@ -307,6 +313,7 @@ mail_click: 'Cliquez sur ce lien pour réinitialiser votre mot de passe'
 mail_sent : 'Un email vient de vous être envoyé. Vérifiez votre dossier spam au cas où vous ne verriez pas l''email'
 manage_rights: 'Gérer les droits'
 manager: Gestionnaire
+max_size_25mb: 'Taille max 25MB'
 media_most_viewed: 'Media les plus consultés'
 messages_confirm_delete: 'Etes-vous sûr de vouloir supprimer ce(s) message(s) ?'
 messages_confirm_permanent_delete: 'Etes-vous sûr de vouloir supprimer définitivement ce(s) message(s) ?'
@@ -321,11 +328,24 @@ messages_removed: 'Messages supprimés'
 messages_sent: 'Messages envoyés'
 messages_sent_removed: 'Messages envoyés supprimés'
 misc: Divers
+month.january: "Janvier"
+month.february: "Février"
+month.march: "Mars"
+month.April: "Avril"
+month.may: "Mai"
+month.june: "Juin"
+month.july: "Juillet"
+month.August: "Août"
+month.september: "Septembre"
+month.october: "Octobre"
+month.november: "Novembre"
+month.december: "Décembre"
 move: Déplacer
 my_account: 'Mon compte'
 my_agenda: 'Mon agenda'
 my_contacts: 'Mes contacts'
 my_notes: 'Mes notes'
+my_badges: 'Mes badges'
 my_portfolio: 'Mon portfolio'
 my_resources: 'Mes resources'
 my_workspace: 'Mon espace de travail'
@@ -339,6 +359,7 @@ none: Aucun
 note: Note
 object: Objet
 ok: Ok
+or: Ou
 open: Ouvrir
 options: Options
 organize_admin_tags: 'Organiser les Tags administrateur'
@@ -416,7 +437,7 @@ resources_most_downloaded: 'Ressources les plus téléchargés'
 resources_rights: 'Droits des ressources'
 resources_rights_management: 'Gestion des droits des ressources'
 resources_usage_ratio: 'Taux d''utilisation des resources'
-resources_usage_list: 'Liste d''utilisation des resources'
+resources_usage_list: 'Liste d''utilisation des ressources'
 resource_right_form_canCopy: Copier
 resource_right_form_canDelete: Supprimer
 resource_right_form_canEdit: Editer
@@ -511,7 +532,11 @@ unregister: Désinscription
 unregistered: 'Non inscrit'
 unregistered_groups: 'Groupes non enregistrés'
 unregistered_users: 'Utilisateurs non enregistrés'
-unwritable_file_exception: 'Vous n''avez pas la permission d''écrire dans le fichier %path%.'
+unwritable_file_exception: "Vous n'avez pas la permission d'écrire dans le fichier %path%."
+upload: 'Téléchargement'
+upload_denied: "Vous n'avez pas la permission de créer une ressource à cet endroit"
+upload_fail: 'Echec du téléchargement'
+url_invalid: "Le code n'est pas correct, n'essayez pas de changer l'adresse"
 user: Utilisateur
 user_accounts: 'Comptes utilisateur'
 user_creation: 'Création d''un utilisateur'
@@ -575,4 +600,3 @@ ws_creator: 'Créateur d''espaces'
 ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: 'oui'
 yesterday_activity: 'Activité de la veille'
-Your changes have been saved: 'Vos changements ont été sauvegardés'

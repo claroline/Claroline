@@ -4,19 +4,18 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'create_new_admin_tag'|trans({}, 'platform') }}</h3>
     </div>
-
     <form class="form-horizontal"
-          id="workspace_tag_form"
-          action="{{ path('claro_workspace_admin_tag_create') }}"
-          method="post" {{ form_enctype(form) }}>
-        <fieldset>
+        id="workspace_tag_form"
+        action="{{ path('claro_workspace_admin_tag_create') }}"
+        method="post" {{ form_enctype(form) }}>
+        <div class="panel-body">
             {{ form_widget(form) }}
-            <div class="form-actions panel-footer">
-                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-                <a href="{{ path('claro_workspace_manage_admin_tag') }}">
-                    <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
-                </a>
-            </div>
-        </fieldset>
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a href="{{ path('claro_workspace_manage_admin_tag') }}" class="btn btn-default">
+                {{ 'cancel'|trans({}, 'platform') }}
+            </a>
+        </div>
     </form>
 {% endblock %}

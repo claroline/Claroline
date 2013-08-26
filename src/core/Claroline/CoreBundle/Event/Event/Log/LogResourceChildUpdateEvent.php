@@ -53,7 +53,7 @@ class LogResourceChildUpdateEvent extends LogGenericEvent
             ),
             null,
             null,
-            $resource,
+            $node,
             null,
             $node->getWorkspace(),
             $node->getCreator(),
