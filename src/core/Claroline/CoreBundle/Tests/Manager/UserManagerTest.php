@@ -161,16 +161,14 @@ class UserManagerTest extends MockeryTestCase
             ->once()
             ->andReturn($user);
 
-        m::getConfiguration()->allowMockingNonExistentMethods(true);
-        $this->userRepo->shouldReceive('findOneByUsername')
-            ->with('username_1')
+        $this->userRepo->shouldReceive('findUserByUsernameOrEmail')
+            ->with('username_1', 'email_1')
             ->once()
             ->andReturn($existingUser);
-        $this->userRepo->shouldReceive('findOneByUsername')
-            ->with('username_2')
+        $this->userRepo->shouldReceive('findUserByUsernameOrEmail')
+            ->with('username_2', 'email_2')
             ->once()
             ->andReturn(null);
-        m::getConfiguration()->allowMockingNonExistentMethods(false);
 
         $user->shouldReceive('setFirstName')
             ->with('first_name_2')
@@ -193,10 +191,6 @@ class UserManagerTest extends MockeryTestCase
         $user->shouldReceive('setPhone')
             ->with(null)
             ->once();
-        $manager->shouldReceive('setPersonalWorkspace')
-            ->with($user)
-            ->once()
-            ->andReturn($workspace);
         $this->toolManager->shouldReceive('addRequiredToolsToUser')
             ->with($user)
             ->once();
