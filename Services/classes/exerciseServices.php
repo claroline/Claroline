@@ -106,8 +106,11 @@ class exerciseServices
         $score = $this->qcmMark($interQCM, $response, $allChoices, $penalty);
 
         $responseID = '';
+        
         foreach ($response as $res) {
-            $responseID .= $res.';';
+            if ($res != null) {
+                $responseID .= $res.';';
+            }
         }
 
         $res = array(
