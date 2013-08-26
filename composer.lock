@@ -1921,12 +1921,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "26f38b7aa73d548f4a60d720bf831834d81846b8"
+                "reference": "933f7e26beb19ce15d97031a3fdd21d8bd83a3d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/26f38b7aa73d548f4a60d720bf831834d81846b8",
-                "reference": "26f38b7aa73d548f4a60d720bf831834d81846b8",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/933f7e26beb19ce15d97031a3fdd21d8bd83a3d3",
+                "reference": "933f7e26beb19ce15d97031a3fdd21d8bd83a3d3",
                 "shasum": ""
             },
             "require": {
@@ -1975,7 +1975,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2013-08-26 08:20:23"
+            "time": "2013-08-26 09:42:58"
         },
         {
             "name": "pagerfanta/pagerfanta",

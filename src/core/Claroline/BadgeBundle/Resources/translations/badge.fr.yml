@@ -14,6 +14,7 @@ no_badges: 'Aucun badge.'
 add_badge: 'Ajouter un badge'
 edit_badge: 'Editer le badge %badge_name%'
 award: 'Attribuer'
+dont_award: 'Ne pas attribuer'
 badge_form_frTranslation: 'Traduction française'
 badge_form_enTranslation: 'Traduction anglaise'
 badge_delete_confirm_title: "Suppression d'un badge"
