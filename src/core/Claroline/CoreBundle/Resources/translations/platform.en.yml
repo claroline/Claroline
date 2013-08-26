@@ -72,6 +72,11 @@ create_new_admin_tag: 'Create new admin tag'
 create_new_tag: 'Create new tag'
 create_workspace: 'Create workspace'
 creation_date: 'Creation date'
+csv_users_import_infos: 'CSV file informations'
+csv_users_import_infos_format: 'Format'
+csv_users_import_infos_format_a: 'User informations must be defined in one line and separated by comma'
+csv_users_import_infos_optional: 'Optional'
+csv_users_import_infos_required: 'Required'
 cut: Cut
 dashboard: Dashboard
 date: Date
@@ -380,6 +385,7 @@ ok: Ok
 or: Or
 open: Open
 options: Options
+order: Order
 organize_admin_tags: 'Organize admin tags'
 organize_private_tags: 'Organize private tags'
 Overview of all recent activities in %workspaceName% : 'Overview of all recent activities in %workspaceName%'
@@ -447,6 +453,10 @@ resource_properties_form_editable: Edit
 resource_properties_form_exportable: Export
 resource_properties_form_name: Name
 resource_properties_form_resourceType: 'Resource type'
+Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the graph to zoom, double-click to cancel'
+Overview of recent activities of your workspaces: 'Overview of recent activities of your workspaces'
+Overview of recent activities in %workspaceName%: 'Overview of recent activities in %workspaceName%'
+Overview of all recent activities in %workspaceName% : 'Overview of all recent activities in %workspaceName%'
 resource_properties_form_sharable: 'Share this resource'
 resource_properties_form_shareType: 'Share type'
 resource_properties_form_userIcon: Icon
