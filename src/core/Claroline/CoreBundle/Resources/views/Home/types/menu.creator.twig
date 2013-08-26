@@ -14,7 +14,7 @@
 
 <div class="creator" data-type="{{ type }}" {% if content is defined %}data-id="{{ content.id }}"{% endif %} {% if father is defined %}data-father="{{ father }}"{% endif %}>
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-md-12">
             <input
             type="text"
             placeholder="{% if father is defined %}{{ "Link title" | trans({}, 'home') }}{% else %}{{ "Menu title" | trans({}, 'home') }}{% endif %}..."
@@ -25,7 +25,7 @@
     </div>
     <br>
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-md-12">
             <div class="panel panel-default" style="height:auto !important">
             <textarea
                 class="form-control content-text"

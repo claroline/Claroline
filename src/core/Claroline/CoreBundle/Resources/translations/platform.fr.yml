@@ -80,7 +80,8 @@ csv_users_import_infos_required: 'Requis'
 cut: Couper
 dashboard: 'Tableau de bord'
 date: Date
-date_format: 'd/m/Y'
+date_format: 'd-m-Y'
+date_form_format: 'dd-MM-yyyy'
 date_range.apply: 'Appliquer'
 date_range.clear: 'Effacer'
 date_range.custom_range: 'Plage personnalisée'
@@ -442,7 +443,7 @@ resources_most_downloaded: 'Ressources les plus téléchargés'
 resources_rights: 'Droits des ressources'
 resources_rights_management: 'Gestion des droits des ressources'
 resources_usage_ratio: 'Taux d''utilisation des resources'
-resources_usage_list: 'Liste d''utilisation des resources'
+resources_usage_list: 'Liste d''utilisation des ressources'
 resource_right_form_canCopy: Copier
 resource_right_form_canDelete: Supprimer
 resource_right_form_canEdit: Editer

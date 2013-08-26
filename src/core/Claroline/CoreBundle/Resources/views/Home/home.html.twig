@@ -1,7 +1,7 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
 {% block content %}
-<div class="col-lg-12">
+<div class="col-md-12">
     <div id="homePath" class="hide">{{ path("claro_index") }}</div>
 
     {% if region['header'] is defined %}
@@ -13,9 +13,9 @@
 
     <div class="row">
         {% if region['left'] is defined or is_granted('ROLE_ADMIN') %}
-            <div class="col-lg-3">
+            <div class="col-md-3">
                 <div class="row"> {% if is_granted('ROLE_ADMIN') %}
-                    <div class="content-element relative col-lg-12">
+                    <div class="content-element relative col-md-12">
                         <div class="list-group menu">
                             <div class="list-group-item disabled">{{ "Content Administration" | trans({}, "home") }}</div>
                             <a class="list-group-item{{ "/type/menu" | compareRoute(" active") }}"
@@ -36,8 +36,8 @@
 
         <div class="{% if
                 (is_granted('ROLE_ADMIN') or region['left'] is defined) and
-                region['right'] is defined %}col-lg-6{% elseif (is_granted('ROLE_ADMIN') or region['left'] is defined) or
-                    region['rigth'] is defined %}col-lg-9{% else %}col-lg-12{% endif %}">
+                region['right'] is defined %}col-md-6{% elseif (is_granted('ROLE_ADMIN') or region['left'] is defined) or
+                    region['rigth'] is defined %}col-md-9{% else %}col-md-12{% endif %}">
             {% if region['content'] is defined %}
                 {{ region['content'] | raw }}
             {% endif %}
@@ -46,7 +46,7 @@
         </div>
 
         {% if region['right'] is defined %}
-            <div class="col-lg-3">
+            <div class="col-md-3">
                 {{ region['right'] | raw }}
             </div>
         {% endif %}
