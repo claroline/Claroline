@@ -16,16 +16,15 @@ class BadgeType extends AbstractType
             ->add('enTranslation', new BadgeTranslationType())
             ->add('version', 'integer')
             ->add('file', 'file', array(
-                    'label' => 'badge_form_image'
-                ))
-            ->add('expired_at', 'datepicker', array(
-                  'read_only' => true,
-                  'component' => true,
-                  'autoclose' => true,
-                  'language'  => $options['language'],
-                  'format'    => $options['date_format']
+                'label' => 'badge_form_image'
             ))
-        ;
+            ->add('expired_at', 'datepicker', array(
+                'read_only' => true,
+                'component' => true,
+                'autoclose' => true,
+                'language'  => $options['language'],
+                'format'    => $options['date_format']
+            ));
     }
 
     public function getName()

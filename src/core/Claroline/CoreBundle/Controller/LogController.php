@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,7 +38,7 @@ class LogController extends Controller
      * @DI\InjectParams({
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
+     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "security"           = @DI\Inject("security.context"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "translator"         = @DI\Inject("translator")
@@ -46,7 +47,7 @@ class LogController extends Controller
     public function __construct(
         ToolManager $toolManager,
         WorkspaceManager $workspaceManager,
-        EventDispatcher $eventDispatcher,
+        StrictDispatcher $eventDispatcher,
         SecurityContextInterface $security,
         FormFactory $formFactory,
         Translator $translator

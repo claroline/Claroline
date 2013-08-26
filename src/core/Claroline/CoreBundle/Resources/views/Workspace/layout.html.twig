@@ -13,7 +13,7 @@
     {% if not is_path_mode %}
         {% render controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspaceId': workspace.getId(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}) %}
     {% endif %}
-    <div class="col-lg-9 section-content">
+    <div class="col-md-9 section-content">
         <div class="panel panel-default">
                 {% block breadcrumb %}
                 <div id="resource-breadcrumb">

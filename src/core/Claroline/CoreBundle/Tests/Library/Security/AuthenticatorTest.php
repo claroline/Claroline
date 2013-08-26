@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Library\Security;
 
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use \Mockery as m;
 
 class AuthenticatorTest extends MockeryTestCase
 {

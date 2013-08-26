@@ -2,7 +2,7 @@
 
 {% block content %}
     {% if is_granted('ROLE_USER') %}
-        <div class="col-lg-3">
+        <div class="col-md-3">
             <div class="list-group menu">
                 <div class="list-group-item disabled">
                     {{ 'workspaces' | trans({}, "platform")}}
@@ -24,7 +24,7 @@
             </div>
         </div>
     {% endif %}
-    <div class="{% if is_granted('ROLE_USER') %}col-lg-9{% else %}col-lg-12{% endif %}">
+    <div class="{% if is_granted('ROLE_USER') %}col-md-9{% else %}col-md-12{% endif %}">
         <div class="panel panel-default">
             {% block section_content %}
             {% endblock %}

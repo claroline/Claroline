@@ -109,7 +109,7 @@ class Content2Region
     /**
      * Set content
      *
-     * @param \Claroline\CoreBundle\Entity\Home\Content $content
+     * @param  \Claroline\CoreBundle\Entity\Home\Content $content
      * @return Content2Region
      */
     public function setContent(Content $content)

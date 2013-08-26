@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Library\Workspace;
 
-use \Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class ConfigurationTest extends MockeryTestCase

@@ -18,15 +18,14 @@ class BadgeClaimRepository extends EntityRepository
     public function findByUser(User $user, $getQuery = false)
     {
         $query = $this->getEntityManager()
-            ->createQuery('
-                SELECT bc, b, bt
+            ->createQuery(
+                'SELECT bc, b, bt
                 FROM ClarolineBadgeBundle:BadgeClaim bc
                 JOIN bc.badge b
                 JOIN b.translations bt
                 WHERE bc.user = :userId
             ')
-            ->setParameter('userId', $user->getId())
-        ;
+            ->setParameter('userId', $user->getId());
 
         return ($getQuery) ? $query: $query->getResult();
     }
@@ -37,13 +36,12 @@ class BadgeClaimRepository extends EntityRepository
     public function findAll()
     {
         return $this->getEntityManager()
-            ->createQuery('
-                SELECT bc, b, bt
+            ->createQuery(
+                'SELECT bc, b, bt
                 FROM ClarolineBadgeBundle:BadgeClaim bc
                 JOIN bc.badge b
                 JOIN b.translations bt
             ')
-            ->getResult()
-        ;
+            ->getResult();
     }
 }
