@@ -11,13 +11,14 @@ class LipsumGenerator
     /**
      * Generate some random texts.
      * If nbwords = 0, then it's somewhat random (from 5 to 500).
+     * If $isFullText is set to TRUE, then their will be some punctuation.
      *
      * @param integer $nbWords
      * @param boolean $isFullText
      *
      * @return string
      */
-    public function generateLipsum($nbWords = 0, $isFullText = false)
+    public function generateLipsum($nbWords = 0, $isFullText = false, $maxCharSize = 10000)
     {
         $words = $this->getArrayLipsum();
         $content = '';
@@ -29,6 +30,7 @@ class LipsumGenerator
         }
 
         for ($i = 0; $i < $nbWords; $i++) {
+            $nextPart = '';
 
             if ($loopBeforeEnd == 0) {
                 $loopBeforeEnd = rand(3, 15);
@@ -37,16 +39,16 @@ class LipsumGenerator
             $loopBeforeEnd--;
 
             if ($isFullText && $loopBeforeEnd == 0) {
-                $content .= "{$endPhrase[array_rand($endPhrase)]} " . ucfirst($words[array_rand($words)]);
+                $nextPart .= "{$endPhrase[array_rand($endPhrase)]} " . ucfirst($words[array_rand($words)]). " ";
             } else {
-
-                if ($content != '') {
-                    $content .= ' ';
-                }
-
-                $content .= "{$words[array_rand($words)]}";
+                $nextPart .= ' '.$words[array_rand($words)];
             }
 
+
+            if ((strlen($content) + strlen($nextPart)) < $maxCharSize - 1) {
+                $content .= $nextPart;
+            }
+            
             $i++;
         }
 
