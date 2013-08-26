@@ -21,6 +21,7 @@ $(function(){
     });
 
     var awardFormContainer  = $("#award_form_container");
+    awardFormContainer.css('display', 'none');
     var awardUsersContainer = $("#award_users_container");
 
     $('#awardUser').click(function(event) {
