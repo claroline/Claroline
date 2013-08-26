@@ -237,25 +237,10 @@ class ExerciseController extends Controller
                 }
             }
 
-            // Pagination finded documents
-            $adapterQuestion = new ArrayAdapter($interactions);
-            $pagerQuestion = new Pagerfanta($adapterQuestion);
+            $pagination = $this->paginationWithIf($interactions, $max, $page, $pageNow);
 
-            try {
-                if ($pageNow == 0) {
-                    $interactionsPager = $pagerQuestion
-                        ->setMaxPerPage($max)
-                        ->setCurrentPage($page)
-                        ->getCurrentPageResults();
-                } else {
-                    $interactionsPager = $pagerQuestion
-                        ->setMaxPerPage($max)
-                        ->setCurrentPage($pageNow)
-                        ->getCurrentPageResults();
-                }
-            } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
-                throw $this->createNotFoundException("Cette page n'existe pas.");
-            }
+            $interactionsPager = $pagination[0];
+            $pagerQuestion = $pagination[1];
 
             return $this->render(
                 'UJMExoBundle:Question:exerciseQuestion.html.twig',
@@ -327,31 +312,13 @@ class ExerciseController extends Controller
                     ->findOneBy(array('question' => $shared[$i]->getQuestion()->getId()));
             }
 
-            // Do the pagination of the result depending on which page of which array was changed
-            // (My questions array)
-            $adapterMy = new ArrayAdapter($interactions);
-            $pagerfantaMy = new Pagerfanta($adapterMy);
+            $doublePagination = $this->doublePagination($interactions, $sharedWithMe, $max, $pagerMy, $pagerShared);
 
-            // (My shared questions array)
-            $adapterShared = new ArrayAdapter($sharedWithMe);
-            $pagerfantaShared = new Pagerfanta($adapterShared);
+            $interactionsPager = $doublePagination[0];
+            $pagerfantaMy = $doublePagination[1];
 
-            try {
-                // Test if my questions array exists (try) and affects the matching results (which page, how many per page ...)
-                $interactionsPager = $pagerfantaMy
-                    ->setMaxPerPage($max)
-                    ->setCurrentPage($pagerMy)
-                    ->getCurrentPageResults();
-
-                // Test if my shared questions array exists (try) and affects the matching results (which page, how many per page ...)
-                $sharedWithMePager = $pagerfantaShared
-                    ->setMaxPerPage($max)
-                    ->setCurrentPage($pagerShared)
-                    ->getCurrentPageResults();
-            } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
-                // If page don't exist
-                throw $this->createNotFoundException("Cette page n'existe pas.");
-            }
+            $sharedWithMePager = $doublePagination[2];
+            $pagerfantaShared = $doublePagination[3];
 
             if ($pageToGo) {
                 $pageGoNow = $pageToGo;
@@ -386,7 +353,7 @@ class ExerciseController extends Controller
     }
 
     /**
-     * To record the Question's import.
+     * To record the question's import.
      *
      */
     public function importValidateAction($exoID, $qid, $pageGoNow)
@@ -429,6 +396,10 @@ class ExerciseController extends Controller
         }
     }
 
+    /**
+     * To record the shared question's import.
+     *
+     */
     public function importValidateSharedAction($exoID, $qid, $pageGoNow)
     {
         $em = $this->getDoctrine()->getManager();
@@ -671,6 +642,10 @@ class ExerciseController extends Controller
         }
     }
 
+    /**
+     * To display the docimology's histogramms
+     *
+     */
     public function docimologyAction($exerciseId, $nbPapers)
     {
         $em = $this->getDoctrine()->getManager();
@@ -720,10 +695,12 @@ class ExerciseController extends Controller
         }
     }
 
+    /**
+     * To have the status of an answer
+     *
+     */
     private function responseStatus($responses, $scoreMax)
     {
-        $em = $this->getDoctrine()->getManager();
-
         $responsesTab = array();
         $responsesTab['correct']        = 0;
         $responsesTab['partiallyRight'] = 0;
@@ -889,7 +866,7 @@ class ExerciseController extends Controller
     }
 
     /**
-     * The user must be registered and (the dates must be good or the user must to be admin for the exercise)
+     * The user must be registered (and the dates must be good or the user must to be admin for the exercise)
      *
      */
     private function controlDate($exoAdmin, $exercise)
@@ -991,14 +968,12 @@ class ExerciseController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $exerciseSer = $this->container->get('ujm.exercise_services');
-        $scoreMax = 0;
         $questionsResponsesTab = array();
         $seriesResponsesTab = array();
         $seriesResponsesTab[0] = '';
         $seriesResponsesTab[1] = '';
         $seriesResponsesTab[2] = '';
         $seriesResponsesTab[3] = '';
-        $responsesTab;
         $questionList = array();
         $histoSuccess = array();
         $maxY = 4;
@@ -1006,28 +981,8 @@ class ExerciseController extends Controller
         foreach ($eqs as $eq) {
             $questionList[] = $eq->getQuestion()->getTitle();
 
-            $interaction = $em->getRepository('UJMExoBundle:Interaction')->getInteraction($eq->getQuestion()->getId());
-            $responses = $em->getRepository('UJMExoBundle:Response')
-                            ->getExerciseInterResponsesWithCount($exerciseId, $interaction[0]->getId());
-            switch ( $interaction[0]->getType()) {
-                case "InteractionQCM":
-                    $scoreMax = $exerciseSer->qcmMaxScore($interaction[0]);
-                    $responsesTab = $this->responseStatus($responses, $scoreMax);
-                    break;
+            $responsesTab = $this->getCorrectAnswer($exerciseId, $eq, $em, $exerciseSer);
 
-                case "InteractionGraphic":
-                    $scoreMax = $exerciseSer->graphicMaxScore($interaction[0]);
-                    $responsesTab = $this->responseStatus($responses, $scoreMax);
-                    break;
-
-                case "InteractionHole":
-
-                    break;
-
-                case "InteractionOpen":
-
-                    break;
-            }
             $questionsResponsesTab[$eq->getQuestion()->getId()] = $responsesTab;
 
         }
@@ -1195,30 +1150,8 @@ class ExerciseController extends Controller
         $measureTab = array();
 
         foreach ($eqs as $eq) {
-            $interaction = $em->getRepository('UJMExoBundle:Interaction')->getInteraction($eq->getQuestion()->getId());
 
-            $responsesCorrect = $em->getRepository('UJMExoBundle:Response')
-                ->getExerciseInterResponsesWithCount($exerciseId, $interaction[0]->getId());
-
-            switch ( $interaction[0]->getType()) {
-                case "InteractionQCM":
-                    $scoreMax = $exerciseSer->qcmMaxScore($interaction[0]);
-                    $responsesTab = $this->responseStatus($responsesCorrect, $scoreMax);
-                    break;
-
-                case "InteractionGraphic":
-                    $scoreMax = $exerciseSer->graphicMaxScore($interaction[0]);
-                    $responsesTab = $this->responseStatus($responsesCorrect, $scoreMax);
-                    break;
-
-                case "InteractionHole":
-
-                    break;
-
-                case "InteractionOpen":
-
-                    break;
-            }
+            $responsesTab = $this->getCorrectAnswer($exerciseId, $eq, $em, $exerciseSer);
 
             $up[] = $responsesTab['correct'];
             $down[] = (int) $responsesTab['correct'] + (int) $responsesTab['partiallyRight'] + (int) $responsesTab['wrong'];
@@ -1275,5 +1208,107 @@ class ExerciseController extends Controller
         } else {
             return $integer.'.'.$ten;
         }
+    }
+
+    /**
+     * To get the number of answers with the 'correct' status
+     *
+     */
+    private function getCorrectAnswer($exerciseId, $eq, $em, $exerciseSer)
+    {
+        $scoreMax = 0;
+
+        $interaction = $em->getRepository('UJMExoBundle:Interaction')->getInteraction($eq->getQuestion()->getId());
+
+        $responses = $em->getRepository('UJMExoBundle:Response')
+                        ->getExerciseInterResponsesWithCount($exerciseId, $interaction[0]->getId());
+
+        switch ( $interaction[0]->getType()) {
+           case "InteractionQCM":
+                $scoreMax = $exerciseSer->qcmMaxScore($interaction[0]);
+                $responsesTab = $this->responseStatus($responses, $scoreMax);
+              break;
+
+            case "InteractionGraphic":
+                $scoreMax = $exerciseSer->graphicMaxScore($interaction[0]);
+                $responsesTab = $this->responseStatus($responses, $scoreMax);
+                break;
+
+            case "InteractionHole":
+
+                break;
+
+            case "InteractionOpen":
+
+                break;
+        }
+
+        return $responsesTab;
+    }
+
+    /**
+     * To paginate two tables on one page
+     *
+     */
+    private function doublePagination($entityToPaginate1, $entityToPaginate2, $max, $page1, $page2)
+    {
+        $adapter1 = new ArrayAdapter($entityToPaginate1);
+        $pager1 = new Pagerfanta($adapter1);
+
+        $adapter2 = new ArrayAdapter($entityToPaginate2);
+        $pager2 = new Pagerfanta($adapter2);
+
+        try {
+            $entityPaginated1 = $pager1
+                ->setMaxPerPage($max)
+                ->setCurrentPage($page1)
+                ->getCurrentPageResults();
+
+            $entityPaginated2 = $pager2
+                ->setMaxPerPage($max)
+                ->setCurrentPage($page2)
+                ->getCurrentPageResults();
+        } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
+            throw $this->createNotFoundException("Cette page n'existe pas.");
+        }
+
+        $doublePagination[0] = $entityPaginated1;
+        $doublePagination[1] = $pager1;
+
+        $doublePagination[2] = $entityPaginated2;
+        $doublePagination[3] = $pager2;
+
+        return $doublePagination;
+    }
+
+    /**
+     * To paginate table
+     *
+     */
+    private function paginationWithIf($entityToPaginate, $max, $page, $pageNow)
+    {
+        $adapter = new ArrayAdapter($entityToPaginate);
+        $pager = new Pagerfanta($adapter);
+
+        try {
+            if ($pageNow == 0) {
+                $entityPaginated = $pager
+                    ->setMaxPerPage($max)
+                    ->setCurrentPage($page)
+                    ->getCurrentPageResults();
+            } else {
+                $entityPaginated = $pager
+                    ->setMaxPerPage($max)
+                    ->setCurrentPage($pageNow)
+                    ->getCurrentPageResults();
+            }
+        } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
+            throw $this->createNotFoundException("Cette page n'existe pas.");
+        }
+
+        $pagination[0] = $entityPaginated;
+        $pagination[1] = $pager;
+
+        return $pagination;
     }
 }

@@ -45,7 +45,7 @@
 
     <div id="AddDocuments" style="display: none;"><br/>
         <form class="well label_bold" id="uploadForm" enctype="multipart/form-data" onsubmit="DisplayMessage();"
-          method="post" action="{{ path('ujm_interactiongraphic_AddImg', { 'redirection': 1, 'page2Go': pagerDoc.getNbPages,
+          method="post" action="{{ path('ujm_interactiongraphic_AddImg', { 'redirection': 1, 'pageToGo': pagerDoc.getNbPages,
                                     'maxPage': pagerDoc.maxPerPage, 'nbItem': pagerDoc.getNbResults }) }}">
 
             <label for="label">{{ 'docName' | trans }} ?</label>
@@ -101,7 +101,7 @@
     <div id="UpdateName" style="position: fixed; left: 40%; top: 20%; background-color: #D4D0C8; border: #000 thin solid;
          width: 400px; height: 200px; display: none; opacity: 0.95; text-align: center;">
 
-             <a href="#" style="color: red; float: right;" onclick="ChangeName();"><i class="icon-remove"></i> {{ 'close' | trans }}</a><br/>
+        <a href="#" style="color: red; float: right;" onclick="ChangeName();"><i class="icon-remove"></i> {{ 'close' | trans }}</a><br/>
 
         <h3 style="text-align: center;">{{ 'changeName' | trans }}</h3>
 
