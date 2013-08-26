@@ -92,6 +92,7 @@
                             {% if isDir %}
                                 <td>
                                     <a data-resource-id="{{ resource.getId() }}"
+                                       data-dismiss="modal"
                                        class="res-creation-options"
                                        href="{{ path('claro_resource_right_creation_form', {'node': resourceRight.getResourceNode().getId(), 'role': resourceRight.getRole().getId() }) }}">
                                        {{ 'options'|trans({}, 'platform') }}
@@ -102,10 +103,13 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <div>
             {% if isDir %}
                 <input name="isRecursive" type="checkbox"/> {{ 'recursive_dir_action'|trans({}, 'platform')}}
             {% endif %}
-             <input id="submit-default-rights-form-button" type="submit" value="{{ 'ok'|trans({}, 'platform') }}" class="pull-right" />
+            <input id="submit-default-rights-form-button" type="submit" value="{{ 'ok'|trans({}, 'platform') }}" class="btn btn-primary pull-right" />
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
+            </div>
         </form>
     </div>
     <div class="tab-pane" id="advanced">
@@ -157,23 +161,12 @@
                                 {% endfor %}
                             </ul>
                         </div>
+                        <div id="form-rights-tag-wrapper"></div>
                     </div>
                 </div>
             </div>
 
             {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable, workspaceRoles, resource) }}
-        </div>
-    </div>
-</div>
-
-<div id="modal-check-node-right-box" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close modal-close">&times;</button>
-                <h4>{{ 'rights_management'|trans({}, 'platform') }}</h4>
-            </div>
-            <div class="modal-body" id="modal-check-role"></div>
         </div>
     </div>
 </div>
