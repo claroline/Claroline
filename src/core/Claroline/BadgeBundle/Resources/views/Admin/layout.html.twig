@@ -4,7 +4,12 @@
     {{ macros.flashBox() }}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'Badges'|trans }}{% block section_title %}{% endblock %}</h3>
+        <h3 class="panel-title">
+            <ol class="breadcrumb">
+                {% block section_title_first %}<li><a href="{{ path('claro_admin_badges') }}" title="{{ 'back_to_badges_list'|trans }}">{{ 'Badges'|trans }}</a>{% endblock %}
+                {% block section_title %}{% endblock %}
+            </ol>
+        </h3>
     </div>
 
     <div class="panel-body">
