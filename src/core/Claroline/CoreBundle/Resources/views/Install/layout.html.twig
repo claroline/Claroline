@@ -27,16 +27,16 @@
     </div>
     </div>
     <div class="container">
- <div id="grid" class="col-lg-12">
+ <div id="grid" class="col-md-12">
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-md-12">
             <ul class="nav nav-tabs">
             </ul>
         <h2>{{ 'welcome'|trans({}, 'install') }}</h2>
             <p> {{'this_process'|trans({} ,'install') }} </p>
             </div>
   {% block content %}
-            <div class="col-lg-3">
+            <div class="col-md-3">
         <ol class="nav nav-list">
              {% block naviguation %}
              {% include 'ClarolineCoreBundle:Install:steps.html.twig' %}
@@ -46,7 +46,7 @@
               <div class="bar" style="width: 30%;"></div>
             </div>
     </div>
-             <div class="col-lg-6">
+             <div class="col-md-6">
                   {%block data %}
                   {%endblock data %}
     {% endblock %}

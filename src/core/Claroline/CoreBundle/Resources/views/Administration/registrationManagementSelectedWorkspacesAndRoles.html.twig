@@ -31,7 +31,7 @@
                     </option>
                 </select>
             {% else %}
-                <select id="roles-list" name="roles-list" size="5" multiple="multiple" nb-workspaces="1" class="col-lg-8 form-control">
+                <select id="roles-list" name="roles-list" size="5" multiple="multiple" nb-workspaces="1" class="col-md-8 form-control">
                 {% for role in workspaces[0].getRoles() %}
                     <option class="dropdown-submenu role-option" value="{{ role.getId() }}">
                         {{ role.getTranslationKey()|trans({}, 'platform') }}
