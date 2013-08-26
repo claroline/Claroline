@@ -258,13 +258,6 @@ class InteractionQCMController extends Controller
         return $this->redirect($this->generateUrl('ujm_question_index', array('pageNow' => $pageNow)));
     }
 
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder(array('id' => $id))
-            ->add('id', 'hidden')
-            ->getForm();
-    }
-
     /**
      * To test the QCM by the teacher
      *
@@ -283,5 +276,12 @@ class InteractionQCMController extends Controller
             'response'   => $res['response']
             )
         );
+    }
+    
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder(array('id' => $id))
+            ->add('id', 'hidden')
+            ->getForm();
     }
 }

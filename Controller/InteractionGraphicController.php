@@ -367,57 +367,6 @@ class InteractionGraphicController extends Controller
         return $this->redirect($this->generateUrl('ujm_question_index', array('pageNow' => $pageNow)));
     }
 
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder(array('id' => $id))
-            ->add('id', 'hidden')
-            ->getForm();
-    }
-
-    /**
-     * Persist coordonates of the answer zones into the database.
-     *
-     */
-    public function persitNewCoords ($coord, $interGraph, $lengthCoord)
-    {
-        $result = array();
-        for ($i = 0; $i < $lengthCoord; $i++) {
-
-            $inter = preg_split('[;]', $coord[$i]); // Divide the src of the answer zone and the other informations
-
-            $before = array("-","~");
-            $after = array(",",",");
-
-            $data = str_replace($before, $after, $inter[1]); // replace separation punctuation of the informations ...
-
-            list(${'value'.$i}, ${'point'.$i}, ${'size'.$i}) = explode(",", $data); //... in order to split informations
-
-            ${'point'.$i} = str_replace('/', '.', ${'point'.$i}); // set the score to a correct value
-
-            // And persist it into the Database
-            ${'url'.$i} = $inter[0];
-
-            ${'value'.$i} = str_replace("_", ",", ${'value'.$i});
-            ${'url'.$i} = substr(${'url'.$i}, strrpos(${'url'.$i}, '/bundles'));
-
-            ${'shape'.$i} = $this->getShape(${'url'.$i});
-            ${'color'.$i} = $this->getColor(${'url'.$i});
-
-            ${'co'.$i} = new Coords();
-
-            ${'co'.$i}->setValue(${'value'.$i});
-            ${'co'.$i}->setShape(${'shape'.$i});
-            ${'co'.$i}->setColor(${'color'.$i});
-            ${'co'.$i}->setScoreCoords(${'point'.$i});
-            ${'co'.$i}->setInteractionGraphic($interGraph);
-            ${'co'.$i}->setSize(${'size'.$i});
-
-            $result[$i] = ${'co'.$i};
-        }
-
-        return $result;
-    }
-
     /**
      * Display the twig view to add a new picture to the user's document.
      *
@@ -456,54 +405,7 @@ class InteractionGraphicController extends Controller
 
         return new Response($url); // Send back the src if the picture
     }
-
-    /**
-     * Get the shape of the answer zone
-     *
-     */
-    public function getShape($url)
-    {
-        // Recover the shape of an answer zone thanks to its src
-        $temp = strrpos($url, 'graphic/') + 8;
-        $chain = substr($url, $temp, 1);
-
-        if ($chain == "r") {
-            return "rectangle";
-        } else if ($chain == "c") {
-            return "circle";
-        }
-    }
-
-    /**
-     * Get the color of the answer zone
-     *
-     */
-    public function getColor($url)
-    {
-        // Recover the color of an answer zone thanks to its src
-        $temp = strrpos($url, '.') - 1;
-        $chain = substr($url, $temp, 1);
-
-        switch ($chain) {
-            case "w" :
-                return "white";
-            case "g" :
-                return "green";
-            case "p" :
-                return "purple";
-            case "b" :
-                return "blue";
-            case "r" :
-                return "red";
-            case "o" :
-                return "orange";
-            case "y" :
-                return "yellow";
-            default :
-                return "white";
-        }
-    }
-
+    
     /**
      * Fired when compose an exercise
      *
@@ -527,5 +429,103 @@ class InteractionGraphicController extends Controller
                 'score' => $res['score'] // Score of the student (right answer - penalty)
             )
         );
+    }
+
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder(array('id' => $id))
+            ->add('id', 'hidden')
+            ->getForm();
+    }
+
+    /**
+     * Persist coordonates of the answer zones into the database.
+     *
+     */
+    private function persitNewCoords($coord, $interGraph, $lengthCoord)
+    {
+        $result = array();
+        for ($i = 0; $i < $lengthCoord; $i++) {
+
+            $inter = preg_split('[;]', $coord[$i]); // Divide the src of the answer zone and the other informations
+
+            $before = array("-","~");
+            $after = array(",",",");
+
+            $data = str_replace($before, $after, $inter[1]); // replace separation punctuation of the informations ...
+
+            list(${'value'.$i}, ${'point'.$i}, ${'size'.$i}) = explode(",", $data); //... in order to split informations
+
+            ${'point'.$i} = str_replace('/', '.', ${'point'.$i}); // set the score to a correct value
+
+            // And persist it into the Database
+            ${'url'.$i} = $inter[0];
+
+            ${'value'.$i} = str_replace("_", ",", ${'value'.$i});
+            ${'url'.$i} = substr(${'url'.$i}, strrpos(${'url'.$i}, '/bundles'));
+
+            ${'shape'.$i} = $this->getShape(${'url'.$i});
+            ${'color'.$i} = $this->getColor(${'url'.$i});
+
+            ${'co'.$i} = new Coords();
+
+            ${'co'.$i}->setValue(${'value'.$i});
+            ${'co'.$i}->setShape(${'shape'.$i});
+            ${'co'.$i}->setColor(${'color'.$i});
+            ${'co'.$i}->setScoreCoords(${'point'.$i});
+            ${'co'.$i}->setInteractionGraphic($interGraph);
+            ${'co'.$i}->setSize(${'size'.$i});
+
+            $result[$i] = ${'co'.$i};
+        }
+
+        return $result;
+    }
+    
+    /**
+     * Get the shape of the answer zone
+     *
+     */
+    private function getShape($url)
+    {
+        // Recover the shape of an answer zone thanks to its src
+        $temp = strrpos($url, 'graphic/') + 8;
+        $chain = substr($url, $temp, 1);
+
+        if ($chain == "r") {
+            return "rectangle";
+        } else if ($chain == "c") {
+            return "circle";
+        }
+    }
+
+    /**
+     * Get the color of the answer zone
+     *
+     */
+    private function getColor($url)
+    {
+        // Recover the color of an answer zone thanks to its src
+        $temp = strrpos($url, '.') - 1;
+        $chain = substr($url, $temp, 1);
+
+        switch ($chain) {
+            case "w" :
+                return "white";
+            case "g" :
+                return "green";
+            case "p" :
+                return "purple";
+            case "b" :
+                return "blue";
+            case "r" :
+                return "red";
+            case "o" :
+                return "orange";
+            case "y" :
+                return "yellow";
+            default :
+                return "white";
+        }
     }
 }

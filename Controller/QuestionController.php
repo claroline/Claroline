@@ -538,13 +538,6 @@ class QuestionController extends Controller
         }
     }
 
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder(array('id' => $id))
-            ->add('id', 'hidden')
-            ->getForm();
-    }
-
     /**
      * Displays the rigth form when a teatcher wants to create a new Question (JS)
      *
@@ -710,38 +703,6 @@ class QuestionController extends Controller
                 )
             );
         }
-    }
-
-    /**
-     * To control the User's rights to this question
-     *
-     */
-    private function controlUserQuestion($questionID)
-    {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-
-        $question = $this->getDoctrine()
-            ->getManager()
-            ->getRepository('UJMExoBundle:Question')
-            ->getControlOwnerQuestion($user->getId(), $questionID);
-
-        return $question;
-    }
-
-    /**
-     * To control the User's rights to this shared question
-     *
-     */
-    private function controlUserSharedQuestion($questionID)
-    {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-
-        $questions = $this->getDoctrine()
-            ->getManager()
-            ->getRepository('UJMExoBundle:Share')
-            ->getControlSharedQuestion($user->getId(), $questionID);
-
-        return $questions;
     }
 
     /**
@@ -1358,7 +1319,7 @@ class QuestionController extends Controller
     /**
      * To delete the shared question of user's questions bank
      */
-    public function deleteSharedQuestionAction ($id, $pageNow, $maxPage, $nbItem, $lastPage)
+    public function deleteSharedQuestionAction($id, $pageNow, $maxPage, $nbItem, $lastPage)
     {
         $em = $this->getDoctrine()->getManager();
         $sharedToDel = $em->getRepository('UJMExoBundle:Share')->findOneBy(array('question' => $id));
@@ -1384,7 +1345,7 @@ class QuestionController extends Controller
      * To see with which person the user has shared his question
      *
      */
-    public function seeSharedWithAction ($id)
+    public function seeSharedWithAction($id)
     {
         $em = $this->getDoctrine()->getManager();
         $questionsharedWith = $em->getRepository('UJMExoBundle:Share')->findBy(array('question' => $id));
@@ -1401,6 +1362,45 @@ class QuestionController extends Controller
             'sharedWith' => $sharedWith,
             )
         );
+    }
+    
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder(array('id' => $id))
+            ->add('id', 'hidden')
+            ->getForm();
+    }
+    
+    /**
+     * To control the User's rights to this question
+     *
+     */
+    private function controlUserQuestion($questionID)
+    {
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        $question = $this->getDoctrine()
+            ->getManager()
+            ->getRepository('UJMExoBundle:Question')
+            ->getControlOwnerQuestion($user->getId(), $questionID);
+
+        return $question;
+    }
+
+    /**
+     * To control the User's rights to this shared question
+     *
+     */
+    private function controlUserSharedQuestion($questionID)
+    {
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        $questions = $this->getDoctrine()
+            ->getManager()
+            ->getRepository('UJMExoBundle:Share')
+            ->getControlSharedQuestion($user->getId(), $questionID);
+
+        return $questions;
     }
 
     /**

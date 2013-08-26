@@ -956,7 +956,7 @@ class ExerciseController extends Controller
      * To draw histogram of marks
      *
      */
-    private function histoMark ($exerciseId)
+    private function histoMark($exerciseId)
     {
         $em = $this->getDoctrine()->getManager();
         $maxY = 4;
@@ -1004,7 +1004,7 @@ class ExerciseController extends Controller
      * To draw histogram of success
      *
      */
-    private function histoSuccess ($exerciseId, $eqs, $papers)
+    private function histoSuccess($exerciseId, $eqs, $papers)
     {
         $em = $this->getDoctrine()->getManager();
         $exerciseSer = $this->container->get('ujm.exercise_services');
@@ -1074,7 +1074,7 @@ class ExerciseController extends Controller
      * To draw histogram of discrimination
      *
      */
-    private function histoDiscrimination ($exerciseId, $eqs, $papers)
+    private function histoDiscrimination($exerciseId, $eqs, $papers)
     {
         $em = $this->getDoctrine()->getManager();
         $tabScoreExo = array();
@@ -1181,7 +1181,7 @@ class ExerciseController extends Controller
      * To draw histogram of measure of difficulty
      *
      */
-    private function histoMeasureOfDifficulty ($exerciseId, $eqs)
+    private function histoMeasureOfDifficulty($exerciseId, $eqs)
     {
         $em = $this->getDoctrine()->getManager();
         $exerciseSer = $this->container->get('ujm.exercise_services');
