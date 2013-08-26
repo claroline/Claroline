@@ -116,6 +116,7 @@ class InteractionOpenController extends Controller
                     )
                 );
             } else {
+                $this->container->get('ujm.exercise_services')->setExerciseQuestion($exoID, $interOpen);
                 return $this->redirect(
                     $this->generateUrl('ujm_exercise_questions', array(
                         'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind)
