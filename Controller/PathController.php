@@ -45,7 +45,7 @@ class PathController extends Controller
      */
     public function fromWorkspaceAction()
     {
-         return array();
+        return array();
     }
 
     /**
