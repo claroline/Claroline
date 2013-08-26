@@ -2,7 +2,7 @@
 
 {% trans_default_domain "badge" %}
 
-{% block section_title %}<a href="{{ path('claro_admin_badges_add') }}" class="btn btn-mini" data-toggle="tooltip" data-placement="right" title="{{ 'add_badge'|trans }}"><i class="icon-plus"></i></a>{% endblock %}
+{% block section_title_first %}<li><a href="{{ path('claro_admin_badges') }}" title="{{ 'back_to_badges_list'|trans }}">{{ 'Badges'|trans }}</a><a href="{{ path('claro_admin_badges_add') }}" class="btn btn-sm" data-toggle="tooltip" data-placement="right" title="{{ 'add_badge'|trans({}, 'badge') }}"><i class="icon-plus"></i></a></li>{% endblock %}
 
 {% block section_body %}
     {% if 0 < badgeClaims|length %}
