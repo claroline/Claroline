@@ -64,8 +64,8 @@
                 + (parameters.route.action[key].btn === undefined ? 'action-button': parameters.route.action[key].btn);
             $(btnClass).click(function (e) {
                 currentAction = $(e.currentTarget).attr('data-action');
-                $('.modal.claroline').modal('show');
-                $('.modal-body.claroline').html(Twig.render(parameters.route.action[currentAction].confirmTemplate,
+                $('.modal').modal('show');
+                $('.modal-body').html(Twig.render(parameters.route.action[currentAction].confirmTemplate,
                     {'nbItems': $('.chk-item:checked').length}
                 ));
             });
@@ -97,8 +97,8 @@
                     });
                 }
             });
-            $('.modal.claroline').modal('hide');
-            $('.modal-body.claroline').empty();
+            $('.modal').modal('hide');
+            $('.modal-body').empty();
         });
 
         $('#check-all-items').click(function () {
@@ -111,8 +111,8 @@
         });
     };
 
-    createValidationBox = function() {
+    function createValidationBox() {
         var html = Twig.render(ModalWindow, {'footer': Twig.render(ValidationFooter), 'isHidden': true});
         $('body').append(html);
-    };
+    }
 })();

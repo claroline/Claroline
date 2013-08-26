@@ -24,7 +24,7 @@ class MessageController
     /**
      * @DI\InjectParams({
      *     "request"        = @DI\Inject("request"),
-     *     "urlGenerator"   = @DI\Inject("router"),
+     *     "router"         = @DI\Inject("router"),
      *     "formFactory"    = @DI\Inject("claroline.form.factory"),
      *     "manager"        = @DI\Inject("claroline.manager.message_manager")
      * })
@@ -306,7 +306,7 @@ class MessageController
      *
      * Restores messages previously moved to the trash bin.
      *
-     * @param User $user
+     * @param User           $user
      * @param array[Message] $messages
      *
      * @return Response

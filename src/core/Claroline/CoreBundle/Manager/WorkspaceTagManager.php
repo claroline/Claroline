@@ -403,7 +403,7 @@ class WorkspaceTagManager
         } catch (\InvalidArgumentException $e) {
             $relTagWorkspace = array();
         }
-        
+
         $tagWorkspaces = array();
 
         // create an array: tagId => [associated_workspace_relation]

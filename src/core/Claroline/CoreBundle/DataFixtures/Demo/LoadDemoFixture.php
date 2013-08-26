@@ -268,8 +268,8 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
                 'Activities',
                 'Jane Doe',
                 array(
-                    $this->getReference('file/video.mp4')->getId(),
-                    $this->getReference('file/wallpaper.jpg')->getId()
+                    $this->getReference('file/video.mp4')->getResourceNode()->getId(),
+                    $this->getReference('file/wallpaper.jpg')->getResourceNode()->getId()
                 )
             )
         );
@@ -279,8 +279,8 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
                 'Activities',
                 'Jane Doe',
                 array(
-                    $this->getReference('file/lorem.pdf')->getId(),
-                    $this->getReference('file/symfony.pdf')->getId()
+                    $this->getReference('file/lorem.pdf')->getResourceNode()->getId(),
+                    $this->getReference('file/symfony.pdf')->getResourceNode()->getId()
                 )
             )
         );
@@ -290,8 +290,8 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
                 'Jane Doe',
                 'Jane Doe',
                 array(
-                    $this->getReference('activity/Chapitre 1')->getId(),
-                    $this->getReference('activity/Chapitre 2')->getId()
+                    $this->getReference('activity/Chapitre 1')->getResourceNode()->getId(),
+                    $this->getReference('activity/Chapitre 2')->getResourceNode()->getId()
                 )
             )
         );

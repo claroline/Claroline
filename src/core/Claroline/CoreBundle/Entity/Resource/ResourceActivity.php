@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(
  *             name="resource_activity_unique_combination",
- *             columns={"activity_id", "resource_id"}
+ *             columns={"activity_id", "resourceNode_id"}
  *         )
  *     }
  * )
@@ -35,10 +35,10 @@ class ResourceActivity
     private $activity;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
-    private $resource;
+    private $resourceNode;
 
     /**
      * @ORM\Column(name="sequence_order", type="integer", nullable=true)
@@ -56,14 +56,14 @@ class ResourceActivity
         return $this->activity;
     }
 
-    public function setResource(AbstractResource $resource)
+    public function setResourceNode(ResourceNode $resourceNode)
     {
-        $this->resource = $resource;
+        $this->resourceNode = $resourceNode;
     }
 
-    public function getResource()
+    public function getResourceNode()
     {
-        return $this->resource;
+        return $this->resourceNode;
     }
 
     public function setSequenceOrder($order)

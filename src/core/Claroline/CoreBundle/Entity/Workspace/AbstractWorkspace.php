@@ -60,7 +60,7 @@ abstract class AbstractWorkspace
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     mappedBy="workspace"
      * )
      */

@@ -113,7 +113,7 @@ class ToolManager
 
         $this->ed->dispatch(
             'tool_' . $tool->getName() . '_from_template', 'ImportTool',
-            array($workspace, $config, $rootDir, $manager, $filePaths, $generatedRoles)
+            array($workspace, $config, $rootDir->getResourceNode(), $manager, $filePaths, $generatedRoles)
         );
     }
 

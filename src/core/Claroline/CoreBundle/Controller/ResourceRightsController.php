@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Manager\RightsManager;
@@ -58,7 +58,7 @@ class ResourceRightsController
 
     /**
      * @EXT\Route(
-     *     "/{resource}/rights/form/role/{role}",
+     *     "/{node}/rights/form/role/{role}",
      *     name="claro_resource_right_form",
      *     options={"expose"=true},
      *     defaults={"role"=null}
@@ -66,27 +66,27 @@ class ResourceRightsController
      *
      * Displays the resource rights form.
      *
-     * @param AbstractResource $resource the resource
+     * @param ResourceNode $node
      *
      * @return Response
      *
      * @throws AccessDeniedException if the current user is not allowed to edit the resource
      */
-    public function rightFormAction(AbstractResource $resource, Role $role = null)
+    public function rightFormAction(ResourceNode $node, Role $role = null)
     {
-        $collection = new ResourceCollection(array($resource));
+        $collection = new ResourceCollection(array($node));
         $this->checkAccess('EDIT', $collection);
-        $isDir = ($resource->getResourceType()->getName() === 'directory') ? true: false;
+        $isDir = ($node->getResourceType()->getName() === 'directory') ? true: false;
 
         if ($role === null) {
-            $rolesRights = $this->rightsManager->getNonAdminRights($resource);
+            $rolesRights = $this->rightsManager->getNonAdminRights($node);
             $datas = $this->wsTagManager->getDatasForWorkspaceList(true);
 
             return $this->templating->renderResponse(
                 'ClarolineCoreBundle:Resource:multipleRightsPage.html.twig',
                 array(
                     'resourceRights' => $rolesRights,
-                    'resource' => $resource,
+                    'resource' => $node,
                     'isDir' => $isDir,
                     'workspaces' => $datas['workspaces'],
                     'tags' => $datas['tags'],
@@ -98,7 +98,7 @@ class ResourceRightsController
                 )
             );
         } else {
-            $resourceRights = $this->rightsManager->getOneByRoleAndResource($role, $resource);
+            $resourceRights = $this->rightsManager->getOneByRoleAndResource($role, $node);
 
             return $this->templating->renderResponse(
                 'ClarolineCoreBundle:Resource:singleRightsForm.html.twig',
@@ -112,7 +112,7 @@ class ResourceRightsController
 
     /**
      * @EXT\Route(
-     *     "/{resource}/rights/edit",
+     *     "/{node}/rights/edit",
      *     name="claro_resource_rights_edit",
      *     options={"expose"=true}
      * )
@@ -121,22 +121,22 @@ class ResourceRightsController
      * by role to be passed by POST method. Permissions are set to false when not passed
      * in the request.
      *
-     * @param AbstractResource $resource the resource
+     * @param ResourceNode $node the resource
      *
      * @return Response
      *
      * @throws AccessDeniedException if the current user is not allowed to edit the resource
      */
 
-    public function editPermsAction(AbstractResource $resource)
+    public function editPermsAction(ResourceNode $node)
     {
-        $collection = new ResourceCollection(array($resource));
+        $collection = new ResourceCollection(array($node));
         $this->checkAccess('EDIT', $collection);
         $datas = $this->getPermissionsFromRequest();
         $isRecursive = $this->request->request->get('isRecursive');
 
         foreach ($datas as $data) {
-            $this->rightsManager->editPerms($data['permissions'], $data['role'], $resource, $isRecursive);
+            $this->rightsManager->editPerms($data['permissions'], $data['role'], $node, $isRecursive);
         }
 
         return new Response("success");
@@ -144,7 +144,7 @@ class ResourceRightsController
 
     /**
      * @EXT\Route(
-     *     "/{resource}/role/{role}/right/creation/form",
+     *     "/{node}/role/{role}/right/creation/form",
      *     name="claro_resource_right_creation_form",
      *     options={"expose"=true}
      * )
@@ -154,29 +154,29 @@ class ResourceRightsController
      * type of resource in a directory). Show the different resource types already
      * allowed for creation.
      *
-     * @param AbstractResource $resource the resource
-     * @param Role             $role     the role for which the form is displayed
+     * @param ResourceNode $node the resource
+     * @param Role         $role the role for which the form is displayed
      *
      * @return Response
      *
      * @throws AccessDeniedException if the current user is not allowed to edit the resource
      */
-    public function rightCreationFormAction(AbstractResource $resource, Role $role)
+    public function rightCreationFormAction(ResourceNode $node, Role $role)
     {
-        $collection = new ResourceCollection(array($resource));
+        $collection = new ResourceCollection(array($node));
         $this->checkAccess('EDIT', $collection);
 
         return array(
-            'configs' => array($this->rightsManager->getOneByRoleAndResource($role, $resource)),
+            'configs' => array($this->rightsManager->getOneByRoleAndResource($role, $node)),
             'resourceTypes' => $this->rightsManager->getResourceTypes(),
-            'resourceId' => $resource->getId(),
+            'nodeId' => $node->getId(),
             'roleId' => $role->getId()
         );
     }
 
     /**
      * @EXT\Route(
-     *     "/{resource}/role/{role}/right/creation/edit",
+     *     "/{node}/role/{role}/right/creation/edit",
      *     name="claro_resource_rights_creation_edit",
      *     options={"expose"=true}
      * )
@@ -185,23 +185,23 @@ class ResourceRightsController
      * array of resource type ids to be passed by POST method. Only the types
      * passed in the request will be allowed.
      *
-     * @param AbstractResource $resource the resource
-     * @param Role             $role     the role for which the form is displayed
+     * @param ResourceNode $node the resource
+     * @param Role         $role the role for which the form is displayed
      *
      * @return Response
      *
      * @throws AccessDeniedException if the current user is not allowed to edit the resource
      */
-    public function editPermsCreationAction(AbstractResource $resource, Role $role)
+    public function editPermsCreationAction(ResourceNode $node, Role $role)
     {
-        $collection = new ResourceCollection(array($resource));
+        $collection = new ResourceCollection(array($node));
         $this->checkAccess('EDIT', $collection);
         $isRecursive = $this->request->request->get('isRecursive');
         $ids = $this->request->request->get('resourceTypes');
         $resourceTypes = $ids === null ?
             array() :
             $this->om->findByIds('ClarolineCoreBundle:Resource\ResourceType', array_keys($ids));
-        $this->rightsManager->editCreationRights($resourceTypes, $role, $resource, $isRecursive);
+        $this->rightsManager->editCreationRights($resourceTypes, $role, $node, $isRecursive);
 
         return new Response("success");
     }
