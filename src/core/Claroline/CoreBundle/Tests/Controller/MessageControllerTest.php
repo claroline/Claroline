@@ -64,10 +64,10 @@ class MessageControllerTest extends MockeryTestCase
         $this->assertEquals('/message?ids[]=1', $response->getTargetUrl());
     }
 
-    public function testSendAction()
+    public function testSendActionSuccess()
     {
         $sender = new User();
-        $message = new Message();
+        $message = $this->mock('Claroline\CoreBundle\Entity\Message');
         $parent = new Message();
         $this->formFactory->shouldReceive('create')
             ->once()
@@ -79,14 +79,17 @@ class MessageControllerTest extends MockeryTestCase
             ->andReturn(true);
         $this->form->shouldReceive('isValid')->once()->andReturn(true);
         $this->form->shouldReceive('getData')->once()->andReturn($message);
-        $this->form->shouldReceive('createView')->once()->andReturn('view');
         $this->messageManager->shouldReceive('send')
             ->once()
-            ->with($sender, $message, $parent);
-        $this->assertEquals(
-            array('form' => 'view'),
-            $this->controller->sendAction($sender, $parent)
-        );
+            ->with($sender, $message, $parent)
+            ->andReturn($message);
+        $message->shouldReceive('getId')->once()->andReturn(1);
+        $this->router->shouldReceive('generate')->once()
+            ->with('claro_message_show', array('message' => 1))
+            ->andReturn('url');
+
+        $response = $this->controller->sendAction($sender, $parent);
+        $this->assertEquals('url', $response->getTargetUrl());
     }
 
     public function testShowAction()

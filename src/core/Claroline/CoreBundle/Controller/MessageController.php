@@ -86,18 +86,18 @@ class MessageController
 
     /**
      * @EXT\Route(
-     *     "/send/{parent_id}",
+     *     "/send/{parentId}",
      *     name="claro_message_send",
-     *     defaults={"parent_id" = null}
+     *     defaults={"parentId" = null}
      * )
      * @EXT\Method({"POST"})
      * @EXT\ParamConverter("sender", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "parent",
      *     class="ClarolineCoreBundle:Message",
-     *     options={"id" = "parent_id", "strictId" = true}
+     *     options={"id" = "parentId", "strictId" = true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Message:messageForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Message:show.html.twig")
      *
      * Handles the message form submission.
      *
@@ -109,10 +109,15 @@ class MessageController
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $this->messageManager->send($sender, $form->getData(), $parent);
+            $message = $this->messageManager->send($sender, $form->getData(), $parent);
+            $url = $this->router->generate('claro_message_show', array('message' => $message->getId()));
+
+            return new RedirectResponse($url);
         }
 
-        return array('form' => $form->createView());
+        $ancestors = $this->messageManager->getConversation($parent);
+
+        return array('form' => $form->createView(), 'message' => $parent, 'ancestors' => $ancestors);
     }
 
     /**
