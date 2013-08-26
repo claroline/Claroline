@@ -48,7 +48,9 @@ class LoadContentData extends AbstractFixture
         );
 
         $types = array("home", "home", "home", "home", "opengraph", "opengraph", "opengraph", "opengraph");
-        $sizes = array("span5", "span7", "span8", "span4", "span12", "span12", "span12", "span12");
+        $sizes = array(
+            "content-3", "content-5", "content-5", "content-3", "content-8", "content-8", "content-8", "content-8"
+        );
 
         foreach ($titles as $i => $title) {
             $type = $manager->getRepository("ClarolineCoreBundle:Home\Type")->findOneBy(array('name' => $types[$i]));

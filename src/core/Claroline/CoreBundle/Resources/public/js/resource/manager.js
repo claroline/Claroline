@@ -20,9 +20,13 @@
                 this.currentDirectory = {id: parameters.directoryId};
 
                 if (parameters.isPickerMode) {
-                    this.el.className = 'picker resource-manager modal hide';
-                    this.wrapper = $('<div class="modal-body"/>');
-                    $(this.el).append(this.wrapper);
+                    this.el.className = 'picker resource-manager';
+
+                    $(this.el).html(Twig.render(ModalWindow, {
+                        'header' : 'Resource Picker',
+                        'body': ''
+                    }));
+                    this.wrapper = $('.modal-body', this.el);
                 } else {
                     this.el.className = 'main resource-manager';
                     this.wrapper = $(this.el);
@@ -98,7 +102,7 @@
                 'click a': function (event) {
                     event.preventDefault();
                     this.dispatcher.trigger('breadcrumb-click', {
-                        resourceId: event.currentTarget.getAttribute('data-node-id'),
+                        nodeId: event.currentTarget.getAttribute('data-node-id'),
                         isPickerMode: this.parameters.isPickerMode
                     });
                 }
@@ -114,7 +118,7 @@
             }
         }),
         Actions: Backbone.View.extend({
-            className: 'navbar navbar-static-top',
+            className: 'navbar navbar-default navbar-static-top',
             events: {
                 'keypress input.name': function (event) {
                     if (event.keyCode !== 13) {
@@ -407,15 +411,17 @@
                     event.preventDefault();
                     var action = event.currentTarget.getAttribute('data-action');
                     var actionType = event.currentTarget.getAttribute('data-action-type');
-                    var resourceId = event.currentTarget.getAttribute('data-id');
+                    var nodeId = event.currentTarget.getAttribute('data-id');
 
                     if (actionType === 'display-form') {
-                        this.dispatcher.trigger('display-form', {type: action, node : {id: resourceId}});
+                        this.dispatcher.trigger('display-form', {type: action, node : {id: nodeId}});
                     } else {
                         if (event.currentTarget.getAttribute('data-is-custom') === 'no') {
-                            this.dispatcher.trigger(action, {ids: [resourceId]});
+                            this.dispatcher.trigger(action, {ids: [nodeId]});
                         } else {
-                            this.dispatcher.trigger('custom', {'action': action, id: [resourceId]});
+                            var async = event.currentTarget.getAttribute('data-async');
+                            var redirect = (async === '1') ? false : true;
+                            this.dispatcher.trigger('custom', {'action': action, id: [nodeId], 'redirect': redirect});
                         }
                     }
                 }
@@ -462,32 +468,32 @@
                     successHandler();
                 }
             },
-            renameThumbnail: function (resourceId, newName, successHandler) {
+            renameThumbnail: function (nodeId, newName, successHandler) {
                 var displayableName = Claroline.Utilities.formatText(newName, 20, 2);
-                this.$('#' + resourceId + ' .node-name').html(displayableName);
-                this.$('#' + resourceId + ' .dropdown[rel=tooltip]').attr('title', newName);
+                this.$('#' + nodeId + ' .node-name').html(displayableName);
+                this.$('#' + nodeId + ' .dropdown[rel=tooltip]').attr('title', newName);
 
                 if (successHandler) {
                     successHandler();
                 }
             },
-            changeThumbnailIcon: function (resourceId, newIconPath, successHandler) {
-                this.$('#' + resourceId + ' img').attr('src', this.parameters.webPath + newIconPath);
+            changeThumbnailIcon: function (nodeId, newIconPath, successHandler) {
+                this.$('#' + nodeId + ' img').attr('src', this.parameters.webPath + newIconPath);
 
                 if (successHandler) {
                     successHandler();
                 }
             },
-            removeResources: function (resourceIds) {
+            removeResources: function (nodeIds) {
                 // same logic for both thumbnails and search results
-                for (var i = 0; i < resourceIds.length; ++i) {
-                    this.$('#' + resourceIds[i]).remove();
+                for (var i = 0; i < nodeIds.length; ++i) {
+                    this.$('#' + nodeIds[i]).remove();
                 }
             },
             dispatchOpen: function (event) {
                 event.preventDefault();
                 this.dispatcher.trigger('node-click', {
-                    resourceId: event.currentTarget.getAttribute('data-id'),
+                    nodeId: event.currentTarget.getAttribute('data-id'),
                     resourceType: event.currentTarget.getAttribute('data-type'),
                     isPickerMode: this.parameters.isPickerMode,
                     directoryHistory: this.parameters.directoryHistory
@@ -617,18 +623,18 @@
                         success: function (form) {
                             $('#modal-check-role').empty();
                             $('#modal-check-role').append(form);
-                            $('#rights-form-node-tab-content').css('display', 'none');
-                            $('#rights-form-node-nav-tabs').css('display', 'none');
-                            $('#modal-check-node-right-box').modal('show');
+                            $('#rights-form-resource-tab-content').css('display', 'none');
+                            $('#rights-form-resource-nav-tabs').css('display', 'none');
+                            $('#modal-check-resource-right-box .modal').modal('show');
                         }
                     });
                 },
                 'click .modal-close': function (event) {
                     event.preventDefault();
                     $('#modal-check-role').empty();
-                    $('#modal-check-node-right-box').modal('hide');
-                    $('#rights-form-node-tab-content').css('display', 'block');
-                    $('#rights-form-node-nav-tabs').css('display', 'block');
+                    $('#modal-check-resource-right-box .modal').modal('hide');
+                    $('#rights-form-resource-tab-content').css('display', 'block');
+                    $('#rights-form-resource-nav-tabs').css('display', 'block');
                 },
                 'click #submit-right-form-button': function (event) {
                     event.preventDefault();
@@ -645,9 +651,9 @@
                             $('#form-right-wrapper').empty();
                             $('#perms-table').append(newrow);
                             $('#modal-check-role').empty();
-                            $('#modal-check-node-right-box').modal('hide');
-                            $('#rights-form-node-tab-content').css('display', 'block');
-                            $('#rights-form-node-nav-tabs').css('display', 'block');
+                            $('#modal-check-resource-right-box .modal').modal('hide');
+                            $('#rights-form-resource-tab-content').css('display', 'block');
+                            $('#rights-form-resource-nav-tabs').css('display', 'block');
                         }
                     });
                 },
@@ -657,7 +663,7 @@
                     this.dispatcher.trigger(this.eventOnSubmit, {
                         action: form.getAttribute('action'),
                         data: new FormData(form),
-                        resourceId: this.targetNodeId
+                        nodeId: this.targetNodeId
                     });
                 }
             },
@@ -668,7 +674,7 @@
                 this.on('close', this.close, this);
             },
             close: function () {
-                $(this.el).modal('hide');
+                $('.modal', this.el).modal('hide');
             },
             render: function (form, targetNodeId, eventOnSubmit) {
                 this.targetNodeId = targetNodeId;
@@ -676,7 +682,8 @@
                 form = form.replace('_nodeId', targetNodeId);
                 $(this.el).html(Twig.render(ModalWindow, {
                     'body': form
-                })).modal();
+                }));
+                $('.modal', this.el).modal('show');
             }
         })
     };
@@ -715,7 +722,7 @@
                 this.displayForm(event.type, event.node);
             },
             'create': function (event) {
-                this.create(event.action, event.data, event.resourceId);
+                this.create(event.action, event.data, event.nodeId);
             },
             'delete': function (event) {
                 this.remove(event.ids);
@@ -724,35 +731,35 @@
                 this.download(event.ids);
             },
             'rename': function (event) {
-                this.rename(event.action, event.data, event.resourceId);
+                this.rename(event.action, event.data, event.nodeId);
             },
             'edit-properties': function (event) {
-                this.editProperties(event.action, event.data, event.resourceId);
+                this.editProperties(event.action, event.data, event.nodeId);
             },
             'custom': function (event) {
-                this.custom(event.action, event.id);
+                this.custom(event.action, event.id, event.redirect);
             },
             'paste': function (event) {
                 this[event.isCutMode ? 'move' : 'copy'](event.ids, event.directoryId, event.sourceDirectoryId);
             },
             'breadcrumb-click': function (event) {
                 if (event.isPickerMode) {
-                    this.displayResources(event.resourceId, 'picker');
+                    this.displayResources(event.nodeId, 'picker');
                 } else {
-                    this.router.navigate('resources/' + event.resourceId, {trigger: true});
+                    this.router.navigate('resources/' + event.nodeId, {trigger: true});
                 }
             },
             'node-click': function (event) {
                 if (this.isOpenEnabled) {
                     if (event.isPickerMode) {
                         if (event.resourceType === 'directory') {
-                            this.displayResources(event.resourceId, 'picker');
+                            this.displayResources(event.nodeId, 'picker');
                         }
                     } else {
                         if (event.resourceType === 'directory') {
-                            this.router.navigate('resources/' + event.resourceId, {trigger: true});
+                            this.router.navigate('resources/' + event.nodeId, {trigger: true});
                         } else {
-                            this.open(event.resourceType, event.resourceId, event.directoryHistory);
+                            this.open(event.resourceType, event.nodeId, event.directoryHistory);
                         }
                     }
                 }
@@ -890,7 +897,7 @@
                                 });
                             }
                         },
-                        start: function (event, ui) {
+                        start: function () {
                             that.isOpenEnabled = false;
                         }
                     });
@@ -961,32 +968,32 @@
                 }
             });
         },
-        createShortcut: function (resourceIds, parentId) {
+        createShortcut: function (nodeIds, parentId) {
             $.ajax({
                 context: this,
                 url: this.parameters.appPath + '/resource/shortcut/' +  parentId + '/create',
-                data: {ids: resourceIds},
+                data: {ids: nodeIds},
                 success: function (data) {
                     this.views.main.subViews.nodes.addThumbnails(data);
                 }
             });
         },
-        remove: function (resourceIds) {
+        remove: function (nodeIds) {
             $.ajax({
                 context: this,
                 url: this.parameters.appPath + '/resource/delete',
-                data: {ids: resourceIds},
+                data: {ids: nodeIds},
                 success: function () {
-                    this.views.main.subViews.nodes.removeResources(resourceIds);
+                    this.views.main.subViews.nodes.removeResources(nodeIds);
                     this.views.main.subViews.actions.setInitialState();
                 }
             });
         },
-        copy: function (resourceIds, directoryId) {
+        copy: function (nodeIds, directoryId) {
             $.ajax({
                 context: this,
                 url: this.parameters.appPath + '/resource/copy/' + directoryId,
-                data: {ids: resourceIds},
+                data: {ids: nodeIds},
                 success: function (data, textStatus, jqXHR) {
                     if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
                         this.views.main.subViews.nodes.addThumbnails(data);
@@ -994,7 +1001,7 @@
                 }
             });
         },
-        move: function (resourceIds, newParentDirectoryId, oldParentDirectoryId) {
+        move: function (nodeIds, newParentDirectoryId, oldParentDirectoryId) {
             if (newParentDirectoryId === oldParentDirectoryId) {
                 this.views.main.subViews.nodes.uncheckAll();
                 this.views.main.subViews.actions.checkedNodes.nodes = {};
@@ -1004,7 +1011,7 @@
                 $.ajax({
                     context: this,
                     url: this.parameters.appPath + '/resource/move/' + newParentDirectoryId,
-                    data: {ids: resourceIds},
+                    data: {ids: nodeIds},
                     success: function (data) {
                         this.views.main.subViews.nodes.addThumbnails(data);
                         this.views.main.subViews.actions.setInitialState();
@@ -1012,7 +1019,7 @@
                 });
             }
         },
-        rename: function (formAction, formData, resourceId) {
+        rename: function (formAction, formData, nodeId) {
             $.ajax({
                 context: this,
                 url: formAction,
@@ -1023,17 +1030,17 @@
                 success: function (data, textStatus, jqXHR) {
                     if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
                         this.views.main.subViews.nodes.renameThumbnail(
-                            resourceId,
+                            nodeId,
                             data[0],
                             this.views.form.close()
                         );
                     } else {
-                        this.views.form.render(data, resourceId);
+                        this.views.form.render(data, nodeId);
                     }
                 }
             });
         },
-        editProperties: function (formAction, formData, resourceId) {
+        editProperties: function (formAction, formData, nodeId) {
             $.ajax({
                 context: this,
                 url: formAction,
@@ -1045,7 +1052,7 @@
                     if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
                         if (data.name) {
                             this.views.main.subViews.nodes.renameThumbnail(
-                                resourceId,
+                                nodeId,
                                 data.name,
                                 this.views.form.close()
                             );
@@ -1053,21 +1060,21 @@
 
                         if (data.icon) {
                             this.views.main.subViews.nodes.changeThumbnailIcon(
-                                resourceId,
+                                nodeId,
                                 data.icon,
                                 this.views.form.close()
                             );
                         }
                     } else {
-                        this.views.form.render(data, resourceId);
+                        this.views.form.render(data, nodeId);
                     }
                 }
             });
         },
-        download: function (resourceIds) {
-            window.location = this.parameters.appPath + '/resource/download?' + $.param({ids: resourceIds});
+        download: function (nodeIds) {
+            window.location = this.parameters.appPath + '/resource/download?' + $.param({ids: nodeIds});
         },
-        open: function (resourceType, resourceId, directoryHistory) {
+        open: function (resourceType, nodeId, directoryHistory) {
             var _path = '';
             for (var i = 0; i < directoryHistory.length; i++) {
                 if (directoryHistory[i].id !== 0) {
@@ -1077,7 +1084,7 @@
             }
 
             window.location = this.parameters.appPath + '/resource/open/' + resourceType + '/' +
-                resourceId + _path;
+                nodeId + _path;
         },
         editRights: function (formAction, formData) {
             $.ajax({
@@ -1102,8 +1109,12 @@
                 contentType: false
             });
         },
-        custom: function (action, resourceId) {
-            alert('Custom action "' + action + '" on resource ' + resourceId + ' (not implemented yet)');
+        custom: function (action, nodeId, redirect) {
+            if (redirect) {
+                window.location = this.parameters.appPath + '/resource/custom/' + action + '/' + nodeId;
+            } else {
+                alert("ajax call: no implementation yet");
+            }
         },
         picker: function (action, callback) {
             if (action === 'open' && !this.views.picker.isAppended) {
@@ -1118,7 +1129,7 @@
                 this.views.picker.subViews.actions.callback = callback;
             }
 
-            this.views.picker.$el.modal(action === 'open' ? 'show' : 'hide');
+            $('.modal', this.views.picker.$el).modal(action === 'open' ? 'show' : 'hide');
         }
     };
 

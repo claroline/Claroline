@@ -1,13 +1,21 @@
-<div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h3>{{ "Content regions" | trans({}, "home") }}</h3>
-</div>
-<div class="modal-body" data-id="{{ id }}">
-    <div class="content row-fluid">
-        <a class="span12 border" data-region="header">{{ "Header" | trans({}, "home") }}</a>
-        <a class="span2 border" data-region="left">{{ "Left" | trans({}, "home") }}</a>
-        <a class="span8 border" data-region="content">{{ "Content" | trans({}, "home") }}</a>
-        <a class="span2 border" data-region="right">{{ "Right" | trans({}, "home") }}</a>
-        <a class="span12 border" data-region="footer">{{ "Footer" | trans({}, "home") }}</a>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">{{ "Content regions" | trans({}, "home") }}</h4>
+        </div>
+        <div class="modal-body" data-id="{{ id }}">
+            <div class="row">
+                <div class="col-md-12"><div class="panel panel-default" data-region="header">{{ "Header" | trans({}, "home") }}</div></div>
+            </div>
+            <div class="row">
+                <div class="col-md-4"><div class="panel panel-default" data-region="left">{{ "Left" | trans({}, "home") }}</div></div>
+                <div class="col-md-4"><div class="panel panel-default" data-region="content">{{ "Content" | trans({}, "home") }}</div></div>
+                <div class="col-md-4"><div class="panel panel-default" data-region="right">{{ "Right" | trans({}, "home") }}</div></div>
+            </div>
+            <div class="row">
+                <div class="col-md-12"><div class="panel panel-default" data-region="footer">{{ "Footer" | trans({}, "home") }}</div></div>
+            </div>
+        </div>
     </div>
 </div>

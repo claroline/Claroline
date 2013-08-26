@@ -1,20 +1,20 @@
 <div class="creator">
-    <div class="content row-fluid">
-        <div class="border span10">
+    <div class="row">
+        <div class="col-md-10">
             <input
             type="text"
             maxlength="200"
             placeholder="{{ "New content page" | trans({}, 'home') }}..."
-            class="content-title"
+            class="content-title form-control"
             {% if content is defined %}value="{{ content.title }}"{% endif %}
             >
         </div>
 
-        <a class="btn btn-primary span2 create-type">{{ "Create" | trans({}, 'home') }}</a>
+        <a class="btn btn-primary col-md-2 create-type">{{ "Create" | trans({}, 'home') }}</a>
     </div>
     <hr>
 </div>
-<div class="content row-fluid">
+<div class="row">
 {% for type in types %}
     {% include 'ClarolineCoreBundle:Home:type.html.twig' with {'type' : type } %}
 {% endfor %}

@@ -1,7 +1,7 @@
 {% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
 
 {% block section_content %}
-
+    <div class="panel-body">
         <ul class="nav nav-tabs tabs">
             <li{% if "desktop/tool/open" in app.request.requesturi or 'claro_tool_desktop_info' == app.request.get('_route') %} class="active"{% endif %}>
             <a href="{{ path('claro_tool_desktop_info') }}" id="desktop_info_link">{{ 'informations'|trans({}, 'platform') }}</a>
@@ -16,6 +16,6 @@
             {% endfor %}
         </ul>
 
-    {% block homeTab %}{% endblock %}
-
+        {% block homeTab %}{% endblock %}
+    </div>
 {% endblock %}

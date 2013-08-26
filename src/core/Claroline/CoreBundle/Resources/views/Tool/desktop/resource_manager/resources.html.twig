@@ -30,7 +30,7 @@
     <script type="text/javascript">
         $(function() {
             Claroline.ResourceManager.initialize({
-                "parentElement": $('div.section-content'),
+                "parentElement": $('div.section-content .panel'),
                 "isPickerMultiSelectAllowed": true,
                 "appPath": "{{ app.request.getBaseUrl }}",
                 "webPath": "{{ asset('') }}",
@@ -42,8 +42,8 @@
                                 {% for customAction in resourceType.getCustomActions() %}
                                     "{{ customAction.getAction() }}": {
                                         "name": "{{ customAction.getAction() }}",
-                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'resourceId': '_nodeId' }) }}",
-                                        "async": {{ customAction.isAsync() }}
+                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'node': '_nodeId' }) }}",
+                                        "async": {% if customAction.isAsync() %} 1 {% else %} 0 {% endif %}
                                     }
                                     {% if loop.last != true %},{% endif %}
                                 {% endfor %}
@@ -60,5 +60,5 @@
     </script>
     <script type="text/javascript" src='{{ asset('bundles/frontend/FileAPI/FileAPI.min.js') }}'></script>
     <script type="text/javascript" src='{{ asset('bundles/frontend/FileAPI/FileAPI.exif.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/resource/dnd.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/resource/dragndrop.js') }}'></script>
 {% endblock %}

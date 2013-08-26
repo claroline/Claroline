@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Event\Event\Log;
 
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 class LogRoleSubscribeEvent extends LogGenericEvent
 {
