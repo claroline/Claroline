@@ -22,7 +22,7 @@ class CopyResourceEvent extends Event implements DataConveyorEventInterface
      */
     public function __construct(AbstractResource $resource)
     {
-        $this->resource= $resource;
+        $this->resource = $resource;
     }
 
     /**

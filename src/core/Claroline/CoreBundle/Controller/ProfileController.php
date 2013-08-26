@@ -6,7 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Event\Log\LogUserUpdateEvent;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;

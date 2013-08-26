@@ -187,7 +187,6 @@ class AuthenticationController
 
         // the link is valid for 24h
         if ($currentTime - (3600 * 24) < $user->getHashTime()) {
-
             return array(
                 'id' => $user->getId(),
                 'form' => $form->createView()

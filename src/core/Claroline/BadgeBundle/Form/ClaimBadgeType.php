@@ -16,8 +16,7 @@ class ClaimBadgeType extends AbstractType
                 'required'         => false,
                 'format'           => 'jsonp',
                 'mapped'           => false
-            ))
-        ;
+            ));
     }
 
     public function getName()
@@ -28,11 +27,11 @@ class ClaimBadgeType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver
-        ->setDefaults(
-            array(
-                'data_class'         => 'Claroline\BadgeBundle\Entity\BadgeClaim',
-                'translation_domain' => 'badge'
-            )
-        );
+            ->setDefaults(
+                array(
+                    'data_class'         => 'Claroline\BadgeBundle\Entity\BadgeClaim',
+                    'translation_domain' => 'badge'
+                )
+            );
     }
 }

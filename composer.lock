@@ -391,7 +391,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -3066,7 +3066,7 @@
                 {
                     "name": "Kevin Bond",
                     "email": "kevinbond@gmail.com",
-                    "homepage": "http://zenstruck.com"
+                    "homepage": "https://zenstruck.com/"
                 }
             ],
             "description": "Provides Twitter Bootstrap form theme, a help type extension, Ajax/Tunnel/Select2 entity form types and javascript helpers",
@@ -3099,49 +3099,6 @@
             "include-path": [
                 "Hamcrest-1.1.0/"
             ]
-        },
-        {
-            "name": "icap-lyon1/simple-tag-bundle",
-            "version": "dev-master",
-            "target-dir": "ICAPLyon1/Bundle/SimpleTagBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/iCAPLyon1/SimpleTagBundle.git",
-                "reference": "4ce5e2ca761c573c5246fd1528dd3e8cc86ca91f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/iCAPLyon1/SimpleTagBundle/zipball/4ce5e2ca761c573c5246fd1528dd3e8cc86ca91f",
-                "reference": "4ce5e2ca761c573c5246fd1528dd3e8cc86ca91f",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/doctrine-bundle": "*",
-                "php": ">=5.3.2",
-                "symfony/framework-bundle": "~2.1",
-                "twig/twig": "*"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-0": {
-                    "ICAPLyon1\\Bundle\\SimpleTagBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Panagiotis Tsavdaris",
-                    "email": "ptsavdar@gmail.com"
-                }
-            ],
-            "description": "Symfony TagBundle that easily adds tags to any entity",
-            "keywords": [
-                "tag"
-            ],
-            "time": "2013-06-19 12:12:01"
         },
         {
             "name": "mikey179/vfsStream",
