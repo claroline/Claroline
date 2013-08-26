@@ -646,9 +646,9 @@
                             $('#form-right-wrapper').empty();
                             $('#perms-table').append(newrow);
                             $('#modal-check-role').empty();
-                            $('#modal-check-resource-right-box .modal').modal('hide');
-                            $('#rights-form-resource-tab-content').css('display', 'block');
-                            $('#rights-form-resource-nav-tabs').css('display', 'block');
+                            $('#modal-check-node-right-box .modal').modal('hide');
+                            $('#rights-form-node-tab-content').css('display', 'block');
+                            $('#rights-form-node-nav-tabs').css('display', 'block');
                         }
                     });
                 },

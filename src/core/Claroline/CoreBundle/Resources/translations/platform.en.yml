@@ -625,6 +625,7 @@ workspace_unregistration_confirm_title: 'Do you really want to unregister from t
 workspace_welcome: Welcome
 workspaces: Workspaces
 ws_creator: 'Workspace creator'
-ws_most_viewed: Most viewed workspaces
-yesterday_activity: Yesterday's activity
+ws_most_viewed: 'Most viewed workspaces'
+yes: 'yes'
+yesterday_activity: 'Yesterday''s activity'
 Your changes have been saved: 'Your changes have been saved'
