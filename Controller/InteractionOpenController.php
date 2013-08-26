@@ -142,4 +142,26 @@ class InteractionOpenController extends Controller
             )
         );
     }
+    
+    /**
+     * To test the open question by the teacher
+     *
+     */
+    public function responseOpenAction()
+    {
+        $request = $this->get('request');
+        $interOpen = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:InteractionOpen')
+                          ->find($request->request->get('interactionOpenToValidated'));
+        
+        if($interOpen->getTypeOpenQuestion() == 'long'){
+            $response = $request->request->get('interOpenLong');
+        }
+        
+        return $this->render(
+            'UJMExoBundle:InteractionOpen:openOverview.html.twig', array(
+            'interOpen'   => $interOpen,
+            'response'    => $response
+            )
+        );
+    }
 }

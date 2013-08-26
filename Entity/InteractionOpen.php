@@ -42,7 +42,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * UJM\ExoBundle\Entity\InteractionOpen
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\InteractionOpenRepository")
  * @ORM\Table(name="ujm_interaction_open")
  */
 class InteractionOpen
