@@ -634,9 +634,11 @@ class WorkspaceControllerTest extends MockeryTestCase
             ->once()
             ->andReturn(array('user' => 'user'));
 
+        $response = new JsonResponse(array('user' => 'user'));
+        
         $this->assertEquals(
-            new JsonResponse(array('user' => 'user')),
-            $this->getController()->addUserAction($workspace, $user)
+            $response->getContent(),
+            $this->getController()->addUserAction($workspace, $user)->getContent()
         );
     }
 
