@@ -227,7 +227,7 @@ print paper: Imprimer la copie
 
 # Q
 qcm: QCM
-qcm creation: Création d'une question de type QCM 
+qcm creation: Création d'une question de type QCM
 question: Question
 question creation: Création d'une question
 questionSharedWith: Cette question est partagée avec les utilisateurs suivants
@@ -245,6 +245,7 @@ result: Résultats
 role: Rôle
 
 # S
+saveNewOrder: Enregistrer le nouvel ordre
 sawHint: de pénalité pour indices vus
 searchQuestion: Chercher des questions
 seeDoc: Voir les questions liées à ce document

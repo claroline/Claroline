@@ -193,7 +193,7 @@ class ExerciseController extends Controller
 
         $exoAdmin = $this->isExerciseAdmin($id);
 
-        $max = 3; // Max Per Page
+        $max = 5; // Max Per Page
         $request = $this->get('request');
         $page = $request->query->get('page', 1);
 
@@ -281,7 +281,7 @@ class ExerciseController extends Controller
         $pagerMy = $request->query->get('pagerMy', 1); // Get the page of the array my question (default 1)
         $pagerShared = $request->query->get('pagerShared', 1); // Get the pager of the array my shared question (default 1)
         $pageToGo = $request->query->get('pageGoNow'); // Page to go for the list of the questions of the exercise
-        $max = 2; // Max of questions per page
+        $max = 5; // Max of questions per page
 
         // If change page of my questions array
         if ($click == 'my') {
@@ -640,6 +640,46 @@ class ExerciseController extends Controller
                 $response->getPaper()->getExercise()->getDispButtonInterrupt(), $workspace
             );
         }
+    }
+
+    /**
+     * To change the order of the questions into an exercise
+     *
+     */
+    public function changeQuestionOrderAction()
+    {
+        $request = $this->container->get('request');
+
+        if ($request->isXmlHttpRequest()) {
+            $exoID = $request->request->get('exoID');
+            $order = $request->request->get('order');
+
+            if ($exoID && $order) {
+
+                $length = count($order);
+
+                $em = $this->getDoctrine()->getManager();
+                $exoQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(array('exercise' => $exoID));
+
+                foreach ($exoQuestions as $exoQuestion) {
+                    for ($i = 0 ; $i < $length ; $i++) {
+                        if ($exoQuestion->getQuestion()->getId() == $order[$i]) {
+                            $exoQuestion->setOrdre($i + 1);
+                        }
+                    }
+                }
+            }
+        }
+
+        $em->persist($exoQuestion);
+        $em->flush();
+
+        return $this->redirect(
+            $this->generateUrl('ujm_exercise_questions', array(
+                'id' => $exoID
+                )
+            )
+        );
     }
 
     /**

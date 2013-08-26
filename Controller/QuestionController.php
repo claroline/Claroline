@@ -85,7 +85,7 @@ class QuestionController extends Controller
         $click = $request->query->get('click', 'my'); // Get which array to fchange page (default 'my question')
         $pagerMy = $request->query->get('pagerMy', 1); // Get the page of the array my question (default 1)
         $pagerShared = $request->query->get('pagerShared', 1); // Get the pager of the array my shared question (default 1)
-        $max = 3; // Max of questions per page
+        $max = 5; // Max of questions per page
 
         // If change page of my questions array
         if ($click == 'my') {
@@ -835,7 +835,7 @@ class QuestionController extends Controller
             $linkPaper = array();
 
             $request = $this->container->get('request');
-            $max = 3;
+            $max = 5;
             $page = $request->query->get('page', 1);
             $show = $request->query->get('show', 0);
 
@@ -1160,7 +1160,7 @@ class QuestionController extends Controller
         $questionWithResponse = array();
         $alreadyShared = array();
 
-        $max = 3; // Max questions displayed per page
+        $max = 5; // Max questions displayed per page
 
         $type = $request->query->get('type'); // In which column
         $whatToFind = $request->query->get('whatToFind'); // Which text to find

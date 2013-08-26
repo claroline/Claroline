@@ -31,3 +31,8 @@ ujm_exercise_validate_import:
 ujm_exercise_validate_import_shared:
     pattern: /import/shared/{exoID}/{qid}/{pageGoNow}
     defaults: { _controller: UJMExoBundle:Exercise:importValidateShared, pageGoNow: 1 }
+
+ujm_exercise_question_order:
+    pattern:  /ExerciseQuestion/changeOrder
+    defaults: { _controller: "UJMExoBundle:Exercise:changeQuestionOrder" }
+    requirements: { _method: post }

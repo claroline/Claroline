@@ -48,6 +48,11 @@
     <a href="{{ path('ujm_question_new', { 'exoID': exerciseID }) }}">{{ 'create a new entry' | trans }}</a>
     <br/><br/>
 
+    <button type="button" id="SaveOrder" style="display: none;"
+        onclick="SaveNewOrder('{{ path('ujm_exercise_question_order') }}', {{exerciseID}}, {{interactions|length}});">
+        {{ 'saveNewOrder' | trans }}
+    </button><br/>
+
     {% if interactions is not empty %}
         <table class="table table-striped table-bordered table-condensed"  id="QuestionArray">
             <thead>
@@ -59,28 +64,29 @@
                     <i class="icon-chevron-down" id="downC"  style="display: none;"></i>
                     {{ 'category' | trans }}
                 </th>
-                <th style="text-align: center"onclick="SortQuestions('Title', 'QuestionArray');"
+                <th style="text-align: center" onclick="SortQuestions('Title', 'QuestionArray');"
                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                     <i class="icon-chevron-up" id="upTi"  style="display: none;"></i>
                     <i class="icon-chevron-down" id="downTi"  style="display: none;"></i>
                     {{ 'title' | trans }}
                 </th>
-                <th style="text-align: center"onclick="SortQuestions('Type', 'QuestionArray');"
+                <th style="text-align: center" onclick="SortQuestions('Type', 'QuestionArray');"
                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                     <i class="icon-chevron-up" id="upTy"  style="display: none;"></i>
                     <i class="icon-chevron-down" id="downTy"  style="display: none;"></i>
                     {{ 'type' | trans }}
                 </th>
-                <th style="text-align: center"onclick="SortQuestions('Invite', 'QuestionArray')"
+                <th style="text-align: center" onclick="SortQuestions('Invite', 'QuestionArray')"
                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                     <i class="icon-chevron-up" id="upI"  style="display: none;"></i>
                     <i class="icon-chevron-down" id="downI"  style="display: none;"></i>
                     {{ 'question' | trans }}
                 </th>
-                    <th style="text-align: center">{{ 'actions' | trans }}</th>
+                <th style="text-align: center">{{ 'actions' | trans }}</th>
+                <th style="text-align: center">{{ 'order' | trans }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -113,8 +119,16 @@
                             </li>
                         </ul>
                     </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        <a href="#" onclick="changeOrderQuestion('up', '{{interaction.question.title|replace({'\'': '_'})}}');"><i class="icon-arrow-up" id="up{{i}}"></i></a>
+                        &nbsp;
+                        <a href="#" onclick="changeOrderQuestion('down', '{{interaction.question.title|replace({'\'': '_'})}}');"><i class="icon-arrow-down" id="down{{i}}"></i></a>
+                    </td>
+                    <td style="display: none;" id="qid{{i}}">
+                        {{ interaction.question.id }}
+                    </td>
                 </tr>
-                {% set i=i+1 %}
+                {% set i = i + 1 %}
             {% endfor %}
             </tbody>
         </table>
@@ -131,5 +145,6 @@
     {{ parent() }}
 
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/SortAndSearch.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ExerciceQuestion.js') }}"></script>
 
 {% endblock %}
