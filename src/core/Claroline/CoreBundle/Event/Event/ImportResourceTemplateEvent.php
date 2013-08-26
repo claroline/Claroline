@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Event\Event;
 
 use Symfony\Component\EventDispatcher\Event;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
@@ -20,7 +21,7 @@ class ImportResourceTemplateEvent extends Event
 
     public function __construct(
         array $config,
-        AbstractResource $parent,
+        ResourceNode $parent,
         User $user,
         AbstractWorkspace $workspace,
         array $roles,

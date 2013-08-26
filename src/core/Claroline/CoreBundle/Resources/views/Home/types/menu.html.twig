@@ -2,50 +2,74 @@
 
     {% if father is not defined %}
         <div class="content-element relative {{ size }}" data-id="{{ content.id }}" data-type="{{ type }}">
-            {% if region is defined and region == "header" %}
-                <ul class="nav nav-pills">
-            {% elseif region is defined and region == "footer" %}
+            {% if region is defined and (region == "header" or region == "footer") %}
                 <ul class="nav nav-pills">
             {% else %}
-                <ul class="nav nav-tabs nav-stacked">
+                <div class="list-group menu">
             {% endif %}
     {% endif %}
 
     {% if content.title != "" and (father is defined or (region is not defined or (region is defined and region != 'footer' and region != 'header'))) %}
-    <li {% if father is defined %}
-            class="content-element relative{{ content.content | activeLink }}"
-            data-id="{{ content.id }}"
-            data-type="{{ type }}"
-            data-father="{{ father }}"
-        {% else %}
-            class="disabled"
-        {% endif %}>
-            <a {% if content.content is defined and content.content != "" %}href="{{ content.content | homeLink }}"{% endif %}>
-                {% if father is not defined %}<b>{% endif %}
+        {% if region is defined and (region == "header" or region == "footer") %}
+             <li {% if father is defined %}
+                class="{% if region != "header" and region != "footer" %}list-group-item {% endif %}content-element relative{{ content.content | activeLink }}"
+                data-id="{{ content.id }}"
+                data-type="{{ type }}"
+                data-father="{{ father }}"
+            {% else %}
+                class="{% if region != "header" and region != "footer" %}list-group-item {% endif %}disabled"
+            {% endif %}>
+            {% if content.content is defined and content.content != "" %}
+                <a  href="{{ content.content | homeLink }}">
+                    {{ content.title }}
+                </a>
+            {% else %}
                 {{ content.title }}
-                {% if father is not defined %}</b>{% endif %}
-
-                {% if father is defined and ((region is defined and (region != 'header' and region != 'footer')) or region is not defined) %}
-                    <i class="icon-chevron-right pull-right"></i>
-                {% endif %}
-
-            </a>
-            {% if (region is defined and region != 'header' and region != 'footer') or region is not defined %}
-                  {% render controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'father': father  }) %}
             {% endif %}
-        </li>
+            </li>
+        {% else %}
+             {% if father is defined %}
+                 <div class="content-element relative{% if region != "header" and region != "footer" %} list-group-item {% endif %}{{ content.content | activeLink }}">
+                    <a data-id="{{ content.id }}"
+                        data-type="{{ type }}"
+                        data-father="{{ father }}"
+                        {% if content.content is defined and content.content != "" %}
+                            href="{{ content.content | homeLink }}"
+                        {% endif %}
+                        >
+                            {{ content.title }}
+                    </a>
+                    {% if (region is defined and region != 'header' and region != 'footer') or region is not defined %}
+                        {% render controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'father': father  }) %}
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="{% if region != "header" and region != "footer" %}list-group-item {% endif %}disabled relative">
+                    {{ content.title }}
+                    {% if (region is defined and region != 'header' and region != 'footer') or region is not defined %}
+                        {% render controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'father': father  }) %}
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endif %}
+
     {% endif %}
 
     {% if father is not defined %}
 
-            {% if region is defined %}
-                {% render controller("ClarolineCoreBundle:Home:type", { 'type': type, 'father': content.id, 'region': region }) %}
-            {% else %}
-                {% render controller("ClarolineCoreBundle:Home:type", { 'type': type, 'father': content.id }) %}
-            {% endif%}
+        {% if region is defined %}
+            {% render controller("ClarolineCoreBundle:Home:type", { 'type': type, 'father': content.id, 'region': region }) %}
+        {% else %}
+            {% render controller("ClarolineCoreBundle:Home:type", { 'type': type, 'father': content.id }) %}
+        {% endif%}
 
-            </ul>
-        </div>
+        {% if region is defined and (region == "header" or region == "footer") %}
+                </ul>
+            </div>
+        {% else %}
+                </div>
+            </div>
+        {% endif %}
 
     {% endif %}
 

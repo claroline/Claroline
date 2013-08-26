@@ -102,10 +102,10 @@ class Log
     protected $toolName;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
-    protected $resource;
+    protected $resourceNode;
 
     /**
      * @ORM\ManyToOne(
@@ -497,12 +497,12 @@ class Log
     /**
      * Set resource
      *
-     * @param  \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param  \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
      * @return Log
      */
-    public function setResource(\Claroline\CoreBundle\Entity\Resource\AbstractResource $resource = null)
+    public function setResourceNode(\Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode = null)
     {
-        $this->resource = $resource;
+        $this->resourceNode = $resourceNode;
 
         return $this;
     }
@@ -510,11 +510,11 @@ class Log
     /**
      * Get resource
      *
-     * @return \Claroline\CoreBundle\Entity\Resource\AbstractResource
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
-    public function getResource()
+    public function getResourceNode()
     {
-        return $this->resource;
+        return $this->resourceNode;
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -38,14 +38,14 @@ class ActivityController extends Controller
 
     /**
      * @EXT\Route(
-     *    "/{activityId}/add/resource/{resourceId}",
+     *    "/{activityId}/add/resource/{nodeId}",
      *    name="claro_activity_add_resource",
           options={"expose"=true}
      * )
      * @EXT\ParamConverter(
-     *      "resource",
-     *      class="ClarolineCoreBundle:Resource\AbstractResource",
-     *      options={"id" = "resourceId", "strictId" = true}
+     *      "node",
+     *      class="ClarolineCoreBundle:Resource\ResourceNode",
+     *      options={"id" = "nodeId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
      *      "activity",
@@ -55,17 +55,17 @@ class ActivityController extends Controller
      *
      * Adds a resource to an activity.
      *
-     * @param AbstractResource $resource
-     * @param Activity         $activity
+     * @param ResourceNode $node
+     * @param Activity     $activity
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function addResourceAction(AbstractResource $resource, Activity $activity)
+    public function addResourceAction(ResourceNode $node, Activity $activity)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $link = new ResourceActivity();
         $link->setActivity($activity);
-        $link->setResource($resource);
+        $link->setResourceNode($node);
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findBy(array('activity' => $activity->getId()));
         $order = count($resourceActivities);
@@ -73,28 +73,28 @@ class ActivityController extends Controller
         $em->persist($link);
         $em->flush();
 
-        return new JsonResponse(array($this->resourceManager->toArray($resource)));
+        return new JsonResponse(array($this->resourceManager->toArray($node)));
     }
 
     /**
      * @EXT\Route(
-     *     "/{activityId}/remove/resource/{resourceId}",
+     *     "/{activityId}/remove/resource/{nodeId}",
      *     name="claro_activity_remove_resource",
      *     options={"expose"=true}
      * )
      *
      * Remove a resource from an activity.
      *
-     * @param type $resourceId the resource id
-     * @param type $activityId the activity id
+     * @param integer $nodeId     the node id
+     * @param integer $activityId the activity id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function removeResourceAction($resourceId, $activityId)
+    public function removeResourceAction($nodeId, $activityId)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $repo = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity');
-        $resourceActivity = $repo->findOneBy(array('resource' => $resourceId, 'activity' => $activityId));
+        $resourceActivity = $repo->findOneBy(array('resourceNode' => $nodeId, 'activity' => $activityId));
         $em->remove($resourceActivity);
         $em->flush();
 
@@ -124,7 +124,7 @@ class ActivityController extends Controller
 
         foreach ($resourceActivities as $resourceActivity) {
             foreach ($params['ids'] as $key => $id) {
-                if ($id == $resourceActivity->getResource()->getId()) {
+                if ($id == $resourceActivity->getResourceNode()->getId()) {
                     $resourceActivity->setSequenceOrder($key);
                     $em->persist($resourceActivity);
                 }
@@ -138,14 +138,9 @@ class ActivityController extends Controller
 
     /**
      * @EXT\Route(
-     *    "/leftmenu/{activityId}",
+     *    "/leftmenu/{activity}",
      *    name="claro_activity_left_menu",
      *    options={"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *      "activity",
-     *      class="ClarolineCoreBundle:Resource\Activity",
-     *      options={"id" = "activityId", "strictId" = true}
      * )
      *
      * @EXT\Template("ClarolineCoreBundle:Activity/player:leftMenu.html.twig")
@@ -177,16 +172,7 @@ class ActivityController extends Controller
     }
 
     /**
-     * @EXT\Route (
-     *     "/player/{activityId}",
-     *     name="claro_activity_show_player"
-     * )
-     * @EXT\ParamConverter(
-     *      "activity",
-     *      class="ClarolineCoreBundle:Resource\Activity",
-     *      options={"id" = "activityId", "strictId" = true}
-     * )
-     *
+     * @EXT\Route ("/player/{activity}", name="claro_activity_show_player")
      * @EXT\Template("ClarolineCoreBundle:Activity/player:activity.html.twig")
      *
      * Shows the player layout.
@@ -200,7 +186,7 @@ class ActivityController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findResourceActivities($activity);
-        $resource = isset($resourceActivities[0]) ? $resourceActivities[0]->getResource(): null;
+        $resource = isset($resourceActivities[0]) ? $resourceActivities[0]->getResourceNode(): null;
 
         return array(
             'activity' => $activity,
@@ -209,16 +195,7 @@ class ActivityController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *     "/instructions/{activityId}",
-     *     name="claro_activity_show_instructions"
-     * )
-     * @EXT\ParamConverter(
-     *      "activity",
-     *      class="ClarolineCoreBundle:Resource\Activity",
-     *      options={"id" = "activityId", "strictId" = true}
-     * )
-     *
+     * @EXT\Route("/instructions/{activity}", name="claro_activity_show_instructions")
      * @EXT\Template("ClarolineCoreBundle:Activity/player:instructions.html.twig")
      *
      * Show the instructions of an activity.
@@ -244,10 +221,13 @@ class ActivityController extends Controller
     private function countSteps(Activity $activity, $countSteps)
     {
         foreach ($activity->getResourceActivities() as $resourceActivity) {
-            if ($resourceActivity->getResource()->getResourceType()->getName() !== 'activity') {
+            if ($resourceActivity->getResourceNode()->getResourceType()->getName() !== 'activity') {
                 $countSteps++;
             } else {
-                $countSteps = $this->countSteps($resourceActivity->getResource(), $countSteps);
+                $countSteps = $this->countSteps(
+                    $this->resourceManager->getResourceFromNode($resourceActivity->getResourceNode()),
+                    $countSteps
+                );
             }
         }
 
@@ -268,8 +248,11 @@ class ActivityController extends Controller
         foreach ($activity->getResourceActivities() as $resourceActivity) {
             $countItems++;
 
-            if ($resourceActivity->getResource()->getResourceType()->getName() == 'activity') {
-                $countItems = $this->countItems($resourceActivity->getResource(), $countItems);
+            if ($resourceActivity->getResourceNode()->getResourceType()->getName() == 'activity') {
+                $countItems = $this->countItems(
+                    $this->resourceManager->getResourceFromNode($resourceActivity->getResourceNode()),
+                    $countItems
+                );
             }
         }
 
@@ -293,14 +276,20 @@ class ActivityController extends Controller
         foreach ($activity->getResourceActivities() as $resourceActivity) {
             $step++;
 
-            if ($resourceActivity->getResource()->getResourceType()->getName() == 'activity') {
+            if ($resourceActivity->getResourceNode()->getResourceType()->getName() == 'activity') {
                 $items[] = array(
-                    'resource' => $resourceActivity->getResource(),
+                    'resource' => $this->resourceManager->getResourceFromNode($resourceActivity->getResourceNode()),
                     'step' => $step,
-                    'resources' => $this->getItems($resourceActivity->getResource(), $step)
+                    'resources' => $this->getItems(
+                        $this->resourceManager->getResourceFromNode($resourceActivity->getResourceNode()),
+                        $step
+                    )
                 );
             } else {
-                $items[] = array('resource' => $resourceActivity->getResource(), 'step' => $step);
+                $items[] = array(
+                    'resource' => $this->resourceManager->getResourceFromNode($resourceActivity->getResourceNode()),
+                    'step' => $step
+                );
             }
         }
 

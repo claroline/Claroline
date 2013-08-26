@@ -26,11 +26,11 @@
 {% endmacro %}
 {% macro displayControls() %}
     {% if app.user %}
-        <button class="btn btn-secondary action-delete-button" data-action="remove">
+        <button class="btn btn-default action-delete-button" data-action="remove">
             <i class="icon-trash"></i>
             {{ 'delete'|trans({}, 'platform') }}
         </button>
-        <button class="btn btn-secondary action-restore-button" data-action="restore">
+        <button class="btn btn-default action-restore-button" data-action="restore">
             <i class="icon-trash"></i>
             {{ 'restore'|trans({}, 'platform') }}
         </button>
@@ -79,15 +79,19 @@
     </script>
 {% endblock %}
 {% block section_content %}
-
-    <div class="search-bar">
-        {{ displayControls() }}
-
-        <div class="input-append pull-right">
-            <input class="input-medium" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
-            <button class="filter btn" type="button" id="search-button">
-                <i class="icon-search"></i>
-            </button>
+    <div class="search-bar row">
+        <div class="col-lg-8">
+            {{ displayControls() }}
+        </div>
+        <div class="col-lg-4">
+             <div class="input-group">
+                <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
+                <span class="input-group-btn">
+                    <button class="filter btn btn-default" type="button" id="search-button">
+                        <i class="icon-search"></i>
+                    </button>
+                </span>
+            </div>
         </div>
     </div>
 
@@ -123,5 +127,5 @@
         </tbody>
     </table>
     {{ renderPager(search, pager) }}
-    {{ displayControls() }}
+    <div>{{ displayControls() }}</div>
 {% endblock %}

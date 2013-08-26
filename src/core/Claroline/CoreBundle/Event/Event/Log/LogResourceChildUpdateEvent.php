@@ -2,6 +2,8 @@
 
 namespace Claroline\CoreBundle\Event\Event\Log;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+
 class LogResourceChildUpdateEvent extends LogGenericEvent
 {
     const ACTION = 'resource_child_update';
@@ -31,30 +33,30 @@ class LogResourceChildUpdateEvent extends LogGenericEvent
      *
      * Please respect Underscore naming convention for property names (all lower case words separated with underscores)
      */
-    public function __construct($resource, $childType, $childAction, $childDetails)
+    public function __construct(ResourceNode $node, $childType, $childAction, $childDetails)
     {
         parent::__construct(
             self::ACTION,
             array(
                 'resource' => array(
-                    'name' => $resource->getName(),
-                    'path' => $resource->getPathForDisplay()
+                    'name' => $node->getName(),
+                    'path' => $node->getPathForDisplay()
                 ),
                 'workspace' => array(
-                    'name' => $resource->getWorkspace()->getName()
+                    'name' => $node->getWorkspace()->getName()
                 ),
                 'owner' => array(
-                    'lastName' => $resource->getCreator()->getLastName(),
-                    'firstName' => $resource->getCreator()->getFirstName()
+                    'lastName' => $node->getCreator()->getLastName(),
+                    'firstName' => $node->getCreator()->getFirstName()
                 ),
                 'child' => $childDetails
             ),
             null,
             null,
-            $resource,
+            $node,
             null,
-            $resource->getWorkspace(),
-            $resource->getCreator(),
+            $node->getWorkspace(),
+            $node->getCreator(),
             null,
             $childType,
             $childAction
