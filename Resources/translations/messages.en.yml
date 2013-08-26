@@ -228,7 +228,7 @@ print paper: Print paper
 
 # Q
 qcm: QCM
-qcm creation: Creation of a question of type QCM 
+qcm creation: Creation of a question of type QCM
 question: Question
 question creation: Question creation
 questionSharedWith: This question is shared with users below
@@ -246,6 +246,7 @@ result: Results
 role: Role
 
 # S
+saveNewOrder: Save the new order
 sawHint: of penalty for seen hints
 searchQuestion: Search questions
 seeDoc: See linked questions to this document
