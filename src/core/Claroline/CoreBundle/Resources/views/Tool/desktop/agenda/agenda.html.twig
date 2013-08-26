@@ -20,20 +20,15 @@
     ])
     }}
 
-    <div id="selectWorkspace">
-        {% for c in cours %}
-        {% if c is empty %} 
-        {{ 'desktop'|trans({}, 'platform') }}
-        {% else %}
-        {{c}}
-        {% endif %}
-        <input type="checkbox" name="{{c}}"  class="filter" />
-        {% endfor %}
-    </div>
-    <div class="row">
-        <div id="events"></div>
-            <div class="row">
-            <div id='calendar' class="col-lg-9"></div>
+        <div id="selectWorkspace">
+            {% for c in cours %}
+                {{c}}
+                <input type="checkbox" name="{{c}}"  class="filter" />
+            {% endfor %}
+        </div>
+        <div class="row">
+            <div id="events"></div>
+            <div id='calendar' class="col-md-8"></div>
             <div  id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -61,9 +56,11 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3">
-                <h4> <u>{{'tasks'|trans({}, 'agenda') }} </u></h4>
-                {% for e in listEvents  %}
+            <div class="col-md-3">
+
+                <h4> <u>{{'task'|trans({}, 'agenda') }} </u></h4>
+                {% for e in listEvents if e.allDay == 1 %}
+
                     <div class="panel panel-default">
                         <button type="button" class="delete-task close" data-event-id="{{e.id}}" data-dismiss="alert">&times;</button>
                         <h5 data-event-title="{{e.title}}"> {{ e.title }}</h5>

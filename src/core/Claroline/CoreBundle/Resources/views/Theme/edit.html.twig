@@ -36,10 +36,10 @@
     </div>
     <div class="panel-body">
         <div class="row">
-            <div class="col-lg-2">
+            <div class="col-md-2">
                 {{ "Theme name" | trans({}, "") }}:
             </div>
-            <div class="col-lg-4">
+            <div class="col-md-4">
                 <input class="form-control" type="text" id="theme-name"{% if theme is defined %} value="{{ theme.getName() }}"{% endif %}>
             </div>
         </div>
