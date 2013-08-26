@@ -15,10 +15,11 @@ class LipsumGenerator
      *
      * @param integer $nbWords
      * @param boolean $isFullText
+     * @param integer $maxChar    the miximal size of the string
      *
      * @return string
      */
-    public function generateLipsum($nbWords = 0, $isFullText = false, $maxCharSize = 10000)
+    public function generateLipsum($nbWords = 0, $isFullText = false, $maxChar = 10000)
     {
         $words = $this->getArrayLipsum();
         $content = '';
@@ -45,10 +46,10 @@ class LipsumGenerator
             }
 
 
-            if ((strlen($content) + strlen($nextPart)) < $maxCharSize - 1) {
+            if ((strlen($content) + strlen($nextPart)) < $maxChar - 1) {
                 $content .= $nextPart;
             }
-            
+
             $i++;
         }
 
