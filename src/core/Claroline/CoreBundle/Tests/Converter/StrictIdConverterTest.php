@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Converter;
 
-use \Mockery as m;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 

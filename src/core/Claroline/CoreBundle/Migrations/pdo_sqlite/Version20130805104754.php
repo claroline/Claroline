@@ -16,19 +16,19 @@ class Version20130805104754 extends AbstractMigration
     {
         $this->addSql("
             CREATE TABLE claro_user (
-                id INTEGER NOT NULL, 
-                workspace_id INTEGER DEFAULT NULL, 
-                first_name VARCHAR(50) NOT NULL, 
-                last_name VARCHAR(50) NOT NULL, 
-                username VARCHAR(255) NOT NULL, 
-                password VARCHAR(255) NOT NULL, 
-                salt VARCHAR(255) NOT NULL, 
-                phone VARCHAR(255) DEFAULT NULL, 
-                mail VARCHAR(255) NOT NULL, 
-                administrative_code VARCHAR(255) DEFAULT NULL, 
-                creation_date DATETIME NOT NULL, 
-                reset_password VARCHAR(255) DEFAULT NULL, 
-                hash_time INTEGER DEFAULT NULL, 
+                id INTEGER NOT NULL,
+                workspace_id INTEGER DEFAULT NULL,
+                first_name VARCHAR(50) NOT NULL,
+                last_name VARCHAR(50) NOT NULL,
+                username VARCHAR(255) NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                salt VARCHAR(255) NOT NULL,
+                phone VARCHAR(255) DEFAULT NULL,
+                mail VARCHAR(255) NOT NULL,
+                administrative_code VARCHAR(255) DEFAULT NULL,
+                creation_date DATETIME NOT NULL,
+                reset_password VARCHAR(255) DEFAULT NULL,
+                hash_time INTEGER DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -43,8 +43,8 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_user_group (
-                user_id INTEGER NOT NULL, 
-                group_id INTEGER NOT NULL, 
+                user_id INTEGER NOT NULL,
+                group_id INTEGER NOT NULL,
                 PRIMARY KEY(user_id, group_id)
             )
         ");
@@ -56,8 +56,8 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_user_role (
-                user_id INTEGER NOT NULL, 
-                role_id INTEGER NOT NULL, 
+                user_id INTEGER NOT NULL,
+                role_id INTEGER NOT NULL,
                 PRIMARY KEY(user_id, role_id)
             )
         ");
@@ -69,8 +69,8 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_group (
-                id INTEGER NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
+                id INTEGER NOT NULL,
+                name VARCHAR(255) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -79,8 +79,8 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_group_role (
-                group_id INTEGER NOT NULL, 
-                role_id INTEGER NOT NULL, 
+                group_id INTEGER NOT NULL,
+                role_id INTEGER NOT NULL,
                 PRIMARY KEY(group_id, role_id)
             )
         ");
@@ -92,12 +92,12 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_role (
-                id INTEGER NOT NULL, 
-                workspace_id INTEGER DEFAULT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                translation_key VARCHAR(255) NOT NULL, 
-                is_read_only BOOLEAN NOT NULL, 
-                type INTEGER NOT NULL, 
+                id INTEGER NOT NULL,
+                workspace_id INTEGER DEFAULT NULL,
+                name VARCHAR(255) NOT NULL,
+                translation_key VARCHAR(255) NOT NULL,
+                is_read_only BOOLEAN NOT NULL,
+                type INTEGER NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -109,22 +109,22 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_resource (
-                id INTEGER NOT NULL, 
-                license_id INTEGER DEFAULT NULL, 
-                resource_type_id INTEGER NOT NULL, 
-                user_id INTEGER NOT NULL, 
-                icon_id INTEGER DEFAULT NULL, 
-                parent_id INTEGER DEFAULT NULL, 
-                workspace_id INTEGER NOT NULL, 
-                next_id INTEGER DEFAULT NULL, 
-                previous_id INTEGER DEFAULT NULL, 
-                creation_date DATETIME NOT NULL, 
-                modification_date DATETIME NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                lvl INTEGER DEFAULT NULL, 
-                path VARCHAR(3000) DEFAULT NULL, 
-                mime_type VARCHAR(255) DEFAULT NULL, 
-                discr VARCHAR(255) NOT NULL, 
+                id INTEGER NOT NULL,
+                license_id INTEGER DEFAULT NULL,
+                resource_type_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                icon_id INTEGER DEFAULT NULL,
+                parent_id INTEGER DEFAULT NULL,
+                workspace_id INTEGER NOT NULL,
+                next_id INTEGER DEFAULT NULL,
+                previous_id INTEGER DEFAULT NULL,
+                creation_date DATETIME NOT NULL,
+                modification_date DATETIME NOT NULL,
+                name VARCHAR(255) NOT NULL,
+                lvl INTEGER DEFAULT NULL,
+                path VARCHAR(3000) DEFAULT NULL,
+                mime_type VARCHAR(255) DEFAULT NULL,
+                discr VARCHAR(255) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -154,21 +154,21 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_workspace (
-                id INTEGER NOT NULL, 
-                user_id INTEGER DEFAULT NULL, 
-                parent_id INTEGER DEFAULT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                code VARCHAR(255) NOT NULL, 
-                is_public BOOLEAN DEFAULT NULL, 
-                displayable BOOLEAN DEFAULT NULL, 
-                guid VARCHAR(255) NOT NULL, 
-                self_registration BOOLEAN DEFAULT NULL, 
-                self_unregistration BOOLEAN DEFAULT NULL, 
-                discr VARCHAR(255) NOT NULL, 
-                lft INTEGER DEFAULT NULL, 
-                lvl INTEGER DEFAULT NULL, 
-                rgt INTEGER DEFAULT NULL, 
-                root INTEGER DEFAULT NULL, 
+                id INTEGER NOT NULL,
+                user_id INTEGER DEFAULT NULL,
+                parent_id INTEGER DEFAULT NULL,
+                name VARCHAR(255) NOT NULL,
+                code VARCHAR(255) NOT NULL,
+                is_public BOOLEAN DEFAULT NULL,
+                displayable BOOLEAN DEFAULT NULL,
+                guid VARCHAR(255) NOT NULL,
+                self_registration BOOLEAN DEFAULT NULL,
+                self_unregistration BOOLEAN DEFAULT NULL,
+                discr VARCHAR(255) NOT NULL,
+                lft INTEGER DEFAULT NULL,
+                lvl INTEGER DEFAULT NULL,
+                rgt INTEGER DEFAULT NULL,
+                root INTEGER DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -186,8 +186,8 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_aggregation (
-                aggregator_workspace_id INTEGER NOT NULL, 
-                simple_workspace_id INTEGER NOT NULL, 
+                aggregator_workspace_id INTEGER NOT NULL,
+                simple_workspace_id INTEGER NOT NULL,
                 PRIMARY KEY(
                     aggregator_workspace_id, simple_workspace_id
                 )
@@ -201,12 +201,12 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_user_message (
-                id INTEGER NOT NULL, 
-                user_id INTEGER NOT NULL, 
-                message_id INTEGER NOT NULL, 
-                is_removed BOOLEAN NOT NULL, 
-                is_read BOOLEAN NOT NULL, 
-                is_sent BOOLEAN NOT NULL, 
+                id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                message_id INTEGER NOT NULL,
+                is_removed BOOLEAN NOT NULL,
+                is_read BOOLEAN NOT NULL,
+                is_sent BOOLEAN NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -218,12 +218,12 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_ordered_tool (
-                id INTEGER NOT NULL, 
-                workspace_id INTEGER DEFAULT NULL, 
-                tool_id INTEGER NOT NULL, 
-                user_id INTEGER DEFAULT NULL, 
-                display_order INTEGER NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
+                id INTEGER NOT NULL,
+                workspace_id INTEGER DEFAULT NULL,
+                tool_id INTEGER NOT NULL,
+                user_id INTEGER DEFAULT NULL,
+                display_order INTEGER NOT NULL,
+                name VARCHAR(255) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -244,8 +244,8 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_ordered_tool_role (
-                orderedtool_id INTEGER NOT NULL, 
-                role_id INTEGER NOT NULL, 
+                orderedtool_id INTEGER NOT NULL,
+                role_id INTEGER NOT NULL,
                 PRIMARY KEY(orderedtool_id, role_id)
             )
         ");
@@ -257,14 +257,14 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_resource_rights (
-                id INTEGER NOT NULL, 
-                role_id INTEGER NOT NULL, 
-                resource_id INTEGER NOT NULL, 
-                can_delete BOOLEAN NOT NULL, 
-                can_open BOOLEAN NOT NULL, 
-                can_edit BOOLEAN NOT NULL, 
-                can_copy BOOLEAN NOT NULL, 
-                can_export BOOLEAN NOT NULL, 
+                id INTEGER NOT NULL,
+                role_id INTEGER NOT NULL,
+                resource_id INTEGER NOT NULL,
+                can_delete BOOLEAN NOT NULL,
+                can_open BOOLEAN NOT NULL,
+                can_edit BOOLEAN NOT NULL,
+                can_copy BOOLEAN NOT NULL,
+                can_export BOOLEAN NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -279,8 +279,8 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_list_type_creation (
-                resource_rights_id INTEGER NOT NULL, 
-                resource_type_id INTEGER NOT NULL, 
+                resource_rights_id INTEGER NOT NULL,
+                resource_type_id INTEGER NOT NULL,
                 PRIMARY KEY(
                     resource_rights_id, resource_type_id
                 )
@@ -294,12 +294,12 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_resource_type (
-                id INTEGER NOT NULL, 
-                plugin_id INTEGER DEFAULT NULL, 
-                parent_id INTEGER DEFAULT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                class VARCHAR(255) DEFAULT NULL, 
-                is_exportable BOOLEAN NOT NULL, 
+                id INTEGER NOT NULL,
+                plugin_id INTEGER DEFAULT NULL,
+                parent_id INTEGER DEFAULT NULL,
+                name VARCHAR(255) NOT NULL,
+                class VARCHAR(255) DEFAULT NULL,
+                is_exportable BOOLEAN NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -314,10 +314,10 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_theme (
-                id INTEGER NOT NULL, 
-                plugin_id INTEGER DEFAULT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                path VARCHAR(255) NOT NULL, 
+                id INTEGER NOT NULL,
+                plugin_id INTEGER DEFAULT NULL,
+                name VARCHAR(255) NOT NULL,
+                path VARCHAR(255) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -326,24 +326,24 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_log (
-                id INTEGER NOT NULL, 
-                doer_id INTEGER DEFAULT NULL, 
-                receiver_id INTEGER DEFAULT NULL, 
-                receiver_group_id INTEGER DEFAULT NULL, 
-                owner_id INTEGER DEFAULT NULL, 
-                workspace_id INTEGER DEFAULT NULL, 
-                resource_id INTEGER DEFAULT NULL, 
-                resource_type_id INTEGER DEFAULT NULL, 
-                role_id INTEGER DEFAULT NULL, 
-                \"action\" VARCHAR(255) NOT NULL, 
-                date_log DATETIME NOT NULL, 
-                short_date_log DATE NOT NULL, 
-                details CLOB DEFAULT NULL, 
-                doer_type VARCHAR(255) NOT NULL, 
-                doer_ip VARCHAR(255) DEFAULT NULL, 
-                tool_name VARCHAR(255) DEFAULT NULL, 
-                child_type VARCHAR(255) DEFAULT NULL, 
-                child_action VARCHAR(255) DEFAULT NULL, 
+                id INTEGER NOT NULL,
+                doer_id INTEGER DEFAULT NULL,
+                receiver_id INTEGER DEFAULT NULL,
+                receiver_group_id INTEGER DEFAULT NULL,
+                owner_id INTEGER DEFAULT NULL,
+                workspace_id INTEGER DEFAULT NULL,
+                resource_id INTEGER DEFAULT NULL,
+                resource_type_id INTEGER DEFAULT NULL,
+                role_id INTEGER DEFAULT NULL,
+                \"action\" VARCHAR(255) NOT NULL,
+                date_log DATETIME NOT NULL,
+                short_date_log DATE NOT NULL,
+                details CLOB DEFAULT NULL,
+                doer_type VARCHAR(255) NOT NULL,
+                doer_ip VARCHAR(255) DEFAULT NULL,
+                tool_name VARCHAR(255) DEFAULT NULL,
+                child_type VARCHAR(255) DEFAULT NULL,
+                child_action VARCHAR(255) DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -373,8 +373,8 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_log_doer_platform_roles (
-                log_id INTEGER NOT NULL, 
-                role_id INTEGER NOT NULL, 
+                log_id INTEGER NOT NULL,
+                role_id INTEGER NOT NULL,
                 PRIMARY KEY(log_id, role_id)
             )
         ");
@@ -386,8 +386,8 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_log_doer_workspace_roles (
-                log_id INTEGER NOT NULL, 
-                role_id INTEGER NOT NULL, 
+                log_id INTEGER NOT NULL,
+                role_id INTEGER NOT NULL,
                 PRIMARY KEY(log_id, role_id)
             )
         ");
@@ -399,10 +399,10 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_log_desktop_widget_config (
-                id INTEGER NOT NULL, 
-                user_id INTEGER DEFAULT NULL, 
-                is_default BOOLEAN NOT NULL, 
-                amount INTEGER NOT NULL, 
+                id INTEGER NOT NULL,
+                user_id INTEGER DEFAULT NULL,
+                is_default BOOLEAN NOT NULL,
+                amount INTEGER NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -411,29 +411,29 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_log_workspace_widget_config (
-                id INTEGER NOT NULL, 
-                workspace_id INTEGER DEFAULT NULL, 
-                is_default BOOLEAN NOT NULL, 
-                amount INTEGER NOT NULL, 
-                resource_copy BOOLEAN NOT NULL, 
-                resource_create BOOLEAN NOT NULL, 
-                resource_shortcut BOOLEAN NOT NULL, 
-                resource_read BOOLEAN NOT NULL, 
-                ws_tool_read BOOLEAN NOT NULL, 
-                resource_export BOOLEAN NOT NULL, 
-                resource_update BOOLEAN NOT NULL, 
-                resource_update_rename BOOLEAN NOT NULL, 
-                resource_child_update BOOLEAN NOT NULL, 
-                resource_delete BOOLEAN NOT NULL, 
-                resource_move BOOLEAN NOT NULL, 
-                ws_role_subscribe_user BOOLEAN NOT NULL, 
-                ws_role_subscribe_group BOOLEAN NOT NULL, 
-                ws_role_unsubscribe_user BOOLEAN NOT NULL, 
-                ws_role_unsubscribe_group BOOLEAN NOT NULL, 
-                ws_role_change_right BOOLEAN NOT NULL, 
-                ws_role_create BOOLEAN NOT NULL, 
-                ws_role_delete BOOLEAN NOT NULL, 
-                ws_role_update BOOLEAN NOT NULL, 
+                id INTEGER NOT NULL,
+                workspace_id INTEGER DEFAULT NULL,
+                is_default BOOLEAN NOT NULL,
+                amount INTEGER NOT NULL,
+                resource_copy BOOLEAN NOT NULL,
+                resource_create BOOLEAN NOT NULL,
+                resource_shortcut BOOLEAN NOT NULL,
+                resource_read BOOLEAN NOT NULL,
+                ws_tool_read BOOLEAN NOT NULL,
+                resource_export BOOLEAN NOT NULL,
+                resource_update BOOLEAN NOT NULL,
+                resource_update_rename BOOLEAN NOT NULL,
+                resource_child_update BOOLEAN NOT NULL,
+                resource_delete BOOLEAN NOT NULL,
+                resource_move BOOLEAN NOT NULL,
+                ws_role_subscribe_user BOOLEAN NOT NULL,
+                ws_role_subscribe_group BOOLEAN NOT NULL,
+                ws_role_unsubscribe_user BOOLEAN NOT NULL,
+                ws_role_unsubscribe_group BOOLEAN NOT NULL,
+                ws_role_change_right BOOLEAN NOT NULL,
+                ws_role_create BOOLEAN NOT NULL,
+                ws_role_delete BOOLEAN NOT NULL,
+                ws_role_update BOOLEAN NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -442,8 +442,8 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_log_hidden_workspace_widget_config (
-                workspace_id INTEGER NOT NULL, 
-                user_id INTEGER NOT NULL, 
+                workspace_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
                 PRIMARY KEY(workspace_id, user_id)
             )
         ");
@@ -452,9 +452,9 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_template (
-                id INTEGER NOT NULL, 
-                hash VARCHAR(255) NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
+                id INTEGER NOT NULL,
+                hash VARCHAR(255) NOT NULL,
+                name VARCHAR(255) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -463,11 +463,11 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_tag_hierarchy (
-                id INTEGER NOT NULL, 
-                user_id INTEGER DEFAULT NULL, 
-                tag_id INTEGER NOT NULL, 
-                parent_id INTEGER NOT NULL, 
-                level INTEGER NOT NULL, 
+                id INTEGER NOT NULL,
+                user_id INTEGER DEFAULT NULL,
+                tag_id INTEGER NOT NULL,
+                parent_id INTEGER NOT NULL,
+                level INTEGER NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -482,9 +482,9 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_rel_workspace_tag (
-                id INTEGER NOT NULL, 
-                workspace_id INTEGER NOT NULL, 
-                tag_id INTEGER NOT NULL, 
+                id INTEGER NOT NULL,
+                workspace_id INTEGER NOT NULL,
+                tag_id INTEGER NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -499,9 +499,9 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_tag (
-                id INTEGER NOT NULL, 
-                user_id INTEGER DEFAULT NULL, 
-                name VARCHAR(255) NOT NULL, 
+                id INTEGER NOT NULL,
+                user_id INTEGER DEFAULT NULL,
+                name VARCHAR(255) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -513,11 +513,11 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_plugin (
-                id INTEGER NOT NULL, 
-                vendor_name VARCHAR(50) NOT NULL, 
-                short_name VARCHAR(50) NOT NULL, 
-                has_options BOOLEAN NOT NULL, 
-                icon VARCHAR(255) NOT NULL, 
+                id INTEGER NOT NULL,
+                vendor_name VARCHAR(50) NOT NULL,
+                short_name VARCHAR(50) NOT NULL,
+                has_options BOOLEAN NOT NULL,
+                icon VARCHAR(255) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -526,18 +526,18 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_message (
-                id INTEGER NOT NULL, 
-                sender_id INTEGER NOT NULL, 
-                parent_id INTEGER DEFAULT NULL, 
-                object VARCHAR(255) NOT NULL, 
-                content VARCHAR(1023) NOT NULL, 
-                date DATETIME NOT NULL, 
-                is_removed BOOLEAN NOT NULL, 
-                lft INTEGER NOT NULL, 
-                lvl INTEGER NOT NULL, 
-                rgt INTEGER NOT NULL, 
-                root INTEGER DEFAULT NULL, 
-                sender_username VARCHAR(255) NOT NULL, 
+                id INTEGER NOT NULL,
+                sender_id INTEGER NOT NULL,
+                parent_id INTEGER DEFAULT NULL,
+                object VARCHAR(255) NOT NULL,
+                content VARCHAR(1023) NOT NULL,
+                date DATETIME NOT NULL,
+                is_removed BOOLEAN NOT NULL,
+                lft INTEGER NOT NULL,
+                lvl INTEGER NOT NULL,
+                rgt INTEGER NOT NULL,
+                root INTEGER DEFAULT NULL,
+                sender_username VARCHAR(255) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -549,15 +549,15 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_event (
-                id INTEGER NOT NULL, 
-                workspace_id INTEGER DEFAULT NULL, 
-                user_id INTEGER NOT NULL, 
-                title VARCHAR(50) NOT NULL, 
-                start_date INTEGER DEFAULT NULL, 
-                end_date INTEGER DEFAULT NULL, 
-                description VARCHAR(255) DEFAULT NULL, 
-                allday BOOLEAN DEFAULT NULL, 
-                priority VARCHAR(255) DEFAULT NULL, 
+                id INTEGER NOT NULL,
+                workspace_id INTEGER DEFAULT NULL,
+                user_id INTEGER NOT NULL,
+                title VARCHAR(50) NOT NULL,
+                start_date INTEGER DEFAULT NULL,
+                end_date INTEGER DEFAULT NULL,
+                description VARCHAR(255) DEFAULT NULL,
+                allday BOOLEAN DEFAULT NULL,
+                priority VARCHAR(255) DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -569,18 +569,18 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_license (
-                id INTEGER NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                acronym VARCHAR(255) DEFAULT NULL, 
+                id INTEGER NOT NULL,
+                name VARCHAR(255) NOT NULL,
+                acronym VARCHAR(255) DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
             CREATE TABLE claro_resource_activity (
-                id INTEGER NOT NULL, 
-                activity_id INTEGER NOT NULL, 
-                resource_id INTEGER NOT NULL, 
-                sequence_order INTEGER DEFAULT NULL, 
+                id INTEGER NOT NULL,
+                activity_id INTEGER NOT NULL,
+                resource_id INTEGER NOT NULL,
+                sequence_order INTEGER DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -595,25 +595,25 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_link (
-                id INTEGER NOT NULL, 
-                url VARCHAR(255) NOT NULL, 
+                id INTEGER NOT NULL,
+                url VARCHAR(255) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
             CREATE TABLE claro_directory (
-                id INTEGER NOT NULL, 
+                id INTEGER NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
             CREATE TABLE claro_resource_icon (
-                id INTEGER NOT NULL, 
-                shortcut_id INTEGER DEFAULT NULL, 
-                icon_location VARCHAR(255) DEFAULT NULL, 
-                mimeType VARCHAR(255) NOT NULL, 
-                is_shortcut BOOLEAN NOT NULL, 
-                relative_url VARCHAR(255) DEFAULT NULL, 
+                id INTEGER NOT NULL,
+                shortcut_id INTEGER DEFAULT NULL,
+                icon_location VARCHAR(255) DEFAULT NULL,
+                mimeType VARCHAR(255) NOT NULL,
+                is_shortcut BOOLEAN NOT NULL,
+                relative_url VARCHAR(255) DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -622,9 +622,9 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_file (
-                id INTEGER NOT NULL, 
-                size INTEGER NOT NULL, 
-                hash_name VARCHAR(36) NOT NULL, 
+                id INTEGER NOT NULL,
+                size INTEGER NOT NULL,
+                hash_name VARCHAR(36) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -633,11 +633,11 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_text_revision (
-                id INTEGER NOT NULL, 
-                text_id INTEGER DEFAULT NULL, 
-                user_id INTEGER DEFAULT NULL, 
-                version INTEGER NOT NULL, 
-                content VARCHAR(255) NOT NULL, 
+                id INTEGER NOT NULL,
+                text_id INTEGER DEFAULT NULL,
+                user_id INTEGER DEFAULT NULL,
+                version INTEGER NOT NULL,
+                content VARCHAR(255) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -649,10 +649,10 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_resource_type_custom_action (
-                id INTEGER NOT NULL, 
-                resource_type_id INTEGER DEFAULT NULL, 
-                \"action\" VARCHAR(255) DEFAULT NULL, 
-                async BOOLEAN DEFAULT NULL, 
+                id INTEGER NOT NULL,
+                resource_type_id INTEGER DEFAULT NULL,
+                \"action\" VARCHAR(255) DEFAULT NULL,
+                async BOOLEAN DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -661,8 +661,8 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_resource_shortcut (
-                id INTEGER NOT NULL, 
-                resource_id INTEGER NOT NULL, 
+                id INTEGER NOT NULL,
+                resource_id INTEGER NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -671,33 +671,33 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_activity (
-                id INTEGER NOT NULL, 
-                instruction VARCHAR(255) NOT NULL, 
-                start_date DATETIME DEFAULT NULL, 
-                end_date DATETIME DEFAULT NULL, 
+                id INTEGER NOT NULL,
+                instruction VARCHAR(255) NOT NULL,
+                start_date DATETIME DEFAULT NULL,
+                end_date DATETIME DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
             CREATE TABLE claro_text (
-                id INTEGER NOT NULL, 
-                version INTEGER NOT NULL, 
+                id INTEGER NOT NULL,
+                version INTEGER NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
             CREATE TABLE claro_tools (
-                id INTEGER NOT NULL, 
-                plugin_id INTEGER DEFAULT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                display_name VARCHAR(255) DEFAULT NULL, 
-                class VARCHAR(255) NOT NULL, 
-                is_workspace_required BOOLEAN NOT NULL, 
-                is_desktop_required BOOLEAN NOT NULL, 
-                is_displayable_in_workspace BOOLEAN NOT NULL, 
-                is_displayable_in_desktop BOOLEAN NOT NULL, 
-                is_exportable BOOLEAN NOT NULL, 
-                has_options BOOLEAN NOT NULL, 
+                id INTEGER NOT NULL,
+                plugin_id INTEGER DEFAULT NULL,
+                name VARCHAR(255) NOT NULL,
+                display_name VARCHAR(255) DEFAULT NULL,
+                class VARCHAR(255) NOT NULL,
+                is_workspace_required BOOLEAN NOT NULL,
+                is_desktop_required BOOLEAN NOT NULL,
+                is_displayable_in_workspace BOOLEAN NOT NULL,
+                is_displayable_in_desktop BOOLEAN NOT NULL,
+                is_exportable BOOLEAN NOT NULL,
+                has_options BOOLEAN NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -709,14 +709,14 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_widget_display (
-                id INTEGER NOT NULL, 
-                parent_id INTEGER DEFAULT NULL, 
-                workspace_id INTEGER DEFAULT NULL, 
-                user_id INTEGER DEFAULT NULL, 
-                widget_id INTEGER NOT NULL, 
-                is_locked BOOLEAN NOT NULL, 
-                is_visible BOOLEAN NOT NULL, 
-                is_desktop BOOLEAN NOT NULL, 
+                id INTEGER NOT NULL,
+                parent_id INTEGER DEFAULT NULL,
+                workspace_id INTEGER DEFAULT NULL,
+                user_id INTEGER DEFAULT NULL,
+                widget_id INTEGER NOT NULL,
+                is_locked BOOLEAN NOT NULL,
+                is_visible BOOLEAN NOT NULL,
+                is_desktop BOOLEAN NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -734,12 +734,12 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_widget (
-                id INTEGER NOT NULL, 
-                plugin_id INTEGER DEFAULT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                is_configurable BOOLEAN NOT NULL, 
-                icon VARCHAR(255) NOT NULL, 
-                is_exportable BOOLEAN NOT NULL, 
+                id INTEGER NOT NULL,
+                plugin_id INTEGER DEFAULT NULL,
+                name VARCHAR(255) NOT NULL,
+                is_configurable BOOLEAN NOT NULL,
+                icon VARCHAR(255) NOT NULL,
+                is_exportable BOOLEAN NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -751,23 +751,23 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_content (
-                id INTEGER NOT NULL, 
-                title VARCHAR(255) DEFAULT NULL, 
-                content CLOB DEFAULT NULL, 
-                generated_content CLOB DEFAULT NULL, 
-                created DATETIME NOT NULL, 
-                modified DATETIME NOT NULL, 
+                id INTEGER NOT NULL,
+                title VARCHAR(255) DEFAULT NULL,
+                content CLOB DEFAULT NULL,
+                generated_content CLOB DEFAULT NULL,
+                created DATETIME NOT NULL,
+                modified DATETIME NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
             CREATE TABLE claro_content2region (
-                id INTEGER NOT NULL, 
-                content_id INTEGER NOT NULL, 
-                region_id INTEGER NOT NULL, 
-                next_id INTEGER DEFAULT NULL, 
-                back_id INTEGER DEFAULT NULL, 
-                size VARCHAR(30) NOT NULL, 
+                id INTEGER NOT NULL,
+                content_id INTEGER NOT NULL,
+                region_id INTEGER NOT NULL,
+                next_id INTEGER DEFAULT NULL,
+                back_id INTEGER DEFAULT NULL,
+                size VARCHAR(30) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -785,12 +785,12 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_content2type (
-                id INTEGER NOT NULL, 
-                content_id INTEGER NOT NULL, 
-                type_id INTEGER NOT NULL, 
-                next_id INTEGER DEFAULT NULL, 
-                back_id INTEGER DEFAULT NULL, 
-                size VARCHAR(30) NOT NULL, 
+                id INTEGER NOT NULL,
+                content_id INTEGER NOT NULL,
+                type_id INTEGER NOT NULL,
+                next_id INTEGER DEFAULT NULL,
+                back_id INTEGER DEFAULT NULL,
+                size VARCHAR(30) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -808,12 +808,12 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_subcontent (
-                id INTEGER NOT NULL, 
-                father_id INTEGER NOT NULL, 
-                child_id INTEGER NOT NULL, 
-                next_id INTEGER DEFAULT NULL, 
-                back_id INTEGER DEFAULT NULL, 
-                size VARCHAR(255) DEFAULT NULL, 
+                id INTEGER NOT NULL,
+                father_id INTEGER NOT NULL,
+                child_id INTEGER NOT NULL,
+                next_id INTEGER DEFAULT NULL,
+                back_id INTEGER DEFAULT NULL,
+                size VARCHAR(255) DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -831,16 +831,16 @@ class Version20130805104754 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_region (
-                id INTEGER NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
+                id INTEGER NOT NULL,
+                name VARCHAR(255) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
             CREATE TABLE claro_type (
-                id INTEGER NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                max_content_page INTEGER NOT NULL, 
+                id INTEGER NOT NULL,
+                name VARCHAR(255) NOT NULL,
+                max_content_page INTEGER NOT NULL,
                 PRIMARY KEY(id)
             )
         ");

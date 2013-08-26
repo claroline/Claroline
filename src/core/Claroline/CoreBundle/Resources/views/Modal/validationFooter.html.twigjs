@@ -1,4 +1,4 @@
 {% twig_js name="ValidationFooter" %}
 
 <input type="button" id="modal-valid-button" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-<input type="button" id="modal-cancel-button" class="btn btn-secondary" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+<input type="button" id="modal-cancel-button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>

@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle:Install:layout.html.twig' %}
     {% block content %}
-     <div class="span3">
+     <div class="col-md-3">
         <h3> Progression</h3>
         <ol class="nav nav-list">
             {%block naviguation %}
@@ -11,7 +11,7 @@
         <div class="bar" style="width: 30%;"></div>
         </div>
     </div>
-   <div class="span6">
+   <div class="col-md-6">
 
         {%block data %}
             <form action="{{path('claro_permission')}}" method="get" name="language_form">
@@ -25,13 +25,13 @@
           </form>
         {%endblock data %}
   </div>
-  <div class="span2">
+  <div class="col-md-2">
       <h3> {{ 'hint'|trans({}, 'install') }} </h3>
       <div class="action">
          {{'hint_1'|trans({}, 'install')}}
           </div>
   </div>
-  <div class="span12">
+  <div class="col-md-12">
 
 </div>
 

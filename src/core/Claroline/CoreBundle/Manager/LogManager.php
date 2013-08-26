@@ -1,10 +1,11 @@
 <?php
-namespace Claroline\CoreBundle\Library\Log;
+namespace Claroline\CoreBundle\Manager;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Exception\NotValidCurrentPageException;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Claroline\CoreBundle\Form\DataTransformer\DateRangeToTextTransformer;
 use Claroline\CoreBundle\Form\WorkspaceLogFilterType;
@@ -17,7 +18,7 @@ use Claroline\CoreBundle\Entity\Logger\LogDesktopWidgetConfig;
 /**
  * @DI\Service("claroline.log.manager")
  */
-class Manager
+class LogManager
 {
     const LOG_PER_PAGE = 40;
 
@@ -479,5 +480,39 @@ class Manager
         }
 
         return $workspaceIds;
+    }
+
+    /**
+     * Get all existing event name with their associated label
+     *
+     * @return array
+     */
+    public function getEventList()
+    {
+        $logClassPath = $this->container->get('kernel')->getRootDir() . '/../src/core/Claroline/CoreBundle/Event/Event/Log';
+        $finder = new Finder();
+        $finder->files()->in($logClassPath);
+
+        $logEventClassNamespace = 'Claroline\CoreBundle\Event\Event\Log\\';
+
+        $eventList = array();
+
+        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        $translator = $this->container->get('translator');
+
+        /** @var \SplFileInfo $file */
+        foreach ($finder as $file) {
+            $className      = basename($file->getFilename(), '.' . $file->getExtension());
+            $classNamespace = $logEventClassNamespace . $className;
+            $classParents   = class_parents($classNamespace);
+            if (in_array('Claroline\CoreBundle\Event\Event\Log\LogGenericEvent', $classParents)) {
+                $reflectionClass = new \ReflectionClass($classNamespace);
+                foreach ($reflectionClass->getConstants() as $constant) {
+                    $eventList[$constant] = $translator->trans(sprintf('log_%s_title', $constant), array(), 'platform');
+                }
+            }
+        }
+
+        return $eventList;
     }
 }

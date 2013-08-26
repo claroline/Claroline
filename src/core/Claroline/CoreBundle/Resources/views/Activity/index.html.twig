@@ -86,7 +86,7 @@
     </script>
 {% endblock %}
 {% block section_content %}
-    <a href="{{ path('claro_activity_show_player', {'activity': _resource.getId()}) }}" class="btn btn-secondary pull-right"> {{ 'show_as_user'|trans({}, 'platform') }} </a>
+    <a href="{{ path('claro_activity_show_player', {'activityId': _resource.getId()}) }}" class="btn btn-default pull-right"> {{ 'show_as_user'|trans({}, 'platform') }} </a>
     <h3>
         <b>{{ 'activity'|trans({}, 'resource') }} {{ _resource.getName() }}</b>
     </h3>
@@ -105,6 +105,6 @@
     {% endfor %}
     </ul>
 
-    <button id="add_resource_button" class="btn btn-secondary">{{'add_resource'|trans({},'platform')}}</button>
+    <button id="add_resource_button" class="btn btn-default">{{'add_resource'|trans({},'platform')}}</button>
     <div id="twig-attributes" data-activity-id="{{ _resource.getId() }}"></div>
 {% endblock %}

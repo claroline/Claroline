@@ -26,6 +26,7 @@ class AppKernel extends Kernel
             new JMS\TwigJsBundle\JMSTwigJsBundle(),
             new Claroline\CoreBundle\ClarolineCoreBundle(),
             new Claroline\MigrationBundle\ClarolineMigrationBundle(),
+            new Claroline\BadgeBundle\ClarolineBadgeBundle(),
             new Claroline\Bundle\FrontEndBundle\FrontEndBundle(),
             new Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle(),
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),

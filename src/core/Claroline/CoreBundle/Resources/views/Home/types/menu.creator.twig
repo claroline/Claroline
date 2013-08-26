@@ -1,52 +1,51 @@
 {% if father is defined and content is not defined %}
-    <li class="creator{{ father }}">
-        <a  data-toggle="collapse" data-target=".creator{{ father }} .collapse">
-            <i class="icon-plus"></i> {{ "Add a link here" | trans({}, 'home') }}
-        </a>
+    <a class="list-group-item" data-toggle="collapse" href=".collapse{{ father }}">
+        <i class="icon-plus"></i> {{ "Add a link here" | trans({}, 'home') }}
+    </a>
+    <div class="creator{{ father }}">
 
-        <div class="collapse">
+        <div class="collapse collapse{{ father }}">
             <div class="creator-collapse">
 {% elseif father is defined and content is defined %}
-    <li class="creator{{ father }}">
+    <div class="creator{{ father }}">
         <div>
             <div class="creator-collapse">
 {% endif %}
 
 <div class="creator" data-type="{{ type }}" {% if content is defined %}data-id="{{ content.id }}"{% endif %} {% if father is defined %}data-father="{{ father }}"{% endif %}>
-    <div class="content row-fluid">
-        <div class="border span12">
+    <div class="row">
+        <div class="col-md-12">
             <input
             type="text"
             placeholder="{% if father is defined %}{{ "Link title" | trans({}, 'home') }}{% else %}{{ "Menu title" | trans({}, 'home') }}{% endif %}..."
-            class="content-title"
+            class="form-control content-title"
             {% if content is defined %}value="{{ content.title }}"{% endif %}
             >
         </div>
     </div>
-    <div class=" content row-fluid">
-        <div class="border span12">
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default" style="height:auto !important">
             <textarea
-                class="content-text"
+                class="form-control content-text"
                 placeholder="{{ "Link address" | trans({}, 'home') }}..."
                 >{% if content is defined %}{{ content.content }}{% endif %}</textarea>
-            <div class="navbar navbar-static-top">
-                <div class="navbar-inner">
-                    <ul class="nav pull-right">
-                        {% if content is defined %}
-                        <li><div><a class="cancel-button btn">{{ 'Cancel' | trans({}, 'home') }}</a></div></li>
-                        <li>&nbsp;&nbsp;</li>
-                        <li><div><a class="edit-button btn btn-primary">{{ 'Edit' | trans({}, 'home') }}</a></div></li>
-                        {% else %}
-                        <li><div><a class="creator-button btn btn-primary">{{ 'Create' | trans({}, 'home') }}</a></div></li>
-                        {% endif %}
-
-                    </ul>
-                </div>
+            <div class="navbar navbar-default navbar-static-top">
+                <form class="navbar-form pull-right">
+                    {% if content is defined %}
+                    <a class="cancel-button btn btn-default">{{ 'Cancel' | trans({}, 'home') }}</a>
+                    <a class="edit-button btn btn-primary">{{ 'Edit' | trans({}, 'home') }}</a>
+                    {% else %}
+                    <a class="creator-button btn btn-primary">{{ 'Create' | trans({}, 'home') }}</a>
+                    {% endif %}
+                </form>
+            </div>
             </div>
         </div>
     </div>
 </div>
 
 {% if father is defined %}
-    </div></div></li>
+    </div></div></div>
 {% endif %}

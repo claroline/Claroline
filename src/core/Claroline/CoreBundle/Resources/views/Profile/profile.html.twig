@@ -1,37 +1,49 @@
 {% extends "ClarolineCoreBundle::layout.html.twig" %}
 
 {% block content %}
-    <div class="span12 border">
-        <div class="margin">
-            <h3 class="sub-section-header">
-                {{ user.getLastName() }} {{ user.getFirstName() }}
-                <em class="muted"> ({{ user.getUsername() }})</em>
-            </h3>
-
-            <div class="span2">
-                {% if user.getPhoto() != "" %}
-                    <img class="border" src="{{ user.getPhoto() }}">
-                {% else %}
-                    <div class="hero-unit">
-                        <h1><i class="icon-user"></i><h1>
-                    </div>
-                {% endif %}
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    {{ user.getLastName() }} {{ user.getFirstName() }}
+                    <em class="muted"> ({{ user.getUsername() }})</em>
+                </h3>
             </div>
+            <div class="panel-body">
 
-            <p>
-                {% if user.getMail() != "" %}
-                    <i class="icon-envelope"></i> {{ user.getMail() }}
-                    &nbsp;
-                {% endif %}
-                {% if user.getPhone() != "" %}
-                    <i class="icon-phone"></i> {{ user.getPhone() }}
-                {% endif %}
-            </p>
-            <p class="muted">{{ 'user'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}</p>
-            <p>
-                <a class="btn" href="{{path('claro_mail_form', {'userId':user.getId()})}}"><i class="icon-envelope"></i> {{ 'send_mail'|trans({}, 'platform') }}</a>
-                <a class="btn" href="{{path('claro_message_form')}}?ids[]={{ user.getId() }}"><i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
-            </p>
+                <div class="row">
+                    <div class="col-md-2">
+                        {% if user.getPhoto() != "" %}
+                            <img src="{{ user.getPhoto() }}">
+                        {% else %}
+                            <div class="jumbotron">
+                                <h1><i class="icon-user"></i><h1>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <p>
+                        {% if user.getMail() != "" %}
+                            <i class="icon-envelope"></i> {{ user.getMail() }}
+                            &nbsp;
+                        {% endif %}
+                        {% if user.getPhone() != "" %}
+                            <i class="icon-phone"></i> {{ user.getPhone() }}
+                        {% endif %}
+                    </p>
+                    <p class="muted">{{ 'user'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}</p>
+                    <p>
+                        <a class="btn btn-default" href="{{path('claro_mail_form', {'userId':user.getId()})}}"><i class="icon-envelope"></i> {{ 'send_mail'|trans({}, 'platform') }}</a>
+                        <a class="btn btn-default" href="{{path('claro_message_form')}}?ids[]={{ user.getId() }}"><i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="row margin">
+            <h3 class="sub-section-header">{{ 'badges'|trans({}, 'platform') }}</h3>
+
+            {% include 'ClarolineBadgeBundle:Badge:display.html.twig' with {'badgeUrl': 'claro_view_badge', 'paginationurl': 'claro_profile_view', 'routeParams': {'userId': user.id}} %}
+
         </div>
     </div>
 {% endblock %}

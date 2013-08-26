@@ -28,7 +28,7 @@
 
 {% macro displayControls(group) %}
     {% if app.user %}
-        <button class="btn btn-secondary action-button" data-action="add"><i class="icon-plus"></i> {{ 'add'|trans({}, 'platform') }}</button>
+        <button class="btn btn-default action-button" data-action="add"><i class="icon-plus"></i> {{ 'add'|trans({}, 'platform') }}</button>
     {% endif %}
 {% endmacro %}
 
@@ -61,39 +61,47 @@
 {% endblock %}
 
 {% block section_content %}
-<div class="margin">
-        {{
-            macros.breadcrumbs([
-                {
-                    'icon': 'icon-user',
-                    'name': 'users_management'|trans({}, 'platform'),
-                    'href': path('claro_admin_users_management')
-                },
-                {
-                    'name': 'groups_list'|trans({}, 'platform'),
-                    'href': path('claro_admin_group_list')
-                },
-                {
-                    'name':  group.getName(),
-                    'href': path('claro_admin_user_of_group_list', {'groupId': group.getId()})
-                },
-                {
-                    'name': 'add_users'|trans({}, 'platform'),
-                    'href': ''
-                },
-            ])
-        }}
-<div class="search-bar">
-     {{ displayControls(group) }}
-            <div class="input-append pull-right">
-                <input class="input-medium" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
-                <button class="filter btn" type="button" id="search-button">
-                    <i class="icon-search"></i>
-                </button>
+
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-user',
+                'name': 'users_management'|trans({}, 'platform'),
+                'href': path('claro_admin_users_management')
+            },
+            {
+                'name': 'groups_list'|trans({}, 'platform'),
+                'href': path('claro_admin_group_list')
+            },
+            {
+                'name':  group.getName(),
+                'href': path('claro_admin_user_of_group_list', {'groupId': group.getId()})
+            },
+            {
+                'name': 'add_users'|trans({}, 'platform'),
+                'href': ''
+            },
+        ])
+    }}
+
+    <div class="search-bar row">
+        <div class="col-md-6">
+            {{ displayControls(group) }}
+        </div>
+        <div class="col-md-6">
+             <div class="input-group">
+                <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
+                <span class="input-group-btn">
+                    <button class="filter btn btn-default" type="button" id="search-button">
+                        <i class="icon-search"></i>
+                    </button>
+                </span>
             </div>
         </div>
-    </div>
-        {{ renderPager(search, group.getId(), pager) }}
+   </div>
+
+
+    {{ renderPager(search, group.getId(), pager) }}
     <div>
     <table class="table table-striped table-bordered table-condensed">
         <thead>
@@ -123,5 +131,5 @@
         {{ renderPager(search, group.getId(), pager) }}
         {{ displayControls(group) }}
     <div>
-</div>
+
 {% endblock %}
