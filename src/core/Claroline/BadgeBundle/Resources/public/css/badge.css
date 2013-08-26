@@ -60,15 +60,13 @@ ul.user_badges > li .close {
   margin-bottom: 20px;
 }
 .panel-title {
-  margin-top: 0;
-  margin-bottom: 0;
   font-size: 22px;
 }
 .panel-title .breadcrumb {
   margin-bottom: 0;
   padding: 0;
 }
-.panel-title .breadcrumb a.btn {
+.panel-title a.btn {
   padding: 0;
   padding-left: 12px;
 }
