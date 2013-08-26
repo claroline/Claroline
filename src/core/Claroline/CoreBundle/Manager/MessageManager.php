@@ -72,6 +72,8 @@ class MessageManager
         }
 
         $this->om->flush();
+
+        return $message;
     }
 
     public function getReceivedMessages(User $receiver, $search = '', $page = 1)
