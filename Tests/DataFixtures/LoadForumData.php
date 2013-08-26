@@ -70,7 +70,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
         $this->log("forum {$forum->getName()} created");
 
         for ($i = 0; $i < $this->nbSubjects; $i++) {
-            $title = $this->container->get('claroline.utilities.lipsum_generator')->generateLipsum(5);
+            $title = $this->container->get('claroline.utilities.lipsum_generator')->generateLipsum(5, false, 255);
             $user = $collaborators[rand(0, $maxOffset)];
             $subject = new Subject();
             $subject->setTitle($title);
@@ -85,7 +85,7 @@ class LoadForumData extends LoggableFixture implements ContainerAwareInterface
                 $message = new Message();
                 $message->setSubject($subject);
                 $message->setCreator($sender);
-                $lipsum = $this->container->get('claroline.utilities.lipsum_generator')->generateLipsum(150, true);
+                $lipsum = $this->container->get('claroline.utilities.lipsum_generator')->generateLipsum(150, true, 1023);
                 $message->setContent($lipsum);
                 $manager->persist($message);
 
