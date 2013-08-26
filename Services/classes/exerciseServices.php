@@ -45,6 +45,8 @@ namespace UJM\ExoBundle\Services\classes;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\HttpFoundation\Request;
 
+use UJM\ExoBundle\Entity\ExerciseQuestion;
+
 class exerciseServices
 {
     protected $doctrine;
@@ -305,6 +307,59 @@ class exerciseServices
         return $res;
     }
 
+    public function responseOpen($request, $paperID = 0)
+    {
+        $res = array();
+        $interactionOpenID = $request->request->get('interactionOpenToValidated');
+        $response = '';
+        $tempMark = true;
+
+        $penalty = 0;
+        $session = $request->getSession();
+        
+        $em = $this->doctrine->getManager();
+        $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')->find($interactionOpenID);
+        
+        if($interOpen->getTypeOpenQuestion() == 'long'){
+            $response = $request->request->get('interOpenLong');
+        }
+     
+        // Not assessment
+        if ($paperID == 0) {
+            if ($session->get('penalties')) {
+                foreach ($session->get('penalties') as $penal) {
+
+                    $signe = substr($penal, 0, 1); // In order to manage the symbol of the penalty
+
+                    if ($signe == '-') {
+                        $penalty += substr($penal, 1);
+                    } else {
+                        $penalty += $penal;
+                    }
+                }
+            }
+            $session->remove('penalties');
+        } else {
+            $penalty = $this->getPenalty($interOpen->getInteraction(), $paperID);
+        }
+        
+        if($interOpen->getTypeOpenQuestion() == 'long'){
+            $score = -1;
+        }
+        
+        $score .= '/'.$this->openMaxScore($interOpen->getInteraction());
+        
+        $res = array(
+            'penalty'   => $penalty,
+            'interOpen' => $interOpen,
+            'response'  => $response,
+            'score'     => $score,
+            'tempMark'  => $tempMark
+        );
+        
+        return $res;
+    }
+    
     // Check if the suggested answer zone isn't already right in order not to have points twice
     public function alreadyDone($coor, $verif, $z)
     {
@@ -345,6 +400,9 @@ class exerciseServices
                 case 'InteractionGraphic':
                     $scoreMax = $this->graphicMaxScore($interaction[0]);
                     break;
+                case 'InteractionOpen':
+                    $scoreMax = $this->openMaxScore($interaction[0]);
+                    break;
             }
 
             $exoTotalScore += $scoreMax;
@@ -381,7 +439,7 @@ class exerciseServices
                     break;
 
                 case "InteractionOpen":
-
+                    $exercisePaperTotalScore += $this->openMaxScore($interaction[0]);
                     break;
             }
         }
@@ -430,5 +488,37 @@ class exerciseServices
         }
 
         return $scoreMax;
+    }
+    
+    public function openMaxScore($interaction)
+    {
+        $scoreMax = 0;
+
+        $interOpen = $this->doctrine
+            ->getManager()
+            ->getRepository('UJMExoBundle:InteractionOpen')
+            ->getInteractionOpen($interaction->getId());
+        
+        if($interOpen[0]->getTypeOpenQuestion() == 'long'){
+            $scoreMax = $interOpen[0]->getScoreMaxLongResp();
+        }
+        
+        return $scoreMax;
+    }
+
+    public function setExerciseQuestion($exercise, $interX)
+    {
+        $exo = $this->doctrine->getManager()->getRepository('UJMExoBundle:Exercise')->find($exercise);
+        $eq = new ExerciseQuestion($exo, $interX->getInteraction()->getQuestion());
+
+        $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
+              . 'WHERE eq.exercise='.$exercise;
+        $query = $this->doctrine->getManager()->createQuery($dql);
+        $maxOrdre = $query->getResult();
+
+        $eq->setOrdre((int) $maxOrdre[0][1] + 1);
+        $this->doctrine->getManager()->persist($eq);
+
+        $this->doctrine->getManager()->flush();
     }
 }

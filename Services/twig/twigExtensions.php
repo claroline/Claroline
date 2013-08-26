@@ -104,7 +104,12 @@ class TwigExtensions extends \Twig_Extension
             break;
 
             case "InteractionOpen":
-
+                $interOpen = $this->doctrine
+                               ->getManager()
+                               ->getRepository('UJMExoBundle:InteractionOpen')
+                               ->getInteractionOpen($interId);
+                $inter['question'] = $interOpen[0];
+                $inter['maxScore'] = $this->getOpenScoreMax($interOpen[0]);
             break;
         }
 
@@ -134,6 +139,17 @@ class TwigExtensions extends \Twig_Extension
             $scoreMax = $interQCM->getScoreRightResponse();
         }
 
+        return $scoreMax;
+    }
+    
+    private function getOpenScoreMax($interOpen)
+    {
+        $scoreMax = 0;
+
+        if($interOpen->getTypeOpenQuestion() == 'long'){
+            $scoreMax = $interOpen->getScoreMaxLongResp();
+        }
+        
         return $scoreMax;
     }
 }

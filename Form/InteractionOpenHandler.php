@@ -64,7 +64,7 @@ class InteractionOpenHandler
         $this->user     = $user;
         $this->exercise = $exercise;
     }
-    
+
     public function processAdd()
     {
         if ( $this->request->getMethod() == 'POST' ) {
@@ -79,9 +79,25 @@ class InteractionOpenHandler
 
         return false;
     }
-    
+
     private function onSuccessAdd(InteractionOpen $interOpen)
     {
-        echo $interOpen->getTypeOpenQuestion();die();
+        $interOpen->getInteraction()->getQuestion()->setDateCreate(new \Datetime());
+        $interOpen->getInteraction()->getQuestion()->setUser($this->user);
+        $interOpen->getInteraction()->setType('InteractionOpen');
+
+        $this->em->persist($interOpen);
+        $this->em->persist($interOpen->getInteraction()->getQuestion());
+        $this->em->persist($interOpen->getInteraction());
+
+        //On persite tous les hints de l'entité interaction
+        foreach ($interOpen->getInteraction()->getHints() as $hint) {
+            $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
+            $interOpen->getInteraction()->addHint($hint);
+            $this->em->persist($hint);
+        }
+
+        $this->em->flush();
+
     }
 }

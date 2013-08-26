@@ -154,26 +154,11 @@ class InteractionGraphicController extends Controller
             }
             $em->flush();
 
-            // To associate the question to an exercise
-            if ($exoID != -1) {
-                $exo = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
-                $eq = new ExerciseQuestion($exo, $interGraph->getInteraction()->getQuestion());
-
-                $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq'
-                    . ' WHERE eq.exercise='.$exoID;
-                $query = $em->createQuery($dql);
-                $maxOrdre = $query->getResult();
-
-                $eq->setOrdre((int) $maxOrdre[0][1] + 1);
-                $em->persist($eq);
-
-                $em->flush();
-            }
-
             $categoryToFind = $interGraph->getInteraction()->getQuestion()->getCategory();
             $titleToFind = $interGraph->getInteraction()->getQuestion()->getTitle();
 
             if ($exoID == -1) {
+                
                 return $this->redirect(
                     $this->generateUrl(
                         'ujm_question_index', array(
@@ -183,6 +168,8 @@ class InteractionGraphicController extends Controller
                     )
                 );
             } else {
+                $this->container->get('ujm.exercise_services')->setExerciseQuestion($exoID, $interGraph);
+                
                 return $this->redirect(
                     $this->generateUrl(
                         'ujm_exercise_questions',

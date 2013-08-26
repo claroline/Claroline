@@ -194,6 +194,7 @@ noQuestionFound: No question found
 noRightAnswer: No right answer
 notImageMesssage: The document should be an image
 noTitle: The question has no title
+not yet mark: Not yet mark
 noUserFound: No user found
 number of papers: Number of papers
 number of questions: Number of questions
@@ -265,6 +266,7 @@ start date: Start date
 subscription: Subscription
 
 # T
+temporary mark: Temporary mark
 test exit: Test output
 title: Title
 try: Try
@@ -341,6 +343,8 @@ Hint.value: Hint
 
 Interaction.feedback: Feedback to display with the correction (optional)
 Interaction.invite: Question
+
+Inter_Open.ScoreMaxLongResp: Points for correct answer
 
 Inter_QCM.ScoreRightResponse: Points for correct answer
 Inter_QCM.ScoreFalseResponse: Points for wrong answer

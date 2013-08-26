@@ -184,6 +184,48 @@
 
             <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
 
+<!--------------------------------------------------- OPEN ------------------------------------------------------------>
+
+        {% elseif interactionType == 'InteractionOpen' %}
+            <h1>{{ interactionToDisplayed.interaction.question.title }}</h1>
+
+            <input type="hidden" name="interactionOpenToValidated" value="{{ interactionToDisplayed.id }}"/>
+            <input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
+            <input type="hidden" name="typeInteraction" value="InteractionOpen"/>
+
+            {% if interactionToDisplayed.interaction.question.description != null %}
+                <div name="description">
+                    <p>{{ interactionToDisplayed.interaction.question.description|raw }}<p/>
+                </div>
+            {% endif %}
+
+            <h3 name="question">
+                <p>{{ interactionToDisplayed.interaction.invite|raw }}<p/>
+            </h3>
+
+            <p>
+                {% if interactionToDisplayed.typeopenquestion == 'long' %}
+                    <textarea name="interOpenLong" class="tinymce" data-theme="medium"></textarea>
+                    <br/>
+                {% endif %}
+
+                <table>
+                    {% set nbr_hint = 1 %}
+                    {% for hint in interactionToDisplayed.interaction.hints %}
+                        <tr>
+                            <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
+                                    '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }} ?', '{{nbr_hint}}',
+                                    '{{paper}}')">{{ "hint" | trans }} {{nbr_hint}}</a>
+                            </td>
+                            <td id="div_hint{{nbr_hint}}"></td>
+                        </tr>
+                        {% set nbr_hint = nbr_hint + 1 %}
+                    {% endfor %}
+                </table>
+
+                <input type="hidden" name="testOpen" value="testOpen" />
+                <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
+            </p>
 <!-------------------------------------------------- Hole ------------------------------------------------------------->
 
         {% elseif interactionType == 'InteractionHole' %}
@@ -233,6 +275,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    {{ tinymce_init() }}
     {% if interactionType == 'InteractionGraphic' %}
         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicdisplay.js') }}"></script>
     {% endif %}

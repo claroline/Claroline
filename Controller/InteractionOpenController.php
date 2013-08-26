@@ -116,6 +116,7 @@ class InteractionOpenController extends Controller
                     )
                 );
             } else {
+                $this->container->get('ujm.exercise_services')->setExerciseQuestion($exoID, $interOpen);
                 return $this->redirect(
                     $this->generateUrl('ujm_exercise_questions', array(
                         'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind)
@@ -138,6 +139,28 @@ class InteractionOpenController extends Controller
         return $this->render(
             'UJMExoBundle:Question:new.html.twig', array(
             'formWithError' => $formWithError
+            )
+        );
+    }
+    
+    /**
+     * To test the open question by the teacher
+     *
+     */
+    public function responseOpenAction()
+    {
+        $request = $this->get('request');
+        
+        $exerciseSer = $this->container->get('ujm.exercise_services');
+        $res = $exerciseSer->responseOpen($request);
+        
+        return $this->render(
+            'UJMExoBundle:InteractionOpen:openOverview.html.twig', array(
+            'interOpen'   => $res['interOpen'],
+            'penalty'     => $res['penalty'],
+            'response'    => $res['response'],
+            'score'       => $res['score'],
+            'tempMark'    => $res['tempMark']
             )
         );
     }

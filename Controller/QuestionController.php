@@ -259,8 +259,21 @@ class QuestionController extends Controller
                     );
 
                 case "InteractionOpen":
+                    $response = new Response();
+                    $interactionOpen = $this->getDoctrine()
+                        ->getManager()
+                        ->getRepository('UJMExoBundle:InteractionOpen')
+                        ->getInteractionOpen($interaction[0]->getId());
 
-                    break;
+                    $form   = $this->createForm(new ResponseType(), $response);
+
+                    return $this->render(
+                        'UJMExoBundle:InteractionOpen:paper.html.twig', array(
+                        'interactionOpen' => $interactionOpen[0],
+                        'form'   => $form->createView()
+                        )
+                    );
+
             }
         } else {
             return $this->redirect($this->generateUrl('ujm_question_index'));

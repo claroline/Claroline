@@ -44,7 +44,6 @@ use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\User;
 
 use UJM\ExoBundle\Entity\InteractionQCM;
-use UJM\ExoBundle\Entity\ExerciseQuestion;
 use UJM\ExoBundle\Entity\Exercise;
 
 
@@ -115,21 +114,6 @@ class InteractionQCMHandler
         }
 
         $this->em->flush();
-
-        if ($this->exercise != -1) {
-            $exo = $this->em->getRepository('UJMExoBundle:Exercise')->find($this->exercise);
-            $eq = new ExerciseQuestion($exo, $interQCM->getInteraction()->getQuestion());
-
-            $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
-                . 'WHERE eq.exercise='.$this->exercise;
-            $query = $this->em->createQuery($dql);
-            $maxOrdre = $query->getResult();
-
-            $eq->setOrdre((int) $maxOrdre[0][1] + 1);
-            $this->em->persist($eq);
-
-            $this->em->flush();
-        }
 
     }
 
