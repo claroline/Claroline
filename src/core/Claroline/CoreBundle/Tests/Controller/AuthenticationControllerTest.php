@@ -109,10 +109,13 @@ class AuthenticationControllerTest extends MockeryTestCase
         $this->authenticator->shouldReceive('authenticate')->once()->with('username', 'password')
             ->andReturn(true);
         $response = new \Symfony\Component\HttpFoundation\JsonResponse(array(), 200);
-        $this->assertEquals($response, $this->controller->postAuthenticationAction());
+        $this->assertEquals($response, $this->controller->postAuthenticationAction('json'));
     }
 
-    public function testFailedPostAuthenticationAction()
+    /**
+     * @dataProvider postAuthenticationProvider
+     */
+    public function testFailedPostAuthenticationAction($responseClass, $format, $header)
     {
         $parameterBag = $this->mock('Symfony\Component\HttpFoundation\ServerBag');
         $parameterBag->shouldReceive('get')->with('username')->once()->andReturn('username');
@@ -122,7 +125,29 @@ class AuthenticationControllerTest extends MockeryTestCase
             ->andReturn(false);
         $this->translator->shouldReceive('trans')->once()->with('login_failure', array(), 'platform')
             ->andReturn('message');
-        $response = new \Symfony\Component\HttpFoundation\JsonResponse(array('message' => 'message'), 403);
-        $this->assertEquals($response, $this->controller->postAuthenticationAction());
+        $response = new $responseClass(array('message' => 'message'), 403);
+        $this->assertEquals($response->getContent(), $this->controller->postAuthenticationAction($format)->getContent());
+        $this->assertEquals($response->headers->get('content-type'), $header);
+    }
+
+    public function testUnknownFormatOnAuthentication()
+    {
+        $this->assertEquals(400, $this->controller->postAuthenticationAction('ABCDEFD')->getStatusCode());
+    }
+
+    public function postAuthenticationProvider()
+    {
+        return array(
+            array(
+                'responseClass' => '\Claroline\CoreBundle\Library\HttpFoundation\XmlResponse',
+                'format' => 'xml',
+                'header' => 'text/xml'
+            ),
+            array(
+                'responseClass' => '\Symfony\Component\HttpFoundation\JsonResponse',
+                'format' => 'json',
+                'header' => 'application/json'
+           )
+        );
     }
 }

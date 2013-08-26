@@ -4,6 +4,7 @@
     'use strict';
 
     var submitForm = function (formAction, formData) {
+        //change the redirection
         $.ajax({
             url: formAction,
             data: formData,
@@ -76,7 +77,6 @@
 
     $('.res-creation-options').live('click', function (event) {
         event.preventDefault();
-
         if (event.currentTarget.getAttribute('data-toggle') !== 'tab') {
             $.ajax({
                 url: event.currentTarget.getAttribute('href'),
@@ -101,16 +101,9 @@
             processData: false,
             contentType: false,
             success: function (form) {
-                $('#modal-check-role').empty();
-                $('#modal-check-role').append(form);
-                $('#modal-check-node-right-box').modal('show');
+                $('#form-rights-tag-wrapper').empty();
+                $('#form-rights-tag-wrapper').append(form);
             }
         });
-    });
-
-    $('.modal-close').live('click', function (event) {
-        event.preventDefault();
-        $('#modal-check-role').empty();
-        $('#modal-check-node-right-box').modal('hide');
     });
 })();

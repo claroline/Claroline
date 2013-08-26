@@ -745,14 +745,16 @@ class AdministrationControllerTest extends MockeryTestCase
             ->times(2)
             ->andReturn('roleTrad');
 
+        $response = new Response($msg, 200);
         $this->assertEquals(
-            new Response($msg, 200),
+            $response->getContent(),
             $this->getController()
                 ->subscribeMultipleUsersToMultipleWorkspacesAction(
                     'role',
                     $workspaces,
                     $users
                 )
+                ->getContent()
         );
     }
 
