@@ -15,7 +15,10 @@
 {% endblock %}
 
 {% block section_content %}
-    <div id="workspace-list-div">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'select_workspaces_for_registration'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body" id="workspace-list-div">
         {{
             macros.breadcrumbs([
                 {
@@ -25,9 +28,6 @@
                 }
             ])
         }}
-
-        <h3>{{ 'select_workspaces_for_registration'|trans({}, 'platform') }}</h3>
-        <br>
 
         <div class="search-bar row">
             <div class="col-md-6">
