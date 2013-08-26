@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-use \Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class ResourceModeExtensionTest extends MockeryTestCase

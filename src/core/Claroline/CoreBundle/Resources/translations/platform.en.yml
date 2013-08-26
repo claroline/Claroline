@@ -45,6 +45,7 @@ analytics_resources: Resources
 analytics_top: Top
 apply: Apply
 available_workspaces: 'Available workspaces'
+badges_management: 'Badges management'
 by: by
 cancel: Cancel
 canCopy: 'Right to copy'
@@ -71,9 +72,16 @@ create_new_admin_tag: 'Create new admin tag'
 create_new_tag: 'Create new tag'
 create_workspace: 'Create workspace'
 creation_date: 'Creation date'
+csv_users_import_infos: 'CSV file informations'
+csv_users_import_infos_format: 'Format'
+csv_users_import_infos_format_a: 'User informations must be defined in one line and separated by comma'
+csv_users_import_infos_optional: 'Optional'
+csv_users_import_infos_required: 'Required'
 cut: Cut
 dashboard: Dashboard
 date: Date
+date_format: 'm-d-Y'
+date_form_format: 'MM-dd-yyyy'
 date_range.apply: 'Apply'
 date_range.clear: 'Clear'
 date_range.custom_range: 'Custom range'
@@ -108,10 +116,13 @@ display_options: 'Display options'
 done_on: 'done on'
 download: Download
 downloads: Downloads
+drag_file_here: Drag the file here
 Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the graph to zoom, double-click to cancel'
+drop_file: Drop the file
 edit: Edit
 editable: 'Editable'
 email_form_mail : 'Enter your email'
+empty_file: 'Empty file'
 enter_tag_name_message: 'Please enter a tag name'
 export: Export
 exportable: 'Exportable'
@@ -324,6 +335,7 @@ mail_click: 'Click on this link to reset your password'
 mail_sent : 'A email has been sent to your address , check your inbox mail and your spam box'
 manage_rights: 'Manage rights'
 manager: Manager
+max_size_25mb: 'The maximum size is 25mb'
 media_most_viewed: 'Most viewed media'
 messages_confirm_delete : 'Are your sure , you want to delete this file ?'
 messages_confirm_permanent_delete: 'Are you sure you want to permanently delete this(these) message(s) ?'
@@ -373,6 +385,7 @@ ok: Ok
 or: Or
 open: Open
 options: Options
+order: Order
 organize_admin_tags: 'Organize admin tags'
 organize_private_tags: 'Organize private tags'
 Overview of all recent activities in %workspaceName% : 'Overview of all recent activities in %workspaceName%'
@@ -440,6 +453,10 @@ resource_properties_form_editable: Edit
 resource_properties_form_exportable: Export
 resource_properties_form_name: Name
 resource_properties_form_resourceType: 'Resource type'
+Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the graph to zoom, double-click to cancel'
+Overview of recent activities of your workspaces: 'Overview of recent activities of your workspaces'
+Overview of recent activities in %workspaceName%: 'Overview of recent activities in %workspaceName%'
+Overview of all recent activities in %workspaceName% : 'Overview of all recent activities in %workspaceName%'
 resource_properties_form_sharable: 'Share this resource'
 resource_properties_form_shareType: 'Share type'
 resource_properties_form_userIcon: Icon
@@ -542,6 +559,9 @@ unregistered: Unregistered
 unregistered_groups: 'Unregistered groups'
 unregistered_users: 'Unregistered users'
 unwritable_file_exception: "You don't have the permission to write in the file %path%."
+upload: 'upload'
+upload_denied: "Permission denied"
+upload_fail: 'Upload failed'
 url_invalid: 'the code is not correct, do no try to change the url'
 user: User
 user_accounts: 'User accounts'
@@ -606,56 +626,5 @@ workspace_welcome: Welcome
 workspaces: Workspaces
 ws_creator: 'Workspace creator'
 ws_most_viewed: Most viewed workspaces
-date_format: 'm/d/Y'
-date_range.format: 'm/d/Y'
-date_range.js_format: 'MM/dd/yyyy'
-date_range.apply: 'Apply'
-date_range.clear: 'Clear'
-date_range.week: 'w'
-date_range.from: 'From'
-date_range.to: 'To'
-date_range.custom_range: 'Custom range'
-date_range.day_names: '["Su","Mo","Tu","We","Th","Fr","Sa"]'
-date_range.month_names: '["January","February","March","April","May","June","July","August","September","October","November","December"]'
-date_range.first_day: '0'
-date_range.today: 'Today'
-date_range.yesterday: 'Yesterday'
-date_range.last_week: 'Last week'
-date_range.this_week: 'This week'
-date_range.last_month: 'Last month'
-date_range.this_month: 'This month'
-date_range.last_year: 'Last year'
-date_range.this_year: 'This year'
-date_range.last_school_year: 'Last school year'
-date_range.this_school_year: 'This school year'
-date_range.last_seven_days: 'Last 7 days'
-date_range.last_thirty_days: 'Last 30 days'
-jqplot_date_output_format: '%m/%d/%Y'
-Show actions for: 'Show actions for'
-for period: 'for period'
-for user: 'for user'
-Show actions: 'Show actions'
-See all: 'See all'
 yesterday_activity: Yesterday's activity
 Your changes have been saved: 'Your changes have been saved'
-The form is not valid: 'The form is not valid'
-Choose workspaces displayed in the widget: 'Choose workspaces displayed in the widget'
-Choose visible actions in the widget: 'Choose visible actions in the widget'
-Actions per day: 'Actions per day'
-Last action: '{1} Last action|[1,Inf] Last %logAmount% actions'
-log_hidden_workspace_widget_config_amount : Amount
-Action List: 'Action List'
-Filter actions: 'Filter actions'
-Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the graph to zoom, double-click to cancel'
-Overview of recent activities of your workspaces: 'Overview of recent activities of your workspaces'
-Overview of recent activities in %workspaceName%: 'Overview of recent activities in %workspaceName%'
-Overview of all recent activities in %workspaceName% : 'Overview of all recent activities in %workspaceName%'
-upload_fail: 'Upload failed'
-max_size_25mb: 'The maximum size is 25mb'
-empty_file: 'Empty file'
-upload: 'upload'
-upload_denied: "Permission denied"
-select_all: Tout sélectionner
-drop_file: Drop the file
-drag_file_here: Drag the file here
-badges_management: 'Badges management'

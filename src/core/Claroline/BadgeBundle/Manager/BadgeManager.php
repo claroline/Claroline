@@ -54,8 +54,7 @@ class BadgeManager
                 $userBadge = new UserBadge();
                 $userBadge
                     ->setBadge($badge)
-                    ->setUser($user)
-                ;
+                    ->setUser($user);
                 $badge->addUserBadge($userBadge);
             }
         }

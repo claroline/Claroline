@@ -25,13 +25,15 @@ class DatePickerType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'input'              => 'datetime',
-            'widget'             => 'single_text',
-            'component'          => false,
-            'autoclose'          => false,
-            'language'           => 'en'
-        ));
+        $resolver->setDefaults(
+            array(
+                'input'              => 'datetime',
+                'widget'             => 'single_text',
+                'component'          => false,
+                'autoclose'          => false,
+                'language'           => 'en'
+            )
+        );
     }
 
     public function getParent()

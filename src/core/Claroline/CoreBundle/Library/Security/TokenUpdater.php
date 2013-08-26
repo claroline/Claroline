@@ -6,7 +6,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
 
 /**
  * @DI\Service("claroline.security.token_updater")
