@@ -44,7 +44,7 @@ class LoadActivityData extends AbstractFixture implements ContainerAwareInterfac
         $activity->setInstructions(
             $this->container
                 ->get('claroline.utilities.lipsum_generator')
-                ->generateLipsum(100)
+                ->generateLipsum(100, true, 255)
         );
         $activity = $this->container
             ->get('claroline.manager.resource_manager')

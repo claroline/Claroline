@@ -143,7 +143,6 @@
                                     flashbag.append('<li>' + messages[i] + '</li>');
                                 }
                                 $('#custom-flashbag-div').removeClass('hide');
-
                             }
                         },
                         type: 'POST'
