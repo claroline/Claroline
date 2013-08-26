@@ -45,15 +45,6 @@ ul.user_badges > li .close {
   visibility: hidden;
   margin-top: -10px;
 }
-#award_form .input-append .btn {
-  vertical-align: middle;
-}
-#award_form label {
-  margin-left: auto;
-  margin-right: auto;
-  float: none;
-  text-align: center;
-}
 .badge_container {
   padding-left: 10px;
 }
@@ -62,4 +53,13 @@ ul.user_badges > li .close {
   text-decoration: none;
   min-width: 41px;
   text-align: center;
+}
+#award_form_container {
+  display: none;
+}
+.form-actions {
+  text-align: center;
+  padding: 19px 20px 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
