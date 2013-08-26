@@ -134,7 +134,7 @@ class AdminController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $form = $this->createForm(new BadgeType(), $badge);
+        $form = $this->createForm(new BadgeType(), $badge, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform')));
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
