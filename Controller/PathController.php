@@ -45,7 +45,10 @@ class PathController extends Controller
      */
     public function fromWorkspaceAction()
     {
-        return array();
+        $id = $this->get('request')->query->get('id');
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($id);        
+        return array('workspace' => $workspace);
     }
 
     /**
