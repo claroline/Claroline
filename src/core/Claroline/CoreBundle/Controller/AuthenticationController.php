@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine;
 use Claroline\CoreBundle\Manager\UserManager;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -31,6 +32,7 @@ class AuthenticationController
     private $translator;
     private $formFactory;
     private $authenticator;
+    private $templating;
 
     /**
      * @DI\InjectParams({
@@ -42,7 +44,8 @@ class AuthenticationController
      *     "router"         = @DI\Inject("router"),
      *     "translator"     = @DI\Inject("translator"),
      *     "formFactory"    = @DI\Inject("claroline.form.factory"),
-     *     "authenticator" = @Di\Inject("claroline.authenticator")
+     *     "authenticator"  = @Di\Inject("claroline.authenticator"),
+     *     "templating"     = @Di\Inject("templating"),
      * })
      */
     public function __construct(
@@ -54,7 +57,8 @@ class AuthenticationController
         UrlGeneratorInterface $router,
         Translator $translator,
         FormFactory $formFactory,
-        Authenticator $authenticator
+        Authenticator $authenticator,
+        TimedTwigEngine $templating
     )
     {
         $this->request = $request;
@@ -66,6 +70,7 @@ class AuthenticationController
         $this->translator = $translator;
         $this->formFactory = $formFactory;
         $this->authenticator = $authenticator;
+        $this->templating = $templating;
     }
     /**
      * @Route(
@@ -129,6 +134,10 @@ class AuthenticationController
         if ($form->isValid()) {
             $data = $form->getData();
             $user = $this->userManager->getUserbyEmail($data['mail']);
+            $link = $this->request->server->get('HTTP_ORIGIN') . $this->router->generate(
+                'claro_security_reset_password',
+                array('hash' => $user->getResetPasswordHash())
+            );
         }
 
         if (!empty($user)) {
@@ -137,17 +146,14 @@ class AuthenticationController
             $user->setResetPasswordHash($password);
             $this->om->persist($user);
             $this->om->flush();
-            $link = $this->request->server->get('HTTP_ORIGIN') . $this->router->generate(
-                'claro_security_reset_password',
-                array('hash' => $user->getResetPasswordHash())
-            );
             $msg = $this->translator->trans('mail_click', array(), 'platform');
-            $body = '<p><a href="' . $link . '"/>' . $msg . '</a></p>';
+            $body = $this->templating->render('ClarolineCoreBundle:Authentication:emailForgotPassword.html.twig',array('message'=> $msg, 'link'=> $link));
             $message = \Swift_Message::newInstance()
                 ->setSubject($this->translator->trans('reset_pwd', array(), 'platform'))
                 ->setFrom('noreply@claroline.net')
                 ->setTo($data['mail'])
-                ->setBody($body, 'text/html');
+                ->setBody($body);
+
             $this->mailer->send($message);
 
             return array(
@@ -230,7 +236,27 @@ class AuthenticationController
             'error' => $this->translator->trans('password_missmatch', array(), 'platform')
         );
     }
-
+     /**
+     * @Route(
+     *     "/render",
+     *     name="claro_security_render_twig_email",
+     *     options={"expose"=true}
+     * )
+     * @Method("POST")
+     * @Template("ClarolineCoreBundle:Authentication:emailForgotPassword.html.twig")
+     */
+    public function renderTwigEmailAction($user)
+    {
+       $link = $this->request->server->get('HTTP_ORIGIN') . $this->router->generate(
+                'claro_security_reset_password',
+                array('hash' => $user->getResetPasswordHash())
+            );
+        $msg = $this->translator->trans('mail_click', array(), 'platform');
+        return array(
+                'message' => $msg,
+                'link' => $link
+            );
+    }
     /**
      * @Route("/authenticate")
      * @Method("POST")
