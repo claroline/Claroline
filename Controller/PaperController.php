@@ -267,7 +267,7 @@ class PaperController extends Controller
 
     private function checkAccess($exo)
     {
-        $collection = new ResourceCollection(array($exo));
+        $collection = new ResourceCollection(array($exo->getResourceNode()));
 
         if (!$this->get('security.context')->isGranted('OPEN', $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
