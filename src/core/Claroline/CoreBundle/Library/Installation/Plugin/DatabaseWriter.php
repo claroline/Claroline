@@ -317,7 +317,8 @@ class DatabaseWriter
         $toolEntity->setIsWorkspaceRequired(false);
         $toolEntity->setPlugin($pluginEntity);
         $toolEntity->setExportable($tool['is_exportable']);
-        $toolEntity->setHasOptions($tool['has_options']);
+        $toolEntity->setIsConfigurableInWorkspace($tool['is_configurable_in_workspace']);
+        $toolEntity->setIsConfigurableInDesktop($tool['is_configurable_in_desktop']);
 
         if (isset($tool['class'])) {
             $toolEntity->setClass(
