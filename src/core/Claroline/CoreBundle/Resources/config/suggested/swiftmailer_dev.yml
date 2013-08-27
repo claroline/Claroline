@@ -1,0 +1,2 @@
+imports:
+    - { resource: swiftmailer_prod.yml }
