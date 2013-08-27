@@ -1,0 +1,13 @@
+twig:
+    debug:            %kernel.debug%
+    #strict_variables: %kernel.debug%
+    strict_variables: false
+    globals:
+        chosenRangeKeys: %chosenRangeKeys%
+    form:
+        resources:
+            - 'ClarolineCoreBundle:Form:date_range.html.twig'
+            - 'ClarolineCoreBundle:Form:two_level_select.html.twig'
+            - 'ClarolineCoreBundle:Form:simple_auto_complete.html.twig'
+            - 'ClarolineCoreBundle:Form:button_group_select.html.twig'
+            - 'ClarolineCoreBundle::form_theme.html.twig'

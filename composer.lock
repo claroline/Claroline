@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "6939bca0d0395ebaf837dbcb7a59dec1",
+    "hash": "c6bf8cd07f674b921267b02e735973e1",
     "packages": [
         {
             "name": "besimple/sso-auth-bundle",
@@ -112,6 +112,47 @@
                 "Claroline"
             ],
             "time": "2013-08-12 11:07:48"
+        },
+        {
+            "name": "claroline/bundle-recorder",
+            "version": "dev-master",
+            "target-dir": "Claroline/BundleRecorder",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/claroline/BundleRecorder.git",
+                "reference": "ccb2ab662cdccb3b36f5538b2c5abe319f5c6d68"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/claroline/BundleRecorder/zipball/ccb2ab662cdccb3b36f5538b2c5abe319f5c6d68",
+                "reference": "ccb2ab662cdccb3b36f5538b2c5abe319f5c6d68",
+                "shasum": ""
+            },
+            "require": {
+                "composer/composer": "dev-master",
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Claroline\\BundleRecorder": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Claroline development team",
+                    "email": "dev@claroline.net",
+                    "homepage": "http://github.com/claroline"
+                }
+            ],
+            "description": "Claroline bundle recorder",
+            "homepage": "http://www.claroline.net",
+            "keywords": [
+                "Bundle recorder",
+                "Claroline"
+            ],
+            "time": "2013-08-27 12:03:20"
         },
         {
             "name": "claroline/example-bundle",
@@ -280,6 +321,47 @@
                 "plugin"
             ],
             "time": "2013-08-12 11:13:20"
+        },
+        {
+            "name": "claroline/installation-bundle",
+            "version": "dev-master",
+            "target-dir": "Claroline/InstallationBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/claroline/InstallationBundle.git",
+                "reference": "844e97afb1c045cdcfd1227af47d0d7803f98984"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/claroline/InstallationBundle/zipball/844e97afb1c045cdcfd1227af47d0d7803f98984",
+                "reference": "844e97afb1c045cdcfd1227af47d0d7803f98984",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "symfony/framework-bundle": "~2.0"
+            },
+            "type": "bundle",
+            "autoload": {
+                "psr-0": {
+                    "Claroline\\InstallationBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Claroline development team",
+                    "email": "dev@claroline.net",
+                    "homepage": "http://github.com/claroline"
+                }
+            ],
+            "description": "Claroline installation bundle",
+            "homepage": "http://www.claroline.net",
+            "keywords": [
+                "Claroline",
+                "installation"
+            ],
+            "time": "2013-08-27 12:43:40"
         },
         {
             "name": "claroline/migration-bundle",
@@ -1230,60 +1312,6 @@
                 "persistence"
             ],
             "time": "2013-08-05 08:41:18"
-        },
-        {
-            "name": "doctrine/doctrine-migrations-bundle",
-            "version": "dev-master",
-            "target-dir": "Doctrine/Bundle/MigrationsBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doctrine/DoctrineMigrationsBundle.git",
-                "reference": "a9796ce33152754e4dbc7d251da5c1c0a739189c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineMigrationsBundle/zipball/a9796ce33152754e4dbc7d251da5c1c0a739189c",
-                "reference": "a9796ce33152754e4dbc7d251da5c1c0a739189c",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/doctrine-bundle": "~1.0",
-                "doctrine/migrations": "*",
-                "php": ">=5.3.2",
-                "symfony/framework-bundle": ">=2.1.0,<2.4-dev"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-0": {
-                    "Doctrine\\Bundle\\MigrationsBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
-                },
-                {
-                    "name": "Doctrine Project",
-                    "homepage": "http://www.doctrine-project.org"
-                }
-            ],
-            "description": "Symfony DoctrineMigrationsBundle",
-            "homepage": "http://www.doctrine-project.org",
-            "keywords": [
-                "dbal",
-                "migrations",
-                "schema"
-            ],
-            "time": "2013-07-10 12:55:18"
         },
         {
             "name": "doctrine/inflector",
@@ -3659,6 +3687,60 @@
     ],
     "packages-dev": [
         {
+            "name": "doctrine/doctrine-migrations-bundle",
+            "version": "dev-master",
+            "target-dir": "Doctrine/Bundle/MigrationsBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/DoctrineMigrationsBundle.git",
+                "reference": "a9796ce33152754e4dbc7d251da5c1c0a739189c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/DoctrineMigrationsBundle/zipball/a9796ce33152754e4dbc7d251da5c1c0a739189c",
+                "reference": "a9796ce33152754e4dbc7d251da5c1c0a739189c",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/doctrine-bundle": "~1.0",
+                "doctrine/migrations": "*",
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": ">=2.1.0,<2.4-dev"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\Bundle\\MigrationsBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Doctrine Project",
+                    "homepage": "http://www.doctrine-project.org"
+                }
+            ],
+            "description": "Symfony DoctrineMigrationsBundle",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "dbal",
+                "migrations",
+                "schema"
+            ],
+            "time": "2013-07-10 12:55:18"
+        },
+        {
             "name": "hamcrest/hamcrest",
             "version": "1.1.0",
             "dist": {
@@ -3771,6 +3853,36 @@
                 "testing"
             ],
             "time": "2013-08-07 21:50:22"
+        },
+        {
+            "name": "stefk/test-plugin-bundle",
+            "version": "dev-master",
+            "target-dir": "Stefk/TestPluginBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stefk/TestPluginBundle.git",
+                "reference": "0780aa7bb98cd33c57e93d1689f291c97692d9c5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stefk/TestPluginBundle/zipball/0780aa7bb98cd33c57e93d1689f291c97692d9c5",
+                "reference": "0780aa7bb98cd33c57e93d1689f291c97692d9c5",
+                "shasum": ""
+            },
+            "require": {
+                "claroline/plugin-installer": "*"
+            },
+            "type": "claroline-plugin",
+            "extra": {
+                "dbVersion": "20130809130203"
+            },
+            "autoload": {
+                "psr-0": {
+                    "Stefk\\TestPluginBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "time": "2013-08-09 11:04:23"
         }
     ],
     "aliases": [
@@ -3778,10 +3890,11 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
+        "claroline/bundle-recorder": 20,
+        "claroline/installation-bundle": 20,
         "jms/security-extra-bundle": 20,
         "jms/di-extra-bundle": 20,
         "stof/doctrine-extensions-bundle": 20,
-        "doctrine/doctrine-migrations-bundle": 20,
         "doctrine/doctrine-fixtures-bundle": 20,
         "friendsofsymfony/jsrouting-bundle": 20,
         "stfalcon/tinymce-bundle": 20,

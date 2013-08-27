@@ -1,26 +1,7 @@
+# This file gathers container configuration that must be loaded at the application level
+
 imports:
-    - { resource: config_dev.yml }
-
-framework:
-    test: ~
-    csrf_protection: false
-    session:
-        storage_id: session.storage.filesystem
-
-web_profiler:
-    toolbar: false
-    intercept_redirects: false
-
-swiftmailer:
-    disable_delivery: true
-
-doctrine:
-    dbal:
-        driver:   %test_database_driver%
-        host:     %test_database_host%
-        dbname:   %test_database_name%
-        user:     %test_database_user%
-        password: %test_database_password%
+    - { resource: config.yml }
 
 parameters:
     test.client.class: Claroline\CoreBundle\Library\Testing\TransactionalTestClient

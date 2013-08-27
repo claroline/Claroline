@@ -6,6 +6,10 @@
     },
     "require": {
         "php": ">=5.3.3",
+
+        "claroline/bundle-recorder": "dev-master",
+        "claroline/installation-bundle": "dev-master",
+
         "symfony/symfony": "2.3.*",
         "doctrine/orm": ">=2.2,<2.5-dev",
         "doctrine/doctrine-bundle": ">=2.1",
@@ -20,7 +24,6 @@
         "jms/security-extra-bundle": "dev-master",
         "jms/di-extra-bundle": "dev-master",
         "stof/doctrine-extensions-bundle": "dev-master",
-        "doctrine/doctrine-migrations-bundle": "dev-master",
         "doctrine/doctrine-fixtures-bundle": "dev-master",
         "friendsofsymfony/jsrouting-bundle": "dev-master",
         "stfalcon/tinymce-bundle": "dev-master",
@@ -115,6 +118,12 @@
         }
     ],
     "scripts": {
+        "post-package-install": [
+            "Claroline\\BundleRecorder\\ScriptHandler::postPackageInstall"
+        ],
+        "post-package-uninstall": [
+            "Claroline\\BundleRecorder\\ScriptHandler::postPackageUninstall"
+        ],
         "post-install-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
