@@ -33,27 +33,12 @@ class MessageControllerTest extends MockeryTestCase
         );
     }
 
-    public function testFormAction()
-    {
-        $receivers = array('foo');
-        $this->messageManager->shouldReceive('generateStringTo')
-            ->once()
-            ->with($receivers)
-            ->andReturn('foo;');
-        $this->formFactory->shouldReceive('create')
-            ->once()
-            ->with(FormFactory::TYPE_MESSAGE, array('foo;'))
-            ->andReturn($this->form);
-        $this->form->shouldReceive('createView')->once()->andReturn('view');
-        $this->assertEquals(array('form' => 'view'), $this->controller->formAction($receivers));
-    }
-
     public function testFormForGroupAction()
     {
         $group = new Group();
         $this->router->shouldReceive('generate')
             ->once()
-            ->with('claro_message_form')
+            ->with('claro_message_show', array('message' => 0))
             ->andReturn('/message');
         $this->messageManager->shouldReceive('generateGroupQueryString')
             ->once()
@@ -92,7 +77,7 @@ class MessageControllerTest extends MockeryTestCase
         $this->assertEquals('url', $response->getTargetUrl());
     }
 
-    public function testShowAction()
+    public function testShowOnActionIfMessageExists()
     {
         $user = new User();
         $sender = new User();
@@ -112,7 +97,25 @@ class MessageControllerTest extends MockeryTestCase
         $this->form->shouldReceive('createView')->once()->andReturn('form');
         $this->assertEquals(
             array('ancestors' => 'ancestors', 'message' => $message, 'form' => 'form'),
-            $this->controller->showAction($user, $message)
+            $this->controller->showAction($user, array(), $message)
+        );
+    }
+
+    public function testShowOnActionIfMessageIsNull()
+    {
+        $user = new User();
+        $sender = new User();
+        $receiverString = 'user1;user2;';
+        $this->messageManager->shouldReceive('generateStringTo')->once()
+            ->with(array($user, $sender))->andReturn($receiverString);
+        $this->formFactory->shouldReceive('create')
+            ->once()
+            ->with(FormFactory::TYPE_MESSAGE, array($receiverString, ''))
+            ->andReturn($this->form);
+        $this->form->shouldReceive('createView')->once()->andReturn('form');
+        $this->assertEquals(
+            array('ancestors' => array(), 'message' => null, 'form' => 'form'),
+            $this->controller->showAction($user, array($user, $sender), null)
         );
     }
 

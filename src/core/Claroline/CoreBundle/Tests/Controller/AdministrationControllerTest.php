@@ -815,14 +815,15 @@ class AdministrationControllerTest extends MockeryTestCase
             ->times(2)
             ->andReturn('roleTrad');
 
+        $response = new Response($msg, 200);
         $this->assertEquals(
-            new Response($msg, 200),
+            $response->getContent(),
             $this->getController()
                 ->subscribeMultipleGroupsToMultipleWorkspacesAction(
                     'role',
                     $workspaces,
                     $groups
-                )
+                )->getContent()
         );
     }
 
@@ -903,12 +904,13 @@ class AdministrationControllerTest extends MockeryTestCase
             ->times(2)
             ->andReturn('roleBTrad');
 
+        $response = new Response($msg, 200);
         $this->assertEquals(
-            new Response($msg, 200),
+            $response->getContent(),
             $this->getController()->subscribeMultipleUsersToOneWorkspaceAction(
                 $roles,
                 $users
-            )
+            )->getContent()
         );
     }
 
@@ -983,12 +985,13 @@ class AdministrationControllerTest extends MockeryTestCase
             ->times(2)
             ->andReturn('roleBTrad');
 
+        $response = new Response($msg, 200);
         $this->assertEquals(
-            new Response($msg, 200),
+            $response->getContent(),
             $this->getController()->subscribeMultipleGroupsToOneWorkspaceAction(
                 $roles,
                 $groups
-            )
+            )->getContent()
         );
     }
 
