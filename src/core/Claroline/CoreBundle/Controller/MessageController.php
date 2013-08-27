@@ -44,28 +44,6 @@ class MessageController
 
     /**
      * @EXT\Route(
-     *     "/form",
-     *     name="claro_message_form"
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Message:messageForm.html.twig")
-     * @EXT\ParamConverter("receivers", class="ClarolineCoreBundle:User", options={"multipleIds" = true})
-     *
-     * Displays the message form with the "to" field filled with users.
-     *
-     * @param array[User] $receivers
-     *
-     * @return Response
-     */
-    public function formAction(array $receivers)
-    {
-        $usersString = $this->messageManager->generateStringTo($receivers);
-        $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE, array($usersString));
-
-        return array('form' => $form->createView());
-    }
-
-    /**
-     * @EXT\Route(
      *     "/form/group/{group}",
      *     name="claro_message_form_for_group"
      * )
@@ -78,7 +56,7 @@ class MessageController
      */
     public function formForGroupAction(Group $group)
     {
-        $url = $this->router->generate('claro_message_form')
+        $url = $this->router->generate('claro_message_show', array('message' => 0))
             . $this->messageManager->generateGroupQueryString($group);
 
         return new RedirectResponse($url);
@@ -88,7 +66,7 @@ class MessageController
      * @EXT\Route(
      *     "/send/{parentId}",
      *     name="claro_message_send",
-     *     defaults={"parentId" = null}
+     *     defaults={"parentId" = 0}
      * )
      * @EXT\Method({"POST"})
      * @EXT\ParamConverter("sender", options={"authenticatedUser" = true})
@@ -115,7 +93,7 @@ class MessageController
             return new RedirectResponse($url);
         }
 
-        $ancestors = $this->messageManager->getConversation($parent);
+        $ancestors = $parent ? $this->messageManager->getConversation($parent): array();
 
         return array('form' => $form->createView(), 'message' => $parent, 'ancestors' => $ancestors);
     }
@@ -226,9 +204,16 @@ class MessageController
     /**
      * @EXT\Route(
      *     "/show/{message}",
-     *     name="claro_message_show"
+     *     name="claro_message_show",
+     *     defaults={"message"=0}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("receivers", class="ClarolineCoreBundle:User", options={"multipleIds" = true})
+     * @EXT\ParamConverter(
+     *      "message",
+     *      class="ClarolineCoreBundle:Message",
+     *      options={"id" = "message", "strictId" = true}
+     * )
      * @EXT\Template()
      *
      * Displays a message.
@@ -237,14 +222,21 @@ class MessageController
      *
      * @return Response
      */
-    public function showAction(User $user, Message $message)
+    public function showAction(User $user, array $receivers, Message $message = null)
     {
-        $this->messageManager->markAsRead($user, array($message));
-        $ancestors = $this->messageManager->getConversation($message);
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_MESSAGE,
-            array($message->getSenderUsername(), 'Re: ' . $message->getObject())
-        );
+        if ($message) {
+            $this->messageManager->markAsRead($user, array($message));
+            $ancestors = $this->messageManager->getConversation($message);
+            $sendString = $message->getSenderUsername();
+            $object = 'Re: ' . $message->getObject();
+        } else {
+            //datas from the post request
+            $sendString = $this->messageManager->generateStringTo($receivers);
+            $object = '';
+            $ancestors = array();
+        }
+
+        $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE, array($sendString, $object));
 
         return array(
             'ancestors' => $ancestors,
