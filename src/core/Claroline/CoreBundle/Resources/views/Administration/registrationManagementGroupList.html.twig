@@ -10,7 +10,10 @@
 {% endblock %}
 
 {% block section_content %}
-    <div id="registration-list-div" subject-type="group">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'registration_to_workspaces'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body" id="registration-list-div" subject-type="group">
         <div>
             <div id="custom-flashbag-div" class="alert alert-success hide">
                 <a id="flashbag-close-button" class="close" href="#">×</a>
@@ -25,9 +28,8 @@
                         'href': path('claro_admin_registration_management')
                     },
                     {
-                        'icon': 'icon-th-list',
                         'name':'groups'|trans({}, 'platform'),
-                        'href': '#'
+                        'href': ''
                     }
                 ])
             }}
