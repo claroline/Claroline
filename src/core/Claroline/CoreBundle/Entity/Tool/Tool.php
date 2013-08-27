@@ -58,9 +58,14 @@ class Tool
     protected $isExportable = false;
 
     /**
-     * @ORM\Column(type="boolean", name="has_options")
+     * @ORM\Column(type="boolean", name="is_configurable_in_workspace")
      */
-    protected $hasOptions = false;
+    protected $isConfigurableInWorkspace = false;
+
+    /**
+     * @ORM\Column(type="boolean", name="is_configurable_in_desktop")
+     */
+    protected $isConfigurableInDesktop= false;
 
     /**
      * Unmapped var used for the tool configuration.
@@ -188,18 +193,28 @@ class Tool
         return $this->isExportable;
     }
 
-    public function setHasOptions($hasOptions)
-    {
-        $this->hasOptions = $hasOptions;
-    }
-
-    public function hasOptions()
-    {
-        return $this->hasOptions;
-    }
-
     public function getOrderedTools()
     {
         return $this->orderedTools;
+    }
+
+    public function setIsConfigurableInWorkspace($bool)
+    {
+        $this->isConfigurableInWorkspace = $bool;
+    }
+
+    public function isConfigurableInWorkspace()
+    {
+        return $this->isConfigurableInWorkspace;
+    }
+
+    public function setIsConfigurableInDesktop($bool)
+    {
+        $this->isConfigurableInDesktop = $bool;
+    }
+
+    public function isConfigurableInDesktop()
+    {
+        return $this->isConfigurableInDesktop;
     }
 }
