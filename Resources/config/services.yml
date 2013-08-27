@@ -15,7 +15,7 @@ services:
 
     twig.extension.twigExtensions:
         class: UJM\ExoBundle\Services\twig\twigExtensions
-        arguments: [@doctrine]
+        arguments: [@doctrine, @ujm.exercise_services]
         tags:
             - { name: twig.extension }
 

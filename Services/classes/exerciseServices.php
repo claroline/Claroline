@@ -127,7 +127,7 @@ class exerciseServices
     public function qcmMark(\UJM\ExoBundle\Entity\InteractionQCM $interQCM, array $response, $allChoices, $penality)
     {
         $score = 0;
-        $scoreMax = $this->qcmMaxScore($interQCM->getInteraction());
+        $scoreMax = $this->qcmMaxScore($interQCM);
 
         $rightChoices = array();
         $markByChoice = array();
@@ -258,7 +258,7 @@ class exerciseServices
                     }
                 }
             }
-            $total = $this->graphicMaxScore($interG->getInteraction()); // Score max
+            $total = $this->graphicMaxScore($interG); // Score max
         }
 
         $penalty = 0;
@@ -350,7 +350,7 @@ class exerciseServices
             $score = -1;
         }
         
-        $score .= '/'.$this->openMaxScore($interOpen->getInteraction());
+        $score .= '/'.$this->openMaxScore($interOpen);
         
         $res = array(
             'penalty'   => $penalty,
@@ -398,13 +398,25 @@ class exerciseServices
 
             switch ($interaction[0]->getType()){
                 case 'InteractionQCM':
-                    $scoreMax = $this->qcmMaxScore($interaction[0]);
+                    $interQCM = $this->doctrine
+                                     ->getManager()
+                                     ->getRepository('UJMExoBundle:InteractionQCM')
+                                     ->getInteractionQCM($interaction[0]->getId());
+                    $scoreMax = $this->qcmMaxScore($interQCM[0]);
                     break;
                 case 'InteractionGraphic':
-                    $scoreMax = $this->graphicMaxScore($interaction[0]);
+                    $interGraphic = $this->doctrine
+                                         ->getManager()
+                                         ->getRepository('UJMExoBundle:InteractionGraphic')
+                                         ->getInteractionGraphic($interaction[0]->getId());
+                    $scoreMax = $this->graphicMaxScore($interGraphic[0]);
                     break;
                 case 'InteractionOpen':
-                    $scoreMax = $this->openMaxScore($interaction[0]);
+                    $interOpen = $this->doctrine
+                                      ->getManager()
+                                      ->getRepository('UJMExoBundle:InteractionOpen')
+                                      ->getInteractionOpen($interaction[0]->getId());
+                    $scoreMax = $this->openMaxScore($interOpen[0]);
                     break;
             }
 
@@ -430,11 +442,19 @@ class exerciseServices
             $interaction = $this->doctrine->getManager()->getRepository('UJMExoBundle:Interaction')->find($interQuestion);
             switch ( $interaction->getType()) {
                 case "InteractionQCM":
-                    $exercisePaperTotalScore += $this->qcmMaxScore($interaction);
+                    $interQCM = $this->doctrine
+                                     ->getManager()
+                                     ->getRepository('UJMExoBundle:InteractionQCM')
+                                     ->getInteractionQCM($interaction->getId());
+                    $exercisePaperTotalScore += $this->qcmMaxScore($interQCM[0]);
                     break;
 
                 case "InteractionGraphic":
-                    $exercisePaperTotalScore += $this->graphicMaxScore($interaction);
+                    $interGraphic = $this->doctrine
+                                         ->getManager()
+                                         ->getRepository('UJMExoBundle:InteractionGraphic')
+                                         ->getInteractionGraphic($interaction->getId());
+                    $exercisePaperTotalScore += $this->graphicMaxScore($interGraphic[0]);
                     break;
 
                 case "InteractionHole":
@@ -442,7 +462,11 @@ class exerciseServices
                     break;
 
                 case "InteractionOpen":
-                    $exercisePaperTotalScore += $this->openMaxScore($interaction[0]);
+                    $interOpen = $this->doctrine
+                                      ->getManager()
+                                      ->getRepository('UJMExoBundle:InteractionOpen')
+                                      ->getInteractionOpen($interaction->getId());
+                    $exercisePaperTotalScore += $this->openMaxScore($interOpen[0]);
                     break;
             }
         }
@@ -450,19 +474,19 @@ class exerciseServices
         return $exercisePaperTotalScore;
     }
 
-    public function qcmMaxScore($interaction)
+    public function qcmMaxScore($interQCM)
     {
         $scoreMax = 0;
 
-        $interQCM = $this->doctrine
+        /*$interQCM = $this->doctrine
             ->getManager()
             ->getRepository('UJMExoBundle:InteractionQCM')
-            ->getInteractionQCM($interaction->getId());
+            ->getInteractionQCM($interaction->getId());*/
 
-        if (!$interQCM[0]->getWeightResponse()) {
-            $scoreMax = $interQCM[0]->getScoreRightResponse();
+        if (!$interQCM->getWeightResponse()) {
+            $scoreMax = $interQCM->getScoreRightResponse();
         } else {
-            foreach ($interQCM[0]->getChoices() as $choice) {
+            foreach ($interQCM->getChoices() as $choice) {
                 if ($choice->getRightResponse()) {
                     $scoreMax += $choice->getWeight();
                 }
@@ -472,19 +496,19 @@ class exerciseServices
         return $scoreMax;
     }
 
-    public function graphicMaxScore($interaction)
+    public function graphicMaxScore($interGraphic)
     {
         $scoreMax = 0;
 
-        $interGraphic = $this->doctrine
+        /*$interGraphic = $this->doctrine
             ->getManager()
             ->getRepository('UJMExoBundle:InteractionGraphic')
-            ->getInteractionGraphic($interaction->getId());
+            ->getInteractionGraphic($interaction->getId());*/
 
         $rightCoords = $this->doctrine
             ->getManager()
             ->getRepository('UJMExoBundle:Coords')
-            ->findBy(array('interactionGraphic' => $interGraphic[0]->getId()));
+            ->findBy(array('interactionGraphic' => $interGraphic->getId()));
 
         foreach ($rightCoords as $score) {
             $scoreMax += $score->getScoreCoords(); // Score max
@@ -493,17 +517,17 @@ class exerciseServices
         return $scoreMax;
     }
     
-    public function openMaxScore($interaction)
+    public function openMaxScore($interOpen)
     {
         $scoreMax = 0;
 
-        $interOpen = $this->doctrine
+        /*$interOpen = $this->doctrine
             ->getManager()
             ->getRepository('UJMExoBundle:InteractionOpen')
-            ->getInteractionOpen($interaction->getId());
+            ->getInteractionOpen($interaction->getId());*/
         
-        if($interOpen[0]->getTypeOpenQuestion() == 'long'){
-            $scoreMax = $interOpen[0]->getScoreMaxLongResp();
+        if($interOpen->getTypeOpenQuestion() == 'long'){
+            $scoreMax = $interOpen->getScoreMaxLongResp();
         }
         
         return $scoreMax;

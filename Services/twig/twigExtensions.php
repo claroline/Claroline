@@ -45,13 +45,17 @@ namespace UJM\ExoBundle\Services\twig;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\HttpFoundation\Request;
 
+use UJM\ExoBundle\Services\classes\exerciseServices;
+
 class TwigExtensions extends \Twig_Extension
 {
     protected $doctrine;
+    protected $exerciseSer;
 
-    public function __construct(Registry $doctrine)
+    public function __construct(Registry $doctrine, exerciseServices $exerciseSer)
     {
         $this->doctrine  = $doctrine;
+        $this->exerciseSer = $exerciseSer;
     }
 
     public function getName()
@@ -128,28 +132,11 @@ class TwigExtensions extends \Twig_Extension
 
     private function getQCMScoreMax($interQCM)
     {
-        $scoreMax = 0;
-        if ($interQCM->getWeightResponse() == 1) {
-            foreach ($interQCM->getChoices() as $choice) {
-                if ($choice->getRightResponse() == 1) {
-                    $scoreMax += $choice->getWeight();
-                }
-            }
-        } else {
-            $scoreMax = $interQCM->getScoreRightResponse();
-        }
-
-        return $scoreMax;
+        return $this->exerciseSer->qcmMaxScore($interQCM);
     }
     
     private function getOpenScoreMax($interOpen)
     {
-        $scoreMax = 0;
-
-        if($interOpen->getTypeOpenQuestion() == 'long'){
-            $scoreMax = $interOpen->getScoreMaxLongResp();
-        }
-        
-        return $scoreMax;
+        return $this->exerciseSer->openMaxScore($interOpen);
     }
 }

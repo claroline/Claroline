@@ -1272,6 +1272,8 @@ class ExerciseController extends Controller
      */
     private function getCorrectAnswer($exerciseId, $eq, $em, $exerciseSer)
     {
+        $em = $this->getDoctrine()->getManager();
+        
         $scoreMax = 0;
 
         $interaction = $em->getRepository('UJMExoBundle:Interaction')->getInteraction($eq->getQuestion()->getId());
@@ -1281,12 +1283,16 @@ class ExerciseController extends Controller
 
         switch ( $interaction[0]->getType()) {
            case "InteractionQCM":
-                $scoreMax = $exerciseSer->qcmMaxScore($interaction[0]);
+                $interQCM = $em->getRepository('UJMExoBundle:InteractionQCM')
+                               ->getInteractionQCM($interaction[0]->getId());
+                $scoreMax = $exerciseSer->qcmMaxScore($interQCM[0]);
                 $responsesTab = $this->responseStatus($responses, $scoreMax);
               break;
 
             case "InteractionGraphic":
-                $scoreMax = $exerciseSer->graphicMaxScore($interaction[0]);
+                $interGraphic = $em->getRepository('UJMExoBundle:InteractionGraphic')
+                                   ->getInteractionGraphic($interaction[0]->getId());
+                $scoreMax = $exerciseSer->graphicMaxScore($interGraphic[0]);
                 $responsesTab = $this->responseStatus($responses, $scoreMax);
                 break;
 
@@ -1295,7 +1301,7 @@ class ExerciseController extends Controller
                 break;
 
             case "InteractionOpen":
-
+                echo 'L1304 TODO open question';die();
                 break;
         }
 
