@@ -60,7 +60,7 @@ class BundleManager
         $nonAutoInstallableBundles = array();
 
         foreach ($entries as $bundleClass => $isActive) {
-            if ($isActive) {
+            if ($isActive && $bundleClass !== 'Claroline\InstallationBundle\ClarolineInstallationBundle') {
                 $bundle = new $bundleClass($this->kernel);
 
                 if ($bundle instanceof ConfigurationProviderInterface) {
