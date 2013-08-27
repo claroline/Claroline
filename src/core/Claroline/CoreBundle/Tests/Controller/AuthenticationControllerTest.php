@@ -17,6 +17,7 @@ class AuthenticationControllerTest extends MockeryTestCase
     private $formFactory;
     private $authenticator;
     private $controller;
+    private $templating;
 
     protected function setUp()
     {
@@ -31,6 +32,7 @@ class AuthenticationControllerTest extends MockeryTestCase
         $this->translator = $this->mock('Symfony\Component\Translation\Translator');
         $this->formFactory = $this->mock('Claroline\CoreBundle\Form\Factory\FormFactory');
         $this->authenticator = $this->mock('Claroline\CoreBundle\Library\Security\Authenticator');
+        $this->templating = $this->mock('Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine');
         $this->controller = new AuthenticationController(
             $this->request,
             $this->userManager,
@@ -40,7 +42,8 @@ class AuthenticationControllerTest extends MockeryTestCase
             $this->router,
             $this->translator,
             $this->formFactory,
-            $this->authenticator
+            $this->authenticator,
+            $this->templating
         );
     }
 
@@ -84,13 +87,20 @@ class AuthenticationControllerTest extends MockeryTestCase
             ->andReturn('/reset/123');
         $this->translator->shouldReceive('trans')->once()->with('mail_click', array(), 'platform')->andReturn('blabla');
         $this->translator->shouldReceive('trans')->once()->with('reset_pwd', array(), 'platform')->andReturn('reset');
+        $this->templating->shouldReceive('render')->once()
+            ->with(
+                'ClarolineCoreBundle:Authentication:emailForgotPassword.html.twig',
+                array('message' => 'blabla', 'link' => 'http://jorgeaimejquery/reset/123')
+            )
+            ->andReturn('<html><body> <p> <a href="http://jorgeaimejquery/reset/123"/>blabla</a> </p></body></html>');
         $this->mailer->shouldReceive('send')->once()->with(
             m::on(
                 function ($message) {
+
                     return $message->getSubject() === 'reset'
                         && $message->getFrom() === array('noreply@claroline.net' => null)
                         && $message->getTo() === array('toto@claroline.com' => null)
-                        && $message->getBody() === '<p><a href="http://jorgeaimejquery/reset/123"/>blabla</a></p>';
+                        && $message->getBody() === '<html><body> <p> <a href="http://jorgeaimejquery/reset/123"/>blabla</a> </p></body></html>';
                 }
             )
         );
