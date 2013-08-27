@@ -25,11 +25,14 @@ class MessageControllerTest extends MockeryTestCase
         $this->router = $this->mock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
         $this->formFactory = $this->mock('Claroline\CoreBundle\Form\Factory\FormFactory');
         $this->messageManager = $this->mock('Claroline\CoreBundle\Manager\MessageManager');
-        $this->controller = new MessageController(
-            $this->request,
-            $this->router,
-            $this->formFactory,
-            $this->messageManager
+        $this->controller = $this->mock(
+            'Claroline\CoreBundle\Controller\MessageController[checkAccess]',
+            array(
+                $this->request,
+                $this->router,
+                $this->formFactory,
+                $this->messageManager
+            )
         );
     }
 
@@ -85,6 +88,7 @@ class MessageControllerTest extends MockeryTestCase
         $message = new Message();
         $message->setSender($sender);
         $message->setObject('Some object...');
+        $this->controller->shouldReceive('checkAccess')->once()->with($message, $user);
         $this->messageManager->shouldReceive('markAsRead')->once()->with($user, array($message));
         $this->messageManager->shouldReceive('getConversation')
             ->once()
@@ -117,6 +121,31 @@ class MessageControllerTest extends MockeryTestCase
             array('ancestors' => array(), 'message' => null, 'form' => 'form'),
             $this->controller->showAction($user, array($user, $sender), null)
         );
+    }
+
+    /**
+     * @dataProvider checkAccessProvider
+     */
+    public function testCheckAccess($senderName, $username, $receiversString, $isCorrect)
+    {
+        $controller = new MessageController(
+            $this->request,
+            $this->router,
+            $this->formFactory,
+            $this->messageManager
+        );
+
+        $user = $this->mock('Claroline\CoreBundle\Entity\User');
+        $message = $this->mock('Claroline\CoreBundle\Entity\Message');
+        $user->shouldReceive('getUsername')->andReturn($username);
+        $message->shouldReceive('getSenderUsername')->andReturn($senderName);
+        $message->shouldReceive('getTo')->andReturn($receiversString);
+
+        if (!$isCorrect) {
+            $this->setExpectedException('\Symfony\Component\Security\Core\Exception\AccessDeniedException');
+        }
+
+        $this->assertTrue($controller->checkAccess($message, $user));
     }
 
     /**
@@ -175,6 +204,30 @@ class MessageControllerTest extends MockeryTestCase
             array('restoreFromTrash', 'markAsUnremoved'),
             array('softDelete', 'markAsRemoved'),
             array('delete', 'remove')
+        );
+    }
+
+    public function checkAccessProvider()
+    {
+        return array(
+            array(
+                'sendername' => 'toto',
+                'username' => 'username',
+                'receiversString' => 'user;username;username1',
+                'isCorrect' => true
+            ),
+            array(
+                'sendername' => 'username',
+                'username' => 'username',
+                'receiversString' => 'user;username; username1',
+                'isCorrect' => true
+            ),
+            array(
+                'sendername' => 'toto',
+                'username' => 'username',
+                'receiversString' => 'user; username1;',
+                'isCorrect' => false
+            )
         );
     }
 }
