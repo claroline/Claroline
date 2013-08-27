@@ -18,7 +18,7 @@
 {% if nbPages > 1 %}
 {{ renderPager(relations, workspaceTagId) }}
 {% endif %}
-<table id="workspace-table"  class="table table-striped table-bordered table-condensed">
+<table id="workspace-table"  class="table table-striped table-condensed">
     <tbody id="user-table-body">
         {% for relation in relations.currentPageResults() %}
         {% set workspace = relation.getWorkspace() %}

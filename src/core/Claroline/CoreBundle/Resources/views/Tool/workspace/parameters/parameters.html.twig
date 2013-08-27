@@ -2,28 +2,20 @@
 
 {% block section_content %}
 
-    {{ macros.breadcrumbs([
-        {
-            'icon': 'icon-cog',
-            'name': 'parameters'|trans({}, 'platform'),
-            'href': '#'
-        }
-    ])}}
-
-    <h3>{{ 'parameters'|trans({}, 'platform') }}</h3>
-    <br>
-
-    <ul>
-        <li>
-            <a href="{{ path('claro_workspace_edit_form', {'workspace': workspace.getId()}) }}"> {{ 'general'|trans({}, 'platform') }} </a>
-        </li>
-        <li>
-            <a href="{{ path('claro_workspace_tools_roles', {'workspaceId': workspace.getId()}) }}"> {{ 'tools'|trans({}, 'platform') }} </a>
-        </li>
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'parameters'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="list-group">
+        <a class="list-group-item" href="{{ path('claro_workspace_edit_form', {'workspace': workspace.getId()}) }}">
+            {{ 'general'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_workspace_tools_roles', {'workspaceId': workspace.getId()}) }}">
+            {{ 'tools'|trans({}, 'platform') }}
+        </a>
         {% for tool in tools %}
-            <li> <a href="{{ path('claro_workspace_tool_config', {'tool': tool.getId(), 'workspace': workspace.getId()}) }}">
+            <a class="list-group-item" href="{{ path('claro_workspace_tool_config', {'tool': tool.getId(), 'workspace': workspace.getId()}) }}">
                 {{ tool.getName()|trans({}, 'tools') }}
-            </a></li>
+            </a>
         {% endfor %}
-    </ul>
+    </div>
 {% endblock %}
