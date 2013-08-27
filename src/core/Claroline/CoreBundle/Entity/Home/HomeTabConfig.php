@@ -8,15 +8,20 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 /**
  * @ORM\Entity
  * @ORM\Table(
- *     name="claro_home_tab_main_config",
+ *     name="claro_home_tab_config",
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(
- *             name="home_tab_main_config_unique_home_tab_user_workspace",
- *             columns={"home_tab_id", "user_id", "workspace_id"}
+ *             name="home_tab_config_unique_home_tab_user",
+ *             columns={"home_tab_id", "user_id"}
+ *         ),
+ *         @ORM\UniqueConstraint(
+ *             name="home_tab_config_unique_home_tab_workspace",
+ *             columns={"home_tab_id", "workspace_id"}
  *         )
  *     }
  * )
- * @DoctrineAssert\UniqueEntity({"homeTab", "user", "workspace"})
+ * @DoctrineAssert\UniqueEntity({"homeTab", "user"})
+ * @DoctrineAssert\UniqueEntity({"homeTab", "workspace"})
  */
 class HomeTabConfig
 {
@@ -60,6 +65,11 @@ class HomeTabConfig
      * @ORM\Column(type="boolean", name="is_locked", nullable=false)
      */
     protected $locked;
+
+    /**
+     * @ORM\Column(type="integer", name="tab_order", nullable=false)
+     */
+    protected $tabOrder;
 
     public function getId()
     {
@@ -119,5 +129,15 @@ class HomeTabConfig
     public function setLocked($locked)
     {
         $this->locked = $locked;
+    }
+
+    public function getTabOrder()
+    {
+        return $this->tabOrder;
+    }
+
+    public function setTabOrder($tabOrder)
+    {
+        $this->tabOrder = $tabOrder;
     }
 }

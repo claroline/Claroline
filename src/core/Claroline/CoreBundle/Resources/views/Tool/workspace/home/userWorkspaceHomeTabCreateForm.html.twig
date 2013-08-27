@@ -1,4 +1,4 @@
-{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
 {% block section_content %}
 
@@ -7,15 +7,15 @@
             {
                 'icon': 'icon-cog',
                 'name': 'parameters'|trans({}, 'platform'),
-                'href': path('claro_desktop_open_tool', {'toolName': 'parameters'})
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
             },
             {
                 'name': 'home'|trans({}, 'platform'),
-                'href': path('claro_desktop_tool_config', {'tool': tool.getId()})
+                'href': path('claro_workspace_tool_config', {'workspace': workspace.getId(), 'tool': tool.getId()})
             },
             {
                 'name': 'home_tabs'|trans({}, 'platform'),
-                'href': path('claro_desktop_home_tab_properties')
+                'href': path('claro_workspace_home_tab_properties', {'workspaceId': workspace.getId()})
             },
             {
                 'name': 'home_tab_creation'|trans({}, 'platform'),
@@ -28,7 +28,7 @@
     <br>
     <form
         class="form-horizontal"
-        action="{{ path('claro_user_desktop_home_tab_create') }}"
+        action="{{ path('claro_user_workspace_home_tab_create', {'workspaceId': workspace.getId()}) }}"
         method="post"
         {{ form_enctype(form) }}
     >
@@ -38,7 +38,7 @@
             <button type="submit" class="btn btn-primary">
                 {{ 'ok'|trans({}, 'platform') }}
             </button>
-            <a href="{{ path('claro_desktop_home_tab_properties') }}">
+            <a href="{{ path('claro_workspace_home_tab_properties', {'workspaceId': workspace.getId()}) }}">
                 <button  type="button" class="btn btn-default">
                     {{ 'cancel'|trans({}, 'platform') }}
                 </button>

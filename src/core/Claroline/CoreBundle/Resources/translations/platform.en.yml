@@ -172,8 +172,10 @@ history: History
 home: Home
 home_parameters: 'Home parameters'
 home_tab: 'Home tab'
+home_tab_creation: 'Home tab creation'
 home_tab_delete_confirm_title: 'Delete Home tab'
 home_tab_delete_confirm_message: 'Do you really want to delete this Home tab ?'
+home_tab_edition: 'Home tab edition'
 home_tab_form_name: 'Name'
 home_tabs: 'Home tabs'
 home_tabs_configuration: 'Home tabs configuration'
@@ -578,8 +580,6 @@ url_invalid: 'the code is not correct, do no try to change the url'
 user: User
 user_accounts: User accounts
 user_creation: 'User creation'
-user_desktop_home_tab_creation: 'Home tab creation'
-user_desktop_home_tab_edition: 'Home tab edition'
 user_form_administrativeCode: 'Administrative code'
 user_form_firstName: 'First name'
 user_form_lastName: 'Last name'

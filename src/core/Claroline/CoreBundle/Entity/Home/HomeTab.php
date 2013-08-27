@@ -2,21 +2,14 @@
 
 namespace Claroline\CoreBundle\Entity\Home;
 
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\HomeTabRepository")
- * @ORM\Table(
- *     name="claro_home_tab",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(
- *             name="home_tab_unique_name_user_workspace",
- *             columns={"name", "user_id", "workspace_id"}
- *         )
- *     }
- * )
- * @DoctrineAssert\UniqueEntity({"name", "user", "workspace"})
+ * @ORM\Table(name="claro_home_tab")
  */
 class HomeTab
 {

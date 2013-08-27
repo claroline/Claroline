@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * @DI\Service
@@ -20,6 +21,7 @@ class HomeListener
 {
     private $workspaceManager;
     private $homeTabManager;
+    private $securityContext;
 
     /**
      * @DI\InjectParams({
@@ -28,7 +30,8 @@ class HomeListener
      *     "templating"         = @DI\Inject("templating"),
      *     "wm"                 = @DI\Inject("claroline.widget.manager"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager")
+     *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
+     *     "securityContext"    = @DI\Inject("security.context")
      * })
      */
     public function __construct(
@@ -37,7 +40,8 @@ class HomeListener
         $templating,
         $wm,
         WorkspaceManager $workspaceManager,
-        HomeTabManager $homeTabManager
+        HomeTabManager $homeTabManager,
+        SecurityContextInterface $securityContext
     )
     {
         $this->em = $em;
@@ -46,6 +50,7 @@ class HomeListener
         $this->wm = $wm;
         $this->workspaceManager = $workspaceManager;
         $this->homeTabManager = $homeTabManager;
+        $this->securityContext = $securityContext;
     }
 
     /**
@@ -190,20 +195,52 @@ class HomeListener
     public function workspaceHome($workspaceId)
     {
         $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
+        $adminHomeTabs = $this->homeTabManager->getAdminWorkspaceHomeTabs();
+        $workspaceHomeTabs = $this->homeTabManager->getWorkspaceHomeTabsByWorkspace($workspace);
+        $tabId = 0;
+
+        if (count($adminHomeTabs) > 0) {
+            $tabId = $adminHomeTabs[0]->getId();
+        } elseif (count($workspaceHomeTabs) > 0) {
+            $tabId = $workspaceHomeTabs[0]->getId();
+        }
 
         return $this->templating->render(
-            'ClarolineCoreBundle:Tool\workspace\home:home.html.twig',
-            array('workspace' => $workspace)
+            'ClarolineCoreBundle:Tool\workspace\home:workspaceHomeTabs.html.twig',
+            array(
+                'workspace' => $workspace,
+                'adminHomeTabs' => $adminHomeTabs,
+                'workspaceHomeTabs' => $workspaceHomeTabs,
+                'tabId' => $tabId
+            )
         );
     }
 
     /**
-     * Displays the Info desktop tab.
+     * Displays the first desktop tab.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function desktopHome()
     {
-        return $this->templating->render('ClarolineCoreBundle:Tool\desktop\home:info.html.twig');
+        $user = $this->securityContext->getToken()->getUser();
+        $adminHomeTabs = $this->homeTabManager->getAdminDesktopHomeTabs();
+        $userHomeTabs = $this->homeTabManager->getDesktopHomeTabsByUser($user);
+        $tabId = 0;
+
+        if (count($adminHomeTabs) > 0) {
+            $tabId = $adminHomeTabs[0]->getId();
+        } elseif (count($userHomeTabs) > 0) {
+            $tabId = $userHomeTabs[0]->getId();
+        }
+
+        return $this->templating->render(
+            'ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabs.html.twig',
+            array(
+                'adminHomeTabs' => $adminHomeTabs,
+                'userHomeTabs' => $userHomeTabs,
+                'tabId' => $tabId
+            )
+        );
     }
 }

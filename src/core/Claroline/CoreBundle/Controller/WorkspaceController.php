@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Security\TokenUpdater;
+use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
@@ -35,6 +36,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class WorkspaceController extends Controller
 {
+    private $homeTabManager;
     private $workspaceManager;
     private $resourceManager;
     private $roleManager;
@@ -50,6 +52,7 @@ class WorkspaceController extends Controller
 
     /**
      * @DI\InjectParams({
+     *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
@@ -65,6 +68,7 @@ class WorkspaceController extends Controller
      * })
      */
     public function __construct(
+        HomeTabManager $homeTabManager,
         WorkspaceManager $workspaceManager,
         ResourceManager $resourceManager,
         RoleManager $roleManager,
@@ -79,6 +83,7 @@ class WorkspaceController extends Controller
         TokenUpdater $tokenUpdater
     )
     {
+        $this->homeTabManager = $homeTabManager;
         $this->workspaceManager = $workspaceManager;
         $this->resourceManager = $resourceManager;
         $this->roleManager = $roleManager;
@@ -797,6 +802,36 @@ class WorkspaceController extends Controller
         $pager = $this->workspaceManager->getDisplayableWorkspacesBySearchPager($search, $page);
 
         return array('workspaces' => $pager, 'search' => $search);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspaceId}/open/tool/home/tab/{tabId}",
+     *     name="claro_display_workspace_home_tabs"
+     * )
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceHomeTabs.html.twig")
+     *
+     * Displays the workspace home tab.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function displayWorkspaceHomeTabsAction(AbstractWorkspace $workspace, $tabId)
+    {
+        $adminHomeTabs = $this->homeTabManager->getAdminWorkspaceHomeTabs();
+        $workspaceHomeTabs = $this->homeTabManager->getWorkspaceHomeTabsByWorkspace($workspace);
+
+        return array(
+            'workspace' => $workspace,
+            'adminHomeTabs' => $adminHomeTabs,
+            'workspaceHomeTabs' => $workspaceHomeTabs,
+            'tabId' => $tabId
+        );
     }
 
     private function assertIsGranted($attributes, $object = null)
