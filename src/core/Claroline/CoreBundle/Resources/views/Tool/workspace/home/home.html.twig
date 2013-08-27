@@ -5,18 +5,19 @@
 {% endblock %}
 
 {% block section_content %}
+    <div class="panel-body">
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'icon-home',
+                    'name': 'home'|trans({}, 'tools'),
+                    'href': '#'
+                }
+            ])
+        }}
 
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-home',
-                'name': 'home'|trans({}, 'tools'),
-                'href': '#'
-            }
-        ])
-    }}
-
-    <div class="welcome-home">
-        {% render controller("ClarolineCoreBundle:Workspace:widgets", {'workspaceId': workspace.getId()}) %}
+        <div class="welcome-home">
+            {% render controller("ClarolineCoreBundle:Workspace:widgets", {'workspaceId': workspace.getId()}) %}
+        </div>
     </div>
 {% endblock %}

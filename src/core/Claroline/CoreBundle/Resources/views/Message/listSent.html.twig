@@ -114,7 +114,7 @@
                         {% endif %}
                     </td>
                     <td>{{ userMessage.getMessage().getDate()|date('d-m-Y') }}</td>
-                    <td>{{ userMessage.getMessage().getSenderUsername() }}</td>
+                    <td>{{ userMessage.getMessage().getTo() }}</td>
                     <td><a href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}">{{ userMessage.getMessage().getObject() }}</a></td>
                     <td><input class="chk-item" value="{{ userMessage.getMessage().getId() }}" type="checkbox"></input></td>
                 </tr>

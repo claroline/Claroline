@@ -155,7 +155,7 @@ class ToolListener
     {
         $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
         $tools = $this->toolManager->getToolByCriterias(
-            array('hasOptions' => true, 'isDisplayableInWorkspace' => true)
+            array('isConfigurableInWorkspace' => true, 'isDisplayableInWorkspace' => true)
         );
 
         return $this->templating->render(
@@ -172,7 +172,7 @@ class ToolListener
     public function desktopParameters()
     {
         $tools = $this->toolManager->getToolByCriterias(
-            array('hasOptions' => true, 'isDisplayableInDesktop' => true)
+            array('isConfigurableInDesktop' => true, 'isDisplayableInDesktop' => true)
         );
 
         return $this->templating->render(

@@ -406,6 +406,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $message->setObject($object);
         $message->setContent($content);
         $message->setDate(self::$time);
+        $message->setTo('x1;x2;x3');
 
         if ($parent) {
             $message->setParent($parent);

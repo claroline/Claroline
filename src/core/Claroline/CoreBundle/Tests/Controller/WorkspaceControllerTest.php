@@ -509,8 +509,8 @@ class WorkspaceControllerTest extends MockeryTestCase
         $workspaceB->shouldReceive('getName')->once()->andReturn('ws_B');
 
         $this->assertEquals(
-            new JsonResponse($arWorkspace),
-            $this->getController()->findRoleByWorkspaceCodeAction('search')
+            json_encode($arWorkspace),
+            $this->getController()->findRoleByWorkspaceCodeAction('search')->getContent()
         );
     }
 
@@ -634,9 +634,11 @@ class WorkspaceControllerTest extends MockeryTestCase
             ->once()
             ->andReturn(array('user' => 'user'));
 
+        $response = new JsonResponse(array('user' => 'user'));
+        
         $this->assertEquals(
-            new JsonResponse(array('user' => 'user')),
-            $this->getController()->addUserAction($workspace, $user)
+            $response->getContent(),
+            $this->getController()->addUserAction($workspace, $user)->getContent()
         );
     }
 
