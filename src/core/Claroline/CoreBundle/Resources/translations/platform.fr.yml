@@ -68,6 +68,7 @@ copy: Copier
 create: Créer
 creation: Création
 create_group: 'Créer un groupe'
+create_user: 'Créer un utilisateur'
 create_new_admin_tag: 'Créer un nouveau Tag administrateur'
 create_new_tag: 'Créer un nouveau Tag'
 create_workspace: 'Créer un espace d''activités'
