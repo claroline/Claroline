@@ -1,4 +1,4 @@
-<ul class="unstyled inline thumbnails badge_user_list">
+<ul class="list-unstyled list-inline thumbnails badge_user_list">
 {% for badge in pager.currentPageResults %}
     <li>
         <a href="{{ path(badgeUrl, {'id': badge.id}) }}" title="{{ badge.name(language) }}" class="thumbnail">

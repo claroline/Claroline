@@ -68,6 +68,7 @@ copy: Copy
 create: Create
 creation: Creation
 create_group: 'Create group'
+create_user: 'Create user'
 create_new_admin_tag: 'Create new admin tag'
 create_new_tag: 'Create new tag'
 create_workspace: 'Create workspace'
@@ -81,7 +82,7 @@ cut: Cut
 dashboard: Dashboard
 date: Date
 date_format: 'm-d-Y'
-date_form_format: 'MM-dd-yyyy'
+date_form_format: 'MM/dd/yyyy'
 date_range.apply: 'Apply'
 date_range.clear: 'Clear'
 date_range.custom_range: 'Custom range'
@@ -373,7 +374,9 @@ my_resources: 'My resources'
 my_workspace: 'My workspace'
 my_workspaces: 'My workspaces'
 name: Name
+new: New
 new_message_alert: 'You have %count% new message(s)'
+new_message: 'New message'
 no: 'no'
 no_email: 'No email found, check the spelling'
 no_search_results: 'Your search hasn''t returned any result.'
@@ -539,6 +542,7 @@ tool: Tool
 tools: Tools
 tool_form_name : 'tool name'
 tool_form_displayName : 'Displayed tool name'
+tool_parameters : 'Tool parameters'
 tools_rights_configuration: 'Tools rights configuration'
 top: Top
 top_extension: 'Top filetypes having the most files'
@@ -625,6 +629,7 @@ workspace_unregistration_confirm_title: 'Do you really want to unregister from t
 workspace_welcome: Welcome
 workspaces: Workspaces
 ws_creator: 'Workspace creator'
-ws_most_viewed: Most viewed workspaces
-yesterday_activity: Yesterday's activity
+ws_most_viewed: 'Most viewed workspaces'
+yes: 'yes'
+yesterday_activity: 'Yesterday''s activity'
 Your changes have been saved: 'Your changes have been saved'

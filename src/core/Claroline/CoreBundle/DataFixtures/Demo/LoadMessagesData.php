@@ -39,7 +39,7 @@ class LoadMessagesData extends LoggableFixture implements ContainerAwareInterfac
 
         foreach ($this->messages as $data) {
             $message  = new Message();
-            $message->setContent($generator->generateLipsum(150, true));
+            $message->setContent($generator->generateLipsum(150, true, 1023));
             $message->setObject($data['object']);
             $message->setTo($data['to']);
             $parent = isset($data['parent']) ?
