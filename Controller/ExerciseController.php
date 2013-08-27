@@ -1301,7 +1301,10 @@ class ExerciseController extends Controller
                 break;
 
             case "InteractionOpen":
-                echo 'L1304 TODO open question';die();
+                $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')
+                                   ->getInteractionOpen($interaction[0]->getId());
+                $scoreMax = $exerciseSer->openMaxScore($interOpen[0]);
+                $responsesTab = $this->responseStatus($responses, $scoreMax);
                 break;
         }
 
