@@ -99,15 +99,10 @@ class PathController extends Controller
         foreach ($steps as $step) {
             echo $step->name."<br/>";
             /* créer activité */
-            $activity = new Activity();
-            $activity->setName($step->name);
-            $activity->setInstructions("jilj");
-
-            $manager->persist($activity);
 
             $this->JSONParser($step->children);
         }
-        
+
         $manager->flush();     
     }
 
