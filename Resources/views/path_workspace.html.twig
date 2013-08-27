@@ -1,1 +1,20 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block section_content %}
+
+	<table class="table">
+	{% for path in paths %}
+		<form action="{{ path('innova_path_deploy') }}" method="post">
+			<tr>
+		    	<td>{{ path.id }}</td>
+		    	<td>{{ path.user }}</td>
+		    	<td>...</td>
+		    	<td><input type="hidden" value="{{ path.id }}" name="path-id"></td>
+		    	<td><input type="hidden" value="{{ workspace.id }}" name="workspace-id"></td>
+		    	<td><input class="btn" value="deploy" type="submit"/></td>	
+		    </tr>
+		</form>   
+	{% endfor %}
+	</table>
+
+{% endblock %}

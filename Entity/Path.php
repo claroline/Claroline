@@ -42,6 +42,10 @@ class Path
      */
     private $editDate;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
+     */
+    private $workspace;
 
     /**
      * Get id
@@ -120,5 +124,15 @@ class Path
     public function getEditDate()
     {
         return $this->editDate;
+    }
+
+    public function getWorkspace()
+    {
+        return $this->workspace;
+    }
+
+    public function setWorkspace(Workspace $workspace)
+    {
+        $this->workspace = $workspace;
     }
 }

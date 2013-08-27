@@ -15,6 +15,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 use Innova\PathBundle\Entity\Path;
+use Claroline\CoreBundle\Entity\Resource\Activity;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
 
 
 class PathController extends Controller 
@@ -35,6 +39,80 @@ class PathController extends Controller
 
     /**
      * @Route(
+     *     "/innova_path_deploy",
+     *     name = "innova_path_deploy"
+     * )
+     * @Method("POST")
+     * @Template("InnovaPathBundle::path_desktop.html.twig")
+     */
+    public function deployAction()
+    {
+        $manager= $this->entityManager();
+
+        $pathId = $this->get('request')->request->get('path-id');
+        $path = $manager->getRepository('InnovaPathBundle:Path')->findOneById($pathId);
+        $json = json_decode($path->getPath());
+        var_dump($json);
+
+
+        $workspaceId = $this->get('request')->request->get('workspace-id');
+        $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
+        $user = $this->get('security.context')->getToken()->getUser();
+        $resourceType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneById(5);
+
+        $resourceNode = new ResourceNode();
+        $resourceNode->setName("xxxxy");
+        $resourceNode->setClass("Claroline\CoreBundle\Entity\Resource\Activity");
+        $resourceNode->setCreator($user);
+        $resourceNode->setResourceType($resourceType);
+        $resourceNode->setWorkspace($workspace);
+        
+        $manager->persist($resourceNode);
+        
+        $activity = new Activity();
+        $activity->setName($step->name);
+        $activity->setInstructions("xxxx");
+
+        $manager->persist($activity);
+        $manager->flush();
+
+        $resourceActivity = new ResourceActivity();
+        $resourceActivity->setActivity($activity);
+        $resourceActivity->setResourceNode($resourceNode);
+        $resourceActivities = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
+            ->findByActivity($activity->getId());
+        $count = count($resourceActivities)+1;
+        $resourceActivity->setSequenceOrder($count);
+
+        $manager->persist($resourceActivity);
+
+        $manager->flush();     
+        //$this->JSONParser($json->steps);
+
+        return array();
+    }
+
+    private function JSONParser($steps)
+    {
+        $manager= $this->entityManager();
+
+        foreach ($steps as $step) {
+            echo $step->name."<br/>";
+            /* créer activité */
+            $activity = new Activity();
+            $activity->setName($step->name);
+            $activity->setInstructions("jilj");
+
+            $manager->persist($activity);
+
+            $this->JSONParser($step->children);
+        }
+        
+        $manager->flush();     
+    }
+
+    /**
+     * @Route(
      *     "/",
      *     name = "innova_path_from_workspace",
      *     options = {"expose"=true}
@@ -47,8 +125,21 @@ class PathController extends Controller
     {
         $id = $this->get('request')->query->get('id');
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($id);        
-        return array('workspace' => $workspace);
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($id);    
+
+        $paths = array();
+        $manager= $this->entityManager();
+        $results = $manager->getRepository('InnovaPathBundle:Path')->findByWorkspace($id);
+
+        foreach ($results as $result) {
+            $path = new \stdClass();
+            $path->id = $result->getId();
+            $path->user = $result->getUser();
+            $path->path = $result->getPath();
+            $paths[] = $path;
+        }
+
+        return array('workspace' => $workspace, 'paths' => $paths);
     }
 
     /**
