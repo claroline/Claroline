@@ -518,6 +518,7 @@ The form is not valid: 'Le formulaire n''est pas valide'
 to: Jusque
 tool_form_name : 'Nom'
 tool_form_displayName : 'Nom affiché'
+tool_parameters : 'Paramètres des outils'
 tools_rights_configuration: 'Configuration des droits sur les outils'
 to_message: A
 today: 'Aujourd''hui'

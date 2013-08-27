@@ -2,12 +2,17 @@
 
 {% block content %}
     <div class="col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="panel panel-default panel-user">
+            <div class="panel-heading relative">
                 <h3 class="panel-title">
                     {{ user.getLastName() }} {{ user.getFirstName() }}
                     <em class="muted"> ({{ user.getUsername() }})</em>
                 </h3>
+                {% if user.getId() == app.user.id or is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('claro_profile_form') }}" class="btn btn-primary float-right-top hide">
+                        <i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}
+                    </a>
+                {% endif %}
             </div>
             <div class="panel-body">
 
@@ -37,12 +42,36 @@
                         <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}"><i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
                     </p>
                 </div>
-                <div class="badges">
-                    <h3>{{ 'badges'|trans({}, 'badge') }}</h3>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ 'badges'|trans({}, 'platform') }}</h3>
+            </div>
+            <div class="panel panel-body">
+                {% include 'ClarolineBadgeBundle:Badge:display.html.twig' with {'badgeUrl': 'claro_view_badge', 'paginationurl': 'claro_profile_view', 'routeParams': {'userId': user.id}} %}
 
-                    {% include 'ClarolineBadgeBundle:Badge:display.html.twig' with {'badgeUrl': 'claro_view_badge', 'paginationurl': 'claro_profile_view', 'routeParams': {'userId': user.id}} %}
-                </div>
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if user.getId() == app.user.id or is_granted('ROLE_ADMIN') %}
+        <script type="text/javascript">
+            (function () {
+                "use strict";
+
+                $('body').on('mouseenter', '.panel-user', function () {
+                    $('.panel-heading', this).find('.btn').removeClass('hide');
+                });
+
+                $('body').on('mouseleave', '.panel-user', function () {
+                    $('.panel-heading', this).find('.btn').addClass('hide');
+                });
+
+            }());
+        </script>
+    {% endif %}
 {% endblock %}

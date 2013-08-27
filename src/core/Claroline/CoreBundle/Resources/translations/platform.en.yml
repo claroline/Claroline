@@ -542,6 +542,7 @@ tool: Tool
 tools: Tools
 tool_form_name : 'tool name'
 tool_form_displayName : 'Displayed tool name'
+tool_parameters : 'Tool parameters'
 tools_rights_configuration: 'Tools rights configuration'
 top: Top
 top_extension: 'Top filetypes having the most files'
