@@ -7,7 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine;
+use Symfony\Bundle\TwigBundle\TimedTwigEngine;
 use Claroline\CoreBundle\Manager\UserManager;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -236,27 +236,7 @@ class AuthenticationController
             'error' => $this->translator->trans('password_missmatch', array(), 'platform')
         );
     }
-     /**
-     * @Route(
-     *     "/render",
-     *     name="claro_security_render_twig_email",
-     *     options={"expose"=true}
-     * )
-     * @Method("POST")
-     * @Template("ClarolineCoreBundle:Authentication:emailForgotPassword.html.twig")
-     */
-    public function renderTwigEmailAction($user)
-    {
-       $link = $this->request->server->get('HTTP_ORIGIN') . $this->router->generate(
-                'claro_security_reset_password',
-                array('hash' => $user->getResetPasswordHash())
-            );
-        $msg = $this->translator->trans('mail_click', array(), 'platform');
-        return array(
-                'message' => $msg,
-                'link' => $link
-            );
-    }
+
     /**
      * @Route("/authenticate")
      * @Method("POST")
