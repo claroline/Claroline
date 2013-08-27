@@ -333,18 +333,18 @@ messages_removed: 'Messages supprimés'
 messages_sent: 'Messages envoyés'
 messages_sent_removed: 'Messages envoyés supprimés'
 misc: Divers
-month.january: "Janvier"
-month.february: "Février"
-month.march: "Mars"
+month.January: "Janvier"
+month.February: "Février"
+month.March: "Mars"
 month.April: "Avril"
-month.may: "Mai"
-month.june: "Juin"
-month.july: "Juillet"
+month.May: "Mai"
+month.June: "Juin"
+month.July: "Juillet"
 month.August: "Août"
-month.september: "Septembre"
-month.october: "Octobre"
-month.november: "Novembre"
-month.december: "Décembre"
+month.September: "Septembre"
+month.October: "Octobre"
+month.November: "Novembre"
+month.December: "Décembre"
 move: Déplacer
 my_account: 'Mon compte'
 my_agenda: 'Mon agenda'
