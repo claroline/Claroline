@@ -68,51 +68,57 @@ article {
         text-overflow: ellipsis;
         width: 90%;
     }
+    ul {
+        padding-left: 20px;
+    }
     li {
         list-style-type: none;
-        margin: 0px 0;
-        padding: 5px 0px 0px 2px;
+        margin:   0px 0;
+        padding:  5px 0px 0px 2px;
         position: relative;
         &::before, &::after {
-            content: '';
-            left: -20px;
+            content:  '';
+            left:     0px;
             position: absolute;
-            right: auto;
+            right:    auto;
         }
         &::before {
             border-left: 1px solid #999;
-            bottom: 50px;
-            height: 100%;
-            top: 0;
-            width: 1px;
+            bottom:      50px;
+            height:      100%;
+            top:         0;
+            width:       1px;
         }
         &::after {
             border-top: 1px solid #999;
-            height: 20px;
-            top: 13px;
-            width: 23px;
+            top:        13px;
+            width:      14px;
         }
         span, a {
-            -moz-border-radius: 5px;
             -webkit-border-radius: 5px;
-            border: 1px solid #999;
-            border-radius: 5px;
-            line-height: 14px;
-            padding: 2px 4px;
-            text-decoration: none;
+               -moz-border-radius: 5px;
+                    border-radius: 5px;
+            border:                1px solid #999;
+            border-radius:         5px;
+            line-height:           22px;
+            padding:               2px 4px;
+            text-decoration:       none;
         }
         &.parent_li > span, &.parent_li > a {
             cursor: pointer;
             /*Time for some hover effects*/
             &:hover, &:hover + ul li span, &:hover + ul li a {
                 background: #eee;
-                border: 1px solid #555;
-                color: #000;
+                border:     1px solid #555;
+                color:      #000;
+            }
+            & + ul li, & + ul li {
+                padding-left: 14px;
             }
         }
         /*Remove connectors after last child*/
         &:last-child::before {
-            height: 30px;
+            height: 14px;
         }
     }
     /*Remove connectors before root*/

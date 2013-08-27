@@ -49,6 +49,9 @@ article .highlight {
   text-overflow: ellipsis;
   width: 90%;
 }
+.tree ul {
+  padding-left: 20px;
+}
 .tree li {
   list-style-type: none;
   margin: 0px 0;
@@ -58,7 +61,7 @@ article .highlight {
 .tree li::before,
 .tree li::after {
   content: '';
-  left: -20px;
+  left: 0px;
   position: absolute;
   right: auto;
 }
@@ -71,17 +74,16 @@ article .highlight {
 }
 .tree li::after {
   border-top: 1px solid #999;
-  height: 20px;
   top: 13px;
-  width: 23px;
+  width: 14px;
 }
 .tree li span,
 .tree li a {
-  -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  border: 1px solid #999;
+  -moz-border-radius: 5px;
   border-radius: 5px;
-  line-height: 14px;
+  border: 1px solid #999;
+  line-height: 22px;
   padding: 2px 4px;
   text-decoration: none;
 }
@@ -99,8 +101,14 @@ article .highlight {
   border: 1px solid #555;
   color: #000;
 }
+.tree li.parent_li > span + ul li,
+.tree li.parent_li > span + ul li,
+.tree li.parent_li > a + ul li,
+.tree li.parent_li > a + ul li {
+  padding-left: 14px;
+}
 .tree li:last-child::before {
-  height: 30px;
+  height: 14px;
 }
 .tree > li::before,
 .tree > li::after {
