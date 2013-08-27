@@ -3,22 +3,35 @@
 {% trans_default_domain "badge" %}
 
 {% block content %}
-    <div class="border badge_container">
-        <h3 class="sub-section-header">
-            <span class="badge badge-info accordion-toggle" data-toggle="tooltip" title="{{ 'badge_form_version'|trans }} {{ badge.version }}">{{ badge.version }}</span>
-            {{ 'badge'|trans }} "{{ badge.name }}"
-            {% if badge.expiredAt is not null %}
-            <small>{{ 'badge_expired_on_date'|trans({'%expirationDate%': badge.expiredAt|date('date_format'|trans({}, 'platform'))}) }}</small>
-            {% endif %}
-        </h3>
-        <div class="media">
-            <a class="pull-left" href="#">
-                <img class="media-object badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
-            </a>
-            <div class="media-body">
-                <h4 class="media-heading">{{ badge.description }}</h4>
-                {{ badge.criteria|raw }}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <span class="badge badge-info" data-toggle="tooltip" title="{{ 'badge_form_version'|trans }} {{ badge.version }}">{{ badge.version }}</span>
+                {{ 'badge'|trans }} "{{ badge.name }}"
+                {% if badge.expiredAt is not null %}
+                <small>{{ 'badge_expired_on_date'|trans({'%expirationDate%': badge.expiredAt|date('date_format'|trans({}, 'platform'))}) }}</small>
+                {% endif %}
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="media">
+                <a class="pull-left" href="#">
+                    <img class="media-object badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
+                </a>
+                <div class="media-body">
+                    <h4 class="media-heading">{{ badge.description }}</h4>
+                    {{ badge.criteria|raw }}
+                </div>
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript">
+    $(function(){
+        $('[data-toggle=tooltip]').tooltip();
+    });
+</script>
 {% endblock %}

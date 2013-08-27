@@ -24,6 +24,23 @@
             }
         ])
     }}
+
+    <h3>{{ 'resources_rights_management'|trans({}, 'platform') }}</h3>
+    <br>
+
     <div id="data" data-workspace-id="{{ workspace.getId() }}" data-node-id="{{ node.getId() }}"></div>
+
     {% include 'ClarolineCoreBundle:Tool\\workspace\\resource_manager:resourcesRightsForm.html.twig' %}
+
+    <div id="modal-check-node-right-box" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close modal-close" data-dismiss="modal">&times;</button>
+                    <h4>{{ 'rights_management'|trans({}, 'platform') }}</h4>
+                </div>
+                <div class="modal-body" id="modal-check-role"></div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

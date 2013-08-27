@@ -42,10 +42,13 @@ class RegistrationControllerTest extends MockeryTestCase
             ->with('allow_self_registration')->once()->andReturn(false);
 
         $response = new JsonResponse(array(), 403);
-        $this->assertEquals($response, $this->controller->postUserRegistrationAction());
+        $this->assertEquals($response->getStatusCode(), $this->controller->postUserRegistrationAction('json')->getStatusCode());
     }
 
-    public function testSuccessfullPostUserRegistrationAction()
+    /**
+     * @dataProvider postUserProvider
+     */
+    public function testSuccessfullPostUserRegistrationAction($responseClass, $format, $header)
     {
         $this->configHandler->shouldReceive('getParameter')
             ->with('allow_self_registration')->once()->andReturn(true);
@@ -75,8 +78,9 @@ class RegistrationControllerTest extends MockeryTestCase
             )
         );
 
-        $response = new JsonResponse(array(), 200);
-        $this->assertEquals($response, $this->controller->postUserRegistrationAction());
+        $response = new $responseClass(array(), 200);
+        $this->assertEquals($response->getContent(), $this->controller->postUserRegistrationAction($format)->getContent());
+        $this->assertEquals($response->headers->get('content-type'), $header);
     }
 
     public function testFailedPostUserRegistrationAction()
@@ -104,7 +108,12 @@ class RegistrationControllerTest extends MockeryTestCase
         )->andReturn($errorList);
 
         $response = new JsonResponse(array(array('property' => 'username', 'message' => 'message')), 422);
-        $this->assertEquals($response->getContent(), $this->controller->postUserRegistrationAction()->getContent());
+        $this->assertEquals($response->getContent(), $this->controller->postUserRegistrationAction('json')->getContent());
+    }
+
+    public function testUnknownFormatOnRegistration()
+    {
+        $this->assertEquals(400, $this->controller->postUserRegistrationAction('ABCDEFD')->getStatusCode());
     }
 
     private function getUserParameterBag()
@@ -117,5 +126,21 @@ class RegistrationControllerTest extends MockeryTestCase
         $parameterBag->shouldReceive('get')->with('mail')->once()->andReturn('mail@mail.com');
 
         return $parameterBag;
+    }
+
+    public function postUserProvider()
+    {
+        return array(
+            array(
+                'responseClass' => '\Claroline\CoreBundle\Library\HttpFoundation\XmlResponse',
+                'format' => 'xml',
+                'header' => 'text/xml'
+            ),
+            array(
+                'responseClass' => '\Symfony\Component\HttpFoundation\JsonResponse',
+                'format' => 'json',
+                'header' => 'application/json'
+           )
+        );
     }
 }
