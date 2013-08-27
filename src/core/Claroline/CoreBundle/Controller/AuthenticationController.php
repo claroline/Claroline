@@ -7,7 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\TwigBundle\TimedTwigEngine;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Claroline\CoreBundle\Manager\UserManager;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
