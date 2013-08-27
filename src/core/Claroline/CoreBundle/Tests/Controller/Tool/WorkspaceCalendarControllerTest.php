@@ -91,13 +91,14 @@ class WorkspaceCalendarControllerTest extends MockeryTestCase
 
      public function testUpdateAction()
      {
-        $this->markTestSkipped('Mocking problems');
+
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $user = new User();
         $event = $this->mock('Claroline\CoreBundle\Entity\Event');
+        $eventRepo = $this->mock('Claroline\CoreBundle\Repository\EventRepository');
         $date = $this->mock('DateTime');
-        $postData = $this->mock('Symfony\Component\HttpFoundation\ParameterBag');
+        $parameterBag = $this->mock('Symfony\Component\HttpFoundation\ParameterBag');
         $this->security
             ->shouldReceive('isGranted')
             ->with('agenda', $workspace)
@@ -105,12 +106,14 @@ class WorkspaceCalendarControllerTest extends MockeryTestCase
             ->andReturn(true);
         $this->security->shouldReceive('getToken')->once()->andReturn($token);
         $token->shouldReceive('getUser')->once()->andReturn($user);
-
-        $postData->shouldReceive('all')->once()->andReturn('8');
+        $this->request->request = $parameterBag;
+        $parameterBag->shouldReceive('all')->once()->andReturn(array('id' => '8'));
+        $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Event')->andReturn($eventRepo);
+        $eventRepo->shouldReceive('find')->with('8')->andReturn($event);
         $form = $this->mock('Symfony\Component\Form\Form');
         $this->formFactory->shouldReceive('create')
              ->once()
-             ->with(FormFactory::TYPE_AGENDA)
+             ->with(FormFactory::TYPE_AGENDA, array(), $event)
              ->andReturn($form);
              $form->shouldReceive('handleRequest')
                  ->once()

@@ -140,6 +140,7 @@ class WorkspaceAgendaController extends Controller
                         'start' => $event->getStart()->getTimestamp(),
                         'end' => $event->getEnd()->getTimestamp(),
                         'color' => $event->getPriority(),
+                        'allDay' => $event->getAllDay(),
                         'description' => $event->getDescription()
                     )
                 ),
