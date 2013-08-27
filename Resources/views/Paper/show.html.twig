@@ -259,6 +259,16 @@
                         {{ 'comment' | trans }}:
                         {{ interOpen.interaction.feedback|raw }}
                     </div>
+                
+                    <div name="response">
+                        {{ 'your answer' | trans }}:
+                        <br/><br/>
+                        <div>
+                            {% if interOpen.typeopenquestion == 'long' %}
+                                {{ responses[i].response|raw}}
+                            {% endif %}
+                        </div> 
+                    </div> 
 
                     {% for hv in hintViewed %}
                         {% if( hv.hint.interaction.id == interaction.id ) %}
