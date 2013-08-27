@@ -42,7 +42,7 @@
                                 {% for customAction in resourceType.getCustomActions() %}
                                     "{{ customAction.getAction() }}": {
                                         "name": "{{ customAction.getAction() }}",
-                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'resourceId': '_nodeId' }) }}",
+                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'node': '_nodeId' }) }}",
                                         "async": {{ customAction.isAsync() }}
                                     }
                                     {% if loop.last != true %},{% endif %}
@@ -67,6 +67,7 @@
                 html+= "<a href="+Routing.generate('claro_resource_open', {'resourceType': nodes[0].type, 'action': 'open', 'node': nodes[0].id})+">"+nodes[0].name+"</a> ";
                 html+="</li>";
 
+
                 $("#sortable").append(html);
             },
         });
@@ -86,7 +87,13 @@
     </script>
 {% endblock %}
 {% block section_content %}
-    <a href="{{ path('claro_activity_show_player', {'activityId': _resource.getId()}) }}" class="btn btn-default pull-right"> {{ 'show_as_user'|trans({}, 'platform') }} </a>
+<<<<<<< HEAD
+    <a  href="{{ path('claro_activity_show_player', {'activity': _resource.getId()}) }}"
+        class="btn btn-default pull-right"
+    >
+        {{ 'show_as_user'|trans({}, 'platform') }}
+    </a>
+    <a href="{{ path('claro_activity_show_player', {'activity': _resource.getId()}) }}" class="btn btn-default pull-right"> {{ 'show_as_user'|trans({}, 'platform') }} </a>
     <h3>
         <b>{{ 'activity'|trans({}, 'resource') }} {{ _resource.getName() }}</b>
     </h3>
@@ -99,8 +106,16 @@
     <ul id="sortable" class="nav nav-tabs nav-stacked">
     {% for resourceActivity in resourceActivities %}
             <li id={{ resourceActivity.getResourceNode().getId() }}>
-                <span><a class="close" href="{{ path('claro_activity_remove_resource', {'nodeId':resourceActivity.getResourceNode().getId(), 'activityId': resourceActivity.getActivity().getId()})}}">x</a></span>
-                <a href="{{ path('claro_resource_open', {'resourceType':resourceActivity.getResourceNode().getResourceType().getName(), 'node':resourceActivity.getResourceNode().getId()} )}}">{{ resourceActivity.getResourceNode().getName() }}</a>
+                <span>
+                    <a  class="close"
+                        href="{{ path('claro_activity_remove_resource', {'nodeId':resourceActivity.getResourceNode().getId(), 'activityId': resourceActivity.getActivity().getId()})}}"
+                    >
+                        x
+                    </a>
+                </span>
+                <a href="{{ path('claro_resource_open', {'resourceType':resourceActivity.getResourceNode().getResourceType().getName(), 'node':resourceActivity.getResourceNode().getId()} )}}">
+                    {{ resourceActivity.getResourceNode().getName() }}
+                </a>
             </li>
     {% endfor %}
     </ul>

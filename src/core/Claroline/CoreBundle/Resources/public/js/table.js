@@ -64,7 +64,7 @@
                 + (parameters.route.action[key].btn === undefined ? 'action-button': parameters.route.action[key].btn);
             $(btnClass).click(function (e) {
                 currentAction = $(e.currentTarget).attr('data-action');
-                $('.modal').modal('show');
+                $('#table-modal').modal('show');
                 $('.modal-body').html(Twig.render(parameters.route.action[currentAction].confirmTemplate,
                     {'nbItems': $('.chk-item:checked').length}
                 ));
@@ -97,7 +97,7 @@
                     });
                 }
             });
-            $('.modal').modal('hide');
+            $('#table-modal').modal('hide');
             $('.modal-body').empty();
         });
 
@@ -112,7 +112,10 @@
     };
 
     function createValidationBox() {
-        var html = Twig.render(ModalWindow, {'footer': Twig.render(ValidationFooter), 'isHidden': true});
+        var html = Twig.render(
+            ModalWindow,
+            {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'table-modal'}
+        );
         $('body').append(html);
     }
 })();

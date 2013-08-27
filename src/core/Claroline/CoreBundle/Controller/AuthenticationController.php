@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Claroline\CoreBundle\Manager\UserManager;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -15,6 +16,8 @@ use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Authenticator;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
+use Symfony\Component\HttpFoundation\Response;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -31,6 +34,7 @@ class AuthenticationController
     private $translator;
     private $formFactory;
     private $authenticator;
+    private $templating;
 
     /**
      * @DI\InjectParams({
@@ -42,7 +46,8 @@ class AuthenticationController
      *     "router"         = @DI\Inject("router"),
      *     "translator"     = @DI\Inject("translator"),
      *     "formFactory"    = @DI\Inject("claroline.form.factory"),
-     *     "authenticator" = @Di\Inject("claroline.authenticator")
+     *     "authenticator"  = @Di\Inject("claroline.authenticator"),
+     *     "templating"     = @Di\Inject("templating"),
      * })
      */
     public function __construct(
@@ -54,7 +59,8 @@ class AuthenticationController
         UrlGeneratorInterface $router,
         Translator $translator,
         FormFactory $formFactory,
-        Authenticator $authenticator
+        Authenticator $authenticator,
+        TwigEngine $templating
     )
     {
         $this->request = $request;
@@ -66,6 +72,7 @@ class AuthenticationController
         $this->translator = $translator;
         $this->formFactory = $formFactory;
         $this->authenticator = $authenticator;
+        $this->templating = $templating;
     }
     /**
      * @Route(
@@ -129,6 +136,10 @@ class AuthenticationController
         if ($form->isValid()) {
             $data = $form->getData();
             $user = $this->userManager->getUserbyEmail($data['mail']);
+            $link = $this->request->server->get('HTTP_ORIGIN') . $this->router->generate(
+                'claro_security_reset_password',
+                array('hash' => $user->getResetPasswordHash())
+            );
         }
 
         if (!empty($user)) {
@@ -137,17 +148,14 @@ class AuthenticationController
             $user->setResetPasswordHash($password);
             $this->om->persist($user);
             $this->om->flush();
-            $link = $this->request->server->get('HTTP_ORIGIN') . $this->router->generate(
-                'claro_security_reset_password',
-                array('hash' => $user->getResetPasswordHash())
-            );
             $msg = $this->translator->trans('mail_click', array(), 'platform');
-            $body = '<p><a href="' . $link . '"/>' . $msg . '</a></p>';
+            $body = $this->templating->render('ClarolineCoreBundle:Authentication:emailForgotPassword.html.twig',array('message'=> $msg, 'link'=> $link));
             $message = \Swift_Message::newInstance()
                 ->setSubject($this->translator->trans('reset_pwd', array(), 'platform'))
                 ->setFrom('noreply@claroline.net')
                 ->setTo($data['mail'])
-                ->setBody($body, 'text/html');
+                ->setBody($body);
+
             $this->mailer->send($message);
 
             return array(
@@ -232,11 +240,20 @@ class AuthenticationController
     }
 
     /**
-     * @Route("/authenticate")
+     * @Route("/authenticate.{format}")
      * @Method("POST")
      */
-    public function postAuthenticationAction()
+    public function postAuthenticationAction($format)
     {
+        $formats = array('json', 'xml');
+
+        if (!in_array($format, $formats)) {
+            Return new Response(
+                "The format {$format} is not supported (supported formats are 'json', 'xml'",
+                400
+            );
+        }
+
         $request = $this->request;
         $username = $request->request->get('username');
         $password = $request->request->get('password');
@@ -245,6 +262,9 @@ class AuthenticationController
             array('message' => $this->translator->trans('login_failure', array(), 'platform')) :
             array();
 
-        return new JsonResponse($content, $status);
+        switch ($format) {
+            case 'json': return new JsonResponse($content, $status);
+            case 'xml' : return new XmlResponse($content, $status);
+        }
     }
 }

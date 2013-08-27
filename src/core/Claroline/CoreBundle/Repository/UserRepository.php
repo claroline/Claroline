@@ -681,4 +681,24 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $query->getResult();
     }
+
+    /**
+     * @param  array           $params
+     * @return ArrayCollection
+     */
+    public function extract($params)
+    {
+        $search = $params['search'];
+        if ($search !== null) {
+
+            $query = $this->findByName($search, false);
+
+            return $query
+                ->setFirstResult(0)
+                ->setMaxResults(10)
+                ->getResult();
+        }
+
+        return array();
+    }
 }
