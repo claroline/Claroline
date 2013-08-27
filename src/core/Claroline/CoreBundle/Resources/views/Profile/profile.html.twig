@@ -9,7 +9,7 @@
                     <em class="muted"> ({{ user.getUsername() }})</em>
                 </h3>
                 {% if user.getId() == app.user.id or is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('claro_profile_form') }}" class="btn btn-primary float-right-top hide">
+                    <a href="{{ path('claro_profile_form', {'user': user.getId}) }}" class="btn btn-primary float-right-top hide">
                         <i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}
                     </a>
                 {% endif %}
