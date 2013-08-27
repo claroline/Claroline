@@ -22,12 +22,12 @@ class LoadToolsData extends AbstractFixture implements ContainerAwareInterface, 
     public function load(ObjectManager $manager)
     {
         $tools = array(
-            array('home', 'icon-home', false, false, true, true, true, true),
-            array('parameters', 'icon-cog', false, false, true, true, false, false),
-            array('resource_manager', 'icon-folder-open', false, false, true, true, true, true),
-            array('agenda', 'icon-calendar', false, false, true, true, false, false),
-            array('logs', 'icon-list', false, false, true, false, false, false),
-            array('roles', 'icon-user', true, false, true, false, false, false)
+            array('home', 'icon-home', false, false, true, true, true, true, true),
+            array('parameters', 'icon-cog', false, false, true, true, false, false, false),
+            array('resource_manager', 'icon-folder-open', false, false, true, true, true, true, false),
+            array('agenda', 'icon-calendar', false, false, true, true, false, false, false),
+            array('logs', 'icon-list', false, false, true, false, false, false, false),
+            array('roles', 'icon-user', true, false, true, false, false, false, false)
         );
 
         foreach ($tools as $tool) {
@@ -39,7 +39,8 @@ class LoadToolsData extends AbstractFixture implements ContainerAwareInterface, 
             $entity->setDisplayableInWorkspace($tool[4]);
             $entity->setDisplayableInDesktop($tool[5]);
             $entity->setExportable($tool[6]);
-            $entity->setHasOptions($tool[7]);
+            $entity->setIsConfigurableInWorkspace($tool[7]);
+            $entity->setIsConfigurableInDesktop($tool[8]);
 
             $manager->persist($entity);
         }
