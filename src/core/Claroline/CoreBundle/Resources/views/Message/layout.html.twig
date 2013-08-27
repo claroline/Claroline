@@ -13,7 +13,10 @@
                             <a href="{{ path('claro_message_list_sent') }}" id="link_message_sent_layout"><i class="icon-share-alt"></i> {{ 'messages_sent'|trans({}, 'platform') }}</a>
                         </li>
                         <li class="{% if 'claro_message_list_removed' == app.request.get('_route') %}active{% endif %}">
-                        <a href="{{ path('claro_message_list_removed')}}" id="link_message_removed_layout"><i class="icon-trash"></i> {{ 'trash'|trans({}, 'platform') }}</a>
+                            <a href="{{ path('claro_message_list_removed')}}" id="link_message_removed_layout"><i class="icon-trash"></i> {{ 'trash'|trans({}, 'platform') }}</a>
+                        </li>
+                        <li class="{% if 'claro_message_show' == app.request.get('_route') %}active{% endif %}">
+                            <a href="{{ path('claro_message_show', {'message': 0})}}" id="link_message_removed_layout"><i class="icon-envelope-alt"></i> {{ 'new'|trans({}, 'platform') }}</a>
                         </li>
                     </ul>
                 </div>
