@@ -101,7 +101,9 @@ class BlogController extends Controller
             '_resource' => $blog,
             'user'      => $user,
             'pager'     => $pager,
-            'archives'  => $this->getArchiveDatas($blog)
+            'archives'  => $this->getArchiveDatas($blog),
+            'tag'       => $tag,
+            'author'    => $author
         );
     }
 

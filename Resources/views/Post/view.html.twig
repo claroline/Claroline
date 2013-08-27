@@ -17,7 +17,7 @@
 
     {% set blogOptions = _resource.options %}
     {% if _resource.isCommentsAuthorized %}
-        <ul class="unstyled comment_list">
+        <ul class="list-unstyled comment_list">
         {% set postComments = post.comments %}
         {% for comment in postComments %}
             {% set isPublished = comment.isPublished %}

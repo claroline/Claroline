@@ -3,6 +3,14 @@
 // Core variables and mixins
 @import "@{webPath}/vendor/twbs/bootstrap/less/variables.less";
 
+.row {
+    margin-left: 0;
+}
+
+.btn-toolbar {
+    margin-bottom: 10px;
+}
+
 article {
     margin-bottom: 30px;
 
@@ -72,14 +80,14 @@ article {
             right: auto;
         }
         &::before {
-            border-left: 1px solid @grayLight;
+            border-left: 1px solid #999;
             bottom: 50px;
             height: 100%;
             top: 0;
             width: 1px;
         }
         &::after {
-            border-top: 1px solid @grayLight;
+            border-top: 1px solid #999;
             height: 20px;
             top: 13px;
             width: 23px;
@@ -87,7 +95,7 @@ article {
         span, a {
             -moz-border-radius: 5px;
             -webkit-border-radius: 5px;
-            border: 1px solid @grayLight;
+            border: 1px solid #999;
             border-radius: 5px;
             line-height: 14px;
             padding: 2px 4px;
@@ -97,8 +105,8 @@ article {
             cursor: pointer;
             /*Time for some hover effects*/
             &:hover, &:hover + ul li span, &:hover + ul li a {
-                background: @grayLighter;
-                border: 1px solid @gray;
+                background: #eee;
+                border: 1px solid #555;
                 color: #000;
             }
         }

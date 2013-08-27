@@ -1,3 +1,9 @@
+.row {
+  margin-left: 0;
+}
+.btn-toolbar {
+  margin-bottom: 10px;
+}
 article {
   margin-bottom: 30px;
   border: 1px solid #E3E3E3;

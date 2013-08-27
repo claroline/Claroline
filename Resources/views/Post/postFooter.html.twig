@@ -1,6 +1,6 @@
 <footer>
-    <ul class="unstyled inline pull-left">
-        <li><i class="icon-tags"></i></li>
+    <ul class="list-unstyled list-inline pull-left">
+        <li><span class="glyphicon icon-tags"></span></li>
     {% for tag in post.tags %}
         <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': tag}) }}" title="{{ tag }}">{{ tag }}</a></li>
     {% else %}
