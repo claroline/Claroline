@@ -76,8 +76,7 @@
             var pickedDate = $.fullCalendar.formatDate(date, 'dd/MM/yyyy HH:mm');
             $('#agenda_form_start').val(pickedDate)
             if (pickedDate > currentDate) {
-                $('#agenda_form_end').val(pickedDate);
-                    
+                $('#agenda_form_end').val(pickedDate);    
             } else {
                 $('#agenda_form_end').val(currentDate);
             }

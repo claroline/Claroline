@@ -97,13 +97,13 @@ class WorkspaceAgendaController extends Controller
                     array('Content-Type' => 'application/json')
                 );
             }
-        } else {
-             return new Response(
-                 json_encode(array('greeting' => 'dates are not valid')),
-                 400,
-                 array('Content-Type' => 'application/json')
-             );
-        }
+
+            return new Response(
+                json_encode(array('greeting' => 'dates are not valid')),
+                400,
+                array('Content-Type' => 'application/json')
+            );
+
     }
 
     /**
@@ -147,16 +147,15 @@ class WorkspaceAgendaController extends Controller
                 200,
                 array('Content-Type' => 'application/json')
             );
-        } else {
+        } 
 
-            return new Response(
-                json_encode(
-                    array('dates are not valids')
-                ),
-                200,
-                array('Content-Type' => 'application/json')
-            );
-        }
+        return new Response(
+            json_encode(
+                array('dates are not valids')
+            ),
+            200,
+             array('Content-Type' => 'application/json')
+        );
     }
 
     /**
