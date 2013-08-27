@@ -110,6 +110,9 @@ class Message
      */
     protected $senderUsername;
 
+    /**
+     * @ORM\Column(name="receiver_string", length=1023)
+     */
     protected $to;
 
     public function __construct()
@@ -240,5 +243,4 @@ class Message
     {
         return $this->senderUsername;
     }
-
 }
