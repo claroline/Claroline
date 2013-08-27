@@ -373,7 +373,9 @@ my_resources: 'My resources'
 my_workspace: 'My workspace'
 my_workspaces: 'My workspaces'
 name: Name
+new: New
 new_message_alert: 'You have %count% new message(s)'
+new_message: 'New message'
 no: 'no'
 no_email: 'No email found, check the spelling'
 no_search_results: 'Your search hasn''t returned any result.'
