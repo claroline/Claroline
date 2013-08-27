@@ -172,8 +172,10 @@ history: Historique
 home: Accueil
 home_parameters: 'Paramètres de l''accueil'
 home_tab: 'Onglet'
+home_tab_creation: 'Création d''un onglet'
 home_tab_delete_confirm_title: 'Suppression de l''onglet'
 home_tab_delete_confirm_message: 'Voulez-vous vraiment supprimer cet onglet de la page d''accueil ?'
+home_tab_edition: 'Edition de l''onglet'
 home_tab_form_name: 'Nom'
 home_tabs: 'Onglets de la page d''accueil'
 home_tabs_configuration: 'Configuration des onglets de la page d''accueil'
@@ -558,8 +560,6 @@ url_invalid: "Le code n'est pas correct, n'essayez pas de changer l'adresse"
 user: Utilisateur
 user_accounts: Comptes utilisateur
 user_creation: 'Création d''un utilisateur'
-user_desktop_home_tab_creation: 'Création d''un onglet'
-user_desktop_home_tab_edition: 'Edition de l''onglet'
 user_form_administrativeCode: 'Code administratif'
 user_form_firstName: Nom
 user_form_lastName: Prénom

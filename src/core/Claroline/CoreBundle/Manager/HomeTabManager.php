@@ -36,8 +36,32 @@ class HomeTabManager
         $this->om->flush();
     }
 
-    public function deleteHomeTab(HomeTab $homeTab)
+    public function deleteHomeTab(HomeTab $homeTab, $type)
     {
+        switch ($type) {
+            case 'admin_desktop':
+                $this->homeTabRepo->updateAdminDesktopOrder(
+                    $homeTab->getTabOrder()
+                );
+                break;
+            case 'admin_workspace':
+                $this->homeTabRepo->updateAdminWorkspaceOrder(
+                    $homeTab->getTabOrder()
+                );
+                break;
+            case 'desktop':
+                $this->homeTabRepo->updateDesktopOrder(
+                    $homeTab->getTabOrder(),
+                    $homeTab->getUser()
+                );
+                break;
+            case 'workspace':
+                $this->homeTabRepo->updateWorkspaceOrder(
+                    $homeTab->getTabOrder(),
+                    $homeTab->getWorkspace()
+                );
+                break;
+        }
         $this->om->remove($homeTab);
         $this->om->flush();
     }

@@ -21,6 +21,11 @@
 
     <ul>
         <li>
+            <a href="{{ path('claro_workspace_home_tab_properties', {'workspaceId': workspace.getId()}) }}">
+                {{ 'home_tabs'|trans({}, 'platform') }}
+            </a>
+        </li>
+        <li>
             <a href="{{ path('claro_workspace_widget_properties', {'workspace': workspace.getId()}) }}">
                 {{ 'widgets'|trans({}, 'platform') }}
             </a>

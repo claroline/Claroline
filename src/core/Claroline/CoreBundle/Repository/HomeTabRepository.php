@@ -119,4 +119,66 @@ class HomeTabRepository extends EntityRepository
 
         return $query->getSingleResult();
     }
+
+    public function updateAdminDesktopOrder($deletedOrder)
+    {
+        $dql = "
+            UPDATE Claroline\CoreBundle\Entity\Home\HomeTab ht
+            SET ht.tabOrder = ht.tabOrder - 1
+            WHERE ht.type = 'desktop'
+            AND ht.user IS NULL
+            AND ht.tabOrder > :deletedOrder
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('deletedOrder', $deletedOrder);
+
+        return $query->execute();
+    }
+
+    public function updateAdminWorkspaceOrder($deletedOrder)
+    {
+        $dql = "
+            UPDATE Claroline\CoreBundle\Entity\Home\HomeTab ht
+            SET ht.tabOrder = ht.tabOrder - 1
+            WHERE ht.type = 'workspace'
+            AND ht.workspace IS NULL
+            AND ht.tabOrder > :deletedOrder
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('deletedOrder', $deletedOrder);
+
+        return $query->execute();
+    }
+
+    public function updateDesktopOrder($deletedOrder, User $user)
+    {
+        $dql = "
+            UPDATE Claroline\CoreBundle\Entity\Home\HomeTab ht
+            SET ht.tabOrder = ht.tabOrder - 1
+            WHERE ht.type = 'desktop'
+            AND ht.user = :user
+            AND ht.tabOrder > :deletedOrder
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('deletedOrder', $deletedOrder);
+        $query->setParameter('user', $user);
+
+        return $query->execute();
+    }
+
+    public function updateWorkspaceOrder($deletedOrder, AbstractWorkspace $workspace)
+    {
+        $dql = "
+            UPDATE Claroline\CoreBundle\Entity\Home\HomeTab ht
+            SET ht.tabOrder = ht.tabOrder - 1
+            WHERE ht.type = 'workspace'
+            AND ht.workspace = :workspace
+            AND ht.tabOrder > :deletedOrder
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('deletedOrder', $deletedOrder);
+        $query->setParameter('workspace', $workspace);
+
+        return $query->execute();
+    }
 }

@@ -23,13 +23,13 @@
                 'href': path('claro_desktop_home_tab_properties')
             },
             {
-                'name': 'user_desktop_home_tab_edition'|trans({}, 'platform'),
+                'name': 'home_tab_edition'|trans({}, 'platform'),
                 'href': ''
             }
         ])
     }}
 
-    <h3>{{ 'user_desktop_home_tab_edition'|trans({}, 'platform') }}</h3>
+    <h3>{{ 'home_tab_edition'|trans({}, 'platform') }}</h3>
     <h4>
         {{ 'home_tab'|trans({}, 'platform') }} :
         {{ homeTabName }}
@@ -67,7 +67,7 @@
     <div id="twig-home-tab-id" data-home-tab-id="{{ homeTab.getId() }}">
     </div>
 
-    <div id="delete-home-tab-validation-box" class="modal hide fade">
+    <div id="delete-home-tab-validation-box" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -79,7 +79,7 @@
                 </div>
                 <div class="modal-footer">
                     <input type="button" id="delete-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-                    <input type="button" class="btn btn-secondary" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
                 </div>
             </div>
         </div>
