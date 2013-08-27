@@ -58,7 +58,7 @@ class AuthenticationController
         Translator $translator,
         FormFactory $formFactory,
         Authenticator $authenticator,
-        TimedTwigEngine $templating
+        TwigEngine $templating
     )
     {
         $this->request = $request;
