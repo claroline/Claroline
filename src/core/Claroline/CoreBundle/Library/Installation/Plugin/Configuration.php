@@ -203,7 +203,10 @@ class Configuration implements ConfigurationInterface
                         ->booleanNode('is_displayable_in_desktop')->isRequired()->end()
                         ->scalarNode('class')->end()
                         ->scalarNode('is_exportable')->defaultValue(false)->end()
+                        //@todo remove the following line later
                         ->scalarNode('has_options')->defaultValue(false)->end()
+                        ->scalarNode('is_configurable_in_workspace')->defaultValue(false)->end()
+                        ->scalarNode('is_configurable_in_desktop')->defaultValue(false)->end()
                     ->end()
                 ->end()
             ->end()
