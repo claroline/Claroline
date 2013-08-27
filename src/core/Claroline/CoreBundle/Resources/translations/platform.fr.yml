@@ -357,6 +357,8 @@ my_workspace: 'Mon espace de travail'
 my_workspaces: 'Mes espaces d''activités'
 name: Nom
 new_message_alert: 'Vous avez %count% nouveaux message(s)'
+new: Nouveau
+new_message: 'Nouveau message'
 no: 'non'
 no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
 no_search_results: 'Votre recherche n''a retourné aucun résultat.'
