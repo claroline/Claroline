@@ -38,7 +38,7 @@ class ResourceControllerTest extends MockeryTestCase
         $node = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $res = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
         $rt = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
-        $customActionEvent = $this->mock('Claroline\CoreBundle\Event\Event\CustomActionResourceEvent');
+        $customActionEvent = $this->mock('Claroline\CoreBundle\Event\CustomActionResourceEvent');
         $node->shouldReceive('getResourceType')->once()->andReturn($rt);
         $rt->shouldReceive('getName')->andReturn('resourcetype');
         $controller->shouldReceive('checkAccess')

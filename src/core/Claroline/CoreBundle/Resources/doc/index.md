@@ -11,7 +11,8 @@ Structure
 
 - [Overview][2]
 - [Core architecture][3]
-    - [Badge system][11]
+    - [Log system][11]
+    - [Badge system][12]
 - [Plugin development][4]
     - [Resources][5]
     - [Tools][6]
@@ -30,4 +31,5 @@ Structure
 [8]: sections/players.md
 [9]: sections/themes.md
 [10]: sections/dev-tools.md
-[11]: sections/badges.md
+[11]: sections/logs.md
+[12]: sections/badges.md

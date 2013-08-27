@@ -10,8 +10,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Claroline\CoreBundle\Form\DataTransformer\DateRangeToTextTransformer;
 use Claroline\CoreBundle\Form\WorkspaceLogFilterType;
 use Claroline\CoreBundle\Form\AdminLogFilterType;
-use Claroline\CoreBundle\Event\Event\Log\LogCreateDelegateViewEvent;
-use Claroline\CoreBundle\Event\Event\Log\LogResourceChildUpdateEvent;
+use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
+use Claroline\CoreBundle\Event\Log\LogResourceChildUpdateEvent;
 use Claroline\CoreBundle\Entity\Logger\LogWorkspaceWidgetConfig;
 use Claroline\CoreBundle\Entity\Logger\LogDesktopWidgetConfig;
 
@@ -493,7 +493,7 @@ class LogManager
         $finder = new Finder();
         $finder->files()->in($logClassPath);
 
-        $logEventClassNamespace = 'Claroline\CoreBundle\Event\Event\Log\\';
+        $logEventClassNamespace = 'Claroline\CoreBundle\Event\Log\\';
 
         $eventList = array();
 
@@ -505,7 +505,7 @@ class LogManager
             $className      = basename($file->getFilename(), '.' . $file->getExtension());
             $classNamespace = $logEventClassNamespace . $className;
             $classParents   = class_parents($classNamespace);
-            if (in_array('Claroline\CoreBundle\Event\Event\Log\LogGenericEvent', $classParents)) {
+            if (in_array('Claroline\CoreBundle\Event\Log\LogGenericEvent', $classParents)) {
                 $reflectionClass = new \ReflectionClass($classNamespace);
                 foreach ($reflectionClass->getConstants() as $constant) {
                     $eventList[$constant] = $translator->trans(sprintf('log_%s_title', $constant), array(), 'platform');

@@ -424,7 +424,7 @@ class ResourceManagerTest extends MockeryTestCase
         $parent = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $user = $this->mock('Claroline\CoreBundle\Entity\User');
         $last = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
-        $event = $this->mock('Claroline\CoreBundle\Event\Event\CopyResourceEvent');
+        $event = $this->mock('Claroline\CoreBundle\Event\CopyResourceEvent');
         $resourceType = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
         $icon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
@@ -472,7 +472,7 @@ class ResourceManagerTest extends MockeryTestCase
         $target = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $user = $this->mock('Claroline\CoreBundle\Entity\User');
         $last = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
-        $event = $this->mock('Claroline\CoreBundle\Event\Event\CopyResourceEvent');
+        $event = $this->mock('Claroline\CoreBundle\Event\CopyResourceEvent');
         $resourceType = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
         $icon = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
