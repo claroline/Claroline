@@ -354,7 +354,7 @@ class WorkspaceManagerTest extends MockeryTestCase
         $toolB->shouldReceive('getName')->andReturn('toolName2');
         $toolA->shouldReceive('isExportable')->once()->andReturn(true);
         $toolB->shouldReceive('isExportable')->once()->andReturn(false);
-        $event = $this->mock('Claroline\CoreBundle\Event\Event\ExportToolEvent');
+        $event = $this->mock('Claroline\CoreBundle\Event\ExportToolEvent');
 
         $this->orderedToolRepo->shouldReceive('findBy')->once()
             ->with(array('workspace' => $workspace), array('order' => 'ASC'))->andReturn($wots);

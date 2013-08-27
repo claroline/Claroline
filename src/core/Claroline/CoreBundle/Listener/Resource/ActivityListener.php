@@ -9,13 +9,13 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
 use Claroline\CoreBundle\Form\ActivityType;
-use Claroline\CoreBundle\Event\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\Event\OpenResourceEvent;
-use Claroline\CoreBundle\Event\Event\ExportResourceTemplateEvent;
-use Claroline\CoreBundle\Event\Event\ImportResourceTemplateEvent;
-use Claroline\CoreBundle\Event\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
+use Claroline\CoreBundle\Event\DeleteResourceEvent;
 
 /**
  * @DI\Service

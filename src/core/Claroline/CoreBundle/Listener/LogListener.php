@@ -2,12 +2,12 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Claroline\CoreBundle\Event\Event\Log\LogGenericEvent;
-use Claroline\CoreBundle\Event\Event\Log\LogGroupDeleteEvent;
-use Claroline\CoreBundle\Event\Event\Log\LogResourceDeleteEvent;
-use Claroline\CoreBundle\Event\Event\Log\LogUserDeleteEvent;
-use Claroline\CoreBundle\Event\Event\Log\LogWorkspaceRoleDeleteEvent;
-use Claroline\CoreBundle\Event\Event\Log\LogNotRepeatableInterface;
+use Claroline\CoreBundle\Event\Log\LogGenericEvent;
+use Claroline\CoreBundle\Event\Log\LogGroupDeleteEvent;
+use Claroline\CoreBundle\Event\Log\LogResourceDeleteEvent;
+use Claroline\CoreBundle\Event\Log\LogUserDeleteEvent;
+use Claroline\CoreBundle\Event\Log\LogWorkspaceRoleDeleteEvent;
+use Claroline\CoreBundle\Event\Log\LogNotRepeatableInterface;
 use Claroline\CoreBundle\Entity\Logger\Log;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;

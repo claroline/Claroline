@@ -49,7 +49,7 @@ class StrictDispatcher
      */
     public function dispatch($eventName, $shortEventClassName, array $eventArgs = array())
     {
-        $className = "Claroline\CoreBundle\Event\Event\\{$shortEventClassName}Event";
+        $className = "Claroline\CoreBundle\Event\\{$shortEventClassName}Event";
 
         if (!class_exists($className)) {
             throw new MissingEventClassException(

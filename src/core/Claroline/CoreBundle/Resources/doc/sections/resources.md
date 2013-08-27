@@ -193,7 +193,7 @@ in the config files.
 
     use Claroline\CoreBundle\Form\FileType;
     use Claroline\CoreBundle\Entity\Resource\File;
-    use Claroline\CoreBundle\Event\Event\CreateFormResourceEvent;
+    use Claroline\CoreBundle\Event\CreateFormResourceEvent;
     use Claroline\CoreBundle\Listener\Resource\FileListener;
     ...
 

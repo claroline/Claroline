@@ -307,7 +307,7 @@ class WorkspaceControllerTest extends MockeryTestCase
         $controller = $this->getController(array('assertIsGranted'));
         $toolName = 'tool_name';
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $event = $this->mock('Claroline\CoreBundle\Event\Event\DisplayToolEvent');
+        $event = $this->mock('Claroline\CoreBundle\Event\DisplayToolEvent');
 
         $this->security
             ->shouldReceive('isGranted')
