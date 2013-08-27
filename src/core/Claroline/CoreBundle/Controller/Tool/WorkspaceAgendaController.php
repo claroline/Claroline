@@ -103,7 +103,7 @@ class WorkspaceAgendaController extends Controller
                 400,
                 array('Content-Type' => 'application/json')
             );
-
+        }
     }
 
     /**
