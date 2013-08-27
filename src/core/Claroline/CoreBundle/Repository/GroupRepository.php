@@ -185,7 +185,7 @@ class GroupRepository extends EntityRepository
         $search = $params['search'];
         if ($search !== null) {
 
-            $query = $this->findByName($search, true);
+            $query = $this->findByName($search, false);
 
             return $query
                 ->setFirstResult(0)

@@ -37,13 +37,12 @@
                         <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}"><i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
                     </p>
                 </div>
+                <div class="badges">
+                    <h3>{{ 'badges'|trans({}, 'badge') }}</h3>
+
+                    {% include 'ClarolineBadgeBundle:Badge:display.html.twig' with {'badgeUrl': 'claro_view_badge', 'paginationurl': 'claro_profile_view', 'routeParams': {'userId': user.id}} %}
+                </div>
             </div>
-        </div>
-        <div class="row margin">
-            <h3 class="sub-section-header">{{ 'badges'|trans({}, 'platform') }}</h3>
-
-            {% include 'ClarolineBadgeBundle:Badge:display.html.twig' with {'badgeUrl': 'claro_view_badge', 'paginationurl': 'claro_profile_view', 'routeParams': {'userId': user.id}} %}
-
         </div>
     </div>
 {% endblock %}
