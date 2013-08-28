@@ -2,34 +2,21 @@
 
 {% block section_content %}
 
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-user',
-                'name':'users_management'|trans({}, 'platform'),
-                'href':'#'
-            }
-        ])
-    }}
-
-    <div>
-        <ul>
-            <li>
-                <a href="{{ path('claro_admin_user_creation_form') }}" id="link_add_user">
-                {{ 'add_user'|trans({}, 'platform') }}</a>
-            </li>
-            <li>
-                <a href="{{ path('claro_admin_user_list') }}" id="link_list_user">
-                {{ 'list_users'|trans({}, 'platform') }}</a>
-            </li>
-            <li>
-                <a href="{{ path('claro_admin_group_creation_form') }}" id="link_group_create_form">
-                {{ 'create_group'|trans({}, 'platform') }}</a>
-            </li>
-            <li>
-                <a href="{{ path('claro_admin_group_list') }}" id="link_group_list">
-                {{ 'list_groups'|trans({}, 'platform') }}</a>
-            </li>
-        </ul>
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'users_management'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="list-group">
+        <a class="list-group-item" href="{{ path('claro_admin_user_creation_form') }}" id="link_add_user">
+            {{ 'create_user'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_admin_user_list') }}" id="link_list_user">
+            {{ 'list_users'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_admin_group_creation_form') }}" id="link_group_create_form">
+            {{ 'create_group'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_admin_group_list') }}" id="link_group_list">
+            {{ 'list_groups'|trans({}, 'platform') }}
+        </a>
     </div>
 {% endblock %}

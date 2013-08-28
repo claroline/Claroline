@@ -596,14 +596,19 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query->setParameter('roles', $roles);
         $query->setParameter('wsId', $workspace);
 
-        return ($getQuery) ? $query: $query->getResult();
+        return $getQuery ? $query : $query->getResult();
     }
 
     /**
      * This method should be renamed.
      * Find users who are outside the workspace and users whose role are in $roles.
      */
-    public function findOutsidersByWorkspaceRolesAndName(array $roles, $name, AbstractWorkspace $workspace, $getQuery = false)
+    public function findOutsidersByWorkspaceRolesAndName(
+        array $roles,
+        $name,
+        AbstractWorkspace $workspace,
+        $getQuery = false
+    )
     {
         //feel free to make this request easier if you can
         $search = strtoupper($name);
@@ -632,7 +637,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query->setParameter('wsId', $workspace);
         $query->setParameter('search', "%{$search}%");
 
-        return ($getQuery) ? $query: $query->getResult();
+        return $getQuery ? $query : $query->getResult();
     }
 
     /**
@@ -659,5 +664,41 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         }
 
         return $query->getResult();
+    }
+
+    public function findUserByUsernameOrEmail($username, $email)
+    {
+        $dql = '
+            SELECT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.username = :username
+            OR u.mail = :email
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('username', $username);
+        $query->setParameter('email', $email);
+
+        return $query->getResult();
+    }
+
+    /**
+     * @param  array           $params
+     * @return ArrayCollection
+     */
+    public function extract($params)
+    {
+        $search = $params['search'];
+        if ($search !== null) {
+
+            $query = $this->findByName($search, false);
+
+            return $query
+                ->setFirstResult(0)
+                ->setMaxResults(10)
+                ->getResult();
+        }
+
+        return array();
     }
 }

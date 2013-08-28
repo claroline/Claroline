@@ -138,9 +138,9 @@ class UserManager
             $email = $user[4];
             $code = isset($user[5])? $user[5] : null;
             $phone = isset($user[6])? $user[6] : null;
-            $existingUser = $this->userRepo->findOneByUsername($username);
+            $existingUsers = $this->userRepo->findUserByUsernameOrEmail($username, $email);
 
-            if (is_null($existingUser)) {
+            if (count($existingUsers) === 0 && filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
                 $newUser = $this->om->factory('Claroline\CoreBundle\Entity\User');
                 $newUser->setFirstName($firstName);
                 $newUser->setLastName($lastName);
@@ -156,8 +156,7 @@ class UserManager
 
                 $this->om->persist($newUser);
                 $this->ed->dispatch('log', 'Log\LogUserCreate', array($newUser));
-            }
-            else {
+            } else {
                 $nonImportedUsers[] = array(
                     'username' => $username,
                     'firstName' => $firstName,

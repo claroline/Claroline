@@ -27,11 +27,11 @@
 
 {% macro displayControls(workspaceId) %}
     {% if app.user %}
-        <button class="btn btn-secondary action-button" data-action="remove">
+        <button class="btn btn-default action-button" data-action="remove">
             <i class="icon-trash"></i>
             {{ 'delete'|trans({}, 'platform') }}
         </button>
-        <a  class="btn btn-secondary"
+        <a  class="btn btn-default"
             href="{{ path('claro_admin_import_users_form') }}"
         >
             <i class="icon-user"></i>
@@ -69,32 +69,43 @@
 {% endblock %}
 
 {% block section_content %}
-    <div class="margin">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'users_list'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body">
         <div>
             {{ macros.flashBox() }}
         </div>
         {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-user',
-                'name': 'users_management'|trans({}, 'platform'),
-                'href': path('claro_admin_users_management')
-            },
-            {
-                'name':'users_list'|trans({}, 'platform'),
-                'href':''
-            }
-        ])
+            macros.breadcrumbs([
+                {
+                    'icon': 'icon-user',
+                    'name': 'users_management'|trans({}, 'platform'),
+                    'href': path('claro_admin_users_management')
+                },
+                {
+                    'name':'users'|trans({}, 'platform'),
+                    'href':''
+                }
+            ])
         }}
-        <div class="search-bar">
-            {{ displayControls(workspace.getId()) }}
-            <div class="input-append pull-right">
-                <input class="input-medium" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
-                <button class="filter btn" type="button" id="search-button">
-                    <i class="icon-search"></i>
-                </button>
+
+        <div class="search-bar row">
+            <div class="col-md-6">
+                {{ displayControls(workspace.getId()) }}
+            </div>
+            <div class="col-md-6">
+                 <div class="input-group">
+                    <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
+                    <span class="input-group-btn">
+                        <button class="filter btn btn-default" type="button" id="search-button">
+                            <i class="icon-search"></i>
+                        </button>
+                    </span>
+                </div>
             </div>
         </div>
+
         {{ renderPager(search, pager) }}
         <div>
         </div>
@@ -107,7 +118,6 @@
                     <th>{{ 'first_name'|trans({}, 'platform') }}</th>
                     <th>{{ 'mail'|trans({}, 'platform') }}</th>
                     <th>{{ 'role'|trans({}, 'platform') }}</th>
-                    <th>{{ 'show_profile'|trans({}, 'platform') }}</th>
                     {% if is_granted('ROLE_ADMIN') %}
                         <th>{{ 'show_as'|trans({}, 'platform') }}</th>
                         <th><input type="checkbox" name="all" id="check-all-items"></input></th>
@@ -118,7 +128,11 @@
                 {% for user in pager.currentPageResults %}
                     <tr id="{{ user.getId() }}" class="row-user">
                         <td>{{ user.getId() }}</td>
-                        <td>{{ user.getUsername() }}</td>
+                        <td>
+                            <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}">
+                                {{ user.getUsername() }}
+                            </a>
+                        </td>
                         <td>{{ user.getLastName() }}</td>
                         <td>{{ user.getFirstName() }}</td>
                         <td>{{ user.getMail() }}</td>
@@ -129,11 +143,6 @@
                                     {% if not loop.last %}, {% endif %}
                                 {% endfor %}
                             </div>
-                        </td>
-                        <td>
-                            <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}">
-                                {{ 'show'|trans({}, 'platform') }}
-                            </a>
                         </td>
                         {% if is_granted('ROLE_ADMIN') %}
                         <td>
@@ -149,9 +158,9 @@
                 {% endfor %}
             </tbody>
         </table>
-        </div>
         {{ renderPager(search, pager) }}
         <div>
-        {{ displayControls(workspace.getId()) }}
+            {{ displayControls(workspace.getId()) }}
+        </div>
     </div>
 {% endblock %}

@@ -89,10 +89,10 @@ class HomeController
      */
     public function typeAction($type, $father = null, $region = null)
     {
-        $array = $this->manager->contentLayout($type, $father, $region);
+        $layout = $this->manager->contentLayout($type, $father, $region);
 
-        if ($array) {
-            return $this->render('ClarolineCoreBundle:Home:layout.html.twig', $this->renderContent($array));
+        if ($layout) {
+            return $this->render('ClarolineCoreBundle:Home:layout.html.twig', $this->renderContent($layout));
         }
 
         return $this->render('ClarolineCoreBundle:Home:error.html.twig', array('path' => $type));
@@ -148,7 +148,7 @@ class HomeController
      * Render the page of the menu.
      *
      * @param string $id   The id of the content.
-     * @param string $size The size (span12) of the content.
+     * @param string $size The size (content-12) of the content.
      * @param string $type The type of the content.
      *
      * @Template("ClarolineCoreBundle:Home:menu.html.twig")
@@ -164,7 +164,7 @@ class HomeController
      * Render the HTML of the menu of sizes of the contents.
      *
      * @param string $id   The id of the content.
-     * @param string $size The size (span12) of the content.
+     * @param string $size The size (content-12) of the content.
      * @param string $type The type of the content.
      *
      * @Route("/content/size/{id}/{size}/{type}", name="claroline_content_size")
@@ -221,20 +221,20 @@ class HomeController
      *
      * @return array
      */
-    public function renderContent($array)
+    public function renderContent($content)
     {
-        $tmp = '';
+        $tmp = ' '; // void in case of not yet content
 
-        if (isset($array['content']) and isset($array['type']) and is_array($array['content'])) {
-            foreach ($array['content'] as $content) {
+        if (isset($content['content']) and isset($content['type']) and is_array($content['content'])) {
+            foreach ($content['content'] as $content) {
                 $tmp .= $this->render(
                     'ClarolineCoreBundle:Home/types:'.$content['type'].'.html.twig', $content, true
                 )->getContent();
             }
-            $array['content'] = $tmp;
+            $content['content'] = $tmp;
         }
 
-        return $array;
+        return $content;
     }
 
     /**
@@ -250,17 +250,9 @@ class HomeController
             $tmp[$name] = '';
 
             foreach ($region as $variables) {
-                //@TODO Need content rights for admin users
-                if (!(!$this->security->isGranted('ROLE_ADMIN') and
-                    $variables['type'] == 'menu' and
-                    $variables['content']->getTitle() == 'Administration')
-                ) {
-                    $tmp[$name] .= $this->render(
-                        'ClarolineCoreBundle:Home/types:'.$variables['type'].'.html.twig', $variables, true
-                    )->getContent();
-                } else {
-                    unset($tmp[$name]);
-                }
+                $tmp[$name] .= $this->render(
+                    'ClarolineCoreBundle:Home/types:'.$variables['type'].'.html.twig', $variables, true
+                )->getContent();
             }
         }
 
@@ -373,6 +365,64 @@ class HomeController
     }
 
     /**
+     * Verify if a type exist.
+     *
+     * @Route("/content/typeexist/{name}", name="claroline_content_typeexist")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function typeExistAction($name)
+    {
+        if ($this->manager->typeExist($name)) {
+            return new Response('true');
+        }
+
+        return new Response('false');
+    }
+
+    /**
+     * Create a type by POST method. This is used by ajax.
+     * The response is a template of the type in success, otherwise false.
+     *
+     * @Route("/content/createtype/{name}", name="claroline_content_createtype")
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @Template("ClarolineCoreBundle:Home:type.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function createTypeAction($name)
+    {
+        try {
+            return array('type' => $this->manager->createType($name));
+        } catch (\Exeption $e) {
+            return new Response('false'); //useful in ajax
+        }
+    }
+
+    /**
+     * Delete a type by POST method. This is used by ajax.
+     * The response is the word true in a string in success, otherwise false.
+     *
+     * @Route("/content/deletetype/{type}", name="claroline_content_deletetype")
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @ParamConverter("type", class = "ClarolineCoreBundle:Home\Type", options = {"id" = "type"})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deletetypeAction($type)
+    {
+        try {
+            $this->manager->deleteType($type);
+
+            return new Response('true');
+        } catch (\Exeption $e) {
+            return new Response('false'); //useful in ajax
+        }
+    }
+
+    /**
      * Put a content into a region in front page as left, right, footer. This is sueful for menus.
      *
      * @Route("/region/{region}/{content}", requirements={"content" = "\d+"}, name="claroline_content_to_region")
@@ -400,13 +450,12 @@ class HomeController
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function render($template, $array, $default = false)
+    public function render($template, $variables, $default = false)
     {
-
         if ($default) {
             $template = $this->homeService->defaultTemplate($template);
         }
 
-        return new Response($this->templating->render($template, $array));
+        return new Response($this->templating->render($template, $variables));
     }
 }

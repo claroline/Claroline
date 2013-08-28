@@ -2,39 +2,32 @@
 
 {% block content %}
     {% if is_granted('ROLE_USER') %}
-        <div class="span3">
-            <ul class="nav nav-tabs nav-stacked">
-                <li class="disabled">
-                <a><b>{{ 'workspaces' | trans({}, "platform")}}</b></a>
-                </li>
-                <li class="{{ "/workspaces/" | activeLink  }}">
-                <a href="{{ path('claro_workspace_list') }}">
+        <div class="col-md-3">
+            <div class="list-group menu">
+                <div class="list-group-item disabled">
+                    {{ 'workspaces' | trans({}, "platform")}}
+                </div>
+                <a class="list-group-item{{ "/workspaces/" | activeLink  }}" href="{{ path('claro_workspace_list') }}">
                     <i class="icon-book"></i>
-                    <i class="icon-chevron-right pull-right"></i>
                     {{ 'all_workspaces'|trans({}, 'platform') }}
                 </a>
-                </li>
-                <li class="{{ "/workspaces/user" | activeLink  }}">
-                <a href="{{ path('claro_workspace_by_user') }}">
+                <a class="list-group-item {{ "/workspaces/user" | activeLink  }}" href="{{ path('claro_workspace_by_user') }}">
                     <i class="icon-book"></i>
-                    <i class="icon-chevron-right pull-right"></i>
                     {{ 'my_workspaces'|trans({}, 'platform') }}
                 </a>
-                </li>
                 {% if is_granted('ADMIN') %}
-                    <li>
-                    <a href="{{ path('claro_workspace_creation_form') }}">
+                    <a class="list-group-item {{ "/workspaces/new/form" | activeLink  }}" href="{{ path('claro_workspace_creation_form') }}">
                         <i class="icon-pencil"></i>
-                        <i class="icon-chevron-right pull-right"></i>
                         {{ 'create_workspace'|trans({}, 'platform') }}
                     </a>
-                    </li>
                 {% endif %}
-            </ul>
+            </div>
         </div>
     {% endif %}
-    <div class="border {% if is_granted('ROLE_USER') %}span9{% else %}span12{% endif %}">
-        {% block section_content %}
-        {% endblock %}
+    <div class="{% if is_granted('ROLE_USER') %}col-md-9{% else %}col-md-12{% endif %}">
+        <div class="panel panel-default">
+            {% block section_content %}
+            {% endblock %}
+        </div>
     </div>
 {% endblock %}

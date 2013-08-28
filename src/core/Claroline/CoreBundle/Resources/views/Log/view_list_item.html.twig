@@ -5,12 +5,12 @@
 </style>
 
 {% if isDesktop %}
-    <div class="span2 log_list_item">
+    <div class="col-md-2 log_list_item">
         {% include 'ClarolineCoreBundle:Log:view_list_item_workspace.html.twig' %}
     </div>
 {% endif %}
 
-<div class="span2 log_list_item">
+<div class="col-md-2 log_list_item">
     {% if log.getDateLog()|date('d-m-Y') == ''|date('d-m-Y') %}
         {{ 'today'|trans({}, 'platform') ~ ', ' }}
     {% else %}
@@ -19,18 +19,18 @@
     {{ log.getDateLog()|date('H:i') }}
 </div>
 
-<div class="span2 log_list_item">
+<div class="col-md-2 log_list_item">
     {% include 'ClarolineCoreBundle:Log:view_list_item_label.html.twig' %}
 </div>
 
-<div class="span2 log_list_item">
+<div class="col-md-2 log_list_item">
     {% include 'ClarolineCoreBundle:Log:view_list_item_doer.html.twig' %}
 </div>
 
 {% if isDesktop %}
-    <div class='span4 log_list_item'>
+    <div class='col-md-4 log_list_item'>
 {% else %}
-    <div class='span6 log_list_item'>
+    <div class='col-md-6 log_list_item'>
 {% endif %}
     {% if listItemView is defined and listItemView != null %}
         {{ listItemView|raw }}
@@ -67,3 +67,6 @@
         )|raw }}
     {% endif %}
 </div>
+{#
+    <h3>{{ log.id }} {{ log.getDetails()|json_encode|raw }}</h3>
+#}

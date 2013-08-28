@@ -131,11 +131,11 @@ class GroupManagerTest extends MockeryTestCase
 
         m::getConfiguration()->allowMockingNonExistentMethods(true);
         $this->userRepo->shouldReceive('findOneBy')
-            ->with( array('username' => 'username1', 'firstName' => 'firstname1', 'lastName' => 'lastname1'))
+            ->with(array('username' => 'username1', 'firstName' => 'firstname1', 'lastName' => 'lastname1'))
             ->once()
             ->andReturn(null);
         $this->userRepo->shouldReceive('findOneBy')
-            ->with( array('username' => 'username2', 'firstName' => 'firstname2', 'lastName' => 'lastname2'))
+            ->with(array('username' => 'username2', 'firstName' => 'firstname2', 'lastName' => 'lastname2'))
             ->once()
             ->andReturn($user);
         m::getConfiguration()->allowMockingNonExistentMethods(false);
@@ -371,8 +371,10 @@ class GroupManagerTest extends MockeryTestCase
             ->once()
             ->andReturn('pager');
 
-        $this->assertEquals('pager', $this->getManager()
-            ->getOutsidersByWorkspaceRolesAndName($roles, 'name', $workspace, 1));
+        $this->assertEquals(
+            'pager',
+            $this->getManager()->getOutsidersByWorkspaceRolesAndName($roles, 'name', $workspace, 1)
+        );
     }
 
     private function getManager(array $mockedMethods = array())

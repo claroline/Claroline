@@ -16,7 +16,7 @@ class File extends AbstractResource
     protected $size;
 
     /**
-     * @ORM\Column(name="hash_name", length=36, unique=true)
+     * @ORM\Column(name="hash_name", length=50, unique=true)
      */
     protected $hashName;
 

@@ -44,7 +44,7 @@ class LoadActivityData extends AbstractFixture implements ContainerAwareInterfac
         $activity->setInstructions(
             $this->container
                 ->get('claroline.utilities.lipsum_generator')
-                ->generateLipsum(100)
+                ->generateLipsum(100, true, 255)
         );
         $activity = $this->container
             ->get('claroline.manager.resource_manager')
@@ -57,11 +57,11 @@ class LoadActivityData extends AbstractFixture implements ContainerAwareInterfac
             );
 
         for ($i = 0, $count = count($this->resources), $order = 1; $i < $count; $i++, $order++) {
-                $resource = $manager->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+                $resource = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
                     ->find($this->resources[$i]);
                 $rs = new ResourceActivity;
                 $rs->setActivity($activity);
-                $rs->setResource($resource);
+                $rs->setResourceNode($resource);
                 $rs->setSequenceOrder($order);
                 $manager->persist($rs);
         }

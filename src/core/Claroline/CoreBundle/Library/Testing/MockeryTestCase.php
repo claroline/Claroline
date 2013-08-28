@@ -74,6 +74,7 @@ abstract class MockeryTestCase extends \PHPUnit_Framework_TestCase
         if (!is_string($class) // probably a final class mock
             || in_array($class, self::$nonCloneableClasses) // already checked
             || false !== strpos($class, '[')) { // partial mock
+
             return false;
         }
 
@@ -83,6 +84,7 @@ abstract class MockeryTestCase extends \PHPUnit_Framework_TestCase
         // custom __clone implementation (ex: Symfony's Request object)
         if ($rClass->isInternal() || $rClass->hasMethod('__clone')) {
             self::$nonCloneableClasses[] = $class;
+
             return false;
         }
 

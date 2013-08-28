@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle:Administration:layout.html.twig' %}
 
-{% block stylesheets %}
+{# block stylesheets %}
     {{ parent() }}
 
     {% stylesheets debug=false output='vendor/bootstrap-colorpicker/css/bootstrap-colorpicker.css'
@@ -21,97 +21,81 @@
         '../vendor/xaguilars/bootstrap-colorpicker/img/bootstrap-colorpicker/saturation.png' %}
     {% endimage %}
 
-{% endblock %}
+{% endblock #}
 
 {% block section_content %}
     <div id="homePath" class="hide">{{ path("claro_index") }}</div>
-
-    <div class="margin theme-generator">
-        <h3 class="sub-section-header">
+    <div class="panel-heading">
+        <h3 class="panel-title">
             {% if theme is defined %}
             {{ "Edit theme" | trans({}, "theme") }}<em> ({{ theme.name }})</em>
             {% else %}
                 {{ "New theme" | trans({}, "theme") }}
             {% endif %}
         </h3>
-        {% if parameters is defined %}
-            <div class="row-fluid">
-                <div class="span6">
-                    <h4>{{ "Theme parameters" | trans({}, "theme") }}</h4>
-                    <table class="table table-bordered table-striped">
-                        <tr>
-                            <th>{{ "Theme name" | trans({}, "") }}:</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="text" id="theme-name"{% if theme is defined %} value="{{ theme.getName() }}"{% endif %}>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="form-actions" colspan="2">
-                                <button class="btn save btn-primary"{% if theme is defined %} data-id="{{ theme.getId() }}"{% endif %}><i class="icon-ok"></i> {{ "Save" | trans({}, "") }}</button>
-                                <a href="{{ path("claroline_admin_theme_list") }}" class="btn"><i class="icon-reply"></i> {{ "Cancel" | trans({}, "") }}</a>
-                                <button class="btn preview"{% if theme is defined %} data-id="{{ theme.getId() }}"{% endif %}><i class="icon-eye-open"></i> {{ "Preview" | trans({}, "") }}</button>
-                                {% if theme is defined %}
-                                    <button class="btn dele" data-id="{{ theme.getId() }}"><i class="icon-trash"></i> {{ "Delete" | trans({}, "") }}</button>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="span6">
-                    <h4>{{ "Colors" | trans({}, "theme")}}</h4>
-                    <table class="table table-bordered table-striped">
-                        {% for code,value in parameters.getColors() %}
-                            <tr>
-                                <td class="theme-code"><code>{{ code }}</code></td>
-                                <td class="theme-value"><input class="picker input-small" type="text" value="{{ value }}"></td>
-                                <td class="theme-swatch"><span style="background-color: {{ value }};"></span></td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                </div>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-2">
+                {{ "Theme name" | trans({}, "") }}:
             </div>
-            <div class="accordion" id="accordion">
-                <div class="accordion-group">
-                    <div class="accordion-heading">
-                        <a class="accordion-toggle" data-parent="#accordion" data-toggle="collapse" href="#moreoptions">
-                            {{ "More options" | trans({}, "theme") }}
-                        </a>
-                    </div>
-                    <div id="moreoptions" class="accordion-body collapse">
-                        <div class="accordion-inner">
-                            {% for name,array in parameters.getParameters() %}
-                                {% if loop.index is divisibleby(2) %}<div class="row-fluid">{% endif %}
-                                    <div class="span6">
-                                        <h4>{{ name }}</h4>
-                                        <table class="table table-bordered table-striped">
-                                            {% for code,value in array %}
-                                                <tr>
-                                                    <td class="theme-code"><code>{{ code }}</code></td>
-                                                    <td class="theme-value"><input class="input-small" type="text" value="{{ value }}"></td>
-                                                </tr>
-                                            {% endfor %}
-                                        </table>
-                                    </div>
-                                    {% if loop.index is divisibleby(2) %}</div>{% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
+            <div class="col-md-4">
+                <input class="form-control" type="text" id="theme-name"{% if theme is defined %} value="{{ theme.getName() }}"{% endif %}>
             </div>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <button class="btn save btn-primary"{% if theme is defined %} data-id="{{ theme.getId() }}"{% endif %}><i class="icon-ok"></i> {{ "Save" | trans({}, "") }}</button>
+        <a href="{{ path("claroline_admin_theme_list") }}" class="btn btn-default"><i class="icon-reply"></i> {{ "Cancel" | trans({}, "") }}</a>
+        <button class="btn btn-default preview"{% if theme is defined %} data-id="{{ theme.getId() }}"{% endif %}><i class="icon-eye-open"></i> {{ "Preview" | trans({}, "") }}</button>
+        {% if theme is defined %}
+            <button class="btn btn-default dele" data-id="{{ theme.getId() }}"><i class="icon-trash"></i> {{ "Delete" | trans({}, "") }}</button>
         {% endif %}
     </div>
+
+    </div>{# end of panel #}
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ "Theme parameters" | trans({}, "theme") }}</h3>
+        </div>
+        <div class="theme-generator panel-body">
+            {% if parameters is defined %}
+                <div class="panel-group" id="accordion">
+                    {% for name,array in parameters.getParameters() %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    <a class="accordion-toggle" data-parent="#accordion" data-toggle="collapse" href="#collapse{{ loop.index }}">
+                                        {{ name }}
+                                    </a>
+                                </h3>
+                            </div>
+                            <div id="collapse{{ loop.index }}" class="collapse">
+                                <table class="table">
+                                    {% for code,value in array %}
+                                        <tr>
+                                            <td width="50%" class="theme-code"><code>{{ code }}</code></td>
+                                            <td class="theme-value"><input class="form-control" type="text" value="{{ value }}"></td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
 
-    {% javascripts debug=false output='vendor/bootstrap-colorpicker/js/bootstrap-colorpicker.js'
+    {# javascripts debug=false output='vendor/bootstrap-colorpicker/js/bootstrap-colorpicker.js'
     '../vendor/xaguilars/bootstrap-colorpicker/js/bootstrap-colorpicker.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {% endjavascripts #}
 
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/theme/theme.js') }}"></script>
 

@@ -2,31 +2,36 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src='{{ asset('bundles/clarolinecore/js/workspace/workspace_tag_hierarchy.js') }}' type="text/javascript"></script>
+    <script
+        src="{{ asset('bundles/clarolinecore/js/workspace/workspace_tag_hierarchy.js') }}"
+        type="text/javascript">
+    </script>
 {% endblock %}
 
 {% block section_content %}
-
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-tag',
-                'name': 'admin_tags_management'|trans({}, 'platform'),
-                'href': path('claro_workspace_manage_admin_tag')
-            },
-            {
-                'name': 'admin_tags_organization'|trans({}, 'platform'),
-                'href': path('claro_workspace_organize_admin_tag')
-            },
-            {
-                'name': tag.getName(),
-                'href': ''
-            }
-        ])
-    }}
-
-    <div class="margin">
-        <h3 class="sub-section-header">{{ 'admin_tags_add_remove_children_to'|trans({}, 'platform') }} [{{ tag.getName() }}]</h3>
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'admin_tags_add_remove_children_to'|trans({}, 'platform') }} [{{ tag.getName() }}]
+        </h3>
+    </div>
+    <div class="panel-body">
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'icon-tag',
+                    'name': 'admin_tags_management'|trans({}, 'platform'),
+                    'href': path('claro_workspace_manage_admin_tag')
+                },
+                {
+                    'name': 'admin_tags_organization'|trans({}, 'platform'),
+                    'href': path('claro_workspace_organize_admin_tag')
+                },
+                {
+                    'name': tag.getName(),
+                    'href': ''
+                }
+            ])
+        }}
 
         <div id="twig-tag-id" data-tag-id="{{ tag.getId() }}">
         </div>
@@ -63,13 +68,13 @@
                 </td>
             </tr>
         </table>
-        <div>
-            <button id="admin-tag-hierarchy-children-button" type="submit" class="btn btn-primary">
-                {{ 'ok'|trans({}, 'platform') }}
-            </button>
-            <a href="{{ path('claro_workspace_organize_admin_tag') }}">
-                <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
-            </a>
-        </div>
+    </div>
+    <div class="panel-footer">
+        <button id="admin-tag-hierarchy-children-button" type="submit" class="btn btn-primary">
+            {{ 'ok'|trans({}, 'platform') }}
+        </button>
+        <a href="{{ path('claro_workspace_organize_admin_tag') }}">
+            <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+        </a>
     </div>
 {% endblock %}

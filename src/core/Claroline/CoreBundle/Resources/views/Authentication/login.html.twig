@@ -6,26 +6,38 @@ same message when authentication has failed (no precise validation errors).
 #}
 
 {% block content %}
-    <div class="offset4 span4">{% if error %}
-            <div class="span12 alert margin alert-error">
+    <div class="col-md-offset-4 col-md-4">
+        {% if error %}
+            <div class="alert alert-danger">
                 <button type="button" class="close" data-dismiss="alert">×</button>
                 {{ 'login_failure'|trans({}, 'platform') }}
             </div>
         {% endif %}
-        <div class='border span12'>
-            <form class="margin" action="{{ path('claro_security_login_check') }}" method="post"><h3 class="sub-section-header">{{ 'login' | trans({}, "platform")}}</h3>
-                <label class="control-label" for="username">  <b>{{ 'username'|trans({}, 'platform') }} </b> </label> 
-                <div class="controls">
-                    <input class="span12" type="text" id="username" name="_username" value="{{ last_username }}" required="required"/>
+        <div class='content-element panel panel-default'>
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ 'login' | trans({}, "platform")}}</h3>
+            </div>
+            <form action="{{ path('claro_security_login_check') }}" method="post">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="username">{{ 'username'|trans({}, 'platform') }}</label>
+                        <input type="text" class="form-control" id="username" name="_username" placeholder="{{ 'username'|trans({}, 'platform') }}" tabindex="1" autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">
+                            {{ 'password'|trans({}, 'platform') }}
+                            <small>
+                                <a href ="{{ path('claro_security_forgot_password')}}" tabindex="4">({{ 'forgot_password'|trans({}, 'platform') }})</a>
+                            </small>
+                        </label>
+                        <input type="password" class="form-control" id="password" name="_password" placeholder="{{ 'password'|trans({}, 'platform') }}" tabindex="2">
+                    </div>
                 </div>
-                <label class="control-label" for="password"><b>{{ 'password'|trans({}, 'platform') }}</b>  <small><a href ="{{ path('claro_security_forgot_password')}}">({{ 'forgot_password'|trans({}, 'platform') }})</a> </small></label> 
-                <div class="controls">
-                    <input  class="span12" type="password" id="password" name="_password" required="required" />
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">{{ 'login'|trans({}, 'platform') }}</button>
+                <div class="panel-footer">
+                    <button type="submit" class="btn btn-primary" tabindex="3">{{ 'login'|trans({}, 'platform') }}</button>
                 </div>
             </form>
+
         </div>
     </div>
 {% endblock %}

@@ -1321,7 +1321,7 @@ class AdministrationController extends Controller
         $msg = '';
 
         foreach ($users as $user) {
-            foreach($roles as $role) {
+            foreach ($roles as $role) {
                 $this->roleManager->associateRole($user, $role);
                 $msg .= $user->getFirstName() . ' ' . $user->getLastName() . ' ';
                 $msg .= $this->translator->trans(
@@ -1368,7 +1368,7 @@ class AdministrationController extends Controller
         $msg = '';
 
         foreach ($groups as $group) {
-            foreach($roles as $role) {
+            foreach ($roles as $role) {
                 $this->roleManager->associateRole($group, $role);
                 $msg .= '"' . $group->getName() . '" ';
                 $msg .= $this->translator->trans(

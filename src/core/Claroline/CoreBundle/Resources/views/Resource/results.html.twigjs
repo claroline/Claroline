@@ -1,7 +1,7 @@
 {% twig_js name="ResourceManagerResults" %}
 
 <div class="results">
-    {% if resources.length > 0 %}
+    {% if nodes.length > 0 %}
         <h4>{{ 'results'|trans({}, 'platform') }} : </h4>
         <table class="table table-striped table-bordered table-condensed table-hover">
             <thead>
@@ -13,23 +13,23 @@
                 </tr>
             </thead>
             <tbody>
-            {% for resource in resources %}
-                {% if resource.parent_id is not null %}
-                    <tr id="{{ resource.id }}" class="resource">
+            {% for node in nodes %}
+                {% if node.parent_id is not null %}
+                    <tr id="{{ node.id }}" class="node">
                         <td class="checkbox-column">
                             <input type="checkbox"
-                                value="{{ resource.id }}"
-                                data-resource-name="{{ resource.name }}"/>
+                                value="{{ node.id }}"
+                                data-node-name="{{ node.name }}"/>
                         </td>
-                        <td><a href="#" class="resource-link" data-id="{{ resource.id }}" data-type="{{ resource.type }}">{{ resource.name }}</a></td>
+                        <td><a href="#" class="node-link" data-id="{{ node.id }}" data-type="{{ node.type }}">{{ node.name }}</a></td>
                         <td>
                             {% for resourceType, attributes in resourceTypes %}
-                                {% if resourceType == resource.type %}
+                                {% if resourceType == node.type %}
                                     {{ attributes.name }}
                                 {% endif %}
                             {% endfor %}
                         </td>
-                        <td>{{ resource.path_for_display }}</td>
+                        <td>{{ node.path_for_display }}</td>
                     </tr>
                 {% endif %}
             {% endfor %}

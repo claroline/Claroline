@@ -32,6 +32,12 @@ claro_content_error:
         _controller: FrameworkBundle:Template:template
         template: 'ClarolineCoreBundle:Home:ajaxerror.html.twig'
 
+claro_content_typeerror:
+    pattern: /content/typeerror
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'ClarolineCoreBundle:Home:typeerror.html.twig'
+
 claro_content_confirm:
     pattern: /content/confirm
     defaults:
@@ -62,9 +68,9 @@ claro_desktop:
     prefix: desktop
     type: annotation
 
-claro_desktop_tool_calendar:
-    resource: "@ClarolineCoreBundle/Controller/Tool/DesktopCalendarController.php"
-    prefix: desktop/tool/calendar
+claro_desktop_tool_agenda:
+    resource: "@ClarolineCoreBundle/Controller/Tool/DesktopAgendaController.php"
+    prefix: desktop/tool/agenda
     type: annotation
 
 claro_desktop_tool_home:
@@ -102,9 +108,9 @@ claro_workspace_tool_resources_properties:
     prefix: workspaces/tool/properties
     type: annotation
 
-claro_workspace_tool_calendar:
-    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceCalendarController.php"
-    prefix: workspaces/tool/calendar
+claro_workspace_tool_agenda:
+    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceAgendaController.php"
+    prefix: workspaces/tool/agenda
     type: annotation
 
 claro_workspace_tool_logs:
@@ -181,10 +187,13 @@ claro_install:
     prefix: install
 
 claro_file:
-    resource: "@ClarolineCoreBundle/Controller/FileControlller.php"
+    resource: "@ClarolineCoreBundle/Controller/FileController.php"
     type: annotation
     prefix: file
 
 idci_exporter:
     resource: "../../vendor/idci/exporter-bundle/IDCI/Bundle/ExporterBundle/Controller"
     type:     annotation
+# app/config/routing.yml
+_bazinga_exposetranslation:
+    resource: "@BazingaExposeTranslationBundle/Resources/config/routing/routing.yml"

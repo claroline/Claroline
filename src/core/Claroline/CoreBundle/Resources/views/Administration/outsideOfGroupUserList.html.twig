@@ -28,7 +28,7 @@
 
 {% macro displayControls(group) %}
     {% if app.user %}
-        <button class="btn btn-secondary action-button" data-action="add"><i class="icon-plus"></i> {{ 'add'|trans({}, 'platform') }}</button>
+        <button class="btn btn-default action-button" data-action="add"><i class="icon-plus"></i> {{ 'add'|trans({}, 'platform') }}</button>
     {% endif %}
 {% endmacro %}
 
@@ -61,7 +61,12 @@
 {% endblock %}
 
 {% block section_content %}
-<div class="margin">
+
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'add_users'|trans({}, 'platform') }} ({{ group.getName() }})</h3>
+    </div>
+    <div class="panel-body">
+
         {{
             macros.breadcrumbs([
                 {
@@ -70,7 +75,7 @@
                     'href': path('claro_admin_users_management')
                 },
                 {
-                    'name': 'groups_list'|trans({}, 'platform'),
+                    'name': 'groups'|trans({}, 'platform'),
                     'href': path('claro_admin_group_list')
                 },
                 {
@@ -83,45 +88,55 @@
                 },
             ])
         }}
-<div class="search-bar">
-     {{ displayControls(group) }}
-            <div class="input-append pull-right">
-                <input class="input-medium" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
-                <button class="filter btn" type="button" id="search-button">
-                    <i class="icon-search"></i>
-                </button>
+
+        <div class="search-bar row">
+            <div class="col-md-6">
+                {{ displayControls(group) }}
             </div>
+            <div class="col-md-6">
+                 <div class="input-group">
+                    <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
+                    <span class="input-group-btn">
+                        <button class="filter btn btn-default" type="button" id="search-button">
+                            <i class="icon-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+       </div>
+
+
+        {{ renderPager(search, group.getId(), pager) }}
+        <div>
+        <table class="table table-striped table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th>{{ 'id'|trans({}, 'platform') }}</th>
+                    <th>{{ 'username'|trans({}, 'platform') }}</th>
+                    <th>{{ 'last_name'|trans({}, 'platform') }}</th>
+                    <th>{{ 'first_name'|trans({}, 'platform') }}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="user-table-body">
+                {% for user in pager.currentPageResults %}
+                    <tr id="row-user-{{ user.getId() }}" class="row-user">
+                        <td>{{ user.getId() }}</td>
+                        <td>{{ user.getUsername() }}</td>
+                        <td>{{ user.getLastName() }}</td>
+                        <td>{{ user.getFirstName() }}</td>
+                        <td>
+                            <input type="checkbox" value="{{ user.id }}" class="chk-item" align="center"></input>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {{ renderPager(search, group.getId(), pager) }}
+
+        <div>
+            {{ displayControls(group) }}
         </div>
     </div>
-        {{ renderPager(search, group.getId(), pager) }}
-    <div>
-    <table class="table table-striped table-bordered table-condensed">
-        <thead>
-            <tr>
-                <th>{{ 'id'|trans({}, 'platform') }}</th>
-                <th>{{ 'username'|trans({}, 'platform') }}</th>
-                <th>{{ 'last_name'|trans({}, 'platform') }}</th>
-                <th>{{ 'first_name'|trans({}, 'platform') }}</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody id="user-table-body">
-            {% for user in pager.currentPageResults %}
-                <tr id="row-user-{{ user.getId() }}" class="row-user">
-                    <td>{{ user.getId() }}</td>
-                    <td>{{ user.getUsername() }}</td>
-                    <td>{{ user.getLastName() }}</td>
-                    <td>{{ user.getFirstName() }}</td>
-                    <td>
-                        <input type="checkbox" value="{{ user.id }}" class="chk-item" align="center"></input>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    </div>
-        {{ renderPager(search, group.getId(), pager) }}
-        {{ displayControls(group) }}
-    <div>
-</div>
 {% endblock %}

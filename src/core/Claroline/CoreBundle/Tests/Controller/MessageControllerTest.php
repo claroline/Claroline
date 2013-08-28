@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use \Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Entity\Group;
@@ -26,27 +25,15 @@ class MessageControllerTest extends MockeryTestCase
         $this->router = $this->mock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
         $this->formFactory = $this->mock('Claroline\CoreBundle\Form\Factory\FormFactory');
         $this->messageManager = $this->mock('Claroline\CoreBundle\Manager\MessageManager');
-        $this->controller = new MessageController(
-            $this->request,
-            $this->router,
-            $this->formFactory,
-            $this->messageManager
+        $this->controller = $this->mock(
+            'Claroline\CoreBundle\Controller\MessageController[checkAccess]',
+            array(
+                $this->request,
+                $this->router,
+                $this->formFactory,
+                $this->messageManager
+            )
         );
-    }
-
-    public function testFormAction()
-    {
-        $receivers = array('foo');
-        $this->messageManager->shouldReceive('generateStringTo')
-            ->once()
-            ->with($receivers)
-            ->andReturn('foo;');
-        $this->formFactory->shouldReceive('create')
-            ->once()
-            ->with(FormFactory::TYPE_MESSAGE, array('foo;'))
-            ->andReturn($this->form);
-        $this->form->shouldReceive('createView')->once()->andReturn('view');
-        $this->assertEquals(array('form' => 'view'), $this->controller->formAction($receivers));
     }
 
     public function testFormForGroupAction()
@@ -54,7 +41,7 @@ class MessageControllerTest extends MockeryTestCase
         $group = new Group();
         $this->router->shouldReceive('generate')
             ->once()
-            ->with('claro_message_form')
+            ->with('claro_message_show', array('message' => 0))
             ->andReturn('/message');
         $this->messageManager->shouldReceive('generateGroupQueryString')
             ->once()
@@ -65,10 +52,10 @@ class MessageControllerTest extends MockeryTestCase
         $this->assertEquals('/message?ids[]=1', $response->getTargetUrl());
     }
 
-    public function testSendAction()
+    public function testSendActionSuccess()
     {
         $sender = new User();
-        $message = new Message();
+        $message = $this->mock('Claroline\CoreBundle\Entity\Message');
         $parent = new Message();
         $this->formFactory->shouldReceive('create')
             ->once()
@@ -80,17 +67,20 @@ class MessageControllerTest extends MockeryTestCase
             ->andReturn(true);
         $this->form->shouldReceive('isValid')->once()->andReturn(true);
         $this->form->shouldReceive('getData')->once()->andReturn($message);
-        $this->form->shouldReceive('createView')->once()->andReturn('view');
         $this->messageManager->shouldReceive('send')
             ->once()
-            ->with($sender, $message, $parent);
-        $this->assertEquals(
-            array('form' => 'view'),
-            $this->controller->sendAction($sender, $parent)
-        );
+            ->with($sender, $message, $parent)
+            ->andReturn($message);
+        $message->shouldReceive('getId')->once()->andReturn(1);
+        $this->router->shouldReceive('generate')->once()
+            ->with('claro_message_show', array('message' => 1))
+            ->andReturn('url');
+
+        $response = $this->controller->sendAction($sender, $parent);
+        $this->assertEquals('url', $response->getTargetUrl());
     }
 
-    public function testShowAction()
+    public function testShowOnActionIfMessageExists()
     {
         $user = new User();
         $sender = new User();
@@ -98,6 +88,7 @@ class MessageControllerTest extends MockeryTestCase
         $message = new Message();
         $message->setSender($sender);
         $message->setObject('Some object...');
+        $this->controller->shouldReceive('checkAccess')->once()->with($message, $user);
         $this->messageManager->shouldReceive('markAsRead')->once()->with($user, array($message));
         $this->messageManager->shouldReceive('getConversation')
             ->once()
@@ -110,8 +101,51 @@ class MessageControllerTest extends MockeryTestCase
         $this->form->shouldReceive('createView')->once()->andReturn('form');
         $this->assertEquals(
             array('ancestors' => 'ancestors', 'message' => $message, 'form' => 'form'),
-            $this->controller->showAction($user, $message)
+            $this->controller->showAction($user, array(), $message)
         );
+    }
+
+    public function testShowOnActionIfMessageIsNull()
+    {
+        $user = new User();
+        $sender = new User();
+        $receiverString = 'user1;user2;';
+        $this->messageManager->shouldReceive('generateStringTo')->once()
+            ->with(array($user, $sender))->andReturn($receiverString);
+        $this->formFactory->shouldReceive('create')
+            ->once()
+            ->with(FormFactory::TYPE_MESSAGE, array($receiverString, ''))
+            ->andReturn($this->form);
+        $this->form->shouldReceive('createView')->once()->andReturn('form');
+        $this->assertEquals(
+            array('ancestors' => array(), 'message' => null, 'form' => 'form'),
+            $this->controller->showAction($user, array($user, $sender), null)
+        );
+    }
+
+    /**
+     * @dataProvider checkAccessProvider
+     */
+    public function testCheckAccess($senderName, $username, $receiversString, $isCorrect)
+    {
+        $controller = new MessageController(
+            $this->request,
+            $this->router,
+            $this->formFactory,
+            $this->messageManager
+        );
+
+        $user = $this->mock('Claroline\CoreBundle\Entity\User');
+        $message = $this->mock('Claroline\CoreBundle\Entity\Message');
+        $user->shouldReceive('getUsername')->andReturn($username);
+        $message->shouldReceive('getSenderUsername')->andReturn($senderName);
+        $message->shouldReceive('getTo')->andReturn($receiversString);
+
+        if (!$isCorrect) {
+            $this->setExpectedException('\Symfony\Component\Security\Core\Exception\AccessDeniedException');
+        }
+
+        $this->assertTrue($controller->checkAccess($message, $user));
     }
 
     /**
@@ -170,6 +204,30 @@ class MessageControllerTest extends MockeryTestCase
             array('restoreFromTrash', 'markAsUnremoved'),
             array('softDelete', 'markAsRemoved'),
             array('delete', 'remove')
+        );
+    }
+
+    public function checkAccessProvider()
+    {
+        return array(
+            array(
+                'sendername' => 'toto',
+                'username' => 'username',
+                'receiversString' => 'user;username;username1',
+                'isCorrect' => true
+            ),
+            array(
+                'sendername' => 'username',
+                'username' => 'username',
+                'receiversString' => 'user;username; username1',
+                'isCorrect' => true
+            ),
+            array(
+                'sendername' => 'toto',
+                'username' => 'username',
+                'receiversString' => 'user; username1;',
+                'isCorrect' => false
+            )
         );
     }
 }

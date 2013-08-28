@@ -1,5 +1,5 @@
 <form novalidate="novalidate"
-      action="{{ path('claro_resource_edit_properties', {'resourceId': '_resourceId'}) }}"
+      action="{{ path('claro_resource_edit_properties', {'node': '_nodeId'}) }}"
       method="post" {{ form_enctype(form) }}
       id="resource-properties-form"
       class="form-horizontal">
@@ -12,6 +12,9 @@
         {{ form_row(form.resourceType) }}
         {{ form_row(form.creator) }}
         {{ form_rest(form) }}
-        <input type="submit" value="{{ 'ok'|trans({}, 'platform') }}"/>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
+            <input type="submit" value="{{ 'ok'|trans({}, 'platform') }}"/>
+        </div>
     </div>
 </form>

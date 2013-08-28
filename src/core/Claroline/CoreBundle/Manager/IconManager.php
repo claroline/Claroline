@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Repository\ResourceIconRepository;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
@@ -38,7 +39,7 @@ class IconManager
      *     "thumbDir" = @DI\Inject("%claroline.param.thumbnails_directory%"),
      *     "rootDir"  = @DI\Inject("%kernel.root_dir%"),
      *     "ut"       = @DI\Inject("claroline.utilities.misc"),
-     *     "om"       = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"       = @DI\Inject("claroline.persistence.object_manager"),
      * })
      */
     public function __construct(
@@ -61,16 +62,11 @@ class IconManager
 
     /**
      * Create (if possible) and|or returns an icon for a resource
-     *
-     * @param File $resource the file
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon
-     *
-     * @throws \InvalidArgumentException
      */
     public function getIcon(AbstractResource $resource)
     {
-        $mimeElements = explode('/', $resource->getMimeType());
+        $node = $resource->getResourceNode();
+        $mimeElements = explode('/', $node->getMimeType());
         $ds = DIRECTORY_SEPARATOR;
         // if video or img => generate the thumbnail, otherwise find an existing one.
         if (($mimeElements[0] === 'video' || $mimeElements[0] === 'image')) {
@@ -95,7 +91,7 @@ class IconManager
         }
 
         //default & fallback
-        return $this->searchIcon($resource->getMimeType());
+        return $this->searchIcon($node->getMimeType());
     }
 
     /**
@@ -244,12 +240,13 @@ class IconManager
         }
     }
 
-    public function replace(AbstractResource $resource, ResourceIcon $icon)
+    public function replace(ResourceNode $resource, ResourceIcon $icon)
     {
         $this->om->startFlushSuite();
         $oldIcon = $resource->getIcon();
         $this->delete($oldIcon);
         $resource->setIcon($icon);
+        $this->om->persist($resource);
         $this->om->endFlushSuite();
 
         return $resource;

@@ -27,7 +27,7 @@
 
 {% macro displayControls() %}
     {% if app.user %}
-        <button class="btn btn-secondary action-button" data-action="remove">
+        <button class="btn btn-default action-button" data-action="remove">
             <i class="icon-trash"></i>
             {{ 'delete'|trans({}, 'platform') }}
         </button>
@@ -74,14 +74,19 @@
 {% endblock %}
 
 {% block section_content %}
-
-    <div class="search-bar">
-        {{ displayControls(workspace.getId()) }}
-        <div class="input-append pull-right">
-            <input class="input-medium" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
-            <button class="filter btn" type="button" id="search-button">
-                <i class="icon-search"></i>
-            </button>
+    <div class="search-bar row">
+        <div class="col-md-8">
+            {{ displayControls(workspace.getId()) }}
+        </div>
+        <div class="col-md-4">
+             <div class="input-group">
+                <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
+                <span class="input-group-btn">
+                    <button class="filter btn btn-default" type="button" id="search-button">
+                        <i class="icon-search"></i>
+                    </button>
+                </span>
+            </div>
         </div>
     </div>
 
@@ -109,7 +114,7 @@
                         {% endif %}
                     </td>
                     <td>{{ userMessage.getMessage().getDate()|date('d-m-Y') }}</td>
-                    <td>{{ userMessage.getMessage().getSenderUsername() }}</td>
+                    <td>{{ userMessage.getMessage().getTo() }}</td>
                     <td><a href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}">{{ userMessage.getMessage().getObject() }}</a></td>
                     <td><input class="chk-item" value="{{ userMessage.getMessage().getId() }}" type="checkbox"></input></td>
                 </tr>
@@ -117,5 +122,5 @@
         </tbody>
     </table>
     {{ renderPager(search, pager) }}
-    {{ displayControls(workspace.getId()) }}
+    <div>{{ displayControls(workspace.getId()) }}</div>
 {% endblock %}
