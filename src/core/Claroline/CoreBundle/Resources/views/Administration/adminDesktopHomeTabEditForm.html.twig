@@ -10,32 +10,6 @@
 
 {% block section_content %}
 
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-th-large',
-                'name': 'home_tabs'|trans({}, 'platform'),
-                'href': path('claro_admin_home_tabs_configuration')
-            },
-            {
-                'name': 'desktop_home_tab_edition'|trans({}, 'platform'),
-                'href': ''
-            }
-        ])
-    }}
-
-    <h3>{{ 'desktop_home_tab_edition'|trans({}, 'platform') }}</h3>
-    <h4>
-        {{ 'home_tab'|trans({}, 'platform') }} :
-        {{ homeTabName }}
-    </h4>
-    <br>
-
-    <button id="delete-home-tab-button" class="btn btn-default">
-        {{ 'delete_home_tab'|trans({}, 'platform') }}
-    </button>
-    <br>
-    <br>
     <form
         class="form-horizontal"
         action="{{ path(
@@ -45,7 +19,35 @@
         method="post"
         {{ form_enctype(form) }}
     >
-        {{ form_widget(form) }}
+        <div class="panel-body">
+            {{
+                macros.breadcrumbs([
+                    {
+                        'icon': 'icon-th-large',
+                        'name': 'home_tabs'|trans({}, 'platform'),
+                        'href': path('claro_admin_home_tabs_configuration')
+                    },
+                    {
+                        'name': 'desktop_home_tab_edition'|trans({}, 'platform'),
+                        'href': ''
+                    }
+                ])
+            }}
+
+            <h3>{{ 'desktop_home_tab_edition'|trans({}, 'platform') }}</h3>
+            <h4>
+                {{ 'home_tab'|trans({}, 'platform') }} :
+                {{ homeTabName }}
+            </h4>
+            <br>
+
+            <button type="button" id="delete-home-tab-button" class="btn btn-default">
+                {{ 'delete_home_tab'|trans({}, 'platform') }}
+            </button>
+            <br>
+            <br>
+            {{ form_widget(form) }}
+        </div>
 
         <div class="form-actions panel-footer">
             <button type="submit" class="btn btn-primary">
