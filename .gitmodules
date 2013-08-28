@@ -13,3 +13,6 @@
 [submodule "src/plugin/Innova/DirectoryBundle"]
 	path = src/plugin/Innova/DirectoryBundle
 	url = https://github.com/InnovaLangues/DirectoryBundle.git
+[submodule "src/plugin/Claroline/AnnouncementBundle"]
+	path = src/plugin/Claroline/AnnouncementBundle
+	url = https://github.com/claroline/AnnouncementBundle.git

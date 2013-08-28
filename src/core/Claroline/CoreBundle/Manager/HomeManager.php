@@ -1,5 +1,7 @@
 <?php
+
 namespace Claroline\CoreBundle\Manager;
+
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\Service;
@@ -8,6 +10,7 @@ use Claroline\CoreBundle\Entity\Home\Content;
 use Claroline\CoreBundle\Entity\Home\SubContent;
 use Claroline\CoreBundle\Entity\Home\Content2Type;
 use Claroline\CoreBundle\Entity\Home\Content2Region;
+
 /**
  * @Service("claroline.manager.home_manager")
  */
@@ -22,6 +25,7 @@ class HomeManager
     private $subContent;
     private $contentType;
     private $contentRegion;
+
     /**
      * @InjectParams({
      *     "graph"          = @Inject("claroline.common.graph_service"),
@@ -50,7 +54,7 @@ class HomeManager
      */
     public function getContent($content, $type, $father = null)
     {
-        $array = array('type' => $type->getName(), 'size' => 'span12');
+        $array = array('type' => $type->getName(), 'size' => 'col-lg-12');
 
         if ($father) {
             $array['father'] = $father->getId();
@@ -76,6 +80,7 @@ class HomeManager
         $content = $this->getContentByType($type, $father, $region);
         $array = null;
 
+        //or is_object($this->type->findOneBy(array('name' => $type)))
         if ($content) {
             $array = array();
             $array['content'] = $content;
@@ -122,6 +127,8 @@ class HomeManager
                     $array[] = $variables;
                     $first = $first->getNext();
                 }
+            } else {
+                $array[] = array('content' => '', 'type' => $type->getName()); // in case of not yet content
             }
         }
 
@@ -192,7 +199,6 @@ class HomeManager
      */
     public function createContent($title, $text, $generated = null, $type = null, $father = null)
     {
-
         if ($title or $text) {
             $content = new Content();
             $content->setTitle($title);
@@ -300,6 +306,51 @@ class HomeManager
     }
 
     /**
+     * Create a type.
+     *
+     * @return This function doesn't return anything.
+     */
+    public function createType($name)
+    {
+        $type = new Type($name);
+        $this->manager->persist($type);
+        $this->manager->flush();
+
+        return $type;
+    }
+
+    /**
+     * Verify if a type exist.
+     */
+    public function typeExist($name)
+    {
+        $type = $this->type->findOneBy(array('name' => $name));
+
+        if (is_object($type)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Delete a type and his childs.
+     *
+     * @return This function doesn't return anything.
+     */
+    public function deleteType($type)
+    {
+        $contents = $this->contentType->findBy(array('type' => $type));
+
+        foreach ($contents as $content) {
+            $this->deleteContent($content->getContent());
+        }
+
+        $this->manager->remove($type);
+        $this->manager->flush();
+    }
+
+    /**
      * Delete a node entity and link together the next and back entities.
      *
      * @return string The word "true" useful in ajax.
@@ -356,7 +407,7 @@ class HomeManager
      * Get the variables of the menu.
      *
      * @param string $id   The id of the content.
-     * @param string $size The size (span12) of the content.
+     * @param string $size The size (col-lg-12) of the content.
      * @param string $type The type of the content.
      *
      * @return array

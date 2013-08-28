@@ -38,6 +38,7 @@ class ClarolineCoreBundle extends Bundle implements AutoInstallableInterface, Co
             'JMS\TwigJsBundle\JMSTwigJsBundle',
             'WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle',
             'Zenstruck\Bundle\FormBundle\ZenstruckFormBundle',
+            'Bazinga\ExposeTranslationBundle\BazingaExposeTranslationBundle',
             'Claroline\MigrationBundle\ClarolineMigrationBundle',
             'Claroline\Bundle\FrontEndBundle\FrontEndBundle'
         );
@@ -70,6 +71,8 @@ class ClarolineCoreBundle extends Bundle implements AutoInstallableInterface, Co
             if (in_array($environment, array('prod', 'dev', 'test'))) {
                 return $config->addContainerResource($this->buildPath("{$envConfigs[$bundleClass]}_{$environment}"));
             }
+        } elseif ($bundle instanceof \Claroline\BadgeBundle\ClarolineBadgeBundle) {
+            return $config->addRoutingResource($this->buildPath('badge_routing'));
         } elseif (in_array($environment, array('dev', 'test'))) {
             if ($bundle instanceof \Symfony\Bundle\WebProfilerBundle\WebProfilerBundle) {
                 return $config

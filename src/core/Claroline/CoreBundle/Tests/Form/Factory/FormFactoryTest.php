@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Form\Factory;
 
-use \Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class FormFactoryTest extends MockeryTestCase

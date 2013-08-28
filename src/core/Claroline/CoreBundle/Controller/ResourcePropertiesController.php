@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContext;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -53,123 +53,100 @@ class ResourcePropertiesController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/rename/form/{resourceId}",
+     *     "/rename/form/{node}",
      *     name="claro_resource_rename_form",
      *     options={"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Resource:renameForm.html.twig")
-     * @EXT\ParamConverter(
-     *      "resource",
-     *      class="ClarolineCoreBundle:Resource\AbstractResource",
-     *      options={"id" = "resourceId", "strictId" = true}
-     * )
      *
      * Displays the form allowing to rename a resource.
      *
-     * @param integer $resourceId the resource id
+     * @param ResourceNode $node
      *
      * @return Response
      */
-    public function renameFormAction(AbstractResource $resource)
+    public function renameFormAction(ResourceNode $node)
     {
-        $collection = new ResourceCollection(array($resource));
+        $collection = new ResourceCollection(array($node));
         $this->checkAccess('EDIT', $collection);
-        $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_RENAME, array(), $resource);
+        $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_RENAME, array(), $node);
 
         return array('form' => $form->createView());
     }
 
     /**
      * @EXT\Route(
-     *     "/rename/{resourceId}",
+     *     "/rename/{node}",
      *     name="claro_resource_rename",
      *     options={"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Resource:renameForm.html.twig")
-     * @EXT\ParamConverter(
-     *      "resource",
-     *      class="ClarolineCoreBundle:Resource\AbstractResource",
-     *      options={"id" = "resourceId", "strictId" = true}
-     * )
      *
      * Renames a resource.
      *
-     * @param integer $resourceId the resource id
+     * @param ResourceNode $node
      *
      * @return Response
      */
-    public function renameAction(AbstractResource $resource)
+    public function renameAction(ResourceNode $node)
     {
-        $collection = new ResourceCollection(array($resource));
+        $collection = new ResourceCollection(array($node));
         $this->checkAccess('EDIT', $collection);
-        $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_RENAME, array(), $resource);
+        $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_RENAME, array(), $node);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $this->resourceManager->rename($resource, $form->get('name')->getData());
+            $this->resourceManager->rename($node, $form->get('name')->getData());
 
-            return new JsonResponse(array($resource->getName()));
+            return new JsonResponse(array($node->getName()));
         }
-
-        return array(
-            'resourceId' => $resource->getId(),
-            'form' => $form->createView()
-        );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/properties/form/{resourceId}",
-     *     name="claro_resource_form_properties",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Resource:propertiesForm.html.twig")
-     * @EXT\ParamConverter(
-     *      "resource",
-     *      class="ClarolineCoreBundle:Resource\AbstractResource",
-     *      options={"id" = "resourceId", "strictId" = true}
-     * )
-     *
-     * Displays the resource properties form.
-     *
-     * @param integer $resourceId the resource id
-     *
-     * @return Response
-     */
-    public function propertiesFormAction(AbstractResource $resource)
-    {
-        $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_PROPERTIES, array(), $resource);
 
         return array('form' => $form->createView());
     }
 
     /**
      * @EXT\Route(
-     *     "/properties/edit/{resourceId}",
+     *     "/properties/form/{node}",
+     *     name="claro_resource_form_properties",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Resource:propertiesForm.html.twig")
+     *
+     * Displays the resource properties form.
+     *
+     * @param ResourceNode $node
+     *
+     * @return Response
+     */
+    public function propertiesFormAction(ResourceNode $node)
+    {
+        $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_PROPERTIES, array(), $node);
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/properties/edit/{node}",
      *     name="claro_resource_edit_properties",
      *     options={"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Resource:propertiesForm.html.twig")
-     * @EXT\ParamConverter(
-     *      "resource",
-     *      class="ClarolineCoreBundle:Resource\AbstractResource",
-     *      options={"id" = "resourceId", "strictId" = true}
-     * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * Changes the resource properties.
      *
-     * @param integer $resourceId the resource id
+     * @param ResourceNode $node
      *
      * @return StreamedResponse
      */
-    public function changePropertiesAction(AbstractResource $resource, User $user)
+    public function changePropertiesAction(ResourceNode $node, User $user)
     {
-        if (!$user === $resource->getCreator()) {
+        if (!$user === $node->getCreator()) {
              throw new AccessDeniedException("You're not the owner of this resource");
         }
 
-        $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_PROPERTIES, array(), $resource);
+        $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_PROPERTIES, array(), $node);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -177,26 +154,23 @@ class ResourcePropertiesController extends Controller
             $file = $form->get('newIcon')->getData();
 
             if ($file) {
-                $icon = $this->resourceManager->changeIcon($resource, $file);
+                $icon = $this->resourceManager->changeIcon($node, $file);
             }
 
-            $this->resourceManager->rename($resource, $name);
+            $this->resourceManager->rename($node, $name);
 
             $content = "{";
             $content .= (isset($icon)) ?
                 $content .= '"icon": "' . $icon->getRelativeUrl() . '"':
-                $content .= '"icon": "' . $resource->getIcon()->getRelativeUrl() . '"';
+                $content .= '"icon": "' . $node->getIcon()->getRelativeUrl() . '"';
 
-            $content .= ', "name": "' . $resource->getName() . '"';
+            $content .= ', "name": "' . $node->getName() . '"';
             $content .= '}';
 
-            return new JsonResponse(array($content));
+            return new JsonResponse(array($node));
         }
 
-        return array(
-            'resourceId' => $resource->getId(),
-            'form' => $form->createView()
-        );
+        return array('form' => $form->createView());
     }
 
     /**

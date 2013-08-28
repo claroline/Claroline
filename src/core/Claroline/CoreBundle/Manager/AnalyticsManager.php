@@ -32,7 +32,7 @@ class AnalyticsManager
     )
     {
         $this->om = $om;
-        $this->resourceRepo = $om->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+        $this->resourceRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
         $this->logRepository = $om->getRepository('ClarolineCoreBundle:Logger\Log');

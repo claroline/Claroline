@@ -26,7 +26,7 @@ class ResourceType
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\AbstractResource",
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     mappedBy="resourceType",
      *     cascade={"persist"}
      * )
@@ -43,14 +43,6 @@ class ResourceType
     protected $customActions;
 
     /**
-     * @ORM\Column(nullable=true)
-     *
-     * @todo this attribute should not be nullable (a modification of "inherited"
-     * resource types -- see SiteBundle for an example -- is needed)
-     */
-    protected $class;
-
-    /**
      * @ORM\Column(name="is_exportable", type="boolean")
      */
     protected $isExportable = false;
@@ -60,24 +52,6 @@ class ResourceType
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $plugin;
-
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
-     *     inversedBy="children"
-     * )
-     * @ORM\JoinColumn(onDelete="SET NULL")
-     */
-    protected $parent;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
-     *     mappedBy="parent"
-     * )
-     * @ORM\OrderBy({"id" = "ASC"})
-     */
-    protected $children;
 
     /**
      * @ORM\ManyToMany(
@@ -136,24 +110,9 @@ class ResourceType
         return $this->plugin;
     }
 
-    public function getClass()
-    {
-        return $this->class;
-    }
-
-    public function setClass($class)
-    {
-        $this->class = $class;
-    }
-
     public function getMetaTypes()
     {
         return $this->metaTypes;
-    }
-
-    public function setParent(ResourceType $parent = null)
-    {
-        $this->parent = $parent;
     }
 
     public function getCustomActions()
@@ -164,16 +123,6 @@ class ResourceType
     public function addCustomAction(ResourceTypeCustomAction $action)
     {
         $this->customActions->add($action);
-    }
-
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    public function getChildren()
-    {
-        return $this->children;
     }
 
     public function getAbstractResources()

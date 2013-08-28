@@ -6,13 +6,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Event\Log\LogUserUpdateEvent;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -135,7 +136,7 @@ class ProfileController extends Controller
 
             $this->eventDispatcher->dispatch(
                 'log',
-                'Log\LogUserUpdateEvent',
+                'Log\LogUserUpdate',
                 array($user, $changeSet)
             );
 
@@ -148,7 +149,7 @@ class ProfileController extends Controller
     /**
      * @EXT\Route(
      *     "/view/{userId}",
-     *     name="claro_profile_view"
+     *      name="claro_profile_view"
      * )
      * @EXT\ParamConverter(
      *      "user",
@@ -159,12 +160,28 @@ class ProfileController extends Controller
      *
      * Displays the public profile of an user.
      *
-     * @param integer $userId The id of the user we want to see the profile
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param int                               $page
      */
-    public function viewAction(User $user)
+    public function viewAction(User $user, $page = 1)
     {
-        return array('user' => $user);
+        $query = $this->getDoctrine()->getRepository('ClarolineBadgeBundle:Badge')->findByUser($user, false);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager   = new Pagerfanta($adapter);
+
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $exception) {
+            throw new NotFoundHttpException();
+        }
+
+        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
+        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+
+        return array(
+            'user'     => $user,
+            'pager'    => $pager,
+            'language' => $platformConfigHandler->getParameter('locale_language')
+        );
     }
 }

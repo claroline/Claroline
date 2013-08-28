@@ -2,16 +2,22 @@
 
 {% block content %}
     {{ macros.flashBox() }}
-    <form class="form-horizontal" id="user_registration_form" action="{{ path('claro_registration_register_user') }}" method="post" {{ form_enctype(form) }}>
-        <fieldset>
-            <legend>{{ 'register'|trans({}, 'platform') }} :</legend>
-            {{ form_widget(form) }}
-            <div class="form-actions">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ 'register'|trans({}, 'platform') }}</h3>
+        </div>
+        <form class="form-horizontal" id="user_registration_form"
+              action="{{ path('claro_registration_register_user') }}"
+              method="post" {{ form_enctype(form) }}>
+            <div class="panel-body">
+                {{ form_widget(form) }}
+            </div>
+            <div class="panel-footer">
                 <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
                 <a href="{{ path('claro_index') }}">
-                    <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
+                    <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
                 </a>
             </div>
-        </fieldset>
-    </form>
+        </form>
+    </div>
 {% endblock %}

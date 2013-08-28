@@ -59,7 +59,7 @@ class LoadDirectoryData extends AbstractFixture implements ContainerAwareInterfa
                         $directory->setName($directories[$i]);
                         $parent = $this->getReference("directory/{$directories[$i - 1]}");
                         $resourceManager->create($directory, $dirType, $user, $parent->getWorkspace(), $parent);
-                        $this->addReference("directory/{$directories[$i]}", $directory);
+                        $this->addReference("directory/{$directories[$i]}", $directory->getResourceNode());
                     }
                 }
             }

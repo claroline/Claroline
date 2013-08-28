@@ -1,0 +1,2 @@
+_badge:
+    resource: "@ClarolineBadgeBundle/Resources/config/routing.yml"

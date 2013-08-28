@@ -37,31 +37,30 @@
 
         $.ajax(homePath + url)
             .done(
-                    function (data)
-                    {
+                function (data)
+                {
+                    var modal = document.createElement("div");
+                    modal.className = "modal fade";
 
-                        var modal = document.createElement("div");
-                        modal.className = "modal hide fade";
-
-                        if (id) {
-                            modal.setAttribute("id", id);
-                        }
-
-                        if (element) {
-                            $(modal).data("element", element);
-                        }
-
-                        modal.innerHTML = data;
-
-                        $(modal).appendTo("body");
-
-                        $(modal).modal("show");
-
-                        $(modal).on("hidden", function () {
-                            $(this).remove();
-                        });
-
+                    if (id) {
+                        modal.setAttribute("id", id);
                     }
+
+                    if (element) {
+                        $(modal).data("element", element);
+                    }
+
+                    modal.innerHTML = data;
+
+                    $(modal).appendTo("body");
+
+                    $(modal).modal("show");
+
+                    $(modal).on("hidden.bs.modal", function () {
+                        $(this).remove();
+                    });
+
+                }
         )
             .error(
                     function ()
@@ -82,6 +81,8 @@
     {
         var lineheight = $(obj).css("line-height").substr(0, $(obj).css("line-height").indexOf("px"));
         var lines = $(obj).val().split("\n").length;
+
+        lineheight = parseInt(lineheight, 10) + 4;
 
         $(obj).css("height", ((lines + 1) * lineheight) + "px");
     }
@@ -144,8 +145,7 @@
             generatedContent = $(creatorElement).find(".generated-content").html();
         }
 
-        if (text.value !== "" || title.value !== "")
-        {
+        if (text.value !== "" || title.value !== "") {
             $.post(homePath + path,
                 {
                     "title": title.value,
@@ -158,12 +158,11 @@
                 .done(
                     function (data)
                     {
-                        if (!isNaN(data) && data !== "")
-                        {
+                        if (!isNaN(data) && data !== "") {
                             contentPath = "content/" + data + "/" + type;
 
                             var insertElement = function (content) {
-                                $(creatorElement).next().prepend(content);
+                                $(creatorElement).next().prepend(content).hide().fadeIn("slow");
                             };
 
                             if (father) {
@@ -191,9 +190,9 @@
                             text.value = "";
                             resize(text);
                             $(creatorElement).find(".generated").html("");
-                        }
-                        else if (data === "true")
-                        {
+
+                        } else if (data === "true") {
+
                             contentPath = "content/" + id + "/" + type;
 
                             if (father) {
@@ -210,10 +209,7 @@
                                 )
                             ;
 
-                        }
-                        else
-                        {
-                            //document.body.innerHTML = data;
+                        } else {
                             modal("content/error");
                         }
                     }
@@ -254,7 +250,6 @@
         ;
     }
 
-
     /** DOM events **/
 
     $("body").on("mouseenter", ".content-element", function () {
@@ -264,23 +259,22 @@
     });
 
     $("body").on("mouseleave", ".content-element", function () {
-        if (!$(this).find(".content-menu").first().hasClass("open"))
-        {
+        if (!$(this).find(".content-menu").first().hasClass("open")) {
             $(this).find(".content-menu").first().addClass("hide");
         }
     });
 
     $("body").on("click", ".content-size", function (event) {
         var element = parentByClassName(event.target, "content-element");
-        var size = (element.className.match(/\bspan\S+/g) || []).join(" ").substr(4);
+        var size = (element.className.match(/\bcontent-\d+/g) || []).join(" ").substr(8);
         var id = $(element).data("id");
         var type = $(element).data("type");
 
         modal("content/size/" + id + "/" + size + "/" + type, "sizes", element);
     });
 
-    $("body").on("click", "#sizes a.border", function (event) {
-        var size = "span" + event.target.innerHTML;
+    $("body").on("click", "#sizes .panel", function (event) {
+        var size = "content-" + event.target.innerHTML;
         var id = $("#sizes .modal-body").data("id");
         var type = $("#sizes .modal-body").data("type");
         var element = $("#sizes").data("element");
@@ -292,15 +286,14 @@
             {
                 if (data === "true") {
                     $(element).removeClass(function (index, css) {
-                        return (css.match(/\bspan\S+/g) || []).join(" ");
+                        return (css.match(/\bcontent-\d+/g) || []).join(" ");
                     });
 
                     $(element).addClass(size);
-
+                    $(element).trigger("DOMSubtreeModified"); //height resize event
                     $("#sizes").modal("hide");
-                }
-                else
-                {
+
+                } else {
                     modal("content/error");
                 }
             }
@@ -323,12 +316,11 @@
     });
 
 
-    $("body").on("click", "#regions a.border", function (event) {
+    $("body").on("click", "#regions .panel", function (event) {
         var name = $(event.target).data("region");
         var id = $("#regions .modal-body").data("id");
 
-        if (id && name)
-        {
+        if (id && name) {
             $.ajax(homePath + "region/" + name + "/" + id)
                 .done(
                     function ()
@@ -352,31 +344,99 @@
         modal("content/confirm", "delete-content", element);
     });
 
-    $("body").on("click", "#delete-content a.delete", function () {
+    $("body").on("click", "#delete-content .btn.delete", function () {
         var element = $("#delete-content").data("element");
         var id = $(element).data("id");
 
         if (id && element) {
             $.ajax(homePath + "content/delete/" + id)
-        .done(
-            function (data)
-            {
-                if (data === "true") {
-                    $(element).hide("slow", function () { $(this).remove(); });
+            .done(
+                function (data)
+                {
+                    if (data === "true") {
+                        $(element).hide("slow", function () {
+                            $(this).remove();
+                        });
+                    } else {
+                        modal("content/error");
+                    }
                 }
-                else
+            )
+            .error(
+                function ()
                 {
                     modal("content/error");
                 }
-            }
+            );
+        }
+    });
+
+    $("body").on("click", ".type-delete", function (event) {
+        var element = parentByClassName(event.target, "alert");
+
+        modal("content/confirm", "delete-type", element);
+    });
+
+    $("body").on("click", "#delete-type .btn.delete", function () {
+        var element = $("#delete-type").data("element");
+        var id = $(element).data("id");
+
+        if (id && element) {
+            $.ajax(homePath + "content/deletetype/" + id)
+            .done(
+                function (data)
+                {
+                    if (data === "true") {
+                        $(element).parent().hide("slow", function () {
+                            $(this).remove();
+                        });
+                    } else {
+                        modal("content/error");
+                    }
+                }
             )
-        .error(
-            function ()
-            {
-                modal("content/error");
-            }
-            )
-        ;
+            .error(
+                function ()
+                {
+                    modal("content/error");
+                }
+            );
+        }
+    });
+
+    $("body").on("click", ".create-type", function (event) {
+        var typeCreator = parentByClassName(event.target, "creator");
+        var name = $("input", typeCreator);
+
+        if (creator && name.val()) {
+            $.ajax(homePath + "content/typeexist/" + name.val())
+            .done(
+                function (data)
+                {
+                    if (data === "false") {
+                        $.ajax(homePath + "content/createtype/" + name.val())
+                        .done(
+                            function (data)
+                            {
+                                if (data !== "false" && data !== "") {
+                                    $(typeCreator).next().prepend(data);
+                                    name.val("");
+                                } else {
+                                    modal("content/error");
+                                }
+                            }
+                        )
+                        .error(
+                            function ()
+                            {
+                                modal("content/error");
+                            }
+                        );
+                    } else {
+                        modal("content/typeerror");
+                    }
+                }
+            );
         }
     });
 
@@ -386,8 +446,7 @@
         var type = $(element).data("type");
         var father = $(element).data("father");
 
-        if (id && type && element)
-        {
+        if (id && type && element) {
             var contentPath = "content/creator/" + type + "/" + id;
 
             if (father) {
@@ -423,8 +482,7 @@
         var element = parentByClassName(event.target, "creator");
         var id = $(element).data("id");
 
-        if (element && id)
-        {
+        if (element && id) {
             creator(event.target, id);
         }
     });
@@ -435,8 +493,7 @@
         var type = $(element).data("type");
         var father = $(element).data("father");
 
-        if (id && type && element)
-        {
+        if (id && type && element) {
             var contentPath = "content/" + id + "/" + type;
 
             if (father) {
@@ -482,20 +539,19 @@
         $(event.target).parent().html("");
     });
 
-    $(".content.row-fluid").sortable({
+    $(".row.contents").sortable({
         items: "> .content-element",
         cancel: "input,textarea,button,select,option,a.btn.dropdown-toggle,.dropdown-menu",
         cursor: "move"
     });
 
-    $(".content.row-fluid").on("sortupdate", function (event, ui) {
+    $(".row.contents").on("sortupdate", function (event, ui) {
         if (this === ui.item.parent()[0]) {
             var a = $(ui.item).data("id");
             var b = $(ui.item).next().data("id");
             var type = $(ui.item).data("type");
 
-            if (a && type)
-            {
+            if (a && type) {
                 $.ajax(homePath + "content/reorder/" + type + "/" + a + "/" + b)
                 .error(
                         function ()

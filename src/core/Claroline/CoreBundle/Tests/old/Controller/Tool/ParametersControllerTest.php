@@ -19,13 +19,13 @@ class ParametersControllerTest extends FunctionalTestCase
         $repo = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool');
         $baseDisplayedTools = $repo->findDesktopDisplayedToolsByUser($this->getUser('john'));
         $nbBaseDisplayedTools = count($baseDisplayedTools);
-        $calendar = $repo->findOneBy(array('name' => 'calendar'));
-        $calendarPosition = $nbBaseDisplayedTools + 1;
+        $agenda = $repo->findOneBy(array('name' => 'agenda'));
+        $agendaPosition = $nbBaseDisplayedTools + 1;
         $this->logUser($this->getUser('john'));
 
         $this->client->request(
             'POST',
-            "/desktop/tool/properties/add/tool/{$calendar->getId()}/position/{$calendarPosition}"
+            "/desktop/tool/properties/add/tool/{$agenda->getId()}/position/{$agendaPosition}"
         );
 
         $this->assertEquals(
@@ -35,7 +35,7 @@ class ParametersControllerTest extends FunctionalTestCase
 
         $this->client->request(
             'POST',
-            "/desktop/tool/properties/remove/tool/{$calendar->getId()}"
+            "/desktop/tool/properties/remove/tool/{$agenda->getId()}"
         );
 
         $this->assertEquals(
@@ -52,10 +52,10 @@ class ParametersControllerTest extends FunctionalTestCase
             ->findVisitorRole($workspace);
         $baseDisplayedTools = $repo->findDisplayedByRolesAndWorkspace(array($role->getName()), $workspace);
         $nbBaseDisplayedTools = count($baseDisplayedTools);
-        $calendar = $repo->findOneBy(array('name' => 'calendar'));
+        $agenda = $repo->findOneBy(array('name' => 'agenda'));
         $this->logUser($this->getUser('john'));
 
-        $toolId = $calendar->getId();
+        $toolId = $agenda->getId();
         $workspaceId = $workspace->getId();
         $roleId = $role->getId();
 

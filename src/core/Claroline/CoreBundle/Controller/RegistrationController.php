@@ -4,12 +4,21 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\BaseProfileType;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
+use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Library\Security\Acl\ClassIdentity;
+use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Symfony\Component\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Controller for user self-registration. Access to this functionality requires
@@ -18,6 +27,31 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  */
 class RegistrationController extends Controller
 {
+    private $request;
+    private $userManager;
+    private $configHandler;
+    private $validator;
+
+    /**
+     * @DI\InjectParams({
+     *     "request"       = @DI\Inject("request"),
+     *     "userManager"   = @DI\Inject("claroline.manager.user_manager"),
+     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "validator"     = @DI\Inject("validator")
+     * })
+     */
+    public function __construct(
+        Request $request,
+        UserManager $userManager,
+        PlatformConfigurationHandler $configHandler,
+        ValidatorInterface $validator
+    )
+    {
+        $this->request = $request;
+        $this->userManager = $userManager;
+        $this->configHandler = $configHandler;
+        $this->validator = $validator;
+    }
     /**
      * @Route(
      *     "/form",
@@ -55,7 +89,9 @@ class RegistrationController extends Controller
     {
         $this->checkAccess();
         $user = new User();
+
         $form = $this->get('form.factory')->create(new BaseProfileType(), $user);
+
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
@@ -68,6 +104,54 @@ class RegistrationController extends Controller
         }
 
         return array('form' => $form->createView());
+    }
+
+    /**
+     * @Route("/new/user.{format}", name = "claro_register_user")
+     * @Method({"POST"})
+     */
+    public function postUserRegistrationAction($format)
+    {
+        $formats = array('json', 'xml');
+
+        if (!in_array($format, $formats)) {
+            Return new Response(
+                "The format {$format} is not supported (supported formats are 'json', 'xml'",
+                400
+            );
+        }
+
+        $status = 200;
+        $content = array();
+
+        if ($this->configHandler->getParameter('allow_self_registration')) {
+            $request = $this->request;
+
+            $user = new User();
+            $user->setUsername($request->request->get('username'));
+            $user->setPlainPassword($request->request->get('password'));
+            $user->setFirstName($request->request->get('firstName'));
+            $user->setLastName($request->request->get('lastName'));
+            $user->setMail($request->request->get('mail'));
+
+            $errorList = $this->validator->validate($user);
+
+            if (count($errorList) > 0) {
+                $status = 422;
+                foreach ($errorList as $error) {
+                    $content[] = array('property' => $error->getPropertyPath(), 'message' => $error->getMessage());
+                }
+            } else {
+                $this->userManager->createUser($user);
+            }
+        } else {
+            $status = 403;
+        }
+
+        switch ($format) {
+            case 'json': return new JsonResponse($content, $status);
+            case 'xml' : return new XmlResponse($content, $status);
+        }
     }
 
     /**
