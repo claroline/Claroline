@@ -28,6 +28,8 @@ class PostController extends Controller
     {
         $this->checkAccess("OPEN", $blog);
 
+        $this->dispatchPostReadEvent($blog, $post);
+
         $commentStatus = Comment::STATUS_UNPUBLISHED;
         if ($blog->isAutoPublishComment()) {
             $commentStatus = Comment::STATUS_PUBLISHED;
@@ -52,6 +54,8 @@ class PostController extends Controller
                 try {
                     $entityManager->persist($comment);
                     $entityManager->flush();
+
+                    $this->dispatchCommentCreateEvent($blog);
 
                     $flashBag->add('success', $translator->trans('icap_blog_comment_add_success', array(), 'icap_blog'));
                 } catch (\Exception $exception) {
@@ -99,7 +103,7 @@ class PostController extends Controller
             'error'   => $translator->trans('icap_blog_post_add_error', array(), 'icap_blog')
         );
 
-        return $this->persistPost($request, $blog, $post, $user, $messages);
+        return $this->persistPost($request, $blog, $post, $user, 'create', $messages);
     }
 
     /**
@@ -121,10 +125,10 @@ class PostController extends Controller
             'error'   => $translator->trans('icap_blog_post_edit_error', array(), 'icap_blog')
         );
 
-        return $this->persistPost($request, $blog, $post, $user, $messages);
+        return $this->persistPost($request, $blog, $post, $user, 'update', $messages);
     }
 
-    protected function persistPost(Request $request, Blog $blog, Post $post, User $user, array $messages)
+    protected function persistPost(Request $request, Blog $blog, Post $post, User $user, $action, array $messages)
     {
         $form = $this->createForm(new PostType(), $post);
 
@@ -137,6 +141,16 @@ class PostController extends Controller
                 try {
                     $entityManager->persist($post);
                     $entityManager->flush();
+
+                    if('create' === $action) {
+                        $this->dispatchPostCreateEvent($blog, $post);
+                    }
+                    elseif('update' === $action) {
+                        $this->dispatchPostUpdateEvent($blog, $post);
+                    }
+                    else {
+                        throw new \InvalidArgumentException('Unknown action type for persisting post');
+                    }
 
                     $flashBag->add('success', $messages['success']);
                 } catch (\Exception $exception) {
@@ -174,6 +188,8 @@ class PostController extends Controller
         try {
             $entityManager->remove($post);
             $entityManager->flush();
+
+            $this->dispatchPostDeleteEvent($blog, $post);
 
             $flashBag->add('success', $translator->trans('icap_blog_post_delete_success', array(), 'icap_blog'));
         } catch (\Exception $exception) {

@@ -61,3 +61,10 @@ add_comment: 'Ajouter un commentaire'
 be_the_first_to_comment: 'Soyez le premier à commenter cet article'
 icap_blog_post_comment_form_message: 'Commentaire'
 to_comment: 'Commenter'
+log.blog.configure: "a configuré le blog %blog%"
+log.blog.read_post: "a ouvert l'article %post% du blog %blog%"
+log.blog.update_post: "a mis à jour l'article %post% du blog %blog%"
+log.blog.create_post: "a crée l'article %post% dans le blog %blog%"
+log.blog.delete_post: "a supprimé l'article %post% du blog %blog%"
+log.blog.create_comment: "a commenté l'article %post% du blog %blog%"
+log.blog.delete_comment: "a supprimé un commentaire de l'article %post% du blog %blog%"

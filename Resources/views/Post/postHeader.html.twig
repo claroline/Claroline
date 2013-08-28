@@ -4,7 +4,7 @@
             <a href="{{ path('icap_blog_post_edit', {'blogId': _resource.id, 'postSlug': post.slug}) }}" data-toggle="tooltip" title="{{ 'edit'|trans({}, 'platform') }}" data-placement="top" data-original-title="{{ 'edit'|trans({}, 'platform') }}" class="btn btn-default btn-sm">
                 <span class="glyphicon icon-edit"></span>
             </a>
-            <a href="{{ path('icap_blog_post_delete', {'blogId': _resource.id, 'postSlug': post.slug}) }}" class="btn btn-sm btn-danger delete" data-confirm-title="{{ 'post_deletion_confirm_title'|trans }}" data-confirm-message="{{ 'post_deletion_confirm_message'|trans({'%postName%': post.title}) }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-toggle="tooltip" title="{{ 'delete'|trans({}, 'platform') }}" data-placement="top" data-original-title="{{ 'delete'|trans({}, 'platform') }}">
+            <a href="{{ path('icap_blog_post_delete', {'blogId': _resource.id, 'postSlug': post.slug}) }}" class="btn btn-sm btn-danger delete" data-confirm-title="{{ 'post_deletion_confirm_title'|trans({}, 'icap_blog') }}" data-confirm-message="{{ 'post_deletion_confirm_message'|trans({'%postName%': post.title}, 'icap_blog') }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-toggle="tooltip" title="{{ 'delete'|trans({}, 'platform') }}" data-placement="top" data-original-title="{{ 'delete'|trans({}, 'platform') }}">
                 <span class="glyphicon icon-trash"></span>
             </a>
             {% if isPublished %}

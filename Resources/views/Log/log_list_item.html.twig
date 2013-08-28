@@ -1,0 +1,45 @@
+{% set doer %}
+    {% include 'ClarolineCoreBundle:Log:view_list_item_doer.html.twig' %}
+{% endset %}
+
+{% set blog %}
+    {% include 'ICAPBlogBundle:Log:log_list_item_blog.html.twig' %}
+{% endset %}
+
+{% set post %}
+    {% include 'ICAPBlogBundle:Log:log_list_item_post.html.twig' %}
+{% endset %}
+
+{% set resource %}
+    {% include 'ClarolineCoreBundle:Log:view_list_item_resource.html.twig' %}
+{% endset %}
+
+{% if constant('ICAP\\BlogBundle\\Controller\\Controller::BLOG_TYPE') == log.childType %}
+    {% if constant('Claroline\\CoreBundle\\Event\\Log\\LogResourceChildUpdateEvent::CHILD_ACTION_UPDATE') == log.childAction %}
+        {{ 'log.blog.configure'|trans({'%blog%': resource}, 'icap_blog')|raw }}
+    {% else %}
+        no default text
+    {% endif %}
+{% elseif constant('ICAP\\BlogBundle\\Controller\\Controller::BLOG_POST_TYPE') == log.childType %}
+    {% if constant('Claroline\\CoreBundle\\Event\\Log\\LogResourceChildUpdateEvent::CHILD_ACTION_READ') == log.childAction %}
+        {{ 'log.blog.read_post'|trans({'%blog%': resource, '%post%': post}, 'icap_blog')|raw }}
+    {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogResourceChildUpdateEvent::CHILD_ACTION_CREATE') == log.childAction %}
+        {{ 'log.blog.create_post'|trans({'%blog%': resource, '%post%': post}, 'icap_blog')|raw }}
+    {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogResourceChildUpdateEvent::CHILD_ACTION_UPDATE') == log.childAction %}
+        {{ 'log.blog.update_post'|trans({'%blog%': resource, '%post%': post}, 'icap_blog')|raw }}
+    {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogResourceChildUpdateEvent::CHILD_ACTION_DELETE') == log.childAction %}
+        {{ 'log.blog.delete_post'|trans({'%blog%': resource, '%post%': post}, 'icap_blog')|raw }}
+    {% else %}
+        no default text
+    {% endif %}
+{% elseif constant('ICAP\\BlogBundle\\Controller\\Controller::BLOG_COMMENT_TYPE') == log.childType %}
+    {% if constant('Claroline\\CoreBundle\\Event\\Log\\LogResourceChildUpdateEvent::CHILD_ACTION_CREATE') == log.childAction %}
+        {{ 'log.blog.create_comment'|trans({'%blog%': resource, '%post%': post}, 'icap_blog')|raw }}
+    {% elseif constant('Claroline\\CoreBundle\\Event\\Log\\LogResourceChildUpdateEvent::CHILD_ACTION_DELETE') == log.childAction %}
+        {{ 'log.blog.delete_comment'|trans({'%blog%': resource, '%post%': post}, 'icap_blog')|raw }}
+    {% else %}
+        no default text
+    {% endif %}
+{% else %}
+    no default text
+{% endif %}

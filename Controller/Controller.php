@@ -2,14 +2,21 @@
 
 namespace ICAP\BlogBundle\Controller;
 
+use Claroline\CoreBundle\Event\Log\LogResourceChildUpdateEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
+use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use ICAP\BlogBundle\Entity\Blog;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use ICAP\BlogBundle\Entity\Post;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class Controller extends BaseController
 {
+    const BLOG_TYPE         = 'icap_blog';
+    const BLOG_POST_TYPE    = 'icap_blog_post';
+    const BLOG_COMMENT_TYPE = 'icap_blog_comment';
+
     /**
      * @param string $permission
      *
@@ -24,8 +31,8 @@ class Controller extends BaseController
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
-        $log = new LogResourceReadEvent($blog->getResourceNode());
-        $this->get('event_dispatcher')->dispatch('log', $log);
+        $logEvent = new LogResourceReadEvent($blog->getResourceNode());
+        $this->get('event_dispatcher')->dispatch('log', $logEvent);
     }
     /**
      * @param string $permission
@@ -65,5 +72,157 @@ class Controller extends BaseController
         }
 
         return $archiveDatas;
+    }
+
+    /***
+     * @param Blog   $blog
+     * @param string $childType
+     * @param string $action
+     * @param array  $details
+     * @return Controller
+     */
+    protected function dispatchChildEvent(Blog $blog, $childType, $action, $details = array())
+    {
+        $log = new LogResourceChildUpdateEvent(
+            $blog->getResourceNode(),
+            $childType,
+            $action,
+            $details
+        );
+
+        $this->get('event_dispatcher')->dispatch('log', $log);
+
+        return $this;
+    }
+
+    /**
+     * @param Blog $blog
+     *
+     * @return Controller
+     */
+    protected function dispatchBlogConfigureEvent(Blog $blog)
+    {
+        return $this->dispatchChildEvent($blog, self::BLOG_TYPE, LogResourceChildUpdateEvent::CHILD_ACTION_UPDATE);
+    }
+
+    /**
+     * @param Blog  $blog
+     *
+     * @param array $changeSet
+     *
+     * @return Controller
+     */
+    protected function dispatchBlogUpdateEvent(Blog $blog, $changeSet)
+    {
+        $logEvent = new LogResourceUpdateEvent($blog->getResourceNode(), $changeSet);
+        $this->get('event_dispatcher')->dispatch('log', $logEvent);
+
+        return $this;
+    }
+
+    /**
+     * @param Blog                         $blog
+     *
+     * @param \ICAP\BlogBundle\Entity\Post $post
+     *
+     * @return Controller
+     */
+    protected function dispatchPostCreateEvent(Blog $blog, Post $post)
+    {
+        $details = array(
+            'icap_blog_post' => array(
+                'id'    => $post->getId(),
+                'title' => $post->getTitle()
+            )
+        );
+
+        return $this->dispatchChildEvent($blog, self::BLOG_POST_TYPE, LogResourceChildUpdateEvent::CHILD_ACTION_CREATE, $details);
+    }
+
+    /**
+     * @param Blog $blog
+     *
+     * @param Post $post
+     *
+     * @return Controller
+     */
+    protected function dispatchPostReadEvent(Blog $blog, Post $post)
+    {
+        $details = array(
+            'icap_blog_post' => array(
+                'id'    => $post->getId(),
+                'title' => $post->getTitle()
+            )
+        );
+
+        return $this->dispatchChildEvent($blog, self::BLOG_POST_TYPE, LogResourceChildUpdateEvent::CHILD_ACTION_READ, $details);
+    }
+
+    /**
+     * @param Blog                         $blog
+     *
+     * @param \ICAP\BlogBundle\Entity\Post $post
+     *
+     * @return Controller
+     */
+    protected function dispatchPostUpdateEvent(Blog $blog, Post $post)
+    {
+        $details = array(
+            'icap_blog_post' => array(
+                'id'    => $post->getId(),
+                'title' => $post->getTitle()
+            )
+        );
+
+        return $this->dispatchChildEvent($blog, self::BLOG_POST_TYPE, LogResourceChildUpdateEvent::CHILD_ACTION_UPDATE, $details);
+    }
+
+    /**
+     * @param Blog                         $blog
+     *
+     * @param \ICAP\BlogBundle\Entity\Post $post
+     *
+     * @return Controller
+     */
+    protected function dispatchPostDeleteEvent(Blog $blog, Post $post)
+    {
+        $details = array(
+            'icap_blog_post' => array(
+                'id'    => $post->getId(),
+                'title' => $post->getTitle()
+            )
+        );
+
+        return $this->dispatchChildEvent($blog, self::BLOG_POST_TYPE, LogResourceChildUpdateEvent::CHILD_ACTION_DELETE, $details);
+    }
+
+    /**
+     * @param Blog $blog
+     *
+     * @return Controller
+     */
+    protected function dispatchCommentCreateEvent(Blog $blog)
+    {
+        return $this->dispatchChildEvent($blog, self::BLOG_COMMENT_TYPE, LogResourceChildUpdateEvent::CHILD_ACTION_CREATE);
+    }
+
+    /**
+     * @param Blog $blog
+     *
+     * @return Controller
+     */
+    protected function dispatchCommentReadEvent(Blog $blog)
+    {
+        return $this->dispatchChildEvent($blog, self::BLOG_COMMENT_TYPE, LogResourceChildUpdateEvent::CHILD_ACTION_READ);
+    }
+
+    /**
+     * @param Blog $blog
+     *
+     * @return Controller
+     */
+    protected function dispatchCommentDeleteEvent(Blog $blog)
+    {
+        return $this->dispatchChildEvent($blog, self::BLOG_COMMENT_TYPE, LogResourceChildUpdateEvent::CHILD_ACTION_DELETE);
     }
 }
