@@ -14,5 +14,5 @@ postgres:
   adapter: postgresql
   database: claroline_test
   username: postgres
-before_script: sh ./travis.sh
+before_script: . ./travis.sh
 script: phpunit -c app --testsuite core
