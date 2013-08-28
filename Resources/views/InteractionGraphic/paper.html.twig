@@ -42,59 +42,56 @@
 
 {% block title %} {{ 'paper' | trans }} {{ 'question' | trans }} {% endblock %}
 
-
-
 {% block section_content %}
 
-<a href="{{ path('ujm_question_index') }}" ><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
+    <a href="{{ path('ujm_question_index') }}" ><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
 
-<h1>{{ interactionGraphic.interaction.question.title }}</h1>
+    <h1>{{ interactionGraphic.interaction.question.title }}</h1>
 
-<div name="description">
-    <p>{{ interactionGraphic.interaction.question.description|raw }}</p>
-</div>
+    <div name="description">
+        <p>{{ interactionGraphic.interaction.question.description|raw }}</p>
+    </div>
 
-<h3 name="question">
-    <p>{{ interactionGraphic.interaction.invite|raw }}</p>
-</h3>
+    <h3 name="question">
+        <p>{{ interactionGraphic.interaction.invite|raw }}</p>
+    </h3>
 
-<h5>{{ 'orders' | trans }} :</h5>
-<h6><em>{{ 'position' | trans }}<br/>{{ 'selection' | trans }}<br/>{{ 'raz' | trans }}<br/>{{ 'onlyOnce' | trans }}</em></h6>
+    <h5>{{ 'orders' | trans }} :</h5>
+    <h6><em>{{ 'position' | trans }}<br/>{{ 'selection' | trans }}<br/>{{ 'raz' | trans }}<br/>{{ 'onlyOnce' | trans }}</em></h6>
 
-<div style="position: relative;" id="Answer">
-    <p id="ContainerCursor">
-        {% set i = 1 %}
-        {% for coords in listeCoords %}
-            <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}" id="cursor{{ i }}"
-                 style="position: absolute;"/>
-            {% set i = i + 1 %}
-       {% endfor %}
-    </p><p>
-       <img src="{{ asset(interactionGraphic.document.url) }}" alt="AnswerImg" id="AnswerImg"
-             width="{{ interactionGraphic.width }}" height="{{ interactionGraphic.height }}"
-             style="margin-top: 30px"/>
-    </p>
-</div>
+    <div style="position: relative;" id="Answer">
+        <p id="ContainerCursor">
+            {% set i = 1 %}
+            {% for coords in listeCoords %}
+                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}" id="cursor{{ i }}"
+                     style="position: absolute;"/>
+                {% set i = i + 1 %}
+           {% endfor %}
+        </p><p>
+           <img src="{{ asset(interactionGraphic.document.url) }}" alt="AnswerImg" id="AnswerImg"
+                 width="{{ interactionGraphic.width }}" height="{{ interactionGraphic.height }}"
+                 style="margin-top: 30px"/>
+        </p>
+    </div>
 
-<form name="ValidGraphic" id="ValidGraphic" action="{{ path('ujm_interactiongraphic_response') }}" method="post">
-    <input type="hidden" id="nbpointer" name="nbpointer" value="{{ i }}"/>
-    <input type="hidden" id="answers" name="answers" value=""/>
-    <input type="hidden" id="graphId" name="graphId" value="{{ interactionGraphic.id }}"/>
-    <input type="hidden" id="PositionInit" name="PositionInit" value="true"/>
-    <table>
-        {% set nbr_hint = 1 %}
-        {% for hint in interactionGraphic.interaction.hints %}
-            <tr>
-                <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}', '{{path('ujm_hint_show')}}', '{{ 'consult_hint' | trans }} ?', '{{nbr_hint}}')">{{ 'hint' | trans }} {{nbr_hint}} </a></td>
-                <td id="div_hint{{nbr_hint}}"></td>
-            </tr>
-            {% set nbr_hint = nbr_hint + 1 %}
-        {% endfor %}
-    </table><br/>
+    <form name="ValidGraphic" id="ValidGraphic" action="{{ path('ujm_interactiongraphic_response') }}" method="post">
+        <input type="hidden" id="nbpointer" name="nbpointer" value="{{ i }}"/>
+        <input type="hidden" id="answers" name="answers" value=""/>
+        <input type="hidden" id="graphId" name="graphId" value="{{ interactionGraphic.id }}"/>
+        <input type="hidden" id="PositionInit" name="PositionInit" value="true"/>
+        <table>
+            {% set nbr_hint = 1 %}
+            {% for hint in interactionGraphic.interaction.hints %}
+                <tr>
+                    <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}', '{{path('ujm_hint_show')}}', '{{ 'consult_hint' | trans }} ?', '{{nbr_hint}}')">{{ 'hint' | trans }} {{nbr_hint}} </a></td>
+                    <td id="div_hint{{nbr_hint}}"></td>
+                </tr>
+                {% set nbr_hint = nbr_hint + 1 %}
+            {% endfor %}
+        </table><br/>
 
-    <button type="submit" onclick="NoEmptyAnswer();return false;">{{ 'validate' | trans }}</button>
-</form><br/>
-
+        <button type="submit" onclick="NoEmptyAnswer();return false;">{{ 'validate' | trans }}</button>
+    </form><br/>
 {% endblock %}
 
 {% block javascripts %}

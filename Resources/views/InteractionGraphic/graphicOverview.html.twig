@@ -44,60 +44,62 @@
 
 {% block section_content %}
 
-        <h1>{{ interG.interaction.question.title }}</h1>
+    <a href="{{ path('ujm_question_index') }}" >
+        <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
+    </a><br/>
+    
+    <h1>{{ interG.interaction.question.title }}</h1>
 
-            <div>
-                <p>{{ interG.interaction.question.description|raw }}</p>
-            </div>
+    <div>
+        <p>{{ interG.interaction.question.description|raw }}</p>
+    </div>
 
-            <h3>
-                <p>{{ interG.interaction.invite|raw }}</p>
-            </h3>
+    <h3>
+        <p>{{ interG.interaction.invite|raw }}</p>
+    </h3>
 
-        <div style="position: relative;">
-            <img src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
-                alt="AnswerImage" id="AnswerImage1"/>
+    <div style="position: relative;">
+        <img src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
+            alt="AnswerImage" id="AnswerImage1"/>
 
-            {% set i = 0 %}{% set allInfo = '' %}
+        {% set i = 0 %}{% set allInfo = '' %}
 
-            {% for c in coords %}
+        {% for c in coords %}
 
-                {% set numb = coords[i].value|split(',') %}
-                {% set respcoo = rep[i]|split('-') %}
+            {% set numb = coords[i].value|split(',') %}
+            {% set respcoo = rep[i]|split('-') %}
 
-                    <img src="/Claroline/web/bundles/ujmexo/images/graphic/circlew.png" alt="RightAnswer{{i}}" id="1ra{{i}}"
-                        style="position: absolute; z-index: 2;"/><br/>
-                    <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{i}}" id="1cursor{{i}}"
-                        style="position: absolute; z-index: 7;"/>
+                <img src="/Claroline/web/bundles/ujmexo/images/graphic/circlew.png" alt="RightAnswer{{i}}" id="1ra{{i}}"
+                    style="position: absolute; z-index: 2;"/><br/>
+                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{i}}" id="1cursor{{i}}"
+                    style="position: absolute; z-index: 7;"/>
 
-                {% set allInfo = coords[i].shape~';'~coords[i].color~';'~asset('bundles/ujmexo/images/graphic/')~';'
-                    ~numb[0]~';'~numb[1]~';'~respcoo[0]~';'~respcoo[1]~';'~coords[i].size~'^'~allInfo %}
+            {% set allInfo = coords[i].shape~';'~coords[i].color~';'~asset('bundles/ujmexo/images/graphic/')~';'
+                ~numb[0]~';'~numb[1]~';'~respcoo[0]~';'~respcoo[1]~';'~coords[i].size~'^'~allInfo %}
 
-                {% set i = i + 1 %}
+            {% set i = i + 1 %}
 
-            {% endfor %}
-        </div>
+        {% endfor %}
+    </div>
 
-        <p>{{ 'mark' | trans }} : {{ score }} / {{ total }}<br/>
+    <p>{{ 'mark' | trans }} : {{ score }} / {{ total }}<br/>
 
-            {% if score == 0 and penalty == 0 %}
-                {{ 'noRightAnswer' | trans }}.
-            {% elseif penalty == 0 %}
-                {{ 'noHintShow' | trans }}.
-            {% else %}
-                {{ 'pointRightResponse' | trans }} : {{ point }} {{ 'with' | trans }} : -{{ penalty }} {{ 'sawHint' | trans }}.
-            {% endif %}
-        </p>
-
-        {% if interG.interaction.feedback is defined %}
-            <div>
-                <p>{{ interG.interaction.feedback|raw }}</p>
-            </div>
+        {% if score == 0 and penalty == 0 %}
+            {{ 'noRightAnswer' | trans }}.
+        {% elseif penalty == 0 %}
+            {{ 'noHintShow' | trans }}.
+        {% else %}
+            {{ 'pointRightResponse' | trans }} : {{ point }} {{ 'with' | trans }} : -{{ penalty }} {{ 'sawHint' | trans }}.
         {% endif %}
+    </p>
 
-        <input type="hidden" id="info" name="info" value="{{i}}~{{allInfo}}"/>
+    {% if interG.interaction.feedback is defined %}
+        <div>
+            <p>{{ interG.interaction.feedback|raw }}</p>
+        </div>
+    {% endif %}
 
-        <a href="{{ path('ujm_question_index') }}">{{ 'list of question' | trans }}</a>
+    <input type="hidden" id="info" name="info" value="{{i}}~{{allInfo}}"/>
 
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
   {% endblock %}

@@ -1,10 +1,10 @@
 <p>
-    {{ form_row(form.interaction.question.title) }}
+    {{ form_row(edit_form.interaction.question.title) }}
 </p>
 <p>
     <ul style="margin-left: 0; list-style-type: none;">
         <li style="float: left;">
-            {{ form_row(form.interaction.question.category, { 'attr': {'style': 'float left;'} }) }}
+            {{ form_row(edit_form.interaction.question.category, { 'attr': {'style': 'float left;'} }) }}
         </li>
         <li style="float: left;  margin-left: 70px; margin-top: 4%;">
             <a href="#" id="lien_category">{{ 'create a new category' | trans }}</a>
@@ -23,15 +23,15 @@
 >{{ 'Question.description' | trans }}</a>
     
 <div id="descriptionOptional">
-    {{ form_widget(form.interaction.question.description) }}
+    {{ form_widget(edit_form.interaction.question.description) }}
 </div>
 <br/>
 <p>
-    {{ form_widget(form.interaction.question.model, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }} 
-    {{ form_label(form.interaction.question.model) }} 
+    {{ form_widget(edit_form.interaction.question.model, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }} 
+    {{ form_label(edit_form.interaction.question.model) }} 
 </p>
 <p>
-    {{ form_row(form.interaction.invite) }}
+    {{ form_row(edit_form.interaction.invite) }}
 </p>
     
 <a onclick="DisplayOptional('feedback');" id="feebackOptionalShow" 
@@ -45,18 +45,18 @@
 >{{ 'Interaction.feedback' | trans }}</a>
     
 <div id="feedbackOptional">
-    {{ form_widget(form.interaction.feedBack) }}
+    {{ form_widget(edit_form.interaction.feedBack) }}
 </div>
 <p>
-    {{ form_row(form.interaction.hints) }}
+    {{ form_row(edit_form.interaction.hints) }}
 </p>
 
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/allQuestionsType.js') }}"></script>
 
-<div id="popupEA">
-    <div id="popupContainer" class="hiddenCat"> <a id="close" class="hiddenCat" title="close popup">{{ 'close' | trans }}</a><h1>{{ 'response' | trans }}</h1><div id="div_input_popup"><textarea id="input_popup" class="tinymce" data-theme="medium"></textarea></div></div><div id="overlayEffect"> </div>
+<div id="listeCategory">
+    <div id="popupCategory" class="hiddenCat" style="background-color: window;"> <a id="closeCategory" class="hiddenCat" title="close popup">{{ 'close' | trans }}</a><h1>{{ 'create a new category' | trans }}</h1><div id="div_input_category"></div></div><div id="overlayEffect_cat"> </div>
 </div>
 
-<div id="listeCategory">
-    <div id="popupCategory" class="hiddenCat"> <a id="closeCategory" class="hiddenCat" title="close popup">{{ 'close' | trans }}</a><h1>{{ 'create a new category' | trans }}</h1><div id="div_input_category"></div></div><div id="overlayEffect_cat"></div>
+<div id="popupEA">
+    <div id="popupContainer" class="hiddenCat" style="background-color: window;"> <a id="close" class="hiddenCat" title="close popup">{{ 'close' | trans }}</a><h1>{{ 'response' | trans }}</h1><div id="div_input_popup"><textarea id="input_popup" class="tinymce" data-theme="medium"></textarea></div></div><div id="overlayEffect"> </div>
 </div>

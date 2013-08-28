@@ -35,6 +35,13 @@
 
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block title %} {{ 'exercise' | trans }} {% endblock %}
+    
 {% block section_content %}
 {{ tinymce_init() }}
 
@@ -49,12 +56,12 @@
 <table class="record_properties table table-striped table-bordered table-condensed">
     <tbody>
         <tr>
-            <th style="text-align: center">{{ 'title' | trans }}</th>
-            <td style="text-align: center; vertical-align: middle;">{{ entity.title }}</td>
+            <th class="classic">{{ 'title' | trans }}</th>
+            <td class="classic">{{ entity.title }}</td>
         </tr>
         <tr>
-            <th style="text-align: center">{{ 'description' | trans }}</th>
-            <td style="text-align: center; vertical-align: middle;">
+            <th class="classic">{{ 'description' | trans }}</th>
+            <td class="classic">
                 {% if entity.description is not empty %}
                     {{ entity.description|raw }}
                 {% else %}
@@ -63,8 +70,8 @@
             </td>
         </tr>
         <tr>
-            <th style="text-align: center">{{ 'random order of questions' | trans }}</th>
-            <td style="text-align: center; vertical-align: middle;">
+            <th class="classic">{{ 'random order of questions' | trans }}</th>
+            <td class="classic">
                 {% if entity.shuffle == 0 %}
                     <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
                 {% else %}
@@ -73,8 +80,8 @@
             </td>
         </tr>
         <tr>
-            <th style="text-align: center">{{ 'number of questions to draw' | trans }}</th>
-            <td style="text-align: center; vertical-align: middle;">
+            <th class="classic">{{ 'number of questions to draw' | trans }}</th>
+            <td class="classic">
                 {% if entity.nbQuestion != 0 %}
                     {{ entity.nbQuestion }}
                 {% else %}
@@ -83,12 +90,12 @@
             </td>
         </tr>
         <tr>
-            <th style="text-align: center">{{ 'creationDate' | trans }}</th>
-            <td style="text-align: center; vertical-align: middle;">{{ entity.dateCreate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
+            <th class="classic">{{ 'creationDate' | trans }}</th>
+            <td class="classic">{{ entity.dateCreate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
         </tr>
         <tr>
-            <th style="text-align: center">{{ 'duration' | trans }}</th>
-            <td style="text-align: center; vertical-align: middle;">
+            <th class="classic">{{ 'duration' | trans }}</th>
+            <td class="classic">
                 {% if entity.duration != 0 %}
                     {{ entity.duration }}
                 {% else %}
@@ -97,8 +104,8 @@
             </td>
         </tr>
         <tr>
-            <th style="text-align: center">{{ 'print paper' | trans }}</th>
-            <td style="text-align: center; vertical-align: middle;">
+            <th class="classic">{{ 'print paper' | trans }}</th>
+            <td class="classic">
                 {% if entity.doprint == 0 %}
                     <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
                 {% else %}
@@ -107,8 +114,8 @@
             </td>
         </tr>
         <tr>
-            <th style="text-align: center">{{ 'maximum number of tries' | trans }}</th>
-            <td style="text-align: center; vertical-align: middle;">
+            <th class="classic">{{ 'maximum number of tries' | trans }}</th>
+            <td class="classic">
                 {% if entity.maxAttempts != 0 %}
                     {{ entity.maxAttempts }}
                 {% else %}
@@ -117,8 +124,8 @@
             </td>
         </tr>
         <tr>
-            <th style="text-align: center">{{ 'availability of correction' | trans }}</th>
-            <td style="text-align: center; vertical-align: middle;">
+            <th class="classic">{{ 'availability of correction' | trans }}</th>
+            <td class="classic">
                 {% if(entity.correctionMode == 1) %}
                     {{ 'at the end of assessment' | trans }}
                 {% elseif (entity.correctionMode == 2) %}
@@ -131,8 +138,8 @@
             </td>
         </tr>
         <tr>
-            <th style="text-align: center">{{ 'availability of score' | trans }}</th>
-            <td style="text-align: center; vertical-align: middle;">
+            <th class="classic">{{ 'availability of score' | trans }}</th>
+            <td class="classic">
                 {% if(entity.markMode == 1) %}
                     {{ 'at the same time that the correction' | trans }}
                 {% else %}
@@ -141,12 +148,12 @@
             </td>
         </tr>
         <tr>
-            <th style="text-align: center">{{ 'start date' | trans }}</th>
-            <td style="text-align: center; vertical-align: middle;">{{ entity.startdate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
+            <th class="classic">{{ 'start date' | trans }}</th>
+            <td class="classic">{{ entity.startdate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
         </tr>
         <tr>
-            <th style="text-align: center">{{ 'use date of end' | trans }}</th>
-            <td style="text-align: center; vertical-align: middle;">
+            <th class="classic">{{ 'use date of end' | trans }}</th>
+            <td class="classic">
                 {% if entity.useDateEnd == 0 %}
                     <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
                 {% else %}
@@ -156,13 +163,13 @@
         </tr>
         {% if entity.useDateEnd != 0 %}
             <tr>
-                <th style="text-align: center">{{ 'end date' | trans }}</th>
-                <td style="text-align: center; vertical-align: middle;">{{ entity.enddate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
+                <th class="classic">{{ 'end date' | trans }}</th>
+                <td class="classic">{{ entity.enddate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
             </tr>
         {% endif %}
         <tr>
-            <th style="text-align: center">{{ 'test exit' | trans }}</th>
-            <td style="text-align: center; vertical-align: middle;">
+            <th class="classic">{{ 'test exit' | trans }}</th>
+            <td class="classic">
                 {% if  entity.dispButtonInterrupt == 0 %}
                     <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
                 {% else %}
@@ -171,8 +178,8 @@
             </td>
         </tr>
         <tr>
-            <th style="text-align: center">{{ 'lock attempt' | trans }}</th>
-            <td style="text-align: center; vertical-align: middle;">
+            <th class="classic">{{ 'lock attempt' | trans }}</th>
+            <td class="classic">
                 {% if  entity.lockAttempt == 0 %}
                     <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
                 {% else %}

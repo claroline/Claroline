@@ -37,75 +37,80 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('bundles/ujmexo/css/paper.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/ujmexo/css/paper.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
 {% block title %} {{ 'correction' | trans }} {% endblock %}
 
-
-
 {% block section_content %}
-{{ interQCM.sortChoices() }}
-<div name="title">
-    {{ interQCM.interaction.question.title}}
-</div>
+    
+    {{ interQCM.sortChoices() }}
+    
+    <a href="{{ path('ujm_question_index') }}" >
+        <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
+    </a><br/>
+    
+    <h1 name="title">
+        {{ interQCM.interaction.question.title}}
+    </h1>
 
-<div name="description">
-    {{ interQCM.interaction.question.description|raw}}
-</div>
+    <div name="description">
+        {{ interQCM.interaction.question.description|raw}}
+    </div>
 
-<div name="invite">
-    {{ interQCM.interaction.invite|raw}}
-</div>
+    <h3 name="invite">
+        {{ interQCM.interaction.invite|raw}}
+    </h3>
 
-<table border="1">
-    <tr>
-        <th>{{ 'your answer' | trans }}</th>
-        <th>{{ 'expected answer' | trans }}</th>
-        <th>{{ 'choice' | trans }}</th>
-        <th>{{ 'feedback' | trans }}</th>
-    </tr>
-
-    {% for choice in interQCM.choices %}
+    <table border="1" class="table table-striped table-bordered table-condensed">
         <tr>
-            <td>
-                {% if regexTwig('/' ~ choice.id ~ ';/', response) > 0 %}
-                {# choice checked by student #}
+            <th class="classic">{{ 'choice' | trans }}</th>
+            <th class="classic">{{ 'expected answer' | trans }}</th>
+            <th class="classic">{{ 'your answer' | trans }}</th>
+            <th class="classic">{{ 'feedback' | trans }}</th>
+        </tr>
+
+        {% for choice in interQCM.choices %}
+            <tr>
+                <td class="classic">
+                    {{ choice.label|raw }}
+                </td>
+                <td class="classic">
                     {% if choice.rightResponse %}
                         <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
                     {% else %}
-                        <img src="{{ asset('bundles/ujmexo/images/checkbox_on_red.gif') }}">
+                        <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
                     {% endif %}
-                {% else %}
-                    <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
-                {% endif %}
-            </td>
-            <td>
-                {% if choice.rightResponse %}
-                    <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
-                {% else %}
-                    <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
-                {% endif %}
-            </td>
-            <td>
-                {{ choice.label|raw }}
-            </td>
-            <td>
-                {{ choice.feedback|raw }}
-            </td>
-        </tr>
-    {% endfor %}
+                </td>
+                <td class="classic">
+                    {% if regexTwig('/' ~ choice.id ~ ';/', response) > 0 %}
+                    {# choice checked by student #}
+                        {% if choice.rightResponse %}
+                            <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                        {% else %}
+                            <img src="{{ asset('bundles/ujmexo/images/checkbox_on_red.gif') }}">
+                        {% endif %}
+                    {% else %}
+                        <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                    {% endif %}
+                </td>
+                <td class="classic">
+                    {% if choice.feedback is not empty %}
+                        {{ choice.feedback|raw }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
 
-</table>
-
-<div name="feddback">
-    {{ interQCM.interaction.feedback|raw}}
-</div>
-{% if penalty > 0 %}
-    {{ 'penalty' | trans }}: {{ penalty }}<br/>
-{% endif %}
-{{ 'mark' | trans }}: <span id="score">{{ score }}</span>
-<br/><br/>
-
-<a href="{{ path('ujm_question_index') }}">{{ 'list of question' | trans }}</a>
+    <div name="feddback">
+        {{ interQCM.interaction.feedback|raw}}
+    </div>
+    {% if penalty > 0 %}
+        {{ 'penalty' | trans }}: {{ penalty }}
+    {% endif %}
+    {{ 'mark' | trans }}: <span id="score">{{ score }}</span>
 {% endblock %}

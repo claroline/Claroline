@@ -37,7 +37,8 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('bundles/ujmexo/css/new_QI.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/ujmexo/css/new_QI.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
 {% block title %} {{ 'edit a question' | trans }} {% endblock %}
@@ -46,33 +47,16 @@
 
     <h1>{{'interactionGraphic Edition'|trans}}</h1>
 
+    <a href="{{ path('ujm_question_index') }}" >
+        <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
+    </a><br/><br/>
+    
     <form class="well label_bold" id="InterGraphForm" action="{{ path('ujm_interactiongraphic_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
         {#{ form_widget(edit_form) }#}
-
-{# ------------------------------------------------- Question description ---------------------------------------------------------------------------- #}
-
+            
+    {% include "UJMExoBundle:Partial:questionEdit.html.twig" %} 
+            
     <p>
-        {{ form_row(edit_form.interaction.question.title) }}
-    </p><p>
-        <ul style="margin-left: 0; list-style-type: none;">
-        <li style="float: left;">
-            {{ form_row(edit_form.interaction.question.category, { 'attr': {'style': 'float left;'} }) }}
-        </li>
-        <li style="float: left;  margin-left: 70px; margin-top: 4%;">
-            <a href="#" id="lien_category">{{ 'create a new category' | trans }}</a>
-        </li>
-    </ul>
-    </p><br/><br/><br/><br/><p>
-        {{ form_row(edit_form.interaction.question.description) }}
-    </p><p>
-        {{ form_row(edit_form.interaction.question.model) }}
-    </p><p>
-        {{ form_row(edit_form.interaction.invite) }}
-    </p><p>
-        {{ form_row(edit_form.interaction.feedBack) }}
-    </p><p>
-        {{ form_row(edit_form.interaction.hints) }}
-    </p>
         <ul style="margin-left: 0; list-style-type: none;">
             <li style="float: left;">
 {# ------------------------------------------------- Champs Liste images ---------------------------------------------------------------------------- #}
@@ -86,12 +70,12 @@
             </li>
         </ul>
     </p>
-    <br/><br/><br/><br/><p>
+    <br/><br/><br/><br/>
 
 {# ------------------------------------------------- Boutton affichage image ---------------------------------------------------------------------------- #}
 
     <p><input id="LoadImg" type="button" value="{{ 'select' | trans }}" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}',
-            '{{ asset('bundles') }}', {{ edit_form.document.vars.id }});"/></p>
+        '{{ asset('bundles') }}', {{ edit_form.document.vars.id }});"/></p><br/>
 
 {# ------------------------------------------------- Zone affichage image ---------------------------------------------------------------------------- #}
 
@@ -110,7 +94,7 @@
         ~ {{ 'placeZone' | trans }}<hr/>~ {{ 'resize' | trans }}<hr/>
         ~ {{ 'erase' | trans }}<hr/>~ {{ 'pointInstruction' | trans }}
     </div>
-
+    <br/>
     <div style="position: relative;" id="Answer">
         <img src="{{ asset(entity.document.url) }}" width="{{entity.width}}" height="{{entity.height}}"
              id="AnswerImage"/>
@@ -120,38 +104,38 @@
             <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" alt="AnswerZone{{ i }}" id="img{{ i }}"
                  style="position: absolute;"/>
 
-    {% set allInfo = p.shape~';'~p.color~';'~asset('bundles/ujmexo/images/graphic/')~';'~p.value~';'~p.size~';'~p.scoreCoords~'^'~allInfo %}
+            {% set allInfo = p.shape~';'~p.color~';'~asset('bundles/ujmexo/images/graphic/')~';'~p.value~';'~p.size~';'~p.scoreCoords~'^'~allInfo %}
 
             {% set i = i + 1 %}
        {% endfor %}
     </div>
 
 {# ------------------------------------------------- tableau zone de reponse ---------------------------------------------------------------------------- #}
-
+    <br/>
     <div style="position: relative;" id="AnswerArray">
-        <table>
+        <table class="record_properties table table-striped table-bordered table-condensed" style="width:500px;">
             <tr>
-                <th>{{ 'answer zone' | trans }}</th>
-                <th>{{ 'shape' | trans }}</th>
-                <th>{{ 'color' | trans }}</th>
-                <th>{{ 'points' | trans }}</th>
+                <th class="classic">{{ 'answer zone' | trans }}</th>
+                <th class="classic">{{ 'shape' | trans }}</th>
+                <th class="classic">{{ 'color' | trans }}</th>
+                <th class="classic">{{ 'points' | trans }}</th>
             </tr>
 
             <tr>
-                <td>
+                <td class="classic">
                     <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}"
-                         id="movable" style="position: absolute"/>
+                         id="movable" style="position: absolute;"/>
                 </td>
 
-                <td>
-                    <select id="shape" name="shape" size="1" style="width:100px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
+                <td class="classic">
+                    <select id="shape" name="shape" size="1" style="width:100px; margin-top: 10px;" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
                         <option value="circle"  selected>{{ 'cercle' | trans }}</option>
                         <option value="rect" >{{ 'rectangle' | trans }}</option>
                     </select>
                 </td>
 
-                <td>
-                    <select id="color" name="color" size="1" style="width:70px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
+                <td class="classic">
+                    <select id="color" name="color" size="1" style="width:70px; margin-top: 10px;" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
                         <option value="white"    style="background-color:#FFFFFF;"selected> &nbsp;&nbsp;&nbsp; </option>
                         <option value="red"      style="background-color:#FF0000;">         &nbsp;&nbsp;&nbsp; </option>
                         <option value="blue"     style="background-color:#002FFF;">         &nbsp;&nbsp;&nbsp; </option>
@@ -162,8 +146,8 @@
                     </select>
                 </td>
 
-                <td>
-                    <input type="TEXT" id="points" name="points" value="1" style="width:50px; text-align: end" onblur="CheckScore('{{ 'wrongPoint' | trans }}');">
+                <td class="classic">
+                    <input type="TEXT" id="points" name="points" value="1" style="width:50px; text-align: end; margin-top: 10px;" onblur="CheckScore('{{ 'wrongPoint' | trans }}');">
                 </td>
             </tr>
         </table>
@@ -181,9 +165,9 @@
 
 {# ------------------------------------------------- Boutton validation formulaire ---------------------------------------------------------------------------- #}
 
-    <div style="visibility: hidden;">{{ form_rest(edit_form) }}</div>
+    <div style="display: none;">{{ form_rest(edit_form) }}</div>
+    
     {{ form_errors(edit_form) }}
-
 
     <p>
         <button type="submit" id="button_submit"
@@ -192,12 +176,6 @@
             '{{ edit_form.interaction.invite.vars.id }}');return false;">{{ 'edit' | trans }}</button>
     </p>
     </form>
-
-{# ------------------------------------------------- Div category ---------------------------------------------------------------------------- #}
-
-<div id="listeCategory">
-    <div id="popupCategory" class="hiddenCat"> <a id="closeCategory" class="hiddenCat" title="close popup">{{ 'close' | trans }}</a><h1>{{ 'create a new category' | trans }}</h1><div id="div_input_category"></div></div><div id="overlayEffect_cat"> </div>
-</div>
 
     {{ tinymce_init() }}
 

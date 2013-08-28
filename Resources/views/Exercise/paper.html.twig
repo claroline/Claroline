@@ -37,6 +37,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
 {% block title %} {{ 'paper' | trans }} {% endblock %}
@@ -86,18 +87,18 @@
             </h3>
 
             <p>
-                <table>
+                <table class="table table-striped table-bordered table-condensed">
                     {% for choice in interactionToDisplayed.choices %}
                         {% set checked = "" %}
                         <tr>
-                            <td>{{ choice.label|raw }}</td>
+                            <td class="classic">{{ choice.label|raw }}</td>
                             {% if regexTwig('/' ~ choice.id ~ ';/', response) > 0 %}
                                 {% set checked = "checked" %}
                             {% endif %}
                             {% if interactionToDisplayed.typeQCM.id == 2 %}
-                                <td><INPUT type="radio" name="choice" value="{{ choice.id }}" {{ checked }}/></td>
+                                <td class="classic"><INPUT type="radio" name="choice" value="{{ choice.id }}" {{ checked }}/></td>
                             {% else %}
-                                <td><INPUT type="checkbox" name="choice[]" value="{{ choice.id }}" {{ checked }}/></td>
+                                <td class="classic"><INPUT type="checkbox" name="choice[]" value="{{ choice.id }}" {{ checked }}/></td>
                             {% endif %}
                         </tr>
                     {% endfor %}
@@ -107,11 +108,11 @@
                     {% set nbr_hint = 1 %}
                     {% for hint in interactionToDisplayed.interaction.hints %}
                         <tr>
-                            <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
+                            <td class="classic"><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
                                     '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }} ?', '{{nbr_hint}}',
                                     '{{paper}}')">{{ "hint" | trans }} {{nbr_hint}}</a>
-                            </td>
-                            <td id="div_hint{{nbr_hint}}"></td>
+                            </td class="classic">
+                            <td id="div_hint{{nbr_hint}}" class="classic"></td>
                         </tr>
                         {% set nbr_hint = nbr_hint + 1 %}
                     {% endfor %}

@@ -38,12 +38,15 @@
 {% block stylesheets %}
     {{ parent() }}
     <link href="{{ asset('bundles/ujmexo/css/paper.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
 {% block title %} {{ 'correction' | trans }} {% endblock %}
 
 {% block section_content %}
 
+    <a href="{{ path('ujm_paper_list', { 'exoID': exoId }) }}"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
+    
     {% set i = 0 %}
     {% set exoMark = 0 %}
     {% set exoScoreMax = 0 %}
@@ -62,29 +65,39 @@
                 <div>
 
             {% if (display == 'all') %}
-                <div name="title">
+                <h1 name="title">
                     {{ interQCM.interaction.question.title }}
-                </div>
+                </h1>
 
                 <div name="description">
                     {{ interQCM.interaction.question.description|raw }}
                 </div>
 
-                <div name="invite">
+                <h3 name="invite">
                     {{ interQCM.interaction.invite|raw }}
-                </div>
+                </h3>
 
-                <table border="1">
+                <table border="1" class="table table-striped table-bordered table-condensed">
                     <tr>
-                        <th>{{ 'your answer' | trans }}</th>
-                        <th>{{ 'expected answer' | trans }}</th>
-                        <th>{{ 'choice' | trans }}</th>
-                        <th>{{ 'feedback' | trans }}</th>
+                        <th class="classic">{{ 'your answer' | trans }}</th>
+                        <th class="classic">{{ 'expected answer' | trans }}</th>
+                        <th class="classic">{{ 'choice' | trans }}</th>
+                        <th class="classic">{{ 'feedback' | trans }}</th>
                     </tr>
 
                     {% for choice in interQCM.choices %}
                         <tr>
-                            <td>
+                            <td class="classic">
+                                {{ choice.label|raw }}
+                            </td>
+                            <td class="classic">
+                                {% if choice.rightResponse %}
+                                    <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                                {% else %}
+                                    <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                                {% endif %}
+                            </td>
+                            <td class="classic">
                                 {% if regexTwig('/' ~ choice.id ~ ';/', responses[i].response) > 0 %}
                                     {# choice checked by student #}
                                     {% if choice.rightResponse %}
@@ -96,17 +109,7 @@
                                     <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
                                 {% endif %}
                             </td>
-                            <td>
-                                {% if choice.rightResponse %}
-                                    <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
-                                {% else %}
-                                    <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
-                                {% endif %}
-                            </td>
-                            <td>
-                                {{ choice.label|raw }}
-                            </td>
-                            <td>
+                            <td class="classic">
                                 {{ choice.feedback|raw }}
                             </td>
                         </tr>
@@ -114,18 +117,20 @@
 
                 </table>
 
-                <div name="feddback">
-                    {{ 'comment' | trans }}:
-                    {{ interQCM.interaction.feedback|raw }}
-                </div>
+                {% if interQCM.interaction.feedback != '' %}
+                    <div name="feddback">
+                        {{ 'comment' | trans }} :
+                        {{ interQCM.interaction.feedback|raw }}
+                    </div>
+                {% endif %}
 
                 {% for hv in hintViewed %}
                     {% if( hv.hint.interaction.id == interaction.id ) %}
-                        {{ 'penalty' | trans }}: {{ hv.hint.penalty }}<br/>
+                        {{ 'penalty' | trans }} : {{ hv.hint.penalty }}<br/>
                     {% endif %}
                 {% endfor %}
 
-                {{ 'mark' | trans }}: {{ responses[i].mark }} / {{ interInfo['maxScore'] }}<br/>
+                {{ 'mark' | trans }} : {{ responses[i].mark }} / {{ interInfo['maxScore'] }}<br/>
                 {% set exoMark = exoMark + responses[i].mark %}
                 {% set exoScoreMax = exoScoreMax + interInfo['maxScore'] %}
                  {% else %}
@@ -146,17 +151,17 @@
 
             <div>
             {% if (display == 'all') %}
-                <div name="title">
+                <h1 name="title">
                     {{ interG.interaction.question.title }}
-                </div>
+                </h1>
 
                 <div name="description">
                     {{ interG.interaction.question.description|raw }}
                 </div>
 
-                <div name="invite">
+                <h3 name="invite">
                     {{ interG.interaction.invite|raw }}
-                </div>
+                </h3>
 
                 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
 
@@ -174,7 +179,7 @@
                         {% set repcoX = repco[x]|split('-') %}
 
                         <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" id="{{ interaction.id }}ra{{ x }}"
-                             alt="RightAnswer{{ x }}" style="position: absolute; z-index: 2;" width="{{ coords[x].size }}"/><br/>
+                             alt="RightAnswer{{ x }}" style="position: absolute; z-index: 2;" width="{{ coords[x].size }}"/>
 
                         <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" id="{{ interaction.id }}cursor{{ x }}"
                              alt="AnswerZone{{ x }}" style="position: absolute; z-index: 7;"/>
@@ -187,9 +192,9 @@
 
                         {% set x = x + 1 %}
                     {% endfor %}
-                </div>
+                </div><br/>
 
-                {{ 'mark' | trans }}: {{ responses[i].mark }} / {{ maxScore }} <br/>
+                {{ 'mark' | trans }} : {{ responses[i].mark }} / {{ maxScore }} <br/>
                 {% set exoMark = exoMark + responses[i].mark %}
                 {% set exoScoreMax = exoScoreMax + maxScore %}
 
@@ -204,7 +209,7 @@
 
                         {% for hv in hintViewed %}
                             {% if( hv.hint.interaction.id == interaction.id ) %}
-                                {{ 'penalty' | trans }}: {{ hv.hint.penalty }}<br/>
+                                {{ 'penalty' | trans }} : {{ hv.hint.penalty }}<br/>
                             {% endif %}
                         {% endfor %}
 
@@ -243,25 +248,27 @@
             <div>
 
                 {% if (display == 'all') %}
-                    <div name="title">
+                    <h1 name="title">
                         {{ interOpen.interaction.question.title }}
-                    </div>
+                    </h1>
 
                     <div name="description">
                         {{ interOpen.interaction.question.description|raw }}
                     </div>
 
-                    <div name="invite">
+                    <h3 name="invite">
                         {{ interOpen.interaction.invite|raw }}
-                    </div>
+                    </h3>
 
-                    <div name="feddback">
-                        {{ 'comment' | trans }}:
-                        {{ interOpen.interaction.feedback|raw }}
-                    </div>
+                    {% if interOpen.interaction.feedback != '' %}
+                        <div name="feddback">
+                            {{ 'comment' | trans }} :
+                            {{ interOpen.interaction.feedback|raw }}
+                        </div>
+                    {% endif %}
                 
                     <div name="response">
-                        {{ 'your answer' | trans }}:
+                        {{ 'your answer' | trans }} :
                         <br/><br/>
                         <div>
                             {% if interOpen.typeopenquestion == 'long' %}
@@ -272,12 +279,12 @@
 
                     {% for hv in hintViewed %}
                         {% if( hv.hint.interaction.id == interaction.id ) %}
-                            {{ 'penalty' | trans }}: {{ hv.hint.penalty }}<br/>
+                            {{ 'penalty' | trans }} : {{ hv.hint.penalty }}<br/>
                         {% endif %}
                     {% endfor %}
                 {% endif %}
                 {% if responses[i].mark != -1 %}
-                    {{ 'mark' | trans }}: {{ responses[i].mark }}/{{ interInfo['maxScore'] }}<br/>
+                    {{ 'mark' | trans }} : {{ responses[i].mark }}/{{ interInfo['maxScore'] }}<br/>
                     {% set exoMark = exoMark + responses[i].mark %}
                 {% else %}
                     {{ 'not yet mark' | trans }}
@@ -294,9 +301,9 @@
     {% set scoreFinal = exoMark / exoScoreMax %}
     {% set scoreFinal = scoreFinal * 20 %}
     {% if temporaryMark == true %}
-        {{ "temporary mark" | trans }}:
+        {{ "temporary mark" | trans }} :
+    {% else %}
+        {{ 'final mark' | trans }} :
     {% endif %}
     <div>{{ scoreFinal }} / 20</div>
-    <br/>
-    <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoId }) }}"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
 {% endblock %}

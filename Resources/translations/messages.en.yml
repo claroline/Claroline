@@ -87,6 +87,7 @@ creationDate: Creation date
 date: Date
 delDocQuestion: Delete this document and all the linked questions
 delete: Delete
+delete document: Deletion of document
 delete of my bank: Delete of my bank
 delete of my exercise: Delete of my exercise
 description: Description
@@ -122,6 +123,7 @@ findIn: Find in
 findLabel: Find a document with a specific label
 findQuestion: Find questions
 findWhat: What you're looking for
+final mark: Final mark
 finish: Finish
 frequency: Frequency
 from: From
@@ -229,6 +231,7 @@ print paper: Print paper
 # Q
 qcm: QCM
 qcm creation: Creation of a question of type QCM
+qcm edition: Edition of a question of type QCM
 question: Question
 question creation: Question creation
 questionSharedWith: This question is shared with users below

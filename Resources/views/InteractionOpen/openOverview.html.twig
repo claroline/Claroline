@@ -42,46 +42,45 @@
 
 {% block title %} {{ 'correction' | trans }} {% endblock %}
 
-
-
 {% block section_content %}
     
-<div name="title">
-    {{ interOpen.interaction.question.title}}
-</div>
+    <a href="{{ path('ujm_question_index') }}" >
+        <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
+    </a><br/>
+    
+    <h1 name="title">
+        {{ interOpen.interaction.question.title}}
+    </h1>
 
-<div name="description">
-    {{ interOpen.interaction.question.description|raw}}
-</div>
+    <div name="description">
+        {{ interOpen.interaction.question.description|raw}}
+    </div>
 
-<div name="invite">
-    {{ interOpen.interaction.invite|raw}}
-</div>
+    <h3 name="invite">
+        {{ interOpen.interaction.invite|raw}}
+    </h3>
 
-<div name="response">
-    {{ 'your answer' | trans }}:
-    <br/><br/>
-    <div>
-        {% if interOpen.typeopenquestion == 'long' %}
-            {{ response|raw}}
-        {% endif %}
-    </div> 
-</div>    
-   
-<div name="feddback">
-    {{ interOpen.interaction.feedback|raw}}
-</div>
-<br/><br/>     
+    <div name="response">
+        {{ 'your answer' | trans }} :
+        <br/><br/>
+        <div>
+            {% if interOpen.typeopenquestion == 'long' %}
+                {{ response|raw}}
+            {% endif %}
+        </div> 
+    </div>    
 
-{% if penalty > 0 %}
-    {{ 'penalty' | trans }}: {{ penalty }}<br/>
-{% endif %}
-{% if tempMark == true %}
-    {{ 'not yet mark' | trans }}: {{ score }}
-{% else %}
-    {{ 'mark' | trans }}: <span id="score">{{ score }}</span>
-{% endif %}
+    <div name="feddback">
+        {{ interOpen.interaction.feedback|raw}}
+    </div>
+    <br/><br/>     
 
-<br/><br/>
-<a href="{{ path('ujm_question_index') }}">{{ 'list of question' | trans }}</a>
+    {% if penalty > 0 %}
+        {{ 'penalty' | trans }} : {{ penalty }}<br/>
+    {% endif %}
+    {% if tempMark == true %}
+        {{ 'not yet mark' | trans }} : {{ score }}
+    {% else %}
+        {{ 'mark' | trans }} : <span id="score">{{ score }}</span>
+    {% endif %}
 {% endblock %}

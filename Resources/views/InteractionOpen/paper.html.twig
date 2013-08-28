@@ -42,8 +42,6 @@
 
 {% block title %} {{ 'paper' | trans }} {{ 'question' | trans }} {% endblock %}
 
-
-
 {% block section_content %}
     <h1>{{ interactionOpen.interaction.question.title }}</h1>
 
@@ -72,8 +70,8 @@
            </table>
         
            {% if interactionOpen.typeopenquestion == 'long' %}
-           <textarea name="interOpenLong" class="tinymce" data-theme="medium"></textarea>
-           <br/>
+                <textarea name="interOpenLong" class="tinymce" data-theme="medium"></textarea>
+                <br/>
            {% endif %}
            
            <input type="hidden" name="testOpen" value="testOpen" />
@@ -81,7 +79,6 @@
            <button type="submit" id="submit_response">{{ 'validate' | trans }}</button>
         </p>
     </form>
-    
 {% endblock %}
     
 {% block javascripts %}

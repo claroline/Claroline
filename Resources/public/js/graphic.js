@@ -36,8 +36,8 @@ document.getElementById('Order').style.display = 'block';
 document.getElementById('hide').style.display = 'none';
 
 // Initialize reference answer zone position
-el.style.left = '45px';
-el.style.top = '28px';
+el.style.left = '70px';
+el.style.top = '47px';
 
 // :::::::::::::::::::::::::::::::::::::::::: Functions :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -541,8 +541,8 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
             document.body.style.cursor = 'default';
 
             // Answer zone go back to its initial place
-            el.style.left = '45px';
-            el.style.top = '28px';
+            el.style.left = '70px';
+            el.style.top = '47px';
 
         } else {
 
@@ -566,8 +566,8 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
 
             // If add a new answer zone, the reference image go back to its initial place
             if (target.id == 'movable') {
-                el.style.left = '45px';
-                el.style.top = '28px';
+                el.style.left = '70px';
+                el.style.top = '47px';
             }
         }
         pressCTRL = false;

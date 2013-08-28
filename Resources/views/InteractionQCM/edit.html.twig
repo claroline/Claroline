@@ -45,32 +45,42 @@
 
 {% block section_content %}
 
+    <h1>{{'qcm edition'|trans}}</h1>
+    
+    <a href="{{ path('ujm_question_index') }}" >
+        <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
+    </a><br/><br/>
+    
     <form onsubmit="return check_form('{{ 'nbr_choices' | trans }}', '{{ 'answer_coched' | trans }}', '{{ 'label_empty' | trans }}', '{{ 'point_answers' | trans }}', '{{ 'point_answer' | trans }}', '{{ 'invite_question' | trans }}');" 
-          action="{{ path('ujm_interactionqcm_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
-        {{ form_widget(edit_form) }}
+          action="{{ path('ujm_interactionqcm_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }} class="well label_bold">
+        {#{ form_widget(edit_form) }#}
+        
+        {% include "UJMExoBundle:Partial:questionEdit.html.twig" %} 
+    
+    <br/><p>
+        {{ form_widget(edit_form.shuffle, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }} 
+        {{ form_label(edit_form.shuffle) }} 
+    </p><br/><p>
+        {{ form_row(edit_form.scoreRightResponse) }}
+    </p><p>
+        {{ form_row(edit_form.scoreFalseResponse) }}
+    </p><p>
+        {{ form_widget(edit_form.weightResponse, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }} 
+        {{ form_label(edit_form.weightResponse) }}
+    </p><p>
+        {{ form_row(edit_form.typeQCM) }}
+    </p><p>
+        {{ form_row(edit_form.choices) }}
+    </p>
+    
+     <div style="visibility: hidden;">{{ form_rest(edit_form) }}</div>
+    {{ form_errors(edit_form) }}
+    
+        
         <p>
             <button type="submit" id="button_submit">{{ 'edit' | trans }}</button>
         </p>
     </form>
-
-{# lien vers category #}
-<a href="#" style="margin: 5px 5px 5px 5px;" id="lien_category">{{ 'create a new category' | trans }}</a>
-
-<div id="popupEA">
-    <div id="popupContainer" class="hiddenCat"> <a id="close" class="hiddenCat" title="close popup">{{ 'close' | trans }}</a><h1>{{ 'response' | trans }}</h1><div id="div_input_popup"><textarea id="input_popup" class="tinymce" data-theme="medium"></textarea></div></div><div id="overlayEffect"> </div>
-</div>
-
-<div id="listeCategory">
-    <div id="popupCategory" class="hiddenCat"> <a id="closeCategory" class="hiddenCat" title="close popup">{{ 'close' | trans }}</a><h1>{{ 'create a new category' | trans }}</h1><div id="div_input_category"></div></div><div id="overlayEffect_cat"> </div>
-</div>
-
-    <ul class="record_actions">
-        <li>
-            <a href="{{ path('ujm_question_index') }}">
-                {{ 'back to the list' | trans }}
-            </a>
-        </li>
-    </ul>
 {% endblock %}
 
 {% block javascripts %}

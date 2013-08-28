@@ -33,9 +33,7 @@
  # knowledge of the CeCILL license and that you accept its terms.
 #}
 
-
-{#{form.interaction.question.description.vars.id }#}
-
+ <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 
 <h1>{{ 'interactionGraphic creation' | trans }}</h1>
 
@@ -92,28 +90,28 @@
 {# ------------------------------------------------- tableau zone de reponse ---------------------------------------------------------------------------- #}
 
     <div style="position: relative;" id="AnswerArray">
-        <table>
+        <table class="table table-striped table-bordered table-condensed">
             <tr>
-                <th>{{ 'answer zone' | trans }}</th>
-                <th>{{ 'shape' | trans }}</th>
-                <th>{{ 'color' | trans }}</th>
-                <th>{{ 'points' | trans }}</th>
+                <th class="classic">{{ 'answer zone' | trans }}</th>
+                <th class="classic">{{ 'shape' | trans }}</th>
+                <th class="classic">{{ 'color' | trans }}</th>
+                <th class="classic">{{ 'points' | trans }}</th>
             </tr>
 
             <tr>
-                <td>
+                <td class="classic">
                     <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}"
                          id="movable" style="position: absolute"/>
                 </td>
 
-                <td>
+                <td class="classic">
                     <select id="shape" name="shape" size="1" style="width:100px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
                         <option value="circle"  selected>{{ 'cercle' | trans }}</option>
                         <option value="rect" >{{ 'rectangle' | trans }}</option>
                     </select>
                 </td>
 
-                <td>
+                <td class="classic">
                     <select id="color" name="color" size="1" style="width:70px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
                         <option value="white"    style="background-color:#FFFFFF;"selected> &nbsp;&nbsp;&nbsp; </option>
                         <option value="red"      style="background-color:#FF0000;">         &nbsp;&nbsp;&nbsp; </option>
@@ -125,7 +123,7 @@
                     </select>
                 </td>
 
-                <td>
+                <td class="classic">
                     <input type="TEXT" id="points" name="points" value="1" style="width:50px; text-align: end" onblur="CheckScore('{{ 'wrongPoint' | trans }}');">
                 </td>
             </tr>
@@ -141,7 +139,7 @@
     <input type="hidden" id="message" name="message" value="{{ 'inside' | trans }} ..."/>
 
 {# ------------------------------------------------- Boutton validation formulaire ---------------------------------------------------------------------------- #}
-    <div style="visibility: hidden;">{{ form_rest(form) }}</div>
+    <div style="display: none;">{{ form_rest(form) }}</div>
     {{ form_errors(form) }}
     <p>
         <button type="submit" onclick="Check('{{ 'noTitle' | trans }}', '{{ 'noQuestion' | trans }} ...','{{ 'noImg' | trans }} !',
@@ -149,16 +147,6 @@
             '{{ form.interaction.invite.vars.id }}');return false;">{{ 'create' | trans }}</button>
     </p>
 </form>
-
-{# ------------------------------------------------- Div category ---------------------------------------------------------------------------- #}
-
-<div id="popupEA">
-    <div id="popupContainer" class="hiddenCat"> <a id="close" class="hiddenCat" title="close popup">{{ 'close' | trans }}</a><h1>{{ 'response' | trans }}</h1><div id="div_input_popup"><textarea id="input_popup" class="tinymce" data-theme="medium"></textarea></div></div><div id="overlayEffect"></div>
-</div>
-
-<div id="listeCategory">
-    <div id="popupCategory" class="hiddenCat"> <a id="closeCategory" class="hiddenCat" title="close popup">{{ 'close' | trans }}</a><h1>{{ 'create a new category' | trans }}</h1><div id="div_input_category"></div></div><div id="overlayEffect_cat"> </div>
-</div>
 
 {{ tinymce_init() }}
 

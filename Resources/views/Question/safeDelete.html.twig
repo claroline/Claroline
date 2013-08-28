@@ -35,11 +35,21 @@
 
 {% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block title %} {{ 'delete document' | trans }} {% endblock %}
+
 {% block section_content %}
+
+    <h1>{{ 'delete document' | trans }}</h1>
+    <br/>
     <h4>
         <mark style=" background-color: yellow; color: red;"><i class="icon-warning-sign"></i> {{ 'linkedDoc' | trans }} !</mark><br/>
     </h4>
-
+    <br/>
     <p>
         {{ 'whichAction' | trans }} ?
         <ul>
@@ -61,42 +71,42 @@
         <table class="table table-striped table-bordered table-condensed" id="linkDocArray">
             <thead>
                 <tr>
-                    <th style="text-align: center" onclick="SortQuestions('dateL', 'linkDocArray');"
+                    <th class="classic" onclick="SortQuestions('dateL', 'linkDocArray');"
                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upDl"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downDl"  style="display: none;"></i>
                         {{ 'creationDate' | trans }}
                     </th>
-                    <th style="text-align: center" onclick="SortQuestions('titleL', 'linkDocArray');"
+                    <th class="classic" onclick="SortQuestions('titleL', 'linkDocArray');"
                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upTl"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downTl"  style="display: none;"></i>
                         {{ 'title' | trans }}
                     </th>
-                    <th style="text-align: center" onclick="SortQuestions('QuestionL', 'linkDocArray');"
+                    <th class="classic" onclick="SortQuestions('QuestionL', 'linkDocArray');"
                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upQl"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downQl"  style="display: none;"></i>
                         {{ 'question' | trans }}
                     </th>
-                    <th style="text-align: center" onclick="SortQuestions('CategoryL', 'linkDocArray');"
+                    <th class="classic" onclick="SortQuestions('CategoryL', 'linkDocArray');"
                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upCl"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downCl"  style="display: none;"></i>
                         {{ 'category' | trans }}
                     </th>
-                    <th style="text-align: center" onclick="SortQuestions('paperL', 'linkDocArray');"
+                    <th class="classic" onclick="SortQuestions('paperL', 'linkDocArray');"
                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upPl"  style="display: none;"></i>
                         <i class="icon-chevron-down" id="downPl"  style="display: none;"></i>
                         {{ 'linkpaper' | trans }} ?
                     </th>
-                    <th style="text-align: center" onclick="SortQuestions('responseL', 'linkDocArray');"
+                    <th class="classic" onclick="SortQuestions('responseL', 'linkDocArray');"
                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                         <i class="icon-chevron-up" id="upRl"  style="display: none;"></i>
@@ -110,23 +120,23 @@
                 {% set format = 'd/m/Y \\- H\\hi\\ms\\s' %}
                 {% for QGraph in listGraph %}
                     <tr>
-                        <td style="text-align: center">
+                        <td class="classic">
                            {{ QGraph.interaction.question.dateCreate|date(format) }}
                         </td>
 
-                        <td style="text-align: center">
+                        <td class="classic">
                            {{ QGraph.interaction.question.title }}
                         </td>
 
-                        <td style="text-align: center">
+                        <td class="classic">
                            {{ QGraph.interaction.invite|raw }}
                         </td>
 
-                        <td style="text-align: center">
+                        <td class="classic">
                            {{ QGraph.interaction.question.category }}
                         </td>
 
-                        <td style="text-align: center">
+                        <td class="classic">
                             {% if(linkpaper[i] == 0) %}
                                 {{ "no" | trans }}
                             {% else %}
@@ -134,7 +144,7 @@
                             {% endif %}
                         </td>
                         
-                        <td style="text-align: center">
+                        <td class="classic">
                             {% if(questionWithResponse[i] == 0) %}
                                 {{ 'no' | trans }}
                             {% else %}
