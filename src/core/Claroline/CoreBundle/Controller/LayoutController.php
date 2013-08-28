@@ -185,6 +185,7 @@ class LayoutController extends Controller
         }
 
         return array(
+            "isImpersonated" => $this->isImpersonated(),
             'workspace' => $workspace->getName(),
             'role' => $roleName
         );

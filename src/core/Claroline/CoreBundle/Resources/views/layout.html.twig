@@ -61,9 +61,6 @@
         {% endif %}
 
         <div class="container">
-            {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
-                {% render controller('ClarolineCoreBundle:Layout:renderWarningImpersonation') %}
-            {% endif %}
             {% block sectionHeader %}
             &nbsp;
             {% endblock %}
