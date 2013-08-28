@@ -1,31 +1,32 @@
 {% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
 
 {% block section_content %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-cog',
-                'name': 'parameters'|trans({}, 'platform'),
-                'href': path('claro_desktop_open_tool', {'toolName': 'parameters'})
-            },
-            {
-                'name': 'home'|trans({}, 'platform'),
-                'href': ''
-            }
-        ])
-    }}
 
-    <ul>
-        <li>
-            <a href="{{ path('claro_desktop_home_tab_properties') }}">
-                {{ 'home_tabs'|trans({}, 'platform') }}
-            </a>
-        </li>
-        <li>
-            <a href="{{ path('claro_desktop_widget_properties') }}">
-                {{ 'widgets'|trans({}, 'platform') }}
-            </a>
-        </li>
-    </ul>
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'home_parameters'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body">
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'icon-cog',
+                    'name': 'parameters'|trans({}, 'platform'),
+                    'href': path('claro_desktop_open_tool', {'toolName': 'parameters'})
+                },
+                {
+                    'name': 'home'|trans({}, 'platform'),
+                    'href': ''
+                }
+            ])
+        }}
+    </div>
+    <div class="list-group">
+        <a class="list-group-item" href="{{ path('claro_desktop_home_tab_properties') }}">
+            {{ 'home_tabs'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_desktop_widget_properties') }}">
+            {{ 'widgets'|trans({}, 'platform') }}
+        </a>
+    </div>
 
 {% endblock %}

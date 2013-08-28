@@ -1,5 +1,5 @@
-{% extends 'ClarolineCoreBundle::layout.html.twig' %}
-{% block content %}
+{% extends 'ClarolineCoreBundle:Message:layout.html.twig' %}
+{% block section_content %}
     <div class="col-md-6">
 
         {% for ancestor in ancestors %}
@@ -24,7 +24,7 @@
     </div>
     <div class="col-md-6">
         <div class="panel panel-default">
-            <div class="panel-heading"><h3 class="panel-title">{{ 'fast_answer'|trans({}, 'platform') }}</h3></div>
+            <div class="panel-heading"><h3 class="panel-title">{{ 'new_message'|trans({}, 'platform') }}</h3></div>
             <form novalidate="novalidate"
                 action="{{ path('claro_message_send', {'parentId': message.getId()}) }}"
                 method="post" {{ form_enctype(form) }}
