@@ -17,6 +17,10 @@ admin_interaction_open:
 admin_interaction_qcm:
     resource: "routing/admin/interactionQCM.yml"
     prefix:   /admin/interactionqcm
+
+admin_paper:
+    resource: "routing/admin/paper.yml"
+    prefix:   /admin/paper    
     
 admin_question:
     resource: "routing/admin/question.yml"

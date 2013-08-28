@@ -273,6 +273,9 @@
                         <div>
                             {% if interOpen.typeopenquestion == 'long' %}
                                 {{ responses[i].response|raw}}
+                                {% if admin == 1 %}
+                                    <a id="open_mark_{{ responses[i].id }}" onClick="openMark('{{ path('ujm_paper_mark_open_question', {'respid': responses[i].id, 'maxScore': interInfo['maxScore']}) }}');">{{ 'marked this question' | trans }}</a>
+                                {% endif %}
                             {% endif %}
                         </div> 
                     </div> 
@@ -284,10 +287,10 @@
                     {% endfor %}
                 {% endif %}
                 {% if responses[i].mark != -1 %}
-                    {{ 'mark' | trans }} : {{ responses[i].mark }}/{{ interInfo['maxScore'] }}<br/>
+                    {{ 'mark' | trans }} : <span id="open_mark_value_{{ responses[i].id }}">{{ responses[i].mark }}/{{ interInfo['maxScore'] }}</span><br/>
                     {% set exoMark = exoMark + responses[i].mark %}
                 {% else %}
-                    {{ 'not yet mark' | trans }}
+                    {{ 'mark' | trans }} : <span id="open_mark_value_{{ responses[i].id }}">{{ 'not yet mark' | trans }}</span>
                     {% set temporaryMark = true %}
                 {% endif %}
                 {% set exoScoreMax = exoScoreMax + interInfo['maxScore'] %}
@@ -307,3 +310,8 @@
     {% endif %}
     <div>{{ scoreFinal }} / 20</div>
 {% endblock %}
+    
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/markedOpenQuestion.js') }}"></script>
+{% endblock %}    

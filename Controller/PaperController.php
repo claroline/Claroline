@@ -38,9 +38,10 @@
 namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 use UJM\ExoBundle\Entity\Paper;
-use UJM\ExoBundle\Entity\Response;
+//use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Form\PaperType;
 
 use Pagerfanta\Adapter\ArrayAdapter;
@@ -137,6 +138,13 @@ class PaperController extends Controller
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($id);
 
         $subscription = $this->getSubscription($user, $paper->getExercise()->getId());
+        
+        if(isset($subscription[0])) {
+            $admin = $subscription[0]->getAdmin();
+        }
+        else {
+            $admin = 0;
+        }
 
         $worspace = $paper->getExercise()->getResourceNode()->getWorkspace();
 
@@ -175,6 +183,7 @@ class PaperController extends Controller
                 'hintViewed'   => $hintViewed,
                 'correction'   => $paper->getExercise()->getCorrectionMode(),
                 'display'      => $display,
+                'admin'        => $admin
             )
         );
     }
@@ -199,6 +208,37 @@ class PaperController extends Controller
         }
 
         return $this->redirect($this->generateUrl('paper'));
+    }
+    
+    public function markedOpenAction($respid, $maxScore)
+    {
+        return $this->render(
+            'UJMExoBundle:Paper:q_open_mark.html.twig', array(
+                'respid'   => $respid,
+                'maxScore' => $maxScore
+                
+            )
+        );
+    }
+    
+    public function markedOpenRecordAction()
+    {
+        $request = $this->get('request');
+        
+        if ($request->isXmlHttpRequest()) {
+            $em = $this->getDoctrine()->getManager();
+            $response = $em->getRepository('UJMExoBundle:Response')->find($request->get('respid'));
+
+            $response->setMark($request->get('mark'));
+
+            $em->persist($response);
+            $em->flush();
+
+            return new Response($response->getId());
+        } else {
+
+            return 0;
+        }
     }
 
     private function createDeleteForm($id)

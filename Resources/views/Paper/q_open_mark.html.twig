@@ -1,0 +1,41 @@
+<div id='modalopenmark' class="modal claroline">
+    <div class="modal-header claroline">
+        <button type="button" id="close_pop_open_mark" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <br>
+     </div>
+    <div class="modal-body claroline">
+        <h1>{{'Response.mark'|trans}}</h1>
+        <form class="well label_bold">
+            <input type="text" required="required" id='mark' />
+            <input type="hidden" id="respid" value="{{ respid }}" />
+            <input type="hidden" id="maxScore" value="{{ maxScore }}" />
+            <br/>
+            <button type="submit" id="submit_open_mark">{{'validate'|trans}}</button>
+        </form>
+    </div>
+</div>
+        
+<script type="text/javascript">
+$("#submit_open_mark").click(function() {
+    var mark = $("#mark").val();
+    var maxScore = $("#maxScore").val();
+    var respid = $("#respid").val();
+
+    $.ajax({
+        type: "POST",
+        url: "{{path('ujm_paper_mark_open_question_record')}}",
+        data: {
+            mark: mark, respid: respid, maxScore: maxScore
+        },
+        cache: false,
+        success: function(data){
+            $("#open_mark_value_"+respid).html(mark+'/'+maxScore);
+            $("#modalopenmark").css({"display": "none"});
+        }
+    });
+});
+
+$("#close_pop_open_mark").click(function() {
+    $("#modalopenmark").css({"display": "none"});
+});
+</script>
