@@ -12,7 +12,7 @@
             </a>
         </div>
 
-        <div class="collapse navbar-collapse">
+        <div class="navbar-collapse collapse">
         {% if isLogged %}
             <ul class="nav navbar-nav">
                 <li{{ "/desktop/tool/" | compareRoute | raw }}>
@@ -57,7 +57,7 @@
                         <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="{% if workspaces is empty %}disabled{% else %}dropdown-submenu{% endif %}">
+                        <li class="{% if workspaces is empty %}disabled{% else %}dropdown{% endif %}">
                             <a><i class="icon-time"></i> {{ 'history'|trans({}, 'platform') }}</a>
                         {% if not workspaces is empty %}
                             <ul class="dropdown-menu">

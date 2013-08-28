@@ -32,7 +32,7 @@
                 </div>
             <div class="col-md-12">
                  {% if app.session.getFlashes() is defined %}
-       <div class="alert alert-error">
+       <div class="alert alert-danger">
         {% for key, flash in app.session.getFlashes() %}
         {{ flash }} <br />
         {% endfor %}
