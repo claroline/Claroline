@@ -5,7 +5,7 @@ agenda_form_title : Titre
 agenda_form_end : " (jj/mm/aaaa)"
 agenda_form_start : "Date de début"
 agenda_form_description : "Description"
-agenda_form_allDay : " Sur toute la journée"
+agenda_form_allDay : "Tâche"
 agenda_form_priority_High : "Haute"
 agenda_form_priority : "Priorité"
 close : Fermer

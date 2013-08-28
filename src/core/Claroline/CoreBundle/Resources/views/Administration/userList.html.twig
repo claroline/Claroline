@@ -146,9 +146,11 @@
                         </td>
                         {% if is_granted('ROLE_ADMIN') %}
                         <td>
-                            <a href="{{ path('claro_desktop_open', {'_switch': user.getUsername()}) }}">
-                                {{ 'show'|trans({}, 'platform') }}
-                            </a>
+                            {% if user.getId() != app.user.id %}
+                                <a href="{{ path('claro_desktop_open', {'_switch': user.getUsername()}) }}">
+                                    {{ 'show'|trans({}, 'platform') }}
+                                </a>
+                            {% endif %}
                         </td>
                         <td>
                             <input type="checkbox" value="{{ user.id }}" class="chk-item" align="center"></input>

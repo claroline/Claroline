@@ -6,7 +6,7 @@
             <div class="panel-heading">
                 <h3 class="panel-title">{{ 'my_account'|trans({}, 'platform') }}</h3>
             </div>
-            <form class="form-horizontal" action="{{ path('claro_profile_update') }}" method="post" {{ form_enctype(profile_form) }} id="profile_form">
+            <form class="form-horizontal" action="{{ path('claro_profile_update', {'user': user.getId()}) }}" method="post" {{ form_enctype(profile_form) }} id="profile_form">
                 <div class="panel-body">
                     {{ form_widget(profile_form) }}
                 </div>
