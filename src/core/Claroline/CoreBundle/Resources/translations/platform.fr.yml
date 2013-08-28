@@ -575,6 +575,7 @@ views: 'Nb vues'
 visible: Visible
 visitor: Visiteur
 warning_workspace_impersonation: 'Vous êtes connectés en tant que %role% du workspace %workspace%.'
+warning_user_impersonation: 'Vous êtes connectés en tant que %user%.'
 widget_settings: 'Paramètres des widgets'
 widgets: Widgets
 widgets_configuration: 'Configuration des widgets'

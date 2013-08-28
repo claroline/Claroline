@@ -596,7 +596,8 @@ view: View
 views: Views
 visible: Visible
 visitor: Visitor
-warning_workspace_impersonation: 'You are connectecd as %role% from the workspace %workspace.'
+warning_workspace_impersonation: 'You are connected as %role% from the workspace %workspace.'
+warning_user_impersonation: 'You are connected as %user%.'
 widget_settings: 'Widget settings'
 widgets: Widgets
 widgets_configuration: 'Widgets configuration'
