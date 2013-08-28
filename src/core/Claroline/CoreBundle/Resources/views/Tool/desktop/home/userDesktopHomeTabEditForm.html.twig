@@ -45,7 +45,7 @@
         class="form-horizontal"
         action="{{ path(
             'claro_user_desktop_home_tab_edit',
-            {'homeTabId': homeTab.getId(), 'homeTabName': homeTabName}
+            {'homeTabConfigId': homeTabConfig.getId(), 'homeTabName': homeTabName}
         ) }}"
         method="post"
         {{ form_enctype(form) }}
@@ -65,6 +65,8 @@
     </form>
 
     <div id="twig-home-tab-id" data-home-tab-id="{{ homeTab.getId() }}">
+    </div>
+    <div id="twig-home-tab-config-order" data-home-tab-config-order="{{ homeTabConfig.getTabOrder() }}">
     </div>
 
     <div id="delete-home-tab-validation-box" class="modal fade">

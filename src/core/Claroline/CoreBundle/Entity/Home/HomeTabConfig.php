@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\HomeTabConfigRepository")
  * @ORM\Table(
  *     name="claro_home_tab_config",
  *     uniqueConstraints={
@@ -55,6 +55,11 @@ class HomeTabConfig
      * @ORM\JoinColumn(name="workspace_id", nullable=true, onDelete="CASCADE")
      */
     protected $workspace;
+
+    /**
+     * @ORM\Column(nullable=false)
+     */
+    protected $type;
 
     /**
      * @ORM\Column(type="boolean", name="is_visible", nullable=false)
@@ -139,5 +144,15 @@ class HomeTabConfig
     public function setTabOrder($tabOrder)
     {
         $this->tabOrder = $tabOrder;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 }

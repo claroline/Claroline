@@ -823,13 +823,15 @@ class WorkspaceController extends Controller
      */
     public function displayWorkspaceHomeTabsAction(AbstractWorkspace $workspace, $tabId)
     {
-        $adminHomeTabs = $this->homeTabManager->getAdminWorkspaceHomeTabs();
-        $workspaceHomeTabs = $this->homeTabManager->getWorkspaceHomeTabsByWorkspace($workspace);
+        $adminHomeTabConfigs = $this->homeTabManager
+            ->getVisibleAdminWorkspaceHomeTabConfigs();
+        $workspaceHomeTabConfigs = $this->homeTabManager
+            ->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
 
         return array(
             'workspace' => $workspace,
-            'adminHomeTabs' => $adminHomeTabs,
-            'workspaceHomeTabs' => $workspaceHomeTabs,
+            'adminHomeTabConfigs' => $adminHomeTabConfigs,
+            'workspaceHomeTabConfigs' => $workspaceHomeTabConfigs,
             'tabId' => $tabId
         );
     }

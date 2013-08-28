@@ -195,22 +195,24 @@ class HomeListener
     public function workspaceHome($workspaceId)
     {
         $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
-        $adminHomeTabs = $this->homeTabManager->getAdminWorkspaceHomeTabs();
-        $workspaceHomeTabs = $this->homeTabManager->getWorkspaceHomeTabsByWorkspace($workspace);
+        $adminHomeTabConfigs = $this->homeTabManager
+            ->getVisibleAdminWorkspaceHomeTabConfigs();
+        $workspaceHomeTabConfigs = $this->homeTabManager
+            ->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
         $tabId = 0;
 
-        if (count($adminHomeTabs) > 0) {
-            $tabId = $adminHomeTabs[0]->getId();
-        } elseif (count($workspaceHomeTabs) > 0) {
-            $tabId = $workspaceHomeTabs[0]->getId();
+        if (count($adminHomeTabConfigs) > 0) {
+            $tabId = $adminHomeTabConfigs[0]->getHomeTab()->getId();
+        } elseif (count($workspaceHomeTabConfigs) > 0) {
+            $tabId = $workspaceHomeTabConfigs[0]->getHomeTab()->getId();
         }
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\workspace\home:workspaceHomeTabs.html.twig',
             array(
                 'workspace' => $workspace,
-                'adminHomeTabs' => $adminHomeTabs,
-                'workspaceHomeTabs' => $workspaceHomeTabs,
+                'adminHomeTabConfigs' => $adminHomeTabConfigs,
+                'workspaceHomeTabConfigs' => $workspaceHomeTabConfigs,
                 'tabId' => $tabId
             )
         );
@@ -224,21 +226,23 @@ class HomeListener
     public function desktopHome()
     {
         $user = $this->securityContext->getToken()->getUser();
-        $adminHomeTabs = $this->homeTabManager->getAdminDesktopHomeTabs();
-        $userHomeTabs = $this->homeTabManager->getDesktopHomeTabsByUser($user);
+        $adminHomeTabConfigs = $this->homeTabManager
+            ->getVisibleAdminDesktopHomeTabConfigs();
+        $userHomeTabConfigs = $this->homeTabManager
+            ->getVisibleDesktopHomeTabConfigsByUser($user);
         $tabId = 0;
 
-        if (count($adminHomeTabs) > 0) {
-            $tabId = $adminHomeTabs[0]->getId();
-        } elseif (count($userHomeTabs) > 0) {
-            $tabId = $userHomeTabs[0]->getId();
+        if (count($adminHomeTabConfigs) > 0) {
+            $tabId = $adminHomeTabConfigs[0]->getHomeTab()->getId();
+        } elseif (count($userHomeTabConfigs) > 0) {
+            $tabId = $userHomeTabConfigs[0]->getHomeTab()->getId();
         }
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabs.html.twig',
             array(
-                'adminHomeTabs' => $adminHomeTabs,
-                'userHomeTabs' => $userHomeTabs,
+                'adminHomeTabConfigs' => $adminHomeTabConfigs,
+                'userHomeTabConfigs' => $userHomeTabConfigs,
                 'tabId' => $tabId
             )
         );

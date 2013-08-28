@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Claroline\CoreBundle\Entity\Home\HomeTab;
+use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
@@ -318,10 +319,10 @@ class HomeController extends Controller
         $this->checkUserAccess();
 
         $user = $this->securityContext->getToken()->getUser();
-        $homeTabs = $this->homeTabManager->getDesktopHomeTabsByUser($user);
+        $homeTabConfigs = $this->homeTabManager->getDesktopHomeTabConfigsByUser($user);
 
         return array(
-            'homeTabs' => $homeTabs,
+            'homeTabConfigs' => $homeTabConfigs,
             'tool' => $this->getHomeTool()
         );
     }
@@ -377,15 +378,24 @@ class HomeController extends Controller
         if ($form->isValid()) {
             $homeTab->setType('desktop');
             $homeTab->setUser($user);
-            $lastOrder = $this->homeTabManager->getOrderOfLastDesktopHomeTabByUser($user);
+            $this->homeTabManager->insertHomeTab($homeTab);
+
+            $homeTabConfig = new HomeTabConfig();
+            $homeTabConfig->setHomeTab($homeTab);
+            $homeTabConfig->setType('desktop');
+            $homeTabConfig->setUser($user);
+            $homeTabConfig->setLocked(false);
+            $homeTabConfig->setVisible(false);
+
+            $lastOrder = $this->homeTabManager->getOrderOfLastDesktopHomeTabConfigByUser($user);
 
             if (is_null($lastOrder['order_max'])) {
-                $homeTab->setTabOrder(1);
+                $homeTabConfig->setTabOrder(1);
             }
             else {
-                $homeTab->setTabOrder($lastOrder['order_max'] + 1);
+                $homeTabConfig->setTabOrder($lastOrder['order_max'] + 1);
             }
-            $this->homeTabManager->insertHomeTab($homeTab);
+            $this->homeTabManager->insertHomeTabConfig($homeTabConfig);
 
             return $this->redirect(
                 $this->generateUrl('claro_desktop_home_tab_properties')
@@ -400,14 +410,14 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "desktop/user/home_tab/{homeTabId}/edit/form",
+     *     "desktop/user/home_tab/{homeTabConfigId}/edit/form",
      *     name="claro_user_desktop_home_tab_edit_form"
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
-     *     "homeTab",
-     *     class="ClarolineCoreBundle:Home\HomeTab",
-     *     options={"id" = "homeTabId", "strictId" = true}
+     *     "homeTabConfig",
+     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
+     *     options={"id" = "homeTabConfigId", "strictId" = true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:userDesktopHomeTabEditForm.html.twig")
      *
@@ -415,15 +425,17 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function userDesktopHomeTabEditFormAction(HomeTab $homeTab)
+    public function userDesktopHomeTabEditFormAction(HomeTabConfig $homeTabConfig)
     {
         $this->checkUserAccess();
 
+        $homeTab = $homeTabConfig->getHomeTab();
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
 
         return array(
             'form' => $form->createView(),
             'tool' => $this->getHomeTool(),
+            'homeTabConfig' => $homeTabConfig,
             'homeTab' => $homeTab,
             'homeTabName' => $homeTab->getName()
         );
@@ -431,14 +443,14 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "desktop/user/home_tab/{homeTabId}/{homeTabName}/edit",
+     *     "desktop/user/home_tab/{homeTabConfigId}/{homeTabName}/edit",
      *     name="claro_user_desktop_home_tab_edit"
      * )
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
-     *     "homeTab",
-     *     class="ClarolineCoreBundle:Home\HomeTab",
-     *     options={"id" = "homeTabId", "strictId" = true}
+     *     "homeTabConfig",
+     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
+     *     options={"id" = "homeTabConfigId", "strictId" = true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:userDesktopHomeTabEditForm.html.twig")
      *
@@ -446,10 +458,11 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function userDesktopHomeTabEditAction(HomeTab $homeTab, $homeTabName)
+    public function userDesktopHomeTabEditAction(HomeTabConfig $homeTabConfig, $homeTabName)
     {
         $this->checkUserAccess();
 
+        $homeTab = $homeTabConfig->getHomeTab();
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
         $request = $this->getRequest();
         $form->handleRequest($request);
@@ -465,6 +478,7 @@ class HomeController extends Controller
         return array(
             'form' => $form->createView(),
             'tool' => $this->getHomeTool(),
+            'homeTabConfig' => $homeTabConfig,
             'homeTab' => $homeTab,
             'homeTabName' => $homeTabName
         );
@@ -472,7 +486,7 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "desktop/user/home_tab/{homeTabId}/delete",
+     *     "desktop/user/home_tab/{homeTabId}/{tabOrder}/delete",
      *     name="claro_user_desktop_home_tab_delete",
      *     options = {"expose"=true}
      * )
@@ -487,13 +501,13 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function userDesktopHomeTabDeleteAction(HomeTab $homeTab)
+    public function userDesktopHomeTabDeleteAction(HomeTab $homeTab, $tabOrder)
     {
         $this->checkUserAccess();
         $user = $this->securityContext->getToken()->getUser();
 
         if ($homeTab->getUser()->getId() === $user->getId()) {
-            $this->homeTabManager->deleteHomeTab($homeTab, 'desktop');
+            $this->homeTabManager->deleteHomeTab($homeTab, 'desktop', $tabOrder);
         }
 
         return new Response('success', 204);
@@ -515,12 +529,14 @@ class HomeController extends Controller
     public function displayDesktopHomeTabsAction($tabId)
     {
         $user = $this->securityContext->getToken()->getUser();
-        $adminHomeTabs = $this->homeTabManager->getAdminDesktopHomeTabs();
-        $userHomeTabs = $this->homeTabManager->getDesktopHomeTabsByUser($user);
+        $adminHomeTabConfigs = $this->homeTabManager
+            ->getVisibleAdminDesktopHomeTabConfigs();
+        $userHomeTabConfigs = $this->homeTabManager
+            ->getVisibleDesktopHomeTabConfigsByUser($user);
 
         return array(
-            'adminHomeTabs' => $adminHomeTabs,
-            'userHomeTabs' => $userHomeTabs,
+            'adminHomeTabConfigs' => $adminHomeTabConfigs,
+            'userHomeTabConfigs' => $userHomeTabConfigs,
             'tabId' => $tabId
         );
     }
@@ -547,11 +563,11 @@ class HomeController extends Controller
     {
         $this->checkUserAccess();
 
-        $homeTabs = $this->homeTabManager->getWorkspaceHomeTabsByWorkspace($workspace);
+        $homeTabConfigs = $this->homeTabManager->getWorkspaceHomeTabConfigsByWorkspace($workspace);
 
         return array(
             'workspace' => $workspace,
-            'homeTabs' => $homeTabs,
+            'homeTabConfigs' => $homeTabConfigs,
             'tool' => $this->getHomeTool()
         );
     }
@@ -617,15 +633,24 @@ class HomeController extends Controller
         if ($form->isValid()) {
             $homeTab->setType('workspace');
             $homeTab->setWorkspace($workspace);
-            $lastOrder = $this->homeTabManager->getOrderOfLastWorkspaceHomeTabByWorkspace($workspace);
+            $this->homeTabManager->insertHomeTab($homeTab);
+
+            $homeTabConfig = new HomeTabConfig();
+            $homeTabConfig->setHomeTab($homeTab);
+            $homeTabConfig->setType('workspace');
+            $homeTabConfig->setWorkspace($workspace);
+            $homeTabConfig->setLocked(false);
+            $homeTabConfig->setVisible(false);
+
+            $lastOrder = $this->homeTabManager->getOrderOfLastWorkspaceHomeTabConfigByWorkspace($workspace);
 
             if (is_null($lastOrder['order_max'])) {
-                $homeTab->setTabOrder(1);
+                $homeTabConfig->setTabOrder(1);
             }
             else {
-                $homeTab->setTabOrder($lastOrder['order_max'] + 1);
+                $homeTabConfig->setTabOrder($lastOrder['order_max'] + 1);
             }
-            $this->homeTabManager->insertHomeTab($homeTab);
+            $this->homeTabManager->insertHomeTabConfig($homeTabConfig);
 
             return $this->redirect(
                 $this->generateUrl(
@@ -644,7 +669,7 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "workspace/{workspaceId}/user/home_tab/{homeTabId}/edit/form",
+     *     "workspace/{workspaceId}/user/home_tab/{homeTabConfigId}/edit/form",
      *     name="claro_user_workspace_home_tab_edit_form"
      * )
      * @EXT\Method("GET")
@@ -654,9 +679,9 @@ class HomeController extends Controller
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
-     *     "homeTab",
-     *     class="ClarolineCoreBundle:Home\HomeTab",
-     *     options={"id" = "homeTabId", "strictId" = true}
+     *     "homeTabConfig",
+     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
+     *     options={"id" = "homeTabConfigId", "strictId" = true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:userWorkspaceHomeTabEditForm.html.twig")
      *
@@ -664,16 +689,21 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function userWorkspaceHomeTabEditFormAction(AbstractWorkspace $workspace, HomeTab $homeTab)
+    public function userWorkspaceHomeTabEditFormAction(
+        AbstractWorkspace $workspace,
+        HomeTabConfig $homeTabConfig
+    )
     {
         $this->checkUserAccess();
 
+        $homeTab = $homeTabConfig->getHomeTab();
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
 
         return array(
             'workspace' => $workspace,
             'form' => $form->createView(),
             'tool' => $this->getHomeTool(),
+            'homeTabConfig' => $homeTabConfig,
             'homeTab' => $homeTab,
             'homeTabName' => $homeTab->getName()
         );
@@ -681,7 +711,7 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "workspace/{workspaceId}/user/home_tab/{homeTabId}/{homeTabName}/edit/form",
+     *     "workspace/{workspaceId}/user/home_tab/{homeTabConfigId}/{homeTabName}/edit/form",
      *     name="claro_user_workspace_home_tab_edit"
      * )
      * @EXT\Method("POST")
@@ -691,9 +721,9 @@ class HomeController extends Controller
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
-     *     "homeTab",
-     *     class="ClarolineCoreBundle:Home\HomeTab",
-     *     options={"id" = "homeTabId", "strictId" = true}
+     *     "homeTabConfig",
+     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
+     *     options={"id" = "homeTabConfigId", "strictId" = true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:userWorkspaceHomeTabEditForm.html.twig")
      *
@@ -703,12 +733,13 @@ class HomeController extends Controller
      */
     public function userWorkspaceHomeTabEditAction(
         AbstractWorkspace $workspace,
-        HomeTab $homeTab,
+        HomeTabConfig $homeTabConfig,
         $homeTabName
     )
     {
         $this->checkUserAccess();
 
+        $homeTab = $homeTabConfig->getHomeTab();
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
         $request = $this->getRequest();
         $form->handleRequest($request);
@@ -728,6 +759,7 @@ class HomeController extends Controller
             'workspace' => $workspace,
             'form' => $form->createView(),
             'tool' => $this->getHomeTool(),
+            'homeTabConfig' => $homeTabConfig,
             'homeTab' => $homeTab,
             'homeTabName' => $homeTabName
         );
@@ -735,7 +767,7 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "workspace/{workspaceId}/user/home_tab/{homeTabId}/delete",
+     *     "workspace/{workspaceId}/user/home_tab/{homeTabId}/{tabOrder}/delete",
      *     name="claro_user_workspace_home_tab_delete",
      *     options = {"expose"=true}
      * )
@@ -757,14 +789,40 @@ class HomeController extends Controller
      */
     public function userWorkspaceHomeTabDeleteAction(
         AbstractWorkspace $workspace,
-        HomeTab $homeTab
+        HomeTab $homeTab,
+        $tabOrder
     )
     {
         $this->checkUserAccess();
 
         if ($homeTab->getWorkspace()->getId() === $workspace->getId()) {
-            $this->homeTabManager->deleteHomeTab($homeTab, 'workspace');
+            $this->homeTabManager->deleteHomeTab($homeTab, 'workspace', $tabOrder);
         }
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/home_tab/{homeTabConfigId}/visibility/{visible}/update",
+     *     name="claro_home_tab_update_visibility",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "homeTabConfig",
+     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
+     *     options={"id" = "homeTabConfigId", "strictId" = true}
+     * )
+     *
+     * Configure visibility of an Home tab
+     *
+     * @return Response
+     */
+    public function homeTabUpdateVisibilityAction(HomeTabConfig $homeTabConfig, $visible)
+    {
+        $isVisible = ($visible === 'visible') ? true : false;
+        $this->homeTabManager->updateVisibility($homeTabConfig, $isVisible);
 
         return new Response('success', 204);
     }

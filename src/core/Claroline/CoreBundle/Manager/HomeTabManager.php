@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Home\HomeTab;
+use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -13,8 +14,8 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class HomeTabManager
 {
-    /** @var HomeTabRepository */
-    private $homeTabRepo;
+    /** @var HomeTabConfigRepository */
+    private $homeTabConfigRepo;
     private $om;
 
     /**
@@ -26,7 +27,7 @@ class HomeTabManager
      */
     public function __construct(ObjectManager $om)
     {
-        $this->homeTabRepo = $om->getRepository('ClarolineCoreBundle:Home\HomeTab');
+        $this->homeTabConfigRepo = $om->getRepository('ClarolineCoreBundle:Home\HomeTabConfig');
         $this->om = $om;
     }
 
@@ -36,73 +37,101 @@ class HomeTabManager
         $this->om->flush();
     }
 
-    public function deleteHomeTab(HomeTab $homeTab, $type)
+    public function deleteHomeTab(HomeTab $homeTab, $type, $tabOrder)
     {
         switch ($type) {
             case 'admin_desktop':
-                $this->homeTabRepo->updateAdminDesktopOrder(
-                    $homeTab->getTabOrder()
-                );
+                $this->homeTabConfigRepo->updateAdminDesktopOrder($tabOrder);
                 break;
             case 'admin_workspace':
-                $this->homeTabRepo->updateAdminWorkspaceOrder(
-                    $homeTab->getTabOrder()
-                );
+                $this->homeTabConfigRepo->updateAdminWorkspaceOrder($tabOrder);
                 break;
             case 'desktop':
-                $this->homeTabRepo->updateDesktopOrder(
-                    $homeTab->getTabOrder(),
-                    $homeTab->getUser()
-                );
+                $this->homeTabConfigRepo->updateDesktopOrder($homeTab->getUser(), $tabOrder);
                 break;
             case 'workspace':
-                $this->homeTabRepo->updateWorkspaceOrder(
-                    $homeTab->getTabOrder(),
-                    $homeTab->getWorkspace()
-                );
+                $this->homeTabConfigRepo->updateWorkspaceOrder($homeTab->getWorkspace(), $tabOrder);
                 break;
         }
         $this->om->remove($homeTab);
         $this->om->flush();
     }
 
-    public function getWorkspaceHomeTabsByWorkspace(AbstractWorkspace $workspace)
+    public function insertHomeTabConfig(HomeTabConfig $homeTabConfig)
     {
-        return $this->homeTabRepo->findWorkspaceHomeTabsByWorkspace($workspace);
+        $this->om->persist($homeTabConfig);
+        $this->om->flush();
     }
 
-    public function getAdminDesktopHomeTabs()
+    public function updateVisibility(HomeTabConfig $homeTabConfig, $visible)
     {
-        return $this->homeTabRepo->findAdminDesktopHomeTabs();
+        $homeTabConfig->setVisible($visible);
+        $this->om->flush();
     }
 
-    public function getAdminWorkspaceHomeTabs()
+    public function updateLock(HomeTabConfig $homeTabConfig, $locked)
     {
-        return $this->homeTabRepo->findAdminWorkspaceHomeTabs();
+        $homeTabConfig->setLocked($locked);
+        $this->om->flush();
     }
 
-    public function getDesktopHomeTabsByUser(User $user)
+    public function getAdminDesktopHomeTabConfigs()
     {
-        return $this->homeTabRepo->findDesktopHomeTabsByUser($user);
+        return $this->homeTabConfigRepo->findAdminDesktopHomeTabConfigs();
     }
 
-    public function getOrderOfLastDesktopHomeTabByUser(User $user)
+    public function getAdminWorkspaceHomeTabConfigs()
     {
-        return $this->homeTabRepo->findOrderOfLastDesktopHomeTabByUser($user);
+        return $this->homeTabConfigRepo->findAdminWorkspaceHomeTabConfigs();
     }
 
-    public function getOrderOfLastWorkspaceHomeTabByWorkspace(AbstractWorkspace $workspace)
+    public function getDesktopHomeTabConfigsByUser(User $user)
     {
-        return $this->homeTabRepo->findOrderOfLastWorkspaceHomeTabByWorkspace($workspace);
+        return $this->homeTabConfigRepo->findDesktopHomeTabConfigsByUser($user);
     }
 
-    public function getOrderOfLastAdminDesktopHomeTab()
+    public function getWorkspaceHomeTabConfigsByWorkspace(AbstractWorkspace $workspace)
     {
-        return $this->homeTabRepo->findOrderOfLastAdminDesktopHomeTab();
+        return $this->homeTabConfigRepo->findWorkspaceHomeTabConfigsByWorkspace($workspace);
     }
 
-    public function getOrderOfLastAdminWorkspaceHomeTab()
+    public function getVisibleAdminDesktopHomeTabConfigs()
     {
-        return $this->homeTabRepo->findOrderOfLastAdminWorkspaceHomeTab();
+        return $this->homeTabConfigRepo->findVisibleAdminDesktopHomeTabConfigs();
+    }
+
+    public function getVisibleAdminWorkspaceHomeTabConfigs()
+    {
+        return $this->homeTabConfigRepo->findVisibleAdminWorkspaceHomeTabConfigs();
+    }
+
+    public function getVisibleDesktopHomeTabConfigsByUser(User $user)
+    {
+        return $this->homeTabConfigRepo->findVisibleDesktopHomeTabConfigsByUser($user);
+    }
+
+    public function getVisibleWorkspaceHomeTabConfigsByWorkspace(AbstractWorkspace $workspace)
+    {
+        return $this->homeTabConfigRepo->findVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
+    }
+
+    public function getOrderOfLastDesktopHomeTabConfigByUser(User $user)
+    {
+        return $this->homeTabConfigRepo->findOrderOfLastDesktopHomeTabByUser($user);
+    }
+
+    public function getOrderOfLastWorkspaceHomeTabConfigByWorkspace(AbstractWorkspace $workspace)
+    {
+        return $this->homeTabConfigRepo->findOrderOfLastWorkspaceHomeTabByWorkspace($workspace);
+    }
+
+    public function getOrderOfLastAdminDesktopHomeTabConfig()
+    {
+        return $this->homeTabConfigRepo->findOrderOfLastAdminDesktopHomeTab();
+    }
+
+    public function getOrderOfLastAdminWorkspaceHomeTabConfig()
+    {
+        return $this->homeTabConfigRepo->findOrderOfLastAdminWorkspaceHomeTab();
     }
 }
