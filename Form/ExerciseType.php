@@ -53,7 +53,7 @@ class ExerciseType extends AbstractType
             )
             ->add(
                 'title', 'text', array(
-                    'label' => 'Title'
+                    'label' => 'title'
                 )
             )
             ->add(
@@ -65,35 +65,35 @@ class ExerciseType extends AbstractType
             )
             ->add(
                 'shuffle', 'checkbox', array(
-                    'required' => false, 'label' => 'Random order of questions'
+                    'required' => false, 'label' => 'Exercise.shuffle'
                 )
             )
             ->add(
                 'nbQuestion', 'text', array(
-                    'label' => 'Number of questions to draw'
+                    'label' => 'number of questions to draw'
                 )
             )
             //->add('dateCreate')
             ->add(
                 'duration', 'text', array(
-                    'label' => 'Duration'
+                    'label' => 'Exercise.duration'
                 )
             )
             //->add('nbQuestionPage')
             ->add(
                 'doprint', 'checkbox', array(
-                    'required' => false, 'label' => 'Print paper'
+                    'required' => false, 'label' => 'print paper'
                 )
             )
             ->add(
                 'maxAttempts', 'text', array(
-                    'label' => 'Maximum number of tries'
+                    'label' => 'maximum number of tries'
                 )
             )
             //->add('correctionMode', 'text', array('label' => 'Availability of correction'))
             ->add(
                 'correctionMode', 'choice', array(
-                    'label' => 'Availability of correction',
+                    'label' => 'availability of correction',
                     'choices' => array(
                         '1' => 'At the end of assessment',
                         '2' => 'After the last attempt',
@@ -108,13 +108,13 @@ class ExerciseType extends AbstractType
                     'input' => 'datetime',
                     'format' => 'dd/MM/yyyy hh:mm:ss',
                     'attr' => array('data-format' => 'dd/MM/yyyy hh:mm:ss'),
-                    'label' => 'Correction date',
+                    'label' => 'correction date',
                     'read_only' => true
                 )
             )
             ->add(
                 'markMode', 'choice', array(
-                    'label' => 'Availability of score',
+                    'label' => 'availability of score',
                     'choices' => array(
                         '1' => 'At the same time that the correction',
                         '2' => 'At the end of assessment'
@@ -127,7 +127,7 @@ class ExerciseType extends AbstractType
                 'input' => 'datetime',
                 'format' => 'dd/MM/yyyy hh:mm:ss',
                 'attr' => array('data-format' => 'dd/MM/yyyy hh:mm:ss'),
-                'label' => 'Start date',
+                'label' => 'start date',
                 'read_only' => true
                 )
             )
@@ -142,18 +142,18 @@ class ExerciseType extends AbstractType
                     'input' => 'datetime',
                     'format' => 'dd/MM/yyyy hh:mm:ss',
                     'attr' => array('data-format' => 'dd/MM/yyyy hh:mm:ss'),
-                    'label' => 'end_date',
+                    'label' => 'Exercise.end_date',
                     'read_only' => true
                 )
             )
             ->add(
                 'dispButtonInterrupt', 'checkbox', array(
-                    'required' => false, 'label' => 'Test exit'
+                    'required' => false, 'label' => 'test exit'
                 )
             )
             ->add(
                 'lockAttempt', 'checkbox', array(
-                    'required' => false, 'label' => 'Lock attempt'
+                    'required' => false, 'label' => 'lock attempt'
                 )
             );
     }
