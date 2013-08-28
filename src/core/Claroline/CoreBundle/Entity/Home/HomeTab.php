@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\HomeTabRepository")
+ * @ORM\Entity
  * @ORM\Table(name="claro_home_tab")
  */
 class HomeTab
@@ -45,11 +45,6 @@ class HomeTab
      * @ORM\JoinColumn(name="workspace_id", nullable=true, onDelete="CASCADE")
      */
     protected $workspace;
-
-    /**
-     * @ORM\Column(type="integer", name="tab_order", nullable=false)
-     */
-    protected $tabOrder;
 
     public function getId()
     {

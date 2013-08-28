@@ -1,5 +1,13 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src='{{ asset('bundles/clarolinecore/js/home/homeTabsProperties.js') }}'
+        type="text/javascript">
+    </script>
+{% endblock %}
+
 {% block section_content %}
 
     {{
@@ -38,23 +46,31 @@
             <thead>
                 <tr>
                     <th>{{ 'name'|trans({}, 'platform') }}</th>
+                    <th>{{ 'visible'|trans({}, 'platform') }}</th>
                     <th>{{ 'order'|trans({}, 'platform') }}</th>
                 </tr>
             </thead>
             <tbody id="widget-table-body">
-                {% for homeTab in homeTabs %}
-                    <tr>
+                {% for homeTabConfig in homeTabConfigs %}
+                {% set homeTab = homeTabConfig.getHomeTab() %}
+                    <tr class='row-home-tab-config' data-id={{ homeTabConfig.getId() }}>
                         <td>
                             <a href="{{
                                 path(
                                     'claro_user_workspace_home_tab_edit_form',
-                                    {'workspaceId': workspace.getId(), 'homeTabId': homeTab.getId()})
+                                    {'workspaceId': workspace.getId(), 'homeTabConfigId': homeTabConfig.getId()})
                             }}">
                                 <i class="icon-edit"></i>
                             </a>
                             {{ homeTab.getName() }}
                         </td>
-                        <td>{{ homeTab.getTabOrder() }}</td>
+                        <td>
+                            <input type="checkbox"
+                                class="chk-visible"
+                               {% if homeTabConfig.isVisible() %} checked {% endif %}
+                            >
+                        </td>
+                        <td>{{ homeTabConfig.getTabOrder() }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
