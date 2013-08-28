@@ -3,7 +3,6 @@
 namespace ICAP\BlogBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use ICAP\BlogBundle\Entity\Blog;
 use ICAP\BlogBundle\Entity\BlogOptions;
 use ICAP\BlogBundle\Entity\Post;
@@ -36,9 +35,6 @@ class BlogController extends Controller
     public function viewAction(Blog $blog, $page, User $user, $filter = null)
     {
         $this->checkAccess("OPEN", $blog);
-
-        $log = new LogResourceReadEvent($blog->getResourceNode());
-        $this->get('event_dispatcher')->dispatch('log', $log);
 
         $search = $this->getRequest()->get('search');
         if (null !== $search && '' !== $search) {

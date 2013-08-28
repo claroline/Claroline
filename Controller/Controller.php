@@ -2,6 +2,7 @@
 
 namespace ICAP\BlogBundle\Controller;
 
+use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use ICAP\BlogBundle\Entity\Blog;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
@@ -22,6 +23,9 @@ class Controller extends BaseController
         if (!$this->get('security.context')->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
+
+        $log = new LogResourceReadEvent($blog->getResourceNode());
+        $this->get('event_dispatcher')->dispatch('log', $log);
     }
     /**
      * @param string $permission
