@@ -64,12 +64,12 @@ class PathController extends Controller
         // Récupération utilisateur courant.
         $user = $this->get('security.context')->getToken()->getUser();
   
-        $this->JSONParser($json_root_steps, $user, $workspace);
+        $this->JSONParser($json_root_steps, $user, $workspace, null, 2);
 
         return array('workspace' => $workspace);
     }
 
-    private function JSONParser($steps, $user, $workspace)
+    private function JSONParser($steps, $user, $workspace, $parent, $lvl)
     {
         $manager= $this->entityManager();
 
@@ -81,18 +81,25 @@ class PathController extends Controller
 
             // Création ResourceNode
             $resourceNode = new ResourceNode();
-            $resourceNode->setName("Nom de la ressource");
+            $resourceNode->setName($step->name);
             $resourceNode->setClass("Claroline\CoreBundle\Entity\Resource\Activity");
             $resourceNode->setCreator($user);
             $resourceNode->setResourceType($resourceType);
             $resourceNode->setWorkspace($workspace);
-            
+            $resourceNode->setParent($parent);
+            $resourceNode->setMimeType("custom/activity");
+            /*
+            setIcon($icon)
+            setNext(ResourceNode $next = null, $setPrev = false)
+            setPrevious(ResourceNode $previous = null, $setNext = false)
+            */
             $manager->persist($resourceNode);
             
             // Création Activité
             $activity = new Activity();
             $activity->setName($step->name);
             $activity->setInstructions("Consigne");
+            $activity->setResourceNode($resourceNode);
 
             $manager->persist($activity);
             $manager->flush();
@@ -110,7 +117,7 @@ class PathController extends Controller
             $manager->flush();   
 
             // récursivité sur les enfants possibles.
-            $this->JSONParser($step->children, $user, $workspace);
+            $this->JSONParser($step->children, $user, $workspace, $resourceNode, $lvl+1);
         }
 
         $manager->flush();     
