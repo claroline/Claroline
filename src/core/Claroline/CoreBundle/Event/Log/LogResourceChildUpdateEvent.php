@@ -9,7 +9,7 @@ class LogResourceChildUpdateEvent extends LogGenericEvent
     const ACTION = 'resource_child_update';
 
     const CHILD_ACTION_CREATE = 'child_action_create';
-    const CHILD_ACTION_READ = 'child_action_read';
+    const CHILD_ACTION_READ   = 'child_action_read';
     const CHILD_ACTION_UPDATE = 'child_action_update';
     const CHILD_ACTION_DELETE = 'child_action_delete';
 
