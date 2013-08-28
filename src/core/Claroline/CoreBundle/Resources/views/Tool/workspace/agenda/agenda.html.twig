@@ -51,8 +51,8 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-md-3">
+
                 <h4> <u>{{'tasks'|trans({}, 'agenda') }} </u></h4>
                 {% for e in listEvents  %}
                     <div class="panel panel-default">
@@ -61,7 +61,7 @@
                         <ul>
                             <li data-event-start="{{ e.start|date("d/m/Y")}}"> {{ e.start|date("d/m/Y")}} </li>
                             <li > {{ e.end|date("d/m/Y") }} </li>
-                            <li>{{ e.description }}</li>
+                            <li>{{ e.description|raw }}</li>
                             <li class="hidden"> {{e.priority}}</li>
                             <a href="#myModal" class="update-task" role="button">modifier</a> </p>
                         </ul>
@@ -87,7 +87,7 @@
     <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}' ></script>
     <script type='text/javascript' src='{{ asset(calendarPath ~ 'js/fullcalendar.js') }}' ></script>
     <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/calendar.js') }}'></script>
-
+    <script type='text/javascript'src='{{ asset('bundles/frontend/date.js') }}'></script>
     <script type='text/javascript'>
         $(function () {
             Claroline.Calendar.initialize('workspace');
