@@ -15,7 +15,7 @@
                     {% elseif values[0] is sameas(false) %}
                         <dd>{{ ('no')|trans({}, 'platform') }}</dd>
                     {% else %}
-                        <dd>{{ values[0] }}</dd>
+                        <dd>{{ values[0]|raw }}</dd>
                     {% endif %}
                 {% endif %}
             {% endfor %}
@@ -34,7 +34,7 @@
                     {% elseif values[1] is sameas(false) %}
                         <dd>{{ ('no')|trans({}, 'platform') }}</dd>
                     {% else %}
-                        <dd>{{ values[1] }}</dd>
+                        <dd>{{ values[1]|raw }}</dd>
                     {% endif %}
                 {% endif %}
             {% endfor %}
