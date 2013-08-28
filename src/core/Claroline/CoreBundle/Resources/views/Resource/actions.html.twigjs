@@ -87,9 +87,13 @@
 {% endif %}
 
 <form class="navbar-form pull-right">
-    <input class="name form-control" type="text" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ searchedName }}" style="width: 150px;">
-    <button class="filter btn btn-default" type="button">
-        <i class="icon-search"></i>
-    </button>
-    <button class="config-search-panel btn btn-default" type="button"><i class="icon-cog"></i></button>
+    <div class="input-group"  style="width: 250px;">
+        <input class="name form-control" type="text" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ searchedName }}">
+        <span class="input-group-btn">
+            <button class="filter btn btn-default" type="button">
+                <i class="icon-search"></i>
+            </button>
+            <button class="config-search-panel btn btn-default" type="button"><i class="icon-cog"></i></button>
+        </span>
+   </div>
 </form>

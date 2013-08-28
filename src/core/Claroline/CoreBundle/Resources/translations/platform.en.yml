@@ -69,6 +69,7 @@ copy: Copy
 create: Create
 creation: Creation
 create_group: 'Create group'
+create_user: 'Create user'
 create_new_admin_tag: 'Create new admin tag'
 create_new_home_tab: 'Create new tab'
 create_new_tag: 'Create new tag'
@@ -364,18 +365,18 @@ messages_removed: 'Messages removed'
 messages_sent: 'Messages sent'
 messages_sent_removed: 'Messages sent removed'
 misc: Miscellaneous
-month.january: "January"
-month.february: "February"
-month.march: "March"
-month.april: "April"
-month.may: "May"
-month.june: "June"
-month.july: "July"
-month.august: "August"
-month.september: "September"
-month.october: "October"
-month.november: "November"
-month.december: "December"
+month.January: "January"
+month.February: "February"
+month.March: "March"
+month.April: "April"
+month.May: "May"
+month.June: "June"
+month.July: "July"
+month.August: "August"
+month.September: "September"
+month.October: "October"
+month.November: "November"
+month.December: "December"
 move: Move
 my_account: 'My account'
 my_agenda: 'My agenda'
@@ -387,7 +388,9 @@ my_resources: 'My resources'
 my_workspace: 'My workspace'
 my_workspaces: 'My workspaces'
 name: Name
+new: New
 new_message_alert: 'You have %count% new message(s)'
+new_message: 'New message'
 no: 'no'
 no_email: 'No email found, check the spelling'
 no_search_results: 'Your search hasn''t returned any result.'
@@ -553,6 +556,7 @@ tool: Tool
 tools: Tools
 tool_form_name : 'tool name'
 tool_form_displayName : 'Displayed tool name'
+tool_parameters : 'Tool parameters'
 tools_rights_configuration: 'Tools rights configuration'
 top: Top
 top_extension: 'Top filetypes having the most files'
