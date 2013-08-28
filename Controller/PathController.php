@@ -43,64 +43,74 @@ class PathController extends Controller
      *     name = "innova_path_deploy"
      * )
      * @Method("POST")
-     * @Template("InnovaPathBundle::path_desktop.html.twig")
+     * @Template("InnovaPathBundle::path_workspace.html.twig")
      */
     public function deployAction()
     {
-        $manager= $this->entityManager();
+        $manager = $this->entityManager();
 
+        // Récupération vars HTTP
         $pathId = $this->get('request')->request->get('path-id');
         $path = $manager->getRepository('InnovaPathBundle:Path')->findOneById($pathId);
+        
+        // JSON string to Object - Récupération des childrens de la racine
         $json = json_decode($path->getPath());
-        var_dump($json);
+        $json_root_steps = $json->steps;
 
-
+        // Récupération Workspace courant.
         $workspaceId = $this->get('request')->request->get('workspace-id');
         $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
+
+        // Récupération utilisateur courant.
         $user = $this->get('security.context')->getToken()->getUser();
-        $resourceType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneById(5);
+  
+        $this->JSONParser($json_root_steps, $user, $workspace);
 
-        $resourceNode = new ResourceNode();
-        $resourceNode->setName("xxxxy");
-        $resourceNode->setClass("Claroline\CoreBundle\Entity\Resource\Activity");
-        $resourceNode->setCreator($user);
-        $resourceNode->setResourceType($resourceType);
-        $resourceNode->setWorkspace($workspace);
-        
-        $manager->persist($resourceNode);
-        
-        $activity = new Activity();
-        $activity->setName($step->name);
-        $activity->setInstructions("xxxx");
-
-        $manager->persist($activity);
-        $manager->flush();
-
-        $resourceActivity = new ResourceActivity();
-        $resourceActivity->setActivity($activity);
-        $resourceActivity->setResourceNode($resourceNode);
-        $resourceActivities = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-            ->findByActivity($activity->getId());
-        $count = count($resourceActivities)+1;
-        $resourceActivity->setSequenceOrder($count);
-
-        $manager->persist($resourceActivity);
-
-        $manager->flush();     
-        //$this->JSONParser($json->steps);
-
-        return array();
+        return array('workspace' => $workspace);
     }
 
-    private function JSONParser($steps)
+    private function JSONParser($steps, $user, $workspace)
     {
         $manager= $this->entityManager();
 
         foreach ($steps as $step) {
             echo $step->name."<br/>";
-            /* créer activité */
 
-            $this->JSONParser($step->children);
+            // Récupération de l'objet resourceType activity. Utile pour le ResourceNode
+            $resourceType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneById(5);
+
+            // Création ResourceNode
+            $resourceNode = new ResourceNode();
+            $resourceNode->setName("Nom de la ressource");
+            $resourceNode->setClass("Claroline\CoreBundle\Entity\Resource\Activity");
+            $resourceNode->setCreator($user);
+            $resourceNode->setResourceType($resourceType);
+            $resourceNode->setWorkspace($workspace);
+            
+            $manager->persist($resourceNode);
+            
+            // Création Activité
+            $activity = new Activity();
+            $activity->setName($step->name);
+            $activity->setInstructions("Consigne");
+
+            $manager->persist($activity);
+            $manager->flush();
+
+            // Gestion de la jointure ResourceActivity
+            $resourceActivity = new ResourceActivity();
+            $resourceActivity->setActivity($activity);
+            $resourceActivity->setResourceNode($resourceNode);
+            $resourceActivities = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
+                ->findByActivity($activity->getId());
+            $count = count($resourceActivities)+1; // TODO: A revoir
+            $resourceActivity->setSequenceOrder($count);
+
+            $manager->persist($resourceActivity);
+            $manager->flush();   
+
+            // récursivité sur les enfants possibles.
+            $this->JSONParser($step->children, $user, $workspace);
         }
 
         $manager->flush();     
