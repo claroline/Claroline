@@ -9,7 +9,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\BaseProfileType;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Library\Security\Acl\ClassIdentity;
 use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -169,10 +168,6 @@ class RegistrationController extends Controller
         $isSelfRegistrationAllowed = $configHandler->getParameter('allow_self_registration');
 
         if (!$securityContext->getToken()->getUser() instanceof User && $isSelfRegistrationAllowed) {
-            return;
-        }
-
-        if ($securityContext->isGranted('CREATE', ClassIdentity::fromDomainClass('Claroline\CoreBundle\Entity\User'))) {
             return;
         }
 

@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Entity\Resource;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /** @ORM\MappedSuperclass */
 abstract class AbstractResource
@@ -20,6 +21,7 @@ abstract class AbstractResource
      */
     protected $resourceNode;
 
+    /** @Assert\NotBlank() */
     protected $name = '';
 
     //to remove ?
