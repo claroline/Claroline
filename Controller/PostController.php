@@ -55,7 +55,7 @@ class PostController extends Controller
                     $entityManager->persist($comment);
                     $entityManager->flush();
 
-                    $this->dispatchCommentCreateEvent($blog);
+                    $this->dispatchCommentCreateEvent($blog, $post);
 
                     $flashBag->add('success', $translator->trans('icap_blog_comment_add_success', array(), 'icap_blog'));
                 } catch (\Exception $exception) {

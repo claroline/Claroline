@@ -199,30 +199,39 @@ class Controller extends BaseController
     /**
      * @param Blog $blog
      *
+     * @param Post $post
+     *
      * @return Controller
      */
-    protected function dispatchCommentCreateEvent(Blog $blog)
+    protected function dispatchCommentCreateEvent(Blog $blog, Post $post)
     {
-        return $this->dispatchChildEvent($blog, self::BLOG_COMMENT_TYPE, LogResourceChildUpdateEvent::CHILD_ACTION_CREATE);
+        $details = array(
+            'icap_blog_post' => array(
+                'id'    => $post->getId(),
+                'title' => $post->getTitle()
+            )
+        );
+
+        return $this->dispatchChildEvent($blog, self::BLOG_COMMENT_TYPE, LogResourceChildUpdateEvent::CHILD_ACTION_CREATE, $details);
     }
+
 
     /**
      * @param Blog $blog
      *
-     * @return Controller
-     */
-    protected function dispatchCommentReadEvent(Blog $blog)
-    {
-        return $this->dispatchChildEvent($blog, self::BLOG_COMMENT_TYPE, LogResourceChildUpdateEvent::CHILD_ACTION_READ);
-    }
-
-    /**
-     * @param Blog $blog
+     * @param Post $post
      *
      * @return Controller
      */
-    protected function dispatchCommentDeleteEvent(Blog $blog)
+    protected function dispatchCommentDeleteEvent(Blog $blog, Post $post)
     {
-        return $this->dispatchChildEvent($blog, self::BLOG_COMMENT_TYPE, LogResourceChildUpdateEvent::CHILD_ACTION_DELETE);
+        $details = array(
+            'icap_blog_post' => array(
+                'id'    => $post->getId(),
+                'title' => $post->getTitle()
+            )
+        );
+
+        return $this->dispatchChildEvent($blog, self::BLOG_COMMENT_TYPE, LogResourceChildUpdateEvent::CHILD_ACTION_DELETE, $details);
     }
 }
