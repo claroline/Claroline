@@ -2,37 +2,39 @@
 
 {% block section_content %}
 
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-cog',
-                'name': 'parameters'|trans({}, 'platform'),
-                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
-            },
-            {
-                'name': 'home'|trans({}, 'platform'),
-                'href': path('claro_workspace_tool_config', {'workspace': workspace.getId(), 'tool': tool.getId()})
-            },
-            {
-                'name': 'home_tabs'|trans({}, 'platform'),
-                'href': path('claro_workspace_home_tab_properties', {'workspaceId': workspace.getId()})
-            },
-            {
-                'name': 'home_tab_creation'|trans({}, 'platform'),
-                'href': ''
-            }
-        ])
-    }}
-
-    <h3>{{ 'home_tab_creation'|trans({}, 'platform') }}</h3>
-    <br>
     <form
         class="form-horizontal"
         action="{{ path('claro_user_workspace_home_tab_create', {'workspaceId': workspace.getId()}) }}"
         method="post"
         {{ form_enctype(form) }}
     >
-        {{ form_widget(form) }}
+        <div class="panel-body">
+            {{
+                macros.breadcrumbs([
+                    {
+                        'icon': 'icon-cog',
+                        'name': 'parameters'|trans({}, 'platform'),
+                        'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+                    },
+                    {
+                        'name': 'home'|trans({}, 'platform'),
+                        'href': path('claro_workspace_tool_config', {'workspace': workspace.getId(), 'tool': tool.getId()})
+                    },
+                    {
+                        'name': 'home_tabs'|trans({}, 'platform'),
+                        'href': path('claro_workspace_home_tab_properties', {'workspaceId': workspace.getId()})
+                    },
+                    {
+                        'name': 'home_tab_creation'|trans({}, 'platform'),
+                        'href': ''
+                    }
+                ])
+            }}
+
+            <h3>{{ 'home_tab_creation'|trans({}, 'platform') }}</h3>
+            <br>
+            {{ form_widget(form) }}
+        </div>
 
         <div class="form-actions panel-footer">
             <button type="submit" class="btn btn-primary">
