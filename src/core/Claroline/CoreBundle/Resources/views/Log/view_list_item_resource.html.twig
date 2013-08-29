@@ -1,6 +1,6 @@
 {% if log.getDetails().resource is defined%}
     <strong>
-        {% if log.getResource() != null %}
+        {% if log.getResourceNode() != null %}
             {% if log.getResourceType().getName() == 'directory' %}
                 <a href="{{ path('claro_workspace_open_tool', {'workspaceId': log.getWorkspace().getId(), 'toolName': 'resource_manager'})}}#resources/{{ log.getResource().getId() }}">{{ log.getDetails().resource.path }}</a>
             {% else %}
