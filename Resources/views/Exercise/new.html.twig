@@ -38,15 +38,17 @@
 
     <form action="{{ path('claro_resource_create', {resourceType: 'ujm_exercise', parentId: '_nodeId'}) }}"
           method="post" {{ form_enctype(form) }}
-          class="well label_bold">
+          id="generic-form"
+          class="form-horizontal">
         {#{ form_widget(form) }#}
         {{ form_row(form.title) }}
         <div style='display: none'>
             {{ form_rest(form) }}
         </div>
 
-        <p>
-            <button type="submit">{{'create'|trans}}</button>
-        </p>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+        </div>
     </form>
 {% endblock %}
