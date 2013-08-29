@@ -50,12 +50,12 @@
     <a href="{{ path('ujm_question_index') }}" >
         <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
     </a><br/><br/>
-    
+
     <form class="well label_bold" id="InterGraphForm" action="{{ path('ujm_interactiongraphic_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
         {#{ form_widget(edit_form) }#}
-            
-    {% include "UJMExoBundle:Partial:questionEdit.html.twig" %} 
-            
+
+    {% include "UJMExoBundle:Partial:questionEdit.html.twig" %}
+
     <p>
         <ul style="margin-left: 0; list-style-type: none;">
             <li style="float: left;">
@@ -113,7 +113,7 @@
 {# ------------------------------------------------- tableau zone de reponse ---------------------------------------------------------------------------- #}
     <br/>
     <div style="position: relative;" id="AnswerArray">
-        <table class="record_properties table table-striped table-bordered table-condensed" style="width:500px;">
+        <table class="table table-striped table-bordered table-condensed" style="width:500px;">
             <tr>
                 <th class="classic">{{ 'answer zone' | trans }}</th>
                 <th class="classic">{{ 'shape' | trans }}</th>
@@ -128,14 +128,14 @@
                 </td>
 
                 <td class="classic">
-                    <select id="shape" name="shape" size="1" style="width:100px; margin-top: 10px;" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
+                    <select id="shape" name="shape" size="1" style="width:100px;" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
                         <option value="circle"  selected>{{ 'cercle' | trans }}</option>
                         <option value="rect" >{{ 'rectangle' | trans }}</option>
                     </select>
                 </td>
 
                 <td class="classic">
-                    <select id="color" name="color" size="1" style="width:70px; margin-top: 10px;" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
+                    <select id="color" name="color" size="1" style="width:70px;" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
                         <option value="white"    style="background-color:#FFFFFF;"selected> &nbsp;&nbsp;&nbsp; </option>
                         <option value="red"      style="background-color:#FF0000;">         &nbsp;&nbsp;&nbsp; </option>
                         <option value="blue"     style="background-color:#002FFF;">         &nbsp;&nbsp;&nbsp; </option>
@@ -147,7 +147,7 @@
                 </td>
 
                 <td class="classic">
-                    <input type="TEXT" id="points" name="points" value="1" style="width:50px; text-align: end; margin-top: 10px;" onblur="CheckScore('{{ 'wrongPoint' | trans }}');">
+                    <input type="TEXT" id="points" name="points" value="1" style="width:50px; text-align: end;" onblur="CheckScore('{{ 'wrongPoint' | trans }}');">
                 </td>
             </tr>
         </table>
@@ -166,7 +166,7 @@
 {# ------------------------------------------------- Boutton validation formulaire ---------------------------------------------------------------------------- #}
 
     <div style="display: none;">{{ form_rest(edit_form) }}</div>
-    
+
     {{ form_errors(edit_form) }}
 
     <p>

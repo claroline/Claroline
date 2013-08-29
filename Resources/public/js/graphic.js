@@ -36,8 +36,8 @@ document.getElementById('Order').style.display = 'block';
 document.getElementById('hide').style.display = 'none';
 
 // Initialize reference answer zone position
-el.style.left = '70px';
-el.style.top = '47px';
+el.style.left = '75px';
+el.style.top = '40px';
 
 // :::::::::::::::::::::::::::::::::::::::::: Functions :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -379,32 +379,30 @@ function MoveAnswerZone(e) {
     if (target != null) {
 
         // Get mouse position
-        if (e.x != undefined && e.y != undefined) { // IE
-            x = e.layerX;
-            y = e.layerY;
-        } else { // Firefox
-            x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - document.getElementById('Answer').offsetLeft;
-            y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - document.getElementById('Answer').offsetTop;
-        }
+        var position = getMousePosition(e);
+        var x = position[0];
+        var y = position[1];
 
         if (target.id != 'movable') {
-            // If out of the image
-            if ((x + 10) > (answerImg.offsetLeft + answerImg.width) || (x - 10) < (answerImg.offsetLeft) ||
-                (y + 10) > (answerImg.offsetTop + answerImg.height) || (y - 10) < (answerImg.offsetTop)) {
+            var posx = x - (document.getElementsByClassName('col-md-9 section-content')[0].offsetLeft + document.getElementById('Answer').offsetLeft);
+            var posy = (y + document.documentElement.scrollTop) - (document.getElementById('Answer').offsetTop + document.getElementById('AnswerArray').clientHeight);
 
+            // If out of the image
+            if ((posx + 10) > (answerImg.width) || (posx - 10) < (0) || (posy + 10) > (answerImg.height) || (posy - 10) < (0)) {
                 target = null;
                 moving = false;
 
             } else {
 
                 // Move answer zone to mouse position (cursor center)
-                target.style.left = String(x - (target.width / 2)) + 'px';
-                target.style.top = String(y - (target.height / 2)) + 'px';
+                target.style.left = String(posx - (target.width / 2)) + 'px';
+                target.style.top = String(posy - (target.height / 2)) + 'px';
            }
+
         } else {
 
-            x +=  document.getElementById('Answer').offsetLeft - document.getElementById('AnswerArray').offsetLeft;
-            y +=  document.getElementById('Answer').offsetTop - document.getElementById('AnswerArray').offsetTop;
+            x -= document.getElementsByClassName('col-md-9 section-content')[0].offsetLeft + document.getElementById('Answer').offsetLeft;
+            y -= document.getElementById('AnswerArray').offsetTop - document.documentElement.scrollTop + document.getElementById('AnswerArray').clientHeight;
 
             // Move answer zone to mouse position (cursor center)
             target.style.left = String(x - (target.width / 2)) + 'px';
@@ -524,33 +522,31 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
     if (pressCTRL == true && el.style.visibility != 'hidden') {
 
         // Position of the mouse into the window
-        if (e.x !== undefined && e.y !== undefined) { // IE
-            mousex = e.layerX;
-            mousey = e.layerY;
-        } else { // Firefox
-            mousex = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - document.getElementById('Answer').offsetLeft;
-            mousey = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - document.getElementById('Answer').offsetTop;
-        }
+        var position = getMousePosition(e);
+        var mousex = position[0];
+        var mousey = position[1];
+
+        var posx = mousex - (document.getElementsByClassName('col-md-9 section-content')[0].offsetLeft + document.getElementById('Answer').offsetLeft);
+        var posy = mousey - (document.getElementById('Answer').offsetTop - document.documentElement.scrollTop + document.getElementById('AnswerArray').clientHeight);
 
         // If out of the image
-        if ((mousex + 10) > (answerImg.offsetLeft + answerImg.width) || (mousex - 10) < (answerImg.offsetLeft) ||
-            (mousey + 10) > (answerImg.offsetTop + answerImg.height) || (mousey - 10) < (answerImg.offsetTop)) {
+        if ((posx + 10) > (answerImg.width) || (posx - 10) < (0) || (posy + 10) > (answerImg.height) || (posy - 10) < (0)) {
 
             alert(document.getElementById('message').value);
 
             document.body.style.cursor = 'default';
 
             // Answer zone go back to its initial place
-            el.style.left = '70px';
-            el.style.top = '47px';
+            el.style.left = '75px';
+            el.style.top = '40px';
 
         } else {
 
             var img = new Image();
 
             img.style.position = 'absolute';
-            img.style.left = String(mousex - 10) + 'px';
-            img.style.top = String(mousey - 10) + 'px';
+            img.style.left = String(posx - 10) + 'px';
+            img.style.top = String(posy - 10) + 'px';
 
             img.id = 'img' + grade;
             grade++;
@@ -566,8 +562,8 @@ document.addEventListener('click', function (e) { // To add/delete answer zones
 
             // If add a new answer zone, the reference image go back to its initial place
             if (target.id == 'movable') {
-                el.style.left = '70px';
-                el.style.top = '47px';
+                el.style.left = '75px';
+                el.style.top = '40px';
             }
         }
         pressCTRL = false;
@@ -673,4 +669,25 @@ function MouseWheelCoords(e) {
     e.preventDefault();
 
     return false;
+}
+
+function getMousePosition(e) {
+    var position = new Array();
+
+    if (e.x != undefined) {
+        x = e.pageX;
+        y = e.pageY;
+    } else if (e) {
+        x = e.clientX;
+        y = e.clientY;
+    } else {
+        var monBody = document.documentElement || document.body;
+        x = window.event.clientX + monBody.scrollLeft;
+        y = window.event.clientY + monBody.scrollTop;
+    }
+
+    position[0] = x;
+    position[1] = y;
+
+    return position;
 }
