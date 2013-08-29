@@ -17,7 +17,7 @@ class AgendaType extends AbstractType
                 'start',
                 'date',
                 array(
-                    'format' => 'd-M-yyyy ',
+                    'format' => 'd-M-yyyy H:mm',
                     'widget' => 'single_text',
                     )
             )
@@ -25,16 +25,13 @@ class AgendaType extends AbstractType
                 'end',
                 'date',
                 array(
-                    'format' => 'd-M-yyyy',
+                    'format' => 'd-M-yyyy H:mm',
                     'widget' => 'single_text',
                 )
             )
             ->add(
                 'allDay',
-                'checkbox',
-                array(
-                'label' => 'all day ?',
-                )
+                'checkbox'
             )
             ->add(
                 'description',

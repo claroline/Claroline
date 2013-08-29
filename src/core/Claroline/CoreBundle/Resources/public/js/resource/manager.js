@@ -550,7 +550,7 @@
             }
         }),
         Form: Backbone.View.extend({
-            className: 'node-form modal hide',
+            className: 'node-form',
             events: {
                 'click #submit-default-rights-form-button': function (event) {
                     event.preventDefault();
@@ -621,18 +621,13 @@
                         processData: false,
                         contentType: false,
                         success: function (form) {
-                            $('#modal-check-role').empty();
-                            $('#modal-check-role').append(form);
-                            $('#rights-form-resource-tab-content').css('display', 'none');
-                            $('#rights-form-resource-nav-tabs').css('display', 'none');
-                            $('#modal-check-resource-right-box .modal').modal('show');
+                            $('#form-rights-tag-wrapper').empty();
+                            $('#form-rights-tag-wrapper').append(form);
                         }
                     });
                 },
                 'click .modal-close': function (event) {
-                    event.preventDefault();
                     $('#modal-check-role').empty();
-                    $('#modal-check-resource-right-box .modal').modal('hide');
                     $('#rights-form-resource-tab-content').css('display', 'block');
                     $('#rights-form-resource-nav-tabs').css('display', 'block');
                 },
@@ -651,9 +646,9 @@
                             $('#form-right-wrapper').empty();
                             $('#perms-table').append(newrow);
                             $('#modal-check-role').empty();
-                            $('#modal-check-resource-right-box .modal').modal('hide');
-                            $('#rights-form-resource-tab-content').css('display', 'block');
-                            $('#rights-form-resource-nav-tabs').css('display', 'block');
+                            $('#modal-check-node-right-box .modal').modal('hide');
+                            $('#rights-form-node-tab-content').css('display', 'block');
+                            $('#rights-form-node-nav-tabs').css('display', 'block');
                         }
                     });
                 },
@@ -674,16 +669,23 @@
                 this.on('close', this.close, this);
             },
             close: function () {
-                $('.modal', this.el).modal('hide');
+                $('#modal-form', this.el).modal('hide');
             },
             render: function (form, targetNodeId, eventOnSubmit) {
                 this.targetNodeId = targetNodeId;
                 this.eventOnSubmit = eventOnSubmit;
                 form = form.replace('_nodeId', targetNodeId);
-                $(this.el).html(Twig.render(ModalWindow, {
-                    'body': form
-                }));
-                $('.modal', this.el).modal('show');
+                if ($('#modal-form').attr('id') === undefined) {
+                    $(this.el).html(Twig.render(ModalWindow, {
+                        'body': form,
+                        'modalId': 'modal-form'
+                    }));
+                    $('#modal-form', this.el).modal('show');
+                } else {
+                    $('.modal-body', this.el).html(form);
+                    $('#modal-form', this.el).modal('show');
+                }
+
             }
         })
     };
@@ -1106,7 +1108,10 @@
                 data: formData,
                 type: 'POST',
                 processData: false,
-                contentType: false
+                contentType: false,
+                success: function() {
+                    this.views.form.close();
+                }
             });
         },
         custom: function (action, nodeId, redirect) {
