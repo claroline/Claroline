@@ -86,7 +86,7 @@ class Event
             return $this->start;
 
         } else {
-            $date = date('d-m-Y', $this->start);
+            $date = date('d-m-Y H:i', $this->start);
 
             return (new \Datetime($date));
 

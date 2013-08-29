@@ -1,17 +1,22 @@
 {% extends "ClarolineCoreBundle::layout.html.twig" %}
 
 {% block content %}
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">{{ 'my_account'|trans({}, 'platform') }}</h3>
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ 'my_account'|trans({}, 'platform') }}</h3>
+            </div>
+            <form class="form-horizontal" action="{{ path('claro_profile_update', {'user': user.getId()}) }}" method="post" {{ form_enctype(profile_form) }} id="profile_form">
+                <div class="panel-body">
+                    {{ form_widget(profile_form) }}
+                </div>
+                <div class="panel-footer">
+                    <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                    <a href="{{ path('claro_profile_view', {'userId': app.user.id}) }}" class="btn btn-default">
+                        {{ 'cancel' | trans({}, 'platform') }}
+                    </a>
+                </div>
+            </form>
         </div>
-        <form class="form-horizontal" action="{{ path('claro_profile_update') }}" method="post" {{ form_enctype(profile_form) }} id="profile_form">
-            <div class="panel-body">
-                {{ form_widget(profile_form) }}
-            </div>
-            <div class="panel-footer">
-                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            </div>
-        </form>
     </div>
 {% endblock %}

@@ -387,7 +387,7 @@
                 function (data)
                 {
                     if (data === "true") {
-                        $(element).hide("slow", function () {
+                        $(element).parent().hide("slow", function () {
                             $(this).remove();
                         });
                     } else {

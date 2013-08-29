@@ -142,10 +142,10 @@ class Version20130819145625 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_resource_type
-            DROP CONSTRAINT FK_AEC62693727ACA70
+            DROP CONSTRAINT IF EXISTS FK_AEC62693727ACA70
         ");
         $this->addSql("
-            DROP INDEX IDX_AEC62693727ACA70
+            DROP INDEX IF EXISTS IDX_AEC62693727ACA70
         ");
         $this->addSql("
             ALTER TABLE claro_activity
