@@ -9,7 +9,8 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\BaseProfileType;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Library\Security\Acl\ClassIdentity;
+use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -105,11 +106,20 @@ class RegistrationController extends Controller
     }
 
     /**
-     * @Route("/new", name = "claro_register_user")
+     * @Route("/new/user.{format}", name = "claro_register_user")
      * @Method({"POST"})
      */
-    public function postUserRegistrationAction()
+    public function postUserRegistrationAction($format)
     {
+        $formats = array('json', 'xml');
+
+        if (!in_array($format, $formats)) {
+            Return new Response(
+                "The format {$format} is not supported (supported formats are 'json', 'xml'",
+                400
+            );
+        }
+
         $status = 200;
         $content = array();
 
@@ -137,10 +147,10 @@ class RegistrationController extends Controller
             $status = 403;
         }
 
-        $response = new JsonResponse($content);
-        $response->setStatusCode($status);
-
-        return $response;
+        switch ($format) {
+            case 'json': return new JsonResponse($content, $status);
+            case 'xml' : return new XmlResponse($content, $status);
+        }
     }
 
     /**
@@ -158,10 +168,6 @@ class RegistrationController extends Controller
         $isSelfRegistrationAllowed = $configHandler->getParameter('allow_self_registration');
 
         if (!$securityContext->getToken()->getUser() instanceof User && $isSelfRegistrationAllowed) {
-            return;
-        }
-
-        if ($securityContext->isGranted('CREATE', ClassIdentity::fromDomainClass('Claroline\CoreBundle\Entity\User'))) {
             return;
         }
 

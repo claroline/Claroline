@@ -8,17 +8,19 @@
             <script src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
             {% endif %}
         {% endblock %}
-        <div class="input-append">
+        <div class="input-group">
             {{ block('form_widget') }}
         </div>
         <script type="text/javascript">
             $(document).ready(function() {
                 var path = '{{ path('exporter_api', {'entityReference': entity_reference, '_format': format}) }}';
-                $( "#{{ form.vars['id'] }}" ).after('<a id="{{ form.vars['id'] }}_clear" class="btn btn-default"><i class="icon-remove"></i></a>');
-                $( "#{{ form.vars['id'] }}_clear" ).on('click', function(){
-                    $( "#{{ form.vars['id'] }}" ).val('');
+                var field = $( "#{{ form.vars['id'] }}" );
+                field.addClass('form-control');
+                field.after('<a id="{{ form.vars['id'] }}_clear" class="btn btn-default input-group-addon"><span class="icon-remove"></span></a>');
+                $("#{{ form.vars['id'] }}_clear").on('click', function(){
+                    field.val('');
                 });
-                $( "#{{ form.vars['id'] }}" ).autocomplete({
+                field.autocomplete({
                     source: function( request, response ) {
                         $.ajax({
                             url: path,
