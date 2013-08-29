@@ -10,7 +10,10 @@
 {% endblock %}
 
 {% block section_content %}
-    <div id="registration-list-div" subject-type="user">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'registration_to_workspaces'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body" id="registration-list-div" subject-type="user">
         <div>
             <div id="custom-flashbag-div" class="alert alert-success hide">
                 <a id="flashbag-close-button" class="close" href="#">×</a>
@@ -25,15 +28,14 @@
                         'href': path('claro_admin_registration_management')
                     },
                     {
-                        'icon': 'icon-user',
                         'name':'users'|trans({}, 'platform'),
-                        'href': '#'
+                        'href': ''
                     }
                 ])
             }}
         </div>
 
-        <h3>{{ 'select_users_for_registration_to_workspace'|trans({}, 'platform') }}</h3>
+        <h4>{{ 'select_users_for_registration_to_workspace'|trans({}, 'platform') }}</h4>
         <br>
 
         {% include 'ClarolineCoreBundle:Administration:registrationManagementSelectedWorkspacesAndRoles.html.twig' %}

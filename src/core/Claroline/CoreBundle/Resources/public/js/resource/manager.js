@@ -669,16 +669,23 @@
                 this.on('close', this.close, this);
             },
             close: function () {
-                $('.modal', this.el).modal('hide');
+                $('#modal-form', this.el).modal('hide');
             },
             render: function (form, targetNodeId, eventOnSubmit) {
                 this.targetNodeId = targetNodeId;
                 this.eventOnSubmit = eventOnSubmit;
                 form = form.replace('_nodeId', targetNodeId);
-                $(this.el).html(Twig.render(ModalWindow, {
-                    'body': form
-                }));
-                $('.modal', this.el).modal('show');
+                if ($('#modal-form').attr('id') === undefined) {
+                    $(this.el).html(Twig.render(ModalWindow, {
+                        'body': form,
+                        'modalId': 'modal-form'
+                    }));
+                    $('#modal-form', this.el).modal('show');
+                } else {
+                    $('.modal-body', this.el).html(form);
+                    $('#modal-form', this.el).modal('show');
+                }
+
             }
         })
     };

@@ -178,13 +178,14 @@ class LogListener
             return false;
         }
 
-        if ($event instanceof NotRepeatableLog) {
+        if ($event instanceof LogNotRepeatableInterface) {
             $request = $this->container->get('request');
             $session = $request->getSession();
 
             $is = false;
             $pushInSession = true;
             $now = time();
+
             //if ($session->get($event->getAction()) != null) {
             if ($session->get($event->getLogSignature()) != null) {
                 //$oldArray = json_decode($session->get($event->getAction()));
