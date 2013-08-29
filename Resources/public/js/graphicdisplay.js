@@ -86,16 +86,15 @@ document.addEventListener('mousemove', function (e) {
 
     if (target) {
         // Position of the mouse into the window
-        if (e.x != undefined && e.y != undefined) { // IE
-            x = e.layerX;
-            y = e.layerY;
-        } else { // Firefox
-            x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - document.getElementById('Answer').offsetLeft;
-            y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - document.getElementById('Answer').offsetTop;
-        }
+        getMousePosition(e);
+
+        var margin = parseInt(answerImg.style.marginTop.substr(0, answerImg.style.marginTop.indexOf('p')));
+
+        x -= document.getElementsByClassName('col-md-9 section-content')[0].offsetLeft + document.getElementById('Answer').offsetLeft;
+        y -= document.getElementById('Answer').offsetTop + answerImg.offsetTop + margin;
 
         target.style.left = String(x - 10) + 'px';
-        target.style.top = String(y - 10) + 'px';
+        target.style.top = String(y - 20) + 'px';
 
         drag = true;
     }
@@ -129,4 +128,25 @@ function NoEmptyAnswer() { // Verify before submit that student placed all answe
     }
     // Submit the form
     validGraphic.submit();
+}
+
+function getMousePosition(e) {
+    var position = new Array();
+
+    if (e.x != undefined) {
+        x = e.pageX;
+        y = e.pageY;
+    } else if (e) {
+        x = e.clientX;
+        y = e.clientY;
+    } else {
+        var monBody = document.documentElement || document.body;
+        x = window.event.clientX + monBody.scrollLeft;
+        y = window.event.clientY + monBody.scrollTop;
+    }
+
+    position[0] = x;
+    position[1] = y;
+
+    return position;
 }

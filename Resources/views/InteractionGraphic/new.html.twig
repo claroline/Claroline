@@ -41,9 +41,9 @@
 
 
 {# ------------------------------------------------- Champs questions ---------------------------------------------------------------------------- #}
-    
-    {% include "UJMExoBundle:Partial:question.html.twig" %} 
-    
+
+    {% include "UJMExoBundle:Partial:question.html.twig" %}
+
     <p>
         <ul style="margin-left: 0; list-style-type: none;">
             <li style="float: left;">
@@ -81,16 +81,16 @@
         ~ {{ 'resizeZone' | trans }}<hr/>~ {{ 'selectZone' | trans }}<hr/>
         ~ {{ 'placeZone' | trans }}<hr/>~ {{ 'resize' | trans }}<hr/>
         ~ {{ 'erase' | trans }}<hr/>~ {{ 'pointInstruction' | trans }}
-    </div>
+    </div><br/>
 
     <div style="position: relative;" id="Answer">
         <img src="" width="" height="" id="AnswerImage"/>
-    </div>
+    </div><br/>
 
 {# ------------------------------------------------- tableau zone de reponse ---------------------------------------------------------------------------- #}
 
     <div style="position: relative;" id="AnswerArray">
-        <table class="table table-striped table-bordered table-condensed">
+        <table class="table table-striped table-bordered table-condensed" style="width:500px;">
             <tr>
                 <th class="classic">{{ 'answer zone' | trans }}</th>
                 <th class="classic">{{ 'shape' | trans }}</th>
@@ -101,7 +101,7 @@
             <tr>
                 <td class="classic">
                     <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}"
-                         id="movable" style="position: absolute"/>
+                         id="movable" style="position: absolute;"/>
                 </td>
 
                 <td class="classic">
