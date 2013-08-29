@@ -8,7 +8,6 @@
 			<tr>
 		    	<td>{{ path.id }}</td>
 		    	<td>{{ path.user }}</td>
-		    	<td>...</td>
 		    	<td><input type="hidden" value="{{ path.id }}" name="path-id"></td>
 		    	<td><input type="hidden" value="{{ workspace.id }}" name="workspace-id"></td>
 		    	<td><input class="btn" value="deploy" type="submit"/></td>	
@@ -16,5 +15,6 @@
 		</form>   
 	{% endfor %}
 	</table>
+	<p>{{ ok }}</p>
 
 {% endblock %}

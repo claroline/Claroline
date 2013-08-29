@@ -19,7 +19,7 @@ use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
-
+use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 
 class PathController extends Controller 
 {
@@ -62,15 +62,12 @@ class PathController extends Controller
         $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
         $root = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
 
- 
-
         // Récupération utilisateur courant.
         $user = $this->get('security.context')->getToken()->getUser();
-  
 
         $this->JSONParser($json_root_steps, $user, $workspace, $root);
 
-        return array('workspace' => $workspace);
+        return array('workspace' => $workspace, 'ok' => "Parcours déployé.");
     }
 
     private function JSONParser($steps, $user, $workspace, $parent)
@@ -79,8 +76,6 @@ class PathController extends Controller
         $rm = $this->resourceManager();
 
         foreach ($steps as $step) {
-            echo $step->name."<br/>";
-
             // Création ResourceNode
             $resourceNode = new ResourceNode();
             $resourceNode->setName($step->name);
@@ -96,11 +91,6 @@ class PathController extends Controller
             $manager->flush();
 
             $rm->setLastPosition($parent, $resourceNode);
-
-            /*
-             setPrevious(ResourceNode $previous = null, $setNext = false)
-            */
-           
             
             // Création Activité
             $activity = new Activity();
@@ -121,7 +111,28 @@ class PathController extends Controller
             $resourceActivity->setSequenceOrder($count);
 
             $manager->persist($resourceActivity);
-            $manager->flush();   
+            $manager->flush();  
+
+            // Gestion des droits.
+            $right1 = new ResourceRights();
+            $right1->setRole($manager->getRepository('ClarolineCoreBundle:Role')->findOneById(3));
+            $right1->setCanEdit(1);
+            $right1->setCanCopy(1);
+            $right1->setCanExport(1);
+            $right1->setCanDelete(1);
+            $right1->setResourceNode($resourceNode);
+            $manager->persist($right1);
+
+            $right2 = new ResourceRights();
+            $right2->setRole($manager->getRepository('ClarolineCoreBundle:Role')->findOneById(1));
+            $right2->setCanEdit(1);
+            $right2->setCanCopy(1);
+            $right2->setCanExport(1);
+            $right2->setCanDelete(1);
+            $right2->setResourceNode($resourceNode);
+            $manager->persist($right2);
+
+            $manager->flush(); 
 
             // récursivité sur les enfants possibles.
             $this->JSONParser($step->children, $user, $workspace, $resourceNode);
