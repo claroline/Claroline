@@ -57,43 +57,50 @@ class PathController extends Controller
         $json = json_decode($path->getPath());
         $json_root_steps = $json->steps;
 
-        // Récupération Workspace courant.
+        // Récupération Workspace courant et la resource root
         $workspaceId = $this->get('request')->request->get('workspace-id');
         $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
+        $root = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
+
+ 
 
         // Récupération utilisateur courant.
         $user = $this->get('security.context')->getToken()->getUser();
   
-        $this->JSONParser($json_root_steps, $user, $workspace, null, 2);
+
+        $this->JSONParser($json_root_steps, $user, $workspace, $root);
 
         return array('workspace' => $workspace);
     }
 
-    private function JSONParser($steps, $user, $workspace, $parent, $lvl)
+    private function JSONParser($steps, $user, $workspace, $parent)
     {
-        $manager= $this->entityManager();
+        $manager = $this->entityManager();
+        $rm = $this->resourceManager();
 
         foreach ($steps as $step) {
             echo $step->name."<br/>";
-
-            // Récupération de l'objet resourceType activity. Utile pour le ResourceNode
-            $resourceType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneById(5);
 
             // Création ResourceNode
             $resourceNode = new ResourceNode();
             $resourceNode->setName($step->name);
             $resourceNode->setClass("Claroline\CoreBundle\Entity\Resource\Activity");
             $resourceNode->setCreator($user);
-            $resourceNode->setResourceType($resourceType);
+            $resourceNode->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneById(5));
             $resourceNode->setWorkspace($workspace);
             $resourceNode->setParent($parent);
             $resourceNode->setMimeType("custom/activity");
-            /*
-            setIcon($icon)
-            setNext(ResourceNode $next = null, $setPrev = false)
-            setPrevious(ResourceNode $previous = null, $setNext = false)
-            */
+            $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(3));
+
             $manager->persist($resourceNode);
+            $manager->flush();
+
+            $rm->setLastPosition($parent, $resourceNode);
+
+            /*
+             setPrevious(ResourceNode $previous = null, $setNext = false)
+            */
+           
             
             // Création Activité
             $activity = new Activity();
@@ -117,7 +124,7 @@ class PathController extends Controller
             $manager->flush();   
 
             // récursivité sur les enfants possibles.
-            $this->JSONParser($step->children, $user, $workspace, $resourceNode, $lvl+1);
+            $this->JSONParser($step->children, $user, $workspace, $resourceNode);
         }
 
         $manager->flush();     
@@ -284,6 +291,14 @@ class PathController extends Controller
         $em = $this->getDoctrine()->getManager();
         
         return $em;
+    }
+
+    public function resourceManager()
+    {
+        $rm = $this->get('claroline.manager.resource_manager');
+        //$rm = $this->getDoctrine()->getManager();
+        
+        return $rm;
     }
 
 }
