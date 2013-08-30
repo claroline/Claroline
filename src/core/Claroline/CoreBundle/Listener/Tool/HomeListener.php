@@ -195,8 +195,10 @@ class HomeListener
     public function workspaceHome($workspaceId)
     {
         $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
+        $adminHomeTabConfigsTemp = $this->homeTabManager
+            ->generateAdminHomeTabConfigsByWorkspace($workspace);
         $adminHomeTabConfigs = $this->homeTabManager
-            ->getVisibleAdminWorkspaceHomeTabConfigs();
+            ->filterVisibleHomeTabConfigs($adminHomeTabConfigsTemp);
         $workspaceHomeTabConfigs = $this->homeTabManager
             ->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
         $tabId = 0;
@@ -226,8 +228,10 @@ class HomeListener
     public function desktopHome()
     {
         $user = $this->securityContext->getToken()->getUser();
+        $adminHomeTabConfigsTemp = $this->homeTabManager
+            ->generateAdminHomeTabConfigsByUser($user);
         $adminHomeTabConfigs = $this->homeTabManager
-            ->getVisibleAdminDesktopHomeTabConfigs();
+            ->filterVisibleHomeTabConfigs($adminHomeTabConfigsTemp);
         $userHomeTabConfigs = $this->homeTabManager
             ->getVisibleDesktopHomeTabConfigsByUser($user);
         $tabId = 0;

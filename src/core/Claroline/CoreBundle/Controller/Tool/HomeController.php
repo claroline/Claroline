@@ -11,6 +11,7 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Widget\Manager;
 use Claroline\CoreBundle\Manager\HomeTabManager;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -31,6 +32,7 @@ class HomeController extends Controller
     private $formFactory;
     private $homeTabManager;
     private $request;
+    private $roleManager;
     private $securityContext;
     private $toolManager;
     private $widgetManager;
@@ -42,6 +44,7 @@ class HomeController extends Controller
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "request"            = @DI\Inject("request"),
+     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "securityContext"    = @DI\Inject("security.context"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
      *     "widgetManager"      = @DI\Inject("claroline.widget.manager")
@@ -53,6 +56,7 @@ class HomeController extends Controller
         FormFactory $formFactory,
         HomeTabManager $homeTabManager,
         Request $request,
+        RoleManager $roleManager,
         SecurityContextInterface $securityContext,
         ToolManager $toolManager,
         Manager $widgetManager
@@ -63,6 +67,7 @@ class HomeController extends Controller
         $this->formFactory = $formFactory;
         $this->homeTabManager = $homeTabManager;
         $this->request = $request;
+        $this->roleManager = $roleManager;
         $this->securityContext = $securityContext;
         $this->toolManager = $toolManager;
         $this->widgetManager = $widgetManager;
@@ -319,9 +324,11 @@ class HomeController extends Controller
         $this->checkUserAccess();
 
         $user = $this->securityContext->getToken()->getUser();
+        $adminHomeTabConfigs = $this->homeTabManager->generateAdminHomeTabConfigsByUser($user);
         $homeTabConfigs = $this->homeTabManager->getDesktopHomeTabConfigsByUser($user);
 
         return array(
+            'adminHomeTabConfigs' => $adminHomeTabConfigs,
             'homeTabConfigs' => $homeTabConfigs,
             'tool' => $this->getHomeTool()
         );
@@ -529,8 +536,10 @@ class HomeController extends Controller
     public function displayDesktopHomeTabsAction($tabId)
     {
         $user = $this->securityContext->getToken()->getUser();
+        $adminHomeTabConfigsTemp = $this->homeTabManager
+            ->generateAdminHomeTabConfigsByUser($user);
         $adminHomeTabConfigs = $this->homeTabManager
-            ->getVisibleAdminDesktopHomeTabConfigs();
+            ->filterVisibleHomeTabConfigs($adminHomeTabConfigsTemp);
         $userHomeTabConfigs = $this->homeTabManager
             ->getVisibleDesktopHomeTabConfigsByUser($user);
 
@@ -561,12 +570,15 @@ class HomeController extends Controller
      */
     public function workspaceHomeTabPropertiesAction(AbstractWorkspace $workspace)
     {
-        $this->checkUserAccess();
+        $this->checkWorkspaceAccess($workspace);
 
+        $adminHTC = array();
+        $adminHomeTabConfigs = $this->homeTabManager->generateAdminHomeTabConfigsByWorkspace($workspace);
         $homeTabConfigs = $this->homeTabManager->getWorkspaceHomeTabConfigsByWorkspace($workspace);
 
         return array(
             'workspace' => $workspace,
+            'adminHomeTabConfigs' => $adminHomeTabConfigs,
             'homeTabConfigs' => $homeTabConfigs,
             'tool' => $this->getHomeTool()
         );
@@ -591,7 +603,7 @@ class HomeController extends Controller
      */
     public function userWorkspaceHomeTabCreateFormAction(AbstractWorkspace $workspace)
     {
-        $this->checkUserAccess();
+        $this->checkWorkspaceAccess($workspace);
 
         $homeTab = new HomeTab();
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
@@ -622,7 +634,7 @@ class HomeController extends Controller
      */
     public function userWorkspaceHomeTabCreateAction(AbstractWorkspace $workspace)
     {
-        $this->checkUserAccess();
+        $this->checkWorkspaceAccess($workspace);
 
         $homeTab = new HomeTab();
 
@@ -694,7 +706,7 @@ class HomeController extends Controller
         HomeTabConfig $homeTabConfig
     )
     {
-        $this->checkUserAccess();
+        $this->checkWorkspaceAccess($workspace);
 
         $homeTab = $homeTabConfig->getHomeTab();
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
@@ -737,7 +749,7 @@ class HomeController extends Controller
         $homeTabName
     )
     {
-        $this->checkUserAccess();
+        $this->checkWorkspaceAccess($workspace);
 
         $homeTab = $homeTabConfig->getHomeTab();
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
@@ -793,7 +805,7 @@ class HomeController extends Controller
         $tabOrder
     )
     {
-        $this->checkUserAccess();
+        $this->checkWorkspaceAccess($workspace);
 
         if ($homeTab->getWorkspace()->getId() === $workspace->getId()) {
             $this->homeTabManager->deleteHomeTab($homeTab, 'workspace', $tabOrder);
@@ -821,6 +833,13 @@ class HomeController extends Controller
      */
     public function homeTabUpdateVisibilityAction(HomeTabConfig $homeTabConfig, $visible)
     {
+        $this->checkUserAccess();
+        $workspace = $homeTabConfig->getWorkspace();
+
+        if (!is_null($workspace)) {
+            $this->checkWorkspaceAccess($workspace);
+        }
+
         $isVisible = ($visible === 'visible') ? true : false;
         $this->homeTabManager->updateVisibility($homeTabConfig, $isVisible);
 
@@ -830,6 +849,15 @@ class HomeController extends Controller
     private function checkUserAccess()
     {
         if (!$this->securityContext->isGranted('ROLE_USER')) {
+            throw new AccessDeniedException();
+        }
+    }
+
+    private function checkWorkspaceAccess(AbstractWorkspace $workspace)
+    {
+        $role = $this->roleManager->getManagerRole($workspace);
+
+        if (!$this->securityContext->isGranted($role->getName())) {
             throw new AccessDeniedException();
         }
     }

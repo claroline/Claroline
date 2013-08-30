@@ -11,13 +11,27 @@
             {% for adminHomeTabConfig in adminHomeTabConfigs %}
             {% set adminHomeTab = adminHomeTabConfig.getHomeTab() %}
             <li {% if adminHomeTab.getId() == tabId %}class="active"{% endif %}>
-                <a href="{{ path('claro_display_workspace_home_tabs', {'workspaceId': workspace.getId(), 'tabId': adminHomeTab.getId()}) }}" id="{{ adminHomeTab.getName() }}_link">{{ adminHomeTab.getName() }}</a>
+                <a href="{{ path(
+                        'claro_display_workspace_home_tabs',
+                        {'workspaceId': workspace.getId(), 'tabId': adminHomeTab.getId()})
+                    }}"
+                    id="{{ adminHomeTab.getName() }}_link"
+                >
+                    {{ adminHomeTab.getName() }}
+                </a>
             </li>
             {% endfor %}
             {% for workspaceHomeTabConfig in workspaceHomeTabConfigs %}
             {% set workspaceHomeTab = workspaceHomeTabConfig.getHomeTab() %}
             <li {% if workspaceHomeTab.getId() == tabId %}class="active"{% endif %}>
-                <a href="{{ path('claro_display_workspace_home_tabs', {'workspaceId': workspace.getId(), 'tabId': workspaceHomeTab.getId()}) }}" id="{{ workspaceHomeTab.getName() }}_link">{{ workspaceHomeTab.getName() }}</a>
+                <a href="{{ path(
+                        'claro_display_workspace_home_tabs',
+                        {'workspaceId': workspace.getId(), 'tabId': workspaceHomeTab.getId()})
+                    }}"
+                    id="{{ workspaceHomeTab.getName() }}_link"
+                >
+                    {{ workspaceHomeTab.getName() }}
+               </a>
             </li>
             {% endfor %}
         </ul>

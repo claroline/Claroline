@@ -134,4 +134,126 @@ class HomeTabManager
     {
         return $this->homeTabConfigRepo->findOrderOfLastAdminWorkspaceHomeTab();
     }
+
+    public function getHomeTabConfigByHomeTabAndWorkspace(HomeTab $homeTab, AbstractWorkspace $workspace)
+    {
+        return $this->homeTabConfigRepo->findOneBy(array('homeTab' => $homeTab, 'workspace' => $workspace));
+    }
+
+    public function getHomeTabConfigByHomeTabAndUser(HomeTab $homeTab, User $user)
+    {
+        return $this->homeTabConfigRepo->findOneBy(array('homeTab' => $homeTab, 'user' => $user));
+    }
+
+    public function createWorkspaceVersion(HomeTabConfig $homeTabConfig, AbstractWorkspace $workspace)
+    {
+        $newHomeTabConfig = new HomeTabConfig();
+        $newHomeTabConfig->setHomeTab($homeTabConfig->getHomeTab());
+        $newHomeTabConfig->setType($homeTabConfig->getType());
+        $newHomeTabConfig->setWorkspace($workspace);
+        $newHomeTabConfig->setVisible($homeTabConfig->isVisible());
+        $newHomeTabConfig->setLocked($homeTabConfig->isLocked());
+        $newHomeTabConfig->setTabOrder($homeTabConfig->getTabOrder());
+        $this->om->persist($newHomeTabConfig);
+        $this->om->flush();
+
+        return $newHomeTabConfig;
+    }
+
+    public function createUserVersion(HomeTabConfig $homeTabConfig, User $user)
+    {
+        $newHomeTabConfig = new HomeTabConfig();
+        $newHomeTabConfig->setHomeTab($homeTabConfig->getHomeTab());
+        $newHomeTabConfig->setType($homeTabConfig->getType());
+        $newHomeTabConfig->setUser($user);
+        $newHomeTabConfig->setVisible($homeTabConfig->isVisible());
+        $newHomeTabConfig->setLocked($homeTabConfig->isLocked());
+        $newHomeTabConfig->setTabOrder($homeTabConfig->getTabOrder());
+        $this->om->persist($newHomeTabConfig);
+        $this->om->flush();
+
+        return $newHomeTabConfig;
+    }
+
+    public function generateAdminHomeTabConfigsByUser(User $user)
+    {
+        $adminHTC = array();
+        $adminHomeTabConfigs = $this->homeTabConfigRepo->findVisibleAdminDesktopHomeTabConfigs();
+
+        foreach ($adminHomeTabConfigs as $adminHomeTabConfig) {
+
+            if ($adminHomeTabConfig->isLocked()) {
+                $adminHTC[] = $adminHomeTabConfig;
+            }
+            else {
+                $existingCustomHTC = $this->homeTabConfigRepo->findOneBy(
+                    array(
+                        'homeTab' => $adminHomeTabConfig->getHomeTab(),
+                        'user' => $user
+                    )
+                );
+
+                if (is_null($existingCustomHTC)) {
+                    $customHTC = $this->createUserVersion(
+                        $adminHomeTabConfig,
+                        $user
+                    );
+                    $adminHTC[] = $customHTC;
+                }
+                else {
+                    $adminHTC[] = $existingCustomHTC;
+                }
+            }
+        }
+
+        return $adminHTC;
+    }
+
+    public function generateAdminHomeTabConfigsByWorkspace(AbstractWorkspace $workspace)
+    {
+        $adminHTC = array();
+        $adminHomeTabConfigs = $this->homeTabConfigRepo->findVisibleAdminWorkspaceHomeTabConfigs();
+
+        foreach ($adminHomeTabConfigs as $adminHomeTabConfig) {
+
+            if ($adminHomeTabConfig->isLocked()) {
+                $adminHTC[] = $adminHomeTabConfig;
+            }
+            else {
+                $existingCustomHTC = $this->homeTabConfigRepo->findOneBy(
+                    array(
+                        'homeTab' => $adminHomeTabConfig->getHomeTab(),
+                        'workspace' => $workspace
+                    )
+                );
+
+                if (is_null($existingCustomHTC)) {
+                    $customHTC = $this->createWorkspaceVersion(
+                        $adminHomeTabConfig,
+                        $workspace
+                    );
+                    $adminHTC[] = $customHTC;
+                }
+                else {
+                    $adminHTC[] = $existingCustomHTC;
+                }
+            }
+        }
+
+        return $adminHTC;
+    }
+
+    public function filterVisibleHomeTabConfigs(array $homeTabConfigs)
+    {
+        $visibleHomeTabConfigs = array();
+
+        foreach ($homeTabConfigs as $homeTabConfig) {
+
+            if ($homeTabConfig->isVisible()) {
+                $visibleHomeTabConfigs[] = $homeTabConfig;
+            }
+        }
+
+        return $visibleHomeTabConfigs;
+    }
 }

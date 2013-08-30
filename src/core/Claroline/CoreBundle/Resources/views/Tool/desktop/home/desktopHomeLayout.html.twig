@@ -9,13 +9,21 @@
             {% for adminHomeTabConfig in adminHomeTabConfigs %}
             {% set adminHomeTab = adminHomeTabConfig.getHomeTab() %}
             <li {% if adminHomeTab.getId() == tabId %}class="active"{% endif %}>
-                <a href="{{ path('claro_display_desktop_home_tabs', {'tabId': adminHomeTab.getId()}) }}" id="{{ adminHomeTab.getName() }}_link">{{ adminHomeTab.getName() }}</a>
+                <a href="{{ path('claro_display_desktop_home_tabs', {'tabId': adminHomeTab.getId()}) }}"
+                    id="{{ adminHomeTab.getName() }}_link"
+                >
+                    {{ adminHomeTab.getName() }}
+                </a>
             </li>
             {% endfor %}
             {% for userHomeTabConfig in userHomeTabConfigs %}
             {% set userHomeTab = userHomeTabConfig.getHomeTab() %}
             <li {% if userHomeTab.getId() == tabId %}class="active"{% endif %}>
-                <a href="{{ path('claro_display_desktop_home_tabs', {'tabId': userHomeTab.getId()}) }}" id="{{ userHomeTab.getName() }}_link">{{ userHomeTab.getName() }}</a>
+                <a href="{{ path('claro_display_desktop_home_tabs', {'tabId': userHomeTab.getId()}) }}"
+                    id="{{ userHomeTab.getName() }}_link"
+                >
+                    {{ userHomeTab.getName() }}
+                </a>
             </li>
             {% endfor %}
         </ul>
