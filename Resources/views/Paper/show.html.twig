@@ -273,6 +273,7 @@
                             {% if interOpen.typeopenquestion == 'long' %}
                                 {{ responses[i].response|raw}}
                                 {% if admin == 1 %}
+                                    <input type="hidden" value="{{ responses[i].mark }}" id="currentOpenMark_{{ responses[i].id }}" />
                                     <a id="open_mark_{{ responses[i].id }}" onClick="openMark('{{ path('ujm_paper_mark_open_question', {'respid': responses[i].id, 'maxScore': interInfo['maxScore']}) }}');">{{ 'marked this question' | trans }}</a>
                                 {% endif %}
                             {% endif %}
@@ -300,6 +301,8 @@
         {% set i = i + 1 %}
     {% endfor %}
 
+    <input type="hidden" value="{{ exoMark }}" id="exoMark" />
+    <input type="hidden" value="{{ exoScoreMax }}" id="exoScoreMax" />
     {% set scoreFinal = exoMark / exoScoreMax %}
     {% set scoreFinal = scoreFinal * 20 %}
     {% if temporaryMark == true %}
@@ -307,7 +310,7 @@
     {% else %}
         {{ 'final mark' | trans }} :
     {% endif %}
-    <div>{{ scoreFinal }} / 20</div>
+    <div id="paperFinalScore">{{ scoreFinal }} / 20</div>
 {% endblock %}
     
 {% block javascripts %}

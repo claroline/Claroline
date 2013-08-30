@@ -27,6 +27,14 @@ $("#submit_open_mark").click(function() {
     var mark = $("#mark").val();
     var maxScore = $("#maxScore").val();
     var respid = $("#respid").val();
+    var exoMark = $("#exoMark").val();
+    var currentOpenMark = parseInt($("#currentOpenMark_"+respid).val());
+    var exoScoreMax = parseInt($("#exoScoreMax").val());
+    var scoreFinal;
+    
+    if(currentOpenMark == -1) {
+        currentOpenMark = 0;
+    }
     
     var url = "{{path('ujm_paper_mark_open_question_record')}}";
 
@@ -39,6 +47,12 @@ $("#submit_open_mark").click(function() {
         cache: false,
         success: function(){
             $("#open_mark_value_"+respid).html(mark+'/'+maxScore);
+            exoMark = parseInt(exoMark) + parseInt(mark) - parseInt(currentOpenMark);
+            $("#currentOpenMark_"+respid).val(mark);
+            $("#exoMark").val(exoMark);
+            scoreFinal = exoMark / exoScoreMax;
+            scoreFinal = scoreFinal * 20;
+            $("#paperFinalScore").html(scoreFinal + "/20");
             $('#modalopenmark').modal('hide');
         },
         error: function(){
