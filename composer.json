@@ -36,7 +36,7 @@
         "idci/exporter-bundle": "dev-master",
         "leafo/lessphp": "master",
         "twbs/bootstrap": "3.0.0",
-        "fortawesome/fontawesome": "dev-master",
+        "fortawesome/font-awesome": "dev-master",
         "xaguilars/bootstrap-colorpicker": "dev-master",
         "zenstruck/form-bundle": "dev-master",
         "icap-lyon1/simple-tag-bundle": "dev-master",
