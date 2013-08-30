@@ -81,6 +81,10 @@ class Recorder
 
         foreach ($items as $item) {
             if (preg_match('#^(.+Bundle)\.php$#', $item->getBasename(), $matches)) {
+                if (false !== strpos(file_get_contents($item->getPathname()), 'abstract class')) {
+                    continue;
+                }
+
                 $fqcnParts = array($matches[1]);
                 $pathParts = array_reverse(explode(DIRECTORY_SEPARATOR, $item->getPath()));
 
