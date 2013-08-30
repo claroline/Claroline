@@ -48,7 +48,7 @@
         "claroline/front-end-bundle": "dev-master",
         "claroline/taxonomy-bundle": "dev-master",
         "claroline/migration-bundle": "dev-master",
-        "claroline/plugin-installer": "dev-master",
+        "claroline/plugin-installer": "dev-master"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
