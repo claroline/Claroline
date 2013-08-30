@@ -223,8 +223,7 @@ class PaperController extends Controller
     
     public function markedOpenRecordAction()
     {
-        $request = $this->get('request');
-        
+        $request = $this->container->get('request');
         if ($request->isXmlHttpRequest()) {
             $em = $this->getDoctrine()->getManager();
             $response = $em->getRepository('UJMExoBundle:Response')->find($request->get('respid'));
@@ -237,7 +236,7 @@ class PaperController extends Controller
             return new Response($response->getId());
         } else {
 
-            return 0;
+            return new Response('Error');
         }
     }
 

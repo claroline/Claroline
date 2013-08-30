@@ -5,3 +5,5 @@ ujm_paper_mark_open_question:
 ujm_paper_mark_open_question_record:
     pattern:  /mark/open/record
     defaults: { _controller: "UJMExoBundle:Paper:markedOpenRecord" }
+    requirements:
+      _method: POST
