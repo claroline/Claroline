@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
@@ -20,6 +21,7 @@ use Symfony\Component\Translation\Translator;
  */
 class RightsManager
 {
+    private $maskRepo;
     /** @var ResourceRightsRepository */
     private $rightsRepo;
     /** @var ResourceNodeRepository */
@@ -58,6 +60,7 @@ class RightsManager
         $this->resourceRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
+        $this->maskRepo = $om->getRepository('ClarolineCoreBundle:Resource\MaskDecoder');
         $this->translator = $translator;
         $this->om = $om;
         $this->dispatcher = $dispatcher;
@@ -142,13 +145,12 @@ class RightsManager
         $this->om->startFlushSuite();
 
         foreach ($originalRights as $originalRight) {
-            $created[] = $this->create(
-                $originalRight->getPermissions(),
-                $originalRight->getRole(),
-                $node,
-                false,
-                $originalRight->getCreatableResourceTypes()->toArray()
-            );
+            $new = new ResourceRights();
+            $new->setRole($originalRight->getRole());
+            $new->setResourceNode($node);
+            $new->setMask($originalRight->getMask());
+            $new->setCreatableResourceTypes($originalRight->getCreatableResourceTypes()->toArray());
+            $this->om->persist($new);
         }
 
         $this->om->endFlushSuite();
@@ -197,11 +199,8 @@ class RightsManager
 
     public function setPermissions(ResourceRights $rights, array $permissions)
     {
-        $rights->setCanCopy($permissions['canCopy']);
-        $rights->setCanOpen($permissions['canOpen']);
-        $rights->setCanDelete($permissions['canDelete']);
-        $rights->setCanEdit($permissions['canEdit']);
-        $rights->setCanExport($permissions['canExport']);
+        $resourceType = $rights->getResourceNode()->getResourceType();
+        $rights->setMask($this->encodeMask($permissions, $resourceType));
 
         return $rights;
     }
@@ -335,5 +334,31 @@ class RightsManager
     public function getCreationRights(array $roles, ResourceNode $node)
     {
         return $this->rightsRepo->findCreationRights($roles, $node);
+    }
+
+    public function decodeMask($mask, ResourceType $type)
+    {
+        $decoders = $this->maskRepo->findBy(array('resourceType' => $type));
+        $perms = array();
+
+        foreach ($decoders as $decoder) {
+            $perms[$decoder->getName()] = ($mask & $decoder->getValue()) ? true: false;
+        }
+
+        return $perms;
+    }
+
+    public function encodeMask($perms, ResourceType $type)
+    {
+        $decoders = $this->maskRepo->findBy(array('resourceType' => $type));
+        $mask = 0;
+
+        foreach ($decoders as $decoder) {
+            if (isset($perms[$decoder->getName()])) {
+                $mask += $perms[$decoder->getName()] ? $decoder->getValue(): 0;
+            }
+        }
+
+        return $mask;
     }
 }

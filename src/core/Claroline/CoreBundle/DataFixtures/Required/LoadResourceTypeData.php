@@ -8,7 +8,8 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction;
+use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
+use Claroline\CoreBundle\Entity\Resource\MenuAction;
 
 /**
  * Resource types data fixture.
@@ -44,6 +45,14 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
             array('activity', true)
         );
 
+        $defaultPerms = array(
+            'open' => array(),
+            'copy' => array(),
+            'delete' => array('delete'),
+            'export' => array('download'),
+            'edit' => array('rename', 'properties', 'manage_rights')
+        );
+
         $i = 0;
 
         foreach ($resourceTypes as $attributes) {
@@ -52,14 +61,25 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
             $type->setExportable($attributes[1]);
             $manager->persist($type);
 
-            if (isset($customActions[$i])) {
-                if ($customActions[$i] !== null) {
-                    $actions = new ResourceTypeCustomAction();
-                    $actions->setAction($customActions[$i][0]);
-                    $actions->setAsync($customActions[$i][1]);
-                    $actions->setResourceType($type);
-                    $manager->persist($actions);
+            $j = 1;
+            foreach($defaultPerms as $name => $menuActions) {
+
+                $maskDecoder = new MaskDecoder();
+                $maskDecoder->setValue(pow($j, 2));
+                $maskDecoder->setName($name);
+                $maskDecoder->setResourceType($type);
+
+                foreach ($menuActions as $menuAction) {
+                    $menu = new MenuAction();
+                    $menu->setName($menuAction);
+                    $menu->setAsync(true);
+                    $menu->setPermRequired($name);
+                    $menu->setResourceType($type);
+                    $manager->persist($menu);
                 }
+
+                $manager->persist($maskDecoder);
+                $j++;
             }
 
             $this->addReference("resource_type/{$attributes[0]}", $type);

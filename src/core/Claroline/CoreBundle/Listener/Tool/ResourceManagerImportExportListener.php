@@ -130,7 +130,7 @@ class ResourceManagerImportExportListener
                 foreach ($roles as $role) {
                     $perms = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
                         ->findMaximumRights(array($role->getName()), $root);
-                    $perms['canCreate'] = array();
+                    $perms['create'] = array();
 
                     $dataResources['perms'][$this->roleManager->getRoleBaseName($role->getName())] = $perms;
                 }

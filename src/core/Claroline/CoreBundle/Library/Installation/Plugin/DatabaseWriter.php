@@ -11,7 +11,7 @@ use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Theme\Theme;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
-use Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction;
+use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
@@ -237,10 +237,11 @@ class DatabaseWriter
     private function persistCustomAction($actions, $resourceType)
     {
         foreach ($actions as $action) {
-            $rtca = new ResourceTypeCustomAction();
+            $rtca = new MenuAction();
             $rtca->setAsync(!$action['is_action_in_new_page']);
-            $rtca->setAction($action['name']);
+            $rtca->setName($action['name']);
             $rtca->setResourceType($resourceType);
+            $rtca->setPermRequired('open');
             $this->em->persist($rtca);
         }
     }

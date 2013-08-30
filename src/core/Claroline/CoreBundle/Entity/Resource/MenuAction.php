@@ -6,9 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_resource_type_custom_action")
+ * @ORM\Table(name="claro_resource_action")
  */
-class ResourceTypeCustomAction
+class MenuAction
 {
     /**
      * @ORM\Id
@@ -20,12 +20,17 @@ class ResourceTypeCustomAction
     /**
      * @ORM\Column(nullable=true)
      */
-    protected $action;
+    protected $name;
 
     /**
      * @ORM\Column(name="async", type="boolean", nullable=true)
      */
     protected $isAsync;
+
+    /**
+     * @ORM\Column(name="permRequired", nullable=true)
+     */
+    protected $permRequired;
 
     /**
      * @ORM\ManyToOne(
@@ -42,14 +47,14 @@ class ResourceTypeCustomAction
         return $this->id;
     }
 
-    public function getAction()
+    public function getName()
     {
-        return $this->action;
+        return $this->name;
     }
 
-    public function setAction($action)
+    public function setName($name)
     {
-        $this->action = $action;
+        $this->name = $name;
     }
 
     public function isAsync()
@@ -70,5 +75,15 @@ class ResourceTypeCustomAction
     public function setResourceType($resourceType)
     {
         $this->resourceType = $resourceType;
+    }
+
+    public function setPermRequired($permRequired)
+    {
+        $this->permRequired = $permRequired;
+    }
+
+    public function getPermRequired()
+    {
+        return $this->permRequired;
     }
 }

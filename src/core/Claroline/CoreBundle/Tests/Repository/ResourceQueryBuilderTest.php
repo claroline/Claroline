@@ -75,10 +75,8 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "    previous.id as previous_id,{$eol}" .
             "    next.id as next_id,{$eol}" .
             "    icon.relativeUrl as large_icon,{$eol}" .
-            "    resource.mimeType as mime_type,{$eol}" .
-            "    MAX (CASE rights.canExport WHEN true THEN 1 ELSE 0 END) as can_export,{$eol}" .
-            "    MAX (CASE rights.canDelete WHEN true THEN 1 ELSE 0 END) as can_delete,{$eol}" .
-            "    MAX (CASE rights.canEdit WHEN true THEN 1 ELSE 0 END) as can_edit{$eol}" .
+            "    resource.mimeType as mime_type" .
+            ",{$eol}rights.mask{$eol}" .
             "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode resource{$eol}" .
             "JOIN resource.creator creator{$eol}" .
             "JOIN resource.resourceType resourceType{$eol}" .
@@ -147,7 +145,7 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "    rightRole.name = :role_0{$eol}" .
             "    OR rightRole.name = :role_1{$eol}" .
             "){$eol}" .
-            "AND rights.canOpen = true{$eol}" .
+            "AND BIT_AND(rights.mask, 1) = true{$eol}" .
             "AND resource.workspace IN{$eol}" .
             "({$eol}" .
             "    SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw{$eol}" .

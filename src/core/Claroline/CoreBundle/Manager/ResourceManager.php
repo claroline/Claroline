@@ -92,8 +92,8 @@ class ResourceManager
 
     /**
      * array $rights should be defined that way:
-     * array('ROLE_WS_XXX' => array('canOpen' => true, 'canEdit' => false, ...
-     * 'canCreate' => array('directory', ...), role => $entity))
+     * array('ROLE_WS_XXX' => array('open' => true, 'edit' => false, ...
+     * 'create' => array('directory', ...), role => $entity))
      *
      */
     public function create(
@@ -341,7 +341,7 @@ class ResourceManager
     )
     {
         foreach ($rights as $data) {
-            $resourceTypes = $this->checkResourceTypes($data['canCreate']);
+            $resourceTypes = $this->checkResourceTypes($data['create']);
             $this->rightsManager->create($data, $data['role'], $node, false, $resourceTypes);
         }
 
@@ -350,11 +350,11 @@ class ResourceManager
         //@todo remove this line and grant edit requests in the resourceManager.
         $this->rightsManager->create(
             array(
-                'canDelete' => true,
-                'canOpen' => true,
-                'canEdit' => true,
-                'canCopy' => true,
-                'canExport' => true,
+                'delete' => true,
+                'open' => true,
+                'edit' => true,
+                'copy' => true,
+                'export' => true,
             ),
             $this->roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
             $node,
@@ -364,11 +364,11 @@ class ResourceManager
 
         $this->rightsManager->create(
             array(
-                'canDelete' => false,
-                'canOpen' => false,
-                'canEdit' => false,
-                'canCopy' => false,
-                'canExport' => false,
+                'delete' => false,
+                'open' => false,
+                'edit' => false,
+                'copy' => false,
+                'export' => false,
             ),
             $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
             $node,

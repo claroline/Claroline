@@ -35,12 +35,21 @@ class ResourceType
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction",
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\MaskDecoder",
      *     mappedBy="resourceType",
      *     cascade={"persist"}
      * )
      */
-    protected $customActions;
+    protected $maskDecoders;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\MenuAction",
+     *     mappedBy="resourceType",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $action;
 
     /**
      * @ORM\Column(name="is_exportable", type="boolean")
@@ -115,14 +124,14 @@ class ResourceType
         return $this->metaTypes;
     }
 
-    public function getCustomActions()
+    public function getActions()
     {
-        return $this->customActions;
+        return $this->action;
     }
 
-    public function addCustomAction(ResourceTypeCustomAction $action)
+    public function addAction(MenuAction $action)
     {
-        $this->customActions->add($action);
+        $this->action->add($action);
     }
 
     public function getAbstractResources()

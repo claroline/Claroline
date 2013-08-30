@@ -244,7 +244,7 @@ class WorkspaceManager
         foreach ($roles as $role) {
             $perms = $this->resourceRightsRepo
                 ->findMaximumRights(array($role->getName()), $root);
-            $perms['canCreate'] = $this->resourceRightsRepo
+            $perms['create'] = $this->resourceRightsRepo
                 ->findCreationRights(array($role->getName()), $root);
 
             $description['root_perms'][$this->roleManager->getRoleBaseName($role->getName())] = $perms;
