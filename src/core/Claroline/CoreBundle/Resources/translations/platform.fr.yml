@@ -68,6 +68,7 @@ copy: Copier
 create: Créer
 creation: Création
 create_group: 'Créer un groupe'
+create_user: 'Créer un utilisateur'
 create_new_admin_tag: 'Créer un nouveau Tag administrateur'
 create_new_tag: 'Créer un nouveau Tag'
 create_workspace: 'Créer un espace d''activités'
@@ -333,18 +334,18 @@ messages_removed: 'Messages supprimés'
 messages_sent: 'Messages envoyés'
 messages_sent_removed: 'Messages envoyés supprimés'
 misc: Divers
-month.january: "Janvier"
-month.february: "Février"
-month.march: "Mars"
+month.January: "Janvier"
+month.February: "Février"
+month.March: "Mars"
 month.April: "Avril"
-month.may: "Mai"
-month.june: "Juin"
-month.july: "Juillet"
+month.May: "Mai"
+month.June: "Juin"
+month.July: "Juillet"
 month.August: "Août"
-month.september: "Septembre"
-month.october: "Octobre"
-month.november: "Novembre"
-month.december: "Décembre"
+month.September: "Septembre"
+month.October: "Octobre"
+month.November: "Novembre"
+month.December: "Décembre"
 move: Déplacer
 my_account: 'Mon compte'
 my_agenda: 'Mon agenda'
@@ -429,17 +430,6 @@ resource: Ressource
 resource_action_denied_message: 'L''action %action% n''a pas pu être exécutée sur la resource ''%path%'': accès refusé.'
 resource_creation_denied: 'Vous n''avez pas la permission de créer une ressource dans le répertoire ''%path'': accès refusé.'
 resource_creation_wrong_type: 'Vous n''avez pas la permission de créer un(e) %type% dans le répertoire ''%path%'': accès refusé.'
-resource_properties_form_copiable: Copier
-resource_properties_form_creationDate: 'Date de création'
-resource_properties_form_creator: Créateur
-resource_properties_form_deletable: Supprimer
-resource_properties_form_editable: Editer
-resource_properties_form_exportable: Exporter
-resource_properties_form_name: Nom
-resource_properties_form_resourceType: 'Type de ressource'
-resource_properties_form_sharable: 'Partager cette ressource'
-resource_properties_form_shareType: Redistribution
-resource_properties_form_userIcon: Icône
 resources: Ressources
 resources_most_downloaded: 'Ressources les plus téléchargés'
 resources_rights: 'Droits des ressources'
@@ -517,6 +507,7 @@ The form is not valid: 'Le formulaire n''est pas valide'
 to: Jusque
 tool_form_name : 'Nom'
 tool_form_displayName : 'Nom affiché'
+tool_parameters : 'Paramètres des outils'
 tools_rights_configuration: 'Configuration des droits sur les outils'
 to_message: A
 today: 'Aujourd''hui'
@@ -573,6 +564,7 @@ views: 'Nb vues'
 visible: Visible
 visitor: Visiteur
 warning_workspace_impersonation: 'Vous êtes connectés en tant que %role% du workspace %workspace%.'
+warning_user_impersonation: 'Vous êtes connectés en tant que %user%.'
 widget_settings: 'Paramètres des widgets'
 widgets: Widgets
 widgets_configuration: 'Configuration des widgets'

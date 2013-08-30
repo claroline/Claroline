@@ -1,4 +1,7 @@
-<div class="logs-container">
+<div class="panel-heading">
+    <h3 class="panel-title">{{ 'admin_logs'|trans({}, 'platform') }}</h3>
+</div>
+<div class="panel-body logs-container">
     <div>
         <style type="text/css">
             #logFilter.form-inline div {
@@ -9,17 +12,6 @@
                 margin-top: 5px;
                 margin-right: 10px;
             }
-            #logFilter.form-inline div label {
-                margin-right: 5px;
-            }
-            #logFilter.form-inline {
-                margin-bottom: 5px;
-            }
-
-            div.logs-container {
-                margin: 0 2%;
-            }
-
         </style>
 
         <legend>

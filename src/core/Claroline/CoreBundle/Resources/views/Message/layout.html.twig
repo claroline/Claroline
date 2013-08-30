@@ -1,27 +1,25 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
 {% block content %}
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="tabs" class="row">
-                <div class="col-md-12">
-                    <ul class="tabs nav nav-tabs">
-                        <li class="{% if 'claro_message_list_received' == app.request.get('_route') %}active{% endif %}">
-                            <a href="{{ path('claro_message_list_received') }}" id="link_message_list_received_layout"><i class="icon-envelope-alt"></i> {{ 'messages_received'|trans({}, 'platform') }}</a>
-                        </li>
-                        <li class="{% if 'claro_message_list_sent' == app.request.get('_route') %}active{% endif %}">
-                            <a href="{{ path('claro_message_list_sent') }}" id="link_message_sent_layout"><i class="icon-share-alt"></i> {{ 'messages_sent'|trans({}, 'platform') }}</a>
-                        </li>
-                        <li class="{% if 'claro_message_list_removed' == app.request.get('_route') %}active{% endif %}">
-                            <a href="{{ path('claro_message_list_removed')}}" id="link_message_removed_layout"><i class="icon-trash"></i> {{ 'trash'|trans({}, 'platform') }}</a>
-                        </li>
-                        <li class="{% if 'claro_message_show' == app.request.get('_route') %}active{% endif %}">
-                            <a href="{{ path('claro_message_show', {'message': 0})}}" id="link_message_removed_layout"><i class="icon-envelope-alt"></i> {{ 'new'|trans({}, 'platform') }}</a>
-                        </li>
-                    </ul>
-                </div>
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <ul class="tabs nav nav-tabs">
+                    <li class="{% if 'claro_message_list_received' == app.request.get('_route') %}active{% endif %}">
+                        <a href="{{ path('claro_message_list_received') }}" id="link_message_list_received_layout"><i class="icon-envelope-alt"></i> {{ 'messages_received'|trans({}, 'platform') }}</a>
+                    </li>
+                    <li class="{% if 'claro_message_list_sent' == app.request.get('_route') %}active{% endif %}">
+                        <a href="{{ path('claro_message_list_sent') }}" id="link_message_sent_layout"><i class="icon-share-alt"></i> {{ 'messages_sent'|trans({}, 'platform') }}</a>
+                    </li>
+                    <li class="{% if 'claro_message_list_removed' == app.request.get('_route') %}active{% endif %}">
+                        <a href="{{ path('claro_message_list_removed')}}" id="link_message_removed_layout"><i class="icon-trash"></i> {{ 'trash'|trans({}, 'platform') }}</a>
+                    </li>
+                    <li class="{% if 'claro_message_show' == app.request.get('_route') and '/message/show/0' | compareRoute(true) %}active{% endif %}">
+                        <a href="{{ path('claro_message_show', {'message': 0})}}" id="link_message_removed_layout"><i class="icon-plus"></i> {{ 'new'|trans({}, 'platform') }}</a>
+                    </li>
+                </ul>
+                {% block section_content %}{% endblock %}
             </div>
-            {% block section_content %}{% endblock %}
         </div>
     </div>
 {% endblock %}
