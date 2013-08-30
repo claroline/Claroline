@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
-use \Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 
@@ -75,7 +74,7 @@ class RolesControllerTest extends MockeryTestCase
         $workspace->shouldReceive('getId')->andReturn(1);
         $user = new \Claroline\CoreBundle\Entity\User();
         $this->checkAccess($workspace);
-        $root = new \Claroline\CoreBundle\Entity\Resource\Directory();
+        $root = new \Claroline\CoreBundle\Entity\Resource\ResourceNode();
         $newRes = new \Claroline\CoreBundle\Entity\Resource\Directory();
         $managerRole = new \Claroline\CoreBundle\Entity\Role();
         $newRole = new \Claroline\CoreBundle\Entity\Role();
@@ -239,23 +238,26 @@ class RolesControllerTest extends MockeryTestCase
      */
     public function testUsersListAction($isUnregistered, $search, $call)
     {
-       $wsRole = new \Claroline\CoreBundle\Entity\Role;
-       $role = new \Claroline\CoreBundle\Entity\Role;
-       $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
-       $wsRoles = array($wsRole);
-       $roles = array($role);
-       $page = 1;
-       $this->roleManager->shouldReceive('getRolesByWorkspace')->once()->with($workspace)->andReturn($wsRoles);
-       $this->userManager->shouldReceive($call)->once()->andReturn('pager');
-       $expected = array(
-           'workspace' => $workspace,
-           'pager' => 'pager',
-           'search' => $search,
-           'wsRoles' => $wsRoles,
-           'roles' => $roles,
-           'withUnregistered' => $isUnregistered
-       );
-       $this->assertEquals($expected, $this->controller->usersListAction($workspace, $page, $search, $isUnregistered, $roles));
+        $wsRole = new \Claroline\CoreBundle\Entity\Role;
+        $role = new \Claroline\CoreBundle\Entity\Role;
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+        $wsRoles = array($wsRole);
+        $roles = array($role);
+        $page = 1;
+        $this->roleManager->shouldReceive('getRolesByWorkspace')->once()->with($workspace)->andReturn($wsRoles);
+        $this->userManager->shouldReceive($call)->once()->andReturn('pager');
+        $expected = array(
+            'workspace' => $workspace,
+            'pager' => 'pager',
+            'search' => $search,
+            'wsRoles' => $wsRoles,
+            'roles' => $roles,
+            'withUnregistered' => $isUnregistered
+        );
+        $this->assertEquals(
+            $expected,
+            $this->controller->usersListAction($workspace, $page, $search, $isUnregistered, $roles)
+        );
     }
 
     /**
@@ -264,23 +266,26 @@ class RolesControllerTest extends MockeryTestCase
      */
     public function testRegisteredGroupsListAction($isUnregistered, $search, $call)
     {
-       $wsRole = new \Claroline\CoreBundle\Entity\Role;
-       $role = new \Claroline\CoreBundle\Entity\Role;
-       $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
-       $wsRoles = array($wsRole);
-       $roles = array($role);
-       $page = 1;
-       $this->roleManager->shouldReceive('getRolesByWorkspace')->once()->with($workspace)->andReturn($wsRoles);
-       $this->groupManager->shouldReceive($call)->once()->andReturn('pager');
-       $expected = array(
-           'workspace' => $workspace,
-           'pager' => 'pager',
-           'search' => $search,
-           'wsRoles' => $wsRoles,
-           'roles' => $roles,
-           'withUnregistered' => $isUnregistered
-       );
-       $this->assertEquals($expected, $this->controller->groupsListAction($workspace, $page, $search, $isUnregistered, $roles));
+        $wsRole = new \Claroline\CoreBundle\Entity\Role;
+        $role = new \Claroline\CoreBundle\Entity\Role;
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+        $wsRoles = array($wsRole);
+        $roles = array($role);
+        $page = 1;
+        $this->roleManager->shouldReceive('getRolesByWorkspace')->once()->with($workspace)->andReturn($wsRoles);
+        $this->groupManager->shouldReceive($call)->once()->andReturn('pager');
+        $expected = array(
+            'workspace' => $workspace,
+            'pager' => 'pager',
+            'search' => $search,
+            'wsRoles' => $wsRoles,
+            'roles' => $roles,
+            'withUnregistered' => $isUnregistered
+        );
+        $this->assertEquals(
+            $expected,
+            $this->controller->groupsListAction($workspace, $page, $search, $isUnregistered, $roles)
+        );
     }
 
     private function checkAccess(\Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace)
@@ -308,5 +313,3 @@ class RolesControllerTest extends MockeryTestCase
         );
     }
 }
-
-

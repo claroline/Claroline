@@ -1,0 +1,4 @@
+twig:
+    form:
+        resources:
+            - 'ICAPLyon1SimpleTagBundle:Form:fields.html.twig'

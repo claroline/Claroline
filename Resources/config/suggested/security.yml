@@ -1,0 +1,31 @@
+security:
+
+    providers:
+        user_db:
+            entity: { class: Claroline\CoreBundle\Entity\User }
+
+    encoders:
+        Claroline\CoreBundle\Entity\User: sha512
+
+    firewalls:
+        install:
+            pattern: ^/install
+            security: false
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            pattern: ^/
+            form_login:
+              failure_handler: claroline.security.ajax_authentication_failure_handler
+            anonymous: ~
+            logout: true
+            switch_user: { role: ROLE_ADMIN, parameter: _switch }
+            
+    acl:
+        connection: default
+        voter:
+          allow_if_object_identity_unavailable: false
+
+    access_decision_manager:
+        allow_if_all_abstain: false

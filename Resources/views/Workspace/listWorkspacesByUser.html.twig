@@ -2,8 +2,8 @@
 {% for tag in tagsList %}
     {% if displayable[tag.getId()] %}
     {% set currentIndex = index ~ "-" ~ tag.getId() %}
-    <div class="accordion-group">
-        <div class="accordion-heading">
+    <div class="panel panel-default">
+        <div class="panel-heading">
             <a  class="accordion-toggle"
                 data-toggle="collapse"
                 href="#collapse-{{ currentIndex }}"
@@ -13,40 +13,35 @@
                 <i class="icon-chevron-down pull-right"></i>
             </a>
         </div>
-        <div id="collapse-{{ currentIndex }}" class="accordion-body collapse">
-            <div class="accordion-inner">
-                {% if hierarchy[tag.getId()]|length > 0 %}
-                {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable) }}
-                {% endif %}
-                <ul>
-                    {% for relWorkspaceTag in tagWorkspaces[tag.id] %}
-                    {% set workspace = relWorkspaceTag.getWorkspace() %}
-                    <li class="row-workspace row-workspace-id-{{ workspace.getId() }}">
-                        {% set granted = is_granted('home', workspace) %}
-                        {% if granted == true %}
-                        <a href="{{ path('claro_workspace_open',
-                           {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
-                           id="link-home-{{ workspace.getId() }}"
-                        >
-                        {% endif %}
-                        <i class="icon-book"></i>
-                        {{ workspace.getName() }}
-                        <span class="workspace-code">({{ workspace.getCode() }})</span>
-                        {% if granted %}</a>{% endif %}
+        <div id="collapse-{{ currentIndex }}" class="list-group collapse">
+            {% if hierarchy[tag.getId()]|length > 0 %}
+            {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable) }}
+            {% endif %}
+                {% for relWorkspaceTag in tagWorkspaces[tag.id] %}
+                {% set workspace = relWorkspaceTag.getWorkspace() %}
+                <a class="list-group-item row-workspace row-workspace-id-{{ workspace.getId() }}"
+                    {% set granted = is_granted('home', workspace) %}
+                    {% if granted == true %}
+                     href="{{ path('claro_workspace_open',
+                       {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
+                       id="link-home-{{ workspace.getId() }}"
+                    {% endif %}
+                    >
+                    <i class="icon-book"></i>
+                    {{ workspace.getName() }}
+                    <span class="workspace-code">({{ workspace.getCode() }})</span>
 
-                        {% if workspace.getSelfUnregistration() %}
-                        <span class="label label-important unregister-user-to-workspace"
-                            data-workspace-id="{{ workspace.getId() }}"
-                            data-workspace-name="{{ workspace.getName() }}"
-                            data-workspace-code="{{ workspace.getCode() }}">
-                            <i class="icon-remove-sign"></i>
-                            {{ 'unregister'|trans({}, 'platform') }}
-                        </span>
-                        {% endif %}
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
+                    {% if workspace.getSelfUnregistration() %}
+                    <span class="label label-danger unregister-user-to-workspace"
+                        data-workspace-id="{{ workspace.getId() }}"
+                        data-workspace-name="{{ workspace.getName() }}"
+                        data-workspace-code="{{ workspace.getCode() }}">
+                        <i class="icon-remove-sign"></i>
+                        {{ 'unregister'|trans({}, 'platform') }}
+                    </span>
+                    {% endif %}
+                </a>
+                {% endfor %}
         </div>
     </div>
     {% endif %}
@@ -63,71 +58,58 @@
 {% endblock %}
 
 {% block section_content %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-book',
-                'name': 'my_workspaces'|trans({}, 'platform'),
-                'href': '#'
-            }
-        ])
-    }}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'my_workspaces'|trans({}, 'platform') }}</h3>
+    </div>
 
-    <div class="margin widget">
+    <div class="panel-body">
         <a href="{{ path('claro_workspace_manage_tag') }}">
-            <button type="button" class="btn">{{ 'tags_management'|trans({}, 'platform') }}</button>
+            <button type="button" class="btn btn-default">{{ 'tags_management'|trans({}, 'platform') }}</button>
         </a>
         <a href="{{ path('claro_list_workspaces_with_self_registration') }}">
-            <button type="button" class="btn">{{ 'register_to_a_workspace'|trans({}, 'platform') }}</button>
+            <button type="button" class="btn btn-default">{{ 'register_to_a_workspace'|trans({}, 'platform') }}</button>
         </a>
 
         <hr>
-        <div class="accordion" id="accordion-all">
-            <div class="accordion-group">
-                <div class="accordion-heading">
-                    <a  class="accordion-toggle"
-                        data-toggle="collapse"
-                        data-parent="#accordion-all"
-                        href="#collapse-all"
-                    >
-                        <i class="icon-align-justify"></i>
-                        {{ 'all_my_workspaces'|trans({}, 'platform') }}
-                        <i class="icon-chevron-down pull-right"></i>
-                    </a>
-                </div>
-                <div id="collapse-all" class="accordion-body collapse {% if tags|length == 0 %}in{% endif %}">
-                    <div class="accordion-inner">
-                        <ul>
-                            {% for workspace in workspaces %}
-                            <li class="row-workspace row-workspace-id-{{ workspace.getId() }}">
-                                {% set granted = is_granted('home', workspace) %}
-                                {% if granted == true %}
-                                <a  href="{{ path('claro_workspace_open',
-                                    {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
-                                    id="link-home-{{ workspace.getId() }}"
-                                >
-                                {% endif %}
-                                   <i class="icon-book"></i>
-                                   {{ workspace.getName() }}
-                                   <span class="workspace-code">({{ workspace.getCode() }})</span>
-                                {% if granted%}</a>{% endif %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a  class="accordion-toggle"
+                    data-toggle="collapse"
+                    data-parent="#accordion-all"
+                    href="#collapse-all"
+                >
+                    <i class="icon-align-justify"></i>
+                    {{ 'all_my_workspaces'|trans({}, 'platform') }}
+                    <i class="icon-chevron-down pull-right"></i>
+                </a>
+            </div>
+                <div id="collapse-all" class="list-group collapse {% if tags|length == 0 %}in{% endif %}">
+                    {% for workspace in workspaces %}
+                    <a  class="list-group-item" class="row-workspace row-workspace-id-{{ workspace.getId() }}"
+                        {% set granted = is_granted('home', workspace) %}
+                        {% if granted == true %}
+                            href="{{ path('claro_workspace_open',
+                            {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
+                            id="link-home-{{ workspace.getId() }}"
+                        {% endif %}
+                        >
+                           <i class="icon-book"></i>
+                           {{ workspace.getName() }}
+                           <span class="workspace-code">({{ workspace.getCode() }})</span>
 
-                                {% if workspace.getSelfUnregistration() %}
-                                <span class="label label-important unregister-user-to-workspace"
-                                    data-workspace-id="{{ workspace.getId() }}"
-                                    data-workspace-name="{{ workspace.getName() }}"
-                                    data-workspace-code="{{ workspace.getCode() }}">
-                                    <i class="icon-remove-sign"></i>
-                                    {{ 'unregister'|trans({}, 'platform') }}
-                                </span>
-                                {% endif %}
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
+                        {% if workspace.getSelfUnregistration() %}
+                        <span class="label label-danger unregister-user-to-workspace"
+                            data-workspace-id="{{ workspace.getId() }}"
+                            data-workspace-name="{{ workspace.getName() }}"
+                            data-workspace-code="{{ workspace.getCode() }}">
+                            <i class="icon-remove-sign"></i>
+                            {{ 'unregister'|trans({}, 'platform') }}
+                        </span>
+                        {% endif %}
+                    </a>
+                    {% endfor %}
                 </div>
             </div>
-        </div>
 
         {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
     </div>
@@ -135,17 +117,21 @@
     <div id="twig-self-registration-user-id" data-user-id="{{ user.getId() }}">
     </div>
 
-    <div id="confirm-unregistration-validation-box" class="modal hide fade">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>{{ 'workspace_unregistration_confirm_title'|trans({}, 'platform') }}</h3>
-        </div>
-        <div class="modal-body">
-            <p id="unregistration-confirm-message">{{ 'workspace_unregistration_confirm_message'|trans({}, 'platform') }}</p>
-        </div>
-        <div class="modal-footer">
-            <input type="button" id="unregistration-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-            <input type="button" class="btn btn-secondary" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+    <div id="confirm-unregistration-validation-box" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>{{ 'workspace_unregistration_confirm_title'|trans({}, 'platform') }}</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="unregistration-confirm-message">{{ 'workspace_unregistration_confirm_message'|trans({}, 'platform') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="unregistration-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

@@ -1,0 +1,10 @@
+assetic:
+    debug:          %kernel.debug%
+    use_controller: false
+    variables:
+        locale: [en, fr]
+    filters:
+        cssrewrite: ~
+        lessphp:
+            file: '%kernel.root_dir%/../vendor/leafo/lessphp/lessc.inc.php'
+            apply_to: '\.less$'

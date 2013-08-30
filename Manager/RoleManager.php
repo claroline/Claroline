@@ -117,9 +117,9 @@ class RoleManager
         $this->om->startFlushSuite();
 
         $this->dispatcher->dispatch(
-                'log',
-                'Log\LogRoleSubscribe',
-                array($role, $ars)
+            'log',
+            'Log\LogRoleSubscribe',
+            array($role, $ars)
         );
 
         $this->om->persist($ars);
@@ -149,7 +149,6 @@ class RoleManager
         $this->om->persist($ars);
         $this->om->flush();
     }
-
 
     public function associateRoleToMultipleSubjects(array $subjects, Role $role)
     {
@@ -185,7 +184,6 @@ class RoleManager
         $roles = $subject instanceof \Claroline\CoreBundle\Entity\Group ?
             $this->roleRepo->findByGroupAndWorkspace($subject, $workspace):
             $this->roleRepo->findByUserAndWorkspace($subject, $workspace);
-
 
         $this->checkWorkspaceRoleEditionIsValid(array($subject), $workspace, $roles);
         $this->om->startFlushSuite();
@@ -244,7 +242,7 @@ class RoleManager
     {
         $this->om->startFlushSuite();
 
-        foreach($subjects as $subject) {
+        foreach ($subjects as $subject) {
             foreach ($roles as $role) {
                 $this->associateRole($subject, $role);
             }
@@ -254,9 +252,9 @@ class RoleManager
     }
 
     /**
-     * @param array[AbstractRoleSubject] $subjects
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param array[Role] $roles
+     * @param  array[AbstractRoleSubject]                               $subjects
+     * @param  \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param  array[Role]                                              $roles
      * @throws \LogicException
      */
     public function checkWorkspaceRoleEditionIsValid(array $subjects, AbstractWorkspace $workspace, array $roles)
@@ -268,12 +266,11 @@ class RoleManager
         $removedGroupsManager = 0;
         $removedUsersManager = 0;
 
-
         foreach ($subjects as $subject) {
-           if ($subject->hasRole($managerRole->getName()) && in_array($managerRole, $roles)) {
-            $subject instanceof \Claroline\CoreBundle\Entity\Group ?
-                $removedGroupsManager ++:
-                $removedUsersManager ++;
+            if ($subject->hasRole($managerRole->getName()) && in_array($managerRole, $roles)) {
+                $subject instanceof \Claroline\CoreBundle\Entity\Group ?
+                    $removedGroupsManager ++:
+                    $removedUsersManager ++;
             }
         }
 

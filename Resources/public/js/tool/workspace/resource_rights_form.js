@@ -4,6 +4,7 @@
     'use strict';
 
     var submitForm = function (formAction, formData) {
+        //change the redirection
         $.ajax({
             url: formAction,
             data: formData,
@@ -19,7 +20,7 @@
 
     $('body').on('click', '#submit-default-rights-form-button', function (e) {
         var formAction = $(e.currentTarget.parentElement).attr('action');
-        var form = document.getElementById('resource-rights-form');
+        var form = document.getElementById('node-rights-form');
         var formData = new FormData(form);
         e.preventDefault();
         submitForm(formAction, formData);
@@ -27,17 +28,17 @@
 
     $('body').on('click', '#submit-right-form-button', function (e) {
         e.preventDefault();
-        $('#modal-check-resource-right-box').modal('hide');
+        $('#modal-check-node-right-box').modal('hide');
         var formAction = $(e.currentTarget.parentElement.parentElement).attr('action');
-        var form = document.getElementById('resource-right-form');
+        var form = document.getElementById('node-right-form');
         var formData = new FormData(form);
         submitForm(formAction, formData);
     });
 
-    $('body').on('click', '#form-resource-creation-rights :submit', function (e) {
+    $('body').on('click', '#form-node-creation-rights :submit', function (e) {
         e.preventDefault();
         var formAction = $(e.currentTarget.parentElement).attr('action');
-        var form = document.getElementById('form-resource-creation-rights');
+        var form = document.getElementById('form-node-creation-rights');
         var formData = new FormData(form);
         submitForm(formAction, formData);
     });
@@ -54,7 +55,7 @@
                 $('#role-list').empty();
                 $('#form-right-wrapper').empty();
                 $('#role-list').append(Twig.render(resourceRightsRoles,
-                    {'workspaces': workspaces, 'resourceId': $('#data').attr('data-resource-id')})
+                    {'workspaces': workspaces, 'nodeId': $('#data').attr('data-node-id')})
                 );
             }
         });
@@ -76,7 +77,6 @@
 
     $('.res-creation-options').live('click', function (event) {
         event.preventDefault();
-
         if (event.currentTarget.getAttribute('data-toggle') !== 'tab') {
             $.ajax({
                 url: event.currentTarget.getAttribute('href'),
@@ -86,7 +86,7 @@
                 success: function (form) {
                     $('#modal-check-role').empty();
                     $('#modal-check-role').append(form);
-                    $('#modal-check-resource-right-box').modal('show');
+                    $('#modal-check-node-right-box').modal('show');
                 }
             });
         }
@@ -101,16 +101,9 @@
             processData: false,
             contentType: false,
             success: function (form) {
-                $('#modal-check-role').empty();
-                $('#modal-check-role').append(form);
-                $('#modal-check-resource-right-box').modal('show');
+                $('#form-rights-tag-wrapper').empty();
+                $('#form-rights-tag-wrapper').append(form);
             }
         });
-    });
-
-    $('.modal-close').live('click', function (event) {
-        event.preventDefault();
-        $('#modal-check-role').empty();
-        $('#modal-check-resource-right-box').modal('hide');
     });
 })();

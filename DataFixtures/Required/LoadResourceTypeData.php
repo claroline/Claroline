@@ -37,11 +37,11 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
     {
         // resource type attributes : name, listable, navigable, class
         $resourceTypes = array(
-            array('file', true, 'Claroline\CoreBundle\Entity\Resource\File'),
-            array('directory', true, 'Claroline\CoreBundle\Entity\Resource\Directory'),
-            array('text', true, 'Claroline\CoreBundle\Entity\Resource\Text'),
-            array('resource_shortcut', false, 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut'),
-            array('activity', true, 'Claroline\CoreBundle\Entity\Resource\Activity')
+            array('file', true),
+            array('directory', true),
+            array('text', true),
+            array('resource_shortcut', false),
+            array('activity', true)
         );
 
         $i = 0;
@@ -50,7 +50,6 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
             $type = new ResourceType();
             $type->setName($attributes[0]);
             $type->setExportable($attributes[1]);
-            $type->setClass($attributes[2]);
             $manager->persist($type);
 
             if (isset($customActions[$i])) {

@@ -7,58 +7,64 @@
 
 {% block section_content %}
 
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-cog',
-                'name': 'parameters'|trans({}, 'platform'),
-                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
-            },
-            {
-                'name': 'general'|trans({}, 'platform'),
-                'href': ''
-            }
-        ])
-    }}
-
-    <div class="margin">
-        {% if is_granted('DELETE', workspace ) %}
-        <a href="#" class="workspace-delete-confirmation btn">
-            {{ 'workspace_delete'|trans({}, 'platform') }}
-        </a>
-        {% endif %}
-            <a href="{{ path('claro_workspace_export_form', {'workspace': workspace.getId() }) }}" class='btn'>
-                {{ 'save_as_template'|trans({}, 'platform') }}
-            </a>
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'general_parameters'|trans({}, 'platform') }}</h3>
     </div>
-    <br>
-
     <form class="form-horizontal" action="{{ path('claro_workspace_edit', {'workspace': workspace.getId()}) }}" method="post" {{ form_enctype(form) }}>
-        <fieldset>
-            {{ form_widget(form) }}
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-                <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
-                    <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
+        <div class="panel-body">
+            {{
+                macros.breadcrumbs([
+                    {
+                        'icon': 'icon-cog',
+                        'name': 'parameters'|trans({}, 'platform'),
+                        'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+                    },
+                    {
+                        'name': 'general'|trans({}, 'platform'),
+                        'href': ''
+                    }
+                ])
+            }}
+
+            {% if is_granted('DELETE', workspace ) %}
+                <a href="#" class="workspace-delete-confirmation btn btn-default">
+                    <i class="icon-trash"></i> {{ 'workspace_delete'|trans({}, 'platform') }}
                 </a>
-            </div>
-        </fieldset>
+            {% endif %}
+            <a href="{{ path('claro_workspace_export_form', {'workspace': workspace.getId() }) }}" class='btn btn-default'>
+                <i class="icon-save"></i> {{ 'save_as_template'|trans({}, 'platform') }}
+            </a>
+            <hr>
+
+
+            {{ form_widget(form) }}
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
+                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+            </a>
+        </div>
     </form>
 
     <div id="twig-workspace-id" data-workspaceId="{{workspace.getId()}}">
     </div>
 
-    <div id="delete-ws-validation-box" class="modal hide fade">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>{{ 'workspace_delete_confirm_title'|trans({}, 'platform') }}</h3>
-        </div>
-        <div class="modal-body">
-            <p>{{ 'workspace_delete_confirm_message'|trans({}, 'platform') }}</p>
-        </div>
-        <div class="modal-footer">
-            <input type="button" id="delete-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-            <input type="button" class="btn btn-secondary" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+    <div id="delete-ws-validation-box" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>{{ 'workspace_delete_confirm_title'|trans({}, 'platform') }}</h4>
+                </div>
+                <div class="modal-body">
+                    <p>{{ 'workspace_delete_confirm_message'|trans({}, 'platform') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="delete-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

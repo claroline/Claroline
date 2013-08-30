@@ -70,7 +70,7 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
         for ($i = 0; $i < $this->numberRoots; $i++) {
             $ws = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
                 ->find($maxWsId);
-            $this->userRootDirectory = $manager->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+            $this->userRootDirectory = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
                  ->findWorkspaceRoot($ws);
             $this->generateItems(
                 $manager,

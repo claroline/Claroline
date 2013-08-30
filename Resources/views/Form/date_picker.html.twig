@@ -1,0 +1,33 @@
+{% extends 'ZenstruckFormBundle:Twitter:form_bootstrap_layout.html.twig' %}
+
+{% block custom_widget_attributes %}
+{% spaceless %}
+    name="{{ full_name }}"{% if read_only %} readonly="readonly"{% endif %}{% if disabled %} disabled="disabled"{% endif %}{% if required %} required="required"{% endif %}{% if max_length %} maxlength="{{ max_length }}"{% endif %}{% if pattern %} pattern="{{ pattern }}"{% endif %}
+    {% for attrname, attrvalue in attr %}{% if attrname in ['placeholder', 'title'] %}{{ attrname }}="{{ attrvalue|trans({}, translation_domain) }}" {% else %}{{ attrname }}="{{ attrvalue }}" {% endif %}{% endfor %}
+{% endspaceless %}
+{% endblock custom_widget_attributes %}
+
+{% block datepicker_widget %}
+    {% spaceless %}
+        {% if component %}
+        <div class="input-group date" id="{{ id }}">
+            <input type="text" class="form-control" {{ block('custom_widget_attributes') }}{% if value is not empty %}value="{{ value }}" {% endif %}readonly>
+            <span class="input-group-addon"><span class="glyphicon icon-calendar"></span></span>
+        </div>
+        {% else %}
+        <input type="text" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+        {% endif %}
+        {% block datepicker_assets %}
+            <link rel="stylesheet" href="{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}" screen="media" />
+            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}"></script>
+            {% if 'en' != options.language %}
+            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/locales/bootstrap-datepicker.' ~ options.language ~ '.js') }}"></script>
+            {% endif %}
+        {% endblock %}
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("#{{ form.vars['id'] }}").datepicker({{ options|json_encode()|raw }});
+            });
+        </script>
+    {% endspaceless %}
+{% endblock %}

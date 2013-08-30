@@ -114,7 +114,7 @@ class DatabaseWriter
             if (null !== $resourceType) {
                 if (null !== $parentType = $resourceType->getParent()) {
                     $resources = $this->em
-                        ->getRepository('ClarolineCoreBundle:Resource\AbstractResource')
+                        ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
                         ->findByResourceType($resourceType->getId());
 
                     foreach ($resources as $resource) {
@@ -251,15 +251,6 @@ class DatabaseWriter
         $resourceType->setName($resource['name']);
         $resourceType->setExportable($resource['is_exportable']);
         $resourceType->setPlugin($pluginEntity);
-        $resourceClass = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-            ->findOneBy(array('class' => $resource['class']));
-
-        if (null === $resourceClass) {
-            $resourceType->setClass($resource['class']);
-        } else {
-            $resourceType->setParent($resourceClass);
-        }
-
         $this->em->persist($resourceType);
         $this->persistCustomAction($resource['actions'], $resourceType);
         $this->persistIcons($resource, $resourceType, $plugin);
@@ -326,7 +317,8 @@ class DatabaseWriter
         $toolEntity->setIsWorkspaceRequired(false);
         $toolEntity->setPlugin($pluginEntity);
         $toolEntity->setExportable($tool['is_exportable']);
-        $toolEntity->setHasOptions($tool['has_options']);
+        $toolEntity->setIsConfigurableInWorkspace($tool['is_configurable_in_workspace']);
+        $toolEntity->setIsConfigurableInDesktop($tool['is_configurable_in_desktop']);
 
         if (isset($tool['class'])) {
             $toolEntity->setClass(

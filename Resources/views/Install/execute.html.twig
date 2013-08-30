@@ -1,6 +1,6 @@
  {% extends 'ClarolineCoreBundle:Install:layout.html.twig' %}
 {% block content %}
-<div class="span3">
+<div class="col-md-3">
     <h3> Progression</h3>
     <ol class="nav nav-list">
         {%block naviguation %}
@@ -12,7 +12,7 @@
         <div class="bar" style="width: 95%;"></div>
     </div>
     </div>
-    <div class="span6">
+    <div class="col-md-6">
         {%block data %}
             <h3> {{ 'step_4'|trans({}, 'install') }} </h3>
             <form action="{{ path('claro_execute') }}" method="post" >
@@ -45,20 +45,20 @@
                 <input type="submit" value="{{ 'next'|trans({}, 'install') }}" class="btn btn-primary"/>
             </form>
             <form action="{{ path('claro_showAdminForm') }}" method="post" >
-                <input type="submit" name="submit" value="{{ 'back'|trans({}, 'install') }}" class="btn"/>
+                <input type="submit" name="submit" value="{{ 'back'|trans({}, 'install') }}" class="btn btn-default"/>
             </form>
         </form>
 
 
         {%endblock data %}
 </div>
-<div class="span2">
+<div class="col-md-2">
     <h3> {{ 'hint'|trans({}, 'install') }}</h3>
     <div class="action">
        <div class="well"> {{ 'hint_5'|trans({}, 'install') }}</div>
     </div>
 </div>
-<div class="span12">
+<div class="col-md-12">
 
 </div>
 

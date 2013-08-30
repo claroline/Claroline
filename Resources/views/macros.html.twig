@@ -5,7 +5,8 @@
             {
                 'info': flashBag.get('info'),
                 'success': flashBag.get('success'),
-                'error': flashBag.get('error'),
+                'warning': flashBag.get('warning'),
+                'danger': flashBag.get('danger'),
                 'alert': flashBag.get('alert')
             }
         %}
@@ -25,8 +26,8 @@
 {% endmacro %}
 
 {% macro sectionHeader(text) %}
-    <div class="row-fluid">
-        <div class="span12">
+    <div class="row">
+        <div class="col-md-12">
             <h2 class="section-header">{{ text }}</h2>
         </div>
     </div>
@@ -42,9 +43,6 @@
                     {{ element['name'] }}
                 {% endif %}
             </li>
-            {% if not loop.last %}
-            <li><span class="divider"> / </span></li>
-            {% endif %}
         {% endfor %}
     </ul>
 {% endmacro %}

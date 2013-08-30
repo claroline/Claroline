@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Converter;
 
-use \Mockery as m;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Entity\User;
@@ -55,7 +54,7 @@ class AuthenticatedUserConverterTest extends MockeryTestCase
     }
 
     /**
-     * @expectedException Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     * @expectedException Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
     public function testApplyThrowsAnExceptionIfThereIsNoAuthenticatedUser()
     {

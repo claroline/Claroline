@@ -15,10 +15,14 @@ class AuthenticationControllerTest extends MockeryTestCase
     private $mailer;
     private $translator;
     private $formFactory;
+    private $authenticator;
+    private $controller;
+    private $templating;
 
     protected function setUp()
     {
         parent::setUp();
+
         $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
         $this->router = $this->mock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
         $this->userManager = $this->mock('Claroline\CoreBundle\Manager\UserManager');
@@ -27,6 +31,8 @@ class AuthenticationControllerTest extends MockeryTestCase
         $this->mailer = $this->mock('Swift_Mailer');
         $this->translator = $this->mock('Symfony\Component\Translation\Translator');
         $this->formFactory = $this->mock('Claroline\CoreBundle\Form\Factory\FormFactory');
+        $this->authenticator = $this->mock('Claroline\CoreBundle\Library\Security\Authenticator');
+        $this->templating = $this->mock('Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine');
         $this->controller = new AuthenticationController(
             $this->request,
             $this->userManager,
@@ -35,7 +41,9 @@ class AuthenticationControllerTest extends MockeryTestCase
             $this->mailer,
             $this->router,
             $this->translator,
-            $this->formFactory
+            $this->formFactory,
+            $this->authenticator,
+            $this->templating
         );
     }
 
@@ -79,17 +87,77 @@ class AuthenticationControllerTest extends MockeryTestCase
             ->andReturn('/reset/123');
         $this->translator->shouldReceive('trans')->once()->with('mail_click', array(), 'platform')->andReturn('blabla');
         $this->translator->shouldReceive('trans')->once()->with('reset_pwd', array(), 'platform')->andReturn('reset');
-        $this->mailer->shouldReceive('send')->once()->with(m::on(function ($message) {
-            return $message->getSubject() === 'reset'
-                && $message->getFrom() === array('noreply@claroline.net' => null)
-                && $message->getTo() === array('toto@claroline.com' => null)
-                && $message->getBody() === '<p><a href="http://jorgeaimejquery/reset/123"/>blabla</a></p>';
-            }
-        )
+        $this->templating->shouldReceive('render')->once()
+            ->with(
+                'ClarolineCoreBundle:Authentication:emailForgotPassword.html.twig',
+                array('message' => 'blabla', 'link' => 'http://jorgeaimejquery/reset/123')
+            )
+            ->andReturn('<html><body> <p> <a href="http://jorgeaimejquery/reset/123"/>blabla</a> </p></body></html>');
+        $this->mailer->shouldReceive('send')->once()->with(
+            m::on(
+                function ($message) {
+
+                    return $message->getSubject() === 'reset'
+                        && $message->getFrom() === array('noreply@claroline.net' => null)
+                        && $message->getTo() === array('toto@claroline.com' => null)
+                        && $message->getBody() === '<html><body> <p> <a href="http://jorgeaimejquery/reset/123"/>blabla</a> </p></body></html>';
+                }
+            )
         );
         $form->shouldReceive('createView')
             ->once()
             ->andReturn('view');
         $this->assertEquals(array('user' => $user, 'form' => 'view'), $this->controller->sendEmailAction());
+    }
+
+    public function testPostAuthenticationAction()
+    {
+        $parameterBag = $this->mock('Symfony\Component\HttpFoundation\ServerBag');
+        $parameterBag->shouldReceive('get')->with('username')->once()->andReturn('username');
+        $parameterBag->shouldReceive('get')->with('password')->once()->andReturn('password');
+        $this->request->request = $parameterBag;
+        $this->authenticator->shouldReceive('authenticate')->once()->with('username', 'password')
+            ->andReturn(true);
+        $response = new \Symfony\Component\HttpFoundation\JsonResponse(array(), 200);
+        $this->assertEquals($response, $this->controller->postAuthenticationAction('json'));
+    }
+
+    /**
+     * @dataProvider postAuthenticationProvider
+     */
+    public function testFailedPostAuthenticationAction($responseClass, $format, $header)
+    {
+        $parameterBag = $this->mock('Symfony\Component\HttpFoundation\ServerBag');
+        $parameterBag->shouldReceive('get')->with('username')->once()->andReturn('username');
+        $parameterBag->shouldReceive('get')->with('password')->once()->andReturn('password');
+        $this->request->request = $parameterBag;
+        $this->authenticator->shouldReceive('authenticate')->once()->with('username', 'password')
+            ->andReturn(false);
+        $this->translator->shouldReceive('trans')->once()->with('login_failure', array(), 'platform')
+            ->andReturn('message');
+        $response = new $responseClass(array('message' => 'message'), 403);
+        $this->assertEquals($response->getContent(), $this->controller->postAuthenticationAction($format)->getContent());
+        $this->assertEquals($response->headers->get('content-type'), $header);
+    }
+
+    public function testUnknownFormatOnAuthentication()
+    {
+        $this->assertEquals(400, $this->controller->postAuthenticationAction('ABCDEFD')->getStatusCode());
+    }
+
+    public function postAuthenticationProvider()
+    {
+        return array(
+            array(
+                'responseClass' => '\Claroline\CoreBundle\Library\HttpFoundation\XmlResponse',
+                'format' => 'xml',
+                'header' => 'text/xml'
+            ),
+            array(
+                'responseClass' => '\Symfony\Component\HttpFoundation\JsonResponse',
+                'format' => 'json',
+                'header' => 'application/json'
+           )
+        );
     }
 }
