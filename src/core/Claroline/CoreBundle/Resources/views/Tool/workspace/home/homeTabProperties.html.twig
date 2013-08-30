@@ -48,10 +48,26 @@
                     <tr>
                         <th>{{ 'name'|trans({}, 'platform') }}</th>
                         <th>{{ 'visible'|trans({}, 'platform') }}</th>
-                        <th>{{ 'order'|trans({}, 'platform') }}</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {% for adminHomeTabConfig in adminHomeTabConfigs %}
+                    {% set adminHomeTab = adminHomeTabConfig.getHomeTab() %}
+                        <tr class='row-home-tab-config {% if adminHomeTabConfig.isLocked() %}text-muted{% endif %}'
+                            data-id={{ adminHomeTabConfig.getId() }}
+                        >
+                            <td>
+                                {{ adminHomeTab.getName() }}
+                            </td>
+                            <td>
+                                <input type="checkbox"
+                                    class="chk-visible"
+                                   {% if adminHomeTabConfig.isVisible() %} checked {% endif %}
+                                   {% if adminHomeTabConfig.isLocked() %} disabled {% endif %}
+                                >
+                            </td>
+                        </tr>
+                    {% endfor %}
                     {% for homeTabConfig in homeTabConfigs %}
                     {% set homeTab = homeTabConfig.getHomeTab() %}
                         <tr class='row-home-tab-config' data-id={{ homeTabConfig.getId() }}>
@@ -71,7 +87,6 @@
                                    {% if homeTabConfig.isVisible() %} checked {% endif %}
                                 >
                             </td>
-                            <td>{{ homeTabConfig.getTabOrder() }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

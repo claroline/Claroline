@@ -13,8 +13,7 @@ class HomeTabConfigRepository extends EntityRepository
         $dql = "
             SELECT htc
             FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
-            JOIN htc.homeTab ht
-            WHERE ht.type = 'desktop'
+            WHERE htc.type = 'admin_desktop'
             AND htc.user IS NULL
             ORDER BY htc.tabOrder ASC
         ";
@@ -28,8 +27,7 @@ class HomeTabConfigRepository extends EntityRepository
         $dql = "
             SELECT htc
             FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
-            JOIN htc.homeTab ht
-            WHERE ht.type = 'workspace'
+            WHERE htc.type = 'admin_workspace'
             AND htc.workspace IS NULL
             ORDER BY htc.tabOrder ASC
         ";
@@ -44,6 +42,7 @@ class HomeTabConfigRepository extends EntityRepository
             SELECT htc
             FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
             WHERE htc.user = :user
+            AND htc.type = 'desktop'
             ORDER BY htc.tabOrder ASC
         ";
         $query = $this->_em->createQuery($dql);
@@ -58,6 +57,7 @@ class HomeTabConfigRepository extends EntityRepository
             SELECT htc
             FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
             WHERE htc.workspace = :workspace
+            AND htc.type = 'workspace'
             ORDER BY htc.tabOrder ASC
         ";
         $query = $this->_em->createQuery($dql);
@@ -71,8 +71,7 @@ class HomeTabConfigRepository extends EntityRepository
         $dql = "
             SELECT htc
             FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
-            JOIN htc.homeTab ht
-            WHERE ht.type = 'desktop'
+            WHERE htc.type = 'admin_desktop'
             AND htc.user IS NULL
             AND htc.visible = true
             ORDER BY htc.tabOrder ASC
@@ -88,7 +87,7 @@ class HomeTabConfigRepository extends EntityRepository
             SELECT htc
             FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
             JOIN htc.homeTab ht
-            WHERE ht.type = 'workspace'
+            WHERE htc.type = 'admin_workspace'
             AND htc.workspace IS NULL
             AND htc.visible = true
             ORDER BY htc.tabOrder ASC
@@ -104,6 +103,7 @@ class HomeTabConfigRepository extends EntityRepository
             SELECT htc
             FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
             WHERE htc.user = :user
+            AND htc.type = 'desktop'
             AND htc.visible = true
             ORDER BY htc.tabOrder ASC
         ";
@@ -119,6 +119,7 @@ class HomeTabConfigRepository extends EntityRepository
             SELECT htc
             FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
             WHERE htc.workspace = :workspace
+            AND htc.type = 'workspace'
             AND htc.visible = true
             ORDER BY htc.tabOrder ASC
         ";
@@ -134,6 +135,7 @@ class HomeTabConfigRepository extends EntityRepository
             SELECT MAX(htc.tabOrder) AS order_max
             FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
             WHERE htc.user = :user
+            AND htc.type = 'desktop'
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('user', $user);
@@ -147,6 +149,7 @@ class HomeTabConfigRepository extends EntityRepository
             SELECT MAX(htc.tabOrder) AS order_max
             FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
             WHERE htc.workspace = :workspace
+            AND htc.type = 'workspace'
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspace', $workspace);
@@ -159,8 +162,7 @@ class HomeTabConfigRepository extends EntityRepository
         $dql = "
             SELECT MAX(htc.tabOrder) AS order_max
             FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
-            JOIN htc.homeTab ht
-            WHERE ht.type = 'desktop'
+            WHERE htc.type = 'admin_desktop'
             AND htc.user IS NULL
         ";
         $query = $this->_em->createQuery($dql);
@@ -173,8 +175,7 @@ class HomeTabConfigRepository extends EntityRepository
         $dql = "
             SELECT MAX(htc.tabOrder) AS order_max
             FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
-            JOIN htc.homeTab ht
-            WHERE ht.type = 'workspace'
+            WHERE htc.type = 'admin_workspace'
             AND htc.workspace IS NULL
         ";
         $query = $this->_em->createQuery($dql);
@@ -187,7 +188,7 @@ class HomeTabConfigRepository extends EntityRepository
         $dql = "
             UPDATE Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
             SET htc.tabOrder = htc.tabOrder - 1
-            WHERE htc.type = 'desktop'
+            WHERE htc.type = 'admin_desktop'
             AND htc.user IS NULL
             AND htc.tabOrder > :tabOrder
         ";
@@ -202,7 +203,7 @@ class HomeTabConfigRepository extends EntityRepository
         $dql = "
             UPDATE Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
             SET htc.tabOrder = htc.tabOrder - 1
-            WHERE htc.type = 'workspace'
+            WHERE htc.type = 'admin_workspace'
             AND htc.workspace IS NULL
             AND htc.tabOrder > :tabOrder
         ";

@@ -96,12 +96,12 @@ class AdministrationHomeTabController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $homeTab->setType('desktop');
+            $homeTab->setType('admin_desktop');
             $this->homeTabManager->insertHomeTab($homeTab);
 
             $homeTabConfig = new HomeTabConfig();
             $homeTabConfig->setHomeTab($homeTab);
-            $homeTabConfig->setType('desktop');
+            $homeTabConfig->setType('admin_desktop');
             $homeTabConfig->setLocked(false);
             $homeTabConfig->setVisible(false);
             $lastOrder = $this->homeTabManager->getOrderOfLastAdminDesktopHomeTabConfig();
@@ -163,12 +163,12 @@ class AdministrationHomeTabController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $homeTab->setType('workspace');
+            $homeTab->setType('admin_workspace');
             $this->homeTabManager->insertHomeTab($homeTab);
 
             $homeTabConfig = new HomeTabConfig();
             $homeTabConfig->setHomeTab($homeTab);
-            $homeTabConfig->setType('workspace');
+            $homeTabConfig->setType('admin_workspace');
             $homeTabConfig->setLocked(false);
             $homeTabConfig->setVisible(false);
             $lastOrder = $this->homeTabManager->getOrderOfLastAdminWorkspaceHomeTabConfig();

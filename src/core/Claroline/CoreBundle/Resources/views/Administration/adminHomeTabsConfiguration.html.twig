@@ -37,7 +37,6 @@
                 <tr>
                     <th>{{ 'name'|trans({}, 'platform') }}</th>
                     <th>{{ 'visible'|trans({}, 'platform') }}</th>
-                    <th>{{ 'order'|trans({}, 'platform') }}</th>
                 </tr>
             </thead>
             <tbody id="workspace-home-tab-table-body">
@@ -56,7 +55,6 @@
                            {% if workspaceHomeTabConfig.isVisible() %} checked {% endif %}
                         >
                     </td>
-                    <td>{{ workspaceHomeTabConfig.getTabOrder() }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -79,7 +77,6 @@
                     <th>{{ 'name'|trans({}, 'platform') }}</th>
                     <th>{{ 'visible'|trans({}, 'platform') }}</th>
                     <th>{{ 'lock'|trans({}, 'platform') }}</th>
-                    <th>{{ 'order'|trans({}, 'platform') }}</th>
                 </tr>
             </thead>
             <tbody id="desktop-home-tab-table-body">
@@ -104,7 +101,6 @@
                             {% if desktopHomeTabConfig.isLocked() %} checked {% endif %}
                         >
                     </td>
-                    <td>{{ desktopHomeTabConfig.getTabOrder() }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

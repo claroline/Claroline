@@ -823,8 +823,10 @@ class WorkspaceController extends Controller
      */
     public function displayWorkspaceHomeTabsAction(AbstractWorkspace $workspace, $tabId)
     {
+        $adminHomeTabConfigsTemp = $this->homeTabManager
+            ->generateAdminHomeTabConfigsByWorkspace($workspace);
         $adminHomeTabConfigs = $this->homeTabManager
-            ->getVisibleAdminWorkspaceHomeTabConfigs();
+            ->filterVisibleHomeTabConfigs($adminHomeTabConfigsTemp);
         $workspaceHomeTabConfigs = $this->homeTabManager
             ->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
 
