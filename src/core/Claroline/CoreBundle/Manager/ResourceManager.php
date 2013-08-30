@@ -248,7 +248,7 @@ class ResourceManager
             }
 
             if ($i > 100) {
-                throw new \Exception('More than 100 items in a directory or infinite loop detected');
+                throw new \Exception('More than 100 items in a directory or infinite loop detected. The order was reseted');
             }
         }
 
@@ -442,6 +442,9 @@ class ResourceManager
             $this->removeNextWhereNextIs($node);
             $previous->setNext($node);
             $this->om->persist($previous);
+        } else {
+            $node->setPrevious(null);
+            $node->setNext(null);
         }
 
         if ($oldPrev) {

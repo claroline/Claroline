@@ -315,6 +315,12 @@ class ResourceManagerTest extends MockeryTestCase
                 'removeNextWhereNextIs'
             )
         );
+
+        if (!$previous) {
+            $resource->shouldReceive('setNext')->with(null)->once();
+            $resource->shouldReceive('setPrevious')->with(null)->once();
+        }
+        
         $manager->shouldReceive('removePreviousWherePreviousIs')->times($rmPrev);
         $manager->shouldReceive('removeNextWhereNextIs')->times($rmNext);
         $manager->shouldReceive('findPreviousOrLastRes')->once()->andReturn($previous);

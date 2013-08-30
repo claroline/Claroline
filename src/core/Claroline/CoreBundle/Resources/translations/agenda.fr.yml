@@ -2,10 +2,10 @@ add_an_event : "Ajouter un évènement"
 all day: "Toute la journée"
 end : "Fin"
 agenda_form_title : Titre
-agenda_form_end : " (jj/mm/aaaa)"
-agenda_form_start : "Date de début"
+agenda_form_end : "Date de fin (jj/mm/aaaa) ou (jj-mm-aaaa)"
+agenda_form_start : "Date de début (jj/mm/aaaa) ou (jj-mm-aaaa)"
 agenda_form_description : "Description"
-agenda_form_allDay : " Sur toute la journée"
+agenda_form_allDay : "Tâche"
 agenda_form_priority_High : "Haute"
 agenda_form_priority : "Priorité"
 close : Fermer

@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Library\Workspace;
 
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
 class TemplateBuilder
 {
@@ -152,14 +153,14 @@ class TemplateBuilder
         return $this->config;
     }
 
-    public static function buildDefault($defaultPath, $translator)
+    public static function buildDefault($defaultPath, Translator $translator)
     {
         $archive = self::createArchive($defaultPath);
         $archive->addFromString('config.yml', Yaml::dump(TemplateBuilder::getDefaultConfig($translator), 10));
         $archive->close();
     }
 
-    public function getDefaultConfig($translator)
+    public static function getDefaultConfig(Translator $translator)
     {
         return array(
             'root_perms' => array(
