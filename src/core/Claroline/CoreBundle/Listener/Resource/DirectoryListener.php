@@ -176,7 +176,7 @@ class DirectoryListener
 
         foreach ($roles as $role) {
             $perms = $this->rightsManager->getMaximumRights(array($role->getName()), $node);
-            $perms['canCreate'] = ($resource instanceof Claroline\CoreBundle\Entity\Resource\Directory) ?
+            $perms['create'] = ($resource instanceof Claroline\CoreBundle\Entity\Resource\Directory) ?
                 $this->rightsManager->getCreationRights(array($role->getName()), $node): array();
 
             $config['perms'][$this->roleManager->getRoleBaseName($role->getName())] = $perms;

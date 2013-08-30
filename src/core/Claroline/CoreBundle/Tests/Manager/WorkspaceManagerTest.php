@@ -224,11 +224,11 @@ class WorkspaceManagerTest extends MockeryTestCase
     public function testExportRootPermsSection()
     {
         $perms = array(
-            'canCopy' => true,
-            'canOpen' => true,
-            'canDelete' => false,
-            'canExport' => false,
-            'canEdit' => false
+            'copy' => true,
+            'open' => true,
+            'delete' => false,
+            'export' => false,
+            'edit' => false
         );
 
         $creations = array(
@@ -238,20 +238,20 @@ class WorkspaceManagerTest extends MockeryTestCase
         $expectedResult = array(
             "root_perms" => array(
                     'ROLE_WS_TEST1' => array(
-                        'canCopy' => true,
-                        'canOpen' => true,
-                        'canDelete' => false,
-                        'canExport' => false,
-                        'canEdit' => false,
-                        'canCreate' => $creations
+                        'copy' => true,
+                        'open' => true,
+                        'delete' => false,
+                        'export' => false,
+                        'edit' => false,
+                        'create' => $creations
                     ),
                     'ROLE_WS_TEST2' => array(
-                        'canCopy' => true,
-                        'canOpen' => true,
-                        'canDelete' => false,
-                        'canExport' => false,
-                        'canEdit' => false,
-                        'canCreate' => array()
+                        'copy' => true,
+                        'open' => true,
+                        'delete' => false,
+                        'export' => false,
+                        'edit' => false,
+                        'create' => array()
                     )
                 )
         );

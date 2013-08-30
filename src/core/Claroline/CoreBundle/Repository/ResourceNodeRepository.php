@@ -92,24 +92,42 @@ class ResourceNodeRepository extends MaterializedPathRepository
             $items = $query->iterate(null, AbstractQuery::HYDRATE_ARRAY);
 
             foreach ($items as $key => $item) {
-                $item[$key]['can_export'] = true;
-                $item[$key]['can_edit'] = true;
-                $item[$key]['can_delete'] = true;
+                $item[$key]['mask'] = 65535;
                 $children[] = $item[$key];
             }
+
+            return $children;
+
         } else {
             $builder->selectAsArray(true)
                 ->whereParentIs($parent)
-                ->whereRoleIn($roles)
-                ->whereCanOpen()
-                ->groupByResourceUserTypeAndIcon();
+                ->whereRoleIn($roles);
 
             $query = $this->_em->createQuery($builder->getDql());
             $query->setParameters($builder->getParameters());
-            $children = $this->executeQuery($query);
-        }
 
-        return $children;
+            $children = $this->executeQuery($query);
+            $childrenWithMaxRights = array();
+
+            foreach ($children as $child) {
+                if (!isset($childrenWithMaxRights[$child['id']])) {
+                    $childrenWithMaxRights[$child['id']] = $child;
+                }
+
+                foreach ($childrenWithMaxRights as $id => $childMaxRights) {
+                    if ($id === $child['id']) {
+                        $childrenWithMaxRights[$id]['mask'] |= $child['mask'];
+                    }
+                }
+            }
+
+            $returnedArray = array();
+
+            foreach ($childrenWithMaxRights as $childMaxRights) {
+                $returnedArray[] = $childMaxRights;
+            }
+            return $returnedArray;;
+        }
    }
 
     /**
