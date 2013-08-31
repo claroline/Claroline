@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\InstallationBundle\DependencyInjection;
+namespace Claroline\KernelBundle\DependencyInjection;
 
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;

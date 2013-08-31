@@ -1,14 +1,14 @@
 <?php
 
-namespace Claroline\InstallationBundle;
+namespace Claroline\KernelBundle;
 
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Claroline\InstallationBundle\Manager\BundleManager;
-use Claroline\InstallationBundle\Bundle\ConfigurationBuilder;
+use Claroline\KernelBundle\Manager\BundleManager;
+use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
-class ClarolineInstallationBundle extends Bundle
+class ClarolineKernelBundle extends Bundle
 {
     private $environment;
     private $bundleManager;

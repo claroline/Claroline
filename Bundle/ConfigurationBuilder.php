@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\InstallationBundle\Bundle;
+namespace Claroline\KernelBundle\Bundle;
 
 class ConfigurationBuilder
 {

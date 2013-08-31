@@ -1,12 +1,12 @@
 <?php
 
-namespace Claroline\InstallationBundle\Manager;
+namespace Claroline\KernelBundle\Manager;
 
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Claroline\InstallationBundle\Bundle\AutoInstallableInterface;
-use Claroline\InstallationBundle\Bundle\ConfigurationProviderInterface;
-use Claroline\InstallationBundle\Bundle\ConfigurationBuilder;
+use Claroline\KernelBundle\Bundle\AutoInstallableInterface;
+use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
+use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 class BundleManager
 {
@@ -60,7 +60,7 @@ class BundleManager
         $nonAutoInstallableBundles = array();
 
         foreach ($entries as $bundleClass => $isActive) {
-            if ($isActive && $bundleClass !== 'Claroline\InstallationBundle\ClarolineInstallationBundle') {
+            if ($isActive && $bundleClass !== 'Claroline\KernelBundle\ClarolineKernelBundle') {
                 $bundle = new $bundleClass($this->kernel);
 
                 if ($bundle instanceof ConfigurationProviderInterface) {

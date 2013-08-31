@@ -1,11 +1,11 @@
 <?php
 
-namespace Claroline\InstallationBundle\Routing;
+namespace Claroline\KernelBundle\Routing;
 
 use Symfony\Component\Config\Loader\Loader as Loader;
 use Symfony\Component\Routing\RouteCollection;
-use Claroline\InstallationBundle\Manager\BundleManager;
-use Claroline\InstallationBundle\Bundle\ConfigurationBuilder;
+use Claroline\KernelBundle\Manager\BundleManager;
+use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 class DynamicLoader extends Loader
 {

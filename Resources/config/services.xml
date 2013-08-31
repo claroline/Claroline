@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="claroline.installation_loader.class">Claroline\InstallationBundle\Routing\DynamicLoader</parameter>
+        <parameter key="claroline.installation_loader.class">Claroline\KernelBundle\Routing\DynamicLoader</parameter>
      </parameters>
 
     <services>
