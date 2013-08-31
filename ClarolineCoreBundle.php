@@ -3,9 +3,9 @@
 namespace Claroline\CoreBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Claroline\InstallationBundle\Bundle\AutoInstallableInterface;
-use Claroline\InstallationBundle\Bundle\ConfigurationProviderInterface;
-use Claroline\InstallationBundle\Bundle\ConfigurationBuilder;
+use Claroline\KernelBundle\Bundle\AutoInstallableInterface;
+use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
+use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 class ClarolineCoreBundle extends Bundle implements AutoInstallableInterface, ConfigurationProviderInterface
 {
