@@ -44,7 +44,7 @@
         "composer/composer": "dev-master",
         "willdurand/expose-translation-bundle": "dev-master",
 
-        "claroline/installation-bundle": "dev-master",
+        "claroline/kernel-bundle": "dev-master",
         "claroline/front-end-bundle": "dev-master",
         "claroline/taxonomy-bundle": "dev-master",
         "claroline/migration-bundle": "dev-master",
