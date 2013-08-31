@@ -10,7 +10,7 @@ use Symfony\Component\Config\FileLocator;
 /**
  * Loads the services configuration file.
  */
-class ClarolineInstallationExtension extends Extension
+class ClarolineKernelExtension extends Extension
 {
     /**
      * {@inheritDoc}
