@@ -1,0 +1,25 @@
+{
+    "name": "claroline/installation-bundle",
+    "description": "Claroline installation bundle",
+    "keywords": ["Claroline","Installation"],
+    "homepage": "http://www.claroline.net",
+    "type": "bundle",
+    "license": "",
+    "authors": [
+        {
+            "name": "Claroline development team",
+            "email": "dev@claroline.net",
+            "homepage": "http://github.com/claroline"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/symfony": "2.*"
+
+    },
+    "autoload": {
+        "psr-0": { "Claroline\\InstallationBundle": "" }
+    },
+    "target-dir": "Claroline/InstallationBundle",
+    "minimum-stability": "dev"
+}
