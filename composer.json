@@ -1,7 +1,7 @@
 {
-    "name": "claroline/installation-bundle",
-    "description": "Claroline installation bundle",
-    "keywords": ["Claroline", "Installation"],
+    "name": "claroline/kernel-bundle",
+    "description": "Claroline kernel bundle",
+    "keywords": ["Claroline", "Kernel"],
     "homepage": "http://www.claroline.net",
     "type": "bundle",
     "license": "",
