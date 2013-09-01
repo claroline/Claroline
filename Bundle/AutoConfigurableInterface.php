@@ -4,7 +4,7 @@ namespace Claroline\KernelBundle\Bundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-interface AutoInstallableInterface
+interface AutoConfigurableInterface
 {
     public function supports($environment);
 

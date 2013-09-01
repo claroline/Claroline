@@ -4,7 +4,7 @@ namespace Claroline\KernelBundle\Manager;
 
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Claroline\KernelBundle\Bundle\AutoInstallableInterface;
+use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
@@ -57,7 +57,7 @@ class BundleManager
         $entries = parse_ini_file($this->bundlesFile);
         $activeBundles = array();
         $configProviderBundles = array();
-        $nonAutoInstallableBundles = array();
+        $nonAutoConfigurableBundles = array();
 
         foreach ($entries as $bundleClass => $isActive) {
             if ($isActive && $bundleClass !== 'Claroline\KernelBundle\ClarolineKernelBundle') {
@@ -67,8 +67,8 @@ class BundleManager
                     $configProviderBundles[] = $bundle;
                 }
 
-                if (!$bundle instanceof AutoInstallableInterface) {
-                    $nonAutoInstallableBundles[] = $bundle;
+                if (!$bundle instanceof AutoConfigurableInterface) {
+                    $nonAutoConfigurableBundles[] = $bundle;
                 } elseif ($bundle->supports($this->environment)) {
                     $activeBundles[] = array(
                         self::BUNDLE_INSTANCE => $bundle,
@@ -78,7 +78,7 @@ class BundleManager
             }
         }
 
-        foreach ($nonAutoInstallableBundles as $bundle) {
+        foreach ($nonAutoConfigurableBundles as $bundle) {
             foreach ($configProviderBundles as $provider) {
                 $config = $provider->suggestConfigurationFor($bundle, $this->environment);
 
