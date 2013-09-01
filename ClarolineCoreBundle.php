@@ -3,11 +3,11 @@
 namespace Claroline\CoreBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Claroline\KernelBundle\Bundle\AutoInstallableInterface;
+use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
-class ClarolineCoreBundle extends Bundle implements AutoInstallableInterface, ConfigurationProviderInterface
+class ClarolineCoreBundle extends Bundle implements AutoConfigurableInterface, ConfigurationProviderInterface
 {
     public function supports($environment)
     {
