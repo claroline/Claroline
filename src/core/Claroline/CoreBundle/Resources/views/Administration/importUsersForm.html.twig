@@ -1,28 +1,33 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
-
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'users_management'|trans({}, 'platform'),
+                'href': path('claro_admin_users_management')
+            },
+            {
+                'name':'users_list'|trans({}, 'platform'),
+                'href':path('claro_admin_user_list')
+            },
+            {
+                'name':'import'|trans({}, 'platform'),
+                'href':''
+            }
+        ])
+    }}
+{% endblock %}
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'users_import'|trans({}, 'platform') }}</h3>
     </div>
     <form class="form-horizontal" action="{{ path('claro_admin_import_users') }}" method="post" {{ form_enctype(form) }} >
         <div class="panel-body">
-            {{
-                macros.breadcrumbs([
-                    {
-                        'icon': 'icon-user',
-                        'name': 'users_management'|trans({}, 'platform'),
-                        'href': path('claro_admin_users_management')
-                    },
-                    {
-                        'name':'users_list'|trans({}, 'platform'),
-                        'href':path('claro_admin_user_list')
-                    },
-                    {
-                        'name':'import'|trans({}, 'platform'),
-                        'href':''
-                    }
-                ])
-            }}
             <div>{{ macros.flashBox() }}</div>
 
             <div class="well">

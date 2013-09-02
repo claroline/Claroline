@@ -422,11 +422,16 @@ div.pagination
     margin: 0 0 10px 0;
 }
 
-.panel > table tr td,
-.panel > table tr th
+.panel
 {
-    padding-right:14px !important;
-    padding-left:14px !important;
+    > table tr td,
+    > table tr th,
+    .workspace-list-pager > table tr td,
+    .workspace-list-pager > table tr th
+    {
+        padding-right:14px !important;
+        padding-left:14px !important;
+    }
 }
 
 .impersonalitation {
@@ -437,7 +442,7 @@ div.pagination
     .navbar-fixed-top {
         z-index:(@zindex-navbar - 1);
         margin-top:@navbar-height;
-        background-color: darken(@brand-info, 5%);
+        background-color: darken(@brand-warning, 5%);
 
         .navbar-nav li a
         {
