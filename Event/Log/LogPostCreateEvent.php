@@ -3,7 +3,7 @@
 namespace ICAP\BlogBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\LogBundle\Event\Log\AbstractLogResourceEvent;
+use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use ICAP\BlogBundle\Entity\Post;
 
 class LogPostCreateEvent extends AbstractLogResourceEvent
