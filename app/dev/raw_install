@@ -10,13 +10,13 @@ require_once __DIR__ . '/utils.php';
 $start = new DateTime();
 $rootDirectory = realpath(__DIR__ . '/../..');
 
-if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-    echo "This script cannot run composer interactively on Windows.\n"
-    . "If it is a fresh installation or if the update requires modifying the\n"
-    . "parameters.yml file, you may have to launch 'composer install' first.\n";
-}
-
-execComposer();
+//if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+//    echo "This script cannot run composer interactively on Windows.\n"
+//    . "If it is a fresh installation or if the update requires modifying the\n"
+//    . "parameters.yml file, you may have to launch 'composer install' first.\n";
+//}
+//
+//execComposer();
 
 echo "Refreshing configuration and log files\n";
 
@@ -47,7 +47,7 @@ if ($returnCode === 0) {
     system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=dev");
     system("php {$rootDirectory}/app/console doctrine:database:create --env=dev");
     system("php {$rootDirectory}/app/console cache:clear --no-warmup --env=dev");
-    system("php {$rootDirectory}/app/console claroline:install --with-plugins --with-fixtures --env=dev");
+    system("php {$rootDirectory}/app/console claroline:install --with-optional-fixtures --env=dev");
 
     system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=test");
     system("php {$rootDirectory}/app/console doctrine:database:create --env=test");
@@ -55,7 +55,7 @@ if ($returnCode === 0) {
     system("php {$rootDirectory}/app/console claroline:install --env=test");
 
     system("php {$rootDirectory}/app/console cache:clear");
-    system("php {$rootDirectory}/app/console claroline:fixture:demo");
+    //system("php {$rootDirectory}/app/console claroline:fixture:demo");
 }
 
 $end = new DateTime();

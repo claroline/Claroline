@@ -2,26 +2,26 @@
 
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Claroline\InstallationBundle\ClarolineInstallationBundle;
+use Claroline\KernelBundle\ClarolineKernelBundle;
 
 class AppKernel extends Kernel
 {
-    private $installBundle;
+    private $kernelBundle;
 
     public function __construct($environment, $debug)
     {
         parent::__construct($environment, $debug);
-        $this->installBundle = new ClarolineInstallationBundle($this);
+        $this->kernelBundle = new ClarolineKernelBundle($this);
     }
 
     public function registerBundles()
     {
-        return $this->installBundle->getBundles();
+        return $this->kernelBundle->getBundles();
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $this->installBundle->loadConfigurations($loader);
+        $this->kernelBundle->loadConfigurations($loader);
         $loader->load(__DIR__ . '/config/local/parameters.yml');
     }
 }
