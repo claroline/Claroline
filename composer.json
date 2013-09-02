@@ -14,8 +14,10 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "symfony/symfony": "2.*"
-
+        "symfony/symfony": "2.*",
+        "doctrine/doctrine-bundle": "~1.0",
+        "doctrine/data-fixtures": "*",
+        "claroline/kernel-bundle": "dev-master"
     },
     "autoload": {
         "psr-0": { "Claroline\\InstallationBundle": "" }
