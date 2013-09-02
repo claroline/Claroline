@@ -110,7 +110,7 @@ class LogController extends Controller
      * )
      * @EXT\ParamConverter(
      *      "log",
-     *      class="ClarolineCoreBundle:Logger\Log",
+     *      class="ClarolineCoreBundle:Log\Log",
      *      options={"id" = "logId", "strictId" = true}
      * )
      *
@@ -122,16 +122,16 @@ class LogController extends Controller
      */
     public function viewDetailsAction(Log $log)
     {
-        if ($log->getAction() === LogResourceChildUpdateEvent::ACTION ) {
-
-            $event = $this->eventDispatcher->dispatch(
-                'create_log_details_'.$log->getResourceType()->getName(),
-                'Log\LogCreateDelegateView',
-                array($log)
-            );
-
-            return new Response($event->getResponseContent());
-        }
+//        if ($log->getAction() === LogResourceChildUpdateEvent::ACTION ) {
+//
+//            $event = $this->eventDispatcher->dispatch(
+//                'create_log_details_'.$log->getResourceType()->getName(),
+//                'Log\LogCreateDelegateView',
+//                array($log)
+//            );
+//
+//            return new Response($event->getResponseContent());
+//        }
 
         return $this->render(
             'ClarolineCoreBundle:Log:view_details.html.twig',
