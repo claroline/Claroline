@@ -2,16 +2,19 @@
 
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
-<style type="text/css">
-    #form_log_update_workspace_widget .control-group {
-        margin-bottom: 0px;
-    }
+{% block stylesheets %}
+    {{ parent() }}
+    <style type="text/css">
+        #form_log_update_workspace_widget .control-group {
+            margin-bottom: 0px;
+        }
 
-    #form_log_update_workspace_widget .control-group:last-child {
-        margin-top: 40px;
-        margin-bottom: 20px;
-    }
-</style>
+        #form_log_update_workspace_widget .control-group:last-child {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+    </style>
+{% endblock %}
 
 <form
     id="form_log_update_workspace_widget"
