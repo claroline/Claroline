@@ -3,7 +3,7 @@
 {% block content %}
     <h1>
         {% block logDetailsTitle %}
-            {{ ('log_'~log.getAction()~'_title')|trans({}, 'platform')}}
+            {{ ('log_'~log.getAction()~'_title')|trans({}, 'log')}}
         {% endblock %}
     </h1>
 
@@ -14,7 +14,7 @@
     </p>
 
     {% block logDetailsContext %}
-        <h3>{{'log_context'|trans({}, 'platform')}}</h3>
+        <h3>{{'log_context'|trans({}, 'log')}}</h3>
 
         {% include 'ClarolineCoreBundle:Log:view_details_doer.html.twig' %}
 
