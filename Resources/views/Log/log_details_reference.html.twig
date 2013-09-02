@@ -1,0 +1,15 @@
+{% if log.getDetails().child.icap_reference is defined %}
+    <h4>{{ ('Action target reference')|trans }}</h4>
+
+    <dl class="dl-horizontal">
+        <dt>{{ ('Title')|trans }}</dt>
+        <dd>{{ log.getDetails().child.icap_reference.title }}</dd>
+        <dt>{{ ('Type')|trans }}</dt>
+        {% if log.getDetails().child.icap_reference is defined and log.getDetails().child.icap_reference.type == 'default' %}
+            {% set referenceType = 'reference' %}
+        {% else %}
+            {% set referenceType = log.getDetails().child.icap_reference.type %}
+        {% endif %}
+        <dd>{{ referenceType|trans|capitalize }}</dd>
+    </dl>
+{% endif %}

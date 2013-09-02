@@ -153,11 +153,11 @@ class BlogListener extends ContainerAware
     public function onCreateLogDetails(LogCreateDelegateViewEvent $event)
     {
         $content = $this->container->get('templating')->render(
-            'ICAPBlogBundle::log_details.html.twig',
+            'ICAPBlogBundle:Log:log_details.html.twig',
             array(
                 'log' => $event->getLog(),
                 'listItemView' => $this->container->get('templating')->render(
-                    'ICAPBlogBundle::log_list_item.html.twig',
+                    'ICAPBlogBundle:Log:log_list_item.html.twig',
                     array('log' => $event->getLog())
                 )
             )

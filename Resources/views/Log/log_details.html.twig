@@ -1,0 +1,25 @@
+{% extends 'ClarolineCoreBundle:Log:view_details.html.twig' %}
+
+{% block logDetailsTitle %}
+    {% if log.getChildType == 'icap_reference' %}
+        {% if log.getChildAction == 'child_action_create' %}
+            {{ 'referenceCreateTitle'|trans }}
+        {% elseif log.getChildAction == 'child_action_delete' %}
+            {{ 'referenceDeleteTitle'|trans }}
+        {% elseif log.getChildAction == 'child_action_update' %}
+            {{ 'referenceUpdateTitle'|trans }}
+        {% else %}
+            no default text
+        {% endif %}
+    {% else %}
+        no default text
+    {% endif %}
+
+{% endblock %}
+
+{% block logDetailsContext %}
+    {{ parent() }}
+    {% if log.getChildType == 'icap_reference' %}
+        {% include 'ICAPBlogBundle::log_details_reference.html.twig' %}
+    {% endif %}
+{% endblock %}

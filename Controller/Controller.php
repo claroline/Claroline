@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use ICAP\BlogBundle\Entity\Blog;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use ICAP\BlogBundle\Entity\Post;
+use ICAP\BlogBundle\Event\Log\LogPostCreateEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -95,6 +96,13 @@ class Controller extends BaseController
         return $this;
     }
 
+    protected function dispatch($event)
+    {
+        $this->get('event_dispatcher')->dispatch('log', $event);
+
+        return $this;
+    }
+
     /**
      * @param Blog $blog
      *
@@ -129,14 +137,9 @@ class Controller extends BaseController
      */
     protected function dispatchPostCreateEvent(Blog $blog, Post $post)
     {
-        $details = array(
-            'icap_blog_post' => array(
-                'id'    => $post->getId(),
-                'title' => $post->getTitle()
-            )
-        );
+        $event = new LogPostCreateEvent($blog->getResourceNode(), $post);
 
-        return $this->dispatchChildEvent($blog, self::BLOG_POST_TYPE, LogResourceChildUpdateEvent::CHILD_ACTION_CREATE, $details);
+        return $this->dispatch($event);
     }
 
     /**
