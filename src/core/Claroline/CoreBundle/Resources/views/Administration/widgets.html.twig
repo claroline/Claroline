@@ -1,10 +1,20 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block javascripts %}
-{{ parent() }}
-<script src="{{ asset('bundles/clarolinecore/js/administration/widgets.js') }}" type="text/javascript"></script>
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'widget_settings'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
 {% endblock %}
-
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title"> {{ 'widget_settings'|trans({}, 'platform') }}</h3>
@@ -64,4 +74,8 @@
             </tbody>
         </table>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/clarolinecore/js/administration/widgets.js') }}" type="text/javascript"></script>
 {% endblock %}
