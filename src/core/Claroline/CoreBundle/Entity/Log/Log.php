@@ -1,12 +1,12 @@
 <?php
 
-namespace Claroline\CoreBundle\Entity\Logger;
+namespace Claroline\CoreBundle\Entity\Log;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\LogRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Log\LogRepository")
  * @ORM\Table(name="claro_log")
  */
 class Log
@@ -115,16 +115,6 @@ class Log
      * @ORM\JoinColumn(name="resource_type_id", onDelete="SET NULL")
      */
     protected $resourceType;
-
-    /**
-     * @ORM\Column(name="child_type", nullable=true)
-     */
-    protected $childType;
-
-    /**
-     * @ORM\Column(name="child_action", nullable=true)
-     */
-    protected $childAction;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role")
@@ -265,52 +255,6 @@ class Log
     public function getDoerIp()
     {
         return $this->doerIp;
-    }
-
-    /**
-     * Set childType
-     *
-     * @param  string $childType
-     * @return Log
-     */
-    public function setChildType($childType)
-    {
-        $this->childType = $childType;
-
-        return $this;
-    }
-
-    /**
-     * Get childType
-     *
-     * @return string
-     */
-    public function getChildType()
-    {
-        return $this->childType;
-    }
-
-    /**
-     * Set childAction
-     *
-     * @param  string $childAction
-     * @return Log
-     */
-    public function setChildAction($childAction)
-    {
-        $this->childAction = $childAction;
-
-        return $this;
-    }
-
-    /**
-     * Get childAction
-     *
-     * @return string
-     */
-    public function getChildAction()
-    {
-        return $this->childAction;
     }
 
     /**

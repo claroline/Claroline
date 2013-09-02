@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller;
+namespace Claroline\CoreBundle\Controller\Log;
 
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -9,12 +9,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Event\Log\LogResourceChildUpdateEvent;
-use Claroline\CoreBundle\Form\LogWorkspaceWidgetConfigType;
-use Claroline\CoreBundle\Form\LogDesktopWidgetConfigType;
-use Claroline\CoreBundle\Entity\Logger\Log;
-use Claroline\CoreBundle\Entity\Logger\LogWorkspaceWidgetConfig;
-use Claroline\CoreBundle\Entity\Logger\LogDesktopWidgetConfig;
-use Claroline\CoreBundle\Entity\Logger\LogHiddenWorkspaceWidgetConfig;
+use Claroline\CoreBundle\Form\Log\LogWorkspaceWidgetConfigType;
+use Claroline\CoreBundle\Form\Log\LogDesktopWidgetConfigType;
+use Claroline\CoreBundle\Entity\Log\Log;
+use Claroline\CoreBundle\Entity\Log\LogWorkspaceWidgetConfig;
+use Claroline\CoreBundle\Entity\Log\LogDesktopWidgetConfig;
+use Claroline\CoreBundle\Entity\Log\LogHiddenWorkspaceWidgetConfig;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\ToolManager;
@@ -239,7 +239,7 @@ class LogController extends Controller
             $workspaces = array();
         } else {
             $user = $this->security->getToken()->getUser();
-            $hiddenConfigs = $em->getRepository('ClarolineCoreBundle:Logger\LogHiddenWorkspaceWidgetConfig')
+            $hiddenConfigs = $em->getRepository('ClarolineCoreBundle:LogHiddenWorkspaceWidgetConfig')
                 ->findBy(array('user' => $user));
             $workspaces = $this->workspaceManager
                 ->getWorkspacesByUserAndRoleNames($user, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'));

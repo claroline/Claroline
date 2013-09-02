@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller\Tool;
+namespace Claroline\CoreBundle\Controller\Log\Tool;
 
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -33,7 +33,7 @@ class WorkspaceLogController extends Controller
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Tool/workspace/logs:logList.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool/workspace:logList.html.twig")
      *
      * Displays logs list using filter parameteres and page number
      *

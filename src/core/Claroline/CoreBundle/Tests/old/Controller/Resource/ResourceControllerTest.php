@@ -21,7 +21,7 @@ class ResourceControllerTest extends FunctionalTestCase
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->client->followRedirects();
         $this->resourceRepository = $this->em->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
-        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Log\Log');
         $this->pwr = $this->getDirectory('user');
     }
 
