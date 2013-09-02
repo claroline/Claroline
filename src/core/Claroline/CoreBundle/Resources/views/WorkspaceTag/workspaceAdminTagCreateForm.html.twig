@@ -1,5 +1,28 @@
 {% extends "ClarolineCoreBundle:WorkspaceTag:layout.html.twig" %}
 
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': 'all_workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': 'admin_tags_management'|trans({}, 'platform'),
+                'href': path('claro_workspace_manage_admin_tag')
+            },
+            {
+                'name': 'admin_tags_management'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'create_new_admin_tag'|trans({}, 'platform') }}</h3>

@@ -1,22 +1,26 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
-
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'users_management'|trans({}, 'platform'),
+                'href': path('claro_admin_users_management')
+            },
+            {'name':'add_user'|trans({}, 'platform'), 'href':''}
+        ])
+    }}
+{% endblock %}
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'user_creation'|trans({}, 'platform') }}</h3>
     </div>
     <form class="form-horizontal" action="{{ path('claro_admin_create_user') }}" method="post" {{ form_enctype(form_complete_user) }} id="form_complete_user" autocomplete="off">
         <div class="panel-body">
-            {{
-                macros.breadcrumbs([
-                    {
-                        'icon': 'icon-user',
-                        'name': 'users_management'|trans({}, 'platform'),
-                        'href': path('claro_admin_users_management')
-                    },
-                    {'name':'add_user'|trans({}, 'platform'), 'href':''}
-                ])
-            }}
-
             {{ form_widget(form_complete_user) }}
         </div>
         <div class="panel-footer">

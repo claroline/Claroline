@@ -61,9 +61,11 @@
         {% endif %}
 
         <div class="container">
-            {% block sectionHeader %}
-            &nbsp;
-            {% endblock %}
+            <div class="row">
+                <div class="col-md-12">
+                    {% block breadcrumb %}{% endblock %}
+                </div>
+            </div>
 
             <div class="row content">
                 {% block content %}{% endblock %}

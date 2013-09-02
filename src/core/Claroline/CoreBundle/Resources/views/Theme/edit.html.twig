@@ -23,15 +23,36 @@
 
 {% endblock #}
 
+{% set themeTitle = "New theme" | trans({}, "theme") %}
+
+{% if theme is defined %}
+    {% set themeTitle = "Edit theme" | trans({}, "theme") ~ "<em> " ~ theme.name ~ ")</em>" %}
+{% endif %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'Theme Generator'|trans({}, 'theme'),
+                'href': path('claroline_admin_theme_list')
+            },
+            {
+                'name': themeTitle,
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
 {% block section_content %}
     <div id="homePath" class="hide">{{ path("claro_index") }}</div>
     <div class="panel-heading">
         <h3 class="panel-title">
-            {% if theme is defined %}
-            {{ "Edit theme" | trans({}, "theme") }}<em> ({{ theme.name }})</em>
-            {% else %}
-                {{ "New theme" | trans({}, "theme") }}
-            {% endif %}
+            {{ themeTitle }}
         </h3>
     </div>
     <div class="panel-body">
