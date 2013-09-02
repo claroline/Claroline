@@ -28,6 +28,16 @@ class MenuAction
     protected $isAsync;
 
     /**
+     * @ORM\Column(name="is_custom", type="boolean", nullable=false)
+     */
+    protected $isCustom = true;
+
+    /**
+     * @ORM\Column(name="is_form", type="boolean", nullable=false)
+     */
+    protected $isForm = false;
+
+    /**
      * @ORM\Column(name="permRequired", nullable=true)
      */
     protected $permRequired;
@@ -35,7 +45,7 @@ class MenuAction
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
-     *     inversedBy="customActions",
+     *     inversedBy="actions",
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="resource_type_id", onDelete="SET NULL")
@@ -85,5 +95,25 @@ class MenuAction
     public function getPermRequired()
     {
         return $this->permRequired;
+    }
+
+    public function setIsCustom($bool)
+    {
+        $this->isCustom = $bool;
+    }
+
+    public function isCustom()
+    {
+        return $this->isCustom;
+    }
+
+    public function setIsForm($bool)
+    {
+        $this->isForm = $bool;
+    }
+
+    public function isForm()
+    {
+        return $this->isForm;
     }
 }

@@ -7,9 +7,10 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Translation\Translator;
+use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Claroline\CoreBundle\Entity\Resource\ResourceRights;
+use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -25,36 +26,45 @@ class ResourceVoter implements VoterInterface
     private $em;
     private $repository;
     private $translator;
-    private $validAttributes;
+    private $specialActions ;
     private $ut;
-    private $fromResourceRightsToOwnerRights;
+    private $maskManager;
 
     /**
      * @DI\InjectParams({
-     *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "translator" = @DI\Inject("translator"),
-     *     "ut" = @DI\Inject("claroline.security.utilities")
+     *     "em"           = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "translator"   = @DI\Inject("translator"),
+     *     "ut"           = @DI\Inject("claroline.security.utilities"),
+     *     "maskManager"  = @DI\Inject("claroline.manager.mask_manager")
      * })
      */
-    public function __construct(EntityManager $em, Translator $translator, Utilities $ut)
+    public function __construct(EntityManager $em, Translator $translator, Utilities $ut, MaskManager $maskManager)
     {
         $this->em = $em;
         $this->repository = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
         $this->translator = $translator;
-        $this->validAttributes = array('MOVE', 'COPY', 'DELETE', 'EXPORT', 'CREATE', 'EDIT', 'OPEN');
+        $this->specialActions = array('move', 'create');
         $this->ut = $ut;
+        $this->maskManager = $maskManager;
     }
 
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        if (!in_array($attributes[0], $this->validAttributes)) {
+        /*
+         * Should check if the action is valid
+        $customPerms = $this->maskManager->getPermissionMap($type);
+        $validActions = array_merge($customPerms, $this->specialAttributes);
+
+        if (!in_array($attributes[0], $validActions)) {
             return VoterInterface::ACCESS_ABSTAIN;
         }
+         *
+         */
 
         if ($object instanceof ResourceCollection) {
             $errors = array();
 
-            if ($attributes[0] == 'CREATE') {
+            if (strtolower($attributes[0]) == 'create') {
                 //there should be one one resource every time
                 //(you only create resource one at a time in a single directory
                 foreach ($object->getResources() as $resource) {
@@ -65,14 +75,14 @@ class ResourceVoter implements VoterInterface
                 }
             }
 
-            if ($attributes[0] == 'MOVE') {
+            if (strtolower($attributes[0]) == 'move') {
                 $errors = array_merge(
                     $errors,
                     $this->checkMove($object->getAttribute('parent'), $object->getResources(), $token)
                 );
             }
 
-            if ($attributes[0] == 'COPY') {
+            if (strtolower($attributes[0]) == 'copy') {
                 $errors = array_merge(
                     $errors,
                     $this->checkCopy($object->getAttribute('parent'), $object->getResources(), $token)
@@ -81,7 +91,7 @@ class ResourceVoter implements VoterInterface
 
             $errors = array_merge(
                 $errors,
-                $this->checkAction($attributes[0], $object->getResources(), $token)
+                $this->checkAction(strtolower($attributes[0]), $object->getResources(), $token)
             );
 
             if (count($errors) === 0) {
@@ -133,52 +143,19 @@ class ResourceVoter implements VoterInterface
     private function checkAction($action, $resources, $token)
     {
         $errors = array();
-        $call = "can" . ucfirst(strtolower($action));
-        $action = strtoupper($action);
-        $rr = new ResourceRights;
+        $action = strtolower($action);
 
-        if (method_exists($rr, $call)) {
-            foreach ($resources as $resource) {
-                $rights = $this->repository->findMaximumRights($this->ut->getRoles($token), $resource);
+        foreach ($resources as $resource) {
+            $mask = $this->repository->findMaximumRights($this->ut->getRoles($token), $resource);
+            $type = $resource->getResourceType();
+            $decoder = $this->maskManager->getDecoder($type, $action);
 
-                if ($rights == null) {
-                    $errors[] = $this->translator
-                        ->trans(
-                            'resource_action_denied_message',
-                            array(
-                                '%path%' => $resource->getPathForDisplay(),
-                                '%action%' => $action
-                                ),
-                            'platform'
-                        );
-                } else {
-                    if (!$this->canDo($resource, $token, $action)) {
-                        $errors[] = $this->getRoleActionDeniedMessage($action, $resource->getPathForDisplay());
-                    }
-                }
+            if (!$mask & $decoder->getValue()) {
+                $errors[] = $this->getRoleActionDeniedMessage($action, $resource->getPathForDisplay());
             }
         }
 
         return $errors;
-    }
-
-    /**
-     * Checks if the current token has the right to do the action $action.
-     *
-     * @param ResourceNode   $resource
-     * @param TokenInterface $token
-     * @param string         $action
-     *
-     * @return boolean
-     */
-    private function canDo(ResourceNode $resource, TokenInterface $token, $action)
-    {
-        $rights = $this->em
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-            ->findMaximumRights($this->ut->getRoles($token), $resource);
-        $permission = 'can'.ucfirst(strtolower($action));
-
-        return $rights[$permission];
     }
 
     /**
@@ -270,14 +247,14 @@ class ResourceVoter implements VoterInterface
                          );
                 }
 
-                $rights = $this->repository->findMaximumRights($this->ut->getRoles($token), $resource);
+                $mask = $this->repository->findMaximumRights($this->ut->getRoles($token), $resource);
 
-                if (!$rights['canCopy']) {
-                    $errors[] = $this->getRoleActionDeniedMessage('COPY', $resource->getPathForDisplay());
+                if ($mask & MaskDecoder::COPY) {
+                    $errors[] = $this->getRoleActionDeniedMessage('copy', $resource->getPathForDisplay());
                 }
 
-                if (!$rights['canDelete']) {
-                    $errors[] = $this->getRoleActionDeniedMessage('DELETE', $resource->getPathForDisplay());
+                if ($mask & MaskDecoder::DELETE) {
+                    $errors[] = $this->getRoleActionDeniedMessage('delete', $resource->getPathForDisplay());
                 }
             }
         }

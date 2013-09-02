@@ -49,7 +49,7 @@ class ResourceType
      *     cascade={"persist"}
      * )
      */
-    protected $action;
+    protected $actions;
 
     /**
      * @ORM\Column(name="is_exportable", type="boolean")
@@ -76,7 +76,7 @@ class ResourceType
     public function __construct()
     {
         $this->abstractResources = new ArrayCollection();
-        $this->customActions = new ArrayCollection();
+        $this->actions = new ArrayCollection();
     }
 
     /**
@@ -126,12 +126,12 @@ class ResourceType
 
     public function getActions()
     {
-        return $this->action;
+        return $this->actions;
     }
 
     public function addAction(MenuAction $action)
     {
-        $this->action->add($action);
+        $this->actions->add($action);
     }
 
     public function getAbstractResources()
@@ -152,5 +152,10 @@ class ResourceType
     public function isExportable()
     {
         return $this->isExportable;
+    }
+
+    public function getMaskDecoders()
+    {
+        return $this->maskDecoders;
     }
 }

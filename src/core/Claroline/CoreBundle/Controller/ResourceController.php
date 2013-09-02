@@ -241,7 +241,7 @@ class ResourceController
     /**
      * @EXT\Route(
      *     "/custom/{action}/{node}",
-     *     name="claro_resource_custom",
+     *     name="claro_resource_action",
      *     options={"expose"=true}
      * )
      *

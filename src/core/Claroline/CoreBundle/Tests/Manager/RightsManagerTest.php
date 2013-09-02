@@ -8,11 +8,11 @@ use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 class RightsManagerTest extends MockeryTestCase
 {
     private $rightsRepo;
+    private $maskManager;
     private $resourceNodeRepo;
     private $roleManager;
     private $roleRepo;
     private $resourceTypeRepo;
-    private $maskRepo;
     private $translator;
     private $om;
     private $dispatcher;
@@ -22,11 +22,11 @@ class RightsManagerTest extends MockeryTestCase
         parent::setUp();
 
         $this->rightsRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceRightsRepository');
+        $this->maskManager = $this->mock('Claroline\CoreBundle\Manager\MaskManager');
         $this->roleManager = $this->mock('Claroline\CoreBundle\Manager\RoleManager');
         $this->resourceNodeRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceNodeRepository');
         $this->roleRepo = $this->mock('Claroline\CoreBundle\Repository\RoleRepository');
         $this->resourceTypeRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceTypeRepository');
-        $this->maskRepo = $this->mock('Doctrine\ORM\EntityRepository');
         $this->translator = $this->mock('Symfony\Component\Translation\Translator');
         $this->dispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
@@ -333,97 +333,6 @@ class RightsManagerTest extends MockeryTestCase
         $this->assertEquals(array(), $this->getManager()->getCreationRights($roles, $node));
     }
 
-    public function testEncodeMask()
-    {
-        $resourceType = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
-
-        $openDecoder = new \Claroline\CoreBundle\Entity\Resource\MaskDecoder();
-        $openDecoder->setValue(1);
-        $openDecoder->setName('open');
-
-        $editDecoder = new \Claroline\CoreBundle\Entity\Resource\MaskDecoder();
-        $editDecoder->setValue(2);
-        $editDecoder->setName('edit');
-
-        $deleteDecoder = new \Claroline\CoreBundle\Entity\Resource\MaskDecoder();
-        $deleteDecoder->setValue(4);
-        $deleteDecoder->setName('delete');
-
-        $copyDecoder = new \Claroline\CoreBundle\Entity\Resource\MaskDecoder();
-        $copyDecoder->setValue(8);
-        $copyDecoder->setName('copy');
-
-        $exportDecoder = new \Claroline\CoreBundle\Entity\Resource\MaskDecoder();
-        $exportDecoder->setValue(16);
-        $exportDecoder->setName('export');
-
-        $decoders = array($openDecoder, $editDecoder, $deleteDecoder, $copyDecoder, $exportDecoder);
-
-        foreach ($decoders as $decoder) {
-            $decoder->setResourceType($resourceType);
-        }
-
-        $this->maskRepo->shouldReceive('findBy')->once()
-            ->with(array('resourceType' => $resourceType))->andReturn($decoders);
-
-        $perms = array(
-            'open' => true,
-            'edit' => false,
-            'delete' => true,
-            'copy' => true,
-            'export' => true
-        );
-
-        $expectedMask = 1 + 8 + 4 + 16;
-
-        $this->assertEquals($expectedMask, $this->getManager()->encodeMask($perms, $resourceType));
-    }
-
-    public function testDecodeMask()
-    {
-        $resourceType = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
-
-        $openDecoder = new \Claroline\CoreBundle\Entity\Resource\MaskDecoder();
-        $openDecoder->setValue(1);
-        $openDecoder->setName('open');
-
-        $editDecoder = new \Claroline\CoreBundle\Entity\Resource\MaskDecoder();
-        $editDecoder->setValue(2);
-        $editDecoder->setName('edit');
-
-        $deleteDecoder = new \Claroline\CoreBundle\Entity\Resource\MaskDecoder();
-        $deleteDecoder->setValue(4);
-        $deleteDecoder->setName('delete');
-
-        $copyDecoder = new \Claroline\CoreBundle\Entity\Resource\MaskDecoder();
-        $copyDecoder->setValue(8);
-        $copyDecoder->setName('copy');
-
-        $exportDecoder = new \Claroline\CoreBundle\Entity\Resource\MaskDecoder();
-        $exportDecoder->setValue(16);
-        $exportDecoder->setName('export');
-
-        $decoders = array($openDecoder, $editDecoder, $deleteDecoder, $copyDecoder, $exportDecoder);
-
-        foreach ($decoders as $decoder) {
-            $decoder->setResourceType($resourceType);
-        }
-
-        $this->maskRepo->shouldReceive('findBy')->once()
-            ->with(array('resourceType' => $resourceType))->andReturn($decoders);
-
-        $perms = array(
-            'open' => true,
-            'edit' => false,
-            'delete' => true,
-            'copy' => true,
-            'export' => true
-        );
-
-        $mask = $this->getManager()->encodeMask($perms, $resourceType);
-        $this->assertEquals($perms, $this->getManager()->decodeMask($mask, $resourceType));
-    }
-
     private function getManager(array $mockedMethods = array())
     {
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Resource\ResourceRights')
@@ -434,15 +343,14 @@ class RightsManagerTest extends MockeryTestCase
             ->andReturn($this->roleRepo);
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Resource\ResourceType')
             ->andReturn($this->resourceTypeRepo);
-        $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Resource\MaskDecoder')
-            ->andReturn($this->maskRepo);
 
         if (count($mockedMethods) === 0) {
             return new RightsManager(
                 $this->translator,
                 $this->om,
                 $this->dispatcher,
-                $this->roleManager
+                $this->roleManager,
+                $this->maskManager
             );
         } else {
             $stringMocked = '[';
@@ -460,7 +368,8 @@ class RightsManagerTest extends MockeryTestCase
                     $this->translator,
                     $this->om,
                     $this->dispatcher,
-                    $this->roleManager
+                    $this->roleManager,
+                    $this->maskManager
                 )
             );
         }
