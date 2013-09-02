@@ -10,6 +10,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class MaskDecoder
 {
+    const OPEN   = 1;
+    const COPY   = 2;
+    const EXPORT = 4;
+    const EDIT   = 8;
+    const DELETE = 16;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -30,7 +36,7 @@ class MaskDecoder
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
-     *     inversedBy="maskDecoder",
+     *     inversedBy="maskDecoders",
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="resource_type_id", onDelete="CASCADE", nullable=false)

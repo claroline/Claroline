@@ -437,7 +437,7 @@
                     'node': node,
                     'isSelectionAllowed': isSelectionAllowed,
                     'hasMenu': hasMenu,
-                    'customActions': this.parameters.resourceTypes[node.type].customActions || {},
+                    'actions': this.parameters.resourceTypes[node.type].actions || {},
                     'webRoot': this.parameters.webPath
                 }));
             }

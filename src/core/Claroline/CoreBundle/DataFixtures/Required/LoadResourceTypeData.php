@@ -48,9 +48,9 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
         $defaultPerms = array(
             'open' => array(),
             'copy' => array(),
-            'delete' => array('delete'),
-            'export' => array('download'),
-            'edit' => array('rename', 'properties', 'manage_rights')
+            'export' => array('download' => false),
+            'edit' => array('rename' => true, 'edit-properties' => true, 'edit-rights' => true),
+            'delete' => array('delete' => false)
         );
 
         $i = 0;
@@ -61,20 +61,22 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
             $type->setExportable($attributes[1]);
             $manager->persist($type);
 
-            $j = 1;
+            $j = 0;
             foreach($defaultPerms as $name => $menuActions) {
 
                 $maskDecoder = new MaskDecoder();
-                $maskDecoder->setValue(pow($j, 2));
+                $maskDecoder->setValue(pow(2, $j));
                 $maskDecoder->setName($name);
                 $maskDecoder->setResourceType($type);
 
-                foreach ($menuActions as $menuAction) {
+                foreach ($menuActions as $menuAction => $isForm) {
                     $menu = new MenuAction();
                     $menu->setName($menuAction);
                     $menu->setAsync(true);
-                    $menu->setPermRequired($name);
+                    $menu->setIsCustom(false);
+                    $menu->setPermRequired(pow(2, $j));
                     $menu->setResourceType($type);
+                    $menu->setIsForm($isForm);
                     $manager->persist($menu);
                 }
 
