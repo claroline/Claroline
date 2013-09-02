@@ -434,6 +434,7 @@ class ResourceManager
 
         if ($next) {
             $this->removePreviousWherePreviousIs($node);
+            $node->setNext(null);
             $next->setPrevious($node);
             $this->om->persist($next);
         }
