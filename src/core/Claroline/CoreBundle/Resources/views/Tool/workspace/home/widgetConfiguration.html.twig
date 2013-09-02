@@ -1,9 +1,17 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
-{% block section_content %}
+{% block breadcrumb %}
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-cog',
+                'icon': 'icon-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': workspace.getName(),
+                'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
+            },
+            {
                 'name': 'parameters'|trans({}, 'platform'),
                 'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
             },
@@ -21,8 +29,9 @@
             }
         ])
     }}
+{% endblock %}
 
-    <br/>
+{% block section_content %}
     {% block section_widget_content %}
         {% include 'ClarolineCoreBundle:Tool\\workspace\\home:widgetConfigurationForm.html.twig' %}
     {% endblock %}

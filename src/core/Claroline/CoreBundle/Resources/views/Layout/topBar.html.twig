@@ -57,10 +57,10 @@
                         <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="{% if workspaces is empty %}disabled{% else %}dropdown{% endif %}">
-                            <a><i class="icon-time"></i> {{ 'history'|trans({}, 'platform') }}</a>
                         {% if not workspaces is empty %}
-                            <ul class="dropdown-menu">
+                            <li class="dropdown-header">
+                                <i class="icon-time"></i> {{ 'history'|trans({}, 'platform') }}
+                            </li>
                                 {% for workspace in workspaces %}
                                     <li>
                                     <a href="{{ path('claro_workspace_open',
@@ -71,9 +71,7 @@
                                     </a>
                                     </li>
                                 {% endfor %}
-                            </ul>
                         {% endif %}
-                        </li>
 
                         <li class="divider"></li>
                         <li>
@@ -99,12 +97,12 @@
                 <li class="dropdown{{ "/workspaces/" | compareRoute(" active") | raw }}">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="icon-book"></i>
-                    {% if isInAWorkspace %}
-                        {{ currentWorkspace.getName() }}
-                        <span class="workspace-code">({{ currentWorkspace.getCode() }})</span>
-                    {% else %}
-                        {{ 'workspaces'|trans({}, 'platform') }}
-                    {% endif %}
+                        {% if isInAWorkspace %}
+                            {{ currentWorkspace.getName() }}
+                            <span class="workspace-code">({{ currentWorkspace.getCode() }})</span>
+                        {% else %}
+                            {{ 'workspaces'|trans({}, 'platform') }}
+                        {% endif %}
                         <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu">

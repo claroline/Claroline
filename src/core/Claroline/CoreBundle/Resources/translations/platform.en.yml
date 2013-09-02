@@ -305,6 +305,7 @@ profile_form_username: Username
 properties: Properties
 public: Public
 public_workspaces: 'Public workspaces'
+public_workspace_empty: 'There are no public workspaces.'
 recursive_dir_action: 'Apply to the contents of the directory and its subdirectories'
 register: Register
 register_to_a_workspace: 'Register to a workspace'
