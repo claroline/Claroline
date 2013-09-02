@@ -10,7 +10,7 @@ class WorkspaceResourceParametersController extends AbstractParametersController
     /**
      * @Template("ClarolineCoreBundle:Resource:configResourcesManager.html.twig")
      */
-    public function workspaceResourceTypesAction()
+    public function initPickerAction()
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
