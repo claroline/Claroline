@@ -1,17 +1,27 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script
-        src="{{ asset('bundles/clarolinecore/js/administration/registrationManagementSubjectList.js') }}"
-        type="text/javascript"
-    >
-    </script>
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name':'registration_to_workspaces'|trans({}, 'platform'),
+                'href': path('claro_admin_registration_management')
+            },
+            {
+                'name':'users'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
 {% endblock %}
-
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'registration_to_workspaces'|trans({}, 'platform') }}</h3>
+        <h3 class="panel-title">{{ 'registration_to_workspaces'|trans({}, 'platform') }} ({{ 'users'|trans({}, 'platform') }})</h3>
     </div>
     <div class="panel-body" id="registration-list-div" subject-type="user">
         <div>
@@ -20,19 +30,6 @@
                 <ul id="custom-flashbag-ul">
                 </ul>
             </div>
-            {{
-                macros.breadcrumbs([
-                    {
-                        'icon': 'icon-book',
-                        'name':'registration_to_workspaces'|trans({}, 'platform'),
-                        'href': path('claro_admin_registration_management')
-                    },
-                    {
-                        'name':'users'|trans({}, 'platform'),
-                        'href': ''
-                    }
-                ])
-            }}
         </div>
 
         <h4>{{ 'select_users_for_registration_to_workspace'|trans({}, 'platform') }}</h4>
@@ -71,3 +68,13 @@
         </button>
     </div>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src="{{ asset('bundles/clarolinecore/js/administration/registrationManagementSubjectList.js') }}"
+        type="text/javascript"
+    >
+    </script>
+{% endblock %}
+

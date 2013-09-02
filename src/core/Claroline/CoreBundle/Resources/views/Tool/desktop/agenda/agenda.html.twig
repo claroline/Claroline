@@ -3,25 +3,32 @@
 {% set calendarPath = 'bundles/frontend/jquery/plugin/calendar/' %}
 
 {% block stylesheets %}
-{{ parent() }}
-<link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.css') }}'/>
-<link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
-<link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
 {% endblock %}
-{% block section_content %}
-    <div class="panel-body">
-        {{
-            macros.breadcrumbs(
-                [
-                    {
-                        'icon': 'icon-calendar',
-                        'name': 'agenda'|trans({}, 'platform'),
-                        'href': '#'
-                    }
-                ]
-            )
-        }}
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-briefcase',
+                'name': 'desktop'|trans({}, 'platform'),
+                'href': path('claro_desktop_open')
+            },
+            {
+                'name': 'agenda'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
 
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'agenda'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body">
         <div id="selectWorkspace">
             {% for c in cours %}
                 {{c}}

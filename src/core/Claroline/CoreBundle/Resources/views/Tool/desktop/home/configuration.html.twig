@@ -1,23 +1,26 @@
 {% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
-
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-briefcase',
+                'name': 'desktop'|trans({}, 'platform'),
+                'href': path('claro_desktop_open')
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_desktop_open_tool', {'toolName': 'parameters'})
+            },
+            {
+                'name': 'home'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'home_parameters'|trans({}, 'platform') }}</h3>
-    </div>
-    <div class="panel-body">
-        {{
-            macros.breadcrumbs([
-                {
-                    'icon': 'icon-cog',
-                    'name': 'parameters'|trans({}, 'platform'),
-                    'href': path('claro_desktop_open_tool', {'toolName': 'parameters'})
-                },
-                {
-                    'name': 'home'|trans({}, 'platform'),
-                    'href': ''
-                }
-            ])
-        }}
     </div>
     <div class="list-group">
         <a class="list-group-item" href="{{ path('claro_desktop_widget_properties') }}">
