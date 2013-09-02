@@ -5,3 +5,12 @@ open: Open
 resource_shortcut: Shortcut
 text: Text
 resource_name_form_name: 'Resource name'
+resource_properties_form_copiable: Copy
+resource_properties_form_creationDate: 'Creation Date'
+resource_properties_form_creator: Creator
+resource_properties_form_deletable: Delete
+resource_properties_form_editable: Edit
+resource_properties_form_exportable: Export
+resource_properties_form_name: Name
+resource_properties_form_resourceType: 'Resource type'
+resource_properties_form_newIcon: 'Icon'

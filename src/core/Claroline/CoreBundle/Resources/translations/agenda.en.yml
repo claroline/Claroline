@@ -1,6 +1,6 @@
 agenda_form_title : title
-agenda_form_end : " (jj/mm/aaaa)"
-agenda_form_start : "Start date"
+agenda_form_end : "End date jj/mm/aaaa) or (jj-mm-aaaa)"
+agenda_form_start : "Start date jj/mm/aaaa) or (jj-mm-aaaa)"
 agenda_form_description : "Description"
 agenda_form_allDay : " All day"
 agenda_form_priority : "Priority"
