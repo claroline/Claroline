@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\DataFixtures\Demo;
+namespace Claroline\CoreBundle\DataFixtures\Optional;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -49,12 +49,10 @@ class LoadTextData extends AbstractFixture implements ContainerAwareInterface
 
         foreach ($this->texts as $name) {
             $lipsumGenerator = $this->container->get('claroline.utilities.lipsum_generator');
-            $manager = $this->container->get('doctrine.orm.entity_manager');
             $revision = new Revision();
             $revision->setContent($lipsumGenerator->generateLipsum($this->words), true, 1023);
             $revision->setUser($user);
             $manager->persist($revision);
-            $manager->flush();
             $text = new Text();
             $text->setName($name);
             $manager->persist($text);

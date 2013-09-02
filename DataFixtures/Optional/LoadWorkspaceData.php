@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\DataFixtures\Demo;
+namespace Claroline\CoreBundle\DataFixtures\Optional;
 
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Doctrine\Common\DataFixtures\AbstractFixture;

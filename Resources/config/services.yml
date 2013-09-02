@@ -16,13 +16,3 @@ services:
     claroline.symfony_yaml:
         class: Symfony\Component\Yaml\Yaml
         public: false
-    claroline.symfony_fixture_loader:
-        class: Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader
-        public: false
-        arguments:
-            - "@service_container"
-    claroline.doctrine_fixture_executor:
-        class: Doctrine\Common\DataFixtures\Executor\ORMExecutor
-        public: false
-        arguments:
-            - "@doctrine.orm.entity_manager"

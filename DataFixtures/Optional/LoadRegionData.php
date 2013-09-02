@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\DataFixtures\Demo;
+namespace Claroline\CoreBundle\DataFixtures\Optional;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
