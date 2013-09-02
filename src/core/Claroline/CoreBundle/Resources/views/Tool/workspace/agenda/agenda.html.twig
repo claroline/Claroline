@@ -93,7 +93,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% render controller('ClarolineCoreBundle:Tool\\WorkspaceResourceParameters:workspaceResourceTypes')
+        {% render controller('ClarolineCoreBundle:Tool\\WorkspaceResourceParameters:initPicker')
     %}
     <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}' ></script>
     <script type='text/javascript' src='{{ asset(calendarPath ~ 'js/fullcalendar.js') }}' ></script>
