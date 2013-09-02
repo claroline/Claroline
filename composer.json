@@ -6,44 +6,10 @@
     },
     "require": {
         "php": ">=5.3.3",
-
-        "claroline/bundle-recorder": "dev-master",
-        "claroline/installation-bundle": "dev-master",
-
-        "symfony/symfony": "2.3.*",
-        "doctrine/orm": ">=2.2,<2.5-dev",
-        "doctrine/doctrine-bundle": ">=2.1",
-        "twig/extensions": "1.0.*",
-        "symfony/assetic-bundle": "2.3.*",
-        "symfony/swiftmailer-bundle": "2.3.*",
-        "symfony/monolog-bundle": "2.3.*",
-        "sensio/distribution-bundle": "2.3.*",
-        "sensio/framework-extra-bundle": "2.3.*",
-        "sensio/generator-bundle": "2.3.*",
         "incenteev/composer-parameter-handler": "~2.0",
-        "jms/security-extra-bundle": "dev-master",
-        "jms/di-extra-bundle": "dev-master",
-        "stof/doctrine-extensions-bundle": "dev-master",
-        "doctrine/doctrine-fixtures-bundle": "dev-master",
-        "friendsofsymfony/jsrouting-bundle": "dev-master",
-        "stfalcon/tinymce-bundle": "dev-master",
-        "jms/twig-js-bundle": "dev-master",
-        "white-october/pagerfanta-bundle": "dev-master",
-        "idci/exporter-bundle": "dev-master",
-        "leafo/lessphp": "master",
-        "twbs/bootstrap": "3.0.0",
-        "fortawesome/fontawesome": "dev-master",
-        "xaguilars/bootstrap-colorpicker": "dev-master",
-        "zenstruck/form-bundle": "dev-master",
-        "icap-lyon1/simple-tag-bundle": "dev-master",
-        "besimple/sso-auth-bundle": "*",
-        "composer/composer": "dev-master",
-        "willdurand/expose-translation-bundle": "dev-master",
-
-        "claroline/front-end-bundle": "dev-master",
-        "claroline/taxonomy-bundle": "dev-master",
-        "claroline/migration-bundle": "dev-master",
-        "claroline/plugin-installer": "dev-master",
+        "sensio/distribution-bundle": "2.3.*",
+        "claroline/bundle-recorder": "dev-master",
+        "claroline/core-bundle": "dev-master",
 
         "claroline/activity-tool-bundle": "dev-master",
         "claroline/example-bundle": "dev-master",
@@ -55,28 +21,7 @@
         "claroline/site-bundle": "dev-master",
         "claroline/video-player-bundle": "dev-master"
     },
-    "require-dev": {
-        "mockery/mockery": "dev-master@dev",
-        "hamcrest/hamcrest": "1.1.0",
-        "mikey179/vfsStream": "dev-master"
-    },
     "repositories": [
-        {
-            "type": "package",
-            "package": {
-                "name": "fortawesome/fontawesome",
-                "version": "dev-master",
-                "dist": {
-                    "url": "https://github.com/FortAwesome/Font-Awesome/zipball/master",
-                    "type": "zip"
-                },
-                "source": {
-                    "url": "https://github.com/FortAwesome/Font-Awesome.git",
-                    "type": "git",
-                    "reference": "master"
-                }
-            }
-        },
         {
             "type": "package",
             "package": {
@@ -108,14 +53,6 @@
                     "files": ["Hamcrest-1.1.0/Hamcrest/Hamcrest.php"]
                 }
             }
-        },
-        {
-            "type": "vcs",
-            "url": "http://github.com/claroline/FrontEndBundle"
-        },
-        {
-            "type": "vcs",
-            "url": "http://github.com/claroline/TaxonomyBundle"
         }
     ],
     "scripts": {

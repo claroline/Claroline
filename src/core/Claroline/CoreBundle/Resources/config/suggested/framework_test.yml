@@ -1,8 +1,0 @@
-imports:
-    - { resource: framework_dev.yml }
-
-framework:
-    test: ~
-    csrf_protection: false
-    session:
-        storage_id: session.storage.filesystem

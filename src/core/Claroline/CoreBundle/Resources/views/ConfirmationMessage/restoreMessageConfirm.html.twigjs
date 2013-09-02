@@ -1,3 +1,0 @@
-{% twig_js name="restoreMessageConfirm" %}
-
-{{ nbItems }} {{ 'restore_messages_confirm_message'|trans({}, 'platform') }}
