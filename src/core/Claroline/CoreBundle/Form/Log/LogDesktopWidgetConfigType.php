@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Form;
+namespace Claroline\CoreBundle\Form\Log;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -47,7 +47,7 @@ class LogDesktopWidgetConfigType extends AbstractType
         $resolver->setDefaults(
             array(
                 'workspaces' => array(),
-                'translation_domain' => 'platform'
+                'translation_domain' => 'log'
             )
         );
     }

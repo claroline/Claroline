@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Event\Log\LogWorkspaceCreateEvent;
 use Mockery as m;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -19,6 +20,7 @@ class WorkspaceManagerTest extends MockeryTestCase
     private $resourceTypeRepo;
     private $roleRepo;
     private $workspaceRepo;
+    private $strictDispatcher;
     private $dispatcher;
     private $om;
     private $ut;
@@ -40,7 +42,8 @@ class WorkspaceManagerTest extends MockeryTestCase
         $this->roleRepo = $this->mock('Claroline\CoreBundle\Repository\RoleRepository');
         $this->rightsRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceRightsRepository');
         $this->workspaceRepo = $this->mock('Claroline\CoreBundle\Repository\AbstractResourceRepository');
-        $this->dispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
+        $this->strictDispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
+        $this->dispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcher');
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->ut = $this->mock('Claroline\CoreBundle\Library\Utilities\ClaroUtilities');
         $this->templateDir = vfsStream::url('template');
@@ -128,7 +131,7 @@ class WorkspaceManagerTest extends MockeryTestCase
         $this->toolManager->shouldReceive('import');
 
         $this->dispatcher->shouldReceive('dispatch')->once()
-            ->with('log', 'Log\LogWorkspaceCreate', array($workspace));
+            ->with('log', new LogWorkspaceCreateEvent($workspace));
 
         $this->om->shouldReceive('persist')->once()->with($workspace);
         $this->om->shouldReceive('endFlushSuite')->once();
@@ -658,6 +661,7 @@ class WorkspaceManagerTest extends MockeryTestCase
                 $this->roleManager,
                 $this->resourceManager,
                 $this->toolManager,
+                $this->strictDispatcher,
                 $this->dispatcher,
                 $this->om,
                 $this->ut,
@@ -680,6 +684,7 @@ class WorkspaceManagerTest extends MockeryTestCase
                     $this->roleManager,
                     $this->resourceManager,
                     $this->toolManager,
+                    $this->strictDispatcher,
                     $this->dispatcher,
                     $this->om,
                     $this->ut,

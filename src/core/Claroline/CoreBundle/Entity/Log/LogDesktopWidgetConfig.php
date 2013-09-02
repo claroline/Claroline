@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Entity\Logger;
+namespace Claroline\CoreBundle\Entity\Log;
 
 use Doctrine\ORM\Mapping as ORM;
 

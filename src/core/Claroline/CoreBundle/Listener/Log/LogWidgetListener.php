@@ -1,6 +1,6 @@
 <?php
 
-namespace  Claroline\CoreBundle\Listener;
+namespace  Claroline\CoreBundle\Listener\Log;
 
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -8,10 +8,10 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Event\ConfigureWidgetWorkspaceEvent;
 use Claroline\CoreBundle\Event\ConfigureWidgetDesktopEvent;
-use Claroline\CoreBundle\Entity\Logger\LogWorkspaceWidgetConfig;
-use Claroline\CoreBundle\Entity\Logger\LogDesktopWidgetConfig;
-use Claroline\CoreBundle\Form\LogWorkspaceWidgetConfigType;
-use Claroline\CoreBundle\Form\LogDesktopWidgetConfigType;
+use Claroline\CoreBundle\Entity\Log\LogWorkspaceWidgetConfig;
+use Claroline\CoreBundle\Entity\Log\LogDesktopWidgetConfig;
+use Claroline\CoreBundle\Form\Log\LogWorkspaceWidgetConfigType;
+use Claroline\CoreBundle\Form\Log\LogDesktopWidgetConfigType;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 
 /**

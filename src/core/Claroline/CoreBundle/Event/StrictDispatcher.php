@@ -41,7 +41,7 @@ class StrictDispatcher
      * @param string $shortEventClassName Short name of the event class
      * @param array  $eventArgs           Parameters to be passed to the event object constructor
      *
-     * @return Symfony\Component\EventDispatcher\Event
+     * @return \Symfony\Component\EventDispatcher\Event
      *
      * @throws MissingEventClassException if no event class matches the short class name
      * @throws MandatoryEventException    if the event is mandatory but have no listener observing it

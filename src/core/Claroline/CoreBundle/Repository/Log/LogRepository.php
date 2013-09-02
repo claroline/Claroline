@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Repository;
+namespace Claroline\CoreBundle\Repository\Log;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -312,23 +312,27 @@ class LogRepository extends EntityRepository
     private function addActionFilterToQueryBuilder($qb, $action, $actionsRestriction)
     {
         if ($action == 'resource_all') {
-            $action = array('resource_create',
+            $action = array(
+                'resource_create',
                 'resource_move',
                 'resource_read',
                 'resource_export',
                 'resource_delete',
                 'resource_update',
                 'resource_shortcut',
-                'resource_child_update');
+                'resource_child_update'
+            );
         } elseif ($action == 'ws_role_all') {
-            $action = array('ws_role_create',
+            $action = array(
+                'ws_role_create',
                 'ws_role_delete',
                 'ws_role_update',
                 'ws_role_change_right',
                 'ws_role_subscribe_user',
                 'ws_role_unsubscribe_user',
                 'ws_role_subscribe_group',
-                'ws_role_unsubscribe_group');
+                'ws_role_unsubscribe_group'
+            );
         } elseif ($action == 'group_all') {
             $action = array('group_add_user', 'group_create', 'group_delete', 'group_remove_user', 'group_update');
         } elseif ($action == 'user_all') {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Listener;
+namespace Claroline\CoreBundle\Listener\Log;
 
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\LogGroupDeleteEvent;
@@ -8,7 +8,7 @@ use Claroline\CoreBundle\Event\Log\LogResourceDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogUserDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceRoleDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogNotRepeatableInterface;
-use Claroline\CoreBundle\Entity\Logger\Log;
+use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -76,8 +76,6 @@ class LogListener
 
         //Simple type properties
         $log->setAction($event->getAction());
-        $log->setChildType($event->getChildType());
-        $log->setChildAction($event->getChildAction());
         $log->setToolName($event->getToolName());
 
         //Object properties

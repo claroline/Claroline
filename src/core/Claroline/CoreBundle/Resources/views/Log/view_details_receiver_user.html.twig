@@ -1,10 +1,10 @@
 {% if log.getDetails().receiverUser is defined %}
-    <h4>{{ ('log_receiver_user')|trans({}, 'platform') }}</h4>
+    <h4>{{ ('log_receiver_user')|trans({}, 'log') }}</h4>
 
     {% if log.getReceiver() and log.getDoer() and log.getReceiver().getId() == log.getDoer().getId() %}
         <dl class="dl-horizontal">
             <dt></dt>
-            <dd>{{ ('log_himself')|trans({}, 'platform') }}</dd>
+            <dd>{{ ('log_himself')|trans({}, 'log') }}</dd>
         </dl>
     {% else %}
         <dl class="dl-horizontal">

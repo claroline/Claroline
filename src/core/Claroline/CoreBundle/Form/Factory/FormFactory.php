@@ -89,10 +89,10 @@ class FormFactory
             'formType' => 'Claroline\CoreBundle\Form\WorkspaceTemplateType'
         ),
         self::TYPE_LOG_WORKSPACE_WIDGET_CONFIG => array(
-            'formType' => 'Claroline\CoreBundle\Form\LogWorkspaceWidgetConfigType'
+            'formType' => 'Claroline\CoreBundle\Form\Log\LogWorkspaceWidgetConfigType'
         ),
         self::TYPE_LOG_DESKTOP_WIDGET_CONFIG => array(
-            'formType' => 'Claroline\CoreBundle\Form\LogDesktopWidgetConfigType'
+            'formType' => 'Claroline\CoreBundle\Form\Log\LogDesktopWidgetConfigType'
         ),
         self::TYPE_AGENDA => array(
             'formType' => 'Claroline\CoreBundle\Form\AgendaType',

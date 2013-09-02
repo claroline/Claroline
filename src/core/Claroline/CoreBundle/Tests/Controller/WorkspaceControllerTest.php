@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\Event\Log\LogRoleSubscribeEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -621,8 +622,7 @@ class WorkspaceControllerTest extends MockeryTestCase
             ->shouldReceive('dispatch')
             ->with(
                 'log',
-                'Log\LogRoleSubscribe',
-                array($role, $user, $workspace)
+                new LogRoleSubscribeEvent($role, $user)
             )
             ->once();
         $this->security->shouldReceive('setToken')

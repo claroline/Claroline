@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Repository\AbstractResourceRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
-use Claroline\CoreBundle\Repository\LogRepository;
+use Claroline\CoreBundle\Repository\Log\LogRepository;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -35,7 +35,7 @@ class AnalyticsManager
         $this->resourceRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
-        $this->logRepository = $om->getRepository('ClarolineCoreBundle:Logger\Log');
+        $this->logRepository = $om->getRepository('ClarolineCoreBundle:Log\Log');
 
     }
 

@@ -11,9 +11,8 @@ use Claroline\CoreBundle\Form\DataTransformer\DateRangeToTextTransformer;
 use Claroline\CoreBundle\Form\WorkspaceLogFilterType;
 use Claroline\CoreBundle\Form\AdminLogFilterType;
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
-use Claroline\CoreBundle\Event\Log\LogResourceChildUpdateEvent;
-use Claroline\CoreBundle\Entity\Logger\LogWorkspaceWidgetConfig;
-use Claroline\CoreBundle\Entity\Logger\LogDesktopWidgetConfig;
+use Claroline\CoreBundle\Entity\Log\LogWorkspaceWidgetConfig;
+use Claroline\CoreBundle\Entity\Log\LogDesktopWidgetConfig;
 
 /**
  * @DI\Service("claroline.log.manager")
@@ -38,7 +37,7 @@ class LogManager
     {
         $loggedUser = $this->container->get('security.context')->getToken()->getUser();
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $repository = $em->getRepository('ClarolineCoreBundle:Logger\Log');
+        $repository = $em->getRepository('ClarolineCoreBundle:Log\Log');
 
         $desktopConfig = $this->getDesktopWidgetConfig($loggedUser);
         if ($desktopConfig === null) {
@@ -49,7 +48,7 @@ class LogManager
         }
 
         $hiddenConfigs = $em
-            ->getRepository('ClarolineCoreBundle:Logger\LogHiddenWorkspaceWidgetConfig')
+            ->getRepository('ClarolineCoreBundle:Log\LogHiddenWorkspaceWidgetConfig')
             ->findBy(array('user' => $loggedUser));
         $workspaceIds = array();
         foreach ($hiddenConfigs as $hiddenConfig) {
@@ -63,7 +62,7 @@ class LogManager
 
         if (count($workspaces) > 0) {
             $configs = $em
-                ->getRepository('ClarolineCoreBundle:Logger\LogWorkspaceWidgetConfig')
+                ->getRepository('ClarolineCoreBundle:Log\LogWorkspaceWidgetConfig')
                 ->findBy(array('workspace' => $workspaces, 'isDefault' => false));
         } else {
             $configs = array();
@@ -138,7 +137,7 @@ class LogManager
             return null;
         }
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $repository = $em->getRepository('ClarolineCoreBundle:Logger\Log');
+        $repository = $em->getRepository('ClarolineCoreBundle:Log\Log');
 
         $config = $this->getWorkspaceWidgetConfig($workspace);
         if ($config === null) {
@@ -265,7 +264,7 @@ class LogManager
         $filter = urlencode(json_encode($data));
 
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $repository = $em->getRepository('ClarolineCoreBundle:Logger\Log');
+        $repository = $em->getRepository('ClarolineCoreBundle:Log\Log');
 
         $query = $repository->findFilteredLogsQuery(
             $action,
@@ -316,7 +315,7 @@ class LogManager
         }
 
         $hiddenWorkspaceConfigs = $em
-            ->getRepository('ClarolineCoreBundle:Logger\LogHiddenWorkspaceWidgetConfig')
+            ->getRepository('ClarolineCoreBundle:Log\LogHiddenWorkspaceWidgetConfig')
             ->findBy(array('user' => $user));
 
         foreach ($hiddenWorkspaceConfigs as $config) {
@@ -333,7 +332,7 @@ class LogManager
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         return $em
-            ->getRepository('ClarolineCoreBundle:Logger\LogDesktopWidgetConfig')
+            ->getRepository('ClarolineCoreBundle:Log\LogDesktopWidgetConfig')
             ->findOneBy(array('user' => $user, 'isDefault' => false));
     }
 
@@ -342,7 +341,7 @@ class LogManager
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         return $em
-            ->getRepository('ClarolineCoreBundle:Logger\LogDesktopWidgetConfig')
+            ->getRepository('ClarolineCoreBundle:Log\LogDesktopWidgetConfig')
             ->findOneBy(array('user' => null, 'isDefault' => true));
     }
 
@@ -351,7 +350,7 @@ class LogManager
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         return $em
-            ->getRepository('ClarolineCoreBundle:Logger\LogWorkspaceWidgetConfig')
+            ->getRepository('ClarolineCoreBundle:Log\LogWorkspaceWidgetConfig')
             ->findOneBy(array('workspace' => $workspace, 'isDefault' => false));
     }
 
@@ -360,7 +359,7 @@ class LogManager
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         return $em
-            ->getRepository('ClarolineCoreBundle:Logger\LogWorkspaceWidgetConfig')
+            ->getRepository('ClarolineCoreBundle:Log\LogWorkspaceWidgetConfig')
             ->findOneBy(array('workspace' => null, 'isDefault' => true));
     }
 
@@ -377,19 +376,19 @@ class LogManager
         //List item delegation
         $views = array();
         foreach ($logs as $log) {
-            if ($log->getAction() === LogResourceChildUpdateEvent::ACTION) {
-                $eventName = 'create_log_list_item_'.$log->getResourceType()->getName();
-                $event = new LogCreateDelegateViewEvent($log);
-                $this->container->get('event_dispatcher')->dispatch($eventName, $event);
-
-                if ($event->getResponseContent() === "") {
-                    throw new \Exception(
-                        "Event '{$eventName}' didn't receive any response."
-                    );
-                }
-
-                $views[$log->getId().''] = $event->getResponseContent();
-            }
+//            if ($log->getAction() === LogResourceChildUpdateEvent::ACTION) {
+//                $eventName = 'create_log_list_item_'.$log->getResourceType()->getName();
+//                $event = new LogCreateDelegateViewEvent($log);
+//                $this->container->get('event_dispatcher')->dispatch($eventName, $event);
+//
+//                if ($event->getResponseContent() === "") {
+//                    throw new \Exception(
+//                        "Event '{$eventName}' didn't receive any response."
+//                    );
+//                }
+//
+//                $views[$log->getId().''] = $event->getResponseContent();
+//            }
         }
 
         return $views;
@@ -434,7 +433,8 @@ class LogManager
             'ws_role_unsubscribe_user',
             'ws_role_subscribe_group',
             'ws_role_unsubscribe_group',
-            'ws_tool_read'
+            'ws_tool_read',
+            'post_create'
         );
     }
 
@@ -489,26 +489,33 @@ class LogManager
      */
     public function getEventList()
     {
-        $logClassPath = $this->container->get('kernel')->getRootDir() . '/../src/core/Claroline/CoreBundle/Event/Event/Log';
-        $finder = new Finder();
-        $finder->files()->in($logClassPath);
-
-        $logEventClassNamespace = 'Claroline\CoreBundle\Event\Log\\';
-
-        $eventList = array();
+        /** @var \AppKernel $kernel */
+        $kernel             = $this->container->get('kernel');
+        $suffixLogPath      = '/Event/Log';
+        $suffixLogNamespace = '\Event\Log';
+        $bundles            = $kernel->getBundles();
+        $eventList          = array();
 
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator = $this->container->get('translator');
 
-        /** @var \SplFileInfo $file */
-        foreach ($finder as $file) {
-            $className      = basename($file->getFilename(), '.' . $file->getExtension());
-            $classNamespace = $logEventClassNamespace . $className;
-            $classParents   = class_parents($classNamespace);
-            if (in_array('Claroline\CoreBundle\Event\Log\LogGenericEvent', $classParents)) {
-                $reflectionClass = new \ReflectionClass($classNamespace);
-                foreach ($reflectionClass->getConstants() as $constant) {
-                    $eventList[$constant] = $translator->trans(sprintf('log_%s_title', $constant), array(), 'platform');
+        foreach ($bundles as $bundle) {
+            $bundleEventLogDirectory = $bundle->getPath() .  $suffixLogPath;
+            if (file_exists($bundleEventLogDirectory)) {
+                $finder = new Finder();
+                $finder->files()->in($bundleEventLogDirectory)->sortByName();
+                /** @var \Symfony\Component\Finder\SplFileInfo $file */
+                foreach ($finder as $file) {
+                    $classNamespace = $bundle->getNamespace() . $suffixLogNamespace . '\\' . $file->getBasename('.' . $file->getExtension());
+                    if (in_array('Claroline\CoreBundle\Event\Log\LogGenericEvent', class_parents($classNamespace))) {
+                        $reflectionClass = new \ReflectionClass($classNamespace);
+                        $classConstants = $reflectionClass->getConstants();
+                        foreach ($classConstants as $key => $classConstant) {
+                            if (preg_match('/^ACTION/', $key)) {
+                                $eventList[$classConstant] = $translator->trans(sprintf('log_%s_title', $classConstant), array(), 'log');
+                            }
+                        }
+                    }
                 }
             }
         }

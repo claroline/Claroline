@@ -170,6 +170,14 @@ The associated view is the ‘log_details.html.twig’ and its code is given bel
 {% endblock %}
 ```
 
+###Create its own event###
+
+If you want you can create your own event class.
+It's easy, you just need to keep in mind that database informations will remain the same.
+You just create a wrapper of an existing event, but with a custom action.
+
+For example l'ts just say that...
+
 ----------
 
 Return to :
