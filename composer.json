@@ -20,7 +20,8 @@
         "symfony/twig-bundle": "~2.0",
         "doctrine/orm": "~2.2",
         "doctrine/migrations": "dev-master",
-        "jdorn/sql-formatter": "~1.0"
+        "jdorn/sql-formatter": "~1.0",
+        "claroline/kernel-bundle": "dev-master"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
