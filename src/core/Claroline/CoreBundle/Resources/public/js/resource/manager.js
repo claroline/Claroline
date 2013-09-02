@@ -23,9 +23,11 @@
                     this.el.className = 'picker resource-manager';
 
                     $(this.el).html(Twig.render(ModalWindow, {
+                        'modalId': 'modal-picker',
                         'header' : 'Resource Picker',
                         'body': ''
                     }));
+                    $('body').append($(this.el));
                     this.wrapper = $('.modal-body', this.el);
                 } else {
                     this.el.className = 'main resource-manager';
@@ -1134,7 +1136,7 @@
                 this.views.picker.subViews.actions.callback = callback;
             }
 
-            $('.modal', this.views.picker.$el).modal(action === 'open' ? 'show' : 'hide');
+            $("#modal-picker").modal(action === 'open' ? 'show' : 'hide');
         }
     };
 
