@@ -13,9 +13,13 @@ class ScriptHandler
         self::initAutoload($event, __METHOD__);
     }
 
-    public static function postPackageInstall(PackageEvent $event)
+    public static function prePackageInstall(PackageEvent $event)
     {
         self::initAutoload($event, __METHOD__);
+    }
+
+    public static function postPackageInstall(PackageEvent $event)
+    {
         $recorder = new Recorder($event->getComposer());
         $recorder->addBundlesFrom($event->getOperation()->getPackage());
     }
