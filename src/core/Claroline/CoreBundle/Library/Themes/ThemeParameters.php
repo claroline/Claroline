@@ -11,50 +11,22 @@ class ThemeParameters
     {
         $path = __DIR__.'/parameters/';
 
-        $this->colors = $this->parseFile($path.'colors.less');
-
-        $this->parameters = array(
-            'Scaffolding' => $this->parseFile($path.'scaffolding.less'),
-            'Links' => $this->parseFile($path.'links.less'),
-            'Typography' => $this->parseFile($path.'typography.less'),
-            'Sizing' => $this->parseFile($path.'sizing.less'),
-            'Tables' => $this->parseFile($path.'tables.less'),
-            'Buttons' => $this->parseFile($path.'buttons.less'),
-            'Forms' => $this->parseFile($path.'forms.less'),
-            'Dropdowns' => $this->parseFile($path.'dropdowns.less'),
-            'Components' => $this->parseFile($path.'components.less'),
-            'Navbar' => $this->parseFile($path.'navbar.less'),
-            'Inverted Navbar' => $this->parseFile($path.'invertednavbar.less'),
-            'Pagination' => $this->parseFile($path.'pagination.less'),
-            'Hero Unit' => $this->parseFile($path.'herounit.less'),
-            'Alerts' => $this->parseFile($path.'alerts.less'),
-            'Tooltip & Popovers' => $this->parseFile($path.'popovers.less')
-        );
+        $this->parameters = $this->getParsedFiles($path);
 
         if (file_exists($file)) {
 
             $variables = $this->parseFile($file);
 
-            foreach ($this->colors as $code => $value) {
-                if (isset($variables[$code])) {
-                    $this->colors[$code] = $variables[$code];
-                }
-            }
-
             foreach ($this->parameters as $name => $parameters) {
 
                 foreach ($parameters as $code => $value) {
-                    if (isset($variables[$code])) {
+
+                    if ($value and isset($variables[$code])) {
                         $this->parameters[$name][$code] = $variables[$code];
                     }
                 }
             }
         }
-    }
-
-    public function getColors()
-    {
-        return $this->colors;
     }
 
     public function getParameters()
@@ -81,6 +53,21 @@ class ThemeParameters
                 }
 
                 $parameters[$code] = trim(str_replace(';', '', $value));
+            }
+        }
+
+        return $parameters;
+    }
+
+    public function getParsedFiles($path)
+    {
+        $parameters = array();
+
+        $files = scandir($path);
+
+        foreach ($files as $file) {
+            if (pathinfo($path.$file, PATHINFO_EXTENSION) == "less") {
+                $parameters[substr(pathinfo($file, PATHINFO_FILENAME), 3)] = $this->parseFile($path.$file);
             }
         }
 
