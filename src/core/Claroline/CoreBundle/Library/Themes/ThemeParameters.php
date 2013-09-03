@@ -9,8 +9,7 @@ class ThemeParameters
 
     public function __construct($file = null)
     {
-        $path = __DIR__.'/parameters/';
-
+        $path = __DIR__.'/../../Resources/Theme/parameters/';
         $this->parameters = $this->getParsedFiles($path);
 
         if (file_exists($file)) {
@@ -18,9 +17,7 @@ class ThemeParameters
             $variables = $this->parseFile($file);
 
             foreach ($this->parameters as $name => $parameters) {
-
                 foreach ($parameters as $code => $value) {
-
                     if ($value and isset($variables[$code])) {
                         $this->parameters[$name][$code] = $variables[$code];
                     }
@@ -40,11 +37,9 @@ class ThemeParameters
         $lines = file($path);
 
         foreach ($lines as $line) {
-
             $line = explode(':', $line);
 
             if (count($line) > 1) {
-
                 $code = trim($line[0]);
                 $value = array_pop($line);
 
@@ -62,12 +57,12 @@ class ThemeParameters
     public function getParsedFiles($path)
     {
         $parameters = array();
-
         $files = scandir($path);
 
         foreach ($files as $file) {
-            if (pathinfo($path.$file, PATHINFO_EXTENSION) == "less") {
-                $parameters[substr(pathinfo($file, PATHINFO_FILENAME), 3)] = $this->parseFile($path.$file);
+            if (pathinfo($path.$file, PATHINFO_EXTENSION) === 'less') {
+                $key = str_replace("_", " ", substr(pathinfo($file, PATHINFO_FILENAME), 3));
+                $parameters[$key] = $this->parseFile($path.$file);
             }
         }
 
