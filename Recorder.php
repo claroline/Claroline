@@ -14,6 +14,10 @@ class Recorder
     {
         $this->composer = $composer;
         $this->bundleFile = $this->getBundleFile();
+
+        if (file_exists($this->bundleFile)) {
+            touch($this->bundleFile);
+        }
     }
 
     public function addBundlesFrom(PackageInterface $package)
