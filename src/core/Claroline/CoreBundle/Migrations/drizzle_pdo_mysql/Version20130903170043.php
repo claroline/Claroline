@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\mysqli;
+namespace Claroline\CoreBundle\Migrations\drizzle_pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/08/30 11:28:21
+ * Generation date: 2013/09/03 05:00:43
  */
-class Version20130830112820 extends AbstractMigration
+class Version20130903170043 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -18,22 +18,24 @@ class Version20130830112820 extends AbstractMigration
             CREATE TABLE claro_resource_mask_decoder (
                 id INT AUTO_INCREMENT NOT NULL, 
                 resource_type_id INT NOT NULL, 
-                value INT NOT NULL, 
+                `value` INT NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
-                INDEX IDX_39D93F4298EC6B7B (resource_type_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                PRIMARY KEY(id), 
+                INDEX IDX_39D93F4298EC6B7B (resource_type_id)
+            )
         ");
         $this->addSql("
-            CREATE TABLE claro_resource_action (
+            CREATE TABLE claro_menu_action (
                 id INT AUTO_INCREMENT NOT NULL, 
                 resource_type_id INT DEFAULT NULL, 
                 name VARCHAR(255) DEFAULT NULL, 
-                async TINYINT(1) DEFAULT NULL, 
-                permRequired VARCHAR(255) DEFAULT NULL, 
-                INDEX IDX_7EE4A91298EC6B7B (resource_type_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                async BOOLEAN DEFAULT NULL, 
+                is_custom BOOLEAN NOT NULL, 
+                is_form BOOLEAN NOT NULL, 
+                `value` VARCHAR(255) DEFAULT NULL, 
+                PRIMARY KEY(id), 
+                INDEX IDX_1F57E52B98EC6B7B (resource_type_id)
+            )
         ");
         $this->addSql("
             ALTER TABLE claro_resource_mask_decoder 
@@ -42,8 +44,8 @@ class Version20130830112820 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE claro_resource_action 
-            ADD CONSTRAINT FK_7EE4A91298EC6B7B FOREIGN KEY (resource_type_id) 
+            ALTER TABLE claro_menu_action 
+            ADD CONSTRAINT FK_1F57E52B98EC6B7B FOREIGN KEY (resource_type_id) 
             REFERENCES claro_resource_type (id) 
             ON DELETE SET NULL
         ");
@@ -64,15 +66,15 @@ class Version20130830112820 extends AbstractMigration
             DROP TABLE claro_resource_mask_decoder
         ");
         $this->addSql("
-            DROP TABLE claro_resource_action
+            DROP TABLE claro_menu_action
         ");
         $this->addSql("
             ALTER TABLE claro_resource_rights 
-            ADD can_delete TINYINT(1) NOT NULL, 
-            ADD can_open TINYINT(1) NOT NULL, 
-            ADD can_edit TINYINT(1) NOT NULL, 
-            ADD can_copy TINYINT(1) NOT NULL, 
-            ADD can_export TINYINT(1) NOT NULL, 
+            ADD can_delete BOOLEAN NOT NULL, 
+            ADD can_open BOOLEAN NOT NULL, 
+            ADD can_edit BOOLEAN NOT NULL, 
+            ADD can_copy BOOLEAN NOT NULL, 
+            ADD can_export BOOLEAN NOT NULL, 
             DROP mask
         ");
     }

@@ -65,6 +65,7 @@
         return Routing.generate(route, parameters);
     });
 
+    //required for variables translations (the language can't be known at the compile time)
     Twig.setFilter('trans', function(name, parameters, domain) {
         return Translator.get(domain + ':' + name);
     });

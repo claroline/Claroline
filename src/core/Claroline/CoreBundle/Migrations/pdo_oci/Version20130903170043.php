@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\oci8;
+namespace Claroline\CoreBundle\Migrations\pdo_oci;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/08/30 11:28:21
+ * Generation date: 2013/09/03 05:00:43
  */
-class Version20130830112820 extends AbstractMigration
+class Version20130903170043 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -55,12 +55,14 @@ class Version20130830112820 extends AbstractMigration
             CREATE INDEX IDX_39D93F4298EC6B7B ON claro_resource_mask_decoder (resource_type_id)
         ");
         $this->addSql("
-            CREATE TABLE claro_resource_action (
+            CREATE TABLE claro_menu_action (
                 id NUMBER(10) NOT NULL, 
                 resource_type_id NUMBER(10) DEFAULT NULL, 
                 name VARCHAR2(255) DEFAULT NULL, 
                 async NUMBER(1) DEFAULT NULL, 
-                permRequired VARCHAR2(255) DEFAULT NULL, 
+                is_custom NUMBER(1) NOT NULL, 
+                is_form NUMBER(1) NOT NULL, 
+                value VARCHAR2(255) DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -68,32 +70,32 @@ class Version20130830112820 extends AbstractMigration
             DECLARE constraints_Count NUMBER; BEGIN 
             SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
             FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_RESOURCE_ACTION' 
+            WHERE TABLE_NAME = 'CLARO_MENU_ACTION' 
             AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_RESOURCE_ACTION ADD CONSTRAINT CLARO_RESOURCE_ACTION_AI_PK PRIMARY KEY (ID)'; END IF; END;
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_MENU_ACTION ADD CONSTRAINT CLARO_MENU_ACTION_AI_PK PRIMARY KEY (ID)'; END IF; END;
         ");
         $this->addSql("
-            CREATE SEQUENCE CLARO_RESOURCE_ACTION_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+            CREATE SEQUENCE CLARO_MENU_ACTION_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
         ");
         $this->addSql("
-            CREATE TRIGGER CLARO_RESOURCE_ACTION_AI_PK BEFORE INSERT ON CLARO_RESOURCE_ACTION FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_RESOURCE_ACTION_ID_SEQ.NEXTVAL INTO :NEW.ID 
+            CREATE TRIGGER CLARO_MENU_ACTION_AI_PK BEFORE INSERT ON CLARO_MENU_ACTION FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_MENU_ACTION_ID_SEQ.NEXTVAL INTO :NEW.ID 
             FROM DUAL; IF (
                 :NEW.ID IS NULL 
                 OR :NEW.ID = 0
             ) THEN 
-            SELECT CLARO_RESOURCE_ACTION_ID_SEQ.NEXTVAL INTO :NEW.ID 
+            SELECT CLARO_MENU_ACTION_ID_SEQ.NEXTVAL INTO :NEW.ID 
             FROM DUAL; ELSE 
             SELECT NVL(Last_Number, 0) INTO last_Sequence 
             FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_RESOURCE_ACTION_ID_SEQ'; 
+            WHERE Sequence_Name = 'CLARO_MENU_ACTION_ID_SEQ'; 
             SELECT :NEW.ID INTO last_InsertID 
             FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_RESOURCE_ACTION_ID_SEQ.NEXTVAL INTO last_Sequence 
+            SELECT CLARO_MENU_ACTION_ID_SEQ.NEXTVAL INTO last_Sequence 
             FROM DUAL; END LOOP; END IF; END;
         ");
         $this->addSql("
-            CREATE INDEX IDX_7EE4A91298EC6B7B ON claro_resource_action (resource_type_id)
+            CREATE INDEX IDX_1F57E52B98EC6B7B ON claro_menu_action (resource_type_id)
         ");
         $this->addSql("
             ALTER TABLE claro_resource_mask_decoder 
@@ -102,8 +104,8 @@ class Version20130830112820 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE claro_resource_action 
-            ADD CONSTRAINT FK_7EE4A91298EC6B7B FOREIGN KEY (resource_type_id) 
+            ALTER TABLE claro_menu_action 
+            ADD CONSTRAINT FK_1F57E52B98EC6B7B FOREIGN KEY (resource_type_id) 
             REFERENCES claro_resource_type (id) 
             ON DELETE SET NULL
         ");
@@ -128,7 +130,7 @@ class Version20130830112820 extends AbstractMigration
             DROP TABLE claro_resource_mask_decoder
         ");
         $this->addSql("
-            DROP TABLE claro_resource_action
+            DROP TABLE claro_menu_action
         ");
         $this->addSql("
             ALTER TABLE claro_resource_rights 
