@@ -50,10 +50,12 @@ body {
     background-color: @gray-lighter;
     color: lighten(@gray, 20%);
 
-    .container p {
-        margin: 15px;
-        text-align: center;
-        max-height: 100%;
+    .container {
+        p, h1, h2, h3, h4, h5, h6 {
+            margin: 15px;
+            text-align: center;
+            max-height: 100%;
+        }
     }
 }
 
@@ -69,6 +71,7 @@ body {
     .list-group-item.disabled {
 
         padding: 8px 15px !important;
+        color:@panel-default-text;
         font-size: (@font-size-base * 1.125);
         background:@panel-default-heading-bg;
     }
@@ -620,22 +623,9 @@ div.pagination
 /**********************/
 /** Theme Generator  **/
 /**********************/
-/*
 
-Colors no longer valid in bootstrap 3
-
-.theme-generator .theme-value input
-{
-    margin:0px;
+.bs-example {
+    border-bottom:1px solid @gray-lighter;
+    margin:0 0 20px 0;
+    padding:0 0 20px 0;
 }
-
-.theme-generator .theme-swatch span {
-    display: inline-block;
-    width: 30px;
-    height: 20px;
-    margin: -6px 0;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-}
-*/
