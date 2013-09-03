@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/08/30 11:28:21
+ * Generation date: 2013/09/03 05:00:43
  */
-class Version20130830112820 extends AbstractMigration
+class Version20130903170043 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -27,17 +27,19 @@ class Version20130830112820 extends AbstractMigration
             CREATE INDEX IDX_39D93F4298EC6B7B ON claro_resource_mask_decoder (resource_type_id)
         ");
         $this->addSql("
-            CREATE TABLE claro_resource_action (
+            CREATE TABLE claro_menu_action (
                 id INT IDENTITY NOT NULL, 
                 resource_type_id INT, 
                 name NVARCHAR(255), 
                 async BIT, 
-                permRequired NVARCHAR(255), 
+                is_custom BIT NOT NULL, 
+                is_form BIT NOT NULL, 
+                value NVARCHAR(255), 
                 PRIMARY KEY (id)
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_7EE4A91298EC6B7B ON claro_resource_action (resource_type_id)
+            CREATE INDEX IDX_1F57E52B98EC6B7B ON claro_menu_action (resource_type_id)
         ");
         $this->addSql("
             ALTER TABLE claro_resource_mask_decoder 
@@ -46,8 +48,8 @@ class Version20130830112820 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE claro_resource_action 
-            ADD CONSTRAINT FK_7EE4A91298EC6B7B FOREIGN KEY (resource_type_id) 
+            ALTER TABLE claro_menu_action 
+            ADD CONSTRAINT FK_1F57E52B98EC6B7B FOREIGN KEY (resource_type_id) 
             REFERENCES claro_resource_type (id) 
             ON DELETE SET NULL
         ");
@@ -83,7 +85,7 @@ class Version20130830112820 extends AbstractMigration
             DROP TABLE claro_resource_mask_decoder
         ");
         $this->addSql("
-            DROP TABLE claro_resource_action
+            DROP TABLE claro_menu_action
         ");
         $this->addSql("
             ALTER TABLE claro_resource_rights 
