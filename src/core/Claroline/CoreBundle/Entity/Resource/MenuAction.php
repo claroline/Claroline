@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_resource_action")
+ * @ORM\Table(name="claro_menu_action")
  */
 class MenuAction
 {
@@ -38,9 +38,9 @@ class MenuAction
     protected $isForm = false;
 
     /**
-     * @ORM\Column(name="permRequired", nullable=true)
+     * @ORM\Column(name="value", nullable=true)
      */
-    protected $permRequired;
+    protected $value;
 
     /**
      * @ORM\ManyToOne(
@@ -87,14 +87,14 @@ class MenuAction
         $this->resourceType = $resourceType;
     }
 
-    public function setPermRequired($permRequired)
+    public function setValue($value)
     {
-        $this->permRequired = $permRequired;
+        $this->value = $value;
     }
 
-    public function getPermRequired()
+    public function getValue()
     {
-        return $this->permRequired;
+        return $this->value;
     }
 
     public function setIsCustom($bool)

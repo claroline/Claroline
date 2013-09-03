@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
@@ -715,14 +716,9 @@ class ResourceManager
         }
 
         if ($isAdmin) {
-            $resourceArray['can_export'] = true;
-            $resourceArray['can_edit'] = true;
-            $resourceArray['can_delete'] = true;
+            $resourceArray['mask'] = 1023;
         } else {
-            $rights = $this->resourceRightsRepo->findMaximumRights($roles, $node);
-            $resourceArray['can_export'] = $rights['canExport'];
-            $resourceArray['can_edit'] = $rights['canEdit'];
-            $resourceArray['can_delete'] = $rights['canDelete'];
+            $resourceArray['mask'] = $this->resourceRightsRepo->findMaximumRights($roles, $node);
         }
 
         return $resourceArray;

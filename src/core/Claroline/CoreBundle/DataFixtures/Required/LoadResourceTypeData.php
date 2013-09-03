@@ -45,47 +45,13 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
             array('activity', true)
         );
 
-        $defaultPerms = array(
-            'open' => array(),
-            'copy' => array(),
-            'export' => array('download' => false),
-            'edit' => array('rename' => true, 'edit-properties' => true, 'edit-rights' => true),
-            'delete' => array('delete' => false)
-        );
-
-        $i = 0;
-
         foreach ($resourceTypes as $attributes) {
             $type = new ResourceType();
             $type->setName($attributes[0]);
             $type->setExportable($attributes[1]);
             $manager->persist($type);
-
-            $j = 0;
-            foreach($defaultPerms as $name => $menuActions) {
-
-                $maskDecoder = new MaskDecoder();
-                $maskDecoder->setValue(pow(2, $j));
-                $maskDecoder->setName($name);
-                $maskDecoder->setResourceType($type);
-
-                foreach ($menuActions as $menuAction => $isForm) {
-                    $menu = new MenuAction();
-                    $menu->setName($menuAction);
-                    $menu->setAsync(true);
-                    $menu->setIsCustom(false);
-                    $menu->setPermRequired(pow(2, $j));
-                    $menu->setResourceType($type);
-                    $menu->setIsForm($isForm);
-                    $manager->persist($menu);
-                }
-
-                $manager->persist($maskDecoder);
-                $j++;
-            }
-
+            $this->container->get('claroline.manager.mask_manager')->addDefaultPerms($type);
             $this->addReference("resource_type/{$attributes[0]}", $type);
-            $i++;
         }
 
         $manager->flush();

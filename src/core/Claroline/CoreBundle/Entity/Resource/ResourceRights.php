@@ -31,7 +31,7 @@ class ResourceRights
     /**
      * @ORM\Column(type="integer")
      */
-    protected $mask;
+    protected $mask = 0;
 
     /**
      * @ORM\ManyToOne(

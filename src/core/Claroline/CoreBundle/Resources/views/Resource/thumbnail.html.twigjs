@@ -38,13 +38,13 @@
                             data-action-type="display-form"
                         {% endif %}
                     >
-                        {{ attributes.name }}
+                        {{ attributes.name|trans({}, 'resource_menu') }}
                     </a>
                 </li>
                 {% else %}
                 <li class="disabled">
                     <a>
-                    {{ attributes.name }}
+                        {{ attributes.name|trans({}, 'resource_menu') }}
                     </a>
                 </li>
                 {% endif %}
