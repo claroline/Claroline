@@ -312,7 +312,7 @@
     </script>
 {% endblock %}
 
-<<<<<<< HEAD
+
 {% set queryString = '' %}
 {% for role in roles %}
     {% set queryString = queryString~'roleIds[]='~role.getId() %}
@@ -560,5 +560,4 @@
     {{ renderPager(search, workspace.getId(), withUnregistered, queryString, pager) }}
     {{ displayControls(workspace.getId()) }}
 {% endblock %}
-=======
->>>>>>> upstream/master
+
