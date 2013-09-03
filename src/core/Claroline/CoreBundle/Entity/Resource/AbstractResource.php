@@ -21,7 +21,6 @@ abstract class AbstractResource
      */
     protected $resourceNode;
 
-    /** @Assert\NotBlank() */
     protected $name = '';
 
     //to remove ?

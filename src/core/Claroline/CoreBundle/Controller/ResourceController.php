@@ -452,7 +452,7 @@ class ResourceController
         //by criteria recursive => infinte loop
         $resources = $this->resourceManager->getByCriteria($criteria, $userRoles, true);
 
-        return new JsonResponse(array('resources' => $resources, 'path' => $path));
+        return new JsonResponse(array('nodes' => $resources, 'path' => $path));
     }
 
     /**
@@ -507,7 +507,7 @@ class ResourceController
     /**
      * @EXT\Template("ClarolineCoreBundle:Resource:breadcrumbs.html.twig")
      */
-    public function renderBreadcrumbsAction(ResourceNode $node, AbstractWorkspace $workspace, $_breadcrumbs)
+    public function renderBreadcrumbsAction(ResourceNode $node, $_breadcrumbs)
     {
         $breadcrumbsAncestors = array();
 
@@ -522,6 +522,7 @@ class ResourceController
         if (count($breadcrumbsAncestors) === 0) {
             $_breadcrumbs = array();
             $ancestors = $this->resourceManager->getAncestors($node);
+            $workspace = $node->getWorkspace();
 
             foreach ($ancestors as $ancestor) {
                 $_breadcrumbs[] = $ancestor['id'];
