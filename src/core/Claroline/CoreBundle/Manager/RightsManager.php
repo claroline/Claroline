@@ -20,8 +20,9 @@ use Symfony\Component\Translation\Translator;
  */
 class RightsManager
 {
-    private $maskManager;
     /** @var MaskManager */
+    private $maskManager;
+
     private $rightsRepo;
     /** @var ResourceNodeRepository */
     private $resourceRepo;
@@ -146,7 +147,7 @@ class RightsManager
         $this->om->startFlushSuite();
 
         foreach ($originalRights as $originalRight) {
-            $new = new ResourceRights();
+            $new = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceRights');
             $new->setRole($originalRight->getRole());
             $new->setResourceNode($node);
             $new->setMask($originalRight->getMask());
@@ -240,9 +241,6 @@ class RightsManager
             $resourceRights = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceRights');
             $resourceRights->setResourceNode($node);
             $resourceRights->setRole($role);
-            $resourceRights->setMask(0);
-            $this->om->persist($resourceRights);
-            $this->om->flush();
         }
 
         return $resourceRights;

@@ -140,7 +140,7 @@ class ResourceVoter implements VoterInterface
         return false;
     }
 
-    private function checkAction($action, $resources, $token)
+    private function checkAction($action, array $resources, TokenInterface $token)
     {
         $errors = array();
         $action = strtolower($action);
@@ -149,8 +149,10 @@ class ResourceVoter implements VoterInterface
             $mask = $this->repository->findMaximumRights($this->ut->getRoles($token), $resource);
             $type = $resource->getResourceType();
             $decoder = $this->maskManager->getDecoder($type, $action);
+            $grant = $decoder ? $mask & $decoder->getValue(): 0;
 
-            if (!$mask & $decoder->getValue()) {
+
+            if ($decoder && $grant === 0) {
                 $errors[] = $this->getRoleActionDeniedMessage($action, $resource->getPathForDisplay());
             }
         }
@@ -272,7 +274,7 @@ class ResourceVoter implements VoterInterface
      *
      * @return array
      */
-    public function checkCopy(ResourceNode $parent, $resources, TokenInterface $token)
+    public function checkCopy(ResourceNode $parent, array $resources, TokenInterface $token)
     {
         $errors = array();
         $rightsCreation = $this->repository

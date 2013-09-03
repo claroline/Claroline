@@ -64,4 +64,8 @@
     Twig.setFunction('path', function (route, parameters) {
         return Routing.generate(route, parameters);
     });
+
+    Twig.setFilter('trans', function(name, parameters, domain) {
+        return Translator.get(domain + ':' + name);
+    });
 })();

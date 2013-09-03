@@ -9,6 +9,7 @@ class MaskManagerTest extends MockeryTestCase
 {
     private $om;
     private $maskRepo;
+    private $menuRepo;
     private $manager;
 
     public function setUp()
@@ -19,6 +20,8 @@ class MaskManagerTest extends MockeryTestCase
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Resource\MaskDecoder')
             ->andReturn($this->maskRepo);
+        $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Resource\MenuAction')
+            ->andReturn($this->menuRepo);
         $this->manager = new MaskManager($this->om);
     }
 

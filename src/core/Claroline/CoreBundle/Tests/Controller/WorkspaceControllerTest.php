@@ -429,7 +429,7 @@ class WorkspaceControllerTest extends MockeryTestCase
             ->andReturn('route');
 
         $this->assertEquals(
-            new RedirectResponse('route'),
+             new RedirectResponse('route'),
             $this->getController()->openAction($workspace)
         );
     }
@@ -635,7 +635,7 @@ class WorkspaceControllerTest extends MockeryTestCase
             ->andReturn(array('user' => 'user'));
 
         $response = new JsonResponse(array('user' => 'user'));
-        
+
         $this->assertEquals(
             $response->getContent(),
             $this->getController()->addUserAction($workspace, $user)->getContent()
