@@ -24,5 +24,7 @@ class LogWorkspaceDeleteEvent extends LogGenericEvent
             null,
             $workspace
         );
+
+        $this->isDisplayedInAdmin(true);
     }
 }

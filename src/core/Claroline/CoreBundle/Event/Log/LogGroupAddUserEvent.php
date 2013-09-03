@@ -22,5 +22,7 @@ class LogGroupAddUserEvent extends LogGenericEvent
             $receiver,
             $receiverGroup
         );
+
+        $this->isDisplayedInAdmin(true);
     }
 }

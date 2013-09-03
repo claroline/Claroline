@@ -27,5 +27,7 @@ class LogWorkspaceRoleDeleteEvent extends LogGenericEvent
             $role,
             $role->getWorkspace()
         );
+
+        $this->isDisplayedInWorkspace(true);
     }
 }

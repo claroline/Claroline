@@ -35,5 +35,7 @@ class LogResourceExportEvent extends LogGenericEvent
             $node->getWorkspace(),
             $node->getCreator()
         );
+
+        $this->isDisplayedInWorkspace(true);
     }
 }

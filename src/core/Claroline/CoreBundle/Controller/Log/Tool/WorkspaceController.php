@@ -9,7 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 /**
  * Display logs in workspace's tool.
  */
-class WorkspaceLogController extends Controller
+class WorkspaceController extends Controller
 {
     /**
      * @EXT\Route(
@@ -33,7 +33,7 @@ class WorkspaceLogController extends Controller
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Tool/workspace:logList.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool/workspace/logs:logList.html.twig")
      *
      * Displays logs list using filter parameteres and page number
      *

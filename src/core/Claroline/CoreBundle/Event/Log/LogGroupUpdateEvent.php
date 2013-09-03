@@ -32,5 +32,7 @@ class LogGroupUpdateEvent extends LogGenericEvent implements MandatoryEventInter
             null,
             $receiverGroup
         );
+
+        $this->isDisplayedInAdmin(true);
     }
 }

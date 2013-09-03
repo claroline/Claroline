@@ -5,6 +5,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Exception\NotValidCurrentPageException;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Claroline\CoreBundle\Form\DataTransformer\DateRangeToTextTransformer;
@@ -376,19 +377,17 @@ class LogManager
         //List item delegation
         $views = array();
         foreach ($logs as $log) {
-//            if ($log->getAction() === LogResourceChildUpdateEvent::ACTION) {
-//                $eventName = 'create_log_list_item_'.$log->getResourceType()->getName();
-//                $event = new LogCreateDelegateViewEvent($log);
-//                $this->container->get('event_dispatcher')->dispatch($eventName, $event);
-//
-//                if ($event->getResponseContent() === "") {
-//                    throw new \Exception(
-//                        "Event '{$eventName}' didn't receive any response."
-//                    );
-//                }
-//
-//                $views[$log->getId().''] = $event->getResponseContent();
-//            }
+            $eventName = 'create_log_list_item_'.$log->getAction();
+            $event     = new LogCreateDelegateViewEvent($log);
+
+            /** @var EventDispatcher $eventDispatcher */
+            $eventDispatcher = $this->container->get('event_dispatcher');
+
+            if ($eventDispatcher->hasListeners($eventName)) {
+                $event = $eventDispatcher->dispatch($eventName, $event);
+
+                $views[$log->getId().''] = $event->getResponseContent();
+            }
         }
 
         return $views;
@@ -418,12 +417,10 @@ class LogManager
             'resource_create',
             'resource_delete',
             'resource_update',
-            'resource_child_update',
             'resource_move',
             'resource_shortcut',
             'resource_read',
             'resource_export',
-            'resource_child_update',
             'resource_copy',
             'ws_role_create',
             'ws_role_delete',
@@ -434,7 +431,8 @@ class LogManager
             'ws_role_subscribe_group',
             'ws_role_unsubscribe_group',
             'ws_tool_read',
-            'post_create'
+            'resource-icap_blog-post_create',
+            'resource-icap_blog-post_read'
         );
     }
 

@@ -21,5 +21,7 @@ class LogUserCreateEvent extends LogGenericEvent
             ),
             $receiver
         );
+
+        $this->isDisplayedInAdmin(true);
     }
 }

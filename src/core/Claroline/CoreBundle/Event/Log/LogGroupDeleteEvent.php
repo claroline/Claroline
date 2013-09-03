@@ -21,5 +21,7 @@ class LogGroupDeleteEvent extends LogGenericEvent
             null,
             $receiverGroup
         );
+
+        $this->isDisplayedInAdmin(true);
     }
 }

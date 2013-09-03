@@ -21,5 +21,7 @@ class LogUserDeleteEvent extends LogGenericEvent
             ),
             $receiver
         );
+
+        $this->isDisplayedInAdmin(true);
     }
 }

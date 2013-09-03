@@ -24,5 +24,7 @@ class LogWorkspaceCreateEvent extends LogGenericEvent
             null,
             $workspace
         );
+
+        $this->isDisplayedInAdmin(true);
     }
 }
