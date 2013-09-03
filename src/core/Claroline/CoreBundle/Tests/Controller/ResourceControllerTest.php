@@ -51,7 +51,7 @@ class ResourceControllerTest extends MockeryTestCase
 
         $response = new \Symfony\Component\HttpFoundation\Response;
         $customActionEvent->shouldReceive('getResponse')->andReturn($response);
-        $this->assertEquals($response, $controller->customAction('action', $node));
+        $this->assertEquals($response->getContent(), $controller->customAction('action', $node)->getContent());
     }
 
     private function getController(array $mockedMethods = array())

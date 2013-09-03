@@ -42,7 +42,8 @@ class HomeControllerTest extends MockeryTestCase
         $this->manager->shouldReceive('getContent')->once()->andReturn(array());
         $this->homeService->shouldReceive('defaultTemplate')->once();
         $this->templating->shouldReceive('render')->once();
-        $this->assertEquals(new Response, $this->controller->contentAction($this->content, $this->type, null));
+        $response = new Response;
+        $this->assertEquals($response->getContent(), $this->controller->contentAction($this->content, $this->type, null)->getContent());
     }
 
     public function testHomeAction()
@@ -64,7 +65,8 @@ class HomeControllerTest extends MockeryTestCase
     {
         $this->manager->shouldReceive('contentLayout')->once()->andReturn(array('content' => array('type' => 'home')));
         $this->templating->shouldReceive('render')->once();
-        $this->assertEquals(new Response, $this->controller->typeAction($this->type, $this->content, $this->region));
+        $response = new Response;
+        $this->assertEquals($response->getContent(), $this->controller->typeAction($this->type, $this->content, $this->region)->getContent());
     }
 
     public function testTypesAction()

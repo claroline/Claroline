@@ -70,27 +70,28 @@ class WorkspaceCalendarControllerTest extends MockeryTestCase
         $event->shouldReceive('getPriority')->once()->andReturn('#BBBDDD');
         $event->shouldReceive('getAllDay')->once()->andReturn(false);
         $event->shouldReceive('getDescription')->once()->andReturn('blabla');
-        $this->assertEquals(
-            new Response(
-                json_encode(
-                    array('id' => '1'
-                        ,'title' => 'title',
-                        'start' => '123456',
-                        'end' => '123457',
-                        'color' => '#BBBDDD',
-                        'allDay' => false,
-                        'description' => 'blabla'
-                    )
-                ),
-                200,
-                array('Content-Type' => 'application/json')
+        $response = new Response(
+            json_encode(
+                array('id' => '1'
+                    ,'title' => 'title',
+                    'start' => '123456',
+                    'end' => '123457',
+                    'color' => '#BBBDDD',
+                    'allDay' => false,
+                    'description' => 'blabla'
+                )
             ),
-            $this->getController(array('checkUserIsAllowed'))->addEventAction($workspace)
+            200,
+            array('Content-Type' => 'application/json')
+        );
+        $this->assertEquals(
+            $response->getContent(),
+            $this->getController(array('checkUserIsAllowed'))->addEventAction($workspace)->getContent()
         );
     }
 
-     public function testUpdateAction()
-     {
+    public function testUpdateAction()
+    {
 
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
@@ -132,22 +133,23 @@ class WorkspaceCalendarControllerTest extends MockeryTestCase
         $event->shouldReceive('getPriority')->once()->andReturn('#BBBDDD');
         $event->shouldReceive('getAllDay')->once()->andReturn(false);
         $event->shouldReceive('getDescription')->once()->andReturn('blabla');
-        $this->assertEquals(
-            new Response(
-                json_encode(
-                    array('id' => '1'
-                        ,'title' => 'title',
-                        'start' => '123456',
-                        'end' => '123457',
-                        'color' => '#BBBDDD',
-                        'allDay' => false,
-                        'description' => 'blabla'
-                    )
-                ),
-                200,
-                array('Content-Type' => 'application/json')
+        $response = new Response(
+            json_encode(
+                array('id' => '1'
+                    ,'title' => 'title',
+                    'start' => '123456',
+                    'end' => '123457',
+                    'color' => '#BBBDDD',
+                    'allDay' => false,
+                    'description' => 'blabla'
+                )
             ),
-            $this->getController(array('checkUserIsAllowed'))->updateAction($workspace)
+            200,
+            array('Content-Type' => 'application/json')
+        );
+        $this->assertEquals(
+            $response->getContent(),
+            $this->getController(array('checkUserIsAllowed'))->updateAction($workspace)->getContent()
         );
      }
 
