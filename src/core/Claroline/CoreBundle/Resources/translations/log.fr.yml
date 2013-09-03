@@ -1,3 +1,8 @@
+all: Tous
+resource: Ressource
+role: Rôle
+Show actions for: 'Afficher les actions sur'
+for user: 'de l''utilisateur'
 log_default_user: 'Claroline Connect'
 log_create: 'Création'
 log_update: 'Mise à jour'

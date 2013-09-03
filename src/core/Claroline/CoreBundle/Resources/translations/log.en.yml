@@ -1,3 +1,8 @@
+all: All
+resource: Resource
+role: Role
+Show actions for: 'Show actions for'
+for user: 'for user'
 log_default_user: 'Claroline Connect'
 log_hidden_workspace_widget_config_amount : Amount
 log_create: 'Create'

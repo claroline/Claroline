@@ -14,6 +14,7 @@ class WorkspaceLogFilterType extends AbstractType
             ->add(
                 'action', 'twolevelselect', array(
                     'label' => 'Show actions for',
+                    'translation_domain' => 'log',
                     'attr' => array('class' => 'input-medium'),
                     'choices' => array(
                         'all' => 'all',
@@ -75,7 +76,7 @@ class WorkspaceLogFilterType extends AbstractType
         $resolver
         ->setDefaults(
             array(
-                'translation_domain' => 'platform'
+                'translation_domain' => 'log'
             )
         );
     }
