@@ -142,7 +142,6 @@ find_workspaces: 'Find workspaces'
 first_name: 'First name'
 firstName: 'First name'
 for period: 'for period'
-for user: 'for user'
 forgot_password: 'Forgot your password ?'
 form_role: Role
 from: From
@@ -381,7 +380,6 @@ settings: Settings
 sharable: 'Sharable'
 show: Show
 Show actions: 'Show actions'
-Show actions for: 'Show actions for'
 show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
 show_as: 'Show as'

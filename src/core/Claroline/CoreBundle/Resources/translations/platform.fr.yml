@@ -143,7 +143,6 @@ first_name: Prénom
 firstName: Prénom
 forgot_password: 'Mot de passe oublié ?'
 for period: 'sur la période du'
-for user: 'de l''utilisateur'
 form_role: Rôle
 from: Depuis
 from_message: De
@@ -356,7 +355,6 @@ settings: Paramètres
 sharable: 'Partageable'
 show: Voir
 Show actions: 'Afficher les actions'
-Show actions for: 'Afficher les actions sur'
 show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
 show_as: 'Voir en tant que'

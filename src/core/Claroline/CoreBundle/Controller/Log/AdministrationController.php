@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller\log;
+namespace Claroline\CoreBundle\Controller\Log;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
