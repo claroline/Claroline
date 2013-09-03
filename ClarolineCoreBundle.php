@@ -104,7 +104,7 @@ class ClarolineCoreBundle extends Bundle implements AutoConfigurableInterface, C
         return $environment !== 'test' ? 'DataFixtures/Required' : null;
     }
 
-    public function getOptionalFixturesDirectory($environement, $version = null)
+    public function getOptionalFixturesDirectory($environment, $version = null)
     {
         return $environment !== 'test' ? 'DataFixtures/Demo' : null;
     }
