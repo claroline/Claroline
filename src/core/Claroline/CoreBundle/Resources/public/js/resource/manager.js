@@ -595,6 +595,7 @@
                             $('#role-list').append(Twig.render(resourceRightsRoles,
                                 {'workspaces': workspaces, 'nodeId': this.targetNodeId})
                             );
+                            $('#role-search-text').val(search);
                         }
                     });
                 },
