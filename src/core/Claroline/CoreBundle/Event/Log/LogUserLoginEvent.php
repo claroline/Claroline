@@ -12,5 +12,7 @@ class LogUserLoginEvent extends LogGenericEvent
     public function __construct()
     {
         parent::__construct(self::ACTION, array());
+
+        $this->isDisplayedInAdmin(true);
     }
 }

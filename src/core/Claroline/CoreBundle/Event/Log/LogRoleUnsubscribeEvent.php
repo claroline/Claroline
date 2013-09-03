@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 
 class LogRoleUnsubscribeEvent extends LogGenericEvent
 {
@@ -24,7 +25,7 @@ class LogRoleUnsubscribeEvent extends LogGenericEvent
             $details['workspace'] = array('name' => $role->getWorkspace()->getName());
         }
 
-        if ($subject instanceof \Claroline\CoreBundle\Entity\User) {
+        if ($subject instanceof User) {
             $details['receiverUser'] = array(
                 'firstName' => $subject->getFirstName(),
                 'lastName' => $subject->getLastName()
@@ -48,5 +49,7 @@ class LogRoleUnsubscribeEvent extends LogGenericEvent
             $role,
             $role->getWorkspace()
         );
+
+        $this->isDisplayedInWorkspace(true);
     }
 }

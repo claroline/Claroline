@@ -48,5 +48,7 @@ class LogResourceCopyEvent extends LogGenericEvent
             $resource->getWorkspace(),
             $resource->getCreator()
         );
+
+        $this->isDisplayedInWorkspace(true);
     }
 }

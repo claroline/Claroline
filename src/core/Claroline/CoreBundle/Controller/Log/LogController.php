@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller\Log;
 
+use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -38,7 +39,7 @@ class LogController extends Controller
      * @DI\InjectParams({
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
      *     "security"           = @DI\Inject("security.context"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "translator"         = @DI\Inject("translator")
@@ -47,18 +48,18 @@ class LogController extends Controller
     public function __construct(
         ToolManager $toolManager,
         WorkspaceManager $workspaceManager,
-        StrictDispatcher $eventDispatcher,
+        EventDispatcher $eventDispatcher,
         SecurityContextInterface $security,
         FormFactory $formFactory,
         Translator $translator
     )
     {
-        $this->toolManager = $toolManager;
+        $this->toolManager      = $toolManager;
         $this->workspaceManager = $workspaceManager;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->security = $security;
-        $this->formFactory = $formFactory;
-        $this->translator = $translator;
+        $this->eventDispatcher  = $eventDispatcher;
+        $this->security         = $security;
+        $this->formFactory      = $formFactory;
+        $this->translator       = $translator;
     }
 
     private function convertFormDataToConfig($config, $data, AbstractWorkspace $workspace = null, $isDefault)
@@ -105,33 +106,33 @@ class LogController extends Controller
     /**
      * @EXT\Route(
      *     "/view_details/{logId}",
-     *     name="claro_log_view_details",
-     *     options={"expose"=true}
+     *           name="claro_log_view_details",
+     *           options={"expose"=true}
      * )
      * @EXT\ParamConverter(
      *      "log",
-     *      class="ClarolineCoreBundle:Log\Log",
-     *      options={"id" = "logId", "strictId" = true}
+     *           class="ClarolineCoreBundle:Log\Log",
+     *           options={"id" = "logId", "strictId" = true}
      * )
      *
      * Displays the public profile of an user.
      *
-     * @param integer $userId The id of the user we want to see the profile
+     * @param \Claroline\CoreBundle\Entity\Log\Log $log
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function viewDetailsAction(Log $log)
     {
-//        if ($log->getAction() === LogResourceChildUpdateEvent::ACTION ) {
-//
-//            $event = $this->eventDispatcher->dispatch(
-//                'create_log_details_'.$log->getResourceType()->getName(),
-//                'Log\LogCreateDelegateView',
-//                array($log)
-//            );
-//
-//            return new Response($event->getResponseContent());
-//        }
+        $eventLogName = 'create_log_details_' . $log->getAction();
+
+        if ($this->eventDispatcher->hasListeners($eventLogName)) {
+            $event = $this->eventDispatcher->dispatch(
+                $eventLogName,
+                new LogCreateDelegateViewEvent($log)
+            );
+
+            return new Response($event->getResponseContent());
+        }
 
         return $this->render(
             'ClarolineCoreBundle:Log:view_details.html.twig',

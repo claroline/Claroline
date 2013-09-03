@@ -20,8 +20,12 @@ class LogGenericEvent extends Event
     protected $workspace;
     protected $owner;
     protected $toolName;
-    protected $childType;
-    protected $childAction;
+
+    /** @var bool */
+    protected $isDisplayedInAdmin = false;
+
+    /** @var bool */
+    protected $isDisplayedInWorkspace = false;
 
     /**
      * Constructor.
@@ -35,22 +39,18 @@ class LogGenericEvent extends Event
         Role $role = null,
         AbstractWorkspace $workspace = null,
         User $owner = null,
-        $toolName = null,
-        $childType = null,
-        $childAction = null
+        $toolName = null
     )
     {
-        $this->action = $action;
-        $this->details = $details;
-        $this->receiver = $receiver;
-        $this->receiverGroup = $receiverGroup;
-        $this->resource = $resource;
-        $this->role = $role;
-        $this->workspace = $workspace;
-        $this->owner = $owner;
-        $this->toolName = $toolName;
-        $this->childType = $childType;
-        $this->childAction = $childAction;
+        $this->action                 = $action;
+        $this->details                = $details;
+        $this->receiver               = $receiver;
+        $this->receiverGroup          = $receiverGroup;
+        $this->resource               = $resource;
+        $this->role                   = $role;
+        $this->workspace              = $workspace;
+        $this->owner                  = $owner;
+        $this->toolName               = $toolName;
     }
 
     /**
@@ -126,21 +126,48 @@ class LogGenericEvent extends Event
     }
 
     /**
-     * Returns the sub entity's type in case of indirect resource update
-     * (creation/delete/update of plugin's sub entities; e.g. In a forum we have threads and posts as sub entities)
+     * Return the visibility in admin for the associated log
+     *
+     * @return bool
      */
-    public function getChildType()
+    public function getIsDisplayedInAdmin()
     {
-        return $this->childType;
+        return $this->isDisplayedInAdmin;
     }
 
     /**
-     * Returns the sub entity's action name in case of indirect resource update
-     * (creation/delete/update of plugin's sub entities; e.g.
-     * In a forum we can have thread creation, post publication etc.)
+     * Return the visibility in workspace for the associated log
+     *
+     * @return bool
      */
-    public function getChildAction()
+    public function getIsDisplayedInWorkspace()
     {
-        return $this->childAction;
+        return $this->isDisplayedInWorkspace;
     }
+
+    /**
+     * @param boolean $isDisplayedInAdmin
+     *
+     * @return LogGenericEvent
+     */
+    public function isDisplayedInAdmin($isDisplayedInAdmin)
+    {
+        $this->isDisplayedInAdmin = $isDisplayedInAdmin;
+
+        return $this;
+    }
+
+    /**
+     * @param boolean $isDisplayedInWorkspace
+     *
+     * @return LogGenericEvent
+     */
+    public function isDisplayedInWorkspace($isDisplayedInWorkspace)
+    {
+        $this->isDisplayedInWorkspace = $isDisplayedInWorkspace;
+
+        return $this;
+    }
+
+
 }

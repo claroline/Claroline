@@ -22,5 +22,7 @@ class LogGroupRemoveUserEvent extends LogGenericEvent
             $receiver,
             $receiverGroup
         );
+
+        $this->isDisplayedInAdmin(true);
     }
 }

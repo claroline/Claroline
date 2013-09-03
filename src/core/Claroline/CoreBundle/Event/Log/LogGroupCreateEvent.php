@@ -21,5 +21,7 @@ class LogGroupCreateEvent extends LogGenericEvent
             null,
             $receiverGroup
         );
+
+        $this->isDisplayedInAdmin(true);
     }
 }

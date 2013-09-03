@@ -48,5 +48,7 @@ class LogResourceMoveEvent extends LogGenericEvent
             $node->getWorkspace(),
             $node->getCreator()
         );
+
+        $this->isDisplayedInWorkspace(true);
     }
 }

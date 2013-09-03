@@ -2,6 +2,13 @@
 
 namespace Claroline\CoreBundle\Entity\Log;
 
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -12,8 +19,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Log
 {
     const doerTypeAnonymous = 'anonymous';
-    const doerTypeUser = 'user';
-    const doerTypePlatform = 'platform';
+    const doerTypeUser      = 'user';
+    const doerTypePlatform  = 'platform';
 
     /**
      * @ORM\Id
@@ -123,12 +130,26 @@ class Log
     protected $role;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_displayed_in_admin", type="boolean")
+     */
+    protected $isDisplayedInAdmin = false;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_displayed_in_workspace", type="boolean")
+     */
+    protected $isDisplayedInWorkspace = false;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->doerPlatformRoles = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->doerWorkspaceRoles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->doerPlatformRoles  = new ArrayCollection();
+        $this->doerWorkspaceRoles = new ArrayCollection();
     }
 
     /**
@@ -260,10 +281,10 @@ class Log
     /**
      * Set doer
      *
-     * @param  \Claroline\CoreBundle\Entity\User $doer
+     * @param  User $doer
      * @return Log
      */
-    public function setDoer(\Claroline\CoreBundle\Entity\User $doer = null)
+    public function setDoer(User $doer = null)
     {
         $this->doer = $doer;
 
@@ -273,7 +294,7 @@ class Log
     /**
      * Get doer
      *
-     * @return \Claroline\CoreBundle\Entity\User
+     * @return User
      */
     public function getDoer()
     {
@@ -283,10 +304,10 @@ class Log
     /**
      * Add doerPlatformRoles
      *
-     * @param  \Claroline\CoreBundle\Entity\Role $doerPlatformRoles
+     * @param  Role $doerPlatformRoles
      * @return Log
      */
-    public function addDoerPlatformRole(\Claroline\CoreBundle\Entity\Role $doerPlatformRoles)
+    public function addDoerPlatformRole(Role $doerPlatformRoles)
     {
         $this->doerPlatformRoles[] = $doerPlatformRoles;
 
@@ -296,9 +317,9 @@ class Log
     /**
      * Remove doerPlatformRoles
      *
-     * @param \Claroline\CoreBundle\Entity\Role $doerPlatformRoles
+     * @param Role $doerPlatformRoles
      */
-    public function removeDoerPlatformRole(\Claroline\CoreBundle\Entity\Role $doerPlatformRoles)
+    public function removeDoerPlatformRole(Role $doerPlatformRoles)
     {
         $this->doerPlatformRoles->removeElement($doerPlatformRoles);
     }
@@ -316,10 +337,10 @@ class Log
     /**
      * Add doerWorkspaceRoles
      *
-     * @param  \Claroline\CoreBundle\Entity\Role $doerWorkspaceRoles
+     * @param  Role $doerWorkspaceRoles
      * @return Log
      */
-    public function addDoerWorkspaceRole(\Claroline\CoreBundle\Entity\Role $doerWorkspaceRoles)
+    public function addDoerWorkspaceRole(Role $doerWorkspaceRoles)
     {
         $this->doerWorkspaceRoles[] = $doerWorkspaceRoles;
 
@@ -329,9 +350,9 @@ class Log
     /**
      * Remove doerWorkspaceRoles
      *
-     * @param \Claroline\CoreBundle\Entity\Role $doerWorkspaceRoles
+     * @param Role $doerWorkspaceRoles
      */
-    public function removeDoerWorkspaceRole(\Claroline\CoreBundle\Entity\Role $doerWorkspaceRoles)
+    public function removeDoerWorkspaceRole(Role $doerWorkspaceRoles)
     {
         $this->doerWorkspaceRoles->removeElement($doerWorkspaceRoles);
     }
@@ -349,10 +370,10 @@ class Log
     /**
      * Set receiver
      *
-     * @param  \Claroline\CoreBundle\Entity\User $receiver
+     * @param  User $receiver
      * @return Log
      */
-    public function setReceiver(\Claroline\CoreBundle\Entity\User $receiver = null)
+    public function setReceiver(User $receiver = null)
     {
         $this->receiver = $receiver;
 
@@ -362,7 +383,7 @@ class Log
     /**
      * Get receiver
      *
-     * @return \Claroline\CoreBundle\Entity\User
+     * @return User
      */
     public function getReceiver()
     {
@@ -372,10 +393,10 @@ class Log
     /**
      * Set receiverGroup
      *
-     * @param  \Claroline\CoreBundle\Entity\Group $receiverGroup
+     * @param  Group $receiverGroup
      * @return Log
      */
-    public function setReceiverGroup(\Claroline\CoreBundle\Entity\Group $receiverGroup = null)
+    public function setReceiverGroup(Group $receiverGroup = null)
     {
         $this->receiverGroup = $receiverGroup;
 
@@ -385,7 +406,7 @@ class Log
     /**
      * Get receiverGroup
      *
-     * @return \Claroline\CoreBundle\Entity\Group
+     * @return Group
      */
     public function getReceiverGroup()
     {
@@ -395,10 +416,10 @@ class Log
     /**
      * Set owner
      *
-     * @param  \Claroline\CoreBundle\Entity\User $owner
+     * @param  User $owner
      * @return Log
      */
-    public function setOwner(\Claroline\CoreBundle\Entity\User $owner = null)
+    public function setOwner(User $owner = null)
     {
         $this->owner = $owner;
 
@@ -408,7 +429,7 @@ class Log
     /**
      * Get owner
      *
-     * @return \Claroline\CoreBundle\Entity\User
+     * @return User
      */
     public function getOwner()
     {
@@ -418,10 +439,10 @@ class Log
     /**
      * Set workspace
      *
-     * @param  \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param  AbstractWorkspace $workspace
      * @return Log
      */
-    public function setWorkspace(\Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace = null)
+    public function setWorkspace(AbstractWorkspace $workspace = null)
     {
         $this->workspace = $workspace;
 
@@ -431,7 +452,7 @@ class Log
     /**
      * Get workspace
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
+     * @return AbstractWorkspace
      */
     public function getWorkspace()
     {
@@ -441,10 +462,10 @@ class Log
     /**
      * Set resource
      *
-     * @param  \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
+     * @param  ResourceNode $resourceNode
      * @return Log
      */
-    public function setResourceNode(\Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode = null)
+    public function setResourceNode(ResourceNode $resourceNode = null)
     {
         $this->resourceNode = $resourceNode;
 
@@ -454,7 +475,7 @@ class Log
     /**
      * Get resource
      *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
+     * @return ResourceNode
      */
     public function getResourceNode()
     {
@@ -464,10 +485,10 @@ class Log
     /**
      * Set resourceType
      *
-     * @param  \Claroline\CoreBundle\Entity\Resource\ResourceType $resourceType
+     * @param  ResourceType $resourceType
      * @return Log
      */
-    public function setResourceType(\Claroline\CoreBundle\Entity\Resource\ResourceType $resourceType = null)
+    public function setResourceType(ResourceType $resourceType = null)
     {
         $this->resourceType = $resourceType;
 
@@ -477,7 +498,7 @@ class Log
     /**
      * Get resourceType
      *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceType
+     * @return ResourceType
      */
     public function getResourceType()
     {
@@ -487,10 +508,10 @@ class Log
     /**
      * Set role
      *
-     * @param  \Claroline\CoreBundle\Entity\Role $role
+     * @param  Role $role
      * @return Log
      */
-    public function setRole(\Claroline\CoreBundle\Entity\Role $role = null)
+    public function setRole(Role $role = null)
     {
         $this->role = $role;
 
@@ -500,7 +521,7 @@ class Log
     /**
      * Get role
      *
-     * @return \Claroline\CoreBundle\Entity\Role
+     * @return Role
      */
     public function getRole()
     {
@@ -529,4 +550,46 @@ class Log
     {
         return $this->toolName;
     }
+
+    /**
+     * @param mixed $isDisplayedInAdmin
+     *
+     * @return Log
+     */
+    public function setIsDisplayedInAdmin($isDisplayedInAdmin)
+    {
+        $this->isDisplayedInAdmin = $isDisplayedInAdmin;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isDisplayedInAdmin()
+    {
+        return $this->isDisplayedInAdmin;
+    }
+
+    /**
+     * @param boolean $isDisplayedInWorkspace
+     *
+     * @return Log
+     */
+    public function setIsDisplayedInWorkspace($isDisplayedInWorkspace)
+    {
+        $this->isDisplayedInWorkspace = $isDisplayedInWorkspace;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isDisplayedInWorkspace()
+    {
+        return $this->isDisplayedInWorkspace;
+    }
+
+
 }

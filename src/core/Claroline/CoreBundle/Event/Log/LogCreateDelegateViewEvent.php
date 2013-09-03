@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Event\Log;
 
+use Claroline\CoreBundle\Entity\Log\Log;
 use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Event\DataConveyorEventInterface;
 
@@ -11,7 +12,7 @@ class LogCreateDelegateViewEvent extends Event implements DataConveyorEventInter
     private $log;
     private $isPopulated = false;
 
-    public function __construct($log)
+    public function __construct(Log $log)
     {
         $this->log = $log;
     }
