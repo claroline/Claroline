@@ -1,29 +1,30 @@
 {% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script src='{{ asset('bundles/clarolinecore/js/workspace/workspace_tag.js') }}' type="text/javascript"></script>
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': 'my_workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_by_user', {'userId': user.getId()})
+            },
+            {
+                'name': 'tags_management'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
 {% endblock %}
-
 {% block section_content %}
 
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'tags_management'|trans({}, 'platform') }}</h3>
     </div>
     <div class="panel-body">
-        {{
-            macros.breadcrumbs([
-                {
-                    'icon': 'icon-book',
-                    'name': 'my_workspaces'|trans({}, 'platform'),
-                    'href': path('claro_workspace_by_user', {'userId': user.getId()})
-                },
-                {
-                    'name': 'tags_management'|trans({}, 'platform'),
-                    'href': ''
-                }
-            ])
-        }}
 
         <a href="{{ path('claro_workspace_tag_create_form') }}">
             <button type="button" class="btn btn-default">{{ 'create_new_tag'|trans({}, 'platform') }}</button>
@@ -116,3 +117,8 @@
         </div>
     </div>
 {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src='{{ asset('bundles/clarolinecore/js/workspace/workspace_tag.js') }}' type="text/javascript"></script>
+{% endblock %}
+

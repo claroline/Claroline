@@ -9,7 +9,7 @@ html, body {
 }
 
 body {
-    padding:@navbar-height 0 (@navbar-height + 10px) 0;
+    padding:(@navbar-height + 20px) 0 (@navbar-height + 10px) 0;
 }
 
 #wrap {
@@ -50,10 +50,12 @@ body {
     background-color: @gray-lighter;
     color: lighten(@gray, 20%);
 
-    .container p {
-        margin: 15px;
-        text-align: center;
-        max-height: 100%;
+    .container {
+        p, h1, h2, h3, h4, h5, h6 {
+            margin: 15px;
+            text-align: center;
+            max-height: 100%;
+        }
     }
 }
 
@@ -69,6 +71,7 @@ body {
     .list-group-item.disabled {
 
         padding: 8px 15px !important;
+        color:@panel-default-text;
         font-size: (@font-size-base * 1.125);
         background:@panel-default-heading-bg;
     }
@@ -422,11 +425,16 @@ div.pagination
     margin: 0 0 10px 0;
 }
 
-.panel > table tr td,
-.panel > table tr th
+.panel
 {
-    padding-right:14px !important;
-    padding-left:14px !important;
+    > table tr td,
+    > table tr th,
+    .workspace-list-pager > table tr td,
+    .workspace-list-pager > table tr th
+    {
+        padding-right:14px !important;
+        padding-left:14px !important;
+    }
 }
 
 .impersonalitation {
@@ -437,7 +445,7 @@ div.pagination
     .navbar-fixed-top {
         z-index:(@zindex-navbar - 1);
         margin-top:@navbar-height;
-        background-color: darken(@brand-info, 5%);
+        background-color: darken(@brand-warning, 5%);
 
         .navbar-nav li a
         {
@@ -615,22 +623,9 @@ div.pagination
 /**********************/
 /** Theme Generator  **/
 /**********************/
-/*
 
-Colors no longer valid in bootstrap 3
-
-.theme-generator .theme-value input
-{
-    margin:0px;
+.bs-example {
+    border-bottom:1px solid @gray-lighter;
+    margin:0 0 20px 0;
+    padding:0 0 20px 0;
 }
-
-.theme-generator .theme-swatch span {
-    display: inline-block;
-    width: 30px;
-    height: 20px;
-    margin: -6px 0;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-}
-*/
