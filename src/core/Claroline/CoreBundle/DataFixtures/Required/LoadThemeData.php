@@ -13,7 +13,7 @@ class LoadThemeData extends AbstractFixture implements OrderedFixtureInterface
     {
         $themes = array(
             'Claroline' => 'ClarolineCoreBundle:less:claroline/theme.html.twig',
-            'Bootstrap Default' => 'ClarolineCoreBundle:less:bootstrap-default/theme.html.twig'
+            'Bootstrap Default' => 'ClarolineCoreBundle:less:bootstrap-default/theme.html.twig',
             'Claroline Dark' => 'ClarolineCoreBundle:less:claroline-dark/theme.html.twig'
         );
 
