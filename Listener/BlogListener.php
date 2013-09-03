@@ -138,32 +138,4 @@ class BlogListener extends ContainerAware
         $event->setCopy($newBlog);
         $event->stopPropagation();
     }
-
-    public function onCreateLogListItem(LogCreateDelegateViewEvent $event)
-    {
-        $content = $this->container->get('templating')->render(
-            'ICAPBlogBundle:Log:log_list_item.html.twig',
-            array('log' => $event->getLog())
-        );
-
-        $event->setResponseContent($content);
-        $event->stopPropagation();
-    }
-
-    public function onCreateLogDetails(LogCreateDelegateViewEvent $event)
-    {
-        $content = $this->container->get('templating')->render(
-            'ICAPBlogBundle:Log:log_details.html.twig',
-            array(
-                'log' => $event->getLog(),
-                'listItemView' => $this->container->get('templating')->render(
-                    'ICAPBlogBundle:Log:log_list_item.html.twig',
-                    array('log' => $event->getLog())
-                )
-            )
-        );
-
-        $event->setResponseContent($content);
-        $event->stopPropagation();
-    }
 }

@@ -1,5 +1,5 @@
 services:
-    claroline.listener.blog_listener:
+    icap.listener.blog_listener:
         class: ICAP\BlogBundle\Listener\BlogListener
         calls:
             - [setContainer, ["@service_container"]]
@@ -9,5 +9,12 @@ services:
             - { name: kernel.event_listener, event: open_icap_blog, method: onOpen }
             - { name: kernel.event_listener, event: delete_icap_blog, method: onDelete }
             - { name: kernel.event_listener, event: copy_icap_blog, method: onCopy }
-            - { name: kernel.event_listener, event: create_log_list_item_icap_blog, method: onCreateLogListItem }
-            - { name: kernel.event_listener, event: create_log_details_icap_blog, method: onCreateLogDetails }
+
+    icap.listener.log_listener:
+        class: ICAP\BlogBundle\Listener\LogListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_log_details_resource-icap_blog-post_create, method: onPostCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_blog-post_create, method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_blog-post_read, method: onCreateLogListItem }
