@@ -172,6 +172,7 @@ lock attempt: Vérouiller le test
 # M
 manageImg: Gérer mes documents
 mark: Score
+marked this question: Noter cette question
 markTooBigest: La note doit être inférieure ou égale à 
 maximum number of tries: Nombre d'essaies maximum
 meaningMeasureDifficulty: Si l'indice est élevé, c'est que la question est facile ; Inversement, si un indice est faible, la question est difficile
