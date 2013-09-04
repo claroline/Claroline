@@ -1,5 +1,8 @@
-log_post_create_title: "Post creation"
-log.blog.create_post: "created post %post% in blog %blog%"
+log_resource-icap_blog-post_create_shortname: "Post creation"
+log_resource-icap_blog-post_create_title: "Post creation in a blog"
+log_resource-icap_blog-post_read_shortname: "Post opening"
+log_created_post: 'Created post'
+log_post_title: 'Title'
 log.blog.configure: "configured the blog %blog%"
 log.blog.read_post: "opened post %post% in blog %blog%"
 log.blog.update_post: "updated post %post% in blog %blog%"
