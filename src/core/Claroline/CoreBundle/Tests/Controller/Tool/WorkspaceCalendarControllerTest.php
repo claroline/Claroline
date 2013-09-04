@@ -83,7 +83,7 @@ class WorkspaceCalendarControllerTest extends MockeryTestCase
             200,
             array('Content-Type' => 'application/json')
         );
-
+        $controller = 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertEquals(
             $response->getContent(),
@@ -149,11 +149,14 @@ class WorkspaceCalendarControllerTest extends MockeryTestCase
             200,
             array('Content-Type' => 'application/json')
         );
-
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
+        $controller = $this->getController(array('checkUserIsAllowed'))->updateAction($workspace);
         $this->assertEquals(
             $response->getContent(),
-            $this->getController(array('checkUserIsAllowed'))->updateAction($workspace)->getContent()
+            $controller->getContent()
+        );
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\Response',
+            $controller
         );
      }
 
