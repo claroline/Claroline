@@ -62,9 +62,11 @@ class ResourceControllerTest extends MockeryTestCase
             ->andReturn($customActionEvent);
         $response = new \Symfony\Component\HttpFoundation\Response;
         $customActionEvent->shouldReceive('getResponse')->andReturn($response);
-        $responseResult = $controller->customAction('action', $node);
-        $this->assertEquals(200, $responseResult->getStatusCode());
-        $this->assertEquals($response->getContent(), $responseResult->getContent());
+        $this->assertEquals($response->getContent(), $controller->customAction('action', $node)->getContent());
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\Response',
+            $controller->customAction('action', $node)
+        );
     }
 
     private function getController(array $mockedMethods = array())
