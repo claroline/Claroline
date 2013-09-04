@@ -174,7 +174,7 @@ class ResourceQueryBuilder
     public function whereCanOpen()
     {
         $this->leftJoinRights = true;
-        $this->addWhereClause('BIT_AND(rights.mask, 1) = true');
+        $this->addWhereClause('BIT_AND(rights.mask, 1) = 1');
 
         return $this;
     }
