@@ -48,8 +48,11 @@ class MessageControllerTest extends MockeryTestCase
             ->with($group)
             ->andReturn('?ids[]=1');
         $response = $this->controller->formForGroupAction($group);
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
         $this->assertEquals('/message?ids[]=1', $response->getTargetUrl());
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\RedirectResponse',
+            $response
+        );
     }
 
     public function testSendActionSuccess()

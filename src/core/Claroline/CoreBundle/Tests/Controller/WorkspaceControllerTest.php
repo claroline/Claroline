@@ -235,8 +235,8 @@ class WorkspaceControllerTest extends MockeryTestCase
             ->shouldReceive('cancelUsurpation')
             ->once()
             ->with($token);
-
-        $this->assertEquals(new Response('success', 204), $controller->deleteAction($workspace));
+        $response = new Response('success', 204);
+        $this->assertEquals($response->getStatusCode(), $controller->deleteAction($workspace)->getStatusCode());
     }
 
     public function testRenderToolListActionWithBreadcrumbs()
@@ -333,10 +333,7 @@ class WorkspaceControllerTest extends MockeryTestCase
             ->once();
         $event->shouldReceive('getContent')->once()->andReturn('content');
 
-        $this->assertEquals(
-            new Response('content'),
-            $controller->openToolAction($toolName, $workspace)
-        );
+        $this->assertEquals('content', $controller->openToolAction($toolName, $workspace)->getContent());
     }
 
     public function testWidgetsAction()
@@ -383,10 +380,8 @@ class WorkspaceControllerTest extends MockeryTestCase
             ->once()
             ->andReturn('route');
 
-        $this->assertEquals(
-            new RedirectResponse('route'),
-            $this->getController()->openAction($workspace)
-        );
+        $response = $this->getController()->openAction($workspace);
+        $this->assertEquals('route', $response->getTargetUrl());
     }
 
     public function testOpenActionUser()
@@ -428,10 +423,8 @@ class WorkspaceControllerTest extends MockeryTestCase
             ->once()
             ->andReturn('route');
 
-        $this->assertEquals(
-            new RedirectResponse('route'),
-            $this->getController()->openAction($workspace)
-        );
+        $response = $this->getController()->openAction($workspace);
+        $this->assertEquals('route', $response->getTargetUrl());
     }
 
     public function testOpenActionAnonymous()
@@ -458,10 +451,8 @@ class WorkspaceControllerTest extends MockeryTestCase
             ->once()
             ->andReturn('route');
 
-        $this->assertEquals(
-            new RedirectResponse('route'),
-            $this->getController()->openAction($workspace)
-        );
+        $response = $this->getController()->openAction($workspace);
+        $this->assertEquals('route', $response->getTargetUrl());
     }
 
     public function testFindRoleByWorkspaceCodeAction()
@@ -635,7 +626,7 @@ class WorkspaceControllerTest extends MockeryTestCase
             ->andReturn(array('user' => 'user'));
 
         $response = new JsonResponse(array('user' => 'user'));
-        
+
         $this->assertEquals(
             $response->getContent(),
             $this->getController()->addUserAction($workspace, $user)->getContent()
@@ -704,11 +695,9 @@ class WorkspaceControllerTest extends MockeryTestCase
         $this->security->shouldReceive('setToken')
             ->with(anInstanceOf('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken'))
             ->once();
-
-        $this->assertEquals(
-            new Response('success', 204),
-            $this->getController()->removeUserAction($workspace, $user)
-        );
+        $response = $this->getController()->removeUserAction($workspace, $user);
+        $this->assertEquals('success', $response->getContent());
+        $this->assertEquals(204, $response->getStatusCode());
     }
 
     private function getController(array $mockedMethods = array())
