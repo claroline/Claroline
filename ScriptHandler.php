@@ -44,6 +44,11 @@ class ScriptHandler
         $packageMap = $generator->buildPackageMap($composer->getInstallationManager(), $package, $packages);
         $map = $generator->parseAutoloads($packageMap, $package);
         $loader = $generator->createLoader($map);
+
+        foreach ($map['classmap'][0] as $path) {
+            $loader->add('', $path);
+        }
+
         $loader->register();
 
         if (class_exists('Doctrine\Common\Annotations\AnnotationRegistry')) {
