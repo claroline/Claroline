@@ -3,7 +3,7 @@
     "description": "Claroline core bundle",
     "keywords": ["Claroline", "Core"],
     "homepage": "http://www.claroline.net",
-    "type": "bundle",
+    "type": "claroline-core",
     "license": "",
     "authors": [
         {
@@ -44,6 +44,7 @@
         "composer/composer": "dev-master",
         "willdurand/expose-translation-bundle": "dev-master",
 
+        "claroline/core-installer": "dev-master",
         "claroline/kernel-bundle": "dev-master",
         "claroline/installation-bundle": "dev-master",
         "claroline/front-end-bundle": "dev-master",
