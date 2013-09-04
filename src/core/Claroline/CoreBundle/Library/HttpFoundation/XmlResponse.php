@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Library\HttpFoundation;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
 
 class XmlResponse extends Response
 {
@@ -30,8 +29,13 @@ class XmlResponse extends Response
 
     protected function setData($data = array())
     {
-        $encoder = new XmlEncoder();
-        $this->data = $encoder->encode($data, 'xml');
+        $doc = new \DOMDocument();
+        $doc->encoding = 'UTF-8';
+        $this->format = 'xml';
+        $root = $doc->createElement('response');
+        $doc->appendChild($root);
+        $this->buildXml($data, $doc, $root);
+        $this->data = $doc->saveXML();
 
         return $this->update();
     }
@@ -40,5 +44,31 @@ class XmlResponse extends Response
     {
         $this->setContent($this->data);
         $this->headers->set('Content-Type', 'text/xml');
+    }
+
+    /*
+     * temporary because XmlEncoder doesn't encode UTF-8 properly.
+     */
+    private function buildXml($data, \DOMDocument $doc, \DOMNode $parentNode = null)
+    {
+        if (is_array($data)) {
+            foreach($data as $elementName => $element) {
+                if (is_int($elementName)) {
+                    $elementName = 'item';
+                }
+
+                $newElement = $doc->createElement($elementName);
+
+                if ($parentNode) {
+                    $parentNode->appendChild($newElement);
+                } else {
+                    $doc->appendChild($newElement);
+                }
+
+                $this->buildXml($element, $doc, $newElement);
+            }
+        } else {
+            $parentNode->nodeValue = $data;
+        }
     }
 }
