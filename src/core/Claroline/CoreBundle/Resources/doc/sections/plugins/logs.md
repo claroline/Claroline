@@ -14,7 +14,7 @@ And if you use them you won't be able to award badge based on specific plugin's 
 Indeed this event is used in the badge system to know which action can be used to award badge.
 
 Knowing that creating custom event is highly recommended.
-For create custom event go see the [event creation][5] documentation and or using existing one please refer to the CoreBundle code.
+For create custom event go see the [event creation][5] documentation and for using existing one please refer to the CoreBundle code.
 
 #### Displaying of custom logs ####
 
