@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{% block title %}{{ workspace.getName() }}{% endblock %}
+{% block title %}{{ workspace.getName() }} {% endblock %}
 
 {% block breadcrumb %}
     <div id="resource-breadcrumb">
@@ -8,11 +8,11 @@
         <div id="twig-resource-attributes"
              data-resource-id="{{ _resource.getId() }}"
              data-resource-name="{{ _resource.getName() }}"
-             data-workspace-id="{{ workspaceId }}">
+        >
         </div>
         {% if not is_path_mode  %}
         {% render controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
-            {'workspace': workspace, 'resource': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
+            {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
         %}
         {% endif %}
     {% endif %}
@@ -39,7 +39,7 @@
 
         $('body').tooltip({
             selector: '[data-toggle=tooltip]'
-        })
+        });
 
     </script>
 {% endblock %}
