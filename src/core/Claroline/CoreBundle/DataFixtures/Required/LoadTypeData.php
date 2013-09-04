@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\DataFixtures\Demo;
+namespace Claroline\CoreBundle\DataFixtures\Required;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
@@ -10,7 +10,7 @@ class LoadTypeData extends AbstractFixture
 {
     public function load(ObjectManager $manager)
     {
-        $fixtures = array('opengraph', 'todo');
+        $fixtures = array('home', 'menu');
 
         foreach ($fixtures as $i => $fixture) {
             $types[$i] = new Type();
