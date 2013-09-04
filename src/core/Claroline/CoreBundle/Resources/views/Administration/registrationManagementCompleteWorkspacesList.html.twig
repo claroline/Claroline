@@ -40,11 +40,10 @@
 {% endmacro %}
 
 {% from _self import showTag %}
-
 <div class="panel-group">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <div>
+            <div class="panel-title">
                 <a  class="accordion-toggle"
                     data-toggle="collapse"
                     data-parent="#accordion-all"
@@ -68,6 +67,6 @@
             {% endif %}
         </div>
     </div>
+    {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
 </div>
 
-{{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
