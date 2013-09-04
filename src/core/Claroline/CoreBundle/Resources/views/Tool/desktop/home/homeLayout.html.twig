@@ -1,6 +1,9 @@
 {% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
 
 {% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'home' | trans({}, 'platform') }}</h3>
+    </div>
     <div class="panel-body">
         <ul class="nav nav-tabs tabs">
             <li{% if "desktop/tool/open" in app.request.requesturi or 'claro_tool_desktop_info' == app.request.get('_route') %} class="active"{% endif %}>
