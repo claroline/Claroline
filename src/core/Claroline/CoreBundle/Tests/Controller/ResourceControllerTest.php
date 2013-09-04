@@ -35,25 +35,36 @@ class ResourceControllerTest extends MockeryTestCase
     }
 
     public function testCustomAction()
-    {/*
+    {
         $controller = $this->getController(array('checkAccess'));
+        $action = 'action';
         $node = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $res = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
-        $rt = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
-        $customActionEvent = $this->mock('Claroline\CoreBundle\Event\Event\CustomActionResourceEvent');
-        $node->shouldReceive('getResourceType')->once()->andReturn($rt);
-        $rt->shouldReceive('getName')->andReturn('resourcetype');
-        $controller->shouldReceive('checkAccess')
-            ->with('OPEN', anInstanceOf('Claroline\CoreBundle\Library\Resource\ResourceCollection'));
         $this->resourceManager->shouldReceive('getResourceFromNode')->with($node)->once()->andReturn($res);
-
+        $type = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
+        $type->shouldReceive('getName')->andReturn('type');
+        $node->shouldReceive('getResourceType')->andReturn($type);
+        $customActionEvent = $this->mock('Claroline\CoreBundle\Event\Event\CustomActionResourceEvent');
+        $menuAction = $this->mock('Claroline\CoreBundle\Entity\Resource\MenuAction');
+        $menuAction->shouldReceive('getValue')->once()->andReturn(42);
+        $this->maskManager->shouldReceive('getMenuFromNameAndResourceType')
+            ->with($action, $type)->andReturn($menuAction);
+        $decoder = $this->mock('Claroline\CoreBundle\Entity\Resource\MaskDecoder');
+        $decoder->shouldReceive('getName')->andReturn('decoderaction');
+        $this->maskManager->shouldReceive('getByValue')->once()->with($type, 42)->andReturn($decoder);
+        $controller->shouldReceive('checkAccess')
+            ->with('decoderaction', anInstanceOf('Claroline\CoreBundle\Library\Resource\ResourceCollection'));
         $this->dispatcher->shouldReceive('dispatch')->once()
-            ->with('action_resourcetype', 'CustomActionResource', array($res))
+            ->with('log', 'Log\LogResourceCustom', array($node, $action))
             ->andReturn($customActionEvent);
-
+        $this->dispatcher->shouldReceive('dispatch')->once()
+            ->with('action_type', 'CustomActionResource', array($res))
+            ->andReturn($customActionEvent);
         $response = new \Symfony\Component\HttpFoundation\Response;
         $customActionEvent->shouldReceive('getResponse')->andReturn($response);
-        $this->assertEquals($response, $controller->customAction('action', $node));*/
+        $responseResult = $controller->customAction('action', $node);
+        $this->assertEquals(200, $responseResult->getStatusCode());
+        $this->assertEquals($response->getContent(), $responseResult->getContent());
     }
 
     private function getController(array $mockedMethods = array())

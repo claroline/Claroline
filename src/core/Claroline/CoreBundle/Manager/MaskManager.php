@@ -13,6 +13,13 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class MaskManager
 {
+    private static $defaultActions = array('open', 'copy', 'export', 'edit', 'delete');
+    private static $defaultMenus= array(
+        'export' => array('download' => false),
+        'edit' => array('rename' => true, 'edit-properties' => true, 'edit-rights' => true),
+        'delete' => array('delete' => false)
+    );
+
     private $om;
     private $maskRepo;
     private $menuRepo;
@@ -84,25 +91,18 @@ class MaskManager
 
     public function addDefaultPerms(ResourceType $type)
     {
-        $defaultPerms = array('open', 'copy', 'export', 'edit', 'delete');
         $createdPerms = array();
 
-        $menuMap = array(
-            'export' => array('download' => false),
-            'edit' => array('rename' => true, 'edit-properties' => true, 'edit-rights' => true),
-            'delete' => array('delete' => false)
-        );
-
-        for ($i = 0, $size = count($defaultPerms); $i < $size; $i++) {
+        for ($i = 0, $size = count(self::$defaultActions); $i < $size; $i++) {
             $maskDecoder = new MaskDecoder();
             $maskDecoder->setValue(pow(2, $i));
-            $maskDecoder->setName($defaultPerms[$i]);
+            $maskDecoder->setName(self::$defaultActions[$i]);
             $maskDecoder->setResourceType($type);
             $this->om->persist($maskDecoder);
-            $createdPerms[$defaultPerms[$i]] = $maskDecoder;
+            $createdPerms[self::$defaultActions[$i]] = $maskDecoder;
         }
 
-        foreach ($menuMap as $action => $data) {
+        foreach (self::$defaultMenus as $action => $data) {
             foreach ($data as $name => $isForm) {
                 $menu = new MenuAction();
                 $menu->setName($name);
