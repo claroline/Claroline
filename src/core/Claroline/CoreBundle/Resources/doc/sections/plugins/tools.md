@@ -1,7 +1,5 @@
 [[Documentation index]][index_path]
 
-[index_path]: ../index.md
-
 # Tools
 
 Each workspace and desktop is composed of tools. A plugin can define new tools.
@@ -121,3 +119,6 @@ or Claroline\CoreBundle\Event\ConfigureDesktopToolEvent) and set some content
 Note: if you want to keep the layout, you must extends either
 {% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %} or
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+
+[index_path]: ../../index.md

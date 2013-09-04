@@ -42,6 +42,10 @@ class LogWorkspaceWidgetConfigType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'platform'));
+        $resolver->setDefaults(
+            array(
+                 'translation_domain' => 'log'
+            )
+        );
     }
 }

@@ -54,18 +54,95 @@ definition of a method called getLogSignature() which generates a unique identif
 event’s occurrences. For any resource the unique identifier would has the following form:resource_read_abstractResourceID. For example in the case of a Blog whose id is 42 the
 generated signature would be: resource_read_42.
 
+[Creating new event log](#create_new_event)
+-------------
 
-### Mechanisms for displaying plugins’ logs ###
+There are two ways for creating new event log:
+ * Using existing event provided by the CoreBundle
+ * Create custom event
 
-When one creates a new plugin, among other functions and listeners he also needs to define
-listeners and functions for displaying plugin’s special logs. In a blog plugin for example,
-listeners and functions have to be defined in order to render properly the logs of post
-creation, comment publication etc.
+Using existing one is quicker but the way it's displayed cannot be change.
+And if you use them you won't be able to award badge based on specific plugin's action, just generic one provided by the CoreBundle.
+Indeed this event is used in the badge system to know which action can be used to award badge.
 
+Knowing that creating custom event is highly recommended.
+So only creation of custom event will be covered in this doc, for using existing one please refer to the CoreBundle code.
 
-In details the listeners that need to be defined are the following:
-- create_log_list_item_resource_type (e.g. create_log_list_item_icapreferencebank)
-- create_log_details_resource_type (e.g. create_log_details_icapreferencebank)
+For creating new event log here is the step to follow:
+ * Create new class that extends LogGenericEvent class
+ * Define a constant in the class whose name begin with `ACTION`, other name won't be used to list available action's log
+   This constant must be well formated in two or three sections separated by a dash `-` in order to be used in the filter form:
+     * first section is the type of object it's associated (platform, resource, workspace, role, tools, widget, or whatever you want)
+     * second section (`optionnal`) is the type of the resource
+     * third section is the action executed (login, post_create, post_update, post_delete, ws_role_subscribe_user etc...)
+   Don't forget to add translation for this words, individually and all together, in the `log` translation domain
+ * Use this new class with an event dispatcher on the `log` event name and you're done
+
+Let's admit you want to create a log for when you create a post in a blog.
+Firs create the event class:
+
+```php
+<?php
+
+namespace ICAP\BlogBundle\Event\Log;
+
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
+use ICAP\BlogBundle\Entity\Blog;
+use ICAP\BlogBundle\Entity\Post;
+
+class LogPostCreateEvent extends AbstractLogResourceEvent
+{
+    const ACTION = 'resource-icap_blog-post_create';
+
+    public function __construct(Blog $blog, Post $post)
+    {
+        $details = array(
+            'post' => array(
+                'blog'  => $blog->getId(),
+                'title' => $post->getTitle(),
+                'slug'  => $post->getSlug()
+            )
+        );
+
+        parent::__construct($blog->getResourceNode(), $details);
+
+        $this->isDisplayedInWorkspace(true);
+    }
+}
+```
+
+By default all logs are not displayed on vizualisation interface.
+To see them you have to define is they can be display in Admin or in Workspace by calling one, the two or none of
+the methods `isDisplayedInAdmin` and `isDisplayedInWorkspace`.
+
+Somme classes you can extend of exist to ease the class creation, here is the list and what they are for:
+ * `AbstractLogResourceEvent` for event log associate to a resource
+ * `AbstractLogToolEvent` for event log associate to a tool
+ * `AbstractLogWidgetEvent` for event log associate to a widget
+
+This solution isn't mandatory, but it fills the log with some predetermined datas that you don't have to deal with.
+
+After creating this class you just have to use it in your code where you create your post:
+
+```php
+$event = new \ICAP\BlogBundle\Event\Log\LogPostCreateEvent($blog, $post);
+
+$this->get('event_dispatcher')->dispatch('log', $event);
+```
+
+And you're good.
+All parameters provided to the event is specific to this case, you can of course give what you want to the class,
+just don't forget to give the superclass what she needs if you use one of them.
+
+[Displaying new event log](#displaying_event)
+-------------
+
+When creating new event log, listeners and functions have to be defined in order to render the new logs.
+
+The listeners that need to be defined are the following:
+- create_log_list_item_%actionName% (e.g. create_log_list_item_resource-icap_blog-post_create)
+- create_log_details_%actionName% (e.g. create_log_details_resource-icap_blog-post_create)
 As well as the functions called by these listeners.
 
 
@@ -76,7 +153,7 @@ list (short presentation of the event). An example of this function is given bel
 public function onCreateLogListItem(LogCreateDelegateViewEvent $event)
 {
     $content = $this->container->get('templating')->render(
-        'ICAPReferenceBundle::log_list_item.html.twig',
+        'ICAPBlogBundle::log_list_item.html.twig',
         array('log' => $event->getLog())
     );
     $event->setResponseContent($content);
@@ -91,34 +168,32 @@ the event in a short form. Below is given the code of this view:
 ```php
 {% set doer %}
     {% include 'ClarolineCoreBundle:Log:view_list_item_doer.html.twig' %}
-    // Renders the doer’s info (defined by core)
 {% endset %}
 
-{% set reference %}
-    {% include 'ICAPReferenceBundle::log_list_item_reference.html.twig' %}
-    // Renders the plugin’s object info (defined by plugin itself)
+{% set blog %}
+    {% include 'ICAPBlogBundle:Log:log_list_item_blog.html.twig' %}
+{% endset %}
+
+{% set post %}
+    {% include 'ICAPBlogBundle:Log:log_list_item_post.html.twig' %}
 {% endset %}
 
 {% set resource %}
     {% include 'ClarolineCoreBundle:Log:view_list_item_resource.html.twig' %}
-    // Renders resource’s info (defined by core)
 {% endset %}
 
-// Follows code for translated representation of the text
-{% if log.getChildType == 'icap_reference' %}
-    {% if log.getChildAction == 'child_action_create' %}
-        {{ 'referenceCreate'|trans({'%doer%': doer, '%reference%': reference, '%resource%': resource})|raw }}
-    {% elseif log.getChildAction == 'child_action_delete' %}
-        {{ 'referenceDelete'|trans({'%doer%': doer, '%reference%': reference, '%resource%': resource})|raw }}
-    {% elseif log.getChildAction == 'child_action_update' %}
-        {{ 'referenceUpdate'|trans({'%doer%': doer, '%reference%': reference, '%resource%': resource})|raw }}
-    {% else %}
-        no default text
-    {% endif %}
+{% if constant('ICAP\\BlogBundle\\Event\\Log\\LogPostCreateEvent::ACTION') == log.action %}
+    {{ 'log.blog.create_post'|trans({'%blog%': resource, '%post%': post}, 'log')|raw }}
+{% elseif constant('ICAP\\BlogBundle\\Event\\Log\\LogPostReadEvent::ACTION') == log.action %}
+    {{ 'log.blog.read_post'|trans({'%blog%': resource, '%post%': post}, 'log')|raw }}
 {% else %}
     no default text
 {% endif %}
 ```
+
+In addition to this listener you need to define a translation text for the key `log_%actionName%_shortname` in order to
+display the action text on the list item row of the log (e.g. for action `resource-icap_blog-post_create` define a
+`log_resource-icap_blog-post_create_shortname` key in your log translation file).
 
 The second listener displays the event in details. Hence, both its function and its view are
 more complex.
@@ -127,11 +202,11 @@ more complex.
 public function onCreateLogDetails(LogCreateDelegateViewEvent $event)
 {
     $content = $this->container->get('templating')->render(
-        'ICAPReferenceBundle::log_details.html.twig',
+        'ICAPBlogBundle::log_details.html.twig',
         array(
             'log' => $event->getLog(),
             'listItemView' => $this->container->get('templating')->render(
-                'ICAPReferenceBundle::log_list_item.html.twig',
+                'ICAPBlogBundle::log_list_item.html.twig',
                 array('log' => $event->getLog())
             )
         )
@@ -145,38 +220,19 @@ The associated view is the ‘log_details.html.twig’ and its code is given bel
 ```php
 {% extends 'ClarolineCoreBundle:Log:view_details.html.twig' %}
 
-// Inheritance of a view that lies in core
-{% block logDetailsTitle %}
-    {% if log.getChildType == 'icap_reference' %}
-        {% if log.getChildAction == 'child_action_create' %}
-            {{ 'referenceCreateTitle'|trans }}
-        {% elseif log.getChildAction == 'child_action_delete' %}
-            {{ 'referenceDeleteTitle'|trans }}
-        {% elseif log.getChildAction == 'child_action_update' %}
-            {{ 'referenceUpdateTitle'|trans }}
-        {% else %}
-            no default text
-        {% endif %}
-    {% else %}
-        no default text
-    {% endif %}
-{% endblock %}
 {% block logDetailsContext %}
     {{ parent() }}
-    {% if log.getChildType == 'icap_reference' %}
-        {% include 'ICAPReferenceBundle::log_details_reference.html.twig' %}
-        // Displays details of plugin’s object (Defined by plugin)
+    {% if constant('ICAP\\BlogBundle\\Event\\Log\\LogPostCreateEvent::ACTION') == log.action %}
+        {% include 'ICAPBlogBundle:Log:log_details_post.html.twig' %}
     {% endif %}
 {% endblock %}
 ```
 
-###Create its own event###
-
-If you want you can create your own event class.
-It's easy, you just need to keep in mind that database informations will remain the same.
-You just create a wrapper of an existing event, but with a custom action.
-
-For example l'ts just say that...
+You are of course encouraged to extends CoreBundle log base views, and just override the part you want.
+To do that you have at your disposal some block that you can customize, by override or to add datas into:
+ * logDetailsTitle: the title displayed at the top of the page (display `log_%actionName%_title` trnalsation by default)
+ * logDetailsSubtitle: display the same information than in the event list.
+ * logDetailsContext: informations about the occured action
 
 ----------
 
@@ -188,3 +244,4 @@ Return to :
 
 [1]: core.md
 [2]: ../index.md
+[3]: plugins/logs.md

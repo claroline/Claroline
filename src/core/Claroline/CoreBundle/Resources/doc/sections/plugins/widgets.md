@@ -1,7 +1,5 @@
 [[Documentation index]][index_path]
 
-[index_path]: ../index.md
-
 #Widget plugin
 
 ## Plugin configuration file
@@ -207,3 +205,6 @@ Then you must know if the admin wants the default config to be used. You can kno
 
 You can retrieve the workspace using
     $event->getWorkspace();
+
+
+[index_path]: ../../index.md

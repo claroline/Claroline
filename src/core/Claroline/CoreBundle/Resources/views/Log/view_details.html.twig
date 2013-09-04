@@ -32,8 +32,4 @@
 
         {% include 'ClarolineCoreBundle:Log:view_details_action_' ~ log.getAction() ~ '.html.twig' ignore missing %}
     {% endblock %}
-
-    {#
-    <small>{{ log.getDetails()|json_encode}}</small>
-    #}
 {% endblock %}
