@@ -21,7 +21,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
      *
      * @param AbstractWorkspace $workspace
      *
-     * @return AbstractResource
+     * @return ResourceNode
      */
     public function findWorkspaceRoot(AbstractWorkspace $workspace)
     {
@@ -38,11 +38,11 @@ class ResourceNodeRepository extends MaterializedPathRepository
     /**
      * Returns the descendants of a resource.
      *
-     * @param AbstractResource $resource           The resource node to start with
+     * @param ResourceNode     $resource           The resource node to start with
      * @param boolean          $includeStartNode   Whether the given resource should be included in the result
      * @param string           $filterResourceType A resource type to filter the results
      *
-     * @return array[AbstractResource]
+     * @return array[ResourceNode]
      */
     public function findDescendants(
         ResourceNode $resource,
@@ -67,7 +67,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
     /**
      * Returns the immediate children of a resource that are openable by any of the given roles.
      *
-     * @param AbstractResource $parent The id of the parent of the requested children
+     * @param ResourceNode     $parent The id of the parent of the requested children
      * @param array[string]    $roles  An array of roles
      *
      * @throw InvalidArgumentException if the array of roles is empty
@@ -177,7 +177,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
     /**
      * Returns the ancestors of a resource, including the resource itself.
      *
-     * @param AbstractResource $resource
+     * @param ResourceNode $resource
      *
      * @return array[array] An array of resources represented as arrays
      */
