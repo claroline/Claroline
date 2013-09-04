@@ -19,6 +19,7 @@ Structure
     - [Widgets][7]
     - [Players][8]
     - [Themes][9]
+    - [Logs][13]
 - [Development tools][10]
 
 [1]: ../../../../../../README.md
@@ -33,3 +34,4 @@ Structure
 [10]: sections/dev-tools.md
 [11]: sections/event-tracking.md
 [12]: sections/badges.md
+[13]: sections/plugins/logs.md
