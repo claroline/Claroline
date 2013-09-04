@@ -5,6 +5,7 @@ namespace Claroline\BundleRecorder;
 use Composer\Script\Event;
 use Composer\Script\CommandEvent;
 use Composer\Script\PackageEvent;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 
 class ScriptHandler
 {
@@ -32,7 +33,21 @@ class ScriptHandler
 
     private static function initAutoload(Event $event, $scriptName)
     {
-        // will force autoloader registering
-        $event->getComposer()->getEventDispatcher()->dispatch($scriptName);
+        // some classes may need to be loaded during the install process, thus
+        // *before* the autoloader is dumped by composer. This method ensures that
+        // everything is loadable by forcing to register the autoloader. For the
+        // implementation, see Composer\Script\EventDispatcher#getListeners().
+        $composer = $event->getComposer();
+        $package = $composer->getPackage();
+        $generator = $composer->getAutoloadGenerator();
+        $packages = $composer->getRepositoryManager()->getLocalRepository()->getCanonicalPackages();
+        $packageMap = $generator->buildPackageMap($composer->getInstallationManager(), $package, $packages);
+        $map = $generator->parseAutoloads($packageMap, $package);
+        $loader = $generator->createLoader($map);
+        $loader->register();
+
+        if (class_exists('Doctrine\Common\Annotations\AnnotationRegistry')) {
+            AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
+        }
     }
 }
