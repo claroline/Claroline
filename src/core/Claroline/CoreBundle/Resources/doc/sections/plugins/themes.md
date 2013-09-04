@@ -189,7 +189,7 @@ file as a simple CSS file but you can use at any place **Less CSS** or
 
 [[Documentation index]][index_path]
 
-[index_path]: ../index.md
+[index_path]: ../../index.md
 [claroline]: http://www.claroline.net
 [bootstrap]: http://twitter.github.io/bootstrap/
 [lesscss]: http://lesscss.org/

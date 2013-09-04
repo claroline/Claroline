@@ -1,7 +1,5 @@
 [[Documentation index]][index_path]
 
-[index_path]: ../index.md
-
 #Resource plugin
 
 ## Plugin configuration file
@@ -320,3 +318,7 @@ or copied).
 
 ### @see forum bundle. No doc yet (import/export_template events). These events need to be caught
 if the resource is exportable.
+
+
+
+[index_path]: ../../index.md
