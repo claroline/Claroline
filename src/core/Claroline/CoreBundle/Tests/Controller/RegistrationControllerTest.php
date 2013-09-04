@@ -42,6 +42,7 @@ class RegistrationControllerTest extends MockeryTestCase
             ->with('allow_self_registration')->once()->andReturn(false);
 
         $response = new JsonResponse(array(), 403);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
         $this->assertEquals($response->getStatusCode(), $this->controller->postUserRegistrationAction('json')->getStatusCode());
     }
 
@@ -108,6 +109,7 @@ class RegistrationControllerTest extends MockeryTestCase
         )->andReturn($errorList);
 
         $response = new JsonResponse(array(array('property' => 'username', 'message' => 'message')), 422);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
         $this->assertEquals($response->getContent(), $this->controller->postUserRegistrationAction('json')->getContent());
     }
 
