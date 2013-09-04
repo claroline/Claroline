@@ -145,7 +145,7 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "    rightRole.name = :role_0{$eol}" .
             "    OR rightRole.name = :role_1{$eol}" .
             "){$eol}" .
-            "AND BIT_AND(rights.mask, 1) = true{$eol}" .
+            "AND BIT_AND(rights.mask, 1) = 1{$eol}" .
             "AND resource.workspace IN{$eol}" .
             "({$eol}" .
             "    SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw{$eol}" .
