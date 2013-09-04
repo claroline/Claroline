@@ -309,7 +309,10 @@ class WorkspaceManager
     {
         $preparedRightsArray = array();
 
+        var_dump($rights);
         foreach ($rights as $key => $right) {
+            var_dump($key);
+            var_dump($right);
             $preparedRights = $right;
             $preparedRights['role'] = $roles[$key];
             $preparedRightsArray[] = $preparedRights;

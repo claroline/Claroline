@@ -72,13 +72,13 @@ class RightsManager
     /**
      * Create a new ResourceRight
      *
-     * @param array                                              $permissions
+     * @param array|integer                                      $permissions
      * @param boolean                                            $isRecursive
      * @param \Claroline\CoreBundle\Entity\Role                  $role
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      */
     public function create(
-        array $permissions,
+        $permissions,
         Role $role,
         ResourceNode $resource,
         $isRecursive,
@@ -91,7 +91,7 @@ class RightsManager
     }
 
     public function editPerms(
-        array $permissions,
+        $permissions,
         Role $role,
         ResourceNode $node,
         $isRecursive
@@ -106,7 +106,7 @@ class RightsManager
             array($this->getOneByRoleAndResource($role, $node));
 
         foreach ($arRights as $toUpdate) {
-            $this->setPermissions($toUpdate, $permissions);
+            is_int($permissions) ? $toUpdate->setMask($permissions): $this->setPermissions($toUpdate, $permissions);
             $this->om->persist($toUpdate);
             $this->logChangeSet($toUpdate);
         }
@@ -211,6 +211,7 @@ class RightsManager
      * Takes an array of Role.
      * Parse each key of the $perms array
      * and add the entry 'role' where it is needed.
+     * It's used when a workspace is imported
      *
      * @param array $baseRoles
      * @param array $perms
@@ -261,7 +262,7 @@ class RightsManager
     }
 
     public function recursiveCreation(
-        array $permissions,
+        $permissions,
         Role $role,
         ResourceNode $node,
         array $creations = array()
@@ -272,7 +273,7 @@ class RightsManager
         $resourceRights = $this->updateRightsTree($role, $node);
 
         foreach ($resourceRights as $rights) {
-            $this->setPermissions($rights, $permissions);
+            is_int($permissions) ? $rights->setMask($permissions): $this->setPermissions($rights, $permissions);
             $rights->setCreatableResourceTypes($creations);
             $this->om->persist($rights);
         }
@@ -281,7 +282,7 @@ class RightsManager
     }
 
     public function nonRecursiveCreation(
-        array $permissions,
+        $permissions,
         Role $role,
         ResourceNode $node,
         array $creations = array()
@@ -291,7 +292,7 @@ class RightsManager
         $rights->setRole($role);
         $rights->setResourceNode($node);
         $rights->setCreatableResourceTypes($creations);
-        $this->setPermissions($rights, $permissions);
+        is_int($permissions) ? $rights->setMask($permissions): $this->setPermissions($rights, $permissions);
         $this->om->persist($rights);
         $this->om->flush();
     }
