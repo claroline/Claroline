@@ -25,11 +25,11 @@ Structure
 [2]: sections/overview.md
 [3]: sections/core.md
 [4]: sections/plugins.md
-[5]: sections/resources.md
-[6]: sections/tools.md
-[7]: sections/widgets.md
-[8]: sections/players.md
-[9]: sections/themes.md
+[5]: plugins/sections/resources.md
+[6]: plugins/sections/tools.md
+[7]: plugins/sections/widgets.md
+[8]: plugins/sections/players.md
+[9]: plugins/sections/themes.md
 [10]: sections/dev-tools.md
 [11]: sections/event-tracking.md
 [12]: sections/badges.md
