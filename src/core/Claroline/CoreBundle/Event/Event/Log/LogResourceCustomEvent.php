@@ -11,7 +11,7 @@ class LogResourceCustomEvent extends LogGenericEvent
     /**
      * Constructor.
      */
-    public function __construct(ResourceNode $node)
+    public function __construct(ResourceNode $node, $action)
     {
         parent::__construct(
             self::ACTION,
@@ -26,7 +26,8 @@ class LogResourceCustomEvent extends LogGenericEvent
                 'owner' => array(
                     'lastName' => $node->getCreator()->getLastName(),
                     'firstName' => $node->getCreator()->getFirstName()
-                )
+                ),
+                'action' => $action
             ),
             null,
             null,

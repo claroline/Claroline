@@ -281,9 +281,8 @@ class ResourceController
             array($this->resourceManager->getResourceFromNode($node))
         );
 
-//      TODO waiting for define CustomActions
-//      $logevent = new ResourceLogEvent($ri, $action);
-//      $this->get('event_dispatcher')->dispatch('log_resource', $logevent);
+        $this->dispatcher->dispatch('log', 'Log\LogResourceCustom', array($node, $action));
+
         return $event->getResponse();
     }
 

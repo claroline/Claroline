@@ -350,13 +350,7 @@ class ResourceManager
 
         //@todo remove this line and grant edit requests in the resourceManager.
         $this->rightsManager->create(
-            array(
-                'delete' => true,
-                'open' => true,
-                'edit' => true,
-                'copy' => true,
-                'export' => true,
-            ),
+            31,
             $this->roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
             $node,
             false,
@@ -364,13 +358,7 @@ class ResourceManager
         );
 
         $this->rightsManager->create(
-            array(
-                'delete' => false,
-                'open' => false,
-                'edit' => false,
-                'copy' => false,
-                'export' => false,
-            ),
+            0,
             $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
             $node,
             false,
