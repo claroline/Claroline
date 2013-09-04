@@ -24,7 +24,7 @@ class AnnouncementRepository extends EntityRepository
             AND a.visible = true
             AND ( ( a.visibleFrom IS NULL ) OR ( a.visibleFrom <= :now ) )
             AND ( ( a.visibleUntil IS NULL ) OR ( a.visibleUntil >= :now ) )
-            AND r.canOpen = true
+            AND BIT_AND(r.mask, 1) = true
             AND rr.name in (:roles)
             ORDER BY a.publicationDate DESC
         ';
@@ -56,7 +56,7 @@ class AnnouncementRepository extends EntityRepository
             AND a.visible = true
             AND ( ( a.visibleFrom IS NULL ) OR ( a.visibleFrom <= :now ) )
             AND ( ( a.visibleUntil IS NULL ) OR ( a.visibleUntil >= :now ) )
-            AND r.canOpen = true
+            AND BIT_AND(r.mask, 1) = true
             AND rr.name in (:roles)
             ORDER BY a.publicationDate DESC
         ';
