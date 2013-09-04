@@ -154,6 +154,7 @@ import questions: Import questions
 inside: You must put all the answer zone INSIDE the picture
 interactionGraphic creation: InteractionGraphic creation
 interactionGraphic Edition: InteractionGraphic Edition
+inValidMark: Invalid score
 
 # K
 kind of question: What kind of question
@@ -171,6 +172,7 @@ lock attempt: Lock attempt
 # M
 manageImg: Manage my documents
 mark: Mark
+markTooBigest: The mark must be less than or equal to 
 maximum number of tries: Maximum number of tries
 meaningMeasureDifficulty: If the measure is hight, the question is easy ; In return, if the measure is low, the question is difficult
 multiple response: Multiple response

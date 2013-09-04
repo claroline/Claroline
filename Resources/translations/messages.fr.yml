@@ -154,6 +154,7 @@ import questions: Importer des questions
 inside: Vous devez mettre la zone de reponse complète DANS l'image
 interactionGraphic creation: Création d'une question Graphique
 interactionGraphic Edition: Edition d'une question Graphique
+inValidMark: Note invalide
 
 # K
 kind of question: Quel type de question
@@ -171,6 +172,7 @@ lock attempt: Vérouiller le test
 # M
 manageImg: Gérer mes documents
 mark: Score
+markTooBigest: La note doit être inférieure ou égale à 
 maximum number of tries: Nombre d'essaies maximum
 meaningMeasureDifficulty: Si l'indice est élevé, c'est que la question est facile ; Inversement, si un indice est faible, la question est difficile
 multiple response: Réponse multiples
