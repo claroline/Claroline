@@ -244,17 +244,23 @@ class DatabaseWriter
         $decoderRepo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\MaskDecoder');
         $existingDecoders = $decoderRepo->findBy(array('resourceType' => $resourceType));
         $exp = count($existingDecoders);
+        $newDecoders = array();
 
         foreach ($actions as $action) {
             $decoder = $decoderRepo->findOneBy(array('name'=> $action['name'], 'resourceType' => $resourceType));
 
             if (!$decoder) {
-                $decoder = new \Claroline\CoreBundle\Entity\Resource\MaskDecoder();
-                $decoder->setName($action['name']);
-                $decoder->setResourceType($resourceType);
-                $decoder->setValue(pow(2, $exp));
-                $this->em->persist($decoder);
-                $exp++;
+                if (array_key_exists($action['name'], $newDecoders)) {
+                    $decoder = $newDecoders[$action['name']];
+                } else {
+                    $decoder = new \Claroline\CoreBundle\Entity\Resource\MaskDecoder();
+                    $decoder->setName($action['name']);
+                    $decoder->setResourceType($resourceType);
+                    $decoder->setValue(pow(2, $exp));
+                    $this->em->persist($decoder);
+                    $newDecoders[$action['name']] = $decoder;
+                    $exp++;
+                }
             }
 
             if (isset($action['menu_name'])) {
