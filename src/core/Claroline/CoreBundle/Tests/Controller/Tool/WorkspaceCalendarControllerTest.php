@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use \Mockery as m;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\User;
@@ -84,10 +83,13 @@ class WorkspaceCalendarControllerTest extends MockeryTestCase
             200,
             array('Content-Type' => 'application/json')
         );
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertEquals(
             $response->getContent(),
             $this->getController(array('checkUserIsAllowed'))->addEventAction($workspace)->getContent()
         );
+
     }
 
     public function testUpdateAction()
@@ -147,6 +149,8 @@ class WorkspaceCalendarControllerTest extends MockeryTestCase
             200,
             array('Content-Type' => 'application/json')
         );
+
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertEquals(
             $response->getContent(),
             $this->getController(array('checkUserIsAllowed'))->updateAction($workspace)->getContent()

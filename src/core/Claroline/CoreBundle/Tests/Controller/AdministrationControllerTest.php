@@ -746,6 +746,7 @@ class AdministrationControllerTest extends MockeryTestCase
             ->andReturn('roleTrad');
 
         $response = new Response($msg, 200);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertEquals(
             $response->getContent(),
             $this->getController()
@@ -816,6 +817,7 @@ class AdministrationControllerTest extends MockeryTestCase
             ->andReturn('roleTrad');
 
         $response = new Response($msg, 200);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertEquals(
             $response->getContent(),
             $this->getController()
@@ -905,6 +907,7 @@ class AdministrationControllerTest extends MockeryTestCase
             ->andReturn('roleBTrad');
 
         $response = new Response($msg, 200);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertEquals(
             $response->getContent(),
             $this->getController()->subscribeMultipleUsersToOneWorkspaceAction(
@@ -986,6 +989,7 @@ class AdministrationControllerTest extends MockeryTestCase
             ->andReturn('roleBTrad');
 
         $response = new Response($msg, 200);
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertEquals(
             $response->getContent(),
             $this->getController()->subscribeMultipleGroupsToOneWorkspaceAction(
