@@ -70,7 +70,7 @@
                     <tr>
                         <th> {{ 'role'|trans({}, 'platform') }} </th>
                         {% for decoder in resource.getResourceType().getMaskDecoders() %}
-                            <td> {{ decoder.getName() }} </td>
+                            <td> {{ decoder.getName()|trans({}, 'resource') }} </td>
                         {% endfor %}
                         {% if isDir %}
                             <th> {{ 'creation'|trans({}, 'platform') }} </th>

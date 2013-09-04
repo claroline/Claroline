@@ -31,7 +31,7 @@ This file will be parsed by the plugin installator to install your plugin and cr
             # The name field allow you to chose an existing action ('open', 'delete', 'edit') or
             # to create a new one if the Claroline core couldn't find your action name.
             # The menu_name is optional. This will append a menu for your resource name with the menu_name you picked.
-            # You can translate your menu_name in with a translation file from the resource_menu domain.
+            # You can translate them in with a translation file from the resource domain.
             actions:
                 - name: actionname
                 - menu_name: new_menu (this line is optional)

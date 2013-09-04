@@ -17,6 +17,7 @@ class MaskManagerTest extends MockeryTestCase
         parent::setUp();
 
         $this->maskRepo = $this->mock('Doctrine\ORM\EntityRepository');
+        $this->menuRepo = $this->mock('Doctrine\ORM\EntityRepository');
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Resource\MaskDecoder')
             ->andReturn($this->maskRepo);
@@ -114,5 +115,57 @@ class MaskManagerTest extends MockeryTestCase
 
         $mask = $this->manager->encodeMask($perms, $resourceType);
         $this->assertEquals($perms, $this->manager->decodeMask($mask, $resourceType));
+    }
+
+    public function testPermissionMap()
+    {
+        $openDecoder = $this->mock('Claroline\CoreBundle\Entity\Resource\MaskDecoder');
+        $editDecoder = $this->mock('Claroline\CoreBundle\Entity\Resource\MaskDecoder');
+        $decoders = array($openDecoder, $editDecoder);
+        $openDecoder->shouldReceive('getName')->andReturn('open');
+        $editDecoder->shouldReceive('getName')->andReturn('edit');
+        $type = new \Claroline\CoreBundle\Entity\Resource\ResourceType();
+        $this->maskRepo->shouldReceive('findBy')->once()->with(array('resourceType' => $type))->andReturn($decoders);
+
+        $this->assertEquals(array('open', 'edit'), $this->manager->getPermissionMap($type));
+    }
+
+    public function testGetDecoder()
+    {
+        $type = new \Claroline\CoreBundle\Entity\Resource\ResourceType();
+        $action = 'action';
+        $decoder = new \Claroline\CoreBundle\Entity\Resource\MaskDecoder();
+        $this->maskRepo->shouldReceive('findOneBy')->with(array('resourceType' => $type, 'name' => $action))
+            ->andReturn($decoder);
+        $this->assertEquals($decoder, $this->manager->getDecoder($type, $action));
+    }
+
+    public function testGetByValue()
+    {
+        $type = new \Claroline\CoreBundle\Entity\Resource\ResourceType();
+        $value = 42;
+        $decoder = new \Claroline\CoreBundle\Entity\Resource\MaskDecoder();
+        $this->maskRepo->shouldReceive('findOneBy')->with(array('resourceType' => $type, 'value' => $value))
+            ->andReturn($decoder);
+        $this->assertEquals($decoder, $this->manager->getByValue($type, $value));
+    }
+
+    public function testGetMenuFromNameAndResourceType()
+    {
+        $type = new \Claroline\CoreBundle\Entity\Resource\ResourceType();
+        $name = 'menu';
+        $menu = new \Claroline\CoreBundle\Entity\Resource\MenuAction();
+        $this->menuRepo->shouldReceive('findOneBy')->with(array('resourceType' => $type, 'name' => $name))
+            ->andReturn($menu);
+        $this->assertEquals($menu, $this->manager->getMenuFromNameAndResourceType($name, $type));
+    }
+
+    public function testAddDefaultPerms()
+    {
+        $type = new \Claroline\CoreBundle\Entity\Resource\ResourceType();
+        $this->om->shouldReceive('persist')->times(5)->with(anInstanceOf('Claroline\CoreBundle\Entity\Resource\MaskDecoder'));
+        $this->om->shouldReceive('persist')->times(5)->with(anInstanceOf('Claroline\CoreBundle\Entity\Resource\MenuAction'));
+        $this->om->shouldReceive('flush')->once();
+        $this->manager->addDefaultPerms($type);
     }
 }
