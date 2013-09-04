@@ -23,7 +23,7 @@ class Message
     protected $id;
 
     /**
-     * @ORM\Column(name="content")
+     * @ORM\Column(name="content", type="text")
      * @Assert\NotBlank()
      */
     protected $content;
