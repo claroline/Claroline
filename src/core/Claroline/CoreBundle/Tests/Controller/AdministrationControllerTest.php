@@ -745,26 +745,14 @@ class AdministrationControllerTest extends MockeryTestCase
             ->times(2)
             ->andReturn('roleTrad');
 
-        $response = new Response($msg, 200);
-        $this->assertEquals(
-            $response->getContent(),
-            $this->getController()
-                ->subscribeMultipleUsersToMultipleWorkspacesAction(
-                    'role',
-                    $workspaces,
-                    $users
-                )
-                ->getContent()
-        );
-        $this->assertInstanceOf(
-            'Symfony\Component\HttpFoundation\Response',
-            $this->getController()
-                ->subscribeMultipleUsersToMultipleWorkspacesAction(
-                    'role',
-                    $workspaces,
-                    $users
-                )
-        );
+        $response = $this->getController()
+            ->subscribeMultipleUsersToMultipleWorkspacesAction(
+                'role',
+                $workspaces,
+                $users
+            );
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
+        $this->assertEquals($msg, $response->getContent());
     }
 
     public function testSubscribeMultipleGroupsToMultipleWorkspacesAction()
