@@ -201,20 +201,10 @@ class ToolListener
     public function workspaceLogs($workspaceId)
     {
         /** @var \Claroline\CoreBundle\Entity\Log\Log[] $logs */
-        $logs = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Log\Log')->findAdminLogs();
-        echo "<pre>";
-        foreach ($logs as $log) {
-            echo $log->getAction() . PHP_EOL;
-        }
-        echo "</pre>" . PHP_EOL;
-
+        $logs       = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Log\Log')->findAdminLogs();
         /** @var \Claroline\CoreBundle\Manager\LogManager $logManager */
         $logManager = $this->container->get('claroline.log.manager');
-        echo "<pre>";
-        var_dump($logManager->getEventList());
-        echo "</pre>" . PHP_EOL;
-        die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
-        $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
+        $workspace  = $this->workspaceManager->getWorkspaceById($workspaceId);
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool/workspace/logs:logList.html.twig',
