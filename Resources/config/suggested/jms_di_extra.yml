@@ -4,3 +4,4 @@ jms_di_extra:
         # the bundles for optimal performance in dev environment
         all_bundles: true
         # bundles: [FooBundle, AcmeBlogBundle]
+        directories: ["%kernel.root_dir%/../vendor"]
