@@ -159,7 +159,7 @@ class TemplateBuilder
         $archive->close();
     }
 
-    public function getDefaultConfig($translator)
+    public static function getDefaultConfig($translator)
     {
         return array(
             'root_perms' => array(
