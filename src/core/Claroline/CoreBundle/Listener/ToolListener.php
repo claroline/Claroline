@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Listener;
 
+use Claroline\CoreBundle\Manager\LogManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -199,6 +200,20 @@ class ToolListener
 
     public function workspaceLogs($workspaceId)
     {
+        /** @var \Claroline\CoreBundle\Entity\Log\Log[] $logs */
+        $logs = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Log\Log')->findAdminLogs();
+        echo "<pre>";
+        foreach ($logs as $log) {
+            echo $log->getAction() . PHP_EOL;
+        }
+        echo "</pre>" . PHP_EOL;
+
+        /** @var \Claroline\CoreBundle\Manager\LogManager $logManager */
+        $logManager = $this->container->get('claroline.log.manager');
+        echo "<pre>";
+        var_dump($logManager->getEventList());
+        echo "</pre>" . PHP_EOL;
+        die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
         $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
 
         return $this->templating->render(

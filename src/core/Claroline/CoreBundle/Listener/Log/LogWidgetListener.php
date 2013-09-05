@@ -19,7 +19,9 @@ use Claroline\CoreBundle\Manager\WorkspaceManager;
  */
 class LogWidgetListener
 {
+    /** @var \Claroline\CoreBundle\Manager\LogManager */
     private $logManager;
+
     private $workspaceManager;
     private $securityContext;
     private $twig;
@@ -188,6 +190,8 @@ class LogWidgetListener
      */
     public function onDesktopConfigure(ConfigureWidgetDesktopEvent $event)
     {
+        $workspaces = array();
+
         if ($event->isDefault() !== true) {
             $workspaces = $this->workspaceManager->getWorkspacesByUserAndRoleNames(
                 $event->getUser(),

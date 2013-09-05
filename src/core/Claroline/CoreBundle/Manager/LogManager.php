@@ -36,9 +36,10 @@ class LogManager
 
     public function getDesktopWidgetList()
     {
-        $loggedUser = $this->container->get('security.context')->getToken()->getUser();
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $repository = $em->getRepository('ClarolineCoreBundle:Log\Log');
+        $loggedUser    = $this->container->get('security.context')->getToken()->getUser();
+        $entitymanager = $this->container->get('doctrine.orm.entity_manager');
+        /** @var \CLaroline\CoreBundle\Repository\Log\LogRepository $logRepository */
+        $logRepository = $entitymanager->getRepository('ClarolineCoreBundle:Log\Log');
 
         $desktopConfig = $this->getDesktopWidgetConfig($loggedUser);
         if ($desktopConfig === null) {
@@ -48,21 +49,22 @@ class LogManager
             }
         }
 
-        $hiddenConfigs = $em
+        $hiddenConfigs = $entitymanager
             ->getRepository('ClarolineCoreBundle:Log\LogHiddenWorkspaceWidgetConfig')
             ->findBy(array('user' => $loggedUser));
+
         $workspaceIds = array();
         foreach ($hiddenConfigs as $hiddenConfig) {
             $workspaceIds[] = $hiddenConfig->getWorkspaceId();
         }
 
         // Get manager and collaborator workspaces config
-        $workspaces = $em
+        $workspaces = $entitymanager
             ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->findByUserAndRoleNamesNotIn($loggedUser, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'), $workspaceIds);
 
         if (count($workspaces) > 0) {
-            $configs = $em
+            $configs = $entitymanager
                 ->getRepository('ClarolineCoreBundle:Log\LogWorkspaceWidgetConfig')
                 ->findBy(array('workspace' => $workspaces, 'isDefault' => false));
         } else {
@@ -111,9 +113,9 @@ class LogManager
             return null;
         }
 
-        $query = $repository->findLogsThroughConfigs($configs, $desktopConfig->getAmount());
-        $logs = $query->getResult();
-        $chartData = $repository->countByDayThroughConfigs($configs, $this->getDefaultRange());
+        $query     = $logRepository->findLogsThroughConfigs($configs, $desktopConfig->getAmount());
+        $logs      = $query->getResult();
+        $chartData = $logRepository->countByDayThroughConfigs($configs, $this->getDefaultRange());
 
         //List item delegation
         $views = $this->renderLogs($logs);
@@ -189,7 +191,7 @@ class LogManager
     {
         return $this->getList(
             $page,
-            $this->getAdminActionRestriction(),
+            'admin',
             new AdminLogFilterType(),
             'admin_log_filter_form',
             null,
@@ -207,7 +209,7 @@ class LogManager
 
         $params = $this->getList(
             $page,
-            $this->getWorkspaceActionRestriction(),
+            'workspace',
             new WorkspaceLogFilterType(),
             'workspace_log_filter_form',
             $workspaceIds,
@@ -265,6 +267,7 @@ class LogManager
         $filter = urlencode(json_encode($data));
 
         $em = $this->container->get('doctrine.orm.entity_manager');
+        /** @var \Claroline\CoreBundle\Repository\Log\LogRepository $repository */
         $repository = $em->getRepository('ClarolineCoreBundle:Log\Log');
 
         $query = $repository->findFilteredLogsQuery(
@@ -391,49 +394,6 @@ class LogManager
         }
 
         return $views;
-    }
-
-    protected function getAdminActionRestriction()
-    {
-        return array(
-            'group_add_user',
-            'group_create',
-            'group_delete',
-            'group_remove_user',
-            'group_update',
-            'user_create',
-            'user_delete',
-            'user_login',
-            'user_update',
-            'workspace_create',
-            'workspace_delete',
-            'workspace_update'
-        );
-    }
-
-    protected function getWorkspaceActionRestriction()
-    {
-        return array(
-            'resource_create',
-            'resource_delete',
-            'resource_update',
-            'resource_move',
-            'resource_shortcut',
-            'resource_read',
-            'resource_export',
-            'resource_copy',
-            'ws_role_create',
-            'ws_role_delete',
-            'ws_role_update',
-            'ws_role_change_right',
-            'ws_role_subscribe_user',
-            'ws_role_unsubscribe_user',
-            'ws_role_subscribe_group',
-            'ws_role_unsubscribe_group',
-            'ws_tool_read',
-            'resource-icap_blog-post_create',
-            'resource-icap_blog-post_read'
-        );
     }
 
     protected function getDefaultRange()
