@@ -2,6 +2,8 @@
 
 namespace Claroline\CoreBundle\Repository\Log;
 
+use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityRepository;
 
 class LogRepository extends EntityRepository
@@ -12,35 +14,35 @@ class LogRepository extends EntityRepository
             return null;
         }
 
-        $qb = $this
+        $queryBuilder = $this
             ->createQueryBuilder('log')
             ->leftJoin('log.workspace', 'workspace')
             ->select('log.shortDateLog as shortDate, count(log.id) as total')
             ->orderBy('shortDate', 'ASC')
             ->groupBy('shortDate');
 
-        $qb = $this->addConfigurationFilterToQueryBuilder($qb, $configs);
+        $queryBuilder = $this->addConfigurationFilterToQueryBuilder($queryBuilder, $configs);
 
-        return $this->extractChartData($qb->getQuery()->getResult(), $range);
+        return $this->extractChartData($queryBuilder->getQuery()->getResult(), $range);
     }
 
-    public function countByDayFilteredLogs($action, $range, $userSearch, $actionsRestriction, $workspaceIds = null)
+    public function countByDayFilteredLogs($action, $range, $userSearch, $workspaceIds = null)
     {
-        $qb = $this
+        $queryBuilder = $this
             ->createQueryBuilder('log')
             ->select('log.shortDateLog as shortDate, count(log.id) as total')
             ->orderBy('shortDate', 'ASC')
             ->groupBy('shortDate');
 
-        $qb = $this->addActionFilterToQueryBuilder($qb, $action, $actionsRestriction);
-        $qb = $this->addDateRangeFilterToQueryBuilder($qb, $range);
-        $qb = $this->addUserFilterToQueryBuilder($qb, $userSearch);
+        $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, $action);
+        $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
+        $queryBuilder = $this->addUserFilterToQueryBuilder($queryBuilder, $userSearch);
 
         if ($workspaceIds !== null and count($workspaceIds) > 0) {
-            $qb = $this->addWorkspaceFilterToQueryBuilder($qb, $workspaceIds);
+            $queryBuilder = $this->addWorkspaceFilterToQueryBuilder($queryBuilder, $workspaceIds);
         }
 
-        return $this->extractChartData($qb->getQuery()->getResult(), $range);
+        return $this->extractChartData($queryBuilder->getQuery()->getResult(), $range);
     }
 
     public function findLogsThroughConfigs($configs, $maxResult = -1)
@@ -49,18 +51,18 @@ class LogRepository extends EntityRepository
             return null;
         }
 
-        $qb = $this
+        $queryBuilder = $this
             ->createQueryBuilder('log')
             ->leftJoin('log.workspace', 'workspace')
-            ->orderBy('log.dateLog', 'DESC');
+            ->orderBy('log.dateLog', 'ASC');
 
-        $qb = $this->addConfigurationFilterToQueryBuilder($qb, $configs);
+        $queryBuilder = $this->addConfigurationFilterToQueryBuilder($queryBuilder, $configs);
 
         if ($maxResult > 0) {
-            $qb->setMaxResults($maxResult);
+            $queryBuilder->setMaxResults($maxResult);
         }
 
-        return $qb->getQuery();
+        return $queryBuilder->getQuery();
     }
 
     public function findFilteredLogsQuery(
@@ -72,23 +74,24 @@ class LogRepository extends EntityRepository
         $maxResult = -1
     )
     {
-        $qb = $this
+        $queryBuilder = $this
             ->createQueryBuilder('log')
-            ->orderBy('log.dateLog', 'DESC');
+            ->orderBy('log.dateLog', 'DESC')
+        ;
 
-        $qb = $this->addActionFilterToQueryBuilder($qb, $action, $actionsRestriction);
-        $qb = $this->addDateRangeFilterToQueryBuilder($qb, $range);
-        $qb = $this->addUserFilterToQueryBuilder($qb, $userSearch);
+        $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, $action, $actionsRestriction);
+        $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
+        $queryBuilder = $this->addUserFilterToQueryBuilder($queryBuilder, $userSearch);
 
         if ($workspaceIds !== null and count($workspaceIds) > 0) {
-            $qb = $this->addWorkspaceFilterToQueryBuilder($qb, $workspaceIds);
+            $queryBuilder = $this->addWorkspaceFilterToQueryBuilder($queryBuilder, $workspaceIds);
         }
 
         if ($maxResult > 0) {
-            $qb->setMaxResults($maxResult);
+            $queryBuilder->setMaxResults($maxResult);
         }
 
-        return $qb->getQuery();
+        return $queryBuilder->getQuery();
     }
 
     public function findFilteredLogs($action, $range, $userSearch, $actionsRestriction, $workspaceIds)
@@ -102,21 +105,6 @@ class LogRepository extends EntityRepository
         )->getResult();
     }
 
-    public function findAdminLogsQuery($actionsRestriction)
-    {
-        $qb = $this
-            ->createQueryBuilder('log')
-            ->orderBy('log.dateLog', 'DESC');
-        $qb = $this->addActionFilterToQueryBuilder($qb, null, $actionsRestriction);
-
-        return $qb->getQuery();
-    }
-
-    public function findAdminLogs($actionsRestriction)
-    {
-        return $this->findAdminLogsQuery($actionsRestriction)->getResult();
-    }
-
     public function findActionAfterDate(
         $action,
         $date,
@@ -127,12 +115,10 @@ class LogRepository extends EntityRepository
         $roleId = null,
         $groupId = null,
         $toolName = null,
-        $userType = null,
-        $childType = null,
-        $childAction = null
+        $userType = null
     )
     {
-        $qb = $this
+        $queryBuilder = $this
             ->createQueryBuilder('log')
             ->orderBy('log.dateLog', 'DESC')
 
@@ -143,66 +129,54 @@ class LogRepository extends EntityRepository
             ->setParameter('date', $date);
 
         if ($doerId !== null) {
-            $qb
+            $queryBuilder
                 ->leftJoin('log.doer', 'doer')
                 ->andWhere('doer.id = :doerId')
                 ->setParameter('doerId', $doerId);
         }
 
         if ($resourceId !== null) {
-            $qb
+            $queryBuilder
                 ->leftJoin('log.resource', 'resource')
                 ->andWhere('resource.id = :resourceId')
                 ->setParameter('resourceId', $resourceId);
         }
 
         if ($workspaceId !== null) {
-            $qb
+            $queryBuilder
                 ->leftJoin('log.workspace', 'workspace')
                 ->andWhere('workspace.id = :workspaceId')
                 ->setParameter('workspaceId', $workspaceId);
         }
 
         if ($receiverId !== null) {
-            $qb
+            $queryBuilder
                 ->leftJoin('log.receiver', 'receiver')
                 ->andWhere('receiver.id = :receiverId')
                 ->setParameter('receiverId', $receiverId);
         }
 
         if ($roleId !== null) {
-            $qb
+            $queryBuilder
                 ->leftJoin('log.role', 'role')
                 ->andWhere('role.id = :roleId')
                 ->setParameter('roleId', $roleId);
         }
 
         if ($groupId !== null) {
-            $qb
+            $queryBuilder
                 ->leftJoin('log.receiverGroup', 'receiverGroup')
                 ->andWhere('receiverGroup.id = :groupId')
                 ->setParameter('groupId', $groupId);
         }
 
         if ($toolName !== null) {
-            $qb
+            $queryBuilder
                 ->andWhere('log.toolName = :toolName')
                 ->setParameter('toolName', $toolName);
         }
 
-        if ($childType !== null) {
-            $qb
-                ->andWhere('log.childType = :childType')
-                ->setParameter('childType', $childType);
-        }
-
-        if ($childAction !== null) {
-            $qb
-                ->andWhere('log.childAction = :childAction')
-                ->setParameter('childAction', $childAction);
-        }
-
-        $q = $qb->getQuery();
+        $q = $queryBuilder->getQuery();
         $logs = $q->getResult();
 
         return $logs;
@@ -210,7 +184,7 @@ class LogRepository extends EntityRepository
 
     public function topWSByAction ($range, $action, $max)
     {
-        $qb = $this
+        $queryBuilder = $this
             ->createQueryBuilder('log')
             ->select('ws.id, ws.name, ws.code, count(log.id) AS actions')
             ->leftJoin('log.workspace', 'ws')
@@ -218,19 +192,19 @@ class LogRepository extends EntityRepository
             ->orderBy('actions', 'DESC');
 
         if ($max > 1) {
-            $qb->setMaxResults($max);
+            $queryBuilder->setMaxResults($max);
         }
 
-        $qb = $this->addActionFilterToQueryBuilder($qb, $action, null);
-        $qb = $this->addDateRangeFilterToQueryBuilder($qb, $range);
-        $query = $qb->getQuery();
+        $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, $action, null);
+        $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
+        $query = $queryBuilder->getQuery();
 
         return $query->getResult();
     }
 
     public function topMediaByAction ($range, $action, $max)
     {
-        $qb = $this
+        $queryBuilder = $this
             ->createQueryBuilder('log')
             ->select('resource.id, resource.name, count(log.id) AS actions')
             ->leftJoin('log.resource', 'resource')
@@ -241,19 +215,19 @@ class LogRepository extends EntityRepository
             ->setParameter('fileType', 'file');
 
         if ($max > 1) {
-            $qb->setMaxResults($max);
+            $queryBuilder->setMaxResults($max);
         }
 
-        $qb = $this->addActionFilterToQueryBuilder($qb, $action, null);
-        $qb = $this->addDateRangeFilterToQueryBuilder($qb, $range);
-        $query = $qb->getQuery();
+        $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, $action, null);
+        $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
+        $query = $queryBuilder->getQuery();
 
         return $query->getResult();
     }
 
     public function topResourcesByAction ($range, $action, $max)
     {
-        $qb = $this
+        $queryBuilder = $this
             ->createQueryBuilder('log')
             ->select('resource.id, resource.name, count(log.id) AS actions')
             ->leftJoin('log.resource', 'resource')
@@ -261,19 +235,19 @@ class LogRepository extends EntityRepository
             ->orderBy('actions', 'DESC');
 
         if ($max > 1) {
-            $qb->setMaxResults($max);
+            $queryBuilder->setMaxResults($max);
         }
 
-        $qb = $this->addActionFilterToQueryBuilder($qb, $action, null);
-        $qb = $this->addDateRangeFilterToQueryBuilder($qb, $range);
-        $query = $qb->getQuery();
+        $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, $action, null);
+        $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
+        $query = $queryBuilder->getQuery();
 
         return $query->getResult();
     }
 
-    public function topUsersByAction ($range, $action, $max)
+    public function topUsersByAction($range, $action, $max)
     {
-        $qb = $this
+        $queryBuilder = $this
             ->createQueryBuilder('log')
             ->select(
                 'doer.id, '
@@ -282,78 +256,54 @@ class LogRepository extends EntityRepository
             )
             ->leftJoin('log.doer', 'doer')
             ->groupBy('doer')
-            ->orderBy('actions', 'DESC');
+            ->orderBy('action', 'DESC')
+        ;
 
         if ($max > 1) {
-            $qb->setMaxResults($max);
+            $queryBuilder->setMaxResults($max);
         }
 
-        $qb = $this->addActionFilterToQueryBuilder($qb, $action, null);
-        $qb = $this->addDateRangeFilterToQueryBuilder($qb, $range);
-        $query = $qb->getQuery();
+        $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, $action);
+        $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
+        $query        = $queryBuilder->getQuery();
 
         return $query->getResult();
     }
 
     public function activeUsers ()
     {
-        $qb = $this
+        $queryBuilder = $this
             ->createQueryBuilder('log')
             ->select('COUNT(DISTINCT log.doer) AS users');
 
-        $qb = $this->addActionFilterToQueryBuilder($qb, "user_login", null);
+        $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, LogUserLoginEvent::ACTION);
 
-        $query = $qb->getQuery();
+        $query = $queryBuilder->getQuery();
         $result = $query->getResult();
 
         return $result[0]['users'];
     }
 
-    private function addActionFilterToQueryBuilder($qb, $action, $actionsRestriction)
+    private function addActionFilterToQueryBuilder(QueryBuilder $queryBuilder, $action, $actionRestriction = null)
     {
-        if ($action == 'resource_all') {
-            $action = array(
-                'resource_create',
-                'resource_move',
-                'resource_read',
-                'resource_export',
-                'resource_delete',
-                'resource_update',
-                'resource_shortcut',
-                'resource_child_update'
-            );
-        } elseif ($action == 'ws_role_all') {
-            $action = array(
-                'ws_role_create',
-                'ws_role_delete',
-                'ws_role_update',
-                'ws_role_change_right',
-                'ws_role_subscribe_user',
-                'ws_role_unsubscribe_user',
-                'ws_role_subscribe_group',
-                'ws_role_unsubscribe_group'
-            );
-        } elseif ($action == 'group_all') {
-            $action = array('group_add_user', 'group_create', 'group_delete', 'group_remove_user', 'group_update');
-        } elseif ($action == 'user_all') {
-            $action = array('user_create', 'user_delete', 'user_login', 'user_update');
-        } elseif ($action == 'workspace_all') {
-            $action = array('workspace_create', 'workspace_delete', 'workspace_update');
-        } elseif ($action == 'all' or $action === null) {
-            $action = $actionsRestriction;
-        } else {
-            $action = array($action);
+        if (null !== $actionRestriction){
+            if ('admin' === $actionRestriction) {
+                $queryBuilder->where('log.isDisplayedInAdmin = true');
+            }
+            elseif('workspace' === $actionRestriction) {
+                $queryBuilder->where('log.isDisplayedInWorkspace = true');
+            }
         }
 
-        if ($action !== null) {
-            $qb->andWhere("log.action IN (:action)");
-            $qb->setParameter('action', $action);
-        }
+        $queryBuilder
+            ->andWhere("log.action LIKE '%:action%'")
+            ->setParameter('action', $action)
+        ;
 
-        return $qb;
+        return $queryBuilder;
     }
 
-    private function addDateRangeFilterToQueryBuilder($qb, $range)
+    private function addDateRangeFilterToQueryBuilder($queryBuilder, $range)
     {
         if ($range !== null and count($range) == 2) {
             $startDate = new \DateTime();
@@ -364,79 +314,85 @@ class LogRepository extends EntityRepository
             $endDate->setTimestamp($range[1]);
             $endDate->setTime(23, 59, 59);
 
-            $qb
+            $queryBuilder
                 ->andWhere("log.dateLog >= :startDate")
                 ->andWhere("log.dateLog <= :endDate")
                 ->setParameter('startDate', $startDate)
                 ->setParameter('endDate', $endDate);
         }
 
-        return $qb;
+        return $queryBuilder;
     }
 
-    private function addUserFilterToQueryBuilder($qb, $userSearch)
+    private function addUserFilterToQueryBuilder($queryBuilder, $userSearch)
     {
         if ($userSearch !== null && $userSearch !== '') {
             $upperUserSearch = strtoupper($userSearch);
             $upperUserSearch = trim($upperUserSearch);
             $upperUserSearch = preg_replace('/\s+/', ' ', $upperUserSearch);
 
-            $qb->leftJoin('log.doer', 'doer');
-            $qb->andWhere(
-                $qb->expr()->orx(
-                    $qb->expr()->like('UPPER(doer.lastName)', ':userSearch'),
-                    $qb->expr()->like('UPPER(doer.firstName)', ':userSearch'),
-                    $qb->expr()->like('UPPER(doer.username)', ':userSearch'),
-                    $qb->expr()->like(
+            $queryBuilder->leftJoin('log.doer', 'doer');
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->orx(
+                    $queryBuilder->expr()->like('UPPER(doer.lastName)', ':userSearch'),
+                    $queryBuilder->expr()->like('UPPER(doer.firstName)', ':userSearch'),
+                    $queryBuilder->expr()->like('UPPER(doer.username)', ':userSearch'),
+                    $queryBuilder->expr()->like(
                         "CONCAT(CONCAT(UPPER(doer.firstName), ' '), UPPER(doer.lastName))",
                         ':userSearch'
                     ),
-                    $qb->expr()->like(
+                    $queryBuilder->expr()->like(
                         "CONCAT(CONCAT(UPPER(doer.lastName), ' '), UPPER(doer.firstName))",
                         ':userSearch'
                     )
                 )
             );
 
-            $qb->setParameter('userSearch', '%' . $upperUserSearch . '%');
+            $queryBuilder->setParameter('userSearch', '%' . $upperUserSearch . '%');
         }
 
-        return $qb;
+        return $queryBuilder;
     }
 
-    private function addWorkspaceFilterToQueryBuilder($qb, $workspaceIds)
+    private function addWorkspaceFilterToQueryBuilder($queryBuilder, $workspaceIds)
     {
         if ($workspaceIds !== null and count($workspaceIds) > 0) {
-            $qb->leftJoin('log.workspace', 'workspace');
+            $queryBuilder->leftJoin('log.workspace', 'workspace');
             if (count($workspaceIds) == 1) {
-                $qb->andWhere("workspace.id = :workspaceId");
-                $qb->setParameter('workspaceId', $workspaceIds[0]);
+                $queryBuilder->andWhere("workspace.id = :workspaceId");
+                $queryBuilder->setParameter('workspaceId', $workspaceIds[0]);
             } else {
-                $qb->andWhere("workspace.id IN (:workspaceIds)")->setParameter('workspaceIds', $workspaceIds);
+                $queryBuilder->andWhere("workspace.id IN (:workspaceIds)")->setParameter('workspaceIds', $workspaceIds);
             }
         }
 
-        return $qb;
+        return $queryBuilder;
     }
 
-    private function addConfigurationFilterToQueryBuilder($qb, $configs)
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param \Claroline\CoreBundle\Entity\Log\LogWorkspaceWidgetConfig[] $configs
+     *
+     * @return mixed
+     */
+    private function addConfigurationFilterToQueryBuilder(QueryBuilder $queryBuilder, $configs)
     {
         $actionIndex = 0;
         foreach ($configs as $config) {
             $workspaceId = $config->getWorkspace()->getId();
+            $queryBuilder
+                ->where('workspace.id = :workspaceId')
+                ->setParameter('workspaceId', $workspaceId);
+
             $actionRestriction = $config->getActionRestriction();
             if (count($actionRestriction) > 0) {
-                foreach ($config->getActionRestriction() as $action) {
-                    $qb->orWhere('log.action = :action'.$actionIndex.' AND workspace.id = :workspace'.$workspaceId);
-                    $qb->setParameter('action'.$actionIndex, $action);
-                    $actionIndex++;
-                }
-                $qb->setParameter('workspace'.$workspaceId, $workspaceId);
+                $queryBuilder
+                    ->andWhere('log.action IN (:actions)')
+                    ->setParameter('actions', $actionRestriction);
             }
-
         }
 
-        return $qb;
+        return $queryBuilder;
     }
 
     private function extractChartData($result, $range)
