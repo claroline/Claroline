@@ -356,9 +356,12 @@ class ResourceManagerTest extends MockeryTestCase
 
     public function testRemovePosition()
     {
+        $manager = $this->getManager(array('removePreviousWherePreviousIs', 'removeNextWhereNextIs'));
         $next = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $previous = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $manager->shouldReceive('removeNextWhereNextIs')->with($next)->once();
+        $manager->shouldReceive('removePreviousWherePreviousIs')->with($previous)->once();
         $resource->shouldReceive('getNext')->once()->andReturn($next);
         $resource->shouldReceive('getPrevious')->once()->andReturn($previous);
         $resource->shouldReceive('setNext')->once()->with(null);
@@ -367,7 +370,7 @@ class ResourceManagerTest extends MockeryTestCase
         $previous->shouldReceive('setNext')->once()->with($next);
         $this->om->shouldReceive('persist')->times(3);
         $this->om->shouldReceive('flush');
-        $this->getManager()->removePosition($resource);
+        $manager->removePosition($resource);
     }
 
     public function testSetLastPosition()
@@ -405,17 +408,22 @@ class ResourceManagerTest extends MockeryTestCase
     public function testDelete()
     {
         $node = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $descendant = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $parent = new \Claroline\CoreBundle\Entity\Resource\Directory();
+        $node->shouldReceive('getParent')->andReturn($parent);
         $resource = new \Claroline\CoreBundle\Entity\Resource\Directory();
         $dirType = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
         $node->shouldReceive('getResourceType')->andReturn($dirType);
         $dirType->shouldReceive('getName')->andReturn('directory');
-        $manager = $this->getManager(array('removePosition', 'getResourceFromNode'));
+        $manager = $this->getManager(array('removePosition', 'getResourceFromNode', 'getDescendants'));
         $manager->shouldReceive('removePosition')->once()->with($node);
-        $manager->shouldReceive('getResourceFromNode')->once()->with($node)->andReturn($resource);
+        $manager->shouldReceive('getResourceFromNode')->times(2);
+        $manager->shouldReceive('getDescendants')->once()->andReturn(array($descendant));
         $this->eventDispatcher->shouldReceive('dispatch')
-            ->once()
-            ->with('delete_directory', 'DeleteResource', m::any());
+            ->times(2);
         $this->om->shouldReceive('remove')->once()->with($node);
+        $this->om->shouldReceive('remove')->once()->with($descendant);
+        $this->om->shouldReceive('remove')->times(2);
         $this->om->shouldReceive('startFlushSuite')->once();
         $this->om->shouldReceive('endFlushSuite')->once();
         $this->eventDispatcher->shouldReceive('dispatch')->once()
