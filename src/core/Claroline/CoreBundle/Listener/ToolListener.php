@@ -200,10 +200,6 @@ class ToolListener
 
     public function workspaceLogs($workspaceId)
     {
-        /** @var \Claroline\CoreBundle\Entity\Log\Log[] $logs */
-        $logs       = $this->container->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Log\Log')->findAdminLogs();
-        /** @var \Claroline\CoreBundle\Manager\LogManager $logManager */
-        $logManager = $this->container->get('claroline.log.manager');
         $workspace  = $this->workspaceManager->getWorkspaceById($workspaceId);
 
         return $this->templating->render(
