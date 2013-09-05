@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Event\MandatoryEventInterface;
 
 class LogUserUpdateEvent extends LogGenericEvent implements MandatoryEventInterface
 {
-    const ACTION = 'user_update';
+    const ACTION = 'user-update';
 
     /**
      * Constructor.

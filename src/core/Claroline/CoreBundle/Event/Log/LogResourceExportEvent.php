@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 class LogResourceExportEvent extends LogGenericEvent
 {
-    const ACTION = 'resource_export';
+    const ACTION = 'resource-export';
 
     /**
      * Constructor.

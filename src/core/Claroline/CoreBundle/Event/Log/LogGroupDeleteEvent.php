@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Event\Log;
 
 class LogGroupDeleteEvent extends LogGenericEvent
 {
-    const ACTION = 'group_delete';
+    const ACTION = 'group-delete';
 
     /**
      * Constructor.

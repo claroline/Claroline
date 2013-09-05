@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Event\Log;
 
 class LogWorkspaceToolReadEvent extends LogGenericEvent implements LogNotRepeatableInterface
 {
-    const ACTION = 'ws_tool_read';
+    const ACTION = 'workspace-tool-read';
 
     /**
      * Constructor.

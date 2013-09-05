@@ -8,8 +8,8 @@ use Claroline\CoreBundle\Entity\User;
 
 class LogRoleUnsubscribeEvent extends LogGenericEvent
 {
-    const ACTION_USER = 'ws_role_unsubscribe_user';
-    const ACTION_GROUP = 'ws_role_unsubscribe_group';
+    const ACTION_USER = 'workspace-role-unsubscribe_user';
+    const ACTION_GROUP = 'workspace-role-unsubscribe_group';
 
     /**
      * Constructor.

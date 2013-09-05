@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Event\Log;
 
 class LogGroupCreateEvent extends LogGenericEvent
 {
-    const ACTION = 'group_create';
+    const ACTION = 'group-create';
 
     /**
      * Constructor.

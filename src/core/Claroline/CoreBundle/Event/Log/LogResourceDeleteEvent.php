@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 class LogResourceDeleteEvent extends LogGenericEvent
 {
-    const ACTION = 'resource_delete';
+    const ACTION = 'resource-delete';
 
     /**
      * Constructor.

@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 class LogResourceShortcutEvent extends LogGenericEvent
 {
-    const ACTION = 'resource_shortcut';
+    const ACTION = 'resource-shortcut';
 
     /**
      * Constructor.

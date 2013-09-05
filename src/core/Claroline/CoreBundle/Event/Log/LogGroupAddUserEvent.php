@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Event\Log;
 
 class LogGroupAddUserEvent extends LogGenericEvent
 {
-    const ACTION = 'group_add_user';
+    const ACTION = 'group-add_user';
 
     public function __construct($receiverGroup, $receiver)
     {

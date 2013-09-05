@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Event\Log;
 
 class LogUserCreateEvent extends LogGenericEvent
 {
-    const ACTION = 'user_create';
+    const ACTION = 'user-create';
 
     /**
      * Constructor.

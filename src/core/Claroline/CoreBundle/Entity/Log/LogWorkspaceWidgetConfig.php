@@ -155,61 +155,61 @@ class LogWorkspaceWidgetConfig
     {
         $actionRestriction = array();
         if ($this->getResourceCopy() === true) {
-            $actionRestriction[] = 'resource_copy';
+            $actionRestriction[] = 'resource-copy';
         }
         if ($this->getResourceCreate() === true) {
-            $actionRestriction[] = 'resource_create';
+            $actionRestriction[] = 'resource-create';
         }
         if ($this->getResourceShortcut() === true) {
-            $actionRestriction[] = 'resource_shortcut';
+            $actionRestriction[] = 'resource-shortcut';
         }
         if ($this->getResourceRead() === true) {
-            $actionRestriction[] = 'resource_read';
+            $actionRestriction[] = 'resource-read';
         }
         if ($this->getWsToolRead() === true) {
-            $actionRestriction[] = 'ws_tool_read';
+            $actionRestriction[] = 'workspace-tool_read';
         }
         if ($this->getResourceExport() === true) {
-            $actionRestriction[] = 'resource_export';
+            $actionRestriction[] = 'resource-export';
         }
         if ($this->getResourceUpdate() === true) {
-            $actionRestriction[] = 'resource_update';
+            $actionRestriction[] = 'resource-update';
         }
         if ($this->getResourceUpdateRename() === true) {
-            $actionRestriction[] = 'resource_update_rename';
+            $actionRestriction[] = 'resource-update_rename';
         }
         if ($this->getResourceChildUpdate() === true) {
-            $actionRestriction[] = 'resource_child_update';
+            $actionRestriction[] = 'resource-child_update';
         }
         if ($this->getResourceDelete() === true) {
-            $actionRestriction[] = 'resource_delete';
+            $actionRestriction[] = 'resource-delete';
         }
         if ($this->getResourceMove() === true) {
-            $actionRestriction[] = 'resource_move';
+            $actionRestriction[] = 'resource-move';
         }
         if ($this->getWsRoleSubscribeUser() === true) {
-            $actionRestriction[] = 'ws_role_subscribe_user';
+            $actionRestriction[] = 'workspace-role-subscribe_user';
         }
         if ($this->getWsRoleSubscribeGroup() === true) {
-            $actionRestriction[] = 'ws_role_subscribe_group';
+            $actionRestriction[] = 'workspace-role-subscribe_group';
         }
         if ($this->getWsRoleUnsubscribeUser() === true) {
-            $actionRestriction[] = 'ws_role_unsubscribe_user';
+            $actionRestriction[] = 'workspace-role-unsubscribe_user';
         }
         if ($this->getWsRoleUnsubscribeGroup() === true) {
-            $actionRestriction[] = 'ws_role_unsubscribe_group';
+            $actionRestriction[] = 'workspace-role-unsubscribe_group';
         }
         if ($this->getWsRoleChangeRight() === true) {
-            $actionRestriction[] = 'ws_role_change_right';
+            $actionRestriction[] = 'workspace-role-change_right';
         }
         if ($this->getWsRoleCreate() === true) {
-            $actionRestriction[] = 'ws_role_create';
+            $actionRestriction[] = 'workspace-role-create';
         }
         if ($this->getWsRoleDelete() === true) {
-            $actionRestriction[] = 'ws_role_delete';
+            $actionRestriction[] = 'workspace-role-delete';
         }
         if ($this->getWsRoleUpdate() === true) {
-            $actionRestriction[] = 'ws_role_update';
+            $actionRestriction[] = 'workspace-role-update';
         }
 
         return $actionRestriction;
