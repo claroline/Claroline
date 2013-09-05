@@ -151,7 +151,6 @@ class ResourceVoter implements VoterInterface
             $decoder = $this->maskManager->getDecoder($type, $action);
             $grant = $decoder ? $mask & $decoder->getValue(): 0;
 
-
             if ($decoder && $grant === 0) {
                 $errors[] = $this->getRoleActionDeniedMessage($action, $resource->getPathForDisplay());
             }
@@ -250,12 +249,13 @@ class ResourceVoter implements VoterInterface
                 }
 
                 $mask = $this->repository->findMaximumRights($this->ut->getRoles($token), $resource);
-
-                if ($mask & MaskDecoder::COPY) {
+                $grantCopy = $mask & MaskDecoder::COPY;
+                if ($grantCopy === 0) {
                     $errors[] = $this->getRoleActionDeniedMessage('copy', $resource->getPathForDisplay());
                 }
 
-                if ($mask & MaskDecoder::DELETE) {
+                $grantDelete = $mask & MaskDecoder::DELETE;
+                if ($grantDelete === 0) {
                     $errors[] = $this->getRoleActionDeniedMessage('delete', $resource->getPathForDisplay());
                 }
             }
