@@ -43,6 +43,10 @@ class RegistrationControllerTest extends MockeryTestCase
 
         $response = new JsonResponse(array(), 403);
         $this->assertEquals($response->getStatusCode(), $this->controller->postUserRegistrationAction('json')->getStatusCode());
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\JsonResponse',
+            $this->controller->postUserRegistrationAction('json')
+        );
     }
 
     /**
@@ -109,6 +113,10 @@ class RegistrationControllerTest extends MockeryTestCase
 
         $response = new JsonResponse(array(array('property' => 'username', 'message' => 'message')), 422);
         $this->assertEquals($response->getContent(), $this->controller->postUserRegistrationAction('json')->getContent());
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\JsonResponse',
+            $this->controller->postUserRegistrationAction('json')
+        );
     }
 
     public function testUnknownFormatOnRegistration()
