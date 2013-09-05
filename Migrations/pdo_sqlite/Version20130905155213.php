@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/08/27 12:18:48
+ * Generation date: 2013/09/05 03:52:14
  */
-class Version20130827121847 extends AbstractMigration
+class Version20130905155213 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -161,7 +161,7 @@ class Version20130827121847 extends AbstractMigration
         $this->addSql("
             CREATE TABLE ujm_word_response (
                 id INTEGER NOT NULL, 
-                interactionopen_id INTEGER DEFAULT NULL, 
+                interaction_open_id INTEGER DEFAULT NULL, 
                 hole_id INTEGER DEFAULT NULL, 
                 response VARCHAR(255) NOT NULL, 
                 score DOUBLE PRECISION NOT NULL, 
@@ -169,7 +169,7 @@ class Version20130827121847 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_4E1930C5F711D980 ON ujm_word_response (interactionopen_id)
+            CREATE INDEX IDX_4E1930C598DDBDFD ON ujm_word_response (interaction_open_id)
         ");
         $this->addSql("
             CREATE INDEX IDX_4E1930C515ADE12C ON ujm_word_response (hole_id)

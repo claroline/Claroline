@@ -1,6 +1,6 @@
 <?php
 
-namespace UJM\ExoBundle\Migrations\oci8;
+namespace UJM\ExoBundle\Migrations\pdo_oci;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/08/27 12:18:48
+ * Generation date: 2013/09/05 03:52:14
  */
-class Version20130827121847 extends AbstractMigration
+class Version20130905155213 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -413,7 +413,7 @@ class Version20130827121847 extends AbstractMigration
         $this->addSql("
             CREATE TABLE ujm_word_response (
                 id NUMBER(10) NOT NULL, 
-                interactionopen_id NUMBER(10) DEFAULT NULL, 
+                interaction_open_id NUMBER(10) DEFAULT NULL, 
                 hole_id NUMBER(10) DEFAULT NULL, 
                 response VARCHAR2(255) NOT NULL, 
                 score DOUBLE PRECISION NOT NULL, 
@@ -449,7 +449,7 @@ class Version20130827121847 extends AbstractMigration
             FROM DUAL; END LOOP; END IF; END;
         ");
         $this->addSql("
-            CREATE INDEX IDX_4E1930C5F711D980 ON ujm_word_response (interactionopen_id)
+            CREATE INDEX IDX_4E1930C598DDBDFD ON ujm_word_response (interaction_open_id)
         ");
         $this->addSql("
             CREATE INDEX IDX_4E1930C515ADE12C ON ujm_word_response (hole_id)
@@ -1192,7 +1192,7 @@ class Version20130827121847 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE ujm_word_response 
-            ADD CONSTRAINT FK_4E1930C5F711D980 FOREIGN KEY (interactionopen_id) 
+            ADD CONSTRAINT FK_4E1930C598DDBDFD FOREIGN KEY (interaction_open_id) 
             REFERENCES ujm_interaction_open (id)
         ");
         $this->addSql("
@@ -1365,7 +1365,7 @@ class Version20130827121847 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE ujm_word_response 
-            DROP CONSTRAINT FK_4E1930C5F711D980
+            DROP CONSTRAINT FK_4E1930C598DDBDFD
         ");
         $this->addSql("
             ALTER TABLE ujm_planning 
