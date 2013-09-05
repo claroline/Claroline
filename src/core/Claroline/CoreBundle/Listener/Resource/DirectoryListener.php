@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Event\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 
 /**
@@ -31,6 +32,7 @@ class DirectoryListener
     private $roleManager;
     private $resourceManager;
     private $rightsManager;
+    private $maskManager;
     private $security;
     private $eventDispatcher;
     private $formFactory;
@@ -40,6 +42,7 @@ class DirectoryListener
      * @DI\InjectParams({
      *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
      *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
      *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
      *     "security"        = @DI\Inject("security.context"),
@@ -52,6 +55,7 @@ class DirectoryListener
         RoleManager $roleManager,
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
+        MaskManager $maskManager,
         StrictDispatcher $eventDispatcher,
         SecurityContextInterface $security,
         FormFactoryInterface $formFactory,
@@ -67,6 +71,7 @@ class DirectoryListener
         $this->formFactory = $formFactory;
         $this->templating = $templating;
         $this->container = $container;
+        $this->maskManager = $maskManager;
     }
 
     /**
@@ -175,8 +180,9 @@ class DirectoryListener
         $roles = $this->roleManager->getRolesByWorkspace($node->getWorkspace());
 
         foreach ($roles as $role) {
-            $perms = $this->rightsManager->getMaximumRights(array($role->getName()), $node);
-            $perms['canCreate'] = ($resource instanceof Claroline\CoreBundle\Entity\Resource\Directory) ?
+            $mask = $this->rightsManager->getMaximumRights(array($role->getName()), $node);
+            $perms = $this->maskManager->decodeMask($mask, $this->resourceManager->getResourceTypeByName('directory'));
+            $perms['create'] = ($resource instanceof Claroline\CoreBundle\Entity\Resource\Directory) ?
                 $this->rightsManager->getCreationRights(array($role->getName()), $node): array();
 
             $config['perms'][$this->roleManager->getRoleBaseName($role->getName())] = $perms;

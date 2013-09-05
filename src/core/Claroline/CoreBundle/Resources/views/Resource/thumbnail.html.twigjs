@@ -24,80 +24,31 @@
             <div class="node-name">{{ node.displayableName|raw }} <i class="icon-caret-down"></i></div>
         </a>
         <ul class="dropdown-menu" role="menu">
-            {% if node.can_edit == true %}
+            {% for action, attributes in actions %}
+                {% set perm = attributes.mask b-and node.mask  %}
+                {% if perm > 0 %}
                 <li>
-                    <a class="node-menu-action" data-action="rename" data-action-type="display-form" data-is-custom="no" data-id="{{ node.id }}" tabindex="-1" href="#">
-                        {{ 'rename'|trans({}, 'platform') }}
+                    <a
+                        href="#"
+                        class="node-menu-action"
+                        data-action="{{ action }}"
+                        data-is-custom="{{ attributes.isCustom }}"
+                        data-id="{{ node.id }}" tabindex="-1" href="#"
+                        {% if attributes.isForm %}
+                            data-action-type="display-form"
+                        {% endif %}
+                    >
+                        {{ attributes.name|trans({}, 'resource') }}
                     </a>
                 </li>
-            {% else %}
+                {% else %}
                 <li class="disabled">
                     <a>
-                        {{ 'rename'|trans({}, 'platform') }}
+                        {{ attributes.name|trans({}, 'resource') }}
                     </a>
                 </li>
-            {% endif %}
-            {% if node.can_export == true %}
-                <li>
-                    <a class="node-menu-action" data-action="download" data-is-custom="no" data-id="{{ node.id }}" tabindex="-1" href="#">
-                        {{ 'download'|trans({}, 'platform') }}
-                    </a>
-                </li>
-            {% else %}
-                <li class="disabled">
-                    <a>
-                        {{ 'download'|trans({}, 'platform') }}
-                </a>
-            {% endif %}
-            {% if node.can_delete == true %}
-                <li>
-                    <a class="node-menu-action" data-action="delete" data-is-custom="no" data-id="{{ node.id }}" tabindex="-1" href="#">
-                        {{ 'delete'|trans({}, 'platform') }}
-                    </a>
-                </li>
-            {% else %}
-                <li class="disabled">
-                    <a>
-                        {{ 'delete'|trans({}, 'platform') }}
-                </a>
-            {% endif %}
-            {% if node.can_edit == true %}
-                <li>
-                    <a class="node-menu-action" data-action="edit-rights" data-action-type="display-form" data-is-custom="no" data-id="{{ node.id }}" tabindex="-1" href="#">
-                        {{ 'manage_rights'|trans({}, 'platform') }}
-                    </a>
-                </li>
-            {% else %}
-                <li class="disabled">
-                    <a>
-                        {{ 'manage_rights'|trans({}, 'platform') }}
-                    </a>
-                </li>
-            {% endif %}
-            {% if node.can_edit == true %}
-                <li>
-                    <a class="node-menu-action" data-action="edit-properties" data-action-type="display-form" data-is-custom="no" data-id="{{ node.id }}" tabindex="-1" href="#">
-                        {{ 'properties'|trans({}, 'platform') }}
-                    </a>
-                </li>
-            {% else %}
-                <li class="disabled">
-                    <a>
-                        {{ 'properties'|trans({}, 'platform') }}
-                    </a>
-                </li>
-            {% endif %}
-
-            {% if customActions|length > 0 %}
-            <li class="divider"></li>
-                {% for customAction, attributes in customActions %}
-                    <li>
-                        <a class="node-menu-action" data-action="{{ customAction }}" data-async="{{ attributes.async }}" data-is-custom="yes" data-id="{{ node.id }}" tabindex="-1" href="#">
-                            {{ attributes.name }}
-                        </a>
-                    </li>
-                {% endfor %}
-            {% endif %}
+                {% endif %}
+            {% endfor %}
         </ul>
     </div>
 {% else %}

@@ -13,7 +13,7 @@ class ResourceCollection
     private $errors;
     private $attributes;
 
-    public function __construct($resources = array(), $attributes = array())
+    public function __construct(array $resources = array(), $attributes = array())
     {
         $this->resources = $resources;
         $this->attributes = $attributes;

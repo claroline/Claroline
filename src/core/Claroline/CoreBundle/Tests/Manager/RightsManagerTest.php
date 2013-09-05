@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 class RightsManagerTest extends MockeryTestCase
 {
     private $rightsRepo;
+    private $maskManager;
     private $resourceNodeRepo;
     private $roleManager;
     private $roleRepo;
@@ -21,6 +22,7 @@ class RightsManagerTest extends MockeryTestCase
         parent::setUp();
 
         $this->rightsRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceRightsRepository');
+        $this->maskManager = $this->mock('Claroline\CoreBundle\Manager\MaskManager');
         $this->roleManager = $this->mock('Claroline\CoreBundle\Manager\RoleManager');
         $this->resourceNodeRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceNodeRepository');
         $this->roleRepo = $this->mock('Claroline\CoreBundle\Repository\RoleRepository');
@@ -73,11 +75,11 @@ class RightsManagerTest extends MockeryTestCase
         $manager = $this->getManager(array('getEntity', 'setPermissions'));
 
         $perms = array(
-            'canCopy' => true,
-            'canOpen' => false,
-            'canDelete' => true,
-            'canEdit' => false,
-            'canExport' => true
+            'copy' => true,
+            'open' => false,
+            'delete' => true,
+            'edit' => false,
+            'export' => true
         );
 
         $types = array(
@@ -104,11 +106,11 @@ class RightsManagerTest extends MockeryTestCase
         $manager = $this->getManager(array('getOneByRoleAndResource', 'setPermissions', 'logChangeSet'));
 
         $perms = array(
-            'canCopy' => true,
-            'canOpen' => false,
-            'canDelete' => true,
-            'canEdit' => false,
-            'canExport' => true
+            'copy' => true,
+            'open' => false,
+            'delete' => true,
+            'edit' => false,
+            'export' => true
         );
 
         $node = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
@@ -150,16 +152,17 @@ class RightsManagerTest extends MockeryTestCase
     {
         $manager = $this->getManager(array('create'));
         $originalRights = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
+        $newRights = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
         $original = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $role = new \Claroline\CoreBundle\Entity\Role();
 
         $perms = array(
-            'canCopy' => true,
-            'canOpen' => false,
-            'canDelete' => true,
-            'canEdit' => false,
-            'canExport' => true
+            'copy' => true,
+            'open' => false,
+            'delete' => true,
+            'edit' => false,
+            'export' => true
         );
 
         $this->rightsRepo
@@ -171,8 +174,14 @@ class RightsManagerTest extends MockeryTestCase
         m::getConfiguration()->allowMockingNonExistentMethods(true);
         $originalRights->shouldReceive('getCreatableResourceTypes->toArray')->once()->andReturn(array());
         $originalRights->shouldReceive('getRole')->once()->andReturn($role);
-        $originalRights->shouldReceive('getPermissions')->once()->andReturn($perms);
-        $manager->shouldReceive('create')->once()->with($perms, $role, $resource, false, array());
+        $originalRights->shouldReceive('getMask')->once()->andReturn(123);
+        $this->om->shouldReceive('factory')->once()->with('Claroline\CoreBundle\Entity\Resource\ResourceRights')
+            ->andReturn($newRights);
+        $newRights->shouldReceive('setResourceNode')->once()->with($resource);
+        $newRights->shouldReceive('setRole')->once()->with($role);
+        $newRights->shouldReceive('setMask')->once()->with(123);
+        $newRights->shouldReceive('setCreatableResourceTypes')->once()->with(array());
+        $this->om->shouldReceive('persist')->once()->with($newRights);
         $this->om->shouldReceive('startFlushSuite')->once();
         $this->om->shouldReceive('endFlushSuite')->once();
 
@@ -181,20 +190,21 @@ class RightsManagerTest extends MockeryTestCase
 
     public function testSetPermissions()
     {
+        m::getConfiguration()->allowMockingNonExistentMethods(true);
+        $type = new \Claroline\CoreBundle\Entity\Resource\ResourceType();
+        $rights = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
+        $rights->shouldReceive('getResourceNode->getResourceType')->once()->andReturn($type);
+
         $perms = array(
-            'canCopy' => true,
-            'canOpen' => false,
-            'canDelete' => true,
-            'canEdit' => false,
-            'canExport' => true
+            'copy' => true,
+            'open' => false,
+            'delete' => true,
+            'edit' => false,
+            'export' => true
         );
 
-        $rights = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
-        $rights->shouldReceive('setCanCopy')->once()->with(true);
-        $rights->shouldReceive('setCanOpen')->once()->with(false);
-        $rights->shouldReceive('setCanDelete')->once()->with(true);
-        $rights->shouldReceive('setCanEdit')->once()->with(false);
-        $rights->shouldReceive('setCanExport')->once()->with(true);
+        $this->maskManager->shouldReceive('encodeMask')->once()->with($perms, $type)->andReturn(123);
+        $rights->shouldReceive('setMask')->once()->with(123);
 
         $this->assertEquals($rights, $this->getManager()->setPermissions($rights, $perms));
     }
@@ -347,7 +357,8 @@ class RightsManagerTest extends MockeryTestCase
                 $this->translator,
                 $this->om,
                 $this->dispatcher,
-                $this->roleManager
+                $this->roleManager,
+                $this->maskManager
             );
         } else {
             $stringMocked = '[';
@@ -365,7 +376,8 @@ class RightsManagerTest extends MockeryTestCase
                     $this->translator,
                     $this->om,
                     $this->dispatcher,
-                    $this->roleManager
+                    $this->roleManager,
+                    $this->maskManager
                 )
             );
         }

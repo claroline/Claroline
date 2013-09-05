@@ -253,8 +253,8 @@ class ResourceManagerTest extends MockeryTestCase
         $res = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
 
         $rights = array(
-            array('role' => $roleA, 'canCreate' => array()),
-            array('role' => $roleB, 'canCreate' => array())
+            array('role' => $roleA, 'create' => array()),
+            array('role' => $roleB, 'create' => array())
         );
 
         $manager->shouldReceive('checkResourceTypes')->times(2)->andReturn(array($typeA, $typeB));

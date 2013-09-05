@@ -69,11 +69,9 @@
                 <thead>
                     <tr>
                         <th> {{ 'role'|trans({}, 'platform') }} </th>
-                        <th> {{ 'open'|trans({}, 'platform') }} </th>
-                        <th> {{ 'copy'|trans({}, 'platform') }} </th>
-                        <th> {{ 'edit'|trans({}, 'platform') }} </th>
-                        <th> {{ 'export'|trans({}, 'platform') }} </th>
-                        <th> {{ 'delete'|trans({}, 'platform') }} </th>
+                        {% for decoder in resource.getResourceType().getMaskDecoders() %}
+                            <td> {{ decoder.getName()|trans({}, 'resource') }} </td>
+                        {% endfor %}
                         {% if isDir %}
                             <th> {{ 'creation'|trans({}, 'platform') }} </th>
                         {% endif %}
@@ -84,11 +82,9 @@
                         {% set roleId = resourceRight.getRole().getId() %}
                         <tr>
                             <td> {{ resourceRight.getRole().getTranslationKey()|trans({}, 'platform') }} <em> ({{ resourceRight.getRole().getWorkspace().getCode() }}) </em> </td>
-                            <td> <input name="roles[{{ roleId }}][open]" type="checkbox" {% if resourceRight.canOpen() %} checked {% endif %} </td>
-                            <td> <input name="roles[{{ roleId }}][copy]" type="checkbox" {% if resourceRight.canCopy() %} checked {% endif %} </td>
-                            <td> <input name="roles[{{ roleId }}][edit]" type="checkbox" {% if resourceRight.canEdit() %} checked {% endif %} </td>
-                            <td> <input name="roles[{{ roleId }}][export]" type="checkbox" {% if resourceRight.canExport() %} checked {% endif %} </td>
-                            <td> <input name="roles[{{ roleId }}][delete]" type="checkbox" {% if resourceRight.canDelete() %} checked {% endif %} </td>
+                            {% for decoder in resource.getResourceType().getMaskDecoders() %}
+                                <td> <input name="roles[{{ roleId }}][{{ decoder.getName() }}]" type="checkbox" {% if resourceRight.getMask() b-and decoder.getValue() %} checked {% endif %} </td>
+                            {% endfor %}
                             {% if isDir %}
                                 <td>
                                     <a data-resource-id="{{ resource.getId() }}"
