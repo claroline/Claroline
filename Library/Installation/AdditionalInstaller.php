@@ -20,7 +20,7 @@ class AdditionalInstaller extends ContainerAware
     {
         $command = new CreateDatabaseDoctrineCommand();
         $command->setContainer($this->container);
-        $code = $command->run(new ArrayInput(array(), new NullOutput()));
+        $code = $command->run(new ArrayInput(array()), new NullOutput());
 
         if ($code !== 0) {
             throw new \Exception(
