@@ -26,7 +26,7 @@ class LogRepository extends EntityRepository
         return $this->extractChartData($queryBuilder->getQuery()->getResult(), $range);
     }
 
-    public function countByDayFilteredLogs($action, $range, $userSearch, $workspaceIds = null)
+    public function countByDayFilteredLogs($action, $range, $userSearch, $actionRestriction, $workspaceIds = null)
     {
         $queryBuilder = $this
             ->createQueryBuilder('log')
@@ -34,7 +34,7 @@ class LogRepository extends EntityRepository
             ->orderBy('shortDate', 'ASC')
             ->groupBy('shortDate');
 
-        $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, $action);
+        $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, $action, $actionRestriction);
         $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
         $queryBuilder = $this->addUserFilterToQueryBuilder($queryBuilder, $userSearch);
 

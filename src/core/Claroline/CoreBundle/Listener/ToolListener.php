@@ -200,6 +200,7 @@ class ToolListener
 
     public function workspaceLogs($workspaceId)
     {
+        /** @var \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace */
         $workspace  = $this->workspaceManager->getWorkspaceById($workspaceId);
 
         return $this->templating->render(
