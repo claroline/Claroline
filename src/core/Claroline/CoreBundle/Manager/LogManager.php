@@ -38,8 +38,6 @@ class LogManager
     {
         $loggedUser    = $this->container->get('security.context')->getToken()->getUser();
         $entitymanager = $this->container->get('doctrine.orm.entity_manager');
-        /** @var \CLaroline\CoreBundle\Repository\Log\LogRepository $logRepository */
-        $logRepository = $entitymanager->getRepository('ClarolineCoreBundle:Log\Log');
 
         $desktopConfig = $this->getDesktopWidgetConfig($loggedUser);
         if ($desktopConfig === null) {
@@ -59,6 +57,7 @@ class LogManager
         }
 
         // Get manager and collaborator workspaces config
+        /** @var \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[] $workspaces */
         $workspaces = $entitymanager
             ->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->findByUserAndRoleNamesNotIn($loggedUser, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'), $workspaceIds);
@@ -84,7 +83,6 @@ class LogManager
 
             for ($i = 0, $countConfigs = count($configs); $i < $countConfigs && $config === null; ++$i) {
                 $current = $configs[$i];
-
                 if ($current->getWorkspace()->getId() == $workspace->getId()) {
                     $config = $current;
                 }
@@ -113,6 +111,9 @@ class LogManager
             return null;
         }
 
+        /** @var \CLaroline\CoreBundle\Repository\Log\LogRepository $logRepository */
+        $logRepository = $entitymanager->getRepository('ClarolineCoreBundle:Log\Log');
+
         $query     = $logRepository->findLogsThroughConfigs($configs, $desktopConfig->getAmount());
         $logs      = $query->getResult();
         $chartData = $logRepository->countByDayThroughConfigs($configs, $this->getDefaultRange());
@@ -139,7 +140,7 @@ class LogManager
         if (!$this->isAllowedToViewLogs($workspace)) {
             return null;
         }
-        $em = $this->container->get('doctrine.orm.entity_manager');
+        $em         = $this->container->get('doctrine.orm.entity_manager');
         $repository = $em->getRepository('ClarolineCoreBundle:Log\Log');
 
         $config = $this->getWorkspaceWidgetConfig($workspace);
@@ -156,8 +157,8 @@ class LogManager
         if ($config->hasAllRestriction()) {
             return null;
         }
-        $query = $repository->findLogsThroughConfigs(array($config), $config->getAmount());
-        $logs = $query->getResult();
+        $query     = $repository->findLogsThroughConfigs(array($config), $config->getAmount());
+        $logs      = $query->getResult();
         $chartData = $repository->countByDayThroughConfigs(array($config), $this->getDefaultRange());
 
         //List item delegation
