@@ -3,6 +3,7 @@
 namespace Claroline\ForumBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -19,11 +20,19 @@ class ForumOptions
 
     /**
      * @ORM\Column(name="subjects", type="integer")
+     * @Assert\Range(
+     *      min = 5,
+     *      max = 50
+     * )
      */
     protected $subjects;
 
     /**
      * @ORM\Column(name="messages", type="integer")
+     * @Assert\Range(
+     *      min = 5,
+     *      max = 100
+     * )
      */
     protected $messages;
 
