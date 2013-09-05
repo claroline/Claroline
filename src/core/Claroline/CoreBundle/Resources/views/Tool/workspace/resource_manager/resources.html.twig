@@ -4,7 +4,30 @@
     {{ parent() }}
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css')}}'>
 {% endblock %}
-
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+             {
+                'icon': 'icon-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': workspace.getName(),
+                'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
+            },
+            {
+                'name': 'resources'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'resources' | trans({}, 'platform') }}<span></span></h3>
+    </div>
+{% endblock %}
 {% block javascripts %}
     {{ parent() }}
     {% javascripts
@@ -34,6 +57,7 @@
                 "directoryHistory": {{ jsonPath|raw }},
                 "parentElement": $('div.section-content .panel'),
                 "isPickerMultiSelectAllowed": true,
+                "isWorkSpace": true,
                 "appPath": "{{ app.request.getBaseUrl() }}",
                 "webPath": "{{ asset('') }}",
                 "resourceTypes": {

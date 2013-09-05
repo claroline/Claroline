@@ -1,0 +1,17 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'Router debug with fake routes' | trans({}, 'platform') }}</h3>
+    </div>
+
+    {% if routes is defined %}
+        <ul class="list-group">
+            {% for key, route in routes %}
+                <li class="list-group-item">
+                    <a href="{{ path('claro_index') }}{{ route.path | slice(1) }}">{{ route.path }}</a>
+                    <i class="text-muted">{{ key }}</i>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
