@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Event\Log;
 
 class LogWorkspaceRoleDeleteEvent extends LogGenericEvent
 {
-    const ACTION = 'ws_role_delete';
+    const ACTION = 'workspace-role-delete';
 
     /**
      * Constructor.

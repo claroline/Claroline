@@ -6,8 +6,8 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 class LogResourceUpdateEvent extends LogGenericEvent
 {
-    const ACTION = 'resource_update';
-    const ACTION_RENAME = 'resource_update_rename';
+    const ACTION = 'resource-update';
+    const ACTION_RENAME = 'resource-update_rename';
 
     /**
      * Constructor.

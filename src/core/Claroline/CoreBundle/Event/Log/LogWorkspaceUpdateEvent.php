@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Event\Log;
 
 class LogWorkspaceUpdateEvent extends LogGenericEvent
 {
-    const ACTION = 'workspace_update';
+    const ACTION = 'workspace-update';
 
     /**
      * Constructor.

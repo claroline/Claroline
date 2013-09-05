@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Event\Log;
 
 class LogWorkspaceRoleCreateEvent extends LogGenericEvent
 {
-    const ACTION = 'ws_role_create';
+    const ACTION = 'workspace-role-create';
 
     /**
      * Constructor.

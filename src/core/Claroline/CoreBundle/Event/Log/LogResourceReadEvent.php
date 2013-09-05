@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 class LogResourceReadEvent extends LogGenericEvent implements LogNotRepeatableInterface
 {
-    const ACTION = 'resource_read';
+    const ACTION = 'resource-read';
 
     /**
      * Constructor.
