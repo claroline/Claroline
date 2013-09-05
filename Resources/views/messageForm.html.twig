@@ -8,9 +8,17 @@
 {% endblock %}
 
 {% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ _resource.getResourceNode().getName() }} ({{ 'new_message'|trans({}, 'forum') }} - {{ subject.getTitle() }})</h3>
+    </div>
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
-    <form novalidate="novalidate" action="{{path('claro_forum_create_message',{'subjectId':subjectId})}}" method="post" {{ form_enctype(form) }} id="message_form">
-       {{ form_widget(form) }}
-       <input type="submit" />
+    <form novalidate="novalidate" action="{{path('claro_forum_create_message',{'subjectId':subject.getId() })}}" method="post" {{ form_enctype(form) }} id="message_form">
+        <div class="panel-body">
+            {{ form_widget(form) }}
+        </div>
+        <div class="panel-footer">
+            <button class="btn btn-primary" type="submit">{{ 'ok' | trans({}, 'platform' )}}</button>
+            <a class="btn btn-default" href="{{ _path('claro_forum_messages', {'subjectId': subject.getId()}) }}">{{ 'cancel' | trans({}, 'platform' )}}</a>
+        </div>
     </form>
 {% endblock %}
