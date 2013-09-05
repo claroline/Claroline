@@ -71,11 +71,14 @@ So only creation of custom event will be covered in this doc, for using existing
 For creating new event log here is the step to follow:
  * Create new class that extends LogGenericEvent class
  * Define a constant in the class whose name begin with `ACTION`, other name won't be used to list available action's log
-   This constant must be well formated in two or three sections separated by a dash `-` in order to be used in the filter form:
-     * first section is the type of object it's associated (platform, resource, workspace, role, tools, widget, or whatever you want)
-     * second section (`optionnal`) is the type of the resource
+   This constant must be well formated in two or three sections separated by a dash `-` in order to be used in the filter form.
+   Each of this section can match pretty much everything you need.
+   Here is an example:
+     * first section is the type of object it's associated (platform, resource, workspace, role, tools, widget, user...)
+     * second section (`optionnal`) is the type of the resource (for resource type of object by example)
      * third section is the action executed (login, post_create, post_update, post_delete, ws_role_subscribe_user etc...)
-   Don't forget to add translation for this words, individually and all together, in the `log` translation domain
+   Don't forget to add translation for this words, individually and all together, in the `log` translation domain.
+   Each section will become a choice list ine the filter form.
  * Use this new class with an event dispatcher on the `log` event name and you're done
 
 Let's admit you want to create a log for when you create a post in a blog.
