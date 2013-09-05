@@ -12,19 +12,21 @@ use Claroline\InstallationBundle\Bundle\InstallableInterface;
 class InstallationManager
 {
     private $container;
+    private $environment;
     private $migrationManager;
     private $fixtureLoader;
 
     public function __construct(ContainerInterface $container, Manager $migrationManager, FixtureLoader $fixtureLoader)
     {
         $this->container = $container;
+        $this->environment = $container->get('kernel')->getEnvironment();
         $this->migrationManager = $migrationManager;
         $this->fixtureLoader = $fixtureLoader;
     }
 
     public function install(InstallableInterface $bundle, $requiredOnly = true)
     {
-        if ($action = $bundle->getPreInstallationAction()) {
+        if ($action = $bundle->getPreInstallationAction($this->environment)) {
             $parts = explode('#', $action);
             $object = new $parts[0];
 
@@ -36,14 +38,14 @@ class InstallationManager
         }
 
         if ($bundle->hasMigrations()) {
-            $this->migrationManager->upgradeBundle($bundle->getName(), Migrator::VERSION_FARTHEST);
+            $this->migrationManager->upgradeBundle($bundle, Migrator::VERSION_FARTHEST);
         }
 
-        if ($fixturesDir = $bundle->getRequiredFixturesDirectory()) {
+        if ($fixturesDir = $bundle->getRequiredFixturesDirectory($this->environment)) {
             $this->fixtureLoader->load($bundle, $fixturesDir);
         }
 
-        if (!$requiredOnly && $fixturesDir = $bundle->getOptionalFixturesDirectory()) {
+        if (!$requiredOnly && $fixturesDir = $bundle->getOptionalFixturesDirectory($this->environment)) {
             $this->fixtureLoader->load($bundle, $fixturesDir);
         }
     }
@@ -51,7 +53,7 @@ class InstallationManager
     public function uninstall(InstallableInterface $bundle)
     {
         if ($bundle->hasMigrations()) {
-            $this->migrationManager->downgradeBundle($bundle->getName(), Migrator::VERSION_FARTHEST);
+            $this->migrationManager->downgradeBundle($bundle, Migrator::VERSION_FARTHEST);
         }
     }
 }
