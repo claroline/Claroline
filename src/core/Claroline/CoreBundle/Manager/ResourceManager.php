@@ -7,7 +7,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
@@ -728,23 +727,31 @@ class ResourceManager
 
         $this->removePosition($node);
         $this->om->startFlushSuite();
-        $children = $this->getAllChildren($node, false);
+        $nodes = $this->getDescendants($node);
+        $nodes[] = $node;
 
-        foreach ($children as $child) {
-            $resChild = $this->getResourceFromNode($child);
-            $this->dispatcher->dispatch(
-                "delete_{$child->getResourceType()->getName()}",
-                'DeleteResource',
-                array($resChild)
-            );
-            /*
-             * If the child isn't removed here aswell, doctrine will fail to remove the child
-             * because it still has $resChild in its UnitOfWork or something (I have no idea
-             * how doctrine works tbh). So if you remove this line the suppression will
-             * not work for direcotry containing children.
+        foreach ($nodes as $node) {
+            $resource = $this->getResourceFromNode($node);
+            /**
+             * resChild can be null if a shortcut was removed
+             * @todo: fix shortcut delete. If a target is removed, every link to the
+             * target should be removed aswell.
              */
-            $this->om->remove($resChild);
-            $this->om->remove($child);
+            if ($resource !== null) {
+                $this->dispatcher->dispatch(
+                    "delete_{$node->getResourceType()->getName()}",
+                    'DeleteResource',
+                    array($resource)
+                );
+                /*
+                 * If the child isn't removed here aswell, doctrine will fail to remove $resChild
+                 * because it still has $resChild in its UnitOfWork or something (I have no idea
+                 * how doctrine works tbh). So if you remove this line the suppression will
+                 * not work for direcotry containing children.
+                 */
+                $this->om->remove($resource);
+                $this->om->remove($node);
+            }
         }
 
         $this->om->remove($node);
