@@ -12,7 +12,16 @@ class MailType extends AbstractType
     {
         $builder
             ->add('object', 'text')
-            ->add('content', 'textarea');
+            ->add(
+                'content',
+                'textarea',
+                array(
+                    'attr' => array(
+                        'class' => 'tinymce',
+                        'data-theme' => 'simple'
+                    )
+                )
+            );
     }
 
     public function getName()
