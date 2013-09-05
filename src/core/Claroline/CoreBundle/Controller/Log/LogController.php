@@ -240,7 +240,7 @@ class LogController extends Controller
             $workspaces = array();
         } else {
             $user = $this->security->getToken()->getUser();
-            $hiddenConfigs = $em->getRepository('ClarolineCoreBundle:LogHiddenWorkspaceWidgetConfig')
+            $hiddenConfigs = $em->getRepository('ClarolineCoreBundle:Log\LogHiddenWorkspaceWidgetConfig')
                 ->findBy(array('user' => $user));
             $workspaces = $this->workspaceManager
                 ->getWorkspacesByUserAndRoleNames($user, array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'));
