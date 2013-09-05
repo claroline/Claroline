@@ -67,7 +67,7 @@ class MailController extends Controller
      *      class="ClarolineCoreBundle:User",
      *      options={"id" = "userId", "strictId" = true}
      * )
-     * @EXT\Template()
+     * @EXT\Template("ClarolineCoreBundle:Mail:form.html.twig")
      *
      * Handles the mail form submission (sends a mail).
      *
