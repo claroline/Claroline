@@ -1,10 +1,13 @@
-all: All
-resource: Resource
-role: Role
+all: 'All'
+resource: 'Resource'
+role: 'Role'
+group: 'Group'
+user: 'User'
+workspace: "Workspace"
 Show actions for: 'Show actions for'
 for user: 'for user'
 log_default_user: 'Claroline Connect'
-log_hidden_workspace_widget_config_amount : Amount
+log_hidden_workspace_widget_config_amount : 'Amount'
 log_create: 'Create'
 log_update: 'Update'
 log_delete: 'Delete'
@@ -17,7 +20,6 @@ log_export: 'Download'
 log_move: 'Move'
 log_shortcut: 'Shortcut'
 log_copy: 'Copy'
-log_child_update: 'Update inside'
 log_change_right: 'Change rights'
 log_subscribe_user: 'Subscribe user'
 log_unsubscribe_user: 'Unsubscribe user'
@@ -82,8 +84,8 @@ log_new_values: 'New values'
 log_platform_roles: 'Platform roles'
 log_workspace_roles: 'Workspace roles'
 log_resource: 'Action target resource'
-log_owner: 'Target''s Owner'
-log_resource_owner: 'Resource''s owner'
+log_owner: "Target's Owner"
+log_resource_owner: "Resource's owner"
 log_context: 'Context:'
 log_receiver_group: 'Action target group'
 log_role: 'Action target role'
@@ -92,15 +94,15 @@ log_old_workspace: 'Old workspace'
 log_has_not_changed: 'Has not changed'
 log_copy_source: 'Copy source'
 log_workspace_source: 'Workspace source'
-log_widget_config_creation: Creation
-log_widget_config_read: Read / Open
-log_widget_config_export: Export
-log_widget_config_update: Update
+log_widget_config_creation: 'Creation'
+log_widget_config_read: 'Read / Open'
+log_widget_config_export: 'Export'
+log_widget_config_update: 'Update'
 log_widget_config_updateChild: 'News in the object'
-log_widget_config_delete: Delete
-log_widget_config_move: Move
-log_widget_config_subscribe: Subscribe
-log_widget_config_amount: Line number
+log_widget_config_delete: 'Delete'
+log_widget_config_move: 'Move'
+log_widget_config_subscribe: 'Subscribe'
+log_widget_config_amount: 'Line number'
 log_resource-copy_title: 'Resource copy'
 log_resource-create_title: 'Resource creation'
 log_resource-delete_title: 'Resource delete'

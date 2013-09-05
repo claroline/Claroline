@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Form;
+namespace Claroline\CoreBundle\Form\Log;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -14,6 +14,7 @@ class AdminLogFilterType extends AbstractType
             ->add(
                 'action', 'twolevelselect', array(
                     'label' => 'Show actions for',
+                    'translation_domain' => 'log',
                     'attr' => array('class' => 'input-medium'),
                     'choices' => array(
                         'all' => 'all',
@@ -72,7 +73,7 @@ class AdminLogFilterType extends AbstractType
         $resolver
         ->setDefaults(
             array(
-                'translation_domain' => 'platform'
+                'translation_domain' => 'log'
             )
         );
     }
