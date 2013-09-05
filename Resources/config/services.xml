@@ -14,7 +14,6 @@
 
     <services>
         <service id="claroline.migration.manager" class="%claroline.migration_manager.class%">
-            <argument type="service" id="kernel" />
             <argument type="service" id="claroline.migration.generator" />
             <argument type="service" id="claroline.migration.writer" />
             <argument type="service" id="claroline.migration.migrator" />
