@@ -29,29 +29,9 @@ class ResourceRights
     protected $id;
 
     /**
-     * @ORM\Column(name="can_delete", type="boolean")
+     * @ORM\Column(type="integer")
      */
-    protected $canDelete = false;
-
-    /**
-     * @ORM\Column(name="can_open", type="boolean")
-     */
-    protected $canOpen = false;
-
-    /**
-     * @ORM\Column(name="can_edit", type="boolean")
-     */
-    protected $canEdit = false;
-
-    /**
-     * @ORM\Column(name="can_copy", type="boolean")
-     */
-    protected $canCopy = false;
-
-    /**
-     * @ORM\Column(name="can_export", type="boolean")
-     */
-    protected $canExport = false;
+    protected $mask = 0;
 
     /**
      * @ORM\ManyToOne(
@@ -115,74 +95,14 @@ class ResourceRights
         $this->resourceNode = $resourceNode;
     }
 
-    public function canDelete()
+    public function getMask()
     {
-        return $this->canDelete;
+        return $this->mask;
     }
 
-    public function setCanDelete($canDelete)
+    public function setMask($mask)
     {
-        $this->canDelete = $canDelete;
-    }
-
-    public function canOpen()
-    {
-        return $this->canOpen;
-    }
-
-    public function setCanOpen($canOpen)
-    {
-        $this->canOpen = $canOpen;
-    }
-
-    public function canEdit()
-    {
-        return $this->canEdit;
-    }
-
-    public function setCanEdit($canEdit)
-    {
-        $this->canEdit = $canEdit;
-    }
-
-    public function canCopy()
-    {
-        return $this->canCopy;
-    }
-
-    public function setCanCopy($canCopy)
-    {
-        $this->canCopy = $canCopy;
-    }
-
-    public function setCanExport($canExport)
-    {
-        $this->canExport = $canExport;
-    }
-
-    public function canExport()
-    {
-        return $this->canExport;
-    }
-
-    public function setRightsFrom(ResourceRights $originalRights)
-    {
-        $this->setCanOpen($originalRights->canOpen());
-        $this->setCanEdit($originalRights->canEdit());
-        $this->setCanDelete($originalRights->canDelete());
-        $this->setCanCopy($originalRights->canCopy());
-        $this->setCanExport($originalRights->canExport());
-    }
-
-    public function getPermissions()
-    {
-        return array(
-            'canOpen' => $this->canOpen,
-            'canEdit' => $this->canEdit,
-            'canDelete' => $this->canDelete,
-            'canCopy' => $this->canCopy,
-            'canExport' => $this->canExport,
-        );
+        $this->mask = $mask;
     }
 
     public function getCreatableResourceTypes()

@@ -6,9 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_resource_type_custom_action")
+ * @ORM\Table(name="claro_menu_action")
  */
-class ResourceTypeCustomAction
+class MenuAction
 {
     /**
      * @ORM\Id
@@ -20,7 +20,7 @@ class ResourceTypeCustomAction
     /**
      * @ORM\Column(nullable=true)
      */
-    protected $action;
+    protected $name;
 
     /**
      * @ORM\Column(name="async", type="boolean", nullable=true)
@@ -28,9 +28,24 @@ class ResourceTypeCustomAction
     protected $isAsync;
 
     /**
+     * @ORM\Column(name="is_custom", type="boolean", nullable=false)
+     */
+    protected $isCustom = true;
+
+    /**
+     * @ORM\Column(name="is_form", type="boolean", nullable=false)
+     */
+    protected $isForm = false;
+
+    /**
+     * @ORM\Column(name="value", nullable=true)
+     */
+    protected $value;
+
+    /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
-     *     inversedBy="customActions",
+     *     inversedBy="actions",
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="resource_type_id", onDelete="SET NULL")
@@ -42,14 +57,14 @@ class ResourceTypeCustomAction
         return $this->id;
     }
 
-    public function getAction()
+    public function getName()
     {
-        return $this->action;
+        return $this->name;
     }
 
-    public function setAction($action)
+    public function setName($name)
     {
-        $this->action = $action;
+        $this->name = $name;
     }
 
     public function isAsync()
@@ -70,5 +85,35 @@ class ResourceTypeCustomAction
     public function setResourceType($resourceType)
     {
         $this->resourceType = $resourceType;
+    }
+
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
+
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    public function setIsCustom($bool)
+    {
+        $this->isCustom = $bool;
+    }
+
+    public function isCustom()
+    {
+        return $this->isCustom;
+    }
+
+    public function setIsForm($bool)
+    {
+        $this->isForm = $bool;
+    }
+
+    public function isForm()
+    {
+        return $this->isForm;
     }
 }
