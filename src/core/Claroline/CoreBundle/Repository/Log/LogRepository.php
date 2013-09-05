@@ -105,6 +105,16 @@ class LogRepository extends EntityRepository
         )->getResult();
     }
 
+    public function findAdminLogs($executeQuery = true)
+    {
+        $queryBuilder = $this
+            ->createQueryBuilder('log')
+            ->orderBy('log.dateLog', 'DESC');
+        $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, null, 'admin');
+
+        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
+    }
+
     public function findActionAfterDate(
         $action,
         $date,
@@ -295,10 +305,12 @@ class LogRepository extends EntityRepository
             }
         }
 
-        $queryBuilder
-            ->andWhere("log.action LIKE '%:action%'")
-            ->setParameter('action', $action)
-        ;
+        if (null !== $action) {
+            $queryBuilder
+                    ->andWhere("log.action LIKE '%:action%'")
+                    ->setParameter('action', $action)
+            ;
+        }
 
         return $queryBuilder;
     }
