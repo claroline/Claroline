@@ -27,6 +27,7 @@ class DesktopController extends Controller
      */
     public function widgetsAction(User $user)
     {
+        /** @var \Claroline\CoreBundle\Entity\Widget\DisplayConfig[] $configs */
         $configs = $this->get('claroline.widget.manager')
             ->generateDesktopDisplayConfig($user->getId());
 

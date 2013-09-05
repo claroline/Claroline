@@ -3,11 +3,18 @@
 namespace Claroline\CoreBundle\Repository\Log;
 
 use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityRepository;
 
 class LogRepository extends EntityRepository
 {
+    /**
+     * @param $configs
+     * @param $range
+     *
+     * @return array|null
+     */
     public function countByDayThroughConfigs($configs, $range)
     {
         if ($configs === null || count($configs) == 0) {
@@ -45,6 +52,12 @@ class LogRepository extends EntityRepository
         return $this->extractChartData($queryBuilder->getQuery()->getResult(), $range);
     }
 
+    /**
+     * @param $configs
+     * @param $maxResult
+     *
+     * @return null|Query
+     */
     public function findLogsThroughConfigs($configs, $maxResult = -1)
     {
         if ($configs === null || count($configs) == 0) {
