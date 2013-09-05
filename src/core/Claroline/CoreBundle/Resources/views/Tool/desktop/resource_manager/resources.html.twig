@@ -4,7 +4,26 @@
     {{ parent() }}
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css')}}'>
 {% endblock %}
-
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-briefcase',
+                'name': 'desktop'|trans({}, 'platform'),
+                'href': path('claro_desktop_open')
+            },
+            {
+                'name': 'resources'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'resources' | trans({}, 'platform') }}<span></span></h3>
+    </div>
+{% endblock %}
 {% block javascripts %}
     {{ parent() }}
     {% javascripts
@@ -33,6 +52,7 @@
             Claroline.ResourceManager.initialize({
                 "parentElement": $('div.section-content .panel'),
                 "isPickerMultiSelectAllowed": true,
+                "isWorkspace": false,
                 "appPath": "{{ app.request.getBaseUrl }}",
                 "webPath": "{{ asset('') }}",
                 "resourceTypes": {

@@ -98,8 +98,7 @@
             }
         }),
         Breadcrumbs: Backbone.View.extend({
-            tagName: 'ul',
-            className: 'breadcrumb',
+            tagName: 'div',
             events: {
                 'click a': function (event) {
                     event.preventDefault();
@@ -114,9 +113,28 @@
                 this.dispatcher = dispatcher;
             },
             render: function (nodes) {
-                $(this.el).html(Twig.render(ResourceManagerBreadcrumbs, {
-                    'nodes': nodes
-                }));
+                if (!this.parameters.isPickerMode) {
+                    //determine if is workspace mode and remove a part of elements in the breadcrumb
+                    if (this.parameters.isWorkspace) {
+                        $('ul.breadcrumb li').slice(2).remove();
+                    } else {
+                        $('ul.breadcrumb li:not(:first)').remove();
+                    }
+
+                    $('ul.breadcrumb').append(Twig.render(ResourceManagerBreadcrumbs, {'nodes': nodes}));
+
+                    // add current folder to the title of the panel
+                    if (nodes.length > 1) {
+                        $('.panel .panel-heading .panel-title span').html(' - ' + $('ul.breadcrumb li').last().text());
+                    } else {
+                        $('.panel .panel-heading .panel-title span').html('');
+                    }
+                } else {
+                    $(this.el).addClass('breadcrumb');
+                    $(this.el).html(Twig.render(ResourceManagerBreadcrumbs, {
+                        'nodes': nodes
+                    }));
+                }
             }
         }),
         Actions: Backbone.View.extend({

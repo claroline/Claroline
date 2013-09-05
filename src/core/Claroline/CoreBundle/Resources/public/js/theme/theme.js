@@ -132,4 +132,5 @@
     $(".theme-value .btn").colorpicker().on("changeColor", function (event) {
         $("input", this.parentNode.parentNode).val(event.color.toHex());
     });
+
 }());
