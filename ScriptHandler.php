@@ -45,8 +45,10 @@ class ScriptHandler
         $map = $generator->parseAutoloads($packageMap, $package);
         $loader = $generator->createLoader($map);
 
-        foreach ($map['classmap'][0] as $path) {
-            $loader->add('', $path);
+        if (isset($map['classmap'][0])) {
+            foreach ($map['classmap'][0] as $path) {
+                $loader->add('', $path);
+            }
         }
 
         $loader->register();
