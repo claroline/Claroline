@@ -9,7 +9,6 @@ use Claroline\MigrationBundle\Migrator\Migrator;
 
 class ManagerTest extends MockeryTestCase
 {
-    private $kernel;
     private $generator;
     private $writer;
     private $migrator;
@@ -18,11 +17,10 @@ class ManagerTest extends MockeryTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->kernel = m::mock('Symfony\Component\HttpKernel\Kernel');
         $this->writer = m::mock('Claroline\MigrationBundle\Generator\Writer');
         $this->generator = m::mock('Claroline\MigrationBundle\Generator\Generator');
         $this->migrator = m::mock('Claroline\MigrationBundle\Migrator\Migrator');
-        $this->manager = new Manager($this->kernel, $this->generator, $this->writer, $this->migrator);
+        $this->manager = new Manager($this->generator, $this->writer, $this->migrator);
     }
 
     /**
@@ -32,15 +30,11 @@ class ManagerTest extends MockeryTestCase
     {
         $manager = m::mock(
             'Claroline\MigrationBundle\Manager\Manager[getAvailablePlatforms]',
-            array($this->kernel, $this->generator, $this->writer, $this->migrator)
+            array($this->generator, $this->writer, $this->migrator)
         );
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
         $platform = m::mock('Doctrine\DBAL\Platforms\AbstractPlatform');
 
-        $this->kernel->shouldReceive('getBundle')
-            ->once()
-            ->with('FooBundle')
-            ->andReturn($bundle);
         $manager->shouldReceive('getAvailablePlatforms')
             ->once()
             ->andReturn(array('driver' => $platform));
@@ -55,7 +49,7 @@ class ManagerTest extends MockeryTestCase
                 ->with($bundle, 'driver', m::any(), $queries);
         }
 
-        $manager->generateBundleMigration('FooBundle');
+        $manager->generateBundleMigration($bundle);
     }
 
     public function testGetAvailablePlatforms()
@@ -69,15 +63,12 @@ class ManagerTest extends MockeryTestCase
     public function testGetBundleStatus()
     {
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
-        $this->kernel->shouldReceive('getBundle')
-            ->once()
-            ->with('FooBundle')
-            ->andReturn($bundle);
+
         $this->migrator->shouldReceive('getMigrationStatus')
             ->once()
             ->with($bundle)
             ->andReturn('status');
-        $this->assertEquals('status', $this->manager->getBundleStatus('FooBundle'));
+        $this->assertEquals('status', $this->manager->getBundleStatus($bundle));
     }
 
     /**
@@ -86,33 +77,25 @@ class ManagerTest extends MockeryTestCase
     public function testMigrate($direction, $method)
     {
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
-        $this->kernel->shouldReceive('getBundle')
-            ->once()
-            ->with('FooBundle')
-            ->andReturn($bundle);
         $this->migrator->shouldReceive('migrate')
             ->once()
             ->with($bundle, '123', $direction);
         $this->migrator->shouldReceive('getCurrentVersion')
             ->once()
             ->with($bundle);
-        $this->manager->{$method}('FooBundle', '123');
+        $this->manager->{$method}($bundle, '123');
     }
 
     public function testDiscardUpperMigrations()
     {
         $manager = m::mock(
             'Claroline\MigrationBundle\Manager\Manager[getAvailablePlatforms]',
-            array($this->kernel, $this->generator, $this->writer, $this->migrator)
+            array($this->generator, $this->writer, $this->migrator)
         );
         $manager->shouldReceive('getAvailablePlatforms')
             ->once()
             ->andReturn(array('driver1' => 'd1', 'driver2' => 'd2'));
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
-        $this->kernel->shouldReceive('getBundle')
-            ->once()
-            ->with('FooBundle')
-            ->andReturn($bundle);
         $this->migrator->shouldReceive('getCurrentVersion')
             ->once()
             ->with($bundle)
@@ -123,7 +106,7 @@ class ManagerTest extends MockeryTestCase
         $this->writer->shouldReceive('deleteUpperMigrationClasses')
             ->once()
             ->with($bundle, 'driver2', '1');
-        $manager->discardUpperMigrations('FooBundle');
+        $manager->discardUpperMigrations($bundle);
     }
 
     public function queriesProvider()

@@ -24,6 +24,6 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getManager($output)->discardUpperMigrations($input->getArgument('bundle'));
+        $this->getManager($output)->discardUpperMigrations($this->getTargetBundle());
     }
 }

@@ -45,7 +45,7 @@ EOT
         try {
             $method = "{$this->getAction()}Bundle";
             $this->getManager($output)->{$method}(
-                $input->getArgument('bundle'),
+                $this->getTargetBundle(),
                 $input->getOption('target')
             );
         } catch (InvalidVersionException $ex) {

@@ -25,7 +25,7 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $status = $this->getManager($output)->getBundleStatus($input->getArgument('bundle'));
+        $status = $this->getManager($output)->getBundleStatus($this->getTargetBundle());
 
         foreach ($status[Migrator::STATUS_AVAILABLE] as $version) {
             $output->writeln(
