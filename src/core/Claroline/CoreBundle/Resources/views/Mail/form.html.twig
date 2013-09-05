@@ -22,12 +22,6 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    <!-- editeur wysiwyg -->
-        <script src='{{ asset('bundles/frontend/jquery/plugin/tinymce/jscripts/tiny_mce/tiny_mce.js') }}' type='text/javascript'></script>
-        <script type="text/javascript">
-    tinyMCE.init({
-        // General options
-        mode : "textareas"
-    });
-    </script>
+        {{ tinymce_init() }}
+        {% render controller('ClarolineCoreBundle:Tool\\WorkspaceResourceParameters:initPicker') %}
 {% endblock %}
