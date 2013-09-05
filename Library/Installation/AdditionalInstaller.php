@@ -11,6 +11,6 @@ class AdditionalInstaller extends ContainerAware
     {
         $defaultTemplatePath = $this->container->getParameter('kernel.root_dir') . '/../templates/default.zip';
         $translator = $this->container->get('translator'); // useless
-        TemplateBuilder::buildDefault($defaultPath, $translator);
+        TemplateBuilder::buildDefault($defaultTemplatePath, $translator);
     }
 }
