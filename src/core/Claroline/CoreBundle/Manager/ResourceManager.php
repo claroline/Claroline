@@ -519,11 +519,13 @@ class ResourceManager
         $this->om->persist($node);
 
         if ($next) {
+            $this->removePreviousWherePreviousIs($previous);
             $next->setPrevious($previous);
             $this->om->persist($next);
         }
 
         if ($previous) {
+            $this->removeNextWhereNextIs($next);
             $previous->setNext($next);
             $this->om->persist($previous);
         }
@@ -720,16 +722,32 @@ class ResourceManager
      */
     public function delete(ResourceNode $node)
     {
-        //why is it broken when this function is fired after startFlushSuite ?
+        if ($node->getParent() === null) {
+            throw new \LogicException('Root directory cannot be removed');
+        }
+
         $this->removePosition($node);
         $this->om->startFlushSuite();
-        $this->dispatcher->dispatch(
-            "delete_{$node->getResourceType()->getName()}",
-            'DeleteResource',
-            array($this->getResourceFromNode($node))
-        );
+        $children = $this->getAllChildren($node, false);
+
+        foreach ($children as $child) {
+            $resChild = $this->getResourceFromNode($child);
+            $this->dispatcher->dispatch(
+                "delete_{$child->getResourceType()->getName()}",
+                'DeleteResource',
+                array($resChild)
+            );
+            /*
+             * If the child isn't removed here aswell, doctrine will fail to remove the child
+             * because it still has $resChild in its UnitOfWork or something (I have no idea
+             * how doctrine works tbh). So if you remove this line the suppression will
+             * not work for direcotry containing children.
+             */
+            $this->om->remove($resChild);
+            $this->om->remove($child);
+        }
+
         $this->om->remove($node);
-        $this->dispatcher->dispatch('log', 'Log\LogResourceDelete', array($node));
         $this->om->endFlushSuite();
     }
 
