@@ -48,6 +48,13 @@
                 <i class="icon-bar-chart"></i>
                 {{ 'admin_analytics'|trans({}, 'platform') }}
             </a>
+            {% if app.environment == 'dev' %}
+                <a class="list-group-item {% if path('claro_admin_router_debug') in app.request.requesturi %} active{% endif %}"
+                    href="{{ path('claro_admin_router_debug') }}" id="link_analytics">
+                    <i class="icon-bug"></i>
+                    {{ 'Router debug'|trans({}, 'platform') }}
+                </a>
+            {% endif %}
         </div>
     </div>
     <div class="col-md-9 section-content">
