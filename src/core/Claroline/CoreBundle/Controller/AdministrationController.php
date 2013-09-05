@@ -1384,29 +1384,4 @@ class AdministrationController extends Controller
 
         return new Response($msg, 200);
     }
-
-    /**
-     * @EXT\Route(
-     *    "router/debug",
-     *    name="claro_admin_router_debug"
-     * )
-     *
-     * @EXT\Template()
-     *
-     * Only for dev env
-     */
-    public function routerDebugAction()
-    {
-        if ($this->get('kernel')->getEnvironment() === 'dev') {
-            $routes = $this->container->get('router')->getRouteCollection()->all();
-
-            foreach ($routes as $route) {
-                $route->setPath(preg_replace("/\{.*\}/", "1", $route->getPath()));
-            }
-
-            return array('routes' => $routes);
-        }
-
-        return array();
-    }
 }

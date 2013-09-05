@@ -115,7 +115,7 @@
             render: function (nodes) {
                 if (!this.parameters.isPickerMode) {
                     //determine if is workspace mode and remove a part of elements in the breadcrumb
-                    if (this.parameters.isWorkSpace) {
+                    if (this.parameters.isWorkspace) {
                         $('ul.breadcrumb li').slice(2).remove();
                     } else {
                         $('ul.breadcrumb li:not(:first)').remove();
