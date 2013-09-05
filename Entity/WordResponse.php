@@ -72,11 +72,13 @@ class WordResponse
 
     /**
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\InteractionOpen", inversedBy="wordResponses")
+     * @ORM\JoinColumn(name="interaction_open_id", referencedColumnName="id")
      */
     private $interactionopen;
 
     /**
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Hole")
+     * @ORM\JoinColumn(name="hole_id", referencedColumnName="id")
      */
     private $hole;
 

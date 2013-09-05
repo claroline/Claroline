@@ -423,6 +423,28 @@ class QuestionController extends Controller
                     );
 
                 case "InteractionOpen":
+                    
+                    $interactionOpen = $this->getDoctrine()
+                        ->getManager()
+                        ->getRepository('UJMExoBundle:InteractionOpen')
+                        ->getInteractionOpen($interaction[0]->getId());
+
+                    $editForm = $this->createForm(
+                        new InteractionOpenType(
+                            $this->container->get('security.context')
+                                ->getToken()->getUser()
+                        ), $interactionOpen[0]
+                    );
+                    $deleteForm = $this->createDeleteForm($interactionOpen[0]->getId());
+
+                    return $this->render(
+                        'UJMExoBundle:InteractionOpen:edit.html.twig', array(
+                        'entity'      => $interactionOpen[0],
+                        'edit_form'   => $editForm->createView(),
+                        'delete_form' => $deleteForm->createView(),
+                        'nbResponses' => $nbResponses
+                        )
+                    );
 
                     break;
             }
@@ -545,7 +567,18 @@ class QuestionController extends Controller
                     );
 
                 case "InteractionOpen":
+                    $interactionOpen = $this->getDoctrine()
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:InteractionOpen')
+                    ->getInteractionOpen($interaction[0]->getId());
 
+                    return $this->forward(
+                        'UJMExoBundle:InteractionOpen:delete', array(
+                            'id' => $interactionOpen[0]->getId(),
+                            'pageNow' => $pageNow
+                        )
+                    );
+                    
                     break;
             }
         }

@@ -100,4 +100,66 @@ class InteractionOpenHandler
         $this->em->flush();
 
     }
+    
+    public function processUpdate(InteractionOpen $originalInterOpen)
+    {
+        $originalHints = array();
+
+        foreach ($originalInterOpen->getInteraction()->getHints() as $hint) {
+            $originalHints[] = $hint;
+        }
+
+        if ( $this->request->getMethod() == 'POST' ) {
+            $this->form->handleRequest($this->request);
+
+            if ( $this->form->isValid() ) {
+                $this->onSuccessUpdate($this->form->getData(), $originalHints);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
+    private function onSuccessUpdate(InteractionOpen $interOpen, $originalHints)
+    {
+
+        // filter $originalHints to contain hint no longer present
+        foreach ($interOpen->getInteraction()->getHints() as $hint) {
+            foreach ($originalHints as $key => $toDel) {
+                if ($toDel->getId() == $hint->getId()) {
+                    unset($originalHints[$key]);
+                }
+            }
+        }
+
+        // remove the relationship between the hint and the interactionopen
+        foreach ($originalHints as $hint) {
+            // remove the Hint from the interactionopen
+            $interOpen->getInteraction()->getHints()->removeElement($hint);
+
+            // if you wanted to delete the Hint entirely, you can also do that
+            $this->em->remove($hint);
+        }
+
+        $pointsWrong = str_replace(',', '.', $interOpen->getScoreFalseResponse());
+        $pointsRight = str_replace(',', '.', $interOpen->getScoreRightResponse());
+
+        $interOpen->setScoreFalseResponse($pointsWrong);
+        $interOpen->setScoreRightResponse($pointsRight);
+
+        $this->em->persist($interOpen);
+        $this->em->persist($interOpen->getInteraction()->getQuestion());
+        $this->em->persist($interOpen->getInteraction());
+
+        //On persite tous les hints de l'entité interaction
+        foreach ($interOpen->getInteraction()->getHints() as $hint) {
+            $interOpen->getInteraction()->addHint($hint);
+            $this->em->persist($hint);
+        }
+
+        $this->em->flush();
+
+    }
 }

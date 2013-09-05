@@ -144,6 +144,62 @@ class InteractionOpenController extends Controller
     }
     
     /**
+     * Edits an existing InteractionOpen entity.
+     *
+     */
+    public function updateAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')->find($id);
+
+        if (!$interOpen) {
+            throw $this->createNotFoundException('Unable to find InteractionOpen entity.');
+        }
+
+        $editForm   = $this->createForm(
+            new InteractionOpenType(
+                $this->container->get('security.context')->getToken()->getUser()
+            ), $interOpen
+        );
+        $formHandler = new InteractionOpenHandler(
+            $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
+            $this->container->get('security.context')->getToken()->getUser()
+        );
+
+        if ($formHandler->processUpdate($interOpen)) {
+            return $this->redirect($this->generateUrl('ujm_question_index'));
+        }
+
+        return $this->forward(
+            'UJMExoBundle:Question:edit', array(
+                'id' => $interOpen->getInteraction()->getQuestion()->getId(),
+                'form' => $editForm
+            )
+        );
+    }
+    
+    /**
+     * Deletes a InteractionOpen entity.
+     *
+     */
+    public function deleteAction($id, $pageNow)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('UJMExoBundle:InteractionOpen')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find InteractionOpen entity.');
+        }
+
+        $em->remove($entity);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('ujm_question_index', array('pageNow' => $pageNow)));
+    }
+    
+    /**
      * To test the open question by the teacher
      *
      */

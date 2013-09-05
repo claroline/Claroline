@@ -209,6 +209,7 @@ num_paper: Paper's number
 # O
 onlyOnce: => The rights answers count only once.
 open: Open
+open edition: Edition of a question of type open
 order: Order
 orders: Instructions
 

@@ -7,3 +7,8 @@ ujm_interactionopen_response:
     pattern: /testOpen
     defaults: { _controller: "UJMExoBundle:InteractionOpen:responseOpen" }
     requirements: { _method: post }
+
+ujm_interactionopen_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "UJMExoBundle:InteractionOpen:update" }
+    requirements: { _method: post }

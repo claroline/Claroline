@@ -209,6 +209,7 @@ num_paper: Numéro de la copie
 # O
 onlyOnce: => Les bonnes réponses ne sont comptabilisées qu'une seule fois.
 open: Ouverte
+open edition: Edition d'une question de type ouverte
 order: Ordre
 orders: Consignes
 
