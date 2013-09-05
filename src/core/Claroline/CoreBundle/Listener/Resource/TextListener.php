@@ -149,8 +149,6 @@ class TextListener implements ContainerAwareInterface
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $em->remove($event->getResource());
         $event->stopPropagation();
     }
 
