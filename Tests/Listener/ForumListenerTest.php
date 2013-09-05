@@ -22,7 +22,7 @@ class ForumListenerTest extends FunctionalTestCase
             ->client
             ->getContainer()
             ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\AbstractResource');
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
     }
 
     public function tearDown()

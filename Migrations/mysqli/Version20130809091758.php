@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\ForumBundle\Migrations\pdo_mysql;
+namespace Claroline\ForumBundle\Migrations\mysqli;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,12 +8,20 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/08/05 10:57:01
+ * Generation date: 2013/08/09 09:17:59
  */
-class Version20130805105700 extends AbstractMigration
+class Version20130809091758 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            CREATE TABLE claro_forum (
+                id INT AUTO_INCREMENT NOT NULL, 
+                resourceNode_id INT DEFAULT NULL, 
+                UNIQUE INDEX UNIQ_F2869DFB87FAB32 (resourceNode_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ");
         $this->addSql("
             CREATE TABLE claro_forum_message (
                 id INT AUTO_INCREMENT NOT NULL, 
@@ -28,8 +36,10 @@ class Version20130805105700 extends AbstractMigration
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
-            CREATE TABLE claro_forum (
-                id INT NOT NULL, 
+            CREATE TABLE claro_forum_options (
+                id INT AUTO_INCREMENT NOT NULL, 
+                subjects INT NOT NULL, 
+                messages INT NOT NULL, 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
@@ -47,12 +57,9 @@ class Version20130805105700 extends AbstractMigration
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
-            CREATE TABLE claro_forum_options (
-                id INT AUTO_INCREMENT NOT NULL, 
-                subjects INT NOT NULL, 
-                messages INT NOT NULL, 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+            ALTER TABLE claro_forum 
+            ADD CONSTRAINT FK_F2869DFB87FAB32 FOREIGN KEY (resourceNode_id) 
+            REFERENCES claro_resource_node (id)
         ");
         $this->addSql("
             ALTER TABLE claro_forum_message 
@@ -64,12 +71,6 @@ class Version20130805105700 extends AbstractMigration
             ALTER TABLE claro_forum_message 
             ADD CONSTRAINT FK_6A49AC0EA76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id)
-        ");
-        $this->addSql("
-            ALTER TABLE claro_forum 
-            ADD CONSTRAINT FK_F2869DFBF396750 FOREIGN KEY (id) 
-            REFERENCES claro_resource (id) 
-            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_forum_subject 
@@ -95,16 +96,16 @@ class Version20130805105700 extends AbstractMigration
             DROP FOREIGN KEY FK_6A49AC0E23EDC87
         ");
         $this->addSql("
-            DROP TABLE claro_forum_message
-        ");
-        $this->addSql("
             DROP TABLE claro_forum
         ");
         $this->addSql("
-            DROP TABLE claro_forum_subject
+            DROP TABLE claro_forum_message
         ");
         $this->addSql("
             DROP TABLE claro_forum_options
+        ");
+        $this->addSql("
+            DROP TABLE claro_forum_subject
         ");
     }
 }

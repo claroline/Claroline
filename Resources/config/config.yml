@@ -7,3 +7,9 @@ plugin:
       name: claroline_forum
       is_exportable: true
       icon: res_forum.png
+      actions:
+          # The name of the action is the translation key that will be used to display
+          #  the action in the list of available actions for your resource.
+          #  The name will be passed to you by the Event manager.
+        - name: post
+        - name: moderate

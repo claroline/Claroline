@@ -8,12 +8,22 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/08/05 10:57:01
+ * Generation date: 2013/08/09 09:17:59
  */
-class Version20130805105700 extends AbstractMigration
+class Version20130809091758 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            CREATE TABLE claro_forum (
+                id INTEGER NOT NULL, 
+                resourceNode_id INTEGER DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_F2869DFB87FAB32 ON claro_forum (resourceNode_id)
+        ");
         $this->addSql("
             CREATE TABLE claro_forum_message (
                 id INTEGER NOT NULL, 
@@ -32,8 +42,10 @@ class Version20130805105700 extends AbstractMigration
             CREATE INDEX IDX_6A49AC0EA76ED395 ON claro_forum_message (user_id)
         ");
         $this->addSql("
-            CREATE TABLE claro_forum (
+            CREATE TABLE claro_forum_options (
                 id INTEGER NOT NULL, 
+                subjects INTEGER NOT NULL, 
+                messages INTEGER NOT NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -54,29 +66,21 @@ class Version20130805105700 extends AbstractMigration
         $this->addSql("
             CREATE INDEX IDX_273AA20BA76ED395 ON claro_forum_subject (user_id)
         ");
-        $this->addSql("
-            CREATE TABLE claro_forum_options (
-                id INTEGER NOT NULL, 
-                subjects INTEGER NOT NULL, 
-                messages INTEGER NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
     }
 
     public function down(Schema $schema)
     {
         $this->addSql("
-            DROP TABLE claro_forum_message
-        ");
-        $this->addSql("
             DROP TABLE claro_forum
         ");
         $this->addSql("
-            DROP TABLE claro_forum_subject
+            DROP TABLE claro_forum_message
         ");
         $this->addSql("
             DROP TABLE claro_forum_options
+        ");
+        $this->addSql("
+            DROP TABLE claro_forum_subject
         ");
     }
 }
