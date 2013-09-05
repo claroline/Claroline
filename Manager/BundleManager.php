@@ -88,6 +88,8 @@ class BundleManager
                         self::BUNDLE_CONFIG => $config
                     );
                 }
+
+                break;
             }
         }
 
