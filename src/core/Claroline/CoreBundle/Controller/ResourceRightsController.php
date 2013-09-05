@@ -4,10 +4,12 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +21,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 class ResourceRightsController
 {
     private $rightsManager;
+    private $maskManager;
     private $request;
     private $sc;
     private $wsTagManager;
@@ -29,6 +32,7 @@ class ResourceRightsController
     /**
      * @DI\InjectParams({
      *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager"),
+     *     "maskManager" = @DI\Inject("claroline.manager.mask_manager"),
      *     "request"       = @DI\Inject("request"),
      *     "sc"            = @DI\Inject("security.context"),
      *     "wsTagManager"  = @DI\Inject("claroline.manager.workspace_tag_manager"),
@@ -39,6 +43,7 @@ class ResourceRightsController
      */
     public function __construct(
         RightsManager $rightsManager,
+        MaskManager $maskManager,
         Request $request,
         SecurityContext $sc,
         WorkspaceTagManager $wsTagManager,
@@ -53,6 +58,7 @@ class ResourceRightsController
         $this->wsTagManager = $wsTagManager;
         $this->templating = $templating;
         $this->roleManager = $roleManager;
+        $this->maskManager = $maskManager;
         $this->om = $om;
     }
 
@@ -132,7 +138,7 @@ class ResourceRightsController
     {
         $collection = new ResourceCollection(array($node));
         $this->checkAccess('EDIT', $collection);
-        $datas = $this->getPermissionsFromRequest();
+        $datas = $this->getPermissionsFromRequest($node->getResourceType());
         $isRecursive = $this->request->request->get('isRecursive');
 
         foreach ($datas as $data) {
@@ -206,16 +212,16 @@ class ResourceRightsController
         return new Response("success");
     }
 
-    public function getPermissionsFromRequest()
+    public function getPermissionsFromRequest(ResourceType $type)
     {
-        $permsMap = array('open', 'copy', 'delete', 'edit', 'export');
+        $permsMap = $this->maskManager->getPermissionMap($type);
         $roles = $this->request->request->get('roles');
         $data = array();
 
         foreach ($roles as $roleId => $perms) {
 
             foreach ($permsMap as $perm) {
-                $changedPerms['can' . ucfirst($perm)] = (array_key_exists($perm, $perms)) ? true: false;
+                $changedPerms[$perm] = (array_key_exists($perm, $perms)) ? true: false;
             }
 
             $data[] = array(

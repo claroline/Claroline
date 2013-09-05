@@ -8,7 +8,8 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction;
+use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
+use Claroline\CoreBundle\Entity\Resource\MenuAction;
 
 /**
  * Resource types data fixture.
@@ -44,26 +45,13 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
             array('activity', true)
         );
 
-        $i = 0;
-
         foreach ($resourceTypes as $attributes) {
             $type = new ResourceType();
             $type->setName($attributes[0]);
             $type->setExportable($attributes[1]);
             $manager->persist($type);
-
-            if (isset($customActions[$i])) {
-                if ($customActions[$i] !== null) {
-                    $actions = new ResourceTypeCustomAction();
-                    $actions->setAction($customActions[$i][0]);
-                    $actions->setAsync($customActions[$i][1]);
-                    $actions->setResourceType($type);
-                    $manager->persist($actions);
-                }
-            }
-
+            $this->container->get('claroline.manager.mask_manager')->addDefaultPerms($type);
             $this->addReference("resource_type/{$attributes[0]}", $type);
-            $i++;
         }
 
         $manager->flush();

@@ -137,21 +137,21 @@ class RolesController extends Controller
                     null,
                     array(
                         'ROLE_WS_' .  strtoupper($name) => array(
-                            'canOpen' => true,
-                            'canEdit' => true,
-                            'canCopy' => true,
-                            'canDelete' => true,
-                            'canExport' => true,
-                            'canCreate' => $creations,
+                            'open' => true,
+                            'edit' => true,
+                            'copy' => true,
+                            'delete' => true,
+                            'export' => true,
+                            'create' => $creations,
                             'role' => $role
                         ),
                         'ROLE_WS_MANAGER' => array(
-                            'canOpen' => true,
-                            'canEdit' => true,
-                            'canCopy' => true,
-                            'canDelete' => true,
-                            'canExport' => true,
-                            'canCreate' => $creations,
+                            'open' => true,
+                            'edit' => true,
+                            'copy' => true,
+                            'delete' => true,
+                            'export' => true,
+                            'create' => $creations,
                             'role' => $this->roleManager->getManagerRole($workspace)
                         )
                     )

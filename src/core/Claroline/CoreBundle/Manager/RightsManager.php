@@ -7,11 +7,11 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
-use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Translation\Translator;
 
@@ -20,7 +20,9 @@ use Symfony\Component\Translation\Translator;
  */
 class RightsManager
 {
-    /** @var ResourceRightsRepository */
+    /** @var MaskManager */
+    private $maskManager;
+
     private $rightsRepo;
     /** @var ResourceNodeRepository */
     private $resourceRepo;
@@ -41,17 +43,19 @@ class RightsManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "translator"  =    @DI\Inject("translator"),
+     *     "translator"  = @DI\Inject("translator"),
      *     "om"          = @DI\Inject("claroline.persistence.object_manager"),
      *     "dispatcher"  = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "roleManager" = @DI\Inject("claroline.manager.role_manager")
+     *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
+     *     "maskManager" = @DI\Inject("claroline.manager.mask_manager")
      * })
      */
     public function __construct(
         Translator $translator,
         ObjectManager $om,
         StrictDispatcher $dispatcher,
-        RoleManager $roleManager
+        RoleManager $roleManager,
+        MaskManager $maskManager
     )
     {
         $this->rightsRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
@@ -62,18 +66,19 @@ class RightsManager
         $this->om = $om;
         $this->dispatcher = $dispatcher;
         $this->roleManager = $roleManager;
+        $this->maskManager = $maskManager;
     }
 
     /**
      * Create a new ResourceRight
      *
-     * @param array                                              $permissions
+     * @param array|integer                                      $permissions
      * @param boolean                                            $isRecursive
      * @param \Claroline\CoreBundle\Entity\Role                  $role
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      */
     public function create(
-        array $permissions,
+        $permissions,
         Role $role,
         ResourceNode $resource,
         $isRecursive,
@@ -86,7 +91,7 @@ class RightsManager
     }
 
     public function editPerms(
-        array $permissions,
+        $permissions,
         Role $role,
         ResourceNode $node,
         $isRecursive
@@ -101,7 +106,7 @@ class RightsManager
             array($this->getOneByRoleAndResource($role, $node));
 
         foreach ($arRights as $toUpdate) {
-            $this->setPermissions($toUpdate, $permissions);
+            is_int($permissions) ? $toUpdate->setMask($permissions): $this->setPermissions($toUpdate, $permissions);
             $this->om->persist($toUpdate);
             $this->logChangeSet($toUpdate);
         }
@@ -142,13 +147,12 @@ class RightsManager
         $this->om->startFlushSuite();
 
         foreach ($originalRights as $originalRight) {
-            $created[] = $this->create(
-                $originalRight->getPermissions(),
-                $originalRight->getRole(),
-                $node,
-                false,
-                $originalRight->getCreatableResourceTypes()->toArray()
-            );
+            $new = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceRights');
+            $new->setRole($originalRight->getRole());
+            $new->setResourceNode($node);
+            $new->setMask($originalRight->getMask());
+            $new->setCreatableResourceTypes($originalRight->getCreatableResourceTypes()->toArray());
+            $this->om->persist($new);
         }
 
         $this->om->endFlushSuite();
@@ -197,11 +201,8 @@ class RightsManager
 
     public function setPermissions(ResourceRights $rights, array $permissions)
     {
-        $rights->setCanCopy($permissions['canCopy']);
-        $rights->setCanOpen($permissions['canOpen']);
-        $rights->setCanDelete($permissions['canDelete']);
-        $rights->setCanEdit($permissions['canEdit']);
-        $rights->setCanExport($permissions['canExport']);
+        $resourceType = $rights->getResourceNode()->getResourceType();
+        $rights->setMask($this->maskManager->encodeMask($permissions, $resourceType));
 
         return $rights;
     }
@@ -210,6 +211,7 @@ class RightsManager
      * Takes an array of Role.
      * Parse each key of the $perms array
      * and add the entry 'role' where it is needed.
+     * It's used when a workspace is imported
      *
      * @param array $baseRoles
      * @param array $perms
@@ -260,7 +262,7 @@ class RightsManager
     }
 
     public function recursiveCreation(
-        array $permissions,
+        $permissions,
         Role $role,
         ResourceNode $node,
         array $creations = array()
@@ -271,7 +273,7 @@ class RightsManager
         $resourceRights = $this->updateRightsTree($role, $node);
 
         foreach ($resourceRights as $rights) {
-            $this->setPermissions($rights, $permissions);
+            is_int($permissions) ? $rights->setMask($permissions): $this->setPermissions($rights, $permissions);
             $rights->setCreatableResourceTypes($creations);
             $this->om->persist($rights);
         }
@@ -280,7 +282,7 @@ class RightsManager
     }
 
     public function nonRecursiveCreation(
-        array $permissions,
+        $permissions,
         Role $role,
         ResourceNode $node,
         array $creations = array()
@@ -290,7 +292,7 @@ class RightsManager
         $rights->setRole($role);
         $rights->setResourceNode($node);
         $rights->setCreatableResourceTypes($creations);
-        $this->setPermissions($rights, $permissions);
+        is_int($permissions) ? $rights->setMask($permissions): $this->setPermissions($rights, $permissions);
         $this->om->persist($rights);
         $this->om->flush();
     }
