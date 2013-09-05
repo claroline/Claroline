@@ -1,7 +1,3 @@
 jms_di_extra:
     locations:
-        # set the following option to false and explicitely name
-        # the bundles for optimal performance in dev environment
         all_bundles: true
-        bundles: [ClarolineCoreBundle]
-        directories: ["%kernel.root_dir%/../vendor/claroline/core-bundle"]
