@@ -9,12 +9,8 @@ class AdditionalInstaller extends ContainerAware
 {
     public function preInstall()
     {
-        $templateDirectory = $this->container->getParameter('claroline.param.templates_directory');
-        $defaultPath = "{$templateDirectory}default.zip";
-        $translator = $this->container->get('translator');
-        $translator->setLocale(
-            $this->container->get('claroline.config.platform_config_handler')->getParameter('locale_language')
-        );
+        $defaultTemplatePath = $this->container->getParameter('kernel.root_dir') . '/../templates/default.zip';
+        $translator = $this->container->get('translator'); // useless
         TemplateBuilder::buildDefault($defaultPath, $translator);
     }
 }
