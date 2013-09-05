@@ -87,9 +87,9 @@ class BundleManager
                         self::BUNDLE_INSTANCE => $bundle,
                         self::BUNDLE_CONFIG => $config
                     );
-                }
 
-                break;
+                    break;
+                }
             }
         }
 
