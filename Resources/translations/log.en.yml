@@ -1,6 +1,7 @@
 log_resource-icap_blog-post_create_shortname: "Post creation"
 log_resource-icap_blog-post_create_title: "Post creation in a blog"
 log_resource-icap_blog-post_read_shortname: "Post opening"
+log_resource-icap_blog-post_read_title: "Post opening in a blog"
 log_created_post: 'Created post'
 log_post_title: 'Title'
 log.blog.configure: "configured the blog %blog%"
