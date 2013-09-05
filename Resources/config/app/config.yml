@@ -4,11 +4,11 @@ parameters:
     security.authentication.listener.anonymous.class: Claroline\CoreBundle\Listener\AnonymousAuthenticationListener
     templating.locator.class: Claroline\CoreBundle\Library\Templating\Loader\TemplateLocator
 
-services:
-    templating.locator:
-        class: '%templating.locator.class%'
-        arguments:
-            - "@file_locator"
-            - "@claroline.config.platform_config_handler"
-            - "@claroline.common.theme_service"
-            - %kernel.root_dir%/Resources
+#services:
+ #   templating.locator:
+  #      class: '%templating.locator.class%'
+   #     arguments:
+    #        - "@file_locator"
+     #       - "@claroline.config.platform_config_handler"
+      #      - "@claroline.common.theme_service"
+       #     - %kernel.root_dir%/Resources
