@@ -466,13 +466,12 @@ class ResourceManager
      */
     public function move(ResourceNode $child, ResourceNode $parent)
     {
-        $this->removePosition($child);
-        $this->setLastPosition($parent, $child);
-
         if ($parent === $child) {
             throw new ResourceMoveException("You cannot move a directory into itself");
         }
 
+        $this->removePosition($child);
+        $this->setLastPosition($parent, $child);
         $child->setParent($parent);
         $child->setName($this->getUniqueName($child, $parent));
         $this->om->persist($child);
