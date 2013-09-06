@@ -198,6 +198,17 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
         $this->assertEquals(1, $mimeTypes[2]['total']);
     }
 
+    public function testFindByMimeTypeAndParent()
+    {
+        $resources = self::$repo->findByMimeTypeAndParent(
+            'directory',
+            self::get('dir_1')->getResourceNode(),
+            array(self::get('ROLE_2'))
+        );
+        $this->assertEquals(1, count($resources));
+        $this->assertEquals('dir_2', $resources[0]['name']);
+    }
+
     /**
      * @expectedException InvalidArgumentException
      */

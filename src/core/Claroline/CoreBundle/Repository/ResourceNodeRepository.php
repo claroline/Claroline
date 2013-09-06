@@ -325,6 +325,23 @@ class ResourceNodeRepository extends MaterializedPathRepository
         return $results;
     }
 
+    public function findByMimeTypeAndParent($mimeType, ResourceNode $parent, array $roles)
+    {
+        $builder = new ResourceQueryBuilder();
+        $dql = $builder->selectAsArray()
+            ->whereParentIs($parent)
+            ->whereMimeTypeIs('%'.$mimeType.'%')
+            ->whereRoleIn($roles)
+            ->whereCanOpen()
+            ->getDql();
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters($builder->getParameters());
+        $resources = $query->getResult();
+
+        return $resources;
+    }
+
     private function addFilters(ResourceQueryBuilder $builder,  array $criteria, array $roles = null)
     {
         if ($roles) {
