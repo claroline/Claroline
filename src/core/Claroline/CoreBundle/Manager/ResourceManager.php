@@ -519,11 +519,13 @@ class ResourceManager
         $this->om->persist($node);
 
         if ($next) {
+            $this->removePreviousWherePreviousIs($previous);
             $next->setPrevious($previous);
             $this->om->persist($next);
         }
 
         if ($previous) {
+            $this->removeNextWhereNextIs($next);
             $previous->setNext($next);
             $this->om->persist($previous);
         }
@@ -720,16 +722,40 @@ class ResourceManager
      */
     public function delete(ResourceNode $node)
     {
-        //why is it broken when this function is fired after startFlushSuite ?
+        if ($node->getParent() === null) {
+            throw new \LogicException('Root directory cannot be removed');
+        }
+
         $this->removePosition($node);
         $this->om->startFlushSuite();
-        $this->dispatcher->dispatch(
-            "delete_{$node->getResourceType()->getName()}",
-            'DeleteResource',
-            array($this->getResourceFromNode($node))
-        );
+        $nodes = $this->getDescendants($node);
+        $nodes[] = $node;
+
+        foreach ($nodes as $node) {
+            $resource = $this->getResourceFromNode($node);
+            /**
+             * resChild can be null if a shortcut was removed
+             * @todo: fix shortcut delete. If a target is removed, every link to the
+             * target should be removed aswell.
+             */
+            if ($resource !== null) {
+                $this->dispatcher->dispatch(
+                    "delete_{$node->getResourceType()->getName()}",
+                    'DeleteResource',
+                    array($resource)
+                );
+                /*
+                 * If the child isn't removed here aswell, doctrine will fail to remove $resChild
+                 * because it still has $resChild in its UnitOfWork or something (I have no idea
+                 * how doctrine works tbh). So if you remove this line the suppression will
+                 * not work for direcotry containing children.
+                 */
+                $this->om->remove($resource);
+                $this->om->remove($node);
+            }
+        }
+
         $this->om->remove($node);
-        $this->dispatcher->dispatch('log', 'Log\LogResourceDelete', array($node));
         $this->om->endFlushSuite();
     }
 
