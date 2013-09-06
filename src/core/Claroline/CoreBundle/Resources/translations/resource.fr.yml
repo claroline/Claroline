@@ -4,6 +4,10 @@ file: Fichier
 open: Ouvrir
 resource_shortcut: Raccourcis
 text: Texte
+copy: Copier
+export: Exporter
+edit: Editer
+delete: Supprimer
 resource_name_form_name: 'Nom de la ressource'
 resource_properties_form_copiable: Copier
 resource_properties_form_creationDate: 'Date de création'
@@ -16,3 +20,8 @@ resource_properties_form_resourceType: 'Type de ressource'
 resource_properties_form_sharable: 'Partager cette ressource'
 resource_properties_form_shareType: Redistribution
 resource_properties_form_userIcon: Icône
+download: Télécharger
+rename: Renommer
+edit-properties: Editer les propriétés
+edit-rights: Editer les droits
+delete: Supprimer

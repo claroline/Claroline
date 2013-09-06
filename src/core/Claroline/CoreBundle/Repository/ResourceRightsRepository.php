@@ -24,12 +24,7 @@ class ResourceRightsRepository extends EntityRepository
         }
 
         $dql = '
-            SELECT
-                MAX (CASE rrw.canEdit WHEN true THEN 1 ELSE 0 END) as canEdit,
-                MAX (CASE rrw.canOpen WHEN true THEN 1 ELSE 0 END) as canOpen,
-                MAX (CASE rrw.canDelete WHEN true THEN 1 ELSE 0 END) as canDelete,
-                MAX (CASE rrw.canCopy WHEN true THEN 1 ELSE 0 END) as canCopy,
-                MAX (CASE rrw.canExport WHEN true THEN 1 ELSE 0 END) as canExport
+            SELECT rrw.mask
             FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rrw
             JOIN rrw.role role
             JOIN rrw.resourceNode resource
@@ -44,8 +39,15 @@ class ResourceRightsRepository extends EntityRepository
         }
 
         $query = $this->_em->createQuery($dql);
+        $results = $query->getResult();
+        $mask = 0;
 
-        return $query->getSingleResult();
+        foreach ($results as $result) {
+            $mask |= $result['mask'];
+        }
+
+        return $mask;
+
     }
 
     /**

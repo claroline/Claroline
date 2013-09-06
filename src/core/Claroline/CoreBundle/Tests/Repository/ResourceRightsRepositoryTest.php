@@ -21,17 +21,20 @@ class ResourceRightsRepositoryTest extends RepositoryTestCase
         self::createResourceType('t_dir');
         self::createDirectory('dir_1', self::get('t_dir'), self::get('john'), self::get('ws_1'));
         self::createDirectory('dir_2', self::get('t_dir'), self::get('john'), self::get('ws_1'), self::get('dir_1'));
-        self::createResourceRights(self::get('ROLE_1'), self::get('dir_1'), array('open'));
-        self::createResourceRights(self::get('ROLE_1'), self::get('dir_2'), array('open'));
-        self::createResourceRights(self::get('ROLE_2'), self::get('dir_1'), array('edit'), array(self::get('t_dir')));
+        self::createResourceRights(self::get('ROLE_1'), self::get('dir_1'), 3);
+        self::createResourceRights(self::get('ROLE_1'), self::get('dir_2'), 1);
+        self::createResourceRights(self::get('ROLE_2'), self::get('dir_1'), 33, array(self::get('t_dir')));
     }
 
     public function testFindMaximumRights()
     {
-        $rights = self::$repo->findMaximumRights(array('ROLE_1'), self::get('dir_1')->getResourceNode());
-        $this->assertEquals(0, $rights['canEdit']);
-        $rights = self::$repo->findMaximumRights(array('ROLE_1', 'ROLE_2'), self::get('dir_1')->getResourceNode());
-        $this->assertEquals(1, $rights['canEdit']);
+        $mask = self::$repo->findMaximumRights(array('ROLE_1'), self::get('dir_1')->getResourceNode());
+        $this->assertTrue((1 & $mask) !== 0);
+        $this->assertTrue((2 & $mask) !== 0);
+        $mask = self::$repo->findMaximumRights(array('ROLE_1', 'ROLE_2'), self::get('dir_1')->getResourceNode());
+        $this->assertTrue((32 & $mask) !== 0);
+        $this->assertTrue((1 & $mask) !== 0);
+        $this->assertTrue((2 & $mask) !== 0);
     }
 
     public function testFindCreationRights()

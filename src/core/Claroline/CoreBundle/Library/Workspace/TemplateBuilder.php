@@ -27,7 +27,7 @@ class TemplateBuilder
 
     public function addResourceType($name, $role)
     {
-        $this->config['root_perms'][$role]['canCreate'][] = array('name' => $name);
+        $this->config['root_perms'][$role]['create'][] = array('name' => $name);
 
         return $this;
     }
@@ -99,8 +99,8 @@ class TemplateBuilder
 
     public function removeResourceType($name)
     {
-        $key = array_search(array('name' => $name), $this->config['root_perms']['ROLE_WS_MANAGER']['canCreate']);
-        unset($this->config['root_perms']['ROLE_WS_MANAGER']['canCreate'][$key]);
+        $key = array_search(array('name' => $name), $this->config['root_perms']['ROLE_WS_MANAGER']['create']);
+        unset($this->config['root_perms']['ROLE_WS_MANAGER']['create'][$key]);
 
         return $this;
     }
@@ -165,28 +165,28 @@ class TemplateBuilder
         return array(
             'root_perms' => array(
                 'ROLE_WS_VISITOR' => array(
-                    'canEdit' => '0',
-                    'canOpen' => '0',
-                    'canDelete' => '0',
-                    'canCopy' => '0',
-                    'canExport' => '0',
-                    'canCreate' => array()
+                    'edit' => '0',
+                    'open' => '0',
+                    'delete' => '0',
+                    'copy' => '0',
+                    'export' => '0',
+                    'create' => array()
                 ),
                 'ROLE_WS_COLLABORATOR' => array(
-                    'canEdit' => '0',
-                    'canOpen' => '1',
-                    'canDelete' => '0',
-                    'canCopy' => '0',
-                    'canExport' => '1',
-                    'canCreate' => array()
+                    'edit' => '0',
+                    'open' => '1',
+                    'delete' => '0',
+                    'copy' => '0',
+                    'export' => '1',
+                    'create' => array()
                 ),
                 'ROLE_WS_MANAGER' => array(
-                    'canEdit' => '1',
-                    'canOpen' => '1',
-                    'canDelete' => '1',
-                    'canCopy' => '1',
-                    'canExport' => '1',
-                    'canCreate' => array(
+                    'edit' => '1',
+                    'open' => '1',
+                    'delete' => '1',
+                    'copy' => '1',
+                    'export' => '1',
+                    'create' => array(
                         0 => array('name' => 'file'),
                         1 => array('name' => 'directory'),
                         2 => array('name' => 'text'),
@@ -255,28 +255,28 @@ class TemplateBuilder
     {
         return array(
             'ROLE_WS_VISITOR' => array(
-                'canEdit' => '0',
-                'canOpen' => '0',
-                'canDelete' => '0',
-                'canCopy' => '0',
-                'canExport' => '0',
-                'canCreate' => array()
+                'edit' => '0',
+                'open' => '0',
+                'delete' => '0',
+                'copy' => '0',
+                'export' => '0',
+                'create' => array()
             ),
             'ROLE_WS_COLLABORATOR' => array(
-                'canEdit' => '0',
-                'canOpen' => '1',
-                'canDelete' => '0',
-                'canCopy' => '0',
-                'canExport' => '1',
-                'canCreate' => array()
+                'edit' => '0',
+                'open' => '1',
+                'delete' => '0',
+                'copy' => '0',
+                'export' => '1',
+                'create' => array()
             ),
             'ROLE_WS_MANAGER' => array(
-                'canEdit' => '1',
-                'canOpen' => '1',
-                'canDelete' => '1',
-                'canCopy' => '1',
-                'canExport' => '1',
-                'canCreate' => array()
+                'edit' => '1',
+                'open' => '1',
+                'delete' => '1',
+                'copy' => '1',
+                'export' => '1',
+                'create' => array()
             )
         );
     }
