@@ -1,89 +1,96 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript" src="{{ asset('bundles/clarolinepdfplayer/js/pdf.js') }}"></script>
-    <script type="text/javascript">
-
-    var url = '{{ asset('') }}/../../files/{{ pdf.getHashName() }}';
-
-    PDFJS.disableWorker = true;
-
-    var pdfDoc = null,
-        pageNum = 1,
-        scale = 1,
-        canvas = document.getElementById('the-canvas'),
-        ctx = canvas.getContext('2d');
-
-    function renderPage(num) {
-      // Using promise to fetch the page
-      pdfDoc.getPage(num).then(function(page) {
-        var viewport = page.getViewport(scale);
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        // Render PDF page into canvas context
-        var renderContext = {
-          canvasContext: ctx,
-          viewport: viewport
-        };
-        page.render(renderContext);
-      });
-
-      // Update page counters
-      document.getElementById('page_num').textContent = pageNum;
-      document.getElementById('page_count').textContent = pdfDoc.numPages;
-    }
-
-    function goPrevious() {
-      if (pageNum <= 1)
-        return;
-      pageNum--;
-      renderPage(pageNum);
-    }
-
-    function goNext() {
-      if (pageNum >= pdfDoc.numPages)
-        return;
-      pageNum++;
-      renderPage(pageNum);
-    }
-
-    function zoomIn(){
-        scale*=1.1;
-        renderPdf(url);
-    }
-
-    function zoomOut(){
-        scale*=0.9
-        renderPdf(url);
-    }
-
-    function renderPdf(url){
-        PDFJS.getDocument(url).then(function getPdf(_pdfDoc) {
-          pdfDoc = _pdfDoc;
-          renderPage(pageNum);
-        });
-    }
-
-    renderPdf(url);
-
-    </script>
-{% endblock %}
-
 {% block section_content %}
-  <h3>{{ pdf.getName() }}</h3>
-  <div>
-    <button class="icon-backward" onclick="goPrevious()"></button>
-    <button class="icon-forward" onclick="goNext()"></button>
-    <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
-    <button class="icon-zoom-in" onclick="zoomIn()"></button>
-    <button class="icon-zoom-out" onclick="zoomOut()"></button>
-  </div>
-
-  <div>
-    <canvas id="the-canvas" style="border:1px solid black"></canvas>
-  </div>
-
- <a href="{{ path('claro_resource_download') }}?ids[]={{pdf.getResourceNode().getId()}}">{{ 'download'|trans({}, 'platform') }} </a>
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ pdf.getResourceNode().getName() }}</h3>
+    </div>
+    <div class="panel-body">
+        <div>
+            <button class="btn btn-default" onclick="goPrevious()"><i class="icon-backward"></i></button>
+            <button class="btn btn-default" onclick="goNext()"><i class="icon-forward"></i></button>
+            <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+            <button class="btn btn-default" onclick="zoomIn()"><i class="icon-zoom-in"></i></button>
+            <button class="btn btn-default" onclick="zoomOut()"><i class="icon-zoom-out"></i></button>
+        </div>
+        <hr>
+        <div style="overflow:auto; border:1px solid #ddd">
+            <canvas id="the-canvas"></canvas>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <a class="btn btn-primary" href="{{ path('claro_resource_download') }}?ids[]={{pdf.getResourceNode().getId()}}">
+            <i class="icon-download"></i> {{ 'download'|trans({}, 'platform') }}
+        </a>
+    </div>
 {% endblock %}
+{% block javascripts %}
+        {{ parent() }}
+        <script type="text/javascript" src="{{ asset('bundles/clarolinepdfplayer/js/pdf.js') }}"></script>
+        <script type="text/javascript">
+
+        var url = '{{ asset('') }}/../../files/{{ pdf.getHashName() }}';
+
+        PDFJS.disableWorker = true;
+
+        var pdfDoc = null,
+                pageNum = 1,
+                scale = 1,
+                canvas = document.getElementById('the-canvas'),
+                ctx = canvas.getContext('2d');
+
+        function renderPage(num) {
+            // Using promise to fetch the page
+            pdfDoc.getPage(num).then(function(page) {
+                var viewport = page.getViewport(scale);
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                // Render PDF page into canvas context
+                var renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                page.render(renderContext);
+            });
+
+            // Update page counters
+            document.getElementById('page_num').textContent = pageNum;
+            document.getElementById('page_count').textContent = pdfDoc.numPages;
+        }
+
+        function goPrevious() {
+            if (pageNum <= 1)
+                return;
+            pageNum--;
+            renderPage(pageNum);
+        }
+
+        function goNext() {
+            if (pageNum >= pdfDoc.numPages)
+                return;
+            pageNum++;
+            renderPage(pageNum);
+        }
+
+        function zoomIn(){
+                scale*=1.1;
+                renderPdf(url);
+        }
+
+        function zoomOut(){
+                scale*=0.9
+                renderPdf(url);
+        }
+
+        function renderPdf(url){
+                PDFJS.getDocument(url).then(function getPdf(_pdfDoc) {
+                    pdfDoc = _pdfDoc;
+                    renderPage(pageNum);
+                });
+        }
+
+        renderPdf(url);
+
+        </script>
+{% endblock %}
+
