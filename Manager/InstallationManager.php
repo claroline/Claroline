@@ -26,7 +26,7 @@ class InstallationManager
 
     public function install(InstallableInterface $bundle, $requiredOnly = true)
     {
-        if ($action = $bundle->getPreInstallationAction($this->environment)) {
+        if ($action = $bundle->getPreInstallAction($this->environment)) {
             $parts = explode('#', $action);
             $object = new $parts[0];
 
