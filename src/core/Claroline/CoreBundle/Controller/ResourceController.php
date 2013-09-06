@@ -391,7 +391,7 @@ class ResourceController
             $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
         }
 
-        return new JsonResponse(
+        $jsonResponse = new JsonResponse(
             array(
                 'path' => $path,
                 'creatableTypes' => $creatableTypes,
@@ -401,6 +401,11 @@ class ResourceController
                 'is_root' => $isRoot
             )
         );
+
+        $jsonResponse->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate');
+        $jsonResponse->headers->add(array('Expires' => '-1'));
+
+        return $jsonResponse;
     }
 
     /**
