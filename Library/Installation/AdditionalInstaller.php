@@ -12,25 +12,29 @@ class AdditionalInstaller extends ContainerAware
 {
     public function preInstall()
     {
-        $this->createDatabase();
-        $this->buildDefautTemplate();
+        $this->createDatabaseIfNotExists();
+        $this->buildDefaultTemplate();
     }
 
-    private function createDatabase()
+    private function createDatabaseIfNotExists()
     {
-        $command = new CreateDatabaseDoctrineCommand();
-        $command->setContainer($this->container);
-        $code = $command->run(new ArrayInput(array()), new NullOutput());
+        try {
+            $this->container->get('doctrine.dbal.default_connection');
+        } catch (\Exception $ex) {
+            $command = new CreateDatabaseDoctrineCommand();
+            $command->setContainer($this->container);
+            $code = $command->run(new ArrayInput(array()), new NullOutput());
 
-        if ($code !== 0) {
-            throw new \Exception(
-                'Database cannot be created : either it already exists either '
-                . 'the connection parameters or rights are incorrect'
-            );
+            if ($code !== 0) {
+                throw new \Exception(
+                    'Database doesn\'t exist and cannot be created : check that the parameters '
+                    . 'you provided are correct and/or that you have sufficient permissions.'
+                );
+            }
         }
     }
 
-    private function buildDefautTemplate()
+    private function buildDefaultTemplate()
     {
         $defaultTemplatePath = $this->container->getParameter('kernel.root_dir') . '/../templates/default.zip';
         $translator = $this->container->get('translator'); // useless
