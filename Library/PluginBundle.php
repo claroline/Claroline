@@ -2,12 +2,12 @@
 
 namespace Claroline\CoreBundle\Library;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Claroline\InstallationBundle\Bundle\InstallableBundle;
 
 /**
  * Base class of all the plugin bundles on the claroline platform.
  */
-abstract class PluginBundle extends Bundle
+abstract class PluginBundle extends InstallableBundle
 {
     final public function getVendorName()
     {
