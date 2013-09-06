@@ -1,1 +1,2 @@
 invalid_move: Vous ne pouvez pas bouger un répertoire dans lui-même.
+insufficient_permissions: Permissions insuffisantes.

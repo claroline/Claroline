@@ -231,7 +231,7 @@ class ResourceController
         $collection->addAttribute('parent', $newParent);
 
         if (!$this->sc->isGranted('MOVE', $collection)) {
-            $response = new Response('not eought perm', 403);
+            $response = new Response($this->translator->trans('insufficient_permissions', array(), 'error'), 403);
             $response->headers->add(array('XXX-Claroline' => 'insufficient-permissions'));
 
             return $response;
@@ -242,7 +242,7 @@ class ResourceController
                 $movedNode = $this->resourceManager->move($node, $newParent);
                 $movedNodes[] = $this->resourceManager->toArray($movedNode);
             } catch (ResourceMoveException $e) {
-                Response($this->translator->trans('invalid_move', array(), 'error'), 422);
+                return new Response($this->translator->trans('invalid_move', array(), 'error'), 422);
             }
         }
 
@@ -430,7 +430,13 @@ class ResourceController
         $newNodes = array();
         $collection = new ResourceCollection($nodes);
         $collection->addAttribute('parent', $parent);
-        $this->checkAccess('COPY', $collection);
+
+        if (!$this->sc->isGranted('COPY', $collection)) {
+            $response = new Response($this->translator->trans('insufficient_permissions', array(), 'error'), 403);
+            $response->headers->add(array('XXX-Claroline' => 'insufficient-permissions'));
+
+            return $response;
+        }
 
         foreach ($nodes as $node) {
             //$resource = $this->resourceManager->getResourceFromNode($node);

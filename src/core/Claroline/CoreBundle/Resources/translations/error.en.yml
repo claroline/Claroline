@@ -1,1 +1,2 @@
 invalid_move: You cannot move a directory into itself.
+insufficient_permissions: Insufficient permissions.

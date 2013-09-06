@@ -56,7 +56,7 @@ if ($returnCode === 0) {
 
     system("php {$rootDirectory}/app/console cache:clear");
     system("php {$rootDirectory}/app/console claroline:plugins:fixtures");
-//    system("php {$rootDirectory}/app/console claroline:fixture:demo");
+    system("php {$rootDirectory}/app/console claroline:fixture:demo");
 }
 
 $end = new DateTime();
