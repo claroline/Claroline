@@ -24,6 +24,7 @@ class AdditionalInstaller extends BaseInstaller
             $cn = $this->container->get('doctrine.dbal.default_connection');
             // todo: implement a more sophisticated way to test connection, as the
             // following query works mainly in MySQL, PostgreSQL and MS-Server
+            // see http://stackoverflow.com/questions/3668506/efficient-sql-test-query-or-validation-query-that-will-work-across-all-or-most
             $cn->query('SELECT 1');
         } catch (\Exception $ex) {
             $this->log('Unable to connect: trying to create database...');
