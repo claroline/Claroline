@@ -345,6 +345,14 @@ class ResourceQueryBuilder
         return $this;
     }
 
+    public function whereMimeTypeIs($mimeType)
+    {
+        $this->addWhereClause('resource.mimeType LIKE :mimeType');
+        $this->parameters[':mimeType'] = $mimeType;
+
+        return $this;
+    }
+
     /**
      * Orders resources by path.
      *
