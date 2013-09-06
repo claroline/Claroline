@@ -5,23 +5,21 @@ namespace Claroline\VideoPlayerBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 //todo use sf2.2 BinaryFileResponse
 class VideoPlayerController extends Controller
 {
     /**
      * @Route(
-     *     "/stream/video/{videoId}",
+     *     "/stream/video/{node}",
      *     name="claro_stream_video"
      * )
      */
-    public function streamAction($videoId)
+    public function streamAction(ResourceNode $node)
     {
-        $video = $this
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\File')
-            ->find($videoId);
-
+        $video = $this->get('claroline.manager.resource_manager')->getResourceFromNode($node);
+        //throw new \Exception($video->getHashName());
         $response = new StreamedResponse();
         $path = $this->container->getParameter('claroline.param.files_directory')
             . DIRECTORY_SEPARATOR
@@ -31,7 +29,7 @@ class VideoPlayerController extends Controller
                 readfile($path);
             }
         );
-        $response->headers->set('Content-Type', $video->getMimeType());
+        $response->headers->set('Content-Type', $node->getMimeType());
 
         return $response;
     }
