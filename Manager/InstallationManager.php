@@ -8,13 +8,15 @@ use Claroline\MigrationBundle\Manager\Manager;
 use Claroline\MigrationBundle\Migrator\Migrator;
 use Claroline\InstallationBundle\Fixtures\FixtureLoader;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
+use Claroline\InstallationBundle\Additional\AdditionalInstallerInterface;
 
-class InstallationManager
+class InstallationManager implements LoggerAwareInterface
 {
     private $container;
     private $environment;
     private $migrationManager;
     private $fixtureLoader;
+    private $logger;
 
     public function __construct(ContainerInterface $container, Manager $migrationManager, FixtureLoader $fixtureLoader)
     {
@@ -24,17 +26,17 @@ class InstallationManager
         $this->fixtureLoader = $fixtureLoader;
     }
 
+    public function setLogger(\Closure $logger)
+    {
+        $this->logger = $logger;
+    }
+
     public function install(InstallableInterface $bundle, $requiredOnly = true)
     {
-        if ($action = $bundle->getPreInstallAction($this->environment)) {
-            $parts = explode('#', $action);
-            $object = new $parts[0];
+        $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
-            if ($object instanceof ContainerAwareInterface) {
-                $object->setContainer($this->container);
-            }
-
-            $object->{$parts[1]}();
+        if ($additionalInstaller) {
+            $additionalInstaller->preInstall();
         }
 
         if ($bundle->hasMigrations()) {
@@ -55,5 +57,23 @@ class InstallationManager
         if ($bundle->hasMigrations()) {
             $this->migrationManager->downgradeBundle($bundle, Migrator::VERSION_FARTHEST);
         }
+    }
+
+    private function getAdditionalInstaller(InstallableInterface $bundle)
+    {
+        $installer = $bundle->getAdditionalInstaller();
+
+        if ($installer instanceof AdditionalInstallerInterface) {
+            $installer->setEnvironment($this->environment);
+            $installer->setLogger($this->logger ?: function () {});
+
+            if ($installer instanceof ContainerAwareInterface) {
+                $installer->setContainer($this->container);
+            }
+
+            return $installer;
+        }
+
+        return false;
     }
 }
