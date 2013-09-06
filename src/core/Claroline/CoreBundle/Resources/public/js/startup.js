@@ -8,7 +8,7 @@
             var w = window.open();
             $(w.document.body).html(html);
         } else {
-            alert('An error occured. Please contact the administrator');
+            alert(html);
         }
     };
     var ajaxAuthenticationErrorHandler = function (form) {
@@ -53,9 +53,10 @@
     });
 
     $(document).ajaxError(function (event, jqXHR) {
-        if (jqXHR.status === 403) {
+        console.debug(jqXHR.getResponseHeader('XXX-Claroline'));
+        if (jqXHR.status === 403 && jqXHR.getResponseHeader('XXX-Claroline') !== 'insufficient-permissions') {
             ajaxAuthenticationErrorHandler(jqXHR.responseText);
-        } else if (jqXHR.status === 500) {
+        } else if (jqXHR.status === 500 || jqXHR.status === 422 || jqXHR.status === 403) {
             ajaxServerErrorHandler(jqXHR.responseText);
         }
     });
