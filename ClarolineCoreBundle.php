@@ -6,9 +6,9 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
-use Claroline\InstallationBundle\Bundle\InstallableInterface;
+use Claroline\InstallationBundle\Bundle\InstallableBundle;
 
-class ClarolineCoreBundle extends Bundle implements AutoConfigurableInterface, ConfigurationProviderInterface, InstallableInterface
+class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableInterface, ConfigurationProviderInterface
 {
     public function supports($environment)
     {
@@ -87,24 +87,19 @@ class ClarolineCoreBundle extends Bundle implements AutoConfigurableInterface, C
         return false;
     }
 
-    public function getPreInstallationAction($environment, $version = null)
+    public function getPreInstallAction($environment)
     {
         return $environment !== 'test' ?
             'Claroline\CoreBundle\Library\Installation\AdditionalInstaller#preInstall' :
             null;
     }
 
-    public function hasMigrations()
-    {
-        return true;
-    }
-
-    public function getRequiredFixturesDirectory($environment, $version = null)
+    public function getRequiredFixturesDirectory($environment)
     {
         return $environment !== 'test' ? 'DataFixtures/Required' : null;
     }
 
-    public function getOptionalFixturesDirectory($environment, $version = null)
+    public function getOptionalFixturesDirectory($environment)
     {
         return $environment !== 'test' ? 'DataFixtures/Demo' : null;
     }
