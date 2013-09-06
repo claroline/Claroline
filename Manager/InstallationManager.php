@@ -10,7 +10,7 @@ use Claroline\InstallationBundle\Fixtures\FixtureLoader;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
 use Claroline\InstallationBundle\Additional\AdditionalInstallerInterface;
 
-class InstallationManager implements LoggerAwareInterface
+class InstallationManager
 {
     private $container;
     private $environment;
