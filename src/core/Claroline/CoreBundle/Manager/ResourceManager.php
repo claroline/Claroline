@@ -953,6 +953,11 @@ class ResourceManager
         return $this->resourceNodeRepo->findDescendants($node);
     }
 
+    public function getByMimeTypeAndParent($mimeType, ResourceNode $parent, array $roles)
+    {
+        return $this->resourceNodeRepo->findByMimeTypeAndParent($mimeType, $parent, $roles);
+    }
+
     public function getByCriteria(array $criteria, array $userRoles = null, $isRecursive = false)
     {
         return $this->resourceNodeRepo->findByCriteria($criteria, $userRoles, $isRecursive);
