@@ -48,11 +48,20 @@
             {% for adminWidgetConfig in adminWidgetConfigs %}
             {% set widget = adminWidgetConfig.getWidget() %}
             <div id="widget-panel-{{ adminWidgetConfig.getId() }}"
-                class="panel panel-default text-muted"
+                class="panel panel-default {% if adminWidgetConfig.isLocked() %}text-muted{% endif %}"
                 widget-config-id="{{ adminWidgetConfig.getId() }}"
             >
                 <div class="panel-body">
                     {{ widget.getName()|trans({}, 'widget') }}
+
+                    {% if not adminWidgetConfig.isLocked() %}
+                    <span class="pull-right">
+                        <span class="whtc-visible-btn pointer-hand label {% if adminWidgetConfig.isVisible() %} label-success {% else %} label-default {% endif %}">
+                            {{ 'visible'|trans({}, 'platform') }}
+                        </span>
+                        &nbsp;
+                    </span>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}

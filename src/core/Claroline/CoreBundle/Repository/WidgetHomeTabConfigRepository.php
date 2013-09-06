@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Doctrine\ORM\EntityRepository;
 
@@ -294,5 +295,27 @@ class WidgetHomeTabConfigRepository extends EntityRepository
         $query->setParameter('workspace', $workspace);
 
         return $query->execute();
+    }
+
+    public function findUserAdminWidgetHomeTabConfig(
+        HomeTab $homeTab,
+        Widget $widget,
+        User $user
+    )
+    {
+        $dql = "
+            SELECT whtc
+            FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
+            WHERE whtc.homeTab = :homeTab
+            AND whtc.widget = :widget
+            AND whtc.user = :user
+            AND whtc.type = 'admin_desktop'
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('homeTab', $homeTab);
+        $query->setParameter('widget', $widget);
+        $query->setParameter('user', $user);
+
+        return $query->getResult();
     }
 }

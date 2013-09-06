@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -602,6 +603,19 @@ class HomeTabManager
     {
         return $this->widgetHomeTabConfigRepo
             ->findOrderOfLastWidgetInHomeTabByWorkspace($homeTab, $workspace);
+    }
+
+    public function getUserAdminWidgetHomeTabConfig(
+        HomeTab $homeTab,
+        Widget $widget,
+        User $user
+    )
+    {
+        return $this->widgetHomeTabConfigRepo->findUserAdminWidgetHomeTabConfig(
+            $homeTab,
+            $widget,
+            $user
+        );
     }
 
     /**

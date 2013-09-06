@@ -1001,10 +1001,42 @@ class HomeController extends Controller
     {
         $this->checkUserAccess();
         $user = $this->securityContext->getToken()->getUser();
-        $this->checkUserAccessForAdminHomeTab($homeTab);
+        $this->checkUserAccessForAdminHomeTab($homeTab, $user);
 
         $adminWidgetConfigs = $this->homeTabManager
-            ->getVisibleAdminWidgetConfigs($homeTab);
+            ->getAdminWidgetConfigs($homeTab);
+
+        $adminWConfigs = array();
+
+        foreach ($adminWidgetConfigs as $adminWidgetConfig) {
+
+            if ($adminWidgetConfig->isLocked()) {
+                $adminWConfigs[] = $adminWidgetConfig;
+            }
+            else {
+                $existingWidgetConfig = $this->homeTabManager
+                    ->getUserAdminWidgetHomeTabConfig(
+                        $homeTab,
+                        $adminWidgetConfig->getWidget(),
+                        $user
+                    );
+                if (count($existingWidgetConfig) === 0) {
+                    $newWHTC = new WidgetHomeTabConfig();
+                    $newWHTC->setHomeTab($homeTab);
+                    $newWHTC->setWidget($adminWidgetConfig->getWidget());
+                    $newWHTC->setUser($user);
+                    $newWHTC->setWidgetOrder($adminWidgetConfig->getWidgetOrder());
+                    $newWHTC->setVisible($adminWidgetConfig->isVisible());
+                    $newWHTC->setLocked(false);
+                    $newWHTC->setType('admin_desktop');
+                    $this->homeTabManager->insertWidgetHomeTabConfig($newWHTC);
+                    $adminWConfigs[] = $newWHTC;
+                }
+                else {
+                    $adminWConfigs[] = $existingWidgetConfig[0];
+                }
+            }
+        }
 
         $widgetConfigs = $this->homeTabManager
             ->getWidgetConfigsByUser($homeTab, $user);
@@ -1016,7 +1048,7 @@ class HomeController extends Controller
         return array(
             'tool' => $this->getHomeTool(),
             'homeTab' => $homeTab,
-            'adminWidgetConfigs' => $adminWidgetConfigs,
+            'adminWidgetConfigs' => $adminWConfigs,
             'widgetConfigs' => $widgetConfigs,
             'lastWidgetOrder' => $lastOrder
         );
@@ -1085,7 +1117,7 @@ class HomeController extends Controller
     {
         $this->checkUserAccess();
         $user = $this->securityContext->getToken()->getUser();
-        $this->checkUserAccessForAdminHomeTab($homeTab);
+        $this->checkUserAccessForAdminHomeTab($homeTab, $user);
 
         $adminWidgetConfigs = $this->homeTabManager
             ->getAdminWidgetConfigs($homeTab);
@@ -1575,7 +1607,8 @@ class HomeController extends Controller
     {
         $widgetHomeTabConfigUser = $widgetHomeTabConfig->getUser();
 
-        if ($widgetHomeTabConfig->getType() !== 'desktop' ||
+        if (($widgetHomeTabConfig->getType() !== 'desktop'
+            && $widgetHomeTabConfig->getType() !== 'admin_desktop') ||
             is_null($widgetHomeTabConfigUser) ||
             ($widgetHomeTabConfigUser->getId() !== $user->getId())) {
 
