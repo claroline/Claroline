@@ -6,6 +6,9 @@
 
 {% block homeTab %}
     <div class="welcome-home">
-        {% render controller("ClarolineCoreBundle:Workspace:widgets", {'workspaceId': workspace.getId()}) %}
+        {% render controller(
+            "ClarolineCoreBundle:Workspace:widgets",
+            {'workspaceId': workspace.getId(), 'homeTabId': tabId})
+        %}
     </div>
 {% endblock %}

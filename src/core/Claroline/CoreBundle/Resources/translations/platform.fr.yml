@@ -3,6 +3,7 @@ account_general_statistics: 'Statistiques générales sur les comptes'
 action: Action
 Action List: 'Liste des actions'
 Actions per day: 'Nombre d''actions par jour'
+active_widgets: 'Widgets actifs'
 activity_form_instructions: Instructions
 activity_form_name: Nom
 add: Ajouter
@@ -14,6 +15,7 @@ add_tag_to_workspace: 'Ajouter un Tag à l''espace d''activités'
 add_user: 'Ajouter un utilisateur'
 add_users: 'Ajouter des utilisateurs'
 add_user_s_confirm_message: 'utilisateur(s) ajouté(s)'
+add_widget_to_home_tab: 'Ajouter un widget à l''onglet'
 admin: Administrateur
 admin_analytics: 'Statistiques plateforme'
 administration: Administration
@@ -45,6 +47,7 @@ analytics_connections: 'Visites utilisateurs'
 analytics_resources: 'Contenu plateforme'
 analytics_top: 'Top des activités'
 apply: Appliquer
+available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espaces d''activités disponibles'
 badges_management: 'Gestion des badges'
 by: par
@@ -178,6 +181,8 @@ home_tab_delete_confirm_title: 'Suppression de l''onglet'
 home_tab_delete_confirm_message: 'Voulez-vous vraiment supprimer cet onglet de la page d''accueil ?'
 home_tab_edition: 'Edition de l''onglet'
 home_tab_form_name: 'Nom'
+home_tab_widgets: 'Widgets de l''onglet'
+home_tab_widgets_configuration: 'Configuration des widgets de l''onglet'
 home_tabs: 'Onglets de la page d''accueil'
 home_tabs_configuration: 'Configuration des onglets de la page d''accueil'
 id: Id
@@ -590,6 +595,9 @@ visible: Visible
 visitor: Visiteur
 warning_workspace_impersonation: 'Vous êtes connectés en tant que %role% du workspace %workspace%.'
 widget_settings: 'Paramètres des widgets'
+widget: Widget
+widget_home_tab_delete_confirm_message: 'Voulez-vous vraiment retirer ce widget de cet onglet ?'
+widget_home_tab_delete_confirm_title: 'Suppression du widget de l''onglet'
 widgets: Widgets
 widgets_configuration: 'Configuration des widgets'
 workspace: 'Espace d''activités'

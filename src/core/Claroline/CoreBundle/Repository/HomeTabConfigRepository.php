@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Doctrine\ORM\EntityRepository;
@@ -34,6 +35,22 @@ class HomeTabConfigRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
+    }
+
+    public function findAdminDesktopHomeTabConfigByHomeTab(HomeTab $homeTab)
+    {
+        $dql = "
+            SELECT htc
+            FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            WHERE htc.homeTab = :homeTab
+            AND htc.user IS NULL
+            AND htc.workspace IS NULL
+            AND htc.type = 'admin_desktop'
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('homeTab', $homeTab);
+
+        return $query->getSingleResult();
     }
 
     public function findDesktopHomeTabConfigsByUser(User $user)

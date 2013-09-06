@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
@@ -429,7 +430,7 @@ class WorkspaceController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspaceId}/widgets",
+     *     "/{workspaceId}/home_tab/{homeTabId}/widgets",
      *     name="claro_workspace_widgets"
      * )
      * @EXT\Method("GET")
@@ -437,6 +438,11 @@ class WorkspaceController extends Controller
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
      *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *     "homeTab",
+     *     class="ClarolineCoreBundle:Home\HomeTab",
+     *     options={"id" = "homeTabId", "strictId" = true}
      * )
      *
      * @EXT\Template("ClarolineCoreBundle:Widget:widgets.html.twig")
@@ -449,41 +455,43 @@ class WorkspaceController extends Controller
      *
      * @todo Reduce the number of sql queries for this action (-> dql)
      */
-    public function widgetsAction(AbstractWorkspace $workspace)
+    public function widgetsAction(AbstractWorkspace $workspace, HomeTab $homeTab)
     {
-        // No right checking is done : security is delegated to each widget renderer
-        // Is that a good idea ?
-        $configs = $this->get('claroline.widget.manager')
-            ->generateWorkspaceDisplayConfig($workspace->getId());
-
-        $rightToConfigure = $this->security->isGranted('parameters', $workspace);
-
         $widgets = array();
 
-        foreach ($configs as $config) {
-            if ($config->isVisible()) {
-                $eventName = "widget_{$config->getWidget()->getName()}_workspace";
-                $event = $this->eventDispatcher->dispatch($eventName, 'DisplayWidget', array($workspace));
+        if ($this->homeTabManager
+            ->checkHomeTabVisibilityByWorkspace($homeTab, $workspace)) {
 
-                if ($event->hasContent()) {
-                    $widget['id'] = $config->getWidget()->getId();
-                    if ($event->hasTitle()) {
-                        $widget['title'] = $event->getTitle();
-                    } else {
-                        $widget['title'] = strtolower($config->getWidget()->getName());
+            $configs = $this->homeTabManager
+                ->getWidgetConfigsByWorkspace($homeTab,$workspace);
+
+            $rightToConfigure = $this->security->isGranted('parameters', $workspace);
+
+            foreach ($configs as $config) {
+                if ($config->isVisible()) {
+                    $eventName = "widget_{$config->getWidget()->getName()}_workspace";
+                    $event = $this->eventDispatcher
+                        ->dispatch($eventName, 'DisplayWidget', array($workspace));
+
+                    if ($event->hasContent()) {
+                        $widget['id'] = $config->getWidget()->getId();
+                        if ($event->hasTitle()) {
+                            $widget['title'] = $event->getTitle();
+                        } else {
+                            $widget['title'] = strtolower($config->getWidget()->getName());
+                        }
+                        $widget['content'] = $event->getContent();
+                        $widget['configurable'] = (
+                            $rightToConfigure
+                            and $config->isLocked() !== true
+                            and $config->getWidget()->isConfigurable()
+                        );
+
+                        $widgets[] = $widget;
                     }
-                    $widget['content'] = $event->getContent();
-                    $widget['configurable'] = (
-                        $rightToConfigure
-                        and $config->isLocked() !== true
-                        and $config->getWidget()->isConfigurable()
-                    );
-
-                    $widgets[] = $widget;
                 }
             }
         }
-
         return array(
             'widgets' => $widgets,
             'isDesktop' => false,
