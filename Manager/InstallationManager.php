@@ -36,18 +36,22 @@ class InstallationManager
         $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
         if ($additionalInstaller) {
+            $this->log('Launching pre-installation actions...');
             $additionalInstaller->preInstall();
         }
 
         if ($bundle->hasMigrations()) {
+            $this->log('Executing migrations...');
             $this->migrationManager->upgradeBundle($bundle, Migrator::VERSION_FARTHEST);
         }
 
         if ($fixturesDir = $bundle->getRequiredFixturesDirectory($this->environment)) {
+            $this->log('Loading required fixtures...');
             $this->fixtureLoader->load($bundle, $fixturesDir);
         }
 
         if (!$requiredOnly && $fixturesDir = $bundle->getOptionalFixturesDirectory($this->environment)) {
+            $this->log('Loading optional fixtures...');
             $this->fixtureLoader->load($bundle, $fixturesDir);
         }
     }
@@ -75,5 +79,12 @@ class InstallationManager
         }
 
         return false;
+    }
+
+    private function log($message)
+    {
+        if ($log = $this->logger) {
+            $log($message);
+        }
     }
 }
