@@ -19,7 +19,6 @@ class VideoPlayerController extends Controller
     public function streamAction(ResourceNode $node)
     {
         $video = $this->get('claroline.manager.resource_manager')->getResourceFromNode($node);
-        //throw new \Exception($video->getHashName());
         $response = new StreamedResponse();
         $path = $this->container->getParameter('claroline.param.files_directory')
             . DIRECTORY_SEPARATOR
