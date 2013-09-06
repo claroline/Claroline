@@ -92,8 +92,8 @@ class ResourceManager
 
     /**
      * array $rights should be defined that way:
-     * array('ROLE_WS_XXX' => array('canOpen' => true, 'canEdit' => false, ...
-     * 'canCreate' => array('directory', ...), role => $entity))
+     * array('ROLE_WS_XXX' => array('open' => true, 'edit' => false, ...
+     * 'create' => array('directory', ...), role => $entity))
      *
      */
     public function create(
@@ -341,7 +341,7 @@ class ResourceManager
     )
     {
         foreach ($rights as $data) {
-            $resourceTypes = $this->checkResourceTypes($data['canCreate']);
+            $resourceTypes = $this->checkResourceTypes($data['create']);
             $this->rightsManager->create($data, $data['role'], $node, false, $resourceTypes);
         }
 
@@ -349,13 +349,7 @@ class ResourceManager
 
         //@todo remove this line and grant edit requests in the resourceManager.
         $this->rightsManager->create(
-            array(
-                'canDelete' => true,
-                'canOpen' => true,
-                'canEdit' => true,
-                'canCopy' => true,
-                'canExport' => true,
-            ),
+            31,
             $this->roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
             $node,
             false,
@@ -363,13 +357,7 @@ class ResourceManager
         );
 
         $this->rightsManager->create(
-            array(
-                'canDelete' => false,
-                'canOpen' => false,
-                'canEdit' => false,
-                'canCopy' => false,
-                'canExport' => false,
-            ),
+            0,
             $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
             $node,
             false,
@@ -530,11 +518,13 @@ class ResourceManager
         $this->om->persist($node);
 
         if ($next) {
+            $this->removePreviousWherePreviousIs($previous);
             $next->setPrevious($previous);
             $this->om->persist($next);
         }
 
         if ($previous) {
+            $this->removeNextWhereNextIs($next);
             $previous->setNext($next);
             $this->om->persist($previous);
         }
@@ -716,14 +706,9 @@ class ResourceManager
         }
 
         if ($isAdmin) {
-            $resourceArray['can_export'] = true;
-            $resourceArray['can_edit'] = true;
-            $resourceArray['can_delete'] = true;
+            $resourceArray['mask'] = 1023;
         } else {
-            $rights = $this->resourceRightsRepo->findMaximumRights($roles, $node);
-            $resourceArray['can_export'] = $rights['canExport'];
-            $resourceArray['can_edit'] = $rights['canEdit'];
-            $resourceArray['can_delete'] = $rights['canDelete'];
+            $resourceArray['mask'] = $this->resourceRightsRepo->findMaximumRights($roles, $node);
         }
 
         return $resourceArray;
@@ -736,16 +721,40 @@ class ResourceManager
      */
     public function delete(ResourceNode $node)
     {
-        //why is it broken when this function is fired after startFlushSuite ?
+        if ($node->getParent() === null) {
+            throw new \LogicException('Root directory cannot be removed');
+        }
+
         $this->removePosition($node);
         $this->om->startFlushSuite();
-        $this->dispatcher->dispatch(
-            "delete_{$node->getResourceType()->getName()}",
-            'DeleteResource',
-            array($this->getResourceFromNode($node))
-        );
+        $nodes = $this->getDescendants($node);
+        $nodes[] = $node;
+
+        foreach ($nodes as $node) {
+            $resource = $this->getResourceFromNode($node);
+            /**
+             * resChild can be null if a shortcut was removed
+             * @todo: fix shortcut delete. If a target is removed, every link to the
+             * target should be removed aswell.
+             */
+            if ($resource !== null) {
+                $this->dispatcher->dispatch(
+                    "delete_{$node->getResourceType()->getName()}",
+                    'DeleteResource',
+                    array($resource)
+                );
+                /*
+                 * If the child isn't removed here aswell, doctrine will fail to remove $resChild
+                 * because it still has $resChild in its UnitOfWork or something (I have no idea
+                 * how doctrine works tbh). So if you remove this line the suppression will
+                 * not work for direcotry containing children.
+                 */
+                $this->om->remove($resource);
+                $this->om->remove($node);
+            }
+        }
+
         $this->om->remove($node);
-        $this->dispatcher->dispatch('log', 'Log\LogResourceDelete', array($node));
         $this->om->endFlushSuite();
     }
 
