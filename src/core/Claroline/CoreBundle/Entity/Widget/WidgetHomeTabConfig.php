@@ -6,12 +6,10 @@ use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WidgetHomeTabConfigRepository")
  * @ORM\Table(
- *     name="claro_widget_home_tab_config",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="widget_home_tab_unique_order", columns={"widget_id", "home_tab_id", "widget_order"})
- *     })
+ *     name="claro_widget_home_tab_config"
+ * )
  */
 class WidgetHomeTabConfig
 {
@@ -39,9 +37,40 @@ class WidgetHomeTabConfig
     protected $homeTab;
 
     /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\User"
+     * )
+     * @ORM\JoinColumn(name="user_id", nullable=true, onDelete="CASCADE")
+     */
+    protected $user;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace"
+     * )
+     * @ORM\JoinColumn(name="workspace_id", nullable=true, onDelete="CASCADE")
+     */
+    protected $workspace;
+
+    /**
      * @ORM\Column(name="widget_order", nullable=false)
      */
     protected $widgetOrder;
+
+    /**
+     * @ORM\Column(nullable=false)
+     */
+    protected $type;
+
+    /**
+     * @ORM\Column(type="boolean", name="is_visible", nullable=false)
+     */
+    protected $visible;
+
+    /**
+     * @ORM\Column(type="boolean", name="is_locked", nullable=false)
+     */
+    protected $locked;
 
     public function getId()
     {
@@ -73,6 +102,26 @@ class WidgetHomeTabConfig
         $this->homeTab = $homeTab;
     }
 
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
+
+    public function getWorkspace()
+    {
+        return $this->workspace;
+    }
+
+    public function setWorkspace($workspace)
+    {
+        $this->workspace = $workspace;
+    }
+
     public function getWidgetOrder()
     {
         return $this->widgetOrder;
@@ -81,5 +130,35 @@ class WidgetHomeTabConfig
     public function setWidgetOrder($widgetOrder)
     {
         $this->widgetOrder = $widgetOrder;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    public function isVisible()
+    {
+        return $this->visible;
+    }
+
+    public function setVisible($visible)
+    {
+        $this->visible = $visible;
+    }
+
+    public function isLocked()
+    {
+        return $this->locked;
+    }
+
+    public function setLocked($locked)
+    {
+        $this->locked = $locked;
     }
 }

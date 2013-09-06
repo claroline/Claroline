@@ -3,6 +3,7 @@ account_general_statistics: 'Account general statistics'
 action: Action
 Action List: 'Action List'
 Actions per day: 'Actions per day'
+active_widgets: 'Active widgets'
 activity_form_instructions: Instructions
 activity_form_name: Name
 add: Add
@@ -14,6 +15,7 @@ add_tag_to_workspace: 'Add tag to workspace'
 add_user: 'Add user'
 add_users: 'Add users'
 add_user_s_confirm_message: 'users(s) added'
+add_widget_to_home_tab: 'Add widget to Home tab'
 admin: Administrator
 admin_analytics: 'Platform analytics'
 administration: Administration
@@ -45,6 +47,7 @@ analytics_connections: Connections
 analytics_resources: Resources
 analytics_top: Top
 apply: Apply
+available_widgets: 'Available widgets'
 available_workspaces: 'Available workspaces'
 badges_management: 'Badges management'
 by: by
@@ -178,6 +181,8 @@ home_tab_delete_confirm_title: 'Delete Home tab'
 home_tab_delete_confirm_message: 'Do you really want to delete this Home tab ?'
 home_tab_edition: 'Home tab edition'
 home_tab_form_name: 'Name'
+home_tab_widgets: 'Home tab widgets'
+home_tab_widgets_configuration: 'Home tab widgets configuration'
 home_tabs: 'Home tabs'
 home_tabs_configuration: 'Home tabs configuration'
 id: Id
@@ -612,6 +617,9 @@ visible: Visible
 visitor: Visitor
 warning_workspace_impersonation: 'You are connectecd as %role% from the workspace %workspace.'
 widget_settings: 'Widget settings'
+widget: Widget
+widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab ?'
+widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
 widgets: Widgets
 widgets_configuration: 'Widgets configuration'
 workspace: Workspace

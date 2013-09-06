@@ -49,6 +49,7 @@
                     <tr>
                         <th>{{ 'name'|trans({}, 'platform') }}</th>
                         <th>{{ 'visible'|trans({}, 'platform') }}</th>
+                        <th>{{ 'active_widgets'|trans({}, 'platform') }}</th>
                     </tr>
                 </thead>
                 <tbody id="widget-table-body">
@@ -66,6 +67,17 @@
                                    {% if adminHomeTabConfig.isVisible() %} checked {% endif %}
                                    {% if adminHomeTabConfig.isLocked() %} disabled {% endif %}
                                 >
+                            </td>
+                            <td>
+                                {% if not adminHomeTabConfig.isLocked() %}
+                                    <a href="{{ path('claro_desktop_admin_home_tab_widgets_configuration',
+                                        {'homeTabId': adminHomeTab.getId()}) }}"
+                                    >
+                                        {{ nbWidgets[adminHomeTabConfig.getId()] }}
+                                    </a>
+                                {% else %}
+                                    {{ nbWidgets[adminHomeTabConfig.getId()] }}
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
@@ -87,6 +99,13 @@
                                     class="chk-visible"
                                    {% if homeTabConfig.isVisible() %} checked {% endif %}
                                 >
+                            </td>
+                            <td>
+                                <a href="{{ path('claro_desktop_home_tab_widgets_configuration',
+                                    {'homeTabId': homeTab.getId()}) }}"
+                                >
+                                    {{ nbWidgets[homeTabConfig.getId()] }}
+                                </a>
                             </td>
                         </tr>
                     {% endfor %}

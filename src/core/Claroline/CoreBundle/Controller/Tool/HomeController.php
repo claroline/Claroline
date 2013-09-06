@@ -4,8 +4,10 @@ namespace Claroline\CoreBundle\Controller\Tool;
 
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Claroline\CoreBundle\Entity\Widget\Widget;
+use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
@@ -327,10 +329,27 @@ class HomeController extends Controller
         $adminHomeTabConfigs = $this->homeTabManager->generateAdminHomeTabConfigsByUser($user);
         $homeTabConfigs = $this->homeTabManager->getDesktopHomeTabConfigsByUser($user);
 
+        $nbWidgets = array();
+
+        foreach ($adminHomeTabConfigs as $adminHomeTabConfig) {
+            $adminWidgetConfigs = $this->homeTabManager
+                ->getVisibleAdminWidgetConfigs($adminHomeTabConfig->getHomeTab());
+            $userWidgetConfigs = $this->homeTabManager
+                ->getVisibleWidgetConfigsByUser($adminHomeTabConfig->getHomeTab(), $user);
+            $nbWidgets[$adminHomeTabConfig->getId()] =
+                count($adminWidgetConfigs) + count($userWidgetConfigs);
+        }
+        foreach ($homeTabConfigs as $homeTabConfig) {
+            $widgetConfigs = $this->homeTabManager
+                ->getVisibleWidgetConfigsByUser($homeTabConfig->getHomeTab(), $user);
+            $nbWidgets[$homeTabConfig->getId()] = count($widgetConfigs);
+        }
+
         return array(
             'adminHomeTabConfigs' => $adminHomeTabConfigs,
             'homeTabConfigs' => $homeTabConfigs,
-            'tool' => $this->getHomeTool()
+            'tool' => $this->getHomeTool(),
+            'nbWidgets' => $nbWidgets
         );
     }
 
@@ -435,8 +454,10 @@ class HomeController extends Controller
     public function userDesktopHomeTabEditFormAction(HomeTabConfig $homeTabConfig)
     {
         $this->checkUserAccess();
-
         $homeTab = $homeTabConfig->getHomeTab();
+        $user = $this->securityContext->getToken()->getUser();
+        $this->checkUserAccessForHomeTab($homeTab, $user);
+
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
 
         return array(
@@ -468,8 +489,10 @@ class HomeController extends Controller
     public function userDesktopHomeTabEditAction(HomeTabConfig $homeTabConfig, $homeTabName)
     {
         $this->checkUserAccess();
-
         $homeTab = $homeTabConfig->getHomeTab();
+        $user = $this->securityContext->getToken()->getUser();
+        $this->checkUserAccessForHomeTab($homeTab, $user);
+
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
         $request = $this->getRequest();
         $form->handleRequest($request);
@@ -512,10 +535,9 @@ class HomeController extends Controller
     {
         $this->checkUserAccess();
         $user = $this->securityContext->getToken()->getUser();
+        $this->checkUserAccessForHomeTab($homeTab, $user);
 
-        if ($homeTab->getUser()->getId() === $user->getId()) {
-            $this->homeTabManager->deleteHomeTab($homeTab, 'desktop', $tabOrder);
-        }
+        $this->homeTabManager->deleteHomeTab($homeTab, 'desktop', $tabOrder);
 
         return new Response('success', 204);
     }
@@ -572,15 +594,36 @@ class HomeController extends Controller
     {
         $this->checkWorkspaceAccess($workspace);
 
-        $adminHTC = array();
-        $adminHomeTabConfigs = $this->homeTabManager->generateAdminHomeTabConfigsByWorkspace($workspace);
-        $homeTabConfigs = $this->homeTabManager->getWorkspaceHomeTabConfigsByWorkspace($workspace);
+        $adminHomeTabConfigs = $this->homeTabManager
+            ->generateAdminHomeTabConfigsByWorkspace($workspace);
+        $homeTabConfigs = $this->homeTabManager
+            ->getWorkspaceHomeTabConfigsByWorkspace($workspace);
+
+        $nbWidgets = array();
+
+        foreach ($adminHomeTabConfigs as $adminHomeTabConfig) {
+            $workspaceWidgetConfigs = $this->homeTabManager
+                ->getVisibleWidgetConfigsByWorkspace(
+                    $adminHomeTabConfig->getHomeTab(),
+                    $workspace
+                );
+            $nbWidgets[$adminHomeTabConfig->getId()] = count($workspaceWidgetConfigs);
+        }
+        foreach ($homeTabConfigs as $homeTabConfig) {
+            $widgetConfigs = $this->homeTabManager
+                ->getVisibleWidgetConfigsByWorkspace(
+                    $homeTabConfig->getHomeTab(),
+                    $workspace
+                );
+            $nbWidgets[$homeTabConfig->getId()] = count($widgetConfigs);
+        }
 
         return array(
             'workspace' => $workspace,
             'adminHomeTabConfigs' => $adminHomeTabConfigs,
             'homeTabConfigs' => $homeTabConfigs,
-            'tool' => $this->getHomeTool()
+            'tool' => $this->getHomeTool(),
+            'nbWidgets' => $nbWidgets
         );
     }
 
@@ -707,8 +750,9 @@ class HomeController extends Controller
     )
     {
         $this->checkWorkspaceAccess($workspace);
-
         $homeTab = $homeTabConfig->getHomeTab();
+        $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
+
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
 
         return array(
@@ -750,8 +794,9 @@ class HomeController extends Controller
     )
     {
         $this->checkWorkspaceAccess($workspace);
-
         $homeTab = $homeTabConfig->getHomeTab();
+        $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
+
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
         $request = $this->getRequest();
         $form->handleRequest($request);
@@ -806,10 +851,9 @@ class HomeController extends Controller
     )
     {
         $this->checkWorkspaceAccess($workspace);
+        $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
 
-        if ($homeTab->getWorkspace()->getId() === $workspace->getId()) {
-            $this->homeTabManager->deleteHomeTab($homeTab, 'workspace', $tabOrder);
-        }
+        $this->homeTabManager->deleteHomeTab($homeTab, 'workspace', $tabOrder);
 
         return new Response('success', 204);
     }
@@ -833,15 +877,616 @@ class HomeController extends Controller
      */
     public function homeTabUpdateVisibilityAction(HomeTabConfig $homeTabConfig, $visible)
     {
-        $this->checkUserAccess();
         $workspace = $homeTabConfig->getWorkspace();
+        $homeTab = $homeTabConfig->getHomeTab();
 
         if (!is_null($workspace)) {
             $this->checkWorkspaceAccess($workspace);
+            $this->checkWorkspaceAccessForAdminHomeTab($homeTab, $workspace);
+        }
+        else {
+            $user = $this->securityContext->getToken()->getUser();
+            $this->checkUserAccess();
+            $this->checkUserAccessForAdminHomeTab($homeTab, $user);
         }
 
         $isVisible = ($visible === 'visible') ? true : false;
         $this->homeTabManager->updateVisibility($homeTabConfig, $isVisible);
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/desktop/home_tab/{homeTabId}/widgets/configuration",
+     *     name="claro_desktop_home_tab_widgets_configuration",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "homeTab",
+     *     class="ClarolineCoreBundle:Home\HomeTab",
+     *     options={"id" = "homeTabId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabWidgetsConfig.html.twig")
+     *
+     * Displays the widgets configuration page for given Home tab.
+     *
+     * @return Response
+     */
+    public function desktopHomeTabWidgetsConfigAction(HomeTab $homeTab)
+    {
+        $this->checkUserAccess();
+        $user = $this->securityContext->getToken()->getUser();
+        $this->checkUserAccessForHomeTab($homeTab, $user);
+
+        $widgetConfigs = $this->homeTabManager->getWidgetConfigsByUser($homeTab, $user);
+        $lastWidgetOrder = $this->homeTabManager
+            ->getOrderOfLastWidgetInHomeTabByUser($homeTab, $user);
+        $lastOrder = is_null($lastWidgetOrder) ? 1 : $lastWidgetOrder['order_max'];
+
+        return array(
+            'tool' => $this->getHomeTool(),
+            'homeTab' => $homeTab,
+            'widgetConfigs' => $widgetConfigs,
+            'lastWidgetOrder' => $lastOrder
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/{workspaceId}/home_tab/{homeTabId}/widgets/configuration",
+     *     name="claro_workspace_home_tab_widgets_configuration",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "homeTab",
+     *     class="ClarolineCoreBundle:Home\HomeTab",
+     *     options={"id" = "homeTabId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceHomeTabWidgetsConfig.html.twig")
+     *
+     * Displays the widgets configuration page for given Home tab.
+     *
+     * @return Response
+     */
+    public function workspaceHomeTabWidgetsConfigAction(
+        HomeTab $homeTab,
+        AbstractWorkspace $workspace
+    )
+    {
+        $this->checkWorkspaceAccess($workspace);
+        $this->checkWorkspaceAccessForAdminHomeTab($homeTab, $workspace);
+
+        $widgetConfigs = $this->homeTabManager
+            ->getWidgetConfigsByWorkspace($homeTab, $workspace);
+        $lastWidgetOrder = $this->homeTabManager
+            ->getOrderOfLastWidgetInHomeTabByWorkspace($homeTab, $workspace);
+        $lastOrder = is_null($lastWidgetOrder) ? 1 : $lastWidgetOrder['order_max'];
+
+        return array(
+            'tool' => $this->getHomeTool(),
+            'workspace' => $workspace,
+            'homeTab' => $homeTab,
+            'widgetConfigs' => $widgetConfigs,
+            'lastWidgetOrder' => $lastOrder
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/desktop/admin/home_tab/{homeTabId}/widgets/configuration",
+     *     name="claro_desktop_admin_home_tab_widgets_configuration",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "homeTab",
+     *     class="ClarolineCoreBundle:Home\HomeTab",
+     *     options={"id" = "homeTabId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopAdminHomeTabWidgetsConfig.html.twig")
+     *
+     * Displays the widgets configuration page for given Home tab.
+     *
+     * @return Response
+     */
+    public function desktopAdminHomeTabWidgetsConfigAction(HomeTab $homeTab)
+    {
+        $this->checkUserAccess();
+        $user = $this->securityContext->getToken()->getUser();
+        $this->checkUserAccessForAdminHomeTab($homeTab);
+
+        $adminWidgetConfigs = $this->homeTabManager
+            ->getVisibleAdminWidgetConfigs($homeTab);
+
+        $widgetConfigs = $this->homeTabManager
+            ->getWidgetConfigsByUser($homeTab, $user);
+
+        $nbWidgetConfigs = count($widgetConfigs);
+
+        $lastOrder = ($nbWidgetConfigs === 0) ? 1 : $nbWidgetConfigs;
+
+        return array(
+            'tool' => $this->getHomeTool(),
+            'homeTab' => $homeTab,
+            'adminWidgetConfigs' => $adminWidgetConfigs,
+            'widgetConfigs' => $widgetConfigs,
+            'lastWidgetOrder' => $lastOrder
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/desktop/home_tab/{homeTabId}/widgets/available/list",
+     *     name="claro_desktop_home_tab_addable_widgets_list",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "homeTab",
+     *     class="ClarolineCoreBundle:Home\HomeTab",
+     *     options={"id" = "homeTabId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:listDesktopAddableWidgets.html.twig")
+     *
+     * Displays the list of widgets that can be added to the given Home tab.
+     *
+     * @return Response
+     */
+    public function listDesktopAddableWidgetsAction(HomeTab $homeTab)
+    {
+        $this->checkUserAccess();
+        $user = $this->securityContext->getToken()->getUser();
+        $this->checkUserAccessForHomeTab($homeTab, $user);
+
+        $widgetConfigs = $this->homeTabManager
+            ->getWidgetConfigsByUser($homeTab, $user);
+        $currentWidgetList = array();
+
+        foreach ($widgetConfigs as $widgetConfig) {
+            $currentWidgetList[] = $widgetConfig->getWidget()->getId();
+        }
+        $widgetDisplayConfigs = $this->homeTabManager
+            ->getVisibleDesktopWidgetConfig($currentWidgetList);
+
+        return array(
+            'tool' => $this->getHomeTool(),
+            'homeTab' => $homeTab,
+            'widgetDisplayConfigs' => $widgetDisplayConfigs
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/desktop/admin/home_tab/{homeTabId}/widgets/available/list",
+     *     name="claro_desktop_admin_home_tab_addable_widgets_list",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "homeTab",
+     *     class="ClarolineCoreBundle:Home\HomeTab",
+     *     options={"id" = "homeTabId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:listDesktopAdminAddableWidgets.html.twig")
+     *
+     * Displays the list of widgets that can be added to the given Home tab.
+     *
+     * @return Response
+     */
+    public function listDesktopAdminAddableWidgetsAction(HomeTab $homeTab)
+    {
+        $this->checkUserAccess();
+        $user = $this->securityContext->getToken()->getUser();
+        $this->checkUserAccessForAdminHomeTab($homeTab);
+
+        $adminWidgetConfigs = $this->homeTabManager
+            ->getAdminWidgetConfigs($homeTab);
+
+        $widgetConfigs = $this->homeTabManager
+            ->getWidgetConfigsByUser($homeTab, $user);
+        $currentWidgetList = array();
+
+        foreach ($adminWidgetConfigs as $adminWidgetConfig) {
+            $currentWidgetList[] = $adminWidgetConfig->getWidget()->getId();
+        }
+
+        foreach ($widgetConfigs as $widgetConfig) {
+            $currentWidgetList[] = $widgetConfig->getWidget()->getId();
+        }
+        $widgetDisplayConfigs = $this->homeTabManager
+            ->getVisibleDesktopWidgetConfig($currentWidgetList);
+
+        return array(
+            'tool' => $this->getHomeTool(),
+            'homeTab' => $homeTab,
+            'widgetDisplayConfigs' => $widgetDisplayConfigs
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/{workspaceId}/home_tab/{homeTabId}/widgets/available/list",
+     *     name="claro_workspace_home_tab_addable_widgets_list",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "homeTab",
+     *     class="ClarolineCoreBundle:Home\HomeTab",
+     *     options={"id" = "homeTabId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:listWorkspaceAddableWidgets.html.twig")
+     *
+     * Displays the list of widgets that can be added to the given Home tab.
+     *
+     * @return Response
+     */
+    public function listWorkspaceAddableWidgetsAction(
+        HomeTab $homeTab,
+        AbstractWorkspace $workspace
+    )
+    {
+        $this->checkWorkspaceAccess($workspace);
+        $this->checkWorkspaceAccessForAdminHomeTab($homeTab, $workspace);
+
+        $widgetConfigs = $this->homeTabManager
+            ->getWidgetConfigsByWorkspace($homeTab, $workspace);
+        $currentWidgetList = array();
+
+        foreach ($widgetConfigs as $widgetConfig) {
+            $currentWidgetList[] = $widgetConfig->getWidget()->getId();
+        }
+        $widgetDisplayConfigs = $this->homeTabManager
+            ->getVisibleWorkspaceWidgetConfig($currentWidgetList);
+
+        return array(
+            'tool' => $this->getHomeTool(),
+            'workspace' => $workspace,
+            'homeTab' => $homeTab,
+            'widgetDisplayConfigs' => $widgetDisplayConfigs
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/desktop/home_tab/{homeTabId}/associate/widget/{widgetId}",
+     *     name="claro_desktop_associate_widget_to_home_tab",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "homeTab",
+     *     class="ClarolineCoreBundle:Home\HomeTab",
+     *     options={"id" = "homeTabId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *     "widget",
+     *     class="ClarolineCoreBundle:Widget\Widget",
+     *     options={"id" = "widgetId", "strictId" = true}
+     * )
+     *
+     * Associate given Widget to given Home tab.
+     *
+     * @return Response
+     */
+    public function associateDesktopWidgetToHomeTabAction(
+        HomeTab $homeTab,
+        Widget $widget
+    )
+    {
+        $this->checkUserAccess();
+        $user = $this->securityContext->getToken()->getUser();
+
+        $widgetHomeTabConfig = new WidgetHomeTabConfig();
+        $widgetHomeTabConfig->setHomeTab($homeTab);
+        $widgetHomeTabConfig->setWidget($widget);
+        $widgetHomeTabConfig->setUser($user);
+        $widgetHomeTabConfig->setVisible(false);
+        $widgetHomeTabConfig->setLocked(false);
+        $widgetHomeTabConfig->setType('desktop');
+
+        $lastOrder = $this->homeTabManager
+            ->getOrderOfLastWidgetInHomeTabByUser($homeTab, $user);
+
+        if (is_null($lastOrder['order_max'])) {
+            $widgetHomeTabConfig->setWidgetOrder(1);
+        }
+        else {
+            $widgetHomeTabConfig->setWidgetOrder($lastOrder['order_max'] + 1);
+        }
+
+        $this->homeTabManager->insertWidgetHomeTabConfig($widgetHomeTabConfig);
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/{workspaceId}/home_tab/{homeTabId}/associate/widget/{widgetId}",
+     *     name="claro_workspace_associate_widget_to_home_tab",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "homeTab",
+     *     class="ClarolineCoreBundle:Home\HomeTab",
+     *     options={"id" = "homeTabId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *     "widget",
+     *     class="ClarolineCoreBundle:Widget\Widget",
+     *     options={"id" = "widgetId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     *
+     * Associate given Widget to given Home tab.
+     *
+     * @return Response
+     */
+    public function associateWorkspaceWidgetToHomeTabAction(
+        HomeTab $homeTab,
+        Widget $widget,
+        AbstractWorkspace $workspace
+    )
+    {
+        $this->checkWorkspaceAccess($workspace);
+
+        $widgetHomeTabConfig = new WidgetHomeTabConfig();
+        $widgetHomeTabConfig->setHomeTab($homeTab);
+        $widgetHomeTabConfig->setWidget($widget);
+        $widgetHomeTabConfig->setWorkspace($workspace);
+        $widgetHomeTabConfig->setVisible(false);
+        $widgetHomeTabConfig->setLocked(false);
+        $widgetHomeTabConfig->setType('workspace');
+
+        $lastOrder = $this->homeTabManager
+            ->getOrderOfLastWidgetInHomeTabByWorkspace($homeTab, $workspace);
+
+        if (is_null($lastOrder['order_max'])) {
+            $widgetHomeTabConfig->setWidgetOrder(1);
+        }
+        else {
+            $widgetHomeTabConfig->setWidgetOrder($lastOrder['order_max'] + 1);
+        }
+
+        $this->homeTabManager->insertWidgetHomeTabConfig($widgetHomeTabConfig);
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/desktop/widget_home_tab_config/{widgetHomeTabConfigId}/change/visibility",
+     *     name="claro_desktop_widget_home_tab_config_change_visibility",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "widgetHomeTabConfig",
+     *     class="ClarolineCoreBundle:Widget\WidgetHomeTabConfig",
+     *     options={"id" = "widgetHomeTabConfigId", "strictId" = true}
+     * )
+     *
+     * Change visibility of the given widgetHomeTabConfig.
+     *
+     * @return Response
+     */
+    public function desktopWidgetHomeTabConfigChangeVisibilityAction(
+        WidgetHomeTabConfig $widgetHomeTabConfig
+    )
+    {
+        $this->checkUserAccess();
+        $user = $this->securityContext->getToken()->getUser();
+        $this->checkUserAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $user);
+
+        $this->homeTabManager->changeVisibilityWidgetHomeTabConfig(
+            $widgetHomeTabConfig
+        );
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/{workspaceId}/widget_home_tab_config/{widgetHomeTabConfigId}/change/visibility",
+     *     name="claro_workspace_widget_home_tab_config_change_visibility",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "widgetHomeTabConfig",
+     *     class="ClarolineCoreBundle:Widget\WidgetHomeTabConfig",
+     *     options={"id" = "widgetHomeTabConfigId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     *
+     * Change visibility of the given widgetHomeTabConfig.
+     *
+     * @return Response
+     */
+    public function workspaceWidgetHomeTabConfigChangeVisibilityAction(
+        WidgetHomeTabConfig $widgetHomeTabConfig,
+        AbstractWorkspace $workspace
+    )
+    {
+        $this->checkWorkspaceAccess($workspace);
+        $this->checkWorkspaceAccessForWidgetHomeTabConfig(
+            $widgetHomeTabConfig,
+            $workspace
+        );
+
+        $this->homeTabManager->changeVisibilityWidgetHomeTabConfig(
+            $widgetHomeTabConfig
+        );
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/desktop/widget_home_tab_config/{widgetHomeTabConfigId}/delete",
+     *     name="claro_desktop_widget_home_tab_config_delete",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("DELETE")
+     * @EXT\ParamConverter(
+     *     "widgetHomeTabConfig",
+     *     class="ClarolineCoreBundle:Widget\WidgetHomeTabConfig",
+     *     options={"id" = "widgetHomeTabConfigId", "strictId" = true}
+     * )
+     *
+     * Delete the given widgetHomeTabConfig.
+     *
+     * @return Response
+     */
+    public function desktopWidgetHomeTabConfigDeleteAction(
+        WidgetHomeTabConfig $widgetHomeTabConfig
+    )
+    {
+        $this->checkUserAccess();
+        $user = $this->securityContext->getToken()->getUser();
+        $this->checkUserAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $user);
+
+        $this->homeTabManager->deleteWidgetHomeTabConfig(
+            $widgetHomeTabConfig
+        );
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/{workspaceId}/widget_home_tab_config/{widgetHomeTabConfigId}/delete",
+     *     name="claro_workspace_widget_home_tab_config_delete",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("DELETE")
+     * @EXT\ParamConverter(
+     *     "widgetHomeTabConfig",
+     *     class="ClarolineCoreBundle:Widget\WidgetHomeTabConfig",
+     *     options={"id" = "widgetHomeTabConfigId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     *
+     * Delete the given widgetHomeTabConfig.
+     *
+     * @return Response
+     */
+    public function workspaceWidgetHomeTabConfigDeleteAction(
+        WidgetHomeTabConfig $widgetHomeTabConfig,
+        AbstractWorkspace $workspace
+    )
+    {
+        $this->checkWorkspaceAccess($workspace);
+        $this->checkWorkspaceAccessForWidgetHomeTabConfig(
+            $widgetHomeTabConfig,
+            $workspace
+        );
+
+        $this->homeTabManager->deleteWidgetHomeTabConfig(
+            $widgetHomeTabConfig
+        );
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/desktop/widget_home_tab_config/{widgetHomeTabConfigId}/change/order/{direction}",
+     *     name="claro_desktop_widget_home_tab_config_change_order",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "widgetHomeTabConfig",
+     *     class="ClarolineCoreBundle:Widget\WidgetHomeTabConfig",
+     *     options={"id" = "widgetHomeTabConfigId", "strictId" = true}
+     * )
+     *
+     * Change order of the given widgetHomeTabConfig in the given direction.
+     *
+     * @return Response
+     */
+    public function desktopWidgetHomeTabConfigChangeOrderAction(
+        WidgetHomeTabConfig $widgetHomeTabConfig,
+        $direction
+    )
+    {
+        $this->checkUserAccess();
+        $user = $this->securityContext->getToken()->getUser();
+        $this->checkUserAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $user);
+
+        $this->homeTabManager->changeOrderWidgetHomeTabConfig(
+            $widgetHomeTabConfig,
+            $direction
+        );
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/{workspaceId}/widget_home_tab_config/{widgetHomeTabConfigId}/change/order/{direction}",
+     *     name="claro_workspace_widget_home_tab_config_change_order",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "widgetHomeTabConfig",
+     *     class="ClarolineCoreBundle:Widget\WidgetHomeTabConfig",
+     *     options={"id" = "widgetHomeTabConfigId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     *
+     * Change order of the given widgetHomeTabConfig in the given direction.
+     *
+     * @return Response
+     */
+    public function workspaceWidgetHomeTabConfigChangeOrderAction(
+        WidgetHomeTabConfig $widgetHomeTabConfig,
+        AbstractWorkspace $workspace,
+        $direction
+    )
+    {
+        $this->checkWorkspaceAccess($workspace);
+        $this->checkWorkspaceAccessForWidgetHomeTabConfig(
+            $widgetHomeTabConfig,
+            $workspace
+        );
+
+        $this->homeTabManager->changeOrderWidgetHomeTabConfig(
+            $widgetHomeTabConfig,
+            $direction
+        );
 
         return new Response('success', 204);
     }
@@ -858,6 +1503,97 @@ class HomeController extends Controller
         $role = $this->roleManager->getManagerRole($workspace);
 
         if (!$this->securityContext->isGranted($role->getName())) {
+            throw new AccessDeniedException();
+        }
+    }
+
+    private function checkUserAccessForHomeTab(HomeTab $homeTab, User $user)
+    {
+        $homeTabUser = $homeTab->getUser();
+
+        if (is_null($homeTabUser) || ($homeTabUser->getId() !== $user->getId())) {
+            throw new AccessDeniedException();
+        }
+    }
+
+    private function checkUserAccessForAdminHomeTab(HomeTab $homeTab, User $user)
+    {
+        $isAdminUser = false;
+        $isUser = false;
+
+        if ($homeTab->getType() === 'admin_desktop') {
+            $homeTabConfig = $this->homeTabManager
+                ->getAdminDesktopHomeTabConfigByHomeTab($homeTab);
+            $isAdminUser = !(is_null($homeTabConfig) || $homeTabConfig->isLocked());
+        }
+        else {
+            $homeTabConfig = $this->homeTabManager
+                ->getHomeTabConfigByHomeTabAndUser($homeTab, $user);
+            $homeTabUser = is_null($homeTabConfig) ? null : $homeTabConfig->getUser();
+            $isUser = !is_null($homeTabUser) && $homeTabUser->getId() === $user->getId();
+        }
+
+        if (!($isAdminUser || $isUser)) {
+
+            throw new AccessDeniedException();
+        }
+    }
+
+    private function checkWorkspaceAccessForHomeTab(
+        HomeTab $homeTab,
+        AbstractWorkspace $workspace
+    )
+    {
+        $homeTabWorkspace = $homeTab->getWorkspace();
+
+        if (is_null($homeTabWorkspace) || ($homeTabWorkspace->getId() !== $workspace->getId())) {
+            throw new AccessDeniedException();
+        }
+    }
+
+    private function checkWorkspaceAccessForAdminHomeTab(
+        HomeTab $homeTab,
+        AbstractWorkspace $workspace
+    )
+    {
+        $homeTabWorkspace = $homeTab->getWorkspace();
+
+        $isAdminWorkspace =
+            is_null($homeTabWorkspace) && ($homeTab->getType() === 'admin_workspace');
+        $isWorkspace = !is_null($homeTabWorkspace) &&
+            ($homeTabWorkspace->getId() === $workspace->getId());
+
+        if (!($isAdminWorkspace || $isWorkspace)) {
+            throw new AccessDeniedException();
+        }
+    }
+
+    private function checkUserAccessForWidgetHomeTabConfig(
+        WidgetHomeTabConfig $widgetHomeTabConfig,
+        User $user
+    )
+    {
+        $widgetHomeTabConfigUser = $widgetHomeTabConfig->getUser();
+
+        if ($widgetHomeTabConfig->getType() !== 'desktop' ||
+            is_null($widgetHomeTabConfigUser) ||
+            ($widgetHomeTabConfigUser->getId() !== $user->getId())) {
+
+            throw new AccessDeniedException();
+        }
+    }
+
+    private function checkWorkspaceAccessForWidgetHomeTabConfig(
+        WidgetHomeTabConfig $widgetHomeTabConfig,
+        AbstractWorkspace $workspace
+    )
+    {
+        $widgetHomeTabConfigWorkspace = $widgetHomeTabConfig->getWorkspace();
+
+        if ($widgetHomeTabConfig->getType() !== 'workspace' ||
+            is_null($widgetHomeTabConfigWorkspace) ||
+            ($widgetHomeTabConfigWorkspace->getId() !== $workspace->getId())) {
+
             throw new AccessDeniedException();
         }
     }
