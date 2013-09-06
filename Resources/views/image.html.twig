@@ -1,8 +1,15 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
 {% block section_content %}
-<h3> {{ image.getName }} </h3>
-<div><img src="{{ asset('') }}/../../files/{{ image.getHashName() }}"/></div>
-
-<a href="{{ path('claro_resource_download') }}?ids[]={{ _resource.getResourceNode().getId() }}">{{ 'download'|trans({}, 'platform') }} </a>
+    <div class="panel-heading">
+        <h3 class="panel-title"> {{ image.getResourceNode().getName() }} </h3>
+    </div>
+    <div class="panel-body">
+        <img src="{{ asset('') }}/../../files/{{ image.getHashName() }}" width="100%">
+    </div>
+    <div class="panel-footer">
+        <a class="btn btn-primary" href="{{ path('claro_resource_download') }}?ids[]={{ _resource.getResourceNode().getId() }}">
+            <i class="icon-download"></i> {{ 'download'|trans({}, 'platform') }}
+        </a>
+    </div>
 {% endblock %}
