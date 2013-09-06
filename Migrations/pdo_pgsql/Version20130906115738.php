@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/08/09 09:17:59
+ * Generation date: 2013/09/06 11:57:39
  */
-class Version20130809091758 extends AbstractMigration
+class Version20130906115738 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -29,7 +29,7 @@ class Version20130809091758 extends AbstractMigration
                 id SERIAL NOT NULL, 
                 subject_id INT DEFAULT NULL, 
                 user_id INT DEFAULT NULL, 
-                content VARCHAR(255) NOT NULL, 
+                content TEXT NOT NULL, 
                 created TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, 
                 updated TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, 
                 PRIMARY KEY(id)
@@ -69,7 +69,8 @@ class Version20130809091758 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_forum 
             ADD CONSTRAINT FK_F2869DFB87FAB32 FOREIGN KEY (resourceNode_id) 
-            REFERENCES claro_resource_node (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
             ALTER TABLE claro_forum_message 

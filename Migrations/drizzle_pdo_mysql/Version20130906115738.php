@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\ForumBundle\Migrations\mysqli;
+namespace Claroline\ForumBundle\Migrations\drizzle_pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/08/09 09:17:59
+ * Generation date: 2013/09/06 11:57:39
  */
-class Version20130809091758 extends AbstractMigration
+class Version20130906115738 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -18,22 +18,22 @@ class Version20130809091758 extends AbstractMigration
             CREATE TABLE claro_forum (
                 id INT AUTO_INCREMENT NOT NULL, 
                 resourceNode_id INT DEFAULT NULL, 
-                UNIQUE INDEX UNIQ_F2869DFB87FAB32 (resourceNode_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                PRIMARY KEY(id), 
+                UNIQUE INDEX UNIQ_F2869DFB87FAB32 (resourceNode_id)
+            )
         ");
         $this->addSql("
             CREATE TABLE claro_forum_message (
                 id INT AUTO_INCREMENT NOT NULL, 
                 subject_id INT DEFAULT NULL, 
                 user_id INT DEFAULT NULL, 
-                content VARCHAR(255) NOT NULL, 
+                content TEXT NOT NULL, 
                 created DATETIME NOT NULL, 
                 updated DATETIME NOT NULL, 
+                PRIMARY KEY(id), 
                 INDEX IDX_6A49AC0E23EDC87 (subject_id), 
-                INDEX IDX_6A49AC0EA76ED395 (user_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                INDEX IDX_6A49AC0EA76ED395 (user_id)
+            )
         ");
         $this->addSql("
             CREATE TABLE claro_forum_options (
@@ -41,7 +41,7 @@ class Version20130809091758 extends AbstractMigration
                 subjects INT NOT NULL, 
                 messages INT NOT NULL, 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+            )
         ");
         $this->addSql("
             CREATE TABLE claro_forum_subject (
@@ -51,15 +51,16 @@ class Version20130809091758 extends AbstractMigration
                 title VARCHAR(255) NOT NULL, 
                 created DATETIME NOT NULL, 
                 updated DATETIME NOT NULL, 
+                PRIMARY KEY(id), 
                 INDEX IDX_273AA20B29CCBAD0 (forum_id), 
-                INDEX IDX_273AA20BA76ED395 (user_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                INDEX IDX_273AA20BA76ED395 (user_id)
+            )
         ");
         $this->addSql("
             ALTER TABLE claro_forum 
             ADD CONSTRAINT FK_F2869DFB87FAB32 FOREIGN KEY (resourceNode_id) 
-            REFERENCES claro_resource_node (id)
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_forum_message 
