@@ -600,7 +600,13 @@ class ResourceController
     {
         if ($node->getClass() === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
             $resource = $this->resourceManager->getResourceFromNode($node);
+            if ($resource === null) {
+                throw new \Exception('The resource was removed.');
+            }
             $node = $resource->getTarget();
+            if ($node === null) {
+                throw new \Exception('The node target was removed.');
+            }
         }
 
         return $node;

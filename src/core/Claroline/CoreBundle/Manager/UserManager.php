@@ -250,7 +250,7 @@ class UserManager
     public function getAllUsers($page)
     {
         $query = $this->userRepo->findAll(false);
-
+        
         return $this->pagerFactory->createPager($query, $page);
     }
 
