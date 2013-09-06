@@ -21,7 +21,8 @@ class AdditionalInstaller extends BaseInstaller
     {
         try {
             $this->log('Checking database connection...');
-            $this->container->get('doctrine.dbal.default_connection');
+            $cn = $this->container->get('doctrine.dbal.default_connection');
+            $cn->query('SELECT * FROM claro_plugin');
         } catch (\Exception $ex) {
             $this->log('Unable to connect: trying to create database...');
             $command = new CreateDatabaseDoctrineCommand();
