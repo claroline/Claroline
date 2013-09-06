@@ -89,6 +89,7 @@ class ToolManagerTest extends MockeryTestCase
     {
         $tool = $this->mock('Claroline\CoreBundle\Entity\Tool\Tool');
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $workspace->shouldReceive('getId')->once()->andReturn('1');
         $position = 1;
 
         $this->orderedToolRepo->shouldReceive('findOneBy')->once()
