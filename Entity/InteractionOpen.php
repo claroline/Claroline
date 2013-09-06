@@ -75,7 +75,7 @@ class InteractionOpen
     private $typeopenquestion;
     
     /**
-     * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\WordResponse", mappedBy="interactionOpen", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\WordResponse", mappedBy="interactionopen", cascade={"remove"})
      */
     private $wordResponses;
     

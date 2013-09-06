@@ -143,12 +143,6 @@ class InteractionOpenHandler
             $this->em->remove($hint);
         }
 
-        $pointsWrong = str_replace(',', '.', $interOpen->getScoreFalseResponse());
-        $pointsRight = str_replace(',', '.', $interOpen->getScoreRightResponse());
-
-        $interOpen->setScoreFalseResponse($pointsWrong);
-        $interOpen->setScoreRightResponse($pointsRight);
-
         $this->em->persist($interOpen);
         $this->em->persist($interOpen->getInteraction()->getQuestion());
         $this->em->persist($interOpen->getInteraction());

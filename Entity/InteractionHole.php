@@ -67,7 +67,17 @@ class InteractionHole
      * @ORM\OneToOne(targetEntity="UJM\ExoBundle\Entity\Interaction")
      */
     private $interaction;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\Hole", mappedBy="interactionHole", cascade={"remove"})
+     */
+    private $holes;
 
+    public function __construct()
+    {
+        $this->holes = new \Doctrine\Common\Collections\ArrayCollection;
+    }
+    
     /**
      * Get id
      *
@@ -106,6 +116,24 @@ class InteractionHole
     public function setInteraction(\UJM\ExoBundle\Entity\Interaction $interaction)
     {
         $this->interaction = $interaction;
+    }
+    
+    public function getHoles()
+    {
+        
+        return $this->holes;
+    }
+
+    public function addHole(\UJM\ExoBundle\Entity\Hole $hole)
+    {
+        $this->holes[] = $hole;
+
+        $hole->setInteractionOpen($this);
+    }
+
+    public function removeHole(\UJM\ExoBundle\Entity\Hole $hole)
+    {
+        
     }
 
 }
