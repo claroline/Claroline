@@ -20,64 +20,19 @@ class Recorder
         }
     }
 
-    public function addBundlesFrom(PackageInterface $package)
+    public function addBundles(array $bundlesFqcns)
     {
-        $this->updateBundleFile($package, 'add');
+        $this->updateBundleFile($bundlesFqcns, 'add');
     }
 
-    public function removeBundlesFrom(PackageInterface $package)
+    public function removeBundles(array $bundlesFqcns)
     {
-        $this->updateBundleFile($package, 'remove');
+        $this->updateBundleFile($bundlesFqcns, 'remove');
     }
 
-    private function getBundleFile()
-    {
-        $options = array_merge(
-            array('bundle-file' => 'app/config/bundles.ini'),
-            $this->composer->getPackage()->getExtra()
-        );
-
-        return $options['bundle-file'];
-    }
-
-    private function updateBundleFile(PackageInterface $package, $action)
+    public function detectBundles(PackageInterface $package)
     {
         $path = $this->getPackagePath($package);
-        $bundles = $this->detectBundles($path);
-        $recordedBundles = parse_ini_file($this->bundleFile);
-        $hasChanges = false;
-
-        foreach ($bundles as $bundleFqcn) {
-            if ($action === 'add' && !isset($recordedBundles[$bundleFqcn])) {
-                $recordedBundles[$bundleFqcn] = true;
-                $hasChanges = true;
-            } elseif ($action === 'remove' && isset($recordedBundles[$bundleFqcn])) {
-                unset($recordedBundles[$bundleFqcn]);
-                $hasChanges = true;
-            }
-        }
-
-        if ($hasChanges) {
-            $content = '';
-
-            foreach ($recordedBundles as $bundle => $isEnabled) {
-                $isEnabled = $isEnabled ? 'true' : 'false';
-                $content .= "{$bundle} = {$isEnabled}" . PHP_EOL;
-            }
-
-            file_put_contents($this->bundleFile, $content);
-        }
-    }
-
-    private function getPackagePath(PackageInterface $package)
-    {
-        $vendorDir = rtrim($this->composer->getConfig()->get('vendor-dir'), '/');
-
-        return realpath(($vendorDir ? $vendorDir . '/' : '') . $package->getPrettyName());
-    }
-
-    private function detectBundles($path)
-    {
         $iterator = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS);
         $filter = new FilterIterator($iterator);
         $items = new \RecursiveIteratorIterator($filter, \RecursiveIteratorIterator::SELF_FIRST);
@@ -106,5 +61,49 @@ class Recorder
         }
 
         return $bundles;
+    }
+
+    private function getBundleFile()
+    {
+        $options = array_merge(
+            array('bundle-file' => 'app/config/bundles.ini'),
+            $this->composer->getPackage()->getExtra()
+        );
+
+        return $options['bundle-file'];
+    }
+
+    private function updateBundleFile(array $bundlesFqcns, $action)
+    {
+        $recordedBundles = parse_ini_file($this->bundleFile);
+        $hasChanges = false;
+
+        foreach ($bundlesFqcns as $bundleFqcn) {
+            if ($action === 'add' && !isset($recordedBundles[$bundleFqcn])) {
+                $recordedBundles[$bundleFqcn] = true;
+                $hasChanges = true;
+            } elseif ($action === 'remove' && isset($recordedBundles[$bundleFqcn])) {
+                unset($recordedBundles[$bundleFqcn]);
+                $hasChanges = true;
+            }
+        }
+
+        if ($hasChanges) {
+            $content = '';
+
+            foreach ($recordedBundles as $bundle => $isEnabled) {
+                $isEnabled = $isEnabled ? 'true' : 'false';
+                $content .= "{$bundle} = {$isEnabled}" . PHP_EOL;
+            }
+
+            file_put_contents($this->bundleFile, $content);
+        }
+    }
+
+    private function getPackagePath(PackageInterface $package)
+    {
+        $vendorDir = rtrim($this->composer->getConfig()->get('vendor-dir'), '/');
+
+        return realpath(($vendorDir ? $vendorDir . '/' : '') . $package->getPrettyName());
     }
 }

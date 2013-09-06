@@ -9,6 +9,8 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 
 class ScriptHandler
 {
+    private static $removableBundles = array();
+
     public static function preUpdateCommand(CommandEvent $event)
     {
         self::initAutoload($event, __METHOD__);
@@ -21,14 +23,22 @@ class ScriptHandler
 
     public static function postPackageInstall(PackageEvent $event)
     {
+        $package = $event->getOperation()->getPackage();
         $recorder = new Recorder($event->getComposer());
-        $recorder->addBundlesFrom($event->getOperation()->getPackage());
+        $recorder->addBundles($recorder->detectBundles($package));
+    }
+
+    public static function prePackageUninstall(PackageEvent $event)
+    {
+        $package = $event->getOperation()->getPackage();
+        $recorder = new Recorder($event->getComposer());
+        self::$removableBundles = $recorder->detectBundles($package);
     }
 
     public static function postPackageUninstall(PackageEvent $event)
     {
         $recorder = new Recorder($event->getComposer());
-        $recorder->removeBundlesFrom($event->getOperation()->getPackage());
+        $recorder->removeBundles(static::$removableBundles);
     }
 
     private static function initAutoload(Event $event, $scriptName)
