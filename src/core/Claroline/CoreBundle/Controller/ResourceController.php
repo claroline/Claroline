@@ -12,9 +12,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContext;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Manager\Exception\ResourceMoveException;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\RightsManager;
@@ -229,14 +229,20 @@ class ResourceController
     {
         $collection = new ResourceCollection($nodes);
         $collection->addAttribute('parent', $newParent);
-        $this->checkAccess('MOVE', $collection);
+
+        if (!$this->sc->isGranted('MOVE', $collection)) {
+            $response = new Response('not eought perm', 403);
+            $response->headers->add(array('XXX-Claroline' => 'insufficient-permissions'));
+
+            return $response;
+        }
 
         foreach ($nodes as $node) {
             try {
                 $movedNode = $this->resourceManager->move($node, $newParent);
                 $movedNodes[] = $this->resourceManager->toArray($movedNode);
-            } catch (\Gedmo\Exception\UnexpectedValueException $e) {
-                throw new \RuntimeException('Cannot move a resource into itself');
+            } catch (ResourceMoveException $e) {
+                Response($this->translator->trans('invalid_move', array(), 'error'), 422);
             }
         }
 

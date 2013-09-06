@@ -63,8 +63,8 @@ class WorkspaceManager
      *
      * @DI\InjectParams({
      *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),

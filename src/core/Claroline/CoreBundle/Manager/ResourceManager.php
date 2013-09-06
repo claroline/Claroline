@@ -7,7 +7,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
@@ -23,6 +22,7 @@ use Claroline\CoreBundle\Manager\Exception\ResourceTypeNotFoundException;
 use Claroline\CoreBundle\Manager\Exception\RightsException;
 use Claroline\CoreBundle\Manager\Exception\ExportResourceException;
 use Claroline\CoreBundle\Manager\Exception\WrongClassException;
+use Claroline\CoreBundle\Manager\Exception\ResourceMoveException;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -469,17 +469,17 @@ class ResourceManager
         $this->removePosition($child);
         $this->setLastPosition($parent, $child);
 
-        try {
-            $child->setParent($parent);
-            $child->setName($this->getUniqueName($child, $parent));
-            $this->om->persist($child);
-            $this->om->flush();
-            $this->dispatcher->dispatch('log', 'Log\LogResourceMove', array($child, $parent));
-
-            return $child;
-        } catch (UnexpectedValueException $e) {
-            throw new \UnexpectedValueException("You cannot move a directory into itself");
+        if ($parent === $child) {
+            throw new ResourceMoveException("You cannot move a directory into itself");
         }
+
+        $child->setParent($parent);
+        $child->setName($this->getUniqueName($child, $parent));
+        $this->om->persist($child);
+        $this->om->flush();
+        $this->dispatcher->dispatch('log', 'Log\LogResourceMove', array($child, $parent));
+
+        return $child;
     }
 
 
