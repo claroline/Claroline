@@ -71,13 +71,44 @@ class DesktopController extends Controller
     public function widgetsAction(HomeTab $homeTab, User $user)
     {
         $widgets = array();
+        $configs = array();
 
         if ($this->homeTabManager->checkHomeTabVisibilityByUser($homeTab, $user)) {
 
             if ($homeTab->getType() === 'admin_desktop') {
-                $configs = $this->homeTabManager->getAdminWidgetConfigs($homeTab);
+                $adminConfigs = $this->homeTabManager->getAdminWidgetConfigs($homeTab);
                 $userWidgetsConfigs = $this->homeTabManager
                     ->getWidgetConfigsByUser($homeTab, $user);
+
+                foreach ($adminConfigs as $adminConfig) {
+
+                    if ($adminConfig->isLocked()) {
+                        $configs[] = $adminConfig;
+                    }
+                    else {
+                        $existingWidgetConfig = $this->homeTabManager
+                            ->getUserAdminWidgetHomeTabConfig(
+                                $homeTab,
+                                $adminConfig->getWidget(),
+                                $user
+                            );
+                        if (count($existingWidgetConfig) === 0) {
+                            $newWHTC = new WidgetHomeTabConfig();
+                            $newWHTC->setHomeTab($homeTab);
+                            $newWHTC->setWidget($adminConfig->getWidget());
+                            $newWHTC->setUser($user);
+                            $newWHTC->setWidgetOrder($adminConfig->getWidgetOrder());
+                            $newWHTC->setVisible($adminConfig->isVisible());
+                            $newWHTC->setLocked(false);
+                            $newWHTC->setType('admin_desktop');
+                            $this->homeTabManager->insertWidgetHomeTabConfig($newWHTC);
+                            $configs[] = $newWHTC;
+                        }
+                        else {
+                            $configs[] = $existingWidgetConfig[0];
+                        }
+                    }
+                }
 
                 foreach ($userWidgetsConfigs as $userWidgetsConfig) {
                     $configs[] = $userWidgetsConfig;
