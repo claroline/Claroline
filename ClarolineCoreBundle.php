@@ -7,6 +7,7 @@ use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\InstallationBundle\Bundle\InstallableBundle;
+use Claroline\CoreBundle\Library\Installation\AdditionalInstaller;
 
 class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableInterface, ConfigurationProviderInterface
 {
@@ -87,13 +88,6 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
         return false;
     }
 
-    public function getPreInstallAction($environment)
-    {
-        return $environment !== 'test' ?
-            'Claroline\CoreBundle\Library\Installation\AdditionalInstaller#preInstall' :
-            null;
-    }
-
     public function getRequiredFixturesDirectory($environment)
     {
         return $environment !== 'test' ? 'DataFixtures/Required' : null;
@@ -102,6 +96,11 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
     public function getOptionalFixturesDirectory($environment)
     {
         return $environment !== 'test' ? 'DataFixtures/Demo' : null;
+    }
+
+    public function getAdditionalInstaller()
+    {
+        return new AdditionalInstaller();
     }
 
     private function buildPath($file, $folder = 'suggested')
