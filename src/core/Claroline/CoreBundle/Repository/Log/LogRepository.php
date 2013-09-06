@@ -299,26 +299,31 @@ class LogRepository extends EntityRepository
 
     private function addActionFilterToQueryBuilder(QueryBuilder $queryBuilder, $action, $actionRestriction = null)
     {
-        if (null !== $actionRestriction){
+        if (null !== $actionRestriction) {
             if ('admin' === $actionRestriction) {
-                $queryBuilder->where('log.isDisplayedInAdmin = true');
+                $queryBuilder->andWhere('log.isDisplayedInAdmin = true');
             }
             elseif('workspace' === $actionRestriction) {
-                $queryBuilder->where('log.isDisplayedInWorkspace = true');
+                $queryBuilder->andWhere('log.isDisplayedInWorkspace = true');
             }
         }
 
         if (null !== $action) {
             $queryBuilder
-                    ->andWhere("log.action LIKE '%:action%'")
-                    ->setParameter('action', $action)
-            ;
+                ->andWhere("log.action LIKE :action")
+                ->setParameter('action', '%' . $action . '%');
         }
 
         return $queryBuilder;
     }
 
-    private function addDateRangeFilterToQueryBuilder($queryBuilder, $range)
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param array        $range
+     *
+     * @return QueryBuilder
+     */
+    private function addDateRangeFilterToQueryBuilder(QueryBuilder $queryBuilder, $range)
     {
         if ($range !== null and count($range) == 2) {
             $startDate = new \DateTime();
@@ -339,7 +344,13 @@ class LogRepository extends EntityRepository
         return $queryBuilder;
     }
 
-    private function addUserFilterToQueryBuilder($queryBuilder, $userSearch)
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param string       $userSearch
+     *
+     * @return QueryBuilder
+     */
+    private function addUserFilterToQueryBuilder(QueryBuilder $queryBuilder, $userSearch)
     {
         if ($userSearch !== null && $userSearch !== '') {
             $upperUserSearch = strtoupper($userSearch);

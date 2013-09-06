@@ -20,10 +20,11 @@
 
         <form id="logFilter" action="{{ filterFormAction }}" method="GET" class="form-inline">
             {{ form_widget(filterForm) }}
-            <input type="submit" value="{{ 'Show actions'|trans({}, 'platform') }}" class="btn btn-primary"/>
+            <input type="submit" value="{{ 'log_filter_actions'|trans({}, 'log') }}" class="btn btn-primary"/>
         </form>
         <br/><br/>
     </div>
+    {% if 0 < pager.nbResults %}
 
     {% include 'ClarolineCoreBundle:Log:count_by_day_chart.html.twig' %}
 
@@ -46,4 +47,7 @@
             {{ pagination }}
         {% endif %}
     </div>
+    {% else %}
+        {{ 'log_no_actions_found'|trans({}, 'log') }}.
+    {% endif %}
 </div>
