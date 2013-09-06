@@ -211,7 +211,7 @@ class LogManager
         $params = $this->getList(
             $page,
             'workspace',
-            new WorkspaceLogFilterType(),
+            $this->container->get('claroline.form.workspaceLogFilter'),
             'workspace_log_filter_form',
             $workspaceIds,
             $maxResult
@@ -267,9 +267,9 @@ class LogManager
         $data['range'] = $dateRangeToTextTransformer->transform($range);
         $filter = urlencode(json_encode($data));
 
-        $em = $this->container->get('doctrine.orm.entity_manager');
+        $entityManager = $this->container->get('doctrine.orm.entity_manager');
         /** @var \Claroline\CoreBundle\Repository\Log\LogRepository $repository */
-        $repository = $em->getRepository('ClarolineCoreBundle:Log\Log');
+        $repository = $entityManager->getRepository('ClarolineCoreBundle:Log\Log');
 
         $query = $repository->findFilteredLogsQuery(
             $action,
@@ -439,46 +439,5 @@ class LogManager
         }
 
         return $workspaceIds;
-    }
-
-    /**
-     * Get all existing event name with their associated label
-     *
-     * @return array
-     */
-    public function getEventList()
-    {
-        /** @var \AppKernel $kernel */
-        $kernel             = $this->container->get('kernel');
-        $suffixLogPath      = '/Event/Log';
-        $suffixLogNamespace = '\Event\Log';
-        $bundles            = $kernel->getBundles();
-        $eventList          = array();
-
-        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
-        $translator = $this->container->get('translator');
-
-        foreach ($bundles as $bundle) {
-            $bundleEventLogDirectory = $bundle->getPath() .  $suffixLogPath;
-            if (file_exists($bundleEventLogDirectory)) {
-                $finder = new Finder();
-                $finder->files()->in($bundleEventLogDirectory)->sortByName();
-                /** @var \Symfony\Component\Finder\SplFileInfo $file */
-                foreach ($finder as $file) {
-                    $classNamespace = $bundle->getNamespace() . $suffixLogNamespace . '\\' . $file->getBasename('.' . $file->getExtension());
-                    if (in_array('Claroline\CoreBundle\Event\Log\LogGenericEvent', class_parents($classNamespace))) {
-                        $reflectionClass = new \ReflectionClass($classNamespace);
-                        $classConstants = $reflectionClass->getConstants();
-                        foreach ($classConstants as $key => $classConstant) {
-                            if (preg_match('/^ACTION/', $key)) {
-                                $eventList[$classConstant] = $translator->trans(sprintf('log_%s_title', $classConstant), array(), 'log');
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return $eventList;
     }
 }

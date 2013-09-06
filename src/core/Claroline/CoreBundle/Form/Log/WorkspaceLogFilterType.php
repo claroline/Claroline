@@ -2,65 +2,62 @@
 
 namespace Claroline\CoreBundle\Form\Log;
 
+use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Manager\EventManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * @DI\Service("claroline.form.workspaceLogFilter")
+ */
 class WorkspaceLogFilterType extends AbstractType
 {
+    /** @var \Claroline\CoreBundle\Manager\EventManager */
+    private $eventManager;
+
+    /**
+     * @DI\InjectParams({
+     *     "eventManager" = @DI\Inject("claroline.event.manager")
+     * })
+     */
+    public function __construct(EventManager $eventManager)
+    {
+        $this->eventManager = $eventManager;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $actionChoices = $this->eventManager->getSortedEventsForFilter();
+
         $builder
             ->add(
                 'action', 'twolevelselect', array(
-                    'label' => 'Show actions for',
+                    'label'              => 'Show actions for',
                     'translation_domain' => 'log',
-                    'attr' => array('class' => 'input-medium'),
-                    'choices' => array(
-                        'all' => 'all',
-                        'workspace-tool-read' => 'log_workspace_read',
-                        'resource' => array(
-                            'resource-all' => 'all',
-                            'resource-create' => 'log_create',
-                            'resource-read' => 'log_read',
-                            'resource-export' => 'log_export',
-                            'resource-delete' => 'log_delete',
-                            'resource-update' => 'log_update',
-                            'resource-move' => 'log_move',
-                            'resource-copy' => 'log_copy',
-                            'resource-shortcut' => 'log_shortcut'
-                        ),
-                        'role' => array(
-                            'workspace-role-all' => 'all',
-                            'workspace-role-create' => 'log_create',
-                            'workspace-role-delete' => 'log_delete',
-                            'workspace-role-update' => 'log_update',
-                            'workspace-role-change_right' => 'log_change_right',
-                            'workspace-role-subscribe_user' => 'log_subscribe_user',
-                            'workspace-role-unsubscribe_user' => 'log_unsubscribe_user',
-                            'workspace-role-subscribe_group' => 'log_subscribe_group',
-                            'workspace-role-unsubscribe_group' => 'log_unsubscribe_group'
-                        )
-                    )
+                    'attr'               => array('class' => 'input-medium'),
+                    'choices'            => $actionChoices,
+                    'empty_value'        => 'all',
+                    'empty_data'         => null
                 )
             )
             ->add(
                 'range',
                 'daterange',
                 array(
-                    'label' => 'for period',
+                    'label'    => 'for period',
                     'required' => false,
-                    'attr' => array('class' => 'input-medium')
+                    'attr'     => array('class' => 'input-medium')
                 )
             )
             ->add(
                 'user',
                 'simpleautocomplete',
                 array(
-                    'label' => 'for user',
+                    'label'            => 'for user',
                     'entity_reference' => 'user',
-                    'required' => false,
-                    'attr' => array('class' => 'input-medium')
+                    'required'         => false,
+                    'attr'             => array('class' => 'input-medium')
                 )
             );
     }

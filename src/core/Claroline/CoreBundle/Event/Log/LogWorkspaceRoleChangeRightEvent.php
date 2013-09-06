@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Event\MandatoryEventInterface;
 
 class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements MandatoryEventInterface
 {
-    const ACTION = 'workspace-role_change_right';
+    const ACTION = 'workspace-role-change_right';
 
     /**
      * Constructor.
