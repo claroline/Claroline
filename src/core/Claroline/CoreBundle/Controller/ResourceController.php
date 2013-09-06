@@ -12,9 +12,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContext;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Manager\Exception\ResourceMoveException;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\RightsManager;
@@ -229,14 +229,20 @@ class ResourceController
     {
         $collection = new ResourceCollection($nodes);
         $collection->addAttribute('parent', $newParent);
-        $this->checkAccess('MOVE', $collection);
+
+        if (!$this->sc->isGranted('MOVE', $collection)) {
+            $response = new Response($this->translator->trans('insufficient_permissions', array(), 'error'), 403);
+            $response->headers->add(array('XXX-Claroline' => 'insufficient-permissions'));
+
+            return $response;
+        }
 
         foreach ($nodes as $node) {
             try {
                 $movedNode = $this->resourceManager->move($node, $newParent);
                 $movedNodes[] = $this->resourceManager->toArray($movedNode);
-            } catch (\Gedmo\Exception\UnexpectedValueException $e) {
-                throw new \RuntimeException('Cannot move a resource into itself');
+            } catch (ResourceMoveException $e) {
+                return new Response($this->translator->trans('invalid_move', array(), 'error'), 422);
             }
         }
 
@@ -385,7 +391,7 @@ class ResourceController
             $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
         }
 
-        return new JsonResponse(
+        $jsonResponse = new JsonResponse(
             array(
                 'path' => $path,
                 'creatableTypes' => $creatableTypes,
@@ -395,6 +401,11 @@ class ResourceController
                 'is_root' => $isRoot
             )
         );
+
+        $jsonResponse->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate');
+        $jsonResponse->headers->add(array('Expires' => '-1'));
+
+        return $jsonResponse;
     }
 
     /**
@@ -424,7 +435,13 @@ class ResourceController
         $newNodes = array();
         $collection = new ResourceCollection($nodes);
         $collection->addAttribute('parent', $parent);
-        $this->checkAccess('COPY', $collection);
+
+        if (!$this->sc->isGranted('COPY', $collection)) {
+            $response = new Response($this->translator->trans('insufficient_permissions', array(), 'error'), 403);
+            $response->headers->add(array('XXX-Claroline' => 'insufficient-permissions'));
+
+            return $response;
+        }
 
         foreach ($nodes as $node) {
             //$resource = $this->resourceManager->getResourceFromNode($node);
