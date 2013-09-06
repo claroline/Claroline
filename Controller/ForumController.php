@@ -189,7 +189,7 @@ class ForumController extends Controller
         $this->checkAccess($forum);
 
         return array(
-            'subjectId' => $subjectId,
+            'subject' => $subject,
             'form' => $form->createView(),
             '_resource' => $forum
         );
