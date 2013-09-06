@@ -373,7 +373,7 @@ my_notes: 'Mes notes'
 my_badges: 'Mes badges'
 my_portfolio: 'Mon portfolio'
 my_resources: 'Mes resources'
-my_workspace: 'Mon espace de travail'
+my_workspace: 'Espace personnel'
 my_workspaces: 'Mes espaces d''activités'
 name: Nom
 new_message_alert: 'Vous avez %count% nouveaux message(s)'
@@ -430,6 +430,7 @@ profile_form_username: 'Nom d''utilisateur'
 properties: Propriétés
 public: Publique
 public_workspaces: 'Espaces d''activités publiques'
+public_workspace_empty: 'Il n''y a aucune espace d''activité publique.'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 register: Inscription
 register_to_a_workspace: 'S''inscrire à un espace d''activités'
@@ -449,17 +450,6 @@ resource: Ressource
 resource_action_denied_message: 'L''action %action% n''a pas pu être exécutée sur la resource ''%path%'': accès refusé.'
 resource_creation_denied: 'Vous n''avez pas la permission de créer une ressource dans le répertoire ''%path'': accès refusé.'
 resource_creation_wrong_type: 'Vous n''avez pas la permission de créer un(e) %type% dans le répertoire ''%path%'': accès refusé.'
-resource_properties_form_copiable: Copier
-resource_properties_form_creationDate: 'Date de création'
-resource_properties_form_creator: Créateur
-resource_properties_form_deletable: Supprimer
-resource_properties_form_editable: Editer
-resource_properties_form_exportable: Exporter
-resource_properties_form_name: Nom
-resource_properties_form_resourceType: 'Type de ressource'
-resource_properties_form_sharable: 'Partager cette ressource'
-resource_properties_form_shareType: Redistribution
-resource_properties_form_userIcon: Icône
 resources: Ressources
 resources_most_downloaded: 'Ressources les plus téléchargés'
 resources_rights: 'Droits des ressources'
@@ -594,6 +584,7 @@ views: 'Nb vues'
 visible: Visible
 visitor: Visiteur
 warning_workspace_impersonation: 'Vous êtes connectés en tant que %role% du workspace %workspace%.'
+warning_user_impersonation: 'Vous êtes connectés en tant que %user%.'
 widget_settings: 'Paramètres des widgets'
 widget: Widget
 widget_home_tab_delete_confirm_message: 'Voulez-vous vraiment retirer ce widget de cet onglet ?'

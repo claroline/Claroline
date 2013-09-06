@@ -17,7 +17,6 @@ class AdministrationHomeTabController extends Controller
 {
     private $formFactory;
     private $homeTabManager;
-    private $widgetManager;
 
     /**
      * @DI\InjectParams({
@@ -77,7 +76,7 @@ class AdministrationHomeTabController extends Controller
 
     /**
      * @EXT\Route(
-     *     "desktop/home_tab/create/form",
+     *     "/home_tab/desktop/create/form",
      *     name="claro_admin_desktop_home_tab_create_form"
      * )
      * @EXT\Method("GET")
@@ -101,7 +100,7 @@ class AdministrationHomeTabController extends Controller
 
     /**
      * @EXT\Route(
-     *     "desktop/home_tab/create",
+     *     "/home_tab/desktop/create",
      *     name="claro_admin_desktop_home_tab_create"
      * )
      * @EXT\Method("POST")
@@ -153,7 +152,7 @@ class AdministrationHomeTabController extends Controller
 
     /**
      * @EXT\Route(
-     *     "workspace/home_tab/create/form",
+     *     "/home_tab/workspace/create/form",
      *     name="claro_admin_workspace_home_tab_create_form"
      * )
      * @EXT\Method("GET")
@@ -177,7 +176,7 @@ class AdministrationHomeTabController extends Controller
 
     /**
      * @EXT\Route(
-     *     "workspace/home_tab/create",
+     *     "/home_tab/workspace/create",
      *     name="claro_admin_workspace_home_tab_create"
      * )
      * @EXT\Method("POST")
@@ -229,7 +228,7 @@ class AdministrationHomeTabController extends Controller
 
     /**
      * @EXT\Route(
-     *     "desktop/home_tab/{homeTabConfigId}/edit/form",
+     *     "/home_tab/{homeTabConfigId}/desktop/edit/form",
      *     name="claro_admin_desktop_home_tab_edit_form"
      * )
      * @EXT\Method("GET")
@@ -265,7 +264,7 @@ class AdministrationHomeTabController extends Controller
 
     /**
      * @EXT\Route(
-     *     "workspace/home_tab/{homeTabConfigId}/edit/form",
+     *     "/home_tab/{homeTabConfigId}/workspace/edit/form",
      *     name="claro_admin_workspace_home_tab_edit_form"
      * )
      * @EXT\Method("GET")
@@ -301,7 +300,7 @@ class AdministrationHomeTabController extends Controller
 
     /**
      * @EXT\Route(
-     *     "desktop/home_tab/{homeTabConfigId}/{homeTabName}/edit",
+     *     "/home_tab/{homeTabConfigId}/desktop/{homeTabName}/edit",
      *     name="claro_admin_desktop_home_tab_edit"
      * )
      * @EXT\Method("POST")
@@ -348,7 +347,7 @@ class AdministrationHomeTabController extends Controller
 
     /**
      * @EXT\Route(
-     *     "workspace/home_tab/{homeTabConfigId}/{homeTabName}/edit",
+     *     "/home_tab/{homeTabConfigId}/workspace/{homeTabName}/edit",
      *     name="claro_admin_workspace_home_tab_edit"
      * )
      * @EXT\Method("POST")

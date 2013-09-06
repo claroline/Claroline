@@ -49,14 +49,14 @@ Make the following directories (and their children) writable from the command
 line and the webserver
 
 - *app/cache*
-- *app/logs*
 - *app/config/local*
+- *app/logs*
 - *files*
 - *templates*
 - *test*
-- *src/core/Claroline/CoreBundle/Resources/public/css/themes*
-- *src/core/Claroline/CoreBundle/Resources/views/less-generated*
+- *web/themes*
 - *web/uploads*
+- *src/core/Claroline/CoreBundle/Resources/views/less-generated*
 
 For further explanation on common permissions issues and solutions with
 Symfony2, read [this][5].

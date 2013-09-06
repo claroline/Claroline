@@ -9,7 +9,7 @@ html, body {
 }
 
 body {
-    padding:@navbar-height 0 (@navbar-height + 10px) 0;
+    padding:(@navbar-height + 20px) 0 (@navbar-height + 10px) 0;
 }
 
 #wrap {
@@ -25,6 +25,19 @@ body {
 }
 
 /************/
+/*  top_bar */
+/************/
+
+#top_bar {
+    @media (max-width: 993px) {
+        .navbar-nav .divider{
+            display:none;
+         }
+    }
+}
+
+
+/************/
 /*  Footer  */
 /************/
 
@@ -37,10 +50,12 @@ body {
     background-color: @gray-lighter;
     color: lighten(@gray, 20%);
 
-    .container p {
-        margin: 15px;
-        text-align: center;
-        max-height: 100%;
+    .container {
+        p, h1, h2, h3, h4, h5, h6 {
+            margin: 15px;
+            text-align: center;
+            max-height: 100%;
+        }
     }
 }
 
@@ -56,6 +71,7 @@ body {
     .list-group-item.disabled {
 
         padding: 8px 15px !important;
+        color:@panel-default-text;
         font-size: (@font-size-base * 1.125);
         background:@panel-default-heading-bg;
     }
@@ -78,18 +94,19 @@ body {
                 display:block;
                 padding:10px 15px;
                 color:@gray;
+
+                &:hover {
+                    text-decoration: none;
+                    background:@panel-default-heading-bg;
+                }
             }
 
-            > a:hover {
-                text-decoration: none;
-                background:@panel-default-heading-bg;
+            //link inside a div case
+            &.active > a,
+            &.active > a:hover {
+                color:#fff;
+                background:@link-color;
             }
-        }
-
-        > .list-group-item.active > a,
-        > .list-group-item.active > a:hover {
-            color:#fff;
-            background:@link-color;
         }
     }
 }
@@ -135,31 +152,28 @@ body {
 {
     position: relative;
 
-    .breadcrumb {
+    .navbar {
         margin:0;
-        .border-bottom-radius(0);
-    }
 
-    .navbar{
-        margin:0;
-    }
+        a.disabled {
+            &, &:hover {
+                color:lighten(@gray-light, 20%);
+            }
 
-    .navbar a.disabled, .navbar a.disabled:hover {
-        color:lighten(@gray-light, 20%);
+            & .caret {
+                visibility:hidden;
+            }
+        }
+
+    .nav.navbar-nav > li > a {
+            cursor:pointer;
+        }
     }
 
     .actions .btn,
     .actions select {
         height: 30px;
         margin: 0;
-    }
-
-    .navbar .nav.navbar-nav > li > a {
-        cursor:pointer;
-    }
-
-    .navbar a.disabled .caret {
-        visibility:hidden;
     }
 
     .filters {
@@ -186,6 +200,10 @@ body {
     {
         margin: 0;
         padding: 0 0 10px 0;
+
+        &.dropzone {
+            padding-bottom: 50px;
+        }
     }
 
     .results {
@@ -198,10 +216,6 @@ body {
         .checkbox-column {
             width: 18px;
         }
-    }
-
-    .resources.dropzone {
-        padding-bottom: 50px;
     }
 }
 
@@ -227,15 +241,6 @@ body {
     position:absolute;
     top:-23px;
     right:20px;
-}
-
-.node-thumbnail
-{
-    display:inline-block;
-    margin: 10px 0 0 10px;
-    padding:0;
-    vertical-align: top;
-    position:relative;
 }
 
 .pointer-hand
@@ -329,6 +334,15 @@ body {
             margin-bottom:10px;
         }
     }
+
+    .node-thumbnail
+    {
+        display:inline-block;
+        margin: 10px 0 0 10px;
+        padding:0;
+        vertical-align: top;
+        position:relative;
+    }
 }
 
 .dropzone {
@@ -406,11 +420,38 @@ div.pagination
     margin: 0 0 10px 0;
 }
 
-.panel > table tr td,
-.panel > table tr th
+.panel
 {
-    padding-right:14px !important;
-    padding-left:14px !important;
+    > table tr td,
+    > table tr th,
+    .workspace-list-pager > table tr td,
+    .workspace-list-pager > table tr th
+    {
+        padding-right:14px !important;
+        padding-left:14px !important;
+    }
+}
+
+.impersonalitation {
+    .spacer {
+        height:@navbar-height;
+    }
+
+    .navbar-fixed-top {
+        z-index:(@zindex-navbar - 1);
+        margin-top:@navbar-height;
+        background-color: darken(@brand-warning, 5%);
+
+        .navbar-nav li a
+        {
+            color:#fff;
+            font-weight:bold;
+        }
+
+        .navbar-nav.navbar-right li a {
+            font-size: 20px;
+        }
+    }
 }
 
 /**********************/
@@ -418,11 +459,12 @@ div.pagination
 /**********************/
 
 /* special grid sistem for content in home page*/
+
+@content-iteration: 8;
+@content-margin: 1.6;
+
 @media (min-width: 767px)
 {
-	@content-iteration: 8;
-    @content-margin: 1.6;
-
     .content-size (@index) when (@index >= 1) {
 
         .content-@{index} {
@@ -444,8 +486,6 @@ div.pagination
 
 @media (max-width: 767px)
 {
-	@content-iteration: 8;
-
     .content-size (@index) when (@index >= 1) {
 
         .content-@{index} {
@@ -491,8 +531,8 @@ div.pagination
 .float-right-top
 {
     position:absolute;
-    right:5px;
-    top:5px
+    right:3px;
+    top:3px
 }
 
 .relative
@@ -503,11 +543,11 @@ div.pagination
 .creator {
     .panel {
         padding:0;
-    }
 
-    .panel .form-control {
-        .border-bottom-radius(0);
-        border:none;
+        .form-control {
+            .border-bottom-radius(0);
+            border:none;
+        }
     }
 
     .navbar.navbar-static-top {
@@ -578,22 +618,9 @@ div.pagination
 /**********************/
 /** Theme Generator  **/
 /**********************/
-/*
 
-Colors no longer valid in bootstrap 3
-
-.theme-generator .theme-value input
-{
-    margin:0px;
+.bs-example {
+    border-bottom:1px solid @gray-lighter;
+    margin:0 0 20px 0;
+    padding:0 0 20px 0;
 }
-
-.theme-generator .theme-swatch span {
-    display: inline-block;
-    width: 30px;
-    height: 20px;
-    margin: -6px 0;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-}
-*/

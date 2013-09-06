@@ -28,12 +28,13 @@ This file will be parsed by the plugin installator to install your plugin and cr
             # Which are the actions we can fire from the resource manager.
             # Note that the resource manager will set some defaults actions
             #  (parameters, delete and download).
+            # The name field allow you to chose an existing action ('open', 'delete', 'edit') or
+            # to create a new one if the Claroline core couldn't find your action name.
+            # The menu_name is optional. This will append a menu for your resource name with the menu_name you picked.
+            # You can translate them in with a translation file from the resource domain.
             actions:
-                # The name of the action is the translation key that will be used to display
-                #  the action in the list of available actions for your resource.
-                #  The name will be passed to you by the Event manager.
-              - name: open
-                is_action_in_new_page: true
+                - name: actionname
+                - menu_name: new_menu (this line is optional)
 
 **/!\ it's a good practice to prefix your resources and widgets names to avoid possible conflicts with other plugins **
 
@@ -78,7 +79,7 @@ The resource manager will trigger some events (Open, Delete...) on your resource
 
 The definition of your listener must be placed in the *Resources/config/services/listeners.yml* file.
 
-You declare in this file all events that you want to catch.
+You declare in this file every events that you want to catch.
 
     services:
       claroline.listener.example_listener:
@@ -281,7 +282,26 @@ Otherwise, they'll be removed.
 There is no predefined event for this action.
 If you want to implement it, you must create some custom actions (see plugin configuration file).
 
-## Right management (They're going to change soon)
+## Right management
+
+Rights are stored in a separate entity called ResourceRights. It will define to permissions of
+a resource for a role. The permissions are stored in the mask field.
+The 5 last bits of the mask are reserved for default permissions and plugins can reserve
+the previous one for the resource type they define each time they add an item to the 'action' list in
+the config file. The mask can be decoded with the MaskDecoder entity. Each resource type will have
+a few mask decoders wich will be required to encode (or decode) the mask from a resource.
+The claroline.manager.mask_manager service will help you to translate a mask in
+an array of permission
+
+    array('delete' => true, 'open' => true, 'custom' => false)
+
+You can then use your new permission by using the isGranted function.
+This function requires an array of resource stored in the ResourceCollection class and the permission name
+you're checking.
+Note: The class name ResourceCollection should be changed for NodeCollection sooner or later.
+
+    $collection = new ResourceCollection(array($node))
+    $this->securityContext->isGranted($collection, 'custom')
 
 ### Database
 

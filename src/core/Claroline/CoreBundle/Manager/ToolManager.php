@@ -119,9 +119,14 @@ class ToolManager
 
     public function addWorkspaceTool(Tool $tool, $position, $name, AbstractWorkspace $workspace)
     {
-        $switchTool = $this->orderedToolRepo->findOneBy(array('workspace' => $workspace, 'order' => $position));
+        $switchTool = null;
 
-        if ($switchTool != null) {
+        // At the workspace creation, the workspace id is still null because we only flush once at the very end.
+        if ($workspace->getId() !== null) {
+            $switchTool = $this->orderedToolRepo->findOneBy(array('workspace' => $workspace, 'order' => $position));
+        }
+
+        if ($switchTool !== null) {
             throw new ToolPositionAlreadyOccupiedException('A tool already exists at this position');
         }
 

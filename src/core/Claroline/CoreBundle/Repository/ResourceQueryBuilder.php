@@ -80,10 +80,7 @@ class ResourceQueryBuilder
         if ($withMaxPermissions) {
             $this->leftJoinRights = true;
             $this->selectClause .=
-                ",{$eol}" .
-                "    MAX (CASE rights.canExport WHEN true THEN 1 ELSE 0 END) as can_export,{$eol}" .
-                "    MAX (CASE rights.canDelete WHEN true THEN 1 ELSE 0 END) as can_delete,{$eol}" .
-                "    MAX (CASE rights.canEdit WHEN true THEN 1 ELSE 0 END) as can_edit";
+                    ",{$eol}rights.mask";
         }
 
         $this->selectClause .= $eol;
@@ -177,7 +174,7 @@ class ResourceQueryBuilder
     public function whereCanOpen()
     {
         $this->leftJoinRights = true;
-        $this->addWhereClause('rights.canOpen = true');
+        $this->addWhereClause('BIT_AND(rights.mask, 1) = 1');
 
         return $this;
     }
@@ -344,6 +341,14 @@ class ResourceQueryBuilder
     public function whereParentIsNull()
     {
         $this->addWhereClause('resource.parent IS NULL');
+
+        return $this;
+    }
+
+    public function whereMimeTypeIs($mimeType)
+    {
+        $this->addWhereClause('resource.mimeType LIKE :mimeType');
+        $this->parameters[':mimeType'] = $mimeType;
 
         return $this;
     }

@@ -132,14 +132,14 @@
     };
 
     function showErrorMessage(message) {
-        var alertUl = $('.alert-error > ul');
+        var alertUl = $('.alert-danger > ul');
         if (alertUl.length > 0) {
             alertUl.append(
                 '<li>' + message + '</li>'
             );
         } else {
             $('.resource-manager').prepend(
-                '<div class="alert alert-error">' + '<a class="close" href="#" data-dismiss="alert">×</a>' + '<ul>' +
+                '<div class="alert alert-danger">' + '<a class="close" href="#" data-dismiss="alert">×</a>' + '<ul>' +
                 '<li>' + message + '</li>' + '</ul>' + '</div>'
             );
         }

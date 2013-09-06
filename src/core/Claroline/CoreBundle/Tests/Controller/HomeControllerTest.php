@@ -42,7 +42,8 @@ class HomeControllerTest extends MockeryTestCase
         $this->manager->shouldReceive('getContent')->once()->andReturn(array());
         $this->homeService->shouldReceive('defaultTemplate')->once();
         $this->templating->shouldReceive('render')->once();
-        $this->assertEquals(new Response, $this->controller->contentAction($this->content, $this->type, null));
+        $response = $this->controller->contentAction($this->content, $this->type, null);
+        $this->assertEquals('', $response->getContent());
     }
 
     public function testHomeAction()
@@ -64,7 +65,7 @@ class HomeControllerTest extends MockeryTestCase
     {
         $this->manager->shouldReceive('contentLayout')->once()->andReturn(array('content' => array('type' => 'home')));
         $this->templating->shouldReceive('render')->once();
-        $this->assertEquals(new Response, $this->controller->typeAction($this->type, $this->content, $this->region));
+        $this->assertEquals('', $this->controller->typeAction($this->type, $this->content, $this->region)->getContent());
     }
 
     public function testTypesAction()
@@ -89,7 +90,7 @@ class HomeControllerTest extends MockeryTestCase
         $this->security->shouldReceive('isGranted')->with('ROLE_ADMIN')->once()->andReturn(true);
         $this->homeService->shouldReceive('defaultTemplate')->once();
         $this->templating->shouldReceive('render')->once();
-        $this->assertEquals(new Response, $this->controller->creatorAction('home', 1, null, null));
+        $this->assertEquals('', $this->controller->creatorAction('home', 1, null, null)->getContent());
     }
 
     public function testSizeAction()
@@ -106,7 +107,16 @@ class HomeControllerTest extends MockeryTestCase
         $this->manager->shouldReceive('getGraph')->once()->andReturn(array('type' => 'video'));
         $this->homeService->shouldReceive('defaultTemplate')->once();
         $this->templating->shouldReceive('render')->once();
-        $this->assertEquals(new Response, $this->controller->graphAction());
+        $response = new Response();
+        $controller = $this->controller->graphAction();
+        $this->assertEquals(
+            $response->getContent(),
+            $controller->getContent()
+        );
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\Response',
+            $controller
+        );
     }
 
     public function testRegionAction()
@@ -118,21 +128,29 @@ class HomeControllerTest extends MockeryTestCase
     {
         $this->request->shouldReceive('get')->times(5);
         $this->manager->shouldReceive('createContent')->once()->andReturn('true');
-        $this->assertEquals(new Response('true'), $this->controller->createAction());
+        $response = new Response('true');
+        $controller = $this->controller->createAction();
+        $this->assertEquals($response->getContent(), $controller->getContent());
     }
 
     public function testUpdateAction()
     {
         $this->request->shouldReceive('get')->times(5);
         $this->manager->shouldReceive('updateContent')->once()->andReturn('true');
-        $this->assertEquals(new Response('true'), $this->controller->updateAction($this->content));
+        $response = $this->controller->updateAction($this->content);
+        $this->assertEquals('true', $response->getContent());
     }
 
     public function testReorderAction()
     {
         $this->manager->shouldReceive('reorderContent')->once()->andReturn('true');
+        $response = new Response('true');
         $this->assertEquals(
-            new Response('true'),
+            $response->getContent(),
+            $this->controller->reorderAction($this->type, $this->content, $this->content)->getContent()
+        );
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\Response',
             $this->controller->reorderAction($this->type, $this->content, $this->content)
         );
     }
@@ -140,19 +158,44 @@ class HomeControllerTest extends MockeryTestCase
     public function testDeleteAction()
     {
         $this->manager->shouldReceive('deleteContent')->once()->andReturn('true');
-        $this->assertEquals(new Response('true'), $this->controller->deleteAction($this->content));
+        $response = new Response('true');
+        $this->assertEquals(
+            $response->getContent(),
+            $this->controller->deleteAction($this->content)->getContent()
+        );
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\Response',
+            $this->controller->deleteAction($this->content)
+        );
     }
 
     public function testDeletetypeAction()
     {
         $this->manager->shouldReceive('deleteType')->once()->andReturn('true');
-        $this->assertEquals(new Response('true'), $this->controller->deletetypeAction($this->content));
+        $response = new Response('true');
+        $this->assertEquals(
+            $response->getContent(),
+            $this->controller->deletetypeAction($this->content)->getContent()
+        );
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\Response',
+            $this->controller->deletetypeAction($this->content)
+        );
     }
 
     public function testTypeExistAction()
     {
         $this->manager->shouldReceive('typeExist')->once()->andReturn('true');
-        $this->assertEquals(new Response('true'), $this->controller->typeExistAction('home'));
+        $response = new Response('true');
+        $this->assertEquals(
+            $response->getContent(),
+            $this->controller->typeExistAction('home')->getContent()
+        );
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\Response',
+            $this->controller->typeExistAction('home')
+        );
+
     }
 
     public function testCreateTypeAction()
@@ -164,9 +207,6 @@ class HomeControllerTest extends MockeryTestCase
     public function testContentToRegionAction()
     {
         $this->manager->shouldReceive('contentToRegion')->once()->andReturn('true');
-        $this->assertEquals(
-            new Response('true'),
-            $this->controller->contentToRegionAction($this->region, $this->content)
-        );
+        $this->assertEquals('true', $this->controller->contentToRegionAction($this->region, $this->content)->getContent());
     }
 }

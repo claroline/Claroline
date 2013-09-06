@@ -56,7 +56,7 @@
             function (data)
             {
                 var modal = document.createElement("div");
-                modal.className = "modal hide fade";
+                modal.className = "modal fade";
 
                 if (name) {
                     modal.setAttribute("id", name);
@@ -81,6 +81,11 @@
     }
 
     $("body").on("click", ".theme-generator .btn.dele", function () {
+
+        modal("admin/theme/confirm", "delete-theme", $(this).data("id"));
+    });
+
+    $("body").on("click", ".theme-generator .alert .close", function () {
 
         modal("admin/theme/confirm", "delete-theme", $(this).data("id"));
     });
@@ -119,14 +124,13 @@
         save($(this).data("id"))
         .done(
             function (data) {
-                window.open(homePath + "admin/theme/preview/" + data, "claroline-preview");
+                window.location = homePath + "admin/theme/preview/" + data;
             }
         );
     });
 
-
-    $(".picker").colorpicker().on("changeColor", function () {
-        $(".theme-swatch span", this.parentNode.parentNode).css("background", this.value);
+    $(".theme-value .btn").colorpicker().on("changeColor", function (event) {
+        $("input", this.parentNode.parentNode).val(event.color.toHex());
     });
 
 }());

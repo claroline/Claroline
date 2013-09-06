@@ -4,7 +4,26 @@
     {{ parent() }}
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css')}}'>
 {% endblock %}
-
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-briefcase',
+                'name': 'desktop'|trans({}, 'platform'),
+                'href': path('claro_desktop_open')
+            },
+            {
+                'name': 'resources'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'resources' | trans({}, 'platform') }}<span></span></h3>
+    </div>
+{% endblock %}
 {% block javascripts %}
     {{ parent() }}
     {% javascripts
@@ -27,23 +46,28 @@
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}" type="text/javascript"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager.js') }}"></script>
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'platform' }) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'resource' }) }}"></script>
     <script type="text/javascript">
         $(function() {
             Claroline.ResourceManager.initialize({
                 "parentElement": $('div.section-content .panel'),
                 "isPickerMultiSelectAllowed": true,
+                "isWorkspace": false,
                 "appPath": "{{ app.request.getBaseUrl }}",
                 "webPath": "{{ asset('') }}",
                 "resourceTypes": {
                     {% for resourceType in resourceTypes %}
                         "{{ resourceType.getName() }}": {
                             "name": "{{ resourceType.getName()|trans({}, 'resource') }}",
-                            "customActions": {
-                                {% for customAction in resourceType.getCustomActions() %}
-                                    "{{ customAction.getAction() }}": {
-                                        "name": "{{ customAction.getAction() }}",
-                                        "route": "{{ path('claro_resource_custom', {'resourceType': resourceType.getName(), 'action': customAction.getAction(), 'node': '_nodeId' }) }}",
-                                        "async": {% if customAction.isAsync() %} 1 {% else %} 0 {% endif %}
+                            "actions": {
+                                {% for action in resourceType.getActions() %}
+                                    "{{ action.getName() }}": {
+                                        "name": "{{ action.getName() }}",
+                                        "route": "{{ path('claro_resource_action', {'resourceType': resourceType.getName(), 'action': action.getName(), 'node': '_nodeId' }) }}",
+                                        "async": {% if action.isAsync() %} 1 {% else %} 0 {% endif %},
+                                        "mask": {{ action.getValue() }},
+                                        "isCustom": {% if action.isCustom() %} "yes" {% else %} "no" {% endif %},
+                                        "isForm": {% if action.isForm() %} true {% else %} false {% endif %}
                                     }
                                     {% if loop.last != true %},{% endif %}
                                 {% endfor %}
