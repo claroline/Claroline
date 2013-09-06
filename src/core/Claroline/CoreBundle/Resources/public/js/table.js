@@ -59,6 +59,23 @@
             window.location.href = route;
         });
 
+        $('#search-items-txt').keypress(function(e){
+
+            if (e.keyCode == 13) {
+                var search = document.getElementById('search-items-txt').value;
+                var route;
+
+                if (search !== '') {
+                    parameters.route.search.parameters.search = search;
+                    route = Routing.generate(parameters.route.search.route, parameters.route.search.parameters);
+                } else {
+                    route = Routing.generate(parameters.route.normal.route, parameters.route.normal.parameters);
+                }
+
+                window.location.href = route;
+            }
+        })
+
         for (var key in parameters.route.action) {
             var btnClass = '.'
                 + (parameters.route.action[key].btn === undefined ? 'action-button': parameters.route.action[key].btn);
@@ -118,4 +135,5 @@
         );
         $('body').append(html);
     }
+
 })();

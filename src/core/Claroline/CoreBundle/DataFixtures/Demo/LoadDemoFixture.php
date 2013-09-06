@@ -323,11 +323,11 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
             )
         );
         $permissions = array(
-            'canOpen' => true,
-            'canDelete' => false,
-            'canEdit' => false,
-            'canExport' => false,
-            'canCopy' => false
+            'open' => true,
+            'delete' => false,
+            'edit' => false,
+            'export' => false,
+            'copy' => false
         );
         $rightsManager = $this->container->get('claroline.manager.rights_manager');
         $rightsManager->create(

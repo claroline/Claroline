@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
@@ -31,11 +32,13 @@ class ResourceController
     private $translator;
     private $request;
     private $dispatcher;
+    private $maskManager;
 
     /**
      * @DI\InjectParams({
      *     "sc"              = @DI\Inject("security.context"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
      *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
      *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "translator"      = @DI\Inject("translator"),
@@ -51,7 +54,8 @@ class ResourceController
         RoleManager $roleManager,
         Translator $translator,
         Request $request,
-        StrictDispatcher $dispatcher
+        StrictDispatcher $dispatcher,
+        MaskManager $maskManager
     )
     {
         $this->sc = $sc;
@@ -61,6 +65,7 @@ class ResourceController
         $this->roleManager = $roleManager;
         $this->request = $request;
         $this->dispatcher = $dispatcher;
+        $this->maskManager = $maskManager;
     }
 
     /**
@@ -241,7 +246,7 @@ class ResourceController
     /**
      * @EXT\Route(
      *     "/custom/{action}/{node}",
-     *     name="claro_resource_custom",
+     *     name="claro_resource_action",
      *     options={"expose"=true}
      * )
      *
@@ -257,10 +262,18 @@ class ResourceController
      */
     public function customAction($action, ResourceNode $node)
     {
-        $resourceType = $node->getResourceType()->getName();
-        $eventName = $action . '_' . $resourceType;
+        $type = $node->getResourceType();
+        $menuAction = $this->maskManager
+            ->getMenuFromNameAndResourceType($action, $type);
+
+        if (!$menuAction) {
+            throw new \Exception("The menu {$action} doesn't exists");
+        }
+
+        $permToCheck = $this->maskManager->getByValue($type, $menuAction->getValue());
+        $eventName = $action . '_' . $type->getName();
         $collection = new ResourceCollection(array($node));
-        $this->checkAccess('OPEN', $collection);
+        $this->checkAccess($permToCheck->getName(), $collection);
 
         $event = $this->dispatcher->dispatch(
             $eventName,
@@ -268,9 +281,8 @@ class ResourceController
             array($this->resourceManager->getResourceFromNode($node))
         );
 
-        // TODO waiting for define CustomActions
-        // $logevent = new ResourceLogEvent($ri, $action);
-        // $this->get('event_dispatcher')->dispatch('log_resource', $logevent);
+        $this->dispatcher->dispatch('log', 'Log\LogResourceCustom', array($node, $action));
+
         return $event->getResponse();
     }
 
@@ -452,7 +464,7 @@ class ResourceController
         //by criteria recursive => infinte loop
         $resources = $this->resourceManager->getByCriteria($criteria, $userRoles, true);
 
-        return new JsonResponse(array('resources' => $resources, 'path' => $path));
+        return new JsonResponse(array('nodes' => $resources, 'path' => $path));
     }
 
     /**
@@ -507,7 +519,7 @@ class ResourceController
     /**
      * @EXT\Template("ClarolineCoreBundle:Resource:breadcrumbs.html.twig")
      */
-    public function renderBreadcrumbsAction(ResourceNode $node, AbstractWorkspace $workspace, $_breadcrumbs)
+    public function renderBreadcrumbsAction(ResourceNode $node, $_breadcrumbs)
     {
         $breadcrumbsAncestors = array();
 
@@ -522,6 +534,7 @@ class ResourceController
         if (count($breadcrumbsAncestors) === 0) {
             $_breadcrumbs = array();
             $ancestors = $this->resourceManager->getAncestors($node);
+            $workspace = $node->getWorkspace();
 
             foreach ($ancestors as $ancestor) {
                 $_breadcrumbs[] = $ancestor['id'];
@@ -575,7 +588,13 @@ class ResourceController
     {
         if ($node->getClass() === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
             $resource = $this->resourceManager->getResourceFromNode($node);
+            if ($resource === null) {
+                throw new \Exception('The resource was removed.');
+            }
             $node = $resource->getTarget();
+            if ($node === null) {
+                throw new \Exception('The node target was removed.');
+            }
         }
 
         return $node;

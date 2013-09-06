@@ -8,19 +8,30 @@
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
 {% endblock %}
-
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': workspace.getName(),
+                'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
+            },
+            {
+                'name': 'agenda'|trans({}, 'tools'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
 {% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'agenda'|trans({}, 'platform') }}</h3>
+    </div>
     <div class="panel-body">
-        {{
-            macros.breadcrumbs([
-                {
-                    'icon': 'icon-calendar',
-                    'name': 'agenda'|trans({}, 'platform'),
-                    'href': '#'
-                }
-            ])
-        }}
-
         <div class="row">
             <div id='calendar' class="col-md-9"></div>
             <div  id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -51,8 +62,8 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-md-3">
+
                 <h4> <u>{{'tasks'|trans({}, 'agenda') }} </u></h4>
                 {% for e in listEvents  %}
                     <div class="panel panel-default">
@@ -61,7 +72,7 @@
                         <ul>
                             <li data-event-start="{{ e.start|date("d/m/Y")}}"> {{ e.start|date("d/m/Y")}} </li>
                             <li > {{ e.end|date("d/m/Y") }} </li>
-                            <li>{{ e.description }}</li>
+                            <li>{{ e.description|raw }}</li>
                             <li class="hidden"> {{e.priority}}</li>
                             <a href="#myModal" class="update-task" role="button">modifier</a> </p>
                         </ul>
@@ -82,12 +93,12 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% render controller('ClarolineCoreBundle:Tool\\WorkspaceResourceParameters:workspaceResourceTypes')
+        {% render controller('ClarolineCoreBundle:Tool\\WorkspaceResourceParameters:initPicker')
     %}
     <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}' ></script>
     <script type='text/javascript' src='{{ asset(calendarPath ~ 'js/fullcalendar.js') }}' ></script>
     <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/calendar.js') }}'></script>
-
+    <script type='text/javascript'src='{{ asset('bundles/frontend/date.js') }}'></script>
     <script type='text/javascript'>
         $(function () {
             Claroline.Calendar.initialize('workspace');

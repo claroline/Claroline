@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\CoreBundle\Manager\IconManager;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
@@ -11,7 +12,7 @@ use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Theme\Theme;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
-use Claroline\CoreBundle\Entity\Resource\ResourceTypeCustomAction;
+use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
@@ -28,6 +29,7 @@ class DatabaseWriter
 {
     private $em;
     private $im;
+    private $mm;
     private $fileSystem;
     private $kernelRootDir;
     private $templateDir;
@@ -40,6 +42,7 @@ class DatabaseWriter
      * @DI\InjectParams({
      *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
      *     "im"             = @DI\Inject("claroline.manager.icon_manager"),
+     *     "mm"             = @DI\Inject("claroline.manager.mask_manager"),
      *     "fileSystem"     = @DI\Inject("filesystem"),
      *     "kernel"         = @DI\Inject("kernel"),
      *     "templateDir"    = @DI\Inject("%claroline.param.templates_directory%")
@@ -50,11 +53,13 @@ class DatabaseWriter
         IconManager $im,
         Filesystem $fileSystem,
         KernelInterface $kernel,
+        MaskManager $mm,
         $templateDir
     )
     {
         $this->em = $em;
         $this->im = $im;
+        $this->mm = $mm;
         $this->fileSystem = $fileSystem;
         $this->kernelRootDir = $kernel->getRootDir();
         $this->templateDir = $templateDir;
@@ -236,12 +241,35 @@ class DatabaseWriter
 
     private function persistCustomAction($actions, $resourceType)
     {
+        $decoderRepo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\MaskDecoder');
+        $existingDecoders = $decoderRepo->findBy(array('resourceType' => $resourceType));
+        $exp = count($existingDecoders);
+        $newDecoders = array();
+
         foreach ($actions as $action) {
-            $rtca = new ResourceTypeCustomAction();
-            $rtca->setAsync(!$action['is_action_in_new_page']);
-            $rtca->setAction($action['name']);
-            $rtca->setResourceType($resourceType);
-            $this->em->persist($rtca);
+            $decoder = $decoderRepo->findOneBy(array('name'=> $action['name'], 'resourceType' => $resourceType));
+
+            if (!$decoder) {
+                if (array_key_exists($action['name'], $newDecoders)) {
+                    $decoder = $newDecoders[$action['name']];
+                } else {
+                    $decoder = new \Claroline\CoreBundle\Entity\Resource\MaskDecoder();
+                    $decoder->setName($action['name']);
+                    $decoder->setResourceType($resourceType);
+                    $decoder->setValue(pow(2, $exp));
+                    $this->em->persist($decoder);
+                    $newDecoders[$action['name']] = $decoder;
+                    $exp++;
+                }
+            }
+
+            if (isset($action['menu_name'])) {
+                $rtca = new MenuAction();
+                $rtca->setName($action['menu_name']);
+                $rtca->setResourceType($resourceType);
+                $rtca->setValue($decoder->getValue());
+                $this->em->persist($rtca);
+            }
         }
     }
 
@@ -252,6 +280,7 @@ class DatabaseWriter
         $resourceType->setExportable($resource['is_exportable']);
         $resourceType->setPlugin($pluginEntity);
         $this->em->persist($resourceType);
+        $this->mm->addDefaultPerms($resourceType);
         $this->persistCustomAction($resource['actions'], $resourceType);
         $this->persistIcons($resource, $resourceType, $plugin);
 

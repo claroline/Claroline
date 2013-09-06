@@ -4,11 +4,9 @@
       class="form-vertical form-right-node"
       id="node-right-form">
     {% set roleId = resourceRights.getRole().getId() %}
-    {{ 'open'|trans({}, 'platform') }} <input type="checkbox" name="roles[{{ roleId }}][open]" type="checkbox" {% if resourceRights.canOpen() %} checked {% endif %} />
-    {{ 'copy'|trans({}, 'platform') }} <input  type="checkbox" name="roles[{{ roleId }}][copy]" type="checkbox" {% if resourceRights.canCopy() %} checked {% endif %} />
-    {{ 'edit'|trans({}, 'platform') }} <input type="checkbox" name="roles[{{ roleId }}][edit]" type="checkbox" {% if resourceRights.canEdit() %} checked {% endif %} />
-    {{ 'export'|trans({}, 'platform') }} <input type="checkbox" name="roles[{{ roleId }}][export]" type="checkbox" {% if resourceRights.canExport() %} checked {% endif %} />
-    {{ 'delete'|trans({}, 'platform') }} <input type="checkbox" name="roles[{{ roleId }}][delete]" type="checkbox" {% if resourceRights.canDelete() %} checked {% endif %} />
+    {% for decoder in resourceRights.getResourceNode().getResourceType().getMaskDecoders() %}
+         {{ decoder.getName() }}  <input type="checkbox" name="roles[{{ roleId }}][{{ decoder.getName() }}]" type="checkbox" {% if resourceRights.getMask() b-and decoder.getValue() %} checked {% endif %} />
+    {% endfor %}
     {% if isDir %}
         <br><input name="isRecursive" type="checkbox"/> {{ 'recursive_dir_action'|trans({}, 'platform')}}
         <br><a data-node-id="{{ node.getId() }}"

@@ -12,7 +12,7 @@
                 <i class="icon-cog"></i>
                 {{ 'platform_parameters'|trans({}, 'platform') }}
             </a>
-            <a class="list-group-item" href="{{ path('claro_admin_users_management') }}" id="link_add_user">
+            <a class="list-group-item{{ '/admin/user' | compareRoute(' active') }}{{ '/admin/group' | compareRoute(' active') }}" href="{{ path('claro_admin_users_management') }}" id="link_add_user">
                 <i class="icon-user"></i>
                 {{ 'users_management'|trans({}, 'platform') }}
             </a>
@@ -20,21 +20,21 @@
                 <i class="icon-certificate"></i>
                 {{ 'badges_management'|trans({}, 'platform') }}
             </a>
-            <a class="list-group-item" href="{{ path('claro_admin_registration_management') }}">
+            <a class="list-group-item{{ '/admin/registration' | compareRoute(' active') }}" href="{{ path('claro_admin_registration_management') }}">
                 <i class="icon-book"></i>
                 {{ 'registration_to_workspaces'|trans({}, 'platform') }}
             </a>
-            <a class="list-group-item{% if path('claro_admin_plugins') == app.request.requesturi %} active{% endif %}"
+            <a class="list-group-item{{ '/admin/plugin' | compareRoute(' active') }}"
                 href="{{ path('claro_admin_plugins') }}" id="link_platform_plugins">
                 <i class="icon-wrench"></i>
                 {{ 'platform_plugins'|trans({}, 'platform') }}
             </a>
-            <a class="list-group-item{% if path('claro_admin_home_tabs_configuration') == app.request.requesturi %} active{% endif %}"
+            <a class="list-group-item{{ '/admin/home_tab' | compareRoute(' active') }}"
                 href="{{ path('claro_admin_home_tabs_configuration') }}" id="link_platform_home_tabs">
                 <i class="icon-th-large"></i>
                 {{ 'home_tabs'|trans({}, 'platform') }}
             </a>
-            <a class="list-group-item {% if path('claro_admin_widgets') == app.request.requesturi %} active{% endif %}"
+            <a class="list-group-item{{ '/admin/widge' | compareRoute(' active') }}"
                 href="{{ path('claro_admin_widgets') }}" id="link_platform_widgets">
                 <i class="icon-dashboard"></i>
                 {{ 'platform_widgets'|trans({}, 'platform') }}

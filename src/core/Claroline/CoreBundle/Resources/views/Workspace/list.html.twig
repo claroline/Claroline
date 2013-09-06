@@ -36,6 +36,21 @@
 
 {% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
 
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': 'all_workspaces'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'workspaces'|trans({}, 'platform') }}</h3>

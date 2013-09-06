@@ -53,9 +53,10 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
         self::createShortcut('l_dir_2', self::get('t_link'), self::get('dir_2'), self::get('john'), self::get('dir_5'));
         self::createShortcut('l_dir_3', self::get('t_link'), self::get('dir_3'), self::get('john'), self::get('dir_2'));
         self::createShortcut('l_dir_4', self::get('t_link'), self::get('dir_4'), self::get('john'), self::get('dir_4'));
-        self::createResourceRights(self::get('ROLE_1'), self::get('dir_1'), array('open'));
-        self::createResourceRights(self::get('ROLE_1'), self::get('dir_2'), array('open'));
-        self::createResourceRights(self::get('ROLE_2'), self::get('dir_5'), array('open'));
+        self::createResourceRights(self::get('ROLE_1'), self::get('dir_1'), 1);
+        self::createResourceRights(self::get('ROLE_2'), self::get('dir_2'), 3);
+        self::createResourceRights(self::get('ROLE_1'), self::get('dir_2'), 6);
+        self::createResourceRights(self::get('ROLE_2'), self::get('dir_5'), 1);
     }
 
     public function testFindWorkspaceRoot()
@@ -90,9 +91,10 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
 
     public function testFindChildrenReturnsOpenableResources()
     {
-        $children = self::$repo->findChildren(self::get('dir_1')->getResourceNode(), array('ROLE_1'));
+        $children = self::$repo->findChildren(self::get('dir_1')->getResourceNode(), array('ROLE_1', 'ROLE_2'));
         $this->assertEquals(1, count($children));
         $this->assertEquals('dir_2', $children[0]['name']);
+        $this->assertEquals(7, $children[0]['mask']);
     }
 
     public function testFindWorkspaceRootsByUser()
@@ -164,7 +166,7 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
     public function testFindByCriteriaWithRoles()
     {
         $resources = self::$repo->findByCriteria(array(), array('ROLE_2'));
-        $this->assertEquals(1, count($resources));
+        $this->assertEquals(2, count($resources));
 
         $this->markTestIncomplete('Queries with more than one role make mysql randomly slow');
 
@@ -194,6 +196,17 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
         $this->assertEquals('file/mime', $mimeTypes[2]['mimeType']);
         $this->assertEquals(5, $mimeTypes[0]['total']);
         $this->assertEquals(1, $mimeTypes[2]['total']);
+    }
+
+    public function testFindByMimeTypeAndParent()
+    {
+        $resources = self::$repo->findByMimeTypeAndParent(
+            'directory',
+            self::get('dir_1')->getResourceNode(),
+            array(self::get('ROLE_2'))
+        );
+        $this->assertEquals(1, count($resources));
+        $this->assertEquals('dir_2', $resources[0]['name']);
     }
 
     /**
