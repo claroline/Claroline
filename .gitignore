@@ -11,12 +11,14 @@ app/build/logs
 app/build/pdepend
 app/build/tools/phpunit.xml
 app/cache/*
+app/config/bundles.ini
 app/config/local/install.yml
 app/config/local/parameters.yml
 app/config/local/plugin/*
 app/logs/*
 bin/*
 catalog.xml
+composer.lock
 files/*
 files/tmp/*
 templates/*
