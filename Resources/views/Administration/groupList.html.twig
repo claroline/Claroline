@@ -39,27 +39,21 @@
 
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block javascripts %}
-    {{ parent() }}
-    {% javascripts
-        vars=["locale"]
-        "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeGroupConfirm.html.twigjs"
-        "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
-        "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
-        filter="twig_js"
-    %}
-    <script language="javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-    <script src='{{ asset('bundles/clarolinecore/js/table.js') }}' type="text/javascript"></script>
-    <script>
-        parameters = {};
-        parameters.route = {};
-        parameters.route.action = {};
-        parameters.route.normal = {"route": "claro_admin_group_list", "parameters": {}};
-        parameters.route.search = {"route": "claro_admin_group_list_search", "parameters": {}};
-        parameters.route.action.remove = {"route": "claro_admin_multidelete_group", "parameters": {}, "type": "DELETE", "confirmTemplate": removeGroupConfirm};
-        Claroline.Table.initialize(parameters);
-    </script>
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'users_management'|trans({}, 'platform'),
+                'href': path('claro_admin_users_management')
+            },
+            {'name':'groups'|trans({}, 'platform'), 'href':''}
+        ])
+    }}
 {% endblock %}
 
 {% block section_content %}
@@ -67,24 +61,13 @@
         <h3 class="panel-title">{{ 'groups_list'|trans({}, 'platform') }}</h3>
     </div>
     <div class="panel-body">
-        {{
-        macros.breadcrumbs([
-               {
-                    'icon': 'icon-user',
-                    'name': 'users_management'|trans({}, 'platform'),
-                    'href': path('claro_admin_users_management')
-                },
-                {'name':'groups'|trans({}, 'platform'), 'href':''}
-            ])
-        }}
-
         <div class="search-bar row">
             <div class="col-md-6">
                 {{ displayControls(workspace.getId()) }}
             </div>
             <div class="col-md-6">
                  <div class="input-group">
-                    <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}">
+                    <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value={{search}}>
                     <span class="input-group-btn">
                         <button class="filter btn btn-default" type="button" id="search-button">
                             <i class="icon-search"></i>
@@ -129,4 +112,27 @@
             {{ displayControls(workspace.getId()) }}
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+        vars=["locale"]
+        "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeGroupConfirm.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
+        filter="twig_js"
+    %}
+    <script language="javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script src='{{ asset('bundles/clarolinecore/js/table.js') }}' type="text/javascript"></script>
+    <script>
+        parameters = {};
+        parameters.route = {};
+        parameters.route.action = {};
+        parameters.route.normal = {"route": "claro_admin_group_list", "parameters": {}};
+        parameters.route.search = {"route": "claro_admin_group_list_search", "parameters": {}};
+        parameters.route.action.remove = {"route": "claro_admin_multidelete_group", "parameters": {}, "type": "DELETE", "confirmTemplate": removeGroupConfirm};
+        Claroline.Table.initialize(parameters);
+    </script>
 {% endblock %}

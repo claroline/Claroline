@@ -101,30 +101,4 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
         );
         $command->run($input, $output);
     }
-
-    private function getAvailablePluginFQCNs($pluginDirectory)
-    {
-        $fqcns = array();
-        $pluginVendors = new \DirectoryIterator($pluginDirectory);
-
-        foreach ($pluginVendors as $vendor) {
-            if (!$vendor->isDir() || $vendor->isDot()) {
-                continue;
-            }
-
-            $vendorName = $vendor->getBasename();
-            $vendorPlugins = new \DirectoryIterator($vendor->getPathname());
-
-            foreach ($vendorPlugins as $plugin) {
-                if (!$plugin->isDir() || $plugin->isDot()) {
-                    continue;
-                }
-
-                $bundleName = $plugin->getBasename();
-                $fqcns[] = "{$vendorName}\\{$bundleName}\\{$vendorName}{$bundleName}";
-            }
-        }
-
-        return $fqcns;
-    }
 }

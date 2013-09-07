@@ -1,5 +1,27 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
-
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': workspace.getName(),
+                'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
+            },
+            {
+                'name': 'roles'|trans({}, 'platform'),
+                'href': path('claro_workspace_roles', {'workspace': workspace.getId()})
+            },
+            {
+                'name': 'creation'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'role_creation'|trans({}, 'platform') }}</h3>
@@ -9,19 +31,6 @@
           method="post" {{ form_enctype(form) }}
           id="workspace-role-creation">
         <div class="panel-body">
-            {{
-                macros.breadcrumbs([
-                    {
-                        'name': 'roles'|trans({}, 'platform'),
-                        'href': path('claro_workspace_roles', {'workspace': workspace.getId()})
-                    },
-                    {
-                        'name': 'creation'|trans({}, 'platform'),
-                        'href': ''
-                    }
-                ])
-            }}
-
             {{ form_widget(form) }}
         </div>
         <div class="panel-footer">

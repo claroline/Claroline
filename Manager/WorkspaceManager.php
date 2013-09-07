@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
@@ -26,6 +27,8 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class WorkspaceManager
 {
+    /** @var MaskManager */
+    private $maskManager;
     /** @var OrderedToolRepository */
     private $orderedToolRepo;
     /** @var RoleManager */
@@ -60,6 +63,7 @@ class WorkspaceManager
      *
      * @DI\InjectParams({
      *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
+     *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
@@ -72,6 +76,7 @@ class WorkspaceManager
 
     public function __construct(
         RoleManager $roleManager,
+        MaskManager $maskManager,
         ResourceManager $resourceManager,
         ToolManager $toolManager,
         StrictDispatcher $dispatcher,
@@ -81,6 +86,7 @@ class WorkspaceManager
         PagerFactory $pagerFactory
     )
     {
+        $this->maskManager = $maskManager;
         $this->roleManager = $roleManager;
         $this->resourceManager = $resourceManager;
         $this->toolManager = $toolManager;
@@ -242,9 +248,10 @@ class WorkspaceManager
         $roles = $this->roleRepo->findByWorkspace($workspace);
 
         foreach ($roles as $role) {
-            $perms = $this->resourceRightsRepo
+            $mask = $this->resourceRightsRepo
                 ->findMaximumRights(array($role->getName()), $root);
-            $perms['canCreate'] = $this->resourceRightsRepo
+            $perms = $this->maskManager->decodeMask($mask, $root->getResourceType());
+            $perms['create'] = $this->resourceRightsRepo
                 ->findCreationRights(array($role->getName()), $root);
 
             $description['root_perms'][$this->roleManager->getRoleBaseName($role->getName())] = $perms;

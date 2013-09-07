@@ -1,18 +1,16 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
-{% block javascripts %}
-    {{ parent() }}
-    {% javascripts
-        vars=["locale"]
-        "@ClarolineCoreBundle/Resources/views/Resource/roles.html.twigjs"
-        filter="twig_js"
-    %}
-        <script language="javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-    <script src="{{ asset('bundles/clarolinecore/js/tool/workspace/resource_rights_form.js') }}" type="text/javascript"></script>
-{% endblock %}
-{% block section_content %}
+{% block breadcrumb %}
     {{
         macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': workspace.getName(),
+                'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
+            },
             {
                 'icon': 'icon-cog',
                 'name': 'parameters'|trans({}, 'platform'),
@@ -24,14 +22,16 @@
             }
         ])
     }}
+{% endblock %}
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'resources_rights_management'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body">
+        <div id="data" data-workspace-id="{{ workspace.getId() }}" data-node-id="{{ node.getId() }}"></div>
 
-    <h3>{{ 'resources_rights_management'|trans({}, 'platform') }}</h3>
-    <br>
-
-    <div id="data" data-workspace-id="{{ workspace.getId() }}" data-node-id="{{ node.getId() }}"></div>
-
-    {% include 'ClarolineCoreBundle:Tool\\workspace\\resource_manager:resourcesRightsForm.html.twig' %}
-
+        {% include 'ClarolineCoreBundle:Tool\\workspace\\resource_manager:resourcesRightsForm.html.twig' %}
+    </div>
     <div id="modal-check-node-right-box" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -43,4 +43,16 @@
             </div>
         </div>
     </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+        vars=["locale"]
+        "@ClarolineCoreBundle/Resources/views/Resource/roles.html.twigjs"
+        filter="twig_js"
+    %}
+        <script language="javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script src="{{ asset('bundles/clarolinecore/js/tool/workspace/resource_rights_form.js') }}" type="text/javascript"></script>
 {% endblock %}

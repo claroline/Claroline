@@ -54,7 +54,7 @@ class AuthenticatedUserConverterTest extends MockeryTestCase
     }
 
     /**
-     * @expectedException Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @expectedException Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
     public function testApplyThrowsAnExceptionIfThereIsNoAuthenticatedUser()
     {

@@ -13,7 +13,7 @@
         </div>
         <script type="text/javascript">
             $(document).ready(function() {
-                var path = '{{ path('exporter_api', {'entity_reference': entity_reference, '_format': format}) }}';
+                var path = '{{ path('exporter_api', {'entityReference': entity_reference, '_format': format}) }}';
                 var field = $( "#{{ form.vars['id'] }}" );
                 field.addClass('form-control');
                 field.after('<a id="{{ form.vars['id'] }}_clear" class="btn btn-default input-group-addon"><span class="icon-remove"></span></a>');

@@ -3,11 +3,17 @@
 {% for node in nodes %}
 
     {% if loop.first %}
-        <li>
-            <a href="#" data-node-id="{{ node.id }}">
-                <i class="icon-folder-open-alt"></i> {{ 'resources'|trans({}, 'platform') }}
-            </a>
-        </li>
+        {% if loop.length == 1 %}
+            <li class="active">
+               {{ 'resources'|trans({}, 'platform') }}
+            </li>
+        {% else %}
+            <li>
+                <a href="#" data-node-id="{{ node.id }}">
+                    {{ 'resources'|trans({}, 'platform') }}
+                </a>
+            </li>
+        {% endif %}
     {% elseif not loop.last %}
         <li>
             <a href="#" data-node-id="{{ node.id }}">

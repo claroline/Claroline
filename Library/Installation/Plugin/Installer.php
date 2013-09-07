@@ -147,3 +147,4 @@ class Installer
         $fixtureLoader->load($plugin);
     }
 }
+

@@ -12,7 +12,16 @@ class MailType extends AbstractType
     {
         $builder
             ->add('object', 'text')
-            ->add('content', 'textarea');
+            ->add(
+                'content',
+                'textarea',
+                array(
+                    'attr' => array(
+                        'class' => 'tinymce',
+                        'data-theme' => 'simple'
+                    )
+                )
+            );
     }
 
     public function getName()
@@ -22,11 +31,6 @@ class MailType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver
-        ->setDefaults(
-            array(
-                'translation_domain' => 'platform'
-                )
-        );
+        $resolver->setDefaults(array('translation_domain' => 'platform'));
     }
 }

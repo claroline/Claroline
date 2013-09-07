@@ -52,9 +52,20 @@
 
 {% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script src='{{ asset('bundles/clarolinecore/js/workspace/list_my_workspaces.js') }}' type="text/javascript"></script>
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': 'my_workspaces'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
 {% endblock %}
 
 {% block section_content %}
@@ -134,4 +145,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src='{{ asset('bundles/clarolinecore/js/workspace/list_my_workspaces.js') }}' type="text/javascript"></script>
 {% endblock %}

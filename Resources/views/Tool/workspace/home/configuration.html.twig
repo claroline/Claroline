@@ -1,11 +1,17 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
-
-{% block section_content %}
-
+{% block breadcrumb %}
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-cog',
+                'icon': 'icon-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': workspace.getName(),
+                'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
+            },
+            {
                 'name': 'parameters'|trans({}, 'platform'),
                 'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
             },
@@ -15,16 +21,16 @@
             }
         ])
     }}
+{% endblock %}
+{% block section_content %}
 
-    <h3>{{ 'home_parameters'|trans({}, 'platform') }}</h3>
-    <br>
-
-    <ul>
-        <li>
-            <a href="{{ path('claro_workspace_widget_properties', {'workspace': workspace.getId()}) }}">
-                {{ 'widgets'|trans({}, 'platform') }}
-            </a>
-        </li>
-    </ul>
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'home_parameters'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="list-group">
+        <a class="list-group-item" href="{{ path('claro_workspace_widget_properties', {'workspace': workspace.getId()}) }}">
+            {{ 'widgets'|trans({}, 'platform') }}
+        </a>
+    </div>
 
 {% endblock %}

@@ -1,4 +1,4 @@
- {% extends 'ClarolineCoreBundle:Install:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:Install:layout.html.twig' %}
 {% block content %}
 <div class="col-md-3">
     <h3> Progression</h3>
@@ -63,7 +63,7 @@
 </div>
 
 </div>
-<div class="alert alert-error">
+<div class="alert alert-danger">
         {% for key, flash in app.session.getFlashes() %}
         {{ flash }}
         {% endfor %}

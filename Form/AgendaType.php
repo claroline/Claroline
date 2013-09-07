@@ -17,24 +17,21 @@ class AgendaType extends AbstractType
                 'start',
                 'date',
                 array(
-                    'format' => 'd-M-yyyy ',
+                    'format' => 'd-M-yyyy H:mm',
                     'widget' => 'single_text',
-                    )
+                )
             )
             ->add(
                 'end',
                 'date',
                 array(
-                    'format' => 'd-M-yyyy',
+                    'format' => 'd-M-yyyy H:mm',
                     'widget' => 'single_text',
                 )
             )
             ->add(
                 'allDay',
-                'checkbox',
-                array(
-                'label' => 'all day ?',
-                )
+                'checkbox'
             )
             ->add(
                 'description',
@@ -43,8 +40,8 @@ class AgendaType extends AbstractType
                     'attr' => array(
                         'class' => 'tinymce',
                         'data-theme' => 'simple'
-                        )
                     )
+                )
             )
             ->add(
                 'priority',
@@ -66,9 +63,7 @@ class AgendaType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver
-
-        ->setDefaults(
+        $resolver->setDefaults(
             array(
                 'title' => 'hello',
                 'priority' => '#FF0000',
@@ -76,7 +71,7 @@ class AgendaType extends AbstractType
                 'user' => new \Claroline\CoreBundle\Entity\User(),
                 'class' => 'Claroline\CoreBundle\Entity\Event',
                 'translation_domain' => 'agenda'
-                )
+            )
         )
         ->setRequired(
             array(
@@ -86,13 +81,12 @@ class AgendaType extends AbstractType
                 'user'
             )
         )
-
-         ->setOptional(
-             array(
+        ->setOptional(
+            array(
                 'start',
                 'end'
             )
-         )
+        )
         ->setAllowedtypes(
             array(
                 'title' => 'string',

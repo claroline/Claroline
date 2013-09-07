@@ -1,5 +1,21 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'registration_to_workspaces'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'registration_to_workspaces'|trans({}, 'platform') }}</h3>
@@ -78,4 +94,3 @@
     >
     </script>
 {% endblock %}
-

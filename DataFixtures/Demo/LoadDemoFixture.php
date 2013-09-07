@@ -19,9 +19,6 @@ use Claroline\CoreBundle\DataFixtures\Optional\LoadWorkspaceData;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadMessagesData;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadActivityData;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadShortcutData;
-use Claroline\CoreBundle\DataFixtures\Optional\LoadContentData;
-use Claroline\CoreBundle\DataFixtures\Optional\LoadTypeData;
-use Claroline\CoreBundle\DataFixtures\Optional\LoadRegionData;
 use Claroline\ForumBundle\Tests\DataFixtures\LoadForumData;
 
 class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
@@ -297,7 +294,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         );
     }
 
-    private function createShortcuts()
+     private function createShortcuts()
     {
         $collaboratorRole = $this->manager->getRepository('ClarolineCoreBundle:Role')
             ->findCollaboratorRole($this->getReference('user/Jane Doe')->getPersonalWorkspace());
@@ -323,11 +320,11 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
             )
         );
         $permissions = array(
-            'canOpen' => true,
-            'canDelete' => false,
-            'canEdit' => false,
-            'canExport' => false,
-            'canCopy' => false
+            'open' => true,
+            'delete' => false,
+            'edit' => false,
+            'export' => false,
+            'copy' => false
         );
         $rightsManager = $this->container->get('claroline.manager.rights_manager');
         $rightsManager->create(

@@ -1,18 +1,57 @@
 {% extends 'ClarolineCoreBundle:Administration:layout.html.twig' %}
-
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'Theme Generator'|trans({}, 'theme'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
 {% block section_content %}
-
+    <div id="homePath" class="hide">{{ path("claro_index") }}</div>
     <div class="panel-heading">
         <h3 class="panel-title">{{ "Theme Generator" | trans({}, "theme") }}</h3>
     </div>
-    <div class="panel-body">
+    <div class="theme-generator panel-body">
         {% for theme in themes %}
-            <a href="{{ path("claroline_admin_theme_edit", {"id": theme.id }) }}" class="col-md-4 label">
-                <h5>&nbsp;&nbsp;&nbsp;<i class="icon-edit"></i> {{ theme.name }}&nbsp;&nbsp;&nbsp;</h5>
-            </a>
+            <div class="col-md-6">
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-id="{{ theme.id }}" aria-hidden="true">&times;</button>
+                    <strong>
+                        <a class="alert-link" href="{{ path("claroline_admin_theme_edit", {"id": theme.id }) }}">
+                            <i class="icon-edit"></i> {{ theme.name }}
+                        </a>
+                    </strong>
+                </div>
+            </div>
         {% endfor %}
-        <a href="{{ path("claroline_admin_theme_edit") }}" class="col-md-4 label label-info">
-            <h5>&nbsp;&nbsp;&nbsp;<i class="icon-plus-sign"></i> {{ "Create New Theme" | trans({}, "theme") }}&nbsp;&nbsp;&nbsp;</h5>
-        </a>
+        <div class="col-md-6">
+            <div class="alert alert-info">
+                <strong>
+                    <a class="alert-link" href="{{ path("claroline_admin_theme_edit") }}">
+                        <i class="icon-plus-sign"></i> {{ "Create New Theme" | trans({}, "theme") }}
+                    </a>
+                </strong>
+            </div>
+        </div>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    {% javascripts debug=false output='vendor/bootstrap-colorpicker/js/bootstrap-colorpicker.js'
+    '../vendor/xaguilars/bootstrap-colorpicker/js/bootstrap-colorpicker.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/theme/theme.js') }}"></script>
+
 {% endblock %}

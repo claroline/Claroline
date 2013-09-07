@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\HttpFoundation\Request;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -27,26 +28,30 @@ class ProfileController extends Controller
     private $roleManager;
     private $eventDispatcher;
     private $security;
+    private $request;
 
     /**
      * @DI\InjectParams({
      *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "security"           = @DI\Inject("security.context")
+     *     "security"           = @DI\Inject("security.context"),
+     *     "request"            = @DI\Inject("request")
      * })
      */
     public function __construct(
         UserManager $userManager,
         RoleManager $roleManager,
         StrictDispatcher $eventDispatcher,
-        SecurityContextInterface $security
+        SecurityContextInterface $security,
+        Request $request
     )
     {
         $this->userManager = $userManager;
         $this->roleManager = $roleManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->security = $security;
+        $this->request = $request;
     }
 
     private function isInRoles($role, $roles)
@@ -62,7 +67,7 @@ class ProfileController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/form",
+     *     "/form/{user}",
      *     name="claro_profile_form"
      * )
      *
@@ -72,18 +77,21 @@ class ProfileController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function formAction()
+    public function formAction(User $user)
     {
-        $user = $this->security->getToken()->getUser();
+        if ($user !== $this->security->getToken()->getUser() && !$this->security->isGranted('ROLE_ADMIN')) {
+            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+        }
+
         $roles = $this->roleManager->getPlatformRoles($user);
         $form = $this->createForm(new ProfileType($roles), $user);
 
-        return array('profile_form' => $form->createView());
+        return array('profile_form' => $form->createView(), 'user' => $user);
     }
 
     /**
      * @EXT\Route(
-     *     "/update",
+     *     "/update/{user}",
      *     name="claro_profile_update"
      * )
      *
@@ -93,14 +101,16 @@ class ProfileController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function updateAction()
+    public function updateAction(User $user)
     {
-        $request = $this->get('request');
-        $user = $this->security->getToken()->getUser();
+        if ($user !== $this->security->getToken()->getUser() && !$this->security->isGranted('ROLE_ADMIN')) {
+            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+        }
+
         $roles = $this->roleManager->getPlatformRoles($user);
 
         $form = $this->get('form.factory')->create(new ProfileType($roles), $user);
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $user = $form->getData();
@@ -140,7 +150,7 @@ class ProfileController extends Controller
                 array($user, $changeSet)
             );
 
-            return $this->redirect($this->generateUrl('claro_profile_form'));
+            return $this->redirect($this->generateUrl('claro_profile_form', array('user' => $user->getId())));
         }
 
         return array('profile_form' => $form->createView());

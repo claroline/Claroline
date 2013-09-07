@@ -23,9 +23,11 @@
                     this.el.className = 'picker resource-manager';
 
                     $(this.el).html(Twig.render(ModalWindow, {
+                        'modalId': 'modal-picker',
                         'header' : 'Resource Picker',
                         'body': ''
                     }));
+                    $('body').append($(this.el));
                     this.wrapper = $('.modal-body', this.el);
                 } else {
                     this.el.className = 'main resource-manager';
@@ -96,8 +98,7 @@
             }
         }),
         Breadcrumbs: Backbone.View.extend({
-            tagName: 'ul',
-            className: 'breadcrumb',
+            tagName: 'div',
             events: {
                 'click a': function (event) {
                     event.preventDefault();
@@ -112,9 +113,28 @@
                 this.dispatcher = dispatcher;
             },
             render: function (nodes) {
-                $(this.el).html(Twig.render(ResourceManagerBreadcrumbs, {
-                    'nodes': nodes
-                }));
+                if (!this.parameters.isPickerMode) {
+                    //determine if is workspace mode and remove a part of elements in the breadcrumb
+                    if (this.parameters.isWorkspace) {
+                        $('ul.breadcrumb li').slice(2).remove();
+                    } else {
+                        $('ul.breadcrumb li:not(:first)').remove();
+                    }
+
+                    $('ul.breadcrumb').append(Twig.render(ResourceManagerBreadcrumbs, {'nodes': nodes}));
+
+                    // add current folder to the title of the panel
+                    if (nodes.length > 1) {
+                        $('.panel .panel-heading .panel-title span').html(' - ' + $('ul.breadcrumb li').last().text());
+                    } else {
+                        $('.panel .panel-heading .panel-title span').html('');
+                    }
+                } else {
+                    $(this.el).addClass('breadcrumb');
+                    $(this.el).html(Twig.render(ResourceManagerBreadcrumbs, {
+                        'nodes': nodes
+                    }));
+                }
             }
         }),
         Actions: Backbone.View.extend({
@@ -437,7 +457,7 @@
                     'node': node,
                     'isSelectionAllowed': isSelectionAllowed,
                     'hasMenu': hasMenu,
-                    'customActions': this.parameters.resourceTypes[node.type].customActions || {},
+                    'actions': this.parameters.resourceTypes[node.type].actions || {},
                     'webRoot': this.parameters.webPath
                 }));
             }
@@ -460,7 +480,7 @@
             addThumbnails: function (nodes, successHandler) {
                 _.each(nodes, function (node) {
                     var thumbnail = new manager.Views.Thumbnail(this.parameters, this.dispatcher);
-                    thumbnail.render(node, this.directoryId !== 0 && !this.parameters.isPickerMode, true);
+                    thumbnail.render(node, this.directoryId !== '0' && !this.parameters.isPickerMode, true);
                     this.$el.append(thumbnail.$el);
                 }, this);
 
@@ -536,8 +556,8 @@
                         var thumbnail = new manager.Views.Thumbnail(this.parameters, this.dispatcher);
                         thumbnail.render(
                             node,
-                            directoryId !== 0 || !this.parameters.isPickerMode,
-                            directoryId !== 0 && !this.parameters.isPickerMode
+                            directoryId !== '0' || !this.parameters.isPickerMode,
+                            directoryId !== '0' && !this.parameters.isPickerMode
                         );
                         $(this.el).append(thumbnail.$el);
                     }, this);
@@ -595,6 +615,7 @@
                             $('#role-list').append(Twig.render(resourceRightsRoles,
                                 {'workspaces': workspaces, 'nodeId': this.targetNodeId})
                             );
+                            $('#role-search-text').val(search);
                         }
                     });
                 },
@@ -669,16 +690,23 @@
                 this.on('close', this.close, this);
             },
             close: function () {
-                $('.modal', this.el).modal('hide');
+                $('#modal-form', this.el).modal('hide');
             },
             render: function (form, targetNodeId, eventOnSubmit) {
                 this.targetNodeId = targetNodeId;
                 this.eventOnSubmit = eventOnSubmit;
                 form = form.replace('_nodeId', targetNodeId);
-                $(this.el).html(Twig.render(ModalWindow, {
-                    'body': form
-                }));
-                $('.modal', this.el).modal('show');
+                if ($('#modal-form').attr('id') === undefined) {
+                    $(this.el).html(Twig.render(ModalWindow, {
+                        'body': form,
+                        'modalId': 'modal-form'
+                    }));
+                    $('#modal-form', this.el).modal('show');
+                } else {
+                    $('.modal-body', this.el).html(form);
+                    $('#modal-form', this.el).modal('show');
+                }
+
             }
         })
     };
@@ -828,7 +856,7 @@
             }
         },
         displayResources: function (directoryId, view, searchParameters) {
-            directoryId = directoryId || 0;
+            directoryId = directoryId || '0';
             view = view && view === 'picker' ? view : 'main';
             var isSearchMode = searchParameters ? true : false;
 
@@ -844,8 +872,8 @@
                         data.creatableTypes = {};
                     }
 
-                    if (this.parameters.directoryId === 0 || view === 'picker') {
-                        data.path.unshift({id: 0});
+                    if (this.parameters.directoryId === '0' || view === 'picker') {
+                        data.path.unshift({id: '0'});
                     }
 
                     this.views[view].render(
@@ -1071,10 +1099,12 @@
         },
         open: function (resourceType, nodeId, directoryHistory) {
             var _path = '';
+            var firstelement = true;
             for (var i = 0; i < directoryHistory.length; i++) {
-                if (directoryHistory[i].id !== 0) {
-                    _path += i === 0 ? '?' : '&';
+                if (directoryHistory[i].id !== '0') {
+                    _path += firstelement ? '?' : '&';
                     _path += '_breadcrumbs[]=' + directoryHistory[i].id;
+                    firstelement = false;
                 }
             }
 
@@ -1116,7 +1146,7 @@
         },
         picker: function (action, callback) {
             if (action === 'open' && !this.views.picker.isAppended) {
-                this.displayResources(0, 'picker');
+                this.displayResources('0', 'picker');
             }
 
             if (!this.parameters.isPickerOnly) {
@@ -1127,7 +1157,7 @@
                 this.views.picker.subViews.actions.callback = callback;
             }
 
-            $('.modal', this.views.picker.$el).modal(action === 'open' ? 'show' : 'hide');
+            $("#modal-picker").modal(action === 'open' ? 'show' : 'hide');
         }
     };
 
@@ -1154,7 +1184,7 @@
      */
     manager.initialize = function (parameters) {
         parameters = parameters || {};
-        parameters.directoryId = parameters.directoryId || 0;
+        parameters.directoryId = parameters.directoryId || '0';
         parameters.directoryHistory = parameters.directoryHistory || [];
         parameters.parentElement = parameters.parentElement || $('body');
         parameters.resourceTypes = parameters.resourceTypes || {};
