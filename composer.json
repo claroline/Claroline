@@ -9,17 +9,7 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "sensio/distribution-bundle": "2.3.*",
         "claroline/bundle-recorder": "dev-master",
-        "claroline/core-bundle": "dev-master",
-
-        "claroline/activity-tool-bundle": "dev-master",
-        "claroline/example-bundle": "dev-master",
-        "claroline/forum-bundle": "dev-master",
-        "claroline/image-player-bundle": "dev-master",
-        "claroline/pdf-player-bundle": "dev-master",
-        "claroline/rss-reader-bundle": "dev-master",
-        "claroline/scorm-bundle": "dev-master",
-        "claroline/site-bundle": "dev-master",
-        "claroline/video-player-bundle": "dev-master"
+        "claroline/core-bundle": "dev-master"
     },
     "repositories": [
         {
@@ -56,8 +46,17 @@
         }
     ],
     "scripts": {
+        "pre-update-cmd": [
+            "Claroline\\BundleRecorder\\ScriptHandler::preUpdateCommand"
+        ],
+        "pre-package-install": [
+            "Claroline\\BundleRecorder\\ScriptHandler::prePackageInstall"
+        ],
         "post-package-install": [
             "Claroline\\BundleRecorder\\ScriptHandler::postPackageInstall"
+        ],
+        "pre-package-uninstall": [
+            "Claroline\\BundleRecorder\\ScriptHandler::prePackageUninstall"
         ],
         "post-package-uninstall": [
             "Claroline\\BundleRecorder\\ScriptHandler::postPackageUninstall"
