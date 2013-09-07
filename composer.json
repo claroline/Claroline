@@ -28,6 +28,7 @@
         "jms/security-extra-bundle": "dev-master",
         "jms/di-extra-bundle": "dev-master",
         "stof/doctrine-extensions-bundle": "dev-master",
+        "gedmo/doctrine-extensions": "~2.3.1", 
         "doctrine/doctrine-fixtures-bundle": "dev-master",
         "friendsofsymfony/jsrouting-bundle": "dev-master",
         "stfalcon/tinymce-bundle": "dev-master",
