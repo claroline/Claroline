@@ -3,7 +3,7 @@
 {% set themePath = 'themes/' ~ config.getParameter('theme') %}
 {% block stylesheets %}
     <link rel='stylesheet' type='text/css' href='{{ asset(themePath ~ '/bootstrap.css') }}'/>
-    <link rel='stylesheet' type='text/css' href='{{ asset('vendor/fortawesome/fontawesome/font-awesome.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset('vendor/fortawesome/font-awesome/font-awesome.css') }}'/>
 {% endblock %}
 
 {% block favicon %}
