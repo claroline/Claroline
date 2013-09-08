@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Converter;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
@@ -49,7 +50,7 @@ class AuthenticatedUserConverter implements ParamConverterInterface
             return true;
         }
 
-        throw new AccessDeniedHttpException();
+        throw new AccessDeniedException();
     }
 
     /**
