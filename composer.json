@@ -11,6 +11,11 @@
         "claroline/bundle-recorder": "dev-master",
         "claroline/core-bundle": "dev-master"
     },
+    "require-dev": {
+        "mockery/mockery": "dev-master@dev",
+        "hamcrest/hamcrest": "1.1.0",
+        "mikey179/vfsStream": "dev-master"
+    },
     "repositories": [
         {
             "type": "package",
@@ -78,7 +83,8 @@
     },
     "config": {
         "bin-dir": "bin",
-        "github-protocols": ["https", "http", "git"]
+        "github-protocols": ["https", "http", "git"],
+        "cache-files-ttl": "0"
     },
     "minimum-stability": "dev",
     "extra": {
