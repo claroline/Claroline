@@ -17,6 +17,7 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
+        $this->markTestSkipped('This test case must be refactored');
         $this->plugin = $this->getMock('Claroline\CoreBundle\Library\PluginBundle');
         $this->loader = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\Loader')
             ->disableOriginalConstructor()

@@ -15,6 +15,7 @@ class FixtureLoaderTest extends MockeryTestCase
 
     protected function setUp()
     {
+        $this->markTestSkipped('This test case should be moved to install bundle');
         parent::setUp();
         $this->bundle = $this->mock('Symfony\Component\HttpKernel\Bundle\Bundle');
         $this->baseLoader = $this->mock('Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader');
