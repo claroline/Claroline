@@ -3,12 +3,24 @@
 namespace Claroline\CoreBundle\Library;
 
 use Claroline\InstallationBundle\Bundle\InstallableBundle;
+use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
+use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 /**
  * Base class of all the plugin bundles on the claroline platform.
  */
-abstract class PluginBundle extends InstallableBundle
+abstract class PluginBundle extends InstallableBundle implements AutoConfigurableInterface
 {
+    public function supports($environment)
+    {
+        return true;
+    }
+
+    public function getConfiguration($environment)
+    {
+        return new ConfigurationBuilder();
+    }
+
     final public function getVendorName()
     {
         $namespaceParts = explode('\\', $this->getNamespace());
