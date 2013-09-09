@@ -33,6 +33,6 @@ class LogGroupUpdateEvent extends LogGenericEvent implements MandatoryEventInter
             $receiverGroup
         );
 
-        $this->isDisplayedInAdmin(true);
+        $this->setIsDisplayedInAdmin(true);
     }
 }

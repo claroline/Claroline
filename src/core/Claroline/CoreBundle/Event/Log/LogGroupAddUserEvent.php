@@ -23,6 +23,6 @@ class LogGroupAddUserEvent extends LogGenericEvent
             $receiverGroup
         );
 
-        $this->isDisplayedInAdmin(true);
+        $this->setIsDisplayedInAdmin(true);
     }
 }

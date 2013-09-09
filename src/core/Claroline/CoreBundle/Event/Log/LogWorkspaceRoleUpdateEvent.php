@@ -37,6 +37,6 @@ class LogWorkspaceRoleUpdateEvent extends LogGenericEvent
             $role->getWorkspace()
         );
 
-        $this->isDisplayedInWorkspace(true);
+        $this->setIsDisplayedInWorkspace(true);
     }
 }

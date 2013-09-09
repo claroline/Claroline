@@ -150,7 +150,7 @@ class LogGenericEvent extends Event
      *
      * @return LogGenericEvent
      */
-    public function isDisplayedInAdmin($isDisplayedInAdmin)
+    public function setIsDisplayedInAdmin($isDisplayedInAdmin)
     {
         $this->isDisplayedInAdmin = $isDisplayedInAdmin;
 
@@ -162,12 +162,22 @@ class LogGenericEvent extends Event
      *
      * @return LogGenericEvent
      */
-    public function isDisplayedInWorkspace($isDisplayedInWorkspace)
+    public function setIsDisplayedInWorkspace($isDisplayedInWorkspace)
     {
         $this->isDisplayedInWorkspace = $isDisplayedInWorkspace;
 
         return $this;
     }
 
+    /**
+     * @param string $restriction
+     *
+     * @return bool
+     */
+    public function isDisplayedByRestriction($restriction)
+    {
+        $isDisplayedByRestriction = false;
 
+        return $isDisplayedByRestriction;
+    }
 }

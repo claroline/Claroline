@@ -33,6 +33,6 @@ class LogUserUpdateEvent extends LogGenericEvent implements MandatoryEventInterf
             $receiver
         );
 
-        $this->isDisplayedInAdmin(true);
+        $this->setIsDisplayedInAdmin(true);
     }
 }
