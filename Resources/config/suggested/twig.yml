@@ -11,4 +11,3 @@ twig:
             - 'ClarolineCoreBundle:Form:simple_auto_complete.html.twig'
             - 'ClarolineCoreBundle:Form:button_group_select.html.twig'
             - 'ClarolineCoreBundle::form_theme.html.twig'
-            - 'ZenstruckFormBundle:Twitter:form_bootstrap3_layout.html.twig'
