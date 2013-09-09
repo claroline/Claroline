@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Event\Event\Log;
+namespace Claroline\CoreBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 

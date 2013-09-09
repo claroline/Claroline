@@ -2,63 +2,62 @@
 
 namespace Claroline\CoreBundle\Form\Log;
 
+use Claroline\CoreBundle\Manager\EventManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * @DI\Service("claroline.form.adminLogFilter")
+ */
 class AdminLogFilterType extends AbstractType
 {
+    /** @var \Claroline\CoreBundle\Manager\EventManager */
+    private $eventManager;
+
+    /**
+     * @DI\InjectParams({
+     *     "eventManager" = @DI\Inject("claroline.event.manager")
+     * })
+     */
+    public function __construct(EventManager $eventManager)
+    {
+        $this->eventManager = $eventManager;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $actionChoices = $this->eventManager->getSortedEventsForFilter();
+
         $builder
             ->add(
                 'action', 'twolevelselect', array(
-                    'label' => 'Show actions for',
+                    'label'              => 'Show actions for',
                     'translation_domain' => 'log',
-                    'attr' => array('class' => 'input-medium'),
-                    'choices' => array(
-                        'all' => 'all',
-                        'group' => array(
-                            'group_all' => 'all',
-                            'group_create' => 'log_create',
-                            'group_delete' => 'log_delete',
-                            'group_update' => 'log_update',
-                            'group_add_user' => 'log_add_user',
-                            'group_remove_user' => 'log_remove_user'
-                        ),
-                        'user' => array(
-                            'user_all' => 'all',
-                            'user_create' => 'log_create',
-                            'user_delete' => 'log_delete',
-                            'user_update' => 'log_update',
-                            'user_login' => 'log_login'
-                        ),
-                        'workspace' => array(
-                            'workspace_all' => 'all',
-                            'workspace_create' => 'log_create',
-                            'workspace_delete' => 'log_delete',
-                            'workspace_update' => 'log_update'
-                        )
-                    )
+                    'attr'               => array('class' => 'input-sm'),
+                    'choices'            => $actionChoices,
+                    'empty_value'        => 'all',
+                    'empty_data'         => null
                 )
             )
             ->add(
                 'range',
                 'daterange',
                 array(
-                    'label' => 'for period',
+                    'label'    => 'for period',
                     'required' => false,
-                    'attr' => array('class' => 'input-medium')
+                    'attr'     => array('class' => 'input-sm')
                 )
             )
             ->add(
                 'user',
                 'simpleautocomplete',
                 array(
-                    'label' => 'for user',
+                    'label'            => 'for user',
                     'entity_reference' => 'user',
-                    'required' => false,
-                    'attr' => array('class' => 'input-medium')
+                    'required'         => false,
+                    'attr'             => array('class' => 'input-sm')
                 )
             );
     }
