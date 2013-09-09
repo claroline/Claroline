@@ -3,14 +3,22 @@
 namespace Claroline\ForumBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 /**
  * Bundle class.
  */
 class ClarolineForumBundle extends PluginBundle
 {
-    public function getRoutingPrefix()
+    public function getConfiguration($environment)
     {
-        return 'forum';
+        $config = new ConfigurationBuilder();
+
+        return $config->addRoutingResource($routingFile, null, 'forum');
+    }
+
+    public function getRequiredFixturesDirectory($environment)
+    {
+        return __DIR__ . '/DataFixtures';
     }
 }
