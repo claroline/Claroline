@@ -42,28 +42,34 @@
 
 {% block section_content %}
 
-<h1>{{ 'question creation' | trans }}</h1>
+    <div class="panel-heading" style="padding-left: 50px;">
+        <h1>{{ 'question creation' | trans }}</h1>
+    </div><br/>
 
-<a href="{{ path('ujm_question_index') }}" >
-    <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
-</a><br/><br/>
+    <a href="{{ path('ujm_question_index') }}" style="padding-left: 50px;">
+        <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
+    </a>
 
-<form name="form_type_question">
-<label for="menu_type_question">{{ 'kind of question' | trans }} ?</label>
-<select name="menu_type_question" id="menu_type_question" onchange="cherche_type('{{ 'warning_change_type_q' | trans }} ?', '{{ exoID }}', '{{ path('ujm_question_display_form_type')}}' )">
-    <option selected="selected">{{ 'choose_type' | trans }}</option>
-    <option>{{ 'hole' | trans }}</option>
-    <option>{{ 'qcm' | trans }}</option>
-    <option>{{ 'graphic' | trans }}</option>
-    <option>{{ 'open' | trans }}</option>
-</select>
-</form>
+    <hr/>
 
-<div id="formulaire_interactions">
-    {% if formWithError is defined %}
-        {{ formWithError | raw }}
-    {% endif %}
-</div>
+    <form name="form_type_question" style="padding-left: 50px;">
+        <label for="menu_type_question">{{ 'kind of question' | trans }} ?&nbsp;&nbsp;</label>
+        <select name="menu_type_question" id="menu_type_question" onchange="cherche_type('{{ 'warning_change_type_q' | trans }} ?', '{{ exoID }}', '{{ path('ujm_question_display_form_type')}}' )">
+            <option selected="selected">{{ 'choose_type' | trans }}</option>
+            <option>{{ 'hole' | trans }}</option>
+            <option>{{ 'qcm' | trans }}</option>
+            <option>{{ 'graphic' | trans }}</option>
+            <option>{{ 'open' | trans }}</option>
+        </select>
+    </form>
+
+    <br/>
+
+    <div id="formulaire_interactions">
+        {% if formWithError is defined %}
+            {{ formWithError | raw }}
+        {% endif %}
+    </div>
 {% endblock %}
 
 {% block javascripts %}

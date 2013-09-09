@@ -33,120 +33,139 @@
  # knowledge of the CeCILL license and that you accept its terms.
 #}
 
- <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+<link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 
-<h1>{{ 'interactionGraphic creation' | trans }}</h1>
+<fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
+    <legend style="border: transparent hidden 0; width: 580px; margin: 0; color: skyblue;">
+        <h1>&nbsp;{{ 'interactionGraphic creation' | trans }}</h1>
+    </legend>
 
-<form class="well label_bold" name="InterGraphForm" id="InterGraphForm" action="{{ path('ujm_interactiongraphic_create') }}" method="post" {{ form_enctype(form) }}>
+    <form name="InterGraphForm" id="InterGraphForm" action="{{ path('ujm_interactiongraphic_create') }}" method="post" {{ form_enctype(form) }}>
 
 
-{# ------------------------------------------------- Champs questions ---------------------------------------------------------------------------- #}
+    {# ------------------------------------------------- Champs questions ---------------------------------------------------------------------------- #}
 
-    {% include "UJMExoBundle:Partial:question.html.twig" %}
+        {% include "UJMExoBundle:Partial:question.html.twig" %}
 
-    <p>
-        <ul style="margin-left: 0; list-style-type: none;">
-            <li style="float: left;">
-    {# ------------------------------------------------- Champs Liste images ---------------------------------------------------------------------------- #}
-                {{ form_row(form.document, { 'attr': {'style': 'float left;'} }) }}
-            </li>
-            <li style="float: left;  margin-left: 70px; margin-top: 4%;">
-    {# ------------------------------------------------- Lien nouvelle image ---------------------------------------------------------------------------- #}
+        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+            <legend style="border: transparent hidden 0; width: 120px; margin: 0; color: lightsteelblue;">
+                &nbsp;&nbsp;{{ 'response' | trans }} :
+            </legend>
+
+            <fieldset style="border: #ccf dotted thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                <legend style="border: transparent hidden 0; width: 100px; margin: 0; color: lightsteelblue;">
+                    &nbsp;&nbsp;{{ 'image' | trans }} :
+                </legend>
+
+                {{ 'choose' | trans }} :&nbsp;&nbsp;{{ form_widget(form.document, { 'attr': {'style': 'float left; width: 200px;'} }) }}
+
+                <input id="LoadImg" type="button" value="{{ 'select' | trans }}" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}',
+                    '{{ asset('bundles') }}', {{ form.document.vars.id }});" class="btn btn-primary" style="margin-left: 20px;"/>
+
+
+                <hr style=" height: 1px; color: powderblue; background-color: powderblue;"/>
+
                 <a href="{{ path('ujm_interactiongraphic_SavePic') }}" onclick="window.open(this.href, 'NewPic',
-                'height=167, width=287, top=300, left=570, toolbar=no, menubar=no, location=no, resizable=yes, scrollbars=no, status=no'
-                ); return false;">{{ "add a new picture" | trans }} ...</a>
-            </li>
-        </ul>
-    </p>
-    <br/><br/><br/><br/><p>
+                    'height=167, width=287, top=300, left=570, toolbar=no, menubar=no, location=no, resizable=yes, scrollbars=no, status=no'
+                    ); return false;">
+                        {{ "add a new picture" | trans }} ...
+                </a>
 
-{# ------------------------------------------------- Boutton affichage image ---------------------------------------------------------------------------- #}
+        {# ------------------------------------------------- Zone affichage image ---------------------------------------------------------------------------- #}
 
-    <p><input id="LoadImg" type="button" value="{{ 'select' | trans }}" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}',
-            '{{ asset('bundles') }}', {{ form.document.vars.id }});"/></p>
+                <hr style=" height: 1px; color: teal; background-color: teal"/>
 
-{# ------------------------------------------------- Zone affichage image ---------------------------------------------------------------------------- #}
+                <a onclick="DisplayInstruction();" id="Order"
+                   onmouseover="document.body.style.cursor = 'pointer';"
+                   onmouseout="document.body.style.cursor = 'default';"
+                >{{ 'show Instructions' | trans }}</a>
 
-    <a onclick="DisplayInstruction();" id="Order"
-       onmouseover="document.body.style.cursor = 'pointer';"
-       onmouseout="document.body.style.cursor = 'default';"
-    >{{ 'show Instructions' | trans }}</a>
+                <a onclick="HideInstruction();" id="hide"
+                   onmouseover="document.body.style.cursor = 'pointer';"
+                   onmouseout="document.body.style.cursor = 'default';"
+                >{{ 'hide Instructions' | trans }}</a>
 
-    <a onclick="HideInstruction();" id="hide"
-       onmouseover="document.body.style.cursor = 'pointer';"
-       onmouseout="document.body.style.cursor = 'default';"
-    >{{ 'hide Instructions' | trans }}</a>
+                <div id="Instructions" style="border: #00CCFF dotted thin; margin: 20px; padding: 10px;">
+                    ~ {{ 'resizeZone' | trans }}<hr/>~ {{ 'selectZone' | trans }}<hr/>
+                    ~ {{ 'placeZone' | trans }}<hr/>~ {{ 'resize' | trans }}<hr/>
+                    ~ {{ 'erase' | trans }}<hr/>~ {{ 'pointInstruction' | trans }}
+                </div><br/>
 
-    <div id="Instructions" style="border: #00CCFF dotted thin; margin: 20px; padding: 10px;">
-        ~ {{ 'resizeZone' | trans }}<hr/>~ {{ 'selectZone' | trans }}<hr/>
-        ~ {{ 'placeZone' | trans }}<hr/>~ {{ 'resize' | trans }}<hr/>
-        ~ {{ 'erase' | trans }}<hr/>~ {{ 'pointInstruction' | trans }}
-    </div><br/>
+                {{ 'selected Image' | trans }} :<br/>
+                <div style="position: relative;" id="Answer">
+                    <img src="" width="" height="" id="AnswerImage"/>
+                </div>
 
-    <div style="position: relative;" id="Answer">
-        <img src="" width="" height="" id="AnswerImage"/>
-    </div><br/>
+            </fieldset><br/>
+        {# ------------------------------------------------- tableau zone de reponse ---------------------------------------------------------------------------- #}
+            <fieldset style="border: #ccf dotted thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                <legend style="border: transparent hidden 0; width: 100px; margin: 0; color: lightsteelblue;">
+                    &nbsp;&nbsp;{{ 'Score' | trans }} :
+                </legend>
+                <div style="position: relative;" id="AnswerArray">
+                    <table class="table table-striped table-bordered table-condensed" style="width:500px;">
+                        <tr>
+                            <th class="classic">{{ 'answer zone' | trans }}</th>
+                            <th class="classic">{{ 'shape' | trans }}</th>
+                            <th class="classic">{{ 'color' | trans }}</th>
+                            <th class="classic">{{ 'points' | trans }}</th>
+                        </tr>
 
-{# ------------------------------------------------- tableau zone de reponse ---------------------------------------------------------------------------- #}
+                        <tr>
+                            <td class="classic">
+                                <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}"
+                                     id="movable" style="position: absolute;"/>
+                            </td>
 
-    <div style="position: relative;" id="AnswerArray">
-        <table class="table table-striped table-bordered table-condensed" style="width:500px;">
-            <tr>
-                <th class="classic">{{ 'answer zone' | trans }}</th>
-                <th class="classic">{{ 'shape' | trans }}</th>
-                <th class="classic">{{ 'color' | trans }}</th>
-                <th class="classic">{{ 'points' | trans }}</th>
-            </tr>
+                            <td class="classic">
+                                <select id="shape" name="shape" size="1" style="width:100px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
+                                    <option value="circle"  selected>{{ 'cercle' | trans }}</option>
+                                    <option value="rect" >{{ 'rectangle' | trans }}</option>
+                                </select>
+                            </td>
 
-            <tr>
-                <td class="classic">
-                    <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}"
-                         id="movable" style="position: absolute;"/>
-                </td>
+                            <td class="classic">
+                                <select id="color" name="color" size="1" style="width:70px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
+                                    <option value="white"    style="background-color:#FFFFFF;"selected> &nbsp;&nbsp;&nbsp; </option>
+                                    <option value="red"      style="background-color:#FF0000;">         &nbsp;&nbsp;&nbsp; </option>
+                                    <option value="blue"     style="background-color:#002FFF;">         &nbsp;&nbsp;&nbsp; </option>
+                                    <option value="purple"   style="background-color:#8B008B;">         &nbsp;&nbsp;&nbsp; </option>
+                                    <option value="green"    style="background-color:#008600;">         &nbsp;&nbsp;&nbsp; </option>
+                                    <option value="orange"   style="background-color:#FF7A00;">         &nbsp;&nbsp;&nbsp; </option>
+                                    <option value="yellow"   style="background-color:#FFFF09;">         &nbsp;&nbsp;&nbsp; </option>
+                                </select>
+                            </td>
 
-                <td class="classic">
-                    <select id="shape" name="shape" size="1" style="width:100px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
-                        <option value="circle"  selected>{{ 'cercle' | trans }}</option>
-                        <option value="rect" >{{ 'rectangle' | trans }}</option>
-                    </select>
-                </td>
+                            <td class="classic">
+                                <input type="TEXT" id="points" name="points" value="1" style="width:50px; text-align: end;" onblur="CheckScore('{{ 'wrongPoint' | trans }}');">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </fieldset>
+        </fieldset>
 
-                <td class="classic">
-                    <select id="color" name="color" size="1" style="width:70px" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
-                        <option value="white"    style="background-color:#FFFFFF;"selected> &nbsp;&nbsp;&nbsp; </option>
-                        <option value="red"      style="background-color:#FF0000;">         &nbsp;&nbsp;&nbsp; </option>
-                        <option value="blue"     style="background-color:#002FFF;">         &nbsp;&nbsp;&nbsp; </option>
-                        <option value="purple"   style="background-color:#8B008B;">         &nbsp;&nbsp;&nbsp; </option>
-                        <option value="green"    style="background-color:#008600;">         &nbsp;&nbsp;&nbsp; </option>
-                        <option value="orange"   style="background-color:#FF7A00;">         &nbsp;&nbsp;&nbsp; </option>
-                        <option value="yellow"   style="background-color:#FFFF09;">         &nbsp;&nbsp;&nbsp; </option>
-                    </select>
-                </td>
+        <input type="hidden" id="imgwidth" name="imgwidth" value="0"/>
+        <input type="hidden" id="imgheight" name="imgheight" value="0"/>
+        <input type="hidden" id="coordsZone" name="coordsZone" value=""/>
 
-                <td class="classic">
-                    <input type="TEXT" id="points" name="points" value="1" style="width:50px; text-align: end" onblur="CheckScore('{{ 'wrongPoint' | trans }}');">
-                </td>
-            </tr>
-        </table>
-    </div>
+        <input type="hidden" name="exercise" value="{{ exoID }}"/>
 
-    <input type="hidden" id="imgwidth" name="imgwidth" value="0"/>
-    <input type="hidden" id="imgheight" name="imgheight" value="0"/>
-    <input type="hidden" id="coordsZone" name="coordsZone" value=""/>
+        <input type="hidden" id="message" name="message" value="{{ 'inside' | trans }} ..."/>
 
-    <input type="hidden" name="exercise" value="{{ exoID }}"/>
+    {# ------------------------------------------------- Boutton validation formulaire ---------------------------------------------------------------------------- #}
+        <div style="display: none;">{{ form_rest(form) }}</div>
+        {{ form_errors(form) }}
 
-    <input type="hidden" id="message" name="message" value="{{ 'inside' | trans }} ..."/>
+        <br/>
 
-{# ------------------------------------------------- Boutton validation formulaire ---------------------------------------------------------------------------- #}
-    <div style="display: none;">{{ form_rest(form) }}</div>
-    {{ form_errors(form) }}
-    <p>
-        <button type="submit" onclick="Check('{{ 'noTitle' | trans }}', '{{ 'noQuestion' | trans }} ...','{{ 'noImg' | trans }} !',
-            '{{ 'noAnswerZone' | trans }} ...', '{{ form.interaction.question.title.vars.id }}',
-            '{{ form.interaction.invite.vars.id }}');return false;">{{ 'create' | trans }}</button>
-    </p>
-</form>
+        <p>
+            <button type="submit" onclick="Check('{{ 'noTitle' | trans }}', '{{ 'noQuestion' | trans }} ...','{{ 'noImg' | trans }} !',
+                '{{ 'noAnswerZone' | trans }} ...', '{{ form.interaction.question.title.vars.id }}',
+                '{{ form.interaction.invite.vars.id }}');return false;" class="btn btn-primary">{{ 'create' | trans }}</button>
+        </p>
+    </form>
+</fieldset>
 
 {{ tinymce_init() }}
 

@@ -44,73 +44,108 @@
 {% block title %} {{ 'correction' | trans }} {% endblock %}
 
 {% block section_content %}
-    
+
     {{ interQCM.sortChoices() }}
-    
-    <a href="{{ path('ujm_question_index') }}" >
+
+    <div class="panel-heading" style="padding-left: 50px;">
+        <h1>{{ 'correction' | trans }}</h1>
+    </div><br/>
+
+    <a href="{{ path('ujm_question_index') }}" style="padding-left: 50px;">
         <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
-    </a><br/>
-    
-    <h1 name="title">
-        {{ interQCM.interaction.question.title}}
-    </h1>
+    </a>
 
-    <div name="description">
-        {{ interQCM.interaction.question.description|raw}}
-    </div>
+    <hr/>
 
-    <h3 name="invite">
-        {{ interQCM.interaction.invite|raw}}
-    </h3>
+    <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
+        <legend style="border: transparent hidden 0; width: 280px; margin: 0; color: skyblue;">
+            <h1>&nbsp;{{ 'question' | trans }} {{ 'qcm' | trans }} :</h1>
+        </legend>
 
-    <table border="1" class="table table-striped table-bordered table-condensed">
-        <tr>
-            <th class="classic">{{ 'choice' | trans }}</th>
-            <th class="classic">{{ 'expected answer' | trans }}</th>
-            <th class="classic">{{ 'your answer' | trans }}</th>
-            <th class="classic">{{ 'feedback' | trans }}</th>
-        </tr>
+        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+            <legend style="border: transparent hidden 0; width: 80px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'title' | trans }} :</legend>
+            <h1 name="title">
+                {{ interQCM.interaction.question.title }}
+            </h1>
+        </fieldset><br/>
 
-        {% for choice in interQCM.choices %}
-            <tr>
-                <td class="classic">
-                    {{ choice.label|raw }}
-                </td>
-                <td class="classic">
-                    {% if choice.rightResponse %}
-                        <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
-                    {% else %}
-                        <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
-                    {% endif %}
-                </td>
-                <td class="classic">
-                    {% if regexTwig('/' ~ choice.id ~ ';/', response) > 0 %}
-                    {# choice checked by student #}
-                        {% if choice.rightResponse %}
-                            <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
-                        {% else %}
-                            <img src="{{ asset('bundles/ujmexo/images/checkbox_on_red.gif') }}">
-                        {% endif %}
-                    {% else %}
-                        <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
-                    {% endif %}
-                </td>
-                <td class="classic">
-                    {% if choice.feedback is not empty %}
-                        {{ choice.feedback|raw }}
-                    {% else %}
-                        -
-                    {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
+        {% if interQCM.interaction.question.description != '' %}
+            <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                <legend style="border: transparent hidden 0; width: 150px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'description' | trans }} :</legend>
+                <div name="description">
+                    {{ interQCM.interaction.question.description|raw }}
+                </div>
+            </fieldset><br/>
+        {% endif %}
 
-    <div name="feddback">
-        {{ interQCM.interaction.feedback|raw}}
-    </div>
-    {% if penalty > 0 %}
-        {{ 'penalty' | trans }}: {{ penalty }}
-    {% endif %}
-    {{ 'mark' | trans }}: <span id="score">{{ score }}</span>
+        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+            <legend style="border: transparent hidden 0; width: 130px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'question' | trans }} :</legend>
+            <h3 name="invite">
+                {{ interQCM.interaction.invite|raw }}
+            </h3>
+        </fieldset><br/>
+
+        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+            <legend style="border: transparent hidden 0; width: 120px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'response' | trans }} :</legend>
+            <table border="1" class="table table-striped table-bordered table-condensed">
+                <tr>
+                    <th class="classic">{{ 'choice' | trans }}</th>
+                    <th class="classic">{{ 'expected answer' | trans }}</th>
+                    <th class="classic">{{ 'your answer' | trans }}</th>
+                    <th class="classic">{{ 'feedback' | trans }}</th>
+                </tr>
+
+                {% for choice in interQCM.choices %}
+                    <tr>
+                        <td class="classic">
+                            {{ choice.label|raw }}
+                        </td>
+                        <td class="classic">
+                            {% if choice.rightResponse %}
+                                <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                            {% else %}
+                                <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                            {% endif %}
+                        </td>
+                        <td class="classic">
+                            {% if regexTwig('/' ~ choice.id ~ ';/', response) > 0 %}
+                            {# choice checked by student #}
+                                {% if choice.rightResponse %}
+                                    <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                                {% else %}
+                                    <img src="{{ asset('bundles/ujmexo/images/checkbox_on_red.gif') }}">
+                                {% endif %}
+                            {% else %}
+                                <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                            {% endif %}
+                        </td>
+                        <td class="classic">
+                            {% if choice.feedback is not empty %}
+                                {{ choice.feedback|raw }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </fieldset><br/>
+
+        {% if interQCM.interaction.feedback != '' %}
+            <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                <legend style="border: transparent hidden 0; width: 170px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'comment' | trans }} :</legend>
+                <div name="feddback">
+                    {{ interQCM.interaction.feedback|raw }}
+                </div>
+            </fieldset><br/>
+        {% endif %}
+
+        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 10px;">
+            <legend style="border: transparent hidden 0; width: 100px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'mark' | trans }} :</legend>
+            {% if penalty > 0 %}
+                {{ 'penalty' | trans }} : {{ penalty }}
+            {% endif %}
+            {{ 'mark' | trans }} : <span id="score">{{ score }}</span>
+        </fieldset>
+    </fieldset>
 {% endblock %}

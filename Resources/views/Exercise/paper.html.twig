@@ -45,48 +45,51 @@
 {% block section_content %}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
 
-    {% set indexMax = 1 %}
-    <table>
-        <tr>
-        {% for interactionID in tabOrderInter %}
-            {% if loop.index != numQ %}
-                <td>
-                    <a href="#" onClick="submitForm({{ loop.index }}, '{{ interactionType }}');">{{ loop.index }}</a>
-                    {% set indexMax = loop.index %}
-                </td>
-            {% else %}
-                <td>
-                    {{ loop.index }}
-                    {% set indexMax = loop.index %}
-                </td>
-            {% endif %}
-        {% endfor %}
-        </tr>
-    </table>
+     <div class="panel-heading" style="padding-left: 50px;">
+        <h1>{{'paper exo'|trans}}</h1>
+    </div><br/>
 
-    <form class="well" action="{{ path('ujm_exercise_paper_nav') }}" method="post" name="formResponse" id="formResponse">
+    <hr/>
+
+    <form action="{{ path('ujm_exercise_paper_nav') }}" method="post" name="formResponse" id="formResponse">
         <input type="hidden" name="numQuestionToDisplayed" id="numQuestionToDisplayed" value=""/>
 
 <!--------------------------------------------------- QCM ------------------------------------------------------------->
 
         {% if interactionType == 'InteractionQCM' %}
-            <h1>{{ interactionToDisplayed.interaction.question.title }}</h1>
+
+        <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
+            <legend style="border: transparent hidden 0; width: 270px; margin: 0; color: skyblue;">
+                <h1>&nbsp;{{ 'nQuestion' | trans }}{{numQ}} :</h1>
+            </legend>
+
+            <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                <legend style="border: transparent hidden 0; width: 80px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'title' | trans }} :</legend>
+                <h1>{{ interactionToDisplayed.interaction.question.title }}</h1>
+            </fieldset><br/>
 
             <input type="hidden" name="interactionQCMToValidated" value="{{ interactionToDisplayed.id }}"/>
             <input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
             <input type="hidden" name="typeInteraction" value="InteractionQCM"/>
 
             {% if interactionToDisplayed.interaction.question.description != null %}
-                <div name="description">
-                    <p>{{ interactionToDisplayed.interaction.question.description|raw }}<p/>
-                </div>
+                <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                    <legend style="border: transparent hidden 0; width: 150px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'description' | trans }} :</legend>
+                    <div name="description">
+                        <p>{{ interactionToDisplayed.interaction.question.description|raw }}<p/>
+                    </div>
+                </fieldset><br/>
             {% endif %}
 
-            <h3 name="question">
-                <p>{{ interactionToDisplayed.interaction.invite|raw }}<p/>
-            </h3>
+             <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                <legend style="border: transparent hidden 0; width: 130px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'question' | trans }} :</legend>
+                <h3 name="question">
+                    <p>{{ interactionToDisplayed.interaction.invite|raw }}<p/>
+                </h3>
+            </fieldset><br/>
 
-            <p>
+            <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                <legend style="border: transparent hidden 0; width: 120px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'response' | trans }} :</legend>
                 <table class="table table-striped table-bordered table-condensed">
                     {% for choice in interactionToDisplayed.choices %}
                         {% set checked = "" %}
@@ -103,175 +106,248 @@
                         </tr>
                     {% endfor %}
                 </table>
+            </fieldset><br/>
 
-                <table>
-                    {% set nbr_hint = 1 %}
-                    {% for hint in interactionToDisplayed.interaction.hints %}
-                        <tr>
-                            <td class="classic"><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
-                                    '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }} ?', '{{nbr_hint}}',
-                                    '{{paper}}')">{{ "hint" | trans }} {{nbr_hint}}</a>
-                            </td class="classic">
-                            <td id="div_hint{{nbr_hint}}" class="classic"></td>
-                        </tr>
-                        {% set nbr_hint = nbr_hint + 1 %}
-                    {% endfor %}
-                </table>
+            {% if interactionToDisplayed.interaction.hints is not empty %}
+                <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                    <legend style="border: transparent hidden 0; width: 110px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'hints' | trans }} :</legend>
+                    <table>
+                        {% set nbr_hint = 1 %}
+                        {% for hint in interactionToDisplayed.interaction.hints %}
+                            <tr>
+                                <td class="classic"><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
+                                        '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }} ?', '{{nbr_hint}}',
+                                        '{{paper}}')">{{ "hint" | trans }} {{nbr_hint}}</a>
+                                </td>
+                                <td id="div_hint{{nbr_hint}}" class="classic"></td>
+                            </tr>
+                            {% set nbr_hint = nbr_hint + 1 %}
+                        {% endfor %}
+                    </table>
+                </fieldset><br/>
+            {% endif %}
 
-                <input type="hidden" name="testQCM" value="testQCM" />
-                <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
-            </p>
+            <input type="hidden" name="testQCM" value="testQCM" />
+            <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
 
+        </fieldset><br/>
 <!------------------------------------------------- Graphic ----------------------------------------------------------->
 
         {% elseif interactionType == 'InteractionGraphic' %}
 
-            <h1>{{ interactionToDisplayed.interaction.question.title }}</h1>
+        <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
+        <legend style="border: transparent hidden 0; width: 270px; margin: 0; color: skyblue;">
+            <h1>&nbsp;{{ 'nQuestion' | trans }}{{numQ}} :</h1>
+        </legend>
+
+            <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                <legend style="border: transparent hidden 0; width: 80px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'title' | trans }} :</legend>
+                <h1>{{ interactionToDisplayed.interaction.question.title }}</h1>
+            </fieldset><br/>
 
             <input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
             <input type="hidden" name="typeInteraction" value="InteractionGraphic"/>
 
-            <div name="description">
-                <p>{{ interactionToDisplayed.interaction.question.description|raw }}</p>
-            </div>
+            {% if interactionToDisplayed.interaction.question.description != null %}
+                <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                    <legend style="border: transparent hidden 0; width: 150px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'description' | trans }} :</legend>
+                    <div name="description">
+                        <p>{{ interactionToDisplayed.interaction.question.description|raw }}</p>
+                    </div>
+                </fieldset><br/>
+            {% endif %}
 
-            <h3 name="question">
-                <p>{{ interactionToDisplayed.interaction.invite|raw }}</p>
-            </h3>
+            <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                <legend style="border: transparent hidden 0; width: 130px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'question' | trans }} :</legend>
+                <h3 name="question">
+                    <p>{{ interactionToDisplayed.interaction.invite|raw }}</p>
+                </h3>
+            </fieldset><br/>
 
-            <h5>{{ "consignes" | trans }} :</h5>
-            <h6><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}<br/>
-                {{ "onlyOnce" | trans }}</em>
-            </h6>
+             <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                <legend style="border: transparent hidden 0; width: 120px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'response' | trans }} :</legend>
+                <h5>{{ "consignes" | trans }} :</h5>
+                <h6><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}<br/>
+                    {{ "onlyOnce" | trans }}</em>
+                </h6>
 
-            <div style="position: relative;" id="Answer">
-                <p id="ContainerCursor">
-                    {% set i = 1 %}
-                    {% for coords in listCoords %}
-                        <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}"
-                             id="cursor{{ i }}" style="position: absolute;"/>
-                        {% set i = i + 1 %}
-                   {% endfor %}
-                </p><p>
+                <div style="position: relative;" id="Answer">
+                    <p id="ContainerCursor">
+                        {% set i = 1 %}
+                        {% for coords in listCoords %}
+                            <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}"
+                                 id="cursor{{ i }}" style="position: absolute;"/>
+                            {% set i = i + 1 %}
+                       {% endfor %}
+                    </p><p>
 
-                    {% if response is empty %}
-                        {% set response = 'empty' %}
-                    {% endif %}
+                        {% if response is empty %}
+                            {% set response = 'empty' %}
+                        {% endif %}
 
-                    <img src="{{ asset(interactionToDisplayed.document.url) }}" alt="AnswerImg" id="AnswerImg"
-                         width="{{ interactionToDisplayed.width }}" height="{{ interactionToDisplayed.height }}"
-                         style="margin-top: 30px" onload="displayAnswersGraph('{{ response }}')"/>
-                </p>
-            </div>
+                        <img src="{{ asset(interactionToDisplayed.document.url) }}" alt="AnswerImg" id="AnswerImg"
+                             width="{{ interactionToDisplayed.width }}" height="{{ interactionToDisplayed.height }}"
+                             style="margin-top: 30px" onload="displayAnswersGraph('{{ response }}')"/>
+                    </p>
+                </div>
+            </fieldset><br/>
 
             <input type="hidden" id="nbpointer" name="nbpointer" value="{{ i }}"/>
             <input type="hidden" id="answers" name="answers" value=""/>
             <input type="hidden" id="graphId" name="graphId" value="{{ interactionToDisplayed.id }}"/>
             <input type="hidden" id="PositionInit" name="PositionInit" value="false"/>
 
-            <table>
-                {% set nbr_hint = 1 %}
-                    {% for hint in interactionToDisplayed.interaction.hints %}
-                        <tr>
-                            <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
-                                    '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }} ?', '{{nbr_hint}}',
-                                    '{{paper}}')">{{ "hint" | trans }} {{nbr_hint}}</a>
-                            </td>
-                            <td id="div_hint{{nbr_hint}}"></td>
-                        </tr>
-                        {% set nbr_hint = nbr_hint + 1 %}
-                    {% endfor %}
-            </table><br/>
+            {% if interactionToDisplayed.interaction.hints is not empty %}
+                <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                    <legend style="border: transparent hidden 0; width: 110px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'hints' | trans }} :</legend>
+                    <table>
+                    {% set nbr_hint = 1 %}
+                        {% for hint in interactionToDisplayed.interaction.hints %}
+                            <tr>
+                                <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
+                                        '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }} ?', '{{nbr_hint}}',
+                                        '{{paper}}')">{{ "hint" | trans }} {{nbr_hint}}</a>
+                                </td>
+                                <td id="div_hint{{nbr_hint}}"></td>
+                            </tr>
+                            {% set nbr_hint = nbr_hint + 1 %}
+                        {% endfor %}
+                    </table>
+                </fieldset><br/>
+            {% endif %}
 
             <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
 
+        </fieldset><br/>
 <!--------------------------------------------------- OPEN ------------------------------------------------------------>
 
         {% elseif interactionType == 'InteractionOpen' %}
-            <h1>{{ interactionToDisplayed.interaction.question.title }}</h1>
+
+        <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
+        <legend style="border: transparent hidden 0; width: 270px; margin: 0; color: skyblue;">
+            <h1>&nbsp;{{ 'nQuestion' | trans }}{{numQ}} :</h1>
+        </legend>
+
+            <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                <legend style="border: transparent hidden 0; width: 80px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'title' | trans }} :</legend>
+                <h1>{{ interactionToDisplayed.interaction.question.title }}</h1>
+            </fieldset><br/>
 
             <input type="hidden" name="interactionOpenToValidated" value="{{ interactionToDisplayed.id }}"/>
             <input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
             <input type="hidden" name="typeInteraction" value="InteractionOpen"/>
 
             {% if interactionToDisplayed.interaction.question.description != null %}
-                <div name="description">
-                    <p>{{ interactionToDisplayed.interaction.question.description|raw }}<p/>
-                </div>
+                <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                    <legend style="border: transparent hidden 0; width: 150px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'description' | trans }} :</legend>
+                    <div name="description">
+                        <p>{{ interactionToDisplayed.interaction.question.description|raw }}<p/>
+                    </div>
+            </fieldset><br/>
             {% endif %}
 
-            <h3 name="question">
-                <p>{{ interactionToDisplayed.interaction.invite|raw }}<p/>
-            </h3>
+            <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                <legend style="border: transparent hidden 0; width: 130px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'question' | trans }} :</legend>
+                <h3 name="question">
+                    <p>{{ interactionToDisplayed.interaction.invite|raw }}<p/>
+                </h3>
+            </fieldset><br/>
 
-            <p>
+
                 {% if interactionToDisplayed.typeopenquestion == 'long' %}
-                    <textarea name="interOpenLong" class="tinymce" data-theme="medium"></textarea>
-                    <br/>
+                    <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                        <legend style="border: transparent hidden 0; width: 120px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'response' | trans }} :</legend>
+                        <textarea name="interOpenLong" class="tinymce" data-theme="medium"></textarea>
+                        <br/>
+                    </fieldset><br/>
                 {% endif %}
 
-                <table>
-                    {% set nbr_hint = 1 %}
-                    {% for hint in interactionToDisplayed.interaction.hints %}
-                        <tr>
-                            <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
-                                    '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }} ?', '{{nbr_hint}}',
-                                    '{{paper}}')">{{ "hint" | trans }} {{nbr_hint}}</a>
-                            </td>
-                            <td id="div_hint{{nbr_hint}}"></td>
-                        </tr>
-                        {% set nbr_hint = nbr_hint + 1 %}
-                    {% endfor %}
-                </table>
+                {% if interactionToDisplayed.interaction.hints is not empty %}
+                    <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                        <legend style="border: transparent hidden 0; width: 110px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'hints' | trans }} :</legend>
+                        <table>
+                            {% set nbr_hint = 1 %}
+                            {% for hint in interactionToDisplayed.interaction.hints %}
+                                <tr>
+                                    <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
+                                            '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }} ?', '{{nbr_hint}}',
+                                            '{{paper}}')">{{ "hint" | trans }} {{nbr_hint}}</a>
+                                    </td>
+                                    <td id="div_hint{{nbr_hint}}"></td>
+                                </tr>
+                                {% set nbr_hint = nbr_hint + 1 %}
+                            {% endfor %}
+                        </table>
+                    </fieldset><br/>
+                {% endif %}
 
                 <input type="hidden" name="testOpen" value="testOpen" />
                 <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
-            </p>
-<!-------------------------------------------------- Hole ------------------------------------------------------------->
+
+        </fieldset><br/>
+<!--------------------------------------------------- Hole --------------------------------------------------------->
 
         {% elseif interactionType == 'InteractionHole' %}
         {% endif %}
     </form>
+<!--------------------------------------------------- Pagination --------------------------------------------------->
 
-    <table>
-        <tr>
+    <div style="text-align: center;">
+        {% set indexMax = 1 %}
+        <ul class="pagination">
             {% if numQ != 1 %}
-                <td>
+                <li>
                     <a href="#" onClick="submitForm(1, '{{ interactionType }}');">
                         <i class="icon-chevron-left"></i><i class="icon-chevron-left"></i>
                     </a>
-                </td>
-                <td>
-                    <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">&nbsp;&nbsp;
-                        <i class="icon-chevron-left">&nbsp;</i>
+                </li>
+                <li>
+                    <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">
+                        <i class="icon-chevron-left"></i>
                     </a>
-                </td>
+                </li>
             {% else %}
-                <td><i class="icon-chevron-left"></i><i class="icon-chevron-left"></i></td>
-                <td>&nbsp;&nbsp;<i class="icon-chevron-left">&nbsp;</i></td>
+                <li class="disabled"><a href="#"><i class="icon-chevron-left"></i><i class="icon-chevron-left"></i></a></li>
+                <li class="disabled"><a href="#"><i class="icon-chevron-left"></i></a></li>
             {% endif %}
+
+            {% for interactionID in tabOrderInter %}
+                {% if loop.index != numQ %}
+                    <li><a href="#" onClick="submitForm({{ loop.index }}, '{{ interactionType }}');">{{ loop.index }}</a></li>
+                    {% set indexMax = loop.index %}
+                {% else %}
+                    <li class="active"><a href="#">{{ loop.index }}</a></li>
+                    {% set indexMax = loop.index %}
+                {% endif %}
+            {% endfor %}
+
             {% if numQ != indexMax %}
-                <td>
-                    <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">&nbsp;
+                <li>
+                    <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
                         <i class="icon-chevron-right"></i>
                     </a>
-                </td>
-                <td>
-                    <a href="#" onClick="submitForm({{ indexMax }}, '{{ interactionType }}');">&nbsp;&nbsp;
-                        <i class="icon-chevron-right"></i><i class="icon-chevron-right"></i>&nbsp;&nbsp;
+                </li>
+                <li>
+                    <a href="#" onClick="submitForm({{ indexMax }}, '{{ interactionType }}');">
+                        <i class="icon-chevron-right"></i><i class="icon-chevron-right"></i>
                     </a>
-                </td>
+                </li>
             {% else %}
-                <td>&nbsp;<i class="icon-chevron-right"></i></td>
-                <td>&nbsp;&nbsp;<i class="icon-chevron-right"></i><i class="icon-chevron-right"></i>&nbsp;&nbsp;</td>
+                <li class="disabled"><a href="#"><i class="icon-chevron-right"></i></a></li>
+                <li class="disabled"><a href="#"><i class="icon-chevron-right"></i><i class="icon-chevron-right"></i></a></li>
             {% endif %}
-            {% if dispButtonInterrupt %}
-                <td><input type="button" value="{{ "interupt" | trans }}" onClick="interupt('{{ interactionType }}');"/>
-                </td>
-            {% endif %}
-            <td><input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}', '{{ 'alert ending' | trans }}');"/></td>
-        </tr>
-    </table>
+
+            <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+            <li>
+                <input type="button" value="{{ "interupt" | trans }}" onClick="interupt('{{ interactionType }}');" class="btn btn-primary"/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </li>
+            <li>
+                <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}', '{{ 'alert ending' | trans }}');"
+                    class="btn btn-primary"/>
+            </li>
+        </ul>
+    </div>
 {% endblock %}
 
 {% block javascripts %}

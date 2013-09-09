@@ -44,8 +44,14 @@
 
 {% block section_content %}
 
-    <a href="{{ path('ujm_paper_list', { 'exoID': exoId }) }}"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
-    
+    <div class="panel-heading" style="padding-left: 50px;">
+        <h1>{{ 'correction' | trans }}</h1>
+    </div><br/>
+
+    <a href="{{ path('ujm_paper_list', { 'exoID': exoId }) }}" style="padding-left: 50px;"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
+
+    <hr/>
+
     {% set i = 0 %}
     {% set exoMark = 0 %}
     {% set exoScoreMax = 0 %}
@@ -61,83 +67,113 @@
             {% set interQCM =  interInfo['question'] %}
             {{ interQCM.sortChoices() }}
 
-                <div>
+            <div>
 
-            {% if (display == 'all') %}
-                <h1 name="title">
-                    {{ interQCM.interaction.question.title }}
-                </h1>
+            <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
+                <legend style="border: transparent hidden 0; width: 270px; margin: 0; color: skyblue;">
+                    <h1>&nbsp;{{ 'nQuestion' | trans }}{{i + 1}} :</h1>
+                </legend>
 
-                <div name="description">
-                    {{ interQCM.interaction.question.description|raw }}
-                </div>
+                {% if (display == 'all') %}
 
-                <h3 name="invite">
-                    {{ interQCM.interaction.invite|raw }}
-                </h3>
+                    <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                        <legend style="border: transparent hidden 0; width: 80px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'title' | trans }} :</legend>
+                        <h1 name="title">
+                            {{ interQCM.interaction.question.title }}
+                        </h1>
+                    </fieldset><br/>
 
-                <table border="1" class="table table-striped table-bordered table-condensed">
-                    <tr>
-                        <th class="classic">{{ 'your answer' | trans }}</th>
-                        <th class="classic">{{ 'expected answer' | trans }}</th>
-                        <th class="classic">{{ 'choice' | trans }}</th>
-                        <th class="classic">{{ 'feedback' | trans }}</th>
-                    </tr>
-
-                    {% for choice in interQCM.choices %}
-                        <tr>
-                            <td class="classic">
-                                {{ choice.label|raw }}
-                            </td>
-                            <td class="classic">
-                                {% if choice.rightResponse %}
-                                    <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
-                                {% else %}
-                                    <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
-                                {% endif %}
-                            </td>
-                            <td class="classic">
-                                {% if regexTwig('/' ~ choice.id ~ ';/', responses[i].response) > 0 %}
-                                    {# choice checked by student #}
-                                    {% if choice.rightResponse %}
-                                        <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
-                                    {% else %}
-                                        <img src="{{ asset('bundles/ujmexo/images/checkbox_on_red.gif') }}">
-                                    {% endif %}
-                                {% else %}
-                                    <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
-                                {% endif %}
-                            </td>
-                            <td class="classic">
-                                {{ choice.feedback|raw }}
-                            </td>
-                        </tr>
-                    {% endfor %}
-
-                </table>
-
-                {% if interQCM.interaction.feedback != '' %}
-                    <div name="feddback">
-                        {{ 'comment' | trans }} :
-                        {{ interQCM.interaction.feedback|raw }}
-                    </div>
-                {% endif %}
-
-                {% for hv in hintViewed %}
-                    {% if( hv.hint.interaction.id == interaction.id ) %}
-                        {{ 'penalty' | trans }} : {{ hv.hint.penalty }}<br/>
+                    {% if interQCM.interaction.question.description != '' %}
+                        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                            <legend style="border: transparent hidden 0; width: 150px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'description' | trans }} :</legend>
+                            <div name="description">
+                                {{ interQCM.interaction.question.description|raw }}
+                            </div>
+                        </fieldset><br/>
                     {% endif %}
-                {% endfor %}
 
-                {{ 'mark' | trans }} : {{ responses[i].mark }} / {{ interInfo['maxScore'] }}<br/>
-                {% set exoMark = exoMark + responses[i].mark %}
-                {% set exoScoreMax = exoScoreMax + interInfo['maxScore'] %}
-                 {% else %}
-                {% set exoMark = exoMark + responses[i].mark %}
-                {% set exoScoreMax = exoScoreMax + interInfo['maxScore'] %}
-            {% endif %}
-        <hr/>
-    </div>
+                    <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                        <legend style="border: transparent hidden 0; width: 130px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'question' | trans }} :</legend>
+                        <h3 name="invite">
+                            {{ interQCM.interaction.invite|raw }}
+                        </h3>
+                    </fieldset><br/>
+
+                    <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                        <legend style="border: transparent hidden 0; width: 120px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'response' | trans }} :</legend>
+                        <table border="1" class="table table-striped table-bordered table-condensed">
+                            <tr>
+                                <th class="classic">{{ 'your answer' | trans }}</th>
+                                <th class="classic">{{ 'expected answer' | trans }}</th>
+                                <th class="classic">{{ 'choice' | trans }}</th>
+                                <th class="classic">{{ 'feedback' | trans }}</th>
+                            </tr>
+
+                            {% for choice in interQCM.choices %}
+                                <tr>
+                                    <td class="classic">
+                                        {{ choice.label|raw }}
+                                    </td>
+                                    <td class="classic">
+                                        {% if choice.rightResponse %}
+                                            <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                                        {% else %}
+                                            <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                                        {% endif %}
+                                    </td>
+                                    <td class="classic">
+                                        {% if regexTwig('/' ~ choice.id ~ ';/', responses[i].response) > 0 %}
+                                            {# choice checked by student #}
+                                            {% if choice.rightResponse %}
+                                                <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                                            {% else %}
+                                                <img src="{{ asset('bundles/ujmexo/images/checkbox_on_red.gif') }}">
+                                            {% endif %}
+                                        {% else %}
+                                            <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                                        {% endif %}
+                                    </td>
+                                    <td class="classic">
+                                        {% if choice.feedback is not empty %}
+                                            {{ choice.feedback|raw }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                        </table>
+                    </fieldset><br/>
+
+                    {% if interQCM.interaction.feedback != '' %}
+                        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                            <legend style="border: transparent hidden 0; width: 170px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'comment' | trans }} :</legend>
+                            <div name="feddback">
+                                {{ interQCM.interaction.feedback|raw }}
+                            </div>
+                        </fieldset><br/>
+                    {% endif %}
+
+                    <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 10px;">
+                        <legend style="border: transparent hidden 0; width: 100px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'mark' | trans }} :</legend>
+                        {% for hv in hintViewed %}
+                            {% if( hv.hint.interaction.id == interaction.id ) %}
+                                {{ 'penalty' | trans }} : {{ hv.hint.penalty }}<br/>
+                            {% endif %}
+                        {% endfor %}
+
+                        {{ 'mark' | trans }} : {{ responses[i].mark }} / {{ interInfo['maxScore'] }}<br/>
+                        {% set exoMark = exoMark + responses[i].mark %}
+                        {% set exoScoreMax = exoScoreMax + interInfo['maxScore'] %}
+                         {% else %}
+                        {% set exoMark = exoMark + responses[i].mark %}
+                        {% set exoScoreMax = exoScoreMax + interInfo['maxScore'] %}
+                    </fieldset>
+
+                {% endif %}
+            </fieldset>
+        </div><br/>
 
 <!------------------------------------------------- Graphic ----------------------------------------------------------->
 
@@ -149,90 +185,116 @@
             {% set maxScore = 0 %}
 
             <div>
-            {% if (display == 'all') %}
-                <h1 name="title">
-                    {{ interG.interaction.question.title }}
-                </h1>
 
-                <div name="description">
-                    {{ interG.interaction.question.description|raw }}
-                </div>
+            <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
+                <legend style="border: transparent hidden 0; width: 270px; margin: 0; color: skyblue;">
+                    <h1>&nbsp;{{ 'nQuestion' | trans }}{{i + 1}} :</h1>
+                </legend>
 
-                <h3 name="invite">
-                    {{ interG.interaction.invite|raw }}
-                </h3>
+                {% if (display == 'all') %}
 
-                <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
+                    <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                        <legend style="border: transparent hidden 0; width: 80px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'title' | trans }} :</legend>
+                        <h1 name="title">
+                            {{ interG.interaction.question.title }}
+                        </h1>
+                    </fieldset><br/>
 
-                <div style="position: relative;" id="Answer">
-                    <img src="{{asset (interG.document.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
-                        alt="AnswerImage" id="AnswerImage{{ interaction.id }}"/>
+                    {% if interG.interaction.question.description != '' %}
+                        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                            <legend style="border: transparent hidden 0; width: 150px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'description' | trans }} :</legend>
+                            <div name="description">
+                                {{ interG.interaction.question.description|raw }}
+                            </div>
+                        </fieldset><br/>
+                    {% endif %}
 
-                    {% set repco = responses[i].response|split(';') %}
+                    <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                        <legend style="border: transparent hidden 0; width: 130px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'question' | trans }} :</legend>
+                        <h3 name="invite">
+                            {{ interG.interaction.invite|raw }}
+                        </h3>
+                    </fieldset><br/>
+
+                    <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                        <legend style="border: transparent hidden 0; width: 120px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'response' | trans }} :</legend>
+                        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
+
+                        <div style="position: relative;" id="Answer">
+                            <img src="{{asset (interG.document.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
+                                alt="AnswerImage" id="AnswerImage{{ interaction.id }}"/>
+
+                            {% set repco = responses[i].response|split(';') %}
+                            {% set x = 0 %}
+
+                            {% for c in coords %}
+
+                                {% set maxScore = maxScore + coords[x].scoreCoords %}
+                                {% set numb = coords[x].value|split(',') %}
+                                {% set repcoX = repco[x]|split('-') %}
+
+                                <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" id="{{ interaction.id }}ra{{ x }}"
+                                     alt="RightAnswer{{ x }}" style="position: absolute; z-index: 2;" width="{{ coords[x].size }}"/>
+
+                                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" id="{{ interaction.id }}cursor{{ x }}"
+                                     alt="AnswerZone{{ x }}" style="position: absolute; z-index: 7;"/>
+
+                                <script type="text/javascript">
+                                    whichImg('{{coords[x].shape}}', '{{coords[x].color}}', {{x}}, '{{ numb[0] }}', '{{ numb[1] }}',
+                                    '{{repcoX[0]}}', '{{repcoX[1]}}', '{{ asset('bundles/ujmexo/images/graphic/') }}',
+                                    '{{ coords[x].size }}', '{{interaction.id}}')
+                                </script>
+
+                                {% set x = x + 1 %}
+                            {% endfor %}
+                        </div><br/>
+                    </fieldset><br/>
+
+                    {% if interG.interaction.feedback != '' %}
+                        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                            <legend style="border: transparent hidden 0; width: 170px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'comment' | trans }} :</legend>
+                            {{ interG.interaction.feedback|raw }}
+                        </fieldset><br/>
+                    {% endif %}
+
+                    <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 10px;">
+                        <legend style="border: transparent hidden 0; width: 100px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'mark' | trans }} :</legend>
+                        {{ 'mark' | trans }} : {{ responses[i].mark }} / {{ maxScore }} <br/>
+                        {% set exoMark = exoMark + responses[i].mark %}
+                        {% set exoScoreMax = exoScoreMax + maxScore %}
+
+                        {% set point = responses[i].mark + hv.hint.penalty %}
+
+                        {% if responses[i].mark == 0 and hv.hint.penalty == 0 %}
+                                {{ 'noRightAnswer' | trans }}.
+                            {% elseif hv.hint.penalty == 0 %}
+                                {{ 'noHintShow' | trans }}.
+                            {% else %}
+                                {{ 'pointRightResponse' | trans }} : {{ point }} {{ 'with' | trans }} : -
+
+                                {% for hv in hintViewed %}
+                                    {% if( hv.hint.interaction.id == interaction.id ) %}
+                                        {{ 'penalty' | trans }} : {{ hv.hint.penalty }}<br/>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {{ 'sawHint' | trans }}.
+                            {% endif %}
+                        <br/>
+                    </fieldset>
+                {% else %}
                     {% set x = 0 %}
 
                     {% for c in coords %}
-
                         {% set maxScore = maxScore + coords[x].scoreCoords %}
-                        {% set numb = coords[x].value|split(',') %}
-                        {% set repcoX = repco[x]|split('-') %}
-
-                        <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" id="{{ interaction.id }}ra{{ x }}"
-                             alt="RightAnswer{{ x }}" style="position: absolute; z-index: 2;" width="{{ coords[x].size }}"/>
-
-                        <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" id="{{ interaction.id }}cursor{{ x }}"
-                             alt="AnswerZone{{ x }}" style="position: absolute; z-index: 7;"/>
-
-                        <script type="text/javascript">
-                            whichImg('{{coords[x].shape}}', '{{coords[x].color}}', {{x}}, '{{ numb[0] }}', '{{ numb[1] }}',
-                            '{{repcoX[0]}}', '{{repcoX[1]}}', '{{ asset('bundles/ujmexo/images/graphic/') }}',
-                            '{{ coords[x].size }}', '{{interaction.id}}')
-                        </script>
-
                         {% set x = x + 1 %}
                     {% endfor %}
-                </div><br/>
 
-                {{ 'mark' | trans }} : {{ responses[i].mark }} / {{ maxScore }} <br/>
-                {% set exoMark = exoMark + responses[i].mark %}
-                {% set exoScoreMax = exoScoreMax + maxScore %}
-
-                {% set point = responses[i].mark + hv.hint.penalty %}
-
-                {% if responses[i].mark == 0 and hv.hint.penalty == 0 %}
-                        {{ 'noRightAnswer' | trans }}.
-                    {% elseif hv.hint.penalty == 0 %}
-                        {{ 'noHintShow' | trans }}.
-                    {% else %}
-                        {{ 'pointRightResponse' | trans }} : {{ point }} {{ 'with' | trans }} : -
-
-                        {% for hv in hintViewed %}
-                            {% if( hv.hint.interaction.id == interaction.id ) %}
-                                {{ 'penalty' | trans }} : {{ hv.hint.penalty }}<br/>
-                            {% endif %}
-                        {% endfor %}
-
-                        {{ 'sawHint' | trans }}.
-                    {% endif %}
-                <br/>
-                {% if interG.interaction.feedback is defined %}
-                    <div>
-                        <p>{{ interG.interaction.feedback|raw }}</p>
-                    </div>
+                    {% set exoMark = exoMark + responses[i].mark %}
+                    {% set exoScoreMax = exoScoreMax + maxScore %}
                 {% endif %}
-                <hr/>
-            {% else %}
-                {% set x = 0 %}
-
-                {% for c in coords %}
-                    {% set maxScore = maxScore + coords[x].scoreCoords %}
-                    {% set x = x + 1 %}
-                {% endfor %}
-
-                {% set exoMark = exoMark + responses[i].mark %}
-                {% set exoScoreMax = exoScoreMax + maxScore %}
-            {% endif %}
-            </div>
+            </fieldset>
+        </div><br/>
 
 <!--------------------------------------------------- Hole ------------------------------------------------------------>
 
@@ -246,74 +308,109 @@
 
             <div>
 
+            <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
+                <legend style="border: transparent hidden 0; width: 270px; margin: 0; color: skyblue;">
+                    <h1>&nbsp;{{ 'nQuestion' | trans }}{{i + 1}} :</h1>
+                </legend>
+
                 {% if (display == 'all') %}
-                    <h1 name="title">
-                        {{ interOpen.interaction.question.title }}
-                    </h1>
 
-                    <div name="description">
-                        {{ interOpen.interaction.question.description|raw }}
-                    </div>
+                    <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                        <legend style="border: transparent hidden 0; width: 80px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'title' | trans }} :</legend>
+                        <h1 name="title">
+                            {{ interOpen.interaction.question.title }}
+                        </h1>
+                    </fieldset><br/>
 
-                    <h3 name="invite">
-                        {{ interOpen.interaction.invite|raw }}
-                    </h3>
-
-                    {% if interOpen.interaction.feedback != '' %}
-                        <div name="feddback">
-                            {{ 'comment' | trans }} :
-                            {{ interOpen.interaction.feedback|raw }}
-                        </div>
+                    {% if interOpen.interaction.question.description != '' %}
+                        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                            <legend style="border: transparent hidden 0; width: 150px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'description' | trans }} :</legend>
+                            <div name="description">
+                                {{ interOpen.interaction.question.description|raw }}
+                            </div>
+                        </fieldset><br/>
                     {% endif %}
-                
-                    <div name="response">
-                        {{ 'your answer' | trans }} :
-                        <br/><br/>
-                        <div>
-                            {% if interOpen.typeopenquestion == 'long' %}
-                                {{ responses[i].response|raw}}
-                                {% if admin == 1 %}
-                                    <input type="hidden" value="{{ responses[i].mark }}" id="currentOpenMark_{{ responses[i].id }}" />
-                                    <a id="open_mark_{{ responses[i].id }}" onClick="openMark('{{ path('ujm_paper_mark_open_question', {'respid': responses[i].id, 'maxScore': interInfo['maxScore']}) }}');">{{ 'marked this question' | trans }}</a>
-                                {% endif %}
-                            {% endif %}
-                        </div> 
-                    </div> 
 
-                    {% for hv in hintViewed %}
-                        {% if( hv.hint.interaction.id == interaction.id ) %}
-                            {{ 'penalty' | trans }} : {{ hv.hint.penalty }}<br/>
+                    <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                        <legend style="border: transparent hidden 0; width: 130px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'question' | trans }} :</legend>
+                        <h3 name="invite">
+                            {{ interOpen.interaction.invite|raw }}
+                        </h3>
+                    </fieldset><br/>
+
+                    <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                        <legend style="border: transparent hidden 0; width: 120px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'response' | trans }} :</legend>
+                        <div name="response">
+                            <div>
+                                {% if interOpen.typeopenquestion == 'long' %}
+                                    {{ responses[i].response|raw}}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </fieldset><br/>
+                    
+                    {% if interOpen.interaction.feedback != '' %}
+                        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                            <legend style="border: transparent hidden 0; width: 170px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'comment' | trans }} :</legend>
+                            <div name="feddback">
+                                {{ interOpen.interaction.feedback|raw }}
+                            </div>
+                        </fieldset><br/>
+                    {% endif %}
+
+                    <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 10px;">
+                        <legend style="border: transparent hidden 0; width: 100px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'mark' | trans }} :</legend>
+                        {% for hv in hintViewed %}
+                            {% if( hv.hint.interaction.id == interaction.id ) %}
+                                {{ 'penalty' | trans }} : {{ hv.hint.penalty }}<br/>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if responses[i].mark != -1 %}
+                            {{ 'mark' | trans }} : <span id="open_mark_value_{{ responses[i].id }}">{{ responses[i].mark }}/{{ interInfo['maxScore'] }}</span><br/>
+                            {% set exoMark = exoMark + responses[i].mark %}
+                        {% else %}
+                            {{ 'mark' | trans }} : <span id="open_mark_value_{{ responses[i].id }}">{{ 'not yet mark' | trans }}</span><br/>
+                            {% set temporaryMark = true %}
                         {% endif %}
-                    {% endfor %}
+
+                        {% if interOpen.typeopenquestion == 'long' and admin == 1 %}
+                            <input type="hidden" value="{{ responses[i].mark }}" id="currentOpenMark_{{ responses[i].id }}" />
+                            <a id="open_mark_{{ responses[i].id }}"
+                                accesskey=""onmouseover="body.style.cursor = 'pointer';" onmouseout="body.style.cursor = 'default';"
+                                onClick="openMark('{{ path('ujm_paper_mark_open_question', {'respid': responses[i].id, 'maxScore': interInfo['maxScore']}) }}');"
+                            >{{ 'mark this question' | trans }}</a>
+                        {% endif %}
+
+                    </fieldset>
                 {% endif %}
-                {% if responses[i].mark != -1 %}
-                    {{ 'mark' | trans }} : <span id="open_mark_value_{{ responses[i].id }}">{{ responses[i].mark }}/{{ interInfo['maxScore'] }}</span><br/>
-                    {% set exoMark = exoMark + responses[i].mark %}
-                {% else %}
-                    {{ 'mark' | trans }} : <span id="open_mark_value_{{ responses[i].id }}">{{ 'not yet mark' | trans }}</span>
-                    {% set temporaryMark = true %}
-                {% endif %}
+
                 {% set exoScoreMax = exoScoreMax + interInfo['maxScore'] %}
-                <hr/>
-            </div>
+
+            </fieldset>
+        </div><br/>
         {% endif %}
 
         {% set i = i + 1 %}
     {% endfor %}
 
-    <input type="hidden" value="{{ exoMark }}" id="exoMark" />
-    <input type="hidden" value="{{ exoScoreMax }}" id="exoScoreMax" />
-    {% set scoreFinal = exoMark / exoScoreMax %}
-    {% set scoreFinal = scoreFinal * 20 %}
-    {% if temporaryMark == true %}
-        {{ "temporary mark" | trans }} :
-    {% else %}
-        {{ 'final mark' | trans }} :
-    {% endif %}
-    <div id="paperFinalScore">{{ scoreFinal }} / 20</div>
+    <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
+        <legend style="border: transparent hidden 0; width: 140px; margin: 0; color: skyblue;"><h1>&nbsp;{{ 'mark' | trans }} :</h1></legend>
+
+        <input type="hidden" value="{{ exoMark }}" id="exoMark" />
+        <input type="hidden" value="{{ exoScoreMax }}" id="exoScoreMax" />
+        {% set scoreFinal = exoMark / exoScoreMax %}
+        {% set scoreFinal = scoreFinal * 20 %}
+        {% if temporaryMark == true %}
+            <h4>{{ "temporary mark" | trans }} :</h4>
+        {% else %}
+            <h4>{{ 'final mark' | trans }} :</h4>
+        {% endif %}
+        <div id="paperFinalScore">{{ scoreFinal }} / 20</div>
+    </fieldset>
 {% endblock %}
-    
+
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/markedOpenQuestion.js') }}"></script>
-{% endblock %}    
+{% endblock %}

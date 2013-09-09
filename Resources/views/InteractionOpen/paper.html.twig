@@ -43,44 +43,74 @@
 {% block title %} {{ 'paper' | trans }} {{ 'question' | trans }} {% endblock %}
 
 {% block section_content %}
-    <h1>{{ interactionOpen.interaction.question.title }}</h1>
 
-    {% if interactionOpen.interaction.question.description != null %}
-        <div name="description">
-            <p>{{ interactionOpen.interaction.question.description|raw }}<p/>
-        </div>
-    {% endif %}
+    <div class="panel-heading" style="padding-left: 50px;">
+        <h1>{{ 'paper' | trans }} {{ 'question' | trans }}</h1>
+    </div><br/>
 
-    <div name="question">
-        <p>{{ interactionOpen.interaction.invite|raw }}<p/>
-    </div>
-    
-    <form action="{{ path('ujm_interactionopen_response') }}" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-        <p>
-            <table>
-                {% set nbr_hint = 1 %}
-                {% for hint in interactionOpen.interaction.hints %}              
-                   <tr>
-                       <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}', '{{path('ujm_hint_show')}}', '{{ 'consult_hint' | trans }} ?', '{{nbr_hint}}')">{{ 'hint' | trans }} {{nbr_hint}} </a></td>
-                       <td id="div_hint{{nbr_hint}}"></td>
-                   </tr>
-                   {% set nbr_hint = nbr_hint + 1 %}
-                {% endfor %}
-           </table>
-        
-           {% if interactionOpen.typeopenquestion == 'long' %}
-                <textarea name="interOpenLong" class="tinymce" data-theme="medium"></textarea>
-                <br/>
-           {% endif %}
-           
-           <input type="hidden" name="testOpen" value="testOpen" />
-           <input type="hidden" name="interactionOpenToValidated" value="{{ interactionOpen.id }}" />
-           <button type="submit" id="submit_response">{{ 'validate' | trans }}</button>
-        </p>
-    </form>
+    <a href="{{ path('ujm_question_index') }}" style="padding-left: 50px;"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
+
+    <hr/>
+
+    <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
+        <legend style="border: transparent hidden 0; width: 330px; margin: 0; color: skyblue;">
+            <h1>&nbsp;{{ 'question' | trans }} {{ 'open' | trans }} :</h1>
+        </legend>
+
+        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+            <legend style="border: transparent hidden 0; width: 80px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'title' | trans }} :</legend>
+            <h1>{{ interactionOpen.interaction.question.title }}</h1>
+        </fieldset><br/>
+
+        {% if interactionOpen.interaction.question.description != null %}
+            <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                <legend style="border: transparent hidden 0; width: 150px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'description' | trans }} :</legend>
+                <div name="description">
+                    <p>{{ interactionOpen.interaction.question.description|raw }}<p/>
+                </div>
+            </fieldset><br/>
+        {% endif %}
+
+        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+            <legend style="border: transparent hidden 0; width: 130px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'question' | trans }} :</legend>
+            <h3 name="question">
+                <p>{{ interactionOpen.interaction.invite|raw }}<p/>
+            </h3>
+        </fieldset><br/>
+
+        <form action="{{ path('ujm_interactionopen_response') }}" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+
+            {% if interactionOpen.typeopenquestion == 'long' %}
+                <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                    <legend style="border: transparent hidden 0; width: 120px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'response' | trans }} :</legend>
+                    <textarea name="interOpenLong" class="tinymce" data-theme="medium"></textarea>
+                </fieldset><br/>
+            {% endif %}
+
+            {% if interactionOpen.interaction.hints is not empty %}
+                <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                    <legend style="border: transparent hidden 0; width: 110px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'hints' | trans }} :</legend>
+                    <table>
+                        {% set nbr_hint = 1 %}
+                        {% for hint in interactionOpen.interaction.hints %}
+                           <tr>
+                               <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}', '{{path('ujm_hint_show')}}', '{{ 'consult_hint' | trans }} ?', '{{nbr_hint}}')">{{ 'hint' | trans }} {{nbr_hint}} </a></td>
+                               <td id="div_hint{{nbr_hint}}"></td>
+                           </tr>
+                           {% set nbr_hint = nbr_hint + 1 %}
+                        {% endfor %}
+                   </table>
+                </fieldset><br/>
+            {% endif %}
+
+            <input type="hidden" name="testOpen" value="testOpen" />
+            <input type="hidden" name="interactionOpenToValidated" value="{{ interactionOpen.id }}" />
+            <button type="submit" id="submit_response" class="btn btn-primary">{{ 'validate' | trans }}</button>
+        </form>
+    </fieldset>
 {% endblock %}
-    
+
 {% block javascripts %}
     {{ parent() }}
     {{ tinymce_init() }}

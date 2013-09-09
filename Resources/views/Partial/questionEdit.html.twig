@@ -1,62 +1,103 @@
-<p>
-    {{ form_row(edit_form.interaction.question.title) }}
-</p>
-<p>
-    <ul style="margin-left: 0; list-style-type: none;">
-        <li style="float: left;">
-            {{ form_row(edit_form.interaction.question.category, { 'attr': {'style': 'float left;'} }) }}
-        </li>
-        <li style="float: left;  margin-left: 70px; margin-top: 4%;">
-            <a href="#" id="lien_category">{{ 'create a new category' | trans }}</a>
-        </li>
-    </ul>
-</p>
-<br/><br/><br/><br/>
-<a onclick="DisplayOptional('description');" id="descriptionOptionalShow" 
-   onmouseover="document.body.style.cursor = 'pointer';" 
-   onmouseout="document.body.style.cursor = 'default';"
->{{ 'Question.description' | trans }}</a>
-    
-<a onclick="HideOptional('description');" id="descriptionOptionalHide" 
-   onmouseover="document.body.style.cursor = 'pointer';" 
-   onmouseout="document.body.style.cursor = 'default';"
->{{ 'Question.description' | trans }}</a>
-    
-<div id="descriptionOptional">
-    {{ form_widget(edit_form.interaction.question.description) }}
-</div>
-<br/>
-<p>
-    {{ form_widget(edit_form.interaction.question.model, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }} 
-    {{ form_label(edit_form.interaction.question.model) }} 
-</p>
-<p>
-    {{ form_row(edit_form.interaction.invite) }}
-</p>
-    
-<a onclick="DisplayOptional('feedback');" id="feebackOptionalShow" 
-   onmouseover="document.body.style.cursor = 'pointer';" 
-   onmouseout="document.body.style.cursor = 'default';"
->{{ 'Interaction.feedback' | trans }}</a>
-    
-<a onclick="HideOptional('feedback');" id="feebackOptionalHide" 
-   onmouseover="document.body.style.cursor = 'pointer';" 
-   onmouseout="document.body.style.cursor = 'default';"
->{{ 'Interaction.feedback' | trans }}</a>
-    
-<div id="feedbackOptional">
-    {{ form_widget(edit_form.interaction.feedBack) }}
-</div>
-<p>
-    {{ form_row(edit_form.interaction.hints) }}
-</p>
+<link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+
+<fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+    <legend style="border: transparent hidden 0; width: 80px;margin: 0; color: lightsteelblue;">
+        &nbsp;&nbsp;{{ 'title' | trans }} :
+    </legend>
+    <div style="float: left;">
+        {{ form_label(edit_form.interaction.question.title) }} &nbsp;
+        {{ form_widget(edit_form.interaction.question.title) }}
+    </div>
+</fieldset><br/>
+
+<fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 10px;">
+    <legend style="border: transparent hidden 0; width: 150px;margin: 0; color: lightsteelblue;">
+        &nbsp;&nbsp;{{ 'category' | trans }} :
+    </legend>
+    {{ 'choose' | trans }} :&nbsp;&nbsp;{{ form_widget(edit_form.interaction.question.category, { 'attr': {'style': 'width: 200px'} }) }}
+
+    <hr style=" height: 1px; color: powderblue; background-color: powderblue;"/>
+
+    <a href="#" id="lien_category">{{ 'create a new category' | trans }}</a>
+</fieldset><br/>
+
+<fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+    <legend style="border: transparent hidden 0; width: 150px;margin: 0; color: lightsteelblue;">
+        &nbsp;&nbsp;{{ 'description' | trans }} :
+    </legend>
+    <a onclick="DisplayOptional('description');" id="descriptionOptionalShow"
+        onmouseover="document.body.style.cursor = 'pointer';"
+        onmouseout="document.body.style.cursor = 'default';"
+    >{{ 'Question.description' | trans }}</a>
+
+    <a onclick="HideOptional('description');" id="descriptionOptionalHide"
+        onmouseover="document.body.style.cursor = 'pointer';"
+        onmouseout="document.body.style.cursor = 'default';"
+    >{{ 'Question.description' | trans }}</a>
+
+    <div id="descriptionOptional">
+        {{ form_widget(edit_form.interaction.question.description) }}
+    </div>
+</fieldset><br/>
+
+<fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+    <legend style="border: transparent hidden 0; width: 100px;margin: 0; color: lightsteelblue;">
+        &nbsp;&nbsp;{{ 'model' | trans }} :
+    </legend>
+    {{ form_widget(edit_form.interaction.question.model, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }}
+    {{ form_label(edit_form.interaction.question.model) }}
+</fieldset><br/>
+
+<fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+    <legend style="border: transparent hidden 0; width: 130px;margin: 0; color: lightsteelblue;">
+        &nbsp;&nbsp;{{ 'question' | trans }} :
+    </legend>
+        {{ form_widget(edit_form.interaction.invite) }}
+</fieldset><br/>
+
+<fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+    <legend style="border: transparent hidden 0; width: 170px;margin: 0; color: lightsteelblue;">
+        &nbsp;&nbsp;{{ 'comment' | trans }} :
+    </legend>
+    <a onclick="DisplayOptional('feedback');" id="feebackOptionalShow"
+        accesskey=""onmouseover="document.body.style.cursor = 'pointer';"
+        onmouseout="document.body.style.cursor = 'default';"
+    >{{ 'Interaction.feedback' | trans }}</a>
+
+    <a onclick="HideOptional('feedback');" id="feebackOptionalHide"
+        accesskey=""onmouseover="document.body.style.cursor = 'pointer';"
+        onmouseout="document.body.style.cursor = 'default';"
+    >{{ 'Interaction.feedback' | trans }}</a>
+
+    <div id="feedbackOptional">
+        {{ form_widget(edit_form.interaction.feedBack) }}
+    </div>
+</fieldset><br/>
+
+<fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-top: 5px;">
+    <legend style="border: transparent hidden 0; width: 110px; margin: 0; color: lightsteelblue;">
+        &nbsp;&nbsp;{{ 'hints' | trans }} :
+    </legend>
+    {{ form_widget(edit_form.interaction.hints) }}
+</fieldset><br/>
 
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/allQuestionsType.js') }}"></script>
 
-<div id="listeCategory">
-    <div id="popupCategory" class="hiddenCat" style="background-color: window;"> <a id="closeCategory" class="hiddenCat" title="close popup">{{ 'close' | trans }}</a><h1>{{ 'create a new category' | trans }}</h1><div id="div_input_category"></div></div><div id="overlayEffect_cat"> </div>
+<div id="popupEA">
+    <div id="popupContainer" class="hiddenCat">
+        <a id="close" class="hiddenCat" title="close popup">{{ 'close' | trans }}</a>
+        <h1>{{ 'response' | trans }}</h1><div id="div_input_popup">
+            <textarea id="input_popup" class="tinymce" data-theme="medium"></textarea>
+        </div>
+    </div>
+    <div id="overlayEffect"> </div>
 </div>
 
-<div id="popupEA">
-    <div id="popupContainer" class="hiddenCat" style="background-color: window;"> <a id="close" class="hiddenCat" title="close popup">{{ 'close' | trans }}</a><h1>{{ 'response' | trans }}</h1><div id="div_input_popup"><textarea id="input_popup" class="tinymce" data-theme="medium"></textarea></div></div><div id="overlayEffect"> </div>
+<div id="listeCategory">
+    <div id="popupCategory" class="hiddenCat">
+        <a id="closeCategory" class="hiddenCat" title="close popup">{{ 'close' | trans }}</a>
+        <h1>{{ 'create a new category' | trans }}</h1>
+        <div id="div_input_category"></div>
+    </div>
+    <div id="overlayEffect_cat"></div>
 </div>

@@ -1,7 +1,7 @@
 $(".form-collection-add").each(function (index) {
     $(this).hide();
 });
-    
+
 //css hint
 function hintCSS() {
     //"use strict";
@@ -13,10 +13,10 @@ function hintCSS() {
     );
 
     //deplacer tous les elementts du hint ds une ligne
-    $('#newTable2 .ligne_choice2:last').append('<td class="colonne_choice2" >  </td>');
+    $('#newTable2 .ligne_choice2:last').append('<td class="colonne_choice2 classic" >  </td>');
     $('#newTable2 .colonne_choice2:last').append($('#newTable2 .ligne_choice2:last').children('div').children('label').first());
     $('#newTable2 .ligne_choice2:last').children('div').children('div').children('div').each(function (index) {
-            $('#newTable2 .ligne_choice2:last').append('<td class="colonne_choice2" >  </td>');
+            $('#newTable2 .ligne_choice2:last').append('<td class="colonne_choice2 classic" >  </td>');
             $('#newTable2 .colonne_choice2:last').append($(this));
         }
     );
@@ -26,13 +26,13 @@ function hintCSS() {
 
     // css th
     $('#newTable2 th').css({
-            'background-color': '#eee'
+            'background-color': 'lightsteelblue'
         }
     );
 
 
     //ajout de la derniere colonne pr l'ajout et la supression
-    $('#newTable2 .ligne_choice2:last').contents('td:last').after('<td><a href="#" id="delete_choice2">supprimer</a></td>');
+    $('#newTable2 .ligne_choice2:last').contents('td:last').after('<td class="classic"><a href="#" id="delete_choice2">supprimer</a></td>');
 
 
     // clique boutons supprimer lignes du tableau
@@ -56,7 +56,7 @@ function hintCSS() {
 //css hint
 function hintCSSEdit() {
     //"use strict";
-    $("*[id$='_interaction_hints']").after('<table style="border: 1px solid black;" id="newTable2"><tr> <th>Num indice</th> <th>Indice</th> <th>penalité</th> <th>------</th> </tr></table>');
+    $("*[id$='_interaction_hints']").after('<table style="border: 1px solid black;" id="newTable2"><tr> <th class="classic">Num indice</th> <th class="classic">Indice</th> <th class="classic">Pénalité</th> <th class="classic">------</th> </tr></table>');
 
     //creer une ligne
     $("*[id$='_interaction_hints']").children().first().children('div').each(function (index) {
@@ -92,7 +92,7 @@ function hintCSSEdit() {
 
     // css th
     $('#newTable2 th').css({
-            'background-color': '#eee'
+            'background-color': 'lightsteelblue'
         }
     );
 
@@ -124,7 +124,7 @@ function hintCSSEdit() {
 
 function addFormHintEdit(add_h, source_image_add) {
     //"use strict";
-    $("*[id$='_interaction_hints']").before('<a href="#" id="add_hint"><img src="' + source_image_add + '">' + add_h + '</a>');
+    $("*[id$='_interaction_hints']").before('<a href="#" id="add_hint"><img src="' + source_image_add + '">&nbsp;' + add_h + '</a><br/>');
     $('#add_hint').css({
             'display': 'block',
             'color': 'green',
@@ -144,7 +144,7 @@ function addFormHintEdit(add_h, source_image_add) {
 
 function addFormHint(add_h, hint_number, hint, Penalty, source_image_add) {
     //"use strict";
-    $("*[id$='_interaction_hints']").before('<a href="#" id="add_hint"><img src="' + source_image_add + '">' + add_h + '</a>');
+    $("*[id$='_interaction_hints']").before('<a href="#" id="add_hint"><img src="' + source_image_add + '">&nbsp;' + add_h + '</a><br/>');
     $('#add_hint').css({
             'display': 'block',
             'color': 'green',
@@ -169,7 +169,9 @@ function addHint(hint_number, hint, Penalty) {
     } else {
         index2 = 0;
         if(typeof hint_number != 'undefined') {
-            $("*[id$='_interaction_hints']").after('<table style="border: 1px solid black;" id="newTable2"><tr> <th>'+hint_number+'</th> <th>'+hint+'</th> <th>'+Penalty+'</th> <th>------</th> </tr></table>');
+            $("*[id$='_interaction_hints']").after('<table style="border: 1px solid black;" id="newTable2"><tr> <th class="classic">'
+                + hint_number + '</th> <th class="classic">' + hint + '</th> <th class="classic">' + Penalty
+                + '</th> <th class="classic">------</th> </tr></table>');
         }
     }
 

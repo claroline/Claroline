@@ -53,7 +53,8 @@ class HintType extends AbstractType
             )
             ->add(
                 'penalty', 'text', array(
-                    'label' => 'Hint.penalty'
+                    'label' => 'Hint.penalty',
+                    'attr' => array('style' => 'width:50px; text-align: end;')
                 )
             );
     }

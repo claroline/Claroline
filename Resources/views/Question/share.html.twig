@@ -39,25 +39,33 @@
 
 {% block section_content %}
 
-    <h1>{{ 'sharedUser' | trans }}</h1>
+    <div class="panel-heading" style="padding-left: 50px;">
+        <h1>{{ 'sharedUser' | trans }}</h1>
+    </div><br/>
 
-    <a href="{{ path('ujm_question_index') }}" ><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
-    <br/>
-    <hr>
-    {{ 'nameUser2Shared' | trans }} :<br/><br/>
-    <div class="input-append pull-left">
-        <input class="input-medium" type="text" id="search-user-txt" placeholder="{{ 'search'|trans({}, 'platform') }}"
-            onkeydown="if (event.keyCode == 13) { search_user_ajax('{{ path('ujm_question_share_search_user') }}', 1);return false; }">
-        <button class="filter btn" type="button" id="search-user-button" onClick="search_user_ajax('{{ path('ujm_question_share_search_user') }}', 1)">
-            <i class="icon-search"></i>
-        </button>
-    </div>
+    <a href="{{ path('ujm_question_index') }}" style="padding-left: 50px;"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
 
-    <br/><br/><br/>
+    <hr/>
+
+    <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
+        <legend style="border: transparent hidden 0; width: 250px; margin: 0; color: skyblue;">
+            <h1>&nbsp;{{ 'shared with' | trans }}</h1>
+        </legend>
+
+        {{ 'nameUser2Shared' | trans }} :<br/><br/>
+        <div class="input-group" style="width: 200px;">
+            <input class="input-medium" type="text" id="search-user-txt" placeholder="{{ 'search'|trans({}, 'platform') }}"
+                onkeydown="if (event.keyCode == 13) { search_user_ajax('{{ path('ujm_question_share_search_user') }}', 1);return false; }">
+            <span class="input-group-btn">
+                <button class="filter btn" type="button" id="search-user-button" onClick="search_user_ajax('{{ path('ujm_question_share_search_user') }}', 1)">
+                    <i class="icon-search"></i>
+                </button>
+            </span>
+        </div>
+    </fieldset><br/>
 
     <div id="searchUserList">
         {% if divResultSearch is defined %}
-            {{ 'result' | trans }} : <br/><br/>
             {{ divResultSearch | raw }}
         {% endif %}
     </div>

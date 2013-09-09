@@ -43,44 +43,71 @@
 {% block title %} {{ 'correction' | trans }} {% endblock %}
 
 {% block section_content %}
-    
-    <a href="{{ path('ujm_question_index') }}" >
+
+    <div class="panel-heading" style="padding-left: 50px;">
+        <h1>{{ 'correction' | trans }}</h1>
+    </div><br/>
+
+    <a href="{{ path('ujm_question_index') }}" style="padding-left: 50px;">
         <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
-    </a><br/>
-    
-    <h1 name="title">
-        {{ interOpen.interaction.question.title}}
-    </h1>
+    </a>
 
-    <div name="description">
-        {{ interOpen.interaction.question.description|raw}}
-    </div>
+    <hr/>
 
-    <h3 name="invite">
-        {{ interOpen.interaction.invite|raw}}
-    </h3>
+    <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
+        <legend style="border: transparent hidden 0; width: 330px; margin: 0; color: skyblue;">
+            <h1>&nbsp;{{ 'question' | trans }} {{ 'open' | trans }} :</h1>
+        </legend>
 
-    <div name="response">
-        {{ 'your answer' | trans }} :
-        <br/><br/>
-        <div>
-            {% if interOpen.typeopenquestion == 'long' %}
-                {{ response|raw}}
+        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+            <legend style="border: transparent hidden 0; width: 80px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'title' | trans }} :</legend>
+            <h1 name="title">
+                {{ interOpen.interaction.question.title }}
+            </h1>
+        </fieldset><br/>
+
+        {% if interOpen.interaction.question.description != '' %}
+            <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                <legend style="border: transparent hidden 0; width: 150px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'description' | trans }} :</legend>
+                <div name="description">
+                    {{ interOpen.interaction.question.description|raw }}
+                </div>
+            </fieldset><br/>
+        {% endif %}
+
+        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+            <legend style="border: transparent hidden 0; width: 130px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'question' | trans }} :</legend>
+            <h3 name="invite">
+                {{ interOpen.interaction.invite|raw }}
+            </h3>
+        </fieldset><br/>
+
+        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+            <legend style="border: transparent hidden 0; width: 120px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'response' | trans }} :</legend>
+                {{ 'your answer' | trans }} :
+                <br/><br/>
+                <div>
+                    {% if interOpen.typeopenquestion == 'long' %}
+                       {{ response|raw}}
+                    {% endif %}
+                </div>
+            </fieldset><br/>
+
+        {% if interOpen.interaction.feedback != '' %}
+            <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                <legend style="border: transparent hidden 0; width: 170px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'comment' | trans }} :</legend>
+                <div name="feddback">
+                    {{ interOpen.interaction.feedback|raw }}
+                </div>
+            </fieldset><br/>
+        {% endif %}
+
+        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 10px;">
+            <legend style="border: transparent hidden 0; width: 100px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'mark' | trans }} :</legend>
+            {% if penalty > 0 %}
+                {{ 'penalty' | trans }} : {{ penalty }}<br/>
             {% endif %}
-        </div> 
-    </div>    
-
-    <div name="feddback">
-        {{ interOpen.interaction.feedback|raw}}
-    </div>
-    <br/><br/>     
-
-    {% if penalty > 0 %}
-        {{ 'penalty' | trans }} : {{ penalty }}<br/>
-    {% endif %}
-    {% if tempMark == true %}
-        {{ 'not yet mark' | trans }} : {{ score }}
-    {% else %}
-        {{ 'mark' | trans }} : <span id="score">{{ score }}</span>
-    {% endif %}
+            {{ 'not yet mark' | trans }}.
+        </fieldset>
+    </fieldset>
 {% endblock %}

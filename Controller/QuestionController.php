@@ -423,7 +423,7 @@ class QuestionController extends Controller
                     );
 
                 case "InteractionOpen":
-                    
+
                     $interactionOpen = $this->getDoctrine()
                         ->getManager()
                         ->getRepository('UJMExoBundle:InteractionOpen')
@@ -578,7 +578,7 @@ class QuestionController extends Controller
                             'pageNow' => $pageNow
                         )
                     );
-                    
+
                     break;
             }
         }
@@ -730,7 +730,7 @@ class QuestionController extends Controller
                 return $divResultSearch; // Send the twig with the result
             } else {
                 // Cut the header of the request to only have the twig with the result
-                $divResultSearch = substr($divResultSearch, strrpos($divResultSearch, '<table'));
+                $divResultSearch = substr($divResultSearch, strrpos($divResultSearch, '<link'));
 
                 // Send the form to search and the result
                 return $this->render(
@@ -1261,7 +1261,7 @@ class QuestionController extends Controller
                     return $divResultSearch; // Send the twig with the result
                 } else {
                     // Cut the header of the request to only have the twig with the result
-                    $divResultSearch = substr($divResultSearch, strrpos($divResultSearch, '<table'));
+                    $divResultSearch = substr($divResultSearch, strrpos($divResultSearch, '<link'));
 
                     // Send the form to search and the result
                     return $this->render(
@@ -1343,7 +1343,7 @@ class QuestionController extends Controller
                     return $divResultSearch; // Send the twig with the result
                 } else {
                     // Cut the header of the request to only have the twig with the result
-                    $divResultSearch = substr($divResultSearch, strrpos($divResultSearch, '<table'));
+                    $divResultSearch = substr($divResultSearch, strrpos($divResultSearch, '<link'));
 
                     // Send the form to search and the result
                     return $this->render(
@@ -1409,14 +1409,14 @@ class QuestionController extends Controller
             )
         );
     }
-    
+
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder(array('id' => $id))
             ->add('id', 'hidden')
             ->getForm();
     }
-    
+
     /**
      * To control the User's rights to this question
      *

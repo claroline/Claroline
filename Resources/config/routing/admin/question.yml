@@ -13,7 +13,6 @@ ujm_question_edit:
 ujm_question_delete:
     pattern:  /{id}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}
     defaults: { _controller: UJMExoBundle:Question:delete, pageNow: 1, maxPage: 10, nbItem: 1, lastPage: 1 }
-    requirements: { _method: post }
 
 ujm_question_display_form_type:
     pattern: /choixFormType

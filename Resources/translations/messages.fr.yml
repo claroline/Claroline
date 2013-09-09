@@ -64,8 +64,9 @@ category: Catégorie
 calculationMeasureDifficulty: Il se calcul avec le nombre de candidats ayant répondu correctement divisé par le nombre total de répondants
 cercle: Cercle
 change: Changer
-changeName: Changer le nom
+changeName: Changer le nom du document
 choice: Choix
+choose: Choisir
 choose_type: Choisir un type
 chooseType: Choisissez le type de document à afficher
 close: Fermer
@@ -107,6 +108,7 @@ entry: Entrer
 erase: Pour effacer une zone de réponse, maintenez la touche s enfoncée et cliquez sur la zone de réponse à effacer.
 exercise: Exercice
 exercise creation: Création d'un exercice
+exercise definition: Définition de l'exercice
 exercise edit: Modification de l'exercice
 exit: Quitter
 expected answer: Réponse attendue
@@ -149,11 +151,13 @@ infoMeasureDifficulty: Cet indice ne prend pas en compte les étudiants n'ayant 
 interupt: Interrompre
 invite_question: L'invite de la question doit être rempli
 isInterupt: Interrompu
+image: Image
 import: Importer
 import questions: Importer des questions
 inside: Vous devez mettre la zone de reponse complète DANS l'image
 interactionGraphic creation: Création d'une question Graphique
 interactionGraphic Edition: Edition d'une question Graphique
+interactionOpen creation: Création d'une question ouverte
 inValidMark: Note invalide
 
 # K
@@ -162,20 +166,24 @@ kind of question: Quel type de question
 # L
 label: Label
 label_empty: Les champs des réponses ne doivent pas être vides
+legend: Légende
 linkedDoc: Attention, le document que vous essayez de supprimer est lié à des questions
 linkpaper: Liées à un test
+linkedQuestions: Questions liées
 list: Liste
 list of exercises: Liste des exercices
 list of question: Liste des questions
 lock attempt: Vérouiller le test
+long: Longue
 
 # M
 manageImg: Gérer mes documents
 mark: Score
-marked this question: Noter cette question
+mark this question: Noter cette question
 markTooBigest: La note doit être inférieure ou égale à 
-maximum number of tries: Nombre d'essaies maximum
+maximum number of tries: Nombre d'essai maximum
 meaningMeasureDifficulty: Si l'indice est élevé, c'est que la question est facile ; Inversement, si un indice est faible, la question est difficile
+model: Modèle
 multiple response: Réponse multiples
 my account: Mon compte
 my questions: Mes questions
@@ -185,7 +193,8 @@ my shared questions: Mes questions partagées
 nameUser2Shared: Nom de l'utilisateur avec qui partager la question
 nbr_choices: Le nombre de choix doit être supérieur à deux
 never: Jamais
-newName: Nouveau nom
+newName: Nouveau nom du document
+newDoc: Nouveau document
 no: non
 no answer: Pas de réponse
 noAnswerZone: Vous n\'avez mis aucune zone de réponse
@@ -201,12 +210,15 @@ notImageMesssage: Le document doit être une image
 noTitle: La question n\'a pas de titre
 not yet mark: Pas encore noté
 noUserFound: Pas d'utilisateur trouvé
+nQuestion: Question n°
 number of papers: Nombre de copies
 number of questions: Nombre de questions
 number of questions to draw: Nombre de questions à tirer
+numerical: Numérique
 num_paper: Numéro de la copie
 
 # O
+oneWord: Un mot
 onlyOnce: => Les bonnes réponses ne sont comptabilisées qu'une seule fois.
 open: Ouverte
 open edition: Edition d'une question de type ouverte
@@ -215,7 +227,8 @@ orders: Consignes
 
 # P
 paper: Passage
-paper list: Listes des copies
+paper exo: Passage d'un test
+paper list: Liste des copies
 partially: Partiellement correcte
 penalty: Pénalité
 percentage: Pourcentage
@@ -237,6 +250,7 @@ qcm: QCM
 qcm creation: Création d'une question de type QCM
 qcm edition: Edition d'une question de type QCM
 question: Question
+questions: Questions
 question creation: Création d'une question
 questionSharedWith: Cette question est partagée avec les utilisateurs suivants
 
@@ -255,10 +269,12 @@ role: Rôle
 # S
 saveNewOrder: Enregistrer le nouvel ordre
 sawHint: de pénalité pour indices vus
+search: Rechercher un document
 searchQuestion: Chercher des questions
 seeDoc: Voir les questions liées à ce document
 seeSharedWith: Question partagée avec des utilisateurs
 select: Sélectionner
+selected Image: Image sélectionnée
 selection: => Cliquez sur un pointeurs pour le sélectionner et cliquez ensuite sur l'image pour définir votre zone de réponse.
 selectZone: Pour définir une zone de réponse, selectionnez la en cliquant dessus puis déposez la en re-cliquant à l'endroit voulu sur l'image. Vous pouvez aussi maintenir la touche CTRL enfoncée et cliquez sur l'image à l'endroit où vous voulez la placer.
 self: Vous ne pouvez pas partager une question avec vous-même
@@ -266,9 +282,11 @@ shape: Forme
 share: Partager
 shared by: Partagée par
 sharedUser: Partage de question
+shared with: Partager avec
+short: Courte
 show: Afficher
 show Instructions: Montrer les consignes
-sort: Trier
+sort: Trier les documents
 start date: Date de début
 subscription: Inscription
 
@@ -305,6 +323,9 @@ your answer: Votre réponse
 
 
 #properties of entities
+At the end of assessment: A la fin du test
+At the same time that the correction: En même temps que la correction
+After the last attempt: Après le dernier essai
 
 Category.value: Catégorie
 
@@ -331,12 +352,14 @@ Exercise.markMode: Note disponible
 Exercise.maxAttemps: Nombre d'essais autorisés
 Exercise.nbQuestion: Nombre de question à tirer aléatoirement
 Exercise.nbQuestionPage: Nombre de questions par page
-Exercise.shuffle: Orde des questions aléatoire
+Exercise.shuffle: Ordre des questions aléatoire
 Exercise.start_date: Date de début
 Exercise.title: Titre de l'exercice
 
 Exepertise.description: Description
 Exepertise.title_expertise: Titre de l'expertise
+
+From: A partir du
 
 Groupes.name: Nom du groupe
 
@@ -364,6 +387,8 @@ Inter_Hole.score: Point
 Inter_Hole.size: Taille
 
 LockAttempte.date: Date
+
+Never: jamais
 
 Planning.end_time: Date de fin
 Planning.start_time: Date de début

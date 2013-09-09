@@ -59,7 +59,7 @@ class ChoiceType extends AbstractType
             )
             ->add(
                 'weight', 'text', array(
-                    'required' => false, 'label' => ' ', 'attr' => array('style' => 'width:50px')
+                    'required' => false, 'label' => ' ', 'attr' => array('style' => 'width:50px; text-align: end;')
                 )
             )
             ->add(

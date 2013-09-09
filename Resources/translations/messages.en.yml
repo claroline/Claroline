@@ -64,8 +64,9 @@ category: Category
 calculationMeasureDifficulty: It's calculate with the number of applicant which have correctly reply divided by total number of applicants
 cercle: Circle
 change: Change
-changeName: Change the name
+changeName: Change the name of the document
 choice: Choice
+choose: Choose
 choose_type: Choose type
 chooseType: Choose type of document to display
 close: Close
@@ -106,6 +107,7 @@ end date: End date
 entry: Entry
 erase: To erase an answer zone, press s key and click on the erasable answer zone.
 exercise: Exercise
+exercise definition: Exercise definition
 exercise creation: Exercise creation
 exercise edit: Exercise edit
 exit: Exit
@@ -149,11 +151,13 @@ infoMeasureDifficulty: This measure doesn't count students that didn't saw the q
 interupt: Interupt
 invite_question: The prompt of question must be completed
 isInterupt: Interupted
+image: Image
 import: Import
 import questions: Import questions
 inside: You must put all the answer zone INSIDE the picture
 interactionGraphic creation: InteractionGraphic creation
 interactionGraphic Edition: InteractionGraphic Edition
+interactionOpen creation: interactionOpen creation
 inValidMark: Invalid score
 
 # K
@@ -162,20 +166,24 @@ kind of question: What kind of question
 # L
 label: Label
 label_empty: Fields of the responses should not be empty
+legend: Legend
 linkedDoc: Warning, the document you tried to delete is linked to questions
 linkpaper: Link to a test
+linkedQuestions: Linked Questions
 list: List
 list of exercises: List of exercises
 list of question: List of question
 lock attempt: Lock attempt
+long: Long
 
 # M
 manageImg: Manage my documents
 mark: Mark
-marked this question: Marked this question
+mark this question: Marked this question
 markTooBigest: The mark must be less than or equal to 
 maximum number of tries: Maximum number of tries
 meaningMeasureDifficulty: If the measure is hight, the question is easy ; In return, if the measure is low, the question is difficult
+model: Model
 multiple response: Multiple response
 my account: My account
 my questions: My questions
@@ -185,7 +193,8 @@ my shared questions: My shared questions
 nameUser2Shared: Name of user to share the question
 nbr_choices: The number of choices must be greater than two
 never: Never
-newName: New name
+newName: New name of the document
+newDoc: New document
 no: No
 no answer: No answer
 noAnswerZone: There is no answer zone
@@ -201,12 +210,15 @@ notImageMesssage: The document should be an image
 noTitle: The question has no title
 not yet mark: Not yet mark
 noUserFound: No user found
+nQuestion: Question n°
 number of papers: Number of papers
 number of questions: Number of questions
 number of questions to draw: Number of questions to draw
+numerical: Numerical
 num_paper: Paper's number
 
 # O
+oneWord: One world
 onlyOnce: => The rights answers count only once.
 open: Open
 open edition: Edition of a question of type open
@@ -215,6 +227,7 @@ orders: Instructions
 
 # P
 paper: Paper
+paper exo:  paper test
 paper list: Paper list
 partially: Partially correct
 penalty: Penalty
@@ -237,6 +250,7 @@ qcm: QCM
 qcm creation: Creation of a question of type QCM
 qcm edition: Edition of a question of type QCM
 question: Question
+questions: Questions
 question creation: Question creation
 questionSharedWith: This question is shared with users below
 
@@ -255,10 +269,12 @@ role: Role
 # S
 saveNewOrder: Save the new order
 sawHint: of penalty for seen hints
+search: Search
 searchQuestion: Search questions
 seeDoc: See linked questions to this document
 seeSharedWith: Question shared with users
 select: Select
+selected Image: Selected image
 selection: => Click on a pointer to select it and click again on the picture to define your answer.
 selectZone: To define an answer zone, click on it and place it by re-clicking to the selected place on the image. You can also press CTRL key and click on the picture where it should be placed.
 self: You can't shared this question with yourself
@@ -266,9 +282,11 @@ shape: Shape
 share: Share
 shared by: Shared by
 sharedUser: Share of questions
+shared with: Shared with
+short: Short
 show: Show
 show Instructions: Show instructions
-sort: Sort
+sort: Sort documents
 start date: Start date
 subscription: Subscription
 
@@ -305,6 +323,9 @@ your answer: Your answer
 
 
 #properties of entities
+At the end of assessment: At the end of assessment
+At the same time that the correction: At the same time that the correction
+After the last attempt: After the last attempt
 
 Category.value: Category
 
@@ -338,6 +359,8 @@ Exercise.title: Exercise title
 Exepertise.description: Description
 Exepertise.title_expertise: Expertise title
 
+From: From
+
 Groupes.name: Name of group
 
 Hole.orthography: Allow misspellings
@@ -365,6 +388,8 @@ Inter_Hole.size: Size
 
 LockAttempte.date: Date
 
+Never: Never
+  
 Planning.end_time: End Date
 Planning.start_time: Start date
 

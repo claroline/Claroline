@@ -34,38 +34,69 @@
 #}
 
 <link href="{{ asset('bundles/ujmexo/css/errorValidation.css') }}" type="text/css" rel="stylesheet" />
+<link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 
-<h1>{{ 'qcm creation' | trans }}</h1>
+<fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
+    <legend style="border: transparent hidden 0; width: 620px; margin: 0; color: skyblue;">
+        <h1>&nbsp;{{ 'qcm creation' | trans }}</h1>
+    </legend>
 
-<form class="well label_bold" onsubmit="return check_form('{{ 'nbr_choices' | trans }}', '{{ 'answer_coched' | trans }}', '{{ 'label_empty' | trans }}', '{{ 'point_answers' | trans }}', '{{ 'point_answer' | trans }}', '{{ 'invite_question' | trans }}');"
-      action="{{ path('ujm_interactionqcm_create') }}" method="post" {{ form_enctype(form) }}>
-    
-    {% include "UJMExoBundle:Partial:question.html.twig" %} 
-    
-    <br/><p>
-        {{ form_widget(form.shuffle, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }} 
-        {{ form_label(form.shuffle) }} 
-    </p><br/><p>
-        {{ form_row(form.scoreRightResponse) }}
-    </p><p>
-        {{ form_row(form.scoreFalseResponse) }}
-    </p><p>
-        {{ form_widget(form.weightResponse, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }} 
-        {{ form_label(form.weightResponse) }}
-    </p><p>
-        {{ form_row(form.typeQCM) }}
-    </p><p>
-        {{ form_row(form.choices) }}
-    </p>
-    
-     <div style="visibility: hidden;">{{ form_rest(form) }}</div>
-    {{ form_errors(form) }}
-    
-    <p>
-        <input type="hidden" name="exercise" value="{{ exoID }}" />
-        <button type="submit" id="button_submit">{{ 'create' | trans }}</button>
-    </p>
-</form>
+    <form onsubmit="return check_form('{{ 'nbr_choices' | trans }}', '{{ 'answer_coched' | trans }}', '{{ 'label_empty' | trans }}', '{{ 'point_answers' | trans }}', '{{ 'point_answer' | trans }}', '{{ 'invite_question' | trans }}');"
+          action="{{ path('ujm_interactionqcm_create') }}" method="post" {{ form_enctype(form) }}>
+
+        {% include "UJMExoBundle:Partial:question.html.twig" %}
+
+        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 5px; padding-bottom: 5px; padding-top: 5px;">
+            <legend style="border: transparent hidden 0; width: 120px; margin: 0; color: lightsteelblue;">
+                &nbsp;&nbsp;{{ 'response' | trans }} :
+            </legend>
+
+            <fieldset style="border: #ccf dotted thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                <legend style="border: transparent hidden 0; width: 100px; margin: 0; color: lightsteelblue;">
+                    &nbsp;&nbsp;{{ 'points' | trans }} :
+                </legend>
+                {{ form_label(form.scoreRightResponse) }} &nbsp;
+                {{ form_widget(form.scoreRightResponse, { 'attr': {'style': 'width:50px; text-align: end;'} }) }}
+
+                <hr style=" height: 1px; color: teal; background-color: teal"/>
+
+                {{ form_label(form.scoreFalseResponse) }} &nbsp;
+                {{ form_widget(form.scoreFalseResponse, { 'attr': {'style': 'width:50px; text-align: end;'} }) }}
+
+                <hr style=" height: 1px; color: teal; background-color: teal"/>
+
+                {{ form_widget(form.weightResponse, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }}
+                {{ form_label(form.weightResponse) }}
+            </fieldset><br/>
+
+            <fieldset style="border: #ccf dotted thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                <legend style="border: transparent hidden 0; width: 90px; margin: 0; color: lightsteelblue;">
+                    &nbsp;&nbsp;{{ 'choice' | trans }} :
+                </legend>
+                {{ form_widget(form.shuffle, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }}
+                {{ form_label(form.shuffle) }}
+
+                <hr style=" height: 1px; color: teal; background-color: teal"/>
+
+                {{ form_row(form.typeQCM) }}
+
+                <hr style=" height: 1px; color: teal; background-color: teal"/>
+
+                {{ form_row(form.choices) }}
+            </fieldset>
+
+            <div style="display: none;">{{ form_rest(form) }}</div>
+            {{ form_errors(form) }}
+        </fieldset>
+
+        <br/>
+
+        <p>
+            <input type="hidden" name="exercise" value="{{ exoID }}" />
+            <button type="submit" id="button_submit" class="btn btn-primary">{{ 'create' | trans }}</button>
+        </p>
+    </form>
+</fieldset>
 
 {# tiny MCE #}
 {{ tinymce_init() }}
@@ -80,7 +111,7 @@
     <script type="text/javascript">
         linkCategory('{{ path('ujm_category_new_pop') }}');
         insertStyle();
-        addFormChoiceEdit('{{ 'multiple response' | trans }}', '{{ 'unique response' | trans }}', '{{ 'add' | trans }}', '{{ 'Response number' | trans }}', '{{ 'Response' | trans }}', '{{ 'point' | trans }}', '{{ 'comment' | trans }}', '{{ 'expected answer' | trans }}', '{{ 'order' | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '0', '{{entity.typeQCM.id}}', '{{ 'Choice.positionForce' | trans }}', '{{ asset('bundles/ujmexo/images/delete.png') }}');
+        addFormChoiceEdit('{{ 'multiple response' | trans }}', '{{ 'unique response' | trans }}', '{{ 'add' | trans }}', '{{ 'Response number' | trans }}', '{{ 'response' | trans }}', '{{ 'point' | trans }}', '{{ 'comment' | trans }}', '{{ 'expected answer' | trans }}', '{{ 'order' | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '0', '{{entity.typeQCM.id}}', '{{ 'Choice.positionForce' | trans }}', '{{ asset('bundles/ujmexo/images/delete.png') }}');
         choiceCSSEdit('{{ asset('bundles/ujmexo/images/delete.png') }}', '0');
         editionAv();
         hintCSSEdit();
@@ -91,7 +122,7 @@
         linkCategory('{{ path('ujm_category_new_pop') }}');
         insertStyle();
         editionAv();
-        addFormChoice('{{ 'multiple response' | trans }}', '{{ 'unique response' | trans }}', '{{ 'add' | trans }}', '{{ 'Response number' | trans }}', '{{ 'Response' | trans }}', '{{ 'point' | trans }}', '{{ 'comment' | trans }}', '{{ 'expected answer' | trans }}', '{{ 'order' | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '{{ asset('bundles/ujmexo/images/delete.png') }}', '{{ 'Choice.positionForce' | trans }}');
+        addFormChoice('{{ 'multiple response' | trans }}', '{{ 'unique response' | trans }}', '{{ 'add' | trans }}', '{{ 'Response number' | trans }}', '{{ 'response' | trans }}', '{{ 'point' | trans }}', '{{ 'comment' | trans }}', '{{ 'expected answer' | trans }}', '{{ 'order' | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '{{ asset('bundles/ujmexo/images/delete.png') }}', '{{ 'Choice.positionForce' | trans }}');
         addFormHint('{{ 'add hint' | trans }}', '{{ 'hint number' | trans }}', '{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
     </script>
 {% endif %}

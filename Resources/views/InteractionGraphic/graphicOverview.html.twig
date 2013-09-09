@@ -44,62 +44,94 @@
 
 {% block section_content %}
 
-    <a href="{{ path('ujm_question_index') }}" >
+    <div class="panel-heading" style="padding-left: 50px;">
+        <h1>{{ 'correction' | trans }}</h1>
+    </div><br/>
+
+    <a href="{{ path('ujm_question_index') }}" style="padding-left: 50px;">
         <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
-    </a><br/>
-    
-    <h1>{{ interG.interaction.question.title }}</h1>
+    </a>
 
-    <div>
-        <p>{{ interG.interaction.question.description|raw }}</p>
-    </div>
+    <hr/>
 
-    <h3>
-        <p>{{ interG.interaction.invite|raw }}</p>
-    </h3>
+    <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
+        <legend style="border: transparent hidden 0; width: 370px; margin: 0; color: skyblue;">
+            <h1>&nbsp;{{ 'question' | trans }} {{ 'graphic' | trans }} :</h1>
+        </legend>
 
-    <div style="position: relative;">
-        <img src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
-            alt="AnswerImage" id="AnswerImage1"/>
+        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+            <legend style="border: transparent hidden 0; width: 80px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'title' | trans }} :</legend>
+            <h1 name="title">
+                {{ interG.interaction.question.title }}
+            </h1>
+        </fieldset><br/>
 
-        {% set i = 0 %}{% set allInfo = '' %}
-
-        {% for c in coords %}
-
-            {% set numb = coords[i].value|split(',') %}
-            {% set respcoo = rep[i]|split('-') %}
-
-                <img src="/Claroline/web/bundles/ujmexo/images/graphic/circlew.png" alt="RightAnswer{{i}}" id="1ra{{i}}"
-                    style="position: absolute; z-index: 2;"/><br/>
-                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{i}}" id="1cursor{{i}}"
-                    style="position: absolute; z-index: 7;"/>
-
-            {% set allInfo = coords[i].shape~';'~coords[i].color~';'~asset('bundles/ujmexo/images/graphic/')~';'
-                ~numb[0]~';'~numb[1]~';'~respcoo[0]~';'~respcoo[1]~';'~coords[i].size~'^'~allInfo %}
-
-            {% set i = i + 1 %}
-
-        {% endfor %}
-    </div>
-
-    <p>{{ 'mark' | trans }} : {{ score }} / {{ total }}<br/>
-
-        {% if score == 0 and penalty == 0 %}
-            {{ 'noRightAnswer' | trans }}.
-        {% elseif penalty == 0 %}
-            {{ 'noHintShow' | trans }}.
-        {% else %}
-            {{ 'pointRightResponse' | trans }} : {{ point }} {{ 'with' | trans }} : -{{ penalty }} {{ 'sawHint' | trans }}.
+        {% if interG.interaction.question.description != '' %}
+            <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+                <legend style="border: transparent hidden 0; width: 150px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'description' | trans }} :</legend>
+                <div name="description">
+                    {{ interG.interaction.question.description|raw }}
+                </div>
+            </fieldset><br/>
         {% endif %}
-    </p>
 
-    {% if interG.interaction.feedback is defined %}
-        <div>
-            <p>{{ interG.interaction.feedback|raw }}</p>
-        </div>
-    {% endif %}
+        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
+            <legend style="border: transparent hidden 0; width: 130px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'question' | trans }} :</legend>
+            <h3 name="invite">
+                {{ interG.interaction.invite|raw }}
+            </h3>
+        </fieldset><br/>
+
+        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+            <legend style="border: transparent hidden 0; width: 120px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'response' | trans }} :</legend>
+
+            <div style="position: relative;">
+                <img src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
+                    alt="AnswerImage" id="AnswerImage1"/>
+
+                {% set i = 0 %}{% set allInfo = '' %}
+
+                {% for c in coords %}
+
+                    {% set numb = coords[i].value|split(',') %}
+                    {% set respcoo = rep[i]|split('-') %}
+
+                        <img src="/Claroline/web/bundles/ujmexo/images/graphic/circlew.png" alt="RightAnswer{{i}}" id="1ra{{i}}"
+                            style="position: absolute; z-index: 2;"/><br/>
+                        <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{i}}" id="1cursor{{i}}"
+                            style="position: absolute; z-index: 7;"/>
+
+                    {% set allInfo = coords[i].shape~';'~coords[i].color~';'~asset('bundles/ujmexo/images/graphic/')~';'
+                        ~numb[0]~';'~numb[1]~';'~respcoo[0]~';'~respcoo[1]~';'~coords[i].size~'^'~allInfo %}
+
+                    {% set i = i + 1 %}
+
+                {% endfor %}
+            </div>
+        </fieldset><br/>
+
+        {% if interG.interaction.feedback != '' %}
+            <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+                <legend style="border: transparent hidden 0; width: 170px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'comment' | trans }} :</legend>
+                {{ interG.interaction.feedback|raw }}
+            </fieldset><br/>
+        {% endif %}
+
+        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 10px;">
+            <legend style="border: transparent hidden 0; width: 100px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'mark' | trans }} :</legend>
+            {{ 'mark' | trans }} : {{ score }} / {{ total }}<br/>
+
+            {% if score == 0 and penalty == 0 %}
+                {{ 'noRightAnswer' | trans }}.
+            {% elseif penalty == 0 %}
+                {{ 'noHintShow' | trans }}.
+            {% else %}
+                {{ 'pointRightResponse' | trans }} : {{ point }} {{ 'with' | trans }} : -{{ penalty }} {{ 'sawHint' | trans }}.
+            {% endif %}
+        </fieldset>
+    </fieldset>
 
     <input type="hidden" id="info" name="info" value="{{i}}~{{allInfo}}"/>
 
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
-  {% endblock %}
+{% endblock %}

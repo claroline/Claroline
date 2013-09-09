@@ -35,47 +35,62 @@
 
 <link href="{{ asset('bundles/ujmexo/css/errorValidation.css') }}" type="text/css" rel="stylesheet" />
 
-<form class="well label_bold" action="{{ path('ujm_interactionopen_create') }}" method="post" {{ form_enctype(form) }}>
-    
-    {% include "UJMExoBundle:Partial:question.html.twig" %}
-    
-    <p>
-        {{ form_row(form.typeopenquestion) }}
-    </p>
-    
-    <div id="qOpenScoreMaxLongResp">
+<fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
+    <legend style="border: transparent hidden 0; width: 530px; margin: 0; color: skyblue;">
+        <h1>&nbsp;{{ 'interactionOpen creation' | trans }}</h1>
+    </legend>
+
+    <form action="{{ path('ujm_interactionopen_create') }}" method="post" {{ form_enctype(form) }}>
+
+        {% include "UJMExoBundle:Partial:question.html.twig" %}
+
+        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+            <legend style="border: transparent hidden 0; width: 120px; margin: 0; color: lightsteelblue;">
+                &nbsp;&nbsp;{{ 'response' | trans }} :
+            </legend>
+
+            {{ form_row(form.typeopenquestion) }}
+
+            <hr style=" height: 1px; color: teal; background-color: teal"/>
+
+            <div id="qOpenScoreMaxLongResp">
+                <p>
+                    {{ form_label(form.scoreMaxLongResp) }} &nbsp;
+                    {{ form_widget(form.scoreMaxLongResp, { 'attr': {'style': 'width: 50px;  text-align: end;'} }) }}
+                </p>
+            </div>
+
+            <div id="qOpenOrthography" style="display: none;">
+                <p>
+                    {{ form_widget(form.orthographyCorrect, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }}
+                    {{ form_label(form.orthographyCorrect) }}
+                </p>
+            </div>
+
+        <!--<div id="qOpenUnit" style="display: none;">
+            <p>
+                {#{ form_row(form.unit) }#}
+            </p>
+        </div>-->
+
+            <div id="qOpenKeyword" style="display: none;">
+                <p>
+                    {{ form_row(form.wordResponses) }}
+                </p>
+            </div>
+        </fieldset>
+
+        <br/>
+
         <p>
-            {{ form_row(form.scoreMaxLongResp) }}
+            <input type="hidden" name="exercise" value="{{ exoID }}" />
+            <button type="submit" id="button_submit" class="btn btn-primary">{{ 'create' | trans }}</button>
         </p>
-    </div>
-    
-    <div id="qOpenOrthography" style="display: none;">
-        <p>
-            {{ form_widget(form.orthographyCorrect, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }} 
-            {{ form_label(form.orthographyCorrect) }} 
-        </p>
-    </div>
-    
-    <!--<div id="qOpenUnit" style="display: none;">
-        <p>
-            {#{ form_row(form.unit) }#}
-        </p>
-    </div>-->
-    
-    <div id="qOpenKeyword" style="display: none;">
-        <p>
-            {{ form_row(form.wordResponses) }}
-        </p>
-    </div>
-    
-    <p>
-        <input type="hidden" name="exercise" value="{{ exoID }}" />
-        <button type="submit" id="button_submit">{{ 'create' | trans }}</button>
-    </p>
-    
-    <div style="display: none;">{{ form_rest(form) }}</div>
-    {{ form_errors(form) }}
-</form>
+
+        <div style="display: none;">{{ form_rest(form) }}</div>
+        {{ form_errors(form) }}
+    </form>
+</fieldset>
 
 {# tiny MCE #}
 {{ tinymce_init() }}

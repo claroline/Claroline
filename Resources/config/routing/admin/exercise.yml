@@ -17,7 +17,6 @@ ujm_exercise_questions:
 ujm_exercise_question_delete:
     pattern:  /{exoID}/{qid}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}
     defaults: { _controller: UJMExoBundle:Exercise:deleteQuestion, pageNow: 1, maxPage: 10, nbItem: 1, lastPage: 1 }
-    requirements: { _method: post }
 
 ujm_exercise_update:
     pattern:  /{id}/update

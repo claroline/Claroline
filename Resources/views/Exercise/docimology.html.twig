@@ -35,6 +35,8 @@
 
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
+{% block title %} {{ 'docimology' | trans }} {% endblock %}
+
 {% block section_content %}
     <style>
         .jqplot-title {
@@ -64,7 +66,7 @@
             position: absolute;
             border: #06A1E3 double thick;
             margin-left: 1%;
-            margin-top: 8%;
+            margin-top: 10%;
         }
 
         div.jqplot-table-legend-swatch {
@@ -82,46 +84,75 @@
         }
     </style>
 
-    <h1>{{ 'docimology' | trans }}</h1>
-    <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" ><i class="icon-arrow-left"></i> {{ "back" | trans }}</a>
-    <br/><br/>
-    {{ "number of papers" | trans }}: {{ nbPapers }}
+    <div class="panel-heading" style="padding-left: 50px;">
+        <h1>{{ 'docimology' | trans }}</h1>
+    </div><br/>
+
+    <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" style="padding-left: 50px;">
+        <i class="icon-arrow-left"></i> {{ "back" | trans }}
+    </a>
+
     <hr/>
-    <div id="histoMarks" style="height:100%; width:100%;"></div>
-    <hr/>
-    <div id="histoSuccess" style="height:100%; width:100%;"></div><br/><br/><br/>
-    <hr/>
-    <div id="histoDiscrimination" style="height:100%; width:100%;">
+<!--------------------------------------------------- Legend ----------------------------------------------------------------------------------->
+    <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
+        <legend style="border: transparent hidden 0; width: 160px; margin: 0; color: skyblue;">
+            <h1>&nbsp;{{ 'legend' | trans }}</h1>
+        </legend>
+            <h4>{{ "number of papers" | trans }} : {{ nbPapers }}</h4>
+            <hr/>
+        <div id="questionList">
+            <h3>{{ "list of question" | trans }}</h3>
+            <ol>
+                {% for questionTitle in questionsList %}
+                    <li>{{ questionTitle }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </fieldset><br/>
+<!--------------------------------------------------- Histogramm of marks --------------------------------------------------------------------->
+    <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
+        <legend style="border: transparent hidden 0; width: 400px; margin: 0; color: skyblue;">
+            <h1>&nbsp;{{ "histoMarks" | trans }}</h1>
+        </legend>
+        <div id="histoMarks" style="height:100%; width:100%;"></div>
+    </fieldset><br/>
+<!--------------------------------------------------- Histogramm of success ------------------------------------------------------------------->
+    <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px;
+            border-radius: 10px; box-shadow: 5px 5px 5px #ccf; height: 570px;">
+        <legend style="border: transparent hidden 0; width: 420px; margin: 0; color: skyblue;">
+            <h1>&nbsp;{{ "histoSuccess" | trans }}</h1>
+        </legend>
+        <div id="histoSuccess" style="height:80%; width:100%;"></div>
+    </fieldset><br/>
+<!--------------------------------------------------- Histogramm of discrimination ----------------------------------------------------------->
+    <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
+        <legend style="border: transparent hidden 0; width: 470px; margin: 0; color: skyblue;">
+            <h1>&nbsp;{{ "histoDiscrimination" | trans }}</h1>
+        </legend>
+        <div id="histoDiscrimination" style="height:100%; width:100%;"></div><br/>
         {% if coeffQ == 'none' %}
             {{ 'explainCoeffDis0' | trans }}
             <br/><br/><br/>
         {% endif %}
-    </div>
-    <br/>
-    <p>
-        {{ 'explainCoeffDis1' | trans }}<br/>
-        {{ 'explainCoeffDis2' | trans }}<br/>
-        {{ 'explainCoeffDis3' | trans }}
-    </p>
-    <hr/>
-    <div id="histoMeasureOfDifficulty" style="height:100%; width:100%;"></div>
-    <br/>
-    <p>
-        {{ 'explainMeasureDifficulty' | trans }}.<br/>
-        {{ 'calculationMeasureDifficulty' | trans }}.<br/>
-        {{ 'meaningMeasureDifficulty' | trans }}.<br/>
-        {{ 'infoMeasureDifficulty' | trans }}.
-    </p>
-
-    <hr/>
-    <div id="questionList">
-        <h4>{{ "list of question" | trans }}</h4>
-        <ol>
-            {% for questionTitle in questionsList %}
-                <li>{{ questionTitle }}</li>
-            {% endfor %}
-        </ol>
-    </div>
+        <p>
+            {{ 'explainCoeffDis1' | trans }}<br/>
+            {{ 'explainCoeffDis2' | trans }}<br/>
+            {{ 'explainCoeffDis3' | trans }}
+        </p>
+    </fieldset><br/>
+<!--------------------------------------------------- Histogramm of measure of diffculty ----------------------------------------------------->
+    <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
+        <legend style="border: transparent hidden 0; width: 600px; margin: 0; color: skyblue;">
+            <h1>&nbsp;{{ "histoMeasureOfDifficulty" | trans }}</h1>
+        </legend>
+        <div id="histoMeasureOfDifficulty" style="height:100%; width:100%;"></div><br/>
+        <p>
+            {{ 'explainMeasureDifficulty' | trans }}.<br/>
+            {{ 'calculationMeasureDifficulty' | trans }}.<br/>
+            {{ 'meaningMeasureDifficulty' | trans }}.<br/>
+            {{ 'infoMeasureDifficulty' | trans }}.
+        </p>
+    </fieldset><br/>
 {% endblock %}
 
 {% block javascripts %}
@@ -139,7 +170,7 @@
             var marks = [{{ scoreList }}];
 
             $.jqplot('histoMarks', [s1], {
-                title:'{{ "histoMarks" | trans }}',
+                //title:'{#{ "histoMarks" | trans }#}',
 
                 series:[{renderer:$.jqplot.BarRenderer}],
 
@@ -192,7 +223,7 @@
             {% endfor %}
 
             plot3 = $.jqplot('histoSuccess', [{{ series }}], {
-                title:'{{ "histoSuccess" | trans }}',
+                //title:'{#{ "histoSuccess" | trans }#}',
 
                 stackSeries: true,
                 captureRightClick: true,
@@ -261,7 +292,7 @@
 
             if (s1 != 'none') {
                 $.jqplot('histoDiscrimination', [s1], {
-                    title:'{{ "histoDiscrimination" | trans }}',
+                    //title:'{#{ "histoDiscrimination" | trans }#}',
                     stackSeries: true,
                     series:[{renderer:$.jqplot.BarRenderer}],
 
@@ -307,7 +338,7 @@
             var percent = [{{MeasureDifficulty}}];
 
             $.jqplot('histoMeasureOfDifficulty', [percent], {
-                title:'{{ "histoMeasureOfDifficulty" | trans }}',
+                //title:'{#{ "histoMeasureOfDifficulty" | trans }#}',
 
                 series:[{renderer:$.jqplot.BarRenderer}],
 

@@ -67,6 +67,16 @@ function sendData(select, path, prefx) {
         cache: false,
         success: function (data) {
             answerImg.src = data;
+
+            if (answerImg.width > 660) {
+                scalex = 660; // New picture width
+
+                var ratio = answerImg.height / answerImg.width;
+                scaley = scalex * ratio;
+
+                answerImg.width = scalex;
+                answerImg.height = scaley;
+            }
         }
     });
 }
@@ -276,7 +286,7 @@ function  ResizeImg(direction) {
     scaley = scalex * ratio; // New picture height proportional to width
 
     if (scalex > 70 && scaley > 70) { // Not resize too small or negative
-        if (scalex < 810 && scaley < 810) { // Not resize too big or out window
+        if (scalex < 660 && scaley < 660) { // Not resize too big or out window
 
             for (j = 0 ; j < grade ; j++) {
                 var imgN = 'img' + j;
@@ -608,15 +618,23 @@ function MouseWheelHandler(e) {
     var e = window.event || e;
     var delta = -(Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail))));
 
-    // New width/height
-    var finalWidth = answerImg.width + delta * 10;
-    var finalHeight = answerImg.height + delta * 10;
-    var rax = finalWidth/answerImg.width;
-    var ray = finalHeight/answerImg.height;
+    var value = delta * 10;
 
-    if (finalWidth > 70 && finalWidth < 800) {
-        answerImg.width = finalWidth;
+    scalex = answerImg.width + value; // New picture width
+
+    var ratio = answerImg.height / answerImg.width;
+    scaley = scalex * ratio; // New picture height proportional to width
+
+    if (scalex > 70 && scaley > 70) { // Not resize too small or negative
+        if (scalex < 660 && scaley < 660) { // Not resize too big or out window
+             // Resize the answer image
+            answerImg.width = scalex;
+            answerImg.height = scaley;
+        }
     }
+
+    var rax = scalex / answerImg.width;
+    var ray = scaley / answerImg.height;
 
     for (j = 0 ; j < grade ; j++) {
         var imgN = 'img' + j;
