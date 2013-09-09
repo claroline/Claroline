@@ -1,8 +1,18 @@
-{% for item in rss %}
-    <h4> {{ item.getTitle() }}</h4>
-    <div class="wrapper">
-        <h5>{{ item.getDate() }} <a href="{{ item.getLink() }}">{{ item.getTitle() }}</a></h5>
-        {{ item.getDescription()|raw }}
-    </div>
-    <hr>
-{% endfor %}
+<div class='panel-group' id="rss-flux">
+    {% for item in rss %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#rss-flux" href="#rss-flux{{ loop.index }}">
+                        {{ item.getTitle() }}
+                    </a>
+                </h3>
+            </div>
+            <div class="panel-body collapse" id="rss-flux{{ loop.index }}">
+                <p>{{ item.getDescription()|raw }}</p>
+                <p><a href="{{ item.getLink() }}">{{ 'Read more' | trans({}, 'rss_reader') }}</a></p>
+                <p class="text-muted">{{ item.getDate() }}</p>
+            </div>
+        </div>
+    {% endfor %}
+</div>

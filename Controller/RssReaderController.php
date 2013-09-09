@@ -46,13 +46,14 @@ class RssReaderController extends Controller
             }
 
             return $this->render(
-                $template, array(
-                'workspace' => $workspace,
-                'form' => $form->createView(),
-                'workspaceId' => $workspaceId,
-                'isDesktop' => $isDesktop,
-                'isDefault' => $isDefault,
-                'userId' => $userId,
+                $template,
+                array(
+                    'workspace' => $workspace,
+                    'form' => $form->createView(),
+                    'workspaceId' => $workspaceId,
+                    'isDesktop' => $isDesktop,
+                    'isDefault' => $isDefault,
+                    'userId' => $userId,
                 )
             );
 
@@ -102,10 +103,11 @@ class RssReaderController extends Controller
             }
 
             return $this->render(
-                $template, array(
-                'form' => $form->createView(),
-                'rssConfig' => $rssConfig,
-                'workspace' => $rssConfig->getWorkspace()
+                $template,
+                array(
+                    'form' => $form->createView(),
+                    'rssConfig' => $rssConfig,
+                    'workspace' => $rssConfig->getWorkspace()
                 )
             );
         }

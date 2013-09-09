@@ -9,15 +9,13 @@
       action="{{ path('claro_rss_config_create', {'workspaceId': workspaceId, 'isDesktop':isDesktop, 'isDefault':isDefault, 'userId':userId}) }} "
       method="post" {{ form_enctype(form) }}
 >
-    <fieldset>
+    <div class="panel-body">
         {{ form_widget(form) }}
-    </fieldset>
-    <div class="form-actions">
+    </div>
+    <div class="panel-footer">
         <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-        {% if noCancelButton is not defined %}
         <a href="{{ path('claro_admin_widgets') }}">
-            <button type="button" class="btn">{{ 'cancel'|trans({}, 'platform') }}</button>
+            <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
         </a>
-        {% endif %}
     </div>
 </form>
