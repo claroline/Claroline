@@ -35,29 +35,25 @@ class WorkspaceLogFilterType extends AbstractType
                 'action', 'twolevelselect', array(
                     'label'              => 'Show actions for',
                     'translation_domain' => 'log',
-                    'attr'               => array('class' => 'input-medium'),
+                    'attr'               => array('class' => 'input-sm'),
                     'choices'            => $actionChoices,
                     'empty_value'        => 'all',
                     'empty_data'         => null
                 )
             )
             ->add(
-                'range',
-                'daterange',
-                array(
+                'range', 'daterange', array(
                     'label'    => 'for period',
                     'required' => false,
-                    'attr'     => array('class' => 'input-medium')
+                    'attr'     => array('class' => 'input-sm')
                 )
             )
             ->add(
-                'user',
-                'simpleautocomplete',
-                array(
+                'user', 'simpleautocomplete', array(
                     'label'            => 'for user',
                     'entity_reference' => 'user',
                     'required'         => false,
-                    'attr'             => array('class' => 'input-medium')
+                    'attr'             => array('class' => 'input-sm')
                 )
             );
     }
