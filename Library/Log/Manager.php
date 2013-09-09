@@ -14,7 +14,7 @@ use Claroline\CoreBundle\Event\Event\Log\LogResourceChildUpdateEvent;
 use Claroline\CoreBundle\Entity\Logger\LogWorkspaceWidgetConfig;
 use Claroline\CoreBundle\Entity\Logger\LogDesktopWidgetConfig;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-
+use Claroline\CoreBundle\Entity\User;
 /**
  * @DI\Service("claroline.log.manager")
  */
@@ -306,7 +306,7 @@ class Manager
         );
     }
 
-    public function getWorkspaceVisibilityForDesktopWidget($user, AbstractWorkspace $workspaces)
+    public function getWorkspaceVisibilityForDesktopWidget(User $user, array $workspaces)
     {
         $workspacesVisibility = array();
 
