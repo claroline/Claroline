@@ -130,7 +130,7 @@ body {
 /*********************/
 /* RESOURCES MANAGER */
 /*********************/
-@media (max-width: 767px)
+@media (max-width: 1024px)
 {
     .resource-manager
     {
@@ -184,6 +184,7 @@ body {
         padding:5px;
         .border-top-radius(@border-radius-base);
         .border-bottom-radius(@border-radius-base);
+        z-index:(@zindex-modal-background - 11);
 
         .row {
             position:relative;
@@ -228,7 +229,8 @@ body {
     width:0;
     position:absolute;
     top:-24px;
-    right:20px;
+    right:27px;
+    z-index:(@zindex-modal-background - 11);
 }
 
 .filters-arrow
@@ -240,7 +242,8 @@ body {
     width:0;
     position:absolute;
     top:-23px;
-    right:20px;
+    right:27px;
+    z-index:(@zindex-modal-background - 11);
 }
 
 .pointer-hand
