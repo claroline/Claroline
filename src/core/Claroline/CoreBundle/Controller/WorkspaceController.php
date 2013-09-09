@@ -439,11 +439,6 @@ class WorkspaceController extends Controller
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
-     * @EXT\ParamConverter(
-     *     "homeTab",
-     *     class="ClarolineCoreBundle:Home\HomeTab",
-     *     options={"id" = "homeTabId", "strictId" = true}
-     * )
      *
      * @EXT\Template("ClarolineCoreBundle:Widget:widgets.html.twig")
      *
@@ -455,12 +450,14 @@ class WorkspaceController extends Controller
      *
      * @todo Reduce the number of sql queries for this action (-> dql)
      */
-    public function widgetsAction(AbstractWorkspace $workspace, HomeTab $homeTab)
+    public function widgetsAction(AbstractWorkspace $workspace, $homeTabId)
     {
         $widgets = array();
 
-        if ($this->homeTabManager
-            ->checkHomeTabVisibilityByWorkspace($homeTab, $workspace)) {
+        $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
+
+        if (!is_null($homeTab) &&
+            $this->homeTabManager->checkHomeTabVisibilityByWorkspace($homeTab, $workspace)) {
 
             $configs = $this->homeTabManager
                 ->getWidgetConfigsByWorkspace($homeTab,$workspace);

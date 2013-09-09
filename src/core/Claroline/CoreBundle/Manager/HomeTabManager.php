@@ -16,6 +16,8 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class HomeTabManager
 {
+    /** @var HomeTabRepository */
+    private $homeTabRepo;
     /** @var HomeTabConfigRepository */
     private $homeTabConfigRepo;
     /** @var WidgetHomeTabConfigRepository */
@@ -33,6 +35,9 @@ class HomeTabManager
      */
     public function __construct(ObjectManager $om)
     {
+        $this->homeTabRepo = $om->getRepository(
+            'ClarolineCoreBundle:Home\HomeTab'
+        );
         $this->homeTabConfigRepo = $om->getRepository(
             'ClarolineCoreBundle:Home\HomeTabConfig'
         );
@@ -432,6 +437,15 @@ class HomeTabManager
         $isLocked = !$widgetHomeTabConfig->isLocked();
         $widgetHomeTabConfig->setLocked($isLocked);
         $this->om->flush();
+    }
+
+    /**
+     * HomeTabRepository access methods
+     */
+
+    public function getHomeTabById($homeTabId)
+    {
+        return $this->homeTabRepo->findOneById($homeTabId);
     }
 
     /**
