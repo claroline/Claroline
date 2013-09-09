@@ -54,7 +54,6 @@
             var nodeId = _.keys(nodes)[0];
             var mimeArray = new Array('image/jpeg','image/gif','image/png');
             var mimeType = nodes[_.keys(nodes)][2];
-            console.debug(mimeType+nodeId+resourceTypes);
             if( mimeArray.indexOf(mimeType) > -1)
             {
                 tinyMCE.execCommand('mceInsertRawHTML', false, '<img src="' + Routing.generate('claro_file_get_image', {'node': id}) + '" alt ="'+nodeId+' width="200" height="100"/>');
