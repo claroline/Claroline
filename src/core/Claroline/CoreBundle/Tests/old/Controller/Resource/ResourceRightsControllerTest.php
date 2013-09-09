@@ -258,11 +258,11 @@ class ResourceRightsControllerTest extends FunctionalTestCase
             'POST',
             "/resource/{$directoryId}/role/{$role->getId()}/right/create",
             array('resources_rights_form' => array(
-                'canOpen' => true,
-                'canEdit' => true,
-                'canDelete' => true,
-                'canCopy' => true,
-                'canExport' => true,
+                'open' => true,
+                'edit' => true,
+                'delete' => true,
+                'copy' => true,
+                'export' => true,
             ))
         );
 

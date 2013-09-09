@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Event\ImportToolEvent;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\MaskManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -20,6 +21,7 @@ class ResourceManagerImportExportListener
     private $ed;
     private $resourceManager;
     private $rightsManager;
+    private $maskManager;
 
     /**
      * @DI\InjectParams({
@@ -28,6 +30,7 @@ class ResourceManagerImportExportListener
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
+     *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager")
      * })
      */
     public function __construct(
@@ -35,7 +38,8 @@ class ResourceManagerImportExportListener
         $ed,
         ResourceManager $resourceManager,
         RoleManager $roleManager,
-        RightsManager $rightsManager
+        RightsManager $rightsManager,
+        MaskManager $maskManager
     )
     {
         $this->em = $em;
@@ -43,6 +47,7 @@ class ResourceManagerImportExportListener
         $this->resourceManager = $resourceManager;
         $this->roleManager = $roleManager;
         $this->rightsManager = $rightsManager;
+        $this->maskManager = $maskManager;
     }
 
     /**
@@ -128,9 +133,10 @@ class ResourceManagerImportExportListener
                 }
 
                 foreach ($roles as $role) {
-                    $perms = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
+                    $mask = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
                         ->findMaximumRights(array($role->getName()), $root);
-                    $perms['canCreate'] = array();
+                    $perms = $this->maskManager->decodeMask($mask, $this->resourceManager->getResourceTypeByName($resource['type']));
+                    $perms['create'] = array();
 
                     $dataResources['perms'][$this->roleManager->getRoleBaseName($role->getName())] = $perms;
                 }

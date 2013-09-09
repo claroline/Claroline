@@ -118,8 +118,9 @@ class AuthenticationControllerTest extends MockeryTestCase
         $this->request->request = $parameterBag;
         $this->authenticator->shouldReceive('authenticate')->once()->with('username', 'password')
             ->andReturn(true);
-        $response = new \Symfony\Component\HttpFoundation\JsonResponse(array(), 200);
-        $this->assertEquals($response, $this->controller->postAuthenticationAction('json'));
+        $response = $this->controller->postAuthenticationAction('json');
+        $this->assertEquals('[]', $response->getContent());
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
     }
 
     /**

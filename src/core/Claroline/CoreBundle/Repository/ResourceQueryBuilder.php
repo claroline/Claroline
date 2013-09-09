@@ -28,32 +28,41 @@ class ResourceQueryBuilder
     public function __construct()
     {
         $eol = PHP_EOL;
-        $this->fromClause = "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode resource{$eol}";
-        $this->joinRelativesClause = "JOIN resource.creator creator{$eol}" .
-            "JOIN resource.resourceType resourceType{$eol}" .
-            "LEFT JOIN resource.next next{$eol}" .
-            "LEFT JOIN resource.previous previous{$eol}" .
-            "LEFT JOIN resource.parent parent{$eol}" .
-            "LEFT JOIN resource.icon icon{$eol}";
+        $this->fromClause = "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode node{$eol}";
+
+        $this->joinRelativesClause = "JOIN node.creator creator{$eol}" .
+            "JOIN node.resourceType resourceType{$eol}" .
+            "LEFT JOIN node.next next{$eol}" .
+            "LEFT JOIN node.previous previous{$eol}" .
+            "LEFT JOIN node.parent parent{$eol}" .
+            "LEFT JOIN node.icon icon{$eol}";
     }
 
     /**
-     * Selects resources as entities.
+     * Selects nodes as entities.
      *
      * @param boolean $joinSingleRelatives Whether the creator, type and icon must be joined to the query
      *
      * @return ResourceQueryBuilder
      */
-    public function selectAsEntity($joinSingleRelatives = false)
+    public function selectAsEntity($joinSingleRelatives = false, $class = null)
     {
+        $eol = PHP_EOL;
+
+        if ($class) {
+            $this->selectClause = 'SELECT resource' . PHP_EOL;
+            $this->fromClause = "FROM {$class} resource{$eol} JOIN resource.resourceNode node{$eol}";
+        } else {
+            $this->selectClause = 'SELECT node' . PHP_EOL;
+        }
+
         $this->joinSingleRelatives = $joinSingleRelatives;
-        $this->selectClause = 'SELECT resource' . PHP_EOL;
 
         return $this;
     }
 
     /**
-     * Selects resources as arrays. Resource type, creator and icon are always added to the query.
+     * Selects nodes as arrays. Resource type, creator and icon are always added to the query.
      *
      * @param boolean $withMaxPermissions Whether maximum permissions must be calculated and added to the result
      *
@@ -66,24 +75,21 @@ class ResourceQueryBuilder
         $eol = PHP_EOL;
         $this->selectClause =
             "SELECT DISTINCT{$eol}" .
-            "    resource.id as id,{$eol}" .
-            "    resource.name as name,{$eol}" .
-            "    resource.path as path,{$eol}" .
+            "    node.id as id,{$eol}" .
+            "    node.name as name,{$eol}" .
+            "    node.path as path,{$eol}" .
             "    parent.id as parent_id,{$eol}" .
             "    creator.username as creator_username,{$eol}" .
             "    resourceType.name as type,{$eol}" .
             "    previous.id as previous_id,{$eol}" .
             "    next.id as next_id,{$eol}" .
             "    icon.relativeUrl as large_icon,{$eol}".
-            "    resource.mimeType as mime_type";
+            "    node.mimeType as mime_type";
 
         if ($withMaxPermissions) {
             $this->leftJoinRights = true;
             $this->selectClause .=
-                ",{$eol}" .
-                "    MAX (CASE rights.canExport WHEN true THEN 1 ELSE 0 END) as can_export,{$eol}" .
-                "    MAX (CASE rights.canDelete WHEN true THEN 1 ELSE 0 END) as can_delete,{$eol}" .
-                "    MAX (CASE rights.canEdit WHEN true THEN 1 ELSE 0 END) as can_edit";
+                    ",{$eol}rights.mask";
         }
 
         $this->selectClause .= $eol;
@@ -92,7 +98,7 @@ class ResourceQueryBuilder
     }
 
     /**
-     * Filters resources belonging to a given workspace.
+     * Filters nodes belonging to a given workspace.
      *
      * @param AbstractWorkspace $workspace
      *
@@ -100,14 +106,14 @@ class ResourceQueryBuilder
      */
     public function whereInWorkspace(AbstractWorkspace $workspace)
     {
-        $this->addWhereClause('resource.workspace = :workspace_id');
+        $this->addWhereClause('node.workspace = :workspace_id');
         $this->parameters[':workspace_id'] = $workspace->getId();
 
         return $this;
     }
 
     /**
-     * Filters resources that are the immediate children of a given resource.
+     * Filters nodes that are the immediate children of a given node.
      *
      * @param AbstractResource $parent
      *
@@ -115,14 +121,14 @@ class ResourceQueryBuilder
      */
     public function whereParentIs(ResourceNode $parent)
     {
-        $this->addWhereClause('resource.parent = :ar_parentId');
+        $this->addWhereClause('node.parent = :ar_parentId');
         $this->parameters[':ar_parentId'] = $parent->getId();
 
         return $this;
     }
 
     /**
-     * Filters resources whose path begins with a given path.
+     * Filters nodes whose path begins with a given path.
      *
      * @param string  $path
      * @param boolean $includeGivenPath
@@ -131,11 +137,11 @@ class ResourceQueryBuilder
      */
     public function wherePathLike($path, $includeGivenPath = true)
     {
-        $this->addWhereClause('resource.path LIKE :pathlike');
+        $this->addWhereClause('node.path LIKE :pathlike');
         $this->parameters[':pathlike'] = $path . '%';
 
         if (!$includeGivenPath) {
-            $this->addWhereClause('resource.path <> :path');
+            $this->addWhereClause('node.path <> :path');
             $this->parameters[':path'] = $path;
         }
 
@@ -143,7 +149,7 @@ class ResourceQueryBuilder
     }
 
     /**
-     * Filters resources that are bound to any of the given roles.
+     * Filters nodes that are bound to any of the given roles.
      *
      * @param array[string|RoleInterface] $roles
      *
@@ -170,20 +176,20 @@ class ResourceQueryBuilder
     }
 
     /**
-     * Filters resources that can be opened.
+     * Filters nodes that can be opened.
      *
      * @return ResourceQueryBuilder
      */
     public function whereCanOpen()
     {
         $this->leftJoinRights = true;
-        $this->addWhereClause('rights.canOpen = true');
+        $this->addWhereClause('BIT_AND(rights.mask, 1) = 1');
 
         return $this;
     }
 
     /**
-     * Filters resources belonging to any of the workspaces a given user has access to.
+     * Filters nodes belonging to any of the workspaces a given user has access to.
      *
      * @param User $user
      *
@@ -193,7 +199,7 @@ class ResourceQueryBuilder
     {
         $eol = PHP_EOL;
         $clause =
-            "resource.workspace IN{$eol}" .
+            "node.workspace IN{$eol}" .
             "({$eol}" .
             "    SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw{$eol}" .
             "    JOIN aw.roles r{$eol}" .
@@ -207,7 +213,7 @@ class ResourceQueryBuilder
     }
 
     /**
-     * Filters resources of any of the given types.
+     * Filters nodes of any of the given types.
      *
      * @param array[string] $types
      *
@@ -234,7 +240,7 @@ class ResourceQueryBuilder
     }
 
     /**
-     * Filters resources that are the descendants of any of the given root directory paths.
+     * Filters nodes that are the descendants of any of the given root directory paths.
      *
      * @param array[string] $roots
      *
@@ -248,7 +254,7 @@ class ResourceQueryBuilder
 
             for ($i = 0; $i < $count; $i++) {
                 $clause .= $i > 0 ? '    OR ' : '    ';
-                $clause .= "resource.path LIKE :root_{$i}{$eol}";
+                $clause .= "node.path LIKE :root_{$i}{$eol}";
                 $this->parameters[":root_{$i}"] = "{$roots[$i]}%";
             }
 
@@ -259,7 +265,7 @@ class ResourceQueryBuilder
     }
 
     /**
-     * Filters resources created at or after a given date.
+     * Filters nodes created at or after a given date.
      *
      * @param string $date
      *
@@ -267,14 +273,14 @@ class ResourceQueryBuilder
      */
     public function whereDateFrom($date)
     {
-        $this->addWhereClause('resource.creationDate >= :dateFrom');
+        $this->addWhereClause('node.creationDate >= :dateFrom');
         $this->parameters[':dateFrom'] = $date;
 
         return $this;
     }
 
     /**
-     * Filters resources created at or before a given date.
+     * Filters nodes created at or before a given date.
      *
      * @param string $date
      *
@@ -282,14 +288,14 @@ class ResourceQueryBuilder
      */
     public function whereDateTo($date)
     {
-        $this->addWhereClause('resource.creationDate <= :dateTo');
+        $this->addWhereClause('node.creationDate <= :dateTo');
         $this->parameters[':dateTo'] = $date;
 
         return $this;
     }
 
     /**
-     * Filters resources whose name contains a given string.
+     * Filters nodes whose name contains a given string.
      *
      * @param string $name
      *
@@ -297,14 +303,14 @@ class ResourceQueryBuilder
      */
     public function whereNameLike($name)
     {
-        $this->addWhereClause('resource.name LIKE :name');
+        $this->addWhereClause('node.name LIKE :name');
         $this->parameters[':name'] = "%{$name}%";
 
         return $this;
     }
 
     /**
-     * Filters resources that can or cannot be exported.
+     * Filters nodes that can or cannot be exported.
      *
      * @param boolean $isExportable
      *
@@ -320,14 +326,14 @@ class ResourceQueryBuilder
     }
 
     /**
-     * Filters resources that are shortcuts and selects their target.
+     * Filters nodes that are shortcuts and selects their target.
      *
      * @return ResourceQueryBuilder
      */
     public function whereIsShortcut()
     {
         $eol = PHP_EOL;
-        $this->joinRelativesClause = "JOIN rs.resourceNode resource{$eol}" . $this->joinRelativesClause;
+        $this->joinRelativesClause = "JOIN rs.resourceNode node{$eol}" . $this->joinRelativesClause;
         $this->joinRelativesClause = "JOIN rs.target target{$eol}" . $this->joinRelativesClause;
         $this->fromClause = "FROM Claroline\CoreBundle\Entity\Resource\ResourceShortcut rs{$eol}";
         $this->selectClause .= ", target.id as target_id{$eol}";
@@ -337,49 +343,57 @@ class ResourceQueryBuilder
     }
 
     /**
-     * Filters the resources that don't have a parent (roots).
+     * Filters the nodes that don't have a parent (roots).
      *
      * @return Claroline\CoreBundle\Repository\ResourceQueryBuilder
      */
     public function whereParentIsNull()
     {
-        $this->addWhereClause('resource.parent IS NULL');
+        $this->addWhereClause('node.parent IS NULL');
+
+        return $this;
+    }
+
+    public function whereMimeTypeIs($mimeType)
+    {
+        $this->addWhereClause('node.mimeType LIKE :mimeType');
+        $this->parameters[':mimeType'] = $mimeType;
 
         return $this;
     }
 
     /**
-     * Orders resources by path.
+     * Orders nodes by path.
      *
      * @return Claroline\CoreBundle\Repository\ResourceQueryBuilder
      */
     public function orderByPath()
     {
-        $this->orderClause = 'ORDER BY resource.path' . PHP_EOL;
+        $this->orderClause = 'ORDER BY node.path' . PHP_EOL;
 
         return $this;
     }
 
     /**
-     * Orders resources by name.
+     * Orders nodes by name.
      *
      * @return Claroline\CoreBundle\Repository\ResourceQueryBuilder
      */
     public function orderByName()
     {
-        $this->orderClause = 'ORDER BY resource.name' . PHP_EOL;
+        $this->orderClause = 'ORDER BY node.name' . PHP_EOL;
 
         return $this;
     }
 
     /**
-     * Groups resources by id.
+     * Groups nodes by id.
      *
      * @return ResourceQueryBuilder
      */
     public function groupById()
     {
-        $this->groupByClause = 'GROUP BY resource.id' . PHP_EOL;
+        $this->groupByClause = 'GROUP BY node.id' . PHP_EOL;
 
         return $this;
     }
@@ -387,7 +401,7 @@ class ResourceQueryBuilder
     public function groupByResourceUserTypeAndIcon()
     {
         $this->groupByClause = '
-            GROUP BY resource.id,
+            GROUP BY node.id,
                      parent.id,
                      previous.id,
                      next.id,
@@ -415,7 +429,7 @@ class ResourceQueryBuilder
         $eol = PHP_EOL;
         $joinRelatives = $this->joinSingleRelatives ? $this->joinRelativesClause: '';
         $joinRights = $this->leftJoinRights ?
-            "LEFT JOIN resource.rights rights{$eol}" .
+            "LEFT JOIN node.rights rights{$eol}" .
             "JOIN rights.role rightRole{$eol}" :
             '';
         $dql =

@@ -12,6 +12,7 @@ use org\bovigo\vfs\vfsStream;
 class WorkspaceManagerTest extends MockeryTestCase
 {
     private $roleManager;
+    private $maskManager;
     private $resourceManager;
     private $toolManager;
     private $orderedToolRepo;
@@ -48,6 +49,7 @@ class WorkspaceManagerTest extends MockeryTestCase
         $this->ut = $this->mock('Claroline\CoreBundle\Library\Utilities\ClaroUtilities');
         $this->templateDir = vfsStream::url('template');
         $this->pagerFactory = $this->mock('Claroline\CoreBundle\Pager\PagerFactory');
+        $this->maskManager = $this->mock('Claroline\CoreBundle\Manager\MaskManager');
     }
 
     public function testCreate()
@@ -227,11 +229,11 @@ class WorkspaceManagerTest extends MockeryTestCase
     public function testExportRootPermsSection()
     {
         $perms = array(
-            'canCopy' => true,
-            'canOpen' => true,
-            'canDelete' => false,
-            'canExport' => false,
-            'canEdit' => false
+            'copy' => true,
+            'open' => true,
+            'delete' => false,
+            'export' => false,
+            'edit' => false
         );
 
         $creations = array(
@@ -241,26 +243,28 @@ class WorkspaceManagerTest extends MockeryTestCase
         $expectedResult = array(
             "root_perms" => array(
                     'ROLE_WS_TEST1' => array(
-                        'canCopy' => true,
-                        'canOpen' => true,
-                        'canDelete' => false,
-                        'canExport' => false,
-                        'canEdit' => false,
-                        'canCreate' => $creations
+                        'copy' => true,
+                        'open' => true,
+                        'delete' => false,
+                        'export' => false,
+                        'edit' => false,
+                        'create' => $creations
                     ),
                     'ROLE_WS_TEST2' => array(
-                        'canCopy' => true,
-                        'canOpen' => true,
-                        'canDelete' => false,
-                        'canExport' => false,
-                        'canEdit' => false,
-                        'canCreate' => array()
+                        'copy' => true,
+                        'open' => true,
+                        'delete' => false,
+                        'export' => false,
+                        'edit' => false,
+                        'create' => array()
                     )
                 )
         );
 
         $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
-        $root = new \Claroline\CoreBundle\Entity\Resource\ResourceNode();
+        $resourceType = new \Claroline\CoreBundle\Entity\Resource\ResourceType();
+        $root = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $root->shouldReceive('getResourceType')->andReturn($resourceType);
         $roleA = $this->mock('Claroline\CoreBundle\Entity\Role');
         $roleA->shouldReceive('getName')->andReturn('ROLE_WS_TEST1_AAA');
         $roleB = $this->mock('Claroline\CoreBundle\Entity\Role');
@@ -272,17 +276,19 @@ class WorkspaceManagerTest extends MockeryTestCase
             ->with('ROLE_WS_TEST1_AAA')->andReturn('ROLE_WS_TEST1');
         $this->roleManager->shouldReceive('getRoleBaseName')->once()
             ->with('ROLE_WS_TEST2_AAA')->andReturn('ROLE_WS_TEST2');
+        $this->resourceRightsRepo->shouldReceive('findMaximumRights')->andReturn('123')
+            ->once()->with(array('ROLE_WS_TEST1_AAA'), $root)->andReturn('123');
         $this->resourceRightsRepo->shouldReceive('findMaximumRights')
-            ->once()->with(array('ROLE_WS_TEST1_AAA'), $root)->andReturn($perms);
-        $this->resourceRightsRepo->shouldReceive('findMaximumRights')
-            ->once()->with(array('ROLE_WS_TEST2_AAA'), $root)->andReturn($perms);
+            ->once()->with(array('ROLE_WS_TEST2_AAA'), $root)->andReturn('123');
         $this->resourceRightsRepo->shouldReceive('findCreationRights')
             ->once()->with(array('ROLE_WS_TEST1_AAA'), $root)->andReturn($creations);
         $this->resourceRightsRepo->shouldReceive('findCreationRights')
             ->once()->with(array('ROLE_WS_TEST2_AAA'), $root)->andReturn(array());
+        $this->maskManager->shouldReceive('decodeMask')->with(m::any(), $resourceType)->andReturn($perms);
+
 
         $result = $this->getManager()->exportRootPermsSection($workspace);
-        $this->assertEquals($expectedResult, $result);
+        $this->assertEquals($result, $expectedResult);
     }
 
     public function testExportToolsInfosSection()
@@ -659,6 +665,7 @@ class WorkspaceManagerTest extends MockeryTestCase
         if (count($mockedMethods) === 0) {
             return new WorkspaceManager(
                 $this->roleManager,
+                $this->maskManager,
                 $this->resourceManager,
                 $this->toolManager,
                 $this->strictDispatcher,
@@ -682,6 +689,7 @@ class WorkspaceManagerTest extends MockeryTestCase
                 'Claroline\CoreBundle\Manager\WorkspaceManager' . $stringMocked,
                 array(
                     $this->roleManager,
+                    $this->maskManager,
                     $this->resourceManager,
                     $this->toolManager,
                     $this->strictDispatcher,

@@ -327,18 +327,14 @@ abstract class RepositoryTestCase extends WebTestCase
     protected static function createResourceRights(
         Role $role,
         AbstractResource $resource,
-        array $allowedActions = array(),
+        $mask,
         array $creatableResourceTypes = array()
     )
     {
         $rights = new ResourceRights();
         $rights->setRole($role);
         $rights->setResourceNode($resource->getResourceNode());
-
-        foreach ($allowedActions as $action) {
-            $method = 'setCan' . ucfirst($action);
-            $rights->{$method}(true);
-        }
+        $rights->setMask($mask);
 
         foreach ($creatableResourceTypes as $type) {
             $rights->addCreatableResourceType($type);

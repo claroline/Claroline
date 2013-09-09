@@ -106,24 +106,24 @@ class RolesControllerTest extends MockeryTestCase
 
         $perms = array(
             'ROLE_WS_ROLENAME' => array(
-                'canOpen' => true,
-                'canEdit' => true,
-                'canCopy' => true,
-                'canDelete' => true,
-                'canExport' => true,
-                'canCreate' => array(
+                'open' => true,
+                'edit' => true,
+                'copy' => true,
+                'delete' => true,
+                'export' => true,
+                'create' => array(
                     array('name' => 'directory'),
                     array('name' => 'file')
                 ),
                 'role' => $newRole
             ),
             'ROLE_WS_MANAGER' => array(
-                'canOpen' => true,
-                'canEdit' => true,
-                'canCopy' => true,
-                'canDelete' => true,
-                'canExport' => true,
-                'canCreate' => array(
+                'open' => true,
+                'edit' => true,
+                'copy' => true,
+                'delete' => true,
+                'export' => true,
+                'create' => array(
                     array('name' => 'directory'),
                     array('name' => 'file')
                 ),

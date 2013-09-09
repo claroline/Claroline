@@ -18,20 +18,20 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
         $dql = $qb->selectAsEntity()->getDql();
         $eol = PHP_EOL;
         $expectedDql =
-            "SELECT resource{$eol}" .
-            "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode resource{$eol}";
+            "SELECT node{$eol}" .
+            "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode node{$eol}";
         $this->assertEquals($expectedDql, $dql);
 
         $dql = $qb->selectAsEntity(true)->getDql();
         $expectedDql =
-            "SELECT resource{$eol}" .
-            "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode resource{$eol}" .
-            "JOIN resource.creator creator{$eol}" .
-            "JOIN resource.resourceType resourceType{$eol}" .
-            "LEFT JOIN resource.next next{$eol}" .
-            "LEFT JOIN resource.previous previous{$eol}" .
-            "LEFT JOIN resource.parent parent{$eol}" .
-            "LEFT JOIN resource.icon icon{$eol}";
+            "SELECT node{$eol}" .
+            "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode node{$eol}" .
+            "JOIN node.creator creator{$eol}" .
+            "JOIN node.resourceType resourceType{$eol}" .
+            "LEFT JOIN node.next next{$eol}" .
+            "LEFT JOIN node.previous previous{$eol}" .
+            "LEFT JOIN node.parent parent{$eol}" .
+            "LEFT JOIN node.icon icon{$eol}";
         $this->assertEquals($expectedDql, $dql);
     }
 
@@ -43,50 +43,48 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
         $eol = PHP_EOL;
         $expectedDql =
             "SELECT DISTINCT{$eol}" .
-            "    resource.id as id,{$eol}" .
-            "    resource.name as name,{$eol}" .
-            "    resource.path as path,{$eol}" .
+            "    node.id as id,{$eol}" .
+            "    node.name as name,{$eol}" .
+            "    node.path as path,{$eol}" .
             "    parent.id as parent_id,{$eol}" .
             "    creator.username as creator_username,{$eol}" .
             "    resourceType.name as type,{$eol}" .
             "    previous.id as previous_id,{$eol}" .
             "    next.id as next_id,{$eol}" .
             "    icon.relativeUrl as large_icon,{$eol}" .
-            "    resource.mimeType as mime_type{$eol}" .
-            "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode resource{$eol}" .
-            "JOIN resource.creator creator{$eol}" .
-            "JOIN resource.resourceType resourceType{$eol}" .
-            "LEFT JOIN resource.next next{$eol}" .
-            "LEFT JOIN resource.previous previous{$eol}" .
-            "LEFT JOIN resource.parent parent{$eol}" .
-            "LEFT JOIN resource.icon icon{$eol}";
+            "    node.mimeType as mime_type{$eol}" .
+            "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode node{$eol}" .
+            "JOIN node.creator creator{$eol}" .
+            "JOIN node.resourceType resourceType{$eol}" .
+            "LEFT JOIN node.next next{$eol}" .
+            "LEFT JOIN node.previous previous{$eol}" .
+            "LEFT JOIN node.parent parent{$eol}" .
+            "LEFT JOIN node.icon icon{$eol}";
 
         $this->assertEquals($expectedDql, $dql);
 
         $dql = $qb->selectAsArray(true)->getDql();
         $expectedDql =
             "SELECT DISTINCT{$eol}" .
-            "    resource.id as id,{$eol}" .
-            "    resource.name as name,{$eol}" .
-            "    resource.path as path,{$eol}" .
+            "    node.id as id,{$eol}" .
+            "    node.name as name,{$eol}" .
+            "    node.path as path,{$eol}" .
             "    parent.id as parent_id,{$eol}" .
             "    creator.username as creator_username,{$eol}" .
             "    resourceType.name as type,{$eol}" .
             "    previous.id as previous_id,{$eol}" .
             "    next.id as next_id,{$eol}" .
             "    icon.relativeUrl as large_icon,{$eol}" .
-            "    resource.mimeType as mime_type,{$eol}" .
-            "    MAX (CASE rights.canExport WHEN true THEN 1 ELSE 0 END) as can_export,{$eol}" .
-            "    MAX (CASE rights.canDelete WHEN true THEN 1 ELSE 0 END) as can_delete,{$eol}" .
-            "    MAX (CASE rights.canEdit WHEN true THEN 1 ELSE 0 END) as can_edit{$eol}" .
-            "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode resource{$eol}" .
-            "JOIN resource.creator creator{$eol}" .
-            "JOIN resource.resourceType resourceType{$eol}" .
-            "LEFT JOIN resource.next next{$eol}" .
-            "LEFT JOIN resource.previous previous{$eol}" .
-            "LEFT JOIN resource.parent parent{$eol}" .
-            "LEFT JOIN resource.icon icon{$eol}" .
-            "LEFT JOIN resource.rights rights{$eol}" .
+            "    node.mimeType as mime_type" .
+            ",{$eol}rights.mask{$eol}" .
+            "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode node{$eol}" .
+            "JOIN node.creator creator{$eol}" .
+            "JOIN node.resourceType resourceType{$eol}" .
+            "LEFT JOIN node.next next{$eol}" .
+            "LEFT JOIN node.previous previous{$eol}" .
+            "LEFT JOIN node.parent parent{$eol}" .
+            "LEFT JOIN node.icon icon{$eol}" .
+            "LEFT JOIN node.rights rights{$eol}" .
             "JOIN rights.role rightRole{$eol}";
         $this->assertEquals($expectedDql, $dql);
     }
@@ -128,27 +126,27 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
 
         $eol = PHP_EOL;
         $expectedDql =
-            "SELECT resource{$eol}" .
-            "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode resource{$eol}" .
-            "JOIN resource.creator creator{$eol}" .
-            "JOIN resource.resourceType resourceType{$eol}" .
-            "LEFT JOIN resource.next next{$eol}" .
-            "LEFT JOIN resource.previous previous{$eol}" .
-            "LEFT JOIN resource.parent parent{$eol}" .
-            "LEFT JOIN resource.icon icon{$eol}" .
-            "LEFT JOIN resource.rights rights{$eol}" .
+            "SELECT node{$eol}" .
+            "FROM Claroline\CoreBundle\Entity\Resource\ResourceNode node{$eol}" .
+            "JOIN node.creator creator{$eol}" .
+            "JOIN node.resourceType resourceType{$eol}" .
+            "LEFT JOIN node.next next{$eol}" .
+            "LEFT JOIN node.previous previous{$eol}" .
+            "LEFT JOIN node.parent parent{$eol}" .
+            "LEFT JOIN node.icon icon{$eol}" .
+            "LEFT JOIN node.rights rights{$eol}" .
             "JOIN rights.role rightRole{$eol}" .
-            "WHERE resource.workspace = :workspace_id{$eol}" .
-            "AND resource.parent = :ar_parentId{$eol}" .
-            "AND resource.path LIKE :pathlike{$eol}" .
-            "AND resource.path <> :path{$eol}" .
+            "WHERE node.workspace = :workspace_id{$eol}" .
+            "AND node.parent = :ar_parentId{$eol}" .
+            "AND node.path LIKE :pathlike{$eol}" .
+            "AND node.path <> :path{$eol}" .
             "AND {$eol}" .
             "({$eol}" .
             "    rightRole.name = :role_0{$eol}" .
             "    OR rightRole.name = :role_1{$eol}" .
             "){$eol}" .
-            "AND rights.canOpen = true{$eol}" .
-            "AND resource.workspace IN{$eol}" .
+            "AND BIT_AND(rights.mask, 1) = 1{$eol}" .
+            "AND node.workspace IN{$eol}" .
             "({$eol}" .
             "    SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw{$eol}" .
             "    JOIN aw.roles r{$eol}" .
@@ -159,16 +157,16 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "OR resourceType.name = :type_1{$eol}" .
             "AND {$eol}" .
             "({$eol}" .
-            "    resource.path LIKE :root_0{$eol}" .
-            "    OR resource.path LIKE :root_1{$eol}" .
+            "    node.path LIKE :root_0{$eol}" .
+            "    OR node.path LIKE :root_1{$eol}" .
             "){$eol}" .
-            "AND resource.creationDate >= :dateFrom{$eol}" .
-            "AND resource.creationDate <= :dateTo{$eol}" .
-            "AND resource.name LIKE :name{$eol}" .
+            "AND node.creationDate >= :dateFrom{$eol}" .
+            "AND node.creationDate <= :dateTo{$eol}" .
+            "AND node.name LIKE :name{$eol}" .
             "AND resourceType.isExportable = :isExportable{$eol}" .
-            "AND resource.parent IS NULL{$eol}" .
-            "ORDER BY resource.path{$eol}" .
-            "GROUP BY resource.id{$eol}";
+            "AND node.parent IS NULL{$eol}" .
+            "ORDER BY node.path{$eol}" .
+            "GROUP BY node.id{$eol}";
 
         $this->assertEquals($expectedDql, $dql);
         $this->assertEquals(

@@ -46,6 +46,12 @@
 {% block javascripts %}
     {{ parent() }}
 
+    {% javascripts debug=false output='vendor/bootstrap-colorpicker/js/bootstrap-colorpicker.js'
+    '../vendor/xaguilars/bootstrap-colorpicker/js/bootstrap-colorpicker.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/theme/theme.js') }}"></script>
 
 {% endblock %}

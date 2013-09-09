@@ -70,12 +70,12 @@ class DirectoryListenerTest extends FunctionalTestCase
     public function testImportTemplate()
     {
         $canDo = array(
-            'canEdit' => false,
-            'canOpen' => true,
-            'canDelete' => false,
-            'canCopy' => false,
-            'canExport' => false,
-            'canCreate' => array('directory')
+            'edit' => false,
+            'open' => true,
+            'delete' => false,
+            'copy' => false,
+            'export' => false,
+            'create' => array('directory')
         );
 
         $perms = array(

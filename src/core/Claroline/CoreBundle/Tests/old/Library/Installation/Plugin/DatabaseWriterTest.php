@@ -288,7 +288,7 @@ class DatabaseWriterTest extends FunctionalTestCase
         $archpath = $container->getParameter('claroline.param.templates_directory').'default.zip';
         $archive->open($archpath);
         $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
-        $oldResources = count($parsedFile['root_perms']['ROLE_WS_MANAGER']['canCreate']);
+        $oldResources = count($parsedFile['root_perms']['ROLE_WS_MANAGER']['create']);
         $archive->close();
         $pluginFqcn = 'Valid\WithCustomResources\ValidWithCustomResources';
         $plugin = $this->loader->load($pluginFqcn);
@@ -296,13 +296,13 @@ class DatabaseWriterTest extends FunctionalTestCase
         $this->dbWriter->insert($plugin, $this->validator->getPluginConfiguration());
         $archive->open($archpath);
         $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
-        $newResources = count($parsedFile['root_perms']['ROLE_WS_MANAGER']['canCreate']);
+        $newResources = count($parsedFile['root_perms']['ROLE_WS_MANAGER']['create']);
         $archive->close();
         $this->assertEquals(2, $newResources - $oldResources);
         $this->dbWriter->delete($pluginFqcn);
         $archive->open($archpath);
         $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
-        $endResources = count($parsedFile['root_perms']['ROLE_WS_MANAGER']['canCreate']);
+        $endResources = count($parsedFile['root_perms']['ROLE_WS_MANAGER']['create']);
         $archive->close();
         $this->assertEquals(0, $oldResources - $endResources);
     }
