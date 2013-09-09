@@ -113,10 +113,10 @@ class EventManager
 
             $sortedEvents[$explodeTextEvents[0]][$explodeTextEvents[0]] = 'all';
             if (isset($explodeTextEvents[2])) {
-                $sortedEvents[$explodeTextEvents[0]][$explodeTextEvents[0] . '-' . $explodeTextEvents[1] . '-' . $explodeTextEvents[2]] = $explodeTextEvents[1] . '-' . $explodeTextEvents[2];
+                $sortedEvents[$explodeTextEvents[0]][$explodeTextEvents[0] . '-' . $explodeTextEvents[1] . '-' . $explodeTextEvents[2]] = 'log_' . $explodeTextEvents[0] . '-' . $explodeTextEvents[1] . '-' . $explodeTextEvents[2] . '_filter';
             }
             else {
-                $sortedEvents[$explodeTextEvents[0]][$explodeTextEvents[0] . '-' . $explodeTextEvents[1]] = $explodeTextEvents[1];
+                $sortedEvents[$explodeTextEvents[0]][$explodeTextEvents[0] . '-' . $explodeTextEvents[1]] = 'log_' . $explodeTextEvents[0] . '-' . $explodeTextEvents[1] . '_filter';
             }
         }
 

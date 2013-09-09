@@ -77,9 +77,11 @@ For creating new event log here is the step to follow:
      * first section is the type of object it's associated (platform, resource, workspace, role, tools, widget, user...)
      * second section (`optionnal`) is the type of the resource (for resource type of object by example)
      * third section is the action executed (login, post_create, post_update, post_delete, ws_role_subscribe_user etc...)
-   Don't forget to add translation for this words, individually and all together, in the `log` translation domain.
+   You will need to add some translation text for the first section key and for the `log_%constantName_filter` (e.g. `log_workspace-update_filter` for update action on a workspace).
    Each section will become a choice list ine the filter form.
  * Use this new class with an event dispatcher on the `log` event name and you're done
+
+For now log form filter will just have two select list but you can make three section for future enhancement.
 
 Let's admit you want to create a log for when you create a post in a blog.
 Firs create the event class:
