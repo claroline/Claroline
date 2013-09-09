@@ -25,6 +25,6 @@ class LogWorkspaceUpdateEvent extends LogGenericEvent
             $workspace
         );
 
-        $this->isDisplayedInAdmin(true);
+        $this->setIsDisplayedInAdmin(true);
     }
 }

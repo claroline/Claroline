@@ -36,6 +36,6 @@ class LogResourceDeleteEvent extends LogGenericEvent
             $node->getCreator()
         );
 
-        $this->isDisplayedInWorkspace(true);
+        $this->setIsDisplayedInWorkspace(true);
     }
 }

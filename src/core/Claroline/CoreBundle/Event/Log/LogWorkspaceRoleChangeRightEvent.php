@@ -43,6 +43,6 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
             $resource->getWorkspace()
         );
 
-        $this->isDisplayedInWorkspace(true);
+        $this->setIsDisplayedInWorkspace(true);
     }
 }

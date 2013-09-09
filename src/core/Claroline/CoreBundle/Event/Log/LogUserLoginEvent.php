@@ -13,6 +13,6 @@ class LogUserLoginEvent extends LogGenericEvent
     {
         parent::__construct(self::ACTION, array());
 
-        $this->isDisplayedInAdmin(true);
+        $this->setIsDisplayedInAdmin(true);
     }
 }

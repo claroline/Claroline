@@ -36,6 +36,6 @@ class LogResourceCreateEvent extends LogGenericEvent
             $node->getCreator()
         );
 
-        $this->isDisplayedInWorkspace(true);
+        $this->setIsDisplayedInWorkspace(true);
     }
 }
