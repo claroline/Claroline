@@ -23,12 +23,18 @@ class LogPostReadEvent extends AbstractLogResourceEvent implements LogNotRepeata
         );
 
         parent::__construct($blog->getResourceNode(), $details);
-
-        $this->isDisplayedInWorkspace(true);
     }
 
     public function getLogSignature()
     {
         return self::ACTION.'_' . $this->resource->getId();
+    }
+
+    /**
+     * @return array
+     */
+    public function getRestriction()
+    {
+        return array(self::DISPLAYED_WORKSPACE);
     }
 }

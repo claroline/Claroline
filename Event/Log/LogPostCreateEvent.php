@@ -22,7 +22,13 @@ class LogPostCreateEvent extends AbstractLogResourceEvent
         );
 
         parent::__construct($blog->getResourceNode(), $details);
+    }
 
-        $this->isDisplayedInWorkspace(true);
+    /**
+     * @return array
+     */
+    public function getRestriction()
+    {
+        return array(self::DISPLAYED_WORKSPACE);
     }
 }
