@@ -13,6 +13,7 @@ use Claroline\CoreBundle\Event\Event\Log\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Event\Event\Log\LogResourceChildUpdateEvent;
 use Claroline\CoreBundle\Entity\Logger\LogWorkspaceWidgetConfig;
 use Claroline\CoreBundle\Entity\Logger\LogDesktopWidgetConfig;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
  * @DI\Service("claroline.log.manager")
@@ -305,7 +306,7 @@ class Manager
         );
     }
 
-    public function getWorkspaceVisibilityForDesktopWidget($user, $workspaces)
+    public function getWorkspaceVisibilityForDesktopWidget($user, AbstractWorkspace $workspaces)
     {
         $workspacesVisibility = array();
 
@@ -345,13 +346,13 @@ class Manager
             ->findOneBy(array('user' => null, 'isDefault' => true));
     }
 
-    public function getWorkspaceWidgetConfig($workspace)
+    public function getWorkspaceWidgetConfig(AbstractWorkspace $workspace)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         return $em
             ->getRepository('ClarolineCoreBundle:Logger\LogWorkspaceWidgetConfig')
-            ->findOneBy(array('workspace' => $workspace, 'isDefault' => false));
+            ->findOneBy(array('workspace' => $workspace->getId(), 'isDefault' => false));
     }
 
     public function getDefaultWorkspaceWidgetConfig()
