@@ -12,10 +12,6 @@
                 'href': path('claro_admin_users_management')
             },
             {
-                'name':'users_list'|trans({}, 'platform'),
-                'href':path('claro_admin_user_list')
-            },
-            {
                 'name':'import'|trans({}, 'platform'),
                 'href':''
             }
@@ -29,7 +25,6 @@
     <form class="form-horizontal" action="{{ path('claro_admin_import_users') }}" method="post" {{ form_enctype(form) }} >
         <div class="panel-body">
             <div>{{ macros.flashBox() }}</div>
-
             <div class="well">
                 <p>
                     <b>{{ 'csv_users_import_infos'|trans({}, 'platform') }}</b>
@@ -42,6 +37,7 @@
                         {{ 'first_name'|trans({}, 'platform') }},
                         {{ 'last_name'|trans({}, 'platform') }},
                         {{ 'username'|trans({}, 'platform') }},
+                        {{ 'password'|trans({}, 'platform') }},
                         {{ 'mail'|trans({}, 'platform') }},
                         {{ 'administrative_code'|trans({}, 'platform') }},
                         {{ 'phone'|trans({}, 'platform') }}
@@ -52,6 +48,7 @@
                     <li>{{ 'first_name'|trans({}, 'platform') }}</li>
                     <li>{{ 'last_name'|trans({}, 'platform') }}</li>
                     <li>{{ 'username'|trans({}, 'platform') }}</li>
+                    <li>{{ 'password'|trans({}, 'platform') }}</li>
                     <li>{{ 'mail'|trans({}, 'platform') }}</li>
                 </ul>
                 <p>{{ 'csv_users_import_infos_optional'|trans({}, 'platform') }} :</p>
