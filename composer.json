@@ -1,9 +1,9 @@
 {
     "name": "claroline/scorm-bundle",
-    "description": "Claroline scorm bundle",
-    "keywords": ["Claroline","Scorm"],
+    "description": "Claroline scorm plugin",
+    "keywords": ["Claroline", "Plugin", "Scorm"],
     "homepage": "http://www.claroline.net",
-    "type": "bundle",
+    "type": "claroline-plugin",
     "license": "",
     "authors": [
         {
