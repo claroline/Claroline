@@ -193,7 +193,7 @@ class LogManager
         return $this->getList(
             $page,
             'admin',
-            new AdminLogFilterType(),
+            $this->container->get('claroline.form.adminLogFilter'),
             'admin_log_filter_form',
             null,
             $maxResult

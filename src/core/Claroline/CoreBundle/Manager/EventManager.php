@@ -2,18 +2,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Pagerfanta;
-use Pagerfanta\Exception\NotValidCurrentPageException;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Claroline\CoreBundle\Form\DataTransformer\DateRangeToTextTransformer;
-use Claroline\CoreBundle\Form\Log\WorkspaceLogFilterType;
-use Claroline\CoreBundle\Form\Log\AdminLogFilterType;
-use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
-use Claroline\CoreBundle\Entity\Log\LogWorkspaceWidgetConfig;
-use Claroline\CoreBundle\Entity\Log\LogDesktopWidgetConfig;
 
 /**
  * @DI\Service("claroline.event.manager")
