@@ -21,5 +21,8 @@
     "autoload": {
         "psr-0": { "Claroline\\AnnouncementBundle": "" }
     },
-    "target-dir": "Claroline/AnnouncementBundle"
+    "target-dir": "Claroline/AnnouncementBundle",
+    "extra": {
+        "dbVersion": "20130909095120"
+    }
 }
