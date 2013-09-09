@@ -142,7 +142,7 @@ class ResourceManagerListener
     public function resourceDesktop()
     {
         $resourceTypes = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
-
+        
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\desktop\resource_manager:resources.html.twig',
             array('resourceTypes' => $resourceTypes)

@@ -157,6 +157,10 @@ claro_resource_rights:
     resource: "@ClarolineCoreBundle/Controller/ResourceRightsController.php"
     prefix: resource
     type: annotation
+claro_resource_type:
+    resource: "@ClarolineCoreBundle/Controller/ResourceTypeController.php"
+    prefix: resource
+    type: annotation
 
 claro_tool_resoure_manager:
     resource: "@ClarolineCoreBundle/Controller/Tool/ResourceManagerController.php"

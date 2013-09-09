@@ -32,12 +32,12 @@ class Utilities
         $this->em = $em;
         $this->expectedTypeOfRight = array('workspace', 'resource');
         $this->expectedKeysForResource = array(
-            'canOpen',
-            'canDelete',
-            'canEdit',
-            'canCopy',
-            'canCreate',
-            'canExport'
+            'open',
+            'delete',
+            'edit',
+            'copy',
+            'create',
+            'export'
         );
         $this->expectedKeysForWorkspace = array('canView', 'canDelete', 'canEdit');
     }

@@ -10,7 +10,7 @@ class LoadTypeData extends AbstractFixture
 {
     public function load(ObjectManager $manager)
     {
-        $fixtures = array('home', 'menu', 'opengraph', 'todo');
+        $fixtures = array('opengraph', 'todo');
 
         foreach ($fixtures as $i => $fixture) {
             $types[$i] = new Type();

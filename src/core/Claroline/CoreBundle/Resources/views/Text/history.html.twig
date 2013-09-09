@@ -2,9 +2,14 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 {# use the section_content block to display yor html #}
 {% block section_content %}
-    {% for difference in differences %}
-        {{ difference|raw }}
-            </br>-------------------------------</br>
-        {% endfor %}
-    {{ original|raw }}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}</h3>
+    </div>
+    <div class="panel-body">
+        {% for difference in differences %}
+            {{ difference|raw }}
+                </br>-------------------------------</br>
+            {% endfor %}
+        {{ original|raw }}
+    </div>
 {% endblock %}

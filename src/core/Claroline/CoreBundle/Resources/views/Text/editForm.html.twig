@@ -3,16 +3,14 @@
 {# use the section_content block to display yor html #}
 {% block section_content %}
 
-    <!-- editeur wysiwyg -->
-        <script src='{{ asset('bundles/frontend/jquery/plugin/tinymce/jscripts/tiny_mce/tiny_mce.js') }}' type='text/javascript'></script>
-        <script type="text/javascript">
-    tinyMCE.init({
-        // General options
-        mode : "textareas"
-    });
-    </script>
+    {{ tinymce_init() }}
+
     <form novalidate="validate" method="post" action="{{ _path('claro_text_edit', {'old':_resource.getId()}) }}" id="edit_form">
-        <textarea name="content" cols="50" rows="15">{{ text|raw }}</textarea>
-        <button type="submit" formnovalidate="formnovalidate" />
+        <textarea name="content" cols="50" rows="15" class="tinymce">{{ text|raw }}</textarea>
+       <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
     </form>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+ {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
 {% endblock %}

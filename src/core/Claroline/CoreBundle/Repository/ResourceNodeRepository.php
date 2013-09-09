@@ -21,7 +21,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
      *
      * @param AbstractWorkspace $workspace
      *
-     * @return AbstractResource
+     * @return ResourceNode
      */
     public function findWorkspaceRoot(AbstractWorkspace $workspace)
     {
@@ -38,11 +38,11 @@ class ResourceNodeRepository extends MaterializedPathRepository
     /**
      * Returns the descendants of a resource.
      *
-     * @param AbstractResource $resource           The resource node to start with
+     * @param ResourceNode     $resource           The resource node to start with
      * @param boolean          $includeStartNode   Whether the given resource should be included in the result
      * @param string           $filterResourceType A resource type to filter the results
      *
-     * @return array[AbstractResource]
+     * @return array[ResourceNode]
      */
     public function findDescendants(
         ResourceNode $resource,
@@ -67,7 +67,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
     /**
      * Returns the immediate children of a resource that are openable by any of the given roles.
      *
-     * @param AbstractResource $parent The id of the parent of the requested children
+     * @param ResourceNode     $parent The id of the parent of the requested children
      * @param array[string]    $roles  An array of roles
      *
      * @throw InvalidArgumentException if the array of roles is empty
@@ -92,24 +92,42 @@ class ResourceNodeRepository extends MaterializedPathRepository
             $items = $query->iterate(null, AbstractQuery::HYDRATE_ARRAY);
 
             foreach ($items as $key => $item) {
-                $item[$key]['can_export'] = true;
-                $item[$key]['can_edit'] = true;
-                $item[$key]['can_delete'] = true;
+                $item[$key]['mask'] = 65535;
                 $children[] = $item[$key];
             }
+
+            return $children;
+
         } else {
             $builder->selectAsArray(true)
                 ->whereParentIs($parent)
-                ->whereRoleIn($roles)
-                ->whereCanOpen()
-                ->groupByResourceUserTypeAndIcon();
+                ->whereRoleIn($roles);
 
             $query = $this->_em->createQuery($builder->getDql());
             $query->setParameters($builder->getParameters());
-            $children = $this->executeQuery($query);
-        }
 
-        return $children;
+            $children = $this->executeQuery($query);
+            $childrenWithMaxRights = array();
+
+            foreach ($children as $child) {
+                if (!isset($childrenWithMaxRights[$child['id']])) {
+                    $childrenWithMaxRights[$child['id']] = $child;
+                }
+
+                foreach ($childrenWithMaxRights as $id => $childMaxRights) {
+                    if ($id === $child['id']) {
+                        $childrenWithMaxRights[$id]['mask'] |= $child['mask'];
+                    }
+                }
+            }
+
+            $returnedArray = array();
+
+            foreach ($childrenWithMaxRights as $childMaxRights) {
+                $returnedArray[] = $childMaxRights;
+            }
+            return $returnedArray;;
+        }
    }
 
     /**
@@ -159,7 +177,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
     /**
      * Returns the ancestors of a resource, including the resource itself.
      *
-     * @param AbstractResource $resource
+     * @param ResourceNode $resource
      *
      * @return array[array] An array of resources represented as arrays
      */
@@ -305,6 +323,23 @@ class ResourceNodeRepository extends MaterializedPathRepository
         }
 
         return $results;
+    }
+
+    public function findByMimeTypeAndParent($mimeType, ResourceNode $parent, array $roles)
+    {
+        $builder = new ResourceQueryBuilder();
+        $dql = $builder->selectAsEntity(false, 'Claroline\CoreBundle\Entity\Resource\File')
+            ->whereParentIs($parent)
+            ->whereMimeTypeIs('%'.$mimeType.'%')
+            ->whereRoleIn($roles)
+            ->whereCanOpen()
+            ->getDql();
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameters($builder->getParameters());
+        $resources = $query->getResult();
+
+        return $resources;
     }
 
     private function addFilters(ResourceQueryBuilder $builder,  array $criteria, array $roles = null)

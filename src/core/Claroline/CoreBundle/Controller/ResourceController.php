@@ -12,10 +12,11 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContext;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Manager\Exception\ResourceMoveException;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
@@ -31,11 +32,13 @@ class ResourceController
     private $translator;
     private $request;
     private $dispatcher;
+    private $maskManager;
 
     /**
      * @DI\InjectParams({
      *     "sc"              = @DI\Inject("security.context"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
      *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
      *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "translator"      = @DI\Inject("translator"),
@@ -51,7 +54,8 @@ class ResourceController
         RoleManager $roleManager,
         Translator $translator,
         Request $request,
-        StrictDispatcher $dispatcher
+        StrictDispatcher $dispatcher,
+        MaskManager $maskManager
     )
     {
         $this->sc = $sc;
@@ -61,6 +65,7 @@ class ResourceController
         $this->roleManager = $roleManager;
         $this->request = $request;
         $this->dispatcher = $dispatcher;
+        $this->maskManager = $maskManager;
     }
 
     /**
@@ -224,14 +229,20 @@ class ResourceController
     {
         $collection = new ResourceCollection($nodes);
         $collection->addAttribute('parent', $newParent);
-        $this->checkAccess('MOVE', $collection);
+
+        if (!$this->sc->isGranted('MOVE', $collection)) {
+            $response = new Response($this->translator->trans('insufficient_permissions', array(), 'error'), 403);
+            $response->headers->add(array('XXX-Claroline' => 'insufficient-permissions'));
+
+            return $response;
+        }
 
         foreach ($nodes as $node) {
             try {
                 $movedNode = $this->resourceManager->move($node, $newParent);
                 $movedNodes[] = $this->resourceManager->toArray($movedNode);
-            } catch (\Gedmo\Exception\UnexpectedValueException $e) {
-                throw new \RuntimeException('Cannot move a resource into itself');
+            } catch (ResourceMoveException $e) {
+                return new Response($this->translator->trans('invalid_move', array(), 'error'), 422);
             }
         }
 
@@ -241,7 +252,7 @@ class ResourceController
     /**
      * @EXT\Route(
      *     "/custom/{action}/{node}",
-     *     name="claro_resource_custom",
+     *     name="claro_resource_action",
      *     options={"expose"=true}
      * )
      *
@@ -257,10 +268,18 @@ class ResourceController
      */
     public function customAction($action, ResourceNode $node)
     {
-        $resourceType = $node->getResourceType()->getName();
-        $eventName = $action . '_' . $resourceType;
+        $type = $node->getResourceType();
+        $menuAction = $this->maskManager
+            ->getMenuFromNameAndResourceType($action, $type);
+
+        if (!$menuAction) {
+            throw new \Exception("The menu {$action} doesn't exists");
+        }
+
+        $permToCheck = $this->maskManager->getByValue($type, $menuAction->getValue());
+        $eventName = $action . '_' . $type->getName();
         $collection = new ResourceCollection(array($node));
-        $this->checkAccess('OPEN', $collection);
+        $this->checkAccess($permToCheck->getName(), $collection);
 
         $event = $this->dispatcher->dispatch(
             $eventName,
@@ -268,9 +287,8 @@ class ResourceController
             array($this->resourceManager->getResourceFromNode($node))
         );
 
-        // TODO waiting for define CustomActions
-        // $logevent = new ResourceLogEvent($ri, $action);
-        // $this->get('event_dispatcher')->dispatch('log_resource', $logevent);
+        $this->dispatcher->dispatch('log', 'Log\LogResourceCustom', array($node, $action));
+
         return $event->getResponse();
     }
 
@@ -373,7 +391,7 @@ class ResourceController
             $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
         }
 
-        return new JsonResponse(
+        $jsonResponse = new JsonResponse(
             array(
                 'path' => $path,
                 'creatableTypes' => $creatableTypes,
@@ -383,6 +401,11 @@ class ResourceController
                 'is_root' => $isRoot
             )
         );
+
+        $jsonResponse->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate');
+        $jsonResponse->headers->add(array('Expires' => '-1'));
+
+        return $jsonResponse;
     }
 
     /**
@@ -412,7 +435,13 @@ class ResourceController
         $newNodes = array();
         $collection = new ResourceCollection($nodes);
         $collection->addAttribute('parent', $parent);
-        $this->checkAccess('COPY', $collection);
+
+        if (!$this->sc->isGranted('COPY', $collection)) {
+            $response = new Response($this->translator->trans('insufficient_permissions', array(), 'error'), 403);
+            $response->headers->add(array('XXX-Claroline' => 'insufficient-permissions'));
+
+            return $response;
+        }
 
         foreach ($nodes as $node) {
             //$resource = $this->resourceManager->getResourceFromNode($node);
@@ -576,7 +605,13 @@ class ResourceController
     {
         if ($node->getClass() === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
             $resource = $this->resourceManager->getResourceFromNode($node);
+            if ($resource === null) {
+                throw new \Exception('The resource was removed.');
+            }
             $node = $resource->getTarget();
+            if ($node === null) {
+                throw new \Exception('The node target was removed.');
+            }
         }
 
         return $node;

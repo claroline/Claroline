@@ -104,8 +104,6 @@ class FileListener implements ContainerAwareInterface
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $em->remove($event->getResource());
         $pathName = $this->container->getParameter('claroline.param.files_directory')
             . DIRECTORY_SEPARATOR
             . $event->getResource()->getHashName();
