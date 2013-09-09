@@ -125,7 +125,7 @@
     {{ parent() }}
     {% javascripts
         vars=["locale"]
-        "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeUserConfirm.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/addUserConfirm.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
         filter="twig_js"
@@ -139,7 +139,7 @@
         parameters.route.action = {};
         parameters.route.normal = {"route": "claro_admin_outside_of_group_user_list", "parameters": {'groupId': {{ group.getId() }} }};
         parameters.route.search = {"route": "claro_admin_outside_of_group_user_list_search", "parameters": {'groupId': {{ group.getId() }}}};
-        parameters.route.action.add = {"route": "claro_admin_multiadd_user_to_group", "parameters": {'groupId': {{ group.getId() }}}, 'type': 'PUT', "confirmTemplate": removeUserConfirm};
+        parameters.route.action.add = {"route": "claro_admin_multiadd_user_to_group", "parameters": {'groupId': {{ group.getId() }}}, 'type': 'PUT', "confirmTemplate": addUserConfirm};
         Claroline.Table.initialize(parameters);
     </script>
 {% endblock %}
