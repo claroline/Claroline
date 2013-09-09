@@ -69,7 +69,8 @@ Knowing that creating custom event is highly recommended.
 So only creation of custom event will be covered in this doc, for using existing one please refer to the CoreBundle code.
 
 For creating new event log here is the step to follow:
- * Create new class that extends LogGenericEvent class
+ * Create new class that extends the good class
+   * AbstractLogResourceEvent when action occured on a resource, or child resource
  * Define a constant in the class whose name begin with `ACTION`, other name won't be used to list available action's log
    This constant must be well formated in two or three sections separated by a dash `-` in order to be used in the filter form.
    Each of this section can match pretty much everything you need.
@@ -111,15 +112,22 @@ class LogPostCreateEvent extends AbstractLogResourceEvent
         );
 
         parent::__construct($blog->getResourceNode(), $details);
+    }
 
-        $this->isDisplayedInWorkspace(true);
+    /**
+     * @return array
+     */
+    public function getRestriction()
+    {
+        return array(self::DISPLAYED_WORKSPACE);
     }
 }
 ```
 
 By default all logs are not displayed on vizualisation interface.
-To see them you have to define is they can be display in Admin or in Workspace by calling one, the two or none of
-the methods `isDisplayedInAdmin` and `isDisplayedInWorkspace`.
+To see them you have to define their displaying restirctions.
+To do it you have to define the `getRestriction` method on your event log class and make it return an array of where you want it to be displayed.
+There is two constants at your disposal in the class, `DISPLAYED_ADMIN` and `DISPLAYED_WORKSPACE`.
 
 Somme classes you can extend of exist to ease the class creation, here is the list and what they are for:
  * `AbstractLogResourceEvent` for event log associate to a resource

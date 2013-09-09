@@ -12,7 +12,13 @@ class LogUserLoginEvent extends LogGenericEvent
     public function __construct()
     {
         parent::__construct(self::ACTION, array());
+    }
 
-        $this->setIsDisplayedInAdmin(true);
+    /**
+     * @return array
+     */
+    public function getRestriction()
+    {
+        return array(self::DISPLAYED_ADMIN);
     }
 }

@@ -27,9 +27,11 @@ class EventManager
     /**
      * Get all existing event name with their associated label
      *
+     * @param string $restiction
+     *
      * @return array
      */
-    public function getEvents()
+    public function getEvents($restiction = null)
     {
         $suffixLogPath      = '/Event/Log';
         $suffixLogNamespace = '\Event\Log';
@@ -41,7 +43,7 @@ class EventManager
             if (file_exists($bundleEventLogDirectory)) {
                 $finder = new Finder();
                 $finder->files()->in($bundleEventLogDirectory)->sortByName();
-                $events = array_merge($events, $this->getEventsByBundle($finder, $bundle->getNamespace(), $suffixLogNamespace));
+                $events = array_merge($events, $this->getEventsByBundle($finder, $bundle->getNamespace(), $suffixLogNamespace, $restiction));
             }
         }
 
@@ -52,10 +54,11 @@ class EventManager
      * @param Finder $finder
      * @param string $bundleNamespace
      * @param string $suffixLogNamespace
+     * @param string $restriction
      *
      * @return array
      */
-    protected function getEventsByBundle(Finder $finder, $bundleNamespace, $suffixLogNamespace)
+    protected function getEventsByBundle(Finder $finder, $bundleNamespace, $suffixLogNamespace, $restriction)
     {
         $events = array();
 
@@ -63,7 +66,7 @@ class EventManager
         foreach ($finder as $file) {
             $classNamespace = $bundleNamespace . $suffixLogNamespace . '\\' . $file->getBasename('.' . $file->getExtension());
             if (in_array('Claroline\CoreBundle\Event\Log\LogGenericEvent', class_parents($classNamespace))) {
-                $events = array_merge($events, $this->getActionConstantsforClass($classNamespace));
+                $events = array_merge($events, $this->getActionConstantsforClass($classNamespace, $restriction));
             }
         }
 
@@ -72,18 +75,29 @@ class EventManager
 
     /**
      * @param string $classNamespace
+     * @param string $restriction
      *
      * @return array
      */
-    protected function getActionConstantsforClass($classNamespace)
+    protected function getActionConstantsforClass($classNamespace, $restriction)
     {
         $constants       = array();
         $reflectionClass = new \ReflectionClass($classNamespace);
-        $classConstants  = $reflectionClass->getConstants();
+        if (!$reflectionClass->isAbstract()) {
+            if (null !== $restriction) {
+                /** @var \Claroline\CoreBundle\Event\Log\LogGenericEvent $instance */
+                $instance = $reflectionClass->newInstanceWithoutConstructor();
+                $instance->setVisibiltyFromRestriction($instance->getRestriction());
 
-        foreach ($classConstants as $key => $classConstant) {
-            if (preg_match('/^ACTION/', $key)) {
-                $constants[] = $classConstant;
+                if ($instance->isDisplayedByRestriction($restriction)) {
+                    $classConstants  = $reflectionClass->getConstants();
+
+                    foreach ($classConstants as $key => $classConstant) {
+                        if (preg_match('/^ACTION/', $key)) {
+                            $constants[] = $classConstant;
+                        }
+                    }
+                }
             }
         }
 
@@ -91,11 +105,13 @@ class EventManager
     }
 
     /**
+     * @param string $restriction
+     *
      * @return array
      */
-    public function getSortedEventsForFilter()
+    public function getSortedEventsForFilter($restriction = null)
     {
-        $textEvents   = $this->getEvents();
+        $textEvents   = $this->getEvents($restriction);
 
         foreach ($textEvents as $textEvent) {
             $explodeTextEvents = explode('-', $textEvent);

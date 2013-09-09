@@ -22,7 +22,13 @@ class LogGroupRemoveUserEvent extends LogGenericEvent
             $receiver,
             $receiverGroup
         );
+    }
 
-        $this->setIsDisplayedInAdmin(true);
+    /**
+     * @return array
+     */
+    public function getRestriction()
+    {
+        return array(self::DISPLAYED_ADMIN);
     }
 }

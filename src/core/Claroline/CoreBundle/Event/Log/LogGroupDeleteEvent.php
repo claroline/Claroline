@@ -21,7 +21,13 @@ class LogGroupDeleteEvent extends LogGenericEvent
             null,
             $receiverGroup
         );
+    }
 
-        $this->setIsDisplayedInAdmin(true);
+    /**
+     * @return array
+     */
+    public function getRestriction()
+    {
+        return array(self::DISPLAYED_ADMIN);
     }
 }
