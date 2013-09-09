@@ -306,7 +306,7 @@ class LogManager
         );
     }
 
-    public function getWorkspaceVisibilityForDesktopWidget($user, $workspaces)
+    public function getWorkspaceVisibilityForDesktopWidget(User $user, array $workspaces)
     {
         $workspacesVisibility = array();
 
