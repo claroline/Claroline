@@ -5,26 +5,79 @@
         <h3 class="panel-title"> {{ image.getResourceNode().getName() }} </h3>
     </div>
     <div class="panel-body">
-        <div id="carousel-example-generic" class="carousel slide">
+        <div id="image-player" class="carousel slide" style="width:100%">
             <div class="carousel-inner">
                 {% for img in images %}
-                    <div class="item">
-                        <img src="{{ asset('') }}/../../files/{{ img.getHashName() }}" width="100%">
+                    <div class="item{% if img.getResourceNode().getId() ==  _resource.getResourceNode().getId() %} active{% endif %}" data-name="{{ img.getResourceNode().getName() }}"  data-id="{{ img.getResourceNode().getId() }}">
+                        <img src="{{ asset('') }}../files/{{ img.getHashName() | raw }}" width="100%">
                     </div>
                 {% endfor %}
             </div>
-            <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+            <a class="left carousel-control" href="#image-player" data-slide="prev">
                 <i class="icon-prev"></i>
             </a>
-            <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+            <a class="right carousel-control" href="#image-player" data-slide="next">
                 <i class="icon-next"></i>
             </a>
+            <div class="float-right-top">
+                <a class="btn btn-default close pointer-hand" onClick="javascript:enterFullscreen(this.parentNode.parentNode)"><i class="icon-resize-full"></i></a>
+            </div>
         </div>
-        <img src="{{ asset('') }}/../../files/{{ image.getHashName() }}" width="100%">
     </div>
     <div class="panel-footer">
         <a class="btn btn-primary" href="{{ path('claro_resource_download') }}?ids[]={{ _resource.getResourceNode().getId() }}">
             <i class="icon-download"></i> {{ 'download'|trans({}, 'platform') }}
         </a>
     </div>
+{% endblock %}
+{% block javascripts_header %}
+    {{ parent() }}
+    <script>
+        function RunPrefixMethod(obj, method)
+        {
+            var pfx = ["webkit", "moz", "ms", "o", ""];
+            var p = 0, m, t;
+
+            while (p < pfx.length && !obj[m]) {
+                m = method;
+                if (pfx[p] == "") {
+                    m = m.substr(0,1).toLowerCase() + m.substr(1);
+                }
+                m = pfx[p] + m;
+                t = typeof obj[m];
+                if (t != "undefined") {
+                    pfx = [pfx[p]];
+                    return (t == "function" ? obj[m]() : obj[m]);
+                }
+                p++;
+            }
+        }
+
+        function enterFullscreen(element) {
+
+            if (RunPrefixMethod(document, "FullScreen") || RunPrefixMethod(document, "IsFullScreen")) {
+                RunPrefixMethod(document, "CancelFullScreen");
+            }
+            else
+            {
+                RunPrefixMethod(element, "RequestFullScreen");
+            }
+        }
+    </script>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        (function() {
+            "use strict";
+
+            $('#image-player').on('slid.bs.carousel', function () {
+                var title = $(".item.active", this).data('name');
+                var id = $(".item.active", this).data('id');
+                $('.panel-heading .panel-title').html(title);
+                $('.breadcrumb li').last().html(title);
+                $('.panel-footer .btn.btn-primary').attr('href', $('.panel-footer .btn.btn-primary').attr('href').replace(/(ids\[\]=)[^\&]+/, '$1' + id));
+            });
+        })();
+    </script>
 {% endblock %}
