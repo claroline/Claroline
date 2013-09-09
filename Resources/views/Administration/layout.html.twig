@@ -16,11 +16,9 @@
                 {{ 'users_management'|trans({}, 'platform') }}
             </a>
             {#<a class="list-group-item{% if path('claro_admin_badges') == app.request.requesturi %} active{% endif %}" href="{{ path('claro_admin_badges') }}" id="link_badges">
-                <i class="icon-certificate"></i>
-                {{ 'badges_management'|trans({}, 'platform') }}
             </a>#}
             <a class="list-group-item{{ '/admin/registration' | compareRoute(' active') }}" href="{{ path('claro_admin_registration_management') }}">
-                <i class="icon-book"></i>
+               <i class="icon-book"></i>
                 {{ 'registration_to_workspaces'|trans({}, 'platform') }}
             </a>
             <a class="list-group-item{{ '/admin/plugin' | compareRoute(' active') }}"
