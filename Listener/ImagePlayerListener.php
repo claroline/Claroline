@@ -10,6 +10,12 @@ class ImagePlayerListener extends ContainerAware
 {
     public function onOpenImage(PlayFileEvent $event)
     {
+        $images = $this->container->get('claroline.manager.resource_manager')->getByMimeTypeAndParent(
+            'image',
+            $event->getResource()->getResourceNode()->getParent(),
+            $this->container->get('security.context')->getToken()->getUser()->getRoles()
+        );
+
         $path = $this->container->getParameter('claroline.param.files_directory')
             . DIRECTORY_SEPARATOR
             . $event->getResource()->getHashName();
@@ -19,9 +25,11 @@ class ImagePlayerListener extends ContainerAware
                 'workspace' => $event->getResource()->getResourceNode()->getWorkspace(),
                 'path' => $path,
                 'image' => $event->getResource(),
-                '_resource' => $event->getResource()
+                '_resource' => $event->getResource(),
+                'images' => $images
             )
         );
+
         $response = new Response($content);
         $event->setResponse($response);
         $event->stopPropagation();

@@ -5,6 +5,21 @@
         <h3 class="panel-title"> {{ image.getResourceNode().getName() }} </h3>
     </div>
     <div class="panel-body">
+        <div id="carousel-example-generic" class="carousel slide">
+            <div class="carousel-inner">
+                {% for img in images %}
+                    <div class="item">
+                        <img src="{{ asset('') }}/../../files/{{ img.getHashName() }}" width="100%">
+                    </div>
+                {% endfor %}
+            </div>
+            <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                <i class="icon-prev"></i>
+            </a>
+            <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                <i class="icon-next"></i>
+            </a>
+        </div>
         <img src="{{ asset('') }}/../../files/{{ image.getHashName() }}" width="100%">
     </div>
     <div class="panel-footer">
