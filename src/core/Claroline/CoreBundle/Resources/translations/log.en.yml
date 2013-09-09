@@ -146,3 +146,33 @@ log_workspace-create_title: 'Workspace creation'
 log_workspace-delete_title: "Workspace dleetion"
 log_workspace-update_title: "Workspace update"
 log_workspace-tool_read_title: 'Workspace tool open'
+log_group-add_user_filter: 'Adding user to group'
+log_group-create_filter: 'Group creation'
+log_group-delete_filter: 'Group delete'
+log_group-remove_user_filter: 'Removing user from group'
+log_group-update_filter: 'Group update'
+log_resource-copy_filter: 'Resource copy'
+log_resource-create_filter: 'Resource creation'
+log_resource-delete_filter: 'Resource delete'
+log_resource-move_filter: 'Resource move'
+log_resource-read_filter: 'Resource open'
+log_resource-shortcut_filter: "Resource shortcut"
+log_resource-export_filter: 'Resource download'
+log_resource-update_filter: 'Resource update'
+log_resource-update_rename_filter: 'Resource rename'
+log_user-create_filter: 'User creation'
+log_user-login_filter: 'User login'
+log_user-delete_filter: 'User delete'
+log_user-update_filter: 'User update'
+log_workspace-role-subscribe_user_filter: 'Subscribe user to a workspace role'
+log_workspace-role-unsubscribe_user_filter: 'Unsubscribe user from a workspace role'
+log_workspace-role-subscribe_group_filter: 'Subscribe group to a workspace role'
+log_workspace-role-unsubscribe_group_filter: 'Unsubscribe group from a workspace role'
+log_workspace-role-change_right_filter: 'Change rights for a workspace role'
+log_workspace-role-create_filter: "Create a role for a workspace"
+log_workspace-role-delete_filter: "Delete a role for a workspace"
+log_workspace-role-update_filter: "Update a role for a workspace"
+log_workspace-create_filter: 'Workspace creation'
+log_workspace-delete_filter: "Workspace dleetion"
+log_workspace-update_filter: "Workspace update"
+log_workspace-tool_read_filter: 'Workspace tool open'
