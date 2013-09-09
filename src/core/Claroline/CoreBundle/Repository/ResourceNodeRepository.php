@@ -328,7 +328,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
     public function findByMimeTypeAndParent($mimeType, ResourceNode $parent, array $roles)
     {
         $builder = new ResourceQueryBuilder();
-        $dql = $builder->selectAsArray()
+        $dql = $builder->selectAsEntity(false, 'Claroline\CoreBundle\Entity\Resource\File')
             ->whereParentIs($parent)
             ->whereMimeTypeIs('%'.$mimeType.'%')
             ->whereRoleIn($roles)
