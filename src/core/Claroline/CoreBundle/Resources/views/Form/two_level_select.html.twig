@@ -10,14 +10,15 @@
                 var secondLevelOptionsHtml = [];
 
                 var onClickFirstLevel = function (elt) {
+                    var formField = $("#{{ form.vars['id'] }}");
                     if (elt.hasClass('first-level')) {
-                        $("#{{ form.vars['id'] }}").html(firstLevelOptionsHtml[elt.val()]);
-                        $("#{{ form.vars['id'] }}").val(elt.val());
-                        $("#{{ form.vars['id'] }}").attr('readonly', true);
+                        formField.html(firstLevelOptionsHtml[elt.val()]);
+                        formField.val(elt.val());
+                        formField.attr('readonly', true);
                     } else {
-                        $("#{{ form.vars['id'] }}").html(secondLevelOptionsHtml[elt.val()]);
+                        formField.html(secondLevelOptionsHtml[elt.val()]);
                         $("#{{ form.vars['id'] }}_first_level").val(elt.val());
-                        $("#{{ form.vars['id'] }}").attr('readonly', false);
+                        formField.attr('readonly', false);
                     }
                 };
 
@@ -28,13 +29,14 @@
                     firstLevelOptionsHtml[$(this).val()] = element.outerHTML;
                 });
                 $("#{{ form.vars['id'] }} > optgroup").each(function (index) {
-                    firstLevelOptions += "<option class='second-level' value='group_"+index+"'>"+$(this).attr("label")+"</option>";
+                    firstLevelOptions += "<option class='second-level' value='group_"+index+"'>" + $(this).attr("label") + "</option>";
                     secondLevelOptionsHtml["group_"+index] = $(this).html();
                 });
-                $("#{{ form.vars['id'] }}").before("<select id='{{ form.vars['id'] }}_first_level' class='input-medium'>"+firstLevelOptions+"</select> <span> : </<span> ");
-                $("#{{ form.vars['id'] }}").css("margin-left", "5px");
-                $("#{{ form.vars['id'] }}").empty();
-                $("#{{ form.vars['id'] }}").attr('readonly', true);
+                var formField = $("#{{ form.vars['id'] }}");
+                formField.before("<select id='{{ form.vars['id'] }}_first_level' class='input-sm form-control' style='width: auto'>" + firstLevelOptions + "</select> <span> : </<span> ");
+                formField.empty();
+                formField.attr('readonly', true);
+                formField.css('width', 'auto');
                 $("#{{ form.vars['id'] }}_first_level").on('change', function () {
                     onClickFirstLevel($(this).find('option[value="'+$(this).val()+'"]'));
                 });
@@ -51,7 +53,7 @@
                             var secondLevelElement = secondLevelOptionsHtml[key];
                             if (secondLevelElement.indexOf(defaultValue) > -1) {
                                 onClickFirstLevel($("#{{ form.vars['id'] }}_first_level option[value='"+key+"']"));
-                                $("#{{ form.vars['id'] }}").val(defaultValue);
+                                formField.val(defaultValue);
                             }
                         }
                     }

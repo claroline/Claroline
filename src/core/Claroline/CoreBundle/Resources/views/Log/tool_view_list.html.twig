@@ -3,23 +3,38 @@
 </div>
 <div class="panel-body logs-container">
     <div>
-        <style type="text/css">
-            #logFilter.form-inline div {
-                display: inline-block;
-                *display: inline;
-                *zoom: 1;
-                margin-bottom: 5px;
-                margin-top: 5px;
-                margin-right: 10px;
-            }
-        </style>
-
         <legend>
             {{ 'Filter actions'|trans({}, 'platform') }}
         </legend>
 
-        <form id="logFilter" action="{{ filterFormAction }}" method="GET" class="form-inline">
-            {{ form_widget(filterForm) }}
+        <form id="logFilter" action="{{ filterFormAction }}" method="GET" class="form-inline" role="form">
+            {{ form_errors(filterForm) }}
+
+            <div class="form-group col-md-12">
+                {{ form_label(filterForm.action) }}
+                {{ form_errors(filterForm.action) }}
+                <div class="col-md-12">
+                    {{ form_widget(filterForm.action) }}
+                </div>
+            </div>
+
+            <div class="form-group col-md-12">
+                {{ form_label(filterForm.range) }}
+                {{ form_errors(filterForm.range) }}
+                <div class="col-md-3">
+                    {{ form_widget(filterForm.range) }}
+                </div>
+            </div>
+
+            <div class="form-group col-md-12">
+                {{ form_label(filterForm.user) }}
+                {{ form_errors(filterForm.user) }}
+                <div class="col-md-6">
+                    {{ form_widget(filterForm.user) }}
+                </div>
+            </div>
+
+            {{ form_rest(filterForm) }}
             <input type="submit" value="{{ 'log_filter_actions'|trans({}, 'log') }}" class="btn btn-primary"/>
         </form>
         <br/><br/>
