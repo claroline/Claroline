@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 class LogResourceCustomEvent extends LogGenericEvent
 {
-    const ACTION = 'resource_custom_action ';
+    const ACTION = 'resource-custom_action ';
 
     /**
      * Constructor.
@@ -36,5 +36,13 @@ class LogResourceCustomEvent extends LogGenericEvent
             $node->getWorkspace(),
             $node->getCreator()
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function getRestriction()
+    {
+        return array(self::DISPLAYED_WORKSPACE);
     }
 }

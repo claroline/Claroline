@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Form\Log;
 
+use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Manager\EventManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
@@ -28,7 +29,7 @@ class AdminLogFilterType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $actionChoices = $this->eventManager->getSortedEventsForFilter();
+        $actionChoices = $this->eventManager->getSortedEventsForFilter(LogGenericEvent::DISPLAYED_ADMIN);
 
         $builder
             ->add(

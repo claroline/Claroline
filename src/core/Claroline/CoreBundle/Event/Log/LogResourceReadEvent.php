@@ -35,12 +35,18 @@ class LogResourceReadEvent extends LogGenericEvent implements LogNotRepeatableIn
             $node->getWorkspace(),
             $node->getCreator()
         );
-
-        $this->setIsDisplayedInWorkspace(true);
     }
 
     public function getLogSignature()
     {
         return self::ACTION.'_'.$this->resource->getId();
+    }
+
+    /**
+     * @return array
+     */
+    public function getRestriction()
+    {
+        return array(self::DISPLAYED_WORKSPACE);
     }
 }

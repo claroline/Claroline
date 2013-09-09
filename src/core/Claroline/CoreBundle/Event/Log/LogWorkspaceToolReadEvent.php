@@ -26,12 +26,18 @@ class LogWorkspaceToolReadEvent extends LogGenericEvent implements LogNotRepeata
             null,
             $toolName
         );
-
-        $this->setIsDisplayedInWorkspace(true);
     }
 
     public function getLogSignature()
     {
         return self::ACTION.'_'.$this->workspace->getId().'_'.$this->toolName;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRestriction()
+    {
+        return array(self::DISPLAYED_WORKSPACE);
     }
 }

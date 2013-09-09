@@ -35,7 +35,13 @@ class LogResourceExportEvent extends LogGenericEvent
             $node->getWorkspace(),
             $node->getCreator()
         );
+    }
 
-        $this->setIsDisplayedInWorkspace(true);
+    /**
+     * @return array
+     */
+    public function getRestriction()
+    {
+        return array(self::DISPLAYED_WORKSPACE);
     }
 }

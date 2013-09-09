@@ -21,7 +21,13 @@ class LogUserDeleteEvent extends LogGenericEvent
             ),
             $receiver
         );
+    }
 
-        $this->setIsDisplayedInAdmin(true);
+    /**
+     * @return array
+     */
+    public function getRestriction()
+    {
+        return array(self::DISPLAYED_ADMIN);
     }
 }

@@ -8,8 +8,11 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
 
-class LogGenericEvent extends Event
+abstract class LogGenericEvent extends Event
 {
+    const DISPLAYED_ADMIN     = 'admin';
+    const DISPLAYED_WORKSPACE = 'workspace';
+
     protected $action;
 
     protected $details;
@@ -51,6 +54,8 @@ class LogGenericEvent extends Event
         $this->workspace              = $workspace;
         $this->owner                  = $owner;
         $this->toolName               = $toolName;
+
+        $this->setVisibiltyFromRestriction();
     }
 
     /**
@@ -126,6 +131,22 @@ class LogGenericEvent extends Event
     }
 
     /**
+     * @return array
+     */
+    public abstract function getRestriction();
+
+    /**
+     * @return LogGenericEvent
+     */
+    public function setVisibiltyFromRestriction()
+    {
+        $this->isDisplayedInAdmin     = in_array(self::DISPLAYED_ADMIN, $this->getRestriction());
+        $this->isDisplayedInWorkspace = in_array(self::DISPLAYED_WORKSPACE, $this->getRestriction());
+
+        return $this;
+    }
+
+    /**
      * Return the visibility in admin for the associated log
      *
      * @return bool
@@ -170,13 +191,25 @@ class LogGenericEvent extends Event
     }
 
     /**
-     * @param string $restriction
+     * @param string $restrictions
      *
+     * @throws \InvalidArgumentException
      * @return bool
      */
     public function isDisplayedByRestriction($restriction)
     {
         $isDisplayedByRestriction = false;
+
+        switch($restriction) {
+            case self::DISPLAYED_ADMIN:
+                $isDisplayedByRestriction = $this->getIsDisplayedInAdmin();
+                break;
+            case self::DISPLAYED_WORKSPACE:
+                $isDisplayedByRestriction = $this->getIsDisplayedInWorkspace();
+                break;
+            default:
+                throw new \InvalidArgumentException(sprintf("Unknown displaying restriction '%s'.", $restriction));
+        }
 
         return $isDisplayedByRestriction;
     }
