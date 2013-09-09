@@ -1,7 +1,32 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'home_tabs'|trans({}, 'platform'),
+                'href': path('claro_admin_home_tabs_configuration')
+            },
+            {
+                'name': 'desktop_home_tab_creation'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
 {% block section_content %}
 
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'desktop_home_tab_creation'|trans({}, 'platform') }}
+        </h3>
+    </div>
     <form
         class="form-horizontal"
         action="{{ path('claro_admin_desktop_home_tab_create') }}"
@@ -9,22 +34,6 @@
         {{ form_enctype(form) }}
     >
         <div class="panel-body">
-            {{
-                macros.breadcrumbs([
-                    {
-                        'icon': 'icon-th-large',
-                        'name': 'home_tabs'|trans({}, 'platform'),
-                        'href': path('claro_admin_home_tabs_configuration')
-                    },
-                    {
-                        'name': 'desktop_home_tab_creation'|trans({}, 'platform'),
-                        'href': ''
-                    }
-                ])
-            }}
-
-            <h3>{{ 'desktop_home_tab_creation'|trans({}, 'platform') }}</h3>
-            <br>
             {{ form_widget(form) }}
         </div>
 

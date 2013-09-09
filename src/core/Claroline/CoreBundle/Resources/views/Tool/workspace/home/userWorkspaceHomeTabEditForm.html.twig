@@ -5,8 +5,45 @@
     <script src='{{ asset('bundles/clarolinecore/js/home/userWorkspaceHomeTabEdit.js') }}' type="text/javascript"></script>
 {% endblock %}
 
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': workspace.getName(),
+                'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+            },
+            {
+                'name': 'home'|trans({}, 'platform'),
+                'href': path('claro_workspace_tool_config', {'workspace': workspace.getId(), 'tool': tool.getId()})
+            },
+            {
+                'name': 'home_tabs'|trans({}, 'platform'),
+                'href': path('claro_workspace_home_tab_properties', {'workspaceId': workspace.getId()})
+            },
+            {
+                'name': 'home_tab_edition'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
 {% block section_content %}
 
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'home_tab_edition'|trans({}, 'platform') }}
+        </h3>
+    </div>
     <form
         class="form-horizontal"
         action="{{ path(
@@ -17,34 +54,10 @@
         {{ form_enctype(form) }}
     >
         <div class="panel-body">
-            {{
-                macros.breadcrumbs([
-                    {
-                        'icon': 'icon-cog',
-                        'name': 'parameters'|trans({}, 'platform'),
-                        'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
-                    },
-                    {
-                        'name': 'home'|trans({}, 'platform'),
-                        'href': path('claro_workspace_tool_config', {'workspace': workspace.getId(), 'tool': tool.getId()})
-                    },
-                    {
-                        'name': 'home_tabs'|trans({}, 'platform'),
-                        'href': path('claro_workspace_home_tab_properties', {'workspaceId': workspace.getId()})
-                    },
-                    {
-                        'name': 'home_tab_edition'|trans({}, 'platform'),
-                        'href': ''
-                    }
-                ])
-            }}
-
-            <h3>{{ 'home_tab_edition'|trans({}, 'platform') }}</h3>
-            <h4>
+            <div class="well well-sm">
                 {{ 'home_tab'|trans({}, 'platform') }} :
                 {{ homeTabName }}
-            </h4>
-            <br>
+            </div>
 
             <button type="button" id="delete-home-tab-button" class="btn btn-default">
                 {{ 'delete_home_tab'|trans({}, 'platform') }}

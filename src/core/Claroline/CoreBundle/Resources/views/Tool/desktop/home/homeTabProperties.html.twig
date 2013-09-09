@@ -8,32 +8,39 @@
     </script>
 {% endblock %}
 
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-briefcase',
+                'name': 'desktop'|trans({}, 'platform'),
+                'href': path('claro_desktop_open')
+            },
+            {
+                'icon': 'icon-cog',
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_desktop_open_tool', {'toolName': 'parameters'})
+            },
+            {
+                'name': 'home'|trans({}, 'platform'),
+                'href': path('claro_desktop_tool_config', {'tool': tool.getId()})
+            },
+            {
+                'name': 'home_tabs'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
 {% block section_content %}
 
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'home_tabs_configuration'|trans({}, 'platform') }}
+        </h3>
+    </div>
     <div class="panel-body">
-        {{
-            macros.breadcrumbs([
-                {
-                    'icon': 'icon-cog',
-                    'name': 'parameters'|trans({}, 'platform'),
-                    'href': path('claro_desktop_open_tool', {'toolName': 'parameters'})
-                },
-                {
-                    'name': 'home'|trans({}, 'platform'),
-                    'href': path('claro_desktop_tool_config', {'tool': tool.getId()})
-                },
-                {
-                    'name': 'home_tabs'|trans({}, 'platform'),
-                    'href': ''
-                }
-            ])
-        }}
-
-        <div>
-            <h3>{{ 'home_tabs_configuration'|trans({}, 'platform') }}</h3>
-        </div>
-        <br>
-
         <div>
             <a href="{{ path('claro_user_desktop_home_tab_create_form') }}">
                 <button class="btn btn-default">

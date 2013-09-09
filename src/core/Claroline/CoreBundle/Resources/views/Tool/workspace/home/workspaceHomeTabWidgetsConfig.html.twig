@@ -8,37 +8,47 @@
     </script>
 {% endblock %}
 
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': workspace.getName(),
+                'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+            },
+            {
+                'name': 'home'|trans({}, 'platform'),
+                'href': path('claro_workspace_tool_config', {'workspace': workspace.getId(), 'tool': tool.getId()})
+            },
+            {
+                'name': 'home_tabs'|trans({}, 'platform'),
+                'href': path('claro_workspace_home_tab_properties', {'workspaceId': workspace.getId()})
+            },
+            {
+                'name': 'home_tab_widgets'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
 {% block section_content %}
 
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'home_tab_widgets_configuration'|trans({}, 'platform') }}
+        </h3>
+    </div>
     <div class="panel-body">
-        {{
-            macros.breadcrumbs([
-               {
-                    'icon': 'icon-cog',
-                    'name': 'parameters'|trans({}, 'platform'),
-                    'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
-                },
-                {
-                    'name': 'home'|trans({}, 'platform'),
-                    'href': path('claro_workspace_tool_config', {'workspace': workspace.getId(), 'tool': tool.getId()})
-                },
-                {
-                    'name': 'home_tabs'|trans({}, 'platform'),
-                    'href': path('claro_workspace_home_tab_properties', {'workspaceId': workspace.getId()})
-                },
-                {
-                    'name': 'home_tab_widgets'|trans({}, 'platform'),
-                    'href': ''
-                }
-            ])
-        }}
-
         <div id="twig-workspace-id" data-workspace-id="{{ workspace.getId() }}"></div>
-
-        <div>
-            <h3>{{ 'home_tab_widgets_configuration'|trans({}, 'platform') }}</h3>
-        </div>
-        <br>
 
         <div>
             <ul class="nav nav-tabs">

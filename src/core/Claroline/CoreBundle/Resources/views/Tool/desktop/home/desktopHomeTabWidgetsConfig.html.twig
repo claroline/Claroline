@@ -8,36 +8,43 @@
     </script>
 {% endblock %}
 
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-briefcase',
+                'name': 'desktop'|trans({}, 'platform'),
+                'href': path('claro_desktop_open')
+            },
+            {
+                'icon': 'icon-cog',
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_desktop_open_tool', {'toolName': 'parameters'})
+            },
+            {
+                'name': 'home'|trans({}, 'platform'),
+                'href': path('claro_desktop_tool_config', {'tool': tool.getId()})
+            },
+            {
+                'name': 'home_tabs'|trans({}, 'platform'),
+                'href': path('claro_desktop_home_tab_properties')
+            },
+            {
+                'name': 'home_tab_widgets'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
 {% block section_content %}
 
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'home_tab_widgets_configuration'|trans({}, 'platform') }}
+        </h3>
+    </div>
     <div class="panel-body">
-        {{
-            macros.breadcrumbs([
-                {
-                    'icon': 'icon-cog',
-                    'name': 'parameters'|trans({}, 'platform'),
-                    'href': path('claro_desktop_open_tool', {'toolName': 'parameters'})
-                },
-                {
-                    'name': 'home'|trans({}, 'platform'),
-                    'href': path('claro_desktop_tool_config', {'tool': tool.getId()})
-                },
-                {
-                    'name': 'home_tabs'|trans({}, 'platform'),
-                    'href': path('claro_desktop_home_tab_properties')
-                },
-                {
-                    'name': 'home_tab_widgets'|trans({}, 'platform'),
-                    'href': ''
-                }
-            ])
-        }}
-
-        <div>
-            <h3>{{ 'home_tab_widgets_configuration'|trans({}, 'platform') }}</h3>
-        </div>
-        <br>
-
         <div>
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#">{{ homeTab.getName() }}</a></li>
