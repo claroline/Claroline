@@ -352,7 +352,7 @@ class LogManager
 
         return $em
             ->getRepository('ClarolineCoreBundle:Logger\LogWorkspaceWidgetConfig')
-            ->findOneBy(array('workspace' => $workspace, 'isDefault' => false));
+            ->findOneBy(array('workspace' => $workspace->getId(), 'isDefault' => false));
     }
 
     public function getDefaultWorkspaceWidgetConfig()
