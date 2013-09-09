@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\ToolManager;
@@ -56,11 +57,6 @@ class DesktopController extends Controller
      *     "/home_tab/{homeTabId}/widgets",
      *     name="claro_desktop_widgets"
      * )
-     * @EXT\ParamConverter(
-     *     "homeTab",
-     *     class="ClarolineCoreBundle:Home\HomeTab",
-     *     options={"id" = "homeTabId", "strictId" = true}
-     * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCoreBundle:Widget:widgets.html.twig")
      *
@@ -68,12 +64,15 @@ class DesktopController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function widgetsAction(HomeTab $homeTab, User $user)
+    public function widgetsAction($homeTabId, User $user)
     {
         $widgets = array();
         $configs = array();
 
-        if ($this->homeTabManager->checkHomeTabVisibilityByUser($homeTab, $user)) {
+        $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
+
+        if (!is_null($homeTab) &&
+            $this->homeTabManager->checkHomeTabVisibilityByUser($homeTab, $user)) {
 
             if ($homeTab->getType() === 'admin_desktop') {
                 $adminConfigs = $this->homeTabManager->getAdminWidgetConfigs($homeTab);
