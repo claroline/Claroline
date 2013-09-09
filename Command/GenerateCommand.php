@@ -27,6 +27,6 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getManager($output)->generateBundleMigration($this->getTargetBundle());
+        $this->getManager($output)->generateBundleMigration($this->getTargetBundle($input));
     }
 }
