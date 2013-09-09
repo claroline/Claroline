@@ -8,8 +8,32 @@
     </script>
 {% endblock %}
 
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'home_tabs'|trans({}, 'platform'),
+                'href': path('claro_admin_home_tabs_configuration')
+            },
+            {
+                'name': 'workspace_home_tab_edition'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
 {% block section_content %}
 
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'workspace_home_tab_edition'|trans({}, 'platform') }}
+        </h3>
+    </div>
     <form
         class="form-horizontal"
         action="{{ path(
@@ -20,26 +44,10 @@
         {{ form_enctype(form) }}
     >
         <div class="panel-body">
-            {{
-                macros.breadcrumbs([
-                    {
-                        'icon': 'icon-th-large',
-                        'name': 'home_tabs'|trans({}, 'platform'),
-                        'href': path('claro_admin_home_tabs_configuration')
-                    },
-                    {
-                        'name': 'workspace_home_tab_edition'|trans({}, 'platform'),
-                        'href': ''
-                    }
-                ])
-            }}
-
-            <h3>{{ 'workspace_home_tab_edition'|trans({}, 'platform') }}</h3>
-            <h4>
+            <div class="well well-sm">
                 {{ 'home_tab'|trans({}, 'platform') }} :
                 {{ homeTabName }}
-            </h4>
-            <br>
+            </div>
 
             <button type="button" id="delete-home-tab-button" class="btn btn-default">
                 {{ 'delete_home_tab'|trans({}, 'platform') }}
