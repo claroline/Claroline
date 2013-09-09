@@ -15,12 +15,17 @@ class DynamicLoader extends Loader
 
         foreach (BundleManager::getInstance()->getActiveBundles() as $bundle) {
             foreach ($bundle[BundleManager::BUNDLE_CONFIG]->getRoutingResources() as $resource) {
-                $collection->addCollection(
-                    $this->import(
-                        $resource[ConfigurationBuilder::RESOURCE_OBJECT],
-                        $resource[ConfigurationBuilder::RESOURCE_TYPE]
-                    )
+                $subCollection = $this->import(
+                    $resource[ConfigurationBuilder::RESOURCE_OBJECT],
+                    $resource[ConfigurationBuilder::RESOURCE_TYPE]
                 );
+
+                if (!empty($resource[ConfigurationBuilder::ROUTING_PREFIX])) {
+                    var_dump('ok');
+                    $subCollection->addPrefix($resource[ConfigurationBuilder::ROUTING_PREFIX]);
+                }
+
+                $collection->addCollection($subCollection);
             }
         }
 

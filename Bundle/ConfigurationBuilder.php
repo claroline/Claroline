@@ -6,13 +6,19 @@ class ConfigurationBuilder
 {
     const RESOURCE_OBJECT = 'resource';
     const RESOURCE_TYPE = 'type';
+    const ROUTING_PREFIX = 'prefix';
 
     private $containerResources = array();
     private $routingResources = array();
 
     public function addContainerResource($resource, $type = null)
     {
-        return $this->addResource($this->containerResources, $resource, $type);
+        $this->containerResources[] = array(
+            self::RESOURCE_OBJECT => $resource,
+            self::RESOURCE_TYPE => $type
+        );
+
+        return $this;
     }
 
     public function getContainerResources()
@@ -20,23 +26,19 @@ class ConfigurationBuilder
         return $this->containerResources;
     }
 
-    public function addRoutingResource($resource, $type = null)
+    public function addRoutingResource($resource, $type = null, $prefix = null)
     {
-        return $this->addResource($this->routingResources, $resource, $type);
+        $this->routingResources[] = array(
+            self::RESOURCE_OBJECT => $resource,
+            self::RESOURCE_TYPE => $type,
+            self::ROUTING_PREFIX => $prefix
+        );
+
+        return $this;
     }
 
     public function getRoutingResources()
     {
         return $this->routingResources;
-    }
-
-    private function addResource(array &$collection, $resource, $type = null)
-    {
-        $collection[] = array(
-            self::RESOURCE_OBJECT => $resource,
-            self::RESOURCE_TYPE => $type
-        );
-
-        return $this;
     }
 }
