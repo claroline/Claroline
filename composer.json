@@ -23,6 +23,6 @@
     },
     "target-dir": "Claroline/ForumBundle",
     "extra": {
-        "dbVersion": "20130805105700"
+        "dbVersion": "20130906115738"
     }
 }
