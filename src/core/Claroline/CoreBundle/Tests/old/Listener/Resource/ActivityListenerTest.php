@@ -4,9 +4,9 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Testing\FunctionalTestCase;
 use Claroline\CoreBundle\Tests\DataFixtures\LoadActivityData;
-use Claroline\CoreBundle\Event\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Event\ExportResourceTemplateEvent;
-use Claroline\CoreBundle\Event\Event\ImportResourceTemplateEvent;
+use Claroline\CoreBundle\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
 
 class ActivityListenerTest extends FunctionalTestCase
 {

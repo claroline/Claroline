@@ -2,16 +2,16 @@
 
     <h4>
         {% if 'resource_' in log.getAction() %}
-            {{ ('log_resource_owner')|trans({}, 'platform') }}
+            {{ ('log_resource_owner')|trans({}, 'log') }}
         {% else %}
-            {{ ('log_owner')|trans({}, 'platform') }}
+            {{ ('log_owner')|trans({}, 'log') }}
         {% endif %}
     </h4>
 
     {% if log.getOwner() and log.getDoer() and log.getOwner().getId() == log.getDoer().getId() %}
         <dl class="dl-horizontal">
             <dt></dt>
-            <dd>{{ ('log_himself')|trans({}, 'platform') }}</dd>
+            <dd>{{ ('log_himself')|trans({}, 'log') }}</dd>
         </dl>
     {% else %}
         <dl class="dl-horizontal">

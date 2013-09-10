@@ -13,7 +13,7 @@ class WorkspaceControllerTest extends FunctionalTestCase
         parent::setUp();
         $this->client->followRedirects();
         $this->loadPlatformRolesFixture();
-        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Log\Log');
         $this->defaultTemplate = $this->em->getRepository('ClarolineCoreBundle:Workspace\Template')
             ->findOneByName('default');
     }

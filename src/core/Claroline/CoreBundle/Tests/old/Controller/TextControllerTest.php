@@ -14,7 +14,7 @@ class TextControllerTest extends FunctionalTestCase
         $this->loadPlatformRolesFixture();
         $this->loadUserData(array('user' => 'user'));
         $this->client->followRedirects();
-        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Log\Log');
     }
 
     public function testEditByRefAction()

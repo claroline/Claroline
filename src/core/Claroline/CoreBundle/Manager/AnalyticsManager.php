@@ -1,10 +1,14 @@
 <?php
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Event\Log\LogResourceExportEvent;
+use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
+use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
+use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Repository\AbstractResourceRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
-use Claroline\CoreBundle\Repository\LogRepository;
+use Claroline\CoreBundle\Repository\Log\LogRepository;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -24,18 +28,16 @@ class AnalyticsManager
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "objectManager" = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
-    public function __construct(
-        ObjectManager $om
-    )
+    public function __construct(ObjectManager $objectManager)
     {
-        $this->om = $om;
-        $this->resourceRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
-        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
-        $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
-        $this->logRepository = $om->getRepository('ClarolineCoreBundle:Logger\Log');
+        $this->om            = $objectManager;
+        $this->resourceRepo  = $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
+        $this->userRepo      = $objectManager->getRepository('ClarolineCoreBundle:User');
+        $this->workspaceRepo = $objectManager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
+        $this->logRepository = $objectManager->getRepository('ClarolineCoreBundle:Log\Log');
 
     }
 
@@ -69,7 +71,7 @@ class AnalyticsManager
     public function getDailyActionNumberForDateRange($range = null, $action = null, $unique = false)
     {
         if ($action === null) {
-            $action = 'all';
+            $action = '';
         }
 
         if ($range === null) {
@@ -78,19 +80,17 @@ class AnalyticsManager
 
         $userSearch = null;
         $workspaceIds = null;
-        $actionsRestriction = null;
         $chartData = $this->logRepository->countByDayFilteredLogs(
             $action,
             $range,
             $userSearch,
-            $actionsRestriction,
             $workspaceIds,
             $unique
         );
 
         return array(
             "chartData" => $chartData,
-            "range" => $range
+            "range"     => $range
         );
     }
 
@@ -109,16 +109,16 @@ class AnalyticsManager
                 $listData = $this->workspaceRepo->findWorkspacesWithMostResources($max);
                 break;
             case 'top_workspaces_connections':
-                $listData = $this->topWSByAction($range, 'ws_tool_read', $max);
+                $listData = $this->topWSByAction($range, LogWorkspaceToolReadEvent::ACTION, $max);
                 break;
             case 'top_resources_views':
-                $listData = $this->topResourcesByAction($range, 'resource_read', $max);
+                $listData = $this->topResourcesByAction($range, LogResourceReadEvent::ACTION, $max);
                 break;
             case 'top_resources_downloads':
-                $listData = $this->topResourcesByAction($range, 'resource_export', $max);
+                $listData = $this->topResourcesByAction($range, LogResourceExportEvent::ACTION, $max);
                 break;
             case 'top_users_connections':
-                $listData = $this->topUsersByAction($range, 'user_login', $max);
+                $listData = $this->topUsersByAction($range, LogUserLoginEvent::ACTION, $max);
                 break;
             case 'top_users_workspaces_enrolled':
                 $listData = $this->userRepo->findUsersEnrolledInMostWorkspaces($max);
@@ -127,7 +127,7 @@ class AnalyticsManager
                 $listData = $this->userRepo->findUsersOwnersOfMostWorkspaces($max);
                 break;
             case 'top_media_views':
-                $listData = $this->topMediaByAction($range, 'resource_read', $max);
+                $listData = $this->topMediaByAction($range, LogResourceReadEvent::ACTION, $max);
                 break;
         }
 
@@ -141,7 +141,7 @@ class AnalyticsManager
         }
 
         if ($action === null) {
-            $action = 'ws_tool_read';
+            $action = LogWorkspaceToolReadEvent::ACTION;
         }
 
         $resultData = $this->logRepository->topWSByAction($range, $action, $max);
@@ -156,7 +156,7 @@ class AnalyticsManager
         }
 
         if ($action === null) {
-            $action = 'resource_read';
+            $action = LogResourceReadEvent::ACTION;
         }
 
         $resultData = $this->logRepository->topMediaByAction($range, $action, $max);
@@ -171,7 +171,7 @@ class AnalyticsManager
         }
 
         if ($action === null) {
-            $action = 'resource_read';
+            $action = LogResourceReadEvent::ACTION;
         }
 
         $resultData = $this->logRepository->topResourcesByAction($range, $action, $max);
@@ -186,7 +186,7 @@ class AnalyticsManager
         }
 
         if ($action === null) {
-            $action = 'user_login';
+            $action = LogUserLoginEvent::ACTION;
         }
 
         $resultData = $this->logRepository->topUsersByAction($range, $action, $max);
@@ -194,6 +194,11 @@ class AnalyticsManager
         return $resultData;
     }
 
+    /**
+     * Retrieve user who connected at least one time on the application
+     *
+     * @return mixed
+     */
     public function getActiveUsers()
     {
         $resultData = $this->logRepository->activeUsers();
