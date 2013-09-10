@@ -55,6 +55,7 @@ line and the webserver
 - *templates*
 - *test*
 - *web/themes*
+- *web/thumbnails*
 - *web/uploads*
 - *src/core/Claroline/CoreBundle/Resources/views/less-generated*
 
