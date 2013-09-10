@@ -3,6 +3,7 @@ account_general_statistics: 'Account general statistics'
 action: Action
 Action List: 'Action List'
 Actions per day: 'Actions per day'
+active_widgets: 'Active widgets'
 activity_form_instructions: Instructions
 activity_form_name: Name
 add: Add
@@ -14,6 +15,7 @@ add_tag_to_workspace: 'Add tag to workspace'
 add_user: 'Add user'
 add_users: 'Add users'
 add_user_s_confirm_message: 'users(s) added'
+add_widget_to_home_tab: 'Add widget to Home tab'
 admin: Administrator
 admin_analytics: 'Platform analytics'
 administration: Administration
@@ -24,6 +26,7 @@ admin_form_plainPassword_first : 'Paswword'
 admin_form_plainPassword_second : 'Repeat your password'
 admin_form_mail : 'Email adress'
 admin_form_username : 'Username'
+admin_home_tabs_configuration: 'Home tabs configuration'
 admin_logs: 'Platform logs'
 admin_tag_children_list: 'Admin tag children list'
 admin_tag_potential_children_list: 'Admin tag potential children list'
@@ -44,6 +47,7 @@ analytics_connections: Connections
 analytics_resources: Resources
 analytics_top: Top
 apply: Apply
+available_widgets: 'Available widgets'
 available_workspaces: 'Available workspaces'
 badges_management: 'Badges management'
 by: by
@@ -70,6 +74,7 @@ creation: Creation
 create_group: 'Create group'
 create_user: 'Create user'
 create_new_admin_tag: 'Create new admin tag'
+create_new_home_tab: 'Create new tab'
 create_new_tag: 'Create new tag'
 create_workspace: 'Create workspace'
 creation_date: 'Creation date'
@@ -108,7 +113,11 @@ date_range.week: 'w'
 date_range.yesterday: 'Yesterday'
 deletable: 'Deletable'
 delete: Delete
+delete_home_tab: 'Delete tab'
 desktop: Desktop
+desktop_home_tab_creation : 'Desktop Home tab creation'
+desktop_home_tab_edition : 'Desktop Home tab edition'
+desktop_home_tabs: 'Desktop Home tabs'
 desktop_tools: Desktop tools
 directory: Directory
 directory_form_name: Name
@@ -165,6 +174,16 @@ has_not_been_imported_into_the_group: 'has not been imported into the group'
 history: History
 home: Home
 home_parameters: 'Home parameters'
+home_tab: 'Home tab'
+home_tab_creation: 'Home tab creation'
+home_tab_delete_confirm_title: 'Delete Home tab'
+home_tab_delete_confirm_message: 'Do you really want to delete this Home tab ?'
+home_tab_edition: 'Home tab edition'
+home_tab_form_name: 'Name'
+home_tab_widgets: 'Home tab widgets'
+home_tab_widgets_configuration: 'Home tab widgets configuration'
+home_tabs: 'Home tabs'
+home_tabs_configuration: 'Home tabs configuration'
 id: Id
 informations: Informations
 instructions: Instructions
@@ -435,7 +454,7 @@ upload_denied: "Permission denied"
 upload_fail: 'Upload failed'
 url_invalid: 'the code is not correct, do no try to change the url'
 user: User
-user_accounts: 'User accounts'
+user_accounts: User accounts
 user_creation: 'User creation'
 user_form_administrativeCode: 'Administrative code'
 user_form_firstName: 'First name'
@@ -466,6 +485,9 @@ visitor: Visitor
 warning_workspace_impersonation: 'You are connected as %role% from the workspace %workspace.'
 warning_user_impersonation: 'You are connected as %user%.'
 widget_settings: 'Widget settings'
+widget: Widget
+widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab ?'
+widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
 widgets: Widgets
 widgets_configuration: 'Widgets configuration'
 workspace: Workspace
@@ -485,6 +507,9 @@ workspace_form_displayable: Public
 workspace_form_name: Name
 workspace_form_template: Template
 workspace_form_type: Type
+workspace_home_tab_creation: 'Workspace Home tab creation'
+workspace_home_tab_edition: 'Workspace Home tab edition'
+workspace_home_tabs: 'Workspace Home tabs'
 workspace_order_tool_edit_form_name: Name
 workspace_registration_confirm_title: 'Do you really want to register to this workspace ?'
 workspace_resource: Resources

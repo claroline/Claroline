@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Entity\Widget;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\DisplayConfigRepository")
  * @ORM\Table(name="claro_widget_display")
  */
 class DisplayConfig
