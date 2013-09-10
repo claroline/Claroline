@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\Event\Log\LogRoleSubscribeEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -309,7 +310,7 @@ class WorkspaceControllerTest extends MockeryTestCase
         $controller = $this->getController(array('assertIsGranted'));
         $toolName = 'tool_name';
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $event = $this->mock('Claroline\CoreBundle\Event\Event\DisplayToolEvent');
+        $event = $this->mock('Claroline\CoreBundle\Event\DisplayToolEvent');
 
         $this->security
             ->shouldReceive('isGranted')
@@ -615,7 +616,7 @@ class WorkspaceControllerTest extends MockeryTestCase
             ->with(
                 'log',
                 'Log\LogRoleSubscribe',
-                array($role, $user, $workspace)
+                array($role, $user)
             )
             ->once();
         $this->security->shouldReceive('setToken')
