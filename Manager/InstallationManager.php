@@ -48,26 +48,33 @@ class InstallationManager
     {
         $this->recorder->addBundles(array(get_class($bundle)));
         $this->kernel->reboot();
-        $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
-        if ($additionalInstaller) {
-            $this->log('Launching pre-installation actions...');
-            $additionalInstaller->preInstall();
-        }
+        try {
+            $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
-        if ($bundle->hasMigrations()) {
-            $this->log('Executing migrations...');
-            $this->migrationManager->upgradeBundle($bundle, Migrator::VERSION_FARTHEST);
-        }
+            if ($additionalInstaller) {
+                $this->log('Launching pre-installation actions...');
+                $additionalInstaller->preInstall();
+            }
 
-        if ($fixturesDir = $bundle->getRequiredFixturesDirectory($this->environment)) {
-            $this->log('Loading required fixtures...');
-            $this->fixtureLoader->load($bundle, $fixturesDir);
-        }
+            if ($bundle->hasMigrations()) {
+                $this->log('Executing migrations...');
+                $this->migrationManager->upgradeBundle($bundle, Migrator::VERSION_FARTHEST);
+            }
 
-        if (!$requiredOnly && $fixturesDir = $bundle->getOptionalFixturesDirectory($this->environment)) {
-            $this->log('Loading optional fixtures...');
-            $this->fixtureLoader->load($bundle, $fixturesDir);
+            if ($fixturesDir = $bundle->getRequiredFixturesDirectory($this->environment)) {
+                $this->log('Loading required fixtures...');
+                $this->fixtureLoader->load($bundle, $fixturesDir);
+            }
+
+            if (!$requiredOnly && $fixturesDir = $bundle->getOptionalFixturesDirectory($this->environment)) {
+                $this->log('Loading optional fixtures...');
+                $this->fixtureLoader->load($bundle, $fixturesDir);
+            }
+        } catch (\Exception $ex) {
+            $this->recorder->removeBundles(array(get_class($bundle)));
+            
+            throw $ex;
         }
     }
 
