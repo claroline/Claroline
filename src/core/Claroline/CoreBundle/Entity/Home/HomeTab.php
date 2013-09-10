@@ -95,14 +95,4 @@ class HomeTab
     {
         $this->workspace = $workspace;
     }
-
-    public function getTabOrder()
-    {
-        return $this->tabOrder;
-    }
-
-    public function setTabOrder($tabOrder)
-    {
-        $this->tabOrder = $tabOrder;
-    }
 }

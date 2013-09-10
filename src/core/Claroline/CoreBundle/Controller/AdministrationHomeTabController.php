@@ -412,7 +412,7 @@ class AdministrationHomeTabController extends Controller
     public function adminHomeTabDeleteAction(HomeTab $homeTab, $tabOrder)
     {
         if (is_null($homeTab->getUser()) && is_null($homeTab->getWorkspace())) {
-            $type = 'admin_' . $homeTab->getType();
+            $type = $homeTab->getType();
             $this->homeTabManager->deleteHomeTab($homeTab, $type, $tabOrder);
         }
 
