@@ -2,3 +2,4 @@ The user {{ username }} does not exist.: The user {{ username }} does not exist.
 The name {{ name }} is already in use.: The name {{ name }} is already in use.
 'The code {{ code }} is already assigned to another workspace.': 'The code {{ code }} is already assigned to another workspace.'
 'special_char_not_allowed': 'Special characters are not allowed.'
+'Each row requires at least 5 parameters.': 'Each row requires at least 5 parameters.'
