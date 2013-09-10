@@ -130,13 +130,11 @@ class LogController extends Controller
                 ->setRestrictions($this->get('claroline.log.manager')->getDefaultWorkspaceConfigRestrictions());
         }
 
-        $form = $this->get('form.factory')->create($this->get('claroline.form.logWorkspaceWidgetConfig'), null);
+        $form = $this->get('form.factory')->create($this->get('claroline.form.logWorkspaceWidgetConfig'), $config);
 
         $form->bind($this->getRequest());
         $translator = $this->get('translator');
         if ($form->isValid()) {
-            $data   = $form->getData();
-
             $entityManager->persist($config);
             $entityManager->flush();
 
