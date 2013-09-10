@@ -72,8 +72,9 @@ class InstallationManager
                 $this->fixtureLoader->load($bundle, $fixturesDir);
             }
         } catch (\Exception $ex) {
+            $this->log('<error>An error occured !</error>');
             $this->recorder->removeBundles(array(get_class($bundle)));
-            
+
             throw $ex;
         }
     }
