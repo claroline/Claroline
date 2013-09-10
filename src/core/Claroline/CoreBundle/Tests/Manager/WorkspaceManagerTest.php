@@ -22,7 +22,6 @@ class WorkspaceManagerTest extends MockeryTestCase
     private $roleRepo;
     private $workspaceRepo;
     private $strictDispatcher;
-    private $dispatcher;
     private $om;
     private $ut;
     private $templateDir;
@@ -44,7 +43,6 @@ class WorkspaceManagerTest extends MockeryTestCase
         $this->rightsRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceRightsRepository');
         $this->workspaceRepo = $this->mock('Claroline\CoreBundle\Repository\AbstractResourceRepository');
         $this->strictDispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
-        $this->dispatcher = $this->mock('Symfony\Component\EventDispatcher\EventDispatcher');
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->ut = $this->mock('Claroline\CoreBundle\Library\Utilities\ClaroUtilities');
         $this->templateDir = vfsStream::url('template');
@@ -132,8 +130,8 @@ class WorkspaceManagerTest extends MockeryTestCase
         $this->toolManager->shouldReceive('getOneToolByName')->once()->with('toolName2')->andReturn($tool);
         $this->toolManager->shouldReceive('import');
 
-        $this->dispatcher->shouldReceive('dispatch')->once()
-            ->with('log', new LogWorkspaceCreateEvent($workspace));
+        $this->strictDispatcher->shouldReceive('dispatch')->once()
+            ->with('log', 'Log\LogWorkspaceCreate', array($workspace));
 
         $this->om->shouldReceive('persist')->once()->with($workspace);
         $this->om->shouldReceive('endFlushSuite')->once();
@@ -368,7 +366,7 @@ class WorkspaceManagerTest extends MockeryTestCase
         $this->orderedToolRepo->shouldReceive('findBy')->once()
             ->with(array('workspace' => $workspace), array('order' => 'ASC'))->andReturn($wots);
 
-        $this->dispatcher->shouldReceive('dispatch')->once()
+        $this->strictDispatcher->shouldReceive('dispatch')->once()
             ->with('tool_toolName1_to_template', 'ExportTool', array($workspace))->andReturn($event);
 
         $event->shouldReceive('getConfig')->andReturn(array('config' => 'config'));
@@ -669,7 +667,6 @@ class WorkspaceManagerTest extends MockeryTestCase
                 $this->resourceManager,
                 $this->toolManager,
                 $this->strictDispatcher,
-                $this->dispatcher,
                 $this->om,
                 $this->ut,
                 $this->templateDir,
@@ -693,7 +690,6 @@ class WorkspaceManagerTest extends MockeryTestCase
                     $this->resourceManager,
                     $this->toolManager,
                     $this->strictDispatcher,
-                    $this->dispatcher,
                     $this->om,
                     $this->ut,
                     $this->templateDir,
