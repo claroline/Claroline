@@ -14,7 +14,7 @@ class AgendaControllerTest extends FunctionalTestCase
         $this->loadPlatformRoleData();
         $this->loadUserData(array('ws_creator' => 'ws_creator'));
         $this->loadWorkspaceData(array('ws_a' => 'ws_creator'));
-        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Log\Log');
     }
 
     public function testWorkspaceUserCanSeeTheAgenda()

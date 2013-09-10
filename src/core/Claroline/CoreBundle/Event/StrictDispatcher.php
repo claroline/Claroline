@@ -17,7 +17,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 class StrictDispatcher
 {
     /** @var EventDispatcher */
-    private $ed;
+    private $eventDispatcher;
 
     /**
      * Constructor.
@@ -28,7 +28,7 @@ class StrictDispatcher
      */
     public function __construct(EventDispatcher $ed)
     {
-        $this->ed = $ed;
+        $this->eventDispatcher = $ed;
     }
 
     /**
@@ -41,7 +41,7 @@ class StrictDispatcher
      * @param string $shortEventClassName Short name of the event class
      * @param array  $eventArgs           Parameters to be passed to the event object constructor
      *
-     * @return Symfony\Component\EventDispatcher\Event
+     * @return \Symfony\Component\EventDispatcher\Event
      *
      * @throws MissingEventClassException if no event class matches the short class name
      * @throws MandatoryEventException    if the event is mandatory but have no listener observing it
@@ -49,7 +49,7 @@ class StrictDispatcher
      */
     public function dispatch($eventName, $shortEventClassName, array $eventArgs = array())
     {
-        $className = "Claroline\CoreBundle\Event\Event\\{$shortEventClassName}Event";
+        $className = "Claroline\CoreBundle\Event\\{$shortEventClassName}Event";
 
         if (!class_exists($className)) {
             throw new MissingEventClassException(
@@ -60,11 +60,11 @@ class StrictDispatcher
         $rEvent = new \ReflectionClass($className);
         $event = $rEvent->newInstanceArgs($eventArgs);
 
-        if ($event instanceof MandatoryEventInterface && !$this->ed->hasListeners($eventName)) {
+        if ($event instanceof MandatoryEventInterface && !$this->eventDispatcher->hasListeners($eventName)) {
             throw new MandatoryEventException("No listener is attached to the '{$eventName}' event");
         }
 
-        $this->ed->dispatch($eventName, $event);
+        $this->eventDispatcher->dispatch($eventName, $event);
 
         if ($event instanceof DataConveyorEventInterface && !$event->isPopulated()) {
             throw new NotPopulatedEventException("Event object for '{$eventName}' was not populated as expected");

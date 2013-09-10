@@ -16,7 +16,7 @@ class ResourcePropertiesControllerTest extends FunctionalTestCase
         $this->loadUserData(array('user' => 'user', 'admin' => 'admin'));
         $this->client->followRedirects();
         $this->thumbsDir = $this->client->getContainer()->getParameter('claroline.param.thumbnails_directory');
-        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Log\Log');
     }
 
     public function tearDown()

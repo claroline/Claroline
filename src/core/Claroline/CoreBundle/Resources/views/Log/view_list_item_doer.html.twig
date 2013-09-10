@@ -10,7 +10,7 @@
             {% endif %}
         </strong>
     {% elseif log.getDoerType == 'platform' %}
-        {{ ('log_default_user')|trans({}, 'platform') }}
+        {{ ('log_default_user')|trans({}, 'log') }}
     {% elseif log.getDoerType == 'anonymous' %}
         {{ ('anonymous')|trans({}, 'platform') }}
     {% endif %}

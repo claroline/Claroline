@@ -464,7 +464,7 @@ class AdministrationControllerTest extends MockeryTestCase
 
     public function testPluginParametersAction()
     {
-        $event = $this->mock('Claroline\CoreBundle\Event\Event\PluginOptionsEvent');
+        $event = $this->mock('Claroline\CoreBundle\Event\PluginOptionsEvent');
 
         $this->eventDispatcher->shouldReceive('dispatch')
             ->with('plugin_options_domain', 'PluginOptions', array())

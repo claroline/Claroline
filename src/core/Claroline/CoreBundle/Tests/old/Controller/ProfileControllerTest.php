@@ -13,7 +13,7 @@ class ProfileControllerTest extends FunctionalTestCase
         parent::setUp();
         $this->loadPlatformRolesFixture();
         $this->client->followRedirects();
-        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Log\Log');
     }
 
     public function testLoggedUserCanEditHisProfile()

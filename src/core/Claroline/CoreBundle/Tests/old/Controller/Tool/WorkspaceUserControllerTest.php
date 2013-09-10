@@ -13,7 +13,7 @@ class WorkspaceUserControllerTest extends FunctionalTestCase
         parent::setUp();
         $this->client->followRedirects();
         $this->loadPlatformRoleData();
-        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Log\Log');
     }
 
     //1111111111111111111

@@ -28,7 +28,7 @@ use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\UserMessage;
 use Claroline\CoreBundle\Entity\Plugin;
-use Claroline\CoreBundle\Entity\Logger\Log;
+use Claroline\CoreBundle\Entity\Log\Log;
 
 /**
  * Base test case for repository testing. Provides fixture methods intended to be
