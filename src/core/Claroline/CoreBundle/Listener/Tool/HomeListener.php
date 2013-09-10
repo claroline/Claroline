@@ -3,11 +3,11 @@
 namespace Claroline\CoreBundle\Listener\Tool;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Event\Event\ExportToolEvent;
-use Claroline\CoreBundle\Event\Event\ImportToolEvent;
-use Claroline\CoreBundle\Event\Event\ConfigureWorkspaceToolEvent;
-use Claroline\CoreBundle\Event\Event\ConfigureDesktopToolEvent;
+use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\ExportToolEvent;
+use Claroline\CoreBundle\Event\ImportToolEvent;
+use Claroline\CoreBundle\Event\ConfigureWorkspaceToolEvent;
+use Claroline\CoreBundle\Event\ConfigureDesktopToolEvent;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;

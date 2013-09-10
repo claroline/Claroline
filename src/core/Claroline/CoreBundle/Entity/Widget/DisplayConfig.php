@@ -48,6 +48,8 @@ class DisplayConfig
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\Widget")
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
+     *
+     * @var Widget
      */
     protected $widget;
 
@@ -76,6 +78,9 @@ class DisplayConfig
         $this->widget = $widget;
     }
 
+    /**
+     * @return Widget
+     */
     public function getWidget()
     {
         return $this->widget;

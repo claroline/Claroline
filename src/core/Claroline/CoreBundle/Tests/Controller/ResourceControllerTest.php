@@ -44,7 +44,7 @@ class ResourceControllerTest extends MockeryTestCase
         $type = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
         $type->shouldReceive('getName')->andReturn('type');
         $node->shouldReceive('getResourceType')->andReturn($type);
-        $customActionEvent = $this->mock('Claroline\CoreBundle\Event\Event\CustomActionResourceEvent');
+        $customActionEvent = $this->mock('Claroline\CoreBundle\Event\CustomActionResourceEvent');
         $menuAction = $this->mock('Claroline\CoreBundle\Entity\Resource\MenuAction');
         $menuAction->shouldReceive('getValue')->once()->andReturn(42);
         $this->maskManager->shouldReceive('getMenuFromNameAndResourceType')

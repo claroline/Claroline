@@ -15,7 +15,7 @@ class ResourceRightsControllerTest extends FunctionalTestCase
         parent::setUp();
         $this->loadPlatformRoleData();
         $this->loadUserData(array('john' => 'user'));
-        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Log\Log');
     }
 
     public function testDisplayRightsForm()

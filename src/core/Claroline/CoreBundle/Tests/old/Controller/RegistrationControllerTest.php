@@ -22,7 +22,7 @@ class RegistrationControllerTest extends FunctionalTestCase
             ->getContainer()
             ->get('claroline.config.platform_config_handler');
         $this->configHandler->eraseTestConfiguration();
-        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Log\Log');
     }
 
     protected function tearDown()

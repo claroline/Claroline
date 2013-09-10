@@ -13,7 +13,7 @@ class WorkspaceGroupControllerTest extends FunctionalTestCase
         parent::setUp();
         $this->client->followRedirects();
         $this->loadPlatformRoleData();
-        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Logger\Log');
+        $this->logRepository = $this->em->getRepository('ClarolineCoreBundle:Log\Log');
     }
 
     public function testMultiAddGroup()
