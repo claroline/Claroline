@@ -21,7 +21,6 @@ class DynamicLoader extends Loader
                 );
 
                 if (!empty($resource[ConfigurationBuilder::ROUTING_PREFIX])) {
-                    var_dump('ok');
                     $subCollection->addPrefix($resource[ConfigurationBuilder::ROUTING_PREFIX]);
                 }
 
