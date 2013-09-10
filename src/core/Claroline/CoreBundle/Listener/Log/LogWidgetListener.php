@@ -2,7 +2,10 @@
 
 namespace  Claroline\CoreBundle\Listener\Log;
 
+use Claroline\CoreBundle\Event\Log\LogGenericEvent;
+use Claroline\CoreBundle\Manager\LogManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
@@ -22,79 +25,41 @@ class LogWidgetListener
     /** @var \Claroline\CoreBundle\Manager\LogManager */
     private $logManager;
 
+    /** @var \Claroline\CoreBundle\Manager\WorkspaceManager */
     private $workspaceManager;
-    private $securityContext;
+
+    /** @var \Symfony\Bundle\TwigBundle\TwigEngine */
     private $twig;
-    private $ed;
+
+    /** @var \Claroline\CoreBundle\Form\Factory\FormFactory */
     private $formFactory;
-
-    private function convertConfigToFormData($config, $isDefault)
-    {
-        $data = array();
-
-        $data['isDefault'] = $isDefault;
-
-        $data['creation'] =
-            $config->getResourceCopy() === true &&
-            $config->getResourceCreate() === true &&
-            $config->getResourceShortcut() === true;
-
-        $data['read'] =
-            $config->getResourceRead() === true &&
-            $config->getWsToolRead() === true;
-
-        $data['export'] = $config->getResourceExport() === true;
-
-        $data['update'] =
-            $config->getResourceUpdate() === true &&
-            $config->getResourceUpdateRename() === true;
-
-        $data['updateChild'] = $config->getResourceChildUpdate() === true;
-
-        $data['delete'] = $config->getResourceDelete() === true;
-
-        $data['move'] = $config->getResourceMove() === true;
-
-        $data['subscribe'] =
-            $config->getWsRoleSubscribeUser() === true &&
-            $config->getWsRoleSubscribeGroup() === true &&
-            $config->getWsRoleUnsubscribeUser() === true &&
-            $config->getWsRoleUnsubscribeGroup() === true &&
-            $config->getWsRoleChangeRight() === true &&
-            $config->getWsRoleCreate() === true &&
-            $config->getWsRoleDelete() === true &&
-            $config->getWsRoleUpdate() === true;
-
-        $data['amount'] = $config->getAmount();
-
-        return $data;
-    }
+    /**
+     * @var \Claroline\CoreBundle\Form\Log\LogWorkspaceWidgetConfigType
+     */
+    private $logWorkspaceWidgetConfigForm;
 
     /**
      * @DI\InjectParams({
-     *     "logManager"         = @DI\Inject("claroline.log.manager"),
-     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "context"            = @DI\Inject("security.context"),
-     *     "twig"               = @DI\Inject("templating"),
-     *     "ed"                 = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "formFactory"        = @DI\Inject("form.factory")
+     *     "logManager"                   = @DI\Inject("claroline.log.manager"),
+     *     "workspaceManager"             = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "twig"                         = @DI\Inject("templating"),
+     *     "formFactory"                  = @DI\Inject("form.factory"),
+     *     "logWorkspaceWidgetConfigForm" = @DI\Inject("claroline.form.logWorkspaceWidgetConfig")
      * })
      */
     public function __construct(
-        $logManager,
+        LogManager $logManager,
         WorkspaceManager $workspaceManager,
-        SecurityContextInterface $context,
         TwigEngine $twig,
-        $ed,
-        $formFactory
+        FormFactory $formFactory,
+        LogWorkspaceWidgetConfigType $logWorkspaceWidgetConfigForm
     )
     {
-        $this->logManager = $logManager;
-        $this->workspaceManager = $workspaceManager;
-        $this->securityContext = $context;
-        $this->twig = $twig;
-        $this->ed = $ed;
-        $this->formFactory = $formFactory;
+        $this->logManager                   = $logManager;
+        $this->workspaceManager             = $workspaceManager;
+        $this->twig                         = $twig;
+        $this->formFactory                  = $formFactory;
+        $this->logWorkspaceWidgetConfigForm = $logWorkspaceWidgetConfigForm;
     }
 
     /**
@@ -157,25 +122,27 @@ class LogWidgetListener
                 if ($defaultConfig !== null) {
                     $config = new LogWorkspaceWidgetConfig();
                     $config->copy($defaultConfig);
-                    $config->setIsDefault(false);
-                    $config->setWorkspace($event->getWorkspace());
+                    $config
+                        ->setIsDefault(false)
+                        ->setWorkspace($event->getWorkspace())
+                        ->setRestrictions($this->logManager->getDefaultWorkspaceConfigRestrictions());
                 }
             }
         }
 
         if ($config === null) {
             $config = new LogWorkspaceWidgetConfig();
-            $config->setIsDefault($event->isDefault());
-            $config->setWorkspace($event->getWorkspace());
+            $config
+                ->setIsDefault($event->isDefault())
+                ->setWorkspace($event->getWorkspace())
+                ->setRestrictions($this->logManager->getDefaultWorkspaceConfigRestrictions());
         }
 
-        $data = $this->convertConfigToFormData($config, $event->isDefault());
-
-        $form = $this->formFactory->create(new LogWorkspaceWidgetConfigType(), $data);
+        $form    = $this->formFactory->create($this->logWorkspaceWidgetConfigForm, $config);
         $content = $this->twig->render(
             'ClarolineCoreBundle:Log:config_workspace_widget_form.html.twig',
             array(
-                'form' => $form->createView(),
+                'form'      => $form->createView(),
                 'workspace' => $event->getWorkspace(),
                 'isDefault' => $event->isDefault() ? 1 : 0
             )
@@ -186,7 +153,7 @@ class LogWidgetListener
     /**
      * @DI\Observe("widget_core_resource_logger_configuration_desktop")
      *
-     * @param ConfigureWidgetWorkspaceEvent $event
+     * @param \Claroline\CoreBundle\Event\ConfigureWidgetDesktopEvent $event
      */
     public function onDesktopConfigure(ConfigureWidgetDesktopEvent $event)
     {

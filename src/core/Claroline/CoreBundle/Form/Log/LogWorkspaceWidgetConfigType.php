@@ -2,23 +2,42 @@
 
 namespace Claroline\CoreBundle\Form\Log;
 
+use Claroline\CoreBundle\Event\Log\LogGenericEvent;
+use Claroline\CoreBundle\Manager\EventManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * @DI\Service("claroline.form.logWorkspaceWidgetConfig")
+ */
 class LogWorkspaceWidgetConfigType extends AbstractType
 {
+    /** @var \Claroline\CoreBundle\Manager\EventManager */
+    private $eventManager;
+
+    /**
+     * @DI\InjectParams({
+     *     "eventManager" = @DI\Inject("claroline.event.manager")
+     * })
+     */
+    public function __construct(EventManager $eventManager)
+    {
+        $this->eventManager = $eventManager;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $actionChoices = $this->eventManager->getSortedEventsForConfigForm(LogGenericEvent::DISPLAYED_WORKSPACE);
+
         $builder
-            ->add('creation', 'checkbox', array('required' => false))
-            ->add('read', 'checkbox', array('required' => false))
-            ->add('export', 'checkbox', array('required' => false))
-            ->add('update', 'checkbox', array('required' => false))
-            ->add('updateChild', 'checkbox', array('required' => false))
-            ->add('delete', 'checkbox', array('required' => false))
-            ->add('move', 'checkbox', array('required' => false))
-            ->add('subscribe', 'checkbox', array('required' => false))
+            ->add('restrictions', 'choice', array(
+                'choices'   => $actionChoices,
+                'required'  => false,
+                'multiple'  => true,
+                'expanded'  => true
+            ))
             ->add(
                 'amount',
                 'choice',
