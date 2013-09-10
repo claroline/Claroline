@@ -1,5 +1,6 @@
 <?php
 namespace Claroline\CoreBundle\Controller;
+use Claroline\CoreBundle\Entity\Home\Region;
 use Claroline\CoreBundle\Entity\Home\Content;
 use Claroline\CoreBundle\Entity\Home\Type;
 use Claroline\CoreBundle\Manager\HomeManager;
@@ -92,6 +93,7 @@ class HomeController
         $layout = $this->manager->contentLayout($type, $father, $region);
 
         if ($layout) {
+
             return $this->render('ClarolineCoreBundle:Home:layout.html.twig', $this->renderContent($layout));
         }
 
