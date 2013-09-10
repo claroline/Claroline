@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/09 03:22:59
+ * Generation date: 2013/09/10 03:03:10
  */
-class Version20130909152258 extends AbstractMigration
+class Version20130910150308 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -639,6 +639,783 @@ class Version20130909152258 extends AbstractMigration
             CREATE INDEX IDX_84B4BEBA98EC6B7B ON claro_list_type_creation (resource_type_id)
         ");
         $this->addSql("
+            CREATE TABLE claro_event (
+                id NUMBER(10) NOT NULL, 
+                workspace_id NUMBER(10) DEFAULT NULL, 
+                user_id NUMBER(10) NOT NULL, 
+                title VARCHAR2(50) NOT NULL, 
+                start_date NUMBER(10) DEFAULT NULL, 
+                end_date NUMBER(10) DEFAULT NULL, 
+                description VARCHAR2(255) DEFAULT NULL, 
+                allday NUMBER(1) DEFAULT NULL, 
+                priority VARCHAR2(255) DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_EVENT' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_EVENT ADD CONSTRAINT CLARO_EVENT_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_EVENT_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_EVENT_AI_PK BEFORE INSERT ON CLARO_EVENT FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_EVENT_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_EVENT_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_EVENT_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_EVENT_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_B1ADDDB582D40A1F ON claro_event (workspace_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_B1ADDDB5A76ED395 ON claro_event (user_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_content2type (
+                id NUMBER(10) NOT NULL, 
+                content_id NUMBER(10) NOT NULL, 
+                type_id NUMBER(10) NOT NULL, 
+                next_id NUMBER(10) DEFAULT NULL, 
+                back_id NUMBER(10) DEFAULT NULL, 
+                \"size\" VARCHAR2(30) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_CONTENT2TYPE' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_CONTENT2TYPE ADD CONSTRAINT CLARO_CONTENT2TYPE_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_CONTENT2TYPE_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_CONTENT2TYPE_AI_PK BEFORE INSERT ON CLARO_CONTENT2TYPE FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_CONTENT2TYPE_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_CONTENT2TYPE_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_CONTENT2TYPE_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_CONTENT2TYPE_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_1A2084EF84A0A3ED ON claro_content2type (content_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_1A2084EFC54C8C93 ON claro_content2type (type_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_1A2084EFAA23F6C8 ON claro_content2type (next_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_1A2084EFE9583FF0 ON claro_content2type (back_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_region (
+                id NUMBER(10) NOT NULL, 
+                name VARCHAR2(255) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_REGION' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_REGION ADD CONSTRAINT CLARO_REGION_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_REGION_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_REGION_AI_PK BEFORE INSERT ON CLARO_REGION FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_REGION_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_REGION_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_REGION_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_REGION_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE TABLE claro_subcontent (
+                id NUMBER(10) NOT NULL, 
+                father_id NUMBER(10) NOT NULL, 
+                child_id NUMBER(10) NOT NULL, 
+                next_id NUMBER(10) DEFAULT NULL, 
+                back_id NUMBER(10) DEFAULT NULL, 
+                \"size\" VARCHAR2(255) DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_SUBCONTENT' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_SUBCONTENT ADD CONSTRAINT CLARO_SUBCONTENT_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_SUBCONTENT_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_SUBCONTENT_AI_PK BEFORE INSERT ON CLARO_SUBCONTENT FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_SUBCONTENT_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_SUBCONTENT_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_SUBCONTENT_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_SUBCONTENT_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D72E133C2055B9A2 ON claro_subcontent (father_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D72E133CDD62C21B ON claro_subcontent (child_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D72E133CAA23F6C8 ON claro_subcontent (next_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D72E133CE9583FF0 ON claro_subcontent (back_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_type (
+                id NUMBER(10) NOT NULL, 
+                name VARCHAR2(255) NOT NULL, 
+                max_content_page NUMBER(10) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_TYPE' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_TYPE ADD CONSTRAINT CLARO_TYPE_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_TYPE_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_TYPE_AI_PK BEFORE INSERT ON CLARO_TYPE FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_TYPE_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_TYPE_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_TYPE_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_TYPE_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE TABLE claro_content2region (
+                id NUMBER(10) NOT NULL, 
+                content_id NUMBER(10) NOT NULL, 
+                region_id NUMBER(10) NOT NULL, 
+                next_id NUMBER(10) DEFAULT NULL, 
+                back_id NUMBER(10) DEFAULT NULL, 
+                \"size\" VARCHAR2(30) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_CONTENT2REGION' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_CONTENT2REGION ADD CONSTRAINT CLARO_CONTENT2REGION_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_CONTENT2REGION_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_CONTENT2REGION_AI_PK BEFORE INSERT ON CLARO_CONTENT2REGION FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_CONTENT2REGION_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_CONTENT2REGION_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_CONTENT2REGION_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_CONTENT2REGION_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_8D18942E84A0A3ED ON claro_content2region (content_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_8D18942E98260155 ON claro_content2region (region_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_8D18942EAA23F6C8 ON claro_content2region (next_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_8D18942EE9583FF0 ON claro_content2region (back_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_content (
+                id NUMBER(10) NOT NULL, 
+                title VARCHAR2(255) DEFAULT NULL, 
+                content CLOB DEFAULT NULL, 
+                generated_content CLOB DEFAULT NULL, 
+                created TIMESTAMP(0) NOT NULL, 
+                modified TIMESTAMP(0) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_CONTENT' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_CONTENT ADD CONSTRAINT CLARO_CONTENT_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_CONTENT_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_CONTENT_AI_PK BEFORE INSERT ON CLARO_CONTENT FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_CONTENT_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_CONTENT_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_CONTENT_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_CONTENT_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE TABLE claro_message (
+                id NUMBER(10) NOT NULL, 
+                sender_id NUMBER(10) NOT NULL, 
+                parent_id NUMBER(10) DEFAULT NULL, 
+                object VARCHAR2(255) NOT NULL, 
+                content VARCHAR2(1023) NOT NULL, 
+                \"date\" TIMESTAMP(0) NOT NULL, 
+                is_removed NUMBER(1) NOT NULL, 
+                lft NUMBER(10) NOT NULL, 
+                lvl NUMBER(10) NOT NULL, 
+                rgt NUMBER(10) NOT NULL, 
+                root NUMBER(10) DEFAULT NULL, 
+                sender_username VARCHAR2(255) NOT NULL, 
+                receiver_string VARCHAR2(1023) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_MESSAGE' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_MESSAGE ADD CONSTRAINT CLARO_MESSAGE_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_MESSAGE_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_MESSAGE_AI_PK BEFORE INSERT ON CLARO_MESSAGE FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_MESSAGE_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_MESSAGE_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_MESSAGE_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_MESSAGE_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D6FE8DD8F624B39D ON claro_message (sender_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D6FE8DD8727ACA70 ON claro_message (parent_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_activity (
+                id NUMBER(10) NOT NULL, 
+                instruction VARCHAR2(255) NOT NULL, 
+                start_date TIMESTAMP(0) DEFAULT NULL, 
+                end_date TIMESTAMP(0) DEFAULT NULL, 
+                resourceNode_id NUMBER(10) DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_ACTIVITY' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_ACTIVITY ADD CONSTRAINT CLARO_ACTIVITY_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_ACTIVITY_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_ACTIVITY_AI_PK BEFORE INSERT ON CLARO_ACTIVITY FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_ACTIVITY_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_ACTIVITY_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_ACTIVITY_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_ACTIVITY_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_E4A67CACB87FAB32 ON claro_activity (resourceNode_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_resource_activity (
+                id NUMBER(10) NOT NULL, 
+                activity_id NUMBER(10) NOT NULL, 
+                sequence_order NUMBER(10) DEFAULT NULL, 
+                resourceNode_id NUMBER(10) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_RESOURCE_ACTIVITY' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_RESOURCE_ACTIVITY ADD CONSTRAINT CLARO_RESOURCE_ACTIVITY_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_RESOURCE_ACTIVITY_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_RESOURCE_ACTIVITY_AI_PK BEFORE INSERT ON CLARO_RESOURCE_ACTIVITY FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_RESOURCE_ACTIVITY_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_RESOURCE_ACTIVITY_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_RESOURCE_ACTIVITY_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_RESOURCE_ACTIVITY_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_DCF37C7E81C06096 ON claro_resource_activity (activity_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_DCF37C7EB87FAB32 ON claro_resource_activity (resourceNode_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX resource_activity_unique_combination ON claro_resource_activity (activity_id, resourceNode_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_resource_type_custom_action (
+                id NUMBER(10) NOT NULL, 
+                resource_type_id NUMBER(10) DEFAULT NULL, 
+                action VARCHAR2(255) DEFAULT NULL, 
+                async NUMBER(1) DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_RESOURCE_TYPE_CUSTOM_ACTION' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_RESOURCE_TYPE_CUSTOM_ACTION ADD CONSTRAINT CLARO_RESOURCE_TYPE_CUSTOM_ACTION_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_RESOURCE_TYPE_CUSTOM_ACTION_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_RESOURCE_TYPE_CUSTOM_ACTION_AI_PK BEFORE INSERT ON CLARO_RESOURCE_TYPE_CUSTOM_ACTION FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_RESOURCE_TYPE_CUSTOM_ACTION_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_RESOURCE_TYPE_CUSTOM_ACTION_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_RESOURCE_TYPE_CUSTOM_ACTION_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_RESOURCE_TYPE_CUSTOM_ACTION_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_4A98967B98EC6B7B ON claro_resource_type_custom_action (resource_type_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_file (
+                id NUMBER(10) NOT NULL, 
+                \"size\" NUMBER(10) NOT NULL, 
+                hash_name VARCHAR2(50) NOT NULL, 
+                resourceNode_id NUMBER(10) DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_FILE' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_FILE ADD CONSTRAINT CLARO_FILE_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_FILE_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_FILE_AI_PK BEFORE INSERT ON CLARO_FILE FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_FILE_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_FILE_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_FILE_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_FILE_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_EA81C80BE1F029B6 ON claro_file (hash_name)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_EA81C80BB87FAB32 ON claro_file (resourceNode_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_link (
+                id NUMBER(10) NOT NULL, 
+                url VARCHAR2(255) NOT NULL, 
+                resourceNode_id NUMBER(10) DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_LINK' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_LINK ADD CONSTRAINT CLARO_LINK_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_LINK_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_LINK_AI_PK BEFORE INSERT ON CLARO_LINK FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_LINK_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_LINK_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_LINK_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_LINK_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_50B267EAB87FAB32 ON claro_link (resourceNode_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_resource_icon (
+                id NUMBER(10) NOT NULL, 
+                shortcut_id NUMBER(10) DEFAULT NULL, 
+                icon_location VARCHAR2(255) DEFAULT NULL, 
+                mimeType VARCHAR2(255) NOT NULL, 
+                is_shortcut NUMBER(1) NOT NULL, 
+                relative_url VARCHAR2(255) DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_RESOURCE_ICON' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_RESOURCE_ICON ADD CONSTRAINT CLARO_RESOURCE_ICON_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_RESOURCE_ICON_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_RESOURCE_ICON_AI_PK BEFORE INSERT ON CLARO_RESOURCE_ICON FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_RESOURCE_ICON_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_RESOURCE_ICON_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_RESOURCE_ICON_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_RESOURCE_ICON_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_478C586179F0D498 ON claro_resource_icon (shortcut_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_directory (
+                id NUMBER(10) NOT NULL, 
+                resourceNode_id NUMBER(10) DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_DIRECTORY' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_DIRECTORY ADD CONSTRAINT CLARO_DIRECTORY_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_DIRECTORY_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_DIRECTORY_AI_PK BEFORE INSERT ON CLARO_DIRECTORY FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_DIRECTORY_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_DIRECTORY_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_DIRECTORY_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_DIRECTORY_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_12EEC186B87FAB32 ON claro_directory (resourceNode_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_resource_shortcut (
+                id NUMBER(10) NOT NULL, 
+                target_id NUMBER(10) NOT NULL, 
+                resourceNode_id NUMBER(10) DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_RESOURCE_SHORTCUT' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_RESOURCE_SHORTCUT ADD CONSTRAINT CLARO_RESOURCE_SHORTCUT_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_RESOURCE_SHORTCUT_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_RESOURCE_SHORTCUT_AI_PK BEFORE INSERT ON CLARO_RESOURCE_SHORTCUT FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_RESOURCE_SHORTCUT_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_RESOURCE_SHORTCUT_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_RESOURCE_SHORTCUT_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_RESOURCE_SHORTCUT_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_5E7F4AB8158E0B66 ON claro_resource_shortcut (target_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_5E7F4AB8B87FAB32 ON claro_resource_shortcut (resourceNode_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_text (
+                id NUMBER(10) NOT NULL, 
+                version NUMBER(10) NOT NULL, 
+                resourceNode_id NUMBER(10) DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_TEXT' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_TEXT ADD CONSTRAINT CLARO_TEXT_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_TEXT_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_TEXT_AI_PK BEFORE INSERT ON CLARO_TEXT FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_TEXT_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_TEXT_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_TEXT_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_TEXT_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_5D9559DCB87FAB32 ON claro_text (resourceNode_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_text_revision (
+                id NUMBER(10) NOT NULL, 
+                text_id NUMBER(10) DEFAULT NULL, 
+                user_id NUMBER(10) DEFAULT NULL, 
+                version NUMBER(10) NOT NULL, 
+                content CLOB NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_TEXT_REVISION' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_TEXT_REVISION ADD CONSTRAINT CLARO_TEXT_REVISION_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_TEXT_REVISION_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_TEXT_REVISION_AI_PK BEFORE INSERT ON CLARO_TEXT_REVISION FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_TEXT_REVISION_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_TEXT_REVISION_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_TEXT_REVISION_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_TEXT_REVISION_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_F61948DE698D3548 ON claro_text_revision (text_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_F61948DEA76ED395 ON claro_text_revision (user_id)
+        ");
+        $this->addSql("
             CREATE TABLE claro_theme (
                 id NUMBER(10) NOT NULL, 
                 plugin_id NUMBER(10) DEFAULT NULL, 
@@ -783,46 +1560,6 @@ class Version20130909152258 extends AbstractMigration
             CREATE INDEX IDX_8A8D2F47D60322AC ON claro_log_doer_workspace_roles (role_id)
         ");
         $this->addSql("
-            CREATE TABLE claro_log_desktop_widget_config (
-                id NUMBER(10) NOT NULL, 
-                user_id NUMBER(10) DEFAULT NULL, 
-                is_default NUMBER(1) NOT NULL, 
-                amount NUMBER(10) NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_LOG_DESKTOP_WIDGET_CONFIG' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_LOG_DESKTOP_WIDGET_CONFIG ADD CONSTRAINT CLARO_LOG_DESKTOP_WIDGET_CONFIG_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_LOG_DESKTOP_WIDGET_CONFIG_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_LOG_DESKTOP_WIDGET_CONFIG_AI_PK BEFORE INSERT ON CLARO_LOG_DESKTOP_WIDGET_CONFIG FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_LOG_DESKTOP_WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_LOG_DESKTOP_WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_LOG_DESKTOP_WIDGET_CONFIG_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_LOG_DESKTOP_WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_4AE48D62A76ED395 ON claro_log_desktop_widget_config (user_id)
-        ");
-        $this->addSql("
             CREATE TABLE claro_log_workspace_widget_config (
                 id NUMBER(10) NOT NULL, 
                 workspace_id NUMBER(10) DEFAULT NULL, 
@@ -882,6 +1619,46 @@ class Version20130909152258 extends AbstractMigration
             CREATE INDEX IDX_D301C70782D40A1F ON claro_log_workspace_widget_config (workspace_id)
         ");
         $this->addSql("
+            CREATE TABLE claro_log_desktop_widget_config (
+                id NUMBER(10) NOT NULL, 
+                user_id NUMBER(10) DEFAULT NULL, 
+                is_default NUMBER(1) NOT NULL, 
+                amount NUMBER(10) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_LOG_DESKTOP_WIDGET_CONFIG' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_LOG_DESKTOP_WIDGET_CONFIG ADD CONSTRAINT CLARO_LOG_DESKTOP_WIDGET_CONFIG_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_LOG_DESKTOP_WIDGET_CONFIG_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_LOG_DESKTOP_WIDGET_CONFIG_AI_PK BEFORE INSERT ON CLARO_LOG_DESKTOP_WIDGET_CONFIG FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_LOG_DESKTOP_WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_LOG_DESKTOP_WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_LOG_DESKTOP_WIDGET_CONFIG_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_LOG_DESKTOP_WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_4AE48D62A76ED395 ON claro_log_desktop_widget_config (user_id)
+        ");
+        $this->addSql("
             CREATE TABLE claro_log_hidden_workspace_widget_config (
                 workspace_id NUMBER(10) NOT NULL, 
                 user_id NUMBER(10) NOT NULL, 
@@ -890,6 +1667,276 @@ class Version20130909152258 extends AbstractMigration
         ");
         $this->addSql("
             CREATE INDEX IDX_BC83196EA76ED395 ON claro_log_hidden_workspace_widget_config (user_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_widget (
+                id NUMBER(10) NOT NULL, 
+                plugin_id NUMBER(10) DEFAULT NULL, 
+                name VARCHAR2(255) NOT NULL, 
+                is_configurable NUMBER(1) NOT NULL, 
+                icon VARCHAR2(255) NOT NULL, 
+                is_exportable NUMBER(1) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_WIDGET' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_WIDGET ADD CONSTRAINT CLARO_WIDGET_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_WIDGET_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_WIDGET_AI_PK BEFORE INSERT ON CLARO_WIDGET FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_WIDGET_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_WIDGET_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_WIDGET_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_WIDGET_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_76CA6C4F5E237E06 ON claro_widget (name)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_76CA6C4FEC942BCF ON claro_widget (plugin_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_widget_display (
+                id NUMBER(10) NOT NULL, 
+                parent_id NUMBER(10) DEFAULT NULL, 
+                workspace_id NUMBER(10) DEFAULT NULL, 
+                user_id NUMBER(10) DEFAULT NULL, 
+                widget_id NUMBER(10) NOT NULL, 
+                is_locked NUMBER(1) NOT NULL, 
+                is_visible NUMBER(1) NOT NULL, 
+                is_desktop NUMBER(1) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_WIDGET_DISPLAY' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_WIDGET_DISPLAY ADD CONSTRAINT CLARO_WIDGET_DISPLAY_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_WIDGET_DISPLAY_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_WIDGET_DISPLAY_AI_PK BEFORE INSERT ON CLARO_WIDGET_DISPLAY FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_WIDGET_DISPLAY_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_WIDGET_DISPLAY_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_WIDGET_DISPLAY_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_WIDGET_DISPLAY_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_2D34DB3727ACA70 ON claro_widget_display (parent_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_2D34DB382D40A1F ON claro_widget_display (workspace_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_2D34DB3A76ED395 ON claro_widget_display (user_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_2D34DB3FBE885E2 ON claro_widget_display (widget_id)
+        ");
+        $this->addSql("
+            CREATE TABLE simple_dekstop_workspace__widget_config (
+                id NUMBER(10) NOT NULL, 
+                user_id NUMBER(10) DEFAULT NULL, 
+                is_default NUMBER(1) NOT NULL, 
+                content CLOB NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'SIMPLE_DEKSTOP_WORKSPACE__WIDGET_CONFIG' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE SIMPLE_DEKSTOP_WORKSPACE__WIDGET_CONFIG ADD CONSTRAINT SIMPLE_DEKSTOP_WORKSPACE__WIDGET_CONFIG_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE SIMPLE_DEKSTOP_WORKSPACE__WIDGET_CONFIG_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER SIMPLE_DEKSTOP_WORKSPACE__WIDGET_CONFIG_AI_PK BEFORE INSERT ON SIMPLE_DEKSTOP_WORKSPACE__WIDGET_CONFIG FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT SIMPLE_DEKSTOP_WORKSPACE__WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT SIMPLE_DEKSTOP_WORKSPACE__WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'SIMPLE_DEKSTOP_WORKSPACE__WIDGET_CONFIG_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT SIMPLE_DEKSTOP_WORKSPACE__WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_65124B39A76ED395 ON simple_dekstop_workspace__widget_config (user_id)
+        ");
+        $this->addSql("
+            CREATE TABLE simple_text_workspace_widget_config (
+                id NUMBER(10) NOT NULL, 
+                workspace_id NUMBER(10) DEFAULT NULL, 
+                is_default NUMBER(1) NOT NULL, 
+                content CLOB NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'SIMPLE_TEXT_WORKSPACE_WIDGET_CONFIG' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE SIMPLE_TEXT_WORKSPACE_WIDGET_CONFIG ADD CONSTRAINT SIMPLE_TEXT_WORKSPACE_WIDGET_CONFIG_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE SIMPLE_TEXT_WORKSPACE_WIDGET_CONFIG_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER SIMPLE_TEXT_WORKSPACE_WIDGET_CONFIG_AI_PK BEFORE INSERT ON SIMPLE_TEXT_WORKSPACE_WIDGET_CONFIG FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT SIMPLE_TEXT_WORKSPACE_WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT SIMPLE_TEXT_WORKSPACE_WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'SIMPLE_TEXT_WORKSPACE_WIDGET_CONFIG_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT SIMPLE_TEXT_WORKSPACE_WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_11925ED382D40A1F ON simple_text_workspace_widget_config (workspace_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_plugin (
+                id NUMBER(10) NOT NULL, 
+                vendor_name VARCHAR2(50) NOT NULL, 
+                short_name VARCHAR2(50) NOT NULL, 
+                has_options NUMBER(1) NOT NULL, 
+                icon VARCHAR2(255) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_PLUGIN' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_PLUGIN ADD CONSTRAINT CLARO_PLUGIN_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_PLUGIN_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_PLUGIN_AI_PK BEFORE INSERT ON CLARO_PLUGIN FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_PLUGIN_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_PLUGIN_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_PLUGIN_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_PLUGIN_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX plugin_unique_name ON claro_plugin (vendor_name, short_name)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_tools (
+                id NUMBER(10) NOT NULL, 
+                plugin_id NUMBER(10) DEFAULT NULL, 
+                name VARCHAR2(255) NOT NULL, 
+                display_name VARCHAR2(255) DEFAULT NULL, 
+                class VARCHAR2(255) NOT NULL, 
+                is_workspace_required NUMBER(1) NOT NULL, 
+                is_desktop_required NUMBER(1) NOT NULL, 
+                is_displayable_in_workspace NUMBER(1) NOT NULL, 
+                is_displayable_in_desktop NUMBER(1) NOT NULL, 
+                is_exportable NUMBER(1) NOT NULL, 
+                is_configurable_in_workspace NUMBER(1) NOT NULL, 
+                is_configurable_in_desktop NUMBER(1) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_TOOLS' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_TOOLS ADD CONSTRAINT CLARO_TOOLS_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_TOOLS_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_TOOLS_AI_PK BEFORE INSERT ON CLARO_TOOLS FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_TOOLS_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_TOOLS_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_TOOLS_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_TOOLS_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_60F909655E237E06 ON claro_tools (name)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_60F90965EC942BCF ON claro_tools (plugin_id)
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_template (
@@ -929,6 +1976,48 @@ class Version20130909152258 extends AbstractMigration
         ");
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_94D0CBDBD1B862B8 ON claro_workspace_template (hash)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_workspace_tag (
+                id NUMBER(10) NOT NULL, 
+                user_id NUMBER(10) DEFAULT NULL, 
+                name VARCHAR2(255) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_WORKSPACE_TAG' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_WORKSPACE_TAG ADD CONSTRAINT CLARO_WORKSPACE_TAG_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_WORKSPACE_TAG_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_WORKSPACE_TAG_AI_PK BEFORE INSERT ON CLARO_WORKSPACE_TAG FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_WORKSPACE_TAG_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_WORKSPACE_TAG_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_WORKSPACE_TAG_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_WORKSPACE_TAG_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_C8EFD7EFA76ED395 ON claro_workspace_tag (user_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX tag_unique_name_and_user ON claro_workspace_tag (user_id, name)
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_tag_hierarchy (
@@ -1023,189 +2112,6 @@ class Version20130909152258 extends AbstractMigration
             CREATE UNIQUE INDEX rel_workspace_tag_unique_combination ON claro_rel_workspace_tag (workspace_id, tag_id)
         ");
         $this->addSql("
-            CREATE TABLE claro_workspace_tag (
-                id NUMBER(10) NOT NULL, 
-                user_id NUMBER(10) DEFAULT NULL, 
-                name VARCHAR2(255) NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_WORKSPACE_TAG' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_WORKSPACE_TAG ADD CONSTRAINT CLARO_WORKSPACE_TAG_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_WORKSPACE_TAG_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_WORKSPACE_TAG_AI_PK BEFORE INSERT ON CLARO_WORKSPACE_TAG FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_WORKSPACE_TAG_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_WORKSPACE_TAG_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_WORKSPACE_TAG_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_WORKSPACE_TAG_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_C8EFD7EFA76ED395 ON claro_workspace_tag (user_id)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX tag_unique_name_and_user ON claro_workspace_tag (user_id, name)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_plugin (
-                id NUMBER(10) NOT NULL, 
-                vendor_name VARCHAR2(50) NOT NULL, 
-                short_name VARCHAR2(50) NOT NULL, 
-                has_options NUMBER(1) NOT NULL, 
-                icon VARCHAR2(255) NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_PLUGIN' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_PLUGIN ADD CONSTRAINT CLARO_PLUGIN_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_PLUGIN_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_PLUGIN_AI_PK BEFORE INSERT ON CLARO_PLUGIN FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_PLUGIN_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_PLUGIN_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_PLUGIN_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_PLUGIN_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX plugin_unique_name ON claro_plugin (vendor_name, short_name)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_message (
-                id NUMBER(10) NOT NULL, 
-                sender_id NUMBER(10) NOT NULL, 
-                parent_id NUMBER(10) DEFAULT NULL, 
-                object VARCHAR2(255) NOT NULL, 
-                content VARCHAR2(1023) NOT NULL, 
-                \"date\" TIMESTAMP(0) NOT NULL, 
-                is_removed NUMBER(1) NOT NULL, 
-                lft NUMBER(10) NOT NULL, 
-                lvl NUMBER(10) NOT NULL, 
-                rgt NUMBER(10) NOT NULL, 
-                root NUMBER(10) DEFAULT NULL, 
-                sender_username VARCHAR2(255) NOT NULL, 
-                receiver_string VARCHAR2(1023) NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_MESSAGE' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_MESSAGE ADD CONSTRAINT CLARO_MESSAGE_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_MESSAGE_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_MESSAGE_AI_PK BEFORE INSERT ON CLARO_MESSAGE FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_MESSAGE_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_MESSAGE_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_MESSAGE_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_MESSAGE_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D6FE8DD8F624B39D ON claro_message (sender_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D6FE8DD8727ACA70 ON claro_message (parent_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_event (
-                id NUMBER(10) NOT NULL, 
-                workspace_id NUMBER(10) DEFAULT NULL, 
-                user_id NUMBER(10) NOT NULL, 
-                title VARCHAR2(50) NOT NULL, 
-                start_date NUMBER(10) DEFAULT NULL, 
-                end_date NUMBER(10) DEFAULT NULL, 
-                description VARCHAR2(255) DEFAULT NULL, 
-                allday NUMBER(1) DEFAULT NULL, 
-                priority VARCHAR2(255) DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_EVENT' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_EVENT ADD CONSTRAINT CLARO_EVENT_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_EVENT_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_EVENT_AI_PK BEFORE INSERT ON CLARO_EVENT FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_EVENT_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_EVENT_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_EVENT_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_EVENT_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_B1ADDDB582D40A1F ON claro_event (workspace_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_B1ADDDB5A76ED395 ON claro_event (user_id)
-        ");
-        $this->addSql("
             CREATE TABLE claro_license (
                 id NUMBER(10) NOT NULL, 
                 name VARCHAR2(255) NOT NULL, 
@@ -1239,832 +2145,6 @@ class Version20130909152258 extends AbstractMigration
             SELECT : NEW.ID INTO last_InsertID 
             FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
             SELECT CLARO_LICENSE_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE TABLE claro_resource_activity (
-                id NUMBER(10) NOT NULL, 
-                activity_id NUMBER(10) NOT NULL, 
-                sequence_order NUMBER(10) DEFAULT NULL, 
-                resourceNode_id NUMBER(10) NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_RESOURCE_ACTIVITY' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_RESOURCE_ACTIVITY ADD CONSTRAINT CLARO_RESOURCE_ACTIVITY_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_RESOURCE_ACTIVITY_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_RESOURCE_ACTIVITY_AI_PK BEFORE INSERT ON CLARO_RESOURCE_ACTIVITY FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_RESOURCE_ACTIVITY_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_RESOURCE_ACTIVITY_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_RESOURCE_ACTIVITY_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_RESOURCE_ACTIVITY_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_DCF37C7E81C06096 ON claro_resource_activity (activity_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_DCF37C7EB87FAB32 ON claro_resource_activity (resourceNode_id)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX resource_activity_unique_combination ON claro_resource_activity (activity_id, resourceNode_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_link (
-                id NUMBER(10) NOT NULL, 
-                url VARCHAR2(255) NOT NULL, 
-                resourceNode_id NUMBER(10) DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_LINK' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_LINK ADD CONSTRAINT CLARO_LINK_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_LINK_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_LINK_AI_PK BEFORE INSERT ON CLARO_LINK FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_LINK_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_LINK_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_LINK_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_LINK_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_50B267EAB87FAB32 ON claro_link (resourceNode_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_directory (
-                id NUMBER(10) NOT NULL, 
-                resourceNode_id NUMBER(10) DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_DIRECTORY' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_DIRECTORY ADD CONSTRAINT CLARO_DIRECTORY_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_DIRECTORY_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_DIRECTORY_AI_PK BEFORE INSERT ON CLARO_DIRECTORY FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_DIRECTORY_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_DIRECTORY_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_DIRECTORY_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_DIRECTORY_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_12EEC186B87FAB32 ON claro_directory (resourceNode_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_resource_icon (
-                id NUMBER(10) NOT NULL, 
-                shortcut_id NUMBER(10) DEFAULT NULL, 
-                icon_location VARCHAR2(255) DEFAULT NULL, 
-                mimeType VARCHAR2(255) NOT NULL, 
-                is_shortcut NUMBER(1) NOT NULL, 
-                relative_url VARCHAR2(255) DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_RESOURCE_ICON' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_RESOURCE_ICON ADD CONSTRAINT CLARO_RESOURCE_ICON_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_RESOURCE_ICON_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_RESOURCE_ICON_AI_PK BEFORE INSERT ON CLARO_RESOURCE_ICON FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_RESOURCE_ICON_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_RESOURCE_ICON_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_RESOURCE_ICON_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_RESOURCE_ICON_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_478C586179F0D498 ON claro_resource_icon (shortcut_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_file (
-                id NUMBER(10) NOT NULL, 
-                \"size\" NUMBER(10) NOT NULL, 
-                hash_name VARCHAR2(50) NOT NULL, 
-                resourceNode_id NUMBER(10) DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_FILE' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_FILE ADD CONSTRAINT CLARO_FILE_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_FILE_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_FILE_AI_PK BEFORE INSERT ON CLARO_FILE FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_FILE_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_FILE_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_FILE_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_FILE_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_EA81C80BE1F029B6 ON claro_file (hash_name)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_EA81C80BB87FAB32 ON claro_file (resourceNode_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_text_revision (
-                id NUMBER(10) NOT NULL, 
-                text_id NUMBER(10) DEFAULT NULL, 
-                user_id NUMBER(10) DEFAULT NULL, 
-                version NUMBER(10) NOT NULL, 
-                content CLOB NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_TEXT_REVISION' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_TEXT_REVISION ADD CONSTRAINT CLARO_TEXT_REVISION_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_TEXT_REVISION_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_TEXT_REVISION_AI_PK BEFORE INSERT ON CLARO_TEXT_REVISION FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_TEXT_REVISION_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_TEXT_REVISION_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_TEXT_REVISION_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_TEXT_REVISION_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F61948DE698D3548 ON claro_text_revision (text_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F61948DEA76ED395 ON claro_text_revision (user_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_resource_type_custom_action (
-                id NUMBER(10) NOT NULL, 
-                resource_type_id NUMBER(10) DEFAULT NULL, 
-                action VARCHAR2(255) DEFAULT NULL, 
-                async NUMBER(1) DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_RESOURCE_TYPE_CUSTOM_ACTION' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_RESOURCE_TYPE_CUSTOM_ACTION ADD CONSTRAINT CLARO_RESOURCE_TYPE_CUSTOM_ACTION_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_RESOURCE_TYPE_CUSTOM_ACTION_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_RESOURCE_TYPE_CUSTOM_ACTION_AI_PK BEFORE INSERT ON CLARO_RESOURCE_TYPE_CUSTOM_ACTION FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_RESOURCE_TYPE_CUSTOM_ACTION_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_RESOURCE_TYPE_CUSTOM_ACTION_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_RESOURCE_TYPE_CUSTOM_ACTION_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_RESOURCE_TYPE_CUSTOM_ACTION_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_4A98967B98EC6B7B ON claro_resource_type_custom_action (resource_type_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_resource_shortcut (
-                id NUMBER(10) NOT NULL, 
-                target_id NUMBER(10) NOT NULL, 
-                resourceNode_id NUMBER(10) DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_RESOURCE_SHORTCUT' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_RESOURCE_SHORTCUT ADD CONSTRAINT CLARO_RESOURCE_SHORTCUT_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_RESOURCE_SHORTCUT_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_RESOURCE_SHORTCUT_AI_PK BEFORE INSERT ON CLARO_RESOURCE_SHORTCUT FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_RESOURCE_SHORTCUT_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_RESOURCE_SHORTCUT_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_RESOURCE_SHORTCUT_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_RESOURCE_SHORTCUT_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_5E7F4AB8158E0B66 ON claro_resource_shortcut (target_id)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_5E7F4AB8B87FAB32 ON claro_resource_shortcut (resourceNode_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_activity (
-                id NUMBER(10) NOT NULL, 
-                instruction VARCHAR2(255) NOT NULL, 
-                start_date TIMESTAMP(0) DEFAULT NULL, 
-                end_date TIMESTAMP(0) DEFAULT NULL, 
-                resourceNode_id NUMBER(10) DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_ACTIVITY' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_ACTIVITY ADD CONSTRAINT CLARO_ACTIVITY_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_ACTIVITY_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_ACTIVITY_AI_PK BEFORE INSERT ON CLARO_ACTIVITY FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_ACTIVITY_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_ACTIVITY_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_ACTIVITY_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_ACTIVITY_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_E4A67CACB87FAB32 ON claro_activity (resourceNode_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_text (
-                id NUMBER(10) NOT NULL, 
-                version NUMBER(10) NOT NULL, 
-                resourceNode_id NUMBER(10) DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_TEXT' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_TEXT ADD CONSTRAINT CLARO_TEXT_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_TEXT_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_TEXT_AI_PK BEFORE INSERT ON CLARO_TEXT FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_TEXT_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_TEXT_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_TEXT_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_TEXT_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_5D9559DCB87FAB32 ON claro_text (resourceNode_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_tools (
-                id NUMBER(10) NOT NULL, 
-                plugin_id NUMBER(10) DEFAULT NULL, 
-                name VARCHAR2(255) NOT NULL, 
-                display_name VARCHAR2(255) DEFAULT NULL, 
-                class VARCHAR2(255) NOT NULL, 
-                is_workspace_required NUMBER(1) NOT NULL, 
-                is_desktop_required NUMBER(1) NOT NULL, 
-                is_displayable_in_workspace NUMBER(1) NOT NULL, 
-                is_displayable_in_desktop NUMBER(1) NOT NULL, 
-                is_exportable NUMBER(1) NOT NULL, 
-                is_configurable_in_workspace NUMBER(1) NOT NULL, 
-                is_configurable_in_desktop NUMBER(1) NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_TOOLS' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_TOOLS ADD CONSTRAINT CLARO_TOOLS_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_TOOLS_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_TOOLS_AI_PK BEFORE INSERT ON CLARO_TOOLS FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_TOOLS_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_TOOLS_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_TOOLS_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_TOOLS_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_60F909655E237E06 ON claro_tools (name)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_60F90965EC942BCF ON claro_tools (plugin_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_widget_display (
-                id NUMBER(10) NOT NULL, 
-                parent_id NUMBER(10) DEFAULT NULL, 
-                workspace_id NUMBER(10) DEFAULT NULL, 
-                user_id NUMBER(10) DEFAULT NULL, 
-                widget_id NUMBER(10) NOT NULL, 
-                is_locked NUMBER(1) NOT NULL, 
-                is_visible NUMBER(1) NOT NULL, 
-                is_desktop NUMBER(1) NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_WIDGET_DISPLAY' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_WIDGET_DISPLAY ADD CONSTRAINT CLARO_WIDGET_DISPLAY_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_WIDGET_DISPLAY_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_WIDGET_DISPLAY_AI_PK BEFORE INSERT ON CLARO_WIDGET_DISPLAY FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_WIDGET_DISPLAY_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_WIDGET_DISPLAY_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_WIDGET_DISPLAY_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_WIDGET_DISPLAY_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_2D34DB3727ACA70 ON claro_widget_display (parent_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_2D34DB382D40A1F ON claro_widget_display (workspace_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_2D34DB3A76ED395 ON claro_widget_display (user_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_2D34DB3FBE885E2 ON claro_widget_display (widget_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_widget (
-                id NUMBER(10) NOT NULL, 
-                plugin_id NUMBER(10) DEFAULT NULL, 
-                name VARCHAR2(255) NOT NULL, 
-                is_configurable NUMBER(1) NOT NULL, 
-                icon VARCHAR2(255) NOT NULL, 
-                is_exportable NUMBER(1) NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_WIDGET' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_WIDGET ADD CONSTRAINT CLARO_WIDGET_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_WIDGET_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_WIDGET_AI_PK BEFORE INSERT ON CLARO_WIDGET FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_WIDGET_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_WIDGET_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_WIDGET_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_WIDGET_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_76CA6C4F5E237E06 ON claro_widget (name)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_76CA6C4FEC942BCF ON claro_widget (plugin_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_content (
-                id NUMBER(10) NOT NULL, 
-                title VARCHAR2(255) DEFAULT NULL, 
-                content CLOB DEFAULT NULL, 
-                generated_content CLOB DEFAULT NULL, 
-                created TIMESTAMP(0) NOT NULL, 
-                modified TIMESTAMP(0) NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_CONTENT' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_CONTENT ADD CONSTRAINT CLARO_CONTENT_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_CONTENT_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_CONTENT_AI_PK BEFORE INSERT ON CLARO_CONTENT FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_CONTENT_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_CONTENT_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_CONTENT_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_CONTENT_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE TABLE claro_content2region (
-                id NUMBER(10) NOT NULL, 
-                content_id NUMBER(10) NOT NULL, 
-                region_id NUMBER(10) NOT NULL, 
-                next_id NUMBER(10) DEFAULT NULL, 
-                back_id NUMBER(10) DEFAULT NULL, 
-                \"size\" VARCHAR2(30) NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_CONTENT2REGION' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_CONTENT2REGION ADD CONSTRAINT CLARO_CONTENT2REGION_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_CONTENT2REGION_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_CONTENT2REGION_AI_PK BEFORE INSERT ON CLARO_CONTENT2REGION FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_CONTENT2REGION_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_CONTENT2REGION_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_CONTENT2REGION_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_CONTENT2REGION_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_8D18942E84A0A3ED ON claro_content2region (content_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_8D18942E98260155 ON claro_content2region (region_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_8D18942EAA23F6C8 ON claro_content2region (next_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_8D18942EE9583FF0 ON claro_content2region (back_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_content2type (
-                id NUMBER(10) NOT NULL, 
-                content_id NUMBER(10) NOT NULL, 
-                type_id NUMBER(10) NOT NULL, 
-                next_id NUMBER(10) DEFAULT NULL, 
-                back_id NUMBER(10) DEFAULT NULL, 
-                \"size\" VARCHAR2(30) NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_CONTENT2TYPE' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_CONTENT2TYPE ADD CONSTRAINT CLARO_CONTENT2TYPE_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_CONTENT2TYPE_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_CONTENT2TYPE_AI_PK BEFORE INSERT ON CLARO_CONTENT2TYPE FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_CONTENT2TYPE_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_CONTENT2TYPE_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_CONTENT2TYPE_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_CONTENT2TYPE_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_1A2084EF84A0A3ED ON claro_content2type (content_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_1A2084EFC54C8C93 ON claro_content2type (type_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_1A2084EFAA23F6C8 ON claro_content2type (next_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_1A2084EFE9583FF0 ON claro_content2type (back_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_subcontent (
-                id NUMBER(10) NOT NULL, 
-                father_id NUMBER(10) NOT NULL, 
-                child_id NUMBER(10) NOT NULL, 
-                next_id NUMBER(10) DEFAULT NULL, 
-                back_id NUMBER(10) DEFAULT NULL, 
-                \"size\" VARCHAR2(255) DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_SUBCONTENT' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_SUBCONTENT ADD CONSTRAINT CLARO_SUBCONTENT_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_SUBCONTENT_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_SUBCONTENT_AI_PK BEFORE INSERT ON CLARO_SUBCONTENT FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_SUBCONTENT_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_SUBCONTENT_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_SUBCONTENT_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_SUBCONTENT_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D72E133C2055B9A2 ON claro_subcontent (father_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D72E133CDD62C21B ON claro_subcontent (child_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D72E133CAA23F6C8 ON claro_subcontent (next_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D72E133CE9583FF0 ON claro_subcontent (back_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_region (
-                id NUMBER(10) NOT NULL, 
-                name VARCHAR2(255) NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_REGION' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_REGION ADD CONSTRAINT CLARO_REGION_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_REGION_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_REGION_AI_PK BEFORE INSERT ON CLARO_REGION FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_REGION_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_REGION_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_REGION_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_REGION_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
-        ");
-        $this->addSql("
-            CREATE TABLE claro_type (
-                id NUMBER(10) NOT NULL, 
-                name VARCHAR2(255) NOT NULL, 
-                max_content_page NUMBER(10) NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_TYPE' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_TYPE ADD CONSTRAINT CLARO_TYPE_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_TYPE_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_TYPE_AI_PK BEFORE INSERT ON CLARO_TYPE FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_TYPE_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_TYPE_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_TYPE_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_TYPE_ID_SEQ.NEXTVAL INTO last_Sequence 
             FROM DUAL; END LOOP; END IF; END;
         ");
         $this->addSql("
@@ -2270,6 +2350,180 @@ class Version20130909152258 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE claro_event 
+            ADD CONSTRAINT FK_B1ADDDB582D40A1F FOREIGN KEY (workspace_id) 
+            REFERENCES claro_workspace (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_event 
+            ADD CONSTRAINT FK_B1ADDDB5A76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_content2type 
+            ADD CONSTRAINT FK_1A2084EF84A0A3ED FOREIGN KEY (content_id) 
+            REFERENCES claro_content (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_content2type 
+            ADD CONSTRAINT FK_1A2084EFC54C8C93 FOREIGN KEY (type_id) 
+            REFERENCES claro_type (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_content2type 
+            ADD CONSTRAINT FK_1A2084EFAA23F6C8 FOREIGN KEY (next_id) 
+            REFERENCES claro_content2type (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_content2type 
+            ADD CONSTRAINT FK_1A2084EFE9583FF0 FOREIGN KEY (back_id) 
+            REFERENCES claro_content2type (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_subcontent 
+            ADD CONSTRAINT FK_D72E133C2055B9A2 FOREIGN KEY (father_id) 
+            REFERENCES claro_content (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_subcontent 
+            ADD CONSTRAINT FK_D72E133CDD62C21B FOREIGN KEY (child_id) 
+            REFERENCES claro_content (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_subcontent 
+            ADD CONSTRAINT FK_D72E133CAA23F6C8 FOREIGN KEY (next_id) 
+            REFERENCES claro_subcontent (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_subcontent 
+            ADD CONSTRAINT FK_D72E133CE9583FF0 FOREIGN KEY (back_id) 
+            REFERENCES claro_subcontent (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_content2region 
+            ADD CONSTRAINT FK_8D18942E84A0A3ED FOREIGN KEY (content_id) 
+            REFERENCES claro_content (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_content2region 
+            ADD CONSTRAINT FK_8D18942E98260155 FOREIGN KEY (region_id) 
+            REFERENCES claro_region (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_content2region 
+            ADD CONSTRAINT FK_8D18942EAA23F6C8 FOREIGN KEY (next_id) 
+            REFERENCES claro_content2region (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_content2region 
+            ADD CONSTRAINT FK_8D18942EE9583FF0 FOREIGN KEY (back_id) 
+            REFERENCES claro_content2region (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_message 
+            ADD CONSTRAINT FK_D6FE8DD8F624B39D FOREIGN KEY (sender_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_message 
+            ADD CONSTRAINT FK_D6FE8DD8727ACA70 FOREIGN KEY (parent_id) 
+            REFERENCES claro_message (id) 
+            ON DELETE SET NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_activity 
+            ADD CONSTRAINT FK_E4A67CACB87FAB32 FOREIGN KEY (resourceNode_id) 
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_resource_activity 
+            ADD CONSTRAINT FK_DCF37C7E81C06096 FOREIGN KEY (activity_id) 
+            REFERENCES claro_activity (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_resource_activity 
+            ADD CONSTRAINT FK_DCF37C7EB87FAB32 FOREIGN KEY (resourceNode_id) 
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_resource_type_custom_action 
+            ADD CONSTRAINT FK_4A98967B98EC6B7B FOREIGN KEY (resource_type_id) 
+            REFERENCES claro_resource_type (id) 
+            ON DELETE SET NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_file 
+            ADD CONSTRAINT FK_EA81C80BB87FAB32 FOREIGN KEY (resourceNode_id) 
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_link 
+            ADD CONSTRAINT FK_50B267EAB87FAB32 FOREIGN KEY (resourceNode_id) 
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_resource_icon 
+            ADD CONSTRAINT FK_478C586179F0D498 FOREIGN KEY (shortcut_id) 
+            REFERENCES claro_resource_icon (id) 
+            ON DELETE SET NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_directory 
+            ADD CONSTRAINT FK_12EEC186B87FAB32 FOREIGN KEY (resourceNode_id) 
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_resource_shortcut 
+            ADD CONSTRAINT FK_5E7F4AB8158E0B66 FOREIGN KEY (target_id) 
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_resource_shortcut 
+            ADD CONSTRAINT FK_5E7F4AB8B87FAB32 FOREIGN KEY (resourceNode_id) 
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_text 
+            ADD CONSTRAINT FK_5D9559DCB87FAB32 FOREIGN KEY (resourceNode_id) 
+            REFERENCES claro_resource_node (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_text_revision 
+            ADD CONSTRAINT FK_F61948DE698D3548 FOREIGN KEY (text_id) 
+            REFERENCES claro_text (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_text_revision 
+            ADD CONSTRAINT FK_F61948DEA76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE SET NULL
+        ");
+        $this->addSql("
             ALTER TABLE claro_theme 
             ADD CONSTRAINT FK_1D76301AEC942BCF FOREIGN KEY (plugin_id) 
             REFERENCES claro_plugin (id) 
@@ -2348,19 +2602,70 @@ class Version20130909152258 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE claro_log_desktop_widget_config 
-            ADD CONSTRAINT FK_4AE48D62A76ED395 FOREIGN KEY (user_id) 
-            REFERENCES claro_user (id)
-        ");
-        $this->addSql("
             ALTER TABLE claro_log_workspace_widget_config 
             ADD CONSTRAINT FK_D301C70782D40A1F FOREIGN KEY (workspace_id) 
             REFERENCES claro_workspace (id)
         ");
         $this->addSql("
+            ALTER TABLE claro_log_desktop_widget_config 
+            ADD CONSTRAINT FK_4AE48D62A76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id)
+        ");
+        $this->addSql("
             ALTER TABLE claro_log_hidden_workspace_widget_config 
             ADD CONSTRAINT FK_BC83196EA76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id)
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget 
+            ADD CONSTRAINT FK_76CA6C4FEC942BCF FOREIGN KEY (plugin_id) 
+            REFERENCES claro_plugin (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget_display 
+            ADD CONSTRAINT FK_2D34DB3727ACA70 FOREIGN KEY (parent_id) 
+            REFERENCES claro_widget_display (id) 
+            ON DELETE SET NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget_display 
+            ADD CONSTRAINT FK_2D34DB382D40A1F FOREIGN KEY (workspace_id) 
+            REFERENCES claro_workspace (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget_display 
+            ADD CONSTRAINT FK_2D34DB3A76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id)
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget_display 
+            ADD CONSTRAINT FK_2D34DB3FBE885E2 FOREIGN KEY (widget_id) 
+            REFERENCES claro_widget (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE simple_dekstop_workspace__widget_config 
+            ADD CONSTRAINT FK_65124B39A76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id)
+        ");
+        $this->addSql("
+            ALTER TABLE simple_text_workspace_widget_config 
+            ADD CONSTRAINT FK_11925ED382D40A1F FOREIGN KEY (workspace_id) 
+            REFERENCES claro_workspace (id)
+        ");
+        $this->addSql("
+            ALTER TABLE claro_tools 
+            ADD CONSTRAINT FK_60F90965EC942BCF FOREIGN KEY (plugin_id) 
+            REFERENCES claro_plugin (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_workspace_tag 
+            ADD CONSTRAINT FK_C8EFD7EFA76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag_hierarchy 
@@ -2392,221 +2697,6 @@ class Version20130909152258 extends AbstractMigration
             REFERENCES claro_workspace_tag (id) 
             ON DELETE CASCADE
         ");
-        $this->addSql("
-            ALTER TABLE claro_workspace_tag 
-            ADD CONSTRAINT FK_C8EFD7EFA76ED395 FOREIGN KEY (user_id) 
-            REFERENCES claro_user (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_message 
-            ADD CONSTRAINT FK_D6FE8DD8F624B39D FOREIGN KEY (sender_id) 
-            REFERENCES claro_user (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_message 
-            ADD CONSTRAINT FK_D6FE8DD8727ACA70 FOREIGN KEY (parent_id) 
-            REFERENCES claro_message (id) 
-            ON DELETE SET NULL
-        ");
-        $this->addSql("
-            ALTER TABLE claro_event 
-            ADD CONSTRAINT FK_B1ADDDB582D40A1F FOREIGN KEY (workspace_id) 
-            REFERENCES claro_workspace (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_event 
-            ADD CONSTRAINT FK_B1ADDDB5A76ED395 FOREIGN KEY (user_id) 
-            REFERENCES claro_user (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_resource_activity 
-            ADD CONSTRAINT FK_DCF37C7E81C06096 FOREIGN KEY (activity_id) 
-            REFERENCES claro_activity (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_resource_activity 
-            ADD CONSTRAINT FK_DCF37C7EB87FAB32 FOREIGN KEY (resourceNode_id) 
-            REFERENCES claro_resource_node (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_link 
-            ADD CONSTRAINT FK_50B267EAB87FAB32 FOREIGN KEY (resourceNode_id) 
-            REFERENCES claro_resource_node (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_directory 
-            ADD CONSTRAINT FK_12EEC186B87FAB32 FOREIGN KEY (resourceNode_id) 
-            REFERENCES claro_resource_node (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_resource_icon 
-            ADD CONSTRAINT FK_478C586179F0D498 FOREIGN KEY (shortcut_id) 
-            REFERENCES claro_resource_icon (id) 
-            ON DELETE SET NULL
-        ");
-        $this->addSql("
-            ALTER TABLE claro_file 
-            ADD CONSTRAINT FK_EA81C80BB87FAB32 FOREIGN KEY (resourceNode_id) 
-            REFERENCES claro_resource_node (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_text_revision 
-            ADD CONSTRAINT FK_F61948DE698D3548 FOREIGN KEY (text_id) 
-            REFERENCES claro_text (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_text_revision 
-            ADD CONSTRAINT FK_F61948DEA76ED395 FOREIGN KEY (user_id) 
-            REFERENCES claro_user (id) 
-            ON DELETE SET NULL
-        ");
-        $this->addSql("
-            ALTER TABLE claro_resource_type_custom_action 
-            ADD CONSTRAINT FK_4A98967B98EC6B7B FOREIGN KEY (resource_type_id) 
-            REFERENCES claro_resource_type (id) 
-            ON DELETE SET NULL
-        ");
-        $this->addSql("
-            ALTER TABLE claro_resource_shortcut 
-            ADD CONSTRAINT FK_5E7F4AB8158E0B66 FOREIGN KEY (target_id) 
-            REFERENCES claro_resource_node (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_resource_shortcut 
-            ADD CONSTRAINT FK_5E7F4AB8B87FAB32 FOREIGN KEY (resourceNode_id) 
-            REFERENCES claro_resource_node (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_activity 
-            ADD CONSTRAINT FK_E4A67CACB87FAB32 FOREIGN KEY (resourceNode_id) 
-            REFERENCES claro_resource_node (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_text 
-            ADD CONSTRAINT FK_5D9559DCB87FAB32 FOREIGN KEY (resourceNode_id) 
-            REFERENCES claro_resource_node (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_tools 
-            ADD CONSTRAINT FK_60F90965EC942BCF FOREIGN KEY (plugin_id) 
-            REFERENCES claro_plugin (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_widget_display 
-            ADD CONSTRAINT FK_2D34DB3727ACA70 FOREIGN KEY (parent_id) 
-            REFERENCES claro_widget_display (id) 
-            ON DELETE SET NULL
-        ");
-        $this->addSql("
-            ALTER TABLE claro_widget_display 
-            ADD CONSTRAINT FK_2D34DB382D40A1F FOREIGN KEY (workspace_id) 
-            REFERENCES claro_workspace (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_widget_display 
-            ADD CONSTRAINT FK_2D34DB3A76ED395 FOREIGN KEY (user_id) 
-            REFERENCES claro_user (id)
-        ");
-        $this->addSql("
-            ALTER TABLE claro_widget_display 
-            ADD CONSTRAINT FK_2D34DB3FBE885E2 FOREIGN KEY (widget_id) 
-            REFERENCES claro_widget (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_widget 
-            ADD CONSTRAINT FK_76CA6C4FEC942BCF FOREIGN KEY (plugin_id) 
-            REFERENCES claro_plugin (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_content2region 
-            ADD CONSTRAINT FK_8D18942E84A0A3ED FOREIGN KEY (content_id) 
-            REFERENCES claro_content (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_content2region 
-            ADD CONSTRAINT FK_8D18942E98260155 FOREIGN KEY (region_id) 
-            REFERENCES claro_region (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_content2region 
-            ADD CONSTRAINT FK_8D18942EAA23F6C8 FOREIGN KEY (next_id) 
-            REFERENCES claro_content2region (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_content2region 
-            ADD CONSTRAINT FK_8D18942EE9583FF0 FOREIGN KEY (back_id) 
-            REFERENCES claro_content2region (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_content2type 
-            ADD CONSTRAINT FK_1A2084EF84A0A3ED FOREIGN KEY (content_id) 
-            REFERENCES claro_content (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_content2type 
-            ADD CONSTRAINT FK_1A2084EFC54C8C93 FOREIGN KEY (type_id) 
-            REFERENCES claro_type (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_content2type 
-            ADD CONSTRAINT FK_1A2084EFAA23F6C8 FOREIGN KEY (next_id) 
-            REFERENCES claro_content2type (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_content2type 
-            ADD CONSTRAINT FK_1A2084EFE9583FF0 FOREIGN KEY (back_id) 
-            REFERENCES claro_content2type (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_subcontent 
-            ADD CONSTRAINT FK_D72E133C2055B9A2 FOREIGN KEY (father_id) 
-            REFERENCES claro_content (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_subcontent 
-            ADD CONSTRAINT FK_D72E133CDD62C21B FOREIGN KEY (child_id) 
-            REFERENCES claro_content (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_subcontent 
-            ADD CONSTRAINT FK_D72E133CAA23F6C8 FOREIGN KEY (next_id) 
-            REFERENCES claro_subcontent (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_subcontent 
-            ADD CONSTRAINT FK_D72E133CE9583FF0 FOREIGN KEY (back_id) 
-            REFERENCES claro_subcontent (id) 
-            ON DELETE CASCADE
-        ");
     }
 
     public function down(Schema $schema)
@@ -2636,6 +2726,18 @@ class Version20130909152258 extends AbstractMigration
             DROP CONSTRAINT FK_6CF1320EA76ED395
         ");
         $this->addSql("
+            ALTER TABLE claro_event 
+            DROP CONSTRAINT FK_B1ADDDB5A76ED395
+        ");
+        $this->addSql("
+            ALTER TABLE claro_message 
+            DROP CONSTRAINT FK_D6FE8DD8F624B39D
+        ");
+        $this->addSql("
+            ALTER TABLE claro_text_revision 
+            DROP CONSTRAINT FK_F61948DEA76ED395
+        ");
+        $this->addSql("
             ALTER TABLE claro_log 
             DROP CONSTRAINT FK_97FAB91F12D3860F
         ");
@@ -2656,28 +2758,20 @@ class Version20130909152258 extends AbstractMigration
             DROP CONSTRAINT FK_BC83196EA76ED395
         ");
         $this->addSql("
-            ALTER TABLE claro_workspace_tag_hierarchy 
-            DROP CONSTRAINT FK_A46B159EA76ED395
+            ALTER TABLE claro_widget_display 
+            DROP CONSTRAINT FK_2D34DB3A76ED395
+        ");
+        $this->addSql("
+            ALTER TABLE simple_dekstop_workspace__widget_config 
+            DROP CONSTRAINT FK_65124B39A76ED395
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag 
             DROP CONSTRAINT FK_C8EFD7EFA76ED395
         ");
         $this->addSql("
-            ALTER TABLE claro_message 
-            DROP CONSTRAINT FK_D6FE8DD8F624B39D
-        ");
-        $this->addSql("
-            ALTER TABLE claro_event 
-            DROP CONSTRAINT FK_B1ADDDB5A76ED395
-        ");
-        $this->addSql("
-            ALTER TABLE claro_text_revision 
-            DROP CONSTRAINT FK_F61948DEA76ED395
-        ");
-        $this->addSql("
-            ALTER TABLE claro_widget_display 
-            DROP CONSTRAINT FK_2D34DB3A76ED395
+            ALTER TABLE claro_workspace_tag_hierarchy 
+            DROP CONSTRAINT FK_A46B159EA76ED395
         ");
         $this->addSql("
             ALTER TABLE claro_user_group 
@@ -2736,12 +2830,16 @@ class Version20130909152258 extends AbstractMigration
             DROP CONSTRAINT FK_3848F483B87FAB32
         ");
         $this->addSql("
-            ALTER TABLE claro_log 
-            DROP CONSTRAINT FK_97FAB91FB87FAB32
+            ALTER TABLE claro_activity 
+            DROP CONSTRAINT FK_E4A67CACB87FAB32
         ");
         $this->addSql("
             ALTER TABLE claro_resource_activity 
             DROP CONSTRAINT FK_DCF37C7EB87FAB32
+        ");
+        $this->addSql("
+            ALTER TABLE claro_file 
+            DROP CONSTRAINT FK_EA81C80BB87FAB32
         ");
         $this->addSql("
             ALTER TABLE claro_link 
@@ -2752,10 +2850,6 @@ class Version20130909152258 extends AbstractMigration
             DROP CONSTRAINT FK_12EEC186B87FAB32
         ");
         $this->addSql("
-            ALTER TABLE claro_file 
-            DROP CONSTRAINT FK_EA81C80BB87FAB32
-        ");
-        $this->addSql("
             ALTER TABLE claro_resource_shortcut 
             DROP CONSTRAINT FK_5E7F4AB8158E0B66
         ");
@@ -2764,12 +2858,12 @@ class Version20130909152258 extends AbstractMigration
             DROP CONSTRAINT FK_5E7F4AB8B87FAB32
         ");
         $this->addSql("
-            ALTER TABLE claro_activity 
-            DROP CONSTRAINT FK_E4A67CACB87FAB32
-        ");
-        $this->addSql("
             ALTER TABLE claro_text 
             DROP CONSTRAINT FK_5D9559DCB87FAB32
+        ");
+        $this->addSql("
+            ALTER TABLE claro_log 
+            DROP CONSTRAINT FK_97FAB91FB87FAB32
         ");
         $this->addSql("
             ALTER TABLE claro_user 
@@ -2800,6 +2894,10 @@ class Version20130909152258 extends AbstractMigration
             DROP CONSTRAINT FK_6CF1320E82D40A1F
         ");
         $this->addSql("
+            ALTER TABLE claro_event 
+            DROP CONSTRAINT FK_B1ADDDB582D40A1F
+        ");
+        $this->addSql("
             ALTER TABLE claro_log 
             DROP CONSTRAINT FK_97FAB91F82D40A1F
         ");
@@ -2808,16 +2906,16 @@ class Version20130909152258 extends AbstractMigration
             DROP CONSTRAINT FK_D301C70782D40A1F
         ");
         $this->addSql("
-            ALTER TABLE claro_rel_workspace_tag 
-            DROP CONSTRAINT FK_7883931082D40A1F
-        ");
-        $this->addSql("
-            ALTER TABLE claro_event 
-            DROP CONSTRAINT FK_B1ADDDB582D40A1F
-        ");
-        $this->addSql("
             ALTER TABLE claro_widget_display 
             DROP CONSTRAINT FK_2D34DB382D40A1F
+        ");
+        $this->addSql("
+            ALTER TABLE simple_text_workspace_widget_config 
+            DROP CONSTRAINT FK_11925ED382D40A1F
+        ");
+        $this->addSql("
+            ALTER TABLE claro_rel_workspace_tag 
+            DROP CONSTRAINT FK_7883931082D40A1F
         ");
         $this->addSql("
             ALTER TABLE claro_ordered_tool_role 
@@ -2840,96 +2938,48 @@ class Version20130909152258 extends AbstractMigration
             DROP CONSTRAINT FK_84B4BEBA98EC6B7B
         ");
         $this->addSql("
-            ALTER TABLE claro_log 
-            DROP CONSTRAINT FK_97FAB91F98EC6B7B
-        ");
-        $this->addSql("
             ALTER TABLE claro_resource_type_custom_action 
             DROP CONSTRAINT FK_4A98967B98EC6B7B
+        ");
+        $this->addSql("
+            ALTER TABLE claro_log 
+            DROP CONSTRAINT FK_97FAB91F98EC6B7B
         ");
         $this->addSql("
             ALTER TABLE claro_list_type_creation 
             DROP CONSTRAINT FK_84B4BEBA195FBDF1
         ");
         $this->addSql("
-            ALTER TABLE claro_log_doer_platform_roles 
-            DROP CONSTRAINT FK_706568A5EA675D86
+            ALTER TABLE claro_content2type 
+            DROP CONSTRAINT FK_1A2084EFAA23F6C8
         ");
         $this->addSql("
-            ALTER TABLE claro_log_doer_workspace_roles 
-            DROP CONSTRAINT FK_8A8D2F47EA675D86
-        ");
-        $this->addSql("
-            ALTER TABLE claro_workspace_tag_hierarchy 
-            DROP CONSTRAINT FK_A46B159EBAD26311
-        ");
-        $this->addSql("
-            ALTER TABLE claro_workspace_tag_hierarchy 
-            DROP CONSTRAINT FK_A46B159E727ACA70
-        ");
-        $this->addSql("
-            ALTER TABLE claro_rel_workspace_tag 
-            DROP CONSTRAINT FK_78839310BAD26311
-        ");
-        $this->addSql("
-            ALTER TABLE claro_resource_type 
-            DROP CONSTRAINT FK_AEC62693EC942BCF
-        ");
-        $this->addSql("
-            ALTER TABLE claro_theme 
-            DROP CONSTRAINT FK_1D76301AEC942BCF
-        ");
-        $this->addSql("
-            ALTER TABLE claro_tools 
-            DROP CONSTRAINT FK_60F90965EC942BCF
-        ");
-        $this->addSql("
-            ALTER TABLE claro_widget 
-            DROP CONSTRAINT FK_76CA6C4FEC942BCF
-        ");
-        $this->addSql("
-            ALTER TABLE claro_user_message 
-            DROP CONSTRAINT FK_D48EA38A537A1329
-        ");
-        $this->addSql("
-            ALTER TABLE claro_message 
-            DROP CONSTRAINT FK_D6FE8DD8727ACA70
-        ");
-        $this->addSql("
-            ALTER TABLE claro_resource_node 
-            DROP CONSTRAINT FK_A76799FF460F904B
-        ");
-        $this->addSql("
-            ALTER TABLE claro_resource_node 
-            DROP CONSTRAINT FK_A76799FF54B9D732
-        ");
-        $this->addSql("
-            ALTER TABLE claro_resource_icon 
-            DROP CONSTRAINT FK_478C586179F0D498
-        ");
-        $this->addSql("
-            ALTER TABLE claro_resource_activity 
-            DROP CONSTRAINT FK_DCF37C7E81C06096
-        ");
-        $this->addSql("
-            ALTER TABLE claro_text_revision 
-            DROP CONSTRAINT FK_F61948DE698D3548
-        ");
-        $this->addSql("
-            ALTER TABLE claro_ordered_tool 
-            DROP CONSTRAINT FK_6CF1320E8F7B22CC
-        ");
-        $this->addSql("
-            ALTER TABLE claro_widget_display 
-            DROP CONSTRAINT FK_2D34DB3727ACA70
-        ");
-        $this->addSql("
-            ALTER TABLE claro_widget_display 
-            DROP CONSTRAINT FK_2D34DB3FBE885E2
+            ALTER TABLE claro_content2type 
+            DROP CONSTRAINT FK_1A2084EFE9583FF0
         ");
         $this->addSql("
             ALTER TABLE claro_content2region 
-            DROP CONSTRAINT FK_8D18942E84A0A3ED
+            DROP CONSTRAINT FK_8D18942E98260155
+        ");
+        $this->addSql("
+            ALTER TABLE claro_subcontent 
+            DROP CONSTRAINT FK_D72E133CAA23F6C8
+        ");
+        $this->addSql("
+            ALTER TABLE claro_subcontent 
+            DROP CONSTRAINT FK_D72E133CE9583FF0
+        ");
+        $this->addSql("
+            ALTER TABLE claro_content2type 
+            DROP CONSTRAINT FK_1A2084EFC54C8C93
+        ");
+        $this->addSql("
+            ALTER TABLE claro_content2region 
+            DROP CONSTRAINT FK_8D18942EAA23F6C8
+        ");
+        $this->addSql("
+            ALTER TABLE claro_content2region 
+            DROP CONSTRAINT FK_8D18942EE9583FF0
         ");
         $this->addSql("
             ALTER TABLE claro_content2type 
@@ -2945,35 +2995,83 @@ class Version20130909152258 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_content2region 
-            DROP CONSTRAINT FK_8D18942EAA23F6C8
+            DROP CONSTRAINT FK_8D18942E84A0A3ED
         ");
         $this->addSql("
-            ALTER TABLE claro_content2region 
-            DROP CONSTRAINT FK_8D18942EE9583FF0
+            ALTER TABLE claro_user_message 
+            DROP CONSTRAINT FK_D48EA38A537A1329
         ");
         $this->addSql("
-            ALTER TABLE claro_content2type 
-            DROP CONSTRAINT FK_1A2084EFAA23F6C8
+            ALTER TABLE claro_message 
+            DROP CONSTRAINT FK_D6FE8DD8727ACA70
         ");
         $this->addSql("
-            ALTER TABLE claro_content2type 
-            DROP CONSTRAINT FK_1A2084EFE9583FF0
+            ALTER TABLE claro_resource_activity 
+            DROP CONSTRAINT FK_DCF37C7E81C06096
         ");
         $this->addSql("
-            ALTER TABLE claro_subcontent 
-            DROP CONSTRAINT FK_D72E133CAA23F6C8
+            ALTER TABLE claro_resource_node 
+            DROP CONSTRAINT FK_A76799FF54B9D732
         ");
         $this->addSql("
-            ALTER TABLE claro_subcontent 
-            DROP CONSTRAINT FK_D72E133CE9583FF0
+            ALTER TABLE claro_resource_icon 
+            DROP CONSTRAINT FK_478C586179F0D498
         ");
         $this->addSql("
-            ALTER TABLE claro_content2region 
-            DROP CONSTRAINT FK_8D18942E98260155
+            ALTER TABLE claro_text_revision 
+            DROP CONSTRAINT FK_F61948DE698D3548
         ");
         $this->addSql("
-            ALTER TABLE claro_content2type 
-            DROP CONSTRAINT FK_1A2084EFC54C8C93
+            ALTER TABLE claro_log_doer_platform_roles 
+            DROP CONSTRAINT FK_706568A5EA675D86
+        ");
+        $this->addSql("
+            ALTER TABLE claro_log_doer_workspace_roles 
+            DROP CONSTRAINT FK_8A8D2F47EA675D86
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget_display 
+            DROP CONSTRAINT FK_2D34DB3FBE885E2
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget_display 
+            DROP CONSTRAINT FK_2D34DB3727ACA70
+        ");
+        $this->addSql("
+            ALTER TABLE claro_resource_type 
+            DROP CONSTRAINT FK_AEC62693EC942BCF
+        ");
+        $this->addSql("
+            ALTER TABLE claro_theme 
+            DROP CONSTRAINT FK_1D76301AEC942BCF
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget 
+            DROP CONSTRAINT FK_76CA6C4FEC942BCF
+        ");
+        $this->addSql("
+            ALTER TABLE claro_tools 
+            DROP CONSTRAINT FK_60F90965EC942BCF
+        ");
+        $this->addSql("
+            ALTER TABLE claro_ordered_tool 
+            DROP CONSTRAINT FK_6CF1320E8F7B22CC
+        ");
+        $this->addSql("
+            ALTER TABLE claro_workspace_tag_hierarchy 
+            DROP CONSTRAINT FK_A46B159EBAD26311
+        ");
+        $this->addSql("
+            ALTER TABLE claro_workspace_tag_hierarchy 
+            DROP CONSTRAINT FK_A46B159E727ACA70
+        ");
+        $this->addSql("
+            ALTER TABLE claro_rel_workspace_tag 
+            DROP CONSTRAINT FK_78839310BAD26311
+        ");
+        $this->addSql("
+            ALTER TABLE claro_resource_node 
+            DROP CONSTRAINT FK_A76799FF460F904B
         ");
         $this->addSql("
             DROP TABLE claro_user
@@ -3027,6 +3125,60 @@ class Version20130909152258 extends AbstractMigration
             DROP TABLE claro_list_type_creation
         ");
         $this->addSql("
+            DROP TABLE claro_event
+        ");
+        $this->addSql("
+            DROP TABLE claro_content2type
+        ");
+        $this->addSql("
+            DROP TABLE claro_region
+        ");
+        $this->addSql("
+            DROP TABLE claro_subcontent
+        ");
+        $this->addSql("
+            DROP TABLE claro_type
+        ");
+        $this->addSql("
+            DROP TABLE claro_content2region
+        ");
+        $this->addSql("
+            DROP TABLE claro_content
+        ");
+        $this->addSql("
+            DROP TABLE claro_message
+        ");
+        $this->addSql("
+            DROP TABLE claro_activity
+        ");
+        $this->addSql("
+            DROP TABLE claro_resource_activity
+        ");
+        $this->addSql("
+            DROP TABLE claro_resource_type_custom_action
+        ");
+        $this->addSql("
+            DROP TABLE claro_file
+        ");
+        $this->addSql("
+            DROP TABLE claro_link
+        ");
+        $this->addSql("
+            DROP TABLE claro_resource_icon
+        ");
+        $this->addSql("
+            DROP TABLE claro_directory
+        ");
+        $this->addSql("
+            DROP TABLE claro_resource_shortcut
+        ");
+        $this->addSql("
+            DROP TABLE claro_text
+        ");
+        $this->addSql("
+            DROP TABLE claro_text_revision
+        ");
+        $this->addSql("
             DROP TABLE claro_theme
         ");
         $this->addSql("
@@ -3039,16 +3191,37 @@ class Version20130909152258 extends AbstractMigration
             DROP TABLE claro_log_doer_workspace_roles
         ");
         $this->addSql("
-            DROP TABLE claro_log_desktop_widget_config
+            DROP TABLE claro_log_workspace_widget_config
         ");
         $this->addSql("
-            DROP TABLE claro_log_workspace_widget_config
+            DROP TABLE claro_log_desktop_widget_config
         ");
         $this->addSql("
             DROP TABLE claro_log_hidden_workspace_widget_config
         ");
         $this->addSql("
+            DROP TABLE claro_widget
+        ");
+        $this->addSql("
+            DROP TABLE claro_widget_display
+        ");
+        $this->addSql("
+            DROP TABLE simple_dekstop_workspace__widget_config
+        ");
+        $this->addSql("
+            DROP TABLE simple_text_workspace_widget_config
+        ");
+        $this->addSql("
+            DROP TABLE claro_plugin
+        ");
+        $this->addSql("
+            DROP TABLE claro_tools
+        ");
+        $this->addSql("
             DROP TABLE claro_workspace_template
+        ");
+        $this->addSql("
+            DROP TABLE claro_workspace_tag
         ");
         $this->addSql("
             DROP TABLE claro_workspace_tag_hierarchy
@@ -3057,76 +3230,7 @@ class Version20130909152258 extends AbstractMigration
             DROP TABLE claro_rel_workspace_tag
         ");
         $this->addSql("
-            DROP TABLE claro_workspace_tag
-        ");
-        $this->addSql("
-            DROP TABLE claro_plugin
-        ");
-        $this->addSql("
-            DROP TABLE claro_message
-        ");
-        $this->addSql("
-            DROP TABLE claro_event
-        ");
-        $this->addSql("
             DROP TABLE claro_license
-        ");
-        $this->addSql("
-            DROP TABLE claro_resource_activity
-        ");
-        $this->addSql("
-            DROP TABLE claro_link
-        ");
-        $this->addSql("
-            DROP TABLE claro_directory
-        ");
-        $this->addSql("
-            DROP TABLE claro_resource_icon
-        ");
-        $this->addSql("
-            DROP TABLE claro_file
-        ");
-        $this->addSql("
-            DROP TABLE claro_text_revision
-        ");
-        $this->addSql("
-            DROP TABLE claro_resource_type_custom_action
-        ");
-        $this->addSql("
-            DROP TABLE claro_resource_shortcut
-        ");
-        $this->addSql("
-            DROP TABLE claro_activity
-        ");
-        $this->addSql("
-            DROP TABLE claro_text
-        ");
-        $this->addSql("
-            DROP TABLE claro_tools
-        ");
-        $this->addSql("
-            DROP TABLE claro_widget_display
-        ");
-        $this->addSql("
-            DROP TABLE claro_widget
-        ");
-        $this->addSql("
-            DROP TABLE claro_content
-        ");
-        $this->addSql("
-            DROP TABLE claro_content2region
-        ");
-        $this->addSql("
-            DROP TABLE claro_content2type
-        ");
-        $this->addSql("
-            DROP TABLE claro_subcontent
-        ");
-        $this->addSql("
-            DROP TABLE claro_region
-        ");
-        $this->addSql("
-            DROP TABLE claro_type
         ");
     }
 }

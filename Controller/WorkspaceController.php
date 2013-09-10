@@ -448,6 +448,7 @@ class WorkspaceController extends Controller
     {
         // No right checking is done : security is delegated to each widget renderer
         // Is that a good idea ?
+        // Answer: I don't think so.
         $configs = $this->get('claroline.widget.manager')
             ->generateWorkspaceDisplayConfig($workspace->getId());
 

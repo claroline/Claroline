@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/09 03:22:58
+ * Generation date: 2013/09/10 03:03:09
  */
-class Version20130909152258 extends AbstractMigration
+class Version20130910150308 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -331,6 +331,279 @@ class Version20130909152258 extends AbstractMigration
             CREATE INDEX IDX_84B4BEBA98EC6B7B ON claro_list_type_creation (resource_type_id)
         ");
         $this->addSql("
+            CREATE TABLE claro_event (
+                id INTEGER NOT NULL, 
+                workspace_id INTEGER DEFAULT NULL, 
+                user_id INTEGER NOT NULL, 
+                title VARCHAR(50) NOT NULL, 
+                start_date INTEGER DEFAULT NULL, 
+                end_date INTEGER DEFAULT NULL, 
+                description VARCHAR(255) DEFAULT NULL, 
+                allday BOOLEAN DEFAULT NULL, 
+                priority VARCHAR(255) DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_B1ADDDB582D40A1F ON claro_event (workspace_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_B1ADDDB5A76ED395 ON claro_event (user_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_content2type (
+                id INTEGER NOT NULL, 
+                content_id INTEGER NOT NULL, 
+                type_id INTEGER NOT NULL, 
+                next_id INTEGER DEFAULT NULL, 
+                back_id INTEGER DEFAULT NULL, 
+                size VARCHAR(30) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_1A2084EF84A0A3ED ON claro_content2type (content_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_1A2084EFC54C8C93 ON claro_content2type (type_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_1A2084EFAA23F6C8 ON claro_content2type (next_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_1A2084EFE9583FF0 ON claro_content2type (back_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_region (
+                id INTEGER NOT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE TABLE claro_subcontent (
+                id INTEGER NOT NULL, 
+                father_id INTEGER NOT NULL, 
+                child_id INTEGER NOT NULL, 
+                next_id INTEGER DEFAULT NULL, 
+                back_id INTEGER DEFAULT NULL, 
+                size VARCHAR(255) DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D72E133C2055B9A2 ON claro_subcontent (father_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D72E133CDD62C21B ON claro_subcontent (child_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D72E133CAA23F6C8 ON claro_subcontent (next_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D72E133CE9583FF0 ON claro_subcontent (back_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_type (
+                id INTEGER NOT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                max_content_page INTEGER NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE TABLE claro_content2region (
+                id INTEGER NOT NULL, 
+                content_id INTEGER NOT NULL, 
+                region_id INTEGER NOT NULL, 
+                next_id INTEGER DEFAULT NULL, 
+                back_id INTEGER DEFAULT NULL, 
+                size VARCHAR(30) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_8D18942E84A0A3ED ON claro_content2region (content_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_8D18942E98260155 ON claro_content2region (region_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_8D18942EAA23F6C8 ON claro_content2region (next_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_8D18942EE9583FF0 ON claro_content2region (back_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_content (
+                id INTEGER NOT NULL, 
+                title VARCHAR(255) DEFAULT NULL, 
+                content CLOB DEFAULT NULL, 
+                generated_content CLOB DEFAULT NULL, 
+                created DATETIME NOT NULL, 
+                modified DATETIME NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE TABLE claro_message (
+                id INTEGER NOT NULL, 
+                sender_id INTEGER NOT NULL, 
+                parent_id INTEGER DEFAULT NULL, 
+                object VARCHAR(255) NOT NULL, 
+                content VARCHAR(1023) NOT NULL, 
+                date DATETIME NOT NULL, 
+                is_removed BOOLEAN NOT NULL, 
+                lft INTEGER NOT NULL, 
+                lvl INTEGER NOT NULL, 
+                rgt INTEGER NOT NULL, 
+                root INTEGER DEFAULT NULL, 
+                sender_username VARCHAR(255) NOT NULL, 
+                receiver_string VARCHAR(1023) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D6FE8DD8F624B39D ON claro_message (sender_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D6FE8DD8727ACA70 ON claro_message (parent_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_activity (
+                id INTEGER NOT NULL, 
+                instruction VARCHAR(255) NOT NULL, 
+                start_date DATETIME DEFAULT NULL, 
+                end_date DATETIME DEFAULT NULL, 
+                resourceNode_id INTEGER DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_E4A67CACB87FAB32 ON claro_activity (resourceNode_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_resource_activity (
+                id INTEGER NOT NULL, 
+                activity_id INTEGER NOT NULL, 
+                sequence_order INTEGER DEFAULT NULL, 
+                resourceNode_id INTEGER NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_DCF37C7E81C06096 ON claro_resource_activity (activity_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_DCF37C7EB87FAB32 ON claro_resource_activity (resourceNode_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX resource_activity_unique_combination ON claro_resource_activity (activity_id, resourceNode_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_resource_type_custom_action (
+                id INTEGER NOT NULL, 
+                resource_type_id INTEGER DEFAULT NULL, 
+                \"action\" VARCHAR(255) DEFAULT NULL, 
+                async BOOLEAN DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_4A98967B98EC6B7B ON claro_resource_type_custom_action (resource_type_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_file (
+                id INTEGER NOT NULL, 
+                size INTEGER NOT NULL, 
+                hash_name VARCHAR(50) NOT NULL, 
+                resourceNode_id INTEGER DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_EA81C80BE1F029B6 ON claro_file (hash_name)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_EA81C80BB87FAB32 ON claro_file (resourceNode_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_link (
+                id INTEGER NOT NULL, 
+                url VARCHAR(255) NOT NULL, 
+                resourceNode_id INTEGER DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_50B267EAB87FAB32 ON claro_link (resourceNode_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_resource_icon (
+                id INTEGER NOT NULL, 
+                shortcut_id INTEGER DEFAULT NULL, 
+                icon_location VARCHAR(255) DEFAULT NULL, 
+                mimeType VARCHAR(255) NOT NULL, 
+                is_shortcut BOOLEAN NOT NULL, 
+                relative_url VARCHAR(255) DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_478C586179F0D498 ON claro_resource_icon (shortcut_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_directory (
+                id INTEGER NOT NULL, 
+                resourceNode_id INTEGER DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_12EEC186B87FAB32 ON claro_directory (resourceNode_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_resource_shortcut (
+                id INTEGER NOT NULL, 
+                target_id INTEGER NOT NULL, 
+                resourceNode_id INTEGER DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_5E7F4AB8158E0B66 ON claro_resource_shortcut (target_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_5E7F4AB8B87FAB32 ON claro_resource_shortcut (resourceNode_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_text (
+                id INTEGER NOT NULL, 
+                version INTEGER NOT NULL, 
+                resourceNode_id INTEGER DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_5D9559DCB87FAB32 ON claro_text (resourceNode_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_text_revision (
+                id INTEGER NOT NULL, 
+                text_id INTEGER DEFAULT NULL, 
+                user_id INTEGER DEFAULT NULL, 
+                version INTEGER NOT NULL, 
+                content CLOB NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_F61948DE698D3548 ON claro_text_revision (text_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_F61948DEA76ED395 ON claro_text_revision (user_id)
+        ");
+        $this->addSql("
             CREATE TABLE claro_theme (
                 id INTEGER NOT NULL, 
                 plugin_id INTEGER DEFAULT NULL, 
@@ -416,18 +689,6 @@ class Version20130909152258 extends AbstractMigration
             CREATE INDEX IDX_8A8D2F47D60322AC ON claro_log_doer_workspace_roles (role_id)
         ");
         $this->addSql("
-            CREATE TABLE claro_log_desktop_widget_config (
-                id INTEGER NOT NULL, 
-                user_id INTEGER DEFAULT NULL, 
-                is_default BOOLEAN NOT NULL, 
-                amount INTEGER NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_4AE48D62A76ED395 ON claro_log_desktop_widget_config (user_id)
-        ");
-        $this->addSql("
             CREATE TABLE claro_log_workspace_widget_config (
                 id INTEGER NOT NULL, 
                 workspace_id INTEGER DEFAULT NULL, 
@@ -459,6 +720,18 @@ class Version20130909152258 extends AbstractMigration
             CREATE INDEX IDX_D301C70782D40A1F ON claro_log_workspace_widget_config (workspace_id)
         ");
         $this->addSql("
+            CREATE TABLE claro_log_desktop_widget_config (
+                id INTEGER NOT NULL, 
+                user_id INTEGER DEFAULT NULL, 
+                is_default BOOLEAN NOT NULL, 
+                amount INTEGER NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_4AE48D62A76ED395 ON claro_log_desktop_widget_config (user_id)
+        ");
+        $this->addSql("
             CREATE TABLE claro_log_hidden_workspace_widget_config (
                 workspace_id INTEGER NOT NULL, 
                 user_id INTEGER NOT NULL, 
@@ -467,6 +740,108 @@ class Version20130909152258 extends AbstractMigration
         ");
         $this->addSql("
             CREATE INDEX IDX_BC83196EA76ED395 ON claro_log_hidden_workspace_widget_config (user_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_widget (
+                id INTEGER NOT NULL, 
+                plugin_id INTEGER DEFAULT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                is_configurable BOOLEAN NOT NULL, 
+                icon VARCHAR(255) NOT NULL, 
+                is_exportable BOOLEAN NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_76CA6C4F5E237E06 ON claro_widget (name)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_76CA6C4FEC942BCF ON claro_widget (plugin_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_widget_display (
+                id INTEGER NOT NULL, 
+                parent_id INTEGER DEFAULT NULL, 
+                workspace_id INTEGER DEFAULT NULL, 
+                user_id INTEGER DEFAULT NULL, 
+                widget_id INTEGER NOT NULL, 
+                is_locked BOOLEAN NOT NULL, 
+                is_visible BOOLEAN NOT NULL, 
+                is_desktop BOOLEAN NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_2D34DB3727ACA70 ON claro_widget_display (parent_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_2D34DB382D40A1F ON claro_widget_display (workspace_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_2D34DB3A76ED395 ON claro_widget_display (user_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_2D34DB3FBE885E2 ON claro_widget_display (widget_id)
+        ");
+        $this->addSql("
+            CREATE TABLE simple_dekstop_workspace__widget_config (
+                id INTEGER NOT NULL, 
+                user_id INTEGER DEFAULT NULL, 
+                is_default BOOLEAN NOT NULL, 
+                content CLOB NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_65124B39A76ED395 ON simple_dekstop_workspace__widget_config (user_id)
+        ");
+        $this->addSql("
+            CREATE TABLE simple_text_workspace_widget_config (
+                id INTEGER NOT NULL, 
+                workspace_id INTEGER DEFAULT NULL, 
+                is_default BOOLEAN NOT NULL, 
+                content CLOB NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_11925ED382D40A1F ON simple_text_workspace_widget_config (workspace_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_plugin (
+                id INTEGER NOT NULL, 
+                vendor_name VARCHAR(50) NOT NULL, 
+                short_name VARCHAR(50) NOT NULL, 
+                has_options BOOLEAN NOT NULL, 
+                icon VARCHAR(255) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX plugin_unique_name ON claro_plugin (vendor_name, short_name)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_tools (
+                id INTEGER NOT NULL, 
+                plugin_id INTEGER DEFAULT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                display_name VARCHAR(255) DEFAULT NULL, 
+                class VARCHAR(255) NOT NULL, 
+                is_workspace_required BOOLEAN NOT NULL, 
+                is_desktop_required BOOLEAN NOT NULL, 
+                is_displayable_in_workspace BOOLEAN NOT NULL, 
+                is_displayable_in_desktop BOOLEAN NOT NULL, 
+                is_exportable BOOLEAN NOT NULL, 
+                is_configurable_in_workspace BOOLEAN NOT NULL, 
+                is_configurable_in_desktop BOOLEAN NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_60F909655E237E06 ON claro_tools (name)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_60F90965EC942BCF ON claro_tools (plugin_id)
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_template (
@@ -478,6 +853,20 @@ class Version20130909152258 extends AbstractMigration
         ");
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_94D0CBDBD1B862B8 ON claro_workspace_template (hash)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_workspace_tag (
+                id INTEGER NOT NULL, 
+                user_id INTEGER DEFAULT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_C8EFD7EFA76ED395 ON claro_workspace_tag (user_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX tag_unique_name_and_user ON claro_workspace_tag (user_id, name)
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_tag_hierarchy (
@@ -516,375 +905,10 @@ class Version20130909152258 extends AbstractMigration
             CREATE UNIQUE INDEX rel_workspace_tag_unique_combination ON claro_rel_workspace_tag (workspace_id, tag_id)
         ");
         $this->addSql("
-            CREATE TABLE claro_workspace_tag (
-                id INTEGER NOT NULL, 
-                user_id INTEGER DEFAULT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_C8EFD7EFA76ED395 ON claro_workspace_tag (user_id)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX tag_unique_name_and_user ON claro_workspace_tag (user_id, name)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_plugin (
-                id INTEGER NOT NULL, 
-                vendor_name VARCHAR(50) NOT NULL, 
-                short_name VARCHAR(50) NOT NULL, 
-                has_options BOOLEAN NOT NULL, 
-                icon VARCHAR(255) NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX plugin_unique_name ON claro_plugin (vendor_name, short_name)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_message (
-                id INTEGER NOT NULL, 
-                sender_id INTEGER NOT NULL, 
-                parent_id INTEGER DEFAULT NULL, 
-                object VARCHAR(255) NOT NULL, 
-                content VARCHAR(1023) NOT NULL, 
-                date DATETIME NOT NULL, 
-                is_removed BOOLEAN NOT NULL, 
-                lft INTEGER NOT NULL, 
-                lvl INTEGER NOT NULL, 
-                rgt INTEGER NOT NULL, 
-                root INTEGER DEFAULT NULL, 
-                sender_username VARCHAR(255) NOT NULL, 
-                receiver_string VARCHAR(1023) NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D6FE8DD8F624B39D ON claro_message (sender_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D6FE8DD8727ACA70 ON claro_message (parent_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_event (
-                id INTEGER NOT NULL, 
-                workspace_id INTEGER DEFAULT NULL, 
-                user_id INTEGER NOT NULL, 
-                title VARCHAR(50) NOT NULL, 
-                start_date INTEGER DEFAULT NULL, 
-                end_date INTEGER DEFAULT NULL, 
-                description VARCHAR(255) DEFAULT NULL, 
-                allday BOOLEAN DEFAULT NULL, 
-                priority VARCHAR(255) DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_B1ADDDB582D40A1F ON claro_event (workspace_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_B1ADDDB5A76ED395 ON claro_event (user_id)
-        ");
-        $this->addSql("
             CREATE TABLE claro_license (
                 id INTEGER NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
                 acronym VARCHAR(255) DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE TABLE claro_resource_activity (
-                id INTEGER NOT NULL, 
-                activity_id INTEGER NOT NULL, 
-                sequence_order INTEGER DEFAULT NULL, 
-                resourceNode_id INTEGER NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_DCF37C7E81C06096 ON claro_resource_activity (activity_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_DCF37C7EB87FAB32 ON claro_resource_activity (resourceNode_id)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX resource_activity_unique_combination ON claro_resource_activity (activity_id, resourceNode_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_link (
-                id INTEGER NOT NULL, 
-                url VARCHAR(255) NOT NULL, 
-                resourceNode_id INTEGER DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_50B267EAB87FAB32 ON claro_link (resourceNode_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_directory (
-                id INTEGER NOT NULL, 
-                resourceNode_id INTEGER DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_12EEC186B87FAB32 ON claro_directory (resourceNode_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_resource_icon (
-                id INTEGER NOT NULL, 
-                shortcut_id INTEGER DEFAULT NULL, 
-                icon_location VARCHAR(255) DEFAULT NULL, 
-                mimeType VARCHAR(255) NOT NULL, 
-                is_shortcut BOOLEAN NOT NULL, 
-                relative_url VARCHAR(255) DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_478C586179F0D498 ON claro_resource_icon (shortcut_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_file (
-                id INTEGER NOT NULL, 
-                size INTEGER NOT NULL, 
-                hash_name VARCHAR(50) NOT NULL, 
-                resourceNode_id INTEGER DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_EA81C80BE1F029B6 ON claro_file (hash_name)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_EA81C80BB87FAB32 ON claro_file (resourceNode_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_text_revision (
-                id INTEGER NOT NULL, 
-                text_id INTEGER DEFAULT NULL, 
-                user_id INTEGER DEFAULT NULL, 
-                version INTEGER NOT NULL, 
-                content CLOB NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F61948DE698D3548 ON claro_text_revision (text_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F61948DEA76ED395 ON claro_text_revision (user_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_resource_type_custom_action (
-                id INTEGER NOT NULL, 
-                resource_type_id INTEGER DEFAULT NULL, 
-                \"action\" VARCHAR(255) DEFAULT NULL, 
-                async BOOLEAN DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_4A98967B98EC6B7B ON claro_resource_type_custom_action (resource_type_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_resource_shortcut (
-                id INTEGER NOT NULL, 
-                target_id INTEGER NOT NULL, 
-                resourceNode_id INTEGER DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_5E7F4AB8158E0B66 ON claro_resource_shortcut (target_id)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_5E7F4AB8B87FAB32 ON claro_resource_shortcut (resourceNode_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_activity (
-                id INTEGER NOT NULL, 
-                instruction VARCHAR(255) NOT NULL, 
-                start_date DATETIME DEFAULT NULL, 
-                end_date DATETIME DEFAULT NULL, 
-                resourceNode_id INTEGER DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_E4A67CACB87FAB32 ON claro_activity (resourceNode_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_text (
-                id INTEGER NOT NULL, 
-                version INTEGER NOT NULL, 
-                resourceNode_id INTEGER DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_5D9559DCB87FAB32 ON claro_text (resourceNode_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_tools (
-                id INTEGER NOT NULL, 
-                plugin_id INTEGER DEFAULT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                display_name VARCHAR(255) DEFAULT NULL, 
-                class VARCHAR(255) NOT NULL, 
-                is_workspace_required BOOLEAN NOT NULL, 
-                is_desktop_required BOOLEAN NOT NULL, 
-                is_displayable_in_workspace BOOLEAN NOT NULL, 
-                is_displayable_in_desktop BOOLEAN NOT NULL, 
-                is_exportable BOOLEAN NOT NULL, 
-                is_configurable_in_workspace BOOLEAN NOT NULL, 
-                is_configurable_in_desktop BOOLEAN NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_60F909655E237E06 ON claro_tools (name)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_60F90965EC942BCF ON claro_tools (plugin_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_widget_display (
-                id INTEGER NOT NULL, 
-                parent_id INTEGER DEFAULT NULL, 
-                workspace_id INTEGER DEFAULT NULL, 
-                user_id INTEGER DEFAULT NULL, 
-                widget_id INTEGER NOT NULL, 
-                is_locked BOOLEAN NOT NULL, 
-                is_visible BOOLEAN NOT NULL, 
-                is_desktop BOOLEAN NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_2D34DB3727ACA70 ON claro_widget_display (parent_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_2D34DB382D40A1F ON claro_widget_display (workspace_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_2D34DB3A76ED395 ON claro_widget_display (user_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_2D34DB3FBE885E2 ON claro_widget_display (widget_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_widget (
-                id INTEGER NOT NULL, 
-                plugin_id INTEGER DEFAULT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                is_configurable BOOLEAN NOT NULL, 
-                icon VARCHAR(255) NOT NULL, 
-                is_exportable BOOLEAN NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_76CA6C4F5E237E06 ON claro_widget (name)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_76CA6C4FEC942BCF ON claro_widget (plugin_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_content (
-                id INTEGER NOT NULL, 
-                title VARCHAR(255) DEFAULT NULL, 
-                content CLOB DEFAULT NULL, 
-                generated_content CLOB DEFAULT NULL, 
-                created DATETIME NOT NULL, 
-                modified DATETIME NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE TABLE claro_content2region (
-                id INTEGER NOT NULL, 
-                content_id INTEGER NOT NULL, 
-                region_id INTEGER NOT NULL, 
-                next_id INTEGER DEFAULT NULL, 
-                back_id INTEGER DEFAULT NULL, 
-                size VARCHAR(30) NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_8D18942E84A0A3ED ON claro_content2region (content_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_8D18942E98260155 ON claro_content2region (region_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_8D18942EAA23F6C8 ON claro_content2region (next_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_8D18942EE9583FF0 ON claro_content2region (back_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_content2type (
-                id INTEGER NOT NULL, 
-                content_id INTEGER NOT NULL, 
-                type_id INTEGER NOT NULL, 
-                next_id INTEGER DEFAULT NULL, 
-                back_id INTEGER DEFAULT NULL, 
-                size VARCHAR(30) NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_1A2084EF84A0A3ED ON claro_content2type (content_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_1A2084EFC54C8C93 ON claro_content2type (type_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_1A2084EFAA23F6C8 ON claro_content2type (next_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_1A2084EFE9583FF0 ON claro_content2type (back_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_subcontent (
-                id INTEGER NOT NULL, 
-                father_id INTEGER NOT NULL, 
-                child_id INTEGER NOT NULL, 
-                next_id INTEGER DEFAULT NULL, 
-                back_id INTEGER DEFAULT NULL, 
-                size VARCHAR(255) DEFAULT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D72E133C2055B9A2 ON claro_subcontent (father_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D72E133CDD62C21B ON claro_subcontent (child_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D72E133CAA23F6C8 ON claro_subcontent (next_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D72E133CE9583FF0 ON claro_subcontent (back_id)
-        ");
-        $this->addSql("
-            CREATE TABLE claro_region (
-                id INTEGER NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE TABLE claro_type (
-                id INTEGER NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                max_content_page INTEGER NOT NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -944,6 +968,60 @@ class Version20130909152258 extends AbstractMigration
             DROP TABLE claro_list_type_creation
         ");
         $this->addSql("
+            DROP TABLE claro_event
+        ");
+        $this->addSql("
+            DROP TABLE claro_content2type
+        ");
+        $this->addSql("
+            DROP TABLE claro_region
+        ");
+        $this->addSql("
+            DROP TABLE claro_subcontent
+        ");
+        $this->addSql("
+            DROP TABLE claro_type
+        ");
+        $this->addSql("
+            DROP TABLE claro_content2region
+        ");
+        $this->addSql("
+            DROP TABLE claro_content
+        ");
+        $this->addSql("
+            DROP TABLE claro_message
+        ");
+        $this->addSql("
+            DROP TABLE claro_activity
+        ");
+        $this->addSql("
+            DROP TABLE claro_resource_activity
+        ");
+        $this->addSql("
+            DROP TABLE claro_resource_type_custom_action
+        ");
+        $this->addSql("
+            DROP TABLE claro_file
+        ");
+        $this->addSql("
+            DROP TABLE claro_link
+        ");
+        $this->addSql("
+            DROP TABLE claro_resource_icon
+        ");
+        $this->addSql("
+            DROP TABLE claro_directory
+        ");
+        $this->addSql("
+            DROP TABLE claro_resource_shortcut
+        ");
+        $this->addSql("
+            DROP TABLE claro_text
+        ");
+        $this->addSql("
+            DROP TABLE claro_text_revision
+        ");
+        $this->addSql("
             DROP TABLE claro_theme
         ");
         $this->addSql("
@@ -956,16 +1034,37 @@ class Version20130909152258 extends AbstractMigration
             DROP TABLE claro_log_doer_workspace_roles
         ");
         $this->addSql("
-            DROP TABLE claro_log_desktop_widget_config
+            DROP TABLE claro_log_workspace_widget_config
         ");
         $this->addSql("
-            DROP TABLE claro_log_workspace_widget_config
+            DROP TABLE claro_log_desktop_widget_config
         ");
         $this->addSql("
             DROP TABLE claro_log_hidden_workspace_widget_config
         ");
         $this->addSql("
+            DROP TABLE claro_widget
+        ");
+        $this->addSql("
+            DROP TABLE claro_widget_display
+        ");
+        $this->addSql("
+            DROP TABLE simple_dekstop_workspace__widget_config
+        ");
+        $this->addSql("
+            DROP TABLE simple_text_workspace_widget_config
+        ");
+        $this->addSql("
+            DROP TABLE claro_plugin
+        ");
+        $this->addSql("
+            DROP TABLE claro_tools
+        ");
+        $this->addSql("
             DROP TABLE claro_workspace_template
+        ");
+        $this->addSql("
+            DROP TABLE claro_workspace_tag
         ");
         $this->addSql("
             DROP TABLE claro_workspace_tag_hierarchy
@@ -974,76 +1073,7 @@ class Version20130909152258 extends AbstractMigration
             DROP TABLE claro_rel_workspace_tag
         ");
         $this->addSql("
-            DROP TABLE claro_workspace_tag
-        ");
-        $this->addSql("
-            DROP TABLE claro_plugin
-        ");
-        $this->addSql("
-            DROP TABLE claro_message
-        ");
-        $this->addSql("
-            DROP TABLE claro_event
-        ");
-        $this->addSql("
             DROP TABLE claro_license
-        ");
-        $this->addSql("
-            DROP TABLE claro_resource_activity
-        ");
-        $this->addSql("
-            DROP TABLE claro_link
-        ");
-        $this->addSql("
-            DROP TABLE claro_directory
-        ");
-        $this->addSql("
-            DROP TABLE claro_resource_icon
-        ");
-        $this->addSql("
-            DROP TABLE claro_file
-        ");
-        $this->addSql("
-            DROP TABLE claro_text_revision
-        ");
-        $this->addSql("
-            DROP TABLE claro_resource_type_custom_action
-        ");
-        $this->addSql("
-            DROP TABLE claro_resource_shortcut
-        ");
-        $this->addSql("
-            DROP TABLE claro_activity
-        ");
-        $this->addSql("
-            DROP TABLE claro_text
-        ");
-        $this->addSql("
-            DROP TABLE claro_tools
-        ");
-        $this->addSql("
-            DROP TABLE claro_widget_display
-        ");
-        $this->addSql("
-            DROP TABLE claro_widget
-        ");
-        $this->addSql("
-            DROP TABLE claro_content
-        ");
-        $this->addSql("
-            DROP TABLE claro_content2region
-        ");
-        $this->addSql("
-            DROP TABLE claro_content2type
-        ");
-        $this->addSql("
-            DROP TABLE claro_subcontent
-        ");
-        $this->addSql("
-            DROP TABLE claro_region
-        ");
-        $this->addSql("
-            DROP TABLE claro_type
         ");
     }
 }

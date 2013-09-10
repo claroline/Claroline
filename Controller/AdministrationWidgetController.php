@@ -58,7 +58,7 @@ class AdministrationWidgetController extends Controller
      */
     public function invertLockWidgetAction(DisplayConfig $displayConfig)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getDoctrine()->getManager();
         $displayConfig->invertLock();
         $em->persist($displayConfig);
         $em->flush();
@@ -153,8 +153,7 @@ class AdministrationWidgetController extends Controller
      */
     public function invertVisibleWidgetAction(DisplayConfig $displayConfig)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $displayConfig->invertVisible();
+        $em = $this->getDoctrine()->getManager();
         $em->persist($displayConfig);
         $em->flush();
 
