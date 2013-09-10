@@ -62,47 +62,6 @@ class LogController extends Controller
         $this->translator       = $translator;
     }
 
-    private function convertFormDataToConfig($config, $data, AbstractWorkspace $workspace = null, $isDefault)
-    {
-        if ($config === null) {
-            $config = new LogWorkspaceWidgetConfig();
-        }
-        $config->setIsDefault($isDefault);
-
-        $config->setResourceCopy($data['creation'] === true);
-        $config->setResourceCreate($data['creation'] === true);
-        $config->setResourceShortcut($data['creation'] === true);
-
-        $config->setResourceRead($data['read'] === true);
-        $config->setWsToolRead($data['read'] === true);
-
-        $config->setResourceExport($data['export'] === true);
-
-        $config->setResourceUpdate($data['update'] === true);
-        $config->setResourceUpdateRename($data['update'] === true);
-
-        $config->setResourceChildUpdate($data['updateChild'] === true);
-
-        $config->setResourceDelete($data['delete'] === true);
-
-        $config->setResourceMove($data['move'] === true);
-
-        $config->setWsRoleSubscribeUser($data['subscribe'] === true);
-        $config->setWsRoleSubscribeGroup($data['subscribe'] === true);
-        $config->setWsRoleUnsubscribeUser($data['subscribe'] === true);
-        $config->setWsRoleUnsubscribeGroup($data['subscribe'] === true);
-        $config->setWsRoleChangeRight($data['subscribe'] === true);
-        $config->setWsRoleCreate($data['subscribe'] === true);
-        $config->setWsRoleDelete($data['subscribe'] === true);
-        $config->setWsRoleUpdate($data['subscribe'] === true);
-
-        $config->setAmount($data['amount']);
-
-        $config->setWorkspace($workspace);
-
-        return $config;
-    }
-
     /**
      * @EXT\Route(
      *     "/view_details/{logId}",
@@ -153,32 +112,33 @@ class LogController extends Controller
         $isDefault = (boolean) $isDefault;
         $redirectToHome = (boolean) $redirectToHome;
 
-        $em = $this->getDoctrine()->getManager();
+        $entityManager = $this->getDoctrine()->getManager();
 
         if ($isDefault) {
             $workspace = null;
             $config = $this->get('claroline.log.manager')->getDefaultWorkspaceWidgetConfig();
         } else {
-            $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+            $workspace = $entityManager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
             $config = $this->get('claroline.log.manager')->getWorkspaceWidgetConfig($workspace);
         }
 
         if ($config === null) {
             $config = new LogWorkspaceWidgetConfig();
-            $config->setIsDefault($isDefault);
-            $config->setWorkspace($workspace);
+            $config
+                ->setIsDefault($isDefault)
+                ->setWorkspace($workspace)
+                ->setRestrictions($this->get('claroline.log.manager')->getDefaultWorkspaceConfigRestrictions());
         }
 
-        $form = $this->get('form.factory')->create(new LogWorkspaceWidgetConfigType(), null);
+        $form = $this->get('form.factory')->create($this->get('claroline.form.logWorkspaceWidgetConfig'), null);
 
         $form->bind($this->getRequest());
         $translator = $this->get('translator');
         if ($form->isValid()) {
-            $data = $form->getData();
-            $config = $this->convertFormDataToConfig($config, $data, $workspace, $isDefault);
+            $data   = $form->getData();
 
-            $em->persist($config);
-            $em->flush();
+            $entityManager->persist($config);
+            $entityManager->flush();
 
             $this
                 ->get('session')
@@ -190,10 +150,10 @@ class LogController extends Controller
                 ->getFlashBag()
                 ->add('error', $translator->trans('The form is not valid', array(), 'platform'));
         }
-        $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName('home');
+        $tool = $entityManager->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName('home');
 
         if ($isDefault === true) {
-            $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
+            $widget = $entityManager->getRepository('ClarolineCoreBundle:Widget\Widget')
                 ->findOneBy(array('name' => 'core_resource_logger'));
 
             return $this->redirect(

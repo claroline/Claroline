@@ -27,7 +27,7 @@ class EventManager
     /**
      * Get all existing event name with their associated label
      *
-     * @param string $restiction
+     * @param string|null $restiction
      *
      * @return array
      */
@@ -105,13 +105,13 @@ class EventManager
     }
 
     /**
-     * @param string $restriction
+     * @param string|null $restriction
      *
      * @return array
      */
     public function getSortedEventsForFilter($restriction = null)
     {
-        $textEvents   = $this->getEvents($restriction);
+        $textEvents = $this->getEvents($restriction);
 
         foreach ($textEvents as $textEvent) {
             $explodeTextEvents = explode('-', $textEvent);
@@ -126,5 +126,21 @@ class EventManager
         }
 
         return $sortedEvents;
+    }
+
+    /**
+     * @param string|null $restriction
+     *
+     * @return array
+     */
+    public function getSortedEventsForConfigForm($restriction = null)
+    {
+        $events = array();
+
+        foreach ($this->getEvents($restriction) as $event) {
+            $events[$event] = 'log_' . $event . '_title';
+        }
+
+        return $events;
     }
 }

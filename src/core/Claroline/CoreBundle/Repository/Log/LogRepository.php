@@ -410,11 +410,10 @@ class LogRepository extends EntityRepository
                 ->where('workspace.id = :workspaceId')
                 ->setParameter('workspaceId', $workspaceId);
 
-            $actionRestriction = $config->getActionRestriction();
-            if (count($actionRestriction) > 0) {
+            if ($config->hasRestriction()) {
                 $queryBuilder
                     ->andWhere('log.action IN (:actions)')
-                    ->setParameter('actions', $actionRestriction);
+                    ->setParameter('actions', $config->getRestrictions());
             }
         }
 
