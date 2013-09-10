@@ -66,7 +66,7 @@ class ScriptHandler
     private static function getBundles(PackageEvent $event)
     {
         $package = $event->getOperation()->getPackage();
-        $vendorDir = rtrim($this->composer->getConfig()->get('vendor-dir'), '/');
+        $vendorDir = rtrim($event->getComposer()->getConfig()->get('vendor-dir'), '/');
         $path = realpath(($vendorDir ? $vendorDir . '/' : '') . $package->getPrettyName());
         $detector = new Detector();
 
@@ -77,7 +77,7 @@ class ScriptHandler
     {
         $options = array_merge(
             array('bundle-file' => 'app/config/bundles.ini'),
-            $this->composer->getPackage()->getExtra()
+            $event->getComposer()->getPackage()->getExtra()
         );
         $recorder = new Recorder($options['bundle-file']);
         $io = $event->getIO();
