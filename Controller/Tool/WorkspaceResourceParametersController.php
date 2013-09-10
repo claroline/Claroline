@@ -15,7 +15,11 @@ class WorkspaceResourceParametersController extends AbstractParametersController
         $em = $this->get('doctrine.orm.entity_manager');
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findAll();
+        $user = $this->security->getToken()->getUser();
 
-        return array('resourceTypes' => $resourceTypes);
+        return array(
+            'resourceTypes' => $resourceTypes,
+            'user' => $user
+            );
     }
 }

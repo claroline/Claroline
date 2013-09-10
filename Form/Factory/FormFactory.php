@@ -36,6 +36,7 @@ class FormFactory
     const TYPE_ROLE_TRANSLATION = 'workspace_role_translation';
     const TYPE_USER_EMAIL = 'email';
     const TYPE_USER_RESET_PWD = 'user_reset_pwd';
+    const TYPE_SIMPLE_TEXT = 'simple_text';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -130,6 +131,9 @@ class FormFactory
         ),
         self::TYPE_USER_RESET_PWD => array(
             'formType' => 'Claroline\CoreBundle\Form\ResetPasswordType'
+        ),
+        self::TYPE_SIMPLE_TEXT => array(
+            'formType' => 'Claroline\CoreBundle\Form\SimpleTextType'
         )
     );
 
