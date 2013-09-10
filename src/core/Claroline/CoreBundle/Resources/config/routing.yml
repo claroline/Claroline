@@ -49,8 +49,18 @@ claro_authentication:
     type: annotation
 
 claro_log:
-    resource: "@ClarolineCoreBundle/Controller/LogController.php"
+    resource: "@ClarolineCoreBundle/Controller/Log/LogController.php"
     prefix: log
+    type: annotation
+
+claro_log_admin:
+    resource: "@ClarolineCoreBundle/Controller/Log/AdministrationController.php"
+    prefix: admin
+    type: annotation
+
+claro_log_workspace:
+    resource: "@ClarolineCoreBundle/Controller/Log/Tool/WorkspaceController.php"
+    prefix: workspaces
     type: annotation
 
 claro_profile:
@@ -111,11 +121,6 @@ claro_workspace_tool_resources_properties:
 claro_workspace_tool_agenda:
     resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceAgendaController.php"
     prefix: workspaces/tool/agenda
-    type: annotation
-
-claro_workspace_tool_logs:
-    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceLogController.php"
-    prefix: workspaces/tool/logs
     type: annotation
 
 claro_workspace_roles:

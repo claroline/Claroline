@@ -11,10 +11,10 @@
 {% endif %}
 
 <div class="col-md-2 log_list_item">
-    {% if log.getDateLog()|date('d-m-Y') == ''|date('d-m-Y') %}
+    {% if log.getDateLog()|date('date_format'|trans({}, 'platform')) == ''|date('date_format'|trans({}, 'platform')) %}
         {{ 'today'|trans({}, 'platform') ~ ', ' }}
     {% else %}
-        {{ log.getDateLog()|date('d-m-Y') ~ ', ' }}
+        {{ log.getDateLog()|date('date_format'|trans({}, 'platform')) ~ ', ' }}
     {% endif %}
     {{ log.getDateLog()|date('H:i') }}
 </div>
@@ -63,10 +63,7 @@
                 '%workspace%': workspace,
                 '%tool%': tool
             },
-            'platform'
+            'log'
         )|raw }}
     {% endif %}
 </div>
-{#
-    <h3>{{ log.id }} {{ log.getDetails()|json_encode|raw }}</h3>
-#}
