@@ -12,10 +12,10 @@
     </parameters>
 
     <services>
-        <service id="claroline.installation.manager" class="%claroline.installation_manager.class%" scope="prototype">
+        <service id="claroline.installation.manager" class="%claroline.installation_manager.class%">
             <argument type="service" id="service_container" />
             <argument type="service" id="claroline.migration.manager" />
-            <argument type="service" id="claroline.installation.fixture_loader" />
+            <argument type="service" strict="false" id="claroline.installation.fixture_loader" />
         </service>
 
         <service id="claroline.installation.fixture_loader" class="%claroline.installation_fixture_loader.class%" scope="prototype">
