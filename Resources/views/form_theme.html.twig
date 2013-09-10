@@ -29,12 +29,15 @@
 {% endblock form_label %}
 
 {% block checkbox_widget %}
-    <div class="checkbox"><input type="checkbox" {% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} /></div>
+    {% if 'choice' not in form.parent.vars.block_prefixes %}
+        {% set attr = attr|merge({'class': (attr.class|default('') ~ ' control-standalone')|trim}) %}
+    {% endif %}
+    {{ parent() | replace({'form-control': ''}) | raw }}
 {% endblock checkbox_widget %}
 
 {% block form_row %}
     {% spaceless %}
-        <div class="form-group {% if errors|length > 0 %}has-error{% endif %}">
+        <div class="form-group row {% if errors|length > 0 %}has-error{% endif %}">
             {{ form_label(form, label|default(null)) }}
             <div class="col-md-9">
                 {{ form_widget(form) }}

@@ -56,7 +56,7 @@
             var mimeType = nodes[_.keys(nodes)][2];
             if(resourceTypes === 'directory')
             {
-                alert('directory');
+               route = Routing.generate('claro_resource_directory', {'node': id});
             }
             if( mimeArray.indexOf(mimeType) > -1)
             {
