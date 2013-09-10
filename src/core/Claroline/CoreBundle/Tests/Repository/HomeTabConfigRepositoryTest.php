@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
-class WorkspaceTagRepositoryTest extends RepositoryTestCase
+class HomeTabConfigRepositoryTest extends RepositoryTestCase
 {
     private static $repo;
 
