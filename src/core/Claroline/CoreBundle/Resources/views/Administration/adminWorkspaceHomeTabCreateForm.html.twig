@@ -1,0 +1,52 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'home_tabs'|trans({}, 'platform'),
+                'href': path('claro_admin_home_tabs_configuration')
+            },
+            {
+                'name': 'workspace_home_tab_creation'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'workspace_home_tab_creation'|trans({}, 'platform') }}
+        </h3>
+    </div>
+    <form
+        class="form-horizontal"
+        action="{{ path('claro_admin_workspace_home_tab_create') }}"
+        method="post"
+        {{ form_enctype(form) }}
+    >
+        <div class="panel-body">
+            {{ form_widget(form) }}
+        </div>
+
+        <div class="form-actions panel-footer">
+            <button type="submit" class="btn btn-primary">
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
+            <a href="{{ path('claro_admin_home_tabs_configuration') }}">
+                <button  type="button" class="btn btn-default">
+                    {{ 'cancel'|trans({}, 'platform') }}
+                </button>
+            </a>
+        </div>
+    </form>
+
+{% endblock %}

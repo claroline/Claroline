@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
@@ -18,6 +19,7 @@ use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Security\TokenUpdater;
+use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
@@ -35,6 +37,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class WorkspaceController extends Controller
 {
+    private $homeTabManager;
     private $workspaceManager;
     private $resourceManager;
     private $roleManager;
@@ -50,6 +53,7 @@ class WorkspaceController extends Controller
 
     /**
      * @DI\InjectParams({
+     *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
@@ -65,6 +69,7 @@ class WorkspaceController extends Controller
      * })
      */
     public function __construct(
+        HomeTabManager $homeTabManager,
         WorkspaceManager $workspaceManager,
         ResourceManager $resourceManager,
         RoleManager $roleManager,
@@ -79,6 +84,7 @@ class WorkspaceController extends Controller
         TokenUpdater $tokenUpdater
     )
     {
+        $this->homeTabManager = $homeTabManager;
         $this->workspaceManager = $workspaceManager;
         $this->resourceManager = $resourceManager;
         $this->roleManager = $roleManager;
@@ -424,7 +430,7 @@ class WorkspaceController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspaceId}/widgets",
+     *     "/{workspaceId}/home_tab/{homeTabId}/widgets",
      *     name="claro_workspace_widgets"
      * )
      * @EXT\Method("GET")
@@ -444,41 +450,45 @@ class WorkspaceController extends Controller
      *
      * @todo Reduce the number of sql queries for this action (-> dql)
      */
-    public function widgetsAction(AbstractWorkspace $workspace)
+    public function widgetsAction(AbstractWorkspace $workspace, $homeTabId)
     {
-        // No right checking is done : security is delegated to each widget renderer
-        // Is that a good idea ?
-        $configs = $this->get('claroline.widget.manager')
-            ->generateWorkspaceDisplayConfig($workspace->getId());
-
-        $rightToConfigure = $this->security->isGranted('parameters', $workspace);
-
         $widgets = array();
 
-        foreach ($configs as $config) {
-            if ($config->isVisible()) {
-                $eventName = "widget_{$config->getWidget()->getName()}_workspace";
-                $event = $this->eventDispatcher->dispatch($eventName, 'DisplayWidget', array($workspace));
+        $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
 
-                if ($event->hasContent()) {
-                    $widget['id'] = $config->getWidget()->getId();
-                    if ($event->hasTitle()) {
-                        $widget['title'] = $event->getTitle();
-                    } else {
-                        $widget['title'] = strtolower($config->getWidget()->getName());
+        if (!is_null($homeTab) &&
+            $this->homeTabManager->checkHomeTabVisibilityByWorkspace($homeTab, $workspace)) {
+
+            $configs = $this->homeTabManager
+                ->getWidgetConfigsByWorkspace($homeTab,$workspace);
+
+            $rightToConfigure = $this->security->isGranted('parameters', $workspace);
+
+            foreach ($configs as $config) {
+                if ($config->isVisible()) {
+                    $eventName = "widget_{$config->getWidget()->getName()}_workspace";
+                    $event = $this->eventDispatcher
+                        ->dispatch($eventName, 'DisplayWidget', array($workspace));
+
+                    if ($event->hasContent()) {
+                        $widget['id'] = $config->getWidget()->getId();
+                        if ($event->hasTitle()) {
+                            $widget['title'] = $event->getTitle();
+                        } else {
+                            $widget['title'] = strtolower($config->getWidget()->getName());
+                        }
+                        $widget['content'] = $event->getContent();
+                        $widget['configurable'] = (
+                            $rightToConfigure
+                            and $config->isLocked() !== true
+                            and $config->getWidget()->isConfigurable()
+                        );
+
+                        $widgets[] = $widget;
                     }
-                    $widget['content'] = $event->getContent();
-                    $widget['configurable'] = (
-                        $rightToConfigure
-                        and $config->isLocked() !== true
-                        and $config->getWidget()->isConfigurable()
-                    );
-
-                    $widgets[] = $widget;
                 }
             }
         }
-
         return array(
             'widgets' => $widgets,
             'isDesktop' => false,
@@ -797,6 +807,40 @@ class WorkspaceController extends Controller
         $pager = $this->workspaceManager->getDisplayableWorkspacesBySearchPager($search, $page);
 
         return array('workspaces' => $pager, 'search' => $search);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspaceId}/open/tool/home/tab/{tabId}",
+     *     name="claro_display_workspace_home_tabs"
+     * )
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceHomeTabs.html.twig")
+     *
+     * Displays the workspace home tab.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function displayWorkspaceHomeTabsAction(AbstractWorkspace $workspace, $tabId)
+    {
+        $adminHomeTabConfigsTemp = $this->homeTabManager
+            ->generateAdminHomeTabConfigsByWorkspace($workspace);
+        $adminHomeTabConfigs = $this->homeTabManager
+            ->filterVisibleHomeTabConfigs($adminHomeTabConfigsTemp);
+        $workspaceHomeTabConfigs = $this->homeTabManager
+            ->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
+
+        return array(
+            'workspace' => $workspace,
+            'adminHomeTabConfigs' => $adminHomeTabConfigs,
+            'workspaceHomeTabConfigs' => $workspaceHomeTabConfigs,
+            'tabId' => $tabId
+        );
     }
 
     private function assertIsGranted($attributes, $object = null)
