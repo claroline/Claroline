@@ -23,22 +23,17 @@ class ScriptHandler
 
     public static function postPackageInstall(PackageEvent $event)
     {
-        $package = $event->getOperation()->getPackage();
-        $recorder = new Recorder($event->getComposer());
-        $recorder->addBundles($recorder->detectBundles($package));
+        self::getRecorder($event)->addBundles(self::getBundles($event));
     }
 
     public static function prePackageUninstall(PackageEvent $event)
     {
-        $package = $event->getOperation()->getPackage();
-        $recorder = new Recorder($event->getComposer());
-        self::$removableBundles = $recorder->detectBundles($package);
+        self::$removableBundles = self::getBundles($event);
     }
 
     public static function postPackageUninstall(PackageEvent $event)
     {
-        $recorder = new Recorder($event->getComposer());
-        $recorder->removeBundles(static::$removableBundles);
+        self::getRecorder($event)->removeBundles(static::$removableBundles);
     }
 
     private static function initAutoload(Event $event, $scriptName)
@@ -66,5 +61,30 @@ class ScriptHandler
         if (class_exists('Doctrine\Common\Annotations\AnnotationRegistry')) {
             AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
         }
+    }
+
+    private static function getBundles(PackageEvent $event)
+    {
+        $package = $event->getOperation()->getPackage();
+        $vendorDir = rtrim($this->composer->getConfig()->get('vendor-dir'), '/');
+        $path = realpath(($vendorDir ? $vendorDir . '/' : '') . $package->getPrettyName());
+        $detector = new Detector();
+
+        return $detector->detectBundles($path);
+    }
+
+    private static function getRecorder(PackageEvent $event)
+    {
+        $options = array_merge(
+            array('bundle-file' => 'app/config/bundles.ini'),
+            $this->composer->getPackage()->getExtra()
+        );
+        $recorder = new Recorder($options['bundle-file']);
+        $io = $event->getIO();
+        $recorder->setLogger(function ($message) use ($io) {
+            $io->write("    {$message}");
+        });
+
+        return $recorder;
     }
 }
