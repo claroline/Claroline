@@ -28,6 +28,9 @@
         <h3 class="panel-title">{{ 'home_parameters'|trans({}, 'platform') }}</h3>
     </div>
     <div class="list-group">
+        <a class="list-group-item" href="{{ path('claro_workspace_home_tab_properties', {'workspaceId': workspace.getId()}) }}">
+            {{ 'home_tabs'|trans({}, 'platform') }}
+        </a>
         <a class="list-group-item" href="{{ path('claro_workspace_widget_properties', {'workspace': workspace.getId()}) }}">
             {{ 'widgets'|trans({}, 'platform') }}
         </a>
