@@ -144,6 +144,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
             FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
             WHERE whtc.homeTab = :homeTab
             AND whtc.user = :user
+            AND whtc.type = 'desktop'
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('homeTab', $homeTab);
@@ -162,6 +163,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
             FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
             WHERE whtc.homeTab = :homeTab
             AND whtc.workspace = :workspace
+            AND whtc.type = 'workspace'
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('homeTab', $homeTab);
