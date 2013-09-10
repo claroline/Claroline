@@ -16,7 +16,6 @@ class BundleManager
     private $kernel;
     private $environment;
     private $bundlesFile;
-    private $activeBundles;
     private static $selfInstance;
 
     public static function initialize(KernelInterface $kernel, $bundlesFile)
@@ -36,23 +35,6 @@ class BundleManager
     }
 
     public function getActiveBundles()
-    {
-        return $this->activeBundles;
-    }
-
-    private function __construct(KernelInterface $kernel, $bundlesFile)
-    {
-        if (!is_file($bundlesFile)) {
-            throw new \InvalidArgumentException("'{$bundlesFile}' is not a file");
-        }
-
-        $this->kernel = $kernel;
-        $this->environment = $kernel->getEnvironment();
-        $this->bundlesFile = $bundlesFile;
-        $this->activeBundles = $this->initializeBundles();
-    }
-
-    private function initializeBundles()
     {
         $entries = parse_ini_file($this->bundlesFile);
         $activeBundles = array();
@@ -94,5 +76,16 @@ class BundleManager
         }
 
         return $activeBundles;
+    }
+
+    private function __construct(KernelInterface $kernel, $bundlesFile)
+    {
+        if (!is_file($bundlesFile)) {
+            throw new \InvalidArgumentException("'{$bundlesFile}' is not a file");
+        }
+
+        $this->kernel = $kernel;
+        $this->environment = $kernel->getEnvironment();
+        $this->bundlesFile = $bundlesFile;
     }
 }
