@@ -6,6 +6,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Claroline\MigrationBundle\Manager\Manager;
 use Claroline\MigrationBundle\Migrator\Migrator;
+use Claroline\BundleRecorder\Recorder;
+use Claroline\KernelBundle\Kernel\RebootableKernel;
 use Claroline\InstallationBundle\Fixtures\FixtureLoader;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
 use Claroline\InstallationBundle\Additional\AdditionalInstallerInterface;
@@ -14,14 +16,24 @@ class InstallationManager
 {
     private $container;
     private $environment;
+    private $kernel;
+    private $recorder;
     private $migrationManager;
     private $fixtureLoader;
     private $logger;
 
-    public function __construct(ContainerInterface $container, Manager $migrationManager, FixtureLoader $fixtureLoader)
+    public function __construct(
+        ContainerInterface $container,
+        RebootableKernel $kernel,
+        Recorder $recorder,
+        Manager $migrationManager,
+        FixtureLoader $fixtureLoader
+    )
     {
         $this->container = $container;
-        $this->environment = $container->get('kernel')->getEnvironment();
+        $this->environment = $kernel->getEnvironment();
+        $this->kernel = $kernel;
+        $this->recorder = $recorder;
         $this->migrationManager = $migrationManager;
         $this->fixtureLoader = $fixtureLoader;
     }
@@ -29,10 +41,13 @@ class InstallationManager
     public function setLogger(\Closure $logger)
     {
         $this->logger = $logger;
+        $this->recorder->setLogger($logger);
     }
 
     public function install(InstallableInterface $bundle, $requiredOnly = true)
     {
+        $this->recorder->addBundles(array(get_class($bundle)));
+        $this->kernel->reboot();
         $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
         if ($additionalInstaller) {
@@ -59,8 +74,11 @@ class InstallationManager
     public function uninstall(InstallableInterface $bundle)
     {
         if ($bundle->hasMigrations()) {
+            $this->log('Executing migrations...');
             $this->migrationManager->downgradeBundle($bundle, Migrator::VERSION_FARTHEST);
         }
+
+        $this->recorder->removeBundles(array(get_class($bundle)));
     }
 
     private function getAdditionalInstaller(InstallableInterface $bundle)

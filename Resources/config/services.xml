@@ -5,7 +5,9 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
+        <parameter key="claroline.installation.bundle_file">%kernel.root_dir%/config/bundles.ini</parameter>
         <parameter key="claroline.installation_manager.class">Claroline\InstallationBundle\Manager\InstallationManager</parameter>
+        <parameter key="claroline.bundle_recorder.class">Claroline\BundleRecorder\Recorder</parameter>
         <parameter key="claroline.installation_fixture_loader.class">Claroline\InstallationBundle\Fixtures\FixtureLoader</parameter>
         <parameter key="claroline.symfony_fixture_loader.class">Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader</parameter>
         <parameter key="claroline.doctrine_fixture_executor.class">Doctrine\Common\DataFixtures\Executor\ORMExecutor</parameter>
@@ -14,8 +16,14 @@
     <services>
         <service id="claroline.installation.manager" class="%claroline.installation_manager.class%">
             <argument type="service" id="service_container" />
+            <argument type="service" id="kernel" />
+            <argument type="service" id="claroline.bundle_recorder" />
             <argument type="service" id="claroline.migration.manager" />
             <argument type="service" strict="false" id="claroline.installation.fixture_loader" />
+        </service>
+
+        <service id="claroline.bundle_recorder" class="%claroline.bundle_recorder.class%">
+            <argument>%claroline.installation.bundle_file%</argument>
         </service>
 
         <service id="claroline.installation.fixture_loader" class="%claroline.installation_fixture_loader.class%" scope="prototype">
