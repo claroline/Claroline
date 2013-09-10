@@ -615,7 +615,7 @@ class WorkspaceController extends Controller
             $this->eventDispatcher->dispatch(
                 'log',
                 'Log\LogRoleSubscribe',
-                array($role, $user, $workspace)
+                array($role, $user)
             );
         }
 

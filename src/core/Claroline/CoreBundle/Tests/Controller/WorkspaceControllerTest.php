@@ -613,7 +613,8 @@ class WorkspaceControllerTest extends MockeryTestCase
             ->shouldReceive('dispatch')
             ->with(
                 'log',
-                new LogRoleSubscribeEvent($role, $user)
+                'Log\LogRoleSubscribe',
+                array($role, $user)
             )
             ->once();
         $this->security->shouldReceive('setToken')
