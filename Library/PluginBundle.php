@@ -11,16 +11,6 @@ use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
  */
 abstract class PluginBundle extends InstallableBundle implements AutoConfigurableInterface
 {
-    public function supports($environment)
-    {
-        return true;
-    }
-
-    public function getConfiguration($environment)
-    {
-        return new ConfigurationBuilder();
-    }
-
     final public function getVendorName()
     {
         $namespaceParts = explode('\\', $this->getNamespace());
@@ -35,6 +25,27 @@ abstract class PluginBundle extends InstallableBundle implements AutoConfigurabl
         return $namespaceParts[1];
     }
 
+    public function supports($environment)
+    {
+        return true;
+    }
+
+    public function getConfiguration($environment)
+    {
+        $config = new ConfigurationBuilder();
+
+        if (file_exists($routingFile = $this->getPath() . '/Resources/config/routing.yml')) {
+            $config->addRoutingResource($routingFile, null, strtolower($this->getName()));
+        }
+
+        return $config;
+    }
+
+    /**
+     * Deprecated: use getConfiguration instead
+     *
+     * @deprecated
+     */
     public function getRoutingResourcesPaths()
     {
         $ds = DIRECTORY_SEPARATOR;
@@ -47,6 +58,11 @@ abstract class PluginBundle extends InstallableBundle implements AutoConfigurabl
         return array();
     }
 
+    /**
+     * Deprecated: use getConfiguration instead
+     *
+     * @deprecated
+     */
     public function getRoutingPrefix()
     {
         $vendor = $this->getVendorName();

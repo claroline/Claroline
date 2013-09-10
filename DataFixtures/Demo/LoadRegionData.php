@@ -28,24 +28,8 @@ class LoadRegionData extends AbstractFixture
             "Accueil" => array("url" => "/", "icon" => "")
         );
 
-        $this->setRegions($manager);
         $this->menuToRegion($manager, $this->menu($manager, "Entête", $header), 'header');
         $this->menuToRegion($manager, $this->menu($manager, "Pied de page", $footer), 'footer');
-    }
-
-    private function setRegions($manager)
-    {
-        $names = array('header', 'left', 'content', 'right', 'footer');
-
-        foreach ($names as $name) {
-            $region = new Region();
-
-            $region->setName($name);
-
-            $manager->persist($region);
-        }
-
-        $manager->flush();
     }
 
     private function menu($manager, $name = "Menu", $links = null)
