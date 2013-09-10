@@ -14,7 +14,7 @@ class ClarolineForumBundle extends PluginBundle
     {
         $config = new ConfigurationBuilder();
 
-        return $config->addRoutingResource($routingFile, null, 'forum');
+        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'forum');
     }
 
     public function getRequiredFixturesDirectory($environment)
