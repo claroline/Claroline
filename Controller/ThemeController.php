@@ -7,7 +7,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Library\Themes\ThemeParameters;
+use JMS\SecurityExtraBundle\Annotation as SEC;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("hasRole('ADMIN')")
+ */
 class ThemeController extends Controller
 {
     /**

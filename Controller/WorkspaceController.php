@@ -423,11 +423,8 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *     "/{workspaceId}/widgets",
-     *     name="claro_workspace_widgets"
-     * )
-     * @EXT\Method("GET")
+     * Routing is not needed.
+     *
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
@@ -446,9 +443,8 @@ class WorkspaceController extends Controller
      */
     public function widgetsAction(AbstractWorkspace $workspace)
     {
-        // No right checking is done : security is delegated to each widget renderer
-        // Is that a good idea ?
-        // Answer: I don't think so.
+        // No right checking is done : security is delegated to each widget renderer.
+        // The routing is now removed. Checking doesn't need to be done.
         $configs = $this->get('claroline.widget.manager')
             ->generateWorkspaceDisplayConfig($workspace->getId());
 
@@ -580,6 +576,7 @@ class WorkspaceController extends Controller
     }
 
     /**
+     * @todo Security context verification.
      * @EXT\Route(
      *     "/{workspaceId}/add/user/{userId}",
      *     name="claro_workspace_add_user",
@@ -678,6 +675,7 @@ class WorkspaceController extends Controller
     }
 
     /**
+     * @todo Security context verification.
      * @EXT\Route(
      *     "/{workspaceId}/remove/user/{userId}",
      *     name="claro_workspace_delete_user",

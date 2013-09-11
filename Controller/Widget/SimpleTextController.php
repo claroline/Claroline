@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Entity\Widget\SimpleTextWorkspaceConfig;
 use Claroline\CoreBundle\Entity\Widget\SimpleTextDesktopConfig;
 use Claroline\CoreBundle\Entity\User;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class SimpleTextController extends Controller
 {
@@ -22,8 +23,12 @@ class SimpleTextController extends Controller
     public function updateLogWorkspaceWidgetConfig($isDefault, $workspaceId, $redirectToHome)
     {
         $isDefault = (boolean) $isDefault;
-        $redirectToHome = (boolean) $redirectToHome;
 
+        if ($isDefault && !$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException();
+        }
+
+        $redirectToHome = (boolean) $redirectToHome;
         $em = $this->getDoctrine()->getManager();
 
         if ($isDefault) {
@@ -31,6 +36,11 @@ class SimpleTextController extends Controller
             $config = $this->get('claroline.manager.simple_text_manager')->getDefaultWorkspaceWidgetConfig();
         } else {
             $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+
+            if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+                throw new AccessDeniedException();
+            }
+            
             $config = $this->get('claroline.manager.simple_text_manager')->getWorkspaceWidgetConfig($workspace);
         }
 
@@ -59,14 +69,12 @@ class SimpleTextController extends Controller
                 ->getFlashBag()
                 ->add('error', $translator->trans('The form is not valid', array(), 'platform'));
         }
-        
+
         if ($isDefault === true) {
             return $this->redirect($this->generateUrl('claro_admin_widgets'));
         } elseif ($redirectToHome === false) {
             return $this->redirect(
-                $this->generateUrl(
-                    'claro_workspace_widget_properties', array('workspace' => $workspaceId)
-                )
+                $this->generateUrl('claro_workspace_widget_properties', array('workspace' => $workspaceId))
             );
         } else {
             return $this->redirect(
@@ -90,6 +98,11 @@ class SimpleTextController extends Controller
     public function updateDesktopWidgetConfig($isDefault, $redirectToHome, User $user)
     {
         $isDefault = (boolean) $isDefault;
+
+        if ($isDefault && !$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException();
+        }
+
         $redirectToHome = (boolean) $redirectToHome;
 
         if ($isDefault === true) {

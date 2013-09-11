@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Entity\Resource\Text;
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -159,6 +160,9 @@ class TextController extends Controller
      */
     public function historyAction(Text $text)
     {
+        $collection = new ResourceCollection(array($text->getResourceNode()));
+        $this->checkAccess('OPEN', $collection);
+
         $revisions = $text->getRevisions();
         $size = count($revisions);
         $size--;
@@ -202,6 +206,9 @@ class TextController extends Controller
      */
     public function editFormAction(Text $text)
     {
+        $collection = new ResourceCollection(array($text->getResourceNode()));
+        $this->checkAccess('OPEN', $collection);
+
         $em = $this->container->get('doctrine.orm.entity_manager');
         $revisionRepo = $em->getRepository('ClarolineCoreBundle:Resource\Revision');
 
@@ -225,6 +232,8 @@ class TextController extends Controller
      */
     public function editAction(Text $old)
     {
+        $collection = new ResourceCollection(array($old->getResourceNode()));
+        $this->checkAccess('OPEN', $collection);
 
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
@@ -246,5 +255,26 @@ class TextController extends Controller
         );
 
         return new RedirectResponse($route);
+    }
+
+    /**
+     * Checks if the current user has the right to perform an action on a ResourceCollection.
+     * Be careful, ResourceCollection may need some aditionnal parameters.
+     *
+     * - for CREATE: $collection->setAttributes(array('type' => $resourceType))
+     *  where $resourceType is the name of the resource type.
+     * - for MOVE / COPY $collection->setAttributes(array('parent' => $parent))
+     *  where $parent is the new parent entity.
+     *
+     * @param string             $permission
+     * @param ResourceCollection $collection
+     *
+     * @throws AccessDeniedException
+     */
+    public function checkAccess($permission, ResourceCollection $collection)
+    {
+        if (!$this->get('security.context')->isGranted($permission, $collection)) {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        }
     }
 }
