@@ -1,7 +1,7 @@
 {% if log.getDetails().role.changeSet is defined  and log.getDetails().role.changeSet|length > 0 %}
     <div>
-        <h4>{{ ('log_change_set')|trans({}, 'platform') }}</h4>
-        <h5>{{ ('log_old_values')|trans({}, 'platform') }}</h4>
+        <h4>{{ ('log_change_set')|trans({}, 'log') }}</h4>
+        <h4>{{ ('log_old_values')|trans({}, 'log') }}</h4>
         <dl class="dl-horizontal">
             {% for key, values in log.getDetails().role.changeSet %}
                 {% if key == 'can_create'%}
@@ -29,7 +29,7 @@
             {% endfor %}
         </dl>
 
-        <h5>{{ ('log_new_values')|trans({}, 'platform') }}</h4>
+        <h4>{{ ('log_new_values')|trans({}, 'log') }}</h4>
         <dl class="dl-horizontal">
             {% for key, values in log.getDetails().role.changeSet %}
                 {% if key == 'can_create'%}

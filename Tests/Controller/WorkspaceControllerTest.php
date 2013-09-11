@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\Event\Log\LogRoleSubscribeEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,6 +13,7 @@ use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class WorkspaceControllerTest extends MockeryTestCase
 {
+    private $homeTabManager;
     private $resourceManager;
     private $roleManager;
     private $userManager;
@@ -28,6 +30,7 @@ class WorkspaceControllerTest extends MockeryTestCase
     protected function setUp()
     {
         parent::setUp();
+        $this->homeTabManager = $this->mock('Claroline\CoreBundle\Manager\HomeTabManager');
         $this->resourceManager = $this->mock('Claroline\CoreBundle\Manager\ResourceManager');
         $this->roleManager = $this->mock('Claroline\CoreBundle\Manager\RoleManager');
         $this->userManager = $this->mock('Claroline\CoreBundle\Manager\UserManager');
@@ -307,7 +310,7 @@ class WorkspaceControllerTest extends MockeryTestCase
         $controller = $this->getController(array('assertIsGranted'));
         $toolName = 'tool_name';
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $event = $this->mock('Claroline\CoreBundle\Event\Event\DisplayToolEvent');
+        $event = $this->mock('Claroline\CoreBundle\Event\DisplayToolEvent');
 
         $this->security
             ->shouldReceive('isGranted')
@@ -613,7 +616,7 @@ class WorkspaceControllerTest extends MockeryTestCase
             ->with(
                 'log',
                 'Log\LogRoleSubscribe',
-                array($role, $user, $workspace)
+                array($role, $user)
             )
             ->once();
         $this->security->shouldReceive('setToken')
@@ -704,6 +707,7 @@ class WorkspaceControllerTest extends MockeryTestCase
     {
         if (count($mockedMethods) === 0) {
             return new WorkspaceController(
+                $this->homeTabManager,
                 $this->workspaceManager,
                 $this->resourceManager,
                 $this->roleManager,
@@ -731,6 +735,7 @@ class WorkspaceControllerTest extends MockeryTestCase
         return $this->mock(
             'Claroline\CoreBundle\Controller\WorkspaceController' . $stringMocked,
             array(
+                $this->homeTabManager,
                 $this->workspaceManager,
                 $this->resourceManager,
                 $this->roleManager,

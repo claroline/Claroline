@@ -16,7 +16,6 @@
             {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
         {% endif %}
         <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
-        {% if label %}
         {{ label|trans({}, translation_domain) }}
         {% else %}
         {{ id|trans({}, translation_domain) }}

@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Entity\Widget;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\DisplayConfigRepository")
  * @ORM\Table(name="claro_widget_display")
  */
 class DisplayConfig
@@ -48,6 +48,8 @@ class DisplayConfig
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\Widget")
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
+     *
+     * @var Widget
      */
     protected $widget;
 
@@ -76,6 +78,9 @@ class DisplayConfig
         $this->widget = $widget;
     }
 
+    /**
+     * @return Widget
+     */
     public function getWidget()
     {
         return $this->widget;

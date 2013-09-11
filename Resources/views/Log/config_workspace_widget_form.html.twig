@@ -16,6 +16,8 @@
     </style>
 {% endblock %}
 
+{{ macros.flashBox() }}
+
 <form
     id="form_log_update_workspace_widget"
     method="POST"
@@ -30,11 +32,10 @@
 
         {{ form_widget(form._token) }}
         {{ form_widget(form) }}
-        {{ macros.flashBox() }}
     </div>
 
     <div class="panel-footer">
-        <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+        <button type="submit" class="btn btn-primary">{{ 'configure'|trans({}, 'platform') }}</button>
         {% if app.request.isXMLHttpRequest %}
             {% set cancelUrl = path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId()}) %}
         {% else %}
@@ -44,7 +45,7 @@
                 {% set cancelUrl = path('claro_workspace_widget_properties', {'workspace': workspace.getId()}) %}
             {% endif %}
         {% endif %}
-        
+
         <a href="{{ cancelUrl }}">
             <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
         </a>

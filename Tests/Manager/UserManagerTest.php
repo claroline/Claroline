@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Event\Log\LogUserCreateEvent;
 use \Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
@@ -13,7 +14,7 @@ class UserManagerTest extends MockeryTestCase
     private $roleManager;
     private $workspaceManager;
     private $toolManager;
-    private $ed;
+    private $strictDispatcher;
     private $personalWsTemplateFile;
     private $translator;
     private $ch;
@@ -27,7 +28,7 @@ class UserManagerTest extends MockeryTestCase
         $this->roleManager = $this->mock('Claroline\CoreBundle\Manager\RoleManager');
         $this->workspaceManager = $this->mock('Claroline\CoreBundle\Manager\WorkspaceManager');
         $this->toolManager = $this->mock('Claroline\CoreBundle\Manager\ToolManager');
-        $this->ed = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
+        $this->strictDispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
         $this->personalWsTemplateFile = 'template';
         $this->translator = $this->mock('Symfony\Component\Translation\Translator');
         $this->ch = $this->mock('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
@@ -62,7 +63,7 @@ class UserManagerTest extends MockeryTestCase
         $this->om->shouldReceive('startFlushSuite')->once();
         $this->om->shouldReceive('endFlushSuite')->once();
         $this->om->shouldReceive('persist')->with($user)->once();
-        $this->ed->shouldReceive('dispatch')
+        $this->strictDispatcher->shouldReceive('dispatch')
             ->with('log', 'Log\LogUserCreate', array($user))
             ->once();
 
@@ -89,7 +90,7 @@ class UserManagerTest extends MockeryTestCase
         $this->toolManager->shouldReceive('addRequiredToolsToUser')->with($user)->once();
         $this->roleManager->shouldReceive('setRoleToRoleSubject')->with($user, 'MY_ROLE')->once();
         $this->om->shouldReceive('persist')->with($user)->once();
-        $this->ed->shouldReceive('dispatch')->with('log', 'Log\LogUserCreate', array($user))->once();
+        $this->strictDispatcher->shouldReceive('dispatch')->with('log', 'Log\LogUserCreate', array($user))->once();
 
         $manager->createUserWithRole($user, 'MY_ROLE');
     }
@@ -119,7 +120,7 @@ class UserManagerTest extends MockeryTestCase
         $this->om->shouldReceive('persist')
             ->with($user)
             ->once();
-        $this->ed->shouldReceive('dispatch')
+        $this->strictDispatcher->shouldReceive('dispatch')
             ->with('log', 'Log\LogUserCreate', array($user))
             ->once();
 
@@ -200,7 +201,7 @@ class UserManagerTest extends MockeryTestCase
         $this->om->shouldReceive('persist')
             ->with($user)
             ->once();
-        $this->ed->shouldReceive('dispatch')
+        $this->strictDispatcher->shouldReceive('dispatch')
             ->with('log', 'Log\LogUserCreate', array($user))
             ->once();
 
@@ -654,7 +655,7 @@ class UserManagerTest extends MockeryTestCase
                 $this->roleManager,
                 $this->workspaceManager,
                 $this->toolManager,
-                $this->ed,
+                $this->strictDispatcher,
                 $this->personalWsTemplateFile,
                 $this->translator,
                 $this->ch,
@@ -678,7 +679,7 @@ class UserManagerTest extends MockeryTestCase
                 $this->roleManager,
                 $this->workspaceManager,
                 $this->toolManager,
-                $this->ed,
+                $this->strictDispatcher,
                 $this->personalWsTemplateFile,
                 $this->translator,
                 $this->ch,

@@ -3,14 +3,16 @@
 namespace Claroline\CoreBundle\Listener\Tool;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Event\Event\ExportToolEvent;
-use Claroline\CoreBundle\Event\Event\ImportToolEvent;
-use Claroline\CoreBundle\Event\Event\ConfigureWorkspaceToolEvent;
-use Claroline\CoreBundle\Event\Event\ConfigureDesktopToolEvent;
+use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\ExportToolEvent;
+use Claroline\CoreBundle\Event\ImportToolEvent;
+use Claroline\CoreBundle\Event\ConfigureWorkspaceToolEvent;
+use Claroline\CoreBundle\Event\ConfigureDesktopToolEvent;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * @DI\Service
@@ -18,6 +20,8 @@ use Symfony\Component\HttpFoundation\Response;
 class HomeListener
 {
     private $workspaceManager;
+    private $homeTabManager;
+    private $securityContext;
 
     /**
      * @DI\InjectParams({
@@ -25,16 +29,28 @@ class HomeListener
      *     "ed"                 = @DI\Inject("claroline.event.event_dispatcher"),
      *     "templating"         = @DI\Inject("templating"),
      *     "wm"                 = @DI\Inject("claroline.widget.manager"),
-     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager")
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
+     *     "securityContext"    = @DI\Inject("security.context")
      * })
      */
-    public function __construct($em, $ed, $templating, $wm, WorkspaceManager $workspaceManager)
+    public function __construct(
+        $em,
+        $ed,
+        $templating,
+        $wm,
+        WorkspaceManager $workspaceManager,
+        HomeTabManager $homeTabManager,
+        SecurityContextInterface $securityContext
+    )
     {
         $this->em = $em;
         $this->ed = $ed;
         $this->templating = $templating;
         $this->wm = $wm;
         $this->workspaceManager = $workspaceManager;
+        $this->homeTabManager = $homeTabManager;
+        $this->securityContext = $securityContext;
     }
 
     /**
@@ -179,20 +195,60 @@ class HomeListener
     public function workspaceHome($workspaceId)
     {
         $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
+        $adminHomeTabConfigsTemp = $this->homeTabManager
+            ->generateAdminHomeTabConfigsByWorkspace($workspace);
+        $adminHomeTabConfigs = $this->homeTabManager
+            ->filterVisibleHomeTabConfigs($adminHomeTabConfigsTemp);
+        $workspaceHomeTabConfigs = $this->homeTabManager
+            ->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
+        $tabId = 0;
+
+        if (count($adminHomeTabConfigs) > 0) {
+            $tabId = $adminHomeTabConfigs[0]->getHomeTab()->getId();
+        } elseif (count($workspaceHomeTabConfigs) > 0) {
+            $tabId = $workspaceHomeTabConfigs[0]->getHomeTab()->getId();
+        }
 
         return $this->templating->render(
-            'ClarolineCoreBundle:Tool\workspace\home:home.html.twig',
-            array('workspace' => $workspace)
+            'ClarolineCoreBundle:Tool\workspace\home:workspaceHomeTabs.html.twig',
+            array(
+                'workspace' => $workspace,
+                'adminHomeTabConfigs' => $adminHomeTabConfigs,
+                'workspaceHomeTabConfigs' => $workspaceHomeTabConfigs,
+                'tabId' => $tabId
+            )
         );
     }
 
     /**
-     * Displays the Info desktop tab.
+     * Displays the first desktop tab.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function desktopHome()
     {
-        return $this->templating->render('ClarolineCoreBundle:Tool\desktop\home:info.html.twig');
+        $user = $this->securityContext->getToken()->getUser();
+        $adminHomeTabConfigsTemp = $this->homeTabManager
+            ->generateAdminHomeTabConfigsByUser($user);
+        $adminHomeTabConfigs = $this->homeTabManager
+            ->filterVisibleHomeTabConfigs($adminHomeTabConfigsTemp);
+        $userHomeTabConfigs = $this->homeTabManager
+            ->getVisibleDesktopHomeTabConfigsByUser($user);
+        $tabId = 0;
+
+        if (count($adminHomeTabConfigs) > 0) {
+            $tabId = $adminHomeTabConfigs[0]->getHomeTab()->getId();
+        } elseif (count($userHomeTabConfigs) > 0) {
+            $tabId = $userHomeTabConfigs[0]->getHomeTab()->getId();
+        }
+
+        return $this->templating->render(
+            'ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabs.html.twig',
+            array(
+                'adminHomeTabConfigs' => $adminHomeTabConfigs,
+                'userHomeTabConfigs' => $userHomeTabConfigs,
+                'tabId' => $tabId
+            )
+        );
     }
 }
