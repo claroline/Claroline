@@ -5,9 +5,10 @@ namespace Claroline\CoreBundle\Controller;
 use \Mockery as m;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
+use Claroline\CoreBundle\Entity\Widget\Widget;
+use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 class AdministrationHomeTabControllerTest extends MockeryTestCase
 {
@@ -493,6 +494,272 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
 
         $response = $this->getController()
             ->adminHomeTabUpdateVisibilityAction($homeTabConfig, 'visible');
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\Response',
+            $response
+        );
+        $this->assertEquals(
+            'success',
+            $response->getContent()
+        );
+        $this->assertEquals(
+            204,
+            $response->getStatusCode()
+        );
+    }
+
+    public function testAdminHomeTabUpdateLockAction()
+    {
+        $homeTabConfig = $this->mock('Claroline\CoreBundle\Entity\Home\HomeTabConfig');
+
+        $this->homeTabManager
+            ->shouldReceive('updateLock')
+            ->with($homeTabConfig, true)
+            ->once();
+
+        $response = $this->getController()
+            ->adminHomeTabUpdateLockAction($homeTabConfig, 'locked');
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\Response',
+            $response
+        );
+        $this->assertEquals(
+            'success',
+            $response->getContent()
+        );
+        $this->assertEquals(
+            204,
+            $response->getStatusCode()
+        );
+    }
+
+    public function testAdminHomeTabWidgetsConfigAction()
+    {
+        $homeTab = new HomeTab();
+        $widgetConfigs = array('widget_config_a', 'widget_config_b');
+
+        $this->homeTabManager
+            ->shouldReceive('getAdminWidgetConfigs')
+            ->with($homeTab)
+            ->once()
+            ->andReturn($widgetConfigs);
+        $this->homeTabManager
+            ->shouldReceive('getOrderOfLastWidgetInAdminHomeTab')
+            ->with($homeTab)
+            ->once()
+            ->andReturn(array('order_max' => 4));
+
+        $this->assertEquals(
+            array(
+                'homeTab' => $homeTab,
+                'widgetConfigs' => $widgetConfigs,
+                'lastWidgetOrder' => 4
+            ),
+            $this->getController()->adminHomeTabWidgetsConfigAction($homeTab)
+        );
+    }
+
+    public function testListDesktopAddableWidgetsAction()
+    {
+        $homeTab = $this->mock('Claroline\CoreBundle\Entity\Home\HomeTab');
+        $widgetDisplayConfigs = array('widget_display_a', 'widget_display_b');
+        $widgetConfig =
+            $this->mock('Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig');
+        $widget = $this->mock('Claroline\CoreBundle\Entity\Widget\Widget');
+
+        $this->homeTabManager
+            ->shouldReceive('getAdminWidgetConfigs')
+            ->with($homeTab)
+            ->once()
+            ->andReturn(array($widgetConfig));
+        $widgetConfig->shouldReceive('getWidget')->once()->andReturn($widget);
+        $widget->shouldReceive('getId')->once()->andReturn(1);
+        $homeTab->shouldReceive('getType')->once()->andReturn('admin_desktop');
+        $this->homeTabManager
+            ->shouldReceive('getVisibleDesktopWidgetConfig')
+            ->with(array(1))
+            ->once()
+            ->andReturn($widgetDisplayConfigs);
+
+        $this->assertEquals(
+            array(
+                'homeTab' => $homeTab,
+                'widgetDisplayConfigs' => $widgetDisplayConfigs
+            ),
+            $this->getController()->listAddableWidgetsAction($homeTab)
+        );
+    }
+
+    public function testListWorkspaceAddableWidgetsAction()
+    {
+        $homeTab = $this->mock('Claroline\CoreBundle\Entity\Home\HomeTab');
+        $widgetDisplayConfigs = array('widget_display_a', 'widget_display_b');
+        $widgetConfig =
+            $this->mock('Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig');
+        $widget = $this->mock('Claroline\CoreBundle\Entity\Widget\Widget');
+
+        $this->homeTabManager
+            ->shouldReceive('getAdminWidgetConfigs')
+            ->with($homeTab)
+            ->once()
+            ->andReturn(array($widgetConfig));
+        $widgetConfig->shouldReceive('getWidget')->once()->andReturn($widget);
+        $widget->shouldReceive('getId')->once()->andReturn(1);
+        $homeTab->shouldReceive('getType')->once()->andReturn('admin_workspace');
+        $this->homeTabManager
+            ->shouldReceive('getVisibleWorkspaceWidgetConfig')
+            ->with(array(1))
+            ->once()
+            ->andReturn($widgetDisplayConfigs);
+
+        $this->assertEquals(
+            array(
+                'homeTab' => $homeTab,
+                'widgetDisplayConfigs' => $widgetDisplayConfigs
+            ),
+            $this->getController()->listAddableWidgetsAction($homeTab)
+        );
+    }
+
+    public function testAssociateWidgetToHomeTabAction()
+    {
+        $homeTab = new HomeTab();
+        $widget = new Widget();
+
+        $this->homeTabManager
+            ->shouldReceive('getOrderOfLastWidgetInAdminHomeTab')
+            ->with($homeTab)
+            ->once()
+            ->andReturn(array('order_max' => 3));
+        $this->homeTabManager
+            ->shouldReceive('insertWidgetHomeTabConfig')
+            ->with(
+                m::on(
+                    function (WidgetHomeTabConfig $widgetHomeTabConfig) {
+
+                        return $widgetHomeTabConfig->getType() === 'admin'
+                            && !$widgetHomeTabConfig->isVisible()
+                            && !$widgetHomeTabConfig->isLocked()
+                            && $widgetHomeTabConfig->getWidgetOrder() === 4;
+                    }
+                )
+            )
+            ->once();
+
+        $response = $this->getController()
+            ->associateWidgetToHomeTabAction($homeTab, $widget);
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\Response',
+            $response
+        );
+        $this->assertEquals(
+            'success',
+            $response->getContent()
+        );
+        $this->assertEquals(
+            204,
+            $response->getStatusCode()
+        );
+    }
+
+    public function testAdminWidgetHomeTabConfigDeleteAction()
+    {
+        $widgetHomeTabConfig =
+            $this->mock('Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig');
+
+        $widgetHomeTabConfig->shouldReceive('getUser')->once()->andReturn(null);
+        $widgetHomeTabConfig->shouldReceive('getWorkspace')->once()->andReturn(null);
+        $this->homeTabManager
+            ->shouldReceive('deleteWidgetHomeTabConfig')
+            ->with($widgetHomeTabConfig)
+            ->once();
+
+        $response = $this->getController()
+            ->adminWidgetHomeTabConfigDeleteAction($widgetHomeTabConfig);
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\Response',
+            $response
+        );
+        $this->assertEquals(
+            'success',
+            $response->getContent()
+        );
+        $this->assertEquals(
+            204,
+            $response->getStatusCode()
+        );
+    }
+
+    public function testAdminWidgetHomeTabConfigChangeOrderAction()
+    {
+        $widgetHomeTabConfig =
+            $this->mock('Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig');
+
+        $widgetHomeTabConfig->shouldReceive('getUser')->once()->andReturn(null);
+        $widgetHomeTabConfig->shouldReceive('getWorkspace')->once()->andReturn(null);
+        $this->homeTabManager
+            ->shouldReceive('changeOrderWidgetHomeTabConfig')
+            ->with($widgetHomeTabConfig, 1)
+            ->once();
+
+        $response = $this->getController()
+            ->adminWidgetHomeTabConfigChangeOrderAction($widgetHomeTabConfig, 1);
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\Response',
+            $response
+        );
+        $this->assertEquals(
+            'success',
+            $response->getContent()
+        );
+        $this->assertEquals(
+            204,
+            $response->getStatusCode()
+        );
+    }
+
+    public function testAdminWidgetHomeTabConfigChangeVisibilityAction()
+    {
+        $widgetHomeTabConfig =
+            $this->mock('Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig');
+
+        $widgetHomeTabConfig->shouldReceive('getUser')->once()->andReturn(null);
+        $widgetHomeTabConfig->shouldReceive('getWorkspace')->once()->andReturn(null);
+        $this->homeTabManager
+            ->shouldReceive('changeVisibilityWidgetHomeTabConfig')
+            ->with($widgetHomeTabConfig)
+            ->once();
+
+        $response = $this->getController()
+            ->adminWidgetHomeTabConfigChangeVisibilityAction($widgetHomeTabConfig);
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\Response',
+            $response
+        );
+        $this->assertEquals(
+            'success',
+            $response->getContent()
+        );
+        $this->assertEquals(
+            204,
+            $response->getStatusCode()
+        );
+    }
+
+    public function testAdminWidgetHomeTabConfigChangeLockAction()
+    {
+        $widgetHomeTabConfig =
+            $this->mock('Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig');
+
+        $widgetHomeTabConfig->shouldReceive('getUser')->once()->andReturn(null);
+        $widgetHomeTabConfig->shouldReceive('getWorkspace')->once()->andReturn(null);
+        $this->homeTabManager
+            ->shouldReceive('changeLockWidgetHomeTabConfig')
+            ->with($widgetHomeTabConfig)
+            ->once();
+
+        $response = $this->getController()
+            ->adminWidgetHomeTabConfigChangeLockAction($widgetHomeTabConfig);
         $this->assertInstanceOf(
             'Symfony\Component\HttpFoundation\Response',
             $response
