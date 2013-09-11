@@ -11,7 +11,12 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 
+/**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("hasRole('ADMIN')")
+ */
 class AdministrationToolController extends Controller
 {
     private $request;

@@ -28,7 +28,7 @@
         <h3 class="panel-title">{{ 'resources_rights_management'|trans({}, 'platform') }}</h3>
     </div>
     <div class="panel-body">
-        <div id="data" data-workspace-id="{{ workspace.getId() }}" data-node-id="{{ node.getId() }}"></div>
+        <div id="data" data-workspace-id="{{ workspace.getId() }}" data-node-id="{{ resource.getId() }}"></div>
 
         {% include 'ClarolineCoreBundle:Tool\\workspace\\resource_manager:resourcesRightsForm.html.twig' %}
     </div>

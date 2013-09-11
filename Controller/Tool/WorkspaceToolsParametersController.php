@@ -242,7 +242,6 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      */
     public function workspaceOrderToolEditAction(AbstractWorkspace $workspace, OrderedTool $ot)
     {
-
         $form = $this->formFactory->create(FormFactory::TYPE_ORDERED_TOOL, array(), $ot);
         $form->handleRequest($this->request);
 
