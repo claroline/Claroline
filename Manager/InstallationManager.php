@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Claroline\MigrationBundle\Manager\Manager;
 use Claroline\MigrationBundle\Migrator\Migrator;
 use Claroline\BundleRecorder\Recorder;
-use Claroline\KernelBundle\Kernel\RebootableKernel;
+use Claroline\KernelBundle\Kernel\SwitchKernel;
 use Claroline\InstallationBundle\Fixtures\FixtureLoader;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
 use Claroline\InstallationBundle\Additional\AdditionalInstallerInterface;
@@ -24,7 +24,7 @@ class InstallationManager
 
     public function __construct(
         ContainerInterface $container,
-        RebootableKernel $kernel,
+        SwitchKernel $kernel,
         Recorder $recorder,
         Manager $migrationManager,
         FixtureLoader $fixtureLoader
@@ -47,7 +47,10 @@ class InstallationManager
     public function install(InstallableInterface $bundle, $requiredOnly = true)
     {
         $this->recorder->addBundles(array(get_class($bundle)));
-        $this->kernel->reboot();
+        $this->kernel->switchToTmpEnvironment();
+        $this->container = $this->kernel->getContainer();
+        // bundle mapping is only accessible in the new container instance
+        $this->fixtureLoader = $this->container->get('claroline.installation.fixture_loader');
 
         try {
             $additionalInstaller = $this->getAdditionalInstaller($bundle);
@@ -74,9 +77,12 @@ class InstallationManager
         } catch (\Exception $ex) {
             $this->log('<error>An error occured !</error>');
             $this->recorder->removeBundles(array(get_class($bundle)));
+            $this->kernel->switchBack();
 
             throw $ex;
         }
+
+        $this->kernel->switchBack();
     }
 
     public function uninstall(InstallableInterface $bundle)
