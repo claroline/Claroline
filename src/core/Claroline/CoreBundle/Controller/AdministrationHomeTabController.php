@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -17,20 +18,24 @@ class AdministrationHomeTabController extends Controller
 {
     private $formFactory;
     private $homeTabManager;
+    private $request;
 
     /**
      * @DI\InjectParams({
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
-     *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager")
+     *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
+     *     "request"            = @DI\Inject("request")
      * })
      */
     public function __construct(
         FormFactory $formFactory,
-        HomeTabManager $homeTabManager
+        HomeTabManager $homeTabManager,
+        Request $request
     )
     {
         $this->formFactory = $formFactory;
         $this->homeTabManager = $homeTabManager;
+        $this->request = $request;
     }
 
     /**
@@ -119,8 +124,7 @@ class AdministrationHomeTabController extends Controller
             array(),
             $homeTab
         );
-        $request = $this->getRequest();
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $homeTab->setType('admin_desktop');
@@ -195,8 +199,7 @@ class AdministrationHomeTabController extends Controller
             array(),
             $homeTab
         );
-        $request = $this->getRequest();
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $homeTab->setType('admin_workspace');
@@ -326,8 +329,7 @@ class AdministrationHomeTabController extends Controller
             array(),
             $homeTab
         );
-        $request = $this->getRequest();
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $this->homeTabManager->insertHomeTab($homeTab);
@@ -373,8 +375,7 @@ class AdministrationHomeTabController extends Controller
             array(),
             $homeTab
         );
-        $request = $this->getRequest();
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $this->homeTabManager->insertHomeTab($homeTab);
