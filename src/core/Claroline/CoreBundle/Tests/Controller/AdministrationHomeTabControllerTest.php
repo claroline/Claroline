@@ -4,8 +4,10 @@ namespace Claroline\CoreBundle\Controller;
 
 use \Mockery as m;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
+use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class AdministrationHomeTabControllerTest extends MockeryTestCase
 {
@@ -136,9 +138,354 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
         );
     }
 
+    public function testAdminDesktopHomeTabCreateAction()
+    {
+        $controller = $this->getController(array('redirect', 'generateUrl'));
+        $form = $this->mock('Symfony\Component\Form\Form');
+
+        $this->formFactory
+            ->shouldReceive('create')
+            ->with(
+                FormFactory::TYPE_HOME_TAB,
+                array(),
+                anInstanceOf('Claroline\CoreBundle\Entity\Home\HomeTab')
+            )
+            ->once()
+            ->andReturn($form);
+        $form->shouldReceive('handleRequest')
+            ->with($this->request)
+            ->once();
+        $form->shouldReceive('isValid')
+            ->once()
+            ->andReturn(true);
+        $this->homeTabManager
+            ->shouldReceive('insertHomeTab')
+            ->with(
+                m::on(
+                    function (HomeTab $newHomeTab) {
+
+                        return $newHomeTab->getType() === 'admin_desktop';
+                    }
+                )
+            )
+            ->once();
+        $this->homeTabManager
+            ->shouldReceive('getOrderOfLastAdminDesktopHomeTabConfig')
+            ->once()
+            ->andReturn(array('order_max' => 3));
+        $this->homeTabManager
+            ->shouldReceive('insertHomeTabConfig')
+            ->with(
+                m::on(
+                    function (HomeTabConfig $newHomeTabConfig) {
+
+                        return $newHomeTabConfig->getType() === 'admin_desktop'
+                            && !$newHomeTabConfig->isVisible()
+                            && !$newHomeTabConfig->isLocked()
+                            && $newHomeTabConfig->getTabOrder() === 4;
+                    }
+                )
+            )
+            ->once();
+        $controller
+            ->shouldReceive('generateUrl')
+            ->with('claro_admin_home_tabs_configuration')
+            ->once()
+            ->andReturn('url');
+        $controller
+            ->shouldReceive('redirect')
+            ->with('url')
+            ->once()
+            ->andReturn('redirection');
+
+        $this->assertEquals(
+            'redirection',
+            $controller->adminDesktopHomeTabCreateAction()
+        );
+    }
+
+    public function testAdminWorkspaceHomeTabCreateFormAction()
+    {
+        $form = $this->mock('Symfony\Component\Form\Form');
+
+        $this->formFactory
+            ->shouldReceive('create')
+            ->with(
+                FormFactory::TYPE_HOME_TAB,
+                array(),
+                anInstanceOf('Claroline\CoreBundle\Entity\Home\HomeTab')
+            )
+            ->once()
+            ->andReturn($form);
+        $form->shouldReceive('createView')->once()->andReturn('view');
+
+        $this->assertEquals(
+            array('form' => 'view'),
+            $this->getController()->adminWorkspaceHomeTabCreateFormAction()
+        );
+    }
+
+    public function testAdminWorkspaceHomeTabCreateAction()
+    {
+        $controller = $this->getController(array('redirect', 'generateUrl'));
+        $form = $this->mock('Symfony\Component\Form\Form');
+
+        $this->formFactory
+            ->shouldReceive('create')
+            ->with(
+                FormFactory::TYPE_HOME_TAB,
+                array(),
+                anInstanceOf('Claroline\CoreBundle\Entity\Home\HomeTab')
+            )
+            ->once()
+            ->andReturn($form);
+        $form->shouldReceive('handleRequest')
+            ->with($this->request)
+            ->once();
+        $form->shouldReceive('isValid')
+            ->once()
+            ->andReturn(true);
+        $this->homeTabManager
+            ->shouldReceive('insertHomeTab')
+            ->with(
+                m::on(
+                    function (HomeTab $newHomeTab) {
+
+                        return $newHomeTab->getType() === 'admin_workspace';
+                    }
+                )
+            )
+            ->once();
+        $this->homeTabManager
+            ->shouldReceive('getOrderOfLastAdminWorkspaceHomeTabConfig')
+            ->once()
+            ->andReturn(array('order_max' => 3));
+        $this->homeTabManager
+            ->shouldReceive('insertHomeTabConfig')
+            ->with(
+                m::on(
+                    function (HomeTabConfig $newHomeTabConfig) {
+
+                        return $newHomeTabConfig->getType() === 'admin_workspace'
+                            && !$newHomeTabConfig->isVisible()
+                            && !$newHomeTabConfig->isLocked()
+                            && $newHomeTabConfig->getTabOrder() === 4;
+                    }
+                )
+            )
+            ->once();
+        $controller
+            ->shouldReceive('generateUrl')
+            ->with('claro_admin_home_tabs_configuration')
+            ->once()
+            ->andReturn('url');
+        $controller
+            ->shouldReceive('redirect')
+            ->with('url')
+            ->once()
+            ->andReturn('redirection');
+
+        $this->assertEquals(
+            'redirection',
+            $controller->adminWorkspaceHomeTabCreateAction()
+        );
+    }
+
+    public function testAdminDesktopHomeTabEditFormAction()
+    {
+        $homeTabConfig = $this->mock('Claroline\CoreBundle\Entity\Home\HomeTabConfig');
+        $homeTab = $this->mock('Claroline\CoreBundle\Entity\Home\HomeTab');
+        $form = $this->mock('Symfony\Component\Form\Form');
+
+        $homeTabConfig
+            ->shouldReceive('getHomeTab')
+            ->once()
+            ->andReturn($homeTab);
+        $homeTab->shouldReceive('getName')
+            ->once()
+            ->andReturn('name');
+        $this->formFactory
+            ->shouldReceive('create')
+            ->with(
+                FormFactory::TYPE_HOME_TAB,
+                array(),
+                anInstanceOf('Claroline\CoreBundle\Entity\Home\HomeTab')
+            )
+            ->once()
+            ->andReturn($form);
+        $form->shouldReceive('createView')->once()->andReturn('view');
+
+        $this->assertEquals(
+            array(
+                'form' => 'view',
+                'homeTabConfig' => $homeTabConfig,
+                'homeTab' => $homeTab,
+                'homeTabName' => 'name'
+            ),
+            $this->getController()->adminDesktopHomeTabEditFormAction($homeTabConfig)
+        );
+    }
+
+    public function testAdminWorkspaceHomeTabEditFormAction()
+    {
+        $homeTabConfig = $this->mock('Claroline\CoreBundle\Entity\Home\HomeTabConfig');
+        $homeTab = $this->mock('Claroline\CoreBundle\Entity\Home\HomeTab');
+        $form = $this->mock('Symfony\Component\Form\Form');
+
+        $homeTabConfig
+            ->shouldReceive('getHomeTab')
+            ->once()
+            ->andReturn($homeTab);
+        $homeTab->shouldReceive('getName')
+            ->once()
+            ->andReturn('name');
+        $this->formFactory
+            ->shouldReceive('create')
+            ->with(
+                FormFactory::TYPE_HOME_TAB,
+                array(),
+                anInstanceOf('Claroline\CoreBundle\Entity\Home\HomeTab')
+            )
+            ->once()
+            ->andReturn($form);
+        $form->shouldReceive('createView')->once()->andReturn('view');
+
+        $this->assertEquals(
+            array(
+                'form' => 'view',
+                'homeTabConfig' => $homeTabConfig,
+                'homeTab' => $homeTab,
+                'homeTabName' => 'name'
+            ),
+            $this->getController()->adminWorkspaceHomeTabEditFormAction($homeTabConfig)
+        );
+    }
+
+    public function testAdminDesktopHomeTabEditAction()
+    {
+        $controller = $this->getController(array('redirect', 'generateUrl'));
+        $homeTabConfig = $this->mock('Claroline\CoreBundle\Entity\Home\HomeTabConfig');
+        $homeTab = new HomeTab();
+        $form = $this->mock('Symfony\Component\Form\Form');
+
+        $homeTabConfig
+            ->shouldReceive('getHomeTab')
+            ->once()
+            ->andReturn($homeTab);
+        $this->formFactory
+            ->shouldReceive('create')
+            ->with(
+                FormFactory::TYPE_HOME_TAB,
+                array(),
+                anInstanceOf('Claroline\CoreBundle\Entity\Home\HomeTab')
+            )
+            ->once()
+            ->andReturn($form);
+        $form->shouldReceive('handleRequest')
+            ->with($this->request)
+            ->once();
+        $form->shouldReceive('isValid')
+            ->once()
+            ->andReturn(true);
+        $this->homeTabManager
+            ->shouldReceive('insertHomeTab')
+            ->with($homeTab)
+            ->once();
+        $controller
+            ->shouldReceive('generateUrl')
+            ->with('claro_admin_home_tabs_configuration')
+            ->once()
+            ->andReturn('url');
+        $controller
+            ->shouldReceive('redirect')
+            ->with('url')
+            ->once()
+            ->andReturn('redirection');
+
+        $this->assertEquals(
+            'redirection',
+            $controller->adminDesktopHomeTabEditAction($homeTabConfig, 'name')
+        );
+    }
+
+    public function testAdminWorkspaceHomeTabEditAction()
+    {
+        $controller = $this->getController(array('redirect', 'generateUrl'));
+        $homeTabConfig = $this->mock('Claroline\CoreBundle\Entity\Home\HomeTabConfig');
+        $homeTab = new HomeTab();
+        $form = $this->mock('Symfony\Component\Form\Form');
+
+        $homeTabConfig
+            ->shouldReceive('getHomeTab')
+            ->once()
+            ->andReturn($homeTab);
+        $this->formFactory
+            ->shouldReceive('create')
+            ->with(
+                FormFactory::TYPE_HOME_TAB,
+                array(),
+                anInstanceOf('Claroline\CoreBundle\Entity\Home\HomeTab')
+            )
+            ->once()
+            ->andReturn($form);
+        $form->shouldReceive('handleRequest')
+            ->with($this->request)
+            ->once();
+        $form->shouldReceive('isValid')
+            ->once()
+            ->andReturn(true);
+        $this->homeTabManager
+            ->shouldReceive('insertHomeTab')
+            ->with($homeTab)
+            ->once();
+        $controller
+            ->shouldReceive('generateUrl')
+            ->with('claro_admin_home_tabs_configuration')
+            ->once()
+            ->andReturn('url');
+        $controller
+            ->shouldReceive('redirect')
+            ->with('url')
+            ->once()
+            ->andReturn('redirection');
+
+        $this->assertEquals(
+            'redirection',
+            $controller->adminWorkspaceHomeTabEditAction($homeTabConfig, 'name')
+        );
+    }
+
+    public function testAdminHomeTabDeleteAction()
+    {
+        $homeTab = $this->mock('Claroline\CoreBundle\Entity\Home\HomeTab');
+
+        $homeTab->shouldReceive('getUser')->once()->andReturn(null);
+        $homeTab->shouldReceive('getWorkspace')->once()->andReturn(null);
+        $homeTab->shouldReceive('getType')->once()->andReturn('type');
+        $this->homeTabManager
+            ->shouldReceive('deleteHomeTab')
+            ->with($homeTab, 'type', 1)
+            ->once();
+
+        $response = $this->getController()->adminHomeTabDeleteAction($homeTab, 1);
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\Response',
+            $response
+        );
+        $this->assertEquals(
+            'success',
+            $response->getContent()
+        );
+        $this->assertEquals(
+            204,
+            $response->getStatusCode()
+        );
+    }
+
     private function getController(array $mockedMethods = array())
     {
         if (count($mockedMethods) === 0) {
+
             return new AdministrationHomeTabController(
                 $this->formFactory,
                 $this->homeTabManager,
