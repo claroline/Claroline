@@ -1,10 +1,10 @@
 <?php
 
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Claroline\KernelBundle\Kernel\RebootableKernel;
+use Claroline\KernelBundle\Kernel\SwitchKernel;
 use Claroline\KernelBundle\ClarolineKernelBundle;
 
-class AppKernel extends RebootableKernel
+class AppKernel extends SwitchKernel
 {
     private $kernelBundle;
 
