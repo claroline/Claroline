@@ -18,6 +18,7 @@ app/config/local/plugin/*
 app/logs/*
 bin/*
 catalog.xml
+composer.json
 composer.lock
 files/*
 files/tmp/*
