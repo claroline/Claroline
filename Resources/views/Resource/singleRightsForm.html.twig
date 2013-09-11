@@ -4,6 +4,7 @@
       class="form-vertical form-right-node"
       id="node-right-form">
     {% set roleId = resourceRights.getRole().getId() %}
+    <input type="hidden" name="role_row[{{ roleId }}]" value="{{ roleId }}"/>
     {% for decoder in resourceRights.getResourceNode().getResourceType().getMaskDecoders() %}
          {{ decoder.getName() }}  <input type="checkbox" name="roles[{{ roleId }}][{{ decoder.getName() }}]" type="checkbox" {% if resourceRights.getMask() b-and decoder.getValue() %} checked {% endif %} />
     {% endfor %}
