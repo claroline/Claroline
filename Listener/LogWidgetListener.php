@@ -188,6 +188,8 @@ class LogWidgetListener
      */
     public function onDesktopConfigure(ConfigureWidgetDesktopEvent $event)
     {
+        $workspaces = array();
+
         if ($event->isDefault() !== true) {
             $workspaces = $this->workspaceManager->getWorkspacesByUserAndRoleNames(
                 $event->getUser(),

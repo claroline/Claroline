@@ -314,6 +314,7 @@ class RolesController extends Controller
     }
 
     /**
+     * @todo security is missing
      * @EXT\Route(
      *     "/{workspace}/users/registered/page/{page}/{withUnregistered}",
      *     name="claro_workspace_registered_user_list",
@@ -385,6 +386,7 @@ class RolesController extends Controller
     }
 
     /**
+     * @todo security is missing
      * @EXT\Route(
      *     "/{workspace}/groups/registered/page/{page}/{withUnregistered}",
      *     name="claro_workspace_registered_group_list",

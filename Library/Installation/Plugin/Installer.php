@@ -2,70 +2,63 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use \RuntimeException;
-use \LogicException;
-use Symfony\Component\HttpKernel\KernelInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\InstallationBundle\Manager\InstallationManager;
 use Claroline\CoreBundle\Library\PluginBundle;
 
 /**
- * This class is used to perform the (un-)installation of a plugin. It uses
- * several dedicated components to load, validate and register the plugin.
+ * This class is used to perform the (un-)installation of a plugin.
  *
  * @DI\Service("claroline.plugin.installer")
  */
 class Installer
 {
-    private $loader;
     private $validator;
     private $recorder;
-    private $migrator;
-    private $kernel;
+    private $baseInstaller;
+    private $logger;
 
     /**
      * Constructor.
      *
-     * @param Loader          $loader
-     * @param Validator       $validator
-     * @param Migrator        $migrator
-     * @param Recorder        $recorder
-     * @param KernelInterface $kernel
+     * @param Validator             $validator
+     * @param Recorder              $recorder
+     * @param InstallationManager   $installer
      *
      * @DI\InjectParams({
-     *     "loader"         = @DI\Inject("claroline.plugin.loader"),
      *     "validator"      = @DI\Inject("claroline.plugin.validator"),
-     *     "migrator"       = @DI\Inject("claroline.plugin.migrator"),
      *     "recorder"       = @DI\Inject("claroline.plugin.recorder"),
-     *     "kernel"         = @DI\Inject("kernel")
+     *     "installer"      = @DI\Inject("claroline.installation.manager")
      * })
      */
     public function __construct(
-        Loader $loader,
         Validator $validator,
-        Migrator $migrator,
         Recorder $recorder,
-        KernelInterface $kernel
+        InstallationManager $installer
     )
     {
-        $this->loader = $loader;
         $this->validator = $validator;
-        $this->migrator = $migrator;
         $this->recorder = $recorder;
-        $this->kernel = $kernel;
+        $this->baseInstaller = $installer;
+    }
+
+    public function setLogger(\Closure $logger)
+    {
+        $this->logger = $logger;
+        $this->baseInstaller->setLogger($logger);
     }
 
     /**
      * Installs a plugin.
      *
-     * @param string $pluginFqcn    FQCN of the plugin bundle class
-     * @param string $pluginPath    Path of the plugin bundle class
+     * PluginBundle $plugin
      *
      * @throws Exception if the plugin doesn't pass the validation
      */
-    public function install($pluginFqcn, $pluginPath = null)
+    public function install(PluginBundle $plugin)
     {
-        $this->checkRegistrationStatus($pluginFqcn, false);
-        $plugin = $this->loader->load($pluginFqcn, $pluginPath);
+        $this->checkInstallationStatus($plugin, false);
+        $this->log('Validating plugin...');
         $errors = $this->validator->validate($plugin);
 
         if (0 !== count($errors)) {
@@ -76,30 +69,25 @@ class Installer
                 $report .= $error->getMessage() . PHP_EOL;
             }
 
-            throw new RuntimeException($report);
+            throw new \Exception($report);
         }
 
-        $config = $this->validator->getPluginConfiguration();
-        $this->recorder->register($plugin, $config);
-        $this->kernel->shutdown();
-        $this->kernel->boot();
-        $this->migrator->install($plugin);
-        $this->loadFixtures($plugin);
+        $this->baseInstaller->install($plugin);
+        $this->log('Saving plugin configuration...');
+        $this->recorder->register($plugin, $this->validator->getPluginConfiguration());
     }
 
     /**
      * Uninstalls a plugin.
      *
-     * @param string $pluginFqcn
+     * @param PluginBundle $plugin
      */
-    public function uninstall($pluginFqcn)
+    public function uninstall(PluginBundle $plugin)
     {
-        $this->checkRegistrationStatus($pluginFqcn, true);
-        $plugin = $this->loader->load($pluginFqcn);
+        $this->checkInstallationStatus($plugin, true);
+        $this->log('Removing plugin configuration...');
         $this->recorder->unregister($plugin);
-        $this->migrator->remove($plugin);
-        $this->kernel->shutdown();
-        $this->kernel->boot();
+        $this->baseInstaller->uninstall($plugin);
     }
 
     /**
@@ -108,43 +96,31 @@ class Installer
      * @param string $pluginFqcn
      * @param string $version
      */
-    public function migrate($pluginFqcn, $version)
+    public function migrate(PluginBundle $plugin, $version)
     {
-        $this->checkRegistrationStatus($pluginFqcn, true);
-        $plugin = $this->loader->load($pluginFqcn);
-        $this->migrator->migrate($plugin, $version);
+//        $this->checkRegistrationStatus($pluginFqcn, true);
+//        $plugin = $this->loader->load($pluginFqcn);
+//        $this->migrator->migrate($plugin, $version);
     }
 
-    /**
-     * Checks if a plugin is installed.
-     *
-     * @param type $pluginFqcn
-     *
-     * @return boolean
-     */
-    public function isInstalled($pluginFqcn)
+    private function checkInstallationStatus(PluginBundle $plugin, $shouldBeInstalled = true)
     {
-        return $this->recorder->isRegistered($pluginFqcn);
-    }
+        $this->log('Checking installation status...');
 
-    private function checkRegistrationStatus($pluginFqcn, $expectedStatus)
-    {
-        if ($this->isInstalled($pluginFqcn) !== $expectedStatus) {
-            $expectedStatus === true ? $stateDiscr = 'not' : $stateDiscr = 'already';
+        if ($this->recorder->isRegistered($plugin) !== $shouldBeInstalled) {
+            $stateDiscr = $shouldBeInstalled ? 'not' : 'already';
 
-            throw new LogicException(
-                "Plugin '{$pluginFqcn}' is {$stateDiscr} registered."
+            throw new \LogicException(
+                "Plugin '{$plugin->getName()}' is {$stateDiscr} installed."
             );
         }
     }
 
-    private function loadFixtures(PluginBundle $plugin)
+    private function log($message)
     {
-        $container = $this->kernel->getContainer();
-        $mappingLoader = $container->get('claroline.installation.mapping_loader');
-        $fixtureLoader = $container->get('claroline.installation.fixture_loader');
-        $mappingLoader->registerMapping($plugin);
-        $fixtureLoader->load($plugin);
+        if ($log = $this->logger) {
+            $log($message);
+        }
     }
 }
 

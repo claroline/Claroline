@@ -13,6 +13,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
+/**
+ * @todo if user has ROLE_ANONYMOUS, a 403 should be returned (otherise he'll get a 500)
+ */
 class DesktopParametersController extends Controller
 {
     private $request;

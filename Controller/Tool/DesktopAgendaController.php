@@ -56,7 +56,7 @@ class DesktopAgendaController extends Controller
      */
     public function desktopShowAction()
     {
-        $usr = $this-> get('security.context')-> getToken()-> getUser();
+        $usr = $this->get('security.context')->getToken()->getUser();
         $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
         $desktopEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop();
         $data = array_merge($this->convertEventoArray($listEvents), $this->convertEventoArray($desktopEvents));
@@ -187,6 +187,7 @@ class DesktopAgendaController extends Controller
     private function convertEventoArray($listEvents)
     {
         $data = array();
+        
         foreach ($listEvents as $key => $object) {
             $data[$key]['id'] = $object->getId();
             $workspace = $object->getWorkspace();

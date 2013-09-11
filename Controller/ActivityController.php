@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
 use Claroline\CoreBundle\Entity\Resource\Activity;
@@ -20,20 +21,24 @@ class ActivityController extends Controller
 {
     private $resourceManager;
     private $request;
+    private $translator;
 
     /**
      * @DI\InjectParams({
-     *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
-     *     "request"            = @DI\Inject("request")
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "request"         = @DI\Inject("request"),
+     *     "translator"      = @DI\Inject("translator")
      * })
      */
     public function __construct(
         ResourceManager $resourceManager,
-        Request $request
+        Request $request,
+        Translator $translator
     )
     {
         $this->resourceManager = $resourceManager;
         $this->request = $request;
+        $this->translator = $translator;
     }
 
     /**
@@ -62,7 +67,11 @@ class ActivityController extends Controller
      */
     public function addResourceAction(ResourceNode $node, Activity $activity)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        if ($node->getResourceType()->getName() === 'activity') {
+            return new Response($this->translator->trans('recursivity_not_supported', array(), 'error'), 422);
+        }
+
+        $em = $this->getDoctrine()->getManager();
         $link = new ResourceActivity();
         $link->setActivity($activity);
         $link->setResourceNode($node);
@@ -92,7 +101,7 @@ class ActivityController extends Controller
      */
     public function removeResourceAction($nodeId, $activityId)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity');
         $resourceActivity = $repo->findOneBy(array('resourceNode' => $nodeId, 'activity' => $activityId));
         $em->remove($resourceActivity);
@@ -117,7 +126,7 @@ class ActivityController extends Controller
      */
     public function setSequenceOrderAction($activityId)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getDoctrine()->getManager();
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findBy(array('activity' => $activityId));
         $params = $this->request->query->all();
@@ -154,7 +163,7 @@ class ActivityController extends Controller
      */
     public function renderLeftMenuAction(Activity $activity)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getDoctrine()->getManager();
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findResourceActivities($activity);
         $totalSteps = $this->countSteps($activity, 0);
@@ -183,7 +192,7 @@ class ActivityController extends Controller
      */
     public function showPlayerAction(Activity $activity)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getDoctrine()->getManager();
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findResourceActivities($activity);
         $resource = isset($resourceActivities[0]) ? $resourceActivities[0]->getResourceNode(): null;
