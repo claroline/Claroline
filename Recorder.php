@@ -40,12 +40,15 @@ class Recorder
         $hasChanges = false;
 
         foreach ($bundlesFqcns as $bundleFqcn) {
+            $fqcnParts = explode('\\', $bundleFqcn);
+            $bundleName = array_pop($fqcnParts);
+
             if ($action === 'add' && !isset($recordedBundles[$bundleFqcn])) {
-                $this->log("Adding '{$bundleFqcn}' to the bundle file..." );
+                $this->log("Adding {$bundleName} to the bundle file..." );
                 $recordedBundles[$bundleFqcn] = true;
                 $hasChanges = true;
             } elseif ($action === 'remove' && isset($recordedBundles[$bundleFqcn])) {
-                $this->log("Removing '{$bundleFqcn}' from the bundle file..." );
+                $this->log("Removing {$bundleName} from the bundle file..." );
                 unset($recordedBundles[$bundleFqcn]);
                 $hasChanges = true;
             }
