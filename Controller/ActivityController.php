@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
 use Claroline\CoreBundle\Entity\Resource\Activity;
@@ -20,20 +21,24 @@ class ActivityController extends Controller
 {
     private $resourceManager;
     private $request;
+    private $translator;
 
     /**
      * @DI\InjectParams({
-     *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
-     *     "request"            = @DI\Inject("request")
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "request"         = @DI\Inject("request"),
+     *     "translator"      = @DI\Inject("translator")
      * })
      */
     public function __construct(
         ResourceManager $resourceManager,
-        Request $request
+        Request $request,
+        Translator $translator
     )
     {
         $this->resourceManager = $resourceManager;
         $this->request = $request;
+        $this->translator = $translator;
     }
 
     /**
@@ -62,6 +67,10 @@ class ActivityController extends Controller
      */
     public function addResourceAction(ResourceNode $node, Activity $activity)
     {
+        if ($node->getResourceType()->getName() === 'activity') {
+            return new Response($this->translator->trans('recursivity_not_supported', array(), 'error'), 422);
+        }
+
         $em = $this->getDoctrine()->getManager();
         $link = new ResourceActivity();
         $link->setActivity($activity);
