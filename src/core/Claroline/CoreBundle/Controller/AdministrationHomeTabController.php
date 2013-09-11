@@ -199,8 +199,7 @@ class AdministrationHomeTabController extends Controller
             array(),
             $homeTab
         );
-        $request = $this->getRequest();
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $homeTab->setType('admin_workspace');
@@ -330,8 +329,7 @@ class AdministrationHomeTabController extends Controller
             array(),
             $homeTab
         );
-        $request = $this->getRequest();
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $this->homeTabManager->insertHomeTab($homeTab);
@@ -377,8 +375,7 @@ class AdministrationHomeTabController extends Controller
             array(),
             $homeTab
         );
-        $request = $this->getRequest();
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $this->homeTabManager->insertHomeTab($homeTab);
