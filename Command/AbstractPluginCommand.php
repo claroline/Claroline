@@ -2,67 +2,85 @@
 
 namespace Claroline\CoreBundle\Command;
 
-use \InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
+use Claroline\BundleRecorder\Detector;
+use Claroline\CoreBundle\Library\PluginBundle;
 
 /**
  * This class contains common methods for the plugin install/uninstall commands.
  */
 abstract class AbstractPluginCommand extends ContainerAwareCommand
 {
-    /**
-     * Installs a plugin using the claroline plugin installer.
-     *
-     * @param string          $fqcn
-     * @param OutputInterface $output
-     *
-     * @return boolean True if the installation succeed, false otherwise
-     */
-    protected function installPlugin($fqcn, OutputInterface $output)
+    protected function configure()
     {
-        $installer = $this->getContainer()->get('claroline.plugin.installer');
+        $this->addArgument('bundle', InputArgument::REQUIRED, 'The bundle name');
+    }
 
-        if (!$installer->isInstalled($fqcn)) {
-            $output->writeln("Installing plugin '{$fqcn}'...");
-            $installer->install($fqcn);
-            $output->writeln('Done');
+    protected function interact(InputInterface $input, OutputInterface $output)
+    {
+        if (!$input->getArgument('bundle')) {
+            $bundleName = $this->getHelper('dialog')->askAndValidate(
+                $output,
+                'Enter the bundle name: ',
+                function ($argument) {
+                    if (empty($argument)) {
+                        throw new \Exception('This argument is required');
+                    }
 
-            return true;
+                    return $argument;
+                }
+            );
+            $input->setArgument('bundle', $bundleName);
+        }
+    }
+
+    protected function getPlugin(InputInterface $input, $fromKernel = true)
+    {
+        $bundleName = $input->getArgument('bundle');
+        $kernel = $this->getContainer()->get('kernel');
+
+        if ($fromKernel) {
+            return $kernel->getBundle($bundleName);
         }
 
-        $output->writeln("Plugin '{$fqcn}' is already installed.");
+        $detector = new Detector();
+        $bundles = $detector->detectBundles($kernel->getRootDir() . '/../vendor');
 
-        return false;
+        foreach ($bundles as $bundleFqcn) {
+            $parts = explode('\\', $bundleFqcn);
+            $name = array_pop($parts);
+
+            if ($name === $bundleName) {
+                $bundle = new $bundleFqcn($kernel);
+
+                if (!$bundle instanceof PluginBundle) {
+                    throw new \Exception("Bundle {$bundle->getName()} must extend PluginBundle");
+                }
+
+                return $bundle;
+            }
+        }
+
+        throw new \Exception("Cannot found bundle '{$bundleName}' in the vendor directory");
+    }
+
+    protected function getPluginInstaller(OutputInterface $output)
+    {
+        $installer = $this->getContainer()->get('claroline.plugin.installer');
+        $installer->setLogger(function ($message) use ($output) {
+            $output->writeln($message);
+        });
+
+        return $installer;
     }
 
     /**
-     * Uninstalls a plugin using the claroline plugin installer.
+     * @todo Remove ?
      *
-     * @param string          $fqcn
-     * @param OutputInterface $output
-     *
-     * @return boolean True if the uninstallation succeed, false otherwise
-     */
-    protected function uninstallPlugin($fqcn, OutputInterface $output)
-    {
-        $installer = $this->getContainer()->get('claroline.plugin.installer');
-
-        if ($installer->isInstalled($fqcn)) {
-            $output->writeln("Uninstalling plugin '{$fqcn}'...");
-            $installer->uninstall($fqcn);
-            $output->writeln('Done');
-
-            return true;
-        }
-
-        $output->writeln("Plugin '{$fqcn}' is not installed.");
-
-        return false;
-    }
-
-    /**
      * Clears the cache in production environment (mandatory after plugin
      * installation/uninstallation).
      *
@@ -85,6 +103,8 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
     }
 
     /**
+     * @todo Remove ?
+     * 
      * Refreshes the asset folder (mandatory after plugin installation/uninstallation)
      *
      * @param OutputInterface $output

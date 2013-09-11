@@ -115,20 +115,6 @@ class DatabaseWriter
             ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findByPlugin($plugin->getGeneratedId());
 
-        foreach ($resourceTypes as $resourceType) {
-            if (null !== $resourceType) {
-                if (null !== $parentType = $resourceType->getParent()) {
-                    $resources = $this->em
-                        ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-                        ->findByResourceType($resourceType->getId());
-
-                    foreach ($resources as $resource) {
-                        $resource->setResourceType($parentType);
-                    }
-                }
-            }
-        }
-
         if ($this->modifyTemplate) {
             $this->templateBuilder = TemplateBuilder::fromTemplate("{$this->templateDir}default.zip");
             foreach ($resourceTypes as $resourceType) {
@@ -169,9 +155,9 @@ class DatabaseWriter
      *
      * @return boolean
      */
-    public function isSaved($pluginFqcn)
+    public function isSaved(PluginBundle $plugin)
     {
-        if ($this->getPluginEntity($pluginFqcn) !== null) {
+        if ($this->getPluginEntity(get_class($plugin)) !== null) {
             return true;
         }
 

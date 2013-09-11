@@ -6,26 +6,21 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Installs a specific plugin.
+ * Installs a plugin.
  */
-class PluginInstallCommand extends SinglePluginCommand
+class PluginInstallCommand extends AbstractPluginCommand
 {
     protected function configure()
     {
         parent::configure();
         $this->setName('claroline:plugin:install')
-            ->setDescription('Registers a specified claroline plugin.');
+            ->setDescription('Installs a specified claroline plugin.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $vendor = $input->getArgument('vendor_name');
-        $bundle = $input->getArgument('bundle_name');
-        $fqcn = "{$vendor}\\{$bundle}\\{$vendor}{$bundle}";
-
-        if ($this->installPlugin($fqcn, $output)) {
-            $this->resetCache($output);
-            $this->installAssets($output);
-        }
+        $plugin = $this->getPlugin($input, false);
+        $this->getPluginInstaller($output)->install($plugin);
+        $this->resetCache($output);
     }
 }
