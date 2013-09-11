@@ -56,7 +56,6 @@ class DesktopAgendaController extends Controller
      */
     public function desktopShowAction()
     {
-        $this->translator->trans('desktop', array(), 'platform');
         $usr = $this-> get('security.context')-> getToken()-> getUser();
         $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
         $desktopEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop();
@@ -127,7 +126,6 @@ class DesktopAgendaController extends Controller
      */
     public function deleteAction()
     {
-
         $repository = $this->om->getRepository('ClarolineCoreBundle:Event');
         $postData = $this->request->request->all();
         $event = $repository->find($postData['id']);
@@ -137,6 +135,51 @@ class DesktopAgendaController extends Controller
         return new Response(
             json_encode(array('greeting' => 'delete')),
             200,
+            array('Content-Type' => 'application/json')
+        );
+    }
+
+        /**
+     * @EXT\Route(
+     *     "/update",
+     *     name="claro_desktop_agenda_update"
+     * )
+     * @EXT\Method("POST")
+     *
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function updateAction()
+    {
+        $postData = $this->request->request->all();
+        $event = $this->om->getRepository('ClarolineCoreBundle:Event')->find($postData['id']);
+        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
+        $form->handleRequest($this->request);
+        if ($form->isValid()) {
+            $this->om->flush();
+
+            return new Response(
+                json_encode(
+                    array(
+                        'id' => $event->getId(),
+                        'title' => $event->getTitle(),
+                        'start' => $event->getStart()->getTimestamp(),
+                        'end' => $event->getEnd()->getTimestamp(),
+                        'color' => $event->getPriority(),
+                        'allDay' => $event->getAllDay(),
+                        'description' => $event->getDescription()
+                    )
+                ),
+                200,
+                array('Content-Type' => 'application/json')
+            );
+        }
+
+        return new Response(
+            json_encode(
+                array('dates are not valids')
+            ),
+            400,
             array('Content-Type' => 'application/json')
         );
     }

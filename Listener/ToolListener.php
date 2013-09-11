@@ -214,11 +214,12 @@ class ToolListener
         $em = $this->container-> get('doctrine.orm.entity_manager');
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findAll();
         $cours = array();
+        $translator = $this->container->get('translator');
 
         foreach ($listEvents as $event) {
 
             if (is_null($event->getWorkspace())){
-                $temp = '';
+                $temp = $translator->trans('desktop', array(), 'platform');
             } else {
                 $temp = $event->getWorkspace()->getName();
             }

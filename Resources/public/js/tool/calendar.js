@@ -141,7 +141,9 @@
             var data = new FormData($('#myForm')[0]);
             data.append('id', id);
             data.append('agenda_form[description]',$('#agenda_form_description').val());
-            data.append('agenda_form[allDay]',$('agenda_form_allDay').val());
+            var allDay = $('#agenda_form_allDay').attr('checked') === 'checked' ? 1 : 0;
+            console.debug(allDay);
+            data.append('agenda_form[allDay]', allDay);
             url = $('a#update').attr('href');
             $.ajax({
                 'url': url,
