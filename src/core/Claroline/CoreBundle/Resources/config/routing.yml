@@ -206,3 +206,16 @@ idci_exporter:
 # app/config/routing.yml
 _bazinga_exposetranslation:
     resource: "@BazingaExposeTranslationBundle/Resources/config/routing/routing.yml"
+
+# Badge routes
+claro_badge_admin:
+    resource: "@ClarolineCoreBundle/Controller/Badge/AdminController.php"
+    type:     annotation
+
+claro_badge_front:
+    resource: "@ClarolineCoreBundle/Controller/Badge/FrontController.php"
+    type:     annotation
+
+claro_badge_profil:
+    resource: "@ClarolineCoreBundle/Controller/Badge/ProfileController.php"
+    type:     annotation

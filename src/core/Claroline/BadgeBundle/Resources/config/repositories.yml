@@ -1,7 +1,0 @@
-services:
-  badge_repository:
-    class:           Claroline\badgeBundle\Repository\BadgeRepository
-    factory_service: doctrine.orm.entity_manager
-    factory_method:  getRepository
-    arguments:
-      - Claroline\BadgeBundle\Entity\Badge
