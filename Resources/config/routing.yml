@@ -49,8 +49,18 @@ claro_authentication:
     type: annotation
 
 claro_log:
-    resource: "@ClarolineCoreBundle/Controller/LogController.php"
+    resource: "@ClarolineCoreBundle/Controller/Log/LogController.php"
     prefix: log
+    type: annotation
+
+claro_log_admin:
+    resource: "@ClarolineCoreBundle/Controller/Log/AdministrationController.php"
+    prefix: admin
+    type: annotation
+
+claro_log_workspace:
+    resource: "@ClarolineCoreBundle/Controller/Log/Tool/WorkspaceController.php"
+    prefix: workspaces
     type: annotation
 
 claro_profile:
@@ -113,11 +123,6 @@ claro_workspace_tool_agenda:
     prefix: workspaces/tool/agenda
     type: annotation
 
-claro_workspace_tool_logs:
-    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceLogController.php"
-    prefix: workspaces/tool/logs
-    type: annotation
-
 claro_workspace_roles:
     resource: "@ClarolineCoreBundle/Controller/Tool/RolesController.php"
     prefix: workspaces/tools/roles/
@@ -125,6 +130,11 @@ claro_workspace_roles:
 
 claro_admin:
     resource: "@ClarolineCoreBundle/Controller/AdministrationController.php"
+    prefix: admin
+    type: annotation
+
+claro_admin_home_tab:
+    resource: "@ClarolineCoreBundle/Controller/AdministrationHomeTabController.php"
     prefix: admin
     type: annotation
 
@@ -201,3 +211,16 @@ idci_exporter:
 # app/config/routing.yml
 _bazinga_exposetranslation:
     resource: "@BazingaExposeTranslationBundle/Resources/config/routing/routing.yml"
+
+# Badge routes
+claro_badge_admin:
+    resource: "@ClarolineCoreBundle/Controller/Badge/AdminController.php"
+    type:     annotation
+
+claro_badge_front:
+    resource: "@ClarolineCoreBundle/Controller/Badge/FrontController.php"
+    type:     annotation
+
+claro_badge_profil:
+    resource: "@ClarolineCoreBundle/Controller/Badge/ProfileController.php"
+    type:     annotation

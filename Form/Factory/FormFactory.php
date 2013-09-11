@@ -36,6 +36,7 @@ class FormFactory
     const TYPE_ROLE_TRANSLATION = 'workspace_role_translation';
     const TYPE_USER_EMAIL = 'email';
     const TYPE_USER_RESET_PWD = 'user_reset_pwd';
+    const TYPE_HOME_TAB = 'home_tab';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -89,10 +90,10 @@ class FormFactory
             'formType' => 'Claroline\CoreBundle\Form\WorkspaceTemplateType'
         ),
         self::TYPE_LOG_WORKSPACE_WIDGET_CONFIG => array(
-            'formType' => 'Claroline\CoreBundle\Form\LogWorkspaceWidgetConfigType'
+            'formType' => 'Claroline\CoreBundle\Form\Log\LogWorkspaceWidgetConfigType'
         ),
         self::TYPE_LOG_DESKTOP_WIDGET_CONFIG => array(
-            'formType' => 'Claroline\CoreBundle\Form\LogDesktopWidgetConfigType'
+            'formType' => 'Claroline\CoreBundle\Form\Log\LogDesktopWidgetConfigType'
         ),
         self::TYPE_AGENDA => array(
             'formType' => 'Claroline\CoreBundle\Form\AgendaType',
@@ -130,6 +131,10 @@ class FormFactory
         ),
         self::TYPE_USER_RESET_PWD => array(
             'formType' => 'Claroline\CoreBundle\Form\ResetPasswordType'
+        ),
+        self::TYPE_HOME_TAB => array(
+            'formType' => 'Claroline\CoreBundle\Form\HomeTabType',
+            'entity' => 'Claroline\CoreBundle\Entity\Home\HomeTab'
         )
     );
 
