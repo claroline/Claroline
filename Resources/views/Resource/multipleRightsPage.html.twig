@@ -81,7 +81,10 @@
                     {% for resourceRight in resourceRights %}
                         {% set roleId = resourceRight.getRole().getId() %}
                         <tr>
-                            <td> {{ resourceRight.getRole().getTranslationKey()|trans({}, 'platform') }} <em> ({{ resourceRight.getRole().getWorkspace().getCode() }}) </em> </td>
+                            <td>
+                                {{ resourceRight.getRole().getTranslationKey()|trans({}, 'platform') }} <em> ({{ resourceRight.getRole().getWorkspace().getCode() }}) </em>
+                                <input type="hidden" name="role_row[{{ roleId }}]" value="{{ roleId }}"/>
+                            </td>
                             {% for decoder in resource.getResourceType().getMaskDecoders() %}
                                 <td> <input name="roles[{{ roleId }}][{{ decoder.getName() }}]" type="checkbox" {% if resourceRight.getMask() b-and decoder.getValue() %} checked {% endif %} </td>
                             {% endfor %}

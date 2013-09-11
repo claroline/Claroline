@@ -216,7 +216,21 @@ class ResourceRightsController
     {
         $permsMap = $this->maskManager->getPermissionMap($type);
         $roles = $this->request->request->get('roles');
+        $rows = $this->request->request->get('role_row');
         $data = array();
+
+        foreach (array_keys($rows) as $roleId) {
+            if (!array_key_exists($roleId, $roles)) {
+                foreach ($permsMap as $perm) {
+                    $changedPerms[$perm] = false;
+                }
+
+                $data[] = array(
+                    'role' => $this->roleManager->getRole($roleId),
+                    'permissions' => $changedPerms
+                );
+            }
+        }
 
         foreach ($roles as $roleId => $perms) {
 
