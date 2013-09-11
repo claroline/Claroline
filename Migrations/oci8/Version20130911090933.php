@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\pdo_oci;
+namespace Claroline\CoreBundle\Migrations\oci8;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/10 03:03:10
+ * Generation date: 2013/09/11 09:09:33
  */
-class Version20130910150308 extends AbstractMigration
+class Version20130911090933 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -1767,7 +1767,7 @@ class Version20130910150308 extends AbstractMigration
             CREATE INDEX IDX_2D34DB3FBE885E2 ON claro_widget_display (widget_id)
         ");
         $this->addSql("
-            CREATE TABLE simple_dekstop_workspace__widget_config (
+            CREATE TABLE simple_text_dekstop_widget_config (
                 id NUMBER(10) NOT NULL, 
                 user_id NUMBER(10) DEFAULT NULL, 
                 is_default NUMBER(1) NOT NULL, 
@@ -1779,32 +1779,32 @@ class Version20130910150308 extends AbstractMigration
             DECLARE constraints_Count NUMBER; BEGIN 
             SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
             FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'SIMPLE_DEKSTOP_WORKSPACE__WIDGET_CONFIG' 
+            WHERE TABLE_NAME = 'SIMPLE_TEXT_DEKSTOP_WIDGET_CONFIG' 
             AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE SIMPLE_DEKSTOP_WORKSPACE__WIDGET_CONFIG ADD CONSTRAINT SIMPLE_DEKSTOP_WORKSPACE__WIDGET_CONFIG_AI_PK PRIMARY KEY (ID)'; END IF; END;
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE SIMPLE_TEXT_DEKSTOP_WIDGET_CONFIG ADD CONSTRAINT SIMPLE_TEXT_DEKSTOP_WIDGET_CONFIG_AI_PK PRIMARY KEY (ID)'; END IF; END;
         ");
         $this->addSql("
-            CREATE SEQUENCE SIMPLE_DEKSTOP_WORKSPACE__WIDGET_CONFIG_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+            CREATE SEQUENCE SIMPLE_TEXT_DEKSTOP_WIDGET_CONFIG_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
         ");
         $this->addSql("
-            CREATE TRIGGER SIMPLE_DEKSTOP_WORKSPACE__WIDGET_CONFIG_AI_PK BEFORE INSERT ON SIMPLE_DEKSTOP_WORKSPACE__WIDGET_CONFIG FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT SIMPLE_DEKSTOP_WORKSPACE__WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            CREATE TRIGGER SIMPLE_TEXT_DEKSTOP_WIDGET_CONFIG_AI_PK BEFORE INSERT ON SIMPLE_TEXT_DEKSTOP_WIDGET_CONFIG FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT SIMPLE_TEXT_DEKSTOP_WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO : NEW.ID 
             FROM DUAL; IF (
                 : NEW.ID IS NULL 
                 OR : NEW.ID = 0
             ) THEN 
-            SELECT SIMPLE_DEKSTOP_WORKSPACE__WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            SELECT SIMPLE_TEXT_DEKSTOP_WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO : NEW.ID 
             FROM DUAL; ELSE 
             SELECT NVL(Last_Number, 0) INTO last_Sequence 
             FROM User_Sequences 
-            WHERE Sequence_Name = 'SIMPLE_DEKSTOP_WORKSPACE__WIDGET_CONFIG_ID_SEQ'; 
+            WHERE Sequence_Name = 'SIMPLE_TEXT_DEKSTOP_WIDGET_CONFIG_ID_SEQ'; 
             SELECT : NEW.ID INTO last_InsertID 
             FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT SIMPLE_DEKSTOP_WORKSPACE__WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO last_Sequence 
+            SELECT SIMPLE_TEXT_DEKSTOP_WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO last_Sequence 
             FROM DUAL; END LOOP; END IF; END;
         ");
         $this->addSql("
-            CREATE INDEX IDX_65124B39A76ED395 ON simple_dekstop_workspace__widget_config (user_id)
+            CREATE INDEX IDX_BAB9695A76ED395 ON simple_text_dekstop_widget_config (user_id)
         ");
         $this->addSql("
             CREATE TABLE simple_text_workspace_widget_config (
@@ -2646,8 +2646,8 @@ class Version20130910150308 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE simple_dekstop_workspace__widget_config 
-            ADD CONSTRAINT FK_65124B39A76ED395 FOREIGN KEY (user_id) 
+            ALTER TABLE simple_text_dekstop_widget_config 
+            ADD CONSTRAINT FK_BAB9695A76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id)
         ");
         $this->addSql("
@@ -2762,8 +2762,8 @@ class Version20130910150308 extends AbstractMigration
             DROP CONSTRAINT FK_2D34DB3A76ED395
         ");
         $this->addSql("
-            ALTER TABLE simple_dekstop_workspace__widget_config 
-            DROP CONSTRAINT FK_65124B39A76ED395
+            ALTER TABLE simple_text_dekstop_widget_config 
+            DROP CONSTRAINT FK_BAB9695A76ED395
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag 
@@ -3206,7 +3206,7 @@ class Version20130910150308 extends AbstractMigration
             DROP TABLE claro_widget_display
         ");
         $this->addSql("
-            DROP TABLE simple_dekstop_workspace__widget_config
+            DROP TABLE simple_text_dekstop_widget_config
         ");
         $this->addSql("
             DROP TABLE simple_text_workspace_widget_config

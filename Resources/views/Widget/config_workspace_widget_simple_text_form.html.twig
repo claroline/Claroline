@@ -16,7 +16,12 @@
     </div>
     <div class="panel-footer">
         <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-        <a href="{{ path('claro_admin_widgets') }}">
+        {% if isDefault %}
+            {% set cancelUrl = path('claro_admin_widgets') %}
+        {% else %}
+            {% set cancelUrl = path('claro_workspace_widget_properties', {'workspace': workspace.getId()}) %}
+        {% endif %}
+        <a href="{{ cancelUrl }}">
             <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
         </a>
     </div>

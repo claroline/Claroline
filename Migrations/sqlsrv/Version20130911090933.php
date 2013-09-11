@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/10 03:03:12
+ * Generation date: 2013/09/11 09:09:34
  */
-class Version20130910150308 extends AbstractMigration
+class Version20130911090933 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -811,7 +811,7 @@ class Version20130910150308 extends AbstractMigration
             CREATE INDEX IDX_2D34DB3FBE885E2 ON claro_widget_display (widget_id)
         ");
         $this->addSql("
-            CREATE TABLE simple_dekstop_workspace__widget_config (
+            CREATE TABLE simple_text_dekstop_widget_config (
                 id INT IDENTITY NOT NULL, 
                 user_id INT, 
                 is_default BIT NOT NULL, 
@@ -820,7 +820,7 @@ class Version20130910150308 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_65124B39A76ED395 ON simple_dekstop_workspace__widget_config (user_id)
+            CREATE INDEX IDX_BAB9695A76ED395 ON simple_text_dekstop_widget_config (user_id)
         ");
         $this->addSql("
             CREATE TABLE simple_text_workspace_widget_config (
@@ -1446,8 +1446,8 @@ class Version20130910150308 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE simple_dekstop_workspace__widget_config 
-            ADD CONSTRAINT FK_65124B39A76ED395 FOREIGN KEY (user_id) 
+            ALTER TABLE simple_text_dekstop_widget_config 
+            ADD CONSTRAINT FK_BAB9695A76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id)
         ");
         $this->addSql("
@@ -1562,8 +1562,8 @@ class Version20130910150308 extends AbstractMigration
             DROP CONSTRAINT FK_2D34DB3A76ED395
         ");
         $this->addSql("
-            ALTER TABLE simple_dekstop_workspace__widget_config 
-            DROP CONSTRAINT FK_65124B39A76ED395
+            ALTER TABLE simple_text_dekstop_widget_config 
+            DROP CONSTRAINT FK_BAB9695A76ED395
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag 
@@ -2006,7 +2006,7 @@ class Version20130910150308 extends AbstractMigration
             DROP TABLE claro_widget_display
         ");
         $this->addSql("
-            DROP TABLE simple_dekstop_workspace__widget_config
+            DROP TABLE simple_text_dekstop_widget_config
         ");
         $this->addSql("
             DROP TABLE simple_text_workspace_widget_config

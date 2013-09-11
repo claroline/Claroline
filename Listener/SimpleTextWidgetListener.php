@@ -90,6 +90,7 @@ class SimpleTextWidgetListener
     public function onDesktopConfig(ConfigureWidgetDesktopEvent $event)
     {
         if ($event->isDefault() === true) {
+
             $config = $this->simpleTextManager->getDefaultDesktopWidgetConfig();
         } else {
             $config = $this->simpleTextManager->getDesktopWidgetConfig($event->getUser());

@@ -59,25 +59,13 @@ class SimpleTextController extends Controller
                 ->getFlashBag()
                 ->add('error', $translator->trans('The form is not valid', array(), 'platform'));
         }
-        $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneByName('home');
-
+        
         if ($isDefault === true) {
-            $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
-                ->findOneBy(array('name' => 'simple_text'));
-
+            return $this->redirect($this->generateUrl('claro_admin_widgets'));
+        } elseif ($redirectToHome === false) {
             return $this->redirect(
                 $this->generateUrl(
-                    'claro_admin_widget_configuration_workspace', array('widgetId' => $widget->getId())
-                )
-            );
-
-        } elseif ($redirectToHome === false) {
-            return $this->render(
-                'ClarolineCoreBundle:Widget:config_workspace_widget_simple_text_form.html.twig', array(
-                'form' => $form->createView(),
-                'workspace' => $workspace,
-                'tool' => $tool,
-                'isDefault' => $config->getIsDefault() ? 1 : 0
+                    'claro_workspace_widget_properties', array('workspace' => $workspaceId)
                 )
             );
         } else {
@@ -93,7 +81,7 @@ class SimpleTextController extends Controller
     /**
      * @EXT\Route(
      *     "/simple_text_update/config/{isDefault}/{redirectToHome}",
-     *     name="claro_simple_text_update_workspace_widget_config",
+     *     name="claro_simple_text_update_desktop_widget_config",
      *     defaults={"isDefault" = 0, "redirectToHome" = 0}
      * )
      * @EXT\Method("POST")
@@ -101,6 +89,9 @@ class SimpleTextController extends Controller
      */
     public function updateDesktopWidgetConfig($isDefault, $redirectToHome, User $user)
     {
+        $isDefault = (boolean) $isDefault;
+        $redirectToHome = (boolean) $redirectToHome;
+
         if ($isDefault === true) {
             $config = $this->get('claroline.manager.simple_text_manager')->getDefaultDesktopWidgetConfig();
         } else {
@@ -110,7 +101,9 @@ class SimpleTextController extends Controller
         if ($config === null) {
             $config = new SimpleTextDesktopConfig();
             $config->setIsDefault($isDefault);
-            $config->setUser($user);
+            if (!$isDefault) {
+                $config->setUser($user);
+            }
         }
 
         $form = $this->get('claroline.form.factory')->create(FormFactory::TYPE_SIMPLE_TEXT);
@@ -134,23 +127,10 @@ class SimpleTextController extends Controller
             );
         }
 
-        if ($isDefault === true) {
-            $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
-                ->findOneBy(array('name' => 'simple_text'));
-
-            return $this->redirect(
-                $this->generateUrl(
-                    'claro_admin_widget_configuration_desktop', array('widgetId' => $widget->getId())
-                )
-            );
-        } elseif ($redirectToHome === false) {
-            return $this->render(
-                'ClarolineCoreBundle:Widget:config_workspace_widget_simple_text_form.html.twig', array(
-                    'form' => $form->createView(),
-                    'tool' => $this->toolManager->getOneToolByName('home'),
-                    'isDefault' => $config->getIsDefault() ? 1 : 0
-                )
-            );
+         if ($isDefault === true) {
+            return $this->redirect($this->generateUrl('claro_admin_widgets'));
+        } elseif ($redirectToHome == false) {
+            return $this->redirect($this->generateUrl('claro_desktop_widget_properties'));
         } else {
             return $this->redirect($this->generateUrl('claro_desktop_open', array()));
         }

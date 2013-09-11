@@ -53,7 +53,7 @@ class SimpleTextManager
     {
         return $this->om
             ->getRepository('ClarolineCoreBundle:Widget\SimpleTextDesktopConfig')
-            ->findOneBy(array('user' => null, 'isDefault' => true));
+            ->findOneBy(array('isDefault' => true));
     }
     public function getDisplayedConfigForWorkspace(AbstractWorkspace $workspace)
     {

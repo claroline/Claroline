@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/10 03:03:09
+ * Generation date: 2013/09/11 09:09:33
  */
-class Version20130910150308 extends AbstractMigration
+class Version20130911090933 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -784,7 +784,7 @@ class Version20130910150308 extends AbstractMigration
             CREATE INDEX IDX_2D34DB3FBE885E2 ON claro_widget_display (widget_id)
         ");
         $this->addSql("
-            CREATE TABLE simple_dekstop_workspace__widget_config (
+            CREATE TABLE simple_text_dekstop_widget_config (
                 id INTEGER NOT NULL, 
                 user_id INTEGER DEFAULT NULL, 
                 is_default BOOLEAN NOT NULL, 
@@ -793,7 +793,7 @@ class Version20130910150308 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_65124B39A76ED395 ON simple_dekstop_workspace__widget_config (user_id)
+            CREATE INDEX IDX_BAB9695A76ED395 ON simple_text_dekstop_widget_config (user_id)
         ");
         $this->addSql("
             CREATE TABLE simple_text_workspace_widget_config (
@@ -1049,7 +1049,7 @@ class Version20130910150308 extends AbstractMigration
             DROP TABLE claro_widget_display
         ");
         $this->addSql("
-            DROP TABLE simple_dekstop_workspace__widget_config
+            DROP TABLE simple_text_dekstop_widget_config
         ");
         $this->addSql("
             DROP TABLE simple_text_workspace_widget_config

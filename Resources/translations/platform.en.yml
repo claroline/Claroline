@@ -524,6 +524,7 @@ tags_list: 'Tags list'
 tags_management: 'Tags management'
 tags_organization: 'Tags organization'
 teacher: Teacher
+text_form_content: Content
 text_form_name: Name
 text_form_shareType: Sharable
 text_form_text: Text

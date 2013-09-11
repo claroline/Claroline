@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\drizzle_pdo_mysql;
+namespace Claroline\CoreBundle\Migrations\pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/10 03:03:12
+ * Generation date: 2013/09/11 09:09:33
  */
-class Version20130910150308 extends AbstractMigration
+class Version20130911090933 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -29,46 +29,46 @@ class Version20130910150308 extends AbstractMigration
                 creation_date DATETIME NOT NULL, 
                 reset_password VARCHAR(255) DEFAULT NULL, 
                 hash_time INT DEFAULT NULL, 
-                PRIMARY KEY(id), 
                 UNIQUE INDEX UNIQ_EB8D2852F85E0677 (username), 
                 UNIQUE INDEX UNIQ_EB8D28525126AC48 (mail), 
-                UNIQUE INDEX UNIQ_EB8D285282D40A1F (workspace_id)
-            )
+                UNIQUE INDEX UNIQ_EB8D285282D40A1F (workspace_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_user_group (
                 user_id INT NOT NULL, 
                 group_id INT NOT NULL, 
-                PRIMARY KEY(user_id, group_id), 
                 INDEX IDX_ED8B34C7A76ED395 (user_id), 
-                INDEX IDX_ED8B34C7FE54D947 (group_id)
-            )
+                INDEX IDX_ED8B34C7FE54D947 (group_id), 
+                PRIMARY KEY(user_id, group_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_user_role (
                 user_id INT NOT NULL, 
                 role_id INT NOT NULL, 
-                PRIMARY KEY(user_id, role_id), 
                 INDEX IDX_797E43FFA76ED395 (user_id), 
-                INDEX IDX_797E43FFD60322AC (role_id)
-            )
+                INDEX IDX_797E43FFD60322AC (role_id), 
+                PRIMARY KEY(user_id, role_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_group (
                 id INT AUTO_INCREMENT NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
-                PRIMARY KEY(id), 
-                UNIQUE INDEX group_unique_name (name)
-            )
+                UNIQUE INDEX group_unique_name (name), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_group_role (
                 group_id INT NOT NULL, 
                 role_id INT NOT NULL, 
-                PRIMARY KEY(group_id, role_id), 
                 INDEX IDX_1CBA5A40FE54D947 (group_id), 
-                INDEX IDX_1CBA5A40D60322AC (role_id)
-            )
+                INDEX IDX_1CBA5A40D60322AC (role_id), 
+                PRIMARY KEY(group_id, role_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_role (
@@ -76,12 +76,12 @@ class Version20130910150308 extends AbstractMigration
                 workspace_id INT DEFAULT NULL, 
                 name VARCHAR(255) NOT NULL, 
                 translation_key VARCHAR(255) NOT NULL, 
-                is_read_only BOOLEAN NOT NULL, 
+                is_read_only TINYINT(1) NOT NULL, 
                 type INT NOT NULL, 
-                PRIMARY KEY(id), 
                 UNIQUE INDEX UNIQ_317774715E237E06 (name), 
-                INDEX IDX_3177747182D40A1F (workspace_id)
-            )
+                INDEX IDX_3177747182D40A1F (workspace_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_resource_node (
@@ -101,7 +101,6 @@ class Version20130910150308 extends AbstractMigration
                 path VARCHAR(3000) DEFAULT NULL, 
                 mime_type VARCHAR(255) DEFAULT NULL, 
                 class VARCHAR(256) NOT NULL, 
-                PRIMARY KEY(id), 
                 INDEX IDX_A76799FF460F904B (license_id), 
                 INDEX IDX_A76799FF98EC6B7B (resource_type_id), 
                 INDEX IDX_A76799FF61220EA6 (creator_id), 
@@ -109,8 +108,9 @@ class Version20130910150308 extends AbstractMigration
                 INDEX IDX_A76799FF727ACA70 (parent_id), 
                 INDEX IDX_A76799FF82D40A1F (workspace_id), 
                 UNIQUE INDEX UNIQ_A76799FFAA23F6C8 (next_id), 
-                UNIQUE INDEX UNIQ_A76799FF2DE62210 (previous_id)
-            )
+                UNIQUE INDEX UNIQ_A76799FF2DE62210 (previous_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_workspace (
@@ -119,46 +119,46 @@ class Version20130910150308 extends AbstractMigration
                 parent_id INT DEFAULT NULL, 
                 name VARCHAR(255) NOT NULL, 
                 code VARCHAR(255) NOT NULL, 
-                is_public BOOLEAN DEFAULT NULL, 
-                displayable BOOLEAN DEFAULT NULL, 
+                is_public TINYINT(1) DEFAULT NULL, 
+                displayable TINYINT(1) DEFAULT NULL, 
                 guid VARCHAR(255) NOT NULL, 
-                self_registration BOOLEAN DEFAULT NULL, 
-                self_unregistration BOOLEAN DEFAULT NULL, 
+                self_registration TINYINT(1) DEFAULT NULL, 
+                self_unregistration TINYINT(1) DEFAULT NULL, 
                 discr VARCHAR(255) NOT NULL, 
                 lft INT DEFAULT NULL, 
                 lvl INT DEFAULT NULL, 
                 rgt INT DEFAULT NULL, 
                 root INT DEFAULT NULL, 
-                PRIMARY KEY(id), 
                 UNIQUE INDEX UNIQ_D902854577153098 (code), 
                 UNIQUE INDEX UNIQ_D90285452B6FCFB2 (guid), 
                 INDEX IDX_D9028545A76ED395 (user_id), 
-                INDEX IDX_D9028545727ACA70 (parent_id)
-            )
+                INDEX IDX_D9028545727ACA70 (parent_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_aggregation (
                 aggregator_workspace_id INT NOT NULL, 
                 simple_workspace_id INT NOT NULL, 
+                INDEX IDX_D012AF0FA08DFE7A (aggregator_workspace_id), 
+                INDEX IDX_D012AF0F782B5A3F (simple_workspace_id), 
                 PRIMARY KEY(
                     aggregator_workspace_id, simple_workspace_id
-                ), 
-                INDEX IDX_D012AF0FA08DFE7A (aggregator_workspace_id), 
-                INDEX IDX_D012AF0F782B5A3F (simple_workspace_id)
-            )
+                )
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_user_message (
                 id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT NOT NULL, 
                 message_id INT NOT NULL, 
-                is_removed BOOLEAN NOT NULL, 
-                is_read BOOLEAN NOT NULL, 
-                is_sent BOOLEAN NOT NULL, 
-                PRIMARY KEY(id), 
+                is_removed TINYINT(1) NOT NULL, 
+                is_read TINYINT(1) NOT NULL, 
+                is_sent TINYINT(1) NOT NULL, 
                 INDEX IDX_D48EA38AA76ED395 (user_id), 
-                INDEX IDX_D48EA38A537A1329 (message_id)
-            )
+                INDEX IDX_D48EA38A537A1329 (message_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_ordered_tool (
@@ -168,56 +168,56 @@ class Version20130910150308 extends AbstractMigration
                 user_id INT DEFAULT NULL, 
                 display_order INT NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
-                PRIMARY KEY(id), 
                 INDEX IDX_6CF1320E82D40A1F (workspace_id), 
                 INDEX IDX_6CF1320E8F7B22CC (tool_id), 
                 INDEX IDX_6CF1320EA76ED395 (user_id), 
                 UNIQUE INDEX ordered_tool_unique_tool_ws_usr (tool_id, workspace_id, user_id), 
-                UNIQUE INDEX ordered_tool_unique_name_by_workspace (workspace_id, name)
-            )
+                UNIQUE INDEX ordered_tool_unique_name_by_workspace (workspace_id, name), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_ordered_tool_role (
                 orderedtool_id INT NOT NULL, 
                 role_id INT NOT NULL, 
-                PRIMARY KEY(orderedtool_id, role_id), 
                 INDEX IDX_9210497679732467 (orderedtool_id), 
-                INDEX IDX_92104976D60322AC (role_id)
-            )
+                INDEX IDX_92104976D60322AC (role_id), 
+                PRIMARY KEY(orderedtool_id, role_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_resource_mask_decoder (
                 id INT AUTO_INCREMENT NOT NULL, 
                 resource_type_id INT NOT NULL, 
-                `value` INT NOT NULL, 
+                value INT NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
-                PRIMARY KEY(id), 
-                INDEX IDX_39D93F4298EC6B7B (resource_type_id)
-            )
+                INDEX IDX_39D93F4298EC6B7B (resource_type_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_resource_type (
                 id INT AUTO_INCREMENT NOT NULL, 
                 plugin_id INT DEFAULT NULL, 
                 name VARCHAR(255) NOT NULL, 
-                is_exportable BOOLEAN NOT NULL, 
-                PRIMARY KEY(id), 
+                is_exportable TINYINT(1) NOT NULL, 
                 UNIQUE INDEX UNIQ_AEC626935E237E06 (name), 
-                INDEX IDX_AEC62693EC942BCF (plugin_id)
-            )
+                INDEX IDX_AEC62693EC942BCF (plugin_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_menu_action (
                 id INT AUTO_INCREMENT NOT NULL, 
                 resource_type_id INT DEFAULT NULL, 
                 name VARCHAR(255) DEFAULT NULL, 
-                async BOOLEAN DEFAULT NULL, 
-                is_custom BOOLEAN NOT NULL, 
-                is_form BOOLEAN NOT NULL, 
-                `value` VARCHAR(255) DEFAULT NULL, 
-                PRIMARY KEY(id), 
-                INDEX IDX_1F57E52B98EC6B7B (resource_type_id)
-            )
+                async TINYINT(1) DEFAULT NULL, 
+                is_custom TINYINT(1) NOT NULL, 
+                is_form TINYINT(1) NOT NULL, 
+                value VARCHAR(255) DEFAULT NULL, 
+                INDEX IDX_1F57E52B98EC6B7B (resource_type_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_resource_rights (
@@ -225,22 +225,22 @@ class Version20130910150308 extends AbstractMigration
                 role_id INT NOT NULL, 
                 mask INT NOT NULL, 
                 resourceNode_id INT NOT NULL, 
-                PRIMARY KEY(id), 
                 INDEX IDX_3848F483D60322AC (role_id), 
                 INDEX IDX_3848F483B87FAB32 (resourceNode_id), 
-                UNIQUE INDEX resource_rights_unique_resource_role (resourceNode_id, role_id)
-            )
+                UNIQUE INDEX resource_rights_unique_resource_role (resourceNode_id, role_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_list_type_creation (
                 resource_rights_id INT NOT NULL, 
                 resource_type_id INT NOT NULL, 
+                INDEX IDX_84B4BEBA195FBDF1 (resource_rights_id), 
+                INDEX IDX_84B4BEBA98EC6B7B (resource_type_id), 
                 PRIMARY KEY(
                     resource_rights_id, resource_type_id
-                ), 
-                INDEX IDX_84B4BEBA195FBDF1 (resource_rights_id), 
-                INDEX IDX_84B4BEBA98EC6B7B (resource_type_id)
-            )
+                )
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_event (
@@ -251,12 +251,12 @@ class Version20130910150308 extends AbstractMigration
                 start_date INT DEFAULT NULL, 
                 end_date INT DEFAULT NULL, 
                 description VARCHAR(255) DEFAULT NULL, 
-                allday BOOLEAN DEFAULT NULL, 
+                allday TINYINT(1) DEFAULT NULL, 
                 priority VARCHAR(255) DEFAULT NULL, 
-                PRIMARY KEY(id), 
                 INDEX IDX_B1ADDDB582D40A1F (workspace_id), 
-                INDEX IDX_B1ADDDB5A76ED395 (user_id)
-            )
+                INDEX IDX_B1ADDDB5A76ED395 (user_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_content2type (
@@ -266,19 +266,19 @@ class Version20130910150308 extends AbstractMigration
                 next_id INT DEFAULT NULL, 
                 back_id INT DEFAULT NULL, 
                 size VARCHAR(30) NOT NULL, 
-                PRIMARY KEY(id), 
                 INDEX IDX_1A2084EF84A0A3ED (content_id), 
                 INDEX IDX_1A2084EFC54C8C93 (type_id), 
                 INDEX IDX_1A2084EFAA23F6C8 (next_id), 
-                INDEX IDX_1A2084EFE9583FF0 (back_id)
-            )
+                INDEX IDX_1A2084EFE9583FF0 (back_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_region (
                 id INT AUTO_INCREMENT NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
                 PRIMARY KEY(id)
-            )
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_subcontent (
@@ -288,12 +288,12 @@ class Version20130910150308 extends AbstractMigration
                 next_id INT DEFAULT NULL, 
                 back_id INT DEFAULT NULL, 
                 size VARCHAR(255) DEFAULT NULL, 
-                PRIMARY KEY(id), 
                 INDEX IDX_D72E133C2055B9A2 (father_id), 
                 INDEX IDX_D72E133CDD62C21B (child_id), 
                 INDEX IDX_D72E133CAA23F6C8 (next_id), 
-                INDEX IDX_D72E133CE9583FF0 (back_id)
-            )
+                INDEX IDX_D72E133CE9583FF0 (back_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_type (
@@ -301,7 +301,7 @@ class Version20130910150308 extends AbstractMigration
                 name VARCHAR(255) NOT NULL, 
                 max_content_page INT NOT NULL, 
                 PRIMARY KEY(id)
-            )
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_content2region (
@@ -311,23 +311,23 @@ class Version20130910150308 extends AbstractMigration
                 next_id INT DEFAULT NULL, 
                 back_id INT DEFAULT NULL, 
                 size VARCHAR(30) NOT NULL, 
-                PRIMARY KEY(id), 
                 INDEX IDX_8D18942E84A0A3ED (content_id), 
                 INDEX IDX_8D18942E98260155 (region_id), 
                 INDEX IDX_8D18942EAA23F6C8 (next_id), 
-                INDEX IDX_8D18942EE9583FF0 (back_id)
-            )
+                INDEX IDX_8D18942EE9583FF0 (back_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_content (
                 id INT AUTO_INCREMENT NOT NULL, 
                 title VARCHAR(255) DEFAULT NULL, 
-                content TEXT DEFAULT NULL, 
-                generated_content TEXT DEFAULT NULL, 
+                content LONGTEXT DEFAULT NULL, 
+                generated_content LONGTEXT DEFAULT NULL, 
                 created DATETIME NOT NULL, 
                 modified DATETIME NOT NULL, 
                 PRIMARY KEY(id)
-            )
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_message (
@@ -336,18 +336,18 @@ class Version20130910150308 extends AbstractMigration
                 parent_id INT DEFAULT NULL, 
                 object VARCHAR(255) NOT NULL, 
                 content VARCHAR(1023) NOT NULL, 
-                `date` DATETIME NOT NULL, 
-                is_removed BOOLEAN NOT NULL, 
+                date DATETIME NOT NULL, 
+                is_removed TINYINT(1) NOT NULL, 
                 lft INT NOT NULL, 
                 lvl INT NOT NULL, 
                 rgt INT NOT NULL, 
                 root INT DEFAULT NULL, 
                 sender_username VARCHAR(255) NOT NULL, 
                 receiver_string VARCHAR(1023) NOT NULL, 
-                PRIMARY KEY(id), 
                 INDEX IDX_D6FE8DD8F624B39D (sender_id), 
-                INDEX IDX_D6FE8DD8727ACA70 (parent_id)
-            )
+                INDEX IDX_D6FE8DD8727ACA70 (parent_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_activity (
@@ -356,9 +356,9 @@ class Version20130910150308 extends AbstractMigration
                 start_date DATETIME DEFAULT NULL, 
                 end_date DATETIME DEFAULT NULL, 
                 resourceNode_id INT DEFAULT NULL, 
-                PRIMARY KEY(id), 
-                UNIQUE INDEX UNIQ_E4A67CACB87FAB32 (resourceNode_id)
-            )
+                UNIQUE INDEX UNIQ_E4A67CACB87FAB32 (resourceNode_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_resource_activity (
@@ -366,21 +366,21 @@ class Version20130910150308 extends AbstractMigration
                 activity_id INT NOT NULL, 
                 sequence_order INT DEFAULT NULL, 
                 resourceNode_id INT NOT NULL, 
-                PRIMARY KEY(id), 
                 INDEX IDX_DCF37C7E81C06096 (activity_id), 
                 INDEX IDX_DCF37C7EB87FAB32 (resourceNode_id), 
-                UNIQUE INDEX resource_activity_unique_combination (activity_id, resourceNode_id)
-            )
+                UNIQUE INDEX resource_activity_unique_combination (activity_id, resourceNode_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_resource_type_custom_action (
                 id INT AUTO_INCREMENT NOT NULL, 
                 resource_type_id INT DEFAULT NULL, 
                 action VARCHAR(255) DEFAULT NULL, 
-                async BOOLEAN DEFAULT NULL, 
-                PRIMARY KEY(id), 
-                INDEX IDX_4A98967B98EC6B7B (resource_type_id)
-            )
+                async TINYINT(1) DEFAULT NULL, 
+                INDEX IDX_4A98967B98EC6B7B (resource_type_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_file (
@@ -388,19 +388,19 @@ class Version20130910150308 extends AbstractMigration
                 size INT NOT NULL, 
                 hash_name VARCHAR(50) NOT NULL, 
                 resourceNode_id INT DEFAULT NULL, 
-                PRIMARY KEY(id), 
                 UNIQUE INDEX UNIQ_EA81C80BE1F029B6 (hash_name), 
-                UNIQUE INDEX UNIQ_EA81C80BB87FAB32 (resourceNode_id)
-            )
+                UNIQUE INDEX UNIQ_EA81C80BB87FAB32 (resourceNode_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_link (
                 id INT AUTO_INCREMENT NOT NULL, 
                 url VARCHAR(255) NOT NULL, 
                 resourceNode_id INT DEFAULT NULL, 
-                PRIMARY KEY(id), 
-                UNIQUE INDEX UNIQ_50B267EAB87FAB32 (resourceNode_id)
-            )
+                UNIQUE INDEX UNIQ_50B267EAB87FAB32 (resourceNode_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_resource_icon (
@@ -408,38 +408,38 @@ class Version20130910150308 extends AbstractMigration
                 shortcut_id INT DEFAULT NULL, 
                 icon_location VARCHAR(255) DEFAULT NULL, 
                 mimeType VARCHAR(255) NOT NULL, 
-                is_shortcut BOOLEAN NOT NULL, 
+                is_shortcut TINYINT(1) NOT NULL, 
                 relative_url VARCHAR(255) DEFAULT NULL, 
-                PRIMARY KEY(id), 
-                INDEX IDX_478C586179F0D498 (shortcut_id)
-            )
+                INDEX IDX_478C586179F0D498 (shortcut_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_directory (
                 id INT AUTO_INCREMENT NOT NULL, 
                 resourceNode_id INT DEFAULT NULL, 
-                PRIMARY KEY(id), 
-                UNIQUE INDEX UNIQ_12EEC186B87FAB32 (resourceNode_id)
-            )
+                UNIQUE INDEX UNIQ_12EEC186B87FAB32 (resourceNode_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_resource_shortcut (
                 id INT AUTO_INCREMENT NOT NULL, 
                 target_id INT NOT NULL, 
                 resourceNode_id INT DEFAULT NULL, 
-                PRIMARY KEY(id), 
                 INDEX IDX_5E7F4AB8158E0B66 (target_id), 
-                UNIQUE INDEX UNIQ_5E7F4AB8B87FAB32 (resourceNode_id)
-            )
+                UNIQUE INDEX UNIQ_5E7F4AB8B87FAB32 (resourceNode_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_text (
                 id INT AUTO_INCREMENT NOT NULL, 
                 version INT NOT NULL, 
                 resourceNode_id INT DEFAULT NULL, 
-                PRIMARY KEY(id), 
-                UNIQUE INDEX UNIQ_5D9559DCB87FAB32 (resourceNode_id)
-            )
+                UNIQUE INDEX UNIQ_5D9559DCB87FAB32 (resourceNode_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_text_revision (
@@ -447,11 +447,11 @@ class Version20130910150308 extends AbstractMigration
                 text_id INT DEFAULT NULL, 
                 user_id INT DEFAULT NULL, 
                 version INT NOT NULL, 
-                content TEXT NOT NULL, 
-                PRIMARY KEY(id), 
+                content LONGTEXT NOT NULL, 
                 INDEX IDX_F61948DE698D3548 (text_id), 
-                INDEX IDX_F61948DEA76ED395 (user_id)
-            )
+                INDEX IDX_F61948DEA76ED395 (user_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_theme (
@@ -459,9 +459,9 @@ class Version20130910150308 extends AbstractMigration
                 plugin_id INT DEFAULT NULL, 
                 name VARCHAR(255) NOT NULL, 
                 path VARCHAR(255) NOT NULL, 
-                PRIMARY KEY(id), 
-                INDEX IDX_1D76301AEC942BCF (plugin_id)
-            )
+                INDEX IDX_1D76301AEC942BCF (plugin_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_log (
@@ -476,14 +476,13 @@ class Version20130910150308 extends AbstractMigration
                 action VARCHAR(255) NOT NULL, 
                 date_log DATETIME NOT NULL, 
                 short_date_log DATE NOT NULL, 
-                details TEXT DEFAULT NULL COMMENT '(DC2Type:json_array)', 
+                details LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json_array)', 
                 doer_type VARCHAR(255) NOT NULL, 
                 doer_ip VARCHAR(255) DEFAULT NULL, 
                 tool_name VARCHAR(255) DEFAULT NULL, 
                 child_type VARCHAR(255) DEFAULT NULL, 
                 child_action VARCHAR(255) DEFAULT NULL, 
                 resourceNode_id INT DEFAULT NULL, 
-                PRIMARY KEY(id), 
                 INDEX IDX_97FAB91F12D3860F (doer_id), 
                 INDEX IDX_97FAB91FCD53EDB6 (receiver_id), 
                 INDEX IDX_97FAB91FC6F122B2 (receiver_group_id), 
@@ -491,86 +490,87 @@ class Version20130910150308 extends AbstractMigration
                 INDEX IDX_97FAB91F82D40A1F (workspace_id), 
                 INDEX IDX_97FAB91FB87FAB32 (resourceNode_id), 
                 INDEX IDX_97FAB91F98EC6B7B (resource_type_id), 
-                INDEX IDX_97FAB91FD60322AC (role_id)
-            )
+                INDEX IDX_97FAB91FD60322AC (role_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_log_doer_platform_roles (
                 log_id INT NOT NULL, 
                 role_id INT NOT NULL, 
-                PRIMARY KEY(log_id, role_id), 
                 INDEX IDX_706568A5EA675D86 (log_id), 
-                INDEX IDX_706568A5D60322AC (role_id)
-            )
+                INDEX IDX_706568A5D60322AC (role_id), 
+                PRIMARY KEY(log_id, role_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_log_doer_workspace_roles (
                 log_id INT NOT NULL, 
                 role_id INT NOT NULL, 
-                PRIMARY KEY(log_id, role_id), 
                 INDEX IDX_8A8D2F47EA675D86 (log_id), 
-                INDEX IDX_8A8D2F47D60322AC (role_id)
-            )
+                INDEX IDX_8A8D2F47D60322AC (role_id), 
+                PRIMARY KEY(log_id, role_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_log_workspace_widget_config (
                 id INT AUTO_INCREMENT NOT NULL, 
                 workspace_id INT DEFAULT NULL, 
-                is_default BOOLEAN NOT NULL, 
+                is_default TINYINT(1) NOT NULL, 
                 amount INT NOT NULL, 
-                resource_copy BOOLEAN NOT NULL, 
-                resource_create BOOLEAN NOT NULL, 
-                resource_shortcut BOOLEAN NOT NULL, 
-                resource_read BOOLEAN NOT NULL, 
-                ws_tool_read BOOLEAN NOT NULL, 
-                resource_export BOOLEAN NOT NULL, 
-                resource_update BOOLEAN NOT NULL, 
-                resource_update_rename BOOLEAN NOT NULL, 
-                resource_child_update BOOLEAN NOT NULL, 
-                resource_delete BOOLEAN NOT NULL, 
-                resource_move BOOLEAN NOT NULL, 
-                ws_role_subscribe_user BOOLEAN NOT NULL, 
-                ws_role_subscribe_group BOOLEAN NOT NULL, 
-                ws_role_unsubscribe_user BOOLEAN NOT NULL, 
-                ws_role_unsubscribe_group BOOLEAN NOT NULL, 
-                ws_role_change_right BOOLEAN NOT NULL, 
-                ws_role_create BOOLEAN NOT NULL, 
-                ws_role_delete BOOLEAN NOT NULL, 
-                ws_role_update BOOLEAN NOT NULL, 
-                PRIMARY KEY(id), 
-                INDEX IDX_D301C70782D40A1F (workspace_id)
-            )
+                resource_copy TINYINT(1) NOT NULL, 
+                resource_create TINYINT(1) NOT NULL, 
+                resource_shortcut TINYINT(1) NOT NULL, 
+                resource_read TINYINT(1) NOT NULL, 
+                ws_tool_read TINYINT(1) NOT NULL, 
+                resource_export TINYINT(1) NOT NULL, 
+                resource_update TINYINT(1) NOT NULL, 
+                resource_update_rename TINYINT(1) NOT NULL, 
+                resource_child_update TINYINT(1) NOT NULL, 
+                resource_delete TINYINT(1) NOT NULL, 
+                resource_move TINYINT(1) NOT NULL, 
+                ws_role_subscribe_user TINYINT(1) NOT NULL, 
+                ws_role_subscribe_group TINYINT(1) NOT NULL, 
+                ws_role_unsubscribe_user TINYINT(1) NOT NULL, 
+                ws_role_unsubscribe_group TINYINT(1) NOT NULL, 
+                ws_role_change_right TINYINT(1) NOT NULL, 
+                ws_role_create TINYINT(1) NOT NULL, 
+                ws_role_delete TINYINT(1) NOT NULL, 
+                ws_role_update TINYINT(1) NOT NULL, 
+                INDEX IDX_D301C70782D40A1F (workspace_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_log_desktop_widget_config (
                 id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT DEFAULT NULL, 
-                is_default BOOLEAN NOT NULL, 
+                is_default TINYINT(1) NOT NULL, 
                 amount INT NOT NULL, 
-                PRIMARY KEY(id), 
-                INDEX IDX_4AE48D62A76ED395 (user_id)
-            )
+                INDEX IDX_4AE48D62A76ED395 (user_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_log_hidden_workspace_widget_config (
                 workspace_id INT NOT NULL, 
                 user_id INT NOT NULL, 
-                PRIMARY KEY(workspace_id, user_id), 
-                INDEX IDX_BC83196EA76ED395 (user_id)
-            )
+                INDEX IDX_BC83196EA76ED395 (user_id), 
+                PRIMARY KEY(workspace_id, user_id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_widget (
                 id INT AUTO_INCREMENT NOT NULL, 
                 plugin_id INT DEFAULT NULL, 
                 name VARCHAR(255) NOT NULL, 
-                is_configurable BOOLEAN NOT NULL, 
+                is_configurable TINYINT(1) NOT NULL, 
                 icon VARCHAR(255) NOT NULL, 
-                is_exportable BOOLEAN NOT NULL, 
-                PRIMARY KEY(id), 
+                is_exportable TINYINT(1) NOT NULL, 
                 UNIQUE INDEX UNIQ_76CA6C4F5E237E06 (name), 
-                INDEX IDX_76CA6C4FEC942BCF (plugin_id)
-            )
+                INDEX IDX_76CA6C4FEC942BCF (plugin_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_widget_display (
@@ -579,46 +579,46 @@ class Version20130910150308 extends AbstractMigration
                 workspace_id INT DEFAULT NULL, 
                 user_id INT DEFAULT NULL, 
                 widget_id INT NOT NULL, 
-                is_locked BOOLEAN NOT NULL, 
-                is_visible BOOLEAN NOT NULL, 
-                is_desktop BOOLEAN NOT NULL, 
-                PRIMARY KEY(id), 
+                is_locked TINYINT(1) NOT NULL, 
+                is_visible TINYINT(1) NOT NULL, 
+                is_desktop TINYINT(1) NOT NULL, 
                 INDEX IDX_2D34DB3727ACA70 (parent_id), 
                 INDEX IDX_2D34DB382D40A1F (workspace_id), 
                 INDEX IDX_2D34DB3A76ED395 (user_id), 
-                INDEX IDX_2D34DB3FBE885E2 (widget_id)
-            )
+                INDEX IDX_2D34DB3FBE885E2 (widget_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
-            CREATE TABLE simple_dekstop_workspace__widget_config (
+            CREATE TABLE simple_text_dekstop_widget_config (
                 id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT DEFAULT NULL, 
-                is_default BOOLEAN NOT NULL, 
-                content TEXT NOT NULL, 
-                PRIMARY KEY(id), 
-                INDEX IDX_65124B39A76ED395 (user_id)
-            )
+                is_default TINYINT(1) NOT NULL, 
+                content LONGTEXT NOT NULL, 
+                INDEX IDX_BAB9695A76ED395 (user_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE simple_text_workspace_widget_config (
                 id INT AUTO_INCREMENT NOT NULL, 
                 workspace_id INT DEFAULT NULL, 
-                is_default BOOLEAN NOT NULL, 
-                content TEXT NOT NULL, 
-                PRIMARY KEY(id), 
-                INDEX IDX_11925ED382D40A1F (workspace_id)
-            )
+                is_default TINYINT(1) NOT NULL, 
+                content LONGTEXT NOT NULL, 
+                INDEX IDX_11925ED382D40A1F (workspace_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_plugin (
                 id INT AUTO_INCREMENT NOT NULL, 
                 vendor_name VARCHAR(50) NOT NULL, 
                 short_name VARCHAR(50) NOT NULL, 
-                has_options BOOLEAN NOT NULL, 
+                has_options TINYINT(1) NOT NULL, 
                 icon VARCHAR(255) NOT NULL, 
-                PRIMARY KEY(id), 
-                UNIQUE INDEX plugin_unique_name (vendor_name, short_name)
-            )
+                UNIQUE INDEX plugin_unique_name (vendor_name, short_name), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_tools (
@@ -627,36 +627,36 @@ class Version20130910150308 extends AbstractMigration
                 name VARCHAR(255) NOT NULL, 
                 display_name VARCHAR(255) DEFAULT NULL, 
                 class VARCHAR(255) NOT NULL, 
-                is_workspace_required BOOLEAN NOT NULL, 
-                is_desktop_required BOOLEAN NOT NULL, 
-                is_displayable_in_workspace BOOLEAN NOT NULL, 
-                is_displayable_in_desktop BOOLEAN NOT NULL, 
-                is_exportable BOOLEAN NOT NULL, 
-                is_configurable_in_workspace BOOLEAN NOT NULL, 
-                is_configurable_in_desktop BOOLEAN NOT NULL, 
-                PRIMARY KEY(id), 
+                is_workspace_required TINYINT(1) NOT NULL, 
+                is_desktop_required TINYINT(1) NOT NULL, 
+                is_displayable_in_workspace TINYINT(1) NOT NULL, 
+                is_displayable_in_desktop TINYINT(1) NOT NULL, 
+                is_exportable TINYINT(1) NOT NULL, 
+                is_configurable_in_workspace TINYINT(1) NOT NULL, 
+                is_configurable_in_desktop TINYINT(1) NOT NULL, 
                 UNIQUE INDEX UNIQ_60F909655E237E06 (name), 
-                INDEX IDX_60F90965EC942BCF (plugin_id)
-            )
+                INDEX IDX_60F90965EC942BCF (plugin_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_template (
                 id INT AUTO_INCREMENT NOT NULL, 
                 hash VARCHAR(255) NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
-                PRIMARY KEY(id), 
-                UNIQUE INDEX UNIQ_94D0CBDBD1B862B8 (hash)
-            )
+                UNIQUE INDEX UNIQ_94D0CBDBD1B862B8 (hash), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_tag (
                 id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT DEFAULT NULL, 
                 name VARCHAR(255) NOT NULL, 
-                PRIMARY KEY(id), 
                 INDEX IDX_C8EFD7EFA76ED395 (user_id), 
-                UNIQUE INDEX tag_unique_name_and_user (user_id, name)
-            )
+                UNIQUE INDEX tag_unique_name_and_user (user_id, name), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_tag_hierarchy (
@@ -665,22 +665,22 @@ class Version20130910150308 extends AbstractMigration
                 tag_id INT NOT NULL, 
                 parent_id INT NOT NULL, 
                 level INT NOT NULL, 
-                PRIMARY KEY(id), 
                 INDEX IDX_A46B159EA76ED395 (user_id), 
                 INDEX IDX_A46B159EBAD26311 (tag_id), 
-                INDEX IDX_A46B159E727ACA70 (parent_id)
-            )
+                INDEX IDX_A46B159E727ACA70 (parent_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_rel_workspace_tag (
                 id INT AUTO_INCREMENT NOT NULL, 
                 workspace_id INT NOT NULL, 
                 tag_id INT NOT NULL, 
-                PRIMARY KEY(id), 
                 INDEX IDX_7883931082D40A1F (workspace_id), 
                 INDEX IDX_78839310BAD26311 (tag_id), 
-                UNIQUE INDEX rel_workspace_tag_unique_combination (workspace_id, tag_id)
-            )
+                UNIQUE INDEX rel_workspace_tag_unique_combination (workspace_id, tag_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_license (
@@ -688,7 +688,7 @@ class Version20130910150308 extends AbstractMigration
                 name VARCHAR(255) NOT NULL, 
                 acronym VARCHAR(255) DEFAULT NULL, 
                 PRIMARY KEY(id)
-            )
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             ALTER TABLE claro_user 
@@ -1189,8 +1189,8 @@ class Version20130910150308 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE simple_dekstop_workspace__widget_config 
-            ADD CONSTRAINT FK_65124B39A76ED395 FOREIGN KEY (user_id) 
+            ALTER TABLE simple_text_dekstop_widget_config 
+            ADD CONSTRAINT FK_BAB9695A76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id)
         ");
         $this->addSql("
@@ -1305,8 +1305,8 @@ class Version20130910150308 extends AbstractMigration
             DROP FOREIGN KEY FK_2D34DB3A76ED395
         ");
         $this->addSql("
-            ALTER TABLE simple_dekstop_workspace__widget_config 
-            DROP FOREIGN KEY FK_65124B39A76ED395
+            ALTER TABLE simple_text_dekstop_widget_config 
+            DROP FOREIGN KEY FK_BAB9695A76ED395
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_tag 
@@ -1749,7 +1749,7 @@ class Version20130910150308 extends AbstractMigration
             DROP TABLE claro_widget_display
         ");
         $this->addSql("
-            DROP TABLE simple_dekstop_workspace__widget_config
+            DROP TABLE simple_text_dekstop_widget_config
         ");
         $this->addSql("
             DROP TABLE simple_text_workspace_widget_config

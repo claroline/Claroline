@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="simple_dekstop_workspace__widget_config")
+ * @ORM\Table(name="simple_text_dekstop_widget_config")
  */
 class SimpleTextDesktopConfig
 {
