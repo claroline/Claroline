@@ -1,7 +1,0 @@
-parameters:
-    claro.badge.transformer.exporter_class: Claroline\BadgeBundle\Transformer\BadgeExporter
-
-services:
-    claro.badge.exporter.transformer:
-        class: %claro.badge.transformer.exporter_class%
-        arguments: [@service_container, @claroline.config.platform_config_handler]
