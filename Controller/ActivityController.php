@@ -62,7 +62,7 @@ class ActivityController extends Controller
      */
     public function addResourceAction(ResourceNode $node, Activity $activity)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getDoctrine()->getManager();
         $link = new ResourceActivity();
         $link->setActivity($activity);
         $link->setResourceNode($node);
@@ -92,7 +92,7 @@ class ActivityController extends Controller
      */
     public function removeResourceAction($nodeId, $activityId)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity');
         $resourceActivity = $repo->findOneBy(array('resourceNode' => $nodeId, 'activity' => $activityId));
         $em->remove($resourceActivity);
@@ -117,7 +117,7 @@ class ActivityController extends Controller
      */
     public function setSequenceOrderAction($activityId)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getDoctrine()->getManager();
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findBy(array('activity' => $activityId));
         $params = $this->request->query->all();
@@ -154,7 +154,7 @@ class ActivityController extends Controller
      */
     public function renderLeftMenuAction(Activity $activity)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getDoctrine()->getManager();
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findResourceActivities($activity);
         $totalSteps = $this->countSteps($activity, 0);
@@ -183,7 +183,7 @@ class ActivityController extends Controller
      */
     public function showPlayerAction(Activity $activity)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getDoctrine()->getManager();
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findResourceActivities($activity);
         $resource = isset($resourceActivities[0]) ? $resourceActivities[0]->getResourceNode(): null;
