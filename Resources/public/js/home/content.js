@@ -167,14 +167,13 @@
 
                             if (father) {
                                 contentPath = "content/" + data + "/" + type + "/" + father;
-                                creatorElement = parentByClassName(creatorElement, "creator" + father);
+                                //creatorElement = parentByClassName(creatorElement, "creator" + father);
 
                                 insertElement = function (content)
                                 {
-                                    $(creatorElement).after(content);
-                                    $(creatorElement).find(".collapse").collapse("hide");
+                                    $(".creator" + father).after(content);
+                                    $(".creator" + father).find(".collapse" + father).collapse("hide");
                                 };
-
                             }
 
                             $.ajax(homePath + contentPath)

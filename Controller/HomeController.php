@@ -1,6 +1,5 @@
 <?php
 namespace Claroline\CoreBundle\Controller;
-use Claroline\CoreBundle\Entity\Home\Region;
 use Claroline\CoreBundle\Entity\Home\Content;
 use Claroline\CoreBundle\Entity\Home\Type;
 use Claroline\CoreBundle\Manager\HomeManager;
@@ -93,7 +92,6 @@ class HomeController
         $layout = $this->manager->contentLayout($type, $father, $region);
 
         if ($layout) {
-
             return $this->render('ClarolineCoreBundle:Home:layout.html.twig', $this->renderContent($layout));
         }
 
@@ -157,9 +155,9 @@ class HomeController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function menuAction($id, $size, $type, $father = null)
+    public function menuAction($id, $size, $type, $father = null, $region = null)
     {
-        return $this->manager->getMenu($id, $size, $type, $father);
+        return $this->manager->getMenu($id, $size, $type, $father, $region);
     }
 
     /**
@@ -205,17 +203,19 @@ class HomeController
     /**
      * Render the HTML of the regions.
      *
-     * @Route("/content/region/{id}", name="claroline_region")
+     * @Route("/content/region/{content}", name="claroline_region")
      *
-     * @param string $id The id of the content.
+     * @param string $content The id of the content or the entity object of a content.
+     *
+     * @ParamConverter("content", class = "ClarolineCoreBundle:Home\Content", options = {"id" = "content"})
      *
      * @Template("ClarolineCoreBundle:Home:regions.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function regionAction($id)
+    public function regionAction($content)
     {
-        return array('id' => $id);
+        return array('id' => $content->getId(), 'region' => $this->manager->getRegion($content));
     }
 
     /**
@@ -223,20 +223,21 @@ class HomeController
      *
      * @return array
      */
-    public function renderContent($content)
+    public function renderContent($layout)
     {
         $tmp = ' '; // void in case of not yet content
 
-        if (isset($content['content']) and isset($content['type']) and is_array($content['content'])) {
-            foreach ($content['content'] as $content) {
+        if (isset($layout['content']) and isset($layout['type']) and is_array($layout['content'])) {
+            foreach ($layout['content'] as $content) {
                 $tmp .= $this->render(
                     'ClarolineCoreBundle:Home/types:'.$content['type'].'.html.twig', $content, true
                 )->getContent();
             }
-            $content['content'] = $tmp;
         }
 
-        return $content;
+        $layout['content'] = $tmp;
+
+        return $layout;
     }
 
     /**

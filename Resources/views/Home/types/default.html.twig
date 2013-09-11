@@ -1,24 +1,25 @@
 {% if content != null %}
 
-    <div class="panel panel-default content-element relative {{ size }}" data-id="{{ content.id }}" data-type="{{ type }}">
-        {% render controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'father': father  }) %}
+    <div class="content-element  {% if region is defined and (region == left or region == right) %}{{ size }}{% else %}col-md-12{% endif %}" data-id="{{ content.id }}" data-type="{{ type }}">
+        <div class="panel panel-default relative">
+            {% render controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'father': father, 'region': region }) %}
 
-        {% if content.title != "" %}
-            <div class="panel-heading">
-                <h3 class="panel-title">{{ content.title }}</h3>
-            </div>
-        {% endif %}
-        <div class="panel-body">
-            <p class="text">{{ content.content | nl2br}}</p>
-            {% if content.generatedcontent != "" and content.generatedcontent != null %}
-            <div class="generated">
-                <div class="generated-content">
-                    {{ content.generatedcontent | raw }}
+            {% if content.title != "" %}
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ content.title }}</h3>
                 </div>
-            </div>
             {% endif %}
-            <i class="text-muted">{{ content.created | timeAgo }}</i>
+            <div class="panel-body">
+                <p class="text">{{ content.content | nl2br}}</p>
+                {% if content.generatedcontent != "" and content.generatedcontent != null %}
+                <div class="generated">
+                    <div class="generated-content">
+                        {{ content.generatedcontent | raw }}
+                    </div>
+                </div>
+                {% endif %}
+                <i class="text-muted">{{ content.created | timeAgo }}</i>
+            </div>
         </div>
     </div>
-
 {% endif %}

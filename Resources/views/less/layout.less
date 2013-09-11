@@ -78,6 +78,13 @@ body {
 }
 
 .content-element {
+    > .nav.nav-pills{
+        margin-bottom:5px;
+        border:1px solid transparent;
+        &.admin:hover{
+            border:1px dashed @link-color;
+        }
+    }
 
     > .list-group {
 
@@ -565,16 +572,16 @@ div.pagination
         .transition(all .2s linear);
     }
 
-    .creator-collapse {
-        border:1px solid @list-group-border;
-        padding:10px 10px 0 10px;
-    }
-
     .generated {
         background: lighten(@state-success-bg, 5%);
         padding:0;
         margin:0;
     }
+}
+
+.creator-collapse {
+    border:1px solid @list-group-border;
+    padding:10px 10px 0 10px;
 }
 
 #sizes .panel, #regions .panel
