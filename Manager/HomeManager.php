@@ -54,7 +54,7 @@ class HomeManager
      */
     public function getContent($content, $type, $father = null)
     {
-        $array = array('type' => $type->getName(), 'size' => 'col-lg-12');
+        $array = array('type' => $type->getName(), 'size' => 'content-8');
 
         if ($father) {
             $array['father'] = $father->getId();
@@ -170,6 +170,20 @@ class HomeManager
         }
 
         return $array;
+    }
+
+    /**
+     * Determine in what region a content is.
+     */
+    public function getRegion($content)
+    {
+        $region = $this->contentRegion->findOneBy(array('content' => $content));
+
+        if ($region) {
+            return $region->getRegion()->getName();
+        }
+
+        return null;
     }
 
     /**
@@ -379,12 +393,32 @@ class HomeManager
      */
     public function contentToRegion($region, $content)
     {
-        $first = $this->contentRegion->findOneBy(array('back' => null, 'region' => $region));
-        $contentRegion = new Content2Region($first);
-        $contentRegion->setRegion($region);
-        $contentRegion->setContent($content);
-        $this->manager->persist($contentRegion);
-        $this->manager->flush();
+        $regions = $this->contentRegion->findBy(array('content' => $content));
+
+        if (count($regions) === 1 and $regions[0]->getRegion()->getName() === $region->getName()) {
+            $this->deleteRegions($content, $regions);
+        } else {
+            $this->deleteRegions($content, $regions);
+
+            $first = $this->contentRegion->findOneBy(array('back' => null, 'region' => $region));
+            $contentRegion = new Content2Region($first);
+            $contentRegion->setRegion($region);
+            $contentRegion->setContent($content);
+            $this->manager->persist($contentRegion);
+            $this->manager->flush();
+        }
+    }
+
+    /**
+     * Delete a content from every region.
+     */
+    public function deleteRegions($content, $regions)
+    {
+        foreach ($regions as $region) {
+            $region->detach();
+            $this->manager->remove($region);
+            $this->manager->flush();
+        }
     }
 
     /**
@@ -407,14 +441,14 @@ class HomeManager
      * Get the variables of the menu.
      *
      * @param string $id   The id of the content.
-     * @param string $size The size (col-lg-12) of the content.
+     * @param string $size The size (content-8) of the content.
      * @param string $type The type of the content.
      *
      * @return array
      */
-    public function getMenu($id, $size, $type, $father = null)
+    public function getMenu($id, $size, $type, $father = null, $region = null)
     {
-        $variables = array('id' => $id, 'size' => $size, 'type' => $type);
+        $variables = array('id' => $id, 'size' => $size, 'type' => $type, 'region' => $region);
 
         return $this->homeService->isDefinedPush($variables, 'father', $father);
     }
