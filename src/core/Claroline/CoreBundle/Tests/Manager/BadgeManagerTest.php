@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Badge;
+use Claroline\CoreBundle\Entity\Badge\Badge;
 use \Mockery as m;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
