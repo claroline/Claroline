@@ -23,7 +23,6 @@
         ])
     }}
 {% endblock %}
-
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'agenda'|trans({}, 'platform') }}</h3>
@@ -56,6 +55,7 @@
                             <a href="{{ path('claro_desktop_agenda_show', {workspaceId: workspace.getId()}) }}" id="link"></a>
                             <a href="{{ path('claro_workspace_agenda_move') }}" id="move"></a>
                             <a href="{{ path('claro_desktop_agenda_delete') }}" id="delete"></a>
+                            <a href="{{ path('claro_desktop_agenda_update') }}" id="update"></a>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{'close'|trans({}, 'agenda') }}</button>
@@ -69,15 +69,16 @@
 
                 <h4> <u>{{'task'|trans({}, 'agenda') }} </u></h4>
                 {% for e in listEvents if e.allDay == 1 %}
-
                     <div class="panel panel-default">
                         <button type="button" class="delete-task close" data-event-id="{{e.id}}" data-dismiss="alert">&times;</button>
                         <h5 data-event-title="{{e.title}}"> {{ e.title }}</h5>
                         <ul>
-                            <li data-event-start="{{ e.start|date("d/m/Y")}}"> {{ e.start|date("d/m/Y")}} </li>
-                            <li > {{ e.end|date("d/m/Y") }} </li>
+                            <li > {{ e.start|date("d/m/Y h:i")}} </li>
+                            <li > {{ e.end|date("d/m/Y h:i") }} </li>
                             <li>{{ e.description|raw }}</li>
+                            <li class="hidden"> {{e.allDay}}</li>
                             <li class="hidden"> {{e.priority}}</li>
+                            <li class="hidden"> {{e.id}}</li>
                             <a href="#myModal" class="update-task" role="button">modifier</a> </p>
                         </ul>
                     </div>
