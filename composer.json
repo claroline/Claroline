@@ -6,14 +6,13 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "incenteev/composer-parameter-handler": "~2.0",
-        "sensio/distribution-bundle": "2.3.*",
+        "sensio/distribution-bundle": "~2.3.4",
         "claroline/bundle-recorder": "dev-master",
         "claroline/core-bundle": "dev-master"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
-        "hamcrest/hamcrest": "1.1.0",
+        "hamcrest/hamcrest": "~1.1.0",
         "mikey179/vfsStream": "dev-master"
     },
     "repositories": [
@@ -67,14 +66,12 @@
             "Claroline\\BundleRecorder\\ScriptHandler::postPackageUninstall"
         ],
         "post-install-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ],
         "post-update-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
@@ -91,9 +88,6 @@
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",
         "symfony-assets-install": "symlink",
-        "incenteev-parameters": {
-            "file": "app/config/local/parameters.yml"
-        },
         "branch-alias": {
             "dev-master": "2.3-dev"
         }
