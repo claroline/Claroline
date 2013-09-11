@@ -139,6 +139,51 @@ class DesktopAgendaController extends Controller
         );
     }
 
+        /**
+     * @EXT\Route(
+     *     "/update",
+     *     name="claro_desktop_agenda_update"
+     * )
+     * @EXT\Method("POST")
+     *
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function updateAction()
+    {
+        $postData = $this->request->request->all();
+        $event = $this->om->getRepository('ClarolineCoreBundle:Event')->find($postData['id']);
+        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
+        $form->handleRequest($this->request);
+        if ($form->isValid()) {
+            $this->om->flush();
+
+            return new Response(
+                json_encode(
+                    array(
+                        'id' => $event->getId(),
+                        'title' => $event->getTitle(),
+                        'start' => $event->getStart()->getTimestamp(),
+                        'end' => $event->getEnd()->getTimestamp(),
+                        'color' => $event->getPriority(),
+                        'allDay' => $event->getAllDay(),
+                        'description' => $event->getDescription()
+                    )
+                ),
+                200,
+                array('Content-Type' => 'application/json')
+            );
+        }
+
+        return new Response(
+            json_encode(
+                array('dates are not valids')
+            ),
+            400,
+            array('Content-Type' => 'application/json')
+        );
+    }
+
     private function convertEventoArray($listEvents)
     {
         $data = array();
