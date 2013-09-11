@@ -373,7 +373,7 @@ class ResourceController
         $canChangePosition = false;
 
         if ($node === null) {
-            $nodes = $this->resourceManager->getRoots($user);
+            $nodesWithCreatorPerms = $this->resourceManager->getRoots($user);
             $isRoot = true;
             $workspaceId = 0;
         } else {
@@ -389,6 +389,13 @@ class ResourceController
 
             $path = $this->resourceManager->getAncestors($node);
             $nodes = $this->resourceManager->getChildren($node, $currentRoles);
+            //set "admin" mask if someone is the creator of a resource.
+            foreach ($nodes as $item) {
+                if ($item['creator_username'] === $user->getUsername()) {
+                    $item['mask'] = 1023;
+                }
+                $nodesWithCreatorPerms[] = $item;
+            }
             $creatableTypes = $this->rightsManager->getCreatableTypes($currentRoles, $node);
             $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
         }
@@ -397,7 +404,7 @@ class ResourceController
             array(
                 'path' => $path,
                 'creatableTypes' => $creatableTypes,
-                'nodes' => $nodes,
+                'nodes' => $nodesWithCreatorPerms,
                 'canChangePosition' => $canChangePosition,
                 'workspace_id' => $workspaceId,
                 'is_root' => $isRoot

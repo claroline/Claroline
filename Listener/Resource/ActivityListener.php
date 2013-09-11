@@ -13,6 +13,7 @@ use Claroline\CoreBundle\Event\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\Event\DeleteResourceEvent;
@@ -182,6 +183,32 @@ class ActivityListener implements ContainerAwareInterface
      */
     public function onOpen(OpenResourceEvent $event)
     {
+        $activity = $event->getResource();
+        $resourceActivities = $this->container
+            ->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
+            ->findResourceActivities($activity);
+
+        $content = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Activity/player:activity.html.twig',
+            array(
+                'activity' => $activity,
+                'resource' => $resourceActivities[0]
+            )
+        );
+
+        $response = new Response($content);
+        $event->setResponse($response);
+        $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("compose_activity")
+     *
+     * @param OpenResourceEvent $event
+     */
+    public function onCompose(CustomActionResourceEvent $event)
+    {
         $resourceTypes = $this->container->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findAll();
@@ -191,24 +218,14 @@ class ActivityListener implements ContainerAwareInterface
             ->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findResourceActivities($activity);
 
-        if ($this->container->get('security.context')->getToken()->getUser() == $activity->getResourceNode()->getCreator()) {
-            $content = $this->container->get('templating')->render(
-                'ClarolineCoreBundle:Activity:index.html.twig',
-                array(
-                    'resourceTypes' => $resourceTypes,
-                    'resourceActivities' => $resourceActivities,
-                    '_resource' => $activity
-                )
-            );
-        } else {
-            $content = $this->container->get('templating')->render(
-                'ClarolineCoreBundle:Activity/player:activity.html.twig',
-                array(
-                    'activity' => $activity,
-                    'resource' => $resourceActivities[0]
-                )
-            );
-        }
+        $content = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Activity:index.html.twig',
+            array(
+                'resourceTypes' => $resourceTypes,
+                'resourceActivities' => $resourceActivities,
+                '_resource' => $activity
+            )
+        );
 
         $response = new Response($content);
         $event->setResponse($response);

@@ -7,6 +7,7 @@ text: Texte
 copy: Copier
 export: Exporter
 edit: Editer
+compose: Composer
 delete: Supprimer
 resource_name_form_name: 'Nom de la ressource'
 resource_properties_form_copiable: Copier
