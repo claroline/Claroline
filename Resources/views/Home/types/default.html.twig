@@ -1,6 +1,5 @@
 {% if content != null %}
-
-    <div class="content-element  {% if region is defined and (region == left or region == right) %}{{ size }}{% else %}col-md-12{% endif %}" data-id="{{ content.id }}" data-type="{{ type }}">
+    <div class="content-element  {% if region is defined and (region == 'left' or region == 'right') %}col-md-12{% else %}{{ size }}{% endif %}" data-id="{{ content.id }}" data-type="{{ type }}">
         <div class="panel panel-default relative">
             {% render controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'father': father, 'region': region }) %}
 

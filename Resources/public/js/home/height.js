@@ -47,7 +47,7 @@
 
     function resizeDivs()
     {
-        var divs = getResizeDivs(".row.contents .content-element.panel");
+        var divs = getResizeDivs(".row.contents .content-element .panel");
         var minHeight = 0;
         var currentline = -1;
 
