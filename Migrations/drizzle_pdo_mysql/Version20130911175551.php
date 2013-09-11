@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/11 09:09:34
+ * Generation date: 2013/09/11 05:55:53
  */
-class Version20130911090933 extends AbstractMigration
+class Version20130911175551 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -186,6 +186,32 @@ class Version20130911090933 extends AbstractMigration
             )
         ");
         $this->addSql("
+            CREATE TABLE claro_user_badge (
+                id INT AUTO_INCREMENT NOT NULL, 
+                user_id INT NOT NULL, 
+                badge_id INT NOT NULL, 
+                issuer_id INT DEFAULT NULL, 
+                issued_at DATETIME NOT NULL, 
+                PRIMARY KEY(id), 
+                INDEX IDX_7EBB381FA76ED395 (user_id), 
+                INDEX IDX_7EBB381FF7A2C2FC (badge_id), 
+                INDEX IDX_7EBB381FBB9D6FEE (issuer_id), 
+                UNIQUE INDEX user_badge_unique (user_id, badge_id)
+            )
+        ");
+        $this->addSql("
+            CREATE TABLE claro_badge_claim (
+                id INT AUTO_INCREMENT NOT NULL, 
+                user_id INT NOT NULL, 
+                badge_id INT NOT NULL, 
+                claimed_at DATETIME NOT NULL, 
+                PRIMARY KEY(id), 
+                INDEX IDX_487A496AA76ED395 (user_id), 
+                INDEX IDX_487A496AF7A2C2FC (badge_id), 
+                UNIQUE INDEX badge_claim_unique (user_id, badge_id)
+            )
+        ");
+        $this->addSql("
             CREATE TABLE claro_resource_mask_decoder (
                 id INT AUTO_INCREMENT NOT NULL, 
                 resource_type_id INT NOT NULL, 
@@ -281,6 +307,24 @@ class Version20130911090933 extends AbstractMigration
             )
         ");
         $this->addSql("
+            CREATE TABLE claro_home_tab_config (
+                id INT AUTO_INCREMENT NOT NULL, 
+                home_tab_id INT NOT NULL, 
+                user_id INT DEFAULT NULL, 
+                workspace_id INT DEFAULT NULL, 
+                type VARCHAR(255) NOT NULL, 
+                is_visible BOOLEAN NOT NULL, 
+                is_locked BOOLEAN NOT NULL, 
+                tab_order INT NOT NULL, 
+                PRIMARY KEY(id), 
+                INDEX IDX_F530F6BE7D08FA9E (home_tab_id), 
+                INDEX IDX_F530F6BEA76ED395 (user_id), 
+                INDEX IDX_F530F6BE82D40A1F (workspace_id), 
+                UNIQUE INDEX home_tab_config_unique_home_tab_user (home_tab_id, user_id), 
+                UNIQUE INDEX home_tab_config_unique_home_tab_workspace (home_tab_id, workspace_id)
+            )
+        ");
+        $this->addSql("
             CREATE TABLE claro_subcontent (
                 id INT AUTO_INCREMENT NOT NULL, 
                 father_id INT NOT NULL, 
@@ -327,6 +371,18 @@ class Version20130911090933 extends AbstractMigration
                 created DATETIME NOT NULL, 
                 modified DATETIME NOT NULL, 
                 PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE TABLE claro_home_tab (
+                id INT AUTO_INCREMENT NOT NULL, 
+                user_id INT DEFAULT NULL, 
+                workspace_id INT DEFAULT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                type VARCHAR(255) NOT NULL, 
+                PRIMARY KEY(id), 
+                INDEX IDX_A9744CCEA76ED395 (user_id), 
+                INDEX IDX_A9744CCE82D40A1F (workspace_id)
             )
         ");
         $this->addSql("
@@ -454,16 +510,6 @@ class Version20130911090933 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE TABLE claro_theme (
-                id INT AUTO_INCREMENT NOT NULL, 
-                plugin_id INT DEFAULT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                path VARCHAR(255) NOT NULL, 
-                PRIMARY KEY(id), 
-                INDEX IDX_1D76301AEC942BCF (plugin_id)
-            )
-        ");
-        $this->addSql("
             CREATE TABLE claro_log (
                 id INT AUTO_INCREMENT NOT NULL, 
                 doer_id INT DEFAULT NULL, 
@@ -480,8 +526,8 @@ class Version20130911090933 extends AbstractMigration
                 doer_type VARCHAR(255) NOT NULL, 
                 doer_ip VARCHAR(255) DEFAULT NULL, 
                 tool_name VARCHAR(255) DEFAULT NULL, 
-                child_type VARCHAR(255) DEFAULT NULL, 
-                child_action VARCHAR(255) DEFAULT NULL, 
+                is_displayed_in_admin BOOLEAN NOT NULL, 
+                is_displayed_in_workspace BOOLEAN NOT NULL, 
                 resourceNode_id INT DEFAULT NULL, 
                 PRIMARY KEY(id), 
                 INDEX IDX_97FAB91F12D3860F (doer_id), 
@@ -518,25 +564,7 @@ class Version20130911090933 extends AbstractMigration
                 workspace_id INT DEFAULT NULL, 
                 is_default BOOLEAN NOT NULL, 
                 amount INT NOT NULL, 
-                resource_copy BOOLEAN NOT NULL, 
-                resource_create BOOLEAN NOT NULL, 
-                resource_shortcut BOOLEAN NOT NULL, 
-                resource_read BOOLEAN NOT NULL, 
-                ws_tool_read BOOLEAN NOT NULL, 
-                resource_export BOOLEAN NOT NULL, 
-                resource_update BOOLEAN NOT NULL, 
-                resource_update_rename BOOLEAN NOT NULL, 
-                resource_child_update BOOLEAN NOT NULL, 
-                resource_delete BOOLEAN NOT NULL, 
-                resource_move BOOLEAN NOT NULL, 
-                ws_role_subscribe_user BOOLEAN NOT NULL, 
-                ws_role_subscribe_group BOOLEAN NOT NULL, 
-                ws_role_unsubscribe_user BOOLEAN NOT NULL, 
-                ws_role_unsubscribe_group BOOLEAN NOT NULL, 
-                ws_role_change_right BOOLEAN NOT NULL, 
-                ws_role_create BOOLEAN NOT NULL, 
-                ws_role_delete BOOLEAN NOT NULL, 
-                ws_role_update BOOLEAN NOT NULL, 
+                restrictions TEXT DEFAULT NULL COMMENT '(DC2Type:simple_array)', 
                 PRIMARY KEY(id), 
                 INDEX IDX_D301C70782D40A1F (workspace_id)
             )
@@ -557,6 +585,16 @@ class Version20130911090933 extends AbstractMigration
                 user_id INT NOT NULL, 
                 PRIMARY KEY(workspace_id, user_id), 
                 INDEX IDX_BC83196EA76ED395 (user_id)
+            )
+        ");
+        $this->addSql("
+            CREATE TABLE claro_theme (
+                id INT AUTO_INCREMENT NOT NULL, 
+                plugin_id INT DEFAULT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                path VARCHAR(255) NOT NULL, 
+                PRIMARY KEY(id), 
+                INDEX IDX_1D76301AEC942BCF (plugin_id)
             )
         ");
         $this->addSql("
@@ -587,6 +625,24 @@ class Version20130911090933 extends AbstractMigration
                 INDEX IDX_2D34DB382D40A1F (workspace_id), 
                 INDEX IDX_2D34DB3A76ED395 (user_id), 
                 INDEX IDX_2D34DB3FBE885E2 (widget_id)
+            )
+        ");
+        $this->addSql("
+            CREATE TABLE claro_widget_home_tab_config (
+                id INT AUTO_INCREMENT NOT NULL, 
+                widget_id INT NOT NULL, 
+                home_tab_id INT NOT NULL, 
+                user_id INT DEFAULT NULL, 
+                workspace_id INT DEFAULT NULL, 
+                widget_order VARCHAR(255) NOT NULL, 
+                type VARCHAR(255) NOT NULL, 
+                is_visible BOOLEAN NOT NULL, 
+                is_locked BOOLEAN NOT NULL, 
+                PRIMARY KEY(id), 
+                INDEX IDX_D48CC23EFBE885E2 (widget_id), 
+                INDEX IDX_D48CC23E7D08FA9E (home_tab_id), 
+                INDEX IDX_D48CC23EA76ED395 (user_id), 
+                INDEX IDX_D48CC23E82D40A1F (workspace_id)
             )
         ");
         $this->addSql("
@@ -687,6 +743,31 @@ class Version20130911090933 extends AbstractMigration
                 id INT AUTO_INCREMENT NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
                 acronym VARCHAR(255) DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE TABLE claro_badge_translation (
+                id INT AUTO_INCREMENT NOT NULL, 
+                badge_id INT DEFAULT NULL, 
+                locale VARCHAR(8) NOT NULL, 
+                name VARCHAR(128) NOT NULL, 
+                description VARCHAR(128) NOT NULL, 
+                slug VARCHAR(128) NOT NULL, 
+                criteria TEXT NOT NULL, 
+                PRIMARY KEY(id), 
+                INDEX IDX_849BC831F7A2C2FC (badge_id), 
+                UNIQUE INDEX badge_translation_unique_idx (locale, badge_id), 
+                UNIQUE INDEX badge_name_translation_unique_idx (name, locale, badge_id), 
+                UNIQUE INDEX badge_slug_translation_unique_idx (slug, locale, badge_id)
+            )
+        ");
+        $this->addSql("
+            CREATE TABLE claro_badge (
+                id INT AUTO_INCREMENT NOT NULL, 
+                version INT NOT NULL, 
+                image VARCHAR(255) NOT NULL, 
+                expired_at DATETIME DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -851,6 +932,36 @@ class Version20130911090933 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE claro_user_badge 
+            ADD CONSTRAINT FK_7EBB381FA76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user_badge 
+            ADD CONSTRAINT FK_7EBB381FF7A2C2FC FOREIGN KEY (badge_id) 
+            REFERENCES claro_badge (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user_badge 
+            ADD CONSTRAINT FK_7EBB381FBB9D6FEE FOREIGN KEY (issuer_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE SET NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_claim 
+            ADD CONSTRAINT FK_487A496AA76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_claim 
+            ADD CONSTRAINT FK_487A496AF7A2C2FC FOREIGN KEY (badge_id) 
+            REFERENCES claro_badge (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
             ALTER TABLE claro_resource_mask_decoder 
             ADD CONSTRAINT FK_39D93F4298EC6B7B FOREIGN KEY (resource_type_id) 
             REFERENCES claro_resource_type (id) 
@@ -929,6 +1040,24 @@ class Version20130911090933 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE claro_home_tab_config 
+            ADD CONSTRAINT FK_F530F6BE7D08FA9E FOREIGN KEY (home_tab_id) 
+            REFERENCES claro_home_tab (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_home_tab_config 
+            ADD CONSTRAINT FK_F530F6BEA76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_home_tab_config 
+            ADD CONSTRAINT FK_F530F6BE82D40A1F FOREIGN KEY (workspace_id) 
+            REFERENCES claro_workspace (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
             ALTER TABLE claro_subcontent 
             ADD CONSTRAINT FK_D72E133C2055B9A2 FOREIGN KEY (father_id) 
             REFERENCES claro_content (id) 
@@ -974,6 +1103,18 @@ class Version20130911090933 extends AbstractMigration
             ALTER TABLE claro_content2region 
             ADD CONSTRAINT FK_8D18942EE9583FF0 FOREIGN KEY (back_id) 
             REFERENCES claro_content2region (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_home_tab 
+            ADD CONSTRAINT FK_A9744CCEA76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_home_tab 
+            ADD CONSTRAINT FK_A9744CCE82D40A1F FOREIGN KEY (workspace_id) 
+            REFERENCES claro_workspace (id) 
             ON DELETE CASCADE
         ");
         $this->addSql("
@@ -1067,12 +1208,6 @@ class Version20130911090933 extends AbstractMigration
             ON DELETE SET NULL
         ");
         $this->addSql("
-            ALTER TABLE claro_theme 
-            ADD CONSTRAINT FK_1D76301AEC942BCF FOREIGN KEY (plugin_id) 
-            REFERENCES claro_plugin (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
             ALTER TABLE claro_log 
             ADD CONSTRAINT FK_97FAB91F12D3860F FOREIGN KEY (doer_id) 
             REFERENCES claro_user (id) 
@@ -1160,6 +1295,12 @@ class Version20130911090933 extends AbstractMigration
             REFERENCES claro_user (id)
         ");
         $this->addSql("
+            ALTER TABLE claro_theme 
+            ADD CONSTRAINT FK_1D76301AEC942BCF FOREIGN KEY (plugin_id) 
+            REFERENCES claro_plugin (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
             ALTER TABLE claro_widget 
             ADD CONSTRAINT FK_76CA6C4FEC942BCF FOREIGN KEY (plugin_id) 
             REFERENCES claro_plugin (id) 
@@ -1186,6 +1327,30 @@ class Version20130911090933 extends AbstractMigration
             ALTER TABLE claro_widget_display 
             ADD CONSTRAINT FK_2D34DB3FBE885E2 FOREIGN KEY (widget_id) 
             REFERENCES claro_widget (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget_home_tab_config 
+            ADD CONSTRAINT FK_D48CC23EFBE885E2 FOREIGN KEY (widget_id) 
+            REFERENCES claro_widget (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget_home_tab_config 
+            ADD CONSTRAINT FK_D48CC23E7D08FA9E FOREIGN KEY (home_tab_id) 
+            REFERENCES claro_home_tab (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget_home_tab_config 
+            ADD CONSTRAINT FK_D48CC23EA76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget_home_tab_config 
+            ADD CONSTRAINT FK_D48CC23E82D40A1F FOREIGN KEY (workspace_id) 
+            REFERENCES claro_workspace (id) 
             ON DELETE CASCADE
         ");
         $this->addSql("
@@ -1240,6 +1405,12 @@ class Version20130911090933 extends AbstractMigration
             REFERENCES claro_workspace_tag (id) 
             ON DELETE CASCADE
         ");
+        $this->addSql("
+            ALTER TABLE claro_badge_translation 
+            ADD CONSTRAINT FK_849BC831F7A2C2FC FOREIGN KEY (badge_id) 
+            REFERENCES claro_badge (id) 
+            ON DELETE CASCADE
+        ");
     }
 
     public function down(Schema $schema)
@@ -1269,8 +1440,28 @@ class Version20130911090933 extends AbstractMigration
             DROP FOREIGN KEY FK_6CF1320EA76ED395
         ");
         $this->addSql("
+            ALTER TABLE claro_user_badge 
+            DROP FOREIGN KEY FK_7EBB381FA76ED395
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user_badge 
+            DROP FOREIGN KEY FK_7EBB381FBB9D6FEE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_claim 
+            DROP FOREIGN KEY FK_487A496AA76ED395
+        ");
+        $this->addSql("
             ALTER TABLE claro_event 
             DROP FOREIGN KEY FK_B1ADDDB5A76ED395
+        ");
+        $this->addSql("
+            ALTER TABLE claro_home_tab_config 
+            DROP FOREIGN KEY FK_F530F6BEA76ED395
+        ");
+        $this->addSql("
+            ALTER TABLE claro_home_tab 
+            DROP FOREIGN KEY FK_A9744CCEA76ED395
         ");
         $this->addSql("
             ALTER TABLE claro_message 
@@ -1303,6 +1494,10 @@ class Version20130911090933 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_widget_display 
             DROP FOREIGN KEY FK_2D34DB3A76ED395
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget_home_tab_config 
+            DROP FOREIGN KEY FK_D48CC23EA76ED395
         ");
         $this->addSql("
             ALTER TABLE simple_text_dekstop_widget_config 
@@ -1441,6 +1636,14 @@ class Version20130911090933 extends AbstractMigration
             DROP FOREIGN KEY FK_B1ADDDB582D40A1F
         ");
         $this->addSql("
+            ALTER TABLE claro_home_tab_config 
+            DROP FOREIGN KEY FK_F530F6BE82D40A1F
+        ");
+        $this->addSql("
+            ALTER TABLE claro_home_tab 
+            DROP FOREIGN KEY FK_A9744CCE82D40A1F
+        ");
+        $this->addSql("
             ALTER TABLE claro_log 
             DROP FOREIGN KEY FK_97FAB91F82D40A1F
         ");
@@ -1451,6 +1654,10 @@ class Version20130911090933 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_widget_display 
             DROP FOREIGN KEY FK_2D34DB382D40A1F
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget_home_tab_config 
+            DROP FOREIGN KEY FK_D48CC23E82D40A1F
         ");
         $this->addSql("
             ALTER TABLE simple_text_workspace_widget_config 
@@ -1541,6 +1748,14 @@ class Version20130911090933 extends AbstractMigration
             DROP FOREIGN KEY FK_8D18942E84A0A3ED
         ");
         $this->addSql("
+            ALTER TABLE claro_home_tab_config 
+            DROP FOREIGN KEY FK_F530F6BE7D08FA9E
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget_home_tab_config 
+            DROP FOREIGN KEY FK_D48CC23E7D08FA9E
+        ");
+        $this->addSql("
             ALTER TABLE claro_user_message 
             DROP FOREIGN KEY FK_D48EA38A537A1329
         ");
@@ -1575,6 +1790,10 @@ class Version20130911090933 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_widget_display 
             DROP FOREIGN KEY FK_2D34DB3FBE885E2
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget_home_tab_config 
+            DROP FOREIGN KEY FK_D48CC23EFBE885E2
         ");
         $this->addSql("
             ALTER TABLE claro_widget_display 
@@ -1617,6 +1836,18 @@ class Version20130911090933 extends AbstractMigration
             DROP FOREIGN KEY FK_A76799FF460F904B
         ");
         $this->addSql("
+            ALTER TABLE claro_user_badge 
+            DROP FOREIGN KEY FK_7EBB381FF7A2C2FC
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_claim 
+            DROP FOREIGN KEY FK_487A496AF7A2C2FC
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_translation 
+            DROP FOREIGN KEY FK_849BC831F7A2C2FC
+        ");
+        $this->addSql("
             DROP TABLE claro_user
         ");
         $this->addSql("
@@ -1653,6 +1884,12 @@ class Version20130911090933 extends AbstractMigration
             DROP TABLE claro_ordered_tool_role
         ");
         $this->addSql("
+            DROP TABLE claro_user_badge
+        ");
+        $this->addSql("
+            DROP TABLE claro_badge_claim
+        ");
+        $this->addSql("
             DROP TABLE claro_resource_mask_decoder
         ");
         $this->addSql("
@@ -1677,6 +1914,9 @@ class Version20130911090933 extends AbstractMigration
             DROP TABLE claro_region
         ");
         $this->addSql("
+            DROP TABLE claro_home_tab_config
+        ");
+        $this->addSql("
             DROP TABLE claro_subcontent
         ");
         $this->addSql("
@@ -1687,6 +1927,9 @@ class Version20130911090933 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE claro_content
+        ");
+        $this->addSql("
+            DROP TABLE claro_home_tab
         ");
         $this->addSql("
             DROP TABLE claro_message
@@ -1722,9 +1965,6 @@ class Version20130911090933 extends AbstractMigration
             DROP TABLE claro_text_revision
         ");
         $this->addSql("
-            DROP TABLE claro_theme
-        ");
-        $this->addSql("
             DROP TABLE claro_log
         ");
         $this->addSql("
@@ -1743,10 +1983,16 @@ class Version20130911090933 extends AbstractMigration
             DROP TABLE claro_log_hidden_workspace_widget_config
         ");
         $this->addSql("
+            DROP TABLE claro_theme
+        ");
+        $this->addSql("
             DROP TABLE claro_widget
         ");
         $this->addSql("
             DROP TABLE claro_widget_display
+        ");
+        $this->addSql("
+            DROP TABLE claro_widget_home_tab_config
         ");
         $this->addSql("
             DROP TABLE simple_text_dekstop_widget_config
@@ -1774,6 +2020,12 @@ class Version20130911090933 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE claro_license
+        ");
+        $this->addSql("
+            DROP TABLE claro_badge_translation
+        ");
+        $this->addSql("
+            DROP TABLE claro_badge
         ");
     }
 }
