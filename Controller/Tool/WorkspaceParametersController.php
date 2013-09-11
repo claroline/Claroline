@@ -199,7 +199,6 @@ class WorkspaceParametersController extends Controller
      *     "/{workspace}/tool/{tool}/config",
      *     name="claro_workspace_tool_config"
      * )
-     * @EXT\Method("GET")
      *
      * @param AbstractWorkspace $workspace
      * @param Tool              $tool

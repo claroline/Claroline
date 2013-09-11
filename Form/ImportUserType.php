@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Claroline\CoreBundle\Validator\Constraints\CsvUser;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ImportUserType extends AbstractType
@@ -20,7 +21,8 @@ class ImportUserType extends AbstractType
                 'mapped' => false,
                 'constraints' => array(
                     new NotBlank(),
-                    new File()
+                    new File(),
+                    new CsvUser()
                 )
            )
         );

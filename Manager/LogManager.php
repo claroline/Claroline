@@ -306,7 +306,7 @@ class LogManager
         );
     }
 
-    public function getWorkspaceVisibilityForDesktopWidget($user, $workspaces)
+    public function getWorkspaceVisibilityForDesktopWidget(User $user, array $workspaces)
     {
         $workspacesVisibility = array();
 
@@ -352,7 +352,7 @@ class LogManager
 
         return $em
             ->getRepository('ClarolineCoreBundle:Logger\LogWorkspaceWidgetConfig')
-            ->findOneBy(array('workspace' => $workspace, 'isDefault' => false));
+            ->findOneBy(array('workspace' => $workspace->getId(), 'isDefault' => false));
     }
 
     public function getDefaultWorkspaceWidgetConfig()

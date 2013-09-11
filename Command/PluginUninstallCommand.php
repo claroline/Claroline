@@ -6,9 +6,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Uninstalls a specific plugin.
+ * Uninstalls a plugin.
  */
-class PluginUninstallCommand extends SinglePluginCommand
+class PluginUninstallCommand extends AbstractPluginCommand
 {
     protected function configure()
     {
@@ -19,12 +19,8 @@ class PluginUninstallCommand extends SinglePluginCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $vendor = $input->getArgument('vendor_name');
-        $bundle = $input->getArgument('bundle_name');
-        $fqcn = "{$vendor}\\{$bundle}\\{$vendor}{$bundle}";
-
-        if ($this->uninstallPlugin($fqcn, $output)) {
-            $this->resetCache($output);
-        }
+        $plugin = $this->getPlugin($input);
+        $this->getPluginInstaller($output)->uninstall($plugin);
+        $this->resetCache($output);
     }
 }

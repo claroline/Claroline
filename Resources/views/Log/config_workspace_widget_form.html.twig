@@ -3,7 +3,7 @@
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
 {% block stylesheets %}
-    {{ parent() }}
+    {#{{ parent() }}#}
     <style type="text/css">
         #form_log_update_workspace_widget .control-group {
             margin-bottom: 0px;
@@ -35,11 +35,17 @@
 
     <div class="panel-footer">
         <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-        {% if workspace is defined and workspace != null %}
-            <a href="{{ path('claro_workspace_widget_properties', {'workspace': workspace.id}) }}">
+        {% if app.request.isXMLHttpRequest %}
+            {% set cancelUrl = path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId()}) %}
         {% else %}
-            <a href="{{ path('claro_admin_widgets') }}">
+            {% if isDefault %}
+                {% set cancelUrl = path('claro_admin_widgets') %}
+            {% else %}
+                {% set cancelUrl = path('claro_workspace_widget_properties', {'workspace': workspace.getId()}) %}
+            {% endif %}
         {% endif %}
+        
+        <a href="{{ cancelUrl }}">
             <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
         </a>
     </div>

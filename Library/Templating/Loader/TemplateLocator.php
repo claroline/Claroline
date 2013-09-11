@@ -40,6 +40,7 @@ class TemplateLocator extends baseTemplateLocator
      */
     public function locate($template, $currentPath = null, $first = true)
     {
+//        return parent::locate($template, $currentPath, $first);
         if (!$template instanceof TemplateReferenceInterface) {
             throw new \InvalidArgumentException('The template must be an instance of TemplateReferenceInterface.');
         }

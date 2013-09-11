@@ -153,8 +153,8 @@ class WorkspaceAgendaController extends Controller
             json_encode(
                 array('dates are not valids')
             ),
-            200,
-             array('Content-Type' => 'application/json')
+            400,
+            array('Content-Type' => 'application/json')
         );
     }
 

@@ -7,7 +7,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\SecurityExtraBundle\Annotation as SEC;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("hasRole('ADMIN')")
+ */
 class AdministrationWidgetController extends Controller
 {
     /**
@@ -58,7 +64,7 @@ class AdministrationWidgetController extends Controller
      */
     public function invertLockWidgetAction(DisplayConfig $displayConfig)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getDoctrine()->getManager();
         $displayConfig->invertLock();
         $em->persist($displayConfig);
         $em->flush();
@@ -153,8 +159,7 @@ class AdministrationWidgetController extends Controller
      */
     public function invertVisibleWidgetAction(DisplayConfig $displayConfig)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $displayConfig->invertVisible();
+        $em = $this->getDoctrine()->getManager();
         $em->persist($displayConfig);
         $em->flush();
 

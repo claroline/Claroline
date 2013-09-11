@@ -708,33 +708,28 @@ class AdministrationController extends Controller
             $lines = str_getcsv(file_get_contents($file), PHP_EOL, ',');
 
             foreach ($lines as $line) {
-                $linesTab = explode(',', $line);
-                $nbElements = count($linesTab);
-
-                if ($nbElements < 5) {
-                    $validFile = false;
-                    $this->get('session')->getFlashBag()->add(
-                        'error',
-                        $this->translator->trans('invalid_csv_file', array(), 'platform')
-                    );
-                    break;
-                }
                 $users[] = str_getcsv($line);
             }
 
             if ($validFile) {
                 $nonImportedUsers = $this->userManager->importUsers($users);
 
-                foreach ($nonImportedUsers as $nonImportedUser) {
+                if (count($nonImportedUsers) > 0) {
+                    foreach ($nonImportedUsers as $nonImportedUser) {
+                        $this->get('session')->getFlashBag()->add(
+                            'error',
+                            $nonImportedUser['firstName'] . ' ' .
+                            $nonImportedUser['lastName'] . ' [' .
+                            $nonImportedUser['username'] . '] ' .
+                            $this->translator->trans('has_not_been_imported', array(), 'platform')
+                        );
+                    }
                     $this->get('session')->getFlashBag()->add(
                         'error',
-                        $nonImportedUser['firstName'] . ' ' .
-                        $nonImportedUser['lastName'] . ' [' .
-                        $nonImportedUser['username'] . '] ' .
-                        $this->translator->trans('has_not_been_imported', array(), 'platform')
+                        $this->translator->trans('users_minimum_requirement_msg', array(), 'platform')
                     );
+                    return array('form' => $form->createView());
                 }
-
                 return $this->redirect($this->generateUrl('claro_admin_user_list'));
             }
         }

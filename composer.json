@@ -56,6 +56,8 @@
     "autoload": {
         "psr-0": { "Claroline\\CoreBundle": "" }
     },
-    "target-dir": "Claroline/CoreBundle"
+    "target-dir": "Claroline/CoreBundle",
+    "extra": {
+        "dbVersion": "20130909152258"
+    }
 }
-

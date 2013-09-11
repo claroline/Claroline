@@ -22,7 +22,8 @@ class LoadWidgetData extends AbstractFixture implements OrderedFixtureInterface
     {
         //name, isConfigurable, icon
         $items = array(
-            array('core_resource_logger', true)
+            array('core_resource_logger', true),
+            array('simple_text', true),
         );
 
         foreach ($items as $item) {

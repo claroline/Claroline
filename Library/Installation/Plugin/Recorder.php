@@ -64,11 +64,11 @@ class Recorder
         $pluginFqcn = get_class($plugin);
 
         $this->dbWriter->insert($plugin, $pluginConfiguration);
-        $this->configWriter->registerNamespace($plugin->getVendorName());
-        $this->configWriter->addInstantiableBundle($pluginFqcn);
-        $this->configWriter->importRoutingResources(
-            $pluginFqcn, $plugin->getRoutingResourcesPaths(), $plugin->getRoutingPrefix()
-        );
+//        $this->configWriter->registerNamespace($plugin->getVendorName());
+//        $this->configWriter->addInstantiableBundle($pluginFqcn);
+//        $this->configWriter->importRoutingResources(
+//            $pluginFqcn, $plugin->getRoutingResourcesPaths(), $plugin->getRoutingPrefix()
+//        );
     }
 
     /**
@@ -81,9 +81,9 @@ class Recorder
         $pluginFqcn = get_class($plugin);
 
         $this->dbWriter->delete($pluginFqcn);
-        $this->configWriter->removeNamespace($plugin->getVendorName());
-        $this->configWriter->removeInstantiableBundle($pluginFqcn);
-        $this->configWriter->removeRoutingResources($pluginFqcn);
+//        $this->configWriter->removeNamespace($plugin->getVendorName());
+//        $this->configWriter->removeInstantiableBundle($pluginFqcn);
+//        $this->configWriter->removeRoutingResources($pluginFqcn);
     }
 
     /**
@@ -93,15 +93,17 @@ class Recorder
      *
      * @return boolean
      */
-    public function isRegistered($pluginFqcn)
+    public function isRegistered(PluginBundle $plugin)
     {
-        $isSavedInDb = $this->dbWriter->isSaved($pluginFqcn);
-        $isSavedInConfig = $this->configWriter->isRecorded($pluginFqcn);
+        return $this->dbWriter->isSaved($plugin);
 
-        if ($isSavedInDb && $isSavedInConfig) {
-            return true;
-        }
-
-        return false;
+//        $isSavedInDb = $this->dbWriter->isSaved($pluginFqcn);
+//        $isSavedInConfig = $this->configWriter->isRecorded($pluginFqcn);
+//
+//        if ($isSavedInDb && $isSavedInConfig) {
+//            return true;
+//        }
+//
+//        return false;
     }
 }

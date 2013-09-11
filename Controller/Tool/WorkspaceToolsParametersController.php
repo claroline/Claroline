@@ -59,6 +59,8 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      */
     public function workspaceToolsRolesAction(AbstractWorkspace $workspace)
     {
+        $this->checkAccess($workspace);
+
         return array(
             'roles' => $this->roleManager->getWorkspaceRoles($workspace),
             'workspace' => $workspace,
@@ -101,6 +103,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      */
     public function removeRoleFromTool(Tool $tool, Role $role, AbstractWorkspace $workspace)
     {
+        $this->checkAccess($workspace);
         $this->toolManager->removeRole($tool, $role, $workspace);
 
         return new Response('success', 204);
@@ -141,6 +144,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      */
     public function addRoleToTool(Tool $tool, Role $role, AbstractWorkspace $workspace)
     {
+        $this->checkAccess($workspace);
         $this->toolManager->addRole($tool, $role, $workspace);
 
         return new Response('success', 204);
@@ -174,6 +178,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      */
     public function move(Tool $tool, $position, AbstractWorkspace $workspace)
     {
+        $this->checkAccess($workspace);
         $this->toolManager->move($tool, $position, null, $workspace);
 
         return new Response('success');
@@ -206,6 +211,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      */
     public function workspaceOrderToolEditFormAction(AbstractWorkspace $workspace, Tool $tool)
     {
+        $this->checkAccess($workspace);
         $ot = $this->toolManager->getOneByWorkspaceAndTool($workspace, $tool);
 
         return array(
@@ -242,7 +248,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      */
     public function workspaceOrderToolEditAction(AbstractWorkspace $workspace, OrderedTool $ot)
     {
-
+        $this->checkAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_ORDERED_TOOL, array(), $ot);
         $form->handleRequest($this->request);
 
