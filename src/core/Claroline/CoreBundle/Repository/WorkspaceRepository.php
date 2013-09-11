@@ -41,6 +41,7 @@ class WorkspaceRepository extends EntityRepository
                 SELECT w1.id FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w1
                 JOIN w1.personalUser pu
             )
+            ORDER BY w.id
         ';
         $query = $this->_em->createQuery($dql);
 
