@@ -482,6 +482,31 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
         );
     }
 
+    public function testAdminHomeTabUpdateVisibilityAction()
+    {
+        $homeTabConfig = $this->mock('Claroline\CoreBundle\Entity\Home\HomeTabConfig');
+
+        $this->homeTabManager
+            ->shouldReceive('updateVisibility')
+            ->with($homeTabConfig, true)
+            ->once();
+
+        $response = $this->getController()
+            ->adminHomeTabUpdateVisibilityAction($homeTabConfig, 'visible');
+        $this->assertInstanceOf(
+            'Symfony\Component\HttpFoundation\Response',
+            $response
+        );
+        $this->assertEquals(
+            'success',
+            $response->getContent()
+        );
+        $this->assertEquals(
+            204,
+            $response->getStatusCode()
+        );
+    }
+
     private function getController(array $mockedMethods = array())
     {
         if (count($mockedMethods) === 0) {
