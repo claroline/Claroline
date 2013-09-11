@@ -11,7 +11,7 @@
     <div class="panel-body">
         <div id="activity-instruction">
             <h4>{{ 'instructions'|trans({}, 'platform') }} :</h4>
-                {{ activity.getInstructions() }}
+                {{ _resource.getInstructions() }}
         </div>
         <br>
 
@@ -96,9 +96,9 @@
             type: 'GET',
             success: function(nodes){
                 var html = "";
-                html+= "<div id={{ resourceActivity.getResourceNode().getId() }}>";
+                html+= "<div id= " + nodes[0].id + " >";
                 html+= "<div class='alert alert-info'>";
-                html+= "<a class='close' href="+Routing.generate('claro_activity_remove_resource', {'node':nodes[0].id, 'activityId': {{ _resource.getId() }} })+">&times;</a>";
+                html+= "<a class='close' href="+Routing.generate('claro_activity_remove_resource', {'nodeId':nodes[0].id, 'activityId': {{ _resource.getId() }} })+">&times;</a>";
                 html+= "<a class='alert-link' href="+Routing.generate('claro_resource_open', {'resourceType': nodes[0].type, 'action': 'open', 'node': nodes[0].id})+">";
                 html+= nodes[0].name
                 html+= "</a>";

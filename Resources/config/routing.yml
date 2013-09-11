@@ -167,6 +167,11 @@ claro_text:
     prefix: text
     type: annotation
 
+claro_simple_text_widget:
+    resource: "@ClarolineCoreBundle/Controller/Widget/SimpleTextController.php"
+    prefix: widget
+    type: annotation
+
 claro_mail:
     resource: "@ClarolineCoreBundle/Controller/MailController.php"
     prefix: mail

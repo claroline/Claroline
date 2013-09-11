@@ -6,6 +6,7 @@ copy: Copy
 export: Export
 edit: Edit
 delete: Delete
+compose: Compose
 resource_shortcut: Shortcut
 text: Text
 resource_name_form_name: 'Resource name'

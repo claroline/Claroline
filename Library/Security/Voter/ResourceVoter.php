@@ -142,6 +142,18 @@ class ResourceVoter implements VoterInterface
 
     private function checkAction($action, array $resources, TokenInterface $token)
     {
+        $isCreator = false;
+
+        foreach ($resources as $resource) {
+            if ($resource->getCreator() === $token->getUser()) {
+                $isCreator = true;
+            }
+        }
+
+        if ($isCreator) {
+            return array();
+        }
+
         $errors = array();
         $action = strtolower($action);
 

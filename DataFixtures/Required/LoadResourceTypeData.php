@@ -45,6 +45,8 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
             array('activity', true)
         );
 
+        $types[] = array();
+
         foreach ($resourceTypes as $attributes) {
             $type = new ResourceType();
             $type->setName($attributes[0]);
@@ -52,7 +54,24 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
             $manager->persist($type);
             $this->container->get('claroline.manager.mask_manager')->addDefaultPerms($type);
             $this->addReference("resource_type/{$attributes[0]}", $type);
+            $types[$attributes[0]] = $type;
         }
+
+        //add special actions.
+        $maskDecoder = new MaskDecoder();
+        $maskDecoder->setValue(pow(2, 6));
+        $maskDecoder->setName('compose');
+        $maskDecoder->setResourceType($types['activity']);
+        $manager->persist($maskDecoder);
+
+        $menu = new MenuAction();
+        $menu->setName('compose');
+        $menu->setAsync(false);
+        $menu->setIsCustom(true);
+        $menu->setValue(pow(2, 6));
+        $menu->setResourceType($types['activity']);
+        $menu->setIsForm(false);
+        $manager->persist($menu);
 
         $manager->flush();
     }

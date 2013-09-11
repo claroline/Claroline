@@ -13,8 +13,6 @@ use JMS\SecurityExtraBundle\Annotation as SEC;
 /**
  * @DI\Tag("security.secure_service")
  * @SEC\PreAuthorize("hasRole('ROLE_USER')")
- *
- * Controller of the user's desktop.
  */
 class DesktopController extends Controller
 {

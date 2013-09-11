@@ -18,9 +18,18 @@
     </div>
 
     {{ macros.flashBox() }}
+    {% if app.request.isXMLHttpRequest %}
+            {% set cancelUrl = path('claro_desktop_open_tool', {'toolName': 'home'}) %}
+        {% else %}
+            {% if isDefault %}
+                {% set cancelUrl = path('claro_admin_widgets') %}
+            {% else %}
+                {% set cancelUrl = path('claro_desktop_widget_properties') %}
+            {% endif %}
+        {% endif %}
     <div class="panel-footer">
         <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-        <a href="{{ path('claro_admin_widgets') }}">
+        <a href="{{ cancelUrl }}">
             <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
         </a>
     </div>

@@ -28,6 +28,8 @@ class FileController extends Controller
      */
     public function streamImageAction(ResourceNode $node)
     {
+        $collection = new ResourceCollection(array($node));
+        $this->checkAccess('OPEN', $collection);
         $file = $this->get('claroline.manager.resource_manager')->getResourceFromNode($node);
         $imgpath = $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR
             . $file->getHashName();

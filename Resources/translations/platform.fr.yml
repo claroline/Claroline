@@ -501,6 +501,7 @@ tags_list: 'Liste des Tags'
 tags_management: 'Gestion des Tags'
 tags_organization: 'Organisation des Tags'
 teacher: Professeur
+text_form_content: Contenu
 text_form_name: Nom
 text_form_shareType: Redistribution
 text_form_text: Texte

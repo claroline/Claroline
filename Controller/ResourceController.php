@@ -373,13 +373,15 @@ class ResourceController
         $canChangePosition = false;
 
         if ($node === null) {
-            $nodes = $this->resourceManager->getRoots($user);
+            $nodesWithCreatorPerms = $this->resourceManager->getRoots($user);
             $isRoot = true;
             $workspaceId = 0;
         } else {
             $isRoot = false;
             $workspaceId = $node->getWorkspace()->getId();
             $node = $this->getRealTarget($node);
+            $collection = new ResourceCollection(array($node));
+            $this->checkAccess('OPEN', $collection);
 
             if ($user === $node->getCreator() || $this->sc->isGranted('ROLE_ADMIN')) {
                 $canChangePosition = true;
@@ -387,6 +389,13 @@ class ResourceController
 
             $path = $this->resourceManager->getAncestors($node);
             $nodes = $this->resourceManager->getChildren($node, $currentRoles);
+            //set "admin" mask if someone is the creator of a resource.
+            foreach ($nodes as $item) {
+                if ($item['creator_username'] === $user->getUsername()) {
+                    $item['mask'] = 1023;
+                }
+                $nodesWithCreatorPerms[] = $item;
+            }
             $creatableTypes = $this->rightsManager->getCreatableTypes($currentRoles, $node);
             $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
         }
@@ -395,7 +404,7 @@ class ResourceController
             array(
                 'path' => $path,
                 'creatableTypes' => $creatableTypes,
-                'nodes' => $nodes,
+                'nodes' => $nodesWithCreatorPerms,
                 'canChangePosition' => $canChangePosition,
                 'workspace_id' => $workspaceId,
                 'is_root' => $isRoot
@@ -508,6 +517,10 @@ class ResourceController
      */
     public function createShortcutAction(ResourceNode $parent, User $creator, array $nodes)
     {
+        $collection = new ResourceCollection(array($parent));
+        $collection->setAttributes(array('type' => 'resource_shortcut'));
+        $this->checkAccess('CREATE', $collection);
+
         foreach ($nodes as $node) {
             $shortcut = $this->resourceManager
                 ->makeShortcut($node, $parent, $creator, new ResourceShortcut());
@@ -524,10 +537,15 @@ class ResourceController
      *     options={"expose"=true}
      * )
      *
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
      */
-    public function restoreNodeOrderAction(ResourceNode $parent)
+    public function restoreNodeOrderAction(ResourceNode $parent, User $user)
     {
+        if ($user !== $parent->getCreator() && !$this->sc->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException();
+        }
+
         $this->resourceManager->restoreNodeOrder($parent);
 
         return new Response('success');

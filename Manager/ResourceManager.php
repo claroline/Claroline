@@ -27,6 +27,7 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -66,7 +67,8 @@ class ResourceManager
      *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager"),
      *     "dispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "ut"            = @DI\Inject("claroline.utilities.misc")
+     *     "ut"            = @DI\Inject("claroline.utilities.misc"),
+     *     "sc"            = @DI\Inject("security.context")
      * })
      */
     public function __construct (
@@ -75,7 +77,8 @@ class ResourceManager
         RightsManager $rightsManager,
         StrictDispatcher $dispatcher,
         ObjectManager $om,
-        ClaroUtilities $ut
+        ClaroUtilities $ut,
+        SecurityContextInterface $sc
     )
     {
         $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
@@ -89,6 +92,7 @@ class ResourceManager
         $this->dispatcher = $dispatcher;
         $this->om = $om;
         $this->ut = $ut;
+        $this->sc = $sc;
     }
 
     /**
@@ -705,7 +709,7 @@ class ResourceManager
             }
         }
 
-        if ($isAdmin) {
+        if ($isAdmin || $node->getCreator()->getUsername() === $this->sc->getToken()->getUser()->getUsername()) {
             $resourceArray['mask'] = 1023;
         } else {
             $resourceArray['mask'] = $this->resourceRightsRepo->findMaximumRights($roles, $node);

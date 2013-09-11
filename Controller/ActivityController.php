@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
 use Claroline\CoreBundle\Entity\Resource\Activity;
@@ -11,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -20,20 +22,24 @@ class ActivityController extends Controller
 {
     private $resourceManager;
     private $request;
+    private $translator;
 
     /**
      * @DI\InjectParams({
-     *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
-     *     "request"            = @DI\Inject("request")
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "request"         = @DI\Inject("request"),
+     *     "translator"      = @DI\Inject("translator")
      * })
      */
     public function __construct(
         ResourceManager $resourceManager,
-        Request $request
+        Request $request,
+        Translator $translator
     )
     {
         $this->resourceManager = $resourceManager;
         $this->request = $request;
+        $this->translator = $translator;
     }
 
     /**
@@ -62,7 +68,14 @@ class ActivityController extends Controller
      */
     public function addResourceAction(ResourceNode $node, Activity $activity)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        $collection = new ResourceCollection(array($node));
+        $this->checkAccess('COMPOSE', $collection);
+
+        if ($node->getResourceType()->getName() === 'activity') {
+            return new Response($this->translator->trans('recursivity_not_supported', array(), 'error'), 422);
+        }
+
+        $em = $this->getDoctrine()->getManager();
         $link = new ResourceActivity();
         $link->setActivity($activity);
         $link->setResourceNode($node);
@@ -83,18 +96,26 @@ class ActivityController extends Controller
      *     options={"expose"=true}
      * )
      *
+     * @EXT\ParamConverter(
+     *      "node",
+     *      class="ClarolineCoreBundle:Resource\ResourceNode",
+     *      options={"id" = "nodeId", "strictId" = true}
+     * )
      * Remove a resource from an activity.
      *
-     * @param integer $nodeId     the node id
-     * @param integer $activityId the activity id
+     * @param ResourceNode $node       the node id
+     * @param integer      $activityId the activity id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function removeResourceAction($nodeId, $activityId)
+    public function removeResourceAction(ResourceNode $node, $activityId)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        $collection = new ResourceCollection(array($node));
+        $this->checkAccess('COMPOSE', $collection);
+
+        $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity');
-        $resourceActivity = $repo->findOneBy(array('resourceNode' => $nodeId, 'activity' => $activityId));
+        $resourceActivity = $repo->findOneBy(array('resourceNode' => $node->getId(), 'activity' => $activityId));
         $em->remove($resourceActivity);
         $em->flush();
 
@@ -107,7 +128,11 @@ class ActivityController extends Controller
      *     name="claro_activity_set_sequence",
      *     options={"expose"=true}
      * )
-
+     * @EXT\ParamConverter(
+     *      "activity",
+     *      class="ClarolineCoreBundle:Resource\Activity",
+     *      options={"id" = "activityId", "strictId" = true}
+     * )
      * Sets the order of the resource in an activity.
      * It takes an array of resourceIds as parameter (querystring: ids[]=1&ids[]=2 ...)
      *
@@ -115,11 +140,13 @@ class ActivityController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function setSequenceOrderAction($activityId)
+    public function setSequenceOrderAction(Activity $activity)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        $collection = new ResourceCollection(array($activity->getResourceNode()));
+        $this->checkAccess('COMPOSE', $collection);
+        $em = $this->getDoctrine()->getManager();
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-            ->findBy(array('activity' => $activityId));
+            ->findBy(array('activity' => $activity->getId()));
         $params = $this->request->query->all();
 
         foreach ($resourceActivities as $resourceActivity) {
@@ -154,7 +181,7 @@ class ActivityController extends Controller
      */
     public function renderLeftMenuAction(Activity $activity)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getDoctrine()->getManager();
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findResourceActivities($activity);
         $totalSteps = $this->countSteps($activity, 0);
@@ -183,7 +210,7 @@ class ActivityController extends Controller
      */
     public function showPlayerAction(Activity $activity)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getDoctrine()->getManager();
         $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
             ->findResourceActivities($activity);
         $resource = isset($resourceActivities[0]) ? $resourceActivities[0]->getResourceNode(): null;
@@ -294,5 +321,12 @@ class ActivityController extends Controller
         }
 
         return $items;
+    }
+
+    public function checkAccess($permission, ResourceCollection $collection)
+    {
+        if (!$this->get('security.context')->isGranted($permission, $collection)) {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        }
     }
 }

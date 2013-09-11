@@ -36,7 +36,6 @@
                             return false;
                         }
                     });
-                    //console.debug($('#calendar').fullCalendar('clientEvents'));
                     $('#calendar').fullCalendar('rerenderEvents');
                 }
             }
@@ -142,6 +141,9 @@
             var data = new FormData($('#myForm')[0]);
             data.append('id', id);
             data.append('agenda_form[description]',$('#agenda_form_description').val());
+            var allDay = $('#agenda_form_allDay').attr('checked') === 'checked' ? 1 : 0;
+            console.debug(allDay);
+            data.append('agenda_form[allDay]', allDay);
             url = $('a#update').attr('href');
             $.ajax({
                 'url': url,
@@ -198,6 +200,7 @@
             $('#save').hide();
             var list = e.target.parentElement.children;
             $('#myModal').modal('show');
+            id = $(list[5])[0].innerHTML;
             $('#agenda_form').find('input:text, input:password, input:file, select, textarea').val('');
             $('#myModalLabel').val('Modifier une entrée');
             $('#agenda_form_title')
@@ -205,7 +208,7 @@
             $('#agenda_form_start').val($(list[0])[0].innerHTML);
             $('#agenda_form_end').val($(list[1])[0].innerHTML);
             $('#agenda_form_description').val($(list[2])[0].innerHTML);
-            if( $(list[4])[0].innerHTML == 1)
+            if( $(list[3])[0].innerHTML == 1)
             {
                 $('#agenda_form_allDay').attr('checked', true);
             }

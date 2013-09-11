@@ -126,10 +126,12 @@ class WorkspaceAgendaController extends Controller
     {
         $this->checkUserIsAllowed('agenda', $workspace);
         $postData = $this->request->request->all();
+        //var_dump($postData);
         $event = $this->om->getRepository('ClarolineCoreBundle:Event')->find($postData['id']);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
         $form->handleRequest($this->request);
         if ($form->isValid()) {
+            $event->setAllDay($postData['agenda_form']['allDay']);
             $this->om->flush();
 
             return new Response(
@@ -153,8 +155,8 @@ class WorkspaceAgendaController extends Controller
             json_encode(
                 array('dates are not valids')
             ),
-            200,
-             array('Content-Type' => 'application/json')
+            400,
+            array('Content-Type' => 'application/json')
         );
     }
 
