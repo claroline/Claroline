@@ -59,32 +59,17 @@
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{'close'|trans({}, 'agenda') }}</button>
-                            <button class="btn btn-primary" id="save">{{ 'add_an_event'|trans({}, 'agenda') }}</button>
+                            <button class="btn btn-primary" id="save">{{ 'add_event'|trans({}, 'agenda') }}</button>
                             <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'agenda') }}</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
-
-                <h4> <u>{{'task'|trans({}, 'agenda') }} </u></h4>
-                {% for e in listEvents if e.allDay == 1 %}
-                    <div class="panel panel-default">
-                        <button type="button" class="delete-task close" data-event-id="{{e.id}}" data-dismiss="alert">&times;</button>
-                        <h5 data-event-title="{{e.title}}"> {{ e.title }}</h5>
-                        <ul>
-                            <li > {{ e.start|date("d/m/Y h:i")}} </li>
-                            <li > {{ e.end|date("d/m/Y h:i") }} </li>
-                            <li>{{ e.description|raw }}</li>
-                            <li class="hidden"> {{e.allDay}}</li>
-                            <li class="hidden"> {{e.priority}}</li>
-                            <li class="hidden"> {{e.id}}</li>
-                            <a href="#myModal" class="update-task" role="button">modifier</a> </p>
-                        </ul>
-                    </div>
-                {% else %}
-                    <li>{{ 'no event found'|trans({}, 'agenda') }}</li>
-                {% endfor %}
+                 <div id="tasks">
+               {% include('ClarolineCoreBundle:Tool\\desktop\\agenda:tasks.html.twig') %} 
+           </div>
+            </div>
                 <h4><u>{{ 'agenda_form_priority'|trans({}, 'agenda') }}</u></h4>
                 <div>
                     <span style="color:#FF0000">  {{ 'high'|trans({}, 'agenda') }} </span>
@@ -109,4 +94,5 @@
         });
     </script>
     {{ tinymce_init() }}
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'agenda' }) }}"></script>
 {% endblock javascripts %}

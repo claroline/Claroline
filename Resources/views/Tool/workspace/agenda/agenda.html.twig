@@ -3,46 +3,46 @@
 {% set calendarPath = 'bundles/frontend/jquery/plugin/calendar/' %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.css') }}'/>
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
-    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
+{{ parent() }}
+<link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.css') }}'/>
+<link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
+<link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
 {% endblock %}
 {% block breadcrumb %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-book',
-                'name': 'workspaces'|trans({}, 'platform'),
-                'href': path('claro_workspace_list')
-            },
-            {
-                'name': workspace.getName(),
-                'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
-            },
-            {
-                'name': 'agenda'|trans({}, 'tools'),
-                'href': ''
-            }
-        ])
-    }}
+{{
+macros.breadcrumbs([
+{
+'icon': 'icon-book',
+'name': 'workspaces'|trans({}, 'platform'),
+'href': path('claro_workspace_list')
+},
+{
+'name': workspace.getName(),
+'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
+},
+{
+'name': 'agenda'|trans({}, 'tools'),
+'href': ''
+}
+])
+}}
 {% endblock %}
 {% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'agenda'|trans({}, 'platform') }}</h3>
-    </div>
-    <div class="panel-body">
-        <div class="row">
-            <div id='calendar' class="col-md-9"></div>
-            <div  id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 id="myModalLabel"> {{ 'Nouvelle entrée'|trans({}, 'calendar') }}</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class='clearfix'>
+<div class="panel-heading">
+    <h3 class="panel-title">{{ 'agenda'|trans({}, 'platform') }}</h3>
+</div>
+<div class="panel-body">
+    <div class="row">
+        <div id='calendar' class="col-md-9"></div>
+        <div  id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 id="myModalLabel"> {{ 'Nouvelle entrée'|trans({}, 'calendar') }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class='clearfix'>
                             <button class="btn btn-danger" id="deleteBtn" >
                                 {{ 'delete'|trans({}, 'platform') }}
                             </button>
@@ -50,63 +50,49 @@
                             <form method="post" action="{{ path('claro_workspace_agenda_add_event', {workspaceId: workspace.getId()}) }}" id="myForm" {{ form_enctype(form) }}>
                                 {{ form_widget(form) }}
                             </form>
-                            </div>
-                            <a href="{{ path('claro_workspace_agenda_show', {workspaceId: workspace.getId()}) }}" id="link"></a>
-                            <a href="{{ path('claro_workspace_agenda_move') }}" id="move"></a>
-                            <a href="{{ path('claro_workspace_agenda_delete', {workspaceId: workspace.getId()}) }}" id="delete"></a>
-                            <a href="{{ path('claro_workspace_agenda_update', {workspaceId: workspace.getId()}) }}" id="update"></a>
                         </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{'close'|trans({}, 'agenda') }}</button>
-                            <button class="btn btn-primary" id="save">{{ 'add_an_event'|trans({}, 'agenda') }}</button>
-                            <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'agenda') }}</button>
-                        </div>
+                        <a href="{{ path('claro_workspace_agenda_show', {workspaceId: workspace.getId()}) }}" id="link"></a>
+                        <a href="{{ path('claro_workspace_agenda_move') }}" id="move"></a>
+                        <a href="{{ path('claro_workspace_agenda_delete', {workspaceId: workspace.getId()}) }}" id="delete"></a>
+                        <a href="{{ path('claro_workspace_agenda_update', {workspaceId: workspace.getId()}) }}" id="update"></a>
+                        <a href="{{ path('claro_workspace_agenda_tasks', {workspaceId: workspace.getId()}) }}" id="taska"></a>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-
-                <h4> <u>{{'tasks'|trans({}, 'agenda') }} </u></h4>
-                {% for e in listEvents  %}
-                    <div class="panel panel-default">
-                        <button type="button" class="delete-task close" data-event-id="{{e.id}}" data-dismiss="alert">&times;</button>
-                        <h5 data-event-title="{{e.title}}"> {{ e.title }}</h5>
-                        <ul>
-                            <li > {{ e.start|date("d/m/Y h:i")}} </li>
-                            <li > {{ e.end|date("d/m/Y h:i") }} </li>
-                            <li>{{ e.description|raw }}</li>
-                            <li class="hidden"> {{e.allDay}}</li>
-                            <li class="hidden"> {{e.priority}}</li>
-                            <li class="hidden"> {{e.id}}</li>
-                            <a href="#myModal" class="update-task" role="button">modifier</a> </p>
-                        </ul>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{'close'|trans({}, 'agenda') }}</button>
+                        <button class="btn btn-primary" id="save">{{ 'add_event'|trans({}, 'agenda') }}</button>
+                        <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'agenda') }}</button>
                     </div>
-                {% else %}
-                    <li>{{ 'no event found'|trans({}, 'agenda') }}</li>
-                {% endfor %}
-                <h4><u>Priorité</u></h4>
-                <div>
-                    <span style="color:#FF0000">  {{ 'high'|trans({}, 'agenda') }} </span>
-                    <span style="color:#01A9DB"> {{ 'medium'|trans({}, 'agenda') }} </span>
-                    <span style="color:#848484"> {{ 'low'|trans({}, 'agenda') }} </span>
                 </div>
             </div>
         </div>
+        <div class="col-md-3">
+         <h4> <u>{{'tasks'|trans({}, 'agenda')}} </u></h4>  
+            <div id="tasks">
+                {% include('ClarolineCoreBundle:Tool\\desktop\\agenda:tasks.html.twig') %}
+            </div> 
+            <h4><u>{{ 'agenda_form_priority'|trans({}, 'agenda') }}</u></h4>
+            <div>
+                <span style="color:#FF0000">  {{ 'high'|trans({}, 'agenda') }} </span>
+                <span style="color:#01A9DB"> {{ 'medium'|trans({}, 'agenda') }} </span>
+                <span style="color:#848484"> {{ 'low'|trans({}, 'agenda') }} </span>
+            </div>
+        </div>
     </div>
+</div>
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
- {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
-    <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}' ></script>
-    <script type='text/javascript' src='{{ asset(calendarPath ~ 'js/fullcalendar.js') }}' ></script>
-    <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/calendar.js') }}'></script>
-    <script type='text/javascript'src='{{ asset('bundles/frontend/date.js') }}'></script>
-    <script type='text/javascript'>
-        $(function () {
+{{ parent() }}
+{% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+<script type='text/javascript' src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}' ></script>
+<script type='text/javascript' src='{{ asset(calendarPath ~ 'js/fullcalendar.js') }}' ></script>
+<script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/calendar.js') }}'></script>
+<script type='text/javascript'src='{{ asset('bundles/frontend/date.js') }}'></script>
+<script type='text/javascript'>
+    $(function () {
             Claroline.Calendar.initialize('workspace');
-        });
-    </script>
-    {{ tinymce_init() }}
-
+            });
+</script>
+{{ tinymce_init() }}
+<script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'agenda' }) }}"></script>
 {% endblock javascripts %}

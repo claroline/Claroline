@@ -1,6 +1,7 @@
-add_an_event : "Ajouter un évènement"
+add_event : "Ajouter un évènement"
 all day: "Toute la journée"
 end : "Fin"
+error: "Une erreure s'est produite, veuillez réessayer"
 agenda_form_title : Titre
 agenda_form_end : "Date de fin (jj/mm/aaaa)"
 agenda_form_start : "Date de début (jj/mm/aaaa)"
@@ -9,12 +10,16 @@ agenda_form_allDay : "Tâche"
 agenda_form_priority_High : "Haute"
 agenda_form_priority : "Priorité"
 close : Fermer
-update : "mettre à jour"
-high: "Haute"
-low: "Basse"
-medium: "Normale"
+date_invalid : "Une erreure s'est produite, verifiez que la date début soit plus petit que la date de fin"
+event_update : "Mise à jour reussie"
+high : "Haute"
+low : "Basse"
+medium : "Normale"
+modify : "Modifier une entrée"
 new entry: "Nouvelle entrée"
-tasks: 'Tâches'
-no event found: "Pas d'évènements"
-start date: "Date début"
-title: "Titre de l'évènement"
+tasks : 'Tâches'
+no event found : "Pas d'évènements"
+start date : "Date début"
+title : "Titre de l'évènement ne peut pas être vide"
+update : "mettre à jour"
+

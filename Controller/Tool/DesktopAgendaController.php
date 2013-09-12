@@ -156,6 +156,7 @@ class DesktopAgendaController extends Controller
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
         $form->handleRequest($this->request);
         if ($form->isValid()) {
+            $event->setAllDay($postData['agenda_form']['allDay']);
             $this->om->flush();
 
             return new Response(
