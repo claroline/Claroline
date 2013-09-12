@@ -9,7 +9,6 @@ use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
-use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -19,7 +18,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 class WorkspaceTagController extends Controller
 {
-    private $em;
     private $tagManager;
     private $workspaceManager;
     private $securityContext;
@@ -28,7 +26,6 @@ class WorkspaceTagController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "em"                 = @DI\Inject("doctrine.orm.entity_manager"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "tagManager"         = @DI\Inject("claroline.manager.workspace_tag_manager"),
      *     "securityContext"    = @DI\Inject("security.context"),
@@ -37,7 +34,6 @@ class WorkspaceTagController extends Controller
      * })
      */
     public function __construct(
-        EntityManager $em,
         WorkspaceManager $workspaceManager,
         WorkspaceTagManager $tagManager,
         SecurityContextInterface $securityContext,
@@ -45,7 +41,6 @@ class WorkspaceTagController extends Controller
         Utilities $utils
     )
     {
-        $this->em = $em;
         $this->workspaceManager = $workspaceManager;
         $this->tagManager = $tagManager;
         $this->securityContext = $securityContext;

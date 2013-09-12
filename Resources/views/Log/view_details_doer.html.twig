@@ -1,7 +1,7 @@
 {% if log.getDoerType() == 'user' %}
     {% if log.getDetails().doer is defined %}
         <div>
-            <h4>{{ ('log_doer')|trans({}, 'platform') }}</h4>
+            <h4>{{ ('log_doer')|trans({}, 'log') }}</h4>
             <dl class="dl-horizontal">
                 <dt>{{ ('last_name')|trans({}, 'platform') }}</dt>
                 <dd>{{ log.getDetails().doer.firstName }}</dd>
@@ -15,7 +15,7 @@
                 {% endif %}
 
                 {% if log.getDetails().doer.platformRoles is defined %}
-                    <dt>{{ ('log_platform_roles')|trans({}, 'platform') }}</dt>
+                    <dt>{{ ('log_platform_roles')|trans({}, 'log') }}</dt>
                     <dd>
                         {% for role in log.getDetails().doer.platformRoles %}
                             {% if not loop.first %}, {% endif %}
@@ -24,7 +24,7 @@
                     </dd>
                 {% endif %}
                 {% if log.getDetails().doer.workspaceRoles is defined %}
-                    <dt>{{ ('log_workspace_roles')|trans({}, 'platform') }}</dt>
+                    <dt>{{ ('log_workspace_roles')|trans({}, 'log') }}</dt>
                     <dd>
                         {% for role in log.getDetails().doer.workspaceRoles %}
                             {% if not loop.first %}, {% endif %}
@@ -37,16 +37,16 @@
     {% endif %}
 {% elseif log.getDoerType() == 'anonymous' %}
     <div>
-        <h4>{{ ('log_doer')|trans({}, 'platform') }}</h4>
+        <h4>{{ ('log_doer')|trans({}, 'log') }}</h4>
         <dl class="dl-horizontal">
             <dt>{{ ('anonymous')|trans({}, 'platform') }}</dt>
         </dl>
     </div>
 {% elseif log.getDoerType() == 'platform' %}
     <div>
-        <h4>{{ ('log_doer')|trans({}, 'platform') }}</h4>
+        <h4>{{ ('log_doer')|trans({}, 'log') }}</h4>
         <dl class="dl-horizontal">
-            <dt>{{ ('log_default_user')|trans({}, 'platform') }}</dt>
+            <dt>{{ ('log_default_user')|trans({}, 'log') }}</dt>
         </dl>
     </div>
 {% endif %}

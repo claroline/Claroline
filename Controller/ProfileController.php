@@ -175,15 +175,15 @@ class ProfileController extends Controller
      */
     public function viewAction(User $user, $page = 1)
     {
-//        $query = $this->getDoctrine()->getRepository('ClarolineBadgeBundle:Badge')->findByUser($user, false);
-//        $adapter = new DoctrineORMAdapter($query);
-//        $pager   = new Pagerfanta($adapter);
+        $query = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findByUser($user, false);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager   = new Pagerfanta($adapter);
 
-//        try {
-//            $pager->setCurrentPage($page);
-//        } catch (NotValidCurrentPageException $exception) {
-//            throw new NotFoundHttpException();
-//        }
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $exception) {
+            throw new NotFoundHttpException();
+        }
 
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');

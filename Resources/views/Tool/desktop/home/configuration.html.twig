@@ -19,10 +19,14 @@
     }}
 {% endblock %}
 {% block section_content %}
+
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'home_parameters'|trans({}, 'platform') }}</h3>
     </div>
     <div class="list-group">
+        <a class="list-group-item" href="{{ path('claro_desktop_home_tab_properties') }}">
+            {{ 'home_tabs'|trans({}, 'platform') }}
+        </a>
         <a class="list-group-item" href="{{ path('claro_desktop_widget_properties') }}">
             {{ 'widgets'|trans({}, 'platform') }}
         </a>

@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Claroline\BadgeBundle\Entity\Badge;
+use Claroline\CoreBundle\Entity\Badge\Badge;
 use \Serializable;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
@@ -189,27 +189,27 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      */
     protected $hashTime;
 
-//    /**
-//     * @var UserBadge[]|ArrayCollection
-//     *
-//     * @ORM\OneToMany(targetEntity="Claroline\BadgeBundle\Entity\UserBadge", mappedBy="user", cascade={"all"})
-//     */
-//    protected $userBadges;
-//
-//    /**
-//     * @var UserBadge[]|ArrayCollection
-//     *
-//     * @ORM\OneToMany(targetEntity="Claroline\BadgeBundle\Entity\UserBadge", mappedBy="issuer", cascade={"all"})
-//     */
-//    protected $issuedBadges;
-//
-//    /**
-//     * @var BadgeClaim[]|ArrayCollection
-//     *
-//     * @ORM\OneToMany(targetEntity="Claroline\BadgeBundle\Entity\BadgeClaim", mappedBy="user", cascade={"all"})
-//     * @ORM\JoinColumn(name="badge_claim_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
-//     */
-//    protected $badgeClaims;
+    /**
+     * @var UserBadge[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\UserBadge", mappedBy="user", cascade={"all"})
+     */
+    protected $userBadges;
+
+    /**
+     * @var UserBadge[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\UserBadge", mappedBy="issuer", cascade={"all"})
+     */
+    protected $issuedBadges;
+
+    /**
+     * @var BadgeClaim[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\BadgeClaim", mappedBy="user", cascade={"all"})
+     * @ORM\JoinColumn(name="badge_claim_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     */
+    protected $badgeClaims;
 
     public function __construct()
     {
@@ -592,87 +592,87 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->hashTime = $hashTime;
     }
 
-//    /**
-//     * @param \Claroline\BadgeBundle\Entity\Badge[]|\Doctrine\Common\Collections\ArrayCollection $badges
-//     *
-//     * @return User
-//     */
-//    public function setUserBadges($badges)
-//    {
-//        $this->userBadges = $badges;
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * @return \Claroline\BadgeBundle\Entity\UserBadge[]|\Doctrine\Common\Collections\ArrayCollection
-//     */
-//    public function getUserBadges()
-//    {
-//        return $this->userBadges;
-//    }
-//
-//    /**
-//     * @return \Claroline\BadgeBundle\Entity\Badge[]|\Doctrine\Common\Collections\ArrayCollection
-//     */
-//    public function getBadges()
-//    {
-//        $badges = new ArrayCollection();
-//
-//        foreach ($this->getUserBadges() as $userBadge) {
-//            $badges[] = $userBadge->getBadge();
-//        }
-//
-//        return $badges;
-//    }
-//
-//    /**
-//     * @param Badge $badge
-//     *
-//     * @return bool
-//     */
-//    public function hasBadge(badge $badge)
-//    {
-//        foreach ($this->getBadges() as $userBadge) {
-//            if ($userBadge->getId() === $badge->getId()) {
-//                return true;
-//            }
-//        }
-//
-//        return false;
-//    }
-//
-//    /**
-//     * @param \Claroline\CoreBundle\Entity\BadgeClaim[]|\Doctrine\Common\Collections\ArrayCollection $badgeClaims
-//     *
-//     * @return User
-//     */
-//    public function setBadgeClaims($badgeClaims)
-//    {
-//        $this->badgeClaims = $badgeClaims;
-//    }
-//
-//    /**
-//     * @return \Claroline\CoreBundle\Entity\BadgeClaim[]|\Doctrine\Common\Collections\ArrayCollection
-//     */
-//    public function getBadgeClaims()
-//    {
-//        return $this->badgeClaims;
-//    }
-//
-//    /**
-//     * @param Badge $badge
-//     *
-//     * @return bool
-//     */
-//    public function hasClaimedFor(Badge $badge)
-//    {
-//        foreach ($this->getBadgeClaims() as $claimedBadge) {
-//            if ($badge->getId() === $claimedBadge->getId()) {
-//                return true;
-//            }
-//        }
-//
-//        return false;
-//    }
+    /**
+     * @param \Claroline\CoreBundle\Entity\Badge\Badge[]|\Doctrine\Common\Collections\ArrayCollection $badges
+     *
+     * @return User
+     */
+    public function setUserBadges($badges)
+    {
+        $this->userBadges = $badges;
+
+        return $this;
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\Badge\UserBadge[]|\Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getUserBadges()
+    {
+        return $this->userBadges;
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\Badge\Badge[]|\Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getBadges()
+    {
+        $badges = new ArrayCollection();
+
+        foreach ($this->getUserBadges() as $userBadge) {
+            $badges[] = $userBadge->getBadge();
+        }
+
+        return $badges;
+    }
+
+    /**
+     * @param Badge $badge
+     *
+     * @return bool
+     */
+    public function hasBadge(badge $badge)
+    {
+        foreach ($this->getBadges() as $userBadge) {
+            if ($userBadge->getId() === $badge->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\BadgeClaim[]|\Doctrine\Common\Collections\ArrayCollection $badgeClaims
+     *
+     * @return User
+     */
+    public function setBadgeClaims($badgeClaims)
+    {
+        $this->badgeClaims = $badgeClaims;
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\BadgeClaim[]|\Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getBadgeClaims()
+    {
+        return $this->badgeClaims;
+    }
+
+    /**
+     * @param Badge $badge
+     *
+     * @return bool
+     */
+    public function hasClaimedFor(Badge $badge)
+    {
+        foreach ($this->getBadgeClaims() as $claimedBadge) {
+            if ($badge->getId() === $claimedBadge->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

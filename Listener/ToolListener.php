@@ -2,10 +2,11 @@
 
 namespace Claroline\CoreBundle\Listener;
 
+use Claroline\CoreBundle\Manager\LogManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Entity\Event;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\ToolManager;
@@ -137,7 +138,7 @@ class ToolListener
     /**
      * @DI\Observe("open_tool_workspace_workgroup")
      *
-     * @param \Claroline\CoreBundle\Event\Event\DisplayToolEvent $event
+     * @param \Claroline\CoreBundle\Event\DisplayToolEvent $event
      */
     public function onDisplayWorkgroup(DisplayToolEvent $event)
     {
@@ -199,7 +200,8 @@ class ToolListener
 
     public function workspaceLogs($workspaceId)
     {
-        $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
+        /** @var \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace */
+        $workspace  = $this->workspaceManager->getWorkspaceById($workspaceId);
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool/workspace/logs:logList.html.twig',

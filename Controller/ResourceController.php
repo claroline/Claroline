@@ -371,6 +371,7 @@ class ResourceController
         $creatableTypes = array();
         $currentRoles = $this->roleManager->getStringRolesFromCurrentUser();
         $canChangePosition = false;
+        $nodesWithCreatorPerms = array();
 
         if ($node === null) {
             $nodesWithCreatorPerms = $this->resourceManager->getRoots($user);
