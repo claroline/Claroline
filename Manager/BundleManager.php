@@ -4,7 +4,6 @@ namespace Claroline\KernelBundle\Manager;
 
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Claroline\KernelBundle\Kernel\SwitchKernel;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
@@ -36,14 +35,11 @@ class BundleManager
 
     public function getActiveBundles()
     {
-        if (SwitchKernel::TMP_ENV === $environment = $this->kernel->getEnvironment()) {
-            $environment = 'dev';
-        }
-
         $entries = parse_ini_file($this->bundlesFile);
         $activeBundles = array();
         $configProviderBundles = array();
         $nonAutoConfigurableBundles = array();
+        $environment = $this->getEnvironment();
 
         foreach ($entries as $bundleClass => $isActive) {
             if ($isActive && $bundleClass !== 'Claroline\KernelBundle\ClarolineKernelBundle') {
@@ -90,5 +86,12 @@ class BundleManager
 
         $this->kernel = $kernel;
         $this->bundlesFile = $bundlesFile;
+    }
+
+    private function getEnvironment()
+    {
+        $environment = $this->kernel->getEnvironment();
+
+        return preg_match('#tmp-\d+#', $environment) ? 'dev' : $environment;
     }
 }

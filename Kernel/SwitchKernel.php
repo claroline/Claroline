@@ -7,8 +7,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 abstract class SwitchKernel extends Kernel
 {
-    const TMP_ENV = 'tmp-switch-env';
-
     private $hasSwitched = false;
     private $fileSystem;
 
@@ -19,7 +17,7 @@ abstract class SwitchKernel extends Kernel
         }
 
         $this->originalEnvironement = $this->environment;
-        $this->environment = static::TMP_ENV;
+        $this->environment = 'tmp-' . time();
         $this->hasSwitched = true;
         $this->shutdown();
         $this->boot();
