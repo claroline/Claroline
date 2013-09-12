@@ -49,8 +49,6 @@ class InstallationManager
         $this->recorder->addBundles(array(get_class($bundle)));
         $this->kernel->switchToTmpEnvironment();
         $this->container = $this->kernel->getContainer();
-        // tmp fix
-        $this->container->setParameter('stof_doctrine_extensions.uploadable.validate_writable_directory', true);
         // bundle mapping is only accessible in the new container instance
         $this->fixtureLoader = $this->container->get('claroline.installation.fixture_loader');
 
