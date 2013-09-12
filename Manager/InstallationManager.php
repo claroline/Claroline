@@ -77,7 +77,7 @@ class InstallationManager
         } catch (\Exception $ex) {
             $this->log('<error>An error occured !</error>');
             $this->recorder->removeBundles(array(get_class($bundle)));
-            $this->kernel->switchBack();
+            $this->kernel->switchBack(true);
 
             throw $ex;
         }
