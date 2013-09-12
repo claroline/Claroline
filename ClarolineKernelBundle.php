@@ -10,7 +10,6 @@ use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 class ClarolineKernelBundle extends Bundle
 {
-    private $environment;
     private $bundleManager;
 
     public function __construct(KernelInterface $kernel, $bundlesFile = null)
@@ -21,7 +20,6 @@ class ClarolineKernelBundle extends Bundle
 
         BundleManager::initialize($kernel, $bundlesFile);
         $this->bundleManager = BundleManager::getInstance();
-        $this->environment = $kernel->getEnvironment();
     }
 
     public function getBundles($includeSelf = true)

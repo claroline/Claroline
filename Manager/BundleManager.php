@@ -4,6 +4,7 @@ namespace Claroline\KernelBundle\Manager;
 
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Claroline\KernelBundle\Kernel\SwitchKernel;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
@@ -14,7 +15,6 @@ class BundleManager
     const BUNDLE_CONFIG = 'config';
 
     private $kernel;
-    private $environment;
     private $bundlesFile;
     private static $selfInstance;
 
@@ -36,6 +36,10 @@ class BundleManager
 
     public function getActiveBundles()
     {
+        if (SwitchKernel::TMP_ENV === $environment = $this->kernel->getEnvironment()) {
+            $environment = 'dev';
+        }
+
         $entries = parse_ini_file($this->bundlesFile);
         $activeBundles = array();
         $configProviderBundles = array();
@@ -51,10 +55,10 @@ class BundleManager
 
                 if (!$bundle instanceof AutoConfigurableInterface) {
                     $nonAutoConfigurableBundles[] = $bundle;
-                } elseif ($bundle->supports($this->environment)) {
+                } elseif ($bundle->supports($environment)) {
                     $activeBundles[] = array(
                         self::BUNDLE_INSTANCE => $bundle,
-                        self::BUNDLE_CONFIG => $bundle->getConfiguration($this->environment)
+                        self::BUNDLE_CONFIG => $bundle->getConfiguration($environment)
                     );
                 }
             }
@@ -62,7 +66,7 @@ class BundleManager
 
         foreach ($nonAutoConfigurableBundles as $bundle) {
             foreach ($configProviderBundles as $provider) {
-                $config = $provider->suggestConfigurationFor($bundle, $this->environment);
+                $config = $provider->suggestConfigurationFor($bundle, $environment);
 
                 if ($config instanceof ConfigurationBuilder) {
                     $activeBundles[] = array(
@@ -80,12 +84,11 @@ class BundleManager
 
     private function __construct(KernelInterface $kernel, $bundlesFile)
     {
-        if (!is_file($bundlesFile)) {
-            throw new \InvalidArgumentException("'{$bundlesFile}' is not a file");
+        if (!file_exists($bundlesFile)) {
+            throw new \InvalidArgumentException("'{$bundlesFile}' does not exist");
         }
 
         $this->kernel = $kernel;
-        $this->environment = $kernel->getEnvironment();
         $this->bundlesFile = $bundlesFile;
     }
 }

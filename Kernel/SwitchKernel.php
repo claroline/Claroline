@@ -7,9 +7,9 @@ use Symfony\Component\Filesystem\Filesystem;
 
 abstract class SwitchKernel extends Kernel
 {
+    const TMP_ENV = 'tmp-switch-env';
+
     private $hasSwitched = false;
-    private $originalEnvironement;
-    private $originalContainer;
     private $fileSystem;
 
     public function switchToTmpEnvironment()
@@ -19,8 +19,7 @@ abstract class SwitchKernel extends Kernel
         }
 
         $this->originalEnvironement = $this->environment;
-        $this->originalContainer = $this->container;
-        $this->environment = 'tmp-switch-env';
+        $this->environment = static::TMP_ENV;
         $this->hasSwitched = true;
         $this->shutdown();
         $this->boot();
@@ -35,7 +34,6 @@ abstract class SwitchKernel extends Kernel
         $fileSystem = $this->fileSystem ?: new Filesystem();
         $fileSystem->remove($this->getCacheDir());
         $this->environment = $this->originalEnvironement;
-        $this->container = $this->originalContainer;
         $this->hasSwitched = false;
 
         $this->shutdown();
