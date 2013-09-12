@@ -252,7 +252,7 @@ class LogManager
 
         if (array_key_exists($queryParamName, $data)) {
             $data = $data[$queryParamName];
-            $action = $data['action'];
+            $action = isset($data['action']) ? $data['action']: null;
             $range = $dateRangeToTextTransformer->reverseTransform($data['range']);
             $userSearch = $data['user'];
         } elseif (array_key_exists('filter', $data)) {
