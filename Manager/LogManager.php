@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Form\Log\AdminLogFilterType;
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Entity\Log\LogWorkspaceWidgetConfig;
 use Claroline\CoreBundle\Entity\Log\LogDesktopWidgetConfig;
+use Claroline\CoreBundle\Entity\User;
 
 /**
  * @DI\Service("claroline.log.manager")

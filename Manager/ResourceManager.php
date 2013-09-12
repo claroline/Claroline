@@ -253,7 +253,9 @@ class ResourceManager
             }
 
             if ($i > 100) {
-                throw new \Exception('More than 100 items in a directory or infinite loop detected. The order was reseted');
+                $this->restoreNodeOrder($parent);
+
+                return $nodes;
             }
         }
 
