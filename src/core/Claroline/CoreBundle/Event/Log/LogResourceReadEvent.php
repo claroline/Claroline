@@ -45,7 +45,7 @@ class LogResourceReadEvent extends LogGenericEvent implements LogNotRepeatableIn
     /**
      * @return array
      */
-    public function getRestriction()
+    public static function getRestriction()
     {
         return array(self::DISPLAYED_WORKSPACE);
     }
