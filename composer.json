@@ -44,9 +44,8 @@
         "claroline/core-installer": "dev-master",
         "claroline/kernel-bundle": "~1.0",
         "claroline/installation-bundle": "~1.0",
-        "claroline/front-end-bundle": "dev-master",
-        "claroline/migration-bundle": "~1.0",
-        "claroline/plugin-installer": "dev-master"
+        "claroline/front-end-bundle": "~1.0",
+        "claroline/migration-bundle": "~1.0"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
