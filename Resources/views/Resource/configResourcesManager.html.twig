@@ -54,17 +54,21 @@
             var nodeId = _.keys(nodes)[0];
             var mimeArray = new Array('image/jpeg','image/gif','image/png');
             var mimeType = nodes[_.keys(nodes)][2];
-            if(resourceTypes === 'directory')
+
+            if (resourceTypes === 'directory')
             {
-               route = Routing.generate('claro_resource_directory', {'node': id});
-            }
-            if( mimeArray.indexOf(mimeType) > -1)
-            {
-                tinyMCE.execCommand('mceInsertRawHTML', false, '<img src="' + Routing.generate('claro_file_get_image', {'node': id}) + '" alt ="'+nodeId+' width="200" height="100"/>');
-            }
-            else
-            {
-                tinyMCE.execCommand('mceInsertRawHTML', false, '<a href="' + Routing.generate('claro_resource_open', {'resourceType': resourceTypes, 'node':nodeId}) + '" />'+nodes[_.keys(nodes)][0] +'</a>');
+                //the breadcrumbs could be appended to the query string aswell
+               route = Routing.generate('claro_desktop_open_tool', {'toolName': 'resource_manager'}) + '#resources/' + id;
+               tinyMCE.execCommand('mceInsertRawHTML', false, '<a href="' + route + '" />'+nodes[_.keys(nodes)][0] +'</a>');
+            } else {
+                if (mimeArray.indexOf(mimeType) > -1)
+                {
+                    tinyMCE.execCommand('mceInsertRawHTML', false, '<img src="' + Routing.generate('claro_file_get_image', {'node': id}) + '" alt ="'+nodeId+' width="200" height="100"/>');
+                }
+                else
+                {
+                    tinyMCE.execCommand('mceInsertRawHTML', false, '<a href="' + Routing.generate('claro_resource_open', {'resourceType': resourceTypes, 'node':nodeId}) + '" />'+nodes[_.keys(nodes)][0] +'</a>');
+                }
             }
         };
     });
