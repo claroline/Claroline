@@ -24,7 +24,7 @@ abstract class SwitchKernel extends Kernel
         $this->boot();
     }
 
-    public function switchBack()
+    public function switchBack($clearOriginalCache = false)
     {
         if (!$this->hasSwitched) {
             throw new \LogicException('Kernel is in its original environment');
@@ -34,6 +34,11 @@ abstract class SwitchKernel extends Kernel
         $fileSystem->remove($this->getCacheDir());
         $this->environment = $this->originalEnvironement;
         $this->hasSwitched = false;
+
+        if ($clearOriginalCache) {
+            $fileSystem->remove($this->getCacheDir());
+        }
+
         $this->shutdown();
         $this->boot();
     }
