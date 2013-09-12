@@ -191,7 +191,7 @@ abstract class LogGenericEvent extends Event
     }
 
     /**
-     * @param $restriction
+     * @param string $restriction
      *
      * @throws \InvalidArgumentException
      *
