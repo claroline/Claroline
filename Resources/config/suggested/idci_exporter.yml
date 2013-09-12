@@ -1,7 +1,7 @@
 idci_exporter:
     entities:
         user:
-            class: 'Claroline\\CoreBundle\\Entity\\User'
+            class: 'Claroline\CoreBundle\Entity\User'
             formats:
                 jsonp:
                     transformer:
@@ -15,10 +15,10 @@ idci_exporter:
                         options:
                             template_name_format: 'export.json.twig'
         badge:
-            class: 'Claroline\BadgeBundle\Entity\Badge'
+            class: 'Claroline\CoreBundle\Entity\Badge\Badge'
             formats:
                 jsonp:
                     transformer:
-                        service: "claro.badge.exporter.transformer"
+                        service: "claroline.transformer.badge"
                         options:
                             template_name_format: 'export.json.twig'
