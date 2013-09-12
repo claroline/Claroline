@@ -34,6 +34,38 @@
         <div class="panel-body">
             {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
             <div>{{ macros.flashBox() }}</div>
+            <div class="well">
+                <p>
+                    <b>{{ 'csv_users_import_infos'|trans({}, 'platform') }}</b>
+                </p>
+                <p>{{ 'csv_users_import_infos_format'|trans({}, 'platform') }} :</p>
+                <ul>
+                    <li>{{ 'csv_users_import_infos_format_a'|trans({}, 'platform') }}</li>
+                    <li>
+                        {{ 'order'|trans({}, 'platform') }} :
+                        {{ 'first_name'|trans({}, 'platform') }},
+                        {{ 'last_name'|trans({}, 'platform') }},
+                        {{ 'username'|trans({}, 'platform') }},
+                        {{ 'password'|trans({}, 'platform') }},
+                        {{ 'mail'|trans({}, 'platform') }},
+                        {{ 'administrative_code'|trans({}, 'platform') }},
+                        {{ 'phone'|trans({}, 'platform') }}
+                    </li>
+                </ul>
+                <p>{{ 'csv_users_import_infos_required'|trans({}, 'platform') }} :</p>
+                <ul>
+                    <li>{{ 'first_name'|trans({}, 'platform') }}</li>
+                    <li>{{ 'last_name'|trans({}, 'platform') }}</li>
+                    <li>{{ 'username'|trans({}, 'platform') }}</li>
+                    <li>{{ 'password'|trans({}, 'platform') }}</li>
+                    <li>{{ 'mail'|trans({}, 'platform') }}</li>
+                </ul>
+                <p>{{ 'csv_users_import_infos_optional'|trans({}, 'platform') }} :</p>
+                <ul>
+                    <li>{{ 'administrative_code'|trans({}, 'platform') }}</li>
+                    <li>{{ 'phone'|trans({}, 'platform') }}</li>
+                </ul>
+            </div>
             {{ form_widget(form) }}
         </div>
         <div class="panel-footer">
