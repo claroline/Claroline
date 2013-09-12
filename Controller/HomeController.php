@@ -71,15 +71,26 @@ class HomeController
      *
      * @Route("/type/{type}", name="claro_get_content_by_type")
      * @Route("/", name="claro_index", defaults={"type" = "home"})
-     * @Template("ClarolineCoreBundle:Home:home.html.twig")
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function homeAction($type)
     {
-        return array(
-            'region' => $this->renderRegions($this->manager->getRegionContents()),
-            'content' => $this->typeAction($type)->getContent()
+        $response = $this->render(
+            'ClarolineCoreBundle:Home:home.html.twig',
+            array(
+                'region' => $this->renderRegions($this->manager->getRegionContents()),
+                'content' => $this->typeAction($type)->getContent()
+            )
         );
+
+        $response->headers->addCacheControlDirective('no-cache', true);
+        $response->headers->addCacheControlDirective('max-age', 0);
+        $response->headers->addCacheControlDirective('must-revalidate', true);
+        $response->headers->addCacheControlDirective('no-store', true);
+        $response->headers->addCacheControlDirective('Expires', '-1');
+
+        return $response;
     }
 
     /**
