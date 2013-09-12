@@ -46,10 +46,10 @@
 
     {% block login %}
         {% import _self as topbar %}
-        {% if (register_target is empty)  and  isLogged == false %}
-            {{ topbar.item('login', null, 'user', '/login', null, block('dropdowLogin')) }}
-        {% else %}
+        {% if register_target is empty %}
             {{ topbar.item('login', login_target, 'user', '/login') }}
+        {% else %}
+            {{ topbar.item('login', null, 'user', '/login', null, block('dropdowLogin')) }}
         {% endif %}
     {% endblock login %}
 
