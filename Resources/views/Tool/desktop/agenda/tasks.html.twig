@@ -1,0 +1,17 @@
+{% for e in listEvents  %}
+        <div class="panel panel-default">
+            <button type="button" class="delete-task close" data-event-id="{{e.id}}" data-dismiss="alert">&times;</button>
+            <h5 data-event-title="{{e.title}}"> {{ e.title }}</h5>
+            <ul>
+                <li> {{ e.start|date("d/m/Y h:i")}} </li>
+                <li> {{ e.end|date("d/m/Y h:i") }} </li>
+                <li> {{ e.description|raw }}</li>
+                <li class="hidden"> {{e.allDay}}</li>
+                <li class="hidden"> {{e.priority}}</li>
+                <li class="hidden"> {{e.id}}</li>
+                <a href="#myModal" class="update-task" role="button">{{'update'|trans({}, 'agenda')}}</a> </p>
+            </ul>
+        </div>
+    {% endfor %}
+
+

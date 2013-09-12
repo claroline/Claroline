@@ -126,7 +126,6 @@ class WorkspaceAgendaController extends Controller
     {
         $this->checkUserIsAllowed('agenda', $workspace);
         $postData = $this->request->request->all();
-        //var_dump($postData);
         $event = $this->om->getRepository('ClarolineCoreBundle:Event')->find($postData['id']);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
         $form->handleRequest($this->request);
@@ -243,7 +242,6 @@ class WorkspaceAgendaController extends Controller
      */
     public function moveAction()
     {
-
         $postData = $this->request->request->all();
         $repository = $this->om->getRepository('ClarolineCoreBundle:Event');
         $event = $repository->find($postData['id']);
@@ -272,6 +270,28 @@ class WorkspaceAgendaController extends Controller
             200,
             array('Content-Type' => 'application/json')
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspaceId}/tasks",
+     *     name="claro_workspace_agenda_tasks"
+     * )
+     * @EXT\Method({"GET","POST"})
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @param AbstractWorkspace $workspace
+     *
+     * @EXT\Template("ClarolineCoreBundle:Tool\\desktop\\agenda:tasks.html.twig")
+     */
+    public function tasksAction(AbstractWorkspace $workspaceId)
+    {
+        $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, true);
+
+        return  array('listEvents' => $listEvents );
     }
 
     private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)

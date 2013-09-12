@@ -50,6 +50,7 @@
             $('#agenda_form').find('input:radio, input:checkbox')
                 .removeAttr('checked')
                 .removeAttr('selected');
+             $('#myModalLabel').text(Translator.get('agenda' + ':' + 'add_event'));
             var  currentDate = Date.today().toString("d/M/yyyy HH:mm");
             var pickedDate = $.fullCalendar.formatDate( date,'dd/MM/yyyy HH:mm');
             $('#agenda_form_start').val(pickedDate);
@@ -75,10 +76,8 @@
             $('#agenda_form_start').val(pickedDate)
             if (pickedDate > currentDate) {
                 $('#agenda_form_end').val(pickedDate);
-                console.debug(pickedDate);
             } else {
                 $('#agenda_form_end').val(currentDate);
-                console.debug(currentDate);
             }
             $('#myModal').modal();
         };
@@ -113,27 +112,34 @@
                                     true // make the event 'stick'
                                 );
                                 $('#calendar').fullCalendar('unselect');
+                            } else {
+                                $.ajax({
+                                    'url': $('a#taska').attr('href'),
+                                    'type': 'GET',
+                                    'success': function (data, textStatus, xhr) {
+                                        $("#tasks").html(data);
+                                        
+                                    }
+                                });
                             }
                         }
                     },
                     'error': function ( xhr, textStatus) {
                         if (xhr.status === 400) {//bad request
-                            alert(textStatus);
+                            alert(Translator.get('agenda' + ':' + 'date_invalid'));
                             $('#save').removeAttr('disabled');
-                            $('#output').html(textStatus);
                         } else {
                             //if we got to this point we know that the controller
                             //did not return a json_encoded array. We can assume that
                             //an unexpected PHP error occured
-                            alert('An unexpeded error occured.');
+                            alert(Translator.get('agenda' + ':' + 'error'));
                             $('#save').removeAttr('disabled');
-                            //if you want to print the error:
-                            $('#output').html(data);
+
                         }
                     }
                 });
             } else {
-                alert('title can not be empty');
+                alert(Translator.get('agenda' + ':' + 'title'));
             }
         });
 
@@ -143,7 +149,6 @@
             data.append('id', id);
             data.append('agenda_form[description]',$('#agenda_form_description').val());
             var allDay = $('#agenda_form_allDay').attr('checked') === 'checked' ? 1 : 0;
-            console.debug(allDay);
             data.append('agenda_form[allDay]', allDay);
             url = $('a#update').attr('href');
             $.ajax({
@@ -157,11 +162,19 @@
                         $('#myModal').modal('hide');
                         $('#updateBtn').removeAttr('disabled');
                         $('#calendar').fullCalendar('refetchEvents');
+                        $.ajax({
+                            'url': $('a#taska').attr('href'),
+                            'type': 'GET',
+                            'success': function (data, textStatus, xhr) {
+                                $("#tasks").html(data);
+                                
+                            }
+                        });
                     }
                 },
                 'error': function ( xhr, textStatus) {
                     if (xhr.status === 400) {//bad request
-                        alert(textStatus);
+                        alert(Translator.get('agenda' + ':' + 'error'));
                         $('#save').removeAttr('disabled');
                         $('#output').html(textStatus);
                     }
@@ -203,7 +216,7 @@
             $('#myModal').modal('show');
             id = $(list[5])[0].innerHTML;
             $('#agenda_form').find('input:text, input:password, input:file, select, textarea').val('');
-            $('#myModalLabel').val('Modifier une entrée');
+            $('#myModalLabel').text(Translator.get('agenda' + ':' + 'modify'));
             $('#agenda_form_title')
                 .attr('value', $(e.target.parentElement.parentElement.children)[1].innerHTML);
             $('#agenda_form_start').val($(list[0])[0].innerHTML);
@@ -230,14 +243,14 @@
                     if (xhr.status  === 200) {
                         alert('event update');
                     } else if (xhr.status === 500) {//internal server error
-                        alert('An error occured' + data.greeting);
+                        alert(Translator.get('agenda' + ':' + 'error'));
                         $('#output').html(data);
                     }
                     else {
                         //if we got to this point we know that the controller
                         //did not return a json_encoded array. We can assume that
                         //an unexpected PHP error occured
-                        alert('An unexpeded error occured.');
+                        alert(Translator.get('agenda' + ':' + 'error'));
 
                         //if you want to print the error:
                         $('#output').html(data);
@@ -257,7 +270,7 @@
             $('#deleteBtn').show();
             $('#updateBtn').show();
             $('#save').hide();
-            $('#myModalLabel').text('Modifier une entrée');
+            $('#myModalLabel').text(Translator.get('agenda' + ':' + 'modify'));
             $('#agenda_form_title').attr('value', calEvent.title);
             $('#agenda_form_description').val(calEvent.description);
             $('#agenda_form_priority option[value=' + calEvent.color + ']').attr('selected', 'selected');
@@ -277,7 +290,7 @@
                 'type': 'POST',
                 'error': function (xhr, textStatus) {
                     if (xhr.status === 500) {//bad request
-                        alert('An error occured' + textStatus);
+                        alert(Translator.get('agenda' + ':' + 'error'));
                     }
                 }
             });
@@ -334,13 +347,13 @@
                         //the response is in the data variable
 
                         if (xhr.status === 200) {
-                            alert('event update');
+                            alert(Translator.get('agenda' + ':' + 'event_update'));
                         }
                         else {
                             //if we got to this point we know that the controller
                             //did not return a json_encoded array. We can assume that
                             //an unexpected PHP error occured
-                            alert('An unexpeded error occured.');
+                            alert(Translator.get('agenda' + ':' + 'error'));
 
                             //if you want to print the error:
                             $('#output').html(data);

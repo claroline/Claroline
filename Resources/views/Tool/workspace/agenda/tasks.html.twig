@@ -1,0 +1,17 @@
+    <div class="span3">
+        <h4> <u>{{'tasks'|trans({}, 'calendar') }} </u></h4>
+        {% for e in listEvents  %}
+        <div class="border">
+            <button type="button" class="delete-task close" data-event-id="{{e.id}}" data-dismiss="alert">&times;</button>
+           <h5 data-event-title="{{e.title}}"> {{ e.title }}</h5>
+           <ul>
+                <li data-event-start="{{ e.start|date("d/m/Y")}}"> {{ e.start|date("d/m/Y")}} </li>
+                <li > {{ e.end|date("d/m/Y") }} </li>
+                <li>{{ e.description }}</li>
+                <li class="hidden"> {{e.priority}}</li>
+                <a href="#myModal" class="update-task" role="button">modifier</a> </p>
+            </ul>
+        </div>
+        {% else %}
+        <li>{{ 'no event found'|trans({}, 'calendar') }}</li>
+        {% endfor %}
