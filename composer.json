@@ -14,7 +14,8 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "claroline/core-bundle": "dev-master"
+        "claroline/core-bundle": "dev-master",
+        "claroline/plugin-installer": "dev-master"
     },
     "autoload": {
         "psr-0": { "Claroline\\ForumBundle": "" }
