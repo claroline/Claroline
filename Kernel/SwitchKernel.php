@@ -9,6 +9,7 @@ abstract class SwitchKernel extends Kernel
 {
     private $hasSwitched = false;
     private $originalEnvironement;
+    private $originalContainer;
     private $fileSystem;
 
     public function switchToTmpEnvironment()
@@ -18,13 +19,14 @@ abstract class SwitchKernel extends Kernel
         }
 
         $this->originalEnvironement = $this->environment;
+        $this->originalContainer = $this->container;
         $this->environment = 'tmp-switch-env';
         $this->hasSwitched = true;
         $this->shutdown();
         $this->boot();
     }
 
-    public function switchBack($clearOriginalCache = false)
+    public function switchBack()
     {
         if (!$this->hasSwitched) {
             throw new \LogicException('Kernel is in its original environment');
@@ -33,11 +35,8 @@ abstract class SwitchKernel extends Kernel
         $fileSystem = $this->fileSystem ?: new Filesystem();
         $fileSystem->remove($this->getCacheDir());
         $this->environment = $this->originalEnvironement;
+        $this->container = $this->originalContainer;
         $this->hasSwitched = false;
-
-        if ($clearOriginalCache) {
-            $fileSystem->remove($this->getCacheDir());
-        }
 
         $this->shutdown();
         $this->boot();
