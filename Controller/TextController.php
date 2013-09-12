@@ -258,6 +258,32 @@ class TextController extends Controller
     }
 
     /**
+     * @Route(
+     *     "/open/{text}",
+     *     name="claro_text_open"
+     * )
+     *
+     * Handles the text edition form submission.
+     *
+     * @param integer $textId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function OpenAction(Text $text)
+    {
+        $revisionRepo = $this->getDoctrine()->getManager()
+            ->getRepository('ClarolineCoreBundle:Resource\Revision');
+
+        return $this->render(
+            'ClarolineCoreBundle:Text:index.html.twig',
+            array(
+                'text' => $revisionRepo->getLastRevision($text)->getContent(),
+                '_resource' => $text
+            )
+        );
+    }
+
+    /**
      * Checks if the current user has the right to perform an action on a ResourceCollection.
      * Be careful, ResourceCollection may need some aditionnal parameters.
      *
