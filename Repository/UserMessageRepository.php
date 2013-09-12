@@ -71,6 +71,7 @@ class UserMessageRepository extends EntityRepository
             JOIN um.message m
             WHERE u.id = {$user->getId()}
             AND um.isRemoved = true
+            GROUP BY m
             ORDER BY m.date DESC
         ";
         $query = $this->_em->createQuery($dql);
@@ -168,6 +169,7 @@ class UserMessageRepository extends EntityRepository
                 UPPER(m.object) LIKE :search
                 OR UPPER(m.senderUsername) LIKE :search
             )
+            GROUP BY m
             ORDER BY m.date DESC
         ";
         $query = $this->_em->createQuery($dql);

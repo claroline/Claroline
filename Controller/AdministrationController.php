@@ -1007,7 +1007,7 @@ class AdministrationController extends Controller
      *
      * @throws \Exception
      */
-    public function analyticsTopAction($topType)
+    public function analyticsTopAction($topType = 'top_users_connections')
     {
         $criteriaForm = $this->formFactory->create(FormFactory::TYPE_ADMIN_ANALYTICS_TOP);
         $cloneForm = clone $criteriaForm;

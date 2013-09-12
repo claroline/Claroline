@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Form\Log\AdminLogFilterType;
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Entity\Log\LogWorkspaceWidgetConfig;
 use Claroline\CoreBundle\Entity\Log\LogDesktopWidgetConfig;
+use Claroline\CoreBundle\Entity\User;
 
 /**
  * @DI\Service("claroline.log.manager")
@@ -251,7 +252,7 @@ class LogManager
 
         if (array_key_exists($queryParamName, $data)) {
             $data = $data[$queryParamName];
-            $action = $data['action'];
+            $action = isset($data['action']) ? $data['action']: null;
             $range = $dateRangeToTextTransformer->reverseTransform($data['range']);
             $userSearch = $data['user'];
         } elseif (array_key_exists('filter', $data)) {

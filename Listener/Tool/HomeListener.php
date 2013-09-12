@@ -71,6 +71,7 @@ class HomeListener
     public function onDisplayWorkspaceHome(DisplayToolEvent $event)
     {
         $event->setContent($this->workspaceHome($event->getWorkspace()->getId()));
+        $event->stopPropagation();
     }
 
     /**

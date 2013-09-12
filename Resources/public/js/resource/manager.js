@@ -122,6 +122,13 @@
                     }
 
                     $('ul.breadcrumb').append(Twig.render(ResourceManagerBreadcrumbs, {'nodes': nodes}));
+                    $('body').on('click', 'ul.breadcrumb li a', function () {
+                        event.preventDefault();
+                        window.Claroline.ResourceManager.Controller.dispatcher.trigger('breadcrumb-click', {
+                            nodeId: $(this).data('node-id'),
+                            isPickerMode: false
+                        });
+                    });
 
                     // add current folder to the title of the panel
                     if (nodes.length > 1) {

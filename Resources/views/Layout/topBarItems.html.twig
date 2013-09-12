@@ -1,0 +1,121 @@
+{% macro item(name, href, icon, attributes, title, dropdown, badge) %}
+    <li class="{% if dropdown is not empty %}dropdown{% endif %}{{ attributes | default('') | compareRoute(' active') | raw }}">
+        <a
+            {% if dropdown is not empty %}class="pointer-hand dropdown-toggle" data-toggle="dropdown"{% endif %}
+            {% if href is not empty %}href="{{ href }}"{% endif %}
+            {% if title is not empty %}title="{{ title }}"{% endif %}
+        >
+            {% if icon is not empty %}<i class="icon-{{ icon }}"></i> {% endif %}
+            {{ name | trans({}, 'platform') }}
+            {% if badge is not empty %}&nbsp;<span class="badge">{{ badge }}</span>{% endif %}
+            {% if dropdown is not empty %}<i class="caret"></i>{% endif %}
+        </a>
+        {% if dropdown is not empty %}
+            <ul class="dropdown-menu">
+                {{ dropdown | raw }}
+            </ul>
+        {% endif %}
+    </li>
+{% endmacro %}
+
+{% block topBar %}
+
+    {% block leftSide %}
+        {% import _self as topbar %}
+
+        {{ topbar.item('desktop', path('claro_desktop_open'), 'briefcase', '/desktop/tool/') }}
+        {% if is_granted('ROLE_ADMIN') %}
+            {{ topbar.item('administration', path('claro_admin_index'), 'cog', '/admin/') }}
+        {% endif %}
+        {% if countUnreadMessages > 0 %}
+            {{ topbar.item('messages', path('claro_message_list_received'), 'envelope', '/message/', 'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform'), null, countUnreadMessages) }}
+        {% else %}
+            {{ topbar.item('messages', path('claro_message_list_received'), 'envelope', '/message/', 'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform')) }}
+        {% endif %}
+    {% endblock leftSide %}
+
+    {% block rightSide %}
+        {% import _self as topbar %}
+        {% if isInAWorkspace %}
+            {% set workspacesName = currentWorkspace.getName() ~ ' (' ~ currentWorkspace.getCode() ~ ')' %}
+        {% else %}
+            {% set workspacesName =  'workspaces' %}
+        {% endif %}
+        {{ topbar.item(workspacesName, null, 'book', '/workspaces/', null, block('dropdownWorkspace')) }}
+    {% endblock rightSide %}
+
+    {% block login %}
+        {% import _self as topbar %}
+        {% if register_target is empty %}
+            {{ topbar.item('login', login_target, 'user', '/login') }}
+        {% else %}
+            {{ topbar.item('login', null, 'user', '/login', null, block('dropdowLogin')) }}
+        {% endif %}
+    {% endblock login %}
+
+    {% block logged %}
+        {% import _self as topbar %}
+        {{ topbar.item(username, null, 'user', '/profile', null, block('dropdownLogged')) }}
+    {% endblock logged %}
+
+    {% block dropdownWorkspace %}
+        {% import _self as topbar %}
+        {% if isLogged %}
+            {% if not workspaces is empty %}
+                <li class="dropdown-header">{{ 'history'|trans({}, 'platform') }}</li>
+                {% for workspace in workspaces %}
+                    {{ topbar.item(workspace.getName() ~ ' (' ~ workspace.getCode() ~ ')', path('claro_workspace_open', {'workspaceId': workspace.getId()})) }}
+                {% endfor %}
+                <li class="divider"></li>
+            {% endif %}
+            {{ topbar.item('my_workspaces', path('claro_workspace_by_user'), 'book') }}
+            {{ topbar.item('find_workspaces', path('claro_workspace_list'), 'book') }}
+            {% if is_granted('CREATE', workspace ) %}
+            <li class="divider"></li>
+            {{ topbar.item('create_workspace', path('claro_workspace_creation_form'), 'pencil') }}
+            {% endif %}
+        {% else %}
+            {{ topbar.item('find_workspaces', path('claro_workspace_list'), 'book') }}
+        {% endif %}
+    {% endblock dropdownWorkspace %}
+
+    {% block dropdowLogin %}
+        <li>
+            <a id="link-registration" href="{{ path(register_target) }}">
+                {{ 'register'|trans({}, 'platform') }}
+            </a>
+        </li>
+        <li class="divider"></li>
+        <li>
+            <a href="{{ login_target }}" id="link-login">
+                {{ 'login'|trans({}, 'platform') }}
+            </a>
+        </li>
+    {% endblock dropdowLogin %}
+
+    {% block dropdownLogged %}
+        {{ topbar.item('my_account', path('claro_profile_view', {'userId': app.user.id}), 'user') }}
+        <li class="divider"></li>
+        {% if personalWs is not null %}
+            {{ topbar.item('my_workspace', path('claro_workspace_open_tool', {'workspaceId': personalWs.getId(), 'toolName': 'home'}), 'book') }}
+        {% endif %}
+        {{ topbar.item('my_agenda', path('claro_desktop_open_tool', {'toolName': 'agenda' }), 'calendar') }}
+        {{ topbar.item('my_resources', path('claro_desktop_open_tool', {'toolName': 'resource_manager'}) ~ '#resources/0', 'folder-close') }}
+        <li class="divider"></li>
+        {% if isImpersonated %}
+            {% set logoutPath = path('claro_desktop_open', {'_switch': '_exit'}) %}
+        {% else %}
+            {% set logoutPath = path('claro_security_logout') %}
+        {% endif %}
+        {{ topbar.item('logout', logoutPath, 'off') }}
+
+    {% endblock dropdownLogged %}
+
+{% endblock topBar %}
+
+{% block impersonation %}
+    {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') or isImpersonated %}
+        {% render controller('ClarolineCoreBundle:Layout:renderWarningImpersonation') %}
+    {% endif %}
+{% endblock %}
+

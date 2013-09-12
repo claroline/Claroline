@@ -118,6 +118,7 @@ class LogRepository extends EntityRepository
         )->getResult();
     }
 
+    //this method is never used and not up to date.
     public function findActionAfterDate(
         $action,
         $date,
@@ -219,11 +220,11 @@ class LogRepository extends EntityRepository
     {
         $queryBuilder = $this
             ->createQueryBuilder('log')
-            ->select('resource.id, resource.name, count(log.id) AS actions')
-            ->leftJoin('log.resource', 'resource')
+            ->select('node.id, node.name, count(log.id) AS actions')
+            ->leftJoin('log.resourceNode', 'node')
             ->leftJoin('log.resourceType', 'resource_type')
             ->andWhere('resource_type.name=:fileType')
-            ->groupBy('resource')
+            ->groupBy('node')
             ->orderBy('actions', 'DESC')
             ->setParameter('fileType', 'file');
 
@@ -242,9 +243,9 @@ class LogRepository extends EntityRepository
     {
         $queryBuilder = $this
             ->createQueryBuilder('log')
-            ->select('resource.id, resource.name, count(log.id) AS actions')
-            ->leftJoin('log.resource', 'resource')
-            ->groupBy('resource')
+            ->select('node.id, node.name, count(log.id) AS actions')
+            ->leftJoin('log.resourceNode', 'node')
+            ->groupBy('node')
             ->orderBy('actions', 'DESC');
 
         if ($max > 1) {
@@ -269,7 +270,7 @@ class LogRepository extends EntityRepository
             )
             ->leftJoin('log.doer', 'doer')
             ->groupBy('doer')
-            ->orderBy('action', 'DESC')
+            ->orderBy('actions', 'DESC')
         ;
 
         if ($max > 1) {
