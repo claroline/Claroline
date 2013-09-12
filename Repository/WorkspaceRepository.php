@@ -41,6 +41,7 @@ class WorkspaceRepository extends EntityRepository
                 SELECT w1.id FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w1
                 JOIN w1.personalUser pu
             )
+            ORDER BY w.id
         ';
         $query = $this->_em->createQuery($dql);
 
@@ -198,7 +199,7 @@ class WorkspaceRepository extends EntityRepository
         $dql = "
             SELECT DISTINCT w AS workspace, MAX(l.dateLog) AS max_date
             FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
-            INNER JOIN Claroline\CoreBundle\Entity\Logger\Log l WITH l.workspace = w
+            INNER JOIN Claroline\CoreBundle\Entity\Log\Log l WITH l.workspace = w
             JOIN l.doer u
             JOIN w.roles r
             WHERE l.action = 'ws_tool_read'

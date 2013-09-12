@@ -1,6 +1,5 @@
 {# to keep the workspace layout, extends this template #}
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
-{# use the section_content block to display yor html #}
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}</h3>
@@ -11,5 +10,10 @@
                 </br>-------------------------------</br>
             {% endfor %}
         {{ original|raw }}
+    </div>
+    <div class="panel-footer">
+        <a class="btn btn-primary" href="{{ _path('claro_text_open', {'text': _resource.getId()}) }}">
+            {{ 'back' | trans({}, 'platform') }}
+        </a>
     </div>
 {% endblock %}

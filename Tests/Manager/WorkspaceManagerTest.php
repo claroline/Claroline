@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Event\Log\LogWorkspaceCreateEvent;
 use Mockery as m;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -20,7 +21,7 @@ class WorkspaceManagerTest extends MockeryTestCase
     private $resourceTypeRepo;
     private $roleRepo;
     private $workspaceRepo;
-    private $dispatcher;
+    private $strictDispatcher;
     private $om;
     private $ut;
     private $templateDir;
@@ -41,7 +42,7 @@ class WorkspaceManagerTest extends MockeryTestCase
         $this->roleRepo = $this->mock('Claroline\CoreBundle\Repository\RoleRepository');
         $this->rightsRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceRightsRepository');
         $this->workspaceRepo = $this->mock('Claroline\CoreBundle\Repository\AbstractResourceRepository');
-        $this->dispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
+        $this->strictDispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->ut = $this->mock('Claroline\CoreBundle\Library\Utilities\ClaroUtilities');
         $this->templateDir = vfsStream::url('template');
@@ -129,7 +130,7 @@ class WorkspaceManagerTest extends MockeryTestCase
         $this->toolManager->shouldReceive('getOneToolByName')->once()->with('toolName2')->andReturn($tool);
         $this->toolManager->shouldReceive('import');
 
-        $this->dispatcher->shouldReceive('dispatch')->once()
+        $this->strictDispatcher->shouldReceive('dispatch')->once()
             ->with('log', 'Log\LogWorkspaceCreate', array($workspace));
 
         $this->om->shouldReceive('persist')->once()->with($workspace);
@@ -360,12 +361,12 @@ class WorkspaceManagerTest extends MockeryTestCase
         $toolB->shouldReceive('getName')->andReturn('toolName2');
         $toolA->shouldReceive('isExportable')->once()->andReturn(true);
         $toolB->shouldReceive('isExportable')->once()->andReturn(false);
-        $event = $this->mock('Claroline\CoreBundle\Event\Event\ExportToolEvent');
+        $event = $this->mock('Claroline\CoreBundle\Event\ExportToolEvent');
 
         $this->orderedToolRepo->shouldReceive('findBy')->once()
             ->with(array('workspace' => $workspace), array('order' => 'ASC'))->andReturn($wots);
 
-        $this->dispatcher->shouldReceive('dispatch')->once()
+        $this->strictDispatcher->shouldReceive('dispatch')->once()
             ->with('tool_toolName1_to_template', 'ExportTool', array($workspace))->andReturn($event);
 
         $event->shouldReceive('getConfig')->andReturn(array('config' => 'config'));
@@ -665,7 +666,7 @@ class WorkspaceManagerTest extends MockeryTestCase
                 $this->maskManager,
                 $this->resourceManager,
                 $this->toolManager,
-                $this->dispatcher,
+                $this->strictDispatcher,
                 $this->om,
                 $this->ut,
                 $this->templateDir,
@@ -688,7 +689,7 @@ class WorkspaceManagerTest extends MockeryTestCase
                     $this->maskManager,
                     $this->resourceManager,
                     $this->toolManager,
-                    $this->dispatcher,
+                    $this->strictDispatcher,
                     $this->om,
                     $this->ut,
                     $this->templateDir,
