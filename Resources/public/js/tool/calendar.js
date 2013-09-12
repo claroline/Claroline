@@ -52,8 +52,8 @@
                 .removeAttr('selected');
             var  currentDate = Date.today().toString("d/M/yyyy HH:mm");
             var pickedDate = $.fullCalendar.formatDate( date,'dd/MM/yyyy HH:mm');
+            $('#agenda_form_start').val(pickedDate);
 
-            $('#agenda_form_start').val(pickedDate)
             if (pickedDate > currentDate) {
                 $('#agenda_form_end').val(pickedDate);
 
@@ -63,7 +63,6 @@
             $('#myModal').modal();
         };
         var dayClickDesktop = function (date) {
-            clickedDate = date;
             $('#deleteBtn').hide();
             $('#save').show();
             $('#updateBtn').hide();
@@ -76,8 +75,10 @@
             $('#agenda_form_start').val(pickedDate)
             if (pickedDate > currentDate) {
                 $('#agenda_form_end').val(pickedDate);
+                console.debug(pickedDate);
             } else {
                 $('#agenda_form_end').val(currentDate);
+                console.debug(currentDate);
             }
             $('#myModal').modal();
         };
@@ -215,7 +216,6 @@
              $('#agenda_form_priority option[value=' + $(list[3])[0].innerHTML + ']').attr('selected', 'selected');
         });
         function dropEvent(event, dayDelta, minuteDelta) {
-            id = event.id;
             $.ajax({
                 'url': $('a#move').attr('href'),
                 'type': 'POST',

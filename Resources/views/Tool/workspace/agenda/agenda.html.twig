@@ -84,7 +84,7 @@
                 {% else %}
                     <li>{{ 'no event found'|trans({}, 'agenda') }}</li>
                 {% endfor %}
-                <h4><u>Priorité</u></h4>
+                <h4><u>{{ 'agenda_form_priority'|trans({}, 'agenda') }}</u></h4>
                 <div>
                     <span style="color:#FF0000">  {{ 'high'|trans({}, 'agenda') }} </span>
                     <span style="color:#01A9DB"> {{ 'medium'|trans({}, 'agenda') }} </span>
@@ -108,5 +108,4 @@
         });
     </script>
     {{ tinymce_init() }}
-
 {% endblock javascripts %}
