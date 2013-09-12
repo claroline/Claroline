@@ -92,6 +92,6 @@ class BundleManager
     {
         $environment = $this->kernel->getEnvironment();
 
-        return preg_match('#tmp-\d+#', $environment) ? 'dev' : $environment;
+        return preg_match('#tmp\d+#', $environment) ? 'dev' : $environment;
     }
 }
