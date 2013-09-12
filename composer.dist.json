@@ -22,6 +22,10 @@
             "url": "https://github.com/stefk/StofDoctrineExtensionsBundle.git"
         },
         {
+            "type": "vcs",
+            "url": "https://github.com/stefk/JMSDiExtraBundle.git"
+        },
+        {
             "type": "package",
             "package": {
                 "name": "xaguilars/bootstrap-colorpicker",
