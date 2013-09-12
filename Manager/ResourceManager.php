@@ -789,7 +789,7 @@ class ResourceManager
             $resource = $this->getResourceFromNode($node);
 
             if (get_class($resource) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
-                $node = $resource->getTarget()->getResourceNode();
+                $node = $resource->getTarget();
             }
 
             if ($node->getResourceType()->getName() !== 'directory') {
