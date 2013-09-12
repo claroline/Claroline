@@ -48,9 +48,9 @@ class InstallationManager
     {
         $this->recorder->addBundles(array(get_class($bundle)));
         $this->kernel->switchToTmpEnvironment();
-        $this->container = $this->kernel->getContainer();
+        $tmpContainer = $this->kernel->getContainer();
         // bundle mapping is only accessible in the new container instance
-        $this->fixtureLoader = $this->container->get('claroline.installation.fixture_loader');
+        $this->fixtureLoader = $tmpContainer->get('claroline.installation.fixture_loader');
 
         try {
             $additionalInstaller = $this->getAdditionalInstaller($bundle);
@@ -77,12 +77,12 @@ class InstallationManager
         } catch (\Exception $ex) {
             $this->log('<error>An error occured !</error>');
             $this->recorder->removeBundles(array(get_class($bundle)));
-            $this->kernel->switchBack(true);
+            $this->kernel->switchBack();
 
             throw $ex;
         }
 
-        $this->kernel->switchBack(true);
+        $this->kernel->switchBack();
     }
 
     public function uninstall(InstallableInterface $bundle)
