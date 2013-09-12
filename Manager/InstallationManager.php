@@ -82,7 +82,7 @@ class InstallationManager
             throw $ex;
         }
 
-        $this->kernel->switchBack();
+        $this->kernel->switchBack(true);
     }
 
     public function uninstall(InstallableInterface $bundle)
