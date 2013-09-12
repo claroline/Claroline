@@ -346,7 +346,6 @@ class ResourceController
      *      class="ClarolineCoreBundle:Resource\ResourceNode",
      *      options={"id" = "nodeId", "strictId" = true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * Returns a json representation of a directory, containing the following items :
      * - The path of the directory
@@ -365,8 +364,9 @@ class ResourceController
      *
      * @throws Exception if the id doesnt't match any existing directory
      */
-    public function openDirectoryAction(User $user, ResourceNode $node = null)
+    public function openDirectoryAction(ResourceNode $node = null)
     {
+        $user = $this->sc->getToken()->getUser();
         $path = array();
         $creatableTypes = array();
         $currentRoles = $this->roleManager->getStringRolesFromCurrentUser();
@@ -384,16 +384,20 @@ class ResourceController
             $collection = new ResourceCollection(array($node));
             $this->checkAccess('OPEN', $collection);
 
-            if ($user === $node->getCreator() || $this->sc->isGranted('ROLE_ADMIN')) {
-                $canChangePosition = true;
+            if ($user !== 'anon.') {
+                if ($user === $node->getCreator() || $this->sc->isGranted('ROLE_ADMIN')) {
+                    $canChangePosition = true;
+                }
             }
 
             $path = $this->resourceManager->getAncestors($node);
             $nodes = $this->resourceManager->getChildren($node, $currentRoles);
             //set "admin" mask if someone is the creator of a resource.
             foreach ($nodes as $item) {
-                if ($item['creator_username'] === $user->getUsername()) {
-                    $item['mask'] = 1023;
+                if ($user !== 'anon.') {
+                    if ($item['creator_username'] === $user->getUsername()) {
+                        $item['mask'] = 1023;
+                    }
                 }
                 $nodesWithCreatorPerms[] = $item;
             }

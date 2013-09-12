@@ -454,7 +454,12 @@ class WorkspaceController extends Controller
         $configs = $this->get('claroline.widget.manager')
             ->generateWorkspaceDisplayConfig($workspace->getId());
 
-        $rightToConfigure = $this->security->isGranted('parameters', $workspace);
+        if ($this->security->getToken()->getUser() !== 'anon.') {
+            $rightToConfigure = $this->security->isGranted('parameters', $workspace);
+        } else {
+            $rightToConfigure = false;
+        }
+
         $widgets = array();
 
         $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
@@ -465,7 +470,11 @@ class WorkspaceController extends Controller
             $configs = $this->homeTabManager
                 ->getWidgetConfigsByWorkspace($homeTab,$workspace);
 
-            $rightToConfigure = $this->security->isGranted('parameters', $workspace);
+            if ($this->security->getToken()->getUser() !== 'anon.') {
+                $rightToConfigure = $this->security->isGranted('parameters', $workspace);
+            } else {
+                $rightToConfigure = false;
+            }
 
             foreach ($configs as $config) {
                 if ($config->isVisible()) {
