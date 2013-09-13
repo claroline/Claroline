@@ -17,8 +17,8 @@ class MessageType extends AbstractType
                 'attr' => array(
                     'class' => 'tinymce',
                     'data-theme' => 'medium'
-                    )
                 )
+            )
         );
     }
 

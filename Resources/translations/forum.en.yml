@@ -9,6 +9,7 @@ forum_subject_form_title: Title
 forum_subject_form_message: Message
 forum_subject_form_message_content: Content
 forum_message_form_content: Content
+forum_subject_form_content : Content of the subject
 forum_form_name: Nom
 forum_options_form_subjects: Subjects per page
 forum_options_form_messages: Messages per page
