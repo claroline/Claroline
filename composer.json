@@ -16,6 +16,8 @@
         "php": ">=5.3.3",
         "symfony/symfony": "~2.3.4",
         "symfony/assetic-bundle": "~2.3",
+        "symfony/swiftmailer-bundle": "~2.3",
+        "symfony/monolog-bundle": "~2.3",
         "doctrine/orm": "~2.4.0",
         "doctrine/doctrine-bundle": "~1.2.0",
         "twig/extensions": "~1.0.0",
