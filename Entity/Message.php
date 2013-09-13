@@ -27,7 +27,7 @@ class Message
     protected $object;
 
     /**
-     * @ORM\Column(length=1023)
+     * @ORM\Column(type="text")
      * @Assert\NotBlank()
      */
     protected $content;
