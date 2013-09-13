@@ -29,47 +29,41 @@
 
     <div id="workspace-widget-pager" workspace-id="{{ workspaceId }}">
 
-    {% if nbPages > 1 %}
-        {{ renderPager(datas, workspaceId) }}
-    {% endif %}
-
-    {% for data in datas %}
-    <div class="panel panel-primary">
-        {% set title = data['announcement'].getTitle() %}
-
-        {% if title is not null %}
-        <div class="panel-heading">
-            <h4>{{ title }}</h4>
-        </div>
+        {% if nbPages > 1 %}
+            {{ renderPager(datas, workspaceId) }}
         {% endif %}
+        <ul class="list-group">
 
-        <div class="panel-body">
-            {% set announcer = data['announcement'].getAnnouncer() %}
+            {% for data in datas %}
+                <li class="list-group-item">
+                    {% set title = data['announcement'].getTitle() %}
 
-            {% if announcer is not null %}
-                <h4>{{ announcer }} :</h4>
-                <div class="well">
-            {% endif %}
+                    {% if title is not null %}
+                        <h4 class="list-group-item-heading"><b>{{ title }}</b></h4>
+                    {% endif %}
+                    <div class="list-group-item-text">
+                        {{ data['announcement'].getContent()|raw }}
+                    </div>
 
-            {{ data['announcement'].getContent()|raw }}
+                    <div class="list-group-item-text text-muted">
+                        <small>
+                            {{ 'published_on'|trans({}, 'announcement') }}
+                            {{ data['announcement'].getPublicationDate().format('d-m-Y') }}
+                            {% set announcer = data['announcement'].getAnnouncer() %}
 
-            {% if announcer is not null %}
-                </div>
-            {% endif %}
-        </div>
+                            {% if announcer is not null %}
+                                {{ 'by'|trans({}, 'announcement') }}
+                                <b>{{ announcer }}</b>
+                            {% endif %}
+                        </small>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
 
-        <div class="panel-footer">
-            <small>
-                {{ 'published_on'|trans({}, 'announcement') }}
-                {{ data['announcement'].getPublicationDate().format('d-m-Y') }}
-            </small>
-        </div>
-    </div>
-    {% endfor %}
-
-    {% if nbPages > 1 %}
-        {{ renderPager(datas, workspaceId) }}
-    {% endif %}
+        {% if nbPages > 1 %}
+            {{ renderPager(datas, workspaceId) }}
+        {% endif %}
     </div>
 {% else %}
     {{ 'no_announcement_widget_message'|trans({}, 'widget') }}

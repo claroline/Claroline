@@ -3,12 +3,12 @@
 namespace Claroline\AnnouncementBundle\Listener;
 
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
-//use Claroline\CoreBundle\Event\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\Event\DeleteResourceEvent;
-//use Claroline\CoreBundle\Event\Event\DownloadResourceEvent;
-use Claroline\CoreBundle\Event\Event\OpenResourceEvent;
+//use Claroline\CoreBundle\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\DeleteResourceEvent;
+//use Claroline\CoreBundle\Event\DownloadResourceEvent;
+use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;

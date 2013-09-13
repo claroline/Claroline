@@ -2,7 +2,7 @@
 
 namespace Claroline\AnnouncementBundle\Listener;
 
-use Claroline\CoreBundle\Event\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use JMS\DiExtraBundle\Annotation as DI;

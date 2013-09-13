@@ -80,7 +80,7 @@
 
             {% if title is not null %}
             <div class="panel-heading">
-                <h4>{{ title }}</h4>
+                <b>{{ title }}</b>
             </div>
             {% endif %}
 
@@ -88,8 +88,8 @@
                 {% set announcer = announcement.getAnnouncer() %}
 
                 {% if announcer is not null %}
-                    <h4>{{ announcer }} :</h4>
-                    <div class="well">
+                    <b>{{ announcer }} :</b>
+                    <div class="well well-sm">
                 {% endif %}
 
                 {{ announcement.getContent()|raw }}
