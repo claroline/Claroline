@@ -6,6 +6,7 @@ agenda_form_description : "Description"
 agenda_form_allDay : " All day"
 agenda_form_priority : "Priority"
 date_invalid : "An error occured. Please check if the start end date is bigger than the start date"
+confirm: "Are you sure about this change ?"
 end : "end"
 event_update : 'Updated'
 error: "An unexpeded error occured, please try again"

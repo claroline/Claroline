@@ -56,6 +56,7 @@
                             <a href="{{ path('claro_workspace_agenda_move') }}" id="move"></a>
                             <a href="{{ path('claro_desktop_agenda_delete') }}" id="delete"></a>
                             <a href="{{ path('claro_desktop_agenda_update') }}" id="update"></a>
+                            <a href="{{ path('claro_desktop_agenda_tasks') }}" id="taska"></a>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{'close'|trans({}, 'agenda') }}</button>
@@ -83,7 +84,6 @@
 
 {% block javascripts %}
     {{ parent() }}
- {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
     <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}' ></script>
     <script type='text/javascript' src='{{ asset(calendarPath ~ 'js/fullcalendar.js') }}' ></script>
     <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/calendar.js') }}'></script>
@@ -93,6 +93,7 @@
             Claroline.Calendar.initialize('workspace');
         });
     </script>
+ {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
     {{ tinymce_init() }}
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'agenda' }) }}"></script>
 {% endblock javascripts %}

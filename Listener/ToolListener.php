@@ -214,7 +214,7 @@ class ToolListener
         $event = new Event();
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
         $em = $this->container-> get('doctrine.orm.entity_manager');
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findAll();
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop(true);
         $cours = array();
         $translator = $this->container->get('translator');
 
