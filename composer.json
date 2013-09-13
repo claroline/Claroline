@@ -3,7 +3,7 @@
     "description": "Claroline announcement bundle",
     "keywords": ["Claroline","Announcement"],
     "homepage": "http://www.claroline.net",
-    "type": "bundle",
+    "type": "claroline-plugin",
     "license": "",
     "authors": [
         {
@@ -14,9 +14,8 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "symfony/framework-bundle":  "2.*",
-        "symfony/symfony":           "2.*"
-
+        "claroline/core-bundle": "dev-master",
+        "claroline/plugin-installer": "dev-master"
     },
     "autoload": {
         "psr-0": { "Claroline\\AnnouncementBundle": "" }
