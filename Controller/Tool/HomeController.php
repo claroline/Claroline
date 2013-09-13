@@ -294,7 +294,7 @@ class HomeController extends Controller
         );
 
         if ($event->getContent() !== '') {
-            if ($this->request->isXMLHttpRequest()) {
+            if ($this->request->isXmlHttpRequest()) {
                 return $this->render(
                     'ClarolineCoreBundle:Tool\desktop\home:widgetConfigurationForm.html.twig',
                     array('content' => $event->getContent(), 'tool' => $this->getHomeTool())
@@ -398,8 +398,7 @@ class HomeController extends Controller
         $homeTab = new HomeTab();
 
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
-        $request = $this->getRequest();
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $homeTab->setType('desktop');
@@ -494,8 +493,7 @@ class HomeController extends Controller
         $this->checkUserAccessForHomeTab($homeTab, $user);
 
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
-        $request = $this->getRequest();
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $this->homeTabManager->insertHomeTab($homeTab);
@@ -682,8 +680,7 @@ class HomeController extends Controller
         $homeTab = new HomeTab();
 
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
-        $request = $this->getRequest();
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $homeTab->setType('workspace');
@@ -798,8 +795,7 @@ class HomeController extends Controller
         $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
 
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
-        $request = $this->getRequest();
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $this->homeTabManager->insertHomeTab($homeTab);
