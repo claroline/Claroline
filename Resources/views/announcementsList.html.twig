@@ -27,8 +27,12 @@
 
 {% block section_content %}
 
-<div>
-    <h3>{{ 'announcements_list'|trans({}, 'announcement') }}</h3>
+<div class="panel-heading">
+    <h3 class="panel-title">
+        {{ 'announcements_list'|trans({}, 'announcement') }}
+    </h3>
+</div>
+<div class="panel-body">
     <h4>{{ 'resource'|trans({}, 'platform') }} : {{ _resource.getResourceNode().getName() }}</h4>
     <br>
 
