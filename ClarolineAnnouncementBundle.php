@@ -16,9 +16,4 @@ class ClarolineAnnouncementBundle extends PluginBundle
 
         return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'announcement');
     }
-
-    public function getRequiredFixturesDirectory($environment)
-    {
-        return 'DataFixtures';
-    }
 }
