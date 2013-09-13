@@ -3,7 +3,7 @@
 {% block content %}
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">{{ "send_message" | trans({}, "platform" )}}</h3>
+            <h3 class="panel-title">{{ "send_mail" | trans({}, "platform" )}}</h3>
         </div>
         <form novalidate="novalidate"
             action="{{path('claro_mail_send', {'userId': userId})}}"
