@@ -18,6 +18,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserRepository")
  * @ORM\Table(name="claro_user")
  * @DoctrineAssert\UniqueEntity("username")
+ * @DoctrineAssert\UniqueEntity("mail")
  *
  * @todo implement AdvancedUserInterface
  */
