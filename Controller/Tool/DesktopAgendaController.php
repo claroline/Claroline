@@ -58,7 +58,7 @@ class DesktopAgendaController extends Controller
     {
         $usr = $this->get('security.context')->getToken()->getUser();
         $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
-        $desktopEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop();
+        $desktopEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop(false);
         $data = array_merge($this->convertEventoArray($listEvents), $this->convertEventoArray($desktopEvents));
 
         return new Response(
@@ -185,14 +185,30 @@ class DesktopAgendaController extends Controller
         );
     }
 
+    /**
+     * @EXT\Route(
+     *     "/tasks",
+     *     name="claro_desktop_agenda_tasks"
+     * )
+     * @EXT\Method({"GET"})
+     * @EXT\Template("ClarolineCoreBundle:Tool\\desktop\\agenda:tasks.html.twig")
+     */
+    public function tasksAction()
+    {
+        $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop(true);
+
+        return  array('listEvents' => $listEvents );
+    }
+
     private function convertEventoArray($listEvents)
     {
         $data = array();
-        
+
         foreach ($listEvents as $key => $object) {
             $data[$key]['id'] = $object->getId();
             $workspace = $object->getWorkspace();
-            $data[$key]['title'] =  !is_null($workspace) ? $workspace->getName().': '.$object->getTitle() : $this->translator->trans('desktop', array(), 'platform');
+            $data[$key]['title'] =  !is_null($workspace) ? $workspace->getName() : $this->translator->trans('desktop', array(), 'platform');
+            $data[$key]['title'] .= ' : ' . $object->getTitle();
             $data[$key]['allDay'] = $object->getAllDay();
             $data[$key]['start'] = $object->getStart()->getTimestamp();
             $data[$key]['end'] = $object->getEnd()->getTimestamp();

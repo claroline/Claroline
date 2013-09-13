@@ -241,7 +241,7 @@
                     //the response is in the data variable
 
                     if (xhr.status  === 200) {
-                        alert('event update');
+                        alert(Translator.get('agenda' + ':' + 'event_update'));
                     } else if (xhr.status === 500) {//internal server error
                         alert(Translator.get('agenda' + ':' + 'error'));
                         $('#output').html(data);
@@ -271,7 +271,10 @@
             $('#updateBtn').show();
             $('#save').hide();
             $('#myModalLabel').text(Translator.get('agenda' + ':' + 'modify'));
-            $('#agenda_form_title').attr('value', calEvent.title);
+            var title = calEvent.title;
+            var reg = new RegExp('[:]+', 'g');
+            title = title.split(reg);
+            $('#agenda_form_title').attr('value', title[1]);
             $('#agenda_form_description').val(calEvent.description);
             $('#agenda_form_priority option[value=' + calEvent.color + ']').attr('selected', 'selected');
             var pickedDate = new Date(calEvent.start);
