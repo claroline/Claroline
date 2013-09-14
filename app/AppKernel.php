@@ -22,6 +22,6 @@ class AppKernel extends SwitchKernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $this->kernelBundle->loadConfigurations($loader);
-        $loader->load(__DIR__ . '/config/local/parameters.yml');
+        $loader->load(__DIR__ . '/config/parameters.yml');
     }
 }
