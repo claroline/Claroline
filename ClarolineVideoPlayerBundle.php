@@ -3,6 +3,7 @@
 namespace Claroline\VideoPlayerBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 class ClarolineVideoPlayerBundle extends PluginBundle
 {
