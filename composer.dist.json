@@ -9,8 +9,13 @@
         "sensio/distribution-bundle": "~2.3.4",
         "claroline/bundle-recorder": "~1.0",
         "claroline/core-bundle": "dev-master",
+        "claroline/activity-tool-bundle": "dev-master",
         "claroline/announcement-bundle": "dev-master",
-        "claroline/forum-bundle": "dev-master"
+        "claroline/forum-bundle": "dev-master",
+        "claroline/image-player-bundle": "dev-master",
+        "claroline/pdf-player-bundle": "dev-master",
+        "claroline/rss-reader-bundle": "dev-master",
+        "claroline/video-player-bundle": "dev-master"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
