@@ -185,17 +185,9 @@ class ActivityListener implements ContainerAwareInterface
     public function onOpen(OpenResourceEvent $event)
     {
         $activity = $event->getResource();
-        $resourceActivities = $this->container
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-            ->findResourceActivities($activity);
-
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Activity/player:activity.html.twig',
-            array(
-                'activity' => $activity,
-                'resource' => $resourceActivities[0]
-            )
+            array('activity' => $activity)
         );
 
         $response = new Response($content);
