@@ -31,7 +31,7 @@ parameters:
 
 # others
 
-    locale: en
+    locale: fr
     secret: ThisTokenIsNotSoSecretChangeIt
 
 # logs

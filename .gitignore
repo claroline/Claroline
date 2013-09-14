@@ -12,9 +12,7 @@ app/build/pdepend
 app/build/tools/phpunit.xml
 app/cache/*
 app/config/bundles.ini
-app/config/local/install.yml
-app/config/local/parameters.yml
-app/config/local/plugin/*
+app/config/parameters.yml
 app/logs/*
 bin/*
 catalog.xml
