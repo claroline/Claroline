@@ -3,6 +3,7 @@
 namespace Claroline\InstallationBundle\Additional;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
+use Claroline\InstallationBundle\Bundle\BundleVersion;
 
 abstract class AdditionalInstaller extends ContainerAware implements AdditionalInstallerInterface
 {
@@ -27,11 +28,11 @@ abstract class AdditionalInstaller extends ContainerAware implements AdditionalI
     {
     }
 
-    public function preUpdate($version)
+    public function preUpdate(BundleVersion $current, BundleVersion $target)
     {
     }
 
-    public function postUpdate($version)
+    public function postUpdate(BundleVersion $current, BundleVersion $target)
     {
     }
 

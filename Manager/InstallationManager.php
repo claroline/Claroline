@@ -9,6 +9,7 @@ use Claroline\MigrationBundle\Migrator\Migrator;
 use Claroline\BundleRecorder\Recorder;
 use Claroline\KernelBundle\Kernel\SwitchKernel;
 use Claroline\InstallationBundle\Fixtures\FixtureLoader;
+use Claroline\InstallationBundle\Bundle\BundleVersion;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
 use Claroline\InstallationBundle\Additional\AdditionalInstallerInterface;
 
@@ -74,6 +75,11 @@ class InstallationManager
                 $this->log('Loading optional fixtures...');
                 $this->fixtureLoader->load($bundle, $fixturesDir);
             }
+
+            if ($additionalInstaller) {
+                $this->log('Launching post-installation actions...');
+                $additionalInstaller->postInstall();
+            }
         } catch (\Exception $ex) {
             $this->log('<error>An error occured !</error>');
             $this->recorder->removeBundles(array(get_class($bundle)));
@@ -85,11 +91,63 @@ class InstallationManager
         $this->kernel->switchBack();
     }
 
+    public function update(InstallableInterface $bundle, BundleVersion $current, BundleVersion $target)
+    {
+        $bundleStatus = $this->migrationManager->getBundleStatus($bundle);
+        $currentDbVersion = $bundleStatus[Migrator::STATUS_CURRENT];
+        $currentPackageDbVersion = $current->getDbVersion();
+        $targetDbVersion = $target->getDbVersion();
+
+        if ($bundle->hasMigrations() && $targetDbVersion !== false) {
+            if ($currentPackageDbVersion !== $currentDbVersion) {
+                throw new \Exception('Current package database version and real version diverge');
+            }
+
+            if (!in_array($targetDbVersion, $bundleStatus[Migrator::STATUS_AVAILABLE])) {
+                throw new \Exception('Target package database version is not available');
+            }
+        }
+
+        $additionalInstaller = $this->getAdditionalInstaller($bundle);
+
+        if ($additionalInstaller) {
+            $this->log('Launching pre-update actions...');
+            $additionalInstaller->preUpdate($current, $target);
+        }
+
+        if ($bundle->hasMigrations() && $targetDbVersion !== false) {
+            if ($currentDbVersion < $targetDbVersion) {
+                $this->log('Upgrading database schema...');
+                $this->migrationManager->upgradeBundle($bundle, $targetDbVersion);
+            } elseif ($currentDbVersion > $targetDbVersion) {
+                $this->log('Downgrading database schema...');
+                $this->migrationManager->downgradeBundle($bundle, $targetDbVersion);
+            }
+        }
+
+        if ($additionalInstaller) {
+            $this->log('Launching post-update actions...');
+            $additionalInstaller->postUpdate($current, $target);
+        }
+    }
+
     public function uninstall(InstallableInterface $bundle)
     {
+        $additionalInstaller = $this->getAdditionalInstaller($bundle);
+
+        if ($additionalInstaller) {
+            $this->log('Launching pre-uninstallation actions...');
+            $additionalInstaller->preUninstall();
+        }
+
         if ($bundle->hasMigrations()) {
             $this->log('Executing migrations...');
             $this->migrationManager->downgradeBundle($bundle, Migrator::VERSION_FARTHEST);
+        }
+
+        if ($additionalInstaller) {
+            $this->log('Launching post-uninstallation actions...');
+            $additionalInstaller->postUninstall();
         }
 
         $this->recorder->removeBundles(array(get_class($bundle)));
