@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\InstallationBundle\Manager\InstallationManager;
+use Claroline\InstallationBundle\Bundle\BundleVersion;
 use Claroline\CoreBundle\Library\PluginBundle;
 
 /**
@@ -93,14 +94,15 @@ class Installer
     /**
      * Upgrades/downgrades a plugin to a specific version.
      *
-     * @param string $pluginFqcn
-     * @param string $version
+     * @param PluginBundle  $plugin
+     * @param BundleVersion $current
+     * @param BundleVersion $target
      */
-    public function migrate(PluginBundle $plugin, $version)
+    public function update(PluginBundle $plugin, BundleVersion $current, BundleVersion $target)
     {
-//        $this->checkRegistrationStatus($pluginFqcn, true);
-//        $plugin = $this->loader->load($pluginFqcn);
-//        $this->migrator->migrate($plugin, $version);
+        $this->checkRegistrationStatus($plugin, true);
+        $this->baseInstaller->update($plugin, $current, $target);
+        // here come the plugin update tasks (e.g. config update)
     }
 
     private function checkInstallationStatus(PluginBundle $plugin, $shouldBeInstalled = true)
