@@ -2,7 +2,7 @@
 
 namespace Claroline\ActivityToolBundle\Listener;
 
-use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
