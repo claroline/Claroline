@@ -25,7 +25,7 @@ class RequirementsChecker
     {
         $ds = DIRECTORY_SEPARATOR;
         $valid = $warning = $errors = array();
-        $parametersPath = "{$this->kernelRootDir}{$ds}config{$ds}local{$ds}parameters.yml";
+        $parametersPath = "{$this->kernelRootDir}{$ds}config{$ds}parameters.yml";
 
         $extensions = array(
             array('name' => 'gd', 'required' => false),

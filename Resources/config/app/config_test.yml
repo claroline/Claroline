@@ -9,7 +9,3 @@ parameters:
     claroline.param.files_directory: "%kernel.root_dir%/../test/files"
     claroline.param.thumbnails_directory: "%kernel.root_dir%/../test/thumbnails"
     claroline.param.templates_directory: "%kernel.root_dir%/../test/templates/"
-    claroline.param.platform_config_handler_class : Claroline\CoreBundle\Library\Testing\PlatformTestConfigurationHandler
-    claroline.param.platform_options_files:
-        prod: %kernel.root_dir%/config/local/platform_options.yml
-        test: %kernel.root_dir%/config/local/platform_test_options.yml

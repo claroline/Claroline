@@ -14,34 +14,20 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class Recorder
 {
-    private $configWriter;
     private $dbWriter;
 
     /**
      * Constructor.
      *
-     * @param ConfigurationFileWriter $configWriter
-     * @param DatabaseWriter          $dbWriter
+     * @param DatabaseWriter dbWriter
      *
      * @DI\InjectParams({
-     *     "configWriter" = @DI\Inject("claroline.plugin.recorder_configuration_file_writer"),
      *     "dbWriter" = @DI\Inject("claroline.plugin.recorder_database_writer")
      * })
      */
-    public function __construct(ConfigurationFileWriter $configWriter, DatabaseWriter $dbWriter)
+    public function __construct(DatabaseWriter $dbWriter)
     {
-        $this->configWriter = $configWriter;
         $this->dbWriter = $dbWriter;
-    }
-
-    /**
-     * Sets the configuration file writer.
-     *
-     * @param ConfigurationFileWriter $writer
-     */
-    public function setConfigurationFileWriter(ConfigurationFileWriter $writer)
-    {
-        $this->configWriter = $writer;
     }
 
     /**
@@ -62,13 +48,7 @@ class Recorder
     public function register(PluginBundle $plugin, array $pluginConfiguration)
     {
         $pluginFqcn = get_class($plugin);
-
         $this->dbWriter->insert($plugin, $pluginConfiguration);
-//        $this->configWriter->registerNamespace($plugin->getVendorName());
-//        $this->configWriter->addInstantiableBundle($pluginFqcn);
-//        $this->configWriter->importRoutingResources(
-//            $pluginFqcn, $plugin->getRoutingResourcesPaths(), $plugin->getRoutingPrefix()
-//        );
     }
 
     /**
@@ -79,11 +59,7 @@ class Recorder
     public function unregister(PluginBundle $plugin)
     {
         $pluginFqcn = get_class($plugin);
-
         $this->dbWriter->delete($pluginFqcn);
-//        $this->configWriter->removeNamespace($plugin->getVendorName());
-//        $this->configWriter->removeInstantiableBundle($pluginFqcn);
-//        $this->configWriter->removeRoutingResources($pluginFqcn);
     }
 
     /**
@@ -96,14 +72,5 @@ class Recorder
     public function isRegistered(PluginBundle $plugin)
     {
         return $this->dbWriter->isSaved($plugin);
-
-//        $isSavedInDb = $this->dbWriter->isSaved($pluginFqcn);
-//        $isSavedInConfig = $this->configWriter->isRecorded($pluginFqcn);
-//
-//        if ($isSavedInDb && $isSavedInConfig) {
-//            return true;
-//        }
-//
-//        return false;
     }
 }
