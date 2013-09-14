@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=5.3.3",
         "claroline/core-bundle": "dev-master",
         "claroline/plugin-installer": "dev-master"
     },
