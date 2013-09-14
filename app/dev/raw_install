@@ -10,19 +10,8 @@ require_once __DIR__ . '/utils.php';
 $start = new DateTime();
 $rootDirectory = realpath(__DIR__ . '/../..');
 
-//if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-//    echo "This script cannot run composer interactively on Windows.\n"
-//    . "If it is a fresh installation or if the update requires modifying the\n"
-//    . "parameters.yml file, you may have to launch 'composer install' first.\n";
-//}
-//
-//execComposer();
+echo "Cleaning log files\n";
 
-echo "Refreshing configuration and log files\n";
-
-refreshFile("{$rootDirectory}/app/config/local/plugin/bundles");
-refreshFile("{$rootDirectory}/app/config/local/plugin/namespaces");
-refreshFile("{$rootDirectory}/app/config/local/plugin/routing.yml");
 refreshFile("{$rootDirectory}/app/logs/dev.log");
 refreshFile("{$rootDirectory}/app/logs/test.log");
 
@@ -41,13 +30,15 @@ foreach ($directories as $directory) {
     emptyDir($directory);
 }
 
+echo "Checking requirements\n";
+
 system("php {$rootDirectory}/app/console claroline:requirements", $returnCode);
 
 if ($returnCode === 0) {
-    system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=dev");
-    system("php {$rootDirectory}/app/console doctrine:database:create --env=dev");
-    system("php {$rootDirectory}/app/console cache:clear --no-warmup --env=dev");
-    system("php {$rootDirectory}/app/console claroline:install --with-optional-fixtures --env=dev");
+    system("php {$rootDirectory}/app/console doctrine:database:drop --force");
+    system("php {$rootDirectory}/app/console doctrine:database:create");
+    system("php {$rootDirectory}/app/console cache:clear --no-warmup");
+    system("php {$rootDirectory}/app/console claroline:install --with-plugins");
 
     system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=test");
     system("php {$rootDirectory}/app/console doctrine:database:create --env=test");
@@ -55,7 +46,7 @@ if ($returnCode === 0) {
     system("php {$rootDirectory}/app/console claroline:install --env=test");
 
     system("php {$rootDirectory}/app/console cache:clear");
-    //system("php {$rootDirectory}/app/console claroline:fixture:demo");
+    system("php {$rootDirectory}/app/console claroline:fixture:demo");
 }
 
 $end = new DateTime();
