@@ -153,14 +153,14 @@ class TemplateBuilder
         return $this->config;
     }
 
-    public static function buildDefault($defaultPath, Translator $translator)
+    public static function buildDefault($defaultPath)
     {
         $archive = self::createArchive($defaultPath);
-        $archive->addFromString('config.yml', Yaml::dump(TemplateBuilder::getDefaultConfig($translator), 10));
+        $archive->addFromString('config.yml', Yaml::dump(TemplateBuilder::getDefaultConfig(), 10));
         $archive->close();
     }
 
-    public static function getDefaultConfig(Translator $translator)
+    public static function getDefaultConfig()
     {
         return array(
             'root_perms' => array(
@@ -224,27 +224,27 @@ class TemplateBuilder
                         1 => 'ROLE_WS_COLLABORATOR',
                         2 => 'ROLE_WS_MANAGER',
                     ),
-                    'name' => $translator->trans('home', array(), 'platform')
+                    'name' => 'home'
                 ),
                 'resource_manager' => array(
                     'perms' => array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'),
-                    'name' => $translator->trans('resources', array(), 'platform')
+                    'name' => 'resource_manager'
                 ),
                 'agenda' => array(
                     'perms' => array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER'),
-                    'name' => $translator->trans('agenda', array(), 'platform')
+                    'name' => 'agenda'
                 ),
                 'parameters' => array(
                     'perms' => array('ROLE_WS_MANAGER'),
-                    'name' => $translator->trans('settings', array(), 'platform')
+                    'name' => 'parameters'
                 ),
-                'roles' => array(
+                'users' => array(
                     'perms' => array('ROLE_WS_MANAGER'),
-                    'name' => $translator->trans('users', array(), 'platform')
+                    'name' => 'users'
                 ),
                 'logs' => array(
                     'perms' => array('ROLE_WS_MANAGER'),
-                    'name' => $translator->trans('admin_logs', array(), 'platform')
+                    'name' => 'logs'
                 ),
             ),
             'name' => 'default'

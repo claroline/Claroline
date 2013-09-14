@@ -308,7 +308,8 @@ platform_plugins: 'Platform plugins'
 platform_role: 'Platform role'
 platform_widgets: 'Platform widgets'
 please_wait: 'Please wait...'
-private: Privée
+position: Position
+private: Private
 profile_form_administrativeCode: 'Administrative code'
 profile_form_firstName: 'First name'
 profile_form_lastName: 'Last name'

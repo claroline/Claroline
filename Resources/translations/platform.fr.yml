@@ -290,6 +290,7 @@ platform_plugins: 'Plugins de la plateforme'
 platform_role: 'Rôle plateforme'
 platform_widgets: 'Widgets de la plateforme'
 please_wait: 'Veuillez patienter...'
+position: Position
 private: Privée
 profile_form_administrativeCode: 'Code administratif'
 profile_form_firstName: Prénom
@@ -303,7 +304,7 @@ profile_form_plainPassword_second: Vérification
 profile_form_platformRoles: Rôles
 profile_form_username: 'Nom d''utilisateur'
 properties: Propriétés
-public: Publique
+public: Public
 public_workspaces: 'Espaces d''activités publiques'
 public_workspace_empty: 'Il n''y a aucune espace d''activité publique.'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'

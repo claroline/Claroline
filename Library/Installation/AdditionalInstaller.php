@@ -45,7 +45,6 @@ class AdditionalInstaller extends BaseInstaller
     {
         $this->log('Creating default workspace template...');
         $defaultTemplatePath = $this->container->getParameter('kernel.root_dir') . '/../templates/default.zip';
-        $translator = $this->container->get('translator'); // useless
-        TemplateBuilder::buildDefault($defaultTemplatePath, $translator);
+        TemplateBuilder::buildDefault($defaultTemplatePath);
     }
 }

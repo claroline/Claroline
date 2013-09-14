@@ -1,7 +1,6 @@
 agenda: Agenda
-group_management: Groupes
 home: Accueil
+logs: Suivi
 parameters: Paramètres
 resource_manager: Ressources
-user_management: Utilisateurs
-logs: Suivi
+users: Utilisateurs

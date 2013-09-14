@@ -47,7 +47,7 @@
                                         'toolId': toolPermission['tool'].getId()}) }}">
                                 <i class="icon-pencil"></i>
                             </a>
-                            {{ toolPermission['displayedName'] }}
+                            {{ toolPermission['displayedName']|trans({}, 'tools') }}
                             <small><em>({{ toolPermission['tool'].getName()|trans({}, 'tools') }})</em></small>
                         </td>
                         {% for key, isVisible in toolPermission['visibility'] %}
