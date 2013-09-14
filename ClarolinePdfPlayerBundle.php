@@ -6,4 +6,8 @@ use Claroline\CoreBundle\Library\PluginBundle;
 
 class ClarolinePdfPlayerBundle extends PluginBundle
 {
+    public function hasMigrations()
+    {
+        return false;
+    }
 }
