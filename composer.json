@@ -13,10 +13,9 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0",
-        "symfony/framework-bundle":  "2.*",
-        "symfony/symfony":           "2.*"
-
+        "php": ">=5.3.3",
+        "claroline/core-bundle": "dev-master",
+        "claroline/plugin-installer": "dev-master"
     },
     "autoload": {
         "psr-0": { "Claroline\\ActivityToolBundle": "" }

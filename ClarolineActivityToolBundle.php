@@ -9,4 +9,8 @@ use Claroline\CoreBundle\Library\PluginBundle;
  */
 class ClarolineActivityToolBundle extends PluginBundle
 {
+    public function hasMigrations()
+    {
+        return false;
+    }
 }
