@@ -46,6 +46,7 @@ analytics_home: 'Vue de l''ensemble'
 analytics_connections: 'Visites utilisateurs'
 analytics_resources: 'Contenu plateforme'
 analytics_top: 'Top des activités'
+an_error_occured_message: Une erreur s'est produite. Veuillez contacter l'administrateur.
 apply: Appliquer
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espaces d''activités disponibles'
@@ -259,6 +260,7 @@ no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
 no_search_results: 'Votre recherche n''a retourné aucun résultat.'
 none: Aucun
 note: Note
+not_allowed_message: Vous n'êtes pas autorisé(e) à effectuer cette action.
 object: Objet
 ok: Ok
 or: Ou

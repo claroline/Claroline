@@ -1,14 +1,17 @@
+/* Global Translator */
+
 (function () {
     'use strict';
 
     var env = $('#sf-environement').attr('data-env');
     var stackedRequests = 0;
-    var ajaxServerErrorHandler = function (html) {
-        if (env === 'dev') {
+    var ajaxServerErrorHandler = function (statusCode, responseText) {
+        if (env !== 'prod') {
             var w = window.open();
-            $(w.document.body).html(html);
+            $(w.document.body).html(responseText);
         } else {
-            alert(html);
+            var msg = statusCode === 403 ? 'not_allowed' : 'an_error_occured';
+            alert(Translator.get('platform:' + msg + '_message'));
         }
     };
     var ajaxAuthenticationErrorHandler = function (form) {
@@ -58,7 +61,7 @@
         if (jqXHR.status === 403 && jqXHR.getResponseHeader('XXX-Claroline') !== 'insufficient-permissions') {
             ajaxAuthenticationErrorHandler(jqXHR.responseText);
         } else if (jqXHR.status === 500 || jqXHR.status === 422 || jqXHR.status === 403) {
-            ajaxServerErrorHandler(jqXHR.responseText);
+            ajaxServerErrorHandler(jqXHR.status, jqXHR.responseText);
         }
     });
 

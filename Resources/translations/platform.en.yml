@@ -46,6 +46,7 @@ analytics_home: Home
 analytics_connections: Connections
 analytics_resources: Resources
 analytics_top: Top
+an_error_occured_message: An error occured. Please contact the administrator.
 apply: Apply
 available_widgets: 'Available widgets'
 available_workspaces: 'Available workspaces'
@@ -276,7 +277,7 @@ no_email: 'No email found, check the spelling'
 no_search_results: 'Your search hasn''t returned any result.'
 none: None
 note: Note
-none: None
+not_allowed_message: You are not allowed to perform this action.
 object: Object
 ok: Ok
 or: Or
