@@ -25,6 +25,7 @@ class LogWorkspaceWidgetConfig
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $workspace;
 
