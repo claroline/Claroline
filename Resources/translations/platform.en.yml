@@ -331,9 +331,12 @@ register_to_a_workspace: 'Register to a workspace'
 registered_groups: 'Registered groups'
 registered_users: 'Registered users'
 registration_to_workspaces: 'Registration to workspaces'
-remove_group_s_confirm_message: 'group(s) removed'
-remove_user_s_confirm_message: 'user(s) removed'
-remove_messages_confirm_message: 'message(s) removed'
+remove_group_confirm_message: Are you sure you want to delete this group ?
+remove_group_s_confirm_message: Are you sure you want to delete these %count% groups ?
+remove_message_confirm_message: Are you sure you want to delete this message ?
+remove_message_s_confirm_message: Are you sure you want to delete these %count% messages ?
+remove_user_confirm_message: Are you sure you want to delete this user ?
+remove_user_s_confirm_message: Are you sure you want to delete these %count% users ?
 rename: Rename
 rename_tool: 'Rename tool'
 reset: Reset

@@ -313,9 +313,12 @@ register_to_a_workspace: 'S''inscrire à un espace d''activités'
 registered_groups: 'Groupes enregistrés'
 registered_users: 'Utilisateurs enregistrés'
 registration_to_workspaces: 'Inscription à des espaces d''activités'
-remove_group_s_confirm_message: 'groupe(s) supprimé(s)'
-remove_user_s_confirm_message: 'utilisateur(s) supprimé(s)'
-remove_messages_confirm_message: 'message(s) supprimé(s)'
+remove_group_confirm_message: Êtes-vous sûr de vouloir supprimer ce groupe ?
+remove_group_s_confirm_message: Êtes-vous sûr de vouloir supprimer ces %count% groupes?
+remove_message_confirm_message: Êtes-vous sûr de vouloir supprimer ce message ?
+remove_message_s_confirm_message: Êtes-vous sûr de vouloir supprimer ces %count% messages?
+remove_user_confirm_message: Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+remove_user_s_confirm_message: Êtes-vous sûr de vouloir supprimer ces %count% utilisateurs?
 rename: Renommer
 rename_tool: 'Renommage d''un outil'
 reset: Réinitialiser
