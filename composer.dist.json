@@ -8,7 +8,7 @@
         "php": ">=5.3.3",
         "sensio/distribution-bundle": "~2.3.4",
         "claroline/bundle-recorder": "~1.0",
-        "claroline/core-bundle": "dev-master",
+        "claroline/core-bundle": "~1.0",
         "claroline/activity-tool-bundle": "dev-master",
         "claroline/announcement-bundle": "dev-master",
         "claroline/forum-bundle": "dev-master",
