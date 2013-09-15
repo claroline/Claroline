@@ -24,6 +24,7 @@ class LogDesktopWidgetConfig
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $user;
 
