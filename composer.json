@@ -14,8 +14,8 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "claroline/core-bundle": "dev-master",
-        "claroline/plugin-installer": "dev-master"
+        "claroline/core-bundle": "~1.0",
+        "claroline/plugin-installer": "~1.0"
     },
     "autoload": {
         "psr-0": { "Claroline\\VideoPlayerBundle": "" }
