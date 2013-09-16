@@ -47,6 +47,7 @@ alert ending: Etes-vous sur de vouloir terminer ? (Vous ne pourrez plus modifier
 allQuestion: Toutes
 already: Cette question est déjà partagée avec cet utilisateur
 alreadyExist: Ce nom existe déjà.
+alter category: Modifier cette catégorie
 answer_coched: Aucune réponse attendue nest cochée
 answer zone: Zone de réponse
 at the end of assessment: A la fin du test
@@ -97,6 +98,7 @@ docManage: Gestion de mes documents
 docName: Nom du document
 document: Document
 doNothing: Ne rien faire et revenir à la liste de mes documents
+drop category: Supprimer cette catégorie
 duration: Durée
 
 # E
@@ -154,7 +156,6 @@ isInterupt: Interrompu
 image: Image
 import: Importer
 import questions: Importer des questions
-inside: Vous devez mettre la zone de reponse complète DANS l'image
 interactionGraphic creation: Création d'une question Graphique
 interactionGraphic Edition: Edition d'une question Graphique
 interactionOpen creation: Création d'une question ouverte
@@ -180,7 +181,7 @@ long: Longue
 manageImg: Gérer mes documents
 mark: Score
 mark this question: Noter cette question
-markTooBigest: La note doit être inférieure ou égale à 
+markTooBigest: La note doit être inférieure ou égale à
 maximum number of tries: Nombre d'essai maximum
 meaningMeasureDifficulty: Si l'indice est élevé, c'est que la question est facile ; Inversement, si un indice est faible, la question est difficile
 model: Modèle
@@ -193,6 +194,7 @@ my shared questions: Mes questions partagées
 nameUser2Shared: Nom de l'utilisateur avec qui partager la question
 nbr_choices: Le nombre de choix doit être supérieur à deux
 never: Jamais
+newCategoryName: Nouveau nom de la catégorie
 newName: Nouveau nom du document
 newDoc: Nouveau document
 no: non
@@ -233,7 +235,7 @@ partially: Partiellement correcte
 penalty: Pénalité
 percentage: Pourcentage
 picture name: Nom de l'image
-placeZone: Pour déplacer une zone de réponse, selecionnez-la en cliquant dessus et disposez-la en recliquant à l'endroit voulu.
+placeZone: Pour déplacer une zone de réponse, selectionnez-la et faites la glisser jusqu'à l'endroit voulu.
 planning_Of_Groups: Planning des groupes
 point: Point
 points: Points
@@ -275,8 +277,8 @@ seeDoc: Voir les questions liées à ce document
 seeSharedWith: Question partagée avec des utilisateurs
 select: Sélectionner
 selected Image: Image sélectionnée
-selection: => Cliquez sur un pointeurs pour le sélectionner et cliquez ensuite sur l'image pour définir votre zone de réponse.
-selectZone: Pour définir une zone de réponse, selectionnez la en cliquant dessus puis déposez la en re-cliquant à l'endroit voulu sur l'image. Vous pouvez aussi maintenir la touche CTRL enfoncée et cliquez sur l'image à l'endroit où vous voulez la placer.
+selection: => Pour répondre, utiliser la technique du glisser/déposer.
+selectZone: Pour définir une zone de réponse, selectionnez-la et faites la glisser jusqu'à l'endroit voulu. Vous pouvez aussi maintenir la touche CTRL enfoncée et cliquez sur l'image à l'endroit où vous voulez la placer.
 self: Vous ne pouvez pas partager une question avec vous-même
 shape: Forme
 share: Partager

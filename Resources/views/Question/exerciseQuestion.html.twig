@@ -38,6 +38,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
 {% endblock %}
 
 {% block title %} {{ 'list of question' | trans }} {% endblock %}
@@ -48,7 +49,7 @@
         <h1>{{ 'my questions' | trans }}</h1>
     </div><br/>
 
-    <a href="{{ path('ujm_exercise_open', { 'exerciseId':  exerciseID }) }}" style="padding-left: 50px;">
+    <a href="{{ path('ujm_exercise_open', { 'exerciseId':  exerciseID }) }}" style="margin-left: 50px;">
         <i class="icon-arrow-left"></i> {{ 'back' | trans }}
     </a>
     &nbsp;&nbsp;|&nbsp;&nbsp;
@@ -60,7 +61,7 @@
     <hr/>
 
     <button type="button" id="SaveOrder" style="display: none; margin-left: 50px;" class="btn btn-primary"
-        onclick="SaveNewOrder('{{ path('ujm_exercise_question_order') }}', {{exerciseID}}, {{interactions|length}});">
+        onclick="SaveNewOrder('{{ path('ujm_exercise_question_order') }}', {{exerciseID}});">
         {{ 'saveNewOrder' | trans }}
     </button><br/>
 
@@ -82,7 +83,6 @@
                             {{ 'question' | trans }}
                         </th>
                         <th class="classic">{{ 'actions' | trans }}</th>
-                        <th class="classic">{{ 'order' | trans }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -119,11 +119,6 @@
                                 </li>
                             </ul>
                         </td>
-                        <td class="classic">&nbsp;
-                            <a href="#" onclick="changeOrderQuestion('up', '{{interaction.question.title|replace({'\'': '_'})}}');"><i class="icon-arrow-up" id="up{{i}}"></i></a>
-                            &nbsp;
-                            <a href="#" onclick="changeOrderQuestion('down', '{{interaction.question.title|replace({'\'': '_'})}}');"><i class="icon-arrow-down" id="down{{i}}"></i></a>
-                        </td>
                         <td style="display: none;" id="qid{{i}}">
                             {{ interaction.question.id }}
                         </td>
@@ -148,6 +143,7 @@
 {% block javascripts %}
     {{ parent() }}
 
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ExerciceQuestion.js') }}"></script>
 
 {% endblock %}

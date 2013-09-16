@@ -1,3 +1,38 @@
+{#
+ # ExoOnLine
+ # Copyright or © or Copr. Université Jean Monnet (France), 2012
+ # dsi.dev@univ-st-etienne.fr
+ #
+ # This software is a computer program whose purpose is to [describe
+ # functionalities and technical features of your software].
+ #
+ # This software is governed by the CeCILL license under French law and
+ # abiding by the rules of distribution of free software.  You can  use,
+ # modify and/ or redistribute the software under the terms of the CeCILL
+ # license as circulated by CEA, CNRS and INRIA at the following URL
+ # "http://www.cecill.info".
+ #
+ # As a counterpart to the access to the source code and  rights to copy,
+ # modify and redistribute granted by the license, users are provided only
+ # with a limited warranty  and the software's author,  the holder of the
+ # economic rights,  and the successive licensors  have only  limited
+ # liability.
+ #
+ # In this respect, the user's attention is drawn to the risks associated
+ # with loading,  using,  modifying and/or developing or reproducing the
+ # software by the user in light of its specific status of free software,
+ # that may mean  that it is complicated to manipulate,  and  that  also
+ # therefore means  that it is reserved for developers  and  experienced
+ # professionals having in-depth computer knowledge. Users are therefore
+ # encouraged to load and test the software's suitability as regards their
+ # requirements in conditions enabling the security of their systems and/or
+ # data to be ensured and,  more generally, to use and operate it in the
+ # same conditions as regards security.
+ #
+ # The fact that you are presently reading this means that you have had
+ # knowledge of the CeCILL license and that you accept its terms.
+#}
+
 <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 
 <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
@@ -10,19 +45,27 @@
     </div>
 </fieldset><br/>
 
-<fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 10px;">
-    <legend style="border: transparent hidden 0; width: 150px;margin: 0; color: lightsteelblue;">
+<fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 10px; padding-top: 10px;">
+    <legend style="border: transparent hidden 0; width: 130px;margin: 0; color: lightsteelblue;">
         &nbsp;&nbsp;{{ 'category' | trans }} :
     </legend>
     {{ 'choose' | trans }} :&nbsp;&nbsp;{{ form_widget(form.interaction.question.category, { 'attr': {'style': 'width: 200px'} }) }}
 
     <hr style=" height: 1px; color: powderblue; background-color: powderblue;"/>
 
-    <a href="#" id="lien_category">{{ 'create a new category' | trans }}</a>
+    <a href="#" id="lien_category_alter" onclick="show();"><i class="icon-pencil"></i> &nbsp;{{ 'alter category' | trans }}</a>
+
+    <hr style=" height: 1px; color: powderblue; background-color: powderblue;"/>
+
+    <a href="#" id="lien_category_drop" onclick="dropCategory();"><i class="icon-trash"></i> &nbsp;{{ 'drop category' | trans }}</a>
+
+    <hr style=" height: 1px; color: teal; background-color: teal"/>
+
+    <a href="#" id="lien_category"><i class="icon-plus"></i> &nbsp;{{ 'create a new category' | trans }}</a>
 </fieldset><br/>
 
 <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
-    <legend style="border: transparent hidden 0; width: 150px;margin: 0; color: lightsteelblue;">
+    <legend style="border: transparent hidden 0; width: 140px;margin: 0; color: lightsteelblue;">
         &nbsp;&nbsp;{{ 'description' | trans }} :
     </legend>
     <a onclick="DisplayOptional('description');" id="descriptionOptionalShow"
@@ -81,7 +124,6 @@
     {{ form_widget(form.interaction.hints) }}
 </fieldset><br/>
 
-<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/allQuestionsType.js') }}"></script>
 
 <div id="popupEA">
     <div id="popupContainer" class="hiddenCat">
@@ -101,3 +143,20 @@
     </div>
     <div id="overlayEffect_cat"></div>
 </div>
+
+<div id="alterCategory" style="position: fixed; left: 40%; top: 20%; background-color: #ccf; border: #000 thin solid;
+    width: 400px; height: 200px; display: none; opacity: 0.95; text-align: center;">
+
+    <a href="#" style="color: red; float: right;" onclick="hide();"><i class="icon-remove"></i> {{ 'close' | trans }}&nbsp;</a><br/>
+
+    <h3 style="text-align: center;">{{ 'alter category' | trans }}</h3>
+
+        <p>{{ 'newCategoryName' | trans }} ?</p>
+        <input type="text" id='newlabel' name='newlabel' required="true"/><br/><br/>
+        <button id="updateSubmit" type="button" class="btn btn-primary">{{ 'change' | trans }} !</button>
+
+        <input type="hidden" id="pathAlter" value="{{ path('ujm_category_alter') }}"/>
+        <input type="hidden" id="pathDrop" value="{{ path('ujm_category_drop') }}"/>
+</div>
+
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/allQuestionsType.js') }}"></script>

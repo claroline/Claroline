@@ -14,141 +14,141 @@ function SortQuestions(type, array) {
     switchType(type, array);
 }
 
+// Select the matching arrows of the right array (e.g. if two arrays are on one page)
 function selectArrows(array) {
-    // Select the matching arrows of the right array (e.g. if two arrays in one page
     if (array == 'QuestionArray' || array == 'QuestionArrayMy') {
-        upC = document.getElementById('upC');
-        upTi = document.getElementById('upTi');
-        upTy = document.getElementById('upTy');
-        upI =  document.getElementById('upI');
-        downC = document.getElementById('downC');
-        downTi = document.getElementById('downTi');
-        downTy = document.getElementById('downTy');
-        downI = document.getElementById('downI');
+        upC = $('#upC');
+        upTi = $('#upTi');
+        upTy = $('#upTy');
+        upI =  $('#upI');
+        downC = $('#downC');
+        downTi = $('#downTi');
+        downTy = $('#downTy');
+        downI = $('#downI');
     } else if (array == 'QuestionArrayShared') {
-        upC = document.getElementById('upCs');
-        upTi = document.getElementById('upTis');
-        upTy = document.getElementById('upTys');
-        upI =  document.getElementById('upIs');
-        downC = document.getElementById('downCs');
-        downTi = document.getElementById('downTis');
-        downTy = document.getElementById('downTys');
-        downI = document.getElementById('downIs');
+        upC = $('#upCs');
+        upTi = $('#upTis');
+        upTy = $('#upTys');
+        upI =  $('#upIs');
+        downC = $('#downCs');
+        downTi = $('#downTis');
+        downTy = $('#downTys');
+        downI = $('#downIs');
     }
 
     if (array == 'table') {
-        upL = document.getElementById('upL');
-        downL = document.getElementById('downL');
-        upT = document.getElementById('upT');
-        downT = document.getElementById('downT');
+        upL = $('#upL');
+        downL = $('#downL');
+        upT = $('#upT');
+        downT = $('#downT');
     }
 
     if (array == 'UserArray') {
-        upU = document.getElementById('upU');
-        upN = document.getElementById('upN');
-        upS = document.getElementById('upS');
-        upE = document.getElementById('upE');
-        downU = document.getElementById('downU');
-        downN = document.getElementById('downN');
-        downS = document.getElementById('downS');
-        downE = document.getElementById('downE');
+        upU = $('#upU');
+        upN = $('#upN');
+        upS = $('#upS');
+        upE = $('#upE');
+        downU = $('#downU');
+        downN = $('#downN');
+        downS = $('#downS');
+        downE = $('#downE');
     }
 
     if (array == 'user-table') {
-        upSps = document.getElementById('upSps');
-        upSn = document.getElementById('upSn');
-        upSp = document.getElementById('upSp');
-        downSps = document.getElementById('downSps');
-        downSn = document.getElementById('downSn');
-        downSp = document.getElementById('downSp');
+        upSps = $('#upSps');
+        upSn = $('#upSn');
+        upSp = $('#upSp');
+        downSps = $('#downSps');
+        downSn = $('#downSn');
+        downSp = $('#downSp');
     }
 
     if (array == 'linkDocArray') {
-        upDl = document.getElementById('upDl');
-        upTl = document.getElementById('upTl');
-        upQl = document.getElementById('upQl');
-        upCl = document.getElementById('upCl');
-        upPl = document.getElementById('upPl');
-        upRl = document.getElementById('upRl');
-        downDl = document.getElementById('downDl');
-        downTl = document.getElementById('downTl');
-        downQl = document.getElementById('downQl');
-        downCl = document.getElementById('downCl');
-        downPl = document.getElementById('downPl');
-        downRl = document.getElementById('downRl');
+        upDl = $('#upDl');
+        upTl = $('#upTl');
+        upQl = $('#upQl');
+        upCl = $('#upCl');
+        upPl = $('#upPl');
+        upRl = $('#upRl');
+        downDl = $('#downDl');
+        downTl = $('#downTl');
+        downQl = $('#downQl');
+        downCl = $('#downCl');
+        downPl = $('#downPl');
+        downRl = $('#downRl');
     }
 }
 
+// Hide all arrows
 function hideArrows(array) {
-    // Hide all arrows
     if (array == 'table') {
-        upL.style.display = 'none';
-        downL.style.display = 'none';
-        upT.style.display = 'none';
-        downT.style.display = 'none';
+        upL.css({"display" : "none"});
+        downL.css({"display" : "none"});
+        upT.css({"display" : "none"});
+        downT.css({"display" : "none"});
     } else if (array == 'UserArray') {
-        upU.style.display = 'none';
-        upN.style.display = 'none';
-        upS.style.display = 'none';
-        upE.style.display = 'none';
-        downU.style.display = 'none';
-        downN.style.display = 'none';
-        downS.style.display = 'none';
-        downE.style.display = 'none';
+        upU.css({"display" : "none"});
+        upN.css({"display" : "none"});
+        upS.css({"display" : "none"});
+        upE.css({"display" : "none"});
+        downU.css({"display" : "none"});
+        downN.css({"display" : "none"});
+        downS.css({"display" : "none"});
+        downE.css({"display" : "none"});
     } else if (array == 'user-table') {
-        upSps.style.display = 'none';
-        upSn.style.display = 'none';
-        upSp.style.display = 'none';
-        downSps.style.display = 'none';
-        downSn.style.display = 'none';
-        downSp.style.display = 'none';
+        upSps.css({"display" : "none"});
+        upSn.css({"display" : "none"});
+        upSp.css({"display" : "none"});
+        downSps.css({"display" : "none"});
+        downSn.css({"display" : "none"});
+        downSp.css({"display" : "none"});
     } else if (array == 'linkDocArray') {
-        upDl.style.display = 'none';
-        upTl.style.display = 'none';
-        upQl.style.display = 'none';
-        upCl.style.display = 'none';
-        upPl.style.display = 'none';
-        upRl.style.display = 'none';
-        downDl.style.display = 'none';
-        downTl.style.display = 'none';
-        downQl.style.display = 'none';
-        downCl.style.display = 'none';
-        downPl.style.display = 'none';
-        downRl.style.display = 'none';
+        upDl.css({"display" : "none"});
+        upTl.css({"display" : "none"});
+        upQl.css({"display" : "none"});
+        upCl.css({"display" : "none"});
+        upPl.css({"display" : "none"});
+        upRl.css({"display" : "none"});
+        downDl.css({"display" : "none"});
+        downTl.css({"display" : "none"});
+        downQl.css({"display" : "none"});
+        downCl.css({"display" : "none"});
+        downPl.css({"display" : "none"});
+        downRl.css({"display" : "none"});
     } else {
-        upC.style.display = 'none';
-        upTi.style.display = 'none';
-        upTy.style.display = 'none';
-        upI.style.display = 'none';
-        downC.style.display = 'none';
-        downTi.style.display = 'none';
-        downTy.style.display = 'none';
-        downI.style.display = 'none';
+        upC.css({"display" : "none"});
+        upTi.css({"display" : "none"});
+        upTy.css({"display" : "none"});
+        upI.css({"display" : "none"});
+        downC.css({"display" : "none"});
+        downTi.css({"display" : "none"});
+        downTy.css({"display" : "none"});
+        downI.css({"display" : "none"});
     }
 }
 
+// Depend on which column is clicked, sort in the good direction and display the matching arrow
 function switchType(type, array) {
-    // Depend on which column were clicked, sort in the good direction and display the matching arrow
     switch (type) {
         case 'Category':
             if (clickC == 'no') {
                 sortTable(array, 0, ASC, type);
-                downC.style.display = 'block';
+                downC.css({"display" : "block"});
                 clickC = 'yes';
             } else {
                 sortTable(array, 0, DESC, type);
-                upC.style.display = 'block';
+                upC.css({"display" : "block"});
                 clickC = 'no';
             }
             break;
         case 'Title':
             if (clickTi == 'no') {
                 sortTable(array, 1, ASC, type);
-                downTi.style.display = 'block';
+                downTi.css({"display" : "block"});
                 clickTi = 'yes';
             } else {
                 sortTable(array, 1, DESC, type);
-                upTi.style.display = 'block';
+                upTi.css({"display" : "block"});
                 clickTi = 'no';
             }
 
@@ -156,22 +156,22 @@ function switchType(type, array) {
         case 'Type':
             if (clickTy == 'no') {
                 sortTable(array, 2, ASC, type);
-                downTy.style.display = 'block';
+                downTy.css({"display" : "block"});
                 clickTy = 'yes';
             } else {
                 sortTable(array, 2, DESC, type);
-                upTy.style.display = 'block';
+                upTy.css({"display" : "block"});
                 clickTy = 'no';
             }
             break;
         case 'Invite':
             if (clickI == 'no') {
                 sortTable(array, 3, ASC, type);
-                downI.style.display = 'block';
+                downI.css({"display" : "block"});
                 clickI = 'yes';
             } else {
                 sortTable(array, 3, DESC, type);
-                upI.style.display = 'block';
+                upI.css({"display" : "block"});
                 clickI = 'no';
             }
             break;
@@ -179,22 +179,22 @@ function switchType(type, array) {
         case 'Label':
             if (clickL == 'no') {
                 sortTable(array, 2, ASC, type);
-                downL.style.display = 'block';
+                downL.css({"display" : "block"});
                 clickL = 'yes';
             } else {
                 sortTable(array, 2, DESC, type);
-                upL.style.display = 'block';
+                upL.css({"display" : "block"});
                 clickL = 'no';
             }
             break;
         case 'kind':
             if (clickT == 'no') {
                 sortTable(array, 0, ASC, type);
-                downT.style.display = 'block';
+                downT.css({"display" : "block"});
                 clickT = 'yes';
             } else {
                 sortTable(array, 0, DESC, type);
-                upT.style.display = 'block';
+                upT.css({"display" : "block"});
                 clickT = 'no';
             }
             break;
@@ -202,44 +202,44 @@ function switchType(type, array) {
         case 'user':
             if (clickU == 'no') {
                 sortTable(array, 0, ASC, type);
-                downU.style.display = 'block';
+                downU.css({"display" : "block"});
                 clickU = 'yes';
             } else {
                 sortTable(array, 0, DESC, type);
-                upU.style.display = 'block';
+                upU.css({"display" : "block"});
                 clickU = 'no';
             }
             break;
         case 'numPaper':
             if (clickN == 'no') {
                 sortTable(array, 1, NUMA, type);
-                downN.style.display = 'block';
+                downN.css({"display" : "block"});
                 clickN = 'yes';
             } else {
                 sortTable(array, 1, NUMD, type);
-                upN.style.display = 'block';
+                upN.css({"display" : "block"});
                 clickN = 'no';
             }
             break;
         case 'startDate':
             if (clickS == 'no') {
                 sortTable(array, 2, DATEA, type);
-                downS.style.display = 'block';
+                downS.css({"display" : "block"});
                 clickS = 'yes';
             } else {
                 sortTable(array, 2, DATED, type);
-                upS.style.display = 'block';
+                upS.css({"display" : "block"});
                 clickS = 'no';
             }
             break;
         case 'endDate':
             if (clickE == 'no') {
                 sortTable(array, 3, DATEA, type);
-                downE.style.display = 'block';
+                downE.css({"display" : "block"});
                 clickE = 'yes';
             } else {
                 sortTable(array, 3, DATED, type);
-                upE.style.display = 'block';
+                upE.css({"display" : "block"});
                 clickE = 'no';
             }
             break;
@@ -247,33 +247,33 @@ function switchType(type, array) {
             case 'pseudo':
             if (clickSps == 'no') {
                 sortTable(array, 0, ASC, type);
-                downSps.style.display = 'block';
+                downSps.css({"display" : "block"});
                 clickSps = 'yes';
             } else {
                 sortTable(array, 0, DESC, type);
-                upSps.style.display = 'block';
+                upSps.css({"display" : "block"});
                 clickSps = 'no';
             }
             break;
         case 'name':
             if (clickSn == 'no') {
                 sortTable(array, 1, ASC, type);
-                downSn.style.display = 'block';
+                downSn.css({"display" : "block"});
                 clickSn = 'yes';
             } else {
                 sortTable(array, 1, DESC, type);
-                upSn.style.display = 'block';
+                upSn.css({"display" : "block"});
                 clickSn = 'no';
             }
             break;
         case 'fname':
             if (clickSp == 'no') {
                 sortTable(array, 2, ASC, type);
-                downSp.style.display = 'block';
+                downSp.css({"display" : "block"});
                 clickSp = 'yes';
             } else {
                 sortTable(array, 2, DESC, type);
-                upSp.style.display = 'block';
+                upSp.css({"display" : "block"});
                 clickSp = 'no';
             }
             break;
@@ -281,66 +281,66 @@ function switchType(type, array) {
         case 'dateL':
             if (clickDl == 'no') {
                 sortTable(array, 0, DATEA, type);
-                downDl.style.display = 'block';
+                downDl.css({"display" : "block"});
                 clickDl = 'yes';
             } else {
                 sortTable(array, 0, DATED, type);
-                upDl.style.display = 'block';
+                upDl.css({"display" : "block"});
                 clickDl = 'no';
             }
             break;
         case 'titleL':
             if (clickTl == 'no') {
                 sortTable(array, 1, ASC, type);
-                downTl.style.display = 'block';
+                downTl.css({"display" : "block"});
                 clickTl = 'yes';
             } else {
                 sortTable(array, 1, DESC, type);
-                upTl.style.display = 'block';
+                upTl.css({"display" : "block"});
                 clickTl = 'no';
             }
             break;
         case 'QuestionL':
             if (clickQl == 'no') {
                 sortTable(array, 2, ASC, type);
-                downQl.style.display = 'block';
+                downQl.css({"display" : "block"});
                 clickQl = 'yes';
             } else {
                 sortTable(array, 2, DESC, type);
-                upQl.style.display = 'block';
+                upQl.css({"display" : "block"});
                 clickQl = 'no';
             }
             break;
         case 'CategoryL':
             if (clickCl == 'no') {
                 sortTable(array, 3, ASC, type);
-                downCl.style.display = 'block';
+                downCl.css({"display" : "block"});
                 clickCl = 'yes';
             } else {
                 sortTable(array, 3, DESC, type);
-                upCl.style.display = 'block';
+                upCl.css({"display" : "block"});
                 clickCl = 'no';
             }
             break;
         case 'paperL':
             if (clickPl == 'no') {
                 sortTable(array, 4, ASC, type);
-                downPl.style.display = 'block';
+                downPl.css({"display" : "block"});
                 clickPl = 'yes';
             } else {
                 sortTable(array, 4, DESC, type);
-                upPl.style.display = 'block';
+                upPl.css({"display" : "block"});
                 clickPl = 'no';
             }
             break;
         case 'responseL':
             if (clickRl == 'no') {
                 sortTable(array, 5, ASC, type);
-                downRl.style.display = 'block';
+                downRl.css({"display" : "block"});
                 clickRl = 'yes';
             } else {
                 sortTable(array, 5, DESC, type);
-                upRl.style.display = 'block';
+                upRl.css({"display" : "block"});
                 clickRl = 'no';
             }
             break;
@@ -384,7 +384,7 @@ function NUMD(a, b) {
     return b - a;
 }
 
-function DATE(x){
+function DATE(x) {
     var datex, yx, mx, dx, hx, mix, sx;
 
     datex = x[1];
@@ -405,7 +405,7 @@ function DATE(x){
     return (dx);
 }
 
-function DATEA(a, b){
+function DATEA(a, b) {
     var datea = DATE(a);
     var dateb = DATE(b);
 
@@ -418,7 +418,7 @@ function DATEA(a, b){
     }
 }
 
-function DATED(a, b){
+function DATED(a, b) {
     var datea = DATE(a);
     var dateb = DATE(b);
 
@@ -434,80 +434,51 @@ function DATED(a, b){
 // To display the rows in the right order
 function sortTable(tid, col, ord, type) {
 
-    mybody = document.getElementById(tid).getElementsByTagName('tbody')[0]; // The array to sort
-    lines = mybody.getElementsByTagName('tr'); // The rows of the array to sort
-
     var sorter = new Array(); // Javascript array to do the sorting
-
     sorter.length = 0;
+    var contenu;
 
-    var i = -1;
-
-    // Put the rows of the html array into the rows of the javascript array
-    while (lines[++i]) {
-        // Sort by class
-        if (type == 'kind') {
-            colIcon = lines[i].getElementsByTagName('td')[col].getElementsByTagName('i')[col].className;
-            iconLabel = colIcon.substring(colIcon.indexOf('-')+1);
-
-            sorter.push([lines[i], iconLabel]);
-        // Sort numbers
-        } else if (type == 'numPaper'){
-            sorter.push([lines[i].getElementsByTagName('td')[col].textContent.toLowerCase().trim()]);
-        // Sort string
-        } else {
-            sorter.push([lines[i], lines[i].getElementsByTagName('td')[col].textContent.toLowerCase()]);
+    // Get the contain of each line in order to sort it
+    $('#' + tid + ' tr').each(function () {
+        if ($(this).find('td').eq(col).html() != null) {
+            // Sort type of document
+            if (type == 'kind') {
+                contenu =  $(this).find('td').eq(col).html().trim();
+                var iconLabel = contenu.substring(contenu.indexOf('-') + 1, contenu.indexOf('">'));
+                sorter.push([$(this), iconLabel]);
+            // Sort href
+            } else if (type == 'Title'){
+                contenu =  $(this).find('td').eq(col).html().toLowerCase();
+                var link = contenu.substring(contenu.indexOf('">') + 2, contenu.indexOf('</'));
+                sorter.push([$(this), link]);
+            // Sort string
+            } else {
+                contenu =  $(this).find('td').eq(col).html().toLowerCase();
+                sorter.push([$(this), contenu]);
+            }
         }
-    }
+    });
 
     // Sort the rows
     sorter.sort(ord);
 
-    var temp = -1;
-    // If numbers, get only numbers at first and after sort, get the entire row to sort it right
-    if (type == 'numPaper') {
-        for (var x = 0 ; x < sorter.length ; x++) {
-           for (var z = 0 ; z < sorter.length ; z++ ) {
-               if (sorter[x] == lines[z].getElementsByTagName('td')[col].textContent.toLowerCase().trim() && z != temp) {
-                   sorter[x] = [lines[z], lines[z].getElementsByTagName('td')[col].textContent.toLowerCase().trim()];
-                   temp = z;
-               }
-            }
-        }
-    }
-
-    j = -1;
+    var j = -1;
 
     // Rearrange the html array's rows accordind to the sorting
     while(sorter[++j]) {
-        mybody.appendChild(sorter[j][0]);
+        $('#' + tid).append(sorter[j][0]);
     }
 }
 
 // To search questions (with parameters in all the user's questions)
 function searchQuestion(path, page) {
 
-    var whatToFind = document.getElementById('what2search').value; // The text to find
-    var type; // What column is selected (category, type, title, contain)
-    var where; // In which database of questions (user's or shared)
-
-    // Which type is selected ?
-    if (document.getElementById('searchQuestionForm').QuestionSearch[0].checked) {
-        type = document.getElementById('searchQuestionForm').QuestionSearch[0].value;
-    } else if (document.getElementById('searchQuestionForm').QuestionSearch[1].checked) {
-        type = document.getElementById('searchQuestionForm').QuestionSearch[1].value;
-    } else if (document.getElementById('searchQuestionForm').QuestionSearch[2].checked) {
-        type = document.getElementById('searchQuestionForm').QuestionSearch[2].value;
-    } else if (document.getElementById('searchQuestionForm').QuestionSearch[3].checked) {
-        type = document.getElementById('searchQuestionForm').QuestionSearch[3].value;
-    }
-
-    // In which database ?
-    if (document.getElementById('searchQuestionForm').WhereSearch[0].checked) {
-        where = document.getElementById('searchQuestionForm').WhereSearch[0].value;
-    } else if (document.getElementById('searchQuestionForm').WhereSearch[1].checked) {
-        where = document.getElementById('searchQuestionForm').WhereSearch[1].value;
-    }
+    // The text to find
+    var whatToFind = $('#what2search').val();
+    // What column is selected (category, type, title, contain)
+    var type = $('input[type=radio][name=QuestionSearch]:checked').attr('value');
+    // In which database of questions (user's or shared)
+    var where = $('input[type=radio][name=WhereSearch]:checked').attr('value');
 
     // Send theses informations to the controller to have the matching questions and display it
     $.ajax({
@@ -521,7 +492,7 @@ function searchQuestion(path, page) {
         },
         cache: false,
         success: function (data) {
-          document.getElementById('resultSearch').innerHTML = data;
+            $('#resultSearch').html(data);
        }
     });
 }
@@ -530,41 +501,41 @@ function searchQuestion(path, page) {
 window.onload = function () {
 
     // If has already done a question research
-    if (document.getElementById('type') && document.getElementById('whatToFind') && document.getElementById('where')) {
+    if ($('#type').length > 0 && $('#whatToFind').length > 0 && $('#where').length > 0) {
         // What did he selected before changing page
-        var type = document.getElementById('type').value;
-        var whatToFind = document.getElementById('whatToFind').value;
-        var where = document.getElementById('where').value;
+        var type = $('#type').val();
+        var whatToFind = $('#whatToFind').val();
+        var where = $('#where').val();
 
         // Select and put the right old user's choices
-        document.getElementById('what2search').value = whatToFind;
+        $('#what2search').val(whatToFind);
 
         if (type == 'Category') {
-            document.getElementById('searchQuestionForm').QuestionSearch[0].checked = true;
+            $("input[type=radio][name=QuestionSearch][value='Category']").attr('checked', true);
         } else if (type == 'Type') {
-            document.getElementById('searchQuestionForm').QuestionSearch[1].checked = true;
+            $("input[type=radio][name=QuestionSearch][value='Type']").attr('checked', true);
         } else if (type == 'Title') {
-            document.getElementById('searchQuestionForm').QuestionSearch[2].checked = true;
+            $("input[type=radio][name=QuestionSearch][value='Title']").attr('checked', true);
         } else if (type == 'Contain') {
-            document.getElementById('searchQuestionForm').QuestionSearch[3].checked = true;
+            $("input[type=radio][name=QuestionSearch][value='Contain']").attr('checked', true);
         }
 
         if (where == 'my') {
-            document.getElementById('searchQuestionForm').WhereSearch[0].checked = true;
+            $("input[type=radio][name=QuestionSearch][value='my']").attr('checked', true);
         } else if (where == 'shared') {
-            document.getElementById('searchQuestionForm').WhereSearch[1].checked = true;
+            $("input[type=radio][name=QuestionSearch][value='shared']").attr('checked', true);
         }
     }
 
     // If has already done a document research, put the values of the research and display selected block when changing page
-    if (document.getElementById('label2Find') && document.getElementById('whichAction')) {
-        if (document.getElementById('label2Find').value != '') {
-            document.getElementById('labelToFind').value = document.getElementById('label2Find').value;
-            document.getElementById('searchDocuments').style.display = 'block';
+    if ($('#label2Find').length > 0 && $('#whichAction').length > 0) {
+        if ($('#label2Find').val() != '') {
+            $('#labelToFind').val($('#label2Find').val());
+            $('#searchDocuments').css({"display" : "block"});
         }
 
-        if (document.getElementById('whichAction').value == 'sort') {
-            document.getElementById('sortDocuments').style.display = 'block';
+        if ($('#whichAction').val() == 'sort') {
+            $('#sortDocuments').css({"display" : "block"});
         }
     }
 };

@@ -37,7 +37,7 @@ function categoryPop(data) {
         "left": "30%",
         "top": "40%",
         "width": "600px",
-        //"background":"url('images/body_bg.jpg') repeat-x left bottom #e5e5e5",
+        "background":"url('images/body_bg.jpg') repeat-x left bottom #e5e5e5",
         "border": "5px solid #cecece",
         "z-index": "2",
         "padding": "10px",
@@ -91,7 +91,4 @@ function categoryPop(data) {
             popup = false;
         }
     }
-
-    ///////////
-
 }

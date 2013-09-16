@@ -48,7 +48,7 @@
         <h1>{{ 'correction' | trans }}</h1>
     </div><br/>
 
-    <a href="{{ path('ujm_paper_list', { 'exoID': exoId }) }}" style="padding-left: 50px;"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
+    <a href="{{ path('ujm_paper_list', { 'exoID': exoId }) }}" style="margin-left: 50px;"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
 
     <hr/>
 
@@ -348,7 +348,7 @@
                             </div>
                         </div>
                     </fieldset><br/>
-                    
+
                     {% if interOpen.interaction.feedback != '' %}
                         <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
                             <legend style="border: transparent hidden 0; width: 170px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'comment' | trans }} :</legend>

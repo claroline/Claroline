@@ -1,6 +1,7 @@
+// Get the already placed right answer zone
 window.onload = function () {
 
-    var infos = document.getElementById('info').value;
+    var infos = $('#info').val();
     var i = infos.substr(0, infos.indexOf('~'));
     infos = infos.substr(infos.indexOf('~') + 1);
     var info = infos.split('^');
@@ -13,86 +14,117 @@ window.onload = function () {
 
 function position(shape, color, i, prefix, value, size, points) {
 
-    // Set the shape/color of the answer zone
+    // Set the shape/color of the right answer zone already placed
     if (shape == 'circle') {
         switch (color) {
         case 'white' :
-            document.getElementById('img' + i).src = prefix + 'circlew.png';
+            $('#img' + i).attr('src', prefix + 'circlew.png');
             break;
 
         case 'red' :
-            document.getElementById('img' + i).src = prefix + 'circler.png';
+            $('#img' + i).attr('src', prefix + 'circler.png');
             break;
 
         case 'blue' :
-            document.getElementById('img' + i).src = prefix + 'circleb.png';
+            $('#img' + i).attr('src', prefix + 'circleb.png');
             break;
 
         case 'purple' :
-            document.getElementById('img' + i).src = prefix + 'circlep.png';
+            $('#img' + i).attr('src', prefix + 'circlep.png');
             break;
 
         case 'green' :
-            document.getElementById('img' + i).src = prefix + 'circleg.png';
+            $('#img' + i).attr('src', prefix + 'circleg.png');
             break;
 
         case 'orange' :
-            document.getElementById('img' + i).src = prefix + 'circleo.png';
+            $('#img' + i).attr('src', prefix + 'circleo.png');
             break;
 
         case 'yellow' :
-            document.getElementById('img' + i).src = prefix + 'circley.png';
+            $('#img' + i).attr('src', prefix + 'circley.png');
             break;
 
         default :
-            document.getElementById('img' + i).src = prefix + 'circlew.png';
+            $('#img' + i).attr('src', prefix + 'circlew.png');
             break;
         }
 
     } else if (shape == 'rectangle') {
         switch (color) {
         case 'white' :
-            document.getElementById('img' + i).src = prefix + 'rectanglew.jpg';
+            $('#img' + i).attr('src', prefix + 'rectanglew.jpg');
             break;
 
         case 'red' :
-            document.getElementById('img' + i).src = prefix + 'rectangler.jpg';
+            $('#img' + i).attr('src', prefix + 'rectangler.jpg');
             break;
 
         case 'blue' :
-            document.getElementById('img' + i).src = prefix + 'rectangleb.jpg';
+            $('#img' + i).attr('src', prefix + 'rectangleb.jpg');
             break;
 
         case 'purple' :
-            document.getElementById('img' + i).src = prefix + 'rectanglep.jpg';
+            $('#img' + i).attr('src', prefix + 'rectanglep.jpg');
             break;
 
         case 'green' :
-            document.getElementById('img' + i).src = prefix + 'rectangleg.jpg';
+            $('#img' + i).attr('src', prefix + 'rectangleg.jpg');
             break;
 
         case 'orange' :
-            document.getElementById('img' + i).src = prefix + 'rectangleo.jpg';
+            $('#img' + i).attr('src', prefix + 'rectangleo.jpg');
             break;
 
         case 'yellow' :
-            document.getElementById('img' + i).src = prefix + 'rectangley.jpg';
+            $('#img' + i).attr('src', prefix + 'rectangley.jpg');
             break;
 
         default :
-            document.getElementById('img' + i).src = prefix + 'rectanglew.jpg';
+            $('#img' + i).attr('src', prefix + 'rectanglew.jpg');
         }
     }
 
+    // Set the width of the right answer zone already placed
+    $('#img' + i).attr('width', size);
+
+    // Set the position of the right answer zone already placed
     var x = value.substr(0, value.indexOf(','));
     var y = value.substr(value.indexOf(',') + 1);
 
-    document.getElementById('img' + i).width = size;
+    $('#img' + i).css({
+        "left" : String(parseInt(x) - (size / 2)) + 'px',
+        "top"  : String(parseInt(y) - (size / 2)) + 'px'
+    });
 
-    document.getElementById('img' + i).style.left = String(parseInt(x) - (size / 2)) + 'px';
-    document.getElementById('img' + i).style.top = String(parseInt(y) - (size / 2)) + 'px';
-
+    // Set the id of the right answer zone already placed
     grade++;
     var name = 'img' + i;
+
+    // Set the points of the right answer zone already placed
     point[name] = points;
+
+    // Make answer image resizable
+    $('#AnswerImage').resizable({
+        aspectRatio: true,
+        minWidth: 70,
+        maxWidth: 660
+    });
+
+    // Make the already placed right answer zone resizable and draggable and save new postion when stop drag
+    $('#img' + i).resizable({
+        aspectRatio: true,
+        minWidth: 10,
+        maxWidth: 500
+    })
+    .parent()
+    .draggable({
+        containment : '#AnswerImage',
+        cursor : 'move',
+
+        stop: function(event, ui) {
+            $('#img' + i).css("left", $(this).css("left"));
+            $('#img' + i).css("top", $(this).css("top"));
+        }
+    });
 }

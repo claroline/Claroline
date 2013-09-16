@@ -272,6 +272,68 @@ class CategoryController extends Controller
         return $this->redirect($this->generateUrl('category'));
     }
 
+    /**
+     * Drop a Category.
+     *
+     */
+    public function dropAction()
+    {
+        $request = $this->container->get('request');
+        $em = $this->getDoctrine()->getManager();
+
+        if ($request->isXmlHttpRequest()) {
+            $idCategory = $request->request->get('idCategory');
+
+            $entity = $em->getRepository('UJMExoBundle:Category')->find($idCategory);
+
+            if (!$entity) {
+                throw $this->createNotFoundException('Unable to find Category entity.');
+            }
+
+            $em->remove($entity);
+            $em->flush();
+
+            return new Response($entity->getId());
+
+        } else {
+
+            return 0;
+        }
+    }
+
+    /**
+     * Alter a Category.
+     *
+     */
+    public function alterAction()
+    {
+
+        $request = $this->container->get('request');
+        $em = $this->getDoctrine()->getManager();
+
+        if ($request->isXmlHttpRequest()) {
+            $newlabel = $request->request->get('newlabel');
+            $idOldCategory = $request->request->get('idOldCategory');
+
+            $entity = $em->getRepository('UJMExoBundle:Category')->find($idOldCategory);
+
+            if (!$entity) {
+                throw $this->createNotFoundException('Unable to find Category entity.');
+            }
+
+            $entity->setValue($newlabel);
+
+            $em->persist($entity);
+            $em->flush();
+
+            return new Response($entity->getId());
+
+        } else {
+
+            return 0;
+        }
+    }
+
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder(array('id' => $id))

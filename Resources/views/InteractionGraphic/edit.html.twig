@@ -39,6 +39,7 @@
     {{ parent() }}
     <link href="{{ asset('bundles/ujmexo/css/new_QI.css') }}" type="text/css" rel="stylesheet"/>
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
 {% endblock %}
 
 {% block title %} {{ 'edit a question' | trans }} {% endblock %}
@@ -49,7 +50,7 @@
         <h1>{{'interactionGraphic Edition'|trans}}</h1>
     </div><br/>
 
-    <a href="{{ path('ujm_question_index') }}" style="padding-left: 50px;">
+    <a href="{{ path('ujm_question_index') }}" style="margin-left: 50px;">
         <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
     </a>
 
@@ -215,6 +216,7 @@
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/editionAv.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphic.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicEdit.js') }}"></script>
 

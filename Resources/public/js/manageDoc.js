@@ -1,48 +1,53 @@
+// Display block to add a new document
 function AddDocument() {
-    if (document.getElementById('AddDocuments').style.display == 'none') {
-        document.getElementById('AddDocuments').style.display = 'block';
-        document.getElementById('icon').className = 'icon-minus';
+    if ($('#AddDocuments').css({"display" : "none"})) {
+        $('#AddDocuments').css({"display" : "block"});
+        $('#icon').attr('class', 'icon-minus');
     } else {
-        document.getElementById('AddDocuments').style.display = 'none';
-        document.getElementById('icon').className = 'icon-plus';
+        $('#AddDocuments').css({"display" : "none"});
+        $('#icon').attr('class', 'icon-plus');
     }
 }
 
+// Display pop up to change name of a document
 function ChangeName(oldname) {
-    if (document.getElementById('UpdateName').style.display == 'none') {
-        document.getElementById('UpdateName').style.display = 'block';
-        document.getElementById('oldName').value = oldname;
+    if ($('#UpdateName').css({"display" : "none"})) {
+        $('#UpdateName').css({"display" : "block"});
+        $('#oldName').val(oldname);
     } else {
-        document.getElementById('UpdateName').style.display = 'none';
-        document.getElementById('newlabel').value = '';
-        document.getElementById('updateSubmit').disabled = false;
-        document.getElementById('oldName').value = '';
+        $('#UpdateName').css({"display" : "none"});
+        $('#newlabel').val('');
+        $('#updateSubmit').prop('disabled', false);
+        $('#oldName').val('');
     }
 }
 
+// Display block to sort documents
 function sortDoc() {
-    if (document.getElementById('sortDocuments').style.display == 'none') {
-        document.getElementById('sortDocuments').style.display = 'block';
+    if ($('#sortDocuments').css({"display" : "none"})) {
+        $('#sortDocuments').css({"display" : "block"});
     } else {
-        document.getElementById('sortDocuments').style.display = 'none';
+        $('#sortDocuments').css({"display" : "none"});
     }
 }
 
+// Display block to search documents
 function searchDocuments() {
-    if (document.getElementById('searchDocuments').style.display == 'none') {
-        document.getElementById('searchDocuments').style.display = 'block';
+    if ($('#searchDocuments').css({"display" : "none"})) {
+        $('#searchDocuments').css({"display" : "block"});
     } else {
-        document.getElementById('searchDocuments').style.display = 'none';
+        $('#searchDocuments').css({"display" : "none"});
     }
 }
 
+// Sort documents depending on its type
 function sortDocument(type, path, page) {
-    // Send the type to display the matching documents
 
     var searchLabel;
 
-    if (document.getElementById('labelToFind').value) {
-        searchLabel = document.getElementById('labelToFind').value;
+    // If have to sort the search documents
+    if ($('#labelToFind').length > 0) {
+        searchLabel = $('#labelToFind').val();
     } else {
         searchLabel = '';
     }
@@ -58,14 +63,15 @@ function sortDocument(type, path, page) {
         },
         cache: false,
         success: function (data) {
-            document.getElementById('sorting').innerHTML = data;
+            $('#sorting').html(data);
         }
     });
 }
 
+// Search documents with specific label
 function searchDoc(path, page) {
 
-    var labelToFind = document.getElementById('labelToFind').value;
+    var labelToFind = $('#labelToFind').val();
 
     $.ajax({
         type: 'GET',
@@ -76,7 +82,7 @@ function searchDoc(path, page) {
         },
         cache: false,
         success: function (data) {
-            document.getElementById('sorting').innerHTML = data;
+            $('#sorting').html(data);
         }
     });
 }

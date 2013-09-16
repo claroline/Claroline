@@ -47,6 +47,7 @@ alert ending: Are you sure you want to finish ? (You can't alter your answers an
 allQuestion: All
 already: This question is already shared with this user
 alreadyExist: This name exist already
+alter category: Alter this cataegory
 answer_coched: No response expected is checked
 answer zone: Answer zone
 at the end of assessment: At the end of assessment
@@ -97,6 +98,7 @@ docManage: Manage my documents
 docName: Document name
 document: Document
 doNothing: Do nothing and go back to my documents management
+drop category: Drop this category
 duration: Duration
 
 # E
@@ -154,7 +156,6 @@ isInterupt: Interupted
 image: Image
 import: Import
 import questions: Import questions
-inside: You must put all the answer zone INSIDE the picture
 interactionGraphic creation: InteractionGraphic creation
 interactionGraphic Edition: InteractionGraphic Edition
 interactionOpen creation: interactionOpen creation
@@ -180,7 +181,7 @@ long: Long
 manageImg: Manage my documents
 mark: Mark
 mark this question: Marked this question
-markTooBigest: The mark must be less than or equal to 
+markTooBigest: The mark must be less than or equal to
 maximum number of tries: Maximum number of tries
 meaningMeasureDifficulty: If the measure is hight, the question is easy ; In return, if the measure is low, the question is difficult
 model: Model
@@ -193,6 +194,7 @@ my shared questions: My shared questions
 nameUser2Shared: Name of user to share the question
 nbr_choices: The number of choices must be greater than two
 never: Never
+newCategoryName: New name of the category
 newName: New name of the document
 newDoc: New document
 no: No
@@ -275,7 +277,7 @@ seeDoc: See linked questions to this document
 seeSharedWith: Question shared with users
 select: Select
 selected Image: Selected image
-selection: => Click on a pointer to select it and click again on the picture to define your answer.
+selection: => To answer, use drag and drop.
 selectZone: To define an answer zone, click on it and place it by re-clicking to the selected place on the image. You can also press CTRL key and click on the picture where it should be placed.
 self: You can't shared this question with yourself
 shape: Shape
@@ -389,7 +391,7 @@ Inter_Hole.size: Size
 LockAttempte.date: Date
 
 Never: Never
-  
+
 Planning.end_time: End Date
 Planning.start_time: Start date
 

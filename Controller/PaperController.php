@@ -138,7 +138,7 @@ class PaperController extends Controller
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($id);
 
         $subscription = $this->getSubscription($user, $paper->getExercise()->getId());
-        
+
         if(isset($subscription[0])) {
             $admin = $subscription[0]->getAdmin();
         }
@@ -209,18 +209,18 @@ class PaperController extends Controller
 
         return $this->redirect($this->generateUrl('paper'));
     }
-    
+
     public function markedOpenAction($respid, $maxScore)
     {
         return $this->render(
             'UJMExoBundle:Paper:q_open_mark.html.twig', array(
                 'respid'   => $respid,
                 'maxScore' => $maxScore
-                
+
             )
         );
     }
-    
+
     public function markedOpenRecordAction()
     {
         $request = $this->container->get('request');
@@ -283,7 +283,7 @@ class PaperController extends Controller
             }
             //if no response
             if ($tem == 0) {
-                $response = new response();
+                $response = new \UJM\ExoBundle\Entity\Response();
                 $response->setResponse('');
                 $response->setMark(0);
 

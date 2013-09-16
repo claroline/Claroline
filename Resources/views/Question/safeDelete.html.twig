@@ -43,19 +43,19 @@
 {% block title %} {{ 'delete document' | trans }} {% endblock %}
 
 {% block section_content %}
-    
-    <div class="panel-heading" style="padding-left: 50px;">
+
+    <div class="panel-heading" style="margin-left: 50px;">
         <h1>{{ 'delete document' | trans }}</h1>
     </div><br/>
-    
+
     <h4>
         <mark style=" background-color: yellow; color: red; margin-left: 50px;"><i class="icon-warning-sign"></i> {{ 'linkedDoc' | trans }} !</mark><br/>
     </h4>
-    
+
     <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
         <legend style="border: transparent hidden 0; width: 140px; margin: 0; color: skyblue;">
             <h1>&nbsp;{{ 'actions' | trans }}</h1>
-        </legend> 
+        </legend>
         {{ 'whichAction' | trans }} ?<br/><br/>
         <ul style="list-style-type: none; margin: 0; padding: 0;">
             <li><a href="{{ path('ujm_question_manage_doc') }}"><i class="icon-arrow-left"></i>&nbsp;&nbsp;{{ 'doNothing' | trans }} ...</a></li>
@@ -71,11 +71,11 @@
     {% else %}
         <div id="listQuestion" style="display: none;">
     {% endif %}
-            
+
         <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
             <legend style="border: transparent hidden 0; width: 270px; margin: 0; color: skyblue;">
                 <h1>&nbsp;{{ 'linkedQuestions' | trans }}</h1>
-            </legend> 
+            </legend>
             {% if listGraph is not empty %}
                 <table class="table table-striped table-bordered table-condensed" id="linkDocArray">
                     <thead>
@@ -180,7 +180,7 @@
     {{ parent() }}
 
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/SortAndSearch.js') }}"></script>
-    
+
     <script language="JavaScript">
         function DisplayQuestions() {
             document.getElementById('listQuestion').style.display = 'block';

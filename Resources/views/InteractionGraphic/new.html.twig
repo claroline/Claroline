@@ -34,6 +34,7 @@
 #}
 
 <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
 
 <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
     <legend style="border: transparent hidden 0; width: 580px; margin: 0; color: skyblue;">
@@ -92,9 +93,7 @@
                 </div><br/>
 
                 {{ 'selected Image' | trans }} :<br/>
-                <div style="position: relative;" id="Answer">
-                    <img src="" width="" height="" id="AnswerImage"/>
-                </div>
+                <div style="position: relative;" id="Answer"></div>
 
             </fieldset><br/>
         {# ------------------------------------------------- tableau zone de reponse ---------------------------------------------------------------------------- #}
@@ -171,6 +170,7 @@
 
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphic.js') }}"></script>
 
 {# ------------------------------------------------- Javascript ---------------------------------------------------------------------------- #}

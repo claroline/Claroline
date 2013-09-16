@@ -45,7 +45,7 @@
     <input id="picture" name="picture" type="file" required="true" accept="image/*"/>
     <br /><br />
     <input id="uploadSubmit" type="submit" value="{{ 'upload' | trans }} !"
-        onclick="ValidName('{{ 'wrongName' | trans }}','label', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'alreadyExist' | trans }}');
+        onclick="ValidName('{{ 'wrongName' | trans }}','label', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'alreadyExist' | trans }}', 'uploadForm');
         return false;"/><p id="Result">{{ 'uploading' | trans }} ...</p>
 </form>
 

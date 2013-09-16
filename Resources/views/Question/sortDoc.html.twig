@@ -112,15 +112,17 @@
     <input type="hidden" id="label2Find" value="{{ labelToFind }}"/>
     <input type="hidden" id="whichAction" value="{{ whichAction }}"/>
 
-    {% if pagerFindDoc.haveToPaginate %}
-        {% if whichAction == 'sort' %}
-            {{ pagerfanta(pagerFindDoc, 'twitter_bootstrap_translated',{ 'routeName': 'ujm_question_sortDocuments',
-                'routeParams': { 'searchLabel': labelToFind, 'doctype': doctype } }) }}
-        {% else %}
-            {{ pagerfanta(pagerFindDoc, 'twitter_bootstrap_translated',{ 'routeName': 'ujm_question_searchDocuments',
-                'routeParams': { 'labelToFind': labelToFind } }) }}
+    <div style="text-align: center;">
+        {% if pagerFindDoc.haveToPaginate %}
+            {% if whichAction == 'sort' %}
+                {{ pagerfanta(pagerFindDoc, 'twitter_bootstrap_translated',{ 'routeName': 'ujm_question_sortDocuments',
+                    'routeParams': { 'searchLabel': labelToFind, 'doctype': doctype } }) }}
+            {% else %}
+                {{ pagerfanta(pagerFindDoc, 'twitter_bootstrap_translated',{ 'routeName': 'ujm_question_searchDocuments',
+                    'routeParams': { 'labelToFind': labelToFind } }) }}
+            {% endif %}
         {% endif %}
-    {% endif %}
+    </div>
 {% else %}
     <p>{{ 'noDocFound'|trans }} ...</p>
 {% endif %}

@@ -1,7 +1,8 @@
+// Get the answers of the student to display it for the correction
 window.onload = function () {
 
-    if (document.getElementById('info')) {
-        var infos = document.getElementById('info').value;
+    if ($('#info').length > 0) {
+        var infos = $('#info').val();
         var i = infos.substr(0, infos.indexOf('~'));
         infos = infos.substr(infos.indexOf('~') + 1);
         var info = infos.split('^');
@@ -19,84 +20,90 @@ function whichImg(shape, color, i, x, y, rx, ry, prefix, size, id) {
     if (shape == 'circle') {
         switch (color) {
         case 'white' :
-            document.getElementById(id + 'ra' + i).src = prefix + 'circlew.png';
+            $('#' + id + 'ra' + i).attr('src', prefix + 'circlew.png');
             break;
 
         case 'red' :
-            document.getElementById(id + 'ra' + i).src = prefix + 'circler.png';
+            $('#' + id + 'ra' + i).attr('src', prefix + 'circler.png');
             break;
 
         case 'blue' :
-            document.getElementById(id + 'ra' + i).src = prefix + 'circleb.png';
+            $('#' + id + 'ra' + i).attr('src', prefix + 'circleb.png');
             break;
 
         case 'purple' :
-            document.getElementById(id + 'ra' + i).src = prefix + 'circlep.png';
+            $('#' + id + 'ra' + i).attr('src', prefix + 'circlep.png');
             break;
 
         case 'green' :
-            document.getElementById(id + 'ra' + i).src = prefix + 'circleg.png';
+            $('#' + id + 'ra' + i).attr('src', prefix + 'circleg.png');
             break;
 
         case 'orange' :
-            document.getElementById(id + 'ra' + i).src = prefix + 'circleo.png';
+            $('#' + id + 'ra' + i).attr('src', prefix + 'circleo.png');
             break;
 
         case 'yellow' :
-            document.getElementById(id + 'ra' + i).src = prefix + 'circley.png';
+            $('#' + id + 'ra' + i).attr('src', prefix + 'circley.png');
             break;
 
         default :
-            document.getElementById(id + 'ra' + i).src = prefix + 'circlew.png';
+            $('#' + id + 'ra' + i).attr('src', prefix + 'circlew.png');
             break;
         }
 
     } else if (shape == 'rectangle') {
         switch (color) {
         case 'white' :
-            document.getElementById(id + 'ra' + i).src = prefix + 'rectanglew.jpg';
+            $('#' + id + 'ra' + i).attr('src', prefix + 'rectanglew.jpg');
             break;
 
         case 'red' :
-            document.getElementById(id + 'ra' + i).src = prefix + 'rectangler.jpg';
+            $('#' + id + 'ra' + i).attr('src', prefix + 'rectangler.jpg');
             break;
 
         case 'blue' :
-            document.getElementById(id + 'ra' + i).src = prefix + 'rectangleb.jpg';
+            $('#' + id + 'ra' + i).attr('src', prefix + 'rectangleb.jpg');
             break;
 
         case 'purple' :
-            document.getElementById(id + 'ra' + i).src = prefix + 'rectanglep.jpg';
+            $('#' + id + 'ra' + i).attr('src', prefix + 'rectanglep.jpg');
             break;
 
         case 'green' :
-            document.getElementById(id + 'ra' + i).src = prefix + 'rectangleg.jpg';
+            $('#' + id + 'ra' + i).attr('src', prefix + 'rectangleg.jpg');
             break;
 
         case 'orange' :
-            document.getElementById(id + 'ra' + i).src = prefix + 'rectangleo.jpg';
+            $('#' + id + 'ra' + i).attr('src', prefix + 'rectangleo.jpg');
             break;
 
         case 'yellow' :
-            document.getElementById(id + 'ra' + i).src = prefix + 'rectangley.jpg';
+            $('#' + id + 'ra' + i).attr('src', prefix + 'rectangley.jpg');
             break;
 
         default :
-            document.getElementById(id + 'ra' + i).src = prefix + 'rectanglew.jpg';
+            $('#' + id + 'ra' + i).attr('src', prefix + 'rectanglew.jpg');
         }
     }
 
-    document.getElementById(id + 'ra' + i).width = size;
+    // Set the width of the answer zone
+    $('#' + id + 'ra' + i).width(size);
 
     // Place the right answer zones
-    document.getElementById(id + 'ra' + i).style.left = String(parseInt(x) - (size / 2)) + 'px';
-    document.getElementById(id + 'ra' + i).style.top = String(parseInt(y) - (size / 2)) + 'px';
-
-    // Place student answer zones if defined
+    $('#' + id + 'ra' + i).css({
+        "left" : String(parseInt(x) - (size / 2)) + 'px',
+        "top"  : String(parseInt(y) - (size / 2)) + 'px'
+    });
+    // Place student's answer zones if defined
     if (rx != 'a' && ry != 'a' && rx != '' && ry != '') {
-        document.getElementById(id + 'cursor' + i).style.left = String(parseInt(rx) - 10) + 'px';
-        document.getElementById(id + 'cursor' + i).style.top = String(parseInt(ry) - 10) + 'px';
+
+        $('#' + id + 'cursor' + i).css({
+            "left" : String(parseInt(rx) - 10) + 'px',
+            "top"  : String(parseInt(ry) - 10) + 'px'
+        });
+
     } else { // Else don't display the unplaced answer zone of the student
-        document.getElementById(id + 'cursor' + i).style.visibility = 'hidden';
+        $('#' + id + 'cursor' + i).css ({ "visibility" : "hidden"});
     }
 }

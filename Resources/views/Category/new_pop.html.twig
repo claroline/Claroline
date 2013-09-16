@@ -38,7 +38,7 @@
 </form>
 <br/>
 <p>
-    <button type="submit" id="submit_category" class="btn btn-primary">{{'create'|trans}}</button>
+    <button type="button" id="submit_category" class="btn btn-primary">{{'create'|trans}}</button>
 </p>
 
 <script type="text/javascript">
@@ -46,38 +46,44 @@
     $("#submit_category").click(function() {
         var nom_cat = $("#ujm_exobundle_categorytype_value").val();
 
-        var exists = false;
-        $("*[id$='_interaction_question_category option']").each(function() {
-            if (this.text == nom_cat) {
-                exists = true;
-                return false;
-            }
-        });
+        if (nom_cat == '') {
 
+            alert('Aucun nom');
+            return false;
 
-        if (exists) {
-            alert("existe");
-        }
-        else {
-        //apler l'action create2 avec ajax
-            $.ajax({
-            type: "POST",
-            url: "{{path('ujm_category_create_pop')}}",
-            data: {
-                value: nom_cat
-            },
-            cache: false,
-            success: function(data){
-                // ne rien faire
-                $("*[id$='_interaction_question_category']")
-                    .append($('<option selected="selected" value="'+data+'"></option>')
-                    .text(nom_cat));
+        } else {
 
-                $("#overlayEffect_cat").fadeOut("slow");
-                $("#popupCategory").fadeOut("slow");
-                $("#closeCategory").fadeOut("slow");
-            }
+            var exists = false;
+            $("*[id$='_interaction_question_category option']").each(function() {
+                if (this.text == nom_cat) {
+                    exists = true;
+                    return false;
+                }
             });
+
+            if (exists) {
+                alert("existe");
+            } else {
+            //apler l'action create2 avec ajax
+                $.ajax({
+                    type: "POST",
+                    url: "{{path('ujm_category_create_pop')}}",
+                    data: {
+                        value: nom_cat
+                    },
+                    cache: false,
+                    success: function(data){
+                        // ne rien faire
+                        $("*[id$='_interaction_question_category']")
+                            .append($('<option selected="selected" value="'+data+'"></option>')
+                            .text(nom_cat));
+
+                        $("#overlayEffect_cat").fadeOut("slow");
+                        $("#popupCategory").fadeOut("slow");
+                        $("#closeCategory").fadeOut("slow");
+                    }
+                });
+            }
         }
     });
 

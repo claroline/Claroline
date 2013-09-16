@@ -48,7 +48,7 @@
         <h1>{{ 'paper' | trans }} {{ 'question' | trans }}</h1>
     </div><br/>
 
-    <a href="{{ path('ujm_question_index') }}" style="padding-left: 50px;"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
+    <a href="{{ path('ujm_question_index') }}" style="margin-left: 50px;"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
 
     <hr/>
 
@@ -130,5 +130,6 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicdisplay.js') }}"></script>
 {% endblock %}

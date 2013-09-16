@@ -338,10 +338,13 @@
             {% endif %}
 
             <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-            <li>
-                <input type="button" value="{{ "interupt" | trans }}" onClick="interupt('{{ interactionType }}');" class="btn btn-primary"/>
+
+            {% if dispButtonInterrupt %}
+                <li>
+                    <input type="button" value="{{ "interupt" | trans }}" onClick="interupt('{{ interactionType }}');" class="btn btn-primary"/>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </li>
+                </li>
+            {% endif %}
             <li>
                 <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}', '{{ 'alert ending' | trans }}');"
                     class="btn btn-primary"/>
@@ -354,6 +357,7 @@
     {{ parent() }}
     {{ tinymce_init() }}
     {% if interactionType == 'InteractionGraphic' %}
+        <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicdisplay.js') }}"></script>
     {% endif %}
 {% endblock %}

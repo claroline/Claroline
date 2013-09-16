@@ -48,7 +48,7 @@
         <h1>{{ 'docManage' | trans }}</h1>
     </div><br/>
 
-    <a href="{{ path('ujm_question_index') }}" style="padding-left: 50px;"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
+    <a href="{{ path('ujm_question_index') }}" style="margin-left: 50px;"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
 
     <hr/>
 
@@ -72,7 +72,7 @@
                     <input id="picture" name="picture" type="file" required="true"/>
                     <br/>
                     <input id="uploadSubmit" type="submit" value="{{ 'upload' | trans }} !"
-                        onclick="ValidName('{{ 'wrongName' | trans }}','label', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'alreadyExist' | trans }}');
+                        onclick="ValidName('{{ 'wrongName' | trans }}','label', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'alreadyExist' | trans }}', 'uploadForm');
                         return false;" class="btn btn-primary"/><p id="Result">{{ 'uploading' | trans }}</p>
                 </form>
             </fieldset>
@@ -141,7 +141,7 @@
                 <p>{{ 'newName' | trans }} ?</p>
                 <input type="text" id='newlabel' name='newlabel' required="true"/><br/><br/>
                 <input id="updateSubmit" type="submit" value="{{ 'change' | trans }} !"
-                    onclick="ValidName('{{ 'wrongName' | trans }}','newlabel', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'alreadyExist' | trans }}');
+                    onclick="ValidName('{{ 'wrongName' | trans }}','newlabel', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'alreadyExist' | trans }}', 'updateName');
                         return false;" class="btn btn-primary"/>
 
                 <input type="hidden" id="oldName" name="oldName" value=""/>
