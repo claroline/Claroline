@@ -1,3 +1,18 @@
+{% javascripts debug=false  output='vendor/twbs/bootstrap/js/bootstrap.js'
+    '../vendor/twbs/bootstrap/js/transition.js'
+    '../vendor/twbs/bootstrap/js/alert.js'
+    '../vendor/twbs/bootstrap/js/button.js'
+    '../vendor/twbs/bootstrap/js/carousel.js'
+    '../vendor/twbs/bootstrap/js/collapse.js'
+    '../vendor/twbs/bootstrap/js/dropdown.js'
+    '../vendor/twbs/bootstrap/js/modal.js'
+    '../vendor/twbs/bootstrap/js/scrollspy.js'
+    '../vendor/twbs/bootstrap/js/tab.js'
+    '../vendor/twbs/bootstrap/js/tooltip.js'
+    '../vendor/twbs/bootstrap/js/popover.js'
+    '../vendor/twbs/bootstrap/js/affix.js'
+    %}<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
 {% javascripts
     vars=["locale"]
     "@ClarolineCoreBundle/Resources/views/Resource/breadcrumbs.html.twigjs"
