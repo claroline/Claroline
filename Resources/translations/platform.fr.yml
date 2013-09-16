@@ -487,6 +487,8 @@ workspace_edit_form_selfUnregistration: 'Désinscription publique'
 workspace_form_code: Code
 workspace_form_displayable: Publique
 workspace_form_name: Nom
+workspace_form_selfRegistration: 'Inscription publique'
+workspace_form_selfUnregistration: 'Désinscription publique'
 workspace_form_template: Modèle
 workspace_form_type: Type
 workspace_home_tab_creation: 'Création d''un onglet pour les espaces d''activités'
