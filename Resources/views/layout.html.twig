@@ -5,7 +5,7 @@
 {% block stylesheets %}
 
     {% if config.getParameter('theme') != '' %}
-        {% include config.getParameter('theme') %}
+        <link rel="stylesheet" href="{{ asset('') ~ 'themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' }}" screen="media" />
     {% endif %}
 
     {% stylesheets debug=false filter='lessphp'  output='vendor/fortawesome/font-awesome/css/font-awesome.css'
@@ -113,9 +113,9 @@
         %}<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-    <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/bazingaexposetranslation/js/translator.min.js') }}"></script>
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'platform' }) }}"></script>
+    <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/utilities.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/startup.js') }}"></script>
 {% endblock %}

@@ -41,16 +41,16 @@ class ThemeController extends Controller
     {
         $variables = array();
         $file = null;
-        $themes = $this->get('claroline.common.theme_service')->getThemes();
+        $themeService = $this->get('claroline.common.theme_service');
+        $themes = $themeService->getThemes();
 
         if ($id and isset($themes[$id])) {
 
             $variables['theme'] = $themes[$id];
 
-            $path = explode(':', $themes[$id]->getPath());
-            $path = explode('/', $path[2]);
-
-            $file = __DIR__."/../Resources/views/less-generated/$path[0]/variables.less";
+            $file = $themeService->getLessPath().str_replace(
+                ' ', '-', strtolower($themes[$id]->getName())
+            )."/variables.less";
         }
 
         $variables['parameters'] = new ThemeParameters($file);
