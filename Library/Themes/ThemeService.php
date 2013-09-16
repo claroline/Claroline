@@ -210,25 +210,15 @@ class ThemeService
             mkdir($path, 0777, true);
         }
 
-        $vars = fopen($path.'/variables.less', 'w');
-        $common = fopen($path.'/common.less', 'w');
-        $themeless = fopen($path.'/theme.less', 'w');
-        $twig = fopen($path.'/theme.html.twig', 'w');
+        file_put_contents($path.'/variables.less', $variables);
+        file_put_contents($path.'/common.less', $this->commonTemplate());
+        file_put_contents($path.'/theme.less', $this->themeTemplate());
+        file_put_contents($path.'/theme.html.twig', $this->twigTemplate($theme->getName()));
 
-        fwrite($vars, $variables);
-        fwrite($common, $this->commonTemplate());
-        fwrite($themeless, $this->themeTemplate());
-        fwrite($twig, $this->twigTemplate($theme->getName()));
-
-        fclose($vars);
-        fclose($common);
-        fclose($themeless);
-        fclose($twig);
+        $this->compileRaw(array($theme->getName()));
 
         $manager->persist($theme);
         $manager->flush();
-
-        $this->compileTheme($theme);
 
         return $theme->getId();
     }
