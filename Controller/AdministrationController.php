@@ -831,19 +831,14 @@ class AdministrationController extends Controller
      *  Get the list of themes availables.
      *  @TODO use directory iterator
      *
-     *  @param $path string The path of the themes.
-     *
      *  @return array with a list of the themes availables.
      */
-    private function getThemes($path = "/../Resources/views/less/")
+    private function getThemes()
     {
         $tmp = array();
 
-        $manager = $this->getDoctrine()->getManager();
-        $themes = $manager->getRepository("ClarolineCoreBundle:Theme\Theme")->findAll();
-
-        foreach ($themes as $theme) {
-            $tmp[$theme->getPath()] = $theme->getName();
+        foreach ($this->get('claroline.common.theme_service')->getThemes() as $theme) {
+            $tmp[str_replace(' ', '-', strtolower($theme->getName()))] = $theme->getName();
         }
 
         return $tmp;

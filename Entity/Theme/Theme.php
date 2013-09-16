@@ -45,6 +45,15 @@ class Theme
         $this->setPath($path);
     }
 
+    public function get($variable)
+    {
+        if (isset($this->$variable)) {
+            return $this->$variable;
+        }
+
+        return null;
+    }
+
     /**
      * Get id
      *
