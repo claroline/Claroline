@@ -114,6 +114,8 @@ class WorkspaceManager
         $workspace->setCode($config->getWorkspaceCode());
         $workspace->setGuid($this->ut->generateGuid());
         $workspace->setDisplayable($config->isDisplayable());
+        $workspace->setSelfRegistration($config->getSelfRegistration());
+        $workspace->setSelfUnregistration($config->getSelfUnregistration());
         $baseRoles = $this->roleManager->initWorkspaceBaseRole($config->getRoles(), $workspace);
         $baseRoles['ROLE_ANONYMOUS'] = $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
         $this->roleManager->associateRole($manager, $baseRoles["ROLE_WS_MANAGER"]);
