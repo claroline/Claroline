@@ -28,9 +28,8 @@ class ThemeService
         $this->container = $container;
         $manager = $this->container->get('doctrine')->getManager();
         $this->themes = $manager->getRepository('ClarolineCoreBundle:Theme\Theme')->findAll();
-        $this->themePath = __dir__.'/../../../../../../../web/themes/';
+        $this->themePath = __DIR__.'/../../../../../../../web/themes/';
         $this->lessPath = $this->themePath.'less/';
-        require_once dirname($this->container->get('kernel')->getRootDir()).'/vendor/leafo/lessphp/lessc.inc.php';
     }
 
     public function getThemePath()
@@ -50,7 +49,7 @@ class ThemeService
     public function getTheme($id)
     {
         foreach ($this->themes as $theme) {
-            if ($theme->getId() == $id) {
+            if ($theme->getId() === intval($id)) {
                 return $theme;
             }
         }
@@ -99,20 +98,23 @@ class ThemeService
         return $tmp;
     }
 
-    public function findTheme($array)
+    /**
+     * @param $filter The array that is used to filter an entity (example: array('id' => 3, 'name' => 'Claroline'))
+     */
+    public function findTheme($filter)
     {
         $search = null;
 
         foreach ($this->themes as $theme) {
-            $comparation = 0;
+            $compare = 0;
 
-            foreach ($array as $key => $value) {
+            foreach ($filter as $key => $value) {
                 if ($theme->get($key) === $value) {
-                    $comparation++;
+                    $compare++;
                 }
             }
 
-            if ($comparation === count($array)) {
+            if ($compare === count($filter)) {
                 $search = $theme;
                 break;
             }
@@ -142,14 +144,14 @@ class ThemeService
 
         if (is_array($themes)) {
             foreach ($themes as $theme) {
-                if ($theme->getPath() == 'less-generated') {
+                if ($theme->getPath() === 'less-generated') {
                     $lessGenerated[] = $theme->getName();
                 } else {
                     $resource = new TwigResource($twigLoader, $theme->getPath());
                     $assetic->addResource($resource, 'twig');
                 }
             }
-        } else if (is_object($themes) and $themes->getPath() == 'less-generated') {
+        } elseif (is_object($themes) and $themes->getPath() === 'less-generated') {
             $lessGenerated[] = $themes->getName();
         } else {
             $resource = new TwigResource($twigLoader, $themes);
@@ -170,10 +172,11 @@ class ThemeService
                     mkdir($this->themePath.$folder, 0777, true);
                 }
 
-                $css = fopen($this->themePath.$folder.'/bootstrap.css', 'wb');
                 $less = new \lessc;
-                fwrite($css, $less->compileFile($this->lessPath.$folder.'/common.less'));
-                fclose($css);
+                file_put_contents(
+                    $this->themePath.$folder.'/bootstrap.css',
+                    $less->compileFile($this->lessPath.$folder.'/common.less')
+                );
             } catch (exception $e) {
                 throw \Exception("Fatal error" . $e->getMessage());
             }
