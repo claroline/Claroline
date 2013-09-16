@@ -121,7 +121,9 @@ class AnnouncementController extends Controller
     {
         $this->checkAccess('EDIT', $aggregate);
 
-        $form = $this->formFactory->create(new AnnouncementType());
+        $announcement = new Announcement();
+        $announcement->setVisible(true);
+        $form = $this->formFactory->create(new AnnouncementType(), $announcement);
 
         return array(
             'form' => $form->createView(),
