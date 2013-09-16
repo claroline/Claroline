@@ -49,13 +49,12 @@ Make the following directories (and their children) writable from the command
 line and the webserver
 
 - *app/cache*
+- *app/config*
 - *app/logs*
-- *app/config/local*
 - *files*
 - *templates*
 - *test*
-- *src/core/Claroline/CoreBundle/Resources/public/css/themes*
-- *src/core/Claroline/CoreBundle/Resources/views/less-generated*
+- *web/themes*
 - *web/uploads*
 
 For further explanation on common permissions issues and solutions with
