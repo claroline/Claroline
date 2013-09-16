@@ -73,13 +73,7 @@ class UserManager
         $this->pagerFactory = $pagerFactory;
         $this->om = $om;
     }
-
-    public function insertUser(User $user)
-    {
-        $this->om->persist($user);
-        $this->om->flush();
-    }
-
+    
     public function createUser(User $user)
     {
         $this->om->startFlushSuite();
@@ -89,7 +83,7 @@ class UserManager
         $this->om->persist($user);
         $this->ed->dispatch('log', 'Log\LogUserCreate', array($user));
         $this->om->endFlushSuite();
-
+            
         return $user;
     }
 
@@ -102,11 +96,8 @@ class UserManager
     public function createUserWithRole(User $user, $roleName)
     {
         $this->om->startFlushSuite();
-        $this->setPersonalWorkspace($user);
-        $this->toolManager->addRequiredToolsToUser($user);
+        $this->createUser($user);
         $this->roleManager->setRoleToRoleSubject($user, $roleName);
-        $this->om->persist($user);
-        $this->ed->dispatch('log', 'Log\LogUserCreate', array($user));
         $this->om->endFlushSuite();
 
         return $user;
@@ -115,18 +106,14 @@ class UserManager
     public function insertUserWithRoles(User $user, ArrayCollection $roles)
     {
         $this->om->startFlushSuite();
-        $this->setPersonalWorkspace($user);
-        $this->toolManager->addRequiredToolsToUser($user);
+        $this->createUser($user);
         $this->roleManager->associateRoles($user, $roles);
-        $this->om->persist($user);
-        $this->ed->dispatch('log', 'Log\LogUserCreate', array($user));
         $this->om->endFlushSuite();
     }
 
     public function importUsers(array $users)
     {
         $nonImportedUsers = array();
-        $roleName = PlatformRoles::USER;
         $this->om->startFlushSuite();
 
         //batch processing. Require a counter to flush every ~150 users.
@@ -149,13 +136,7 @@ class UserManager
                 $newUser->setMail($email);
                 $newUser->setAdministrativeCode($code);
                 $newUser->setPhone($phone);
-
-                $this->setPersonalWorkspace($newUser);
-                $this->toolManager->addRequiredToolsToUser($newUser);
-                $this->roleManager->setRoleToRoleSubject($newUser, $roleName);
-
-                $this->om->persist($newUser);
-                $this->ed->dispatch('log', 'Log\LogUserCreate', array($newUser));
+                $this->createUser($newUser);
             } else {
                 $nonImportedUsers[] = array(
                     'username' => $username,
