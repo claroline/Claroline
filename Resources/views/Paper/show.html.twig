@@ -375,11 +375,14 @@
                         {% endif %}
 
                         {% if interOpen.typeopenquestion == 'long' and admin == 1 %}
-                            <input type="hidden" value="{{ responses[i].mark }}" id="currentOpenMark_{{ responses[i].id }}" />
-                            <a id="open_mark_{{ responses[i].id }}"
-                                accesskey=""onmouseover="body.style.cursor = 'pointer';" onmouseout="body.style.cursor = 'default';"
-                                onClick="openMark('{{ path('ujm_paper_mark_open_question', {'respid': responses[i].id, 'maxScore': interInfo['maxScore']}) }}');"
-                            >{{ 'mark this question' | trans }}</a>
+                            {% if responses[i].id != '' %}
+                                {% set url = path('ujm_paper_mark_open_question', {'respid': responses[i].id, 'maxScore': interInfo['maxScore']}) %}
+                                <input type="hidden" value="{{ responses[i].mark }}" id="currentOpenMark_{{ responses[i].id }}" />
+                                <a id="open_mark_{{ responses[i].id }}"
+                                    accesskey=""onmouseover="body.style.cursor = 'pointer';" onmouseout="body.style.cursor = 'default';"
+                                    onClick="openMark('{{ url }}');"
+                                >{{ 'mark this question' | trans }}</a>
+                            {% endif %}     
                         {% endif %}
 
                     </fieldset>
