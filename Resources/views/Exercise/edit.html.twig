@@ -174,4 +174,11 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript">
+        //To disable the feature not yet implemented
+        $(document).ready(function() {
+            $('#ujm_exobundle_exercisetype_doprint').attr("disabled", true);
+            $('#ujm_exobundle_exercisetype_duration').attr("disabled", true);
+        });
+    </script>
 {% endblock %}
