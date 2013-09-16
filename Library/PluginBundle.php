@@ -86,8 +86,6 @@ abstract class PluginBundle extends InstallableBundle implements AutoConfigurabl
         if (file_exists($defaultFilePath)) {
             return $defaultFilePath;
         }
-
-        return null;
     }
 
     public function getImgFolder()
@@ -98,8 +96,6 @@ abstract class PluginBundle extends InstallableBundle implements AutoConfigurabl
         if (is_dir($path)) {
             return $path;
         }
-
-        return null;
     }
 
     public function getAssetsFolder()

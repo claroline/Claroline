@@ -135,7 +135,9 @@ class ResourceManagerImportExportListener
                 foreach ($roles as $role) {
                     $mask = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
                         ->findMaximumRights(array($role->getName()), $root);
-                    $perms = $this->maskManager->decodeMask($mask, $this->resourceManager->getResourceTypeByName($resource['type']));
+                    $perms = $this->maskManager->decodeMask(
+                        $mask, $this->resourceManager->getResourceTypeByName($resource['type'])
+                    );
                     $perms['create'] = array();
 
                     $dataResources['perms'][$this->roleManager->getRoleBaseName($role->getName())] = $perms;
@@ -228,8 +230,6 @@ class ResourceManagerImportExportListener
                 return $key;
             }
         }
-
-        return null;
     }
 
     /**

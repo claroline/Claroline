@@ -50,8 +50,6 @@ class Theme
         if (isset($this->$variable)) {
             return $this->$variable;
         }
-
-        return null;
     }
 
     /**

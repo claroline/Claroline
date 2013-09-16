@@ -53,8 +53,6 @@ class ThemeService
                 return $theme;
             }
         }
-
-        return null;
     }
 
     /**
