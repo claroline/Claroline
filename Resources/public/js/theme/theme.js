@@ -99,7 +99,7 @@
                 if (data === "true") {
                     window.location = homePath + "admin/theme/list";
                 } else {
-                    alert(data);
+                    modal("admin/theme/error");
                 }
             }
         )

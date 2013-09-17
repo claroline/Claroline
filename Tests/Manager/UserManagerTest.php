@@ -35,15 +35,7 @@ class UserManagerTest extends MockeryTestCase
         $this->pagerFactory = $this->mock('Claroline\CoreBundle\Pager\PagerFactory');
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
     }
-
-    public function testInsertUser()
-    {
-        $user = $this->mock('Claroline\CoreBundle\Entity\User');
-        $this->om->shouldReceive('persist')->with($user)->once();
-        $this->om->shouldReceive('flush')->once();
-        $this->getManager()->insertUser($user);
-    }
-
+    
     public function testCreateUser()
     {
         $manager = $this->getManager(array('setPersonalWorkspace'));

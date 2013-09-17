@@ -4,20 +4,21 @@
 
 {% block breadcrumb %}
     <div id="resource-breadcrumb">
-    {% if _resource is defined %}
-        <div id="twig-resource-attributes"
-             data-resource-id="{{ _resource.getId() }}"
-             data-resource-name="{{ _resource.getName() }}"
-        >
-        </div>
-        {% if not is_path_mode  %}
-        {% render controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
-            {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
-        %}
+        {% if _resource is defined %}
+            <div id="twig-resource-attributes"
+                 data-resource-id="{{ _resource.getId() }}"
+                 data-resource-name="{{ _resource.getName() }}"
+            >
+            </div>
+            {% if not is_path_mode  %}
+            {% render controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
+                {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
+            %}
+            {% endif %}
         {% endif %}
-    {% endif %}
     </div>
 {% endblock %}
+
 {% block content %}
     {% if _resource is defined %}
         {% set workspace = _resource.getResourceNode().getWorkspace() %}

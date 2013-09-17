@@ -29,17 +29,15 @@ class DateRangeToTextTransformer implements DataTransformerInterface
             if (array_key_exists(1, $dateArray)) {
                 $endDate = $dateArray[1];
             }
-        } else {
-            return null;
-        }
 
-        $format = $this->translator->trans('date_range.format', array(), 'platform');
-        $outputValue = date($format, $startDate).' - '.date($format, $endDate);
-        if ($startDate == $endDate) {
-            $outputValue = date($format, $startDate);
-        }
+            $format = $this->translator->trans('date_range.format', array(), 'platform');
+            $outputValue = date($format, $startDate).' - '.date($format, $endDate);
+            if ($startDate == $endDate) {
+                $outputValue = date($format, $startDate);
+            }
 
-        return $outputValue;
+            return $outputValue;
+        }
     }
 
     /**
@@ -62,10 +60,8 @@ class DateRangeToTextTransformer implements DataTransformerInterface
             if (array_key_exists(1, $array)) {
                 $endDate = strtotime($array[1]);
             }
-        } else {
-            return null;
-        }
 
-        return array($startDate, $endDate);
+            return array($startDate, $endDate);
+        }
     }
 }
