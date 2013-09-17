@@ -60,7 +60,7 @@ class WorkspaceWidgetListener
         $roles = $this->utils->getRoles($token);
         $datas = $this->workspaceTagManager
             ->getDatasForWorkspaceListByUser($user, $roles);
-//throw new \Exception(count($workspaces));
+
         $content = $this->templating->render(
             'ClarolineCoreBundle:Widget:desktopWidgetMyWorkspaces.html.twig',
             array(

@@ -2,7 +2,7 @@
     {{ 'no_workspace'|trans({}, 'platform') }}
 {% else %}
     {% for workspace in workspaces %}
-    <a  class="list-group-item"
+    <a class="col-md-6"
         {% set granted = is_granted('home', workspace) %}
         {% if granted == true %}
             href="{{ path('claro_workspace_open',
