@@ -129,7 +129,8 @@ class ResourceManagerListener
                 'workspace' => $workspace,
                 'directoryId' => $directoryId,
                 'resourceTypes' => $resourceTypes,
-                'jsonPath' => $jsonPath
+                'jsonPath' => $jsonPath,
+                'maxPostSize' => ini_get('post_max_size')
              )
         );
     }
@@ -145,7 +146,7 @@ class ResourceManagerListener
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\desktop\resource_manager:resources.html.twig',
-            array('resourceTypes' => $resourceTypes)
+            array('resourceTypes' => $resourceTypes, 'maxPostSize' => ini_get('post_max_size'))
         );
     }
 
