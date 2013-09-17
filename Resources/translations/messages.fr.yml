@@ -48,7 +48,7 @@ allQuestion: Toutes
 already: Cette question est déjà partagée avec cet utilisateur
 alreadyExist: Ce nom existe déjà.
 alter category: Modifier cette catégorie
-answer_coched: Aucune réponse attendue nest cochée
+answer_coched: Aucune réponse attendue n\'est cochée
 answer zone: Zone de réponse
 at the end of assessment: A la fin du test
 at the same time that the correction: En même temps que la correction
@@ -66,6 +66,7 @@ calculationMeasureDifficulty: Il se calcul avec le nombre de candidats ayant ré
 cercle: Cercle
 change: Changer
 changeName: Changer le nom du document
+changeOrder: Pour changer l'ordre des questions, déplacez-les en utilisant le glisser/déposer
 choice: Choix
 choose: Choisir
 choose_type: Choisir un type
@@ -107,7 +108,7 @@ edit a category: Editer une catégorie
 edit a question: Editer une question
 end date: Date de fin
 entry: Entrer
-erase: Pour effacer une zone de réponse, maintenez la touche s enfoncée et cliquez sur la zone de réponse à effacer.
+erase: Pour effacer une zone de réponse, maintenez la touche 's' enfoncée et cliquez sur la zone de réponse à effacer.
 exercise: Exercice
 exercise creation: Création d'un exercice
 exercise definition: Définition de l'exercice
@@ -117,7 +118,7 @@ expected answer: Réponse attendue
 explainCoeffDis0: Les copies doivent avoir les mêmes questions pour pouvoir calculer le coefficient de discrimination.
 explainCoeffDis1: Analyse de la pertinence des questions, ce coefficient de corrélation varie de -1 à + 1.
 explainCoeffDis2: Les questions dont le coefficient de discrimination se situe entre 0,35 et 0,65 maximisent la discrimination des étudiants.
-explainCoeffDis3: Les questions ayant un indice négatif signalent une incohérence, les meilleurs candidats échouent ces questions, les plus faibles réussissent ces questions.
+explainCoeffDis3: Les questions ayant un indice négatif signalent une incohérence, les meilleurs candidats échouent à ces questions tandis que les plus faibles réussissent.
 explainMeasureDifficulty: L'indice de difficulté équivaut à un pourcentage de réussite à la question
 
 # F
@@ -149,16 +150,17 @@ hole: Blancs
 
 # I
 infiny: Infini
+infoMark: Les éventuelles pénalités sont à prendre en compte dans votre notation
 infoMeasureDifficulty: Cet indice ne prend pas en compte les étudiants n'ayant pas vu la question
 interupt: Interrompre
-invite_question: L'invite de la question doit être rempli
+invite_question: L\'invite de la question doit être rempli
 isInterupt: Interrompu
 image: Image
 import: Importer
 import questions: Importer des questions
 interactionGraphic creation: Création d'une question Graphique
 interactionGraphic Edition: Edition d'une question Graphique
-interactionOpen creation: Création d'une question ouverte
+interactionOpen creation: Création d'une question Ouverte
 inValidMark: Note invalide
 
 # K
@@ -223,7 +225,7 @@ num_paper: Numéro de la copie
 oneWord: Un mot
 onlyOnce: => Les bonnes réponses ne sont comptabilisées qu'une seule fois.
 open: Ouverte
-open edition: Edition d'une question de type ouverte
+open edition: Edition d'une question de type Ouverte
 order: Ordre
 orders: Consignes
 
@@ -235,7 +237,6 @@ partially: Partiellement correcte
 penalty: Pénalité
 percentage: Pourcentage
 picture name: Nom de l'image
-placeZone: Pour déplacer une zone de réponse, selectionnez-la et faites la glisser jusqu'à l'endroit voulu.
 planning_Of_Groups: Planning des groupes
 point: Point
 points: Points
@@ -257,14 +258,13 @@ question creation: Création d'une question
 questionSharedWith: Cette question est partagée avec les utilisateurs suivants
 
 # R
-random order of questions: Ordre des question aléatoire
-raz: => Pour remettre à zéro tous les pointeurs, appuyez sur "c".
+random order of questions: Ordre des questions aléatoire
+raz: => Pour remettre à leurs position initiale tous les pointeurs, appuyez sur "c".
 rectangle: Rectangle
 reset: Réinitialiser
-resize: Pour redimmensionner la zone de réponse, selection la en cliquant dessus puis appuyez sur Alt en bougeant la souris.
-resizeZone: Pour redimmensionner l'image, Placez votre souris sur l'image et utilisez la molette. Vous pouvez aussi appuyer sur la touche MAJ et déplacez la souris.
+resizeZone: Pour redimmensionner une image, placez votre souris sur son coin inférieur droit et, tout en maintenant le clic gauche, faites la glisser.
 response: Réponse
-response number: Num rép
+response number: Numéro de la réponse
 result: Résultats
 role: Rôle
 
@@ -278,7 +278,7 @@ seeSharedWith: Question partagée avec des utilisateurs
 select: Sélectionner
 selected Image: Image sélectionnée
 selection: => Pour répondre, utiliser la technique du glisser/déposer.
-selectZone: Pour définir une zone de réponse, selectionnez-la et faites la glisser jusqu'à l'endroit voulu. Vous pouvez aussi maintenir la touche CTRL enfoncée et cliquez sur l'image à l'endroit où vous voulez la placer.
+selectZone: Pour définir et déplacer une zone de réponse, utilisez le glisser/déposer.
 self: Vous ne pouvez pas partager une question avec vous-même
 shape: Forme
 share: Partager

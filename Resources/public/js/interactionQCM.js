@@ -389,14 +389,14 @@ function check_form(nbrChoices, answerCoched, labelEmpty, pointAnswers, pointAns
     //"use strict";
 
     //vérifier qu'il y a au moins deux choix
-    if (($('newTable .ligne_choice').length) < 2) {
+    if (($('#newTable .ligne_choice').length) < 2) {
         alert(nbrChoices);
         return false;
     } else {
         //vérifier qu'il y a des réponse attendue
         var nbr_rep_coched = 0;
         $('#newTable .ligne_choice').each(function (index) {
-            if ($(this).contents('td:nth-child(6)').find('input').is(':checked')) {
+            if ($(this).contents('td:nth-child(5)').find('input').is(':checked')) {
                 nbr_rep_coched = nbr_rep_coched + 1;
             }
         });

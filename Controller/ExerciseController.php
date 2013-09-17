@@ -830,7 +830,7 @@ class ExerciseController extends Controller
                 break;
 
             case "InteractionOpen":
-                
+
                 $interactionToDisplayed = $this->getDoctrine()
                     ->getManager()
                     ->getRepository('UJMExoBundle:InteractionOpen')
@@ -846,7 +846,7 @@ class ExerciseController extends Controller
                 } else {
                     $responseGiven = '';
                 }
-                
+
                 break;
         }
 
@@ -974,6 +974,7 @@ class ExerciseController extends Controller
      */
     private function histoMark($exerciseId)
     {
+        $exerciseSer = $this->container->get('ujm.exercise_services');
         $em = $this->getDoctrine()->getManager();
         $maxY = 4;
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
@@ -991,7 +992,7 @@ class ExerciseController extends Controller
             }
             $scoreU = round(($mark["noteExo"] / $exoScoreMax) * 20, 2);
 
-            $score = $this->roundUpDown($scoreU);
+            $score = $exerciseSer->roundUpDown($scoreU);
 
             if (isset($tabMarks[(string) $score])) {
                 $tabMarks[(string) $score] += 1;
@@ -1216,54 +1217,13 @@ class ExerciseController extends Controller
         $stop = count($up);
 
         for ($i = 0 ; $i < $stop ; $i++) {
-            $measureTab[$i] = $this->roundUpDown(($up[$i] / $down[$i]) * 100);
+
+            $measureTab[$i] = $exerciseSer->roundUpDown(($up[$i] / $down[$i]) * 100);
         }
 
         $measure = implode(",", $measureTab);
 
         return $measure;
-    }
-
-    /**
-     * Round up or down parameter's value
-     *
-     */
-    private function roundUpDown($toBeAdjusted)
-    {
-        if (strrpos($toBeAdjusted, ".")) {
-            list($integer, $rest) = explode(".", $toBeAdjusted);
-        } else if (strrpos($toBeAdjusted, ",")) {
-            list($integer, $rest) = explode(",", $toBeAdjusted);
-        } else {
-            return $toBeAdjusted;
-        }
-
-        $ten = substr($rest, 0, 1);
-        $hundred = substr($rest, 1);
-
-        if ($hundred == 5 || $hundred > 5) {
-            $ten = $ten + 1;
-            if ($ten > 5) {
-                $ten = 0;
-                $integer = $integer + 1;
-            } else if ($ten < 5) {
-                $ten = 0;
-            }
-        } else if ($hundred < 5) {
-            $ten = $ten - 1;
-            if ($ten > 5) {
-                $ten = 0;
-                $integer = $integer + 1;
-            } else if ($ten < 5) {
-                $ten = 0;
-            }
-        }
-
-        if ($ten == 0) {
-            return $integer;
-        } else {
-            return $integer.'.'.$ten;
-        }
     }
 
     /**
@@ -1273,7 +1233,7 @@ class ExerciseController extends Controller
     private function getCorrectAnswer($exerciseId, $eq, $em, $exerciseSer)
     {
         $em = $this->getDoctrine()->getManager();
-        
+
         $scoreMax = 0;
 
         $interaction = $em->getRepository('UJMExoBundle:Interaction')->getInteraction($eq->getQuestion()->getId());

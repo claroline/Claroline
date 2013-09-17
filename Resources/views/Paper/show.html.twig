@@ -259,27 +259,17 @@
 
                     <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 10px;">
                         <legend style="border: transparent hidden 0; width: 100px;margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'mark' | trans }} :</legend>
+                        {% for hv in hintViewed %}
+                            {% if( hv.hint.interaction.id == interaction.id ) %}
+                                {{ 'penalty' | trans }} : {{ hv.hint.penalty }}<br/>
+                            {% endif %}
+                        {% endfor %}
+
                         {{ 'mark' | trans }} : {{ responses[i].mark }} / {{ maxScore }} <br/>
                         {% set exoMark = exoMark + responses[i].mark %}
                         {% set exoScoreMax = exoScoreMax + maxScore %}
 
                         {% set point = responses[i].mark + hv.hint.penalty %}
-
-                        {% if responses[i].mark == 0 and hv.hint.penalty == 0 %}
-                                {{ 'noRightAnswer' | trans }}.
-                            {% elseif hv.hint.penalty == 0 %}
-                                {{ 'noHintShow' | trans }}.
-                            {% else %}
-                                {{ 'pointRightResponse' | trans }} : {{ point }} {{ 'with' | trans }} : -
-
-                                {% for hv in hintViewed %}
-                                    {% if( hv.hint.interaction.id == interaction.id ) %}
-                                        {{ 'penalty' | trans }} : {{ hv.hint.penalty }}<br/>
-                                    {% endif %}
-                                {% endfor %}
-
-                                {{ 'sawHint' | trans }}.
-                            {% endif %}
                         <br/>
                     </fieldset>
                 {% else %}
@@ -382,7 +372,7 @@
                                     accesskey=""onmouseover="body.style.cursor = 'pointer';" onmouseout="body.style.cursor = 'default';"
                                     onClick="openMark('{{ url }}');"
                                 >{{ 'mark this question' | trans }}</a>
-                            {% endif %}     
+                            {% endif %}
                         {% endif %}
 
                     </fieldset>
@@ -409,6 +399,9 @@
         {% else %}
             <h4>{{ 'final mark' | trans }} :</h4>
         {% endif %}
+
+        {% set scoreFinal = roundUpOrDown(scoreFinal) %}
+
         <div id="paperFinalScore">{{ scoreFinal }} / 20</div>
     </fieldset>
 {% endblock %}

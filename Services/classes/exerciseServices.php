@@ -106,7 +106,7 @@ class exerciseServices
         $score = $this->qcmMark($interQCM, $response, $allChoices, $penalty);
 
         $responseID = '';
-        
+
         foreach ($response as $res) {
             if ($res != null) {
                 $responseID .= $res.';';
@@ -319,14 +319,14 @@ class exerciseServices
 
         $penalty = 0;
         $session = $request->getSession();
-        
+
         $em = $this->doctrine->getManager();
         $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')->find($interactionOpenID);
-        
+
         if($interOpen->getTypeOpenQuestion() == 'long'){
             $response = $request->request->get('interOpenLong');
         }
-     
+
         // Not assessment
         if ($paperID == 0) {
             if ($session->get('penalties')) {
@@ -345,13 +345,13 @@ class exerciseServices
         } else {
             $penalty = $this->getPenalty($interOpen->getInteraction(), $paperID);
         }
-        
+
         if($interOpen->getTypeOpenQuestion() == 'long'){
             $score = -1;
         }
-        
+
         $score .= '/'.$this->openMaxScore($interOpen);
-        
+
         $res = array(
             'penalty'   => $penalty,
             'interOpen' => $interOpen,
@@ -359,10 +359,10 @@ class exerciseServices
             'score'     => $score,
             'tempMark'  => $tempMark
         );
-        
+
         return $res;
     }
-    
+
     // Check if the suggested answer zone isn't already right in order not to have points twice
     public function alreadyDone($coor, $verif, $z)
     {
@@ -516,7 +516,7 @@ class exerciseServices
 
         return $scoreMax;
     }
-    
+
     public function openMaxScore($interOpen)
     {
         $scoreMax = 0;
@@ -525,11 +525,11 @@ class exerciseServices
             ->getManager()
             ->getRepository('UJMExoBundle:InteractionOpen')
             ->getInteractionOpen($interaction->getId());*/
-        
+
         if($interOpen->getTypeOpenQuestion() == 'long'){
             $scoreMax = $interOpen->getScoreMaxLongResp();
         }
-        
+
         return $scoreMax;
     }
 
@@ -547,5 +547,47 @@ class exerciseServices
         $this->doctrine->getManager()->persist($eq);
 
         $this->doctrine->getManager()->flush();
+    }
+
+    /**
+     * Round up or down parameter's value
+     *
+     */
+    public function roundUpDown($toBeAdjusted)
+    {
+        if (strrpos($toBeAdjusted, ".")) {
+            list($integer, $rest) = explode(".", $toBeAdjusted);
+        } else if (strrpos($toBeAdjusted, ",")) {
+            list($integer, $rest) = explode(",", $toBeAdjusted);
+        } else {
+            return $toBeAdjusted;
+        }
+
+        $ten = substr($rest, 0, 1);
+        $hundred = substr($rest, 1);
+
+        if ($hundred == 5 || $hundred > 5) {
+            $ten = $ten + 1;
+            if ($ten > 5) {
+                $ten = 0;
+                $integer = $integer + 1;
+            } else if ($ten < 5) {
+                $ten = 0;
+            }
+        } else if ($hundred < 5) {
+            $ten = $ten - 1;
+            if ($ten > 5) {
+                $ten = 0;
+                $integer = $integer + 1;
+            } else if ($ten < 5) {
+                $ten = 0;
+            }
+        }
+
+        if ($ten == 0) {
+            return $integer;
+        } else {
+            return $integer.'.'.$ten;
+        }
     }
 }

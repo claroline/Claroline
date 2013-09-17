@@ -66,6 +66,7 @@ calculationMeasureDifficulty: It's calculate with the number of applicant which 
 cercle: Circle
 change: Change
 changeName: Change the name of the document
+changeOrder: To change questions order, move it by using drag and drop
 choice: Choice
 choose: Choose
 choose_type: Choose type
@@ -107,7 +108,7 @@ edit a category: Edit a category
 edit a question: Edit a question
 end date: End date
 entry: Entry
-erase: To erase an answer zone, press s key and click on the erasable answer zone.
+erase: To erase an answer zone, press 's' key and click on the erasable answer zone.
 exercise: Exercise
 exercise definition: Exercise definition
 exercise creation: Exercise creation
@@ -149,6 +150,7 @@ hole: Hole
 
 # I
 infiny: Indefinite
+infoMark: The potential penalties have to be count during your notation
 infoMeasureDifficulty: This measure doesn't count students that didn't saw the question
 interupt: Interupt
 invite_question: The prompt of question must be completed
@@ -235,7 +237,6 @@ partially: Partially correct
 penalty: Penalty
 percentage: Percentage
 picture name: Picture name
-placeZone: To move an answer zone, select it by clicking on it and click again to place it.
 planning_Of_Groups: Planning of groups
 point: Point
 points: Points
@@ -258,11 +259,10 @@ questionSharedWith: This question is shared with users below
 
 # R
 random order of questions: Random order of questions
-raz: => To reset pointers, press "c".
+raz: => To reset all pointers' position, press "c".
 rectangle: Rectangle
 reset: Reset
-resize: To resize the answer zone, select it by clicking, then press Alt and move your mouse.
-resizeZone: To re-size the picture, place your mouse ove rthe image and use the wheel. You can also press MAJ key and move your mouse.
+resizeZone: To re-size the picture, place your mouse on its bottom right corner, keep left mouse button down, and mouve your mouse.
 response: Response
 response number: Response number
 result: Results
@@ -278,7 +278,7 @@ seeSharedWith: Question shared with users
 select: Select
 selected Image: Selected image
 selection: => To answer, use drag and drop.
-selectZone: To define an answer zone, click on it and place it by re-clicking to the selected place on the image. You can also press CTRL key and click on the picture where it should be placed.
+selectZone: To define and move an answer zone, use drag and drop.
 self: You can't shared this question with yourself
 shape: Shape
 share: Share

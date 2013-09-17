@@ -60,6 +60,10 @@
 
     <hr/>
 
+    {% if interactions is not empty %}
+        <p style="margin-left: 50px;">{{ 'changeOrder' | trans }}.</p><hr/>
+    {%endif%}
+
     <button type="button" id="SaveOrder" style="display: none; margin-left: 50px;" class="btn btn-primary"
         onclick="SaveNewOrder('{{ path('ujm_exercise_question_order') }}', {{exerciseID}});">
         {{ 'saveNewOrder' | trans }}
@@ -67,6 +71,7 @@
 
     <div style="padding-left: 50px; padding-right: 50px;">
         {% if interactions is not empty %}
+
             <table class="table table-striped table-bordered table-condensed" id="QuestionArray">
                 <thead>
                     <tr style="background-color: lightsteelblue;">

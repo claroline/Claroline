@@ -133,7 +133,7 @@ class ExerciseType extends AbstractType
             )
             ->add(
                 'useDateEnd', 'checkbox', array(
-                    'required' => false, 'label' => 'Use date of end'
+                    'required' => false, 'label' => 'use date of end'
                 )
             )
             ->add(

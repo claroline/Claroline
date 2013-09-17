@@ -70,6 +70,7 @@ class TwigExtensions extends \Twig_Extension
             'regexTwig'            => new \Twig_Function_Method($this, 'regexTwig'),
             'getInterTwig'         => new \Twig_Function_Method($this, 'getInterTwig'),
             'getCoordsGraphTwig'   => new \Twig_Function_Method($this, 'getCoordsGraphTwig'),
+            'roundUpOrDown'        => new \Twig_Function_Method($this, 'roundUpOrDown'),
         );
 
     }
@@ -130,11 +131,16 @@ class TwigExtensions extends \Twig_Extension
         return $coords;
     }
 
+    public function roundUpOrDown($markToBeAdjusted)
+    {
+        return $this->exerciseSer->roundUpDown($markToBeAdjusted);
+    }
+
     private function getQCMScoreMax($interQCM)
     {
         return $this->exerciseSer->qcmMaxScore($interQCM);
     }
-    
+
     private function getOpenScoreMax($interOpen)
     {
         return $this->exerciseSer->openMaxScore($interOpen);
