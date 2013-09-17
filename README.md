@@ -3,8 +3,6 @@ BlogBundle
 
 A Claroline plugin to add Blog resources.
 
-#### /!\ This is a Work In Progress. /!\
-
 Installation
 ============
 
