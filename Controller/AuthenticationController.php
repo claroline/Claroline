@@ -4,21 +4,20 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Component\Security\Core\SecurityContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Claroline\CoreBundle\Manager\UserManager;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\Translator;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Authenticator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
 use Symfony\Component\HttpFoundation\Response;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Manager\MailManager;
 
 /**
  * Authentication/login controller.
@@ -26,11 +25,11 @@ use JMS\DiExtraBundle\Annotation as DI;
 class AuthenticationController
 {
     private $request;
-    private $router;
+
     private $userManager;
     private $encoderFactory;
     private $om;
-    private $mailer;
+    private $mailManager;
     private $translator;
     private $formFactory;
     private $authenticator;
@@ -42,12 +41,10 @@ class AuthenticationController
      *     "userManager"    = @DI\Inject("claroline.manager.user_manager"),
      *     "encoderFactory" = @DI\Inject("security.encoder_factory"),
      *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "mailer"         = @DI\Inject("mailer"),
-     *     "router"         = @DI\Inject("router"),
      *     "translator"     = @DI\Inject("translator"),
      *     "formFactory"    = @DI\Inject("claroline.form.factory"),
      *     "authenticator"  = @Di\Inject("claroline.authenticator"),
-     *     "templating"     = @Di\Inject("templating"),
+     *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager")
      * })
      */
     public function __construct(
@@ -55,24 +52,20 @@ class AuthenticationController
         UserManager $userManager,
         EncoderFactory $encoderFactory,
         ObjectManager $om,
-        \Swift_Mailer $mailer,
-        UrlGeneratorInterface $router,
         Translator $translator,
         FormFactory $formFactory,
         Authenticator $authenticator,
-        TwigEngine $templating
+        MailManager $mailManager
     )
     {
         $this->request = $request;
         $this->userManager = $userManager;
         $this->encoderFactory = $encoderFactory;
         $this->om = $om;
-        $this->mailer = $mailer;
-        $this->router = $router;
         $this->translator = $translator;
         $this->formFactory = $formFactory;
         $this->authenticator = $authenticator;
-        $this->templating = $templating;
+        $this->mailManager = $mailManager;
     }
     /**
      * @Route(
@@ -114,10 +107,16 @@ class AuthenticationController
      */
     public function forgotPasswordAction()
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_EMAIL, array(), null);
+        if ($this->mailManager->getMailConfiguration()) {
+            $form = $this->formFactory->create(FormFactory::TYPE_USER_EMAIL, array(), null);
 
-        return array('form' => $form->createView());
+            return array('form' => $form->createView());
+        }
 
+        return array(
+            'error' => $this->translator->trans('mail_config_problem', array(), 'platform'),
+            //'form' => $form->createView()
+        );
     }
 
     /**
@@ -143,46 +142,26 @@ class AuthenticationController
                 $user->setResetPasswordHash($password);
                 $this->om->persist($user);
                 $this->om->flush();
-                $msg = $this->translator->trans('mail_click', array(), 'platform');
-                $link = $this->request->server->get('HTTP_ORIGIN') . $this->router->generate(
-                    'claro_security_reset_password',
-                    array('hash' => $user->getResetPasswordHash())
-                );
-
-                try {
-                    $this->mailer->getTransport()->start();
-                } catch (Swift_TransportException $e)
+                if( $this->mailManager->sendForgotPassword('noreply@claroline.net', $data['mail'], $user->getResetPasswordHash()) )
                 {
-                    return array(
-                        'error' => $this->translator->trans('mail_config_problem', array(), 'platform'),
-                        'form' => $form->createView()
-                    );
-                }
-                    $body = $this->templating->render('ClarolineCoreBundle:Authentication:emailForgotPassword.html.twig',array('message'=> $msg, 'link'=> $link));
-                    $message = \Swift_Message::newInstance()
-                        ->setSubject($this->translator->trans('reset_pwd', array(), 'platform'))
-                        ->setFrom('noreply@claroline.net')
-                        ->setTo($data['mail'])
-                        ->setBody($body);
-                    $this->mailer->send($message);
-
                     return array(
                         'user' => $user,
                         'form' => $form->createView()
                     );
 
+                }
                 return array(
                     'error' => $this->translator->trans('mail_config_problem', array(), 'platform'),
                     'form' => $form->createView()
-                    );
-
+                );
             }
 
-            return array(
-                'error' => $this->translator->trans('mail_invalid', array(), 'platform'),
-                'form' => $form->createView()
-            );
         }
+
+        return array(
+            'error' => $this->translator->trans('mail_invalid', array(), 'platform'),
+            'form' => $form->createView()
+        );
     }
 
     /**
@@ -278,8 +257,8 @@ class AuthenticationController
             array();
 
         switch ($format) {
-            case 'json': return new JsonResponse($content, $status);
-            case 'xml' : return new XmlResponse($content, $status);
+        case 'json': return new JsonResponse($content, $status);
+        case 'xml' : return new XmlResponse($content, $status);
         }
     }
 }
