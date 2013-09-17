@@ -250,7 +250,25 @@ class ProfileController extends Controller
 
             $this->roleManager->resetRoles($user);
             $this->roleManager->associateRoles($user, $newRoles);
-            
+            $newRoles = $this->roleManager->getPlatformRoles($user);
+
+            $rolesChangeSet = array();
+            //Detect added
+            foreach ($newRoles as $role) {
+                if (!$this->isInRoles($role, $roles)) {
+                    $rolesChangeSet[$role->getTranslationKey()] = array(false, true);
+                }
+            }
+            //Detect removed
+            foreach ($roles as $role) {
+                if (!$this->isInRoles($role, $newRoles)) {
+                    $rolesChangeSet[$role->getTranslationKey()] = array(true, false);
+                }
+            }
+            if (count($rolesChangeSet) > 0) {
+                $changeSet['roles'] = $rolesChangeSet;
+            }
+
             $this->eventDispatcher->dispatch(
                 'log',
                 'Log\LogUserUpdate',
@@ -261,5 +279,5 @@ class ProfileController extends Controller
         }
 
         return array('claro_profile_form_admin' => $form->createView(), 'user' => $user);
-    }
+    }         
 }
