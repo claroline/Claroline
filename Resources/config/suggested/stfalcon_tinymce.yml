@@ -21,6 +21,7 @@ stfalcon_tinymce:
             menubar: false
             toolbar1: 'bold,italic,underline,undo,redo,removeformat,cleanup,code | ressourceLinker | preview '
             toolbar2: 'alignleft aligncenter alignright alignjustify | emoticons'
+            relative_urls : false
         advanced:
             plugins:
                 - 'advlist autolink lists link image charmap print preview hr anchor pagebreak'

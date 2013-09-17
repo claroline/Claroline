@@ -35,6 +35,10 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class ResourceManager
 {
+    //This is the default crunchbang page code. It should be the same for every debian.
+    //I don't know if this line works for windows.
+    const ENCODING = "ISO-8859-1";
+    
     /** @var RightsManager */
     private $rightsManager;
     /** @var ResourceTypeRepository */
@@ -791,7 +795,9 @@ class ResourceManager
             if (get_class($resource) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
                 $node = $resource->getTarget();
             }
-
+            
+            $filename = $this->getRelativePath($currentDir, $node) . $node->getName();
+            
             if ($node->getResourceType()->getName() !== 'directory') {
                 $event = $this->dispatcher->dispatch(
                     "download_{$node->getResourceType()->getName()}",
@@ -801,13 +807,13 @@ class ResourceManager
 
                 $obj = $event->getItem();
 
-                if ($obj !== null) {
-                    $archive->addFile($obj, $this->getRelativePath($currentDir, $node) . $node->getName());
+                if ($obj !== null) {              
+                    $archive->addFile($obj, iconv(mb_detect_encoding($filename), self::ENCODING, $filename));
                 } else {
-                     $archive->addFromString($this->getRelativePath($currentDir, $node) . $node->getName(), '');
+                     $archive->addFromString(iconv(mb_detect_encoding($filename), self::ENCODING, $filename), '');
                 }
             } else {
-                $archive->addEmptyDir($this->getRelativePath($currentDir, $node). $node->getName());
+                $archive->addEmptyDir(iconv(mb_detect_encoding($filename), self::ENCODING, $filename));
             }
 
             $this->dispatcher->dispatch('log', 'Log\LogResourceExport', array($node));

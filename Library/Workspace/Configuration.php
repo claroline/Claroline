@@ -16,6 +16,8 @@ class Configuration
     private $workspaceCode;
     private $isPublic;
     private $displayable;
+    private $selfRegistration;
+    private $selfUnregistration;
     /**
      * If you want to use the role_anonymous from the platform, use
      * 'ROLE_ANONYMOUS'.
@@ -202,5 +204,25 @@ class Configuration
     public function isDisplayable()
     {
         return $this->displayable;
+    }
+
+    public function setSelfRegistration($selfRegistration)
+    {
+        $this->selfRegistration = $selfRegistration;
+    }
+
+    public function getSelfRegistration()
+    {
+        return $this->selfRegistration;
+    }
+
+    public function setSelfUnregistration($selfUnregistration)
+    {
+        $this->selfUnregistration = $selfUnregistration;
+    }
+
+    public function getSelfUnregistration()
+    {
+        return $this->selfUnregistration;
     }
 }

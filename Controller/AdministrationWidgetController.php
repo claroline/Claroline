@@ -160,6 +160,7 @@ class AdministrationWidgetController extends Controller
     public function invertVisibleWidgetAction(DisplayConfig $displayConfig)
     {
         $em = $this->getDoctrine()->getManager();
+        $displayConfig->invertVisible();
         $em->persist($displayConfig);
         $em->flush();
 

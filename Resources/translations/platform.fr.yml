@@ -214,7 +214,7 @@ mail_click: 'Cliquez sur ce lien pour réinitialiser votre mot de passe'
 mail_sent : 'Un email vient de vous être envoyé. Vérifiez votre dossier spam au cas où vous ne verriez pas l''email'
 manage_rights: 'Gérer les droits'
 manager: Gestionnaire
-max_size_25mb: 'Taille max 25MB'
+max_size_is: 'La taille maximale est %size%'
 media_most_viewed: 'Media les plus consultés'
 messages_confirm_delete: 'Etes-vous sûr de vouloir supprimer ce(s) message(s) ?'
 messages_confirm_permanent_delete: 'Etes-vous sûr de vouloir supprimer définitivement ce(s) message(s) ?'
@@ -487,6 +487,8 @@ workspace_edit_form_selfUnregistration: 'Désinscription publique'
 workspace_form_code: Code
 workspace_form_displayable: Publique
 workspace_form_name: Nom
+workspace_form_selfRegistration: 'Inscription publique'
+workspace_form_selfUnregistration: 'Désinscription publique'
 workspace_form_template: Modèle
 workspace_form_type: Type
 workspace_home_tab_creation: 'Création d''un onglet pour les espaces d''activités'

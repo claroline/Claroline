@@ -13,7 +13,7 @@
                 <i class="icon-chevron-down pull-right"></i>
             </a>
         </div>
-        <div id="collapse-{{ currentIndex }}" class="list-group collapse">
+        <div id="collapse-{{ currentIndex }}" class="panel-body collapse">
             {% if hierarchy[tag.getId()]|length > 0 %}
             {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable) }}
             {% endif %}

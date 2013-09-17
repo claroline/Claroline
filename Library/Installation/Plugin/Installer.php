@@ -100,7 +100,7 @@ class Installer
      */
     public function update(PluginBundle $plugin, BundleVersion $current, BundleVersion $target)
     {
-        $this->checkRegistrationStatus($plugin, true);
+        $this->checkInstallationStatus($plugin, true);
         $this->baseInstaller->update($plugin, $current, $target);
         // here come the plugin update tasks (e.g. config update)
     }
