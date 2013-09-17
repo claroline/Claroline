@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Claroline\CoreBundle\Entity\Widget\Widget;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -165,5 +166,32 @@ class AdministrationWidgetController extends Controller
         $em->flush();
 
         return new Response('success', 204);
+    }
+    
+    /**
+     * @EXT\Route(
+     *     "/widget/name/form/{config}",
+     *     name = "claro_admin_widget_name_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Administration:editWidgetNameForm.html.twig")
+     * 
+     * @param \Claroline\CoreBundle\Entity\Widget\DisplayConfig $config
+     * 
+     * @return array
+     */
+    public function editWidgetNameFormAction(DisplayConfig $config)
+    {   
+        $formFactory = $this->get("claroline.form.factory");
+        $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
+        
+        return array('form' => $form->createView());
+    }
+    
+    public function editWidgetName(DisplayConfig $config)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $config->setName($name);
+        $em->flush();
     }
 }

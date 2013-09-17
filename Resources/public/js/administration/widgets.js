@@ -36,4 +36,12 @@
             }
         });
     });
+    
+   $('.form-name-widget').on('submit', function (e) {
+        e.preventDefault();
+        var formAction = $(e.currentTarget.parentElement.parentElement).attr('action');
+        var form = document.getElementById('node-rights-form');
+        var formData = new FormData(form);
+        submitForm(formAction, formData);
+   });
 })();

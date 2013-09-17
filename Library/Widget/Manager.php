@@ -198,6 +198,7 @@ class Manager
         $childConfig->setVisible($config->isVisible());
         $childConfig->setWidget($config->getWidget());
         $childConfig->setLock($config->isLocked());
+        $childConfig->setName($config->getName());
 
         return $childConfig;
     }

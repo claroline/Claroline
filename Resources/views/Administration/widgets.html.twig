@@ -34,7 +34,7 @@
             <tbody id="widget-table-body">
                 {% for wconfig in wconfigs %}
                 <tr class='row-widget-config' data-id="{{ wconfig.getId() }}">
-                    <td>{{ wconfig.getWidget().getName()|lower|trans({}, 'widget') }}</td>
+                    <td>{% render controller('ClarolineCoreBundle:AdministrationWidget:editWidgetNameForm', {'config': wconfig}) %}</td>
                     <td><input type="checkbox" class="chk-config-visible" value="1" {% if wconfig.isVisible() %} checked {% endif %}></td>
                     <td><input type="checkbox" class="chk-admin-lock" value="1" {% if wconfig.isLocked() %} checked {% endif %}></td>
                     <td>

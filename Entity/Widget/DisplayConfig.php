@@ -69,6 +69,11 @@ class DisplayConfig
      */
     protected $isDesktop = false;
 
+    /**
+     * @ORM\Column(name="name")
+     */
+    protected $name = 'Change me !';
+    
     public function getId()
     {
         return $this->id;
@@ -155,5 +160,15 @@ class DisplayConfig
     public function getUser()
     {
         return $this->user;
+    }
+    
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+    
+    public function getName()
+    {
+        return $this->name;
     }
 }
