@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
+use Claroline\InstallationBundle\Bundle\BundleVersion;
 
 class AdditionalInstaller extends BaseInstaller
 {
