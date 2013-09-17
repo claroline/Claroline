@@ -3,11 +3,19 @@
 namespace ICAP\BlogBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 class ICAPBlogBundle extends PluginBundle
 {
-    public function getRoutingPrefix()
+    public function getConfiguration($environment)
     {
-        return "icap_blog";
+        $config = new ConfigurationBuilder();
+
+        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'icap_blog');
+    }
+
+    public function getRequiredFixturesDirectory($environment)
+    {
+        return 'DataFixtures';
     }
 }
