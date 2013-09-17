@@ -63,6 +63,7 @@ class AdditionalInstaller extends BaseInstaller
             ->findOneByName('my_workspaces');
 
         if (is_null($workspaceWidget)) {
+            $this->log('Creating workspaces list widget...');
             $widget = new Widget();
             $widget->setName('my_workspaces');
             $widget->setConfigurable(false);
