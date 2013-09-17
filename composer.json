@@ -17,9 +17,9 @@
         "claroline/plugin-installer": "~1.0"
     },
     "autoload": {
-        "psr-0": { "ICAP\\BlogBundle": "" }
+        "psr-0": { "Icap\\BlogBundle": "" }
     },
-    "target-dir": "ICAP/BlogBundle",
+    "target-dir": "Icap/BlogBundle",
     "extra": {
         "dbVersion": "20130820133717"
     }
