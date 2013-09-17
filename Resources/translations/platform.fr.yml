@@ -214,7 +214,7 @@ mail_click: 'Cliquez sur ce lien pour réinitialiser votre mot de passe'
 mail_sent : 'Un email vient de vous être envoyé. Vérifiez votre dossier spam au cas où vous ne verriez pas l''email'
 manage_rights: 'Gérer les droits'
 manager: Gestionnaire
-max_size_25mb: 'Taille max 25MB'
+max_size_is: 'La taille maximale est %size%'
 media_most_viewed: 'Media les plus consultés'
 messages_confirm_delete: 'Etes-vous sûr de vouloir supprimer ce(s) message(s) ?'
 messages_confirm_permanent_delete: 'Etes-vous sûr de vouloir supprimer définitivement ce(s) message(s) ?'
