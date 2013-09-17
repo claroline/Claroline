@@ -136,38 +136,53 @@ class AuthenticationController
         if ($form->isValid()) {
             $data = $form->getData();
             $user = $this->userManager->getUserbyEmail($data['mail']);
-            $link = $this->request->server->get('HTTP_ORIGIN') . $this->router->generate(
-                'claro_security_reset_password',
-                array('hash' => $user->getResetPasswordHash())
-            );
-        }
 
-        if (!empty($user)) {
-            $user->setHashTime(time());
-            $password = sha1(rand(1000, 10000) . $user->getUsername() . $user->getSalt());
-            $user->setResetPasswordHash($password);
-            $this->om->persist($user);
-            $this->om->flush();
-            $msg = $this->translator->trans('mail_click', array(), 'platform');
-            $body = $this->templating->render('ClarolineCoreBundle:Authentication:emailForgotPassword.html.twig',array('message'=> $msg, 'link'=> $link));
-            $message = \Swift_Message::newInstance()
-                ->setSubject($this->translator->trans('reset_pwd', array(), 'platform'))
-                ->setFrom('noreply@claroline.net')
-                ->setTo($data['mail'])
-                ->setBody($body);
+            if (!empty($user)) {
+                $user->setHashTime(time());
+                $password = sha1(rand(1000, 10000) . $user->getUsername() . $user->getSalt());
+                $user->setResetPasswordHash($password);
+                $this->om->persist($user);
+                $this->om->flush();
+                $msg = $this->translator->trans('mail_click', array(), 'platform');
+                $link = $this->request->server->get('HTTP_ORIGIN') . $this->router->generate(
+                    'claro_security_reset_password',
+                    array('hash' => $user->getResetPasswordHash())
+                );
 
-            $this->mailer->send($message);
+                try {
+                    $this->mailer->getTransport()->start();
+                } catch (Swift_TransportException $e)
+                {
+                    return array(
+                        'error' => $this->translator->trans('mail_config_problem', array(), 'platform'),
+                        'form' => $form->createView()
+                    );
+                }
+                    $body = $this->templating->render('ClarolineCoreBundle:Authentication:emailForgotPassword.html.twig',array('message'=> $msg, 'link'=> $link));
+                    $message = \Swift_Message::newInstance()
+                        ->setSubject($this->translator->trans('reset_pwd', array(), 'platform'))
+                        ->setFrom('noreply@claroline.net')
+                        ->setTo($data['mail'])
+                        ->setBody($body);
+                    $this->mailer->send($message);
+
+                    return array(
+                        'user' => $user,
+                        'form' => $form->createView()
+                    );
+
+                return array(
+                    'error' => $this->translator->trans('mail_config_problem', array(), 'platform'),
+                    'form' => $form->createView()
+                    );
+
+            }
 
             return array(
-                'user' => $user,
+                'error' => $this->translator->trans('mail_invalid', array(), 'platform'),
                 'form' => $form->createView()
             );
         }
-
-        return array(
-            'error' => $this->translator->trans('no_email', array(), 'platform'),
-            'form' => $form->createView()
-        );
     }
 
     /**
