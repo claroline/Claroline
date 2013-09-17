@@ -54,12 +54,12 @@ $("#updateSubmit").click(function () {
 
     // If new label is empty
     if (newlabel == '') {
-        alert('Aucun nom');
+        alert(translations['wrongName']);
         return false;
     } else {
         // If new label already exist
         var exists = false;
-        $("*[id$='_interaction_question_category option']").each(function () {
+        $("*[id$='_interaction_question_category']  option").each(function () {
             if (this.text == newlabel) {
                 exists = true;
                 return false;
@@ -67,7 +67,7 @@ $("#updateSubmit").click(function () {
         });
 
         if (exists) {
-            alert("existe déjà");
+           alert(translations['alreadyExist']);
         } else {
             $.ajax({
                 type: "POST",

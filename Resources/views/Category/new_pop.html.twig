@@ -48,13 +48,14 @@
 
         if (nom_cat == '') {
 
-            alert('Aucun nom');
+            alert('{{ 'wrongName'|trans }}');
             return false;
 
         } else {
 
             var exists = false;
-            $("*[id$='_interaction_question_category option']").each(function() {
+            $("*[id$='_interaction_question_category'] option").each(function() {
+
                 if (this.text == nom_cat) {
                     exists = true;
                     return false;
@@ -62,7 +63,7 @@
             });
 
             if (exists) {
-                alert("existe");
+                alert('{{ 'alreadyExist'|trans }}');
             } else {
             //apler l'action create2 avec ajax
                 $.ajax({
