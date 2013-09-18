@@ -5,7 +5,7 @@ namespace ICAP\BlogBundle;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
-class IcapBlogBundle extends PluginBundle
+class ICAPBlogBundle extends PluginBundle
 {
     public function getConfiguration($environment)
     {
