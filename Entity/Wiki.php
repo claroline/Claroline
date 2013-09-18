@@ -1,6 +1,6 @@
 <?php
 
-namespace ICAP\WikiBundle\Entity;
+namespace Icap\WikiBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Mapping as ORM;
@@ -20,7 +20,7 @@ class Wiki extends AbstractResource
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="ICAP\WikiBundle\Entity\Section",
+     *      targetEntity="Icap\WikiBundle\Entity\Section",
      *      mappedBy="wiki",
      *      cascade={"all"},
      *      orphanRemoval=true

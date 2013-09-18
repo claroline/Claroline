@@ -1,6 +1,6 @@
 <?php
 
-namespace ICAP\WikiBundle\Migrations\sqlsrv;
+namespace Icap\WikiBundle\Migrations\sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;

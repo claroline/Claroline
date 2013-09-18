@@ -1,6 +1,6 @@
 <?php
 
-namespace ICAP\WikiBundle\Listener;
+namespace Icap\WikiBundle\Listener;
 
 use Claroline\CoreBundle\Event\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Event\Event\CreateFormResourceEvent;
@@ -13,8 +13,8 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-use ICAP\WikiBundle\Entity\Wiki;
-use ICAP\WikiBundle\Form\WikiType;
+use Icap\WikiBundle\Entity\Wiki;
+use Icap\WikiBundle\Form\WikiType;
 
 class WikiListener extends ContainerAware
 {

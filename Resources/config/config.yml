@@ -3,6 +3,6 @@ plugin:
 
     resources:
         - name: icap_wiki
-          class: ICAP\WikiBundle\Entity\Wiki
+          class: Icap\WikiBundle\Entity\Wiki
           is_visible: true
           is_browsable: false

@@ -1,6 +1,6 @@
 <?php
 
-namespace ICAP\WikiBundle\Migrations\ibm_db2;
+namespace Icap\WikiBundle\Migrations\ibm_db2;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;

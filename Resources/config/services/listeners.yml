@@ -1,6 +1,6 @@
 services:
     icap.listener.wiki_listener:
-        class: ICAP\WikiBundle\Listener\WikiListener
+        class: Icap\WikiBundle\Listener\WikiListener
         calls:
           - [setContainer, ["@service_container"]]
         tags:

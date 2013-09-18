@@ -1,6 +1,6 @@
 <?php
 
-namespace ICAP\WikiBundle\Migrations\pdo_pgsql;
+namespace Icap\WikiBundle\Migrations\pdo_pgsql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;

@@ -1,6 +1,6 @@
 <?php
 
-namespace ICAP\WikiBundle\Migrations\pdo_oci;
+namespace Icap\WikiBundle\Migrations\pdo_oci;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;

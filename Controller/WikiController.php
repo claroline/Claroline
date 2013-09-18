@@ -7,11 +7,11 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace ICAP\WikiBundle\Controller;
+namespace Icap\WikiBundle\Controller;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use ICAP\WikiBundle\Entity\Section;
-use ICAP\WikiBundle\Form\SectionType;
+use Icap\WikiBundle\Entity\Section;
+use Icap\WikiBundle\Form\SectionType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -29,7 +29,7 @@ class WikiController extends Controller{
     {
         $em = $this->getDoctrine()->getManager();
         $wiki = $em
-            ->getRepository('ICAPWikiBundle:Wiki')
+            ->getRepository('IcapWikiBundle:Wiki')
             ->findOneBy(array('id' => $resourceId ));
         if (!$wiki) {
             throw $this->createNotFoundException('The wiki does not exist');
@@ -70,7 +70,7 @@ class WikiController extends Controller{
         $form = $this->createForm(new SectionType());
         if ($request->isXMLHttpRequest()) {
             return $this->render(
-                'ICAPWikiBundle:Wiki:createSectionModal.html.twig',
+                'IcapWikiBundle:Wiki:createSectionModal.html.twig',
                 array(
                     'wiki' => $wiki,
                     'workspace' => $wiki->getResourceNode()->getWorkspace(),

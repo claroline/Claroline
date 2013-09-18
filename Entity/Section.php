@@ -1,6 +1,6 @@
 <?php
 
-namespace ICAP\WikiBundle\Entity;
+namespace Icap\WikiBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,7 +23,7 @@ class Section
 
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="ICAP\WikiBundle\Entity\Wiki",
+     *      targetEntity="Icap\WikiBundle\Entity\Wiki",
      *      inversedBy="sections"
      * )
      * @ORM\JoinColumn(name="wiki_id", referencedColumnName="id", nullable=false)
@@ -32,7 +32,7 @@ class Section
 
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="ICAP\WikiBundle\Entity\Section",
+     *      targetEntity="Icap\WikiBundle\Entity\Section",
      *      inversedBy="sections"
      * )
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
@@ -57,7 +57,7 @@ class Section
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="ICAP\WikiBundle\Entity\Section",
+     *      targetEntity="Icap\WikiBundle\Entity\Section",
      *      mappedBy="section",
      *      cascade={"all"},
      *      orphanRemoval=true
@@ -78,10 +78,10 @@ class Section
     /**
      * Set wiki
      *
-     * @param \ICAP\WikiBundle\Entity\Wiki $wiki
+     * @param \Icap\WikiBundle\Entity\Wiki $wiki
      * @return section
      */
-    public function setWiki(\ICAP\WikiBundle\Entity\Wiki $wiki)
+    public function setWiki(\Icap\WikiBundle\Entity\Wiki $wiki)
     {
         $this->wiki = $wiki;
 
@@ -91,7 +91,7 @@ class Section
     /**
      * Get wiki
      *
-     * @return \ICAP\WikiBundle\Entity\Wiki
+     * @return \Icap\WikiBundle\Entity\Wiki
      */
     public function getWiki()
     {
@@ -101,10 +101,10 @@ class Section
     /**
      * Set wiki
      *
-     * @param \ICAP\WikiBundle\Entity\Wiki $wiki
+     * @param \Icap\WikiBundle\Entity\Wiki $wiki
      * @return section
      */
-    public function setParent(\ICAP\WikiBundle\Entity\Section $section)
+    public function setParent(\Icap\WikiBundle\Entity\Section $section)
     {
         $this->section = $section;
         return $this;
@@ -113,7 +113,7 @@ class Section
     /**
      * Get wiki
      *
-     * @return \ICAP\WikiBundle\Entity\Wiki
+     * @return \Icap\WikiBundle\Entity\Wiki
      */
     public function getParent()
     {
