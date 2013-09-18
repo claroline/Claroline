@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 use Innova\PathBundle\Entity\Path;
+use Innova\PathBundle\Entity\Step;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
@@ -79,26 +80,24 @@ class PathController extends Controller
             // Création ResourceNode
             $resourceNode = new ResourceNode();
             $resourceNode->setName($step->name);
-            $resourceNode->setClass("Claroline\CoreBundle\Entity\Resource\Activity");
+            $resourceNode->setClass("Innova\PathBundle\Entity\Step");
             $resourceNode->setCreator($user);
-            $resourceNode->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneById(5));
+            $resourceNode->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneById(10));
             $resourceNode->setWorkspace($workspace);
             $resourceNode->setParent($parent);
             $resourceNode->setMimeType("custom/activity");
-            $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(3));
+            $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(35));
 
             $manager->persist($resourceNode);
             $manager->flush();
 
             $rm->setLastPosition($parent, $resourceNode);
             
-            // Création Activité
-            $activity = new Activity();
-            $activity->setName($step->name);
-            $activity->setInstructions("Consigne");
-            $activity->setResourceNode($resourceNode);
+            // Création Step
+            $step1 = new Step();
+            $step1->setResourceNode($resourceNode);
 
-            $manager->persist($activity);
+            $manager->persist($step1);
             $manager->flush();
 
             // Gestion de la jointure ResourceActivity
