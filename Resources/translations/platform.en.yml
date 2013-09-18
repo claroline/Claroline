@@ -224,7 +224,7 @@ login: Login
 login_failure: 'Login has failed. Check your username and password are correct.'
 logout: Logout
 mail: Mail
-mail_config_problem : Please check your mail configuration
+mail_config_problem : Please contact your administrator platform to reinitialize your password
 mail_form_content: Content
 mail_form_object: Object
 mail_invalid : "Mail format is not valid"

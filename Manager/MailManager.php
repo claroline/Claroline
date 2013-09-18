@@ -14,6 +14,7 @@ class MailManager
 {
     private $router;
     private $mailer;
+
     /**
      * @DI\InjectParams({
      *     "router"         = @DI\Inject("router"),
@@ -36,13 +37,14 @@ class MailManager
         $this->translator = $translator;
         $this->request = $request;
     }
-    public function getMailConfiguration()
+    public function isMailerAvailable()
     {
         try {
             $this->mailer->getTransport()->start();
 
             return true;
         } catch (\Swift_TransportException $e) {
+
             return false;
         }
     }
@@ -55,13 +57,14 @@ class MailManager
             array('hash' => $hash)
         );
 
-        $body = $this->templating->render('ClarolineCoreBundle:Authentication:emailForgotPassword.html.twig',array('message'=> $msg, 'link'=> $link));
+        $body = $this->templating->render('ClarolineCoreBundle:Authentication:emailForgotPassword.html.twig',array('message' => $msg, 'link' => $link));
         $message = \Swift_Message::newInstance()
             ->setSubject($this->translator->trans('reset_pwd', array(), 'platform'))
             ->setFrom($from)
             ->setTo($sender)
             ->setBody($body);
         if ($this->mailer->send($message)) {
+
             return true;
         }
 

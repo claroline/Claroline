@@ -107,15 +107,14 @@ class AuthenticationController
      */
     public function forgotPasswordAction()
     {
-        if ($this->mailManager->getMailConfiguration()) {
+        if ($this->mailManager->isMailerAvailable()) {
             $form = $this->formFactory->create(FormFactory::TYPE_USER_EMAIL, array(), null);
 
             return array('form' => $form->createView());
         }
 
         return array(
-            'error' => $this->translator->trans('mail_config_problem', array(), 'platform'),
-            //'form' => $form->createView()
+            'error' => $this->translator->trans('mail_config_problem', array(), 'platform')
         );
     }
 
@@ -142,14 +141,14 @@ class AuthenticationController
                 $user->setResetPasswordHash($password);
                 $this->om->persist($user);
                 $this->om->flush();
-                if( $this->mailManager->sendForgotPassword('noreply@claroline.net', $data['mail'], $user->getResetPasswordHash()) )
-                {
+                if ($this->mailManager->sendForgotPassword('noreply@claroline.net', $data['mail'], $user->getResetPasswordHash())) {
+
                     return array(
                         'user' => $user,
                         'form' => $form->createView()
                     );
-
                 }
+
                 return array(
                     'error' => $this->translator->trans('mail_config_problem', array(), 'platform'),
                     'form' => $form->createView()
@@ -179,6 +178,7 @@ class AuthenticationController
         $user = $this->userManager->getResetPasswordHash($hash);
 
         if (empty($user)) {
+
             return array(
                 'error' => $this->translator->trans('url_invalid', array(), 'platform'),
             );
