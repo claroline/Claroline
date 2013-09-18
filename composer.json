@@ -1,5 +1,5 @@
 {
-    "name": "innova/path",
+    "name": "innova/pathBundle",
     "type": "claroline-plugin",
     "description": "Claroline Path Bundle",
     "keywords": ["Claroline", "Path"],
