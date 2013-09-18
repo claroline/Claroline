@@ -65,24 +65,7 @@ class PathController extends Controller
         // Récupération utilisateur courant.
         $user = $this->get('security.context')->getToken()->getUser();
 
-        $pathsDirectory = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneByName("_paths");
-
-        // création du dossier _paths
-        $pathsDirectory = new ResourceNode();
-        $pathsDirectory->setName("_paths");
-        $pathsDirectory->setClass("Claroline\CoreBundle\Entity\Resource\Directory");
-        $pathsDirectory->setCreator($user);
-        $pathsDirectory->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneById(2));
-        $pathsDirectory->setWorkspace($workspace);
-        $pathsDirectory->setParent($root);
-        $pathsDirectory->setMimeType("custom/directory");
-        $pathsDirectory->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(7));
-
-        $manager->persist($pathsDirectory);
-        $manager->flush();
-
-        //lancement récursion 
-        $this->JSONParser($json_root_steps, $user, $workspace, $pathsDirectory);
+        $this->JSONParser($json_root_steps, $user, $workspace, $root);
 
         return array('workspace' => $workspace, 'ok' => "Parcours déployé.");
     }
@@ -133,19 +116,17 @@ class PathController extends Controller
             // Gestion des droits.
             $right1 = new ResourceRights();
             $right1->setRole($manager->getRepository('ClarolineCoreBundle:Role')->findOneById(3));
-            /*
             $right1->setCanEdit(1);
             $right1->setCanCopy(1);
             $right1->setCanExport(1);
             $right1->setCanDelete(1);
-            */
             $right1->setResourceNode($resourceNode);
             $manager->persist($right1);
 
             $manager->flush(); 
 
             // récursivité sur les enfants possibles.
-            $this->JSONParser($step->children, $user, $workspace, $parent);
+            $this->JSONParser($step->children, $user, $workspace, $resourceNode);
         }
 
         $manager->flush();     
