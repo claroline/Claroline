@@ -224,8 +224,10 @@ login: Login
 login_failure: 'Login has failed. Check your username and password are correct.'
 logout: Logout
 mail: Mail
+mail_config_problem : Please check your mail configuration
 mail_form_content: Content
 mail_form_object: Object
+mail_invalid : "Mail format is not valid"
 mail_message : 'You received this message because you asked for a new password. Please click on the link below to reset it. If you did not ask to reset your password please ignore this message.'
 mail_click: 'Click on this link to reset your password'
 mail_sent : 'A email has been sent to your address , check your inbox mail and your spam box'
