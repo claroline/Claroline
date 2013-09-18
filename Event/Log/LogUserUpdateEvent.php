@@ -37,7 +37,7 @@ class LogUserUpdateEvent extends LogGenericEvent implements MandatoryEventInterf
     /**
      * @return array
      */
-    public function getRestriction()
+    public static function getRestriction()
     {
         return array(self::DISPLAYED_ADMIN);
     }
