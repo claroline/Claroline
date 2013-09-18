@@ -15,26 +15,36 @@
 {% from _self import renderPager %}
 
 {% set nbPages = relations.getNbPages() %}
+
 {% if nbPages > 1 %}
-{{ renderPager(relations, workspaceTagId) }}
+    {{ renderPager(relations, workspaceTagId) }}
 {% endif %}
-<ul>
-    {% for relation in relations.currentPageResults() %}
+
+{% for relation in relations.currentPageResults() %}
     {% set workspace = relation.getWorkspace() %}
-    <li class="row-workspace row-workspace-id-{{ workspace.getId() }}">
+    <a class="list-group-item row-workspace row-workspace-id-{{ workspace.getId() }}"
         {% set granted = has_access_to_workspace(workspace.getId(), app.security.getToken()) %}
-        {% if granted == true %}
-        <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
-           id="link-home-{{ workspace.getId() }}"
-        >
+        {% if granted %}
+            href="{{ path('claro_workspace_open',
+            {'workspaceId': workspace.getId()}) }}"
+            id="link-home-{{ workspace.getId() }}"
+
         {% endif %}
+    >
+        {% if not granted %}
+            <span class="text-muted">
+        {% endif %}
+
         <i class="icon-book"></i>
         {{ workspace.getName() }}
         <span class="workspace-code">({{ workspace.getCode() }})</span>
-        {% if granted %}</a>{% endif %}
-    </li>
-    {% endfor %}
-</ul>
+
+        {% if not granted %}
+            </span>
+        {% endif %}
+    </a>
+{% endfor %}
+
 {% if nbPages > 1 %}
-{{ renderPager(relations, workspaceTagId) }}
+    {{ renderPager(relations, workspaceTagId) }}
 {% endif %}
