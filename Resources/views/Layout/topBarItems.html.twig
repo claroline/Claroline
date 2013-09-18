@@ -70,7 +70,7 @@
             {% endif %}
             {{ topbar.item('my_workspaces', path('claro_workspace_by_user'), 'book') }}
             {{ topbar.item('find_workspaces', path('claro_workspace_list'), 'book') }}
-            {% if is_granted('CREATE', workspace ) %}
+            {% if is_granted('ROLE_WS_CREATOR') %}
             <li class="divider"></li>
             {{ topbar.item('create_workspace', path('claro_workspace_creation_form'), 'pencil') }}
             {% endif %}
