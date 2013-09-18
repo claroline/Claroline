@@ -105,7 +105,7 @@
                     <tr id="{{ user.getId() }}" class="row-user">
                         <td>{{ user.getId() }}</td>
                         <td>
-                            <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}">
+                            <a href="{{ path('claro_profile_form_admin', {'user': user.getId()}) }}">
                                 {{ user.getUsername() }}
                             </a>
                         </td>

@@ -63,7 +63,7 @@ class Installer
         $errors = $this->validator->validate($plugin);
 
         if (0 !== count($errors)) {
-            $report = "Plugin '{$pluginFqcn}' cannot be installed, due to the "
+            $report = "Plugin '{$plugin->getNamespace()}' cannot be installed, due to the "
                 . "following validation errors :" . PHP_EOL;
 
             foreach ($errors as $error) {

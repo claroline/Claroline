@@ -1,0 +1,17 @@
+{% if workspaces|length == 0 %}
+    {{ 'no_workspace'|trans({}, 'platform') }}
+{% else %}
+    {% for workspace in workspaces %}
+    <a class="col-md-6"
+        {% set granted = is_granted('home', workspace) %}
+        {% if granted == true %}
+            href="{{ path('claro_workspace_open',
+            {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
+        {% endif %}
+    >
+        <i class="icon-book"></i>
+        {{ workspace.getName() }}
+        <span><small>({{ workspace.getCode() }})</small></span>
+    </a>
+    {% endfor %}
+{% endif %}
