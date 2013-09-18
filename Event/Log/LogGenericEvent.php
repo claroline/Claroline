@@ -133,7 +133,7 @@ abstract class LogGenericEvent extends Event
     /**
      * @return array
      */
-    public abstract function getRestriction();
+    public abstract static function getRestriction();
 
     /**
      * @return LogGenericEvent
@@ -191,9 +191,10 @@ abstract class LogGenericEvent extends Event
     }
 
     /**
-     * @param string $restrictions
+     * @param string $restriction
      *
      * @throws \InvalidArgumentException
+     *
      * @return bool
      */
     public function isDisplayedByRestriction($restriction)
