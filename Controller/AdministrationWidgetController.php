@@ -185,13 +185,36 @@ class AdministrationWidgetController extends Controller
         $formFactory = $this->get("claroline.form.factory");
         $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
         
-        return array('form' => $form->createView());
+        return array('form' => $form->createView(), 'config' => $config);
     }
-    
+
+    /**
+     * @EXT\Route(
+     *     "/widget/name/edit/{config}",
+     *     name = "claro_admin_widget_name_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Administration:editWidgetNameForm.html.twig")
+     * 
+     * @param \Claroline\CoreBundle\Entity\Widget\DisplayConfig $config
+     * 
+     * @return array
+     */
     public function editWidgetName(DisplayConfig $config)
     {
-        $em = $this->getDoctrine()->getManager();
-        $config->setName($name);
-        $em->flush();
+        $formFactory = $this->get("claroline.form.factory");
+        $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
+        $form->handleRequest($this->get('request'));
+        
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $config = $form->getData();
+            $em->persist($config);
+            $em->flush();
+            
+            return new Response('success', 204);
+        } else {
+            return array('form' => $form->createView(), 'config' => $config);
+        }
     }
 }

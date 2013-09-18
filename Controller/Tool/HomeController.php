@@ -1518,7 +1518,122 @@ class HomeController extends Controller
 
         return new Response('success', 204);
     }
+    
+    /**
+     * @EXT\Route(
+     *     "/desktop/widget/name/form/{config}",
+     *     name = "claro_desktop_widget_name_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:editWidgetNameForm.html.twig")
+     * 
+     * @param \Claroline\CoreBundle\Entity\Widget\DisplayConfig $config
+     * 
+     * @return array
+     */
+    public function editDesktopWidgetNameFormAction(DisplayConfig $config)
+    {   
+        $formFactory = $this->get("claroline.form.factory");
+        $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array('isLocked' => $config->getParent()->isLocked()), $config);
+         
+        return array('form' => $form->createView(), 'config' => $config);
+    }
 
+    /**
+     * @EXT\Route(
+     *     "/desktop/widget/name/edit/{widget}/parent/{adminConfig}",
+     *     name = "claro_desktop_widget_name_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:editWidgetNameForm.html.twig")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @param \Claroline\CoreBundle\Entity\Widget\DisplayConfig $config
+     * 
+     * @return array
+     */
+    public function editDesktopWidgetName(Widget $widget, DisplayConfig $adminConfig, User $user)
+    {
+        $config = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+            ->findOneBy(array('user' => $user, 'widget' => $widget));
+
+        if ($config === null) {
+            $config = new DisplayConfig();
+            $config->setParent($adminConfig);
+            $config->setWidget($widget);
+            $config->setUser($user);
+            $config->setVisible($adminConfig->isVisible());
+            $config->setLock(true);
+            $config->setDesktop(true);
+            $config->setName($adminConfig->getName());
+        }
+        
+        $form = $this->request->request->get('widget_display_form');
+        $config->setName($form['name']);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($config);
+        $em->flush();
+        
+        return new Response('success', 204);
+    }
+    
+    /**
+     * @EXT\Route(
+     *     "/workspace/widget/name/form/{config}",
+     *     name = "claro_workspace_widget_name_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:editWidgetNameForm.html.twig")
+     * 
+     * @param \Claroline\CoreBundle\Entity\Widget\DisplayConfig $config
+     * 
+     * @return array
+     */
+    public function editWorkspaceWidgetNameFormAction(DisplayConfig $config)
+    {   
+        $formFactory = $this->get("claroline.form.factory");
+        $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array('isLocked' => $config->getParent()->isLocked()), $config);
+            var_dump($config->getWorkspace()->getId());
+        
+        return array('form' => $form->createView(), 'config' => $config);
+    }
+    
+    /**
+     * @EXT\Route(
+     *     "/workspace/{workspace}/widget/name/edit/{widget}/parent/{adminConfig}",
+     *     name = "claro_workspace_widget_name_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:editWidgetNameForm.html.twig")
+     * 
+     * @param \Claroline\CoreBundle\Entity\Widget\DisplayConfig $config
+     * 
+     * @return array
+     */
+    public function editWorkspaceWidgetName(Widget $widget, DisplayConfig $adminConfig, AbstractWorkspace $workspace)
+    {
+        $config = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+            ->findOneBy(array('workspace' => $workspace, 'widget' => $widget));
+
+        if ($config === null) {
+            $config = new DisplayConfig();
+            $config->setParent($adminConfig);
+            $config->setWidget($widget);
+            $config->setWorkspace($workspace);
+            $config->setVisible($adminConfig->isVisible());
+            $config->setLock(true);
+            $config->setDesktop(false);
+            $config->setName($adminConfig->getName());
+        }
+        
+        $form = $this->request->request->get('widget_display_form');
+        $config->setName($form['name']);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($config);
+        $em->flush();
+        
+        return new Response('success', 204);
+    }
+    
     private function checkUserAccess()
     {
         if (!$this->securityContext->isGranted('ROLE_USER')) {

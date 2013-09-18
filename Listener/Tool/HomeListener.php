@@ -108,7 +108,8 @@ class HomeListener
     public function onImportHome(ImportToolEvent $event)
     {
         $config = $event->getConfig();
-
+//        $widgets = $this->em->getRepository('Claroline\CoreBundle\Entity\Widget\Widget')->findAll():
+        
         if (isset($config['widget'])) {
             $unknownWidgets = array();
             foreach ($config['widget'] as $widgetConfig) {
@@ -139,6 +140,8 @@ class HomeListener
 
                 $this->em->persist($displayConfig);
             }
+            
+            //find not seen widget configs and add them.
         }
 
         if (count($unknownWidgets) > 0) {

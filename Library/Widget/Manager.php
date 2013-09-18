@@ -116,7 +116,7 @@ class Manager
      *
      * @return DisplayConfig
      */
-    private function getWorkspaceForcedConfig($widgetId, $workspaceId)
+    public function getWorkspaceForcedConfig($widgetId, $workspaceId)
     {
         $wsConfig = $this->em
             ->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
@@ -137,7 +137,7 @@ class Manager
     }
 
     /**
-     * Gets the config in use for a widget in a uyser desktop. If the admin locked
+     * Gets the config in use for a widget in a user desktop. If the admin locked
      * his choice or no desktop config were defined, the admin one will be returned.
      *
      * @param integer $widgetId
@@ -145,7 +145,7 @@ class Manager
      *
      * @return DisplayConfig
      */
-    private function getDesktopForcedConfig($widgetId, $userId)
+    public function getDesktopForcedConfig($widgetId, $userId)
     {
         $userConfig = $this->em
             ->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')

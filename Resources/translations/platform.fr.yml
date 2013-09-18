@@ -471,6 +471,7 @@ widget: Widget
 widget_home_tab_delete_confirm_message: 'Voulez-vous vraiment retirer ce widget de cet onglet ?'
 widget_home_tab_delete_confirm_title: 'Suppression du widget de l''onglet'
 widgets: Widgets
+widget_display_form_name: Nom
 widgets_configuration: 'Configuration des widgets'
 workspace: 'Espace d''activités'
 workspace.create: 'Créer un nouvel espace d''activités'

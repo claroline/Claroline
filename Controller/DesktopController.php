@@ -27,6 +27,7 @@ class DesktopController extends Controller
     private $homeTabManager;
     private $router;
     private $toolManager;
+    private $widgetManager;
 
 
     /**
@@ -35,7 +36,8 @@ class DesktopController extends Controller
      *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "router"             = @DI\Inject("router"),
-     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager")
+     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
+     *     "widgetManager"      = @DI\Inject("claroline.widget.manager")
      * })
      */
     public function __construct(
@@ -43,7 +45,8 @@ class DesktopController extends Controller
         StrictDispatcher $eventDispatcher,
         HomeTabManager $homeTabManager,
         UrlGeneratorInterface $router,
-        ToolManager $toolManager
+        ToolManager $toolManager,
+        $widgetManager
     )
     {
         $this->em = $em;
@@ -51,6 +54,7 @@ class DesktopController extends Controller
         $this->homeTabManager = $homeTabManager;
         $this->router = $router;
         $this->toolManager = $toolManager;
+        $this->widgetManager = $widgetManager;
     }
 
     /**
@@ -127,14 +131,11 @@ class DesktopController extends Controller
 
                     if ($event->hasContent()) {
                         $widget['id'] = $config->getWidget()->getId();
-                        if ($event->hasTitle()) {
-                            $widget['title'] = $event->getTitle();
-                        } else {
-                            $widget['title'] = strtolower($config->getWidget()->getName());
-                        }
+                        $widget['title'] = $this->widgetManager
+                            ->getDesktopForcedConfig($widget['id'], $user->getId())->getName();
+                        
                         $widget['content'] = $event->getContent();
                         $widget['configurable'] = ($config->isLocked() !== true and $config->getWidget()->isConfigurable());
-
                         $widgets[] = $widget;
                     }
                 }

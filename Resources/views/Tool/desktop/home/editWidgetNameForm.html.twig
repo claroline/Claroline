@@ -1,0 +1,8 @@
+<form class="form-name-widget" action="{{ path('claro_desktop_widget_name_edit', {'widget': config.getWidget().getId(), 'adminConfig': config.getParent().getId() }) }}"> 
+    <div class="col-md-10">
+        {{ form_widget(form) }}
+    </div>
+    <div class="col-md-2">
+        <input class="btn btn-primary" type="submit" value="{{ 'validate'|trans({}, 'platform') }}" {% if config.getParent().isLocked() == true %} disabled {% endif %}></input>
+    </div>
+</form>

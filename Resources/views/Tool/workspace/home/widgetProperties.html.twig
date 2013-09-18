@@ -42,7 +42,7 @@
             <tbody id="widget-table-body" data-workspace-id="{{ workspace.getId() }}">
                 {% for config in configs %}
                     <tr class='row-widget-config' data-id="{{ config.getParent().getId() }}" data-widget-id="{{ config.getWidget().getId() }}">
-                        <th>{{ config.getWidget().getName()|lower|trans({}, 'widget') }}</th>
+                        <th>{% render controller('ClarolineCoreBundle:Tool\\Home:editWorkspaceWidgetNameForm', {'config': config}) %}</th>
                         <th><input type="checkbox" class="chk-config-visible" value="1" {% if config.isVisible() %} checked {% endif %} {% if config.getParent().isLocked() %} disabled {% endif %}></th>
                         <th> {% if config.getWidget().isConfigurable() and config.getParent().isLocked() == false %}
                             <a href="{{ path('claro_workspace_widget_configuration', {'widget': config.getWidget().getId(), 'workspace': workspace.getId()}) }}">

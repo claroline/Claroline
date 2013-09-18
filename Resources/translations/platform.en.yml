@@ -492,6 +492,7 @@ warning_workspace_impersonation: 'You are connected as %role% from the workspace
 warning_user_impersonation: 'You are connected as %user%.'
 widget_settings: 'Widget settings'
 widget: Widget
+widget_display_form_name: Name
 widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab ?'
 widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
 widgets: Widgets

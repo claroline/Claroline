@@ -50,6 +50,7 @@ class WorkspaceController extends Controller
     private $utils;
     private $formFactory;
     private $tokenUpdater;
+    private $widgetManager;
 
     /**
      * @DI\InjectParams({
@@ -65,7 +66,8 @@ class WorkspaceController extends Controller
      *     "router"             = @DI\Inject("router"),
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
-     *     "tokenUpdater"       = @DI\Inject("claroline.security.token_updater")
+     *     "tokenUpdater"       = @DI\Inject("claroline.security.token_updater"),
+     *     "widgetManager"      = @DI\Inject("claroline.widget.manager")
      * })
      */
     public function __construct(
@@ -81,7 +83,8 @@ class WorkspaceController extends Controller
         UrlGeneratorInterface $router,
         Utilities $utils,
         FormFactory $formFactory,
-        TokenUpdater $tokenUpdater
+        TokenUpdater $tokenUpdater,
+        $widgetManager
     )
     {
         $this->homeTabManager = $homeTabManager;
@@ -97,6 +100,7 @@ class WorkspaceController extends Controller
         $this->utils = $utils;
         $this->formFactory = $formFactory;
         $this->tokenUpdater = $tokenUpdater;
+        $this->widgetManager = $widgetManager;
     }
 
     /**
@@ -486,11 +490,9 @@ class WorkspaceController extends Controller
 
                     if ($event->hasContent()) {
                         $widget['id'] = $config->getWidget()->getId();
-                        if ($event->hasTitle()) {
-                            $widget['title'] = $event->getTitle();
-                        } else {
-                            $widget['title'] = strtolower($config->getWidget()->getName());
-                        }
+                        $widget['title'] = $this->widgetManager
+                            ->getWorkspaceForcedConfig($widget['id'], $workspace->getId())->getName();
+                        
                         $widget['content'] = $event->getContent();
                         $widget['configurable'] = (
                             $rightToConfigure
