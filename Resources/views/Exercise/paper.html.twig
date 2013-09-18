@@ -108,24 +108,7 @@
                 </table>
             </fieldset><br/>
 
-            {% if interactionToDisplayed.interaction.hints is not empty %}
-                <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
-                    <legend style="border: transparent hidden 0; width: 110px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'hints' | trans }} :</legend>
-                    <table>
-                        {% set nbr_hint = 1 %}
-                        {% for hint in interactionToDisplayed.interaction.hints %}
-                            <tr>
-                                <td class="classic"><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
-                                        '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }} ?', '{{nbr_hint}}',
-                                        '{{paper}}')">{{ "hint" | trans }} {{nbr_hint}}</a>
-                                </td>
-                                <td id="div_hint{{nbr_hint}}" class="classic"></td>
-                            </tr>
-                            {% set nbr_hint = nbr_hint + 1 %}
-                        {% endfor %}
-                    </table>
-                </fieldset><br/>
-            {% endif %}
+            {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
 
             <input type="hidden" name="testQCM" value="testQCM" />
             <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
@@ -197,24 +180,7 @@
             <input type="hidden" id="graphId" name="graphId" value="{{ interactionToDisplayed.id }}"/>
             <input type="hidden" id="PositionInit" name="PositionInit" value="false"/>
 
-            {% if interactionToDisplayed.interaction.hints is not empty %}
-                <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
-                    <legend style="border: transparent hidden 0; width: 110px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'hints' | trans }} :</legend>
-                    <table>
-                    {% set nbr_hint = 1 %}
-                        {% for hint in interactionToDisplayed.interaction.hints %}
-                            <tr>
-                                <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
-                                        '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }} ?', '{{nbr_hint}}',
-                                        '{{paper}}')">{{ "hint" | trans }} {{nbr_hint}}</a>
-                                </td>
-                                <td id="div_hint{{nbr_hint}}"></td>
-                            </tr>
-                            {% set nbr_hint = nbr_hint + 1 %}
-                        {% endfor %}
-                    </table>
-                </fieldset><br/>
-            {% endif %}
+            {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
 
             <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
 
@@ -262,25 +228,8 @@
                     </fieldset><br/>
                 {% endif %}
 
-                {% if interactionToDisplayed.interaction.hints is not empty %}
-                    <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
-                        <legend style="border: transparent hidden 0; width: 110px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'hints' | trans }} :</legend>
-                        <table>
-                            {% set nbr_hint = 1 %}
-                            {% for hint in interactionToDisplayed.interaction.hints %}
-                                <tr>
-                                    <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
-                                            '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }} ?', '{{nbr_hint}}',
-                                            '{{paper}}')">{{ "hint" | trans }} {{nbr_hint}}</a>
-                                    </td>
-                                    <td id="div_hint{{nbr_hint}}"></td>
-                                </tr>
-                                {% set nbr_hint = nbr_hint + 1 %}
-                            {% endfor %}
-                        </table>
-                    </fieldset><br/>
-                {% endif %}
-
+                {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
+                
                 <input type="hidden" name="testOpen" value="testOpen" />
                 <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
 

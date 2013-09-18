@@ -1,19 +1,24 @@
 function show_hint(idHint, path_hint_show, confirm_hint, nbr_hint, paper) {
     //"use strict";
+    
     if (confirm(confirm_hint)) {
-        $.ajax({
-            type: "POST",
-            url: path_hint_show,
-            data: {
-                id: idHint,
-                paper: paper
-            },
-            cache: false,
-            success: function (data) {
-                $("#div_hint" + nbr_hint).html(data);
-            }
-        });
+        show_hint2(idHint, path_hint_show, nbr_hint, paper);
     }
+}
+
+function show_hint2(idHint, path_hint_show, nbr_hint, paper) {
+    $.ajax({
+        type: "POST",
+        url: path_hint_show,
+        data: {
+            id: idHint,
+            paper: paper
+        },
+        cache: false,
+        success: function (data) {
+            $("#div_hint" + nbr_hint).html(data);
+        }
+    });
 }
 
 function submitForm(numQuestionToDisplayed, interactionType) {

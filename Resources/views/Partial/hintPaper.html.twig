@@ -1,0 +1,32 @@
+{% if interactionToDisplayed.interaction.hints is not empty %}
+    <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
+        <legend style="border: transparent hidden 0; width: 110px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'hints' | trans }} :</legend>
+        <table>
+            {% set penalties = app.session.get('penalties') %}
+            {% set nbr_hint = 1 %}
+            {% for hint in interactionToDisplayed.interaction.hints %}
+                <tr>
+                    {% if penalties[hint.id] is defined %}
+
+                        <td class="classic">{{ "hint" | trans }} {{nbr_hint}}</td>
+
+                        <script type="text/javascript">
+                            show_hint2('{{hint.id}}', '{{path('ujm_hint_show')}}',
+                                       '{{nbr_hint}}', '{{paper}}'
+                                      );
+                        </script>
+                    {% else %}
+
+                        <td class="classic"><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
+                                '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }} ?', '{{nbr_hint}}',
+                                '{{paper}}')">{{ "hint" | trans }} {{nbr_hint}}</a>
+                        </td>
+
+                    {% endif %}
+                    <td id="div_hint{{nbr_hint}}" class="classic"></td>
+                </tr>
+                {% set nbr_hint = nbr_hint + 1 %}
+            {% endfor %}
+        </table>
+    </fieldset><br/>
+{% endif %}

@@ -87,15 +87,13 @@ class HintController extends Controller
             }
             $deleteForm = $this->createDeleteForm($id);
 
-            if ($request->request->get('paper') == null) {
-                if (!$session->get('penalties')) {
-                    $penalties = array();
-                    $session->set('penalties', $penalties);
-                }
-                $penalties = $session->get('penalties');
-                $penalties[$id] = $entity->getPenalty();
+            if (!$session->get('penalties')) {
+                $penalties = array();
                 $session->set('penalties', $penalties);
-            } else {
+            }
+            $penalties = $session->get('penalties');
+            
+            if (($request->request->get('paper') != null) && (!isset($penalties[$id]))) {
                 $lhp = new LinkHintPaper(
                     $entity, $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper'))
                 );
@@ -103,6 +101,9 @@ class HintController extends Controller
                 $em->persist($lhp);
                 $em->flush();
             }
+            
+            $penalties[$id] = $entity->getPenalty();
+            $session->set('penalties', $penalties);
 
             return $this->container->get('templating')->renderResponse(
                 'UJMExoBundle:Hint:show.html.twig', array(
