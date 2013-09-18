@@ -24,3 +24,11 @@ no event found : 'no event found'
 tasks: Tasks
 title : "Title can not be empty"
 update : "update"
+prev:     '&lsaquo;', // <
+next:     '&rsaquo;', // >
+prevYear: '&laquo;',  // <<
+nextYear: '&raquo;',  // >>
+today:    'today',
+month:    'month',
+week:     'week',
+day:      'day'

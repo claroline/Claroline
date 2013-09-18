@@ -318,12 +318,13 @@
             dayNamesShort: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
             editable: true,
             events: $('a#link').attr('href'),
-            timeFormat: 'H(:mm)',
-            agenda: 'h:mm{ - h:mm}', // 5:00 - 6:30
-            // for all other views
-            '': 'h(:mm)t',            // 7p
+            axisFormat: 'HH:mm',
+            timeFormat: {
+                agenda: 'H:mm{ - h:mm}'
+            },
             allDayText: 'all-day',
             allDaySlot: true,
+            lazyFetching : true,
             eventDrop: function (event, dayDelta, minuteDelta) {
                 dropEvent(event, dayDelta, minuteDelta);
             },
