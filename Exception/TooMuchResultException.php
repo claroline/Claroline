@@ -1,6 +1,6 @@
 <?php
 
-namespace ICAP\BlogBundle\Exception;
+namespace Icap\BlogBundle\Exception;
 
 class TooMuchResultException extends \Exception
 {

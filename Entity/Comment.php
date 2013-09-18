@@ -1,6 +1,6 @@
 <?php
 
-namespace ICAP\BlogBundle\Entity;
+namespace Icap\BlogBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="icap__blog_comment")
- * @ORM\Entity(repositoryClass="ICAP\BlogBundle\Repository\CommentRepository")
+ * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\CommentRepository")
  */
 class Comment extends Statusable
 {
@@ -57,7 +57,7 @@ class Comment extends Statusable
     /**
      * @var Post
      *
-     * @ORM\ManyToOne(targetEntity="ICAP\BlogBundle\Entity\Post", inversedBy="comments")
+     * @ORM\ManyToOne(targetEntity="Icap\BlogBundle\Entity\Post", inversedBy="comments")
      */
     protected $post;
 

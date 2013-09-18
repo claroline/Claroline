@@ -1,12 +1,12 @@
 <?php
 
-namespace ICAP\BlogBundle\Event\Log;
+namespace Icap\BlogBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogNotRepeatableInterface;
-use ICAP\BlogBundle\Entity\Blog;
-use ICAP\BlogBundle\Entity\Post;
+use Icap\BlogBundle\Entity\Blog;
+use Icap\BlogBundle\Entity\Post;
 
 class LogPostReadEvent extends AbstractLogResourceEvent implements LogNotRepeatableInterface
 {

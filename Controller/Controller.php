@@ -1,15 +1,15 @@
 <?php
 
-namespace ICAP\BlogBundle\Controller;
+namespace Icap\BlogBundle\Controller;
 
 use Claroline\CoreBundle\Event\Log\LogResourceChildUpdateEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
-use ICAP\BlogBundle\Entity\Blog;
+use Icap\BlogBundle\Entity\Blog;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use ICAP\BlogBundle\Entity\Post;
-use ICAP\BlogBundle\Event\Log\LogPostCreateEvent;
-use ICAP\BlogBundle\Event\Log\LogPostReadEvent;
+use Icap\BlogBundle\Entity\Post;
+use Icap\BlogBundle\Event\Log\LogPostCreateEvent;
+use Icap\BlogBundle\Event\Log\LogPostReadEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -130,9 +130,9 @@ class Controller extends BaseController
     }
 
     /**
-     * @param \ICAP\BlogBundle\Entity\Blog $blog
+     * @param \Icap\BlogBundle\Entity\Blog $blog
      *
-     * @param \ICAP\BlogBundle\Entity\Post $post
+     * @param \Icap\BlogBundle\Entity\Post $post
      *
      * @return Controller
      */
@@ -160,7 +160,7 @@ class Controller extends BaseController
     /**
      * @param Blog                         $blog
      *
-     * @param \ICAP\BlogBundle\Entity\Post $post
+     * @param \Icap\BlogBundle\Entity\Post $post
      *
      * @return Controller
      */
@@ -179,7 +179,7 @@ class Controller extends BaseController
     /**
      * @param Blog                         $blog
      *
-     * @param \ICAP\BlogBundle\Entity\Post $post
+     * @param \Icap\BlogBundle\Entity\Post $post
      *
      * @return Controller
      */

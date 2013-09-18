@@ -1,6 +1,6 @@
 services:
     icap.listener.blog_listener:
-        class: ICAP\BlogBundle\Listener\BlogListener
+        class: Icap\BlogBundle\Listener\BlogListener
         calls:
             - [setContainer, ["@service_container"]]
         tags:
@@ -11,7 +11,7 @@ services:
             - { name: kernel.event_listener, event: copy_icap_blog, method: onCopy }
 
     icap.listener.log_listener:
-        class: ICAP\BlogBundle\Listener\LogListener
+        class: Icap\BlogBundle\Listener\LogListener
         calls:
             - [setContainer, ["@service_container"]]
         tags:

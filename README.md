@@ -8,8 +8,7 @@ Installation
 
 This bundle requires Claroline to run correctly (https://github.com/claroline/Claroline).
 
-`git submodule add https://github.com/iCAPLyon1/BlogBundle.git src/plugin/ICAP/BlogBundle`
-`php app/console claroline:plugin:install ICAP BlogBundle`
+`composer require icap/blog-bundle "dev-master"`
 
 Overview
 ========

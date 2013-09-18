@@ -1,4 +1,4 @@
 icap_blog:
-    resource: "@ICAPBlogBundle/Controller/"
+    resource: "@IcapBlogBundle/Controller/"
     type:     annotation
     prefix:   /

@@ -1,17 +1,17 @@
 <?php
 
-namespace ICAP\BlogBundle\Entity;
+namespace Icap\BlogBundle\Entity;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use ICAP\BlogBundle\Entity\BlogOptions;
+use Icap\BlogBundle\Entity\BlogOptions;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="icap__blog")
- * @ORM\Entity(repositoryClass="ICAP\BlogBundle\Repository\BlogRepository")
+ * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\BlogRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class Blog extends AbstractResource
@@ -19,7 +19,7 @@ class Blog extends AbstractResource
     /**
      * @var Post[]
      *
-     * @ORM\OneToMany(targetEntity="ICAP\BlogBundle\Entity\Post", mappedBy="blog", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Icap\BlogBundle\Entity\Post", mappedBy="blog", cascade={"persist"})
      * @ORM\OrderBy({"creationDate" = "ASC"})
      */
     protected $posts;
@@ -50,7 +50,7 @@ class Blog extends AbstractResource
      */
     public function setPosts(ArrayCollection $posts)
     {
-        /** @var \ICAP\BlogBundle\Entity\Post[] $posts */
+        /** @var \Icap\BlogBundle\Entity\Post[] $posts */
         foreach ($posts as $post) {
             $post->setBlog($this);
         }

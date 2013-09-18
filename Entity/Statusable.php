@@ -1,6 +1,6 @@
 <?php
 
-namespace ICAP\BlogBundle\Entity;
+namespace Icap\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace ICAP\BlogBundle\Repository;
+namespace Icap\BlogBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use ICAP\BlogBundle\Entity\Blog;
-use ICAP\BlogBundle\Entity\Statusable;
-use ICAP\BlogBundle\Exception\TooMuchResultException;
+use Icap\BlogBundle\Entity\Blog;
+use Icap\BlogBundle\Entity\Statusable;
+use Icap\BlogBundle\Exception\TooMuchResultException;
 
 class PostRepository extends EntityRepository
 {
@@ -20,7 +20,7 @@ class PostRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery('
                 SELECT DISTINCT a.id, a.username, a.firstName, a.lastName
-                FROM ICAPBlogBundle:Post p
+                FROM IcapBlogBundle:Post p
                 JOIN p.author a
                 WHERE p.blog = :blogId
             ')
@@ -123,7 +123,7 @@ class PostRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery('
                 SELECT SUBSTRING(p.publicationDate, 1, 4) as year, SUBSTRING(p.publicationDate, 6, 2) as month, COUNT(p) as number
-                FROM ICAPBlogBundle:Post p
+                FROM IcapBlogBundle:Post p
                 WHERE p.blog = :blogId
                 GROUP BY year, month
                 ORDER BY year DESC

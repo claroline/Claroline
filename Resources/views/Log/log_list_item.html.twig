@@ -1,14 +1,14 @@
 {% set post %}
-    {% include 'ICAPBlogBundle:Log:log_list_item_post.html.twig' %}
+    {% include 'IcapBlogBundle:Log:log_list_item_post.html.twig' %}
 {% endset %}
 
 {% set resource %}
     {% include 'ClarolineCoreBundle:Log:view_list_item_resource.html.twig' %}
 {% endset %}
 
-{% if constant('ICAP\\BlogBundle\\Event\\Log\\LogPostCreateEvent::ACTION') == log.action %}
+{% if constant('Icap\\BlogBundle\\Event\\Log\\LogPostCreateEvent::ACTION') == log.action %}
     {{ 'log.blog.create_post'|trans({'%blog%': resource, '%post%': post}, 'log')|raw }}
-{% elseif constant('ICAP\\BlogBundle\\Event\\Log\\LogPostReadEvent::ACTION') == log.action %}
+{% elseif constant('Icap\\BlogBundle\\Event\\Log\\LogPostReadEvent::ACTION') == log.action %}
     {{ 'log.blog.read_post'|trans({'%blog%': resource, '%post%': post}, 'log')|raw }}
 {% else %}
     no default text

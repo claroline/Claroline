@@ -1,6 +1,6 @@
 <?php
 
-namespace ICAP\BlogBundle\Migrations\mysqli;
+namespace Icap\BlogBundle\Migrations\mysqli;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;

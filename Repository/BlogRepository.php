@@ -1,6 +1,6 @@
 <?php
 
-namespace ICAP\BlogBundle\Repository;
+namespace Icap\BlogBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 

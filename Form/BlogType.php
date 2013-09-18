@@ -1,6 +1,6 @@
 <?php
 
-namespace ICAP\BlogBundle\Form;
+namespace Icap\BlogBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,7 +22,7 @@ class BlogType extends AbstractType
     {
         $resolver->setDefaults(array(
            'translation_domain' => 'icap_blog',
-            'data_class'      => 'ICAP\BlogBundle\Entity\Blog',
+            'data_class'      => 'Icap\BlogBundle\Entity\Blog',
             'csrf_protection' => true,
             'intention'       => 'create_blog'
         ));

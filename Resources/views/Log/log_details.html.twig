@@ -2,7 +2,7 @@
 
 {% block logDetailsContext %}
     {{ parent() }}
-    {% if constant('ICAP\\BlogBundle\\Event\\Log\\LogPostCreateEvent::ACTION') == log.action %}
-        {% include 'ICAPBlogBundle:Log:log_details_post.html.twig' %}
+    {% if constant('Icap\\BlogBundle\\Event\\Log\\LogPostCreateEvent::ACTION') == log.action %}
+        {% include 'IcapBlogBundle:Log:log_details_post.html.twig' %}
     {% endif %}
 {% endblock %}

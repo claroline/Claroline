@@ -1,6 +1,6 @@
 <?php
 
-namespace ICAP\BlogBundle\Migrations\pdo_sqlite;
+namespace Icap\BlogBundle\Migrations\pdo_sqlite;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;

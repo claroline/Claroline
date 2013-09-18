@@ -1,13 +1,13 @@
 <?php
 
-namespace ICAP\BlogBundle\Controller;
+namespace Icap\BlogBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
-use ICAP\BlogBundle\Entity\Comment;
-use ICAP\BlogBundle\Entity\Post;
-use ICAP\BlogBundle\Entity\Blog;
-use ICAP\BlogBundle\Form\CommentType;
-use ICAP\BlogBundle\Form\PostType;
+use Icap\BlogBundle\Entity\Comment;
+use Icap\BlogBundle\Entity\Post;
+use Icap\BlogBundle\Entity\Blog;
+use Icap\BlogBundle\Form\CommentType;
+use Icap\BlogBundle\Form\PostType;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -19,8 +19,8 @@ class PostController extends Controller
     /**
      * @Route("/{blogId}/post/view/{postSlug}", name="icap_blog_post_view", requirements={"id" = "\d+"})
      *
-     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
+     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
@@ -77,7 +77,7 @@ class PostController extends Controller
     /**
      * @Route("/{blogId}/post/new", name="icap_blog_post_new", requirements={"blogId" = "\d+"})
      *
-     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
@@ -109,8 +109,8 @@ class PostController extends Controller
     /**
      * @Route("/{blogId}/post/edit/{postSlug}", name="icap_blog_post_edit", requirements={"blogId" = "\d+"})
      *
-     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
+     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
@@ -173,8 +173,8 @@ class PostController extends Controller
     /**
      * @Route("/{blogId}/post/delete/{postSlug}", name="icap_blog_post_delete", requirements={"blogId" = "\d+"})
      *
-     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
+     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
      * @Template()
      */
     public function deleteAction(Blog $blog, Post $post)
@@ -202,8 +202,8 @@ class PostController extends Controller
     /**
      * @Route("/{blogId}/post/publish/{postSlug}", name="icap_blog_post_publish", requirements={"blogId" = "\d+"})
      *
-     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
+     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
      * @Template()
      */
     public function publishAction(Blog $blog, Post $post)
@@ -223,8 +223,8 @@ class PostController extends Controller
     /**
      * @Route("/{blogId}/post/unpublish/{postSlug}", name="icap_blog_post_unpublish", requirements={"blogId" = "\d+"})
      *
-     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
+     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
      * @Template()
      */
     public function unpublishAction(Blog $blog, Post $post)

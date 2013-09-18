@@ -1,11 +1,11 @@
 parameters:
-    icap.blog.manager.tag.class:     ICAP\BlogBundle\Manager\TagManager
-    icap.blog.type.tags.class:       ICAP\BlogBundle\Form\TagsType
-    icap.blog.twig.extension.class:  ICAP\BlogBundle\Twig\ICAPBlogExtension
-    icap.blog.tag.class:             ICAP\BlogBundle\Entity\Tag
-    icap.blog.tag_repository.class:  ICAP\BlogBundle\Repository\TagRepository
-    icap.blog.post.class:            ICAP\BlogBundle\Entity\Post
-    icap.blog.post_repository.class: ICAP\BlogBundle\Repository\PostRepository
+    icap.blog.manager.tag.class:     Icap\BlogBundle\Manager\TagManager
+    icap.blog.type.tags.class:       Icap\BlogBundle\Form\TagsType
+    icap.blog.twig.extension.class:  Icap\BlogBundle\Twig\IcapBlogExtension
+    icap.blog.tag.class:             Icap\BlogBundle\Entity\Tag
+    icap.blog.tag_repository.class:  Icap\BlogBundle\Repository\TagRepository
+    icap.blog.post.class:            Icap\BlogBundle\Entity\Post
+    icap.blog.post_repository.class: Icap\BlogBundle\Repository\PostRepository
 
 services:
     icap.blog.tag_repository:

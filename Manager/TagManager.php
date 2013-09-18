@@ -1,19 +1,19 @@
 <?php
 
-namespace ICAP\BlogBundle\Manager;
+namespace Icap\BlogBundle\Manager;
 
-use ICAP\BlogBundle\Entity\Tag;
-use ICAP\BlogBundle\Repository\TagRepository;
+use Icap\BlogBundle\Entity\Tag;
+use Icap\BlogBundle\Repository\TagRepository;
 
 class TagManager
 {
-    /** @var \ICAP\BlogBundle\Repository\TagRepository */
+    /** @var \Icap\BlogBundle\Repository\TagRepository */
     protected $tagRepository;
 
     /**
      * Constructor
      *
-     * @param \ICAP\BlogBundle\Repository\TagRepository $tagRepository
+     * @param \Icap\BlogBundle\Repository\TagRepository $tagRepository
      */
     public function __construct(TagRepository $tagRepository)
     {
@@ -21,7 +21,7 @@ class TagManager
     }
 
     /**
-     * @return \ICAP\BlogBundle\Repository\TagRepository
+     * @return \Icap\BlogBundle\Repository\TagRepository
      */
     public function getTagRepository()
     {
@@ -65,7 +65,7 @@ class TagManager
      * Load or Create tag following to a given name
      *
      * @param  string                      $name
-     * @return \ICAP\BlogBundle\Entity\Tag
+     * @return \Icap\BlogBundle\Entity\Tag
      */
     public function loadOrCreateTag($name)
     {
@@ -81,7 +81,7 @@ class TagManager
      * Load a tag following to its name
      *
      * @param  string                      $name
-     * @return \ICAP\BlogBundle\Entity\Tag
+     * @return \Icap\BlogBundle\Entity\Tag
      */
     public function loadTag($name)
     {

@@ -3,7 +3,7 @@ plugin:
   icon: icap_blog_icon.png
 
   resources:
-    - class: \ICAP\BlogBundle\Entity\Blog
+    - class: Icap\BlogBundle\Entity\Blog
       name: icap_blog
       is_browsable: false
       is_exportable: false

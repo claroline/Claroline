@@ -1,9 +1,9 @@
 <?php
 
-namespace ICAP\BlogBundle\Form;
+namespace Icap\BlogBundle\Form;
 
-use ICAP\BlogBundle\Form\DataTransformer\TagsToTextTransformer;
-use ICAP\BlogBundle\Manager\TagManager;
+use Icap\BlogBundle\Form\DataTransformer\TagsToTextTransformer;
+use Icap\BlogBundle\Manager\TagManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;

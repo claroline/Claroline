@@ -1,13 +1,13 @@
 <?php
 
-namespace ICAP\BlogBundle\Entity;
+namespace Icap\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="icap__blog_options")
- * @ORM\Entity(repositoryClass="ICAP\BlogBundle\Repository\BlogOptionsRepository")
+ * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\BlogOptionsRepository")
  */
 class BlogOptions
 {

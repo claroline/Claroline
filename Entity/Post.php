@@ -1,6 +1,6 @@
 <?php
 
-namespace ICAP\BlogBundle\Entity;
+namespace Icap\BlogBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity
  * @ORM\Table(name="icap__blog_post")
- * @ORM\Entity(repositoryClass="ICAP\BlogBundle\Repository\PostRepository")
+ * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\PostRepository")
  */
 class Post extends Statusable
 {
@@ -86,7 +86,7 @@ class Post extends Statusable
     /**
      * @var Blog
      *
-     * @ORM\ManyToOne(targetEntity="ICAP\BlogBundle\Entity\Blog", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="Icap\BlogBundle\Entity\Blog", inversedBy="posts")
      * @ORM\JoinColumn(name="blog_id", referencedColumnName="id")
      */
     protected $blog;
@@ -94,7 +94,7 @@ class Post extends Statusable
     /**
      * @var PostTag[]|ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="ICAP\BlogBundle\Entity\Tag", inversedBy="posts", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Icap\BlogBundle\Entity\Tag", inversedBy="posts", cascade={"persist"})
      * @ORM\JoinTable(name="icap__blog_post_tag")
      */
     protected $tags;
@@ -288,7 +288,7 @@ class Post extends Statusable
      */
     public function setComments(ArrayCollection $comments)
     {
-        /** @var \ICAP\BlogBundle\Entity\Comment[] $comments */
+        /** @var \Icap\BlogBundle\Entity\Comment[] $comments */
         foreach ($comments as $comment) {
             $comment->setPost($this);
         }
@@ -355,7 +355,7 @@ class Post extends Statusable
     }
 
     /**
-     * @param \ICAP\BlogBundle\Entity\PostTag[]|\Doctrine\Common\Collections\ArrayCollection $postTags
+     * @param \Icap\BlogBundle\Entity\PostTag[]|\Doctrine\Common\Collections\ArrayCollection $postTags
      *
      * @return Post
      */
@@ -367,7 +367,7 @@ class Post extends Statusable
     }
 
     /**
-     * @return \ICAP\BlogBundle\Entity\PostTag[]|\Doctrine\Common\Collections\ArrayCollection
+     * @return \Icap\BlogBundle\Entity\PostTag[]|\Doctrine\Common\Collections\ArrayCollection
      */
     public function getTags()
     {

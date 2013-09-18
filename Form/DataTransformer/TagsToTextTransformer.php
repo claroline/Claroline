@@ -1,9 +1,9 @@
 <?php
-namespace ICAP\BlogBundle\Form\DataTransformer;
+namespace Icap\BlogBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
-use ICAP\BlogBundle\Manager\TagManager;
-use ICAP\BlogBundle\Entity\Tag;
+use Icap\BlogBundle\Manager\TagManager;
+use Icap\BlogBundle\Entity\Tag;
 
 class TagsToTextTransformer implements DataTransformerInterface
 {

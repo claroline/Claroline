@@ -1,16 +1,16 @@
 <?php
 
-namespace ICAP\BlogBundle\Controller;
+namespace Icap\BlogBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
-use ICAP\BlogBundle\Entity\Blog;
-use ICAP\BlogBundle\Entity\BlogOptions;
-use ICAP\BlogBundle\Entity\Post;
-use ICAP\BlogBundle\Entity\Statusable;
-use ICAP\BlogBundle\Exception\TooMuchResultException;
-use ICAP\BlogBundle\Form\BlogInfosType;
-use ICAP\BlogBundle\Form\BlogOptionsType;
-use ICAP\BlogBundle\Entity\Tag;
+use Icap\BlogBundle\Entity\Blog;
+use Icap\BlogBundle\Entity\BlogOptions;
+use Icap\BlogBundle\Entity\Post;
+use Icap\BlogBundle\Entity\Statusable;
+use Icap\BlogBundle\Exception\TooMuchResultException;
+use Icap\BlogBundle\Form\BlogInfosType;
+use Icap\BlogBundle\Form\BlogOptionsType;
+use Icap\BlogBundle\Entity\Tag;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
@@ -28,7 +28,7 @@ class BlogController extends Controller
     /**
      * @Route("/{blogId}/{page}", name="icap_blog_view", requirements={"blogId" = "\d+", "page" = "\d+"}, defaults={"page" = 1})
      * @Route("/{blogId}/{filter}/{page}", name="icap_blog_view_filter", requirements={"blogId" = "\d+", "page" = "\d+"}, defaults={"page" = 1})
-     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
@@ -109,7 +109,7 @@ class BlogController extends Controller
 
     /**
      * @Route("/{blogId}/search/{search}/{page}", name="icap_blog_view_search", requirements={"blogId" = "\d+", "page" = "\d+"}, defaults={"page" = 1})
-     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
@@ -117,7 +117,7 @@ class BlogController extends Controller
     {
         $this->checkAccess("OPEN", $blog);
 
-        /** @var \ICAp\BlogBundle\Repository\PostRepository $postRepository */
+        /** @var \Icap\BlogBundle\Repository\PostRepository $postRepository */
         $postRepository = $this->get('icap.blog.post_repository');
 
         try {
@@ -160,7 +160,7 @@ class BlogController extends Controller
 
     /**
      * @Route("/configure/{blogId}", name="icap_blog_configure", requirements={"blogId" = "\d+"})
-     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
      * @Template()
      */
     public function configureAction(Request $request, Blog $blog)
@@ -202,7 +202,7 @@ class BlogController extends Controller
 
     /**
      * @Route("/edit/{blogId}", name="icap_blog_edit_infos", requirements={"blogId" = "\d+"})
-     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
      * @Template()
      */
     public function editAction(Request $request, Blog $blog)
@@ -246,7 +246,7 @@ class BlogController extends Controller
 
     /**
      * @Route("/calendar/{blogId}", name="icap_blog_calendar_datas", requirements={"blogId" = "\d+"})
-     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
      */
     public function calendarDatas(Request $request, Blog $blog)
     {
@@ -255,7 +255,7 @@ class BlogController extends Controller
         $endDate           = $requestParameters['end'];
         $calendarDatas     = array();
 
-        $postRepository = $this->getDoctrine()->getManager()->getRepository('ICAPBlogBundle:Post');
+        $postRepository = $this->getDoctrine()->getManager()->getRepository('IcapBlogBundle:Post');
 
         $posts = $postRepository->findPublishedByBlogAndDates($blog, $startDate, $endDate);
 

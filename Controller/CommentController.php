@@ -1,10 +1,10 @@
 <?php
 
-namespace ICAP\BlogBundle\Controller;
+namespace Icap\BlogBundle\Controller;
 
-use ICAP\BlogBundle\Entity\Comment;
-use ICAP\BlogBundle\Entity\Post;
-use ICAP\BlogBundle\Entity\Blog;
+use Icap\BlogBundle\Entity\Comment;
+use Icap\BlogBundle\Entity\Post;
+use Icap\BlogBundle\Entity\Blog;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -15,9 +15,9 @@ class CommentController extends Controller
     /**
      * @Route("/{blogId}/{postSlug}/comment/delete/{commentId}", name="icap_blog_comment_delete", requirements={"blogId" = "\d+"})
      *
-     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
-     * @ParamConverter("comment", class="ICAPBlogBundle:Comment", options={"id" = "commentId"})
+     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
+     * @ParamConverter("comment", class="IcapBlogBundle:Comment", options={"id" = "commentId"})
      * @Template()
      */
     public function deleteAction(Blog $blog, Post $post, Comment $comment)
@@ -45,9 +45,9 @@ class CommentController extends Controller
     /**
      * @Route("/{blogId}/{postSlug}/comment/publish/{commentId}", name="icap_blog_comment_publish", requirements={"blogId" = "\d+"})
      *
-     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
-     * @ParamConverter("comment", class="ICAPBlogBundle:Comment", options={"id" = "commentId"})
+     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
+     * @ParamConverter("comment", class="IcapBlogBundle:Comment", options={"id" = "commentId"})
      * @Template()
      */
     public function publishAction(Blog $blog, Post $post, Comment $comment)
@@ -67,9 +67,9 @@ class CommentController extends Controller
     /**
      * @Route("/{blogId}/{postSlug}/comment/unpublish/{commentId}", name="icap_blog_comment_unpublish", requirements={"blogId" = "\d+"})
      *
-     * @ParamConverter("blog", class="ICAPBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("post", class="ICAPBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
-     * @ParamConverter("comment", class="ICAPBlogBundle:Comment", options={"id" = "commentId"})
+     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
+     * @ParamConverter("comment", class="IcapBlogBundle:Comment", options={"id" = "commentId"})
      * @Template()
      */
     public function unpublishAction(Blog $blog, Post $post, Comment $comment)

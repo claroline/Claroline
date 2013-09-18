@@ -1,9 +1,9 @@
 <?php
 
-namespace ICAP\BlogBundle\Repository;
+namespace Icap\BlogBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use ICAP\BlogBundle\Entity\Blog;
+use Icap\BlogBundle\Entity\Blog;
 
 class TagRepository extends EntityRepository
 {
@@ -18,7 +18,7 @@ class TagRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery('
                 SELECT t
-                FROM ICAPBlogBundle:Tag t
+                FROM IcapBlogBundle:Tag t
                 JOIN t.posts p
                 WHERE p.blog = :blogId
             ')

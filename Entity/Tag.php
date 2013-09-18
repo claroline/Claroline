@@ -1,6 +1,6 @@
 <?php
 
-namespace ICAP\BlogBundle\Entity;
+namespace Icap\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity
  * @ORM\Table(name="icap__blog_tag")
- * @ORM\Entity(repositoryClass="ICAP\BlogBundle\Repository\TagRepository")
+ * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\TagRepository")
  */
 class Tag
 {

@@ -1,16 +1,16 @@
 <?php
-namespace ICAP\BlogBundle\Twig;
+namespace Icap\BlogBundle\Twig;
 
-use ICAP\BlogBundle\Entity\Blog;
-use ICAP\BlogBundle\Repository\PostRepository;
-use ICAP\BlogBundle\Repository\TagRepository;
+use Icap\BlogBundle\Entity\Blog;
+use Icap\BlogBundle\Repository\PostRepository;
+use Icap\BlogBundle\Repository\TagRepository;
 
-class ICAPBlogExtension extends \Twig_Extension
+class IcapBlogExtension extends \Twig_Extension
 {
-    /** @var \ICAP\BlogBundle\Repository\TagRepository */
+    /** @var \Icap\BlogBundle\Repository\TagRepository */
     protected $tagRepository;
 
-    /** @var \ICAP\BlogBundle\Repository\PostRepository */
+    /** @var \Icap\BlogBundle\Repository\PostRepository */
     protected $postRepository;
 
     public function __construct(TagRepository $tagManager, PostRepository $postManager)

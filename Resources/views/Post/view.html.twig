@@ -1,4 +1,4 @@
-{% extends 'ICAPBlogBundle::layout.html.twig' %}
+{% extends 'IcapBlogBundle::layout.html.twig' %}
 
 {% trans_default_domain "icap_blog" %}
 
@@ -8,11 +8,11 @@
     {% set isPublished = post.isPublished %}
     <article{% if not isPublished %} class="draft"{% endif %}>
 
-        {% include 'ICAPBlogBundle:Post:postHeader.html.twig' with {'mode': 'post_view'} %}
+        {% include 'IcapBlogBundle:Post:postHeader.html.twig' with {'mode': 'post_view'} %}
 
         <div class="content">{{ post.content|raw }}</div>
 
-        {% include 'ICAPBlogBundle:Post:postFooter.html.twig' with {'mode': 'post_view'} %}
+        {% include 'IcapBlogBundle:Post:postFooter.html.twig' with {'mode': 'post_view'} %}
     </article>
 
     {% set blogOptions = _resource.options %}
