@@ -1,5 +1,5 @@
 {% macro item(name, href, icon, attributes, title, dropdown, badge) %}
-    <li class="{% if dropdown is not empty %}dropdown{% endif %}{{ attributes | default(' ') | compareRoute(' active') | raw }}">
+    <li class="{% if dropdown is not empty %}dropdown{% endif %}{{ attributes | default('') | compareRoute(' active') | raw }}">
         <a
             {% if dropdown is not empty %}class="pointer-hand dropdown-toggle" data-toggle="dropdown"{% endif %}
             {% if href is not empty %}href="{{ href }}"{% endif %}
