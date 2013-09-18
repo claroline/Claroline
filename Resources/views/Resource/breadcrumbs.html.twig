@@ -1,11 +1,11 @@
-<ul class="breadcrumb">
-    {% for keyRes, node in ancestors %}
-    <li>sqsqsdfqsdf</li>
+ {% for keyRes, node in ancestors %}
     <li {% if loop.last %} class="active" {% endif %}>
 
-    {% set url = path('claro_workspace_open_tool',
-        {'toolName': 'resource_manager', 'workspaceId': workspaceId })
-    %}
+    {% if isDesktop() %}
+        {% set url = path('claro_desktop_open_tool', {'toolName': 'resource_manager', 'workspaceId': workspaceId }) %}
+    {% else %}
+        {% set url = path('claro_workspace_open_tool', {'toolName': 'resource_manager', 'workspaceId': workspaceId }) %}
+    {% endif %}
 
     {% for keyPath, pathItem in ancestors %}
         {% if keyPath == 0 %}
@@ -26,7 +26,6 @@
     {% else %}
         {{ node.name }}
     {% endif %}
-
     </li>
-    {% endfor %}
-</ul>
+{% endfor %}
+

@@ -11,9 +11,12 @@
             >
             </div>
             {% if not is_path_mode  %}
-            {% render controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
-                {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
-            %}
+                <ul class="breadcrumb">
+                    <li><a href="{{ path('claro_workspace_list') }}"><i class="icon-book"></i> {{ 'workspaces'|trans({}, 'platform') }}</a></li>
+                    {% render controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
+                        {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
+                    %}
+                </ul>
             {% endif %}
         {% endif %}
     </div>

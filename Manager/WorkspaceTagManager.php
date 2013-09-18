@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\CoreBundle\Repository\WorkspaceTagRepository;
 use Claroline\CoreBundle\Repository\RelWorkspaceTagRepository;
@@ -30,6 +31,7 @@ class WorkspaceTagManager
     /** @var WorkspaceRepository */
     private $workspaceRepo;
     private $roleManager;
+    private $workspaceManager;
     private $om;
     private $pagerFactory;
 
@@ -37,13 +39,15 @@ class WorkspaceTagManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "roleManager"  = @DI\Inject("claroline.manager.role_manager"),
-     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
-     *     "pagerFactory" = @DI\Inject("claroline.pager.pager_factory")
+     *     "roleManager"       = @DI\Inject("claroline.manager.role_manager"),
+     *     "workspaceManager"  = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
+     *     "pagerFactory"      = @DI\Inject("claroline.pager.pager_factory")
      * })
      */
     public function __construct(
         RoleManager $roleManager,
+        WorkspaceManager $workspaceManager,
         ObjectManager $om,
         PagerFactory $pagerFactory
     )
@@ -53,6 +57,7 @@ class WorkspaceTagManager
         $this->tagHierarchyRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTagHierarchy');
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
         $this->roleManager = $roleManager;
+        $this->workspaceManager = $workspaceManager;
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
     }
@@ -385,6 +390,65 @@ class WorkspaceTagManager
         $datas['rootTags'] = $rootTags;
         $datas['displayable'] = $displayable;
         $datas['workspaceRoles'] = $workspaceRoles;
+
+        return $datas;
+    }
+
+    public function getDatasForWorkspaceListByUser(User $user, array $roles)
+    {
+        $workspaces = $this->workspaceManager->getWorkspacesByRoles($roles);
+        $tags = $this->tagRepo->findNonEmptyTagsByUser($user);
+        $relTagWorkspace = $this->relTagRepo->findByUser($user);
+        $tagWorkspaces = array();
+
+        foreach ($relTagWorkspace as $tagWs) {
+
+            if (empty($tagWorkspaces[$tagWs['tag_id']])) {
+                $tagWorkspaces[$tagWs['tag_id']] = array();
+            }
+            $tagWorkspaces[$tagWs['tag_id']][] = $tagWs['rel_ws_tag'];
+        }
+        $tagsHierarchy = $this->tagHierarchyRepo->findAllByUser($user);
+        $rootTags = $this->tagRepo->findRootTags($user);
+        $hierarchy = array();
+
+        // create an array : tagId => [direct_children_id]
+        foreach ($tagsHierarchy as $tagHierarchy) {
+
+            if ($tagHierarchy->getLevel() === 1) {
+
+                if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
+                    !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
+
+                    $hierarchy[$tagHierarchy->getParent()->getId()] = array();
+                }
+                $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
+            }
+        }
+
+        // create an array indicating which tag is displayable
+        // a tag is displayable if it or one of his children contains is associated to a workspace
+        $displayable = array();
+        $allTags = $this->tagRepo->findBy(array('user' => $user), array('name' => 'ASC'));
+
+        foreach ($allTags as $oneTag) {
+            $oneTagId = $oneTag->getId();
+            $displayable[$oneTagId] = $this->isTagDisplayable($oneTagId, $tagWorkspaces, $hierarchy);
+        }
+
+        $tagWorkspacePager = array();
+
+        foreach ($tagWorkspaces as $key => $content) {
+            $tagWorkspacePager[$key] = $this->pagerFactory->createPagerFromArray($content, 1);
+        }
+
+        $datas = array();
+        $datas['workspaces'] = $workspaces;
+        $datas['tags'] = $tags;
+        $datas['tagWorkspaces'] = $tagWorkspaces;
+        $datas['hierarchy'] = $hierarchy;
+        $datas['rootTags'] = $rootTags;
+        $datas['displayable'] = $displayable;
 
         return $datas;
     }

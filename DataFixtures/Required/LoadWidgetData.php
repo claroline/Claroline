@@ -24,6 +24,7 @@ class LoadWidgetData extends AbstractFixture implements OrderedFixtureInterface
         $items = array(
             array('core_resource_logger', true),
             array('simple_text', true),
+            array('my_workspaces', false),
         );
 
         foreach ($items as $item) {
@@ -35,14 +36,16 @@ class LoadWidgetData extends AbstractFixture implements OrderedFixtureInterface
             $widget->setExportable(false);
             $manager->persist($widget);
 
-            $wWidgetConfig = new DisplayConfig();
-            $wWidgetConfig->setWidget($widget);
-            $wWidgetConfig->setLock(false);
-            $wWidgetConfig->setVisible(true);
-            $wWidgetConfig->setParent(null);
-            $wWidgetConfig->setDesktop(false);
-            $wWidgetConfig->setName($item[0]);
-            $manager->persist($wWidgetConfig);
+            if ($item[0] !== 'my_workspaces') {
+                $wWidgetConfig = new DisplayConfig();
+                $wWidgetConfig->setWidget($widget);
+                $wWidgetConfig->setLock(false);
+                $wWidgetConfig->setVisible(true);
+                $wWidgetConfig->setParent(null);
+                $wWidgetConfig->setDesktop(false);
+                $wWidgetConfig->setName($item[0]);
+                $manager->persist($wWidgetConfig);
+            }
 
             $dWidgetConfig = new DisplayConfig();
             $dWidgetConfig->setWidget($widget);

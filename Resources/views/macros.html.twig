@@ -34,15 +34,19 @@
 {% endmacro %}
 
 {% macro breadcrumbs(elements) %}
+    {% spaceless %}
     <ul class="breadcrumb">
         {% for element in elements %}
             <li{% if element['href'] == "" %} class="active"{% endif %}>
                 {% if element['href'] != "" %}
-                    <a href="{{ element['href'] }}"><i class="{{ element['icon'] }}"></i> {{ element['name'] }}</a>
+                    <a href="{{ element['href'] }}">
+                        {% if element['icon'] is defined %}<i class="{{ element['icon'] }}"></i> {% endif %}{{ element['name'] }}
+                    </a>
                 {% else %}
                     {{ element['name'] }}
                 {% endif %}
             </li>
         {% endfor %}
     </ul>
+    {% endspaceless %}
 {% endmacro %}
