@@ -82,14 +82,13 @@ class EventManager
     protected function getActionConstantsforClass($classNamespace, $restriction)
     {
         $constants       = array();
+        /** @var \Claroline\CoreBundle\Event\Log\LogGenericEvent $reflectionClass */ 
         $reflectionClass = new \ReflectionClass($classNamespace);
         if (!$reflectionClass->isAbstract()) {
             if (null !== $restriction) {
-                /** @var \Claroline\CoreBundle\Event\Log\LogGenericEvent $instance */
-                $instance = $reflectionClass->newInstanceWithoutConstructor();
-                $instance->setVisibiltyFromRestriction($instance->getRestriction());
+                $restrictions = $classNamespace::getRestriction();
 
-                if ($instance->isDisplayedByRestriction($restriction)) {
+                if (in_array($restriction, $restrictions)) {
                     $classConstants  = $reflectionClass->getConstants();
 
                     foreach ($classConstants as $key => $classConstant) {
