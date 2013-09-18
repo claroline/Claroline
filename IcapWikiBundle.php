@@ -3,13 +3,14 @@
 namespace Icap\WikiBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 class IcapWikiBundle extends PluginBundle
 {
-    public function getRoutingPrefix()
+    public function getConfiguration($environment)
     {
-        return "wiki";
+        $config = new ConfigurationBuilder();
+
+        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'icap_wiki');
     }
-
-
 }
