@@ -364,7 +364,7 @@ class WorkspaceController extends Controller
             array($workspace, $toolName)
         );
 
-        if ($toolName === "resource_manager") {
+        if ($toolName === 'resource_manager') {
             $this->get('session')->set('isDesktop', false);
         }
 
