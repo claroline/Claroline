@@ -427,6 +427,10 @@ class WorkspaceController extends Controller
             array($workspace, $toolName)
         );
 
+        if ($toolName === "resource_manager") {
+            $this->get('session')->set('isDesktop', false);
+        }
+
         return new Response($event->getContent());
     }
 
@@ -469,8 +473,7 @@ class WorkspaceController extends Controller
         if (!is_null($homeTab) &&
             $this->homeTabManager->checkHomeTabVisibilityByWorkspace($homeTab, $workspace)) {
 
-            $configs = $this->homeTabManager
-                ->getWidgetConfigsByWorkspace($homeTab,$workspace);
+            $configs = $this->homeTabManager->getWidgetConfigsByWorkspace($homeTab, $workspace);
 
             if ($this->security->getToken()->getUser() !== 'anon.') {
                 $rightToConfigure = $this->security->isGranted('parameters', $workspace);
@@ -503,6 +506,7 @@ class WorkspaceController extends Controller
                 }
             }
         }
+
         return array(
             'widgets' => $widgets,
             'isDesktop' => false,
