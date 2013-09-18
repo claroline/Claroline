@@ -182,8 +182,6 @@ class HomeManager
         if ($region) {
             return $region->getRegion()->getName();
         }
-
-        return null;
     }
 
     /**
@@ -240,8 +238,6 @@ class HomeManager
 
             return $content->getId();
         }
-
-        return null;
     }
 
     /**

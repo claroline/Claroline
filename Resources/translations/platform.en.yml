@@ -231,7 +231,7 @@ mail_click: 'Click on this link to reset your password'
 mail_sent : 'A email has been sent to your address , check your inbox mail and your spam box'
 manage_rights: 'Manage rights'
 manager: Manager
-max_size_25mb: 'The maximum size is 25mb'
+max_size_is: 'The maximum size is %size%'
 media_most_viewed: 'Most viewed media'
 messages_confirm_delete : 'Are your sure , you want to delete this file ?'
 messages_confirm_permanent_delete: 'Are you sure you want to permanently delete this(these) message(s) ?'
@@ -511,6 +511,8 @@ workspace_edit_form_selfUnregistration: 'Public unregistration'
 workspace_form_code: Code
 workspace_form_displayable: Public
 workspace_form_name: Name
+workspace_form_selfRegistration: 'Public registration'
+workspace_form_selfUnregistration: 'Public unregistration'
 workspace_form_template: Template
 workspace_form_type: Type
 workspace_home_tab_creation: 'Workspace Home tab creation'
