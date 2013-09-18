@@ -13,9 +13,4 @@ class IcapBlogBundle extends PluginBundle
 
         return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'icap_blog');
     }
-
-    public function getRequiredFixturesDirectory($environment)
-    {
-        return 'DataFixtures';
-    }
 }
