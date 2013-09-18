@@ -1,8 +1,10 @@
 plugin:
-    has_options: true
+    has_options: false
+    icon: res_wiki.png
 
     resources:
         - name: icap_wiki
           class: Icap\WikiBundle\Entity\Wiki
           is_visible: true
           is_browsable: false
+          icon: res_wiki.png
