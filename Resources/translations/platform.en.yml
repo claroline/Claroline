@@ -230,6 +230,7 @@ mail_form_object: Object
 mail_invalid : "Mail format is not valid"
 mail_message : 'You received this message because you asked for a new password. Please click on the link below to reset it. If you did not ask to reset your password please ignore this message.'
 mail_click: 'Click on this link to reset your password'
+mail_not_exist: 'This mail does not exist'
 mail_sent : 'A email has been sent to your address , check your inbox mail and your spam box'
 manage_rights: 'Manage rights'
 manager: Manager

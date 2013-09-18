@@ -154,6 +154,11 @@ class AuthenticationController
                     'form' => $form->createView()
                 );
             }
+            
+            return array(
+                    'error' => $this->translator->trans('mail_not_exist', array(), 'platform'),
+                    'form' => $form->createView()
+                );
         }
 
         return array(
