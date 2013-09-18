@@ -3,7 +3,7 @@
 namespace Innova\PathBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace as Workspace;
 
 /**
  * Path
