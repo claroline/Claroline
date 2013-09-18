@@ -47,7 +47,7 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
     /**
      * @return array
      */
-    public function getRestriction()
+    public static function getRestriction()
     {
         return array(self::DISPLAYED_WORKSPACE);
     }

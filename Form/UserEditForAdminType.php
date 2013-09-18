@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\AbstractType;
 
-class ProfileType extends AbstractType
+class UserEditForAdminType extends AbstractType
 {
     private $platformRoles;
 
@@ -17,16 +17,13 @@ class ProfileType extends AbstractType
         $this->platformRoles = new ArrayCollection($platformRoles);
 
     }
-
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::buildForm($builder, $options);
-        
-        $builder->add('firstName', 'text', array('disabled' => true))
-            ->add('lastName', 'text', array('disabled' => true))
-            ->add('username', 'text', array('disabled' => true))
-            ->add('administrativeCode', 'text', array('required' => false, 'disabled' => true))
-            ->add('plainPassword', 'repeated', array('type' => 'password'))
+        $builder->add('firstName', 'text')
+            ->add('lastName', 'text')
+            ->add('username', 'text')
+            ->add('administrativeCode', 'text', array('required' => false))
             ->add('mail', 'email', array('required' => false))
             ->add('phone', 'text', array('required' => false));
         $builder->add(
@@ -39,29 +36,26 @@ class ProfileType extends AbstractType
                 'expanded' => false,
                 'multiple' => true,
                 'property' => 'translationKey',
-                'disabled' => true,
                 'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
                     return $er->createQueryBuilder('r')
-                            ->where("r.type != " . Role::WS_ROLE)
-                            ->andWhere("r.name != 'ROLE_ANONYMOUS'");
+                        ->where("r.type != " . Role::WS_ROLE)
+                        ->andWhere("r.name != 'ROLE_ANONYMOUS'");
                 }
             )
         );
-        
     }
-
+    
     public function getName()
     {
         return 'profile_form';
     }
-
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    
+    public function setDefaultOptions(OptionsResolverInterface $resolver) 
     {
-        $resolver
-        ->setDefaults(
-            array(
-                'translation_domain' => 'platform'
-                )
-        );
+        $resolver->setDefaults(array(
+            'data_class' => 'Claroline\CoreBundle\Entity\User',
+            'validation_groups' => array('admin'),
+            'translation_domain' => 'platform'
+        ));
     }
 }

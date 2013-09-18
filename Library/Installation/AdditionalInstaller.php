@@ -6,8 +6,12 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
+use Doctrine\Common\Persistence\Mapping\MappingException;
+use Claroline\CoreBundle\Entity\Widget\Widget;
+use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
+use Claroline\InstallationBundle\Bundle\BundleVersion;
 
 class AdditionalInstaller extends BaseInstaller
 {
@@ -15,6 +19,11 @@ class AdditionalInstaller extends BaseInstaller
     {
         $this->createDatabaseIfNotExists();
         $this->buildDefaultTemplate();
+    }
+
+    public function postUpdate(BundleVersion $current, BundleVersion $target)
+    {
+        $this->createWorkspacesListWidget();
     }
 
     private function createDatabaseIfNotExists()
@@ -46,5 +55,40 @@ class AdditionalInstaller extends BaseInstaller
         $this->log('Creating default workspace template...');
         $defaultTemplatePath = $this->container->getParameter('kernel.root_dir') . '/../templates/default.zip';
         TemplateBuilder::buildDefault($defaultTemplatePath);
+    }
+
+    private function createWorkspacesListWidget()
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+
+        try {
+            $workspaceWidget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
+                ->findOneByName('my_workspaces');
+
+            if (is_null($workspaceWidget)) {
+                $this->log('Creating workspaces list widget...');
+                $widget = new Widget();
+                $widget->setName('my_workspaces');
+                $widget->setConfigurable(false);
+                $widget->setIcon('fake/icon/path');
+                $widget->setPlugin(null);
+                $widget->setExportable(false);
+                $em->persist($widget);
+                $em->flush();
+
+                $widgetConfig = new DisplayConfig();
+                $widgetConfig->setWidget($widget);
+                $widgetConfig->setLock(false);
+                $widgetConfig->setVisible(true);
+                $widgetConfig->setParent(null);
+                $widgetConfig->setDesktop(true);
+
+                $em->persist($widgetConfig);
+                $em->flush();
+            }
+        }
+        catch (MappingException $e) {
+            $this->log('A MappingException has been thrown while trying to get Widget repository');
+        }
     }
 }

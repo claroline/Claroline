@@ -55,7 +55,7 @@ class LogResourceUpdateEvent extends LogGenericEvent
     /**
      * @return array
      */
-    public function getRestriction()
+    public static function getRestriction()
     {
         return array(self::DISPLAYED_WORKSPACE);
     }
