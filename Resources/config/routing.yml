@@ -1,0 +1,4 @@
+icap_wiki:
+    resource: "@ICAPWikiBundle/Controller/"
+    type:     annotation
+    prefix:   /

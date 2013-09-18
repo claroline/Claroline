@@ -1,0 +1,8 @@
+plugin:
+    has_options: true
+
+    resources:
+        - name: icap_wiki
+          class: ICAP\WikiBundle\Entity\Wiki
+          is_visible: true
+          is_browsable: false

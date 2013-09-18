@@ -1,0 +1,9 @@
+services:
+    icap.listener.wiki_listener:
+        class: ICAP\WikiBundle\Listener\WikiListener
+        calls:
+          - [setContainer, ["@service_container"]]
+        tags:
+          - { name: kernel.event_listener, event: create_form_icap_wiki, method: onCreateForm }
+          - { name: kernel.event_listener, event: create_icap_wiki, method: onCreate }
+          - { name: kernel.event_listener, event: open_icap_wiki, method: onOpen }
