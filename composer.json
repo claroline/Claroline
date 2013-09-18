@@ -1,6 +1,6 @@
 {
     "name": "innova/path",
-    "type": "library",
+    "type": "claroline-plugin",
     "description": "Claroline Path Bundle",
     "keywords": ["Claroline", "Path"],
     "homepage": "http://github.com/InnovaLangues/PathBundle",

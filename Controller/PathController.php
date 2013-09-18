@@ -123,15 +123,6 @@ class PathController extends Controller
             $right1->setResourceNode($resourceNode);
             $manager->persist($right1);
 
-            $right2 = new ResourceRights();
-            $right2->setRole($manager->getRepository('ClarolineCoreBundle:Role')->findOneById(1));
-            $right2->setCanEdit(1);
-            $right2->setCanCopy(1);
-            $right2->setCanExport(1);
-            $right2->setCanDelete(1);
-            $right2->setResourceNode($resourceNode);
-            $manager->persist($right2);
-
             $manager->flush(); 
 
             // récursivité sur les enfants possibles.
