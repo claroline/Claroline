@@ -216,8 +216,8 @@ class RolesController extends Controller
         if ($form->isValid()) {
             $this->roleManager->edit($role);
             $route = $this->router->generate(
-                'claro_workspace_role_parameters',
-                array('role' => $role->getId(), 'workspace' => $workspace->getId())
+                'claro_workspace_roles',
+                array('workspace' => $workspace->getId())
             );
 
             return new RedirectResponse($route);
