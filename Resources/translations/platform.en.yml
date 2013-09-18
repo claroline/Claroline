@@ -11,6 +11,7 @@ add_group: 'Add group'
 add_group_s_confirm_message: 'group(s) added'
 add_resource: 'Add resource'
 add_role: 'Add role'
+add_tag: 'Add tag'
 add_tag_to_workspace: 'Add tag to workspace'
 add_user: 'Add user'
 add_users: 'Add users'
@@ -275,6 +276,8 @@ new_message: 'New message'
 no: 'no'
 no_email: 'No email found, check the spelling'
 no_search_results: 'Your search hasn''t returned any result.'
+no_tag: 'There is no tag'
+no_workspace: 'There is no workspace'
 none: None
 note: Note
 not_allowed_message: You are not allowed to perform this action.

@@ -19,6 +19,14 @@
 
 {% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src='{{ asset('bundles/clarolinecore/js/workspace/organizeWorkspaceAdminTag.js') }}'
+        type="text/javascript">
+    </script>
+{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([
@@ -54,20 +62,64 @@
                 <th>{{ 'admin_tags_list'|trans({}, 'platform') }}</th>
             </tr>
             <tr>
-                <td>
-                    {{ showTagHierarchy(rootTags, hierarchy) }}
-                </td>
-                <td>
-                    <ul>
-                    {% for tag in tags %}
-                        <li>
-                            <a href="{{ path('claro_workspace_admin_tag_check_children', {'tagId':tag.getId()}) }}">
-                            {{ tag.getName() }}
-                        </li>
-                    {% endfor %}
-                    </ul>
+                {% if tags is empty %}
+                    <td colspan="2" align="center">
+                        {{ 'no_tag'|trans({}, 'platform') }}
+                    </td>
+                {% else %}
+                    <td>
+                        {{ showTagHierarchy(rootTags, hierarchy) }}
+                    </td>
+                    <td>
+                        <ul>
+                        {% for tag in tags %}
+                            <li>
+                                <a href="{{ path('claro_workspace_admin_tag_check_children', {'tagId':tag.getId()}) }}">
+                                {{ tag.getName() }}
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    </td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td colspan="2" align="center" id="add-tag-button">
+                    <a href="">
+                        {{ 'add_tag'|trans({}, 'platform') }}
+                    </a>
                 </td>
             </tr>
         </table>
+    </div>
+
+    <div id="add-tag-validation-box" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">{{ 'enter_tag_name_message'|trans({}, 'platform') }}</h4>
+                </div>
+                <div class="modal-body" style="overflow-y: visible">
+                    <form class="form-horizontal">
+                        <label for="modal-tag-input" class="col-md-2 control-label">
+                            {{ 'name'|trans({}, 'platform') }}
+                        </label>
+                        <div class="col-md-6">
+                            <input
+                                id="modal-tag-input"
+                                class="form-control"
+                                type="text"
+                                name="tag-to-add"
+                                autocomplete="off">
+                        </div>
+                    </form>
+                    <br>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="add-tag-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

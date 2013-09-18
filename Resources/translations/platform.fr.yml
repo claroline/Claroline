@@ -11,6 +11,7 @@ add_group: 'Ajouter un groupe'
 add_group_s_confirm_message: 'groupe(s) ajouté(s)'
 add_resource: 'Ajouter une ressource'
 add_role: 'Ajouter un role'
+add_tag: 'Ajouter un Tag'
 add_tag_to_workspace: 'Ajouter un Tag à l''espace d''activités'
 add_user: 'Ajouter un utilisateur'
 add_users: 'Ajouter des utilisateurs'
@@ -258,6 +259,8 @@ new_message: 'Nouveau message'
 no: 'non'
 no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
 no_search_results: 'Votre recherche n''a retourné aucun résultat.'
+no_tag: 'Il n''y a aucun Tag'
+no_workspace: 'Il n''y a aucun espace d''activités'
 none: Aucun
 note: Note
 not_allowed_message: Vous n'êtes pas autorisé(e) à effectuer cette action.
@@ -308,7 +311,7 @@ profile_form_username: 'Nom d''utilisateur'
 properties: Propriétés
 public: Public
 public_workspaces: 'Espaces d''activités publiques'
-public_workspace_empty: 'Il n''y a aucune espace d''activité publique.'
+public_workspace_empty: 'Il n''y a aucun espace d''activité publique.'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 register: Inscription
 register_to_a_workspace: 'S''inscrire à un espace d''activités'

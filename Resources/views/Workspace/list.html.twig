@@ -64,22 +64,26 @@
             <hr>
         {% endif %}
 
-        <div class="panel panel-default" id="accordion-all">
-            <div class="panel-heading">
-                <a  class="accordion-toggle"
-                    data-toggle="collapse"
-                    data-parent="#accordion-all"
-                    href="#collapse-all"
-                >
-                    <i class="icon-align-justify"></i>
-                    {{ 'all_workspaces'|trans({}, 'platform') }}
-                    <i class="icon-chevron-down pull-right"></i>
-                </a>
+        {% if workspaces is empty %}
+            {{ 'no_workspace' | trans({}, 'platform') }}
+        {% else %}
+            <div class="panel panel-default" id="accordion-all">
+                <div class="panel-heading">
+                    <a  class="accordion-toggle"
+                        data-toggle="collapse"
+                        data-parent="#accordion-all"
+                        href="#collapse-all"
+                    >
+                        <i class="icon-align-justify"></i>
+                        {{ 'all_workspaces'|trans({}, 'platform') }}
+                        <i class="icon-chevron-down pull-right"></i>
+                    </a>
+                </div>
+                <div id="collapse-all" class="list-group collapse {% if tags|length == 0 %}in{% endif %}">
+                    {% include 'ClarolineCoreBundle:Workspace:workspaceCompleteListPager.html.twig' %}
+                </div>
             </div>
-            <div id="collapse-all" class="list-group collapse {% if tags|length == 0 %}in{% endif %}">
-                {% include 'ClarolineCoreBundle:Workspace:workspaceCompleteListPager.html.twig' %}
-            </div>
-        </div>
+        {% endif %}
 
         {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
     </div>
