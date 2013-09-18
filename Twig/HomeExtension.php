@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Twig;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
  * @DI\Service
@@ -11,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator;
  */
 class HomeExtension extends \Twig_Extension
 {
+    /** @var Container */
     protected $container;
 
     /**
@@ -18,7 +20,7 @@ class HomeExtension extends \Twig_Extension
      *     "container" = @DI\Inject("service_container")
      * })
      */
-    public function __construct($container)
+    public function __construct(Container $container)
     {
         $this->container = $container;
     }
