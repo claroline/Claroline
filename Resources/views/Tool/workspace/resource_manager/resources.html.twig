@@ -7,13 +7,13 @@
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([
-             {
+            {
                 'icon': 'icon-book',
                 'name': 'workspaces'|trans({}, 'platform'),
                 'href': path('claro_workspace_list')
             },
             {
-                'name': workspace.getName(),
+                'name': workspace.getName() ~ ' - ' ~  workspace.getCode(),
                 'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
             },
             {
