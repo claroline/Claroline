@@ -82,18 +82,21 @@
         </a>
 
         <hr>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <a  class="accordion-toggle"
-                    data-toggle="collapse"
-                    data-parent="#accordion-all"
-                    href="#collapse-all"
-                >
-                    <i class="icon-align-justify"></i>
-                    {{ 'all_my_workspaces'|trans({}, 'platform') }}
-                    <i class="icon-chevron-down pull-right"></i>
-                </a>
-            </div>
+        {% if workspaces is empty %}
+            {{ 'no_workspace' | trans({}, 'platform') }}
+        {% else %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a  class="accordion-toggle"
+                        data-toggle="collapse"
+                        data-parent="#accordion-all"
+                        href="#collapse-all"
+                    >
+                        <i class="icon-align-justify"></i>
+                        {{ 'all_my_workspaces'|trans({}, 'platform') }}
+                        <i class="icon-chevron-down pull-right"></i>
+                    </a>
+                </div>
                 <div id="collapse-all" class="list-group collapse {% if tags|length == 0 %}in{% endif %}">
                     {% for workspace in workspaces %}
                     <a  class="list-group-item" class="row-workspace row-workspace-id-{{ workspace.getId() }}"
@@ -121,6 +124,7 @@
                     {% endfor %}
                 </div>
             </div>
+        {% endif %}
 
         {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
     </div>

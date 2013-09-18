@@ -3,7 +3,8 @@
 
     var twigUserId = document.getElementById('twig-self-registration-user-id').getAttribute('data-user-id');
 
-    $('.unregister-user-to-workspace').click(function () {
+    $('.unregister-user-to-workspace').click(function (e) {
+        e.preventDefault();
         var workspaceId = $(this).attr('data-workspace-id');
         var workspaceName = $(this).attr('data-workspace-name');
         var workspaceCode = $(this).attr('data-workspace-code');
