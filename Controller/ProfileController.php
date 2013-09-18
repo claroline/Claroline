@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Form\ProfileType;
+use Claroline\CoreBundle\Form\UserEditForAdminType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -72,20 +73,20 @@ class ProfileController extends Controller
      * )
      *
      * @EXT\Template("ClarolineCoreBundle:Profile:profileForm.html.twig")
-     *
+     * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * Displays an editable form of the current user's profile.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function formAction(User $user)
+    public function formAction(User $user, User $loggedUser)
     {
-        if ($user !== $this->security->getToken()->getUser() && !$this->security->isGranted('ROLE_ADMIN')) {
+        if ($user !== $loggedUser) {
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         }
-
-        $roles = $this->roleManager->getPlatformRoles($user);
+        
+        $roles = $this->roleManager->getPlatformRoles($loggedUser);
         $form = $this->createForm(new ProfileType($roles), $user);
-
+       
         return array('profile_form' => $form->createView(), 'user' => $user);
     }
 
@@ -96,19 +97,18 @@ class ProfileController extends Controller
      * )
      *
      * @EXT\Template("ClarolineCoreBundle:Profile:profileForm.html.twig")
-     *
+     * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * Updates the user's profile and redirects to the profile form.
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function updateAction(User $user)
+    public function updateAction(User $user, User $loggedUser)
     {
-        if ($user !== $this->security->getToken()->getUser() && !$this->security->isGranted('ROLE_ADMIN')) {
+        if ($user !== $loggedUser) {
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         }
 
-        $roles = $this->roleManager->getPlatformRoles($user);
-
+        $roles = $this->roleManager->getPlatformRoles($loggedUser);
         $form = $this->get('form.factory')->create(new ProfileType($roles), $user);
         $form->handleRequest($this->request);
 
@@ -153,7 +153,7 @@ class ProfileController extends Controller
             return $this->redirect($this->generateUrl('claro_profile_form', array('user' => $user->getId())));
         }
 
-        return array('profile_form' => $form->createView());
+        return array('profile_form' => $form->createView(), 'user' => $user);
     }
 
     /**
@@ -193,10 +193,91 @@ class ProfileController extends Controller
             'pager'    => null,
             'language' => $platformConfigHandler->getParameter('locale_language')
         );
-//        return array(
-//            'user'     => $user,
-//            'pager'    => $pager,
-//            'language' => $platformConfigHandler->getParameter('locale_language')
-//        );
     }
+    
+    /**
+     * @EXT\Route(
+     *     "/admin/edition/form/user/{user}",
+     *     name="claro_profile_form_admin"
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Profile:adminProfileForm.html.twig")
+     * Displays an editable form of the current user's profile.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function adminUserFormEditionAction(User $user)
+    {
+        if (!$this->security->isGranted('ROLE_ADMIN')) {
+            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+        }
+
+        $roles = $this->roleManager->getPlatformRoles($user);
+        $form = $this->createForm(new UserEditForAdminType($roles), $user);
+       
+        return array('profile_form' => $form->createView(), 'user' => $user);
+    }
+    
+    /**
+     * @EXT\Route(
+     *     "/admin/update/user/{user}",
+     *     name="claro_profile_admin_update"
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Profile:profileForm.html.twig")
+     * 
+     * Updates the user's profile and redirects to the profile form.
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function AdminUserFormSubmitAction(User $user)
+    {
+        if (!$this->security->isGranted('ROLE_ADMIN')) {
+            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+        }
+        
+        $roles = $this->roleManager->getPlatformRoles($user);
+        $form = $this->get('form.factory')->create(new UserEditForAdminType($roles), $user);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $user = $form->getData();
+
+            $em = $this->getDoctrine()->getManager();
+            $unitOfWork = $em->getUnitOfWork();
+            $unitOfWork->computeChangeSets();
+            $changeSet = $unitOfWork->getEntityChangeSet($user);
+            $newRoles = $form->get('platformRoles')->getData();
+
+            $this->roleManager->resetRoles($user);
+            $this->roleManager->associateRoles($user, $newRoles);
+            $newRoles = $this->roleManager->getPlatformRoles($user);
+
+            $rolesChangeSet = array();
+            //Detect added
+            foreach ($newRoles as $role) {
+                if (!$this->isInRoles($role, $roles)) {
+                    $rolesChangeSet[$role->getTranslationKey()] = array(false, true);
+                }
+            }
+            //Detect removed
+            foreach ($roles as $role) {
+                if (!$this->isInRoles($role, $newRoles)) {
+                    $rolesChangeSet[$role->getTranslationKey()] = array(true, false);
+                }
+            }
+            if (count($rolesChangeSet) > 0) {
+                $changeSet['roles'] = $rolesChangeSet;
+            }
+
+            $this->eventDispatcher->dispatch(
+                'log',
+                'Log\LogUserUpdate',
+                array($user, $changeSet)
+            );
+
+            return $this->redirect($this->generateUrl('claro_admin_user_list'));
+        }
+
+        return array('claro_profile_form_admin' => $form->createView(), 'user' => $user);
+    }         
 }

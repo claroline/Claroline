@@ -9,23 +9,23 @@
 <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
 {% endblock %}
 {% block breadcrumb %}
-{{
-macros.breadcrumbs([
-{
-'icon': 'icon-book',
-'name': 'workspaces'|trans({}, 'platform'),
-'href': path('claro_workspace_list')
-},
-{
-'name': workspace.getName(),
-'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
-},
-{
-'name': 'agenda'|trans({}, 'tools'),
-'href': ''
-}
-])
-}}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': workspace.getName() ~ ' - ' ~  workspace.getCode(),
+                'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
+            },
+            {
+                'name': 'agenda'|trans({}, 'tools'),
+                'href': ''
+            }
+        ])
+    }}
 {% endblock %}
 {% block section_content %}
 <div class="panel-heading">
@@ -66,10 +66,10 @@ macros.breadcrumbs([
             </div>
         </div>
         <div class="col-md-3">
-         <h4> <u>{{'tasks'|trans({}, 'agenda')}} </u></h4>  
+         <h4> <u>{{'tasks'|trans({}, 'agenda')}} </u></h4>
             <div id="tasks">
                 {% include('ClarolineCoreBundle:Tool\\desktop\\agenda:tasks.html.twig') %}
-            </div> 
+            </div>
             <h4><u>{{ 'agenda_form_priority'|trans({}, 'agenda') }}</u></h4>
             <div>
                 <span style="color:#FF0000">  {{ 'high'|trans({}, 'agenda') }} </span>
