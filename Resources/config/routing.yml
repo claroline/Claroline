@@ -1,0 +1,4 @@
+claro_pdf_player:
+    resource: "@ClarolinePdfPlayerBundle/Controller/PdfPlayerController.php"
+    type:     annotation
+    prefix:   /

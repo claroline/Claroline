@@ -19,7 +19,7 @@
                             <button class="btn btn-primary" onclick="goPrevious()"><i class="icon-backward"></i></button>
                             <button class="btn btn-primary" onclick="goNext()"><i class="icon-forward"></i></button>
                         </span>
-                        <span class="text-center form-control input-group-btn">{{ Page | trans({}, '')}}: <span class="page_num"></span> / <span class="page_count"></span></span>
+                        <span class="text-center form-control input-group-btn">{{ 'Page' | trans({}, 'widget')}}: <span class="page_num"></span> / <span class="page_count"></span></span>
                         <span class="input-group-btn">
                             <button class="btn btn-primary" onclick="zoomIn()"><i class="icon-zoom-in"></i></button>
                             <button class="btn btn-primary" onclick="zoomOut()"><i class="icon-zoom-out"></i></button>
@@ -46,7 +46,7 @@
         <script type="text/javascript" src="{{ asset('bundles/clarolinepdfplayer/js/pdf.js') }}"></script>
         <script type="text/javascript">
 
-        var url = '{{ asset('') }}/../../files/{{ pdf.getHashName() }}';
+        var url = '{{ path ("claro_pdf", {"node": pdf.getResourceNode.getId()}) }}';
 
         PDFJS.disableWorker = true;
 
