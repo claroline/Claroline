@@ -20,13 +20,13 @@
 {% endif %}
 
 {% for workspace in workspaces.currentPageResults %}
-    {% set granted = has_access_to_workspace(workspace.getId(), app.security.getToken()) %}
+    {% set hasRole = has_role_in_workspace(workspace.getId(), app.security.getToken()) %}
     <div class="list-group-item row-workspace row-workspace-id-{{ workspace.getId() }}">
         <i class="icon-book"></i>
         {{ workspace.getName() }}
-        <span class="workspace-code">({{ workspace.getCode() }})</span>
+        <span><small>({{ workspace.getCode() }})</small></span>
 
-        {% if granted %}
+        {% if hasRole %}
         <span class="pull-right label label-success">
             {{ 'registered'|trans({}, 'platform') }}
         </span>

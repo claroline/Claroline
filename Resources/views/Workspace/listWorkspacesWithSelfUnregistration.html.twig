@@ -64,7 +64,7 @@
             {% for workspace in workspaces %}
                 <div id="workspace-{{ workspace.getId() }}" class="list-group-item">
                     {{ workspace.getName() }}
-                    <small>({{ workspace.getCode() }})</small>
+                    <span><small>({{ workspace.getCode() }})</small></span>
                     <span class="pull-right pointer-hand label label-danger unregister-btn"
                         data-workspace-id="{{ workspace.getId() }}"
                         data-workspace-name="{{ workspace.getName() }}"
