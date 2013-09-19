@@ -316,7 +316,10 @@ class ResourceController
     {
         $collection = new ResourceCollection($nodes);
         $this->checkAccess('EXPORT', $collection);
-        $file = $this->resourceManager->download($nodes);
+        /** @todo pointers are awfull: find an other way to do this later */
+        //pointer used in the download function
+        $fileName = '';
+        $file = $this->resourceManager->download($nodes, $fileName);
         $response = new StreamedResponse();
 
         $response->setCallBack(
@@ -327,7 +330,7 @@ class ResourceController
 
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename=archive');
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . $fileName);
         $response->headers->set('Content-Type', 'application/zip');
         $response->headers->set('Connection', 'close');
 

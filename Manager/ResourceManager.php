@@ -772,10 +772,11 @@ class ResourceManager
      * Returns an archive with the required content.
      *
      * @param array $nodes the nodes being exported
+     * @param fileName pointer to the file name.
      *
      * @return file
      */
-    public function download(array $nodes)
+    public function download(array $nodes, &$fileName = '')
     {
         if (count($nodes) === 0) {
             throw new ExportResourceException('No resources were selected.');
@@ -785,6 +786,18 @@ class ResourceManager
         $pathArch = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->ut->generateGuid() . '.zip';
         $archive->open($pathArch, \ZipArchive::CREATE);
         $nodes = $this->expandResources($nodes);
+        
+        if (count($nodes) === 1) {
+            $event = $this->dispatcher->dispatch(
+                "download_{$nodes[0]->getResourceType()->getName()}",
+                'DownloadResource',
+                array($this->getResourceFromNode($nodes[0]))
+            );
+
+            $fileName = $nodes[0]->getName();
+            
+            return $event->getItem();
+        }
 
         $currentDir = $nodes[0];
 
@@ -820,6 +833,7 @@ class ResourceManager
         }
 
         $archive->close();
+        $fileName = 'archive.zip';
 
         return $pathArch;
     }
@@ -853,7 +867,6 @@ class ResourceManager
         }
 
         $merge = array_merge($toAppend, $ress);
-        $merge = array_merge($merge, $dirs);
 
         return $merge;
     }
