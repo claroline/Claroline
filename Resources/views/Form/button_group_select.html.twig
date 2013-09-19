@@ -10,7 +10,7 @@
                 var curValue = $("#{{ form.vars['id'] }}").val();
                 $("#{{ form.vars['id'] }} option").each(function(index, element){
                     var activeClass = (curValue==$(this).attr("value"))?" active":"";
-                    optionsHTML += "<a class='btn"+activeClass+" button-group-select' value='"+$(this).attr("value")+"'>"+$(this).text()+"</a>";
+                    optionsHTML += "<a class='btn"+activeClass+" btn-default button-group-select btn-sm' value='"+$(this).attr("value")+"'>"+$(this).text()+"</a>";
                 });
                 optionsHTML += "</div>";
                 $("#{{ form.vars['id'] }}").after(optionsHTML);

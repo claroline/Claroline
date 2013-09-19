@@ -53,8 +53,7 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             'Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle' => 'stof_doctrine_extensions',
             'BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle' => 'sso',
             'Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle' => 'stfalcon_tinymce',
-            'IDCI\Bundle\ExporterBundle\IDCIExporterBundle' => 'idci_exporter',
-            'ICAPLyon1\Bundle\SimpleTagBundle\ICAPLyon1SimpleTagBundle' => 'icap_simple_tag'
+            'IDCI\Bundle\ExporterBundle\IDCIExporterBundle' => 'idci_exporter'
         );
         // one configuration file for every standard environment (prod, dev, test)
         $envConfigs = array(
