@@ -80,18 +80,17 @@ class AnalyticsManager
 
         $userSearch = null;
         $workspaceIds = null;
+        $actionRestriction = null;
         $chartData = $this->logRepository->countByDayFilteredLogs(
             $action,
             $range,
             $userSearch,
+            $actionRestriction,
             $workspaceIds,
             $unique
         );
 
-        return array(
-            "chartData" => $chartData,
-            "range"     => $range
-        );
+        return $chartData;
     }
 
     public function getTopByCriteria ($range = null, $topType = null, $max = 30)

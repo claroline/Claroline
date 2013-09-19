@@ -893,8 +893,7 @@ class AdministrationController extends Controller
      */
     public function analyticsAction()
     {
-        $actionsForRange = $this->analyticsManager->getDailyActionNumberForDateRange();
-        $lastMonthActions = $actionsForRange["chartData"];
+        $lastMonthActions = $this->analyticsManager->getDailyActionNumberForDateRange();
         $mostViewedWS = $this->analyticsManager->topWSByAction(null, 'ws_tool_read', 5);
         $mostViewedMedia = $this->analyticsManager->topMediaByAction(null, 'resource_read', 5);
         $mostDownloadedResources = $this->analyticsManager->topResourcesByAction(null, 'resource_export', 5);
@@ -928,9 +927,16 @@ class AdministrationController extends Controller
      */
     public function analyticsConnectionsAction()
     {
-        $criteriaForm = $this->formFactory->create(FormFactory::TYPE_ADMIN_ANALYTICS_CONNECTIONS);
-        $cloneForm = clone $criteriaForm;
-        $criteriaForm->bind($this->request);
+        $criteriaForm = $this->formFactory->create(
+            FormFactory::TYPE_ADMIN_ANALYTICS_CONNECTIONS,
+            array(),
+            array(
+                "range"=>$this->analyticsManager->getDefaultRange(),
+                "unique"=>"false"
+            )
+        );
+        
+        $criteriaForm->handleRequest($this->request);
         $unique = false;
         if ($criteriaForm->isValid()) {
             $range = $criteriaForm->get('range')->getData();
@@ -938,13 +944,8 @@ class AdministrationController extends Controller
         }
         $actionsForRange = $this->analyticsManager
             ->getDailyActionNumberForDateRange($range, 'user_login', $unique);
-        if ($range === null) {
-            $cloneForm->get('range')->setData($actionsForRange['range']);
-            $cloneForm->get('unique')->setData($unique);
-            $criteriaForm = $cloneForm;
-        }
-
-        $connections = $actionsForRange['chartData'];
+        
+        $connections = $actionsForRange;
         $activeUsers = $this->analyticsManager->getActiveUsers();
 
         return array(
@@ -1002,27 +1003,24 @@ class AdministrationController extends Controller
      *
      * @throws \Exception
      */
-    public function analyticsTopAction($topType = 'top_users_connections')
+    public function analyticsTopAction($top_type)
     {
-        $criteriaForm = $this->formFactory->create(FormFactory::TYPE_ADMIN_ANALYTICS_TOP);
-        $cloneForm = clone $criteriaForm;
-        $criteriaForm->bind($this->request);
-
+        $criteriaForm = $this->formFactory->create(
+            FormFactory::TYPE_ADMIN_ANALYTICS_TOP,
+            array(),
+            array(
+                "top_type"=>$top_type,
+                "top_number"=>30,
+                "range"=>$this->analyticsManager->getDefaultRange()
+            )
+        );
+        
+        $criteriaForm->handleRequest($this->request);
+               
         $range = $criteriaForm->get('range')->getData();
-        if ($range === null) {
-            $range = $this->analyticsManager->getDefaultRange();
-        }
-        $topTypeTemp = $criteriaForm->get('top_type')->getData();
-        $topType = $topTypeTemp !== null ? $topTypeTemp : $topType;
+        $topType = $criteriaForm->get('top_type')->getData();
         $max = $criteriaForm->get('top_number')->getData();
-        $max = $max !== null ? intval($max) : 30;
-
         $listData = $this->analyticsManager->getTopByCriteria($range, $topType, $max);
-
-        $cloneForm->get('range')->setData($range);
-        $cloneForm->get('top_type')->setData($topType);
-        $cloneForm->get('top_number')->setData($max);
-        $criteriaForm = $cloneForm;
 
         return array(
             'form_criteria' => $criteriaForm->createView(),

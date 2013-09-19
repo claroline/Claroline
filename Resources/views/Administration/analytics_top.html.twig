@@ -19,26 +19,32 @@
     </style>
 {% endblock %}
 {% block section_content %}
-    {% include 'ClarolineCoreBundle:Administration:analytics_navbar.html.twig'%}
-    <div class="margin clearfix">
-        <form id="top_criteria" action="{{ path('claro_admin_analytics_top') }}" method="POST" class="form-inline">
-            {{ form_widget(form_criteria) }}
-            <div> <input type="submit" value="{{ 'Show'|trans({}, 'platform') }}" class="btn btn-primary"/> </div>
-        </form>
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'admin_analytics'|trans({}, 'platform') }}</h3>
     </div>
-    <div class="margin clearfix">
-        <div class="results_list">
-            <table id="top_analytics_table" class="table table-condensed">
-                {% for row in list_data %}
-                    <tr>
-                        {% for key, col in row %}
-                            {% if key != 'id' %}
-                                <td>{{ col }}</td>
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-            </table>
+    <div class="panel-body" id="workspace-list-div">
+        {% include 'ClarolineCoreBundle:Administration:analytics_navbar.html.twig'%}
+        <div class="margin clearfix">
+            <form id="top_criteria" action="{{ path('claro_admin_analytics_top') }}" method="POST" class="form-horizontal">
+                {{ form_widget(form_criteria) }}
+                <div class="form-group"> <div class="col-md-9 col-md-offset-3"><input type="submit" value="{{ 'Show'|trans({}, 'platform') }}" class="btn btn-primary"/> </div></div>
+            </form>
+        </div>
+        <div class="margin clearfix">
+            <div class="results_list">
+                
+            </div>
         </div>
     </div>
+    <table id="top_analytics_table" class="table table-condensed">
+        {% for row in list_data %}
+            <tr>
+                {% for key, col in row %}
+                    {% if key != 'id' %}
+                        <td>{{ col }}</td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
 {% endblock %}
