@@ -2,6 +2,8 @@
 
 namespace Innova\PathBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 use Symfony\Component\HttpFoundation\Response; 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request; 
@@ -77,6 +79,8 @@ class PathController extends Controller
         $rm = $this->resourceManager();
 
         foreach ($steps as $step) {
+            $order++;
+
             // Création ResourceNode
             $resourceNode = new ResourceNode();
             $resourceNode->setName($step->name);
@@ -100,6 +104,7 @@ class PathController extends Controller
             $manager->persist($step1);
             $manager->flush();
 
+            /*
             // Gestion de la jointure ResourceActivity
             $resourceActivity = new ResourceActivity();
             $resourceActivity->setActivity($activity);
@@ -111,6 +116,7 @@ class PathController extends Controller
 
             $manager->persist($resourceActivity);
             $manager->flush();  
+            */
 
             // Gestion des droits.
             $right1 = new ResourceRights();
