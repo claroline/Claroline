@@ -123,7 +123,7 @@ class WorkspaceAgendaControllerTest extends MockeryTestCase
              $form->shouldReceive('isValid')
                  ->once()
                  ->andReturn(true);
-        $this->om->shouldReceive('persist')->once()->with($event);
+        $event->shouldReceive('setAllDay')->with(true)->once();
         $this->om->shouldReceive('flush')->once();
         $event->shouldReceive('getId')->once()->andReturn('1');
         $event->shouldReceive('getTitle')->once()->andReturn('title');
