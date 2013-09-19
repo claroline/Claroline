@@ -9,8 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Path
  *
- * @ORM\Table(name="innova_path")
-* @ORM\Entity
+ * @ORM\Table(name="innova_step")
+ * @ORM\Entity
  */
 class Step extends AbstractResource
 {
