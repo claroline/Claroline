@@ -416,4 +416,12 @@ class WorkspaceManager
 
         return $this->pagerFactory->createPagerFromArray($workspaces, $page);
     }
+
+    public function getWorkspacesWithSelfUnregistrationByRoles($roles, $page)
+    {
+        $workspaces = $this->workspaceRepo
+            ->findWorkspacesWithSelfUnregistrationByRoles($roles);
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page);
+    }
 }

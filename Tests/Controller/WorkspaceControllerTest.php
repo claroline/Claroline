@@ -78,76 +78,45 @@ class WorkspaceControllerTest extends MockeryTestCase
 
     public function testListWorkspacesByUserAction()
     {
-        $controller = $this->getController(array('assertIsGranted', 'isTagDisplayable'));
+        $controller = $this->getController(array('assertIsGranted'));
+        $datas = array(
+            'workspaces' => 'workspaces',
+            'tags' => 'tags',
+            'tagWorkspaces' => 'tagWorkspaces',
+            'hierarchy' => 'hierarchy',
+            'rootTags' => 'rootTags',
+            'displayable' => 'displayable'
+        );
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $user = new User();
         $roles = array('ROLE_A', 'ROLE_B');
-        $workspaces = array('worksapce_1', 'workspace_2');
-        $tagA = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
-        $tagB = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
-        $tagC = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
-        $tagD = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTag');
-        $tags = array($tagA, $tagB, $tagC);
-        $allTags = array($tagA, $tagB, $tagC, $tagD);
-        $relTagWorkspace = array(
-            array('tag_id' => 1, 'rel_ws_tag' => 'relation_1'),
-            array('tag_id' => 1, 'rel_ws_tag' => 'relation_2'),
-            array('tag_id' => 2, 'rel_ws_tag' => 'relation_3'),
-            array('tag_id' => 3, 'rel_ws_tag' => 'relation_4')
-        );
-        $tagHierarchyA = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy');
-        $tagHierarchyB = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy');
-        $tagHierarchyC = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy');
-        $tagHierarchyD = $this->mock('Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy');
-        $tagsHierarchy = array($tagHierarchyA, $tagHierarchyB, $tagHierarchyC, $tagHierarchyD);
-        $rootTags = array($tagA);
 
-        $this->security->shouldReceive('isGranted')->with('ROLE_USER', null)->once()->andReturn(true);
+        $this->security
+            ->shouldReceive('isGranted')
+            ->with('ROLE_USER', null)
+            ->once()
+            ->andReturn(true);
         $this->security->shouldReceive('getToken')->once()->andReturn($token);
         $token->shouldReceive('getUser')->once()->andReturn($user);
         $this->utils->shouldReceive('getRoles')->with($token)->once()->andReturn($roles);
-        $this->workspaceManager
-            ->shouldReceive('getWorkspacesByRoles')
-            ->with($roles)
-            ->once()
-            ->andReturn($workspaces);
         $this->tagManager
-            ->shouldReceive('getNonEmptyTagsByUser')
-            ->with($user)
+            ->shouldReceive('getDatasForWorkspaceListByUser')
+            ->with($user, $roles)
             ->once()
-            ->andReturn($tags);
-        $this->tagManager
-            ->shouldReceive('getTagRelationsByUser')
-            ->with($user)
-            ->once()
-            ->andReturn($relTagWorkspace);
-        $this->tagManager
-            ->shouldReceive('getAllHierarchiesByUser')
-            ->with($user)
-            ->once()
-            ->andReturn($tagsHierarchy);
-        $this->tagManager
-            ->shouldReceive('getRootTags')
-            ->with($user)
-            ->once()
-            ->andReturn($rootTags);
-        $tagHierarchyA->shouldReceive('getLevel')->once()->andReturn(0);
-        $tagHierarchyB->shouldReceive('getLevel')->once()->andReturn(0);
-        $tagHierarchyC->shouldReceive('getLevel')->once()->andReturn(0);
-        $tagHierarchyD->shouldReceive('getLevel')->once()->andReturn(1);
-        $tagHierarchyD->shouldReceive('getParent')->times(3)->andReturn($tagA);
-        $tagA->shouldReceive('getId')->times(4)->andReturn(1);
-        $tagHierarchyD->shouldReceive('getTag')->once()->andReturn($tagB);
-        $this->tagManager
-            ->shouldReceive('getTagsByUser')
-            ->with($user)
-            ->once()
-            ->andReturn($allTags);
-        $tagB->shouldReceive('getId')->once()->andReturn(2);
-        $tagC->shouldReceive('getId')->once()->andReturn(3);
-        $tagD->shouldReceive('getId')->once()->andReturn(4);
+            ->andReturn($datas);
 
-        $controller->listWorkspacesByUserAction();
+        $this->assertEquals(
+            array(
+                'user' => $user,
+                'workspaces' => 'workspaces',
+                'tags' => 'tags',
+                'tagWorkspaces' => 'tagWorkspaces',
+                'hierarchy' => 'hierarchy',
+                'rootTags' => 'rootTags',
+                'displayable' => 'displayable'
+            ),
+            $controller->listWorkspacesByUserAction()
+        );
     }
 
     public function testListWorkspacesWithSelfRegistrationAction()

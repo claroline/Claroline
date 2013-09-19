@@ -1,59 +1,37 @@
 {% macro showTag(tagsList, tagWorkspaces, hierarchy, index, displayable) %}
-{% for tag in tagsList %}
-    {% if displayable[tag.getId()] %}
-    {% set currentIndex = index ~ "-" ~ tag.getId() %}
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <a  class="accordion-toggle"
-                data-toggle="collapse"
-                href="#collapse-{{ currentIndex }}"
-            >
-                <i class="icon-align-justify"></i>
-                {{ tag.getName() }}
-                <i class="icon-chevron-down pull-right"></i>
-            </a>
-        </div>
-        <div id="collapse-{{ currentIndex }}" class="list-group collapse">
-            {% if hierarchy[tag.getId()]|length > 0 %}
-            {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable) }}
-            {% endif %}
-                {% for relWorkspaceTag in tagWorkspaces[tag.id] %}
-                {% set workspace = relWorkspaceTag.getWorkspace() %}
-                <a class="row-workspace row-workspace-id-{{ workspace.getId() }}"
-                    {% set granted = has_access_to_workspace(workspace.getId(), app.security.getToken()) %}
-                    {% if granted == true %}
-                        href="{{ path('claro_workspace_open',
-                        {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
-                        id="link-home-{{ workspace.getId() }}"
+
+    {% for tag in tagsList %}
+        {% set workspaceTagId = tag.getId() %}
+
+        {% if displayable[workspaceTagId] %}
+            {% set currentIndex = index ~ "-" ~ workspaceTagId %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a  class="accordion-toggle"
+                        data-toggle="collapse"
+                        href="#collapse-{{ currentIndex }}"
+                    >
+                        <i class="icon-align-justify"></i>
+                        {{ tag.getName() }}
+                        <i class="icon-chevron-down pull-right"></i>
+                    </a>
+                </div>
+                <div id="collapse-{{ currentIndex }}" class="panel-body collapse">
+
+                    {% if hierarchy[workspaceTagId]|length > 0 %}
+                        {{ _self.showTag(hierarchy[workspaceTagId], tagWorkspaces, hierarchy, currentIndex, displayable) }}
                     {% endif %}
-                    ><i class="icon-book"></i>
-                    {{ workspace.getName() }}
-                    <span class="workspace-code">({{ workspace.getCode() }})</span>
-                    {% if granted %}
-                        {% if workspace.getSelfUnregistration() %}
-                        <span class="label label-danger unregister-user-to-workspace"
-                            data-workspace-id="{{ workspace.getId() }}"
-                            data-workspace-name="{{ workspace.getName() }}"
-                            data-workspace-code="{{ workspace.getCode() }}">
-                            <i class="icon-remove-sign"></i>
-                            {{ 'unregister'|trans({}, 'platform') }}
-                        </span>
-                        {% endif %}
-                    {% elseif workspace.getSelfRegistration() %}
-                        <span class="label label-success register-user-to-workspace"
-                            data-workspace-id="{{ workspace.getId() }}"
-                            data-workspace-name="{{ workspace.getName() }}"
-                            data-workspace-code="{{ workspace.getCode() }}">
-                            <i class="icon-plus-sign"></i>
-                            {{ 'register'|trans({}, 'platform') }}
-                        </span>
+
+                    {% if tagWorkspaces[workspaceTagId] is defined %}
+                        {% set relations = tagWorkspaces[workspaceTagId] %}
+                        <div id="workspace-list-pager-{{ currentIndex }}" class="workspace-list-pager">
+                            {% include 'ClarolineCoreBundle:Workspace:workspaceListWithSelfRegByTagPager.html.twig' %}
+                        </div>
                     {% endif %}
-                </a>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
-{% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
 {% endmacro %}
 
 {% from _self import showTag %}
@@ -73,18 +51,20 @@
                 'href': path('claro_workspace_by_user')
             },
             {
-                'name': 'public_workspaces'|trans({}, 'platform'),
+                'name': 'register_to_a_public_workspace'|trans({}, 'platform'),
                 'href': ''
             }
         ])
     }}
 {% endblock %}
+
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'public_workspaces'|trans({}, 'platform') }}</h3>
+        <h3 class="panel-title">{{ 'register_to_a_public_workspace'|trans({}, 'platform') }}</h3>
     </div>
-    <div class="panel-body">
+    <div id="workspace-list-div" class="panel-body">
+
         {% if workspaces is empty %}
             {{ 'public_workspace_empty' | trans({}, 'platform') }}
         {% else %}
@@ -96,91 +76,50 @@
                         href="#collapse-all"
                     >
                         <i class="icon-align-justify"></i>
-                        {{ 'available_workspaces'|trans({}, 'platform') }}
+                        {{ 'all_available_workspaces'|trans({}, 'platform') }}
                         <i class="icon-chevron-down pull-right"></i>
                     </a>
                 </div>
-                <div id="collapse-all" class="list-group collapse {% if tags|length == 0 %}in{% endif %}">
-                    {% for workspace in workspaces %}
-                    <a class="list-group-item row-workspace row-workspace-id-{{ workspace.getId() }}"
-                        {% set granted = has_access_to_workspace(workspace.getId(), app.security.getToken()) %}
-                        {% if granted == true %}
-                            href="{{ path('claro_workspace_open',
-                           {'workspaceId': workspace.getId()}) }}"
-                           id="link-home-{{ workspace.getId() }}"
-                        {% endif %}
-                        >
-                        <i class="icon-book"></i>
-                        {{ workspace.getName() }}
-                        <span class="workspace-code">({{ workspace.getCode() }})</span>
-                        {% if granted %}
-                            {% if workspace.getSelfUnregistration() %}
-                            <span class="label label-danger unregister-user-to-workspace"
-                                data-workspace-id="{{ workspace.getId() }}"
-                                data-workspace-name="{{ workspace.getName() }}"
-                                data-workspace-code="{{ workspace.getCode() }}">
-                                <i class="icon-remove-sign"></i>
-                                {{ 'unregister'|trans({}, 'platform') }}
-                            </span>
-                            {% endif %}
-                        {% elseif workspace.getSelfRegistration() %}
-                            <span class="label label-success register-user-to-workspace"
-                                data-workspace-id="{{ workspace.getId() }}"
-                                data-workspace-name="{{ workspace.getName() }}"
-                                data-workspace-code="{{ workspace.getCode() }}">
-                                <i class="icon-plus-sign"></i>
-                                {{ 'register'|trans({}, 'platform') }}
-                            </span>
-                        {% endif %}
-                    </a>
-                    {% endfor %}
-                </div>
-
-                {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
-            </div>
-
-            <div id="twig-self-registration-user-id" data-user-id="{{ user.getId() }}">
-            </div>
-
-            <div id="confirm-registration-validation-box" class="modal fade">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4>{{ 'workspace_registration_confirm_title'|trans({}, 'platform') }}</h4>
-                        </div>
-                        <div class="modal-body">
-                            <p id="registration-confirm-message">{{ 'workspace_registration_confirm_message'|trans({}, 'platform') }}</p>
-                        </div>
-                        <div class="modal-footer">
-                            <input type="button" id="registration-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-                            <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="confirm-unregistration-validation-box" class="modal fade">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4>{{ 'workspace_unregistration_confirm_title'|trans({}, 'platform') }}</h4>
-                        </div>
-                        <div class="modal-body">
-                            <p id="unregistration-confirm-message">{{ 'workspace_unregistration_confirm_message'|trans({}, 'platform') }}</p>
-                        </div>
-                        <div class="modal-footer">
-                            <input type="button" id="unregistration-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-                            <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
-                        </div>
-                    </div>
+                <div id="collapse-all" class="panel-body collapse {% if tags|length == 0 %}in{% endif %}">
+                    {% include 'ClarolineCoreBundle:Workspace:workspaceCompleteListWithSelfRegPager.html.twig' %}
                 </div>
             </div>
         {% endif %}
+
+        {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
     </div>
+
+    <div id="twig-self-registration-user-id" data-user-id="{{ user.getId() }}">
+    </div>
+
+    <div id="confirm-registration-validation-box" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>{{ 'workspace_registration_confirm_title'|trans({}, 'platform') }}</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="registration-confirm-message">{{ 'workspace_registration_confirm_message'|trans({}, 'platform') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="registration-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
-    <script src='{{ asset('bundles/clarolinecore/js/workspace/self_registration.js') }}' type="text/javascript"></script>
+    <script
+        src='{{ asset('bundles/clarolinecore/js/workspace/self_registration.js') }}'
+        type="text/javascript">
+    </script>
+    <script
+        src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'platform' }) }}"
+        type="text/javascript">
+    </script>
 {% endblock %}

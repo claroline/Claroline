@@ -277,6 +277,65 @@ class WorkspaceTagController extends Controller
 
     /**
      * @EXT\Route(
+     *     "create/tag/{tagName}",
+     *     name="claro_create_workspace_tag",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
+     *
+     * Create a workspace tag.
+     *
+     * @param User              $currentUser
+     * @param string            $tagName
+     *
+     * @return Response
+     */
+    public function createWorkspaceTag(User $currentUser, $tagName)
+    {
+        $tag = $this->tagManager->getTagByNameAndUser($tagName, $currentUser);
+
+        if ($tag === null) {
+            $tag = $this->tagManager->createTag($tagName, $currentUser);
+            $this->tagManager->createTagHierarchy($tag, $tag, 0);
+        }
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "create/admin/tag/{tagName}",
+     *     name="claro_create_admin_workspace_tag",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
+     *
+     * Create an admin workspace tag.
+     *
+     * @param string            $tagName
+     *
+     * @return Response
+     */
+    public function createAdminWorkspaceTag($tagName)
+    {
+        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException();
+        }
+
+        $tag = $this->tagManager->getTagByNameAndUser($tagName, null);
+
+        if ($tag === null) {
+            $tag = $this->tagManager->createTag($tagName);
+            $this->tagManager->createTagHierarchy($tag, $tag, 0);
+        }
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
      *     "/{userId}/workspace/{workspaceId}/tag/add/{tagName}",
      *     name="claro_workspace_tag_add",
      *     options={"expose"=true}

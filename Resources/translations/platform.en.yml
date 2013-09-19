@@ -11,6 +11,7 @@ add_group: 'Add group'
 add_group_s_confirm_message: 'group(s) added'
 add_resource: 'Add resource'
 add_role: 'Add role'
+add_tag: 'Add tag'
 add_tag_to_workspace: 'Add tag to workspace'
 add_user: 'Add user'
 add_users: 'Add users'
@@ -39,6 +40,7 @@ admin_workspace_tag_form_name: Name
 advanced: Advanced
 agenda: Agenda
 all: All
+all_available_workspaces: 'All available workspaces'
 all_my_workspaces: 'All my workspaces'
 all_workspaces: 'All workspaces'
 anonymous: Anonymous
@@ -58,6 +60,8 @@ canCreate: 'Create %type%'
 canDelete: 'Right to delete'
 canEdit: 'Right to edit'
 canExport: 'Right to export'
+cannot_delete_unique_manager: 'Cannot remove the unique manager.'
+cannot_unsubscribe_from_workspace: 'Cannot unsubscribe from workspace'
 canOpen: 'Right to open'
 choose_resource_form_type: 'Resource type'
 Choose visible actions in the widget: 'Choose visible actions in the widget'
@@ -278,6 +282,8 @@ new_message: 'New message'
 no: 'no'
 no_email: 'No email found, check the spelling'
 no_search_results: 'Your search hasn''t returned any result.'
+no_tag: 'There is no tag'
+no_workspace: 'There is no workspace'
 none: None
 note: Note
 not_allowed_message: You are not allowed to perform this action.
@@ -331,7 +337,9 @@ public_workspaces: 'Public workspaces'
 public_workspace_empty: 'There are no public workspaces.'
 recursive_dir_action: 'Apply to the contents of the directory and its subdirectories'
 register: Register
+register_to_a_public_workspace: 'Register to a public workspace'
 register_to_a_workspace: 'Register to a workspace'
+registered: 'Registered'
 registered_groups: 'Registered groups'
 registered_users: 'Registered users'
 registration_to_workspaces: 'Registration to workspaces'
@@ -454,6 +462,7 @@ type: Type
 type_s: Type(s)
 unique connections: 'Nb unique Cnx.'
 unregister: Unregister
+unregister_from_a_workspace: 'Unregister from a workspace'
 unregistered: Unregistered
 unregistered_groups: 'Unregistered groups'
 unregistered_users: 'Unregistered users'
