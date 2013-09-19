@@ -14,7 +14,35 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Step extends AbstractResource
 {
+   /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="text")
+     */
+    private $title;
    
+    /**
+     * Set title
+     *
+     * @param string $title
+     * @return Path
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string 
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
    
 
  

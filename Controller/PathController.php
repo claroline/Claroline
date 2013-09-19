@@ -96,7 +96,7 @@ class PathController extends Controller
             // Création Step
             $step1 = new Step();
             $step1->setResourceNode($resourceNode);
-
+            $step1->setTitle($step->name);
             $manager->persist($step1);
             $manager->flush();
 

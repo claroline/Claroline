@@ -43,6 +43,5 @@ class Path extends AbstractResource
     {
         return $this->path;
     }
-
  
 }
