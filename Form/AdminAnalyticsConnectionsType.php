@@ -14,7 +14,7 @@ class AdminAnalyticsConnectionsType extends AbstractType
             ->add(
                 'unique', 'buttongroupselect', array(
                     'label' => 'Show',
-                    'attr' => array('class' => 'input-medium'),
+                    'attr' => array('class' => 'input-sm'),
                     'choices' => array(
                         'false' => 'connections',
                         'true' => 'unique connections'
@@ -27,7 +27,10 @@ class AdminAnalyticsConnectionsType extends AbstractType
                 array(
                     'label' => 'for period',
                     'required' => false,
-                    'attr' => array('class' => 'input-medium')
+                    'attr' => array(
+                        'class' => 'input-sm',
+                        'style' => 'max-width:200px'
+                    )
                 )
             );
     }
