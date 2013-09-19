@@ -286,7 +286,9 @@ class QuestionController extends Controller
      */
     public function newAction($exoID)
     {
-        return $this->render('UJMExoBundle:Question:new.html.twig', array('exoID' => $exoID));
+        $linkedCategory = $this->getLinkedCategories();
+
+        return $this->render('UJMExoBundle:Question:new.html.twig', array('exoID' => $exoID, 'linkedCategory' => $linkedCategory));
     }
 
     /**
@@ -338,6 +340,8 @@ class QuestionController extends Controller
                 ->findBy(array('interaction' => $interaction[0]->getId()));
             $nbResponses = count($response);
 
+            $linkedCategory = $this->getLinkedCategories();
+
             switch ($typeInter) {
                 case "InteractionQCM":
 
@@ -365,7 +369,8 @@ class QuestionController extends Controller
                         'entity'      => $interactionQCM[0],
                         'edit_form'   => $editForm->createView(),
                         'delete_form' => $deleteForm->createView(),
-                        'nbResponses' => $nbResponses
+                        'nbResponses' => $nbResponses,
+                        'linkedCategory' => $linkedCategory
                         )
                     );
 
@@ -395,7 +400,8 @@ class QuestionController extends Controller
                         'edit_form'   => $editForm->createView(),
                         'delete_form' => $deleteForm->createView(),
                         'nbResponses' => $nbResponses,
-                        'position'    => $position
+                        'position'    => $position,
+                        'linkedCategory' => $linkedCategory
                         )
                     );
 
@@ -418,7 +424,8 @@ class QuestionController extends Controller
                         'entity'      => $interactionHole[0],
                         'edit_form'   => $editForm->createView(),
                         'delete_form' => $deleteForm->createView(),
-                        'nbResponses' => $nbResponses
+                        'nbResponses' => $nbResponses,
+                        'linkedCategory' => $linkedCategory
                         )
                     );
 
@@ -442,7 +449,8 @@ class QuestionController extends Controller
                         'entity'      => $interactionOpen[0],
                         'edit_form'   => $editForm->createView(),
                         'delete_form' => $deleteForm->createView(),
-                        'nbResponses' => $nbResponses
+                        'nbResponses' => $nbResponses,
+                        'linkedCategory' => $linkedCategory
                         )
                     );
 
@@ -1520,5 +1528,31 @@ class QuestionController extends Controller
         $doublePagination[3] = $pager2;
 
         return $doublePagination;
+    }
+
+    private function getLinkedCategories()
+    {
+        $linkedCategory = array();
+        $repositoryCategory = $this->getDoctrine()
+                   ->getManager()
+                   ->getRepository('UJMExoBundle:Category');
+
+        $repositoryQuestion = $this->getDoctrine()
+                   ->getManager()
+                   ->getRepository('UJMExoBundle:Question');
+
+        $categoryList = $repositoryCategory->findAll();
+
+
+        foreach ($categoryList as $category) {
+          $questionLink = $repositoryQuestion->findOneBy(array('category' => $category->getId()));
+          if (!$questionLink) {
+              $linkedCategory[$category->getId()] = 0;
+          } else {
+              $linkedCategory[$category->getId()] = 1;
+          }
+        }
+
+        return $linkedCategory;
     }
 }

@@ -109,6 +109,38 @@ function dropCategory() {
         success: function (data) {
             // Remove the label from the list
             $("*[id$='_interaction_question_category'] option[value=\""+idCategory+"\"]").remove();
+            displayDeleteCategory();
         }
     });
 }
+
+var allCategory = $('#categoryArray').val();
+var categoryArray = allCategory.split(';');
+
+$("*[id$='_interaction_question_category']").change(function () {
+    displayDeleteCategory();
+});
+
+function displayDeleteCategory() {
+    var idCat = $("*[id$='_interaction_question_category']").val();
+
+
+    for(var i = 0 ; i < categoryArray.length - 1 ; i++) {
+        var index = categoryArray[i].substring(0, categoryArray[i].indexOf('/'));
+        var contain = categoryArray[i].substring(categoryArray[i].indexOf('/') + 1);
+
+        if (idCat == index) {
+            if (contain == 0) {
+                $('#linkedCategory').css({"display" : "block"});
+                break;
+            } else {
+                $('#linkedCategory').css({"display" : "none"});
+                 break;
+            }
+        } else {
+            $('#linkedCategory').css({"display" : "block"});
+        }
+    }
+}
+
+displayDeleteCategory();
