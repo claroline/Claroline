@@ -12,6 +12,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class User2Path
 {
+
+    // Enum definition
+    const STATUS_START = 0;
+    const STATUS_CONTINUE = 1;
+    const STATUS_END = 2;
+
+    protected $status;
+    //protected $status = self::STATUS_ACTIVE;
+
     /**
      * @var integer
      *
