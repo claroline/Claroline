@@ -140,6 +140,14 @@ class PathController extends Controller
             $manager->persist($step1);
             $manager->flush();
 
+            foreach ($resources as $resource) {
+                
+                $resourceNodeId = $resource->resourceId;
+                $step2ressourceNode = new Step2ResourceNode();
+                $resourceNode = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resourceNodeId);
+                $step2ressourceNode->setResourceNode($resourceNode);
+                $step2ressourceNode->setStep($step1);
+            }
             /*
             // Gestion de la jointure ResourceActivity - Ne sert plus à rien je crois
             $resourceActivity = new ResourceActivity();
