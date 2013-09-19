@@ -1,5 +1,17 @@
-.thumbnails.badge_list {
-  margin-left: 20px;
+.badge_list .thumbnail {
+  height: 110px;
+}
+.badge_list .add_button {
+  height: 110px;
+  font-size: 68px;
+  border-color: #357ebd;
+}
+.nodes {
+  padding: 0;
+}
+.nodes .node-thumbnail a.thumbnail {
+  font-size: 80px;
+  text-align: center;
 }
 .thumbnails.badge_user_list > li {
   margin-left: 5px;
@@ -7,6 +19,9 @@
 .badge_image {
   width: 100px;
   height: 100px;
+}
+.badges_infos .form-group {
+  margin-left: 0;
 }
 #translationFormTabs {
   margin-bottom: 0;
@@ -17,6 +32,7 @@
 }
 .badge_translations {
   border-top: 0;
+  padding-right: 32px;
 }
 #award_user_modal {
   min-width: 650px;
@@ -53,11 +69,13 @@ ul.user_badges > li .close {
 #award_form_container {
   display: none;
 }
+.flag {
+  margin-left: 10px;
+}
 .form-actions {
+  clear: both;
   text-align: center;
   padding: 19px 20px 20px;
-  margin-top: 20px;
-  margin-bottom: 20px;
 }
 .panel-title {
   font-size: 22px;
@@ -66,10 +84,40 @@ ul.user_badges > li .close {
   margin-bottom: 0;
   padding: 0;
 }
-.panel-title a.btn {
-  padding: 0;
-  padding-left: 12px;
-}
 table.no_margin {
   margin: 0;
+}
+.badges_rules .rules {
+  border: 1px solid #ddd;
+  padding-top: 15px;
+  background-color: #f5f5f5;
+}
+.badges_rules .rules select {
+  display: inline-block;
+}
+.badges_rules .nav-tabs {
+  border-bottom: 0;
+}
+.badges_rules .nav-tabs #add_rule a {
+  cursor: pointer;
+}
+.badges_rules .nav-tabs > li > a {
+  margin-right: 0;
+  border-radius: 4px 0 0 0;
+  border-bottom: 0;
+}
+.badges_rules .nav-tabs > li.active > a,
+.badges_rules .nav-tabs > li.active > a:hover,
+.badges_rules .nav-tabs > li.active > a:focus {
+  border-right-color: transparent;
+  border-bottom: 1px solid #dddddd;
+  background-color: #f5f5f5;
+  margin-right: -1px;
+  z-index: 1;
+}
+.badges_rules .nav-stacked {
+  padding-right: 0;
+}
+.badges_rules .nav-stacked > li + li {
+  margin-top: 0;
 }
