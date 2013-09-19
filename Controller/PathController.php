@@ -68,12 +68,30 @@ class PathController extends Controller
         // Récupération utilisateur courant.
         $user = $this->get('security.context')->getToken()->getUser();
 
-        $this->JSONParser($json_root_steps, $user, $workspace, $root);
+        // création du dossier _paths s'il existe pas.
+        if(!$pathsDirectory = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneByName("_paths")){
+            $pathsDirectory = new ResourceNode();
+            $pathsDirectory->setName("_paths");
+            $pathsDirectory->setClass("Claroline\CoreBundle\Entity\Resource\Directory");
+            $pathsDirectory->setCreator($user);
+            $pathsDirectory->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneById(2));
+            $pathsDirectory->setWorkspace($workspace);
+            $pathsDirectory->setParent($root);
+            $pathsDirectory->setMimeType("custom/directory");
+            $pathsDirectory->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(7));
+
+            $manager->persist($pathsDirectory);
+            $manager->flush();
+        }
+       
+
+        //lancement récursion 
+        $this->JSONParser($json_root_steps, $user, $workspace, $pathsDirectory, null, 0);
 
         return array('workspace' => $workspace, 'ok' => "Parcours déployé.");
     }
 
-    private function JSONParser($steps, $user, $workspace, $parent)
+    private function JSONParser($steps, $user, $workspace, $pathsDirectory, $parent, $order)
     {
         $manager = $this->entityManager();
         $rm = $this->resourceManager();
@@ -88,24 +106,27 @@ class PathController extends Controller
             $resourceNode->setCreator($user);
             $resourceNode->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneById(10));
             $resourceNode->setWorkspace($workspace);
-            $resourceNode->setParent($parent);
+            $resourceNode->setParent($pathsDirectory);
             $resourceNode->setMimeType("custom/activity");
             $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(35));
 
             $manager->persist($resourceNode);
             $manager->flush();
 
-            $rm->setLastPosition($parent, $resourceNode);
+            $rm->setLastPosition($pathsDirectory, $resourceNode);
             
             // Création Step
             $step1 = new Step();
             $step1->setResourceNode($resourceNode);
-            $step1->setTitle($step->name);
+            $step1->setUuid($step->id);
+            $step1->setParent($parent);
+            $step1->setOrder($order);
+
             $manager->persist($step1);
             $manager->flush();
 
             /*
-            // Gestion de la jointure ResourceActivity
+            // Gestion de la jointure ResourceActivity - Ne sert plus à rien je crois
             $resourceActivity = new ResourceActivity();
             $resourceActivity->setActivity($activity);
             $resourceActivity->setResourceNode($resourceNode);
@@ -121,17 +142,13 @@ class PathController extends Controller
             // Gestion des droits.
             $right1 = new ResourceRights();
             $right1->setRole($manager->getRepository('ClarolineCoreBundle:Role')->findOneById(3));
-            $right1->setCanEdit(1);
-            $right1->setCanCopy(1);
-            $right1->setCanExport(1);
-            $right1->setCanDelete(1);
             $right1->setResourceNode($resourceNode);
             $manager->persist($right1);
 
             $manager->flush(); 
 
             // récursivité sur les enfants possibles.
-            $this->JSONParser($step->children, $user, $workspace, $resourceNode);
+            $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $step->id, 0);
         }
 
         $manager->flush();     
@@ -155,12 +172,14 @@ class PathController extends Controller
 
         $paths = array();
         $manager= $this->entityManager();
-        $results = $manager->getRepository('InnovaPathBundle:Path')->findByWorkspace($id);
+
+        $resourceNode = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneByWorkspace($id);
+
+        $results = $manager->getRepository('InnovaPathBundle:Path')->findByResourceNode($resourceNode);
 
         foreach ($results as $result) {
             $path = new \stdClass();
             $path->id = $result->getId();
-            $path->user = $result->getUser();
             $path->path = $result->getPath();
             $paths[] = $path;
         }
