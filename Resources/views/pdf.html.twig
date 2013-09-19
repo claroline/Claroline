@@ -1,21 +1,39 @@
-{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
 
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ pdf.getResourceNode().getName() }}</h3>
     </div>
     <div class="panel-body">
-        <div>
-            <button class="btn btn-default" onclick="goPrevious()"><i class="icon-backward"></i></button>
-            <button class="btn btn-default" onclick="goNext()"><i class="icon-forward"></i></button>
-            <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
-            <button class="btn btn-default" onclick="zoomIn()"><i class="icon-zoom-in"></i></button>
-            <button class="btn btn-default" onclick="zoomOut()"><i class="icon-zoom-out"></i></button>
-        </div>
+        {% block controls %}
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" onclick="goPrevious()"><i class="icon-backward"></i></button>
+                            <button class="btn btn-primary" onclick="goNext()"><i class="icon-forward"></i></button>
+                        </span>
+                        <span class="text-center form-control input-group-btn">{{ Page | trans({}, '')}}: <span class="page_num"></span> / <span class="page_count"></span></span>
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" onclick="zoomIn()"><i class="icon-zoom-in"></i></button>
+                            <button class="btn btn-primary" onclick="zoomOut()"><i class="icon-zoom-out"></i></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        {% endblock controls %}
         <hr>
         <div style="overflow:auto; border:1px solid #ddd">
             <canvas id="the-canvas"></canvas>
         </div>
+        <hr>
+        {{ block('controls') }}
     </div>
     <div class="panel-footer">
         <a class="btn btn-primary" href="{{ path('claro_resource_download') }}?ids[]={{pdf.getResourceNode().getId()}}">
@@ -54,8 +72,8 @@
             });
 
             // Update page counters
-            document.getElementById('page_num').textContent = pageNum;
-            document.getElementById('page_count').textContent = pdfDoc.numPages;
+            $('.page_num').html(pageNum);
+            $('.page_count').html(pdfDoc.numPages);
         }
 
         function goPrevious() {
