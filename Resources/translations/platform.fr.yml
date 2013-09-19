@@ -40,6 +40,7 @@ admin_workspace_tag_form_name: Nom
 advanced: Avancé
 agenda: Agenda
 all: Tous
+all_available_workspaces: 'Tous les espaces d''activités disponibles'
 all_my_workspaces: 'Tous mes espaces d''activités'
 all_workspaces: 'Tous les espaces'
 anonymous: Anonyme
@@ -59,6 +60,7 @@ canCreate: 'Creation de %type%'
 canEdit: 'Droit de modifier'
 canExport: 'Droit d''exporter'
 canDelete: 'Droit de supprimer'
+cannot_delete_unique_manager: 'Impossible de supprimer le seul manager'
 canOpen: 'Droit d''ouvrir'
 choose_resource_form_type: 'Type de ressource'
 Choose visible actions in the widget: 'Choisissez les actions visibles dans le widget'
@@ -434,6 +436,7 @@ type: Type
 type_s: Type(s)
 unique connections: 'Nb Cnx. uniques'
 unregister: Désinscription
+unregister_from_a_workspace: 'Désinscription d''un espace d''activités'
 unregistered: 'Non inscrit'
 unregistered_groups: 'Groupes non enregistrés'
 unregistered_users: 'Utilisateurs non enregistrés'

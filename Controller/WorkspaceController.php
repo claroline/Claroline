@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Security\TokenUpdater;
+use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -189,6 +190,36 @@ class WorkspaceController extends Controller
             'hierarchy' => $datas['hierarchy'],
             'rootTags' => $datas['rootTags'],
             'displayable' => $datas['displayable']
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/displayable/selfunregistration/page/{page}",
+     *     name="claro_list_workspaces_with_self_unregistration",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
+     *
+     * @EXT\Template()
+     *
+     * Renders the displayable workspace list with self-unregistration.
+     *
+     * @return Response
+     */
+    public function listWorkspacesWithSelfUnregistrationAction(User $currentUser, $page = 1)
+    {
+        $token = $this->security->getToken();
+        $roles = $this->utils->getRoles($token);
+
+        $workspacesPager = $this->workspaceManager
+            ->getWorkspacesWithSelfUnregistrationByRoles($roles, $page);
+
+        return array(
+            'user' => $currentUser,
+            'workspaces' => $workspacesPager
         );
     }
 
@@ -722,25 +753,34 @@ class WorkspaceController extends Controller
      */
     public function removeUserAction(AbstractWorkspace $workspace, User $user)
     {
-        $roles = $this->roleManager->getRolesByWorkspace($workspace);
-        $this->roleManager->checkWorkspaceRoleEditionIsValid(array($user), $workspace, $roles);
+        try {
+            $roles = $this->roleManager->getRolesByWorkspace($workspace);
+            $this->roleManager->checkWorkspaceRoleEditionIsValid(array($user), $workspace, $roles);
 
-        foreach ($roles as $role) {
-            if ($user->hasRole($role->getName())) {
-                $this->roleManager->dissociateRole($user, $role);
-                $this->eventDispatcher->dispatch(
-                    'log',
-                    'Log\LogRoleUnsubscribe',
-                    array($role, $user, $workspace)
-                );
+            foreach ($roles as $role) {
+                if ($user->hasRole($role->getName())) {
+                    $this->roleManager->dissociateRole($user, $role);
+                    $this->eventDispatcher->dispatch(
+                        'log',
+                        'Log\LogRoleUnsubscribe',
+                        array($role, $user, $workspace)
+                    );
+                }
             }
+            $this->tagManager->deleteAllRelationsFromWorkspaceAndUser($workspace, $user);
+
+            $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+            $this->security->setToken($token);
+
+            return new Response('success', 204);
         }
-        $this->tagManager->deleteAllRelationsFromWorkspaceAndUser($workspace, $user);
-
-        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $this->security->setToken($token);
-
-        return new Response('success', 204);
+        catch (LastManagerDeleteException $e) {
+            return new Response(
+                'cannot_delete_unique_manager',
+                200,
+                array('XXX-Claroline-delete-last-manager')
+            );
+        }
     }
 
     /**

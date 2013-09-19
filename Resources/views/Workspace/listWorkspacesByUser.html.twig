@@ -30,16 +30,6 @@
                     <i class="icon-book"></i>
                     {{ workspace.getName() }}
                     <span class="workspace-code">({{ workspace.getCode() }})</span>
-
-                    {% if workspace.getSelfUnregistration() %}
-                    <span class="label label-danger unregister-user-to-workspace"
-                        data-workspace-id="{{ workspace.getId() }}"
-                        data-workspace-name="{{ workspace.getName() }}"
-                        data-workspace-code="{{ workspace.getCode() }}">
-                        <i class="icon-remove-sign"></i>
-                        {{ 'unregister'|trans({}, 'platform') }}
-                    </span>
-                    {% endif %}
                 </a>
                 {% endfor %}
         </div>
@@ -80,6 +70,9 @@
         <a href="{{ path('claro_list_workspaces_with_self_registration') }}">
             <button type="button" class="btn btn-default">{{ 'register_to_a_workspace'|trans({}, 'platform') }}</button>
         </a>
+        <a href="{{ path('claro_list_workspaces_with_self_unregistration') }}">
+            <button type="button" class="btn btn-default">{{ 'unregister_from_a_workspace'|trans({}, 'platform') }}</button>
+        </a>
 
         <hr>
         {% if workspaces is empty %}
@@ -106,20 +99,10 @@
                             {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
                             id="link-home-{{ workspace.getId() }}"
                         {% endif %}
-                        >
-                           <i class="icon-book"></i>
-                           {{ workspace.getName() }}
-                           <span class="workspace-code">({{ workspace.getCode() }})</span>
-
-                        {% if workspace.getSelfUnregistration() %}
-                        <span class="label label-danger unregister-user-to-workspace"
-                            data-workspace-id="{{ workspace.getId() }}"
-                            data-workspace-name="{{ workspace.getName() }}"
-                            data-workspace-code="{{ workspace.getCode() }}">
-                            <i class="icon-remove-sign"></i>
-                            {{ 'unregister'|trans({}, 'platform') }}
-                        </span>
-                        {% endif %}
+                    >
+                        <i class="icon-book"></i>
+                        {{ workspace.getName() }}
+                        <span class="workspace-code">({{ workspace.getCode() }})</span>
                     </a>
                     {% endfor %}
                 </div>
@@ -129,28 +112,4 @@
         {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
     </div>
 
-    <div id="twig-self-registration-user-id" data-user-id="{{ user.getId() }}">
-    </div>
-
-    <div id="confirm-unregistration-validation-box" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4>{{ 'workspace_unregistration_confirm_title'|trans({}, 'platform') }}</h4>
-                </div>
-                <div class="modal-body">
-                    <p id="unregistration-confirm-message">{{ 'workspace_unregistration_confirm_message'|trans({}, 'platform') }}</p>
-                </div>
-                <div class="modal-footer">
-                    <input type="button" id="unregistration-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-                    <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endblock %}
-{% block javascripts %}
-    {{ parent() }}
-    <script src='{{ asset('bundles/clarolinecore/js/workspace/list_my_workspaces.js') }}' type="text/javascript"></script>
 {% endblock %}

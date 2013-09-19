@@ -340,4 +340,22 @@ class WorkspaceRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findWorkspacesWithSelfUnregistrationByRoles(array $roles)
+    {
+        $dql = "
+            SELECT DISTINCT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            JOIN w.orderedTools ot
+            JOIN ot.roles r
+            WHERE w.displayable = true
+            AND w.selfUnregistration = true
+            AND r.name IN (:roles)
+            ORDER BY w.name
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roles', $roles);
+
+        return $query->getResult();
+    }
 }

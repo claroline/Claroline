@@ -40,6 +40,7 @@ admin_workspace_tag_form_name: Name
 advanced: Advanced
 agenda: Agenda
 all: All
+all_available_workspaces: 'All available workspaces'
 all_my_workspaces: 'All my workspaces'
 all_workspaces: 'All workspaces'
 anonymous: Anonymous
@@ -59,6 +60,7 @@ canCreate: 'Create %type%'
 canDelete: 'Right to delete'
 canEdit: 'Right to edit'
 canExport: 'Right to export'
+cannot_delete_unique_manager: 'Cannot remove the unique manager'
 canOpen: 'Right to open'
 choose_resource_form_type: 'Resource type'
 Choose visible actions in the widget: 'Choose visible actions in the widget'
@@ -456,6 +458,7 @@ type: Type
 type_s: Type(s)
 unique connections: 'Nb unique Cnx.'
 unregister: Unregister
+unregister_from_a_workspace: 'Unregister from a workspace'
 unregistered: Unregistered
 unregistered_groups: 'Unregistered groups'
 unregistered_users: 'Unregistered users'

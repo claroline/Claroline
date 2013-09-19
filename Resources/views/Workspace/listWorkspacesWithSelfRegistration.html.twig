@@ -76,7 +76,7 @@
                         href="#collapse-all"
                     >
                         <i class="icon-align-justify"></i>
-                        {{ 'available_workspaces'|trans({}, 'platform') }}
+                        {{ 'all_available_workspaces'|trans({}, 'platform') }}
                         <i class="icon-chevron-down pull-right"></i>
                     </a>
                 </div>
@@ -104,24 +104,6 @@
                 </div>
                 <div class="modal-footer">
                     <input type="button" id="registration-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-                    <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="confirm-unregistration-validation-box" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4>{{ 'workspace_unregistration_confirm_title'|trans({}, 'platform') }}</h4>
-                </div>
-                <div class="modal-body">
-                    <p id="unregistration-confirm-message">{{ 'workspace_unregistration_confirm_message'|trans({}, 'platform') }}</p>
-                </div>
-                <div class="modal-footer">
-                    <input type="button" id="unregistration-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
                     <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
                 </div>
             </div>
