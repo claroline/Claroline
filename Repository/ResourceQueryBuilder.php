@@ -162,7 +162,7 @@ class ResourceQueryBuilder
             $eol = PHP_EOL;
             $clause = "{$eol}({$eol}";
 
-            for ($i = 0; $i < $count; ++$i) {
+            foreach ($roles as $i => $role) {
                 $role = $roles[$i] instanceof RoleInterface ? $roles[$i]->getRole() : $roles[$i];
                 $clause .= $i > 0 ? '    OR ' : '    ';
                 $clause .= "rightRole.name = :role_{$i}{$eol}";
