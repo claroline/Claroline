@@ -170,7 +170,6 @@
             var marks = [{{ scoreList }}];
 
             $.jqplot('histoMarks', [s1], {
-                //title:'{#{ "histoMarks" | trans }#}',
 
                 series:[{renderer:$.jqplot.BarRenderer}],
 
@@ -189,7 +188,7 @@
                         },
                         renderer: $.jqplot.CategoryAxisRenderer,
                         ticks: marks,
-                        tickOptions: {showGridline: false}
+                        tickOptions: {showGridline: false,formatString: '%.1f'}
                     },
 
                     yaxis: {
@@ -223,7 +222,6 @@
             {% endfor %}
 
             plot3 = $.jqplot('histoSuccess', [{{ series }}], {
-                //title:'{#{ "histoSuccess" | trans }#}',
 
                 stackSeries: true,
                 captureRightClick: true,
@@ -292,7 +290,7 @@
 
             if (s1 != 'none') {
                 $.jqplot('histoDiscrimination', [s1], {
-                    //title:'{#{ "histoDiscrimination" | trans }#}',
+
                     stackSeries: true,
                     series:[{renderer:$.jqplot.BarRenderer}],
 
@@ -338,7 +336,6 @@
             var percent = [{{MeasureDifficulty}}];
 
             $.jqplot('histoMeasureOfDifficulty', [percent], {
-                //title:'{#{ "histoMeasureOfDifficulty" | trans }#}',
 
                 series:[{renderer:$.jqplot.BarRenderer}],
 

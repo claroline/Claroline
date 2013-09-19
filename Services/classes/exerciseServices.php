@@ -555,39 +555,6 @@ class exerciseServices
      */
     public function roundUpDown($toBeAdjusted)
     {
-        if (strrpos($toBeAdjusted, ".")) {
-            list($integer, $rest) = explode(".", $toBeAdjusted);
-        } else if (strrpos($toBeAdjusted, ",")) {
-            list($integer, $rest) = explode(",", $toBeAdjusted);
-        } else {
-            return $toBeAdjusted;
-        }
-
-        $ten = substr($rest, 0, 1);
-        $hundred = substr($rest, 1);
-
-        if ($hundred == 5 || $hundred > 5) {
-            $ten = $ten + 1;
-            if ($ten > 5) {
-                $ten = 0;
-                $integer = $integer + 1;
-            } else if ($ten < 5) {
-                $ten = 0;
-            }
-        } else if ($hundred < 5) {
-            $ten = $ten - 1;
-            if ($ten > 5) {
-                $ten = 0;
-                $integer = $integer + 1;
-            } else if ($ten < 5) {
-                $ten = 0;
-            }
-        }
-
-        if ($ten == 0) {
-            return $integer;
-        } else {
-            return $integer.'.'.$ten;
-        }
+        return (round($toBeAdjusted / 0.5) * 0.5);
     }
 }

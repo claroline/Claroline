@@ -881,7 +881,7 @@ class ExerciseController extends Controller
         $em->flush();
 
         $this->get('session')->remove('penalties');
-        
+
         return $this->forward('UJMExoBundle:Paper:show', array('id' => $paper->getId()));
     }
 
