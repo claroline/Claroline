@@ -776,8 +776,10 @@ class ResourceManager
      *
      * @return file
      */
-    public function download(array $nodes, &$fileName = '')
+    public function download(array $nodes)
     {
+        $data = array();
+        
         if (count($nodes) === 0) {
             throw new ExportResourceException('No resources were selected.');
         }
@@ -794,9 +796,10 @@ class ResourceManager
                 array($this->getResourceFromNode($nodes[0]))
             );
 
-            $fileName = $nodes[0]->getName();
+            $data['name'] = $nodes[0]->getName();
+            $data['file'] = $event->getItem();
             
-            return $event->getItem();
+            return $data;
         }
 
         $currentDir = $nodes[0];
@@ -833,9 +836,10 @@ class ResourceManager
         }
 
         $archive->close();
-        $fileName = 'archive.zip';
-
-        return $pathArch;
+        $data['name'] = 'archive.zip';
+        $data['file'] = $pathArch;
+        
+        return $data;
     }
 
     /**

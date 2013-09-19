@@ -316,10 +316,9 @@ class ResourceController
     {
         $collection = new ResourceCollection($nodes);
         $this->checkAccess('EXPORT', $collection);
-        /** @todo pointers are awfull: find an other way to do this later */
-        //pointer used in the download function
-        $fileName = '';
-        $file = $this->resourceManager->download($nodes, $fileName);
+        $data = $this->resourceManager->download($nodes);
+        $file = $data['file'];
+        $fileName = $data['name'];
         $response = new StreamedResponse();
 
         $response->setCallBack(
