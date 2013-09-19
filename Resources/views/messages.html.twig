@@ -14,7 +14,18 @@
 
 {% from _self import renderPager %}
 
-{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('claro_forum_subjects', { 'forumId': _resource.getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+    <li class="active">{{ subject.getTitle() }}</li>
+{% endblock %}
 
 {% block section_content %}
     <div class="panel-heading">
@@ -35,26 +46,23 @@
             {% for message in pager.currentPageResults %}
                 <tr class="row-message">
                     <td width="125px">
-                        <div>
-                            <img src="{{ asset('bundles/clarolinecore/images/workspaces/tools/user_small.png') }}"/>
-                        </div>
-                        <div>
-                           {{ message.getCreator().getFirstName() }} {{ message.getCreator().getLastName() }}
-                        </div>
-                        <div>
-                            {{ message.getCreationDate()|date('m/d/Y H:i:s') }}
-                        </div>
+                        <p>{{ message.getCreator().getFirstName() }} {{ message.getCreator().getLastName() }}</p>
                     </td>
-                    <td>{{ message.getContent()|raw }}</td>
+                    <td>
+                        <p>{{ message.getContent()|raw }}</p>
+                        <p class="text-muted">{{ message.getCreationDate()| timeAgo }}</p>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
-        <a class="btn btn-primary" href='{{ _path('claro_forum_message_form', {'subjectId': subject.getId()}) }}'>
-            <i class="icon-reply"></i> {{ 'new_message'|trans({}, 'forum') }}
-        </a>
         <div>
             {{ renderPager(subject.getId(), pager) }}
         </div>
+    </div>
+    <div class="panel-footer">
+        <a class="btn btn-primary" href='{{ _path('claro_forum_message_form', {'subjectId': subject.getId()}) }}'>
+            <i class="icon-reply"></i> {{ 'new_message'|trans({}, 'forum') }}
+        </a>
     </div>
 {% endblock %}
