@@ -15,8 +15,7 @@ class AdminAnalyticsTopType extends AbstractType
                 'top_type', 'choice', array(
                     'label' => 'Show',
                     'attr' => array(
-                        'class' => 'input-medium',
-                        'style' => 'max-width:200px;'
+                        'class' => 'input-sm'
                     ),
                     'choices' => array(
                         'top_extension' => 'top_extension',
@@ -37,13 +36,16 @@ class AdminAnalyticsTopType extends AbstractType
                 array(
                     'label' => 'for period',
                     'required' => false,
-                    'attr' => array('class' => 'input-medium')
+                    'attr' => array(
+                        'class' => 'input-sm col-lg-2',
+                        'style' => 'max-width:200px'
+                    )
                 )
             )
             ->add(
                 'top_number', 'buttongroupselect', array(
                     'label' => 'top',
-                    'attr' => array('class' => 'input-medium'),
+                    'attr' => array('class' => 'input-sm'),
                     'choices' => array(
                         '20' => '20',
                         '30' => '30',

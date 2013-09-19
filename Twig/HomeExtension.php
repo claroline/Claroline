@@ -147,13 +147,7 @@ class HomeExtension extends \Twig_Extension
      */
     public function isDesktop()
     {
-        $resourcesPath = $this->container->get('router')->generate(
-            'claro_desktop_open_tool', array('toolName' => 'resource_manager'), true
-        );
-        $referer = $this->container->get('request')->headers->get('referer');
-        $referer = preg_replace('/\?.*/', '', $referer);//delete query string
-
-        if ($resourcesPath == $referer) {
+        if ($this->container->get('session')->get('isDesktop')) {
             return true;
         }
 

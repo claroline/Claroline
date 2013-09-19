@@ -182,6 +182,10 @@ class DesktopController extends Controller
             'DisplayTool'
         );
 
+        if ($toolName === 'resource_manager') {
+            $this->get('session')->set('isDesktop', true);
+        }
+
         return new Response($event->getContent());
     }
 

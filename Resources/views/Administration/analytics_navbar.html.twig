@@ -1,31 +1,17 @@
-<style type="text/css">
-    #analytics-navbar{
-        margin:10px 10px 0 10px;
+<ul id="analytics-navbar" class="nav nav-tabs tabs">
+    <li{% if path('claro_admin_analytics_show') == app.request.requesturi %} class="active"{% endif %}>
+        <a href="{{path('claro_admin_analytics_show')}}">{{'analytics_home'|trans({}, 'platform')}}</a>
+    </li>
 
-    }
-    #analytics-navbar li.active a{
-        color: #555555 !important;
-    }
-</style>
+    <li{% if path('claro_admin_analytics_connections') == app.request.requesturi %} class="active"{% endif %}>
+        <a href="{{path('claro_admin_analytics_connections')}}">Audience/Visites utilisateurs</a>
+    </li>
 
-<div id="analytics-navbar" class="navbar">
-    <div class="navbar-inner">
-    <ul class="nav">
-        <li{% if path('claro_admin_analytics_show') == app.request.requesturi %} class="active"{% endif %}>
-            <a href="{{path('claro_admin_analytics_show')}}">{{'analytics_home'|trans({}, 'platform')}}</a>
-        </li>
+    <li{% if path('claro_admin_analytics_resources') == app.request.requesturi %} class="active"{% endif %}>
+        <a href="{{path('claro_admin_analytics_resources')}}">Contenu plateforme</a>
+    </li>
 
-        <li{% if path('claro_admin_analytics_connections') == app.request.requesturi %} class="active"{% endif %}>
-            <a href="{{path('claro_admin_analytics_connections')}}">Audience/Visites utilisateurs</a>
-        </li>
-
-        <li{% if path('claro_admin_analytics_resources') == app.request.requesturi %} class="active"{% endif %}>
-            <a href="{{path('claro_admin_analytics_resources')}}">Contenu plateforme</a>
-        </li>
-
-        <li{% if path('claro_admin_analytics_top') in app.request.requesturi %} class="active"{% endif %}>
-            <a href="{{path('claro_admin_analytics_top')}}">Top des activités</a>
-        </li>
-    </ul>
-    </div>
-</div>
+    <li{% if path('claro_admin_analytics_top') in app.request.requesturi %} class="active"{% endif %}>
+        <a href="{{path('claro_admin_analytics_top')}}">Top des activités</a>
+    </li>
+</ul>

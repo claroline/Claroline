@@ -207,10 +207,13 @@ login: Connexion
 login_failure: 'La connexion a échoué. Vérifiez que votre nom d''utilisateur et votre mot de passe sont corrects.'
 logout: Déconnexion
 mail: Mail
+mail_config_problem : Veuillez contacter l'administrateur pour reinitialiser votre mot de passe.
 mail_form_content: Contenu
 mail_form_object: Objet
+mail_invalid : 'Le format de votre email n''est pas valide'
 mail_message : 'Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur me lien ci-dessous pour le réinitialiser. Si vous n''êtes pas à l''orgine de cette action, veuillez ignorer ce message.'
 mail_click: 'Cliquez sur ce lien pour réinitialiser votre mot de passe'
+mail_not_exist : 'Cet email n''existe pas '
 mail_sent : 'Un email vient de vous être envoyé. Vérifiez votre dossier spam au cas où vous ne verriez pas l''email'
 manage_rights: 'Gérer les droits'
 manager: Gestionnaire
