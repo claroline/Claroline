@@ -239,16 +239,6 @@ class Step extends AbstractResource
     {
         return $this->deployable;
     }
-    /**
-     * @var integer
-     */
-    private $id;
-
-    /**
-     * @var \Claroline\CoreBundle\Entity\Resource\ResourceNode
-     */
-    private $resourceNode;
-
 
     /**
      * Set order
