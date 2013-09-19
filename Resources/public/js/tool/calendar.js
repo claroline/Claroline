@@ -329,10 +329,10 @@
             editable: true,
             events: $('a#link').attr('href'),
             axisFormat: 'HH:mm',
-            timeFormat: {
-                agenda: 'HH:mm{ - HH:mm}',
-                '': 'h(:mm)t' 
-            },
+            timeFormat: 'H(:mm)',
+            agenda: 'h:mm{ - h:mm}', // 5:00 - 6:30
+            // for all other views
+            '': 'h(:mm)t',
             allDayText: 'all-day',
             allDaySlot: true,
             eventDrop: function (event, dayDelta, minuteDelta) {
