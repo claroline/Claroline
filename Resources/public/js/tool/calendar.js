@@ -319,7 +319,7 @@
                 month:    Translator.get('agenda' + ':' + 'month'),
                 week:     Translator.get('agenda' + ':' + 'week'),
                 day:      Translator.get('agenda' + ':' + 'day')
-            };
+            },
             monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
                 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
             monthNamesShort: ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août',
