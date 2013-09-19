@@ -29,6 +29,7 @@ class HasRoleExtension extends \Twig_Extension
     {
         return array(
             'has_role' => new \Twig_Function_Method($this, 'hasRole'),
+            'is_impersonated' => new \Twig_Function_Method($this, 'isImpersonated'),
         );
     }
 
@@ -36,6 +37,17 @@ class HasRoleExtension extends \Twig_Extension
     {
         foreach ($this->securityContext->getToken()->getRoles() as $tokenRole) {
             if ($tokenRole->getRole() === $role) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
+    public function isImpersonated()
+    {
+        foreach ($this->securityContext->getToken()->getRoles() as $role) {
+            if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
                 return true;
             }
         }

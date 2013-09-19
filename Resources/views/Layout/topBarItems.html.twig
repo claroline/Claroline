@@ -114,9 +114,3 @@
 
 {% endblock topBar %}
 
-{% block impersonation %}
-    {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') or isImpersonated %}
-        {% render controller('ClarolineCoreBundle:Layout:renderWarningImpersonation') %}
-    {% endif %}
-{% endblock %}
-
