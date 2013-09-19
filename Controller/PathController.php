@@ -87,7 +87,6 @@ class PathController extends Controller
             $manager->persist($pathsDirectory);
             $manager->flush();
         }
-       
 
         //lancement récursion 
         $this->JSONParser($json_root_steps, $user, $workspace, $pathsDirectory, null, 0);
@@ -131,12 +130,12 @@ class PathController extends Controller
             $stepWhere = $manager->getRepository('InnovaPathBundle:StepWhere')->findOneById($step->where);
             $step1->setStepWhere($stepWhere); 
             $step1->setDuration(new \DateTime());
+            $step1->setExpanded($step->expanded);
+            $step1->setWithTutor($step->withTutor);
+            $step1->setWithComputer($step->withComputer);
+            $step1->setInstructions($step->instructions);
 
             $step1->setUuid('AAAAAAA'); //$step1->setUuid($step->uuid);
-            $step1->setExpanded(true); //$step1->setUuid($step->expanded);
-            $step1->setWithTutor(true); //$step1->setWithTutor($step->withTutor);
-            $step1->setWithComputer(true); //$step1->setWithComputer($step->withComputer);
-            $step1->setInstructions('Instructions'); //$step1->setInstructions($step->instructions);
             
             $manager->persist($step1);
             $manager->flush();

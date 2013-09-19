@@ -13,7 +13,13 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
  */
 class Path extends AbstractResource
 {
-   
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="uuid", type="string", length=255)
+     */
+    private $uuid;
+
     /**
      * @var string
      *
@@ -42,6 +48,29 @@ class Path extends AbstractResource
     public function getPath()
     {
         return $this->path;
+    }
+
+    /**
+     * Set uuid
+     *
+     * @param string $uuid
+     * @return Path
+     */
+    public function setUuid($uuid)
+    {
+        $this->uuid = $uuid;
+
+        return $this;
+    }
+
+    /**
+     * Get uuid
+     *
+     * @return string 
+     */
+    public function getUuid()
+    {
+        return $this->uuid;
     }
  
 }
