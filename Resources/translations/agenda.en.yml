@@ -26,9 +26,10 @@ title : "Title can not be empty"
 update : "update"
 prev : '<'
 next : '>'
-prevYear : '<<;'
+prevYear : '<<'
 nextYear : '>>'
 today : 'today'
 month : 'month'
 week : 'week'
 day: 'day'
+

@@ -38,6 +38,13 @@ class HomeExtension extends \Twig_Extension
         );
     }
 
+    public function getFunctions()
+    {
+        return array(
+            'isDesktop' => new \Twig_Function_Method($this, 'isDesktop')
+        );
+    }
+
     /**
      * Get the elapsed time since $start to right now, with a transChoice() for translation in plural or singular.
      *
@@ -136,6 +143,18 @@ class HomeExtension extends \Twig_Extension
     }
 
     /**
+     * Check if you come from desktop or workspace.
+     */
+    public function isDesktop()
+    {
+        if ($this->container->get('session')->get('isDesktop')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Get the name of the twig extention.
      *
      * @return \String
@@ -143,6 +162,5 @@ class HomeExtension extends \Twig_Extension
     public function getName()
     {
         return 'home_extension';
-
     }
 }

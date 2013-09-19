@@ -11,7 +11,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
@@ -147,80 +146,18 @@ class WorkspaceController extends Controller
         $token = $this->security->getToken();
         $user = $token->getUser();
         $roles = $this->utils->getRoles($token);
-        $workspaces = $this->workspaceManager->getWorkspacesByRoles($roles);
-        $tags = $this->tagManager->getNonEmptyTagsByUser($user);
-        $relTagWorkspace = $this->tagManager->getTagRelationsByUser($user);
-        $tagWorkspaces = array();
 
-        foreach ($relTagWorkspace as $tagWs) {
-
-            if (empty($tagWorkspaces[$tagWs['tag_id']])) {
-                $tagWorkspaces[$tagWs['tag_id']] = array();
-            }
-            $tagWorkspaces[$tagWs['tag_id']][] = $tagWs['rel_ws_tag'];
-        }
-        $tagsHierarchy = $this->tagManager->getAllHierarchiesByUser($user);
-        $rootTags = $this->tagManager->getRootTags($user);
-        $hierarchy = array();
-
-        // create an array : tagId => [direct_children_id]
-        foreach ($tagsHierarchy as $tagHierarchy) {
-
-            if ($tagHierarchy->getLevel() === 1) {
-
-                if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
-                    !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
-
-                    $hierarchy[$tagHierarchy->getParent()->getId()] = array();
-                }
-                $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
-            }
-        }
-
-        // create an array indicating which tag is displayable
-        // a tag is displayable if it or one of his children contains is associated to a workspace
-        $displayable = array();
-        $allTags = $this->tagManager->getTagsByUser($user);
-
-        foreach ($allTags as $oneTag) {
-            $oneTagId = $oneTag->getId();
-            $displayable[$oneTagId] = $this->isTagDisplayable($oneTagId, $tagWorkspaces, $hierarchy);
-        }
+        $datas = $this->tagManager->getDatasForWorkspaceListByUser($user, $roles);
 
         return array(
             'user' => $user,
-            'workspaces' => $workspaces,
-            'tags' => $tags,
-            'tagWorkspaces' => $tagWorkspaces,
-            'hierarchy' => $hierarchy,
-            'rootTags' => $rootTags,
-            'displayable' => $displayable
+            'workspaces' => $datas['workspaces'],
+            'tags' => $datas['tags'],
+            'tagWorkspaces' => $datas['tagWorkspaces'],
+            'hierarchy' => $datas['hierarchy'],
+            'rootTags' => $datas['rootTags'],
+            'displayable' => $datas['displayable']
         );
-    }
-
-    private function isTagDisplayable($tagId, array $tagWorkspaces, array $hierarchy)
-    {
-        $displayable = false;
-
-        if (isset($tagWorkspaces[$tagId]) && count($tagWorkspaces[$tagId]) > 0) {
-            $displayable = true;
-        } else {
-
-            if (isset($hierarchy[$tagId]) && count($hierarchy[$tagId]) > 0) {
-                $children = $hierarchy[$tagId];
-
-                foreach ($children as $child) {
-
-                    $displayable = $this->isTagDisplayable($child->getId(), $tagWorkspaces, $hierarchy);
-
-                    if ($displayable) {
-                        break;
-                    }
-                }
-            }
-        }
-
-        return $displayable;
     }
 
     /**
@@ -427,6 +364,10 @@ class WorkspaceController extends Controller
             array($workspace, $toolName)
         );
 
+        if ($toolName === 'resource_manager') {
+            $this->get('session')->set('isDesktop', false);
+        }
+
         return new Response($event->getContent());
     }
 
@@ -469,8 +410,7 @@ class WorkspaceController extends Controller
         if (!is_null($homeTab) &&
             $this->homeTabManager->checkHomeTabVisibilityByWorkspace($homeTab, $workspace)) {
 
-            $configs = $this->homeTabManager
-                ->getWidgetConfigsByWorkspace($homeTab,$workspace);
+            $configs = $this->homeTabManager->getWidgetConfigsByWorkspace($homeTab, $workspace);
 
             if ($this->security->getToken()->getUser() !== 'anon.') {
                 $rightToConfigure = $this->security->isGranted('parameters', $workspace);
@@ -503,6 +443,7 @@ class WorkspaceController extends Controller
                 }
             }
         }
+
         return array(
             'widgets' => $widgets,
             'isDesktop' => false,

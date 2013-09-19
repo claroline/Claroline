@@ -9,45 +9,43 @@
     <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
 {% endblock %}
 {% block section_content %}
-    {% include 'ClarolineCoreBundle:Administration:analytics_navbar.html.twig'%}
-
-    <div class="margin">
-        <h1>{{ wsCount }}</h1>
-        <p><i class="icon-book"></i> {{'workspaces'|trans({}, 'platform')}}</p>
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'admin_analytics'|trans({}, 'platform') }}</h3>
     </div>
-    <div class="accordion widget row">
-        <div class="accordion-group widget col-md-6">
-            <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#collapse-piechart" href="#collapse-piechart">
-                    <i class="icon-bar-chart"></i>
-                    {{'resources_usage_ratio'|trans({}, 'platform')}}
-                    <i class="icon-chevron-up pull-right"></i>
-                </a>
-            </div>
-            <div id="collapse-piechart" class="accordion-body collapse in">
-                <div id="container-piechart" class="accordion-inner">
-                    <div id="resources-pie-chart" class="pie-chart"></div>
+    <div class="panel-body" id="workspace-list-div">
+        {% include 'ClarolineCoreBundle:Administration:analytics_navbar.html.twig'%}
+
+        <div class="margin">
+            <h1>{{ wsCount }}</h1>
+            <p><i class="icon-book"></i> {{'workspaces'|trans({}, 'platform')}}</p>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div id="analytics-resources-piechart" class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="icon-bar-chart"></i>
+                        {{'resources_usage_ratio'|trans({}, 'platform')}}
+                    </div>
+                    <div id="collapse-piechart" class="panel-body">
+                        <div id="container-piechart">
+                            <div id="resources-pie-chart" class="pie-chart"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="accordion-group widget col-md-6">
-            <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#collapse-list" href="#collapse-list">
-                    <i class="icon-list"></i>
-                    {{'resources_usage_list'|trans({}, 'platform')}}
-                    <i class="icon-chevron-up pull-right"></i>
-                </a>
-            </div>
-            <div id="collapse-list" class="accordion-body collapse in">
-                <div id="container-list" class="accordion-inner">
-                    <div id="resources-list" class="bar-chart">
-                        <table class="table table-condensed">
-                            <tr><th>{{'resource'|trans({}, 'platform')}}</th><th>#</th></tr>
-                            {% for resource in resourceCount %}
-                                <tr><td>{{resource.name|trans({}, 'resource')}}</td><td>{{resource.total}}</td></tr>
-                            {% endfor %}
-                        </table>
+            <div class="col-md-6">
+                <div id="analytics-resources-list" class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="icon-list"></i>
+                        {{'resources_usage_list'|trans({}, 'platform')}}
                     </div>
+                    
+                    <table class="table table-condensed">
+                        <tr><th>{{'resource'|trans({}, 'platform')}}</th><th>#</th></tr>
+                        {% for resource in resourceCount %}
+                            <tr><td>{{resource.name|trans({}, 'resource')}}</td><td>{{resource.total}}</td></tr>
+                        {% endfor %}
+                    </table>
                 </div>
             </div>
         </div>
@@ -68,18 +66,6 @@
         var bg_color = "transparent";
         if ($.browser.msie && parseInt($.browser.version, 10) <= 8) bg_color = "#fff";
         $(document).ready(function(){
-            $(".accordion-body").bind("hide", function(){
-                var arrowIcon = $(this).parents(".accordion-group").find(".icon-chevron-up");
-                arrowIcon.addClass("icon-chevron-down");
-                arrowIcon.removeClass("icon-chevron-up");
-            });
-
-            $(".accordion-body").bind("show", function(){
-                var arrowIcon = $(this).parents(".accordion-group").find(".icon-chevron-down");
-                arrowIcon.addClass("icon-chevron-up");
-                arrowIcon.removeClass("icon-chevron-down");
-            });
-
             if (chartData.length>0) {
                 var resourcesPlot = $.jqplot(
                     'resources-pie-chart',

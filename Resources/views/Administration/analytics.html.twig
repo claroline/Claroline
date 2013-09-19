@@ -14,107 +14,84 @@
     <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
 {% endblock %}
 {% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'admin_analytics'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body" id="workspace-list-div">
+        {% include 'ClarolineCoreBundle:Administration:analytics_navbar.html.twig'%}
 
-    {% include 'ClarolineCoreBundle:Administration:analytics_navbar.html.twig'%}
-
-    <div class="accordion widget">
-        <div class="accordion-group widget">
-            <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#collapse-barchart" href="#collapse-barchart">
+        <div class="">
+            <div class="panel panel-default">
+                <div class="panel-heading">
                     <i class="icon-bar-chart"></i>
                     {{'last_30_days_activity'|trans({}, 'platform')}}
-                    <i class="icon-chevron-up pull-right"></i>
-                </a>
-            </div>
-            <div id="collapse-barchart" class="accordion-body collapse in">
-                <div id="container-barchart" class="accordion-inner">
-                    <div id="activity-bar-chart" class="bar-chart"></div>
+                </div>
+                <div id="analytics-barchart" class="panel-body">
+                    <div id="container-barchart">
+                        <div id="activity-bar-chart" class="bar-chart"></div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="accordion-group widget">
-            <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#collapse-userstats" href="#collapse-userstats">
+            <div class="panel panel-default">
+                <div class="panel-heading">
                     <i class="icon-user"></i>
                     {{'account_general_statistics'|trans({}, 'platform')}}
-                    <i class="icon-chevron-up pull-right"></i>
-                </a>
-            </div>
-            <div id="collapse-userstats" class="accordion-body collapse in">
-                <div id="container-userstats" class="accordion-inner">
-                    {{usersCount}} {{'user_accounts'|trans({}, 'platform')}}
+                </div>
+                <div id="analytics-userstats" class="panel-body">
+                    <div id="container-userstats">
+                        {{usersCount}} {{'user_accounts'|trans({}, 'platform')}}
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <h3>
-            {{'yesterday_activity'|trans({}, 'platform')}}
-        </h3>
+            <h3>
+                {{'yesterday_activity'|trans({}, 'platform')}}
+            </h3>
 
-        <div class="accordion-group widget">
-            <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#most-viewed-ws" href="#most-viewed-ws">
+            <div class="panel panel-default">
+                <div class="panel-heading">
                     <i class="icon-book"></i>
                     {{'ws_most_viewed'|trans({}, 'platform')}}
-                    <i class="icon-chevron-up pull-right"></i>
-                </a>
-            </div>
-            <div id="most-viewed-ws" class="accordion-body collapse in">
-                <div id="container-most-viewed-ws" class="accordion-inner">
-                    <table class="table table-condensed table-hovered">
+                </div>
+                <table class="table table-condensed table-hovered">
                     <tr><th>#</th><th>{{'name'|trans({}, 'platform')}}</th><th>{{'connections'|trans({}, 'platform')}}</th></tr>
                     {% for ws in mostViewedWS %}
                         <tr><td>{{loop.index}}</td><td>{{ws.name}} ({{ws.code}})</td><td>{{ws.actions}}</td></tr>
                     {% endfor %}
                     <tr><td colspan="3" class="text-right"><a href="{{ path('claro_admin_analytics_top', { 'top_type': 'top_workspaces_connections' }) }}">{{'see_more'|trans({}, 'platform')}}...</a></td></tr>
-                    </table>
-                </div>
+                </table>
             </div>
-        </div>
 
-        <div class="accordion-group widget">
-            <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#most-viewed-media" href="#most-viewed-media">
+            <div class="panel panel-default">
+                <div class="panel-heading">
                     <i class="icon-file"></i>
                     {{'media_most_viewed'|trans({}, 'platform')}}
-                    <i class="icon-chevron-up pull-right"></i>
-                </a>
-            </div>
-            <div id="most-viewed-media" class="accordion-body collapse in">
-                <div id="container-most-viewed-media" class="accordion-inner">
-                    <table class="table table-condensed table-hovered">
+                </div>
+                <table class="table table-condensed table-hovered">
                     <tr><th>#</th><th>{{'name'|trans({}, 'platform')}}</th><th>{{'views'|trans({}, 'platform')}}</th></tr>
                     {% for media in mostViewedMedia %}
                         <tr><td>{{loop.index}}</td><td>{{media.name}}</td><td>{{media.actions}}</td></tr>
                     {% endfor %}
                     <tr><td colspan="3" class="text-right"><a href="{{ path('claro_admin_analytics_top', { 'top_type': 'top_media_views' }) }}">{{'see_more'|trans({}, 'platform')}}...</a></td></tr>
-                    </table>
-                </div>
+                </table>
             </div>
-        </div>
 
-        <div class="accordion-group widget">
-            <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#most-downloaded-resources" href="#most-downloaded-resources">
+            <div class="panel panel-default">
+                <div class="panel-heading">
                     <i class="icon-download"></i>
                     {{'resources_most_downloaded'|trans({}, 'platform')}}
-                    <i class="icon-chevron-up pull-right"></i>
-                </a>
-            </div>
-            <div id="most-downloaded-resources" class="accordion-body collapse in">
-                <div id="container-most-downloaded-resources" class="accordion-inner">
-                    <table class="table table-condensed table-hovered">
+                </div>
+                <table class="table table-condensed table-hovered">
                     <tr><th>#</th><th>{{'name'|trans({}, 'platform')}}</th><th>{{'downloads'|trans({}, 'platform')}}</th></tr>
                     {% for resource in mostDownloadedResources %}
                         <tr><td>{{loop.index}}</td><td>{{resource.name}}</td><td>{{resource.actions}}</td></tr>
                     {% endfor %}
                     <tr><td colspan="3" class="text-right"><a href="{{ path('claro_admin_analytics_top', { 'top_type': 'top_resources_downloads' }) }}">{{'see_more'|trans({}, 'platform')}}...</a></td></tr>
-                    </table>
-                </div>
+                </table>
             </div>
-        </div>
 
+        </div>
     </div>
 {% endblock %}
 {% block javascripts %}
@@ -133,18 +110,6 @@
         var bg_color = "transparent";
         if ($.browser.msie && parseInt($.browser.version, 10) <= 8) bg_color = "#fff";
         $(document).ready(function(){
-            $(".accordion-body").bind("hide", function(){
-                var arrowIcon = $(this).parents(".accordion-group").find(".icon-chevron-up");
-                arrowIcon.addClass("icon-chevron-down");
-                arrowIcon.removeClass("icon-chevron-up");
-            });
-
-            $(".accordion-body").bind("show", function(){
-                var arrowIcon = $(this).parents(".accordion-group").find(".icon-chevron-down");
-                arrowIcon.addClass("icon-chevron-up");
-                arrowIcon.removeClass("icon-chevron-down");
-            });
-
             if (chartData.length>0) {
                 var actionsPlot = $.jqplot(
                     'activity-bar-chart',
