@@ -18,6 +18,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 use Innova\PathBundle\Entity\Path;
 use Innova\PathBundle\Entity\Step;
+use Innova\PathBundle\Entity\StepType;
+use Innova\PathBundle\Entity\StepWho;
+use Innova\PathBundle\Entity\StepWhere;
+
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
@@ -118,10 +122,22 @@ class PathController extends Controller
             // Création Step
             $step1 = new Step();
             $step1->setResourceNode($resourceNode);
-            $step1->setUuid($step->id);
             $step1->setParent($parent);
-            $step1->setOrder($order);
+            $step1->setStepOrder($order);
+            $stepType = $manager->getRepository('InnovaPathBundle:StepType')->findOneById($step->type);
+            $step1->setStepType($stepType);
+            $stepWho = $manager->getRepository('InnovaPathBundle:StepWho')->findOneById($step->who);
+            $step1->setStepWho($stepWho);
+            $stepWhere = $manager->getRepository('InnovaPathBundle:StepWhere')->findOneById($step->where);
+            $step1->setStepWhere($stepWhere); 
+            $step1->setDuration(new \DateTime());
 
+            $step1->setUuid('AAAAAAA'); //$step1->setUuid($step->uuid);
+            $step1->setExpanded(true); //$step1->setUuid($step->expanded);
+            $step1->setWithTutor(true); //$step1->setWithTutor($step->withTutor);
+            $step1->setWithComputer(true); //$step1->setWithComputer($step->withComputer);
+            $step1->setInstructions('Instructions'); //$step1->setInstructions($step->instructions);
+            
             $manager->persist($step1);
             $manager->flush();
 
@@ -143,8 +159,8 @@ class PathController extends Controller
             $right1 = new ResourceRights();
             $right1->setRole($manager->getRepository('ClarolineCoreBundle:Role')->findOneById(3));
             $right1->setResourceNode($resourceNode);
-            $manager->persist($right1);
 
+            $manager->persist($right1);
             $manager->flush(); 
 
             // récursivité sur les enfants possibles.

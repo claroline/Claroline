@@ -24,14 +24,14 @@ class Step extends AbstractResource
     /**
      * @var integer
      *
-     * @ORM\Column(name="order", type="integer")
+     * @ORM\Column(name="stepOrder", type="integer")
      */
-    private $order;
+    private $stepOrder;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="parent", type="string", length=255)
+     * @ORM\Column(name="parent", type="string", length=255, nullable=true)
      */
     private $parent;
 
@@ -69,13 +69,6 @@ class Step extends AbstractResource
      * @ORM\Column(name="duration", type="datetime")
      */
     private $duration;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="deployable", type="boolean")
-     */
-    private $deployable;
 
     /**
     * @ORM\ManyToOne(targetEntity="StepType", inversedBy="steps")
@@ -231,19 +224,6 @@ class Step extends AbstractResource
     }
 
     /**
-     * Set deployable
-     *
-     * @param boolean $deployable
-     * @return Step
-     */
-    public function setDeployable($deployable)
-    {
-        $this->deployable = $deployable;
-
-        return $this;
-    }
-
-    /**
      * Get deployable
      *
      * @return boolean 
@@ -254,26 +234,26 @@ class Step extends AbstractResource
     }
 
     /**
-     * Set order
+     * Set stepOrder
      *
-     * @param integer $order
+     * @param integer $stepOrder
      * @return Step
      */
-    public function setOrder($order)
+    public function setStepOrder($stepOrder)
     {
-        $this->order = $order;
+        $this->stepOrder = $stepOrder;
 
         return $this;
     }
 
     /**
-     * Get order
+     * Get stepOrder
      *
      * @return integer 
      */
-    public function getOrder()
+    public function getStepOrder()
     {
-        return $this->order;
+        return $this->stepOrder;
     }
 
     /**
