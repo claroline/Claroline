@@ -772,9 +772,8 @@ class ResourceManager
      * Returns an archive with the required content.
      *
      * @param array $nodes the nodes being exported
-     * @param fileName pointer to the file name.
      *
-     * @return file
+     * @return array('name' => 'filename', 'file' => 'filepath')
      */
     public function download(array $nodes)
     {
