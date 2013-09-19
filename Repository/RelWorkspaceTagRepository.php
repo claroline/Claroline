@@ -145,6 +145,25 @@ class RelWorkspaceTagRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findAdminRelationsByTagForSelfReg(WorkspaceTag $workspaceTag)
+    {
+        $dql = '
+            SELECT rwt
+            FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
+            JOIN rwt.tag t
+            JOIN rwt.workspace w
+            WHERE t.user IS NULL
+            AND t = :tag
+            AND w.displayable = true
+            AND w.selfRegistration = true
+            ORDER BY rwt.id
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('tag', $workspaceTag);
+
+        return $query->getResult();
+    }
+
     public function findByAdminAndWorkspaces(array $workspaces)
     {
         if (count($workspaces) === 0) {

@@ -1,0 +1,49 @@
+{% macro renderPager(pager) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_all_workspaces_list_with_self_reg_pager'
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
+{% set nbPages = workspaces.getNbPages() %}
+
+{% if nbPages > 1 %}
+    {{ renderPager(workspaces) }}
+{% endif %}
+
+{% for workspace in workspaces.currentPageResults %}
+    {% set granted = has_access_to_workspace(workspace.getId(), app.security.getToken()) %}
+    <div class="list-group-item row-workspace row-workspace-id-{{ workspace.getId() }}">
+        <i class="icon-book"></i>
+        {{ workspace.getName() }}
+        <span class="workspace-code">({{ workspace.getCode() }})</span>
+
+        {% if granted %}
+        <span class="pull-right label label-success">
+            {{ 'registered'|trans({}, 'platform') }}
+        </span>
+        {% else %}
+        <span class="pull-right pointer-hand label label-primary register-user-to-workspace register-button-{{ workspace.getId() }}"
+            data-workspace-id="{{ workspace.getId() }}"
+            data-workspace-name="{{ workspace.getName() }}"
+            data-workspace-code="{{ workspace.getCode() }}">
+            <i class="icon-plus-sign"></i>
+            {{ 'register'|trans({}, 'platform') }}
+        </span>
+        {% endif %}
+    </div>
+{% endfor %}
+
+{% set nbPages = workspaces.getNbPages() %}
+
+{% if nbPages > 1 %}
+    {{ renderPager(workspaces) }}
+{% endif %}

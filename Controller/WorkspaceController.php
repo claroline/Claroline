@@ -616,6 +616,39 @@ class WorkspaceController extends Controller
         );
     }
 
+    /** @EXT\Route(
+     *     "/list/self_reg/tag/{workspaceTagId}/page/{page}",
+     *     name="claro_workspace_list_with_self_reg_pager",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "workspaceTag",
+     *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
+     *      options={"id" = "workspaceTagId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template()
+     *
+     * Renders the workspace list with self-registration associate to a tag in a pager.
+     *
+     * @return Response
+     */
+    public function workspaceListWithSelfRegByTagPagerAction(
+        WorkspaceTag $workspaceTag,
+        $page = 1
+    )
+    {
+        $relations = $this->tagManager
+            ->getPagerRelationByTagForSelfReg($workspaceTag, $page);
+
+        return array(
+            'workspaceTagId' => $workspaceTag->getId(),
+            'relations' => $relations
+        );
+    }
+
     /**
      * @EXT\Route(
      *     "/list/workspaces/page/{page}",
@@ -634,6 +667,28 @@ class WorkspaceController extends Controller
     public function workspaceCompleteListPagerAction($page = 1)
     {
         $workspaces = $this->tagManager->getPagerAllWorkspaces($page);
+
+        return array('workspaces' => $workspaces);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/list/workspaces/self_reg/page/{page}",
+     *     name="claro_all_workspaces_list_with_self_reg_pager",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @EXT\Template()
+     *
+     * Renders the workspace list with self-registration in a pager.
+     *
+     * @return Response
+     */
+    public function workspaceCompleteListWithSelfRegPagerAction($page = 1)
+    {
+        $workspaces = $this->tagManager->getPagerAllWorkspacesWithSelfReg($page);
 
         return array('workspaces' => $workspaces);
     }
