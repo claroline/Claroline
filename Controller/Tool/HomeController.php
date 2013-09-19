@@ -1592,7 +1592,6 @@ class HomeController extends Controller
     {   
         $formFactory = $this->get("claroline.form.factory");
         $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array('isLocked' => $config->getParent()->isLocked()), $config);
-            var_dump($config->getWorkspace()->getId());
         
         return array('form' => $form->createView(), 'config' => $config);
     }

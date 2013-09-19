@@ -110,50 +110,54 @@ class HomeListener
         $config = $event->getConfig();
         $widgets = $this->em->getRepository('Claroline\CoreBundle\Entity\Widget\Widget')->findAll();
         
-        if (isset($config['widget'])) {
-            $unknownWidgets = array();
-            foreach ($config['widget'] as $widgetConfig) {
-                $widget = $this->em->getRepository('ClarolineCoreBundle:Widget\Widget')
-                    ->findOneByName($widgetConfig['name']);
+        foreach ($widgets as $widget) {
+            $found = false;
+            $parent = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+                ->findOneBy(array('widget' => $widget, 'parent' => null, 'isDesktop' => false));
+            
+            if ($parent === null) {
+                break;
+            }
+            
+            if (isset($config['widget'])) {
+                foreach ($config['widget'] as $widgetConfig) {
+                     if ($widgetConfig['name'] === $widget->getName()) {
+                        $found = true;
+                        $widget = $this->em->getRepository('ClarolineCoreBundle:Widget\Widget')
+                            ->findOneByName($widgetConfig['name']);
+                        $displayConfig = new DisplayConfig();
+                        $displayConfig->setParent($parent);
+                        $displayConfig->setVisible($widgetConfig['is_visible']);
+                        $displayConfig->setWidget($widget);
+                        $displayConfig->setDesktop(false);
+                        $displayConfig->isLocked(true);
+                        $displayConfig->setWorkspace($event->getWorkspace());
+                        $displayConfig->setName($parent->getName());
 
-                if ($widget === null) {
-                    $unknownWidgets[] = $widgetConfig['name'];
+                        if (isset($widgetConfig['config'])) {
+                            $this->ed->dispatch(
+                                "widget_{$widgetConfig['name']}_from_template",
+                                'ImportWidgetConfig',
+                                array($widgetConfig['config'], $event->getWorkspace())
+                            );
+                        }
+
+                        $this->em->persist($displayConfig);
+                     }
                 }
-
-                $parent = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
-                    ->findOneBy(array('widget' => $widget, 'parent' => null, 'isDesktop' => false));
+            }
+            
+            if (!$found) {
                 $displayConfig = new DisplayConfig();
                 $displayConfig->setParent($parent);
-                $displayConfig->setVisible($widgetConfig['is_visible']);
+                $displayConfig->setVisible(false);
                 $displayConfig->setWidget($widget);
                 $displayConfig->setDesktop(false);
                 $displayConfig->isLocked(true);
                 $displayConfig->setWorkspace($event->getWorkspace());
-
-                if (isset($widgetConfig['config'])) {
-                    $this->ed->dispatch(
-                        "widget_{$widgetConfig['name']}_from_template",
-                        'ImportWidgetConfig',
-                        array($widgetConfig['config'], $event->getWorkspace())
-                    );
-                }
-
+                $displayConfig->setName($parent->getName());
                 $this->em->persist($displayConfig);
             }
-            
-            //find not seen widget configs and add them.
-        }
-
-        if (count($unknownWidgets) > 0) {
-            $content = "Widget(s) ";
-
-            foreach ($unknownWidgets as $unknown) {
-                $content .= "{$unknown}, ";
-            }
-
-            $content .= "were not found";
-
-            throw new \Exception($content);
         }
     }
 
