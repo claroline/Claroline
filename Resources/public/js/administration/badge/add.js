@@ -47,7 +47,7 @@ $(function(){
 
     $(ruleTabs).on({
         click: function () {
-            console.log($(this));
+            deleteRule($(this).attr('data-id-tab'));
         }
     }, "li .delete");
 
@@ -71,5 +71,17 @@ $(function(){
         var newTabContent = tabContentPrototype.replace(/__name__/g, tabIndex);
 
         $(".rules").append(newTabContent);
+    }
+
+    function deleteRule(tabId)
+    {
+        $("#tab" + tabId).remove();
+        $("#" + tabId).remove();
+
+        $('li:first-child a', ruleTabs).tab('show');
+
+        if (0 == $("a[data-toggle='tab']", ruleTabs).length) {
+            $('#no_rule').show();
+        }
     }
 });
