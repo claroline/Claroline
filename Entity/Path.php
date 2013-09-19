@@ -9,7 +9,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
  * Path
  *
  * @ORM\Table(name="innova_path")
-* @ORM\Entity
+ * @ORM\Entity(repositoryClass="Innova\PathBundle\Repository\PathRepository")
  */
 class Path extends AbstractResource
 {

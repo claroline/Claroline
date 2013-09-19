@@ -4,15 +4,17 @@
 
 	<table class="table">
 	{% for path in paths %}
-		<form action="{{ path('innova_path_deploy') }}" method="post">
+
 			<tr>
-		    	<td>{{ path.id }}</td>
-		    	<td>{{ path.user }}</td>
-		    	<td><input type="hidden" value="{{ path.id }}" name="path-id"></td>
-		    	<td><input type="hidden" value="{{ workspace.id }}" name="workspace-id"></td>
-		    	<td><input class="btn" value="deploy" type="submit"/></td>	
+		    	<td>{{ path.name }}</td>
+		    	<td class="text-right">		
+		    		<form action="{{ path('innova_path_deploy') }}" method="post">
+		    			<input type="hidden" value="{{ workspace.id }}" name="workspace-id">
+						<input type="hidden" value="{{ path.id }}" name="path-id">
+						<input class="btn" value="deploy" type="submit"/>
+					</form>
+				</td>
 		    </tr>
-		</form>   
 	{% endfor %}
 	</table>
 	<p>{{ ok }}</p>

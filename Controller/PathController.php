@@ -200,23 +200,15 @@ class PathController extends Controller
      */
     public function fromWorkspaceAction()
     {
+        $manager = $this->container->get('doctrine.orm.entity_manager');
+       
         $id = $this->get('request')->query->get('id');
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($id);    
 
-        $paths = array();
-        $manager= $this->entityManager();
+        $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($id);
+        
+        $resourceType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('path');
 
-        $resourceNode = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneByWorkspace($id);
-
-        $results = $manager->getRepository('InnovaPathBundle:Path')->findByResourceNode($resourceNode);
-
-        foreach ($results as $result) {
-            $path = new \stdClass();
-            $path->id = $result->getId();
-            $path->path = $result->getPath();
-            $paths[] = $path;
-        }
+        $paths = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findByWorkspaceAndResourceType($workspace, $resourceType);
 
         return array('workspace' => $workspace, 'paths' => $paths);
     }
