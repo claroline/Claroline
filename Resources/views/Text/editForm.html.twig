@@ -5,6 +5,7 @@
 {% endif %}
 
 {% extends layout %}
+
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_text_open', {'text': _resource.getId()} ) }}">{{ _resource.getResourceNode().getName() }}</a></li>
     <li class="active">{{ 'edit' | trans({}, 'platform') }}</li>
