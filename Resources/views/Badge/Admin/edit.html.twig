@@ -82,45 +82,81 @@
             <form action="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}" method="post" class="form-horizontal" {{ form_enctype(form) }} novalidate>
                 {{ form_errors(form) }}
 
-                <ul class="nav nav-tabs" id="translationFormTabs">
-                    <li class="active"><a href="#fr" data-toggle="tab">{{ 'badge_form_frTranslation'|trans }}</a></li>
-                    <li><a href="#en" data-toggle="tab">{{ 'badge_form_enTranslation'|trans }}</a></li>
-                </ul>
-
-                <div class="tab-content well well-sm badge_translations">
-                    <div class="tab-pane active" id="fr">
-                        {{ form_errors(form.frTranslation) }}
-                        {{ form_widget(form.frTranslation) }}
-                    </div>
-                    <div class="tab-pane" id="en">
-                        {{ form_errors(form.enTranslation) }}
-                        {{ form_widget(form.enTranslation) }}
-                    </div>
-                </div>
-
-                <div id="badge_form">
-                    {{ form_row(form.version) }}
-
-                    <div class="form-group ">
-                        {{ form_errors(form.file) }}
-                        {{ form_label(form.file) }}
-                        <div class="controls">
-                            <img src="{{ asset(badge.webPath) }}" id="current_image" alt="{{ badge.name }}" />
-                            {{ form_widget(form.file, {'attr': {'class': 'hidden'}}) }}
+                <div class="row badges_infos">
+                    <div class="col-md-3 text-center">
+                        <a href="#" class="thumbnail upload_image_placeholder">
+                            <img src="{{ asset(badge.webPath) }}" data-src-current="{{ asset(badge.webPath) }}" data-src-placeholder="{{ asset('bundles/clarolinecore/images/upload-placeholder.jpg') }}" id="current_image" alt="{{ badge.name }}" style="height: 180px" />
+                            <div class="caption">
+                                <span>{{ 'badge_form_change_image'|trans }}</span>
+                            </div>
+                        </a>
+                        <div class="form-group">
                             <label class="checkbox">
-                                <input type="checkbox" id="delete_image" /> {{ 'badge_form_change_image'|trans }}
+                                {{ form_widget(form.change_image) }} {{ 'badge_form_delete_image'|trans }}
                             </label>
                         </div>
+                        {{ form_widget(form.file) }}
+                        <div class="form-group">
+                            <label class="checkbox">
+                                {{ form_widget(form.automatic_award) }}{{ 'badge_form_automatic_award'|trans }}
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-6 control-label required" for="badge_form_version">{{ 'badge_form_version'|trans }} :</label>
+                            <div class="col-md-6">
+                                {{ form_widget(form.version) }}
+                            </div>
+                        </div>
+                        <label class="control-label required" for="badge_form_expired_at">{{ 'badge_form_expired_at'|trans }} :</label>
+                        {{ form_widget(form.expired_at) }}
                     </div>
+                    <div class="col-md-9">
+                        <ul class="nav nav-tabs" id="translationFormTabs">
+                            <li class="active"><a href="#fr" data-toggle="tab">{{ 'badge_form_frTranslation'|trans }}</a></li>
+                            <li><a href="#en" data-toggle="tab">{{ 'badge_form_enTranslation'|trans }}</a></li>
+                        </ul>
 
-                    {{ form_row(form.expired_at) }}
-
-                    {{ form_rest(form) }}
+                        <div class="tab-content well well-sm badge_translations">
+                            <div class="tab-pane active" id="fr">
+                                {{ form_errors(form.frTranslation) }}
+                                <div class="form-group">
+                                    <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_name'|trans }} :</label>
+                                    {{ form_widget(form.frTranslation.name) }}
+                                </div>
+                                <div class="form-group">
+                                    <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_description'|trans }} :</label>
+                                    {{ form_widget(form.frTranslation.description) }}
+                                </div>
+                                <div class="form-group">
+                                    <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_criteria'|trans }} :</label>
+                                    {{ form_widget(form.frTranslation.criteria) }}
+                                </div>
+                                {{ form_widget(form.frTranslation) }}
+                            </div>
+                            <div class="tab-pane" id="en">
+                                {{ form_errors(form.enTranslation) }}
+                                <div class="form-group">
+                                    <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_name'|trans }} :</label>
+                                    {{ form_widget(form.enTranslation.name) }}
+                                </div>
+                                <div class="form-group">
+                                    <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_description'|trans }} :</label>
+                                    {{ form_widget(form.enTranslation.description) }}
+                                </div>
+                                <div class="form-group">
+                                    <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_criteria'|trans }} :</label>
+                                    {{ form_widget(form.enTranslation.criteria) }}
+                                </div>
+                                {{ form_widget(form.enTranslation) }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
+                {{ form_rest(form) }}
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
-                    <a href="{{ path('claro_admin_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-inverse">{{ 'cancel'|trans({}, 'platform') }}</a>
+                    <a href="{{ path('claro_admin_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
                     <a href="{{ path('claro_admin_badges_delete', {'id': badge.id}) }}" title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-danger delete" data-confirm-title="{{ 'badge_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}) }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}">{{ 'delete'|trans({}, 'platform') }}</a>
                 </div>
             </form>
@@ -132,5 +168,5 @@
 {{ parent() }}
 {{ tinymce_init() }}
 <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
-<script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge.js') }}'></script>
+<script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/administration/badge/edit.js') }}'></script>
 {% endblock %}

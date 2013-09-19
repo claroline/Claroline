@@ -1,5 +1,19 @@
-.thumbnails.badge_list {
-    margin-left: 20px;
+.badge_list {
+    li {
+        text-align: center;
+    }
+    .thumbnail {
+        height: 110px;
+    }
+    .badge-toolbar {
+        list-style:       none;
+        height:           23px;
+        margin-top:       -23px;
+        background-color: #f5f5f5;
+        border:           1px solid #ddd;
+        border-top:       0;
+        border-radius:    0 0 4px 4px;
+    }
 }
 .thumbnails.badge_user_list > li {
     margin-left: 5px;
@@ -8,6 +22,12 @@
 .badge_image {
     width:  100px;
     height: 100px;
+}
+
+.badges_infos {
+     .form-group {
+        margin-left: 0;
+    }
 }
 
 #translationFormTabs {
@@ -20,6 +40,7 @@
 
 .badge_translations {
     border-top: 0;
+    padding-right: 32px;
     .border-radius(0 0);
     .box-shadow(0);
 }
@@ -75,10 +96,9 @@ ul.user_badges {
 }
 
 .form-actions {
+    clear: both;
     text-align: center;
     padding: 19px 20px 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
 }
 
 .panel-title {
@@ -87,12 +107,45 @@ ul.user_badges {
         margin-bottom: 0;
         padding: 0;
     }
-    a.btn {
-        padding: 0;
-        padding-left: 12px;
-    }
 }
 
 table.no_margin {
     margin: 0;
+}
+
+.badges_rules {
+    .rules {
+        border:           1px solid #ddd;
+        padding-top:      15px;
+        background-color: #f5f5f5;
+        select {
+            display: inline-block;
+        }
+    }
+    .nav-tabs {
+        #add_rule a {
+            cursor: pointer;
+        }
+        border-bottom: 0;
+        & > li > a {
+            margin-right:       0;
+            border-radius:      4px 0 0 0;
+            border-bottom:      0;
+        }
+        & > li.active {
+            & > a, & > a:hover, & > a:focus {
+                border-right-color: transparent;
+                border-bottom:      1px solid #dddddd;
+                background-color:   #f5f5f5;
+                margin-right:       -1px;
+                z-index:            1;
+            }
+        }
+    }
+    .nav-stacked {
+        padding-right: 0;
+        & > li + li {
+            margin-top: 0;
+        }
+    }
 }

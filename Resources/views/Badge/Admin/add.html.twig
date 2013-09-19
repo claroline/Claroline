@@ -1,28 +1,145 @@
 {% extends "ClarolineCoreBundle:Badge/Admin:layout.html.twig" %}
 
+{% form_theme form _self %}
+
 {% trans_default_domain "badge" %}
+{% block collection_widget %}
+    {% spaceless %}
+        {% if prototype is defined %}
+            {% set attr = attr|merge({'data-prototype': block('collection_prototype') }) %}
+        {% endif %}
+        <div class="row badges_rules" {{ block('widget_container_attributes') }}>
+            <p class="row">{{ form_label(form) }}</p>
+            {{ form_errors(form) }}
+            {% set tabPrototype = '<li><a href="#rule__name__" data-toggle="tab">' ~ "rule"|trans ~ ' __name__ <span class="btn btn-sm btn-danger icon-trash delete pull-right" style="display: none;"></span></a></li>' %}
+            <ul class="nav nav-tabs nav-stacked col-md-3" id="ruleTabs" data-tab-prototype="{{ tabPrototype|e }}">
+                {% for rows in form %}
+                    <li><a href="#rule{{ loop.index }}" data-toggle="tab">{{ 'rule'|trans }} {{ loop.index }}{% if allow_delete %} <span class="icon-trash delete pull-right" style="display: none;"></span>{% endif %}</a></li>
+                {% endfor %}
+                {% if allow_add %}
+                <li id="add_rule"><a href="#"><span class="icon-plus"></span>{{ 'add_rule'|trans }}</a></li>
+                {% endif %}
+            </ul>
+            <div class="tab-content rules col-md-9">
+                {% for rows in form %}
+                    {{ _self.collection_row(rows) }}
+                {% else %}
+                    <p id="no_rule">{{ 'no_rule'|trans }}</p>
+                {% endfor %}
+            </div>
+            {{ form_rest(form) }}
+        </div>
+    {% endspaceless %}
+{% endblock collection_widget %}
+
+{% block collection_prototype %}
+    {{ _self.collection_row(prototype) }}
+{% endblock collection_prototype %}
+
+{% macro collection_row(rows) %}
+    {% spaceless %}
+        <div class="tab-pane" id="rule__name__">
+            <h4>{{ 'rule'|trans }} __name__</h4>
+
+            <div class="form-group">
+                {{ form_label(rows.children.occurrence) }}
+                <div class="col-md-2">
+                    {{ form_widget(rows.children.occurrence) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(rows.children.action) }}
+                <div class="col-md-8">
+                    {{ form_widget(rows.children.action) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(rows.children.period) }}
+                <div class="col-md-2">
+                    {{ form_widget(rows.children.period_duration) }}
+                </div>
+                <div class="col-md-3">
+                    {{ form_widget(rows.children.period) }}
+                </div>
+            </div>
+        </div>
+    {% endspaceless %}
+{% endmacro %}
 
 {% block section_title %}<li class="active">{{ 'add_badge'|trans }}</li>{% endblock %}
 
 {% block section_body %}
     <form action="{{ path('claro_admin_badges_add') }}" method="post" class="form-horizontal" {{ form_enctype(form) }}>
-        <ul class="nav nav-tabs" id="translationFormTabs">
-            <li class="active"><a href="#fr" data-toggle="tab">{{ 'badge_form_frTranslation'|trans }}</a></li>
-            <li><a href="#en" data-toggle="tab">{{ 'badge_form_enTranslation'|trans }}</a></li>
-        </ul>
-
-        <div class="tab-content well well-sm badge_translations">
-            <div class="tab-pane active" id="fr">
-                {{ form_errors(form.frTranslation) }}
-                {{ form_widget(form.frTranslation) }}
+        <div class="row badges_infos">
+            <div class="col-md-3 text-center">
+                <a href="#" class="thumbnail upload_image_placeholder">
+                    <img title="badge_form_choose_image" alt="260x180" style="height: 180px" src="{{ asset('bundles/clarolinecore/images/upload-placeholder.jpg') }}">
+                </a>
+                {{ form_widget(form.file) }}
+                <div class="form-group">
+                    <label class="checkbox">
+                        {{ form_widget(form.automatic_award) }}{{ 'badge_form_automatic_award'|trans }}
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-6 control-label required" for="badge_form_version">{{ 'badge_form_version'|trans }} :</label>
+                    <div class="col-md-6">
+                        {{ form_widget(form.version) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label required" for="badge_form_expired_at">{{ 'badge_form_expired_at'|trans }} :</label>
+                    {{ form_widget(form.expired_at) }}
+                </div>
             </div>
-            <div class="tab-pane" id="en">
-                {{ form_errors(form.enTranslation) }}
-                {{ form_widget(form.enTranslation) }}
+            <div class="col-md-9">
+                <ul class="nav nav-tabs" id="translationFormTabs">
+                    <li class="active"><a href="#fr" data-toggle="tab">{{ 'badge_form_frTranslation'|trans }}</a></li>
+                    <li><a href="#en" data-toggle="tab">{{ 'badge_form_enTranslation'|trans }}</a></li>
+                </ul>
+
+                <div class="tab-content well well-sm badge_translations">
+                    <div class="tab-pane active" id="fr">
+                        {{ form_errors(form.frTranslation) }}
+                        <div class="form-group">
+                            <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_name'|trans }} :</label>
+                            {{ form_widget(form.frTranslation.name) }}
+                        </div>
+                        <div class="form-group">
+                            <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_description'|trans }} :</label>
+                            {{ form_widget(form.frTranslation.description) }}
+                        </div>
+                        <div class="form-group">
+                            <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_criteria'|trans }} :</label>
+                            {{ form_widget(form.frTranslation.criteria) }}
+                        </div>
+                        {{ form_widget(form.frTranslation) }}
+                    </div>
+                    <div class="tab-pane" id="en">
+                        {{ form_errors(form.enTranslation) }}
+                        <div class="form-group">
+                            <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_name'|trans }} :</label>
+                            {{ form_widget(form.enTranslation.name) }}
+                        </div>
+                        <div class="form-group">
+                            <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_description'|trans }} :</label>
+                            {{ form_widget(form.enTranslation.description) }}
+                        </div>
+                        <div class="form-group">
+                            <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_criteria'|trans }} :</label>
+                            {{ form_widget(form.enTranslation.criteria) }}
+                        </div>
+                        {{ form_widget(form.enTranslation) }}
+                    </div>
+                </div>
             </div>
         </div>
 
-        {{ form_widget(form) }}
+        {{ form_widget(form.badgeRules) }}
+
+        {{ form_rest(form) }}
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">{{ 'add'|trans({}, 'platform') }}</button>
             <a href="{{ path('claro_admin_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger">{{ 'cancel'|trans({}, 'platform') }}</a>
@@ -34,9 +151,5 @@
 {% block javascripts %}
 {{ parent() }}
 {{ tinymce_init() }}
-<script type="text/javascript">
-    $(document).ready(function() {
-        $("[name='badge_form[expired_at]']").off('focus');
-    });
-</script>
+<script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/administration/badge/add.js') }}'></script>
 {% endblock %}

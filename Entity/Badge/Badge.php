@@ -34,6 +34,13 @@ class Badge
     protected $version;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="automatic_award", type="boolean", nullable=true)
+     */
+    protected $automaticAward;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="image", type="string", nullable=false)
@@ -64,14 +71,21 @@ class Badge
      *
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\UserBadge", mappedBy="badge", cascade={"all"})
      */
-    private $userBadges;
+    protected $userBadges;
 
     /**
      * @var ArrayCollection|BadgeClaim[]
      *
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\BadgeClaim", mappedBy="badge", cascade={"all"})
      */
-    private $badgeClaims;
+    protected $badgeClaims;
+
+    /**
+     * @var ArrayCollection|BadgeRule[]
+     *
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\BadgeRule", mappedBy="badge", cascade={"persist"})
+     */
+    protected $badgeRules;
 
     /**
      * @var ArrayCollection|BadgeTranslation[]
@@ -93,6 +107,7 @@ class Badge
     {
         $this->translations = new ArrayCollection();
         $this->userBadges   = new ArrayCollection();
+        $this->badgeRules   = new ArrayCollection();
     }
 
     /**
@@ -395,6 +410,50 @@ class Badge
     }
 
     /**
+     * @param boolean $automaticAward
+     *
+     * @return Badge
+     */
+    public function setAutomaticAward($automaticAward)
+    {
+        $this->automaticAward = $automaticAward;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getAutomaticAward()
+    {
+        return $this->automaticAward;
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Badge\BadgeRule[]|\Doctrine\Common\Collections\ArrayCollection $badgeRules
+     *
+     * @return Badge
+     */
+    public function setBadgeRules($badgeRules)
+    {
+        foreach ($badgeRules as $rule) {
+            $rule->setBadge($this);
+        }
+
+        $this->badgeRules = $badgeRules;
+
+        return $this;
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\Badge\BadgeRule[]|\Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getBadgeRules()
+    {
+        return $this->badgeRules;
+    }
+
+    /**
      * @param UploadedFile $file
      *
      * @return Badge
@@ -408,6 +467,17 @@ class Badge
             $this->imagePath   = null;
         }
         $this->file = $file;
+
+        return $this;
+    }
+
+    /**
+     * @return Badge
+     */
+    public function resetFile()
+    {
+        $this->imagePath = $this->olfFileName;
+        $this->file = null;
 
         return $this;
     }
@@ -436,13 +506,21 @@ class Badge
     }
 
     /**
+     * @throws \Exception
      * @return string
      */
     protected function getUploadRootDir()
     {
         $ds = DIRECTORY_SEPARATOR;
 
-        return realpath(sprintf('%s%s..%s..%s..%s..%s..%s..%sweb%s%s', __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir()));
+        $uploadRootDir         = sprintf('%s%s..%s..%s..%s..%s..%s..%s..%sweb%s%s', __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir());
+        $realpathUploadRootDir = realpath($uploadRootDir);
+
+        if (false === $realpathUploadRootDir) {
+            throw new \Exception(sprintf("Invalid upload root dir '%s'for uploading badge images.", $uploadRootDir));
+        }
+
+        return $realpathUploadRootDir;
     }
 
     /**

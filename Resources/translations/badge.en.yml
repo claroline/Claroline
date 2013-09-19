@@ -34,8 +34,16 @@ badge_form_description: 'Description'
 badge_form_criteria: "Earning criteria"
 badge_form_version: 'Version'
 badge_form_image: 'Image'
+badge_form_automatic_award: 'Automatic awarding'
 badge_form_expired_at: 'Expiration date'
-badge_form_change_image: "Change the image"
+badge_form_choose_image: "Click to choose the image"
+badge_form_delete_image: "Click to delete the image"
+badge_form_change_image: "Click to change the image"
+badge_form_badgeRules: "Awarding rules"
+badge_form_action: 'Associated action :'
+badge_form_occurrence: "Occurrence number :"
+badge_form_period: "On a period of :"
+badge_form_period_duration: "Period duration"
 badge_award_form_group: 'Group'
 badge_award_form_user: 'User'
 badge_expired_on_date: 'Expire the %expirationDate%'
@@ -61,3 +69,6 @@ badge_validate_award_success_message: "Validation of badge awarding made with su
 badge_validate_award_error_message: "An error occured while validating badge awarding."
 badge_reject_award_success_message: "Reject of badge awarding made with success."
 badge_reject_award_error_message: "An error occured while rejecting badge awarding."
+rule: 'Rule'
+add_rule: 'Add a rule'
+no_rule: 'No rule'

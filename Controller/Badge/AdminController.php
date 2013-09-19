@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller\Badge;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
+use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
 use Claroline\CoreBundle\Entity\Badge\UserBadge;
 use Claroline\CoreBundle\Entity\User;
@@ -18,8 +19,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use JMS\SecurityExtraBundle\Annotation as SEC;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("hasRole('ADMIN')")
+ *
  * Controller of the badges.
  *
  * @Route("/admin/badges")
@@ -82,7 +88,7 @@ class AdminController extends Controller
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
-        $form = $this->createForm(new BadgeType(), $badge, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform')));
+        $form = $this->createForm($this->get('claroline.form.badge'), $badge, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform')));
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -133,7 +139,11 @@ class AdminController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $form = $this->createForm(new BadgeType(), $badge, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform')));
+        $form = $this->createForm($this->get('claroline.form.badge'), $badge, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform')));
+        $form
+            ->add('change_image', 'checkbox', array(
+                'mapped' => false
+            ));
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -141,6 +151,10 @@ class AdminController extends Controller
                 /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
                 $translator = $this->get('translator');
                 try {
+                    if (!$form->get('change_image')->getData()) {
+                        $badge->resetFile();
+                    }
+
                     /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
                     $entityManager = $doctrine->getManager();
 

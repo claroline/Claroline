@@ -62,10 +62,15 @@
 
     <ul class="list-unstyled list-inline badge_list">
     {% for badge in pager %}
-        <li class="span2">
+        <li class="col-md-2">
             <a href="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}" title="{{ badge.name(language) }}" class="thumbnail">
                 <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name(language) }}" />
             </a>
+            <ul class="badge-toolbar list-inline col-md-12 hidden">
+                <li><a href="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}"><span class="glyphicon icon-eye-open"></span></a></li>
+                <li><a href="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}#!edit"><span class="glyphicon icon-edit"></span></a></li>
+                <li><a href="{{ path('claro_admin_badges_delete', {'id': badge.id}) }}" title="{{ 'delete'|trans({}, 'platform') }}" class="confirm" data-confirm-title="{{ 'badge_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name(language)}) }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"><span class="glyphicon icon-trash"></span></a></li>
+            </ul>
         </li>
     {% else %}
         <li>{{ 'no_badges'|trans({}, 'badge') }}</li>
@@ -92,9 +97,16 @@
 <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
 <script type="text/javascript">
     $(function(){
-        $('[data-toggle=tooltip]').tooltip();
+        $("[data-toggle=tooltip]").tooltip();
 
-        $('.confirm').confirmModal();
+        $(".confirm").confirmModal();
+
+        $(".badge_list > li").hover(function() {
+            $(".badge-toolbar", this).removeClass("hidden");
+        },
+        function() {
+            $(".badge-toolbar", this).addClass("hidden");
+        });
     });
 </script>
 {% endblock %}

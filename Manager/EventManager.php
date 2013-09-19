@@ -82,7 +82,7 @@ class EventManager
     protected function getActionConstantsforClass($classNamespace, $restriction)
     {
         $constants       = array();
-        /** @var \Claroline\CoreBundle\Event\Log\LogGenericEvent $reflectionClass */ 
+        /** @var \Claroline\CoreBundle\Event\Log\LogGenericEvent $reflectionClass */
         $reflectionClass = new \ReflectionClass($classNamespace);
         if (!$reflectionClass->isAbstract()) {
             if (null !== $restriction) {
@@ -95,6 +95,15 @@ class EventManager
                         if (preg_match('/^ACTION/', $key)) {
                             $constants[] = $classConstant;
                         }
+                    }
+                }
+            }
+            else {
+                $classConstants  = $reflectionClass->getConstants();
+
+                foreach ($classConstants as $key => $classConstant) {
+                    if (preg_match('/^ACTION/', $key)) {
+                        $constants[] = $classConstant;
                     }
                 }
             }
@@ -111,6 +120,8 @@ class EventManager
     public function getSortedEventsForFilter($restriction = null)
     {
         $textEvents = $this->getEvents($restriction);
+
+        $sortedEvents = array();
 
         foreach ($textEvents as $textEvent) {
             $explodeTextEvents = explode('-', $textEvent);
