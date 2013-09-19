@@ -9,7 +9,7 @@
             <div class="carousel-inner">
                 {% for img in images %}
                     <div class="item{% if img.getResourceNode().getId() ==  _resource.getResourceNode().getId() %} active{% endif %}" data-name="{{ img.getResourceNode().getName() }}"  data-id="{{ img.getResourceNode().getId() }}">
-                        <img src="{{ asset('') }}../files/{{ img.getHashName() | raw }}" width="100%">
+                        <img src="{{ path ("claro_pdf", {"node": img.getResourceNode.getId()}) }}" width="100%">
                     </div>
                 {% endfor %}
             </div>
