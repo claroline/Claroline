@@ -121,7 +121,12 @@ class HomeControllerTest extends MockeryTestCase
 
     public function testRegionAction()
     {
-        $this->assertEquals(array('id' => 1), $this->controller->regionAction(1));
+        $this->content->shouldReceive('getId')->once()->andReturn(1);
+        $this->manager->shouldReceive('getRegion')->once()->with($this->content)->andReturn('region');
+        $this->assertEquals(
+            array('id' => 1, 'region' => 'region'),
+            $this->controller->regionAction($this->content)
+        );
     }
 
     public function testCreateAction()
