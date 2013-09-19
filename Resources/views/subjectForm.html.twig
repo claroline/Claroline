@@ -6,11 +6,9 @@
 
 {% extends layout %}
 
-{% block javascripts %}
-{{ parent() }}
-{% render controller('ClarolineCoreBundle:Tool\\WorkspaceResourceParameters:initPicker')
-%}
-{{ tinymce_init() }}
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('claro_forum_subjects', { 'forumId': _resource.getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+    <li class="active">{{ 'new_subject'|trans({}, 'forum') }}</li>
 {% endblock %}
 
 {% block section_content %}
@@ -27,4 +25,11 @@
             <a class="btn btn-default" href="{{ path('claro_forum_subjects', { 'forumId': _resource.getId() }) }}">{{ 'cancel' | trans({}, 'platform') }}</a>
         </div>
     </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% render controller('ClarolineCoreBundle:Tool\\WorkspaceResourceParameters:initPicker')
+    %}
+    {{ tinymce_init() }}
 {% endblock %}

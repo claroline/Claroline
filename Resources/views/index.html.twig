@@ -27,11 +27,6 @@
         <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}</h3>
     </div>
     <div class="panel-body">
-        <p>
-            <a class="btn btn-primary" href="{{ _path('claro_forum_form_subject_creation', {'forumId': _resource.getId()}) }}">
-                <i class="icon-plus"></i> {{ 'new_subject'|trans({}, 'forum') }}
-            </a>
-        </p>
         <div>
             {{ renderPager(_resource.getId(), pager) }}
         </div>
@@ -67,5 +62,10 @@
         <div>
             {{ renderPager(_resource.getId(), pager) }}
         </div>
+    </div>
+    <div class="panel-footer">
+        <a class="btn btn-primary" href="{{ _path('claro_forum_form_subject_creation', {'forumId': _resource.getId()}) }}">
+            <i class="icon-plus"></i> {{ 'new_subject'|trans({}, 'forum') }}
+        </a>
     </div>
 {% endblock %}
