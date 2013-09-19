@@ -96,19 +96,6 @@
                             </label>
                         </div>
                         {{ form_widget(form.file) }}
-                        <div class="form-group">
-                            <label class="checkbox">
-                                {{ form_widget(form.automatic_award) }}{{ 'badge_form_automatic_award'|trans }}
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-6 control-label required" for="badge_form_version">{{ 'badge_form_version'|trans }} :</label>
-                            <div class="col-md-6">
-                                {{ form_widget(form.version) }}
-                            </div>
-                        </div>
-                        <label class="control-label required" for="badge_form_expired_at">{{ 'badge_form_expired_at'|trans }} :</label>
-                        {{ form_widget(form.expired_at) }}
                     </div>
                     <div class="col-md-9">
                         <ul class="nav nav-tabs" id="translationFormTabs">
@@ -148,6 +135,26 @@
                                     {{ form_widget(form.enTranslation.criteria) }}
                                 </div>
                                 {{ form_widget(form.enTranslation) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-2 form-group">
+                                <label class="control-label required" for="badge_form_version">{{ 'badge_form_version'|trans }} :</label>
+                                {{ form_widget(form.version) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label required" for="badge_form_expired_at">{{ 'badge_form_expired_at'|trans }} :</label>
+                                    {{ form_widget(form.expired_at) }}
+                                </div>
+                                <div class="form-group">
+                                    <label class="checkbox">
+                                        {{ form_widget(form.automatic_award) }}{{ 'badge_form_automatic_award'|trans }}
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
