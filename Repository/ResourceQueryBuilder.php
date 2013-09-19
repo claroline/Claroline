@@ -162,7 +162,7 @@ class ResourceQueryBuilder
             $eol = PHP_EOL;
             $clause = "{$eol}({$eol}";
 
-            for ($i = 0; $i < $count; ++$i) {
+            foreach ($roles as $i => $role) {
                 $role = $roles[$i] instanceof RoleInterface ? $roles[$i]->getRole() : $roles[$i];
                 $clause .= $i > 0 ? '    OR ' : '    ';
                 $clause .= "rightRole.name = :role_{$i}{$eol}";
@@ -203,9 +203,13 @@ class ResourceQueryBuilder
             "({$eol}" .
             "    SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw{$eol}" .
             "    JOIN aw.roles r{$eol}" .
-            "    JOIN r.users u{$eol}" .
-            "    WHERE u.id = :user_id{$eol}" .
-            ")";
+            "    WHERE r IN (SELECT r2 FROM Claroline\CoreBundle\Entity\Role r2 {$eol}". 
+            "       LEFT JOIN r2.users u {$eol}" .
+            "       LEFT JOIN r2.groups g {$eol}" .
+            "       LEFT JOIN g.users u2 {$eol}" .
+            "       WHERE u.id = :user_id OR u2.id = :user_id {$eol}" .
+            "   ) {$eol}" .
+            ") {$eol}";
         $this->addWhereClause($clause);
         $this->parameters[':user_id'] = $user->getId();
 

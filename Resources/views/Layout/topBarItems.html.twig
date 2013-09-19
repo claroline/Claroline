@@ -1,5 +1,5 @@
-{% macro item(name, href, icon, attributes, title, dropdown, badge) %}
-    <li class="{% if dropdown is not empty %}dropdown{% endif %}{{ attributes | default('') | compareRoute(' active') | raw }}">
+{% macro item(name, href, icon, route, title, dropdown, badge) %}
+    <li class="{% if dropdown is not empty %}dropdown{% endif %}{{ route | default('') | compareRoute(' active') | raw }}">
         <a
             {% if dropdown is not empty %}class="pointer-hand dropdown-toggle" data-toggle="dropdown"{% endif %}
             {% if href is not empty %}href="{{ href }}"{% endif %}
@@ -113,10 +113,4 @@
     {% endblock dropdownLogged %}
 
 {% endblock topBar %}
-
-{% block impersonation %}
-    {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') or isImpersonated %}
-        {% render controller('ClarolineCoreBundle:Layout:renderWarningImpersonation') %}
-    {% endif %}
-{% endblock %}
 
