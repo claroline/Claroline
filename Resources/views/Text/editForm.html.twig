@@ -1,15 +1,31 @@
-{# to keep the workspace layout, extends this template #}
-{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
-{# use the section_content block to display yor html #}
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('claro_text_open', {'text': _resource.getId()} ) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+    <li class="active">{{ 'edit' | trans({}, 'platform') }}</li>
+{% endblock %}
 {% block section_content %}
 
     {{ tinymce_init() }}
-
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}</h3>
+    </div>
     <form novalidate="validate" method="post" action="{{ _path('claro_text_edit', {'old':_resource.getId()}) }}" id="edit_form">
-        <textarea name="content" cols="50" rows="15" class="tinymce">{{ text|raw }}</textarea>
-       <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+        <div class="panel-body">
+            <textarea name="content" cols="50" rows="15" class="hide tinymce">{{ text|raw }}</textarea>
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a class="btn btn-default" href="{{ path('claro_text_open', {'text': _resource.getId()} ) }}">{{ 'cancel' | trans({}, 'platform') }}</a>
+        </div>
     </form>
 {% endblock %}
+
 {% block javascripts %}
 {{ parent() }}
     {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}

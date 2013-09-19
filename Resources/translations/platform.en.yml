@@ -50,6 +50,7 @@ an_error_occured_message: An error occured. Please contact the administrator.
 apply: Apply
 available_widgets: 'Available widgets'
 available_workspaces: 'Available workspaces'
+back: 'Back'
 badges_management: 'Badges management'
 by: by
 cancel: Cancel
