@@ -8,19 +8,24 @@
         {{ form_errors(form) }}
 
         <div class="row">
-            <div class="col-lg-4 col-lg-offset-1">
+            <div class="col-lg-2">
                 {{ form_label(form.group) }}
                 {{ form_errors(form.group) }}
+            </div>
+            <div class="col-lg-3">
                 {{ form_widget(form.group) }}
             </div>
 
-            <div class="col-lg-2">
+            <div class="col-lg-2 text-center">
                 <p>{{ 'or'|trans }}</p>
             </div>
 
-            <div class="col-lg-4">
+
+            <div class="col-lg-2">
                 {{ form_label(form.user) }}
                 {{ form_errors(form.user) }}
+            </div>
+            <div class="col-lg-3">
                 {{ form_widget(form.user) }}
             </div>
         </div>
