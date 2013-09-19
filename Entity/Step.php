@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Step extends AbstractResource
 {
-
+   
     /**
      * @var string
      *
@@ -77,7 +77,20 @@ class Step extends AbstractResource
      */
     private $deployable;
 
+    /**
+    * @ORM\ManyToOne(targetEntity="StepType", inversedBy="steps")
+    */
+    protected $stepType;
 
+    /**
+    * @ORM\ManyToOne(targetEntity="StepWho", inversedBy="steps")
+    */
+    protected $stepWho;
+
+    /**
+    * @ORM\ManyToOne(targetEntity="StepWhere", inversedBy="steps")
+    */
+    protected $stepWhere;
 
     /**
      * Set uuid
@@ -287,16 +300,6 @@ class Step extends AbstractResource
     }
 
     /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * Set resourceNode
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
@@ -318,4 +321,75 @@ class Step extends AbstractResource
     {
         return $this->resourceNode;
     }
+
+
+    /**
+     * Set stepType
+     *
+     * @param \Innova\PathBundle\Entity\StepType $stepType
+     * @return Step
+     */
+    public function setStepType(\Innova\PathBundle\Entity\StepType $stepType = null)
+    {
+        $this->stepType = $stepType;
+
+        return $this;
+    }
+
+    /**
+     * Get stepType
+     *
+     * @return \Innova\PathBundle\Entity\StepType 
+     */
+    public function getStepType()
+    {
+        return $this->stepType;
+    }
+
+    /**
+     * Set stepWho
+     *
+     * @param \Innova\PathBundle\Entity\StepWho $stepWho
+     * @return Step
+     */
+    public function setStepWho(\Innova\PathBundle\Entity\StepWho $stepWho = null)
+    {
+        $this->stepWho = $stepWho;
+
+        return $this;
+    }
+
+    /**
+     * Get stepWho
+     *
+     * @return \Innova\PathBundle\Entity\StepWho 
+     */
+    public function getStepWho()
+    {
+        return $this->stepWho;
+    }
+
+    /**
+     * Set stepWhere
+     *
+     * @param \Innova\PathBundle\Entity\StepWhere $stepWhere
+     * @return Step
+     */
+    public function setStepWhere(\Innova\PathBundle\Entity\StepWhere $stepWhere = null)
+    {
+        $this->stepWhere = $stepWhere;
+
+        return $this;
+    }
+
+    /**
+     * Get stepWhere
+     *
+     * @return \Innova\PathBundle\Entity\StepWhere 
+     */
+    public function getStepWhere()
+    {
+        return $this->stepWhere;
+    }
+
 }
