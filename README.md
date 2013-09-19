@@ -1,16 +1,23 @@
 README
 ======
 
-- [Project setup](#project-setup)
-  - [Requirements](#requirements)
-  - [Quick start](#quick-start)
-  - [Quick update](#quick-update)
-  - [Plugin installation](#plugin-installation)
-- [Development tools](#development-tools)
-  - [Testing](#testing)
-  - [Build and Static analysis](#build-and-static-analysis)
-  - [Miscellaneous](#miscellaneous)
-- [Documentation](#documentation)
+This repository provides the basic application structure of the Claroline platform.
+It doesn't contain the sources nor the third-party libraries required to make the
+application fully functional. Thoses sources have to be installed following the
+procedure described below.
+
+If you want to contribute or directly browse the sources of the project, here is a
+(non-exhaustive) list of their dedicated repositories:
+
+- [CoreBundle][core]
+- [KernelBundle][kernel]
+- [InstallationBundle][install]
+- [MigrationBundle][migration]
+- [ForumBundle][forum]
+- [AnnouncementBundle][announcement]
+- [RssReaderBundle][rssreader]
+- ...
+
 
 Project setup
 -------------
@@ -25,84 +32,68 @@ Project setup
         - [ffmpeg][2] (for video thumbnail creation)
 - A global installation of [composer][3] (for dependency management)
 
-### Quick start
+### Development installation
 
-Clone the project and its associated plugins with:
-
+- Clone this repository and checkout the alt-master branch
+- Create an *app/config/parameters.yml* file based on *app/config/parameters.yml.dist*
+  and fill at least the main db parameters (database doesn't have to exist, but if
+  it exists, it must be empty)
+- Make the following directories (and their children) writable from the command
+  line and the webserver (for further explanation on common permissions issues and
+  solutions with Symfony2, read [this][5]):
+    - *app/cache*
+    - *app/logs*
+    - *app/config*
+    - *files*
+    - *templates*
+    - *test*
+    - *web/uploads*
+    - *web/themes*
+    - *web/thumbnails*
+- Run the following commands:
 ```sh
-$ git clone --recursive https://github.com/claroline/Claroline.git
+$ composer require claroline/bundle-recorder ~1.0
+$ cp composer.dist.json composer.json
+$ composer update --prefer-source
+$ php app/console assetic:dump
 ```
 
-Checkout the master branch of each plugin with:
+You can then create a first admin user with:
 
 ```sh
-$ git submodule foreach git checkout master
+$ php app/console claroline:user:create -a
 ```
 
-Use the automatic install script:
+The application is accessible in your browser via:
+
+- *[site]/web/app_dev.php* (development environment)
+- *[site]/web/app.php* (production environment)
+
+### Update
+
+To update your installation to the last stable state, use:
 
 ```sh
-$ php app/dev/raw_install
+$ composer update --prefer-dist
 ```
-
-Make the following directories (and their children) writable from the command
-line and the webserver
-
-- *app/cache*
-- *app/logs*
-- *app/config/local*
-- *files*
-- *templates*
-- *test*
-- *src/core/Claroline/CoreBundle/Resources/public/css/themes*
-- *src/core/Claroline/CoreBundle/Resources/views/less-generated*
-- *web/uploads*
-
-For further explanation on common permissions issues and solutions with
-Symfony2, read [this][5].
-
-Open your browser and go to *[site]/web/app.php* for production environment or
-*[site]/web/app_dev.php* for development environment.
-
-### Quick update
-
-To update your installation to the last development state, use:
-
-```sh
-$ git pull
-$ git submodule update
-```
-
-Or in the event of new plugins:
-
-```sh
-$ git pull
-$ git submodule update --init --recursive
-$ git submodule foreach git checkout master
-```
-
-Then launch the installation script mentioned above:
-```sh
-$ php app/dev/raw_install
-```
-
-***Warning***: this is a quick dev tool, it will drop existing databases
-(both prod and test) and create new ones.
 
 ### Plugin installation
 
-You can install or uninstall a plugin with:
+You can install or uninstall a plugin by adding or removing the package in the
+*require* section of your composer.json and running:
 
 ```sh
-$ php app/console claroline:plugin:install [vendor] [bundle short name]
-$ php app/console claroline:plugin:uninstall [vendor] [bundle short name]
+$ composer update vendor/plugin-name
 ```
 
-A new plugin can be added to the module list with:
+If the plugin package is already present in your project and if you simply want
+to install or uninstall it locally, you can use one the following commands:
 
 ```sh
-$ git submodule add http://github.com/vendor/bundle.git src/plugin/Vendor/bundle
+$ php app/console claroline:plugin:install FooBarBundle
+$ php app/console claroline:plugin:uninstall FooBarBundle
 ```
+
 
 Development tools
 -----------------
@@ -131,19 +122,20 @@ analysis and build tools (PHPMD, PHPCS, JSHint, Ant, etc.).
 You can install and use them locally (see their respective documentation for
 usage) or visit our continuous integration server [here][7].
 
-### Miscellaneous
-
-To have the core **Less** and **TwigJs** assets automatically processed and
-dumped when they have changed, you can run the provided [watchr][8] script:
-
-```sh
-$ watchr src/core/Claroline/CoreBundle/Resources/watchr/refresh_assets.rb
-```
 
 Documentation
 -------------
 
-For development documentation, see [Claroline/CoreBundle/Resources/doc/index.md][9].
+For development documentation, see [Claroline/CoreBundle/Resources/doc/index.md][8].
+
+
+[core]:         https://github.com/claroline/CoreBundle
+[kernel]:       https://github.com/claroline/KernelBundle
+[install]:      https://github.com/claroline/InstallationBundle
+[migration]:    https://github.com/claroline/MigrationBundle
+[forum]:        https://github.com/claroline/ForumBundle
+[announcement]: https://github.com/claroline/AnnouncementBundle
+[rssreader]:    https://github.com/claroline/RssReaderBundle
 
 
 [1]: http://www.php.net/manual/en/book.image.php
@@ -153,5 +145,4 @@ For development documentation, see [Claroline/CoreBundle/Resources/doc/index.md]
 [5]: http://symfony.com/doc/current/book/installation.html#configuration-and-setup
 [6]: http://www.phpunit.de/manual/current/en/index.html
 [7]: http://dev.claroline.net:8080/job/Claronext/
-[8]: https://github.com/mynyml/watchr
-[9]: src/core/Claroline/CoreBundle/Resources/doc/index.md
+[8]: https://github.com/claroline/CoreBundle/blob/master/Resources/doc/index.md
