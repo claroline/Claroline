@@ -308,7 +308,17 @@
             header: {
                 left: 'prev,next today',
                 center: 'title',
-                right: 'month,agendaWeek,agendaDay'
+                right: 'month,agendaWeek,agendaDay',      
+            },
+            buttonText: {
+                prev: Translator.get('agenda' + ':' + 'prev'),
+                next: Translator.get('agenda' + ':' + 'next'),
+                prevYear: Translator.get('agenda' + ':' + 'prevYear'),
+                nextYear: Translator.get('agenda' + ':' + 'nextYear'),
+                today:    Translator.get('agenda' + ':' + 'today'),
+                month:    Translator.get('agenda' + ':' + 'month'),
+                week:     Translator.get('agenda' + ':' + 'week'),
+                day:      Translator.get('agenda' + ':' + 'day')
             },
             monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
                 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
@@ -318,12 +328,13 @@
             dayNamesShort: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
             editable: true,
             events: $('a#link').attr('href'),
-            timeFormat: 'H(:mm)',
-            agenda: 'h:mm{ - h:mm}', // 5:00 - 6:30
-            // for all other views
-            '': 'h(:mm)t',            // 7p
+            axisFormat: 'HH:mm',
+            timeFormat: {
+                agenda: 'H:mm{ - h:mm}'
+            },
             allDayText: 'all-day',
             allDaySlot: true,
+            lazyFetching : true,
             eventDrop: function (event, dayDelta, minuteDelta) {
                 dropEvent(event, dayDelta, minuteDelta);
             },
