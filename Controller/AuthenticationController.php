@@ -43,8 +43,8 @@ class AuthenticationController
      *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
      *     "translator"     = @DI\Inject("translator"),
      *     "formFactory"    = @DI\Inject("claroline.form.factory"),
-     *     "authenticator"  = @Di\Inject("claroline.authenticator"),
-     *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager")
+     *     "authenticator"  = @DI\Inject("claroline.authenticator"),
+     *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager")
      * })
      */
     public function __construct(
@@ -67,6 +67,7 @@ class AuthenticationController
         $this->authenticator = $authenticator;
         $this->mailManager = $mailManager;
     }
+
     /**
      * @Route(
      *     "/login",
@@ -131,6 +132,7 @@ class AuthenticationController
     {
         $form = $this->formFactory->create(FormFactory::TYPE_USER_EMAIL, array(), null);
         $form->handleRequest($this->request);
+        
         if ($form->isValid()) {
             $data = $form->getData();
             $user = $this->userManager->getUserbyEmail($data['mail']);
@@ -141,6 +143,7 @@ class AuthenticationController
                 $user->setResetPasswordHash($password);
                 $this->om->persist($user);
                 $this->om->flush();
+                
                 if ($this->mailManager->sendForgotPassword('noreply@claroline.net', $data['mail'], $user->getResetPasswordHash())) {
 
                     return array(
@@ -154,7 +157,11 @@ class AuthenticationController
                     'form' => $form->createView()
                 );
             }
-
+            
+            return array(
+                'error' => $this->translator->trans('mail_not_exist', array(), 'platform'),
+                'form' => $form->createView()
+            );
         }
 
         return array(
@@ -257,8 +264,8 @@ class AuthenticationController
             array();
 
         switch ($format) {
-        case 'json': return new JsonResponse($content, $status);
-        case 'xml' : return new XmlResponse($content, $status);
+            case 'json': return new JsonResponse($content, $status);
+            case 'xml' : return new XmlResponse($content, $status);
         }
     }
 }

@@ -85,7 +85,7 @@ class ProfileController extends Controller
         }
         
         $roles = $this->roleManager->getPlatformRoles($loggedUser);
-        $form = $this->createForm(new ProfileType($roles), $user);
+        $form = $this->createForm(new ProfileType($roles, true), $user);
        
         return array('profile_form' => $form->createView(), 'user' => $user);
     }

@@ -33,13 +33,19 @@ class LogRepository extends EntityRepository
         return $this->extractChartData($queryBuilder->getQuery()->getResult(), $range);
     }
 
-    public function countByDayFilteredLogs($action, $range, $userSearch, $actionRestriction, $workspaceIds = null)
+    public function countByDayFilteredLogs($action, $range, $userSearch, $actionRestriction, $workspaceIds = null, $unique = false)
     {
         $queryBuilder = $this
             ->createQueryBuilder('log')
-            ->select('log.shortDateLog as shortDate, count(log.id) as total')
             ->orderBy('shortDate', 'ASC')
             ->groupBy('shortDate');
+
+        if ($unique === true) {
+            $queryBuilder->select('log.shortDateLog as shortDate, count(DISTINCT log.doer) as total');
+        }
+        else {
+            $queryBuilder->select('log.shortDateLog as shortDate, count(log.id) as total');
+        }
 
         $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, $action, $actionRestriction);
         $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);

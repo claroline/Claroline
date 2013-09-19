@@ -1,4 +1,5 @@
 <?php
+
 namespace Claroline\CoreBundle\Manager;
 
 use JMS\DiExtraBundle\Annotation as DI;
@@ -22,7 +23,6 @@ class MailManager
      *     "templating"     = @Di\Inject("templating"), 
      * })
      */
-
     public function __construct(
         \Swift_Mailer $mailer,
         TwigEngine $templating,
@@ -43,6 +43,7 @@ class MailManager
             $this->mailer->getTransport()->start();
 
             return true;
+            
         } catch (\Swift_TransportException $e) {
 
             return false;
@@ -63,11 +64,12 @@ class MailManager
             ->setFrom($from)
             ->setTo($sender)
             ->setBody($body);
-        if ($this->mailer->send($message)) {
+
+        if ($this->mailer->send($message)) {        
 
             return true;
         }
-
+        
         return false;
     }
 }
