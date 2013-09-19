@@ -33,6 +33,7 @@ class WorkspaceAccessExtension extends \Twig_Extension
         return array(
             'has_role_access_to_workspace' => new \Twig_Function_Method($this, 'hasRoleAccess'),
             'has_access_to_workspace' => new \Twig_Function_Method($this, 'hasAccess'),
+            'has_role_in_workspace' => new \Twig_Function_Method($this, 'hasRoleInWorkspace')
         );
     }
 
@@ -55,6 +56,17 @@ class WorkspaceAccessExtension extends \Twig_Extension
         $tools = $repo->findDisplayedByRolesAndWorkspace($roles, $workspace);
 
         return count($tools) > 0 ? true: false;
+    }
+
+    public function hasRoleInWorkspace($workspaceId, TokenInterface $token)
+    {
+        $roles = $this->ut->getRoles($token);
+        $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+            ->find($workspaceId);
+        $repo = $this->em->getRepository('ClarolineCoreBundle:Role');
+        $workspaceRoles = $repo->findRolesByWorkspaceAndRoleNames($workspace, $roles);
+
+        return count($workspaceRoles) > 0 ? true: false;
     }
 
     /**

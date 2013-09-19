@@ -3,10 +3,11 @@
 namespace Claroline\CoreBundle\Pager;
 
 use Doctrine\ORM\Query;
-use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\AdapterInterface;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Exception\OutOfRangeCurrentPageException;
+use Pagerfanta\Pagerfanta;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -32,7 +33,13 @@ class PagerFactory
     {
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage($max); // should be configurable
-        $pager->setCurrentPage($currentPage);
+
+        try {
+            $pager->setCurrentPage($currentPage);
+        }
+        catch (OutOfRangeCurrentPageException $e) {
+            $pager->setCurrentPage(1);
+        }
 
         return $pager;
     }

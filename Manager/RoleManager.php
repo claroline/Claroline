@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
 use Claroline\CoreBundle\Manager\Exception\RoleReadOnlyException;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
@@ -275,7 +276,7 @@ class RoleManager
         }
 
         if ($removedGroupsManager >= count($groupsManagers) && $removedUsersManager >= count($usersManagers)) {
-            throw new \LogicException("You can't remove every managers");
+            throw new LastManagerDeleteException("You can't remove every managers");
         }
     }
 
