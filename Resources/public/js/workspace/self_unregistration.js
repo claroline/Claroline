@@ -1,15 +1,31 @@
 (function () {
     'use strict';
 
+    function emptyFlashBag() {
+        $('#custom-flashbag-div').addClass('hide');
+        $('#custom-flashbag-msg-div').empty();
+    }
+
+    function addFlashBagMessage() {
+        var msgA = Translator.get('platform:cannot_unsubscribe_from_workspace');
+        msgA += ' "' + workspaceName + ' [' + workspaceCode + ']".';
+        var msgB = Translator.get('platform:cannot_delete_unique_manager');
+        var msg = '<p>' + msgA + '</p><p>' + msgB + '</p>';
+        $('#custom-flashbag-msg-div').append(msg);
+        $('#custom-flashbag-div').removeClass('hide');
+    }
+
     var twigUserId = document.getElementById('twig-self-registration-user-id').getAttribute('data-user-id');
     var workspaceId;
+    var workspaceName;
+    var workspaceCode;
     var currentElement;
 
     $('.unregister-btn').click(function () {
         currentElement = $(this);
         workspaceId = $(this).attr('data-workspace-id');
-        var workspaceName = $(this).attr('data-workspace-name');
-        var workspaceCode = $(this).attr('data-workspace-code');
+        workspaceName = $(this).attr('data-workspace-name');
+        workspaceCode = $(this).attr('data-workspace-code');
         $('#unregistration-confirm-message').html(workspaceName + ' [' + workspaceCode + ']');
         $('#confirm-unregistration-validation-box').modal('show');
     });
@@ -29,8 +45,8 @@
                 200: function (data) {
 
                     if (data === 'cannot_delete_unique_manager') {
-                        $('#custom-flashbag-div').append(Translator.get('platform:cannot_delete_unique_manager'));
-                        $('#custom-flashbag-div').removeClass('hide');
+                        emptyFlashBag();
+                        addFlashBagMessage();
                     }
                 }
             }
@@ -40,7 +56,6 @@
     });
 
     $('#flashbag-close-button').click(function () {
-        $(this).parent().addClass('hide');
-        $('#custom-flashbag-div').empty();
+        emptyFlashBag();
     });
 })();

@@ -48,7 +48,7 @@
 
         <div id="custom-flashbag-div" class="alert alert-danger hide">
             <a id="flashbag-close-button" class="close" href="#">×</a>
-            <div id="custom-flashbag-div">
+            <div id="custom-flashbag-msg-div">
             </div>
         </div>
 
@@ -64,6 +64,7 @@
             {% for workspace in workspaces %}
                 <div id="workspace-{{ workspace.getId() }}" class="list-group-item">
                     {{ workspace.getName() }}
+                    <small>({{ workspace.getCode() }})</small>
                     <span class="pull-right pointer-hand label label-danger unregister-btn"
                         data-workspace-id="{{ workspace.getId() }}"
                         data-workspace-name="{{ workspace.getName() }}"
