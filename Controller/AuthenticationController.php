@@ -25,7 +25,6 @@ use Claroline\CoreBundle\Manager\MailManager;
 class AuthenticationController
 {
     private $request;
-
     private $userManager;
     private $encoderFactory;
     private $om;
@@ -33,7 +32,6 @@ class AuthenticationController
     private $translator;
     private $formFactory;
     private $authenticator;
-    private $templating;
 
     /**
      * @DI\InjectParams({
@@ -132,7 +130,7 @@ class AuthenticationController
     {
         $form = $this->formFactory->create(FormFactory::TYPE_USER_EMAIL, array(), null);
         $form->handleRequest($this->request);
-        
+
         if ($form->isValid()) {
             $data = $form->getData();
             $user = $this->userManager->getUserbyEmail($data['mail']);
@@ -143,7 +141,7 @@ class AuthenticationController
                 $user->setResetPasswordHash($password);
                 $this->om->persist($user);
                 $this->om->flush();
-                
+
                 if ($this->mailManager->sendForgotPassword('noreply@claroline.net', $data['mail'], $user->getResetPasswordHash())) {
 
                     return array(
@@ -157,7 +155,7 @@ class AuthenticationController
                     'form' => $form->createView()
                 );
             }
-            
+
             return array(
                 'error' => $this->translator->trans('mail_not_exist', array(), 'platform'),
                 'form' => $form->createView()
