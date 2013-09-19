@@ -25,7 +25,7 @@ title : "Titre de l'évènement ne peut pas être vide"
 update : "mettre à jour"
 prev : '<'
 next : '>'
-prevYear : '<<;'
+prevYear : '<<'
 nextYear : '>>'
 today : 'auj'
 month : 'mois'
