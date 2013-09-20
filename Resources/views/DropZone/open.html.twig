@@ -1,4 +1,4 @@
-{% extends "ICAPDropZoneBundle::layout.html.twig" %}
+{% extends "IcapDropZoneBundle::layout.html.twig" %}
 {% block dropzone_breadcrumb %}
     <li class="active"><span class="glyphicon icon-file"></span> {{ dropZone.resourceNode.name }}</li>
 {% endblock %}
@@ -59,7 +59,7 @@
                 <ul>
                     {%  for document in drop.documents%}
                         <li>
-                            {% include 'ICAPDropZoneBundle:DropZone:simpleShowDocument.html.twig' %}
+                            {% include 'IcapDropZoneBundle:DropZone:simpleShowDocument.html.twig' %}
                         </li>
                     {% endfor %}
                 </ul>

@@ -1,6 +1,6 @@
 services:
     icap.listener.dropzone_listener:
-        class: ICAP\DropZoneBundle\Listener\DropZoneListener
+        class: Icap\DropZoneBundle\Listener\DropZoneListener
         calls:
           - [setContainer, ["@service_container"]]
         tags: 

@@ -5,7 +5,7 @@
  * Time: 14:56
  */
 
-namespace ICAP\DropZoneBundle\Repository;
+namespace Icap\DropZoneBundle\Repository;
 
 
 use Doctrine\ORM\EntityRepository;
@@ -16,7 +16,7 @@ class DropRepository extends EntityRepository {
     {
         $query = $this->getEntityManager()->createQuery(
             "SELECT d.id AS did, count(c.id) AS nb_corrections \n".
-            "FROM ICAP\\DropZoneBundle\\Entity\\Drop AS d \n".
+            "FROM Icap\\DropZoneBundle\\Entity\\Drop AS d \n".
             "LEFT OUTER JOIN d.corrections AS c \n".
             "WHERE d.dropZone = :dropZone \n".
             "GROUP BY d.id \n".
@@ -38,7 +38,7 @@ class DropRepository extends EntityRepository {
     {
         $query = $this->getEntityManager()->createQuery(
             "SELECT d.id AS did, count(c.id) AS nb_corrections \n".
-            "FROM ICAP\\DropZoneBundle\\Entity\\Drop AS d \n".
+            "FROM Icap\\DropZoneBundle\\Entity\\Drop AS d \n".
             "LEFT OUTER JOIN d.corrections AS c \n".
             "WHERE d.dropZone = :dropZone \n".
             "AND c.finished = true \n".
@@ -66,7 +66,7 @@ class DropRepository extends EntityRepository {
             return null;
         }
         // Remove copies that the logged user has already corrected
-        $alreadyCorrectedDropIds = $this->getEntityManager()->getRepository('ICAPDropZoneBundle:Correction')->getAlreadyCorrectedDropIds($dropZone, $user);
+        $alreadyCorrectedDropIds = $this->getEntityManager()->getRepository('IcapDropZoneBundle:Correction')->getAlreadyCorrectedDropIds($dropZone, $user);
 
         $qb = $this->createQueryBuilder('drop')
             ->select('drop.id')
@@ -98,7 +98,7 @@ class DropRepository extends EntityRepository {
     {
         $query = $this->getEntityManager()->createQuery(
             "SELECT cd.id AS did, count(cd.id) AS nb_corrections, cdd.expectedTotalCorrection \n".
-            "FROM ICAP\\DropZoneBundle\\Entity\\Correction AS c \n".
+            "FROM Icap\\DropZoneBundle\\Entity\\Correction AS c \n".
             "JOIN c.drop AS cd \n".
             "JOIN cd.dropZone AS cdd \n".
             "WHERE cdd.id = :dropZoneId \n".
@@ -121,7 +121,7 @@ class DropRepository extends EntityRepository {
     {
         $query = $this->getEntityManager()->createQuery(
             "SELECT count(d.id) \n".
-            "FROM ICAP\\DropZoneBundle\\Entity\\Drop AS d \n".
+            "FROM Icap\\DropZoneBundle\\Entity\\Drop AS d \n".
             "WHERE d.finished = true \n".
             "AND d.dropZone = :dropZone \n")
             ->setParameter('dropZone', $dropZone);

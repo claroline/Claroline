@@ -1,6 +1,6 @@
 <?php
 
-namespace ICAP\DropZoneBundle\Listener;
+namespace Icap\DropZoneBundle\Listener;
 
 use Claroline\CoreBundle\Event\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\Event\PluginOptionsEvent;
@@ -12,8 +12,8 @@ use Claroline\CoreBundle\Event\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Event\Log\LogCreateDelegateViewEvent;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use ICAP\DropZoneBundle\Entity\DropZone;
-use ICAP\DropZoneBundle\Form\DropZoneType;
+use Icap\DropZoneBundle\Entity\DropZone;
+use Icap\DropZoneBundle\Form\DropZoneType;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -117,7 +117,7 @@ class DropZoneListener extends ContainerAware
     {
 //        $referenceOptionsList = $this->container
 //            ->get('doctrine.orm.entity_manager')
-//            ->getRepository('ICAPReferenceBundle:ReferenceBankOptions')
+//            ->getRepository('IcapReferenceBundle:ReferenceBankOptions')
 //            ->findAll();
 //
 //        $referenceOptions = null;
@@ -129,7 +129,7 @@ class DropZoneListener extends ContainerAware
 //
 //        $form = $this->container->get('form.factory')->create(new ReferenceBankOptionsType(), $referenceOptions);
 //        $content = $this->container->get('templating')->render(
-//            'ICAPReferenceBundle::plugin_options_form.html.twig', array(
+//            'IcapReferenceBundle::plugin_options_form.html.twig', array(
 //                'form' => $form->createView()
 //            )
 //        );
@@ -176,7 +176,7 @@ class DropZoneListener extends ContainerAware
     public function onCreateLogListItem(LogCreateDelegateViewEvent $event)
     {
 //        $content = $this->container->get('templating')->render(
-//            'ICAPReferenceBundle::log_list_item.html.twig',
+//            'IcapReferenceBundle::log_list_item.html.twig',
 //            array('log' => $event->getLog())
 //        );
 //
@@ -187,11 +187,11 @@ class DropZoneListener extends ContainerAware
     public function onCreateLogDetails(LogCreateDelegateViewEvent $event)
     {
 //        $content = $this->container->get('templating')->render(
-//            'ICAPReferenceBundle::log_details.html.twig',
+//            'IcapReferenceBundle::log_details.html.twig',
 //            array(
 //                'log' => $event->getLog(),
 //                'listItemView' => $this->container->get('templating')->render(
-//                    'ICAPReferenceBundle::log_list_item.html.twig',
+//                    'IcapReferenceBundle::log_list_item.html.twig',
 //                    array('log' => $event->getLog())
 //                )
 //            )

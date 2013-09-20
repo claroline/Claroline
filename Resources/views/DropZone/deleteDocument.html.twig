@@ -1,4 +1,4 @@
-{% extends "ICAPDropZoneBundle::layout.html.twig" %}
+{% extends "IcapDropZoneBundle::layout.html.twig" %}
 {% block dropzone_breadcrumb %}
     <li class="active"><span class="glyphicon icon-file"></span> {{ dropZone.resourceNode.name }}</li>
 {% endblock %}
@@ -8,7 +8,7 @@
         <h3>
             {{ 'Delete a document'|trans }}
         </h3>
-        {% include "ICAPDropZoneBundle:DropZone:deleteDocumentForm.html.twig" %}
+        {% include "IcapDropZoneBundle:DropZone:deleteDocumentForm.html.twig" %}
     </div>
 {% endblock %}
 

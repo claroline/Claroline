@@ -1,4 +1,4 @@
-{% extends "ICAPDropZoneBundle::layout.html.twig" %}
+{% extends "IcapDropZoneBundle::layout.html.twig" %}
 {% block dropzone_breadcrumb %}
     <li><a href="{{ path('icap_dropzone_open', {'resourceId': dropZone.id}) }}"><span class="glyphicon icon-file"></span> {{ dropZone.resourceNode.name }}</a></li>
     <li><a href="{{ path('icap_dropzone_drops', {'resourceId': dropZone.id}) }}">{{ 'List of copies'|trans }}</a></li>
@@ -30,7 +30,7 @@
             <div class="col-md-8">
                 <ul class="list-unstyled">
                     {% for document in drop.documents %}
-                        <li>{% include 'ICAPDropZoneBundle:DropZone:simpleShowDocument.html.twig' %}</li>
+                        <li>{% include 'IcapDropZoneBundle:DropZone:simpleShowDocument.html.twig' %}</li>
                     {% endfor %}
                 </ul>
             </div>
@@ -43,12 +43,12 @@
 
         <div class="row">
             <div class="text-muted col-md-4">{{ 'Number of validated corrections'|trans }}</div>
-            <div class="col-md-8">{% include 'ICAPDropZoneBundle:DropZone:dropsNbCorrections.html.twig' %}</div>
+            <div class="col-md-8">{% include 'IcapDropZoneBundle:DropZone:dropsNbCorrections.html.twig' %}</div>
         </div>
 
         <div class="row">
             <div class="text-muted col-md-4">{{ 'Average validated corrections'|trans }}</div>
-            <div class="col-md-8">{% include 'ICAPDropZoneBundle:DropZone:dropsTotalGrade.html.twig' %}</div>
+            <div class="col-md-8">{% include 'IcapDropZoneBundle:DropZone:dropsTotalGrade.html.twig' %}</div>
         </div>
 
         <div class="container">

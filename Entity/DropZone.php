@@ -5,7 +5,7 @@
  * Time: 15:18
  */
 
-namespace ICAP\DropZoneBundle\Entity;
+namespace Icap\DropZoneBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -108,7 +108,7 @@ class DropZone extends AbstractResource {
     protected $totalCriteriaColumn = 5;
     /**
      * @ORM\OneToMany(
-     *     targetEntity="ICAP\DropZoneBundle\Entity\Drop",
+     *     targetEntity="Icap\DropZoneBundle\Entity\Drop",
      *     mappedBy="dropZone",
      *     cascade={"all"},
      *     orphanRemoval=true
@@ -117,7 +117,7 @@ class DropZone extends AbstractResource {
     protected $drops;
     /**
      * @ORM\OneToMany(
-     *     targetEntity="ICAP\DropZoneBundle\Entity\Criterion",
+     *     targetEntity="Icap\DropZoneBundle\Entity\Criterion",
      *     mappedBy="dropZone",
      *     cascade={"all"},
      *     orphanRemoval=true

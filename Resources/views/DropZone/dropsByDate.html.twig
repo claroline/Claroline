@@ -1,4 +1,4 @@
-{% extends "ICAPDropZoneBundle:DropZone:drops.html.twig" %}
+{% extends "IcapDropZoneBundle:DropZone:drops.html.twig" %}
 
 {% block dropzone_content_drops %}
     <div class="navbar navbar-default" role="navigation">
@@ -63,15 +63,15 @@
 
                 <div class="row">
                     <div class="col-md-3">{{ drop.user.firstName }} {{ drop.user.lastName }}</div>
-                    <div class="col-md-3">{% include 'ICAPDropZoneBundle:DropZone:dropsLastCorrectionDate.html.twig' %}</div>
+                    <div class="col-md-3">{% include 'IcapDropZoneBundle:DropZone:dropsLastCorrectionDate.html.twig' %}</div>
                     <div class="col-md-4">
                         <ul>
                             {% for document in drop.documents %}
-                                <li>{% include 'ICAPDropZoneBundle:DropZone:simpleShowDocument.html.twig' %}</li>
+                                <li>{% include 'IcapDropZoneBundle:DropZone:simpleShowDocument.html.twig' %}</li>
                             {% endfor %}
                         </ul>
                     </div>
-                    <div class="col-md-2">{% include 'ICAPDropZoneBundle:DropZone:dropsTotalGrade.html.twig' %}</div>
+                    <div class="col-md-2">{% include 'IcapDropZoneBundle:DropZone:dropsTotalGrade.html.twig' %}</div>
                 </div>
             </div>
         </div>

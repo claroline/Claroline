@@ -3,6 +3,6 @@ plugin:
 
     resources:
         - name: icap_dropzone
-          class: ICAP\DropZoneBundle\Entity\DropZone
+          class: Icap\DropZoneBundle\Entity\DropZone
           is_visible: true
           is_browsable: false

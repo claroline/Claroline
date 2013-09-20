@@ -1,4 +1,4 @@
-{% extends "ICAPDropZoneBundle::layout.html.twig" %}
+{% extends "IcapDropZoneBundle::layout.html.twig" %}
 {% block dropzone_breadcrumb %}
     <li><a href="{{ path('icap_dropzone_open', {'resourceId': dropZone.id}) }}"><span class="glyphicon icon-file"></span> {{ dropZone.resourceNode.name }}</a></li>
     {% if admin == true %}
@@ -60,7 +60,7 @@
                 <div class="col-md-8">
                     <ul class="list-unstyled">
                         {% for document in correction.drop.documents %}
-                            <li>{% include 'ICAPDropZoneBundle:DropZone:simpleShowDocument.html.twig' %}</li>
+                            <li>{% include 'IcapDropZoneBundle:DropZone:simpleShowDocument.html.twig' %}</li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -103,7 +103,7 @@
                 {% if correction.drop.documents|length > 0 %}
                     <ul>
                         {% for document in correction.drop.documents %}
-                            <li>{% include 'ICAPDropZoneBundle:DropZone:simpleShowDocument.html.twig' with {'document': document} %}</li>
+                            <li>{% include 'IcapDropZoneBundle:DropZone:simpleShowDocument.html.twig' with {'document': document} %}</li>
                         {% endfor %}
                     </ul>
                 {% else %}

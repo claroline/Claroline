@@ -5,11 +5,11 @@
  * Time: 15:00
  */
 
-namespace ICAP\DropZoneBundle;
+namespace Icap\DropZoneBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
 
-class ICAPDropZoneBundle extends PluginBundle
+class IcapDropZoneBundle extends PluginBundle
 {
     public function getRoutingPrefix()
     {

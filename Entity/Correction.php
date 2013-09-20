@@ -5,14 +5,14 @@
  * Time: 16:40
  */
 
-namespace ICAP\DropZoneBundle\Entity;
+namespace Icap\DropZoneBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="ICAP\DropZoneBundle\Repository\CorrectionRepository")
+ * @ORM\Entity(repositoryClass="Icap\DropZoneBundle\Repository\CorrectionRepository")
  * @ORM\Table(name="icap__dropzonebundle_correction")
 
  */
@@ -67,7 +67,7 @@ class Correction {
     protected $reportComment = null;
     /**
      * @ORM\OneToMany(
-     *      targetEntity="ICAP\DropZoneBundle\Entity\Grade",
+     *      targetEntity="Icap\DropZoneBundle\Entity\Grade",
      *      mappedBy="correction",
      *      cascade={"all"},
      *      orphanRemoval=true
@@ -85,7 +85,7 @@ class Correction {
 
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="ICAP\DropZoneBundle\Entity\Drop",
+     *      targetEntity="Icap\DropZoneBundle\Entity\Drop",
      *      inversedBy="corrections"
      * )
      * @ORM\JoinColumn(name="drop_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
@@ -94,7 +94,7 @@ class Correction {
 
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="ICAP\DropZoneBundle\Entity\DropZone"
+     *      targetEntity="Icap\DropZoneBundle\Entity\DropZone"
      * )
      * @ORM\JoinColumn(name="drop_zone_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
