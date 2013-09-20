@@ -1,18 +1,18 @@
-{% extends "IcapDropZoneBundle:DropZone:edit.html.twig" %}
+{% extends "IcapDropzoneBundle:Dropzone:edit.html.twig" %}
 
 {% form_theme form 'ClarolineCoreBundle::form_theme_bootstrap3.html.twig' %}
 
 {% block drop_zone_content_edit %}
-    <div class="navbar navbar-default peer-review-options" role="navigation" {% if not dropZone.peerReview %}style="display: none;"{% endif %}>
+    <div class="navbar navbar-default peer-review-options" role="navigation" {% if not dropzone.peerReview %}style="display: none;"{% endif %}>
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                 <li class="active">
-                    <a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropZone.id}) }}">
+                    <a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.id}) }}">
                         {{ 'Common'|trans }}
                     </a>
                 </li>
-                <li class="{% if dropZone.editionState < 1 %}disabled{% endif %}">
-                    <a href="{% if dropZone.editionState < 1 %}#{% else %}{{ path('icap_dropzone_edit_criteria', {'resourceId': dropZone.id}) }}{% endif %}">
+                <li class="{% if dropzone.editionState < 1 %}disabled{% endif %}">
+                    <a href="{% if dropzone.editionState < 1 %}#{% else %}{{ path('icap_dropzone_edit_criteria', {'resourceId': dropzone.id}) }}{% endif %}">
                         {{ 'Peer review criteria'|trans }}
                     </a>
                 </li>
@@ -20,7 +20,7 @@
         </div>
     </div>
     <h3>{{ 'Common information'|trans }}</h3>
-    <form class="form-horizontal" role="form" method="POST" action="{{ path('icap_dropzone_edit_common', {'resourceId': dropZone.id}) }}" {{ form_enctype(form) }}>
+    <form class="form-horizontal" role="form" method="POST" action="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.id}) }}" {{ form_enctype(form) }}>
 
         {{ form_errors(form) }}
 
@@ -105,7 +105,7 @@
 
         <div class="btn-group pull-right">
             <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
-            <button type= "submit" class="btn btn-primary submit_button">{% if dropZone.peerReview %}{{ 'Save and continue'|trans }}{% else %}{{ 'Save and finished'|trans }}{% endif %}</button>
+            <button type= "submit" class="btn btn-primary submit_button">{% if dropzone.peerReview %}{{ 'Save and continue'|trans }}{% else %}{{ 'Save and finished'|trans }}{% endif %}</button>
         </div>
         {{ form_rest(form) }}
     </form>
@@ -146,7 +146,7 @@
                 }
             }
 
-            enablePeerReviewOptions({{ dropZone.peerReview }});
+            enablePeerReviewOptions({{ dropzone.peerReview }});
 
             var manualPlanning = function () {
                 $('#planning_dates').addClass('text-muted');
@@ -167,7 +167,7 @@
             $('#icap_dropzone_common_form_manualPlanning_0').on('click', manualPlanning);
             $('#icap_dropzone_common_form_manualPlanning_1').on('click', datesPlanning);
 
-            if ({{ dropZone.manualPlanning }}) {
+            if ({{ dropzone.manualPlanning }}) {
                 manualPlanning();
             } else {
                 datesPlanning();

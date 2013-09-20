@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\DropZoneBundle\Listener;
+namespace Icap\DropzoneBundle\Listener;
 
 use Claroline\CoreBundle\Event\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\Event\PluginOptionsEvent;
@@ -12,17 +12,17 @@ use Claroline\CoreBundle\Event\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Event\Log\LogCreateDelegateViewEvent;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Icap\DropZoneBundle\Entity\DropZone;
-use Icap\DropZoneBundle\Form\DropZoneType;
+use Icap\DropzoneBundle\Entity\Dropzone;
+use Icap\DropzoneBundle\Form\DropzoneType;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class DropZoneListener extends ContainerAware
+class DropzoneListener extends ContainerAware
 {
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $form = $this->container->get('form.factory')->create(new DropZoneType(), new DropZone());
+        $form = $this->container->get('form.factory')->create(new DropzoneType(), new Dropzone());
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
@@ -38,12 +38,12 @@ class DropZoneListener extends ContainerAware
     public function onCreate(CreateResourceEvent $event)
     {
         $request = $this->container->get('request');
-        $form = $this->container->get('form.factory')->create(new DropZoneType(), new DropZone());
+        $form = $this->container->get('form.factory')->create(new DropzoneType(), new Dropzone());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $dropZone = $form->getData();
-            $event->setResources(array($dropZone));
+            $dropzone = $form->getData();
+            $event->setResources(array($dropzone));
         } else {
             $content = $this->container->get('templating')->render(
                 'ClarolineCoreBundle:Resource:createForm.html.twig',

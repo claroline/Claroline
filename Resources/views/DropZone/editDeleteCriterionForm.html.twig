@@ -1,4 +1,4 @@
-<form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_edit_remove_criterion', {'resourceId': dropZone.id, 'page': page, 'criterionId':criterion.id}) }}">
+<form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_edit_remove_criterion', {'resourceId': dropzone.id, 'page': page, 'criterionId':criterion.id}) }}">
     {{ form_errors(form) }}
 
     <div class="container">
@@ -7,7 +7,7 @@
 
     <div class="container form-group form-buttons">
         <div class="btn-group pull-right">
-            <a href="{{ path('icap_dropzone_edit_criteria_paginated', {'resourceId': dropZone.id, 'page': page}) }}" class="btn btn-default">
+            <a href="{{ path('icap_dropzone_edit_criteria_paginated', {'resourceId': dropzone.id, 'page': page}) }}" class="btn btn-default">
                 {{ 'Cancel'|trans }}
             </a>
             <button type="submit" class="btn btn-danger">

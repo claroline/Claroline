@@ -1,12 +1,12 @@
 <?php
 
-namespace Icap\DropZoneBundle\Form;
+namespace Icap\DropzoneBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class DropZoneCommonType extends AbstractType
+class DropzoneCommonType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

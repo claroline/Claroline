@@ -1,6 +1,6 @@
 {% form_theme form 'ClarolineCoreBundle::form_theme_bootstrap3.html.twig' %}
 
-<form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_report_drop', {'resourceId': dropZone.id, 'dropId': drop.id, 'correctionId':correction.id}) }}">
+<form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_report_drop', {'resourceId': dropzone.id, 'dropId': drop.id, 'correctionId':correction.id}) }}">
     {{ form_errors(form) }}
 
     <p>{{ 'You are about to report a copy. This action is not without consequence.'|trans }}</p>
@@ -18,7 +18,7 @@
     <br/>
     <div class="container form-group form-buttons">
         <div class="btn-group pull-right">
-            <a href="{{ path('icap_dropzone_correct', {'resourceId': dropZone.id, 'dropId': drop.id}) }}" class="btn btn-default">
+            <a href="{{ path('icap_dropzone_correct', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" class="btn btn-default">
                 {{ 'Cancel'|trans }}
             </a>
             <button type="submit" class="btn btn-danger">

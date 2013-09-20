@@ -1,10 +1,10 @@
-{% extends "IcapDropZoneBundle::layout.html.twig" %}
+{% extends "IcapDropzoneBundle::layout.html.twig" %}
 
 {% form_theme form 'ClarolineCoreBundle::form_theme_bootstrap3.html.twig' %}
 
 {% block dropzone_breadcrumb %}
     <li>
-        <a href="{{ path('icap_dropzone_open', {'resourceId': dropZone.id}) }}"><span class="glyphicon icon-file"></span> {{ dropZone.resourceNode.name }}</a>
+        <a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-file"></span> {{ dropzone.resourceNode.name }}</a>
     </li>
     <li class="active"> {{ 'Made a copy'|trans }}</li>
 {% endblock %}
@@ -20,13 +20,13 @@
         {% if allowedTypes|length <= 0 %}
             <span class="text-danger">{{ 'No document type allowed'|trans }}</span>
         {% elseif allowedTypes|length == 1 %}
-            <a class="btn btn-primary launch-inline disabled-during-add" href="{{ path('icap_dropzone_document', {'resourceId': dropZone.id, 'documentType': allowedTypes.0, 'dropId': drop.id}) }}">{{ 'Add a %type% document'|trans({'%type%': ((allowedTypes.0)|trans|lower)}) }}</a>
+            <a class="btn btn-primary launch-inline disabled-during-add" href="{{ path('icap_dropzone_document', {'resourceId': dropzone.id, 'documentType': allowedTypes.0, 'dropId': drop.id}) }}">{{ 'Add a %type% document'|trans({'%type%': ((allowedTypes.0)|trans|lower)}) }}</a>
         {% else %}
             <div class="dropdown">
                 <a data-toggle="dropdown" class="btn btn-primary disabled-during-add" href="#">{{ 'Add a document'|trans }}</a>
                 <ul id="menu1" class="dropdown-menu" role="menu" aria-labelledby="drop4">
                     {% for allowedType in allowedTypes %}
-                        <li role="presentation"><a role="menuitem" tabindex="-1" class="launch-inline disabled-during-add" href="{{ path('icap_dropzone_document', {'resourceId': dropZone.id, 'documentType': allowedType, 'dropId': drop.id}) }}">{{ allowedType|trans }}</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" class="launch-inline disabled-during-add" href="{{ path('icap_dropzone_document', {'resourceId': dropzone.id, 'documentType': allowedType, 'dropId': drop.id}) }}">{{ allowedType|trans }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
@@ -37,11 +37,11 @@
             <hr/>
             <div class="row">
                 <div class="col-md-9">
-                    {% include 'IcapDropZoneBundle:DropZone:simpleShowDocument.html.twig' %}
+                    {% include 'IcapDropzoneBundle:Dropzone:simpleShowDocument.html.twig' %}
                 </div>
 
                 <div class="col-md-3">
-                    <a href="{{ path('icap_dropzone_delete_document', {'resourceId': dropZone.id, 'dropId': drop.id, 'documentId': document.id}) }}" class="btn btn-danger btn-sm pull-right launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete'|trans }}</a>
+                    <a href="{{ path('icap_dropzone_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" class="btn btn-danger btn-sm pull-right launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete'|trans }}</a>
                 </div>
             </div>
         {% endfor %}
@@ -53,7 +53,7 @@
 
         <hr/>
 
-        <form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_drop', {'resourceId': dropZone.id}) }}">
+        <form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_drop', {'resourceId': dropzone.id}) }}">
             <div class="{% if form.vars.errors|length > 0 %}has-error{% endif %}">
                 {{ form_errors(form) }}
             </div>
