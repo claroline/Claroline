@@ -1,0 +1,15 @@
+{
+    "name": "icap/lesson-bundle",
+    "type": "claroline-plugin",
+    "require": {
+        "claroline/core-bundle": "~1.0",
+        "claroline/plugin-installer": "~1.0"
+    },
+    "autoload": {
+        "psr-0": { "Icap\\LessonBundle": "" }
+    },
+    "target-dir": "Icap/LessonBundle",
+    "extra": {
+        "dbVersion": "20130619153000"
+    }
+}
