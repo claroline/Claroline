@@ -177,7 +177,10 @@
             </div>
         </div>
         <div class="tab-pane" id="edit">
-            <h3 id='user-list-block' class="sub-section-header">{{ 'edit_badge'|trans({'%badge_name%' : badge.name}) }}</h3>
+            <h3 id='user-list-block' class="sub-section-header">
+                {{ 'edit_badge'|trans({'%badge_name%' : badge.name}) }}
+                <a href="{{ path('claro_admin_badges_delete', {'id': badge.id}) }}" title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-sm btn-danger delete pull-right" data-confirm-title="{{ 'badge_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}) }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger"><span class="icon-trash"></span></a>
+            </h3>
             <form action="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}" method="post" class="form-horizontal" {{ form_enctype(form) }} novalidate>
                 {{ form_errors(form) }}
 
@@ -257,8 +260,7 @@
                 {{ form_rest(form) }}
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
-                    <a href="{{ path('claro_admin_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
-                    <a href="{{ path('claro_admin_badges_delete', {'id': badge.id}) }}" title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-danger delete" data-confirm-title="{{ 'badge_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}) }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">{{ 'delete'|trans({}, 'platform') }}</a>
+                    <a href="{{ path('claro_admin_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger">{{ 'cancel'|trans({}, 'platform') }}</a>
                 </div>
             </form>
         </div>
