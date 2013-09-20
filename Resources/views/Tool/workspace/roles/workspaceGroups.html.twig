@@ -90,7 +90,7 @@
 
         {{ displayControls(workspace.getId()) }}
         <div class="input-append pull-right">
-            <input class="input-medium" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}">
+            <input class="input-medium" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
             <button class="filter btn btn-default" type="button" id="search-button">
                 <i class="icon-search"></i>
             </button>

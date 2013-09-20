@@ -52,6 +52,7 @@ an_error_occured_message: Une erreur s'est produite. Veuillez contacter l'admini
 apply: Appliquer
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espaces d''activités disponibles'
+back: 'Retour'
 badges_management: 'Gestion des badges'
 by: par
 cancel: Annuler
