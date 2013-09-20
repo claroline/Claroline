@@ -1,0 +1,4 @@
+icap_reference:
+    resource: "@ICAPDropZoneBundle/Controller/"
+    type:     annotation
+    prefix:   /

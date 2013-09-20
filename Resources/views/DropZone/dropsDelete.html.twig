@@ -1,0 +1,19 @@
+{% extends "ICAPDropZoneBundle::layout.html.twig" %}
+{% block dropzone_breadcrumb %}
+    <li class="active"><span class="glyphicon icon-file"></span> {{ dropZone.resourceNode.name }}</li>
+    <li class="active">Copies made</li>
+    <li class="active">Invalidate a drop</li>
+{% endblock %}
+
+{% block dropzone_content %}
+    <div class="container container-dropzone">
+        <h3>
+            {{ 'Invalidate a drop'|trans }}
+        </h3>
+        {% include "ICAPDropZoneBundle:DropZone:dropsDeleteForm.html.twig" %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}}
+{% endblock %}

@@ -1,0 +1,8 @@
+{% set date = drop.corrections.0.endDate %}
+{%  for correction in drop.corrections %}
+    {% if date < correction.endDate %}
+        {% set date = correction.endDate %}
+    {% endif %}
+{%  endfor %}
+
+{{ date|date }}

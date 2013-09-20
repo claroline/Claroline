@@ -1,0 +1,38 @@
+{% extends "ICAPDropZoneBundle:DropZone:edit.html.twig" %}
+
+{% block drop_zone_content_edit %}
+    <div class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropZone.id}) }}">
+                        {{ 'Common'|trans }}
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="{{ path('icap_dropzone_edit_criteria', {'resourceId': dropZone.id}) }}">
+                        {{ 'Peer review criteria'|trans }}
+                    </a>
+                </li>
+                <li class="disabled">
+                    <a href="#">
+                        {{ 'Participant'|trans }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <h3>
+        {% if criterion.id == 0 %}
+            {{ 'Add a criterion'|trans }}
+        {% else %}
+            {{ 'Edit a criterion'|trans }}
+        {% endif %}
+    </h3>
+    {% include "ICAPDropZoneBundle:DropZone:editAddCriterionForm.html.twig" %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}}
+    {{ tinymce_init() }}
+{% endblock %}

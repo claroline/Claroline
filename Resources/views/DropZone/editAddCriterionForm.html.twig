@@ -1,0 +1,30 @@
+{% form_theme form 'ClarolineCoreBundle::form_theme_bootstrap3.html.twig' %}
+
+<form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_edit_create_criterion', {'resourceId': dropZone.id, 'page':page, 'criterionId':criterion.id}) }}">
+    {{ form_errors(form) }}
+
+    <div class="form-group">
+        {{ form_row(form.instruction) }}
+    </div>
+
+    <div class="column-input">
+        {{ form_row(form.totalCriteriaColumn) }}
+    </div>
+
+    <div class="comment-input">
+        {{ form_row(form.allowCommentInCorrection) }}
+    </div>
+
+    <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10 btn-group form-buttons">
+            <a href="{{ path('icap_dropzone_edit_criteria_paginated', {'resourceId': dropZone.id, 'page':page}) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
+            <button type="submit" class="btn btn-primary">
+                {% if criterion.id == 0 %}
+                    {{ 'Create'|trans }}
+                {% else %}
+                    {{ 'dropZone_edit'|trans }}
+                {% endif %}
+            </button>
+        </div>
+    </div>
+{{ form_end(form) }}

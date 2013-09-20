@@ -1,0 +1,31 @@
+{% form_theme form 'ClarolineCoreBundle::form_theme_bootstrap3.html.twig' %}
+
+<form class="form-inline" method="POST" action="{{ path('icap_dropzone_document', {'resourceId': dropZone.id, 'documentType': documentType, 'dropId': drop.id}) }}">
+
+    <div class="row">
+        <div class="col-md-12">
+            <h4>{{ documentType|trans }}</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        {{ form_row(form.document, {'label_col_size': ' ', 'input_col_size': 'col-md-12', 'attr': {'placeholder': (documentType~'_placeholder')|trans}, 'label_attr': {'class': 'sr-only'} }) }}
+    </div>
+
+    <br/>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group pull-right">
+                <a href="{{ path('icap_dropzone_drop', {'resourceId': dropZone.id}) }}" class="btn btn-default cancel-inline">{{ 'Cancel'|trans }}</a>
+                <button type="submit" class="btn btn-primary">
+                    {{ 'Add'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{ form_errors(form) }}
+{{ form_end(form) }}
+
+{{ tinymce_init() }}
