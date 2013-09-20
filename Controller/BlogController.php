@@ -142,7 +142,7 @@ class BlogController extends Controller
         } catch (NotValidCurrentPageException $exception) {
             throw new NotFoundHttpException();
         } catch (TooMuchResultException $exception) {
-            $this->get('session')->getFlashBag()->add('alert', $this->get('translator')->trans('icap_blog_post_search_too_much_result', array(), 'icap_blog'));
+            $this->get('session')->getFlashBag()->add('error', $this->get('translator')->trans('icap_blog_post_search_too_much_result', array(), 'icap_blog'));
             $adapter = new ArrayAdapter(array());
             $pager   = new PagerFanta($adapter);
 
