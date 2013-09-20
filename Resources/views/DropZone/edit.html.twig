@@ -1,0 +1,23 @@
+{% extends "ICAPDropZoneBundle::layout.html.twig" %}
+{% block dropzone_breadcrumb %}
+    <li>
+        <a href="{{ path('icap_dropzone_open', {'resourceId': dropZone.id}) }}"><span class="glyphicon icon-file"></span> {{ dropZone.resourceNode.name }}</a>
+    </li>
+    <li class="active"><span class="glyphicon icon-edit"></span> {{ 'dropZone_edit'|trans }}</li>
+{% endblock %}
+
+{% block dropzone_content %}
+    <div class="container container-dropzone">
+        <div class="row">
+            <div class="col-md-6">
+                <h2>{{ 'Edit evaluation'|trans }}</h2>
+            </div>
+            <div class="col-md-6">
+                <a class="pull-right" href="{{ path('icap_dropzone_drops', {'resourceId': dropZone.id}) }}">{{ 'Check the list of copies made'|trans }}</a>
+            </div>
+        </div>
+        {{ macros.flashBox() }}
+        {% block drop_zone_content_edit %}
+        {% endblock %}
+    </div>
+{% endblock %}

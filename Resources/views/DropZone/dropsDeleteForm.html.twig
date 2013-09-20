@@ -1,0 +1,31 @@
+<form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_drops_delete', {'resourceId': dropZone.id, 'dropId':drop.id, 'tab': tab, 'page': page}) }}">
+    {{ form_errors(form) }}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 text-muted">{{ 'Drop by'|trans }}</div>
+            <div class="col-md-9">{{ drop.user.firstName }} {{ drop.user.lastName }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 text-muted">{{ 'Documents'|trans }}</div>
+            <div class="col-md-9">
+                <ul>
+                    {% for document in drop.documents %}
+                        <li>{% include 'ICAPDropZoneBundle:DropZone:simpleShowDocument.html.twig' %}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container form-group form-buttons">
+        <div class="btn-group pull-right">
+            <a href="{{ path(previousPath, {'resourceId': dropZone.id, 'page': page}) }}" class="btn btn-default">
+                {{ 'Cancel'|trans }}
+            </a>
+            <button type="submit" class="btn btn-danger">
+                {{ 'Confirm delete'|trans }}
+            </button>
+        </div>
+    </div>
+{{ form_end(form) }}

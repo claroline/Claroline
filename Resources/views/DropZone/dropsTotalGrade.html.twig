@@ -1,0 +1,17 @@
+{% set grade = 0 %}
+{% set nbFinishedCorrections = 0 %}
+
+{% if drop.corrections|length > 0 %}
+    {%  for correction in drop.corrections %}
+        {% if correction.finished and correction.valid and correction.totalGrade != null %}
+            {% set grade = grade + correction.totalGrade %}
+            {% set nbFinishedCorrections = nbFinishedCorrections + 1 %}
+        {% endif %}
+    {%  endfor %}
+{% endif %}
+
+{% if nbFinishedCorrections > 0 %}
+    {{ (grade/nbFinishedCorrections)|number_format }}/20
+{% else %}
+    --/20
+{% endif %}

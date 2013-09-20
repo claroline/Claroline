@@ -1,0 +1,118 @@
+{% extends "ICAPDropZoneBundle::layout.html.twig" %}
+
+{% form_theme form 'ClarolineCoreBundle::form_theme_bootstrap3.html.twig' %}
+
+{% block dropzone_breadcrumb %}
+    <li>
+        <a href="{{ path('icap_dropzone_open', {'resourceId': dropZone.id}) }}"><span class="glyphicon icon-file"></span> {{ dropZone.resourceNode.name }}</a>
+    </li>
+    <li class="active"> {{ 'Made a copy'|trans }}</li>
+{% endblock %}
+
+{% block dropzone_content %}
+    <div class="container">
+        <h3>
+            {{ 'Made a copy'|trans }}
+        </h3>
+
+        {{ macros.flashBox() }}
+
+        {% if allowedTypes|length <= 0 %}
+            <span class="text-danger">{{ 'No document type allowed'|trans }}</span>
+        {% elseif allowedTypes|length == 1 %}
+            <a class="btn btn-primary launch-inline disabled-during-add" href="{{ path('icap_dropzone_document', {'resourceId': dropZone.id, 'documentType': allowedTypes.0, 'dropId': drop.id}) }}">{{ 'Add a %type% document'|trans({'%type%': ((allowedTypes.0)|trans|lower)}) }}</a>
+        {% else %}
+            <div class="dropdown">
+                <a data-toggle="dropdown" class="btn btn-primary disabled-during-add" href="#">{{ 'Add a document'|trans }}</a>
+                <ul id="menu1" class="dropdown-menu" role="menu" aria-labelledby="drop4">
+                    {% for allowedType in allowedTypes %}
+                        <li role="presentation"><a role="menuitem" tabindex="-1" class="launch-inline disabled-during-add" href="{{ path('icap_dropzone_document', {'resourceId': dropZone.id, 'documentType': allowedType, 'dropId': drop.id}) }}">{{ allowedType|trans }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+
+        {% for document in drop.documents %}
+            <hr/>
+            <div class="row">
+                <div class="col-md-9">
+                    {% include 'ICAPDropZoneBundle:DropZone:simpleShowDocument.html.twig' %}
+                </div>
+
+                <div class="col-md-3">
+                    <a href="{{ path('icap_dropzone_delete_document', {'resourceId': dropZone.id, 'dropId': drop.id, 'documentId': document.id}) }}" class="btn btn-danger btn-sm pull-right launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete'|trans }}</a>
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="show-during-add" style="display: none;">
+            <hr/>
+            <div class="container-inline"></div>
+        </div>
+
+        <hr/>
+
+        <form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_drop', {'resourceId': dropZone.id}) }}">
+            <div class="{% if form.vars.errors|length > 0 %}has-error{% endif %}">
+                {{ form_errors(form) }}
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                    <!-- Button trigger modal -->
+                    <a data-toggle="modal" href="#saveModal" class="btn btn-primary pull-right disabled-during-add">{{ 'Save and finished'|trans }}</a>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="saveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">{{ 'Warning'|trans }}</h4>
+                                </div>
+                                <div class="modal-body">
+                                    {{ 'You are about to make your copy. This action is final. Are you sure you have done'|trans }}
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="#" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans }}</a>
+
+                                    <button type="submit" class="btn btn-primary pull-right">
+                                        {{ 'Confirm and finished'|trans }}
+                                    </button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+
+                </div>
+            </div>
+            {{ form_end(form) }}
+
+        <br/>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}}
+    <script src="{{ asset('bundles/icapdropzone/js/popup.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            'use strict';
+
+            $('a.launch-inline').on('click', function (event) {
+                event.preventDefault();
+                $('.disabled-during-add').attr('disabled', 'disabled');
+
+                $.get($(this).attr('href'))
+                    .always(function () {
+                    })
+                    .done(function (data) {
+                        $('.container-inline').append(data);
+                        $('.show-during-add').show();
+                    })
+                ;
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% form_theme form 'ClarolineCoreBundle::form_theme_bootstrap3.html.twig' %}
+
+<form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_report_drop', {'resourceId': dropZone.id, 'dropId': drop.id, 'correctionId':correction.id}) }}">
+    {{ form_errors(form) }}
+
+    <p>{{ 'You are about to report a copy. This action is not without consequence.'|trans }}</p>
+    <p>{{ 'This ends your correction and assigns zero to the copy. Are you sure you want to do this?'|trans }}</p>
+
+    <div class="row">
+        <strong class="col-md-12">
+            {{ 'Report comment'|trans }}
+        </strong>
+    </div>
+    <div class="row">
+        {{ form_row(form.reportComment, {'label_col_size': ' ', 'input_col_size': 'col-md-12'}) }}
+    </div>
+
+    <br/>
+    <div class="container form-group form-buttons">
+        <div class="btn-group pull-right">
+            <a href="{{ path('icap_dropzone_correct', {'resourceId': dropZone.id, 'dropId': drop.id}) }}" class="btn btn-default">
+                {{ 'Cancel'|trans }}
+            </a>
+            <button type="submit" class="btn btn-danger">
+                {{ 'Report copy and close correction'|trans }}
+            </button>
+        </div>
+    </div>
+{{ form_end(form) }}
+
+{{ tinymce_init() }}

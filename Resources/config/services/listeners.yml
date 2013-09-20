@@ -1,0 +1,18 @@
+services:
+    icap.listener.dropzone_listener:
+        class: ICAP\DropZoneBundle\Listener\DropZoneListener
+        calls:
+          - [setContainer, ["@service_container"]]
+        tags: 
+          - { name: kernel.event_listener, event: create_form_icap_dropzone, method: onCreateForm }
+          - { name: kernel.event_listener, event: create_icap_dropzone, method: onCreate }
+          - { name: kernel.event_listener, event: delete_icap_dropzone, method: onDelete }
+          #- { name: kernel.event_listener, event: export_icap_dropzone, method: onExport }
+          - { name: kernel.event_listener, event: copy_icap_dropzone, method: onCopy }
+          - { name: kernel.event_listener, event: open_icap_dropzone, method: onOpen }
+          - { name: kernel.event_listener, event: create_log_list_item_icap_dropzone, method: onCreateLogListItem }
+          - { name: kernel.event_listener, event: create_log_details_icap_dropzone, method: onCreateLogDetails }
+          - { name: kernel.event_listener, event: plugin_options_icapdropzone, method: onAdministrate }
+          - { name: kernel.event_listener, event: edit_icap_dropzone, method: onEdit }
+          - { name: kernel.event_listener, event: edit_icap_dropzone, method: onEdit }
+          - { name: kernel.event_listener, event: drops_icap_dropzone, method: onDrops }
