@@ -18,6 +18,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 use Innova\PathBundle\Entity\Path;
 use Innova\PathBundle\Entity\Step;
+use Innova\PathBundle\Entity\StepType;
+use Innova\PathBundle\Entity\StepWho;
+use Innova\PathBundle\Entity\StepWhere;
+
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
@@ -83,7 +87,6 @@ class PathController extends Controller
             $manager->persist($pathsDirectory);
             $manager->flush();
         }
-       
 
         //lancement récursion 
         $this->JSONParser($json_root_steps, $user, $workspace, $pathsDirectory, null, 0);
@@ -118,10 +121,22 @@ class PathController extends Controller
             // Création Step
             $step1 = new Step();
             $step1->setResourceNode($resourceNode);
-            $step1->setUuid($step->id);
             $step1->setParent($parent);
-            $step1->setOrder($order);
+            $step1->setStepOrder($order);
+            $stepType = $manager->getRepository('InnovaPathBundle:StepType')->findOneById($step->type);
+            $step1->setStepType($stepType);
+            $stepWho = $manager->getRepository('InnovaPathBundle:StepWho')->findOneById($step->who);
+            $step1->setStepWho($stepWho);
+            $stepWhere = $manager->getRepository('InnovaPathBundle:StepWhere')->findOneById($step->where);
+            $step1->setStepWhere($stepWhere); 
+            $step1->setDuration(new \DateTime());
+            $step1->setExpanded($step->expanded);
+            $step1->setWithTutor($step->withTutor);
+            $step1->setWithComputer($step->withComputer);
+            $step1->setInstructions($step->instructions);
 
+            $step1->setUuid('AAAAAAA'); //$step1->setUuid($step->uuid);
+            
             $manager->persist($step1);
             $manager->flush();
 
@@ -143,8 +158,8 @@ class PathController extends Controller
             $right1 = new ResourceRights();
             $right1->setRole($manager->getRepository('ClarolineCoreBundle:Role')->findOneById(3));
             $right1->setResourceNode($resourceNode);
-            $manager->persist($right1);
 
+            $manager->persist($right1);
             $manager->flush(); 
 
             // récursivité sur les enfants possibles.
@@ -166,24 +181,22 @@ class PathController extends Controller
      */
     public function fromWorkspaceAction()
     {
+        // Manager Calling
+        $manager = $this->container->get('doctrine.orm.entity_manager');
+       
+        // Id get
         $id = $this->get('request')->query->get('id');
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($id);    
 
-        $paths = array();
-        $manager= $this->entityManager();
+        // I need to have the workspace for this ID.
+        $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($id);
+        
+        // I need to have the resourceType for the type "path".
+        $resourceType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('path');
 
-        $resourceNode = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneByWorkspace($id);
+        // I need to have to know all the paths for workspace/resourceType.
+        $paths = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findByWorkspaceAndResourceType($workspace, $resourceType);
 
-        $results = $manager->getRepository('InnovaPathBundle:Path')->findByResourceNode($resourceNode);
-
-        foreach ($results as $result) {
-            $path = new \stdClass();
-            $path->id = $result->getId();
-            $path->path = $result->getPath();
-            $paths[] = $path;
-        }
-
+        // Call view path_workspace.html.twig
         return array('workspace' => $workspace, 'paths' => $paths);
     }
 
