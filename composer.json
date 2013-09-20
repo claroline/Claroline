@@ -58,6 +58,6 @@
     },
     "target-dir": "Claroline/CoreBundle",
     "extra": {
-        "dbVersion": "20130915203447"
+        "dbVersion": "20130919105916"
     }
 }
