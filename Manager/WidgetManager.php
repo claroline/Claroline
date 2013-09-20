@@ -1,15 +1,15 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\Widget;
+namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("claroline.widget.manager")
+ * @DI\Service("claroline.manager.widget_manager")
  */
-class Manager
+class WidgetManager
 {
     private $em;
 

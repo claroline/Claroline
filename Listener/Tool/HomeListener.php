@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Event\ConfigureWorkspaceToolEvent;
 use Claroline\CoreBundle\Event\ConfigureDesktopToolEvent;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Claroline\CoreBundle\Manager\HomeTabManager;
+use Claroline\CoreBundle\Manager\WidgetManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -28,7 +29,7 @@ class HomeListener
      *     "em"                 = @DI\Inject("doctrine.orm.entity_manager"),
      *     "ed"                 = @DI\Inject("claroline.event.event_dispatcher"),
      *     "templating"         = @DI\Inject("templating"),
-     *     "wm"                 = @DI\Inject("claroline.widget.manager"),
+     *     "wm"                 = @DI\Inject("claroline.manager.widget_manager"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "securityContext"    = @DI\Inject("security.context")
@@ -38,7 +39,7 @@ class HomeListener
         $em,
         $ed,
         $templating,
-        $wm,
+        WidgetManager $wm,
         WorkspaceManager $workspaceManager,
         HomeTabManager $homeTabManager,
         SecurityContextInterface $securityContext

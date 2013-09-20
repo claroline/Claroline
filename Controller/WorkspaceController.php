@@ -26,6 +26,7 @@ use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
+use Claroline\CoreBundle\Manager\WidgetManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -67,7 +68,7 @@ class WorkspaceController extends Controller
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "tokenUpdater"       = @DI\Inject("claroline.security.token_updater"),
-     *     "widgetManager"      = @DI\Inject("claroline.widget.manager")
+     *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
      * })
      */
     public function __construct(
@@ -84,7 +85,7 @@ class WorkspaceController extends Controller
         Utilities $utils,
         FormFactory $formFactory,
         TokenUpdater $tokenUpdater,
-        $widgetManager
+        WidgetManager $widgetManager
     )
     {
         $this->homeTabManager = $homeTabManager;
@@ -429,7 +430,7 @@ class WorkspaceController extends Controller
     {
         // No right checking is done : security is delegated to each widget renderer.
         // The routing is now removed. Checking doesn't need to be done.
-        $configs = $this->get('claroline.widget.manager')
+        $configs = $this->get('claroline.manager.widget_manager')
             ->generateWorkspaceDisplayConfig($workspace->getId());
 
         if ($this->security->getToken()->getUser() !== 'anon.') {

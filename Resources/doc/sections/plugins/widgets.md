@@ -198,8 +198,8 @@ Simply set a string in the $event->setContent() method.
 If your widget is configurable, you can find the context using $event->getWorkspace()->getId()
 Then you must know if the admin wants the default config to be used. You can know it using
 
-    $boolean = $this->container->get('claroline.widget.manager')->isWorkspaceDefaultConfig($widget->getId(), $event->getWorkspace()->getId());
-    $boolean = $this->container->get('claroline.widget.manager')->isDesktopDefaultConfig($widget->getId(), $user->getId());
+    $boolean = $this->container->get('claroline.manager.widget_manager')->isWorkspaceDefaultConfig($widget->getId(), $event->getWorkspace()->getId());
+    $boolean = $this->container->get('claroline.manager.widget_manager')->isDesktopDefaultConfig($widget->getId(), $user->getId());
 
 ###### Keeping the context
 

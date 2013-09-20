@@ -5,8 +5,8 @@ namespace Claroline\CoreBundle\Manager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Library\Widget\Manager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Manager\WidgetManager;
 
 /**
  * @DI\Service("claroline.manager.simple_text_manager")
@@ -19,10 +19,10 @@ class SimpleTextManager
    /**
     * @DI\InjectParams({
     *       "om"            = @DI\Inject("claroline.persistence.object_manager"),
-    *       "widgetManager" = @DI\Inject("claroline.widget.manager")
+    *       "widgetManager" = @DI\Inject("claroline.manager.widget_manager")
     * })
     */
-    public function __construct(ObjectManager $om, Manager $widgetManager)
+    public function __construct(ObjectManager $om, WidgetManager $widgetManager)
     {
         $this->om = $om;
         $this->widgetManager = $widgetManager;

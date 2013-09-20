@@ -11,7 +11,7 @@ use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
-use Claroline\CoreBundle\Library\Widget\Manager;
+use Claroline\CoreBundle\Manager\WidgetManager;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
@@ -49,7 +49,7 @@ class HomeController extends Controller
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "securityContext"    = @DI\Inject("security.context"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
-     *     "widgetManager"      = @DI\Inject("claroline.widget.manager")
+     *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
      * })
      */
     public function __construct(
@@ -61,7 +61,7 @@ class HomeController extends Controller
         RoleManager $roleManager,
         SecurityContextInterface $securityContext,
         ToolManager $toolManager,
-        Manager $widgetManager
+        WidgetManager $widgetManager
     )
     {
         $this->em = $em;
