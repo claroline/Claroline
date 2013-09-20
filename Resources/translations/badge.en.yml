@@ -36,9 +36,8 @@ badge_form_version: 'Version'
 badge_form_image: 'Image'
 badge_form_automatic_award: 'Automatic awarding'
 badge_form_expired_at: 'Expiration date'
-badge_form_choose_image: "Click to choose the image"
-badge_form_delete_image: "Click to delete the image"
-badge_form_change_image: "Click to change the image"
+badge_form_choose_image: "Choose badge image"
+badge_form_change_image: "Change badge image"
 badge_form_badgeRules: "Awarding rules"
 badge_form_action: 'Associated action :'
 badge_form_occurrence: "Occurrence number :"

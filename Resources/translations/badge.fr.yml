@@ -36,9 +36,8 @@ badge_form_version: 'Version'
 badge_form_image: 'Image'
 badge_form_automatic_award: 'Attribution automatique'
 badge_form_expired_at: "Date d'expiration"
-badge_form_choose_image: "Cliquer pour choisir l'image"
-badge_form_delete_image: "Cliquer pour supprimer l'image"
-badge_form_change_image: "Cliquer pour changer l'image"
+badge_form_choose_image: "Choisir l'image du badge"
+badge_form_change_image: "Changer l'image du badge"
 badge_form_badgeRules: "Règles d'attribution"
 badge_form_action: 'Action associée :'
 badge_form_occurrence: "Nombre d'occurence :"

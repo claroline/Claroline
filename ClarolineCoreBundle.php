@@ -53,7 +53,8 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             'Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle' => 'stof_doctrine_extensions',
             'BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle' => 'sso',
             'Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle' => 'stfalcon_tinymce',
-            'IDCI\Bundle\ExporterBundle\IDCIExporterBundle' => 'idci_exporter'
+            'IDCI\Bundle\ExporterBundle\IDCIExporterBundle' => 'idci_exporter',
+            'Zenstruck\Bundle\FormBundle\ZenstruckFormBundle' => 'zenstruckform'
         );
         // one configuration file for every standard environment (prod, dev, test)
         $envConfigs = array(
