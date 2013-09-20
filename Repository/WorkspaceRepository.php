@@ -202,7 +202,7 @@ class WorkspaceRepository extends EntityRepository
             INNER JOIN Claroline\CoreBundle\Entity\Log\Log l WITH l.workspace = w
             JOIN l.doer u
             JOIN w.roles r
-            WHERE l.action = 'ws_tool_read'
+            WHERE l.action = 'workspace-tool-read'
             AND u.id = :userId
             AND (
         ";
