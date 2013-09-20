@@ -33,7 +33,7 @@ class LogPostReadEvent extends AbstractLogResourceEvent implements LogNotRepeata
     /**
      * @return array
      */
-    public function getRestriction()
+    public static function getRestriction()
     {
         return array(self::DISPLAYED_WORKSPACE);
     }
