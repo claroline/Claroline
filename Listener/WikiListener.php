@@ -2,12 +2,12 @@
 
 namespace Icap\WikiBundle\Listener;
 
-use Claroline\CoreBundle\Event\Event\PluginOptionsEvent;
-use Claroline\CoreBundle\Event\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\Event\OpenResourceEvent;
-use Claroline\CoreBundle\Event\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Event\PluginOptionsEvent;
+use Claroline\CoreBundle\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\CopyResourceEvent;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;

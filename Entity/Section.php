@@ -26,7 +26,7 @@ class Section
      *      targetEntity="Icap\WikiBundle\Entity\Wiki",
      *      inversedBy="sections"
      * )
-     * @ORM\JoinColumn(name="wiki_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="wiki_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     protected $wiki;
 
@@ -43,6 +43,11 @@ class Section
      * @ORM\Column(type="string", length=255)
      */
     protected $name;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=false, options={"default"=false})
+     */
+    protected $visible;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -129,6 +134,16 @@ class Section
     public function setName($name)
     {
         return $this->name = $name;
+    }
+
+    public function getVisible()
+    {
+        return $this->visible;
+    }
+
+    public function setVisible($visible)
+    {
+        return $this->visible = $visible;
     }
 
     public function getText()

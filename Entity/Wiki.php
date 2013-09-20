@@ -19,6 +19,11 @@ class Wiki extends AbstractResource
     protected $id;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $text;
+
+    /**
      * @ORM\OneToMany(
      *      targetEntity="Icap\WikiBundle\Entity\Section",
      *      mappedBy="wiki",
@@ -58,6 +63,25 @@ class Wiki extends AbstractResource
     public function getSections()
     {
         return $this->sections;
+    }
+
+    /**
+     *  Get text (wiki's description)
+     *  @return wiki's text
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
+     *  Set text
+     *
+     *  @param string $text
+     */
+    public function setText($text)
+    {
+        return $this->text = $text;
     }
 
     public function getPathArray()

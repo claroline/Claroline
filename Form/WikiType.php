@@ -4,6 +4,7 @@ namespace Icap\WikiBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class WikiType extends AbstractType
 {
@@ -17,10 +18,13 @@ class WikiType extends AbstractType
         return 'icap_wiki_form';
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
-            'translation_domain' => 'icap_wiki'
-        );
+        $resolver->setDefaults(array(
+           'translation_domain' => 'icap_wiki',
+            'data_class' => 'Icap\WikiBundle\Entity\Wiki',
+            'csrf_protection' => true,
+            'intention' => 'create_wiki'
+        ));
     }
 }
