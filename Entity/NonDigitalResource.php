@@ -2,33 +2,19 @@
 
 namespace Innova\PathBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Mapping as ORM;
 
 
 /**
- * Resource
+ * NonDigitalResource
  *
- * @ORM\Table("innova_resource")
+ * @ORM\Table("innova_nonDigitalResource")
  * @ORM\Entity
  */
-class Resource
+class NonDigitalResource extends AbstractResource
 {
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-    
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255)
-     */
-    private $name;
-
+  
     /**
      * @var string
      *
@@ -50,7 +36,7 @@ class Resource
      * Set name
      *
      * @param string $name
-     * @return Resource
+     * @return NonDigitalResource
      */
     public function setName($name)
     {
@@ -73,7 +59,7 @@ class Resource
      * Set description
      *
      * @param string $description
-     * @return Resource
+     * @return NonDigitalResource
      */
     public function setDescription($description)
     {
@@ -96,7 +82,7 @@ class Resource
      * Set type
      *
      * @param string $type
-     * @return Resource
+     * @return NonDigitalResource
      */
     public function setType($type)
     {
@@ -116,13 +102,27 @@ class Resource
     }
 
 
+
     /**
-     * Get id
+     * Set resourceNode
      *
-     * @return integer 
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
+     * @return NonDigitalResource
      */
-    public function getId()
+    public function setResourceNode(\Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode = null)
     {
-        return $this->id;
+        $this->resourceNode = $resourceNode;
+
+        return $this;
+    }
+
+    /**
+     * Get resourceNode
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode 
+     */
+    public function getResourceNode()
+    {
+        return $this->resourceNode;
     }
 }

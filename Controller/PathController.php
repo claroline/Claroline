@@ -141,26 +141,16 @@ class PathController extends Controller
             // RESOURCES MANAGEMENT
             $resourceOrder = 0;
             foreach ($resources as $resource) {
-                 $resourceOrder++;
-                if ($resource->isDigital == true){
-                    $resourceNodeId = $resource->resourceId;
-                    $step2ressourceNode = new Step2ResourceNode();
-                    $resourceNode = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resourceNodeId);
-                    $step2ressourceNode->setResourceNode($resourceNode);
-                    $step2ressourceNode->setStep($step1);
-                    $step2ressourceNode->setResourceOrder($resourceOrder);
+                $resourceOrder++;
 
-                    $manager->persist($step2ressourceNode);
-                   
-                }
-                elseif($resource->isDigital == false){
-                    $resourceId = $resource->resourceId;
-                    $step2ressource = new Step2Resource();
-                    $resource = $manager->getRepository('InnovaPathBundle:Resource')->findOneById($resourceId);
-                    $step2ressource->setResource($resource);
-                    $step2ressource->setStep($step1);
-                    $step2ressource->setResourceOrder($resourceOrder);
-                }
+                $resourceNodeId = $resource->resourceId;
+                $step2ressourceNode = new Step2ResourceNode();
+                $resourceNode = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resourceNodeId);
+                $step2ressourceNode->setResourceNode($resourceNode);
+                $step2ressourceNode->setStep($step1);
+                $step2ressourceNode->setResourceOrder($resourceOrder);
+
+                $manager->persist($step2ressourceNode);
             }
             $manager->flush();
 
