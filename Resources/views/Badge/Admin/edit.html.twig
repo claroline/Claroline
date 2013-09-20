@@ -1,6 +1,105 @@
 {% extends "ClarolineCoreBundle:Badge/Admin:layout.html.twig" %}
 
+{% form_theme form _self %}
+
 {% trans_default_domain "badge" %}
+
+{% block collection_widget %}
+    {% spaceless %}
+        {% if prototype is defined %}
+            {% set attr = attr|merge({'data-prototype': block('collection_prototype') }) %}
+        {% endif %}
+        <div class="row badges_rules" {{ block('widget_container_attributes') }}>
+            <p class="row">{{ form_label(form) }}</p>
+            {{ form_errors(form) }}
+            {% set tabPrototype = '<li id="tabrule__name__"><a href="#rule__name__" data-toggle="tab">' ~ "rule"|trans ~ ' __name__ <span class="btn btn-sm btn-danger icon-trash delete pull-right" data-id-tab="rule__name__" style="display: none;"></span></a></li>' %}
+            <ul class="nav nav-tabs nav-stacked col-md-3" id="ruleTabs" data-tab-prototype="{{ tabPrototype|e }}">
+                {% for rows in form %}
+                    <li id="tabrule{{ loop.index }}">
+                        <a href="#rule{{ loop.index }}" data-toggle="tab">{{ 'rule'|trans }} {{ loop.index }}
+                            {% if allow_delete %}
+                            <span class="btn btn-sm btn-danger icon-trash delete pull-right" data-id-tab="rule__name__" data-confirm-title="{{ 'badge_rule_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_rule_delete_confirm_message'|trans }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger"></span>
+                            {% endif %}
+                        </a>
+                    </li>
+                {% endfor %}
+                {% if allow_add %}
+                <li id="add_rule"><a href="#"><span class="icon-plus"></span>{{ 'add_rule'|trans }}</a></li>
+                {% endif %}
+            </ul>
+            <div class="tab-content rules col-md-9">
+                {% for rows in form %}
+                    <div class="tab-pane" id="rule{{ loop.index }}">
+                        <h4>{{ 'rule'|trans }} {{ loop.index }}</h4>
+
+                        <div class="form-group">
+                            {{ form_label(rows.children.occurrence) }}
+                            <div class="col-md-2">
+                                {{ form_widget(rows.children.occurrence) }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(rows.children.action) }}
+                            <div class="col-md-8">
+                                {{ form_widget(rows.children.action) }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(rows.children.period) }}
+                            <div class="col-md-2">
+                                {{ form_widget(rows.children.period_duration) }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ form_widget(rows.children.period) }}
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p id="no_rule">{{ 'no_rule'|trans }}</p>
+                {% endfor %}
+            </div>
+            {{ form_rest(form) }}
+        </div>
+    {% endspaceless %}
+{% endblock collection_widget %}
+
+{% block collection_prototype %}
+    {{ _self.collection_prototype_row(prototype) }}
+{% endblock collection_prototype %}
+
+{% macro collection_prototype_row(rows) %}
+    {% spaceless %}
+        <div class="tab-pane" id="rule__name__">
+            <h4>{{ 'rule'|trans }} __name__</h4>
+
+            <div class="form-group">
+                {{ form_label(rows.children.occurrence) }}
+                <div class="col-md-2">
+                    {{ form_widget(rows.children.occurrence) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(rows.children.action) }}
+                <div class="col-md-8">
+                    {{ form_widget(rows.children.action) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(rows.children.period) }}
+                <div class="col-md-2">
+                    {{ form_widget(rows.children.period_duration) }}
+                </div>
+                <div class="col-md-3">
+                    {{ form_widget(rows.children.period) }}
+                </div>
+            </div>
+        </div>
+    {% endspaceless %}
+{% endmacro %}
 
 {% block section_title %}<li class="active">{{ badge.name }}</li>{% endblock %}
 
@@ -153,11 +252,13 @@
                     </div>
                 </div>
 
+                {{ form_widget(form.badgeRules) }}
+
                 {{ form_rest(form) }}
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
                     <a href="{{ path('claro_admin_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
-                    <a href="{{ path('claro_admin_badges_delete', {'id': badge.id}) }}" title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-danger delete" data-confirm-title="{{ 'badge_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}) }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}">{{ 'delete'|trans({}, 'platform') }}</a>
+                    <a href="{{ path('claro_admin_badges_delete', {'id': badge.id}) }}" title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-danger delete" data-confirm-title="{{ 'badge_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}) }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">{{ 'delete'|trans({}, 'platform') }}</a>
                 </div>
             </form>
         </div>
@@ -169,4 +270,5 @@
 {{ tinymce_init() }}
 <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
 <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/administration/badge/edit.js') }}'></script>
+<script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/administration/badge/rules.js') }}'></script>
 {% endblock %}

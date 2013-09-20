@@ -8,6 +8,20 @@ $(function(){
 
     $('.delete').confirmModal();
 
+    var awardFormContainer  = $("#award_form_container");
+    var awardUsersContainer = $("#award_users_container");
+
+    $('#awardUser').click(function(event) {
+        event.preventDefault();
+        awardUsersContainer.hide('fast');
+        awardFormContainer.show('fast');
+    });
+    $('#viewAwardedUser').click(function(event) {
+        event.preventDefault();
+        awardFormContainer.hide('fast');
+        awardUsersContainer.show('fast');
+    });
+
     var badgeFormFile = $("#badge_form_file");
     badgeFormFile.hide();
 
@@ -46,19 +60,5 @@ $(function(){
 
             reader.readAsDataURL(input.files[0]);
         }
-    });
-
-    var awardFormContainer  = $("#award_form_container");
-    var awardUsersContainer = $("#award_users_container");
-
-    $('#awardUser').click(function(event) {
-        event.preventDefault();
-        awardUsersContainer.hide('fast');
-        awardFormContainer.show('fast');
-    });
-    $('#viewAwardedUser').click(function(event) {
-        event.preventDefault();
-        awardFormContainer.hide('fast');
-        awardUsersContainer.show('fast');
     });
 });
