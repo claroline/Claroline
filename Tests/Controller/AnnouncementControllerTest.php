@@ -119,6 +119,7 @@ class AnnouncementControllerTest extends MockeryTestCase
     {
         $controller = $this->getController(array('checkAccess'));
         $aggregate = new AnnouncementAggregate();
+        $announcement = new Announcement();
         $form = $this->mock('Symfony\Component\Form\Form');
 
         $this->securityContext
@@ -128,7 +129,10 @@ class AnnouncementControllerTest extends MockeryTestCase
             ->andReturn(true);
         $this->formFactory
             ->shouldReceive('create')
-            ->with(anInstanceOf('Claroline\AnnouncementBundle\Form\AnnouncementType'))
+            ->with(
+                anInstanceOf('Claroline\AnnouncementBundle\Form\AnnouncementType'),
+                anInstanceOf('Claroline\AnnouncementBundle\Entity\Announcement')
+            )
             ->once()
             ->andReturn($form);
         $form->shouldReceive('createView')
