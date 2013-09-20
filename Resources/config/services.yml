@@ -1,5 +1,5 @@
 parameters:
-#    lesson.example.class: ICAP\LessonBundle\Example
+#    lesson.example.class: Icap\LessonBundle\Example
 
 services:
 #    lesson.example:

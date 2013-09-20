@@ -1,7 +1,7 @@
 services:
     icap.listener.lesson_listener:
         # Class that implements the listener
-        class: ICAP\LessonBundle\Listener\LessonListener
+        class: Icap\LessonBundle\Listener\LessonListener
         # The Symfony Container will be given to the class
         calls:
             - [setContainer, ["@service_container"]]

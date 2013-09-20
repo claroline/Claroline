@@ -6,7 +6,7 @@
  * Time: 15:31
  * To change this template use File | Settings | File Templates.
  */
-namespace ICAP\LessonBundle\Form;
+namespace Icap\LessonBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace ICAP\LessonBundle\Tests\Controller;
+namespace Icap\LessonBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

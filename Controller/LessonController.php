@@ -1,6 +1,6 @@
 <?php
 
-namespace ICAP\LessonBundle\Controller;
+namespace Icap\LessonBundle\Controller;
 
 use ICAP\LessonBundle\Form\ChapterType;
 use ICAP\LessonBundle\Form\MoveChapterType;

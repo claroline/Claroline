@@ -6,7 +6,7 @@
  * Time: 15:52
  * To change this template use File | Settings | File Templates.
  */
-namespace ICAP\LessonBundle\Entity;
+namespace Icap\LessonBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Gedmo\Mapping\Annotation as Gedmo;

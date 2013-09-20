@@ -1,10 +1,10 @@
 <?php
 
-namespace ICAP\LessonBundle;
+namespace Icap\LessonBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
 
-class ICAPLessonBundle extends PluginBundle
+class IcapLessonBundle extends PluginBundle
 {
     public function getRoutingPrefix()
     {

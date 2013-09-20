@@ -2,7 +2,7 @@ plugin:
     has_options: false
 
     resources:
-      - class: ICAP\LessonBundle\Entity\Lesson
+      - class: Icap\LessonBundle\Entity\Lesson
         name: icap_lesson
         is_browsable: true
         is_exportable: false

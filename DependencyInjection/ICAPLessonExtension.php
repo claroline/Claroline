@@ -1,6 +1,6 @@
 <?php
 
-namespace ICAP\LessonBundle\DependencyInjection;
+namespace Icap\LessonBundle\DependencyInjection;
 
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
