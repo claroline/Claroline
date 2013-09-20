@@ -37,7 +37,7 @@ class Chapter
     private $text;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ICAP\LessonBundle\Entity\Lesson")
+     * @ORM\ManyToOne(targetEntity="Icap\LessonBundle\Entity\Lesson")
      * @ORM\JoinColumn(name="lesson_id", referencedColumnName="id")
      */
     private $lesson;
@@ -68,7 +68,7 @@ class Chapter
 
     /**
      * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="ICAP\LessonBundle\Entity\Chapter")
+     * @ORM\ManyToOne(targetEntity="Icap\LessonBundle\Entity\Chapter")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $parent;

@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Lesson extends AbstractResource
 {
     /**
-     * @ORM\OneToOne(targetEntity="ICAP\LessonBundle\Entity\Chapter", cascade={"all"})
+     * @ORM\OneToOne(targetEntity="Icap\LessonBundle\Entity\Chapter", cascade={"all"})
      * @ORM\JoinColumn(name="root_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $root;
@@ -75,7 +75,7 @@ class Lesson extends AbstractResource
                 $rootLesson->setLesson($this);
                 $this->setRoot($rootLesson);
 
-                $em->getRepository('ICAPLessonBundle:Chapter')->persistAsFirstChild($rootLesson);
+                $em->getRepository('IcapLessonBundle:Chapter')->persistAsFirstChild($rootLesson);
                 $em->flush();
             }
         }

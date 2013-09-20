@@ -24,7 +24,7 @@ class ChapterType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'ICAP\LessonBundle\Entity\Chapter'
+            'data_class' => 'Icap\LessonBundle\Entity\Chapter'
         ));
     }
 

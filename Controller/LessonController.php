@@ -2,8 +2,8 @@
 
 namespace Icap\LessonBundle\Controller;
 
-use ICAP\LessonBundle\Form\ChapterType;
-use ICAP\LessonBundle\Form\MoveChapterType;
+use Icap\LessonBundle\Form\ChapterType;
+use Icap\LessonBundle\Form\MoveChapterType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,9 +14,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use ICAP\LessonBundle\Entity\Lesson;
-use ICAP\LessonBundle\Entity\Chapter;
-use ICAP\LessonBundle\Form\DeleteChapterType;
+use Icap\LessonBundle\Entity\Lesson;
+use Icap\LessonBundle\Entity\Chapter;
+use Icap\LessonBundle\Form\DeleteChapterType;
 
 class LessonController extends Controller
 {
@@ -41,7 +41,7 @@ class LessonController extends Controller
     {
         $lesson = $this->findLesson($resourceId);
         $em = $this->getDoctrine()->getManager();
-        $chapterRepository = $em->getRepository('ICAPLessonBundle:Chapter');
+        $chapterRepository = $em->getRepository('IcapLessonBundle:Chapter');
 
         $chapter = null;
 
@@ -54,7 +54,7 @@ class LessonController extends Controller
         $query = $this->getDoctrine()->getManager()
             ->createQueryBuilder()
             ->select('node')
-            ->from('ICAP\\LessonBundle\\Entity\\Chapter', 'node')
+            ->from('Icap\\LessonBundle\\Entity\\Chapter', 'node')
             ->orderBy('node.root, node.left', 'ASC')
             ->where('node.root = :rootId')
             ->setParameter('rootId', $lesson->getRoot()->getId())
@@ -111,7 +111,7 @@ class LessonController extends Controller
      *      name="icap_lesson_update_chapter",
      *      requirements={"resourceId" = "\d+", "chapterId" = "\d+"}
      * )
-     * @Template("ICAPLessonBundle:Lesson:editChapter.html.twig")
+     * @Template("IcapLessonBundle:Lesson:editChapter.html.twig")
      */
     public function updateChapterAction($resourceId, $chapterId)
     {
@@ -159,7 +159,7 @@ class LessonController extends Controller
         $lesson = $this->findLesson($resourceId);
         $chapter = $this->findChapter($lesson, $chapterId);
 
-        $chapterRepository = $this->getDoctrine()->getManager()->getRepository('ICAPLessonBundle:Chapter');
+        $chapterRepository = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter');
         $childrenChapter = $chapterRepository->childCount($chapter);
 
         $form = $this->createForm(new DeleteChapterType(), $chapter, array('hasChildren' => $childrenChapter > 0));
@@ -184,7 +184,7 @@ class LessonController extends Controller
      *      name="icap_lesson_delete_chapter",
      *      requirements={"resourceId" = "\d+", "chapterId" = "\d+"}
      * )
-     * @Template("ICAPLessonBundle:Lesson:confirmDeleteChapter.html.twig")
+     * @Template("IcapLessonBundle:Lesson:confirmDeleteChapter.html.twig")
      */
     public function deleteChapterAction($resourceId, $chapterId)
     {
@@ -199,7 +199,7 @@ class LessonController extends Controller
         if($form->isValid()){
             if ($form->get('children')->getData() == false) {
                 $em = $this->getDoctrine()->getManager();
-                $repo = $em->getRepository('ICAPLessonBundle:Chapter');
+                $repo = $em->getRepository('IcapLessonBundle:Chapter');
                 $repo->removeFromTree($chapter);
                 $em->clear();
                 $em->flush();
@@ -282,7 +282,7 @@ class LessonController extends Controller
      *      name="icap_lesson_add_chapter",
      *      requirements={"resourceId" = "\d+", "parentChapterId" = "\d+"}
      * )
-     * @Template("ICAPLessonBundle:Lesson:newChapter.html.twig")
+     * @Template("IcapLessonBundle:Lesson:newChapter.html.twig")
      */
     public function addChapterAction($resourceId, $parentChapterId)
     {
@@ -299,7 +299,7 @@ class LessonController extends Controller
             $chapter->setLesson($lesson);
 
             $em = $this->getDoctrine()->getManager();
-            $chapterRepository = $this->getDoctrine()->getManager()->getRepository('ICAPLessonBundle:Chapter');
+            $chapterRepository = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter');
             $chapterRepository->persistAsLastChildOf($chapter, $chapterParent);
             $em->flush();
 
@@ -334,7 +334,7 @@ class LessonController extends Controller
         $chapter = $this->findChapter($lesson, $chapterId);
 
         $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository('ICAPLessonBundle:Chapter');
+        $repo = $em->getRepository('IcapLessonBundle:Chapter');
         $chapters = $repo->children($lesson->getRoot());
 
         $form = $this->createForm(new MoveChapterType(), $chapter,  array('chapters' => $chapters));
@@ -357,7 +357,7 @@ class LessonController extends Controller
      *      requirements={"resourceId" = "\d+", "chapterId" = "\d+"}
      * )
      * @Method("POST")
-     * @Template("ICAPLessonBundle:Lesson:choiceMoveChapter.html.twig")
+     * @Template("IcapLessonBundle:Lesson:choiceMoveChapter.html.twig")
      */
     public function moveChapterAction($resourceId, $chapterId)
     {
@@ -366,7 +366,7 @@ class LessonController extends Controller
         $lesson = $this->findLesson($resourceId);
         $chapter = $this->findChapter($lesson, $chapterId);
         $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository('ICAPLessonBundle:Chapter');
+        $repo = $em->getRepository('IcapLessonBundle:Chapter');
         $chapters = $repo->children($lesson->getRoot());
 
         $form = $this->createForm(new MoveChapterType(), $chapter,  array('chapters' => $chapters));
@@ -406,7 +406,7 @@ class LessonController extends Controller
      */
     private function findLesson($resourceId)
     {
-        $lessonRepository = $this->getDoctrine()->getManager()->getRepository('ICAPLessonBundle:Lesson');
+        $lessonRepository = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Lesson');
         $lesson = $lessonRepository->findOneBy(array('id' => $resourceId));
         if ($lesson === null) {
             throw new NotFoundHttpException();
@@ -420,7 +420,7 @@ class LessonController extends Controller
      */
     private function findChapter($lesson, $chapterId)
     {
-        $chapterRepository = $this->getDoctrine()->getManager()->getRepository('ICAPLessonBundle:Chapter');
+        $chapterRepository = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter');
         $chapter = $chapterRepository->findOneBy(array('id' => $chapterId, 'lesson' => $lesson));
         if ($chapter === null) {
             throw new NotFoundHttpException();
