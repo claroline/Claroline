@@ -92,12 +92,12 @@ class PathController extends Controller
         }
 
         //lancement récursion 
-        $this->JSONParser($json_root_steps, $user, $workspace, $pathsDirectory, null, 0);
+        $this->JSONParser($json_root_steps, $user, $workspace, $pathsDirectory, null, 0, $path);
 
         return array('workspace' => $workspace, 'ok' => "Parcours déployé.");
     }
 
-    private function JSONParser($steps, $user, $workspace, $pathsDirectory, $parent, $order)
+    private function JSONParser($steps, $user, $workspace, $pathsDirectory, $parent, $order, $path)
     {
         $manager = $this->entityManager();
         $rm = $this->resourceManager();
@@ -134,6 +134,7 @@ class PathController extends Controller
             $step1->setWithTutor($step->withTutor);
             $step1->setWithComputer($step->withComputer);
             $step1->setInstructions($step->instructions);
+            $step1->setPath($path);
             $manager->persist($step1);
            
 
@@ -187,7 +188,7 @@ class PathController extends Controller
             $manager->flush(); 
 
             // récursivité sur les enfants possibles.
-            $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $step->id, 0);
+            $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $step->id, 0, $path);
         }
 
         $manager->flush();     

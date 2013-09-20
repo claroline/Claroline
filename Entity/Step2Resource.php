@@ -30,7 +30,7 @@ class Step2Resource
     /**
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Resource")
     */
-    private $resourceNode;
+    private $resource;
 
     /**
      * @var integer
@@ -73,26 +73,26 @@ class Step2Resource
     }
 
     /**
-     * Set resourceNode
+     * Set resource
      *
      * @param \Innova\PathBundle\Entity\Resource $resourceNode
      * @return Step2Resource
      */
-    public function setResourceNode(\Innova\PathBundle\Entity\Resource $resourceNode = null)
+    public function setResource(\Innova\PathBundle\Entity\Resource $resource = null)
     {
-        $this->resourceNode = $resourceNode;
+        $this->resource = $resource;
 
         return $this;
     }
 
     /**
-     * Get resourceNode
+     * Get resource
      *
      * @return \Innova\PathBundle\Entity\Resource 
      */
-    public function getResourceNode()
+    public function getResource()
     {
-        return $this->resourceNode;
+        return $this->resource;
     }
 
     /**
