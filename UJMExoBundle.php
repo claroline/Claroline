@@ -15,4 +15,9 @@ class UJMExoBundle extends PluginBundle
     {
         return new DependencyInjection\UJMExoExtension();
     }
+    
+    public function getRequiredFixturesDirectory()
+    {
+        return 'DataFixtures';
+    }
 }
