@@ -140,10 +140,6 @@ class AdminController extends Controller
         }
 
         $form = $this->createForm($this->get('claroline.form.badge'), $badge, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform')));
-        $form
-            ->add('change_image', 'checkbox', array(
-                'mapped' => false
-            ));
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);

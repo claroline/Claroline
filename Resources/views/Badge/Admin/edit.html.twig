@@ -83,18 +83,11 @@
                 {{ form_errors(form) }}
 
                 <div class="row badges_infos">
-                    <div class="col-md-3 text-center">
-                        <a href="#" class="thumbnail upload_image_placeholder">
-                            <img src="{{ asset(badge.webPath) }}" data-src-current="{{ asset(badge.webPath) }}" data-src-placeholder="{{ asset('bundles/clarolinecore/images/upload-placeholder.jpg') }}" id="current_image" alt="{{ badge.name }}" style="height: 180px" />
-                            <div class="caption">
-                                <span>{{ 'badge_form_change_image'|trans }}</span>
-                            </div>
+                    <div class="col-md-3">
+                        <button type="button" id="change_image" class="btn btn-xs btn-default"><span class="icon-edit">{{ 'badge_form_change_image'|trans }}</span></button>
+                        <a href="#" class="thumbnail" id="upload_image_placeholder">
+                            <img src="{{ asset(badge.webPath) }}" id="current_image" alt="{{ badge.name }}" style="height: 180px" />
                         </a>
-                        <div class="form-group">
-                            <label class="checkbox">
-                                {{ form_widget(form.change_image) }} {{ 'badge_form_delete_image'|trans }}
-                            </label>
-                        </div>
                         {{ form_widget(form.file) }}
                     </div>
                     <div class="col-md-9">

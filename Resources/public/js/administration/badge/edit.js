@@ -8,21 +8,32 @@ $(function(){
 
     $('.delete').confirmModal();
 
-    var deleteImageCheckbox = $("#badge_form_change_image");
-
     var badgeFormFile = $("#badge_form_file");
     badgeFormFile.hide();
 
-    var uploadImagePlaceholder = $(".upload_image_placeholder");
-    uploadImagePlaceholder.click(function(event) {
-        if (deleteImageCheckbox[0].checked) {
+    var changeBadgeImageButton = $("#change_image");
+    changeBadgeImageButton
+        .click(function(event) {
             badgeFormFile.click();
-        }
-        event.preventDefault();
-    });
+        })
+        .hover(function(){
+                changeBadgeImageButton.show();
+            }, function() {
+                changeBadgeImageButton.hide();
+            }
+        );
 
-    var uploadImagePlaceholderCaption = $(".caption", uploadImagePlaceholder);
-    uploadImagePlaceholderCaption.hide();
+    var uploadImagePlaceholder = $("#upload_image_placeholder");
+    uploadImagePlaceholder
+        .click(function(event) {
+            event.preventDefault();
+        })
+        .hover(function(){
+                changeBadgeImageButton.show();
+            }, function() {
+                changeBadgeImageButton.hide();
+            }
+        );
 
     badgeFormFile.change(function(){
         var input = this;
@@ -34,22 +45,6 @@ $(function(){
             };
 
             reader.readAsDataURL(input.files[0]);
-        }
-    });
-
-    var currentImage  = $('#current_image');
-    var badgeFormFile = $('#badge_form_file');
-    deleteImageCheckbox.click(function() {
-        var fileImage = $("img", uploadImagePlaceholder);
-        if($(this)[0].checked)
-        {
-            fileImage.attr('src', fileImage.attr('data-src-placeholder'));
-            uploadImagePlaceholderCaption.show();
-        }
-        else
-        {
-            fileImage.attr('src', fileImage.attr('data-src-current'));
-            uploadImagePlaceholderCaption.hide();
         }
     });
 
