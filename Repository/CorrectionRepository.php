@@ -5,7 +5,7 @@
  * Time: 14:56
  */
 
-namespace ICAP\DropZoneBundle\Repository;
+namespace Icap\DropZoneBundle\Repository;
 
 
 use Doctrine\ORM\EntityRepository;
@@ -83,7 +83,7 @@ class CorrectionRepository extends EntityRepository {
     public function invalidateAllCorrectionForADrop($dropZone, $drop)
     {
         $this->createQueryBuilder('correction')
-            ->update('ICAPDropZoneBundle:Correction', 'correction')
+            ->update('IcapDropZoneBundle:Correction', 'correction')
             ->set('correction.valid', 'false')
             ->where('correction.drop = :drop')
             ->andWhere('correction.dropZone = :dropZone')

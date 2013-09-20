@@ -5,7 +5,7 @@
  * Time: 16:06
  */
 
-namespace ICAP\DropZoneBundle\Entity;
+namespace Icap\DropZoneBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -26,7 +26,7 @@ class Criterion {
     protected $instruction;
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="ICAP\DropZoneBundle\Entity\DropZone",
+     *      targetEntity="Icap\DropZoneBundle\Entity\DropZone",
      *      inversedBy="peerReviewCriteria"
      * )
      * @ORM\JoinColumn(name="drop_zone_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")

@@ -5,25 +5,25 @@
  * Time: 09:30
  */
 
-namespace ICAP\DropZoneBundle\Controller;
+namespace Icap\DropZoneBundle\Controller;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use ICAP\DropZoneBundle\Entity\Correction;
-use ICAP\DropZoneBundle\Entity\Criterion;
-use ICAP\DropZoneBundle\Entity\Document;
-use ICAP\DropZoneBundle\Entity\Drop;
-use ICAP\DropZoneBundle\Entity\DropZone;
-use ICAP\DropZoneBundle\Entity\Grade;
-use ICAP\DropZoneBundle\Form\CorrectCriteriaPageType;
-use ICAP\DropZoneBundle\Form\CorrectionCommentType;
-use ICAP\DropZoneBundle\Form\CorrectionReportType;
-use ICAP\DropZoneBundle\Form\CriterionDeleteType;
-use ICAP\DropZoneBundle\Form\CriterionType;
-use ICAP\DropZoneBundle\Form\DocumentDeleteType;
-use ICAP\DropZoneBundle\Form\DocumentType;
-use ICAP\DropZoneBundle\Form\DropType;
-use ICAP\DropZoneBundle\Form\DropZoneCommonType;
-use ICAP\DropZoneBundle\Form\DropZoneCriteriaType;
+use Icap\DropZoneBundle\Entity\Correction;
+use Icap\DropZoneBundle\Entity\Criterion;
+use Icap\DropZoneBundle\Entity\Document;
+use Icap\DropZoneBundle\Entity\Drop;
+use Icap\DropZoneBundle\Entity\DropZone;
+use Icap\DropZoneBundle\Entity\Grade;
+use Icap\DropZoneBundle\Form\CorrectCriteriaPageType;
+use Icap\DropZoneBundle\Form\CorrectionCommentType;
+use Icap\DropZoneBundle\Form\CorrectionReportType;
+use Icap\DropZoneBundle\Form\CriterionDeleteType;
+use Icap\DropZoneBundle\Form\CriterionType;
+use Icap\DropZoneBundle\Form\DocumentDeleteType;
+use Icap\DropZoneBundle\Form\DocumentType;
+use Icap\DropZoneBundle\Form\DropType;
+use Icap\DropZoneBundle\Form\DropZoneCommonType;
+use Icap\DropZoneBundle\Form\DropZoneCriteriaType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
@@ -71,7 +71,7 @@ class DropZoneController extends Controller {
      *      name="icap_dropzone_edit_common",
      *      requirements={"resourceId" = "\d+"}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
      * @Template()
      */
     public function editCommonAction($dropZone)
@@ -185,7 +185,7 @@ class DropZoneController extends Controller {
      *      requirements={"resourceId" = "\d+", "page" = "\d+"},
      *      defaults={"page" = 1}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
      * @Template()
      */
     public function editCriteriaAction($dropZone, $page)
@@ -194,7 +194,7 @@ class DropZoneController extends Controller {
         $this->isAllowToEdit($dropZone);
 
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('ICAPDropZoneBundle:Criterion');
+        $repository = $em->getRepository('IcapDropZoneBundle:Criterion');
         $query = $repository
             ->createQueryBuilder('criterion')
             ->andWhere('criterion.dropZone = :dropZone')
@@ -257,7 +257,7 @@ class DropZoneController extends Controller {
      *      requirements={"resourceId" = "\d+", "criterionId" = "\d+", "page" = "\d+"},
      *      defaults={"criterionId" = 0}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
      * @Template()
      */
     public function editAddCriterionAction($dropZone, $page, $criterionId)
@@ -270,7 +270,7 @@ class DropZoneController extends Controller {
             $criterion = $this
                 ->getDoctrine()
                 ->getManager()
-                ->getRepository('ICAPDropZoneBundle:Criterion')
+                ->getRepository('IcapDropZoneBundle:Criterion')
                 ->find($criterionId);
         } else {
             $criterion->setDropZone($dropZone);
@@ -281,7 +281,7 @@ class DropZoneController extends Controller {
         if ($this->getRequest()->isXMLHttpRequest()) {
 
             return $this->render(
-                'ICAPDropZoneBundle:DropZone:editAddCriterionModal.html.twig',
+                'IcapDropZoneBundle:DropZone:editAddCriterionModal.html.twig',
                 array(
                     'workspace' => $dropZone->getResourceNode()->getWorkspace(),
                     'dropZone' => $dropZone,
@@ -310,8 +310,8 @@ class DropZoneController extends Controller {
      *      requirements={"resourceId" = "\d+", "criterionId" = "\d+", "page" = "\d+"},
      *      defaults={"criterionId" = 0}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
-     * @Template("ICAPDropZoneBundle:DropZone:editAddCriteria.html.twig")
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @Template("IcapDropZoneBundle:DropZone:editAddCriteria.html.twig")
      */
     public function editCreateCriterionAction($dropZone, $page, $criterionId)
     {
@@ -324,7 +324,7 @@ class DropZoneController extends Controller {
             $criterion = $this
                 ->getDoctrine()
                 ->getManager()
-                ->getRepository('ICAPDropZoneBundle:Criterion')
+                ->getRepository('IcapDropZoneBundle:Criterion')
                 ->find($criterionId);
         } else {
             $criterion->setDropZone($dropZone);
@@ -370,8 +370,8 @@ class DropZoneController extends Controller {
      *      name="icap_dropzone_edit_delete_criterion",
      *      requirements={"resourceId" = "\d+", "criterionId" = "\d+", "page" = "\d+", "number" = "\d+"}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
-     * @ParamConverter("criterion", class="ICAPDropZoneBundle:Criterion", options={"id" = "criterionId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("criterion", class="IcapDropZoneBundle:Criterion", options={"id" = "criterionId"})
      * @Template()
      */
     public function editDeleteCriterionAction($dropZone, $page, $criterion, $number)
@@ -385,7 +385,7 @@ class DropZoneController extends Controller {
         if ($this->getRequest()->isXMLHttpRequest()) {
 
             return $this->render(
-                'ICAPDropZoneBundle:DropZone:editDeleteCriterionModal.html.twig',
+                'IcapDropZoneBundle:DropZone:editDeleteCriterionModal.html.twig',
                 array(
                     'workspace' => $dropZone->getResourceNode()->getWorkspace(),
                     'dropZone' => $dropZone,
@@ -415,9 +415,9 @@ class DropZoneController extends Controller {
      *      name="icap_dropzone_edit_remove_criterion",
      *      requirements={"resourceId" = "\d+", "criterionId" = "\d+", "page" = "\d+"}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
-     * @ParamConverter("criterion", class="ICAPDropZoneBundle:Criterion", options={"id" = "criterionId"})
-     * @Template("ICAPDropZoneBundle:DropZone:editDeleteCriterion.html.twig")
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("criterion", class="IcapDropZoneBundle:Criterion", options={"id" = "criterionId"})
+     * @Template("IcapDropZoneBundle:DropZone:editDeleteCriterion.html.twig")
      */
     public function editRemoveCriterionAction($dropZone, $page, $criterion)
     {
@@ -462,7 +462,7 @@ class DropZoneController extends Controller {
      *      name="icap_dropzone_open",
      *      requirements={"resourceId" = "\d+"}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
@@ -472,10 +472,10 @@ class DropZoneController extends Controller {
         $this->isAllowToOpen($dropZone);
 
         $em = $this->getDoctrine()->getManager();
-        $dropRepo = $em->getRepository('ICAPDropZoneBundle:Drop');
+        $dropRepo = $em->getRepository('IcapDropZoneBundle:Drop');
         $drop = $dropRepo->findOneBy(array('dropZone' => $dropZone, 'user' => $user, 'finished' => true));
 
-        $nbCorrections = $this->getDoctrine()->getManager()->getRepository('ICAPDropZoneBundle:Correction')->countFinished($dropZone, $user);
+        $nbCorrections = $this->getDoctrine()->getManager()->getRepository('IcapDropZoneBundle:Correction')->countFinished($dropZone, $user);
 
         return array(
             'workspace' => $dropZone->getResourceNode()->getWorkspace(),
@@ -492,7 +492,7 @@ class DropZoneController extends Controller {
      *      name="icap_dropzone_drop",
      *      requirements={"resourceId" = "\d+"}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
@@ -501,7 +501,7 @@ class DropZoneController extends Controller {
         $this->isAllowToOpen($dropZone);
 
         $em = $this->getDoctrine()->getManager();
-        $dropRepo = $em->getRepository('ICAPDropZoneBundle:Drop');
+        $dropRepo = $em->getRepository('IcapDropZoneBundle:Drop');
 
         if ($dropRepo->findOneBy(array('dropZone' => $dropZone, 'user' => $user, 'finished' => true)) !== null) {
             $this->getRequest()->getSession()->getFlashBag()->add('danger', $this->get('translator')->trans('You ve already made ​​your copy for this review'));
@@ -578,9 +578,9 @@ class DropZoneController extends Controller {
      *      name="icap_dropzone_document",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+", "documentType" = "url|file|resource|text"}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
-     * @ParamConverter("drop", class="ICAPDropZoneBundle:Drop", options={"id" = "dropId"})
+     * @ParamConverter("drop", class="IcapDropZoneBundle:Drop", options={"id" = "dropId"})
      * @Template()
      */
     public function documentAction($dropZone, $user, $documentType, $drop)
@@ -644,9 +644,9 @@ class DropZoneController extends Controller {
             }
         }
 
-        $view = 'ICAPDropZoneBundle:DropZone:document.html.twig';
+        $view = 'IcapDropZoneBundle:DropZone:document.html.twig';
         if ($this->getRequest()->isXMLHttpRequest()) {
-            $view = 'ICAPDropZoneBundle:DropZone:documentInline.html.twig';
+            $view = 'IcapDropZoneBundle:DropZone:documentInline.html.twig';
         }
 
         return $this->render(
@@ -668,10 +668,10 @@ class DropZoneController extends Controller {
      *      name="icap_dropzone_delete_document",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+", "documentId" = "\d+"}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
-     * @ParamConverter("drop", class="ICAPDropZoneBundle:Drop", options={"id" = "dropId"})
-     * @ParamConverter("document", class="ICAPDropZoneBundle:Document", options={"id" = "documentId"})
+     * @ParamConverter("drop", class="IcapDropZoneBundle:Drop", options={"id" = "dropId"})
+     * @ParamConverter("document", class="IcapDropZoneBundle:Document", options={"id" = "documentId"})
      * @Template()
      */
     public function deleteDocumentAction($dropZone, $user, $drop, $document)
@@ -706,9 +706,9 @@ class DropZoneController extends Controller {
             }
         }
 
-        $view = 'ICAPDropZoneBundle:DropZone:deleteDocument.html.twig';
+        $view = 'IcapDropZoneBundle:DropZone:deleteDocument.html.twig';
         if ($this->getRequest()->isXMLHttpRequest()) {
-            $view = 'ICAPDropZoneBundle:DropZone:deleteDocumentModal.html.twig';
+            $view = 'IcapDropZoneBundle:DropZone:deleteDocumentModal.html.twig';
         }
 
         return $this->render(
@@ -743,7 +743,7 @@ class DropZoneController extends Controller {
         }
 
         // Check that the user has a finished dropzone for this drop.
-        $userDrop = $em->getRepository('ICAPDropZoneBundle:Drop')->findOneBy(array(
+        $userDrop = $em->getRepository('IcapDropZoneBundle:Drop')->findOneBy(array(
                 'user' => $user,
                 'dropZone' => $dropZone,
                 'finished' => true
@@ -762,7 +762,7 @@ class DropZoneController extends Controller {
         }
 
         // Check that the user still make corrections
-        $nbCorrection = $em->getRepository('ICAPDropZoneBundle:Correction')->countFinished($dropZone, $user);
+        $nbCorrection = $em->getRepository('IcapDropZoneBundle:Correction')->countFinished($dropZone, $user);
         if ($nbCorrection >= $dropZone->getExpectedTotalCorrection()) {
             $this->getRequest()->getSession()->getFlashBag()->add('danger', $this->get('translator')->trans('You no longer have any copies to correct'));
 
@@ -783,9 +783,9 @@ class DropZoneController extends Controller {
     {
         $em = $this->getDoctrine()->getManager();
         // Check that the user as a not finished correction (exclude admin correction). Otherwise generate a new one.
-        $correction = $em->getRepository('ICAPDropZoneBundle:Correction')->getNotFinished($dropZone, $user);
+        $correction = $em->getRepository('IcapDropZoneBundle:Correction')->getNotFinished($dropZone, $user);
         if ($correction == null) {
-            $drop = $em->getRepository('ICAPDropZoneBundle:Drop')->drawDropForCorrection($dropZone, $user);
+            $drop = $em->getRepository('IcapDropZoneBundle:Drop')->drawDropForCorrection($dropZone, $user);
 
             if ($drop != null) {
                 $correction = new Correction();
@@ -810,7 +810,7 @@ class DropZoneController extends Controller {
     private function getCriteriaPager($dropZone)
     {
         $em = $this->getDoctrine()->getManager();
-        $criterionRepository = $em->getRepository('ICAPDropZoneBundle:Criterion');
+        $criterionRepository = $em->getRepository('IcapDropZoneBundle:Criterion');
         $criterionQuery = $criterionRepository
             ->createQueryBuilder('criterion')
             ->andWhere('criterion.dropZone = :dropZone')
@@ -838,7 +838,7 @@ class DropZoneController extends Controller {
         }
 
         if ($grade == null) {
-            $criterionReference = $em->getReference('ICAPDropZoneBundle:Criterion', $criterionId);
+            $criterionReference = $em->getReference('IcapDropZoneBundle:Criterion', $criterionId);
             $grade = new Grade();
             $grade->setCriterion($criterionReference);
             $grade->setCorrection($correction);
@@ -920,7 +920,7 @@ class DropZoneController extends Controller {
      *      requirements={"resourceId" = "\d+", "page" = "\d+"},
      *      defaults={"page" = 1}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
@@ -958,7 +958,7 @@ class DropZoneController extends Controller {
         $oldData = array();
         $grades = array();
         if ($correction !== null) {
-            $grades = $em->getRepository('ICAPDropZoneBundle:Grade')->findByCriteriaAndCorrection($pager->getCurrentPageResults(), $correction);
+            $grades = $em->getRepository('IcapDropZoneBundle:Grade')->findByCriteriaAndCorrection($pager->getCurrentPageResults(), $correction);
             foreach($grades as $grade) {
                 $oldData[$grade->getCriterion()->getId()] = ($grade->getValue() >= $dropZone->getTotalCriteriaColumn()) ? ($dropZone->getTotalCriteriaColumn()-1) : $grade->getValue();
             }
@@ -1002,7 +1002,7 @@ class DropZoneController extends Controller {
             }
         }
 
-        $view = 'ICAPDropZoneBundle:DropZone:correctCriteria.html.twig';
+        $view = 'IcapDropZoneBundle:DropZone:correctCriteria.html.twig';
 
         return $this->render(
             $view,
@@ -1025,7 +1025,7 @@ class DropZoneController extends Controller {
      *      name="icap_dropzone_correct_comment",
      *      requirements={"resourceId" = "\d+"}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
@@ -1065,7 +1065,7 @@ class DropZoneController extends Controller {
             }
         }
 
-        $view = 'ICAPDropZoneBundle:DropZone:correctComment.html.twig';
+        $view = 'IcapDropZoneBundle:DropZone:correctComment.html.twig';
 
         return $this->render(
             $view,
@@ -1084,8 +1084,8 @@ class DropZoneController extends Controller {
 
     private function addDropsStats($dropZone, $array)
     {
-        $array['nbDropCorrected'] = $this->getDoctrine()->getManager()->getRepository('ICAPDropZoneBundle:Drop')->countDropsFullyCorrected($dropZone);
-        $array['nbDrop'] = $this->getDoctrine()->getManager()->getRepository('ICAPDropZoneBundle:Drop')->countDrops($dropZone);
+        $array['nbDropCorrected'] = $this->getDoctrine()->getManager()->getRepository('IcapDropZoneBundle:Drop')->countDropsFullyCorrected($dropZone);
+        $array['nbDrop'] = $this->getDoctrine()->getManager()->getRepository('IcapDropZoneBundle:Drop')->countDrops($dropZone);
 
         return $array;
     }
@@ -1109,7 +1109,7 @@ class DropZoneController extends Controller {
      *      requirements={"resourceId" = "\d+", "page" = "\d+"},
      *      defaults={"page" = 1}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
      * @Template()
      */
     public function dropsByUserAction($dropZone, $page)
@@ -1117,7 +1117,7 @@ class DropZoneController extends Controller {
         $this->isAllowToOpen($dropZone);
         $this->isAllowToEdit($dropZone);
 
-        $dropRepo = $this->getDoctrine()->getManager()->getRepository('ICAPDropZoneBundle:Drop');
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropZoneBundle:Drop');
         $dropsQuery = $dropRepo->getDropsFullyCorrectedOrderByUserQuery($dropZone);
 
         $adapter = new DoctrineORMAdapter($dropsQuery);
@@ -1162,7 +1162,7 @@ class DropZoneController extends Controller {
      *      requirements={"resourceId" = "\d+", "page" = "\d+"},
      *      defaults={"page" = 1}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
      * @Template()
      */
     public function dropsByDateAction($dropZone, $page)
@@ -1170,7 +1170,7 @@ class DropZoneController extends Controller {
         $this->isAllowToOpen($dropZone);
         $this->isAllowToEdit($dropZone);
 
-        $dropRepo = $this->getDoctrine()->getManager()->getRepository('ICAPDropZoneBundle:Drop');
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropZoneBundle:Drop');
         $dropsQuery = $dropRepo->getDropsFullyCorrectedOrderByDropDateQuery($dropZone);
 
         $adapter = new DoctrineORMAdapter($dropsQuery);
@@ -1215,7 +1215,7 @@ class DropZoneController extends Controller {
      *      requirements={"resourceId" = "\d+", "page" = "\d+"},
      *      defaults={"page" = 1}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
      * @Template()
      */
     public function dropsAwaitingAction($dropZone, $page)
@@ -1223,7 +1223,7 @@ class DropZoneController extends Controller {
         $this->isAllowToOpen($dropZone);
         $this->isAllowToEdit($dropZone);
 
-        $dropRepo = $this->getDoctrine()->getManager()->getRepository('ICAPDropZoneBundle:Drop');
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropZoneBundle:Drop');
         $dropsQuery = $dropRepo->getDropsAwaitingCorrectionQuery($dropZone);
 
         $adapter = new DoctrineORMAdapter($dropsQuery);
@@ -1262,8 +1262,8 @@ class DropZoneController extends Controller {
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+", "tab" = "\d+", "page" = "\d+"},
      *      defaults={"page" = 1}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
-     * @ParamConverter("drop", class="ICAPDropZoneBundle:Drop", options={"id" = "dropId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("drop", class="IcapDropZoneBundle:Drop", options={"id" = "dropId"})
      * @Template()
      */
     public function dropsDeleteAction($dropZone, $drop, $tab, $page)
@@ -1299,9 +1299,9 @@ class DropZoneController extends Controller {
             }
         }
 
-        $view = 'ICAPDropZoneBundle:DropZone:dropsDelete.html.twig';
+        $view = 'IcapDropZoneBundle:DropZone:dropsDelete.html.twig';
         if ($this->getRequest()->isXmlHttpRequest()) {
-            $view = 'ICAPDropZoneBundle:DropZone:dropsDeleteModal.html.twig';
+            $view = 'IcapDropZoneBundle:DropZone:dropsDeleteModal.html.twig';
         }
 
         return $this->render($view, array(
@@ -1322,7 +1322,7 @@ class DropZoneController extends Controller {
      *      name="icap_dropzone_drops_detail",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
@@ -1331,7 +1331,7 @@ class DropZoneController extends Controller {
         $this->isAllowToOpen($dropZone);
         $this->isAllowToEdit($dropZone);
 
-        $drop = $this->getDoctrine()->getRepository('ICAPDropZoneBundle:Drop')->getDropAndCorrectionsAndDocumentsAndUser($dropZone, $dropId);
+        $drop = $this->getDoctrine()->getRepository('IcapDropZoneBundle:Drop')->getDropAndCorrectionsAndDocumentsAndUser($dropZone, $dropId);
 
         return array(
             'workspace' => $dropZone->getResourceNode()->getWorkspace(),
@@ -1354,7 +1354,7 @@ class DropZoneController extends Controller {
      *      name="icap_dropzone_drops_detail_correction_paginated",
      *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "page" = "\d+", "state" = "show|edit"}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
      * @Template()
      */
     public function dropsDetailCorrectionAction($dropZone, $state, $correctionId, $page)
@@ -1362,7 +1362,7 @@ class DropZoneController extends Controller {
         $this->isAllowToOpen($dropZone);
         $this->isAllowToEdit($dropZone);
 
-        $correction = $this->getDoctrine()->getRepository('ICAPDropZoneBundle:Correction')->getCorrectionAndDropAndUserAndDocuments($dropZone, $correctionId);
+        $correction = $this->getDoctrine()->getRepository('IcapDropZoneBundle:Correction')->getCorrectionAndDropAndUserAndDocuments($dropZone, $correctionId);
 
         $edit = $state == 'edit';
 
@@ -1382,7 +1382,7 @@ class DropZoneController extends Controller {
         $oldData = array();
         $grades = array();
         if ($correction !== null) {
-            $grades = $em->getRepository('ICAPDropZoneBundle:Grade')->findByCriteriaAndCorrection($pager->getCurrentPageResults(), $correction);
+            $grades = $em->getRepository('IcapDropZoneBundle:Grade')->findByCriteriaAndCorrection($pager->getCurrentPageResults(), $correction);
             foreach($grades as $grade) {
                 $oldData[$grade->getCriterion()->getId()] = ($grade->getValue() >= $dropZone->getTotalCriteriaColumn()) ? ($dropZone->getTotalCriteriaColumn()-1) : $grade->getValue();
             }
@@ -1439,7 +1439,7 @@ class DropZoneController extends Controller {
             }
         }
 
-        $view = 'ICAPDropZoneBundle:DropZone:correctCriteria.html.twig';
+        $view = 'IcapDropZoneBundle:DropZone:correctCriteria.html.twig';
 
         return $this->render(
             $view,
@@ -1463,7 +1463,7 @@ class DropZoneController extends Controller {
      *      name="icap_dropzone_drops_detail_correction_comment",
      *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "state" = "show|edit"}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
      * @Template()
      */
     public function dropsDetailCorrectionCommentAction($dropZone, $state, $correctionId)
@@ -1471,7 +1471,7 @@ class DropZoneController extends Controller {
         $this->isAllowToOpen($dropZone);
         $this->isAllowToEdit($dropZone);
 
-        $correction = $this->getDoctrine()->getRepository('ICAPDropZoneBundle:Correction')->getCorrectionAndDropAndUserAndDocuments($dropZone, $correctionId);
+        $correction = $this->getDoctrine()->getRepository('IcapDropZoneBundle:Correction')->getCorrectionAndDropAndUserAndDocuments($dropZone, $correctionId);
 
         $edit = $state == 'edit';
 
@@ -1492,7 +1492,7 @@ class DropZoneController extends Controller {
             }
         }
 
-        $view = 'ICAPDropZoneBundle:DropZone:correctComment.html.twig';
+        $view = 'IcapDropZoneBundle:DropZone:correctComment.html.twig';
 
         return $this->render(
             $view,
@@ -1516,9 +1516,9 @@ class DropZoneController extends Controller {
      *      name="icap_dropzone_drops_detail_add_correction",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
-     * @ParamConverter("drop", class="ICAPDropZoneBundle:Drop", options={"id" = "dropId"})
+     * @ParamConverter("drop", class="IcapDropZoneBundle:Drop", options={"id" = "dropId"})
      * @Template()
      */
     public function dropsDetailAddCorrectionAction($dropZone, $user, $drop)
@@ -1554,8 +1554,8 @@ class DropZoneController extends Controller {
      *      name="icap_dropzone_drops_detail_correction_validation",
      *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "value" = "no|yes"}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
-     * @ParamConverter("correction", class="ICAPDropZoneBundle:Correction", options={"id" = "correctionId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("correction", class="IcapDropZoneBundle:Correction", options={"id" = "correctionId"})
      * @Template()
      */
     public function setCorrectionValidationAction($dropZone, $correction, $value)
@@ -1591,8 +1591,8 @@ class DropZoneController extends Controller {
      *      name="icap_dropzone_drops_detail_invalidate_all_corrections",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
-     * @ParamConverter("drop", class="ICAPDropZoneBundle:Drop", options={"id" = "dropId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("drop", class="IcapDropZoneBundle:Drop", options={"id" = "dropId"})
      * @Template()
      */
     public function invalidateAllCorrectionsAction($dropZone, $drop)
@@ -1600,7 +1600,7 @@ class DropZoneController extends Controller {
         $this->isAllowToOpen($dropZone);
         $this->isAllowToEdit($dropZone);
 
-        $this->getDoctrine()->getRepository('ICAPDropZoneBundle:Correction')->invalidateAllCorrectionForADrop($dropZone, $drop);
+        $this->getDoctrine()->getRepository('IcapDropZoneBundle:Correction')->invalidateAllCorrectionForADrop($dropZone, $drop);
 
         return $this->redirect(
             $this->generateUrl(
@@ -1619,9 +1619,9 @@ class DropZoneController extends Controller {
      *      name="icap_dropzone_report_drop",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+", "correctionId" = "\d+"}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
-     * @ParamConverter("drop", class="ICAPDropZoneBundle:Drop", options={"id" = "dropId"})
-     * @ParamConverter("correction", class="ICAPDropZoneBundle:Correction", options={"id" = "correctionId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("drop", class="IcapDropZoneBundle:Drop", options={"id" = "dropId"})
+     * @ParamConverter("correction", class="IcapDropZoneBundle:Correction", options={"id" = "correctionId"})
      * @Template()
      */
     public function reportDropAction($dropZone, $drop, $correction)
@@ -1657,9 +1657,9 @@ class DropZoneController extends Controller {
             }
         }
 
-        $view = 'ICAPDropZoneBundle:DropZone:reportDrop.html.twig';
+        $view = 'IcapDropZoneBundle:DropZone:reportDrop.html.twig';
         if ($this->getRequest()->isXmlHttpRequest()) {
-            $view = 'ICAPDropZoneBundle:DropZone:reportDropModal.html.twig';
+            $view = 'IcapDropZoneBundle:DropZone:reportDropModal.html.twig';
         }
 
         return $this->render($view, array(
@@ -1678,9 +1678,9 @@ class DropZoneController extends Controller {
      *      name="icap_dropzone_remove_report",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+", "correctionId" = "\d+", "state" = "show|edit", "invalidate" = "0|1"}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
-     * @ParamConverter("drop", class="ICAPDropZoneBundle:Drop", options={"id" = "dropId"})
-     * @ParamConverter("correction", class="ICAPDropZoneBundle:Correction", options={"id" = "correctionId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("drop", class="IcapDropZoneBundle:Drop", options={"id" = "dropId"})
+     * @ParamConverter("correction", class="IcapDropZoneBundle:Correction", options={"id" = "correctionId"})
      * @Template()
      */
     public function removeReportAction($dropZone, $drop, $correction, $state, $invalidate)
@@ -1698,7 +1698,7 @@ class DropZoneController extends Controller {
         $em->persist($correction);
         $em->flush();
 
-        $correctionRepo = $this->getDoctrine()->getRepository('ICAPDropZoneBundle:Correction');
+        $correctionRepo = $this->getDoctrine()->getRepository('IcapDropZoneBundle:Correction');
         if ($correctionRepo->countReporter($dropZone, $drop) == 0) {
             $drop->setReported(false);
             $em->persist($drop);
@@ -1723,8 +1723,8 @@ class DropZoneController extends Controller {
      *      name="icap_dropzone_remove_report",
      *      requirements={"resourceId" = "\d+", "correctionId" = "\d+"}
      * )
-     * @ParamConverter("dropZone", class="ICAPDropZoneBundle:DropZone", options={"id" = "resourceId"})
-     * @ParamConverter("correction", class="ICAPDropZoneBundle:Correction", options={"id" = "correctionId"})
+     * @ParamConverter("dropZone", class="IcapDropZoneBundle:DropZone", options={"id" = "resourceId"})
+     * @ParamConverter("correction", class="IcapDropZoneBundle:Correction", options={"id" = "correctionId"})
      * @Template()
      */
     public function recalculateScoreAction($dropZone, $correction)

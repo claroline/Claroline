@@ -5,7 +5,7 @@
  * Time: 15:58
  */
 
-namespace ICAP\DropZoneBundle\Entity;
+namespace Icap\DropZoneBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -37,7 +37,7 @@ class Document {
     protected $resourceNode;
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="ICAP\DropZoneBundle\Entity\Drop",
+     *      targetEntity="Icap\DropZoneBundle\Entity\Drop",
      *      inversedBy="documents"
      * )
      * @ORM\JoinColumn(name="drop_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
