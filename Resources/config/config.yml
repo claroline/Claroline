@@ -6,8 +6,3 @@ plugin:
           class: ICAP\DropZoneBundle\Entity\DropZone
           is_visible: true
           is_browsable: false
-          actions:
-            - name: edit
-              is_action_in_new_page: false
-            - name: drops
-              is_action_in_new_page: false
