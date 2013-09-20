@@ -14,24 +14,18 @@ use Doctrine\ORM\Mapping as ORM;
 class Step extends AbstractResource
 {
    
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="uuid", type="string", length=255)
-     */
-    private $uuid;
-
+  
     /**
      * @var integer
      *
-     * @ORM\Column(name="order", type="integer")
+     * @ORM\Column(name="stepOrder", type="integer")
      */
-    private $order;
+    private $stepOrder;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="parent", type="string", length=255)
+     * @ORM\Column(name="parent", type="string", length=255, nullable=true)
      */
     private $parent;
 
@@ -71,11 +65,9 @@ class Step extends AbstractResource
     private $duration;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="deployable", type="boolean")
-     */
-    private $deployable;
+    * @ORM\ManyToOne(targetEntity="Path", inversedBy="steps")
+    */
+    protected $path;
 
     /**
     * @ORM\ManyToOne(targetEntity="StepType", inversedBy="steps")
@@ -91,29 +83,6 @@ class Step extends AbstractResource
     * @ORM\ManyToOne(targetEntity="StepWhere", inversedBy="steps")
     */
     protected $stepWhere;
-
-    /**
-     * Set uuid
-     *
-     * @param string $uuid
-     * @return Step
-     */
-    public function setUuid($uuid)
-    {
-        $this->uuid = $uuid;
-
-        return $this;
-    }
-
-    /**
-     * Get uuid
-     *
-     * @return string 
-     */
-    public function getUuid()
-    {
-        return $this->uuid;
-    }
 
     /**
      * Set expanded
@@ -231,19 +200,6 @@ class Step extends AbstractResource
     }
 
     /**
-     * Set deployable
-     *
-     * @param boolean $deployable
-     * @return Step
-     */
-    public function setDeployable($deployable)
-    {
-        $this->deployable = $deployable;
-
-        return $this;
-    }
-
-    /**
      * Get deployable
      *
      * @return boolean 
@@ -254,26 +210,26 @@ class Step extends AbstractResource
     }
 
     /**
-     * Set order
+     * Set stepOrder
      *
-     * @param integer $order
+     * @param integer $stepOrder
      * @return Step
      */
-    public function setOrder($order)
+    public function setStepOrder($stepOrder)
     {
-        $this->order = $order;
+        $this->stepOrder = $stepOrder;
 
         return $this;
     }
 
     /**
-     * Get order
+     * Get stepOrder
      *
      * @return integer 
      */
-    public function getOrder()
+    public function getStepOrder()
     {
-        return $this->order;
+        return $this->stepOrder;
     }
 
     /**
@@ -392,4 +348,27 @@ class Step extends AbstractResource
         return $this->stepWhere;
     }
 
+
+    /**
+     * Set path
+     *
+     * @param \Innova\PathBundle\Entity\Path $path
+     * @return Step
+     */
+    public function setPath(\Innova\PathBundle\Entity\Path $path = null)
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    /**
+     * Get path
+     *
+     * @return \Innova\PathBundle\Entity\Path 
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
 }
