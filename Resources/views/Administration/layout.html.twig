@@ -7,7 +7,7 @@
     <div class="col-md-3 administration">
         <div class="list-group menu">
             <div class="list-group-item disabled">{{ 'administration'|trans({}, 'platform') }}</div>
-            <a class="list-group-item{% if path('claro_admin_platform_settings_form') == app.request.requesturi or app.request.requesturi == '/Claroline/web/app_dev.php/admin/' %} active{% endif %}"
+            <a class="list-group-item{% if 'claro_admin_platform_settings_form' == app.request.get('_route') or 'claro_admin_index' == app.request.get('_route') %} active{% endif %}"
                 href="{{ path('claro_admin_platform_settings_form') }}" id="link_platform_parameters">
                 <i class="icon-cog"></i>
                 {{ 'platform_parameters'|trans({}, 'platform') }}
