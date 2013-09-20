@@ -104,7 +104,7 @@ class AdminController extends Controller
 
                     $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_add_success_message', array(), 'badge'));
                 } catch (\Exception $exception) {
-                    $this->get('session')->getFlashBag()->add('danger', $translator->trans('badge_add_error_message', array(), 'badge'));
+                    $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_add_error_message', array(), 'badge'));
                 }
 
                 return $this->redirect($this->generateUrl('claro_admin_badges'));
@@ -147,10 +147,6 @@ class AdminController extends Controller
                 /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
                 $translator = $this->get('translator');
                 try {
-                    if (!$form->get('change_image')->getData()) {
-                        $badge->resetFile();
-                    }
-
                     /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
                     $entityManager = $doctrine->getManager();
 
@@ -159,7 +155,7 @@ class AdminController extends Controller
 
                     $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_edit_success_message', array(), 'badge'));
                 } catch (\Exception $exception) {
-                    $this->get('session')->getFlashBag()->add('danger', $translator->trans('badge_edit_error_message', array(), 'badge'));
+                    $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_edit_error_message', array(), 'badge'));
                 }
 
                 return $this->redirect($this->generateUrl('claro_admin_badges'));
@@ -191,7 +187,7 @@ class AdminController extends Controller
 
             $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_delete_success_message', array(), 'badge'));
         } catch (\Exception $exception) {
-            $this->get('session')->getFlashBag()->add('danger', $translator->trans('badge_delete_error_message', array(), 'badge'));
+            $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_delete_error_message', array(), 'badge'));
         }
 
         return $this->redirect($this->generateUrl('claro_admin_badges'));
@@ -252,7 +248,7 @@ class AdminController extends Controller
                     $this->get('session')->getFlashBag()->add($flashMessageType, $translator->transChoice('badge_awarded_count_message', $awardedBadge, array('%awaredBadge%' => $awardedBadge), 'badge'));
                 } catch (\Exception $exception) {
                     if (!$request->isXmlHttpRequest()) {
-                        $this->get('session')->getFlashBag()->add('danger', $translator->trans('badge_award_error_message', array(), 'badge'));
+                        $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_award_error_message', array(), 'badge'));
                     } else {
                         return new Response($exception->getMessage(), 500);
                     }
@@ -295,7 +291,7 @@ class AdminController extends Controller
             $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_unaward_success_message', array(), 'badge'));
         } catch (\Exception $exception) {
             if (!$request->isXmlHttpRequest()) {
-                $this->get('session')->getFlashBag()->add('danger', $translator->trans('badge_unaward_error_message', array(), 'badge'));
+                $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_unaward_error_message', array(), 'badge'));
             } else {
                 return new Response($exception->getMessage(), 500);
             }
@@ -341,7 +337,7 @@ class AdminController extends Controller
 
             $this->get('session')->getFlashBag()->add('success', $successMessage);
         } catch (\Exception $exception) {
-            $this->get('session')->getFlashBag()->add('danger', $errorMessage);
+            $this->get('session')->getFlashBag()->add('error', $errorMessage);
         }
 
         return $this->redirect($this->generateUrl('claro_admin_badges'));

@@ -472,17 +472,6 @@ class Badge
     }
 
     /**
-     * @return Badge
-     */
-    public function resetFile()
-    {
-        $this->imagePath = $this->olfFileName;
-        $this->file = null;
-
-        return $this;
-    }
-
-    /**
      * @return UploadedFile
      */
     public function getFile()
