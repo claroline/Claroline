@@ -1,0 +1,18 @@
+<form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_edit_remove_criterion', {'resourceId': dropzone.id, 'page': page, 'criterionId':criterion.id}) }}">
+    {{ form_errors(form) }}
+
+    <div class="container">
+        {{ 'Are you sure you want to delete the %number%'|trans({'%number%': number}) }}
+    </div>
+
+    <div class="container form-group form-buttons">
+        <div class="btn-group pull-right">
+            <a href="{{ path('icap_dropzone_edit_criteria_paginated', {'resourceId': dropzone.id, 'page': page}) }}" class="btn btn-default">
+                {{ 'Cancel'|trans }}
+            </a>
+            <button type="submit" class="btn btn-danger">
+                {{ 'Confirm delete'|trans }}
+            </button>
+        </div>
+    </div>
+{{ form_end(form) }}

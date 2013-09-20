@@ -1,0 +1,187 @@
+{% extends "IcapDropzoneBundle:Dropzone:edit.html.twig" %}
+
+{% form_theme form 'ClarolineCoreBundle::form_theme_bootstrap3.html.twig' %}
+
+{% block drop_zone_content_edit %}
+    <div class="navbar navbar-default peer-review-options" role="navigation" {% if not dropzone.peerReview %}style="display: none;"{% endif %}>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.id}) }}">
+                        {{ 'Common'|trans }}
+                    </a>
+                </li>
+                <li class="{% if dropzone.editionState < 1 %}disabled{% endif %}">
+                    <a href="{% if dropzone.editionState < 1 %}#{% else %}{{ path('icap_dropzone_edit_criteria', {'resourceId': dropzone.id}) }}{% endif %}">
+                        {{ 'Peer review criteria'|trans }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <h3>{{ 'Common information'|trans }}</h3>
+    <form class="form-horizontal" role="form" method="POST" action="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.id}) }}" {{ form_enctype(form) }}>
+
+        {{ form_errors(form) }}
+
+        <h4>{{ 'Instruction'|trans }}</h4>
+        <div class="form-group">
+            {{ form_row(form.instruction, {'label_attr': {'style': 'display: none;'}}) }}
+        </div>
+
+        <h4>{{ 'Document type allowed'|trans }}</h4>
+
+        <div class="form-group">
+            {{ form_row(form.allowWorkspaceResource, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
+            {{ form_row(form.allowUpload, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
+            {{ form_row(form.allowUrl, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
+            {{ form_row(form.allowRichText, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
+        </div>
+
+        <h4>{{ 'Type of evaluation'|trans }}</h4>
+        <div class="form-group">
+            {{ form_row(form.peerReview, {'label_attr': {'style': 'display: none;'}}) }}
+
+            <div class="col-lg-offset-3 col-lg-9 peer-review-options">
+                {{ form_row(form.expectedTotalCorrection, {'type': 'number', 'input_col_size': 'col-lg-4', 'label_col_size': 'col-lg-8', 'attr': {'style': 'width: 60px;'}, 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+            </div>
+        </div>
+        <h4>{{ 'Rating'|trans }}</h4>
+
+        <div class="form-group">
+            {{ form_row(form.displayNotationToLearners, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+            {{ form_row(form.displayNotationMessageToLearners, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+            <div class="col-lg-offset-3 col-lg-9">
+                {{ form_row(form.minimumScoreToPass, {'type': 'number', 'input_col_size': 'col-lg-4', 'label_col_size': 'col-lg-8', 'attr': {'style': 'width: 60px;'}, 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+            </div>
+        </div>
+
+
+        <h4>{{ 'Planning'|trans }}</h4>
+
+        <p>{{ 'Planification instruction'|trans }}</p>
+
+        <p class="peer-review-options">{{ 'Planification peer review instruction'|trans }}</p>
+
+        {{ form_errors(form.manualPlanning) }}
+        <div class="radio">
+            <label>
+                {{ form_widget(form.manualPlanning.0) }}
+                <strong>{{ 'manualPlanning'|trans }}</strong>
+            </label>
+        </div>
+        <div id="planning_manual" class="form-group">
+            <div class="col-md-offset-2">{{ 'Choose current phase'|trans }}</div>
+            {{ form_row(form.manualState, {'label_attr': {'style': 'display: none;'}}) }}
+        </div>
+
+        <label class="radio">
+            {{ form_widget(form.manualPlanning.1) }}
+            <strong>{{ 'scheduleByDatePlanning'|trans }}</strong>
+        </label>
+
+        <div id="planning_dates">
+            <div class="form-group">
+                <div class="row col-lg-offset-2">
+                    {{ form_row(form.startAllowDrop, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row col-lg-offset-2">
+                    {{ form_row(form.endAllowDrop, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row col-lg-offset-2 peer-review-options">
+                    {{ form_row(form.startReview, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row col-lg-offset-2 peer-review-options">
+                    {{ form_row(form.endReview, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-group pull-right">
+            <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
+            <button type= "submit" class="btn btn-primary submit_button">{% if dropzone.peerReview %}{{ 'Save and continue'|trans }}{% else %}{{ 'Save and finished'|trans }}{% endif %}</button>
+        </div>
+        {{ form_rest(form) }}
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}}
+    {{ tinymce_init() }}
+    <script>
+        $('document').ready(function() {
+            $('#icap_dropzone_common_form_peerReview_0').on('click', function() {
+                enablePeerReviewOptions(false);
+            });
+            $('#icap_dropzone_common_form_peerReview_1').on('click', function() {
+                enablePeerReviewOptions(true);
+            });
+
+            var enablePeerReviewOptions = function (peerReviewEnabled) {
+                if (peerReviewEnabled) {
+                    $('.peer-review-options').show();
+                    $('#icap_dropzone_common_form_manualState_2').parent().show();
+
+                    $('.submit_button').html('{{ 'Save and continue'|trans }}');
+                } else {
+                    $('.peer-review-options').hide();
+                    $('#icap_dropzone_common_form_manualState_2').parent().hide();
+
+                    if ($('#icap_dropzone_common_form_expectedTotalCorrection').val() < 1 || $('#icap_dropzone_common_form_expectedTotalCorrection').val() > 10) {
+                        $('#icap_dropzone_common_form_expectedTotalCorrection').val(3);
+                    }
+
+                    $('#icap_dropzone_common_form_endReview_date').val(null);
+                    $('#icap_dropzone_common_form_endReview_time').val(null);
+                    $('#icap_dropzone_common_form_startReview_date').val(null);
+                    $('#icap_dropzone_common_form_startReview_time').val(null);
+
+                    $('.submit_button').html('{{ 'Save and finished'|trans }}');
+                }
+            }
+
+            enablePeerReviewOptions({{ dropzone.peerReview }});
+
+            var manualPlanning = function () {
+                $('#planning_dates').addClass('text-muted');
+                $('#planning_dates input').prop('disabled', true);
+
+                $('#planning_manual').removeClass('text-muted');
+                $('#planning_manual input').prop('disabled', false);
+            }
+
+            var datesPlanning = function () {
+                $('#planning_manual').addClass('text-muted');
+                $('#planning_manual input').prop('disabled', true);
+
+                $('#planning_dates').removeClass('text-muted');
+                $('#planning_dates input').prop('disabled', false);
+            }
+
+            $('#icap_dropzone_common_form_manualPlanning_0').on('click', manualPlanning);
+            $('#icap_dropzone_common_form_manualPlanning_1').on('click', datesPlanning);
+
+            if ({{ dropzone.manualPlanning }}) {
+                manualPlanning();
+            } else {
+                datesPlanning();
+            }
+        });
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .form-control.time {
+            width: 50px;
+            display: inline;
+        }
+    </style>
+{% endblock %}
