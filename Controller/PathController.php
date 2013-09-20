@@ -18,9 +18,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 use Innova\PathBundle\Entity\Path;
 use Innova\PathBundle\Entity\Step;
+use Innova\PathBundle\Entity\Resource;
 use Innova\PathBundle\Entity\StepType;
 use Innova\PathBundle\Entity\StepWho;
 use Innova\PathBundle\Entity\StepWhere;
+use Innova\PathBundle\Entity\Step2ResourceNode;
+use Innova\PathBundle\Entity\Step2Resource;
 
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -102,7 +105,7 @@ class PathController extends Controller
         foreach ($steps as $step) {
             $order++;
 
-            // Création ResourceNode
+            // STEP MANAGEMENT
             $resourceNode = new ResourceNode();
             $resourceNode->setName($step->name);
             $resourceNode->setClass("Innova\PathBundle\Entity\Step");
@@ -112,13 +115,10 @@ class PathController extends Controller
             $resourceNode->setParent($pathsDirectory);
             $resourceNode->setMimeType("custom/activity");
             $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(35));
-
             $manager->persist($resourceNode);
-            $manager->flush();
 
             $rm->setLastPosition($pathsDirectory, $resourceNode);
             
-            // Création Step
             $step1 = new Step();
             $step1->setResourceNode($resourceNode);
             $step1->setParent($parent);
@@ -134,20 +134,36 @@ class PathController extends Controller
             $step1->setWithTutor($step->withTutor);
             $step1->setWithComputer($step->withComputer);
             $step1->setInstructions($step->instructions);
-
-            $step1->setUuid('AAAAAAA'); //$step1->setUuid($step->uuid);
-            
             $manager->persist($step1);
+           
+
+            // RESOURCES MANAGEMENT
+            $resourceOrder = 0;
+            foreach ($resources as $resource) {
+                 $resourceOrder++;
+                if ($resource->isDigital == true){
+                    $resourceNodeId = $resource->resourceId;
+                    $step2ressourceNode = new Step2ResourceNode();
+                    $resourceNode = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resourceNodeId);
+                    $step2ressourceNode->setResourceNode($resourceNode);
+                    $step2ressourceNode->setStep($step1);
+                    $step2ressourceNode->setResourceOrder($resourceOrder);
+
+                    $manager->persist($step2ressourceNode);
+                   
+                }
+                elseif($resource->isDigital == false){
+                    $resourceId = $resource->resourceId;
+                    $step2ressource = new Step2Resource();
+                    $resource = $manager->getRepository('InnovaPathBundle:Resource')->findOneById($resourceId);
+                    $step2ressource->setResource($resource);
+                    $step2ressource->setStep($step1);
+                    $step2ressource->setResourceOrder($resourceOrder);
+                }
+            }
             $manager->flush();
 
-            foreach ($resources as $resource) {
-                
-                $resourceNodeId = $resource->resourceId;
-                $step2ressourceNode = new Step2ResourceNode();
-                $resourceNode = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resourceNodeId);
-                $step2ressourceNode->setResourceNode($resourceNode);
-                $step2ressourceNode->setStep($step1);
-            }
+
             /*
             // Gestion de la jointure ResourceActivity - Ne sert plus à rien je crois
             $resourceActivity = new ResourceActivity();

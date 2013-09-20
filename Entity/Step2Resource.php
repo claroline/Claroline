@@ -5,12 +5,12 @@ namespace Innova\PathBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Step2ResourceNode
+ * Step2Resource
  *
- * @ORM\Table("innova_step2resourceNode")
+ * @ORM\Table("innova_step2resource")
  * @ORM\Entity
  */
-class Step2ResourceNode
+class Step2Resource
 {
     /**
      * @var integer
@@ -28,12 +28,17 @@ class Step2ResourceNode
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Resource")
     */
     private $resourceNode;
 
-
-
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="resourceOrder", type="integer")
+     */
+    private $resourceOrder;
+    
     /**
      * Get id
      *
@@ -44,20 +49,11 @@ class Step2ResourceNode
         return $this->id;
     }
 
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="resourceOrder", type="integer")
-     */
-    private $resourceOrder;
-
-
     /**
      * Set step
      *
      * @param \Innova\PathBundle\Entity\Step $step
-     * @return Step2ResourceNode
+     * @return Step2Resource
      */
     public function setStep(\Innova\PathBundle\Entity\Step $step = null)
     {
@@ -79,10 +75,10 @@ class Step2ResourceNode
     /**
      * Set resourceNode
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
-     * @return Step2ResourceNode
+     * @param \Innova\PathBundle\Entity\Resource $resourceNode
+     * @return Step2Resource
      */
-    public function setResourceNode(\Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode = null)
+    public function setResourceNode(\Innova\PathBundle\Entity\Resource $resourceNode = null)
     {
         $this->resourceNode = $resourceNode;
 
@@ -92,7 +88,7 @@ class Step2ResourceNode
     /**
      * Get resourceNode
      *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode 
+     * @return \Innova\PathBundle\Entity\Resource 
      */
     public function getResourceNode()
     {
@@ -103,7 +99,7 @@ class Step2ResourceNode
      * Set resourceOrder
      *
      * @param integer $resourceOrder
-     * @return Step2ResourceNode
+     * @return Step2Resource
      */
     public function setResourceOrder($resourceOrder)
     {

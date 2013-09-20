@@ -14,13 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Step extends AbstractResource
 {
    
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="uuid", type="string", length=255)
-     */
-    private $uuid;
-
+  
     /**
      * @var integer
      *
@@ -71,6 +65,11 @@ class Step extends AbstractResource
     private $duration;
 
     /**
+    * @ORM\ManyToOne(targetEntity="Path", inversedBy="steps")
+    */
+    protected $path;
+
+    /**
     * @ORM\ManyToOne(targetEntity="StepType", inversedBy="steps")
     */
     protected $stepType;
@@ -84,29 +83,6 @@ class Step extends AbstractResource
     * @ORM\ManyToOne(targetEntity="StepWhere", inversedBy="steps")
     */
     protected $stepWhere;
-
-    /**
-     * Set uuid
-     *
-     * @param string $uuid
-     * @return Step
-     */
-    public function setUuid($uuid)
-    {
-        $this->uuid = $uuid;
-
-        return $this;
-    }
-
-    /**
-     * Get uuid
-     *
-     * @return string 
-     */
-    public function getUuid()
-    {
-        return $this->uuid;
-    }
 
     /**
      * Set expanded
@@ -372,4 +348,27 @@ class Step extends AbstractResource
         return $this->stepWhere;
     }
 
+
+    /**
+     * Set path
+     *
+     * @param \Innova\PathBundle\Entity\Path $path
+     * @return Step
+     */
+    public function setPath(\Innova\PathBundle\Entity\Path $path = null)
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    /**
+     * Get path
+     *
+     * @return \Innova\PathBundle\Entity\Path 
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
 }
