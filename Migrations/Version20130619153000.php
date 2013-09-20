@@ -33,14 +33,14 @@ class Version20130619153000 extends BundleMigration
     */
     public function createLessonTable(Schema $schema)
     {
-        // Table creation
+/*        // Table creation
         $table = $schema->createTable('icap__lesson');
         $this->addId($table);
         $table->addColumn('root_id', 'integer', array('notnull' => false));
         $this->storeTable($table);
         $table->addForeignKeyConstraint(
             $schema->getTable('claro_resource'), array('id'), array('id'), array("onDelete" => "CASCADE")
-        );
+        );*/
     }
 
     /**
@@ -50,7 +50,7 @@ class Version20130619153000 extends BundleMigration
     public function createLessonChapterTable(Schema $schema)
     {
         // Table creation
-        $table = $schema->createTable('icap__lesson_chapter');
+/*        $table = $schema->createTable('icap__lesson_chapter');
         // Add an auto increment id
         $this->addId($table);
 
@@ -75,7 +75,7 @@ class Version20130619153000 extends BundleMigration
 
         $schema->getTable('icap__lesson')->addForeignKeyConstraint(
             $table, array('root_id'), array('id'), array("onDelete" => "CASCADE")
-        );
+        );*/
 
     }
 }
