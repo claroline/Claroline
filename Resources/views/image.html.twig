@@ -20,12 +20,15 @@
                     </div>
                 {% endfor %}
             </div>
-            <a class="left carousel-control" href="#image-player" data-slide="prev">
-                <i class="icon-prev"></i>
-            </a>
-            <a class="right carousel-control" href="#image-player" data-slide="next">
-                <i class="icon-next"></i>
-            </a>
+            {% if images | length > 1 %}
+                <a class="left carousel-control" href="#image-player" data-slide="prev">
+                    <i class="icon-prev"></i>
+                </a>
+                <a class="right carousel-control" href="#image-player" data-slide="next">
+                    <i class="icon-next"></i>
+                </a>
+            {% endif %}
+
             <div class="float-right-top">
                 <a class="btn btn-default close pointer-hand" onClick="javascript:enterFullscreen(this.parentNode.parentNode)"><i class="icon-resize-full"></i></a>
             </div>
