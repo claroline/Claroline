@@ -165,6 +165,25 @@ class RoleRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findRolesByWorkspaceAndRoleNames(
+        AbstractWorkspace $workspace,
+        array $roles
+    )
+    {
+        $dql = "
+            SELECT r FROM Claroline\CoreBundle\Entity\Role r
+            JOIN r.workspace w
+            WHERE w = :workspace
+            AND r.name IN (:roles)
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('roles', $roles);
+
+        return $query->getResult();
+    }
+
     /**
      * @todo check and document this method
      */

@@ -11,6 +11,7 @@ add_group: 'Ajouter un groupe'
 add_group_s_confirm_message: 'groupe(s) ajouté(s)'
 add_resource: 'Ajouter une ressource'
 add_role: 'Ajouter un role'
+add_tag: 'Ajouter un Tag'
 add_tag_to_workspace: 'Ajouter un Tag à l''espace d''activités'
 add_user: 'Ajouter un utilisateur'
 add_users: 'Ajouter des utilisateurs'
@@ -39,6 +40,7 @@ admin_workspace_tag_form_name: Nom
 advanced: Avancé
 agenda: Agenda
 all: Tous
+all_available_workspaces: 'Tous les espaces d''activités disponibles'
 all_my_workspaces: 'Tous mes espaces d''activités'
 all_workspaces: 'Tous les espaces'
 anonymous: Anonyme
@@ -50,6 +52,7 @@ an_error_occured_message: Une erreur s'est produite. Veuillez contacter l'admini
 apply: Appliquer
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espaces d''activités disponibles'
+back: 'Retour'
 badges_management: 'Gestion des badges'
 by: par
 cancel: Annuler
@@ -58,6 +61,8 @@ canCreate: 'Creation de %type%'
 canEdit: 'Droit de modifier'
 canExport: 'Droit d''exporter'
 canDelete: 'Droit de supprimer'
+cannot_delete_unique_manager: 'Impossible de supprimer le seul gestionnaire.'
+cannot_unsubscribe_from_workspace: 'Impossible de vous désincrire de l''espace d''activités'
 canOpen: 'Droit d''ouvrir'
 choose_resource_form_type: 'Type de ressource'
 Choose visible actions in the widget: 'Choisissez les actions visibles dans le widget'
@@ -261,6 +266,8 @@ new_message: 'Nouveau message'
 no: 'non'
 no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
 no_search_results: 'Votre recherche n''a retourné aucun résultat.'
+no_tag: 'Il n''y a aucun Tag'
+no_workspace: 'Il n''y a aucun espace d''activités'
 none: Aucun
 note: Note
 not_allowed_message: Vous n'êtes pas autorisé(e) à effectuer cette action.
@@ -311,10 +318,12 @@ profile_form_username: 'Nom d''utilisateur'
 properties: Propriétés
 public: Public
 public_workspaces: 'Espaces d''activités publiques'
-public_workspace_empty: 'Il n''y a aucune espace d''activité publique.'
+public_workspace_empty: 'Il n''y a aucun espace d''activité publique.'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 register: Inscription
+register_to_a_public_workspace: 'Inscription à un espace d''activités publique'
 register_to_a_workspace: 'S''inscrire à un espace d''activités'
+registered: 'Inscrit'
 registered_groups: 'Groupes enregistrés'
 registered_users: 'Utilisateurs enregistrés'
 registration_to_workspaces: 'Inscription à des espaces d''activités'
@@ -432,6 +441,7 @@ type: Type
 type_s: Type(s)
 unique connections: 'Nb Cnx. uniques'
 unregister: Désinscription
+unregister_from_a_workspace: 'Désinscription d''un espace d''activités'
 unregistered: 'Non inscrit'
 unregistered_groups: 'Groupes non enregistrés'
 unregistered_users: 'Utilisateurs non enregistrés'

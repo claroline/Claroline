@@ -23,4 +23,11 @@ no event found : "Pas d'évènements"
 start date : "Date début"
 title : "Titre de l'évènement ne peut pas être vide"
 update : "mettre à jour"
-
+prev : '<'
+next : '>'
+prevYear : '<<'
+nextYear : '>>'
+today : 'auj'
+month : 'mois'
+week : 'semaine'
+day: 'jour'

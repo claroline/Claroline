@@ -1,16 +1,5 @@
-{% javascripts debug=false  output='vendor/twbs/bootstrap/js/bootstrap.js'
-    '../vendor/twbs/bootstrap/js/transition.js'
-    '../vendor/twbs/bootstrap/js/alert.js'
-    '../vendor/twbs/bootstrap/js/button.js'
-    '../vendor/twbs/bootstrap/js/carousel.js'
-    '../vendor/twbs/bootstrap/js/collapse.js'
-    '../vendor/twbs/bootstrap/js/dropdown.js'
+{% javascripts debug=false  output='vendor/twbs/bootstrap/js/change_me.js'
     '../vendor/twbs/bootstrap/js/modal.js'
-    '../vendor/twbs/bootstrap/js/scrollspy.js'
-    '../vendor/twbs/bootstrap/js/tab.js'
-    '../vendor/twbs/bootstrap/js/tooltip.js'
-    '../vendor/twbs/bootstrap/js/popover.js'
-    '../vendor/twbs/bootstrap/js/affix.js'
     %}<script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 {% javascripts
@@ -33,6 +22,8 @@
 <div id="picker-wrapper"></div>
     <script type="text/javascript">
     $(function() {
+        "use strict";
+
         Claroline.ResourceManager.initialize({
             "parentElement": $('#picker-wrapper'),
             "isPickerMultiSelectAllowed": false,
@@ -60,7 +51,7 @@
             }
         });
 
-        $('#resource-picker').click(function(){Claroline.ResourceManager.picker('open')});
+        $("body").on('click', '#resource-picker', function(){Claroline.ResourceManager.picker('open')});
 
         var callBack = function(nodes){
             console.debug(nodes[_.keys(nodes)][1]);

@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Repository\Exception\UnknownFilterException;
 
 /**
@@ -340,6 +341,19 @@ class ResourceNodeRepository extends MaterializedPathRepository
         $resources = $query->getResult();
 
         return $resources;
+    }
+
+    public function findByWorkspaceAndResourceType(AbstractWorkspace $workspace, ResourceType $resourceType)
+    {
+        $qb = $this->createQueryBuilder('resourceNode');
+        $qb->select('resourceNode')
+            ->where('resourceNode.workspace = :workspace')
+            ->andWhere('resourceNode.resourceType = :resourceType');
+
+        return $results = $qb->getQuery()->execute(array(
+          ':workspace'    => $workspace,
+          ':resourceType' => $resourceType
+        ));
     }
 
     private function addFilters(ResourceQueryBuilder $builder,  array $criteria, array $roles = null)
