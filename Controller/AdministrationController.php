@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
+use Claroline\CoreBundle\Manager\MailManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -45,6 +46,7 @@ class AdministrationController extends Controller
     private $analyticsManager;
     private $translator;
     private $request;
+    private $mailManager;
 
     /**
      * @DI\InjectParams({
@@ -59,7 +61,8 @@ class AdministrationController extends Controller
      *     "formFactory"         = @DI\Inject("claroline.form.factory"),
      *     "analyticsManager"    = @DI\Inject("claroline.manager.analytics_manager"),
      *     "translator"          = @DI\Inject("translator"),
-     *     "request"             = @DI\Inject("request")
+     *     "request"             = @DI\Inject("request"),
+     *      "mailManager"        = @DI\Inject("claroline.manager.mail_manager")
      * })
      */
     public function __construct(
@@ -74,7 +77,8 @@ class AdministrationController extends Controller
         FormFactory $formFactory,
         AnalyticsManager $analyticsManager,
         Translator $translator,
-        Request $request
+        Request $request,
+        MailManager $mailManager
     )
     {
         $this->userManager = $userManager;
@@ -89,6 +93,7 @@ class AdministrationController extends Controller
         $this->analyticsManager = $analyticsManager;
         $this->translator = $translator;
         $this->request = $request;
+        $this->mailManager = $mailManager;
     }
 
     /**
@@ -120,8 +125,17 @@ class AdministrationController extends Controller
     {
         $roles = $this->roleManager->getPlatformRoles($currentUser);
         $form = $this->formFactory->create(FormFactory::TYPE_USER, array($roles));
+        if ($this->mailManager->isMailerAvailable()) {
 
-        return array('form_complete_user' => $form->createView());
+            return array('form_complete_user' => $form->createView());
+
+        } else {
+
+            return array(
+                'form_complete_user' => $form->createView(),
+                'error' => 'Mail not available'
+                );
+        }
     }
 
     /**
@@ -147,8 +161,21 @@ class AdministrationController extends Controller
             $user = $form->getData();
             $newRoles = $form->get('platformRoles')->getData();
             $this->userManager->insertUserWithRoles($user, $newRoles);
+            if ($this->mailManager->isMailerAvailable()) {
 
-            return $this->redirect($this->generateUrl('claro_admin_user_list'));
+                $body = $this->translator->trans('admin_form_username', array(), 'platform').': '.$user->getUsername(). $this->translator->trans('admin_form_plainPassword_first', array(), 'platform'). ': '.$user->getPlainPassword();
+
+                if ($this->mailManager->sendPlainPassword('noreply@claroline.net', $user->getMail(), $body)) {
+
+                    return $this->redirect($this->generateUrl('claro_admin_user_list'));
+
+                }
+
+                return $this->redirect($this->generateUrl('claro_admin_user_list'));
+
+            } else {
+                return $this->redirect($this->generateUrl('claro_admin_user_list'));
+            }
         }
 
         return array('form_complete_user' => $form->createView());
@@ -1014,9 +1041,9 @@ class AdministrationController extends Controller
                 "range"=>$this->analyticsManager->getDefaultRange()
             )
         );
-        
+
         $criteriaForm->handleRequest($this->request);
-               
+
         $range = $criteriaForm->get('range')->getData();
         $topType = $criteriaForm->get('top_type')->getData();
         $max = $criteriaForm->get('top_number')->getData();

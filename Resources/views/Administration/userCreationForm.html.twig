@@ -19,6 +19,9 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'user_creation'|trans({}, 'platform') }}</h3>
     </div>
+    {% if error is not empty %}
+        <div class="alert alert-warning"> {{ 'mail_not_available'|trans({}, 'platform') }} </div>
+    {% endif %}
     <form class="form-horizontal" action="{{ path('claro_admin_create_user') }}" method="post" {{ form_enctype(form_complete_user) }} id="form_complete_user" autocomplete="off">
         <div class="panel-body">
             {{ form_widget(form_complete_user) }}
