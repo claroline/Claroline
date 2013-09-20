@@ -1,0 +1,15 @@
+{
+    "name": "vendor/exo-bundle",
+    "type": "claroline-plugin",
+    "require": {
+        "claroline/core-bundle": "~1.0",
+        "claroline/plugin-installer": "~1.0"
+    },
+    "autoload": {
+        "psr-0": { "Vendor\\ExoBundle": "" }
+    },
+    "target-dir": "Vendor/ExoBundle",
+    "extra": {
+        "dbVersion": "20130906115738"
+    }
+}
