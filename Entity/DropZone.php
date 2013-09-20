@@ -5,7 +5,7 @@
  * Time: 15:18
  */
 
-namespace Icap\DropZoneBundle\Entity;
+namespace Icap\DropzoneBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="icap__dropzonebundle_dropzone")
  */
-class DropZone extends AbstractResource {
+class Dropzone extends AbstractResource {
 
     /**
      * 1 = common
@@ -108,8 +108,8 @@ class DropZone extends AbstractResource {
     protected $totalCriteriaColumn = 5;
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Icap\DropZoneBundle\Entity\Drop",
-     *     mappedBy="dropZone",
+     *     targetEntity="Icap\DropzoneBundle\Entity\Drop",
+     *     mappedBy="dropzone",
      *     cascade={"all"},
      *     orphanRemoval=true
      * )
@@ -117,8 +117,8 @@ class DropZone extends AbstractResource {
     protected $drops;
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Icap\DropZoneBundle\Entity\Criterion",
-     *     mappedBy="dropZone",
+     *     targetEntity="Icap\DropzoneBundle\Entity\Criterion",
+     *     mappedBy="dropzone",
      *     cascade={"all"},
      *     orphanRemoval=true
      * )

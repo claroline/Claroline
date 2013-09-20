@@ -1,16 +1,16 @@
-{% extends "IcapDropZoneBundle:DropZone:edit.html.twig" %}
+{% extends "IcapDropzoneBundle:Dropzone:edit.html.twig" %}
 
 {% block drop_zone_content_edit %}
     <div class="navbar navbar-default" role="navigation">
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                 <li>
-                    <a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropZone.id}) }}">
+                    <a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.id}) }}">
                         {{ 'Common'|trans }}
                     </a>
                 </li>
                 <li class="active">
-                    <a href="{{ path('icap_dropzone_edit_criteria', {'resourceId': dropZone.id}) }}">
+                    <a href="{{ path('icap_dropzone_edit_criteria', {'resourceId': dropzone.id}) }}">
                         {{ 'Peer review criteria'|trans }}
                     </a>
                 </li>
@@ -29,7 +29,7 @@
             {{ 'Edit a criterion'|trans }}
         {% endif %}
     </h3>
-    {% include "IcapDropZoneBundle:DropZone:editAddCriterionForm.html.twig" %}
+    {% include "IcapDropzoneBundle:Dropzone:editAddCriterionForm.html.twig" %}
 {% endblock %}
 
 {% block javascripts %}

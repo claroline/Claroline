@@ -1,13 +1,13 @@
 <?php
 
-namespace Icap\DropZoneBundle\DependencyInjection;
+namespace Icap\DropzoneBundle\DependencyInjection;
 
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 
-class IcapDropZoneExtension extends Extension
+class IcapDropzoneExtension extends Extension
 {
 
     public function load(array $configs, ContainerBuilder $container)

@@ -5,7 +5,7 @@
  * Time: 16:06
  */
 
-namespace Icap\DropZoneBundle\Entity;
+namespace Icap\DropzoneBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -26,27 +26,27 @@ class Criterion {
     protected $instruction;
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="Icap\DropZoneBundle\Entity\DropZone",
+     *      targetEntity="Icap\DropzoneBundle\Entity\Dropzone",
      *      inversedBy="peerReviewCriteria"
      * )
      * @ORM\JoinColumn(name="drop_zone_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
-    protected $dropZone;
+    protected $dropzone;
 
     /**
      * @return mixed
      */
-    public function getDropZone()
+    public function getDropzone()
     {
-        return $this->dropZone;
+        return $this->dropzone;
     }
 
     /**
-     * @param mixed $dropZone
+     * @param mixed $dropzone
      */
-    public function setDropZone($dropZone)
+    public function setDropzone($dropzone)
     {
-        $this->dropZone = $dropZone;
+        $this->dropzone = $dropzone;
     }
 
     /**
@@ -82,38 +82,38 @@ class Criterion {
     }
 
     /**
-     * Proxy dropZone
+     * Proxy dropzone
      * @return mixed
      */
     public function getTotalCriteriaColumn()
     {
-        return $this->getDropZone()->getTotalCriteriaColumn();
+        return $this->getDropzone()->getTotalCriteriaColumn();
     }
 
     /**
-     * Proxy dropZone
+     * Proxy dropzone
      * @param mixed
      */
     public function setTotalCriteriaColumn($value)
     {
-        $this->getDropZone()->setTotalCriteriaColumn($value);
+        $this->getDropzone()->setTotalCriteriaColumn($value);
     }
 
     /**
-     * Proxy dropZone
+     * Proxy dropzone
      * @return mixed
      */
     public function getAllowCommentInCorrection()
     {
-        return $this->getDropZone()->getAllowCommentInCorrection() ? 1 : 0;
+        return $this->getDropzone()->getAllowCommentInCorrection() ? 1 : 0;
     }
 
     /**
-     * Proxy dropZone
+     * Proxy dropzone
      * @param mixed
      */
     public function setAllowCommentInCorrection($value)
     {
-        $this->getDropZone()->setAllowCommentInCorrection($value == 1);
+        $this->getDropzone()->setAllowCommentInCorrection($value == 1);
     }
 }

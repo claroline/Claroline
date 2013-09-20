@@ -5,14 +5,14 @@
  * Time: 15:39
  */
 
-namespace Icap\DropZoneBundle\Entity;
+namespace Icap\DropzoneBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="Icap\DropZoneBundle\Repository\DropRepository")
+ * @ORM\Entity(repositoryClass="Icap\DropzoneBundle\Repository\DropRepository")
  * @ORM\Table(name="icap__dropzonebundle_drop", uniqueConstraints={@ORM\UniqueConstraint(name="unique_drop_for_user_in_drop_zone", columns={"drop_zone_id", "user_id"})})
  */
 class Drop {
@@ -37,15 +37,15 @@ class Drop {
     protected $finished = false;
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="Icap\DropZoneBundle\Entity\DropZone",
+     *      targetEntity="Icap\DropzoneBundle\Entity\Dropzone",
      *      inversedBy="drops"
      * )
      * @ORM\JoinColumn(name="drop_zone_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
-    protected $dropZone;
+    protected $dropzone;
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Icap\DropZoneBundle\Entity\Document",
+     *     targetEntity="Icap\DropzoneBundle\Entity\Document",
      *     mappedBy="drop",
      *     cascade={"all"},
      *     orphanRemoval=true
@@ -62,7 +62,7 @@ class Drop {
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Icap\DropZoneBundle\Entity\Correction",
+     *     targetEntity="Icap\DropzoneBundle\Entity\Correction",
      *     mappedBy="drop"
      * )
      */
@@ -140,17 +140,17 @@ class Drop {
     /**
      * @return mixed
      */
-    public function getDropZone()
+    public function getDropzone()
     {
-        return $this->dropZone;
+        return $this->dropzone;
     }
 
     /**
-     * @param mixed $dropZone
+     * @param mixed $dropzone
      */
-    public function setDropZone($dropZone)
+    public function setDropzone($dropzone)
     {
-        $this->dropZone = $dropZone;
+        $this->dropzone = $dropzone;
     }
 
     /**

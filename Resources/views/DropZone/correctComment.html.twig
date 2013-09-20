@@ -1,4 +1,4 @@
-{% extends "IcapDropZoneBundle:DropZone:correct.html.twig" %}
+{% extends "IcapDropzoneBundle:Dropzone:correct.html.twig" %}
 
 {% form_theme form 'ClarolineCoreBundle::form_theme_bootstrap3.html.twig' %}
 
@@ -9,7 +9,7 @@
 
     <div class="container">
         <div class="row">
-            <form method="POST" action="{% if edit == false %}#{% elseif admin == true %}{{ path('icap_dropzone_drops_detail_correction_comment', {'resourceId': dropZone.id, 'state' : edit ? 'edit' : 'show', 'correctionId': correction.id}) }}{% else %}{{ path('icap_dropzone_correct_comment', {'resourceId': dropZone.id}) }}{% endif %}" class="form-horizontal">
+            <form method="POST" action="{% if edit == false %}#{% elseif admin == true %}{{ path('icap_dropzone_drops_detail_correction_comment', {'resourceId': dropzone.id, 'state' : edit ? 'edit' : 'show', 'correctionId': correction.id}) }}{% else %}{{ path('icap_dropzone_correct_comment', {'resourceId': dropzone.id}) }}{% endif %}" class="form-horizontal">
 
                 {% if edit %}
                     <div class="form-group">
@@ -26,15 +26,15 @@
                 {% if edit == true %}
                     <div class="btn-group pull-right">
                         {% if admin == true %}
-                            <a href="{{ path('icap_dropzone_drops_detail_correction_paginated', {'resourceId': dropZone.id, 'state' : state, 'correctionId': correction.id, 'page': nbPages}) }}" class="btn btn-default">{{ 'Previous'|trans }}</a>
+                            <a href="{{ path('icap_dropzone_drops_detail_correction_paginated', {'resourceId': dropzone.id, 'state' : state, 'correctionId': correction.id, 'page': nbPages}) }}" class="btn btn-default">{{ 'Previous'|trans }}</a>
                         {% else %}
-                            <a href="{{ path('icap_dropzone_correct_paginated', {'resourceId': dropZone.id, 'page': nbPages}) }}" class="btn btn-default">{{ 'Retour'|trans }}</a>
+                            <a href="{{ path('icap_dropzone_correct_paginated', {'resourceId': dropzone.id, 'page': nbPages}) }}" class="btn btn-default">{{ 'Retour'|trans }}</a>
                         {% endif %}
                         <button type= "submit" class="btn btn-primary">{{ 'Save and finished'|trans }}</button>
                     </div>
                 {% else %}
                     <div class="btn-group pull-right">
-                        <a href="{{ path('icap_dropzone_drops_detail_correction_paginated', {'resourceId': dropZone.id, 'state' : state, 'correctionId': correction.id, 'page': nbPages}) }}" class="btn btn-default">{{ 'Previous'|trans }}</a>
+                        <a href="{{ path('icap_dropzone_drops_detail_correction_paginated', {'resourceId': dropzone.id, 'state' : state, 'correctionId': correction.id, 'page': nbPages}) }}" class="btn btn-default">{{ 'Previous'|trans }}</a>
                         <a href="#" class="btn btn-default disabled">{{ 'Next'|trans }}</a>
                     </div>
                 {% endif %}

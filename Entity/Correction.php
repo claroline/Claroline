@@ -5,14 +5,14 @@
  * Time: 16:40
  */
 
-namespace Icap\DropZoneBundle\Entity;
+namespace Icap\DropzoneBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="Icap\DropZoneBundle\Repository\CorrectionRepository")
+ * @ORM\Entity(repositoryClass="Icap\DropzoneBundle\Repository\CorrectionRepository")
  * @ORM\Table(name="icap__dropzonebundle_correction")
 
  */
@@ -67,7 +67,7 @@ class Correction {
     protected $reportComment = null;
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Icap\DropZoneBundle\Entity\Grade",
+     *      targetEntity="Icap\DropzoneBundle\Entity\Grade",
      *      mappedBy="correction",
      *      cascade={"all"},
      *      orphanRemoval=true
@@ -85,7 +85,7 @@ class Correction {
 
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="Icap\DropZoneBundle\Entity\Drop",
+     *      targetEntity="Icap\DropzoneBundle\Entity\Drop",
      *      inversedBy="corrections"
      * )
      * @ORM\JoinColumn(name="drop_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
@@ -94,11 +94,11 @@ class Correction {
 
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="Icap\DropZoneBundle\Entity\DropZone"
+     *      targetEntity="Icap\DropzoneBundle\Entity\Dropzone"
      * )
      * @ORM\JoinColumn(name="drop_zone_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
-    protected $dropZone;
+    protected $dropzone;
 
     function __construct()
     {
@@ -282,19 +282,19 @@ class Correction {
     }
 
     /**
-     * @param mixed $dropZone
+     * @param mixed $dropzone
      */
-    public function setDropZone($dropZone)
+    public function setDropzone($dropzone)
     {
-        $this->dropZone = $dropZone;
+        $this->dropzone = $dropzone;
     }
 
     /**
      * @return mixed
      */
-    public function getDropZone()
+    public function getDropzone()
     {
-        return $this->dropZone;
+        return $this->dropzone;
     }
 
     /**

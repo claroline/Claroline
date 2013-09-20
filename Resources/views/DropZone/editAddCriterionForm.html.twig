@@ -1,6 +1,6 @@
 {% form_theme form 'ClarolineCoreBundle::form_theme_bootstrap3.html.twig' %}
 
-<form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_edit_create_criterion', {'resourceId': dropZone.id, 'page':page, 'criterionId':criterion.id}) }}">
+<form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_edit_create_criterion', {'resourceId': dropzone.id, 'page':page, 'criterionId':criterion.id}) }}">
     {{ form_errors(form) }}
 
     <div class="form-group">
@@ -17,12 +17,12 @@
 
     <div class="form-group">
         <div class="col-lg-offset-2 col-lg-10 btn-group form-buttons">
-            <a href="{{ path('icap_dropzone_edit_criteria_paginated', {'resourceId': dropZone.id, 'page':page}) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
+            <a href="{{ path('icap_dropzone_edit_criteria_paginated', {'resourceId': dropzone.id, 'page':page}) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
             <button type="submit" class="btn btn-primary">
                 {% if criterion.id == 0 %}
                     {{ 'Create'|trans }}
                 {% else %}
-                    {{ 'dropZone_edit'|trans }}
+                    {{ 'dropzone_edit'|trans }}
                 {% endif %}
             </button>
         </div>

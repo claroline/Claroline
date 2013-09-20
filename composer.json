@@ -6,9 +6,9 @@
         "claroline/plugin-installer": "~1.0"
     },
     "autoload": {
-        "psr-0": { "Icap\\DropZoneBundle": "" }
+        "psr-0": { "Icap\\DropzoneBundle": "" }
     },
-    "target-dir": "Icap/DropZoneBundle",
+    "target-dir": "Icap/DropzoneBundle",
     "extra": {
         "dbVersion": "20130906115738"
     }

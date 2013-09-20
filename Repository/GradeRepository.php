@@ -5,7 +5,7 @@
  * Time: 14:56
  */
 
-namespace Icap\DropZoneBundle\Repository;
+namespace Icap\DropzoneBundle\Repository;
 
 
 use Doctrine\ORM\EntityRepository;

@@ -1,16 +1,16 @@
-{% extends "IcapDropZoneBundle:DropZone:drops.html.twig" %}
+{% extends "IcapDropzoneBundle:Dropzone:drops.html.twig" %}
 
 {% block dropzone_content_drops %}
     <div class="navbar navbar-default" role="navigation">
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                 <li>
-                    <a href="{{ path('icap_dropzone_drops_by_user', {'resourceId': dropZone.id}) }}">
+                    <a href="{{ path('icap_dropzone_drops_by_user', {'resourceId': dropzone.id}) }}">
                         {{ 'Copies evaluation finished'|trans }} <span class="badge">{{ nbDropCorrected }}</span>
                     </a>
                 </li>
                 <li class="active">
-                    <a href="{{ path('icap_dropzone_drops_awaiting', {'resourceId': dropZone.id}) }}">
+                    <a href="{{ path('icap_dropzone_drops_awaiting', {'resourceId': dropzone.id}) }}">
                         {{ 'Copies being evaluated'|trans }} <span class="badge">{{ nbDrop - nbDropCorrected }}</span>
                     </a>
                 </li>
@@ -28,7 +28,7 @@
             {
             'proximity' : 1,
             'routeName': 'icap_dropzone_drops_awaiting_paginated',
-            'routeParams': {'resourceId': dropZone.id}
+            'routeParams': {'resourceId': dropzone.id}
             }
             )
             }}
@@ -41,10 +41,10 @@
                 <div class="row">
                     <h3 class="panel-title col-md-9">
                         {% if drop.reported %}<span class="glyphicon icon-warning-sign" data-toggle="tooltip" title="" data-original-title="{{ 'This copy has been reported'|trans }}"></span>{% endif %}
-                        <a href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropZone.id, 'dropId': drop.id}) }}">{{ drop.user.firstName }} {{ drop.user.lastName }}</a>
+                        <a href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': drop.id}) }}">{{ drop.user.firstName }} {{ drop.user.lastName }}</a>
                     </h3>
                     <div class="col-md-3">
-                        <a href="{{ path('icap_dropzone_drops_delete', {'resourceId': dropZone.id, 'dropId': drop.id, 'tab': 2, 'page': pager.currentPage}) }}" class="btn btn-danger btn-xs pull-right launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete'|trans }}</a>
+                        <a href="{{ path('icap_dropzone_drops_delete', {'resourceId': dropzone.id, 'dropId': drop.id, 'tab': 2, 'page': pager.currentPage}) }}" class="btn btn-danger btn-xs pull-right launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete'|trans }}</a>
                     </div>
                 </div>
             </div>
@@ -58,15 +58,15 @@
 
                 <div class="row">
                     <div class="col-md-3">{{ drop.dropDate|date }}</div>
-                    <div class="col-md-3">{% include 'IcapDropZoneBundle:DropZone:dropsLastCorrectionDate.html.twig' %}</div>
+                    <div class="col-md-3">{% include 'IcapDropzoneBundle:Dropzone:dropsLastCorrectionDate.html.twig' %}</div>
                     <div class="col-md-4">
                         <ul>
                             {% for document in drop.documents %}
-                                <li>{% include 'IcapDropZoneBundle:DropZone:simpleShowDocument.html.twig' %}</li>
+                                <li>{% include 'IcapDropzoneBundle:Dropzone:simpleShowDocument.html.twig' %}</li>
                             {% endfor %}
                         </ul>
                     </div>
-                    <div class="col-md-2">{% include 'IcapDropZoneBundle:DropZone:dropsNbCorrections.html.twig' %}</div>
+                    <div class="col-md-2">{% include 'IcapDropzoneBundle:Dropzone:dropsNbCorrections.html.twig' %}</div>
                 </div>
             </div>
         </div>
@@ -89,7 +89,7 @@
             {
             'proximity' : 1,
             'routeName': 'icap_dropzone_drops_awaiting_paginated',
-            'routeParams': {'resourceId': dropZone.id}
+            'routeParams': {'resourceId': dropzone.id}
             }
             )
             }}

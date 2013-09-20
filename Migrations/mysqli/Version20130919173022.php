@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\DropZoneBundle\Migrations\mysqli;
+namespace Icap\DropzoneBundle\Migrations\mysqli;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;

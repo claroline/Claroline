@@ -1,6 +1,6 @@
 formatDatetime: 'd/m/Y h:i'
 Resource: 'Ressource'
-dropZone_edit: 'Modifier'
+dropzone_edit: 'Modifier'
 Common: 'Général'
 Peer review criteria: 'Critères d''évaluation par les pairs'
 Participant: 'Participant'

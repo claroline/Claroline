@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\DropZoneBundle\Migrations\pdo_oci;
+namespace Icap\DropzoneBundle\Migrations\pdo_oci;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
