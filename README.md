@@ -72,7 +72,7 @@ The application is accessible in your browser via:
 To update your installation to the last stable state, use:
 
 ```sh
-$ composer update --prefer-dist
+$ composer update --prefer-source
 ```
 
 ### Plugin installation
