@@ -7,55 +7,55 @@ use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class ToolListenerTest extends MockeryTestCase
 {
-    private $container;
+//    private $container;
     private $toolListener;
+    private $em;
+    private $activityRepo;
+    private $resourceManager;
+    private $securityContext;
+    private $templating;
+    private $utils;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->container = $this->mock('Symfony\Component\DependencyInjection\ContainerInterface');
-        $this->toolListener = new ToolListener();
-        $this->toolListener->setContainer($this->container);
+        $this->em = $this->mock('Doctrine\ORM\EntityManager');
+        $this->activityRepo = $this->mock('Claroline\CoreBundle\Repository\ActivityRepository');
+        $this->resourceManager = $this->mock('Claroline\CoreBundle\Manager\ResourceManager');
+        $this->securityContext = $this->mock('Symfony\Component\Security\Core\SecurityContext');
+        $this->templating = $this->mock('Symfony\Bundle\TwigBundle\TwigEngine');
+        $this->utils = $this->mock('Claroline\CoreBundle\Library\Security\Utilities');
+
+        $this->em->shouldReceive('getRepository')
+            ->with('ClarolineCoreBundle:Resource\Activity')
+            ->once()
+            ->andReturn($this->activityRepo);
+
+        $this->toolListener = new ToolListener(
+            $this->em,
+            $this->resourceManager,
+            $this->securityContext,
+            $this->templating,
+            $this->utils
+        );
     }
 
     public function testFetchActivitiesDatasForDesktopTool()
     {
-        $em = $this->mock('Doctrine\ORM\EntityManager');
-        $sc = $this->mock('Symfony\Component\Security\Core\SecurityContext');
-        $ut = $this->mock('Claroline\CoreBundle\Library\Security\Utilities');
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $activityRepo = $this->mock('Claroline\CoreBundle\Repository\ActivityRepository');
-        $resourceRepo = $this->mock('Claroline\CoreBundle\Repository\AbstractResourceRepository');
         $startDate = $this->mock('\DateTime');
 
-        $this->container->shouldReceive('get')
-            ->with('doctrine.orm.entity_manager')
-            ->once()
-            ->andReturn($em);
-        $this->container->shouldReceive('get')
-            ->with('security.context')
-            ->once()
-            ->andReturn($sc);
-        $this->container->shouldReceive('get')
-            ->with('claroline.security.utilities')
-            ->once()
-            ->andReturn($ut);
-        $sc->shouldReceive('getToken')
+        $this->securityContext
+            ->shouldReceive('getToken')
             ->once()
             ->andReturn($token);
-        $ut->shouldReceive('getRoles')
+        $this->utils
+            ->shouldReceive('getRoles')
             ->with($token)
             ->once()
             ->andReturn(array());
-        $em->shouldReceive('getRepository')
-            ->with('ClarolineCoreBundle:Resource\AbstractResource')
-            ->times(2)
-            ->andReturn($resourceRepo);
-        $em->shouldReceive('getRepository')
-            ->with('ClarolineCoreBundle:Resource\Activity')
-            ->once()
-            ->andReturn($activityRepo);
-        $resourceRepo->shouldReceive('findByCriteria')
+        $this->resourceManager
+            ->shouldReceive('getByCriteria')
             ->with(array('roots' => array(), 'types' => array('activity')), array(), true)
             ->once()
             ->andReturn(
@@ -73,7 +73,8 @@ class ToolListenerTest extends MockeryTestCase
                     )
                 )
             );
-        $resourceRepo->shouldReceive('findWorkspaceInfoByIds')
+        $this->resourceManager
+            ->shouldReceive('getWorkspaceInfoByIds')
             ->with(array(1))
             ->once()
             ->andReturn(
@@ -85,13 +86,14 @@ class ToolListenerTest extends MockeryTestCase
                     )
                 )
             );
-        $activityRepo->shouldReceive('findActivitiesByIds')
+        $this->activityRepo
+            ->shouldReceive('findActivitiesByNodeIds')
             ->with(array(1))
             ->once()
             ->andReturn(
                 array(
                     array(
-                        'id' => 1,
+                        'nodeId' => 1,
                         'instructions' => 'my_instructions',
                         'startDate' => $startDate,
                         'endDate' => null
@@ -129,7 +131,7 @@ class ToolListenerTest extends MockeryTestCase
                     'workspace_code' => array(
                         'code' => 'workspace_code',
                         'name' => 'workspace_name',
-                        'resources' => array(1)
+                        'nodes' => array(1)
                     )
                 )
             ),
@@ -139,51 +141,30 @@ class ToolListenerTest extends MockeryTestCase
 
     public function testFetchActivitiesDatasForWorkspaceTool()
     {
-        $em = $this->mock('Doctrine\ORM\EntityManager');
-        $sc = $this->mock('Symfony\Component\Security\Core\SecurityContext');
-        $ut = $this->mock('Claroline\CoreBundle\Library\Security\Utilities');
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $activityRepo = $this->mock('Claroline\CoreBundle\Repository\ActivityRepository');
-        $resourceRepo = $this->mock('Claroline\CoreBundle\Repository\AbstractResourceRepository');
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $root = $this->mock('Claroline\CoreBundle\Entity\Resource\AbstractResource');
+        $root = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $startDate = $this->mock('\DateTime');
 
-        $this->container->shouldReceive('get')
-            ->with('doctrine.orm.entity_manager')
-            ->once()
-            ->andReturn($em);
-        $this->container->shouldReceive('get')
-            ->with('security.context')
-            ->once()
-            ->andReturn($sc);
-        $this->container->shouldReceive('get')
-            ->with('claroline.security.utilities')
-            ->once()
-            ->andReturn($ut);
-        $sc->shouldReceive('getToken')
+        $this->securityContext
+            ->shouldReceive('getToken')
             ->once()
             ->andReturn($token);
-        $ut->shouldReceive('getRoles')
+        $this->utils
+            ->shouldReceive('getRoles')
             ->with($token)
             ->once()
             ->andReturn(array());
-        $em->shouldReceive('getRepository')
-            ->with('ClarolineCoreBundle:Resource\AbstractResource')
-            ->times(2)
-            ->andReturn($resourceRepo);
-        $em->shouldReceive('getRepository')
-            ->with('ClarolineCoreBundle:Resource\Activity')
-            ->once()
-            ->andReturn($activityRepo);
-        $resourceRepo->shouldReceive('findWorkspaceRoot')
+        $this->resourceManager
+            ->shouldReceive('getWorkspaceRoot')
             ->with($workspace)
             ->once()
             ->andReturn($root);
         $root->shouldReceive('getPath')
             ->once()
             ->andReturn('my_path');
-        $resourceRepo->shouldReceive('findByCriteria')
+        $this->resourceManager
+            ->shouldReceive('getByCriteria')
             ->with(array('roots' => array('my_path'), 'types' => array('activity')), array(), true)
             ->once()
             ->andReturn(
@@ -201,13 +182,14 @@ class ToolListenerTest extends MockeryTestCase
                     )
                 )
             );
-        $activityRepo->shouldReceive('findActivitiesByIds')
+        $this->activityRepo
+            ->shouldReceive('findActivitiesByNodeIds')
             ->with(array(1))
             ->once()
             ->andReturn(
                 array(
                     array(
-                        'id' => 1,
+                        'nodeId' => 1,
                         'instructions' => 'my_instructions',
                         'startDate' => $startDate,
                         'endDate' => null

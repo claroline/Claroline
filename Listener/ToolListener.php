@@ -4,27 +4,50 @@ namespace Claroline\ActivityToolBundle\Listener;
 
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Claroline\CoreBundle\Library\Security\Utilities;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Doctrine\ORM\EntityManager;
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service
  */
-class ToolListener extends ContainerAware
+class ToolListener
 {
-    protected $container;
+    private $em;
+    private $activityRepo;
+    private $resourceManager;
+    private $securityContext;
+    private $templating;
+    private $utils;
 
     /**
-     * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container")
-     * })
+     * Constructor.
      *
-     * @param ContainerInterface $container
+     * @DI\InjectParams({
+     *     "em"                 = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
+     *     "securityContext"    = @DI\Inject("security.context"),
+     *     "templating"         = @DI\Inject("templating"),
+     *     "utils"              = @DI\Inject("claroline.security.utilities")
+     * })
      */
-    public function setContainer(ContainerInterface $container = null)
+    public function __construct(
+        EntityManager $em,
+        ResourceManager $resourceManager,
+        SecurityContextInterface $securityContext,
+        TwigEngine $templating,
+        Utilities $utils
+    )
     {
-        $this->container = $container;
+        $this->em = $em;
+        $this->resourceManager = $resourceManager;
+        $this->securityContext = $securityContext;
+        $this->templating = $templating;
+        $this->utils = $utils;
+        $this->activityRepo = $em->getRepository('ClarolineCoreBundle:Resource\Activity');
     }
 
     /**
@@ -36,7 +59,7 @@ class ToolListener extends ContainerAware
     {
         $datas = $this->fetchActivitiesDatas(true);
 
-        $content = $this->container->get('templating')->render(
+        $content = $this->templating->render(
             'ClarolineActivityToolBundle::desktopActivityList.html.twig',
             array(
                 'resourceInfos' => $datas['resourceInfos'],
@@ -58,7 +81,7 @@ class ToolListener extends ContainerAware
         $workspace = $event->getWorkspace();
         $datas = $this->fetchActivitiesDatas(false, $workspace);
 
-        $content = $this->container->get('templating')->render(
+        $content = $this->templating->render(
             'ClarolineActivityToolBundle::workspaceActivityList.html.twig',
             array(
                 'workspace' => $workspace,
@@ -72,21 +95,18 @@ class ToolListener extends ContainerAware
 
     public function fetchActivitiesDatas($isDesktopTool, AbstractWorkspace $workspace = null)
     {
-        $token = $this->container->get('security.context')->getToken();
-        $userRoles = $this->container->get('claroline.security.utilities')->getRoles($token);
-        $em = $this->container->get('doctrine.orm.entity_manager');
+        $token = $this->securityContext->getToken();
+        $userRoles = $this->utils->getRoles($token);
 
         $criteria = array();
         $criteria['roots'] = array();
 
         if (!$isDesktopTool) {
-            $root = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-                ->findWorkspaceRoot($workspace);
+            $root = $this->resourceManager->getWorkspaceRoot($workspace);
             $criteria['roots'][] = $root->getPath();
         }
         $criteria['types'] = array('activity');
-        $nodes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-            ->findByCriteria($criteria, $userRoles, true);
+        $nodes = $this->resourceManager->getByCriteria($criteria, $userRoles, true);
 
         $activitiesDatas = array();
         $nodeInfos = array();
@@ -105,8 +125,8 @@ class ToolListener extends ContainerAware
 
         if (count($activityNodesId) > 0) {
             if ($isDesktopTool) {
-                $nodeWorkspaces = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-                    ->findWorkspaceInfoByIds($activityNodesId);
+                $nodeWorkspaces = $this->resourceManager
+                    ->getWorkspaceInfoByIds($activityNodesId);
 
                 foreach ($nodeWorkspaces as $nodeWs) {
                     $code = $nodeWs['code'];
@@ -121,7 +141,7 @@ class ToolListener extends ContainerAware
                 }
             }
 
-            $activities = $em->getRepository('ClarolineCoreBundle:Resource\Activity')
+            $activities = $this->activityRepo
                 ->findActivitiesByNodeIds($activityNodesId);
 
             foreach ($activities as $activity) {
