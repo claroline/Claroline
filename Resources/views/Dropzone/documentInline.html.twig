@@ -1,0 +1,13 @@
+{% include "IcapDropzoneBundle:Dropzone:documentForm.html.twig" %}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('a.cancel-inline').bind('click', function(event) {
+            event.preventDefault();
+
+            $('.container-inline').empty();
+            $('.show-during-add').hide();
+            $('.disabled-during-add').removeAttr('disabled');
+        });
+    });
+</script>

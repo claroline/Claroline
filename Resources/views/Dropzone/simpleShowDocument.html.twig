@@ -1,0 +1,7 @@
+{% if document.url is not null %}
+    <a href="{{ document.url }}">{{ document.url }}</a>
+{% elseif document.resourceNode is not null %}
+    <a href="#">document.resourceNode.name</a>
+{% else %}
+    <a href="#">file</a>
+{% endif %}

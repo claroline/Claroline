@@ -1,0 +1,17 @@
+{% extends "IcapDropzoneBundle::layout.html.twig" %}
+{% block dropzone_breadcrumb %}
+    <li class="active"><span class="glyphicon icon-file"></span> {{ dropzone.resourceNode.name }}</li>
+{% endblock %}
+
+{% block dropzone_content %}
+    <div class="container">
+        <h3>
+            {{ 'Warning'|trans }}
+        </h3>
+        {% include "IcapDropzoneBundle:Dropzone:reportDropForm.html.twig" %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}}
+{% endblock %}
