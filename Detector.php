@@ -35,4 +35,19 @@ class Detector
 
         return $bundles;
     }
+
+    public function detectBundle($path)
+    {
+        $bundles = $this->detectBundles($path);
+
+        if (1 !== $count = count($bundles)) {
+            $msg = "Expected one bundle in class {$path}, {$count} found";
+            $msg .= $count === 0 ? '.' :  ('(' . implode(', ', $bundles) .').');
+
+            throw new \Exception($msg);
+        }
+
+        return $bundles[0];
+    }
 }
+
