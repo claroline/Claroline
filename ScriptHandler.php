@@ -2,23 +2,26 @@
 
 namespace Claroline\BundleRecorder;
 
-use Composer\Script\Event;
+use Composer\Composer;
 use Composer\Script\CommandEvent;
 use Composer\Script\PackageEvent;
+use Composer\Package\PackageInterface;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
 class ScriptHandler
 {
     private static $removableBundles = array();
 
+    /**
+     * @deprecated Will be removed in 2.0.0
+     */
     public static function preUpdateCommand(CommandEvent $event)
     {
-        self::initAutoload($event, __METHOD__);
     }
 
     public static function prePackageInstall(PackageEvent $event)
     {
-        self::initAutoload($event, __METHOD__);
+        self::initAutoload($event->getComposer(), $event->getOperation()->getPackage());
     }
 
     public static function postPackageInstall(PackageEvent $event)
@@ -26,8 +29,14 @@ class ScriptHandler
         self::getRecorder($event)->addBundles(self::getBundles($event));
     }
 
+    public static function prePackageUpdate(PackageEvent $event)
+    {
+        self::initAutoload($event->getComposer(), $event->getOperation()->getPackage());
+    }
+
     public static function prePackageUninstall(PackageEvent $event)
     {
+        self::initAutoload($event->getComposer());
         self::$removableBundles = self::getBundles($event);
     }
 
@@ -36,18 +45,23 @@ class ScriptHandler
         self::getRecorder($event)->removeBundles(static::$removableBundles);
     }
 
-    private static function initAutoload(Event $event, $scriptName)
+    private static function initAutoload(Composer $composer, PackageInterface $package = null)
     {
-        // some classes may need to be loaded during the install process, thus
-        // *before* the autoloader is dumped by composer. This method ensures that
-        // everything is loadable by forcing to register the autoloader. For the
-        // implementation, see Composer\Script\EventDispatcher#getListeners().
-        $composer = $event->getComposer();
-        $package = $composer->getPackage();
+        // This method enables autoloading for installed packages and optionally for non-installed
+        // packages targeted by an installation operation. It may become superfluous when composer
+        // will handle it internally (see https://github.com/composer/composer/issues/187).
+        // As for implementation details, see Composer\Script\EventDispatcher#getListeners().
+
+        $rootPackage = $composer->getPackage();
         $generator = $composer->getAutoloadGenerator();
         $packages = $composer->getRepositoryManager()->getLocalRepository()->getCanonicalPackages();
-        $packageMap = $generator->buildPackageMap($composer->getInstallationManager(), $package, $packages);
-        $map = $generator->parseAutoloads($packageMap, $package);
+
+        if ($package) {
+            $packages[] = $package;
+        }
+
+        $packageMap = $generator->buildPackageMap($composer->getInstallationManager(), $rootPackage, $packages);
+        $map = $generator->parseAutoloads($packageMap, $rootPackage);
         $loader = $generator->createLoader($map);
 
         if (isset($map['classmap'][0])) {
@@ -88,3 +102,4 @@ class ScriptHandler
         return $recorder;
     }
 }
+
