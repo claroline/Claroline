@@ -51,7 +51,7 @@ Project setup
     - *web/themes*
     - *web/thumbnails*
 - Run the following commands:
-    - `$ composer require claroline/bundle-recorder ~1.0`
+    - `$ composer require claroline/bundle-recorder ~1.1`
     - `$ cp composer.dist.json composer.json`
     - `$ composer update --prefer-source`
     - `$ php app/console assetic:dump`

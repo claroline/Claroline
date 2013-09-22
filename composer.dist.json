@@ -7,7 +7,7 @@
     "require": {
         "php": ">=5.3.3",
         "sensio/distribution-bundle": "~2.3.4",
-        "claroline/bundle-recorder": "~1.0",
+        "claroline/bundle-recorder": "~1.1",
         "claroline/core-bundle": ">=1.3.4,<2.0",
         "claroline/activity-tool-bundle": "dev-master",
         "claroline/announcement-bundle": "dev-master",
@@ -65,14 +65,14 @@
         }
     ],
     "scripts": {
-        "pre-update-cmd": [
-            "Claroline\\BundleRecorder\\ScriptHandler::preUpdateCommand"
-        ],
         "pre-package-install": [
             "Claroline\\BundleRecorder\\ScriptHandler::prePackageInstall"
         ],
         "post-package-install": [
             "Claroline\\BundleRecorder\\ScriptHandler::postPackageInstall"
+        ],
+        "pre-package-update": [
+            "Claroline\\BundleRecorder\\ScriptHandler::prePackageUpdate"
         ],
         "pre-package-uninstall": [
             "Claroline\\BundleRecorder\\ScriptHandler::prePackageUninstall"
