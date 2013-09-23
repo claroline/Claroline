@@ -208,7 +208,7 @@ In addition to this listener you need to define a translation text for the key `
 display the action text on the list item row of the log (e.g. for action `resource-icap_blog-post_create` define a
 `log_resource-icap_blog-post_create_shortname` key in your log translation file).
 
-If you don't want to define a listener, and all the associated actions to do, for displaying the short presentation of the event
+If you don't want to define a listener and don't want to customize the details displaying, for displaying the short presentation of the event
 you can just define a `log_%actionName%_sentence` key in the translation files.
 In this translation text you have access to some variable, resource, receiver_user, receiver_group, role, workspace, tool, that you can use.
 
