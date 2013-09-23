@@ -1,0 +1,96 @@
+{% extends 'form_div_layout.html.twig' %}
+
+{% block form_row %}
+    {% spaceless %}
+        {% set input_col_size = input_col_size|default('col-md-10') %}
+        {% set label_col_size = label_col_size|default('col-md-2') %}
+
+        <div{% if errors|length > 0 %} class="has-error"{% endif %}>
+            {% if 'checkbox' not in block_prefixes %}
+                <div class="{{ label_col_size }}">
+                    {% if 'checkbox' not in block_prefixes %}
+                        {{ form_label(form, label|default(null)) }}
+                    {% endif %}
+                </div>
+            {% endif %}
+            <div class="{{ input_col_size }}">
+                {{ form_widget(form) }}
+                {{ form_errors(form) }}
+                {% if help is defined and help %}
+                    <div class="help-block">{{ help }}</div>
+                {% endif %}
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock form_row %}
+
+{% block checkbox_widget %}
+    {% spaceless %}
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+                {{ form_label(form, label|default(null)) }}
+            </label>
+        </div>
+    {% endspaceless %}
+{% endblock checkbox_widget %}
+
+{% block choice_widget_expanded %}
+    {% spaceless %}
+        <div {{ block('widget_container_attributes') }}>
+            {% for child in form %}
+                {{ form.vars.multiple }}
+                <div class="{{ multiple ? 'checkbox' : 'radio' }}">
+                    {{ form_widget(child) }}
+                    {{ form_label(child) }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endspaceless %}
+{% endblock choice_widget_expanded %}
+
+{% block datetime_widget %}
+    {% spaceless %}
+        {% if widget == 'single_text' %}
+            {{ block('form_widget_simple') }}
+        {% else %}
+            {% set date_col_size = date_col_size|default('col-md-8') %}
+            {% set time_col_size = time_col_size|default('col-md-4') %}
+
+
+            <div {{ block('widget_container_attributes') }}>
+                {{ form_errors(form.date) }}
+                {{ form_errors(form.time) }}
+                <div class="{{ date_col_size }}">
+                    {{ form_widget(form.date) }}
+                </div>
+                <div class="{{ time_col_size }}">
+                    {{ form_widget(form.time) }}
+                </div>
+            </div>
+        {% endif %}
+    {% endspaceless %}
+{% endblock datetime_widget %}
+
+{% block widget_attributes %}
+    {% spaceless %}
+        {% if 'checkbox' not in block_prefixes and 'radio' not in block_prefixes %}
+            {% set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control')|trim}) %}
+        {% endif %}
+
+        id="{{ id }}" name="{{ full_name }}"{% if read_only %} readonly="readonly"{% endif %}{% if disabled %} disabled="disabled"{% endif %}{% if required %} required="required"{% endif %}{% if max_length %} maxlength="{{ max_length }}"{% endif %}{% if pattern %} pattern="{{ pattern }}"{% endif %}
+        {% for attrname, attrvalue in attr %}{% if attrname in ['placeholder', 'title'] %}{{ attrname }}="{{ attrvalue|trans({}, translation_domain) }}" {% else %}{{ attrname }}="{{ attrvalue }}" {% endif %}{% endfor %}
+    {% endspaceless %}
+{% endblock widget_attributes %}
+
+{% block form_errors %}
+    {% spaceless %}
+        {% if errors|length > 0 %}
+            <ul class="help-block" style="clear: both;">
+                {% for error in errors %}
+                    <li>{{ error.message|trans }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_errors %}

@@ -504,7 +504,7 @@ class DropzoneController extends Controller {
         $dropRepo = $em->getRepository('IcapDropzoneBundle:Drop');
 
         if ($dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user, 'finished' => true)) !== null) {
-            $this->getRequest()->getSession()->getFlashBag()->add('danger', $this->get('translator')->trans('You ve already made ​​your copy for this review'));
+            $this->getRequest()->getSession()->getFlashBag()->add('error', $this->get('translator')->trans('You ve already made ​​your copy for this review'));
 
             return $this->redirect(
                 $this->generateUrl(
@@ -730,7 +730,7 @@ class DropzoneController extends Controller {
         $em = $this->getDoctrine()->getManager();
         // Check that the dropzone is in the process of peer review
         if ($dropzone->isPeerReview() == false) {
-            $this->getRequest()->getSession()->getFlashBag()->add('danger', $this->get('translator')->trans('The peer review is not enabled'));
+            $this->getRequest()->getSession()->getFlashBag()->add('error', $this->get('translator')->trans('The peer review is not enabled'));
 
             return $this->redirect(
                 $this->generateUrl(
@@ -749,7 +749,7 @@ class DropzoneController extends Controller {
                 'finished' => true
             ));
         if ($userDrop == null) {
-            $this->getRequest()->getSession()->getFlashBag()->add('danger', $this->get('translator')->trans('You must have made ​​your copy before correcting'));
+            $this->getRequest()->getSession()->getFlashBag()->add('error', $this->get('translator')->trans('You must have made ​​your copy before correcting'));
 
             return $this->redirect(
                 $this->generateUrl(
@@ -764,7 +764,7 @@ class DropzoneController extends Controller {
         // Check that the user still make corrections
         $nbCorrection = $em->getRepository('IcapDropzoneBundle:Correction')->countFinished($dropzone, $user);
         if ($nbCorrection >= $dropzone->getExpectedTotalCorrection()) {
-            $this->getRequest()->getSession()->getFlashBag()->add('danger', $this->get('translator')->trans('You no longer have any copies to correct'));
+            $this->getRequest()->getSession()->getFlashBag()->add('error', $this->get('translator')->trans('You no longer have any copies to correct'));
 
             return $this->redirect(
                 $this->generateUrl(
@@ -936,7 +936,7 @@ class DropzoneController extends Controller {
 
         $correction = $this->getCorrection($dropzone, $user);
         if ($correction === null) {
-            $this->getRequest()->getSession()->getFlashBag()->add('danger', $this->get('translator')->trans('Unfortunately there is no copy to correct for the moment. Please try again later'));
+            $this->getRequest()->getSession()->getFlashBag()->add('error', $this->get('translator')->trans('Unfortunately there is no copy to correct for the moment. Please try again later'));
 
             return $this->redirect(
                 $this->generateUrl(
@@ -1042,7 +1042,7 @@ class DropzoneController extends Controller {
 
         $correction = $this->getCorrection($dropzone, $user);
         if ($correction === null) {
-            $this->getRequest()->getSession()->getFlashBag()->add('danger', $this->get('translator')->trans('Unfortunately there is no copy to correct for the moment. Please try again later'));
+            $this->getRequest()->getSession()->getFlashBag()->add('error', $this->get('translator')->trans('Unfortunately there is no copy to correct for the moment. Please try again later'));
 
             return $this->redirect(
                 $this->generateUrl(

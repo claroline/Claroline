@@ -2,14 +2,14 @@
 
 namespace Icap\DropzoneBundle\Listener;
 
-use Claroline\CoreBundle\Event\Event\CustomActionResourceEvent;
-use Claroline\CoreBundle\Event\Event\PluginOptionsEvent;
-use Claroline\CoreBundle\Event\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\Event\OpenResourceEvent;
-use Claroline\CoreBundle\Event\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Event\Log\LogCreateDelegateViewEvent;
+use Claroline\CoreBundle\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Event\PluginOptionsEvent;
+use Claroline\CoreBundle\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Icap\DropzoneBundle\Entity\Dropzone;
