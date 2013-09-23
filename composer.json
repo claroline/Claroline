@@ -35,6 +35,7 @@
         "idci/exporter-bundle": "~1.0",
         "leafo/lessphp": "~0.4.0",
         "twbs/bootstrap": "~3.0.0",
+        "twitter/typeahead.js": "dev-master",
         "fortawesome/font-awesome": "~3.2.1",
         "xaguilars/bootstrap-colorpicker": "dev-master",
         "zenstruck/form-bundle": "dev-master",
