@@ -158,7 +158,7 @@ class InteractionGraphicController extends Controller
             $titleToFind = $interGraph->getInteraction()->getQuestion()->getTitle();
 
             if ($exoID == -1) {
-                
+
                 return $this->redirect(
                     $this->generateUrl(
                         'ujm_question_index', array(
@@ -169,7 +169,7 @@ class InteractionGraphicController extends Controller
                 );
             } else {
                 $this->container->get('ujm.exercise_services')->setExerciseQuestion($exoID, $interGraph);
-                
+
                 return $this->redirect(
                     $this->generateUrl(
                         'ujm_exercise_questions',
@@ -229,6 +229,8 @@ class InteractionGraphicController extends Controller
      */
     public function updateAction($id)
     {
+        $exoID = $this->container->get('request')->request->get('exercise');
+
         $originalHints = array();
 
         $em = $this->getDoctrine()->getManager();
@@ -308,7 +310,20 @@ class InteractionGraphicController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('ujm_question_index'));
+            if ($exoID == -1) {
+
+                return $this->redirect($this->generateUrl('ujm_question_index'));
+            } else {
+
+                return $this->redirect(
+                    $this->generateUrl(
+                        'ujm_exercise_questions',
+                        array(
+                            'id' => $exoID,
+                        )
+                    )
+                );
+            }
         }
 
         return $this->render(
@@ -392,7 +407,7 @@ class InteractionGraphicController extends Controller
 
         return new Response($url); // Send back the src if the picture
     }
-    
+
     /**
      * Fired when compose an exercise
      *
@@ -468,7 +483,7 @@ class InteractionGraphicController extends Controller
 
         return $result;
     }
-    
+
     /**
      * Get the shape of the answer zone
      *

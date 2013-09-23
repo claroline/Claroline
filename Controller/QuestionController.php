@@ -322,7 +322,7 @@ class QuestionController extends Controller
      * Displays a form to edit an existing Question entity.
      *
      */
-    public function editAction($id, $form = null)
+    public function editAction($exoID, $id, $form = null)
     {
         $question = $this->controlUserQuestion($id);
 
@@ -370,7 +370,8 @@ class QuestionController extends Controller
                         'edit_form'   => $editForm->createView(),
                         'delete_form' => $deleteForm->createView(),
                         'nbResponses' => $nbResponses,
-                        'linkedCategory' => $linkedCategory
+                        'linkedCategory' => $linkedCategory,
+                        'exoID' => $exoID
                         )
                     );
 
@@ -401,7 +402,8 @@ class QuestionController extends Controller
                         'delete_form' => $deleteForm->createView(),
                         'nbResponses' => $nbResponses,
                         'position'    => $position,
-                        'linkedCategory' => $linkedCategory
+                        'linkedCategory' => $linkedCategory,
+                        'exoID' => $exoID
                         )
                     );
 
@@ -425,7 +427,8 @@ class QuestionController extends Controller
                         'edit_form'   => $editForm->createView(),
                         'delete_form' => $deleteForm->createView(),
                         'nbResponses' => $nbResponses,
-                        'linkedCategory' => $linkedCategory
+                        'linkedCategory' => $linkedCategory,
+                        'exoID' => $exoID
                         )
                     );
 
@@ -450,7 +453,8 @@ class QuestionController extends Controller
                         'edit_form'   => $editForm->createView(),
                         'delete_form' => $deleteForm->createView(),
                         'nbResponses' => $nbResponses,
-                        'linkedCategory' => $linkedCategory
+                        'linkedCategory' => $linkedCategory,
+                        'exoID' => $exoID
                         )
                     );
 

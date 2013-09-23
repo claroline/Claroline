@@ -54,9 +54,15 @@
         <h1>{{ 'question creation' | trans }}</h1>
     </div><br/>
 
-    <a href="{{ path('ujm_question_index') }}" style="margin-left: 50px;">
-        <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
-    </a>
+    {% if exoID == -1 %}
+        <a href="{{ path('ujm_question_index') }}" style="margin-left: 50px;">
+            <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
+        </a>
+    {% else %}
+        <a href="{{ path('ujm_exercise_questions', { 'id': exoID }) }}" style="margin-left: 50px;">
+            <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
+        </a>
+    {% endif %}
 
     <hr/>
 

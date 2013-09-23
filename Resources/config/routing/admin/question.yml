@@ -7,8 +7,8 @@ ujm_question_new:
     defaults: { _controller: UJMExoBundle:Question:new, exoID: -1, pageToGo: 1, maxPage: 10, nbItem: 1 }
 
 ujm_question_edit:
-    pattern:  /{id}/edit
-    defaults: { _controller: "UJMExoBundle:Question:edit" }
+    pattern:  /{id}/edit/{exoID}
+    defaults: { _controller: UJMExoBundle:Question:edit, exoID: -1 }
 
 ujm_question_delete:
     pattern:  /{id}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}

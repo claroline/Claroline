@@ -103,13 +103,13 @@
                             <ul  style="list-style-type: none; margin-left: 0; padding-left: 0;">
                                 {% if(questionWithResponse[x] == 0) %}
                                     <li>
-                                        <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}">
+                                        <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id, 'exoID': exerciseID }) }}">
                                             <i class="icon-pencil"></i>&nbsp;{{ 'edit' | trans }}
                                         </a>
                                     </li>
                                 {% else %}
                                     <li>
-                                        <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}" style="color: red;">
+                                        <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id, 'exoID': exerciseID }) }}" style="color: red;">
                                              <i class="icon-pencil"></i>&nbsp;{{ 'edit' | trans }}
                                         </a>
                                     </li>

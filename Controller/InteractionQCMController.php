@@ -205,6 +205,8 @@ class InteractionQCMController extends Controller
      */
     public function updateAction($id)
     {
+        $exoID = $this->container->get('request')->request->get('exercise');
+
         $em = $this->getDoctrine()->getManager();
 
         $interQCM = $em->getRepository('UJMExoBundle:InteractionQCM')->find($id);
@@ -224,7 +226,20 @@ class InteractionQCMController extends Controller
         );
 
         if ($formHandler->processUpdate($interQCM)) {
-            return $this->redirect($this->generateUrl('ujm_question_index'));
+            if ($exoID == -1) {
+
+                return $this->redirect($this->generateUrl('ujm_question_index'));
+            } else {
+
+                return $this->redirect(
+                    $this->generateUrl(
+                        'ujm_exercise_questions',
+                        array(
+                            'id' => $exoID,
+                        )
+                    )
+                );
+            }
         }
 
         return $this->forward(
@@ -278,7 +293,7 @@ class InteractionQCMController extends Controller
             )
         );
     }
-    
+
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder(array('id' => $id))

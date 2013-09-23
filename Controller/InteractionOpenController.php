@@ -84,7 +84,7 @@ class InteractionOpenController extends Controller
             'entity'      => $entity,
         ));
     }
-    
+
     /**
      * Creates a new InteractionOpen entity.
      *
@@ -97,14 +97,14 @@ class InteractionOpenController extends Controller
                 $this->container->get('security.context')->getToken()->getUser()
             ), $interOpen
         );
-        
+
         $exoID = $this->container->get('request')->request->get('exercise');
-        
+
         $formHandler = new InteractionOpenHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('security.context')->getToken()->getUser(), $exoID
         );
-        
+
         if ($formHandler->processAdd()) {
             $categoryToFind = $interOpen->getInteraction()->getQuestion()->getCategory();
             $titleToFind = $interOpen->getInteraction()->getQuestion()->getTitle();
@@ -124,7 +124,7 @@ class InteractionOpenController extends Controller
                 );
             }
         }
-        
+
         $formWithError = $this->render(
             'UJMExoBundle:InteractionOpen:new.html.twig', array(
             'entity' => $interOpen,
@@ -142,13 +142,15 @@ class InteractionOpenController extends Controller
             )
         );
     }
-    
+
     /**
      * Edits an existing InteractionOpen entity.
      *
      */
     public function updateAction($id)
     {
+        $exoID = $this->container->get('request')->request->get('exercise');
+
         $em = $this->getDoctrine()->getManager();
 
         $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')->find($id);
@@ -168,7 +170,20 @@ class InteractionOpenController extends Controller
         );
 
         if ($formHandler->processUpdate($interOpen)) {
-            return $this->redirect($this->generateUrl('ujm_question_index'));
+           if ($exoID == -1) {
+
+                return $this->redirect($this->generateUrl('ujm_question_index'));
+            } else {
+
+                return $this->redirect(
+                    $this->generateUrl(
+                        'ujm_exercise_questions',
+                        array(
+                            'id' => $exoID,
+                        )
+                    )
+                );
+            }
         }
 
         return $this->forward(
@@ -178,7 +193,7 @@ class InteractionOpenController extends Controller
             )
         );
     }
-    
+
     /**
      * Deletes a InteractionOpen entity.
      *
@@ -198,7 +213,7 @@ class InteractionOpenController extends Controller
 
         return $this->redirect($this->generateUrl('ujm_question_index', array('pageNow' => $pageNow)));
     }
-    
+
     /**
      * To test the open question by the teacher
      *
@@ -206,10 +221,10 @@ class InteractionOpenController extends Controller
     public function responseOpenAction()
     {
         $request = $this->get('request');
-        
+
         $exerciseSer = $this->container->get('ujm.exercise_services');
         $res = $exerciseSer->responseOpen($request);
-        
+
         return $this->render(
             'UJMExoBundle:InteractionOpen:openOverview.html.twig', array(
             'interOpen'   => $res['interOpen'],
