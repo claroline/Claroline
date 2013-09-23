@@ -191,8 +191,7 @@ class PathController extends Controller
     /**
      * @Route(
      *     "/",
-     *     name = "innova_path_from_workspace",
-     *     options = {"expose"=true}
+     *     name = "innova_path_from_workspace"
      * )
      *
      * @Template("InnovaPathBundle::path_workspace.html.twig")
