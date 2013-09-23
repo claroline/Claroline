@@ -3,9 +3,6 @@
 namespace Innova\PathBundle\DataFixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\DataFixtures\FixtureInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 
@@ -13,7 +10,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
  * Class LoadResourceTypeData
  * @package Innova\PathBundle\DataFixtures\ORM
  */
-class LoadResourceTypeData implements FixtureInterface
+class LoadResourceTypeData extends AbstractFixture
 {
     /**
      * {@inheritDoc}

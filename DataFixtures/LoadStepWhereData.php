@@ -3,17 +3,14 @@
 namespace Innova\PathBundle\DataFixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\DataFixtures\FixtureInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Innova\PathBundle\Entity\StepWhere;
 
 /**
- * Class LoadStepTypeData
+ * Class LoadStepWhereData
  * @package Innova\PathBundle\DataFixtures\ORM
  */
-class LoadStepWhereData implements FixtureInterface
+class LoadStepWhere extends AbstractFixture
 {
     /**
      * {@inheritDoc}
