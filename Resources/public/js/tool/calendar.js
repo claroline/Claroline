@@ -264,7 +264,7 @@
                 alert('Please tell me what I\'m supposed to do');
             }
         }
-        function modifiedEvent(calEvent)
+        function modifiedEvent(calEvent, context)
         {
             id = calEvent.id;
             $('#deleteBtn').show();
@@ -272,9 +272,16 @@
             $('#save').hide();
             $('#myModalLabel').text(Translator.get('agenda' + ':' + 'modify'));
             var title = calEvent.title;
-            var reg = new RegExp('[:]+', 'g');
-            title = title.split(reg);
-            $('#agenda_form_title').attr('value', title[1]);
+            console.debug(context);
+            if (context === 'desktop')
+            {
+                var reg = new RegExp('[:]+', 'g');
+                title = title.split(reg);
+                $('#agenda_form_title').attr('value', title[1]);
+            } else
+            {
+                $('#agenda_form_title').attr('value', title);
+            }
             $('#agenda_form_description').val(calEvent.description);
             $('#agenda_form_priority option[value=' + calEvent.color + ']').attr('selected', 'selected');
             var pickedDate = new Date(calEvent.start);
@@ -340,7 +347,7 @@
             },
             dayClick: dayClickFunction,
             eventClick:  function (calEvent) {
-                modifiedEvent(calEvent);
+                modifiedEvent(calEvent ,context);
             },
             eventRender: function (event) {
                 if (event.visible === false)

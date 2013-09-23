@@ -131,6 +131,10 @@ class WorkspaceAgendaController extends Controller
         $form->handleRequest($this->request);
         if ($form->isValid()) {
             $event->setAllDay($postData['agenda_form']['allDay']);
+            // Check if the event has changed 
+            $uow = $this->om->getUnitOfWork();
+            $uow->computeChangeSets();
+            $changeSet = $uow->getEntityChangeSet($rights);
             $this->om->flush();
 
             return new Response(
