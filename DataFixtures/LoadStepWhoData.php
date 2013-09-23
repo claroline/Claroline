@@ -4,7 +4,7 @@ namespace Innova\PathBundle\DataFixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Innova\PathBundle\Entity\StepType;
+use Innova\PathBundle\Entity\StepWho;
 
 /**
  * Class LoadStepWhoData

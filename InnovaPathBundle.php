@@ -23,6 +23,11 @@ class InnovaPathBundle extends PluginBundle implements AutoConfigurableInterface
         return new ConfigurationBuilder();
     }
 
+     public function getRequiredFixturesDirectory($environment)
+    {
+        return 'DataFixtures';
+    } 
+
     public function suggestConfigurationFor(Bundle $bundle, $environment)
     {
         $config = new ConfigurationBuilder();
@@ -43,10 +48,6 @@ class InnovaPathBundle extends PluginBundle implements AutoConfigurableInterface
         //         __DIR__ . "/Resources/config/suggested/twig.yml"
         //     );
         // }
-    }  
-
-     public function getRequiredFixturesDirectory($environment)
-    {
-        return 'DataFixtures';
-    }  
+    } 
+    
 }
