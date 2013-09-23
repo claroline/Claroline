@@ -548,4 +548,9 @@ class Exercise extends AbstractResource
     {
         $this->groupes[] = $groupe;
     }
+
+    public function archiveExercise()
+    {
+        $this->resourceNode = null;
+    }
 }

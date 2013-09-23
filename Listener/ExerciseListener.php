@@ -6,7 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Event\DeleteResourceEvent;
@@ -96,7 +96,54 @@ class ExerciseListener extends ContainerAware
     public function onDelete(DeleteResourceEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $em->remove($event->getResource());
+
+        $papers = $em->getRepository('UJMExoBundle:Paper')
+            ->findOneBy(array(
+                'exercise' => $event->getResource()->getId()
+                )
+            );
+
+        if (count($papers) == 0) {
+
+             $eqs = $em->getRepository('UJMExoBundle:ExerciseQuestion')
+                ->findBy(array(
+                    'exercise' => $event->getResource()->getId()
+                    )
+                );
+
+            foreach ($eqs as $eq) {
+                $em->remove($eq);
+            }
+
+            $subscriptions = $em->getRepository('UJMExoBundle:Subscription')
+                ->findBy(array(
+                    'exercise' => $event->getResource()->getId()
+                    )
+                );
+
+            foreach ($subscriptions as $subscription) {
+                $em->remove($subscription);
+            }
+
+            $em->flush();
+
+            $em->remove($event->getResource());
+
+        } else {
+
+            $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($event->getResource()->getId());
+            $resourceNode = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->find(
+                $exercise->getResourceNode()->getId()
+            );
+
+            $em->remove($resourceNode);
+
+            $exercise->archiveExercise();
+            $em->persist($exercise);
+            $em->flush();
+            exit();
+        }
+
         $event->stopPropagation();
     }
 
