@@ -195,6 +195,7 @@ class ThemeService
 
         // enable loading assets from twig templates
         $assetManager->setLoader('twig', new TwigFormulaLoader($twigEnvironment));
+        $lessGenerated = array();
 
         if (is_array($themes)) {
             foreach ($themes as $theme) {
@@ -214,7 +215,7 @@ class ThemeService
 
         $this->compileRaw($lessGenerated);
         $writer = new AssetWriter($webPath);
-        $writer->writeManagerAssets($assetic);
+        $writer->writeManagerAssets($assetManager);
     }
 
     private function compileRaw($files)
