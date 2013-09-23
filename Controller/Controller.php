@@ -7,9 +7,16 @@ use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Icap\BlogBundle\Entity\Blog;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Icap\BlogBundle\Entity\BlogOptions;
+use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
+use Icap\BlogBundle\Event\Log\LogBlogConfigureEvent;
+use Icap\BlogBundle\Event\Log\LogCommentCreateEvent;
+use Icap\BlogBundle\Event\Log\LogCommentDeleteEvent;
 use Icap\BlogBundle\Event\Log\LogPostCreateEvent;
+use Icap\BlogBundle\Event\Log\LogPostDeleteEvent;
 use Icap\BlogBundle\Event\Log\LogPostReadEvent;
+use Icap\BlogBundle\Event\Log\LogPostUpdateEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -105,16 +112,6 @@ class Controller extends BaseController
     }
 
     /**
-     * @param Blog $blog
-     *
-     * @return Controller
-     */
-    protected function dispatchBlogConfigureEvent(Blog $blog)
-    {
-        return $this->dispatchChildEvent($blog, self::BLOG_TYPE, LogResourceChildUpdateEvent::CHILD_ACTION_UPDATE);
-    }
-
-    /**
      * @param Blog  $blog
      *
      * @param array $changeSet
@@ -130,9 +127,25 @@ class Controller extends BaseController
     }
 
     /**
-     * @param \Icap\BlogBundle\Entity\Blog $blog
+     * @param Blog        $blog
      *
-     * @param \Icap\BlogBundle\Entity\Post $post
+     * @param BlogOptions $blogOptions
+     *
+     * @param array       $changeSet
+     *
+     * @return Controller
+     */
+    protected function dispatchBlogConfigureEvent(Blog $blog, BlogOptions $blogOptions, $changeSet)
+    {
+        $event = new LogBlogConfigureEvent($blog, $blogOptions, $changeSet);
+
+        return $this->dispatch($event);
+    }
+
+    /**
+     * @param Blog $blog
+     *
+     * @param Post $post
      *
      * @return Controller
      */
@@ -158,79 +171,64 @@ class Controller extends BaseController
     }
 
     /**
-     * @param Blog                         $blog
+     * @param Blog  $blog
      *
-     * @param \Icap\BlogBundle\Entity\Post $post
+     * @param Post  $post
+     *
+     * @param array $changeSet
      *
      * @return Controller
      */
-    protected function dispatchPostUpdateEvent(Blog $blog, Post $post)
+    protected function dispatchPostUpdateEvent(Blog $blog, Post $post, $changeSet)
     {
-        $details = array(
-            'icap_blog_post' => array(
-                'id'    => $post->getId(),
-                'title' => $post->getTitle()
-            )
-        );
+        $event = new LogPostUpdateEvent($blog, $post, $changeSet);
 
-        return $this->dispatchChildEvent($blog, self::BLOG_POST_TYPE, LogResourceChildUpdateEvent::CHILD_ACTION_UPDATE, $details);
+        return $this->dispatch($event);
     }
 
     /**
-     * @param Blog                         $blog
+     * @param Blog $blog
      *
-     * @param \Icap\BlogBundle\Entity\Post $post
+     * @param Post $post
      *
      * @return Controller
      */
     protected function dispatchPostDeleteEvent(Blog $blog, Post $post)
     {
-        $details = array(
-            'icap_blog_post' => array(
-                'id'    => $post->getId(),
-                'title' => $post->getTitle()
-            )
-        );
+        $event = new LogPostDeleteEvent($blog, $post);
 
-        return $this->dispatchChildEvent($blog, self::BLOG_POST_TYPE, LogResourceChildUpdateEvent::CHILD_ACTION_DELETE, $details);
+        return $this->dispatch($event);
     }
 
     /**
-     * @param Blog $blog
+     * @param Blog    $blog
      *
-     * @param Post $post
+     * @param Post    $post
+     *
+     * @param Comment $comment
      *
      * @return Controller
      */
-    protected function dispatchCommentCreateEvent(Blog $blog, Post $post)
+    protected function dispatchCommentCreateEvent(Blog $blog, Post $post, Comment $comment)
     {
-        $details = array(
-            'icap_blog_post' => array(
-                'id'    => $post->getId(),
-                'title' => $post->getTitle()
-            )
-        );
+        $event = new LogCommentCreateEvent($blog, $post, $comment);
 
-        return $this->dispatchChildEvent($blog, self::BLOG_COMMENT_TYPE, LogResourceChildUpdateEvent::CHILD_ACTION_CREATE, $details);
+        return $this->dispatch($event);
     }
 
-
     /**
-     * @param Blog $blog
+     * @param Blog    $blog
      *
-     * @param Post $post
+     * @param Post    $post
+     *
+     * @param Comment $comment
      *
      * @return Controller
      */
-    protected function dispatchCommentDeleteEvent(Blog $blog, Post $post)
+    protected function dispatchCommentDeleteEvent(Blog $blog, Post $post, Comment $comment)
     {
-        $details = array(
-            'icap_blog_post' => array(
-                'id'    => $post->getId(),
-                'title' => $post->getTitle()
-            )
-        );
+        $event = new LogCommentDeleteEvent($blog, $post, $comment);
 
-        return $this->dispatchChildEvent($blog, self::BLOG_COMMENT_TYPE, LogResourceChildUpdateEvent::CHILD_ACTION_DELETE, $details);
+        return $this->dispatch($event);
     }
 }

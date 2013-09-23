@@ -32,7 +32,7 @@ class CommentController extends Controller
             $entityManager->remove($comment);
             $entityManager->flush();
 
-            $this->dispatchCommentDeleteEvent($blog, $post);
+            $this->dispatchCommentDeleteEvent($blog, $post, $comment);
 
             $flashBag->add('success', $translator->trans('icap_blog_comment_delete_success', array(), 'icap_blog'));
         } catch (\Exception $exception) {

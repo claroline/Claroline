@@ -179,10 +179,14 @@ class BlogController extends Controller
                 $flashBag = $this->get('session')->getFlashBag();
 
                 try {
+                    $unitOfWork = $entityManager->getUnitOfWork();
+                    $unitOfWork->computeChangeSets();
+                    $changeSet = $unitOfWork->getEntityChangeSet($blogOptions);
+
                     $entityManager->persist($blogOptions);
                     $entityManager->flush();
 
-                    $this->dispatchBlogConfigureEvent($blog);
+                    $this->dispatchBlogConfigureEvent($blog, $blogOptions, $changeSet);
 
                     $flashBag->add('success', $translator->trans('icap_blog_post_configure_success', array(), 'icap_blog'));
                 } catch (\Exception $exception) {

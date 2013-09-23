@@ -5,23 +5,25 @@ namespace Icap\BlogBundle\Event\Log;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Icap\BlogBundle\Entity\Blog;
+use Icap\BlogBundle\Entity\BlogOptions;
 use Icap\BlogBundle\Entity\Post;
 
-class LogPostCreateEvent extends AbstractLogResourceEvent
+class LogBlogConfigureEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'resource-icap_blog-post_create';
+    const ACTION = 'resource-icap_blog-configure';
 
     /**
-     * @param Blog $blog
-     * @param Post $post
+     * @param Blog        $blog
+     * @param BlogOptions $blogOptions
+     * @param array       $changeSet
      */
-    public function __construct(Blog $blog, Post $post)
+    public function __construct(Blog $blog, BlogOptions $blogOptions, $changeSet)
     {
         $details = array(
-            'post' => array(
-                'blog'  => $blog->getId(),
-                'title' => $post->getTitle(),
-                'slug'  => $post->getSlug()
+            'blog' => array(
+                'blog'      => $blog->getId(),
+                'options'   => json_encode($blogOptions),
+                'changeSet' => $changeSet
             )
         );
 

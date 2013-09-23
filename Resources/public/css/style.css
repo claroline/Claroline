@@ -36,6 +36,16 @@ article .highlight {
 .comment_list li.unpublished {
   border: 1px dotted orange;
 }
+#icap_blog_post_form label {
+  float: none;
+}
+.form-actions {
+  clear: both;
+  text-align: center;
+  padding: 19px 20px 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
 .tree {
   margin: 0;
   max-height: 300px;

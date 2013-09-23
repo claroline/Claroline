@@ -1,15 +1,50 @@
 log_resource-icap_blog-post_create_shortname: "Création d'un article"
-log_resource-icap_blog-post_create_title: "Création d'un article dans un blog"
-log_resource-icap_blog-post_create_filter: "Création d'un article dans un blog"
+log_resource-icap_blog-post_create_title:     "Création d'un article dans un blog"
+log_resource-icap_blog-post_create_filter:    "Création d'un article dans un blog"
+
 log_resource-icap_blog-post_read_shortname: "Ouverture d'un article"
-log_resource-icap_blog-post_read_title: "Ouverture d'un article d'un blog"
-log_resource-icap_blog-post_read_filter: "Ouverture d'un article d'un blog"
-log_created_post: 'Article crée'
-log_post_title: 'Titre'
-log.blog.configure: "a configuré le blog %blog%"
-log.blog.create_post: "a crée l'article %post% dans le blog %blog%"
-log.blog.read_post: "a ouvert l'article %post% du blog %blog%"
-log.blog.update_post: "a mis à jour l'article %post% du blog %blog%"
-log.blog.delete_post: "a supprimé l'article %post% du blog %blog%"
+log_resource-icap_blog-post_read_title:     "Ouverture d'un article d'un blog"
+log_resource-icap_blog-post_read_filter:    "Ouverture d'un article d'un blog"
+
+log_resource-icap_blog-configure_shortname: "Configuration d'un blog"
+log_resource-icap_blog-configure_title:     "Configuration d'un blog"
+log_resource-icap_blog-configure_filter:    "Configuration d'un blog"
+
+log_resource-icap_blog-post_update_shortname: "Modification d'un article"
+log_resource-icap_blog-post_update_title:     "Modification d'un article"
+log_resource-icap_blog-post_update_filter:    "Modification d'un article"
+
+log_resource-icap_blog-post_delete_shortname: "Suppression d'un article"
+log_resource-icap_blog-post_delete_title:     "Suppression d'un article"
+log_resource-icap_blog-post_delete_filter:    "Suppression d'un article"
+
+log_resource-icap_blog-comment_create_shortname: "Création d'un commentaire"
+log_resource-icap_blog-comment_create_title:     "Création d'un commentaire"
+log_resource-icap_blog-comment_create_filter:    "Création d'un commentaire"
+
+log_resource-icap_blog-comment_delete_shortname: "Suppression d'un commentaire"
+log_resource-icap_blog-comment_delete_title:     "Suppression d'un commentaire"
+log_resource-icap_blog-comment_delete_filter:    "Suppression d'un commentaire"
+
+log_created_post: "Article crée"
+log_readed_post:  "Article lu"
+log_deleted_post: "Article supprimé"
+
+log_created_comment: "Commentaire crée"
+log_deleted_comment: "Commentaire supprimé"
+
+log_post_title:      "Titre"
+log_post_author:     "Auteur"
+log_comment_content: "Contenu"
+log_comment_author:  "Auteur"
+
+postPerPage: "Article par page"
+content:     "Contenu"
+
+log.blog.configure:      "a configuré le blog %blog%"
+log.blog.create_post:    "a crée l'article %post% dans le blog %blog%"
+log.blog.read_post:      "a ouvert l'article %post% du blog %blog%"
+log.blog.update_post:    "a mis à jour l'article %post% du blog %blog%"
+log.blog.delete_post:    "a supprimé l'article %post% du blog %blog%"
 log.blog.create_comment: "a commenté l'article %post% du blog %blog%"
 log.blog.delete_comment: "a supprimé un commentaire de l'article %post% du blog %blog%"

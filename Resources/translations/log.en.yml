@@ -1,15 +1,50 @@
 log_resource-icap_blog-post_create_shortname: "Post creation"
-log_resource-icap_blog-post_create_title: "Post creation in a blog"
-log_resource-icap_blog-post_create_filter: "Post creation in a blog"
+log_resource-icap_blog-post_create_title:     "Post creation in a blog"
+log_resource-icap_blog-post_create_filter:    "Post creation in a blog"
+
 log_resource-icap_blog-post_read_shortname: "Post opening"
-log_resource-icap_blog-post_read_title: "Post opening in a blog"
-log_resource-icap_blog-post_read_filter: "Post opening in a blog"
-log_created_post: 'Created post'
-log_post_title: 'Title'
-log.blog.configure: "configured the blog %blog%"
-log.blog.read_post: "opened post %post% in blog %blog%"
-log.blog.update_post: "updated post %post% in blog %blog%"
-log.blog.create_post: "created post %post% in blog %blog%"
-log.blog.delete_post: "deleted post %post% in blog %blog%"
+log_resource-icap_blog-post_read_title:     "Post opening in a blog"
+log_resource-icap_blog-post_read_filter:    "Post opening in a blog"
+
+log_resource-icap_blog-configure_shortname: "Blog configuration"
+log_resource-icap_blog-configure_title:     "Blog configuration"
+log_resource-icap_blog-configure_filter:    "Blog configuration"
+
+log_resource-icap_blog-post_update_shortname: "Post updating"
+log_resource-icap_blog-post_update_title:     "Post updating"
+log_resource-icap_blog-post_update_filter:    "Post updating"
+
+log_resource-icap_blog-post_delete_shortname: "Post deletion"
+log_resource-icap_blog-post_delete_title:     "Post deletion"
+log_resource-icap_blog-post_delete_filter:    "Post deletion"
+
+log_resource-icap_blog-comment_create_shortname: "Comment creation"
+log_resource-icap_blog-comment_create_filter:    "Comment creation"
+log_resource-icap_blog-comment_create_title:     "Comment creation"
+
+log_resource-icap_blog-comment_delete_shortname: "Comment deletion"
+log_resource-icap_blog-comment_delete_filter:    "Comment deletion"
+log_resource-icap_blog-comment_delete_title:     "Comment deletion"
+
+log_created_post: "Created post"
+log_readed_post:  "Readed post"
+log_deleted_post: "Deleted post"
+
+log_created_comment: "Created comment"
+log_deleted_comment: "Deleted comment"
+
+log_post_title:      "Title"
+log_post_author:     "Author"
+log_comment_content: "Content"
+log_comment_author:  "Author"
+
+postPerPage: "Post per page"
+content:     "Content"
+
+log.blog.configure:      "configured the blog %blog%"
+log.blog.read_post:      "opened post %post% in blog %blog%"
+log.blog.update_post:    "updated post %post% in blog %blog%"
+log.blog.create_post:    "created post %post% in blog %blog%"
+log.blog.delete_post:    "deleted post %post% in blog %blog%"
 log.blog.create_comment: "commented post %post% in blog %blog%"
 log.blog.delete_comment: "deleted a comment of post %post% in blog %blog%"

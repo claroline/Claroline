@@ -10,6 +10,16 @@
     {{ 'log.blog.create_post'|trans({'%blog%': resource, '%post%': post}, 'log')|raw }}
 {% elseif constant('Icap\\BlogBundle\\Event\\Log\\LogPostReadEvent::ACTION') == log.action %}
     {{ 'log.blog.read_post'|trans({'%blog%': resource, '%post%': post}, 'log')|raw }}
+{% elseif constant('Icap\\BlogBundle\\Event\\Log\\LogPostUpdateEvent::ACTION') == log.action %}
+    {{ 'log.blog.update_post'|trans({'%blog%': resource, '%post%': post}, 'log')|raw }}
+{% elseif constant('Icap\\BlogBundle\\Event\\Log\\LogPostDeleteEvent::ACTION') == log.action %}
+    {{ 'log.blog.delete_post'|trans({'%blog%': resource, '%post%': post}, 'log')|raw }}
+{% elseif constant('Icap\\BlogBundle\\Event\\Log\\LogCommentCreateEvent::ACTION') == log.action %}
+    {{ 'log.blog.create_comment'|trans({'%blog%': resource, '%post%': post}, 'log')|raw }}
+{% elseif constant('Icap\\BlogBundle\\Event\\Log\\LogCommentDeleteEvent::ACTION') == log.action %}
+    {{ 'log.blog.delete_comment'|trans({'%blog%': resource, '%post%': post}, 'log')|raw }}
+{% elseif constant('Icap\\BlogBundle\\Event\\Log\\LogBlogConfigureEvent::ACTION') == log.action %}
+    {{ 'log.blog.configure'|trans({'%blog%': resource}, 'log')|raw }}
 {% else %}
     no default text
 {% endif %}

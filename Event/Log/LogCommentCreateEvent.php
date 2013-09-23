@@ -4,34 +4,33 @@ namespace Icap\BlogBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
-use Claroline\CoreBundle\Event\Log\LogNotRepeatableInterface;
 use Icap\BlogBundle\Entity\Blog;
+use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
 
-class LogPostReadEvent extends AbstractLogResourceEvent implements LogNotRepeatableInterface
+class LogCommentCreateEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'resource-icap_blog-post_read';
+    const ACTION = 'resource-icap_blog-comment_create';
 
     /**
-     * @param Blog $blog
-     * @param Post $post
+     * @param Blog    $blog
+     * @param Post    $post
+     * @param Comment $comment
      */
-    public function __construct(Blog $blog, Post $post)
+    public function __construct(Blog $blog, Post $post, Comment $comment)
     {
         $details = array(
             'post' => array(
-                'blog'  => $post->getBlog()->getId(),
+                'blog'  => $blog->getId(),
                 'title' => $post->getTitle(),
                 'slug'  => $post->getSlug()
+            ),
+            'comment' => array(
+                'content' => $comment->getMessage()
             )
         );
 
         parent::__construct($blog->getResourceNode(), $details);
-    }
-
-    public function getLogSignature()
-    {
-        return self::ACTION.'_' . $this->resource->getId();
     }
 
     /**

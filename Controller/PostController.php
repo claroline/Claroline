@@ -55,7 +55,7 @@ class PostController extends Controller
                     $entityManager->persist($comment);
                     $entityManager->flush();
 
-                    $this->dispatchCommentCreateEvent($blog, $post);
+                    $this->dispatchCommentCreateEvent($blog, $post, $comment);
 
                     $flashBag->add('success', $translator->trans('icap_blog_comment_add_success', array(), 'icap_blog'));
                 } catch (\Exception $exception) {
@@ -139,6 +139,10 @@ class PostController extends Controller
                 $entityManager = $this->getDoctrine()->getManager();
 
                 try {
+                    $unitOfWork = $entityManager->getUnitOfWork();
+                    $unitOfWork->computeChangeSets();
+                    $changeSet = $unitOfWork->getEntityChangeSet($post);
+
                     $entityManager->persist($post);
                     $entityManager->flush();
 
@@ -146,7 +150,7 @@ class PostController extends Controller
                         $this->dispatchPostCreateEvent($blog, $post);
                     }
                     elseif('update' === $action) {
-                        $this->dispatchPostUpdateEvent($blog, $post);
+                        $this->dispatchPostUpdateEvent($blog, $post, $changeSet);
                     }
                     else {
                         throw new \InvalidArgumentException('Unknown action type for persisting post');
