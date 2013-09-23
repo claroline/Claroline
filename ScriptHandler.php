@@ -31,7 +31,7 @@ class ScriptHandler
 
     public static function prePackageUpdate(PackageEvent $event)
     {
-        self::initAutoload($event->getComposer(), $event->getOperation()->getPackage());
+        self::initAutoload($event->getComposer(), $event->getOperation()->getTargetPackage());
     }
 
     public static function prePackageUninstall(PackageEvent $event)
