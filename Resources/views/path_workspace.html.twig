@@ -1,62 +1,35 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
 {% block section_content %}
-
-	<table class="table">
-	{% for path in paths %}
-
-			<tr>
-		    	<td>{{ path.name }}</td>
-		    	<td class="text-right">		
-		    		<form action="{{ path('innova_path_deploy') }}" method="post">
-		    			<input type="hidden" value="{{ workspace.id }}" name="workspace-id">
-						<input type="hidden" value="{{ path.id }}" name="path-id">
-						<input class="btn" value="deploy" type="submit"/>
-					</form>
-				</td>
-		    </tr>
-	{% endfor %}
-	</table>
-	<p>{{ ok }}</p>
-
-	
-
-
-
-
-
-
-
-
-
-
-{% verbatim %}
-
-
-
- <div ng-app>
-
-    <div class="container">
-  		<input type="text" size="50" ng-model="yourName" placeholder="Entrez un nom ici, il sera affiché en majuscules">
-    		<h1>Hello {{yourName | uppercase}}!</h1>
-
-  
-
+    <div class="panel-heading">
+        <h3 class="panel-title">Parcours</h3>
     </div>
+    <table class="table table-hover">
+    {% for path in paths %}
+    <tr>
+        <td>{{ path.name }}</td>
+                <td class="text-right">		
+                    <form action="{{ path('innova_path_deploy') }}" method="post">
+                        <input type="hidden" value="{{ workspace.id }}" name="workspace-id">
+                        <input type="hidden" value="{{ path.id }}" name="path-id">
+                        <input class="btn" value="deploy" type="submit"/>
+                    </form>
+                </td>
+            </tr>
+    {% endfor %}
+    </table>
+{% endblock %}
 
-  </div>
-
-
-
-{% endverbatim %}
-
-
-
-
-
-
-
-
-
-
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-cookies.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-loader.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-resource.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-sanitize.min.js') }}"></script>
+    
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/angular-ui.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/ui-bootstrap-tpls.min.js') }}"></script>
+    
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularpageslide/js/angular-pageslide-directive.js') }}"></script>
 {% endblock %}
