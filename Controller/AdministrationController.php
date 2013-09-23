@@ -126,15 +126,13 @@ class AdministrationController extends Controller
         $roles = $this->roleManager->getPlatformRoles($currentUser);
         $form = $this->formFactory->create(FormFactory::TYPE_USER, array($roles));
         if ($this->mailManager->isMailerAvailable()) {
-
             return array('form_complete_user' => $form->createView());
-
         }
 
         return array(
             'form_complete_user' => $form->createView(),
             'error' => 'Mail not available'
-            );
+        );
     }
 
     /**
@@ -166,15 +164,12 @@ class AdministrationController extends Controller
 
                 if ($this->mailManager->sendPlainPassword('noreply@claroline.net', $user->getMail(), $body)) {
                     return $this->redirect($this->generateUrl('claro_admin_user_list'));
-
                 }
 
                 return $this->redirect($this->generateUrl('claro_admin_user_list'));
-
             }
 
             return $this->redirect($this->generateUrl('claro_admin_user_list'));
-
         }
 
         return array('form_complete_user' => $form->createView());

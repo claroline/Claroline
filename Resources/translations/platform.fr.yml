@@ -213,7 +213,7 @@ mail_form_receiver : destinataire(s)
 mail_form_object: Objet
 mail_login : 'Cliquez sur le lien' 
 mail_invalid : 'Le format de votre email n''est pas valide'
-mail_message : 'Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur me lien ci-dessous pour le réinitialiser. Si vous n''êtes pas à l''orgine de cette action, veuillez ignorer ce message.'
+mail_message : 'Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur lien ci-dessous pour le réinitialiser. Si vous n''êtes pas à l''origine de cette action, veuillez ignorer ce message.'
 mail_not_available : 'La fonction d''envoi de mail n''est pas disponible'
 mail_click: 'Cliquez sur ce lien pour réinitialiser votre mot de passe'
 mail_not_exist : 'Cet email n''existe pas '
