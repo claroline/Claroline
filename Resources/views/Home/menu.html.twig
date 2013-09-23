@@ -1,4 +1,3 @@
-{#% if (region is defined and region != 'header' and region != 'footer') or region is not defined %#}
 <div class="content-menu float-right-top hide">
     <button type="button" class="btn btn-primary" data-toggle="dropdown">
         <i class="icon-cog"></i>
@@ -14,7 +13,9 @@
                 <li><a class="content-edit"><i class="icon-edit"></i> {{ "Edit" | trans({}, 'home') }}</a></li>
             {% endif %}
             <li><a class="content-delete"><i class="icon-trash"></i> {{ "Delete" | trans({}, 'home') }}</a></li>
-            <li><a class="content-region"><i class="icon-th-large"></i> {{ "Region" | trans({}, 'home') }}</a></li>
+            {% if type != "home" %}
+                <li><a class="content-region"><i class="icon-th-large"></i> {{ "Region" | trans({}, 'home') }}</a></li>
+            {% endif %}
         {% endif %}
     </ul>
 </div>

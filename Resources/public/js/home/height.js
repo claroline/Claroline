@@ -47,7 +47,7 @@
 
     function resizeDivs()
     {
-        var divs = getResizeDivs(".row.contents .content-element .panel");
+        var divs = getResizeDivs(".contents .content-element .panel");
         var minHeight = 0;
         var currentline = -1;
 
@@ -105,7 +105,7 @@
         resizeDivs();
     });
 
-    $(".row.contents").bind("DOMSubtreeModified", function () {
+    $(".contents").bind("DOMSubtreeModified", function () {
         clearTimeout(domChange);
         domChange = setTimeout(resizeDivs, 500);
     });

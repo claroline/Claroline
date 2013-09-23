@@ -1,41 +1,24 @@
+//Home Functions
 (function () {
     "use strict";
 
-    var homePath = $("#homePath").html(); //global
+    window.Claroline.Home = {};
+    var home = window.Claroline.Home;
 
-    if (!homePath) {
-        homePath = "./";
+    home.path = $("#homePath").html(); //global
+
+    if (!home.path) {
+        home.path = "./";
     }
 
-    /**
-     * Get the parent node of an element by her ClassName.
-     *
-     * @param [DOM obj] element The element child.
-     * @param [String] classname The class name of the parent node.
-     *
-     * @return [DOM obj]
-     */
-    function parentByClassName(element, classname)
-    {
-        if (element.parentNode !== undefined && element.parentNode !== null) {
-            if (element.parentNode.className.indexOf(classname) !== -1) {
-                return element.parentNode;
-            } else {
-                return parentByClassName(element.parentNode, classname);
-            }
-        }
-
-        return null;
-    }
-
-    function modal(url, id, element)
+    home.modal = function (url, id, element)
     {
         $(".modal").modal("hide");
 
         id = typeof(id) !== "undefined" ? id : null;
         element = typeof(element) !== "undefined" ? element : null;
 
-        $.ajax(homePath + url)
+        $.ajax(home.path + url)
             .done(
                 function (data)
                 {
@@ -70,14 +53,14 @@
                   )
             ;
 
-    }
+    };
 
     /**
      * This function resize the height of a textarea relative of their content.
      *
      * @param [Textarea Obj] Obj The textarea to resize.
      */
-    function resize(obj)
+    home.resize = function (obj)
     {
         var lineheight = $(obj).css("line-height").substr(0, $(obj).css("line-height").indexOf("px"));
         var lines = $(obj).val().split("\n").length;
@@ -85,34 +68,27 @@
         lineheight = parseInt(lineheight, 10) + 4;
 
         $(obj).css("height", ((lines + 1) * lineheight) + "px");
-    }
+    };
 
 
-     /**
-     * Verify if a string is a valid url.
-     *
-     * @param [String] url The url to verify.
-     *
-     * @TODO allow http://fr.wikipedia.org/wiki/Wikip%C3%A9dia:Accueil_principal
-     *
-     * @return this function returns true in success, otherwise false
-     */
-    function isurl(url) {
-        var pattern = new RegExp(
-            "^(https?:\\/\\/)?" + // protocol
-            "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-            "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-            "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-            "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-            "(\\#[-a-z\\d_]*)?$", "i" // fragment locator
-            );
+    home.findUrls = function (text)
+    {
+        var source = (text || "").toString();
+        var urlArray = [];
+        var matchArray;
 
-        if (pattern.test(url)) {
-            return true;
+        // Regular expression to find FTP, HTTP(S) and email URLs.
+        var regexToken =
+        /(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)|((mailto:)?[_.\w-]+@([\w][\w\-]+\.)+[a-zA-Z]{2,3})/g;
+
+        // Iterate through any URLs in the text.
+        while ((matchArray = regexToken.exec(source)) !== null) {
+            var token = matchArray[0];
+            urlArray.push(token);
         }
 
-        return false;
-    }
+        return urlArray;
+    };
 
     /**
      * Create and update an element by POST method with ajax.
@@ -122,13 +98,13 @@
      *
      * @TODO Prevent multiple clicks
      */
-    function creator(element, id)
+    home.creator = function (element, id)
     {
         id = typeof(id) !== "undefined" ? id : null;
 
-        var creatorElement = parentByClassName(element, "creator");
-        var title = creatorElement.getElementsByTagName("input")[0];
-        var text = creatorElement.getElementsByTagName("textarea")[0];
+        var creatorElement = $(element).parents(".creator").get(0);
+        var title = $(".content-title", creatorElement).get(0);
+        var text = $(".content-text", creatorElement).get(0);
         var type = $(creatorElement).data("type");
         var father = $(creatorElement).data("father");
         var generatedContent = "";
@@ -146,7 +122,7 @@
         }
 
         if (text.value !== "" || title.value !== "") {
-            $.post(homePath + path,
+            $.post(home.path + path,
                 {
                     "title": title.value,
                     "text": text.value,
@@ -167,7 +143,6 @@
 
                             if (father) {
                                 contentPath = "content/" + data + "/" + type + "/" + father;
-                                //creatorElement = parentByClassName(creatorElement, "creator" + father);
 
                                 insertElement = function (content)
                                 {
@@ -176,7 +151,7 @@
                                 };
                             }
 
-                            $.ajax(homePath + contentPath)
+                            $.ajax(home.path + contentPath)
                                 .done(
                                         function (data)
                                         {
@@ -187,7 +162,7 @@
 
                             title.value = "";
                             text.value = "";
-                            resize(text);
+                            home.resize(text);
                             $(creatorElement).find(".generated").html("");
 
                         } else if (data === "true") {
@@ -195,11 +170,11 @@
                             contentPath = "content/" + id + "/" + type;
 
                             if (father) {
-                                creatorElement = parentByClassName(creatorElement, "creator" + father);
+                                creatorElement = $(creatorElement).parents(".creator" + father).get(0);
                                 contentPath = "content/" + id + "/" + type + "/" + father;
                             }
 
-                            $.ajax(homePath + contentPath)
+                            $.ajax(home.path + contentPath)
                                  .done(
                                     function (data)
                                     {
@@ -209,47 +184,54 @@
                             ;
 
                         } else {
-                            modal("content/error");
+                            home.modal("content/error");
                         }
                     }
                 )
                 .error(
                     function ()
                     {
-                        modal("content/error");
+                        home.modal("content/error");
                     }
                   )
             ;
 
         }
-    }
+    };
 
     /**
      * Get content from a external url and put it in a creator of contents.
      *
-     * @param [HTML obj] textarea The textarea of the creator of contents.
+     * @param url The url of a webpage.
      */
-    function generatedContent(textarea)
+    home.generatedContent = function (creator, url)
     {
-        $.post(homePath + "content/graph", { "generated_content_url": textarea.value })
+        $.post(home.path + "content/graph", { "generated_content_url": url })
             .done(
                 function (data)
                 {
                     if (data !== "false") {
-                        $(textarea).parent().find(".generated").html(data);
+                        $(creator).find(".generated").html(data);
                     }
                 }
              )
             .error(
                 function ()
                 {
-                    modal("content/error");
+                    home.modal("content/error");
                 }
             )
         ;
-    }
+    };
 
-    /** DOM events **/
+}());
+
+
+//DOM events
+(function () {
+    "use strict";
+
+    var home = window.Claroline.Home;
 
     $("body").on("mouseenter", ".content-element", function () {
         $(".content-menu").first().addClass("hide"); // prevent some errors with the drop dawn
@@ -264,12 +246,12 @@
     });
 
     $("body").on("click", ".content-size", function (event) {
-        var element = parentByClassName(event.target, "content-element");
+        var element = $(event.target).parents(".content-element").get(0);
         var size = (element.className.match(/\bcontent-\d+/g) || []).join(" ").substr(8);
         var id = $(element).data("id");
         var type = $(element).data("type");
 
-        modal("content/size/" + id + "/" + size + "/" + type, "sizes", element);
+        home.modal("content/size/" + id + "/" + size + "/" + type, "sizes", element);
     });
 
     $("body").on("click", "#sizes .panel", function (event) {
@@ -279,7 +261,7 @@
         var element = $("#sizes").data("element");
 
         if (id && type && element) {
-            $.post(homePath + "content/update/" + id, { "size": size, "type": type })
+            $.post(home.path + "content/update/" + id, { "size": size, "type": type })
         .done(
             function (data)
             {
@@ -293,14 +275,14 @@
                     $("#sizes").modal("hide");
 
                 } else {
-                    modal("content/error");
+                    home.modal("content/error");
                 }
             }
             )
         .error(
                 function ()
                 {
-                    modal("content/error");
+                    home.modal("content/error");
                 }
               )
         ;
@@ -308,10 +290,10 @@
     });
 
     $("body").on("click", ".content-region", function (event) {
-        var element = parentByClassName(event.target, "content-element");
+        var element = $(event.target).parents(".content-element").get(0);
         var id = $(element).data("id");
 
-        modal("content/region/" + id, "regions", element);
+        home.modal("content/region/" + id, "regions", element);
     });
 
 
@@ -320,7 +302,7 @@
         var id = $("#regions .modal-body").data("id");
 
         if (id && name) {
-            $.ajax(homePath + "region/" + name + "/" + id)
+            $.ajax(home.path + "region/" + name + "/" + id)
                 .done(
                     function ()
                     {
@@ -330,7 +312,7 @@
                 .error(
                     function ()
                     {
-                        modal("content/error");
+                        home.modal("content/error");
                     }
                 )
             ;
@@ -338,9 +320,9 @@
     });
 
     $("body").on("click", ".content-delete", function (event) {
-        var element = parentByClassName(event.target, "content-element");
+        var element = $(event.target).parents(".content-element").get(0);
 
-        modal("content/confirm", "delete-content", element);
+        home.modal("content/confirm", "delete-content", element);
     });
 
     $("body").on("click", "#delete-content .btn.delete", function () {
@@ -348,7 +330,7 @@
         var id = $(element).data("id");
 
         if (id && element) {
-            $.ajax(homePath + "content/delete/" + id)
+            $.ajax(home.path + "content/delete/" + id)
             .done(
                 function (data)
                 {
@@ -357,23 +339,23 @@
                             $(this).remove();
                         });
                     } else {
-                        modal("content/error");
+                        home.modal("content/error");
                     }
                 }
             )
             .error(
                 function ()
                 {
-                    modal("content/error");
+                    home.modal("content/error");
                 }
             );
         }
     });
 
     $("body").on("click", ".type-delete", function (event) {
-        var element = parentByClassName(event.target, "alert");
+        var element = $(event.target).parents(".alert").get(0);
 
-        modal("content/confirm", "delete-type", element);
+        home.modal("content/confirm", "delete-type", element);
     });
 
     $("body").on("click", "#delete-type .btn.delete", function () {
@@ -381,7 +363,7 @@
         var id = $(element).data("id");
 
         if (id && element) {
-            $.ajax(homePath + "content/deletetype/" + id)
+            $.ajax(home.path + "content/deletetype/" + id)
             .done(
                 function (data)
                 {
@@ -390,30 +372,30 @@
                             $(this).remove();
                         });
                     } else {
-                        modal("content/error");
+                        home.modal("content/error");
                     }
                 }
             )
             .error(
                 function ()
                 {
-                    modal("content/error");
+                    home.modal("content/error");
                 }
             );
         }
     });
 
     $("body").on("click", ".create-type", function (event) {
-        var typeCreator = parentByClassName(event.target, "creator");
+        var typeCreator = $(event.target).parents(".creator").get(0);
         var name = $("input", typeCreator);
 
-        if (creator && name.val()) {
-            $.ajax(homePath + "content/typeexist/" + name.val())
+        if (typeCreator && name.val()) {
+            $.ajax(home.path + "content/typeexist/" + name.val())
             .done(
                 function (data)
                 {
                     if (data === "false") {
-                        $.ajax(homePath + "content/createtype/" + name.val())
+                        $.ajax(home.path + "content/createtype/" + name.val())
                         .done(
                             function (data)
                             {
@@ -421,18 +403,18 @@
                                     $(typeCreator).next().prepend(data);
                                     name.val("");
                                 } else {
-                                    modal("content/error");
+                                    home.modal("content/error");
                                 }
                             }
                         )
                         .error(
                             function ()
                             {
-                                modal("content/error");
+                                home.modal("content/error");
                             }
                         );
                     } else {
-                        modal("content/typeerror");
+                        home.modal("content/typeerror");
                     }
                 }
             );
@@ -440,7 +422,7 @@
     });
 
     $("body").on("click", ".content-edit", function (event) {
-        var element = parentByClassName(event.target, "content-element");
+        var element = $(event.target).parents(".content-element").get(0);
         var id = $(element).data("id");
         var type = $(element).data("type");
         var father = $(element).data("father");
@@ -452,21 +434,21 @@
                 contentPath = "content/creator/" + type + "/" + id + "/" + father;
             }
 
-            $.ajax(homePath + contentPath)
+            $.ajax(home.path + contentPath)
                 .done(
                     function (data)
                     {
                         $(element).replaceWith(data);
 
                         $(".creator textarea").each(function () {
-                            resize(this);
+                            home.resize(this);
                         });
                     }
                 )
                 .error(
                     function ()
                     {
-                        modal("content/error");
+                        home.modal("content/error");
                     }
                 )
             ;
@@ -474,20 +456,20 @@
     });
 
     $("body").on("click", ".creator-button", function (event) {
-        creator(event.target);
+        home.creator(event.target);
     });
 
     $("body").on("click", ".creator .edit-button", function (event) {
-        var element = parentByClassName(event.target, "creator");
+        var element = $(event.target).parents(".creator").get(0);
         var id = $(element).data("id");
 
         if (element && id) {
-            creator(event.target, id);
+            home.creator(event.target, id);
         }
     });
 
     $("body").on("click", ".creator .cancel-button", function (event) {
-        var element = parentByClassName(event.target, "creator");
+        var element = $(event.target).parents(".creator").get(0);
         var id = $(element).data("id");
         var type = $(element).data("type");
         var father = $(element).data("father");
@@ -496,11 +478,11 @@
             var contentPath = "content/" + id + "/" + type;
 
             if (father) {
-                element = parentByClassName(element, "creator" + father);
+                element = $(element).parents(".creator" + father).get(0);
                 contentPath = "content/" + id + "/" + type + "/" + father;
             }
 
-            $.ajax(homePath + contentPath)
+            $.ajax(home.path + contentPath)
                 .done(
                     function (data)
                     {
@@ -510,7 +492,7 @@
                 .error(
                     function ()
                     {
-                        modal("content/error");
+                        home.modal("content/error");
                     }
                 )
             ;
@@ -518,44 +500,78 @@
     });
 
     $(".creator textarea").each(function () {
-        resize(this);
+        home.resize(this);
     });
 
     $("body").on("keyup", ".creator textarea", function (event) {
 
         if (event && event.keyCode) {
             if (event.keyCode === 13 || event.keyCode === 86 || event.keyCode === 8 || event.keyCode === 46) {
-                resize(this);
-            }
-
-            if (isurl(this.value) && event.keyCode === 86) {
-                generatedContent(this);
+                home.resize(this);
             }
         }
+    });
+
+    $("body").on("click", ".creator .addlink", function () {
+        var element = $(event.target).parents(".creator").get(0);
+
+        home.modal("content/link", "add-link", element);
+    });
+
+    $("body").on("click", "#add-link .btn-primary", function () {
+        var urls = home.findUrls($("#add-link input").val());
+        var modal = $(this).parents(".modal").get(0);
+        var creator = $("#add-link").data("element");
+
+        if (urls.length > 0) {
+            home.generatedContent(creator, urls[0]);
+
+            if ($(".content-text", creator).val() === "" && $(".content-title", creator).val() === "") {
+                $(".content-text", creator).val($("#add-link input").val());
+            }
+
+            $(modal).modal("hide");
+        } else {
+            $(".form-group", modal).addClass("has-error");
+        }
+    });
+
+    $("body").on("paste", ".creator textarea", function () {
+        var element = this;
+
+        setTimeout(function () {
+            var text = $(element).val();
+            var urls = home.findUrls(text);
+
+            if (urls.length > 0) {
+                home.generatedContent($(element).parents(".creator").get(0), urls[0]);
+            }
+
+        }, 100);
     });
 
     $("body").on("click", ".generated .close", function (event) {
         $(event.target).parent().html("");
     });
 
-    $(".row.contents").sortable({
+    $(".contents").sortable({
         items: "> .content-element",
-        cancel: "input,textarea,button,select,option,a.btn.dropdown-toggle,.dropdown-menu",
+        cancel: "input, textarea, button, select, option, a.btn.dropdown-toggle, .dropdown-menu,a",
         cursor: "move"
     });
 
-    $(".row.contents").on("sortupdate", function (event, ui) {
+    $(".contents").on("sortupdate", function (event, ui) {
         if (this === ui.item.parent()[0]) {
             var a = $(ui.item).data("id");
             var b = $(ui.item).next().data("id");
             var type = $(ui.item).data("type");
 
             if (a && type) {
-                $.ajax(homePath + "content/reorder/" + type + "/" + a + "/" + b)
+                $.ajax(home.path + "content/reorder/" + type + "/" + a + "/" + b)
                 .error(
                         function ()
                         {
-                            modal("content/error");
+                            home.modal("content/error");
                         }
                     )
                 ;
@@ -564,4 +580,3 @@
     });
 
 }());
-
