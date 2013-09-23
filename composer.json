@@ -10,6 +10,6 @@
     },
     "target-dir": "Icap/LessonBundle",
     "extra": {
-        "dbVersion": "20130619153000"
+        "dbVersion": "20130923155308"
     }
 }
