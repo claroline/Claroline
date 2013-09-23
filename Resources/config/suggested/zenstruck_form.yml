@@ -1,0 +1,4 @@
+zenstruck_form:
+    theme_options:
+        control_width: col-md-9
+        label_width: col-md-3
