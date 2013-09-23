@@ -410,7 +410,7 @@ class HomeController extends Controller
             $homeTabConfig->setType('desktop');
             $homeTabConfig->setUser($user);
             $homeTabConfig->setLocked(false);
-            $homeTabConfig->setVisible(false);
+            $homeTabConfig->setVisible(true);
 
             $lastOrder = $this->homeTabManager->getOrderOfLastDesktopHomeTabConfigByUser($user);
 
@@ -692,7 +692,7 @@ class HomeController extends Controller
             $homeTabConfig->setType('workspace');
             $homeTabConfig->setWorkspace($workspace);
             $homeTabConfig->setLocked(false);
-            $homeTabConfig->setVisible(false);
+            $homeTabConfig->setVisible(true);
 
             $lastOrder = $this->homeTabManager->getOrderOfLastWorkspaceHomeTabConfigByWorkspace($workspace);
 
@@ -1222,7 +1222,7 @@ class HomeController extends Controller
         $widgetHomeTabConfig->setHomeTab($homeTab);
         $widgetHomeTabConfig->setWidget($widget);
         $widgetHomeTabConfig->setUser($user);
-        $widgetHomeTabConfig->setVisible(false);
+        $widgetHomeTabConfig->setVisible(true);
         $widgetHomeTabConfig->setLocked(false);
         $widgetHomeTabConfig->setType('desktop');
 
@@ -1280,7 +1280,7 @@ class HomeController extends Controller
         $widgetHomeTabConfig->setHomeTab($homeTab);
         $widgetHomeTabConfig->setWidget($widget);
         $widgetHomeTabConfig->setWorkspace($workspace);
-        $widgetHomeTabConfig->setVisible(false);
+        $widgetHomeTabConfig->setVisible(true);
         $widgetHomeTabConfig->setLocked(false);
         $widgetHomeTabConfig->setType('workspace');
 
