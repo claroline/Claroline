@@ -38,7 +38,7 @@ class ResourceManager
     //This is the default crunchbang page code. It should be the same for every debian.
     //I don't know if this line works for windows.
     const ENCODING = "ISO-8859-1";
-    
+
     /** @var RightsManager */
     private $rightsManager;
     /** @var ResourceTypeRepository */
@@ -778,7 +778,7 @@ class ResourceManager
     public function download(array $nodes)
     {
         $data = array();
-        
+
         if (count($nodes) === 0) {
             throw new ExportResourceException('No resources were selected.');
         }
@@ -787,7 +787,7 @@ class ResourceManager
         $pathArch = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->ut->generateGuid() . '.zip';
         $archive->open($pathArch, \ZipArchive::CREATE);
         $nodes = $this->expandResources($nodes);
-        
+
         if (count($nodes) === 1) {
             $event = $this->dispatcher->dispatch(
                 "download_{$nodes[0]->getResourceType()->getName()}",
@@ -797,7 +797,7 @@ class ResourceManager
 
             $data['name'] = $nodes[0]->getName();
             $data['file'] = $event->getItem();
-            
+
             return $data;
         }
 
@@ -810,9 +810,9 @@ class ResourceManager
             if (get_class($resource) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
                 $node = $resource->getTarget();
             }
-            
+
             $filename = $this->getRelativePath($currentDir, $node) . $node->getName();
-            
+
             if ($node->getResourceType()->getName() !== 'directory') {
                 $event = $this->dispatcher->dispatch(
                     "download_{$node->getResourceType()->getName()}",
@@ -822,7 +822,7 @@ class ResourceManager
 
                 $obj = $event->getItem();
 
-                if ($obj !== null) {              
+                if ($obj !== null) {
                     $archive->addFile($obj, iconv(mb_detect_encoding($filename), self::ENCODING, $filename));
                 } else {
                      $archive->addFromString(iconv(mb_detect_encoding($filename), self::ENCODING, $filename), '');
@@ -837,7 +837,7 @@ class ResourceManager
         $archive->close();
         $data['name'] = 'archive.zip';
         $data['file'] = $pathArch;
-        
+
         return $data;
     }
 
@@ -989,6 +989,11 @@ class ResourceManager
     public function getByCriteria(array $criteria, array $userRoles = null, $isRecursive = false)
     {
         return $this->resourceNodeRepo->findByCriteria($criteria, $userRoles, $isRecursive);
+    }
+
+    public function getWorkspaceInfoByIds(array $nodesIds)
+    {
+        return $this->resourceNodeRepo->findWorkspaceInfoByIds($nodesIds);
     }
 
     public function getResourceTypeByName($name)

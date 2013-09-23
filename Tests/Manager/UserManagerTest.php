@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\CoreBundle\Event\Log\LogUserCreateEvent;
 use \Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
@@ -35,7 +34,7 @@ class UserManagerTest extends MockeryTestCase
         $this->pagerFactory = $this->mock('Claroline\CoreBundle\Pager\PagerFactory');
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
     }
-    
+
     public function testCreateUser()
     {
         $manager = $this->getManager(array('setPersonalWorkspace'));
@@ -78,11 +77,27 @@ class UserManagerTest extends MockeryTestCase
 
         $this->om->shouldReceive('startFlushSuite')->once();
         $this->om->shouldReceive('endFlushSuite')->once();
-        $manager->shouldReceive('setPersonalWorkspace')->with($user)->once()->andReturn($workspace);
-        $this->toolManager->shouldReceive('addRequiredToolsToUser')->with($user)->once();
-        $this->roleManager->shouldReceive('setRoleToRoleSubject')->with($user, 'MY_ROLE')->once();
+        $manager->shouldReceive('setPersonalWorkspace')
+            ->with($user)
+            ->once()
+            ->andReturn($workspace);
+        $this->toolManager
+            ->shouldReceive('addRequiredToolsToUser')
+            ->with($user)
+            ->once();
+        $this->roleManager
+            ->shouldReceive('setRoleToRoleSubject')
+            ->with($user, PlatformRoles::USER)
+            ->once();
         $this->om->shouldReceive('persist')->with($user)->once();
-        $this->strictDispatcher->shouldReceive('dispatch')->with('log', 'Log\LogUserCreate', array($user))->once();
+        $this->strictDispatcher
+            ->shouldReceive('dispatch')
+            ->with('log', 'Log\LogUserCreate', array($user))
+            ->once();
+        $this->roleManager
+            ->shouldReceive('setRoleToRoleSubject')
+            ->with($user, 'MY_ROLE')
+            ->once();
 
         $manager->createUserWithRole($user, 'MY_ROLE');
     }
@@ -105,6 +120,10 @@ class UserManagerTest extends MockeryTestCase
             ->andReturn($workspace);
         $this->toolManager->shouldReceive('addRequiredToolsToUser')
             ->with($user)
+            ->once();
+        $this->roleManager
+            ->shouldReceive('setRoleToRoleSubject')
+            ->with($user, PlatformRoles::USER)
             ->once();
         $this->roleManager->shouldReceive('associateRoles')
             ->with($user, $roles)

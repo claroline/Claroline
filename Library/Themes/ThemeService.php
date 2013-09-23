@@ -196,6 +196,7 @@ class ThemeService
 
         // enable loading assets from twig templates
         $assetManager->setLoader('twig', new TwigFormulaLoader($twigEnvironment));
+        $lessGenerated = array();
 
         if (is_array($themes)) {
             foreach ($themes as $theme) {

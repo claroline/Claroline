@@ -44,6 +44,10 @@ class ResourceVoterTest extends MockeryTestCase
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $decoder = $this->mock('Claroline\CoreBundle\Entity\Resource\MaskDecoder');
         $type = new \Claroline\CoreBundle\Entity\Resource\ResourceType();
+
+        $nodes[0]->shouldReceive('getCreator')->once()->andReturn('creator_a');
+        $token->shouldReceive('getUser')->once()->andReturn('creator_b');
+
         $nodes[0]->shouldReceive('getResourceType')->andReturn($type);
         $nodes[0]->shouldReceive('getPathForDisplay')->andReturn('/path/to/dir');
         $this->ut->shouldReceive('getRoles')->with($token)->andReturn(array());
