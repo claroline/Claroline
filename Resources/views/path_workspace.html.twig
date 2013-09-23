@@ -17,46 +17,18 @@
 		    </tr>
 	{% endfor %}
 	</table>
-	<p>{{ ok }}</p>
-
-	
-
-
-
-
-
-
-
-
-
+	<p>{{ ok }}</p>	
 
 {% verbatim %}
-
-
-
- <div ng-app>
-
+<!-- AngularJS Call -->
+<div ng-app>
     <div class="container">
   		<input type="text" size="50" ng-model="yourName" placeholder="Entrez un nom ici, il sera affiché en majuscules">
     		<h1>Hello {{yourName | uppercase}}!</h1>
-
-  
-
     </div>
-
-  </div>
-
-
-
+</div>
+<!-- AngularJS Script Call -->
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.4/angular.min.js"></script>
 {% endverbatim %}
-
-
-
-
-
-
-
-
-
 
 {% endblock %}
