@@ -150,9 +150,13 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
             "({$eol}" .
             "    SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw{$eol}" .
             "    JOIN aw.roles r{$eol}" .
-            "    JOIN r.users u{$eol}" .
-            "    WHERE u.id = :user_id{$eol}" .
-            "){$eol}" .
+            "    WHERE r IN (SELECT r2 FROM Claroline\CoreBundle\Entity\Role r2 {$eol}".
+            "       LEFT JOIN r2.users u {$eol}" .
+            "       LEFT JOIN r2.groups g {$eol}" .
+            "       LEFT JOIN g.users u2 {$eol}" .
+            "       WHERE u.id = :user_id OR u2.id = :user_id {$eol}" .
+            "   ) {$eol}" .
+            ") {$eol}{$eol}" .
             "AND resourceType.name = :type_0{$eol}" .
             "OR resourceType.name = :type_1{$eol}" .
             "AND {$eol}" .
