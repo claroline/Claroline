@@ -2,7 +2,7 @@
 
 {% block title %}{{ _resource.resourceNode.getName() }} - {{ "edit_blog_infos"|trans({}, 'icap_blog') }}{% endblock %}
 
-{% block content %}
+{% block blog_content %}
     <form action="{{ _path('icap_blog_edit_infos', {'blogId':_resource.id}) }}" method="post" {{ form_enctype(form) }} id="edit_blog_infos_form">
         <legend>{{ "edit_blog_infos"|trans({}, 'icap_blog') }}</legend>
         {{ form_widget(form) }}

@@ -4,7 +4,7 @@
 
 {% block title %}{{ _resource.resourceNode.name }}{% endblock %}
 
-{% block content %}
+{% block blog_content %}
     {% set isPublished = post.isPublished %}
     <article{% if not isPublished %} class="draft"{% endif %}>
 

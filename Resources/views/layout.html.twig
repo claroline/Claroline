@@ -1,176 +1,141 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
-{% block layout %}
-    <div id="sf-environement" data-env="{{ app.environment }}"></div>
-    <div id="wrap">
-        <div class="please-wait">
-            <h4><span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span></h4>
-        </div>
-        {% render controller('ClarolineCoreBundle:Layout:topBar', {'blogId': _resource.id}) %}
+{% block breadcrumb %}{% endblock %}
 
-        <div class="container">
-            {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
-                {% render controller('ClarolineCoreBundle:Layout:renderWarningImpersonation') %}
-            {% endif %}
-            {% block sectionHeader %}
-            &nbsp;
-            {% endblock %}
-
-            {% if is_granted('ROLE_ADMIN') or is_granted('EDIT', blog) %}
-            <div class="btn-toolbar">
-                {% if is_granted('ROLE_ADMIN') %}
-                <div class="btn-group">
-                    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="icon-eye-open"></span>{{ 'show_as'|trans({}, 'platform') }} <span class="caret"></span></button>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        {% if has_role_access_to_workspace('ROLE_ANONYMOUS', _resource.resourceNode.workspace.id) %}
+{% block content %}
+        {% if is_granted('ROLE_ADMIN') or is_granted('EDIT', blog) %}
+        <div class="btn-toolbar">
+            {% if is_granted('ROLE_ADMIN') %}
+            <div class="btn-group">
+                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="icon-eye-open"></span>{{ 'show_as'|trans({}, 'platform') }} <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    {% if has_role_access_to_workspace('ROLE_ANONYMOUS', _resource.resourceNode.workspace.id) %}
+                        <li>
+                            <a href="?view_as=ROLE_ANONYMOUS_{{ _resource.resourceNode.workspace.id }}">
+                                {{ 'anonymous'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% for role in user.personalWorkspace.roles %}
+                        {% if has_role_access_to_workspace(role.getName(), _resource.resourceNode.workspace.id) %}
                             <li>
-                                <a href="?view_as=ROLE_ANONYMOUS_{{ _resource.resourceNode.workspace.id }}">
-                                    {{ 'anonymous'|trans({}, 'platform') }}
+                                <a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}?view_as={{ role.getName() }}">
+                                    {{ role.getTranslationKey()|trans({}, 'platform') }}
                                 </a>
                             </li>
                         {% endif %}
-                        {% for role in user.personalWorkspace.roles %}
-                            {% if has_role_access_to_workspace(role.getName(), _resource.resourceNode.workspace.id) %}
-                                <li>
-                                    <a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}?view_as={{ role.getName() }}">
-                                        {{ role.getTranslationKey()|trans({}, 'platform') }}
-                                    </a>
-                                </li>
-                            {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            {% if is_granted('EDIT', blog) %}
+            <div class="btn-group">
+                <a href="{{ path('icap_blog_configure', {"blogId": _resource.id}) }}" class="btn btn-default">
+                    <i class="icon-wrench"></i> {{ 'options'|trans({}, 'platform') }}
+                </a>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        <div class="jumbotron">
+            <h1><a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" title="{{ _resource.resourceNode.name }}">{{ _resource.resourceNode.name }}</a></h1>
+
+            <a href="{{ path('claro_desktop_open_tool', {"toolName": "resource_manager"}) ~ "#resources/" ~ user.personalWorkspace.id }}">
+                <small>{{ 'back_to_workspace'|trans({}, 'icap_blog') }}</small>
+            </a>
+        </div>
+        {{ macros.flashBox() }}
+        <div class="row">
+            <section class="col-lg-8 well">
+                {% block blog_content %}{% endblock %}
+            </section>
+            <aside class="col-lg-4">
+                <form action="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" method="get" class="form-horisontal well" role="search">
+                    <div class="input-group">
+                        <input type="search" class="form-control" name="search" id="search_query" placeholder="Recherche..." {% if search is defined %}value="{{ search }}" {% endif %}/>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit"><span class="glyphicon icon-search"></span></button>
+                        </span>
+                    </div>
+                    <p class="help-block"><small>Recherche dans les titres, contenus.</small></p>
+                </form>
+                <div class="well">
+                    <h3>
+                        Info bar
+                        {% if is_granted('ROLE_ADMIN') or is_granted('EDIT', blog) %}
+                        <a href="{{ path('icap_blog_edit_infos', {'blogId': _resource.id}) }}" title="{{ 'edit_blog_infos'|trans({}, 'icap_blog') }}" class="btn btn-default btn-xs">
+                            <span class="gluphicon icon-edit"></span>
+                        </a>
+                        {% endif %}
+                    </h3>
+                    <div>
+                        <p>
+                            {{ _resource.infos|raw }}
+                        </p>
+                    </div>
+                </div>
+                <div class="well collapse in">
+                    <h3>
+                        Informations
+                        <button type="button" class="btn btn-default btn-xs pull-right" data-toggle="collapse" data-target="#informations">
+                            <i class="icon-chevron-down"></i>
+                        </button>
+                    </h3>
+                    <div id="informations" class="collapse out">
+                        <p>
+                            Date de création : {{ _resource.creationDate|date('date_format'|trans({}, 'platform')) }}<br />
+                            Commentaires autorisés : {% if _resource.options.authorizeComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
+                            Commentaires anonymes autorisés : {% if _resource.options.authorizeAnonymousComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
+                            Nb d'article/pages : {{ _resource.options.postPerPage }}<br />
+                            Publication automatique des billets : {% if _resource.options.autoPublishPost %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
+                            Publication automatique des commentaires : {% if _resource.options.autoPublishComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
+                        </p>
+                    </div>
+                </div>
+                <div class="well">
+                    <h3>Nuage de tag</h3>
+                    {{ for }}
+                    <ul class="list-unstyled list-inline">
+                        {% for tag in blog_tags(_resource) %}
+                        <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': tag}) }}" title="{{ tag }}">{{ tag }}</a></li>
+                        {% else %}
+                        <li>{{ 'no_tags'|trans({}, 'icap_blog') }}</li>
                         {% endfor %}
                     </ul>
                 </div>
-                {% endif %}
-                {% if is_granted('EDIT', blog) %}
-                <div class="btn-group">
-                    <a href="{{ path('icap_blog_configure', {"blogId": _resource.id}) }}" class="btn btn-default">
-                        <i class="icon-wrench"></i> {{ 'options'|trans({}, 'platform') }}
-                    </a>
+                <div class="well">
+                    <h3>Rédacteurs</h3>
+                    <ul class="list-unstyled list-inline">
+                        {% for author in blog_authors(_resource) %}
+                        <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': author.username}) }}" title="{{ author.firstName ~ ' ' ~ author.lastName }}">{{ author.firstName ~ ' ' ~ author.lastName }}</a></li>
+                        {% else %}
+                        <li>{{ 'no_authors'|trans({}, 'icap_blog') }}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
-                {% endif %}
-            </div>
-            {% endif %}
-
-            <div class="content">
-                <div class="jumbotron">
-                        <h1><a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" title="{{ _resource.resourceNode.name }}">{{ _resource.resourceNode.name }}</a></h1>
-
-                        <a href="{{ path('claro_desktop_open_tool', {"toolName": "resource_manager"}) ~ "#resources/" ~ user.personalWorkspace.id }}">
-                            <small>{{ 'back_to_workspace'|trans({}, 'icap_blog') }}</small>
-                        </a>
+                <div class="well">
+                    <h3>Calendrier</h3>
+                    <div id='calendar'></div>
                 </div>
-                {{ macros.flashBox() }}
-                <div class="row">
-                    <section class="col-lg-8 well">
-                        {% block content %}{% endblock %}
-                    </section>
-                    <aside class="col-lg-4">
-                        <form action="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" method="get" class="form-horisontal well" role="search">
-                            <div class="input-group">
-                                <input type="search" class="form-control" name="search" id="search_query" placeholder="Recherche..." {% if search is defined %}value="{{ search }}" {% endif %}/>
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="submit"><span class="glyphicon icon-search"></span></button>
-                                </span>
-                            </div>
-                            <p class="help-block"><small>Recherche dans les titres, contenus.</small></p>
-                        </form>
-                        <div class="well">
-                            <h3>
-                                Info bar
-                                {% if is_granted('ROLE_ADMIN') or is_granted('EDIT', blog) %}
-                                <a href="{{ path('icap_blog_edit_infos', {'blogId': _resource.id}) }}" title="{{ 'edit_blog_infos'|trans({}, 'icap_blog') }}" class="btn btn-default btn-xs">
-                                    <span class="gluphicon icon-edit"></span>
-                                </a>
-                                {% endif %}
-                            </h3>
-                            <div>
-                                <p>
-                                    {{ _resource.infos|raw }}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="well collapse in">
-                            <h3>
-                                Informations
-                                <button type="button" class="btn btn-default btn-xs pull-right" data-toggle="collapse" data-target="#informations">
-                                    <i class="icon-chevron-down"></i>
-                                </button>
-                            </h3>
-                            <div id="informations" class="collapse out">
-                                <p>
-                                    Date de création : {{ _resource.creationDate|date('date_format'|trans({}, 'platform')) }}<br />
-                                    Commentaires autorisés : {% if _resource.options.authorizeComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
-                                    Commentaires anonymes autorisés : {% if _resource.options.authorizeAnonymousComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
-                                    Nb d'article/pages : {{ _resource.options.postPerPage }}<br />
-                                    Publication automatique des billets : {% if _resource.options.autoPublishPost %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
-                                    Publication automatique des commentaires : {% if _resource.options.autoPublishComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
-                                </p>
-                            </div>
-                        </div>
-                        <div class="well">
-                            <h3>Nuage de tag</h3>
-                            {{ for }}
-                            <ul class="list-unstyled list-inline">
-                                {% for tag in blog_tags(_resource) %}
-                                <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': tag}) }}" title="{{ tag }}">{{ tag }}</a></li>
-                                {% else %}
-                                <li>{{ 'no_tags'|trans({}, 'icap_blog') }}</li>
-                                {% endfor %}
+                <div class="well">
+                    <h3>Archives</h3>
+                    <ul class="tree">
+                        {% for year, datas in archives %}
+                        <li>
+                            <span>{{ year }}</span>
+                            <ul>
+                            {% for data in datas %}
+                                <li><a href="#">{{ data.month }} ({{ data.count }})</a></li>
+                            {% endfor %}
                             </ul>
-                        </div>
-                        <div class="well">
-                            <h3>Rédacteurs</h3>
-                            <ul class="list-unstyled list-inline">
-                                {% for author in blog_authors(_resource) %}
-                                <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': author.username}) }}" title="{{ author.firstName ~ ' ' ~ author.lastName }}">{{ author.firstName ~ ' ' ~ author.lastName }}</a></li>
-                                {% else %}
-                                <li>{{ 'no_authors'|trans({}, 'icap_blog') }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        <div class="well">
-                            <h3>Calendrier</h3>
-                            <div id='calendar'></div>
-                        </div>
-                        <div class="well">
-                            <h3>Archives</h3>
-                            <ul class="tree">
-                                {% for year, datas in archives %}
-                                <li>
-                                    <span>{{ year }}</span>
-                                    <ul>
-                                    {% for data in datas %}
-                                        <li><a href="#">{{ data.month }} ({{ data.count }})</a></li>
-                                    {% endfor %}
-                                    </ul>
-                                </li>
-                                {% else %}
-                                <li>{{ 'no_archives'|trans({}, 'icap_blog') }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </aside>
+                        </li>
+                        {% else %}
+                        <li>{{ 'no_archives'|trans({}, 'icap_blog') }}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
-            </div>
+            </aside>
         </div>
-    </div>
-    {% block footer %}
-        {% if not is_path_mode %}
-            {% render controller('ClarolineCoreBundle:Layout:footer') %}
-        {% endif %}
-    {% endblock%}
-    <div id="ajax-login-modal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                </div>
-                <div class="modal-body" id="ajax-login-modal-body">
-                    <div id="ajax-login-validation-box-body">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock %}
 
 {% set calendarPath = 'bundles/frontend/jquery/plugin/calendar/' %}

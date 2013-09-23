@@ -4,7 +4,7 @@
 
 {% block title %}{{ _resource.name }}{% endblock %}
 
-{% block content %}
+{% block blog_content %}
     {% if is_granted('EDIT', blog) %}
     <p>
         <a href="{{ _path('icap_blog_post_new', {'blogId': _resource.id}) }}" class="btn btn-default">
