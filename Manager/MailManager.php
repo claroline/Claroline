@@ -79,7 +79,6 @@ class MailManager
             ->setBody($body);
 
         if ($this->mailer->send($message)) {
-
             return true;
         }
 
