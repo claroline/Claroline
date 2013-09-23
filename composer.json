@@ -17,7 +17,8 @@
         "symfony/symfony":           "2.*",
         "innova/angularjs":          "dev-master",
         "innova/angular-ui":         "dev-master",
-        "innova/angular-pageslide":  "dev-master"
+        "innova/angular-pageslide":  "dev-master",
+        "doctrine/doctrine-fixtures-bundle": "dev-master"
     },
     "autoload": {
         "psr-0": { "Innova\\PathBundle": "." }

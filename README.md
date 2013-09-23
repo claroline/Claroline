@@ -5,7 +5,6 @@ PathBundle
 add "innova/path-bundle" to composer.json >> require
 
 ### Fixtures
-install with 
 ```sh
-php app/console claroline:plugin:install InnovaPathBundle
+php app/console doctrine:fixtures:load --append --fixtures=vendor/innova/path-bundle/Innova/PathBundle/DataFixtures/Dev
 ```
