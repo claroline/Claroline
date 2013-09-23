@@ -43,5 +43,10 @@ class InnovaPathBundle extends PluginBundle implements AutoConfigurableInterface
         //         __DIR__ . "/Resources/config/suggested/twig.yml"
         //     );
         // }
-    }    
+    }  
+
+     public function getRequiredFixturesDirectory($environment)
+    {
+        return 'DataFixtures';
+    }  
 }
