@@ -7,11 +7,11 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Event\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Event\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Event\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\OpenResourceEvent;
 
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Form\ExerciseType;
