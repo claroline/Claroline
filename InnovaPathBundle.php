@@ -27,7 +27,7 @@ class InnovaPathBundle extends PluginBundle implements AutoConfigurableInterface
 
      public function getRequiredFixturesDirectory($environment)
     {
-        return 'DataFixtures';
+        return 'DataFixtures/Required';
     } 
 
     public function suggestConfigurationFor(Bundle $bundle, $environment)
