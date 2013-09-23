@@ -43,9 +43,7 @@ class MailManager
             $this->mailer->getTransport()->start();
 
             return true;
-
         } catch (\Swift_TransportException $e) {
-
             return false;
         }
     }
@@ -66,7 +64,6 @@ class MailManager
             ->setBody($body);
 
         if ($this->mailer->send($message)) {
-
             return true;
         }
 

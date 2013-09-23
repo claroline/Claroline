@@ -185,7 +185,6 @@ class AuthenticationController
         $user = $this->userManager->getResetPasswordHash($hash);
 
         if (empty($user)) {
-
             return array(
                 'error' => $this->translator->trans('url_invalid', array(), 'platform'),
             );

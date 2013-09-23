@@ -211,7 +211,7 @@ mail_config_problem : Veuillez contacter l'administrateur pour reinitialiser vot
 mail_form_content: Contenu
 mail_form_receiver : destinataire(s)
 mail_form_object: Objet
-mail_login : 'Vos identifiants Claroline' 
+mail_login : 'Cliquez sur le lien' 
 mail_invalid : 'Le format de votre email n''est pas valide'
 mail_message : 'Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur me lien ci-dessous pour le réinitialiser. Si vous n''êtes pas à l''orgine de cette action, veuillez ignorer ce message.'
 mail_not_available : 'La fonction d''envoi de mail n''est pas disponible'

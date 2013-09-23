@@ -62,7 +62,7 @@ class AdministrationController extends Controller
      *     "analyticsManager"    = @DI\Inject("claroline.manager.analytics_manager"),
      *     "translator"          = @DI\Inject("translator"),
      *     "request"             = @DI\Inject("request"),
-     *      "mailManager"        = @DI\Inject("claroline.manager.mail_manager")
+     *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager")
      * })
      */
     public function __construct(
@@ -129,13 +129,12 @@ class AdministrationController extends Controller
 
             return array('form_complete_user' => $form->createView());
 
-        } else {
-
-            return array(
-                'form_complete_user' => $form->createView(),
-                'error' => 'Mail not available'
-                );
         }
+
+        return array(
+            'form_complete_user' => $form->createView(),
+            'error' => 'Mail not available'
+            );
     }
 
     /**
@@ -161,21 +160,21 @@ class AdministrationController extends Controller
             $user = $form->getData();
             $newRoles = $form->get('platformRoles')->getData();
             $this->userManager->insertUserWithRoles($user, $newRoles);
-            if ($this->mailManager->isMailerAvailable()) {
 
+            if ($this->mailManager->isMailerAvailable()) {
                 $body = $this->translator->trans('admin_form_username', array(), 'platform').': '.$user->getUsername(). $this->translator->trans('admin_form_plainPassword_first', array(), 'platform'). ': '.$user->getPlainPassword();
 
                 if ($this->mailManager->sendPlainPassword('noreply@claroline.net', $user->getMail(), $body)) {
-
                     return $this->redirect($this->generateUrl('claro_admin_user_list'));
 
                 }
 
                 return $this->redirect($this->generateUrl('claro_admin_user_list'));
 
-            } else {
-                return $this->redirect($this->generateUrl('claro_admin_user_list'));
             }
+
+            return $this->redirect($this->generateUrl('claro_admin_user_list'));
+
         }
 
         return array('form_complete_user' => $form->createView());
