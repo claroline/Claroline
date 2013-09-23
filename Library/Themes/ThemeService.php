@@ -192,6 +192,7 @@ class ThemeService
         $assetManager = $this->container->get('assetic.asset_manager');
         $twigEnvironment = $this->container->get('twig');
         $twigLoader = $this->container->get('twig.loader');
+        $lessGenerated = array();
 
         // enable loading assets from twig templates
         $assetManager->setLoader('twig', new TwigFormulaLoader($twigEnvironment));
