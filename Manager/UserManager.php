@@ -7,6 +7,7 @@ use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
@@ -34,6 +35,7 @@ class UserManager
     private $ch;
     private $pagerFactory;
     private $om;
+    private $mailer;
 
     /**
      * Constructor.
@@ -47,7 +49,7 @@ class UserManager
      *     "translator"             = @DI\Inject("translator"),
      *     "ch"                     = @DI\Inject("claroline.config.platform_config_handler"),
      *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory"),
-     *     "om"                     = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
      * })
      */
     public function __construct(
@@ -73,7 +75,7 @@ class UserManager
         $this->pagerFactory = $pagerFactory;
         $this->om = $om;
     }
-    
+
     public function createUser(User $user)
     {
         $this->om->startFlushSuite();
@@ -83,7 +85,7 @@ class UserManager
         $this->om->persist($user);
         $this->ed->dispatch('log', 'Log\LogUserCreate', array($user));
         $this->om->endFlushSuite();
-            
+
         return $user;
     }
 

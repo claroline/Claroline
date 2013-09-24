@@ -174,19 +174,29 @@ class RolesControllerTest extends MockeryTestCase
     public function testEditRoleAction()
     {
         $role = $this->mock('Claroline\CoreBundle\Entity\Role');
-        $role->shouldReceive('getId')->once()->andReturn(1);
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace');
-        $workspace->shouldReceive('getId')->once()->andReturn(2);
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
         $form = $this->mock('Symfony\Component\Form\FormInterface');
-        $this->checkAccess($workspace);
-        $this->formFactory->shouldReceive('create')->once()
-            ->with(FormFactory::TYPE_ROLE_TRANSLATION, array(), $role)->andReturn($form);
+
+        $this->security
+            ->shouldReceive('isGranted')
+            ->with('parameters', $workspace)
+            ->once()
+            ->andReturn(true);
+        $this->formFactory
+            ->shouldReceive('create')
+            ->once()
+            ->with(FormFactory::TYPE_ROLE_TRANSLATION, array(), $role)
+            ->andReturn($form);
         $form->shouldReceive('handleRequest')->once()->with($this->request);
         $form->shouldReceive('isValid')->once()->andReturn(true);
         $this->roleManager->shouldReceive('edit')->once()->with($role);
-        $this->router->shouldReceive('generate')->once()
-            ->with('claro_workspace_role_parameters', array('role' => 1, 'workspace' => 2))
-            ->andReturn('path/to/url');
+        $workspace->shouldReceive('getId')->once()->andReturn(2);
+        $this->router
+            ->shouldReceive('generate')
+            ->with('claro_workspace_roles', array('workspace' => 2))
+            ->once()
+            ->andReturn('route');
+
         $this->controller->editRoleAction($role, $workspace);
     }
 

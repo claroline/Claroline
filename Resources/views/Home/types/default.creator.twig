@@ -1,5 +1,5 @@
 <div class="creator{% if content is defined %} col-md-12{% endif %}" data-type="{{ type }}" {% if content is defined %}data-id="{{ content.id }}"{% endif %}>
-    <div class="row">
+    <div class="row spacing-right">
         <div class="col-md-12">
             <input
             type="text"
@@ -10,7 +10,7 @@
         </div>
     </div>
     <br>
-    <div class="row">
+    <div class="row spacing-right">
         <div class="col-md-12">
             <div class="panel panel-default">
                 <textarea
@@ -27,11 +27,11 @@
                 </div>
                 <div class="navbar navbar-default navbar-static-top">
 
-                    <!--<ul class="nav">
-                        <li><a href="#"><i class="icon-picture"></i> {{ "Add Pictures" | trans({}, 'home') }}</a></li>
-                        <li><a href="#"><i class="icon-paper-clip"></i> {{ "Add Files" | trans({}, 'home') }}</a></li>
+                    <ul class="nav navbar-nav">
+                        <!--<li><a href="#"><i class="icon-picture"></i> {{ "Add Pictures" | trans({}, 'home') }}</a></li>-->
+                        <li><a class="pointer-hand addlink"><i class="icon-link"></i> {{ "Add a link" | trans({}, 'home') }}</a></li>
                         <li class="divider-vertical"></li>
-                    </ul>-->
+                    </ul>
                     <form class="navbar-form pull-right">
                         {% if content is defined %}
                             <a class="cancel-button btn btn-default">{{ 'Cancel' | trans({}, 'home') }}</a>

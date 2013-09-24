@@ -14,6 +14,7 @@
             var numberOfChecked = $('.filter:checkbox:checked').length;
             var totalCheckboxes = $('.filter:checkbox').length;
             var selected = [];
+
             $('.filter:checkbox:checked').each(function () {
                 selected.push($(this).attr('name'));
             });
@@ -26,8 +27,9 @@
             } else {
                 for (var i = 0; i < selected.length; i++) {
                     $('#calendar').fullCalendar('clientEvents', function (eventObject) {
-                        var reg = new RegExp('[:]+', 'g');
+                        var reg = new RegExp(' : ', 'g');
                         var title = eventObject.title.split(reg);
+
                         if (selected.indexOf(title[0]) < 0) {
                             eventObject.visible = false;
                             return true;
@@ -158,7 +160,6 @@
                 'processData': false,
                 'contentType': false,
                 'success': function (data, textStatus, xhr) {
-                    if (xhr.status === 200)  {
                         $('#myModal').modal('hide');
                         $('#updateBtn').removeAttr('disabled');
                         $('#calendar').fullCalendar('refetchEvents');
@@ -170,7 +171,6 @@
                                 
                             }
                         });
-                    }
                 },
                 'error': function ( xhr, textStatus) {
                     if (xhr.status === 400) {//bad request
@@ -257,14 +257,8 @@
                     }
                 }
             });
-
-            if (!confirm('Are you sure about this change?')) {
-                //@todo revertFunc ? what is this ?
-                //revertFunc(); ? what is this ?
-                alert('Please tell me what I\'m supposed to do');
-            }
         }
-        function modifiedEvent(calEvent)
+        function modifiedEvent(calEvent, context)
         {
             id = calEvent.id;
             $('#deleteBtn').show();
@@ -272,19 +266,23 @@
             $('#save').hide();
             $('#myModalLabel').text(Translator.get('agenda' + ':' + 'modify'));
             var title = calEvent.title;
-            var reg = new RegExp('[:]+', 'g');
-            title = title.split(reg);
-            $('#agenda_form_title').attr('value', title[1]);
+            if (context === 'desktop')
+            {
+                var reg = new RegExp('[:]+', 'g');
+                title = title.split(reg);
+                $('#agenda_form_title').attr('value', title[1]);
+            } else
+            {
+                $('#agenda_form_title').attr('value', title);
+            }
             $('#agenda_form_description').val(calEvent.description);
             $('#agenda_form_priority option[value=' + calEvent.color + ']').attr('selected', 'selected');
             var pickedDate = new Date(calEvent.start);
             $('#agenda_form_start').val($.fullCalendar.formatDate( pickedDate,'dd/MM/yyyy HH:mm'));
-            if (calEvent.end === null)
-            {
+            if (calEvent.end === null){
                 $('#agenda_form_end').val($.fullCalendar.formatDate( pickedDate,'dd/MM/yyyy HH:mm'));
             }
-            else
-            {
+            else{
                 var Enddate = new Date(calEvent.end);
                 $('#agenda_form_end').val($.fullCalendar.formatDate( Enddate,'dd/MM/yyyy HH:mm'));
             }
@@ -308,7 +306,17 @@
             header: {
                 left: 'prev,next today',
                 center: 'title',
-                right: 'month,agendaWeek,agendaDay'
+                right: 'month,agendaWeek,agendaDay',      
+            },
+            buttonText: {
+                prev: Translator.get('agenda' + ':' + 'prev'),
+                next: Translator.get('agenda' + ':' + 'next'),
+                prevYear: Translator.get('agenda' + ':' + 'prevYear'),
+                nextYear: Translator.get('agenda' + ':' + 'nextYear'),
+                today:    Translator.get('agenda' + ':' + 'today'),
+                month:    Translator.get('agenda' + ':' + 'month'),
+                week:     Translator.get('agenda' + ':' + 'week'),
+                day:      Translator.get('agenda' + ':' + 'day')
             },
             monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
                 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
@@ -319,9 +327,11 @@
             editable: true,
             events: $('a#link').attr('href'),
             axisFormat: 'HH:mm',
-            timeFormat: {
-                agenda: 'H:mm{ - h:mm}'
-            },
+            timeFormat: 'H(:mm)',
+            agenda: 'h:mm{ - h:mm}',
+            '': 'h:mm{ - h:mm}',
+            minTime: 0,
+            maxTime: 24,
             allDayText: 'all-day',
             allDaySlot: true,
             lazyFetching : true,
@@ -330,7 +340,8 @@
             },
             dayClick: dayClickFunction,
             eventClick:  function (calEvent) {
-                modifiedEvent(calEvent);
+                modifiedEvent(calEvent ,context);
+                $('#calendar').fullCalendar( 'updateEvent', calEvent );
             },
             eventRender: function (event) {
                 if (event.visible === false)

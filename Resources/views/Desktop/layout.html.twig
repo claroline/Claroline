@@ -17,6 +17,9 @@
                     {% render controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
                         {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
                     %}
+                    {% block resourceBreadcrumb %}
+                        <li class="active">{{ _resource.getResourceNode().getName() }}</li>
+                    {% endblock %}
                 </ul>
             {% endif %}
         {% endif %}

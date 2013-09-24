@@ -1,5 +1,7 @@
 <?php
+
 namespace Claroline\CoreBundle\Controller;
+
 use Claroline\CoreBundle\Entity\Home\Content;
 use Claroline\CoreBundle\Entity\Home\Type;
 use Claroline\CoreBundle\Manager\HomeManager;
@@ -224,7 +226,7 @@ class HomeController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function regionAction($content)
+    public function regionAction(Content $content)
     {
         return array('id' => $content->getId(), 'region' => $this->manager->getRegion($content));
     }

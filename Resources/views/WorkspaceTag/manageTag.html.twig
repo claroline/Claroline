@@ -41,6 +41,13 @@
                 <th> {{ 'tag'|trans({}, 'platform') }} </th>
             </thead>
             <tbody id="manage-tag-table-body">
+            {% if workspaces is empty %}
+                <tr>
+                    <td colspan="2">
+                        {{ 'no_workspace'|trans({}, 'platform') }}
+                    </td>
+                </tr>
+            {% else %}
                 {% for workspace in workspaces %}
                     <tr>
                         <td>
@@ -77,6 +84,7 @@
                         </td>
                     </tr>
                 {% endfor %}
+            {% endif %}
             </tbody>
         </table>
     </div>

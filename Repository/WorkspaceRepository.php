@@ -202,7 +202,7 @@ class WorkspaceRepository extends EntityRepository
             INNER JOIN Claroline\CoreBundle\Entity\Log\Log l WITH l.workspace = w
             JOIN l.doer u
             JOIN w.roles r
-            WHERE l.action = 'ws_tool_read'
+            WHERE l.action = 'workspace-tool-read'
             AND u.id = :userId
             AND (
         ";
@@ -337,6 +337,24 @@ class WorkspaceRepository extends EntityRepository
         $search = strtoupper($search);
         $query = $this->_em->createQuery($dql);
         $query->setParameter('search', "%{$search}%");
+
+        return $query->getResult();
+    }
+
+    public function findWorkspacesWithSelfUnregistrationByRoles(array $roles)
+    {
+        $dql = "
+            SELECT DISTINCT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            JOIN w.orderedTools ot
+            JOIN ot.roles r
+            WHERE w.displayable = true
+            AND w.selfUnregistration = true
+            AND r.name IN (:roles)
+            ORDER BY w.name
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roles', $roles);
 
         return $query->getResult();
     }
