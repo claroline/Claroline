@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WidgetInstanceRepository")
- * @ORM\Table(name="claro_widget_display")
+ * @ORM\Table(name="claro_widget_instance")
  */
 class WidgetInstance
 {
