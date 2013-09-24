@@ -158,7 +158,7 @@ class HomeController extends Controller
             'widgets' => $widgets
         );
     }
-    
+
     /**
      * @EXT\Route(
      *     "desktop/widget/{widget}/create",
@@ -179,10 +179,10 @@ class HomeController extends Controller
         $config->setUser($this->securityContext->getToken()->getUser());
         $em->persist($config);
         $em->flush();
-        
-        return new Response('success'); 
+
+        return new Response('success');
     }
-    
+
     /**
      * @EXT\Route(
      *     "/workspace/{workspace}/widget/{widget}/create",
@@ -203,8 +203,8 @@ class HomeController extends Controller
         $config->setWorkspace($workspace);
         $em->persist($config);
         $em->flush();
-        
-        return new Response('success'); 
+
+        return new Response('success');
     }
 
     /**
@@ -215,7 +215,7 @@ class HomeController extends Controller
      * )
      * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:widgetConfiguration.html.twig")
-     * 
+     *
      * Asks a widget to render its configuration page for a workspace.
      *
      * @param AbstractWorkspace $workspace
@@ -1008,7 +1008,7 @@ class HomeController extends Controller
             $currentWidgetList[] = $widgetConfig->getWidget()->getId();
         }
         $widgetDisplayConfigs = $this->homeTabManager
-            ->getVisibleDesktopWidgetConfig($currentWidgetList);
+            ->getAdminDesktopWidgetInstance($currentWidgetList);
 
         return array(
             'tool' => $this->getHomeTool(),
@@ -1056,7 +1056,7 @@ class HomeController extends Controller
             $currentWidgetList[] = $widgetConfig->getWidget()->getId();
         }
         $widgetDisplayConfigs = $this->homeTabManager
-            ->getVisibleDesktopWidgetConfig($currentWidgetList);
+            ->getAdminDesktopWidgetInstance($currentWidgetList);
 
         return array(
             'tool' => $this->getHomeTool(),
@@ -1104,7 +1104,7 @@ class HomeController extends Controller
             $currentWidgetList[] = $widgetConfig->getWidget()->getId();
         }
         $widgetDisplayConfigs = $this->homeTabManager
-            ->getVisibleWorkspaceWidgetConfig($currentWidgetList);
+            ->getAdminWorkspaceWidgetInstance($currentWidgetList);
 
         return array(
             'tool' => $this->getHomeTool(),
@@ -1444,7 +1444,7 @@ class HomeController extends Controller
 
         return new Response('success', 204);
     }
-    
+
     /**
      * @EXT\Route(
      *     "/desktop/widget/name/form/{config}",
@@ -1452,16 +1452,16 @@ class HomeController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:editWidgetNameForm.html.twig")
-     * 
+     *
      * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
-     * 
+     *
      * @return array
      */
     public function editDesktopWidgetNameFormAction(WidgetInstance $config)
-    {   
+    {
         $formFactory = $this->get("claroline.form.factory");
         $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
-         
+
         return array('form' => $form->createView(), 'config' => $config);
     }
 
@@ -1473,7 +1473,7 @@ class HomeController extends Controller
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:editWidgetNameForm.html.twig")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * 
+     *
      * @return array
      */
     public function editDesktopWidgetName(WidgetInstance $config, User $user)
@@ -1483,10 +1483,10 @@ class HomeController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->persist($config);
         $em->flush();
-        
+
         return new Response('success', 204);
     }
-    
+
     /**
      * @EXT\Route(
      *     "/workspace/widget/name/form/{config}",
@@ -1494,19 +1494,19 @@ class HomeController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:editWidgetNameForm.html.twig")
-     * 
+     *
      * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
-     * 
+     *
      * @return array
      */
     public function editWorkspaceWidgetNameFormAction(WidgetInstance $config)
-    {   
+    {
         $formFactory = $this->get("claroline.form.factory");
         $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
-        
+
         return array('form' => $form->createView(), 'config' => $config);
     }
-    
+
     /**
      * @EXT\Route(
      *     "/workspace/widget/name/edit/{config}",
@@ -1514,9 +1514,9 @@ class HomeController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:editWidgetNameForm.html.twig")
-     * 
+     *
      * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
-     * 
+     *
      * @return array
      */
     public function editWorkspaceWidgetName(WidgetInstance $config)
@@ -1526,10 +1526,10 @@ class HomeController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->persist($config);
         $em->flush();
-        
+
         return new Response('success', 204);
     }
-    
+
     private function checkUserAccess()
     {
         if (!$this->securityContext->isGranted('ROLE_USER')) {

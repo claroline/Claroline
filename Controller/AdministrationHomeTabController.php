@@ -537,11 +537,11 @@ class AdministrationHomeTabController extends Controller
 
         if ($homeTab->getType() === 'admin_desktop') {
             $widgetDisplayConfigs = $this->homeTabManager
-                ->getVisibleDesktopWidgetConfig($currentWidgetList);
+                ->getAdminDesktopWidgetInstance($currentWidgetList);
         }
         else {
             $widgetDisplayConfigs = $this->homeTabManager
-                ->getVisibleWorkspaceWidgetConfig($currentWidgetList);
+                ->getAdminWorkspaceWidgetInstance($currentWidgetList);
         }
 
         return array(

@@ -6,34 +6,32 @@ use Doctrine\ORM\EntityRepository;
 
 class WidgetInstanceRepository extends EntityRepository
 {
-    public function findVisibleAdminDesktopWidgetDisplayConfig(array $excludedWidgets)
+    public function findAdminDesktopWidgetInstance(array $excludedWidgetInstances)
     {
         $dql = "
             SELECT wdc
             FROM Claroline\CoreBundle\Entity\Widget\WidgetInstance wdc
-            WHERE wdc.parent IS NULL
-            AND wdc.isVisible = true
+            WHERE wdc.isAdmin = true
             AND wdc.isDesktop = true
-            AND wdc.widget NOT IN (:excludedWidgets)
+            AND wdc NOT IN (:excludedWidgetInstances)
         ";
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('excludedWidgets', $excludedWidgets);
+        $query->setParameter('excludedWidgetInstances', $excludedWidgetInstances);
 
         return $query->getResult();
     }
 
-    public function findVisibleAdminWorkspaceWidgetDisplayConfig(array $excludedWidgets)
+    public function findAdminWorkspaceWidgetInstance(array $excludedWidgetInstances)
     {
         $dql = "
             SELECT wdc
             FROM Claroline\CoreBundle\Entity\Widget\WidgetInstance wdc
-            WHERE wdc.parent IS NULL
-            AND wdc.isVisible = true
+            WHERE wdc.isAdmin = true
             AND wdc.isDesktop = false
-            AND wdc.widget NOT IN (:excludedWidgets)
+            AND wdc NOT IN (:excludedWidgetInstances)
         ";
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('excludedWidgets', $excludedWidgets);
+        $query->setParameter('excludedWidgetInstances', $excludedWidgetInstances);
 
         return $query->getResult();
     }
