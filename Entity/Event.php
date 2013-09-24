@@ -178,13 +178,4 @@ class Event
     {
         $this->priority = $priority;
     }
-
-    public function compareEvent(Event $event1, Event $event2)
-    {
-        if ($event1 == $event2) {
-            return 0;
-        }
-
-        return -1;
-    }
 }

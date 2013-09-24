@@ -133,7 +133,7 @@ class WorkspaceAgendaController extends Controller
             $event->setAllDay($postData['agenda_form']['allDay']);
             $this->om->flush();
 
-            return new Response(204);
+            return new Response('', 204);
         }
 
         return new Response(

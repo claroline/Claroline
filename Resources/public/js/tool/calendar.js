@@ -18,7 +18,6 @@
             $('.filter:checkbox:checked').each(function () {
                 selected.push($(this).attr('name'));
             });
-            console.debug(selected);
             //if all checkboxes or none checkboxes are checked display all events
             if ((totalCheckboxes - numberOfChecked === 0) || (numberOfChecked === 0)) {
                 $('#calendar').fullCalendar('clientEvents', function (eventObject) {
@@ -32,11 +31,9 @@
                         var title = eventObject.title.split(reg);
 
                         if (selected.indexOf(title[0]) < 0) {
-                            console.debug(['teset', title[0]]);
                             eventObject.visible = false;
                             return true;
                         } else {
-                            console.debug('ok');
                             eventObject.visible = true;
                             return false;
                         }
@@ -163,7 +160,6 @@
                 'processData': false,
                 'contentType': false,
                 'success': function (data, textStatus, xhr) {
-                    if (xhr.status <= 200)  {
                         $('#myModal').modal('hide');
                         $('#updateBtn').removeAttr('disabled');
                         $('#calendar').fullCalendar('refetchEvents');
@@ -175,7 +171,6 @@
                                 
                             }
                         });
-                    }
                 },
                 'error': function ( xhr, textStatus) {
                     if (xhr.status === 400) {//bad request
@@ -262,12 +257,6 @@
                     }
                 }
             });
-
-            if (!confirm('Are you sure about this change?')) {
-                //@todo revertFunc ? what is this ?
-                //revertFunc(); ? what is this ?
-                alert('Please tell me what I\'m supposed to do');
-            }
         }
         function modifiedEvent(calEvent, context)
         {
@@ -277,7 +266,6 @@
             $('#save').hide();
             $('#myModalLabel').text(Translator.get('agenda' + ':' + 'modify'));
             var title = calEvent.title;
-            console.debug(context);
             if (context === 'desktop')
             {
                 var reg = new RegExp('[:]+', 'g');
@@ -291,12 +279,10 @@
             $('#agenda_form_priority option[value=' + calEvent.color + ']').attr('selected', 'selected');
             var pickedDate = new Date(calEvent.start);
             $('#agenda_form_start').val($.fullCalendar.formatDate( pickedDate,'dd/MM/yyyy HH:mm'));
-            if (calEvent.end === null)
-            {
+            if (calEvent.end === null){
                 $('#agenda_form_end').val($.fullCalendar.formatDate( pickedDate,'dd/MM/yyyy HH:mm'));
             }
-            else
-            {
+            else{
                 var Enddate = new Date(calEvent.end);
                 $('#agenda_form_end').val($.fullCalendar.formatDate( Enddate,'dd/MM/yyyy HH:mm'));
             }

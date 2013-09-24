@@ -189,21 +189,24 @@ class ToolListener
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, true);
         $usr = $this->container->get('security.context')->getToken()->getUser();
-        if( $usr === 'anon.')
-        {
+        if ($usr === 'anon.') {
             return $this->templating->render(
                 'ClarolineCoreBundle:Tool/workspace/agenda:agenda_read_only.html.twig',
-                array('workspace' => $workspace,
+                array(
+                    'workspace' => $workspace,
                     'form' => $form->createView(),
-                    'listEvents' => $listEvents )
+                    'listEvents' => $listEvents
+                )
             );
         }
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool/workspace/agenda:agenda.html.twig',
-            array('workspace' => $workspace,
+            array(
+                'workspace' => $workspace,
                 'form' => $form->createView(),
-                'listEvents' => $listEvents )
+                'listEvents' => $listEvents
+            )
         );
 
     }
@@ -226,7 +229,7 @@ class ToolListener
         $em = $this->container-> get('doctrine.orm.entity_manager');
         $usr = $this->container->get('security.context')->getToken()->getUser();
         $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, false);
         $cours = array();
         $translator = $this->container->get('translator');
 
@@ -235,7 +238,6 @@ class ToolListener
             $temp = $event->getWorkspace()->getName();
             $cours[] = $temp;
         }
-
         if (count($listEventsDesktop) > 0) {
 
             $cours[] = $translator->trans('desktop', array(), 'platform');
