@@ -24,7 +24,7 @@
         <form id="create-workspace-widget">
             <select id="workspace-widgets" >
                 {% for widget in wwidgets %}
-                    <option value="{{ widget.getId() }}"> {{ widget.getName() }} </option>
+                    <option value="{{ widget.getId() }}"> {{ widget.getName()|trans({}, 'widget') }} </option>
                 {% endfor %}
             </select>
             <input type="submit" value="{{ 'add'|trans({}, 'platform') }}"></input>
@@ -56,7 +56,7 @@
         <form id="create-desktop-widget">
             <select id="desktop-widgets" >
                 {% for widget in dwidgets %}
-                    <option value="{{ widget.getId() }}"> {{ widget.getName() }} </option>
+                    <option value="{{ widget.getId() }}"> {{ widget.getName()|trans({}, 'widget') }} </option>
                 {% endfor %}
             </select>
             <input type="submit" value="{{ 'add'|trans({}, 'platform') }}"></input>

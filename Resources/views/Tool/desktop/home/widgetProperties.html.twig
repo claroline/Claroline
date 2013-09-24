@@ -31,7 +31,7 @@
         <form id="create-widget">
             <select id="widgets" >
                 {% for widget in widgets %}
-                    <option value="{{ widget.getId() }}"> {{ widget.getName() }} </option>
+                    <option value="{{ widget.getId() }}"> {{ widget.getName()|trans({}, 'widget') }} </option>
                 {% endfor %}
             </select>
             <input type="submit" value="{{ 'add'|trans({}, 'platform') }}"></input>

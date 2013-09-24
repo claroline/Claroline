@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\Translator;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -19,21 +20,24 @@ class WidgetManager
     private $repo;
     private $widgetRepo;
     private $router;
+    private $translator;
     
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "om"     = @DI\Inject("claroline.persistence.object_manager"),
-     *     "router" = @DI\Inject("router")
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
+     *     "router"     = @DI\Inject("router"),
+     *     "translator" = @DI\Inject("translator")
      * })
      */
-    public function __construct(ObjectManager $om, RouterInterface $router)
+    public function __construct(ObjectManager $om, RouterInterface $router, Translator $translator)
     {
         $this->om = $om;
         $this->repo = $om->getRepository('ClarolineCoreBundle:Widget\WidgetInstance');
         $this->widgetRepo = $om->getRepository('ClarolineCoreBundle:Widget\Widget');
         $this->router = $router;
+        $this->translator = $translator;
     } 
     
     public function getDesktopInstances(User $user)
@@ -66,7 +70,7 @@ class WidgetManager
         }
         
         $instance = new WidgetInstance($widget);
-        $instance->setName($widget->getName());
+        $instance->setName($this->translator->trans($widget->getName(), array(), 'widget'));
         $instance->setIsAdmin($isAdmin);
         $instance->setIsDesktop($isDesktop);
         $instance->setWidget($widget);
