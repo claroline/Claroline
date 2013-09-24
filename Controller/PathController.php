@@ -1,5 +1,39 @@
 <?php
 
+/**
+ * MIT License
+ * ===========
+ *
+ * Copyright (c) 2012 Donovan Tengblad <contact@donovan-tengblad.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @category   Entity
+ * @package    InnovaPathBundle
+ * @subpackage PathBundle
+ * @author     Donovan Tengblad <contact@donovan-tengblad.com>
+ * @copyright  2012 Donovan Tengblad.
+ * @license    http://www.opensource.org/licenses/mit-license.php  MIT License
+ * @version    0.1
+ * @link       http://donovan-tengblad.com
+ */
 namespace Innova\PathBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -25,9 +59,25 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 
+/**
+ * Class PathController
+ *
+ * @category   Controller
+ * @package    Innova
+ * @subpackage PathBundle
+ * @author     Innovalangues <contant@innovalangues.net>
+ * @copyright  2012 Innovlangues.
+ * @license    http://www.opensource.org/licenses/mit-license.php MIT License
+ * @version    0.1
+ * @link       http://innovalangues.net
+*/
 class PathController extends Controller
 {
     /**
+     * fromDesktopAction function
+     *
+     * @return array response
+     *
      * @Route(
      *     "/",
      *     name = "innova_path_from_desktop",
@@ -42,6 +92,10 @@ class PathController extends Controller
     }
 
     /**
+     * deployAction function
+     *
+     * @return array workspace / OK
+     *
      * @Route(
      *     "/innova_path_deploy",
      *     name = "innova_path_deploy"
@@ -93,6 +147,21 @@ class PathController extends Controller
         return array('workspace' => $workspace, 'ok' => "Parcours déployé.");
     }
 
+
+    /**
+     * private _jsonParser function
+     *
+     * @param is_object($steps)          $steps          step of activity
+     * @param is_object($user)           $user           user of activity
+     * @param is_object($workspace)      $workspace      workspace of activity
+     * @param is_object($pathsDirectory) $pathsDirectory pathsDirectory of activity
+     * @param is_object($parent)         $parent         parent of activity
+     * @param is_object($order)          $order          order of activity
+     * @param is_object($path)           $path           path of activity
+     *
+     * @return array
+     *
+     */
     private function JSONParser($steps, $user, $workspace, $pathsDirectory, $parent, $order, $path)
     {
         $manager = $this->entityManager();
@@ -181,6 +250,10 @@ class PathController extends Controller
     }
 
     /**
+     * fromWorkspaceAction function
+     *
+     * @return array workspace / paths
+     *
      * @Route(
      *     "/",
      *     name = "innova_path_from_workspace"
@@ -234,6 +307,12 @@ class PathController extends Controller
     }
 
     /**
+     * getPathsAction function
+     *
+     * @param string $path path of activity
+     *
+     * @return JsonResponse
+     *
      * @Route(
      *     "/path/{id}",
      *     name = "innova_path_get_path",
@@ -252,6 +331,10 @@ class PathController extends Controller
     }
 
     /**
+     * addPathAction function
+     *
+     * @return Response($new_path->getId()
+     *
     * @Route(
     *     "/path/add",
     *     name = "innova_path_add_path",
@@ -283,6 +366,12 @@ class PathController extends Controller
     }
 
     /**
+     * editPathAction function
+     *
+     * @param string $path path of activity
+     *
+     * @return Response($new_path->getId()
+     *
     * @Route(
     *     "/path/edit/{id}",
     *     name = "innova_path_edit_path",
@@ -310,6 +399,12 @@ class PathController extends Controller
     }
 
     /**
+     * deletePathAction function
+     *
+     * @param string $path path of activity
+     *
+     * @return OK
+     *
     * @Route(
     *     "/path/delete/{id}",
     *     name = "innova_path_delete_path",
@@ -328,6 +423,12 @@ class PathController extends Controller
         return New Response("ok");
     }
 
+    /**
+     * entityManager function
+     *
+     * @return $em
+     *
+     */
     public function entityManager()
     {
         $em = $this->get('doctrine.orm.entity_manager');
@@ -336,6 +437,12 @@ class PathController extends Controller
         return $em;
     }
 
+    /**
+     * resourceManager function
+     *
+     * @return $rm
+     *
+     */
     public function resourceManager()
     {
         $rm = $this->get('claroline.manager.resource_manager');
