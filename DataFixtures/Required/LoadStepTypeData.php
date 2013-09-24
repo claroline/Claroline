@@ -17,11 +17,10 @@ class LoadStepTypeData extends AbstractFixture
      */
     public function load(ObjectManager $manager)
     {
-  
+
         $stepType1 = new stepType();
         $stepType1->setName("sequential");
         $manager->persist($stepType1);
-
 
         $stepType2 = new stepType();
         $stepType2->setName("parallel");

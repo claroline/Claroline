@@ -16,10 +16,10 @@ class Version20130923121758 extends AbstractMigration
     {
         $this->addSql("
             CREATE TABLE innova_step2resourceNode (
-                id SERIAL NOT NULL, 
-                step_id INT DEFAULT NULL, 
-                resourceOrder INT NOT NULL, 
-                resourceNode_id INT DEFAULT NULL, 
+                id SERIAL NOT NULL,
+                step_id INT DEFAULT NULL,
+                resourceOrder INT NOT NULL,
+                resourceNode_id INT DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -31,10 +31,10 @@ class Version20130923121758 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE innova_user2path (
-                id SERIAL NOT NULL, 
-                user_id INT NOT NULL, 
-                path_id INT NOT NULL, 
-                status INT NOT NULL, 
+                id SERIAL NOT NULL,
+                user_id INT NOT NULL,
+                path_id INT NOT NULL,
+                status INT NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -45,25 +45,25 @@ class Version20130923121758 extends AbstractMigration
             CREATE INDEX IDX_2D4590E5D96C566B ON innova_user2path (path_id)
         ");
         $this->addSql("
-            ALTER TABLE innova_step2resourceNode 
-            ADD CONSTRAINT FK_21EA11F73B21E9C FOREIGN KEY (step_id) 
+            ALTER TABLE innova_step2resourceNode
+            ADD CONSTRAINT FK_21EA11F73B21E9C FOREIGN KEY (step_id)
             REFERENCES innova_step (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE innova_step2resourceNode 
-            ADD CONSTRAINT FK_21EA11FB87FAB32 FOREIGN KEY (resourceNode_id) 
+            ALTER TABLE innova_step2resourceNode
+            ADD CONSTRAINT FK_21EA11FB87FAB32 FOREIGN KEY (resourceNode_id)
             REFERENCES claro_resource_node (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE innova_user2path 
-            ADD CONSTRAINT FK_2D4590E5A76ED395 FOREIGN KEY (user_id) 
-            REFERENCES claro_user (id) 
+            ALTER TABLE innova_user2path
+            ADD CONSTRAINT FK_2D4590E5A76ED395 FOREIGN KEY (user_id)
+            REFERENCES claro_user (id)
             ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE innova_user2path 
-            ADD CONSTRAINT FK_2D4590E5D96C566B FOREIGN KEY (path_id) 
-            REFERENCES innova_path (id) 
+            ALTER TABLE innova_user2path
+            ADD CONSTRAINT FK_2D4590E5D96C566B FOREIGN KEY (path_id)
+            REFERENCES innova_path (id)
             ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
     }

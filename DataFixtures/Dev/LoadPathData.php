@@ -21,10 +21,6 @@ class LoadPathData extends AbstractFixture
     {
         $name = "Path Dev";
 
-
-
-
-
         $resourceNode = new ResourceNode();
         $resourceNode->setName($name);
         $resourceNode->setClass("Innova\PathBundle\Entity\Path");

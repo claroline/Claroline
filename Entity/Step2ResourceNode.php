@@ -26,24 +26,20 @@ class Step2ResourceNode
     */
     private $step;
 
-
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
     */
     private $resourceNode;
 
-
-
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
     }
-
 
     /**
      * @var integer
@@ -52,11 +48,10 @@ class Step2ResourceNode
      */
     private $resourceOrder;
 
-
     /**
      * Set step
      *
-     * @param \Innova\PathBundle\Entity\Step $step
+     * @param  \Innova\PathBundle\Entity\Step $step
      * @return Step2ResourceNode
      */
     public function setStep(\Innova\PathBundle\Entity\Step $step = null)
@@ -69,7 +64,7 @@ class Step2ResourceNode
     /**
      * Get step
      *
-     * @return \Innova\PathBundle\Entity\Step 
+     * @return \Innova\PathBundle\Entity\Step
      */
     public function getStep()
     {
@@ -79,7 +74,7 @@ class Step2ResourceNode
     /**
      * Set resourceNode
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
+     * @param  \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
      * @return Step2ResourceNode
      */
     public function setResourceNode(\Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode = null)
@@ -92,7 +87,7 @@ class Step2ResourceNode
     /**
      * Get resourceNode
      *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode 
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
     public function getResourceNode()
     {
@@ -102,7 +97,7 @@ class Step2ResourceNode
     /**
      * Set resourceOrder
      *
-     * @param integer $resourceOrder
+     * @param  integer           $resourceOrder
      * @return Step2ResourceNode
      */
     public function setResourceOrder($resourceOrder)
@@ -115,7 +110,7 @@ class Step2ResourceNode
     /**
      * Get resourceOrder
      *
-     * @return integer 
+     * @return integer
      */
     public function getResourceOrder()
     {

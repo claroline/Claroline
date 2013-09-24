@@ -33,11 +33,10 @@ class StepType
     */
     protected $steps;
 
-
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -47,7 +46,7 @@ class StepType
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string   $name
      * @return StepType
      */
     public function setName($name)
@@ -60,7 +59,7 @@ class StepType
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {

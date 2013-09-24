@@ -56,11 +56,10 @@ class PathTemplate
      */
     private $editDate;
 
-
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -70,7 +69,7 @@ class PathTemplate
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string       $name
      * @return PathTemplate
      */
     public function setName($name)
@@ -83,7 +82,7 @@ class PathTemplate
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -93,7 +92,7 @@ class PathTemplate
     /**
      * Set description
      *
-     * @param string $description
+     * @param  string       $description
      * @return PathTemplate
      */
     public function setDescription($description)
@@ -106,7 +105,7 @@ class PathTemplate
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -116,7 +115,7 @@ class PathTemplate
     /**
      * Set step
      *
-     * @param string $step
+     * @param  string       $step
      * @return PathTemplate
      */
     public function setstep($step)
@@ -129,7 +128,7 @@ class PathTemplate
     /**
      * Get step
      *
-     * @return string 
+     * @return string
      */
     public function getstep()
     {
@@ -139,7 +138,7 @@ class PathTemplate
     /**
      * Set user
      *
-     * @param string $user
+     * @param  string       $user
      * @return PathTemplate
      */
     public function setUser($user)
@@ -152,7 +151,7 @@ class PathTemplate
     /**
      * Get user
      *
-     * @return string 
+     * @return string
      */
     public function getUser()
     {
@@ -162,7 +161,7 @@ class PathTemplate
     /**
      * Set editDate
      *
-     * @param \DateTime $editDate
+     * @param  \DateTime    $editDate
      * @return PathTemplate
      */
     public function setEditDate($editDate)
@@ -175,7 +174,7 @@ class PathTemplate
     /**
      * Get editDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getEditDate()
     {

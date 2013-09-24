@@ -17,11 +17,9 @@ class LoadStepWhoData extends AbstractFixture
      */
     public function load(ObjectManager $manager)
     {
-  
         $stepWho1 = new stepWho();
         $stepWho1->setName("student");
         $manager->persist($stepWho1);
-
 
         $stepWho2 = new stepWho();
         $stepWho2->setName("group");

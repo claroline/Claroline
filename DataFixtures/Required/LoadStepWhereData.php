@@ -10,18 +10,17 @@ use Innova\PathBundle\Entity\StepWhere;
  * Class LoadStepWhereData
  * @package Innova\PathBundle\DataFixtures\ORM
  */
-class LoadStepWhere extends AbstractFixture
+class LoadStepWhereData extends AbstractFixture
 {
     /**
      * {@inheritDoc}
      */
     public function load(ObjectManager $manager)
     {
-  
+
         $stepWhere1 = new stepWhere();
         $stepWhere1->setName("home");
         $manager->persist($stepWhere1);
-
 
         $stepWhere2 = new stepWhere();
         $stepWhere2->setName("classroom");
