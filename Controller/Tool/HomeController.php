@@ -142,8 +142,6 @@ class HomeController extends Controller
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:widgetProperties.html.twig")
      *
      * Displays the widget configuration page.
-     *
-     * @return Response
      */
     public function desktopWidgetPropertiesAction()
     {
@@ -166,13 +164,13 @@ class HomeController extends Controller
      *     options={"expose"=true}
      * )
      *
-     * @return Response
+     * @EXT\Template("ClarolineCoreBundle:Widget:desktopWidgetConfigRow.html.twig")
      */
     public function createDesktopWidgetInstance(Widget $widget)
     {
         $instance = $this->widgetManager->createInstance($widget, false, true, $this->securityContext->getToken()->getUser());
         
-        return new Response('success'); 
+        return array('config' => $instance);
     }
     
     /**
@@ -182,13 +180,13 @@ class HomeController extends Controller
      *     options={"expose"=true}
      * )
      *
-     * @return Response
+     * @EXT\Template("ClarolineCoreBundle:Widget:workspaceWidgetConfigRow.html.twig")
      */
     public function createWorkspaceWidgetInstance(Widget $widget, AbstractWorkspace $workspace)
     {
         $instance = $this->widgetManager->createInstance($widget, false, false, null, $workspace);
         
-        return new Response('success'); 
+        return array('config' => $instance);
     }
     
     /**

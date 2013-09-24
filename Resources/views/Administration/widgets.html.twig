@@ -71,7 +71,7 @@
                     <th>{{ 'delete'|trans({}, 'platform') }}</th>
                 </tr>
             </thead>
-            <tbody id="widget-dekstop-table-body">
+            <tbody id="widget-desktop-table-body">
                 {% for dconfig in dconfigs %}
                 <tr class='row-widget-config' data-id="{{ dconfig.getId() }}">
                     <td>{% render controller('ClarolineCoreBundle:AdministrationWidget:editWidgetNameForm', {'config': dconfig}) %}</td>

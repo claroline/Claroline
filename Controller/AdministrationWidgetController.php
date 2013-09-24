@@ -64,35 +64,6 @@ class AdministrationWidgetController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/plugin/lock/{displayConfigId}",
-     *     name="claro_admin_invert_widgetconfig_lock",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter(
-     *      "displayConfig",
-     *      class="ClarolineCoreBundle:Widget\WidgetInstance",
-     *      options={"id" = "displayConfigId", "strictId" = true}
-     * )
-     *
-     * Sets true|false to the widget displayConfig isLockedByAdmin option.
-     *
-     * @param WidgetInstance $displayConfig
-     *
-     * @return Response
-     */
-    public function invertLockWidgetAction(WidgetInstance $displayConfig)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $displayConfig->invertLock();
-        $em->persist($displayConfig);
-        $em->flush();
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
      *     "widget/{config}/configuration/workspace",
      *     name="claro_admin_widget_configuration",
      *     options={"expose"=true}
@@ -176,7 +147,7 @@ class AdministrationWidgetController extends Controller
      *     name = "claro_admin_create_workspace_widget",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Widget:widgetConfigRow.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Widget:adminWidgetConfigRow.html.twig")
      */
     public function createWorkspaceWidgetInstance(Widget $widget)
     {
@@ -191,7 +162,7 @@ class AdministrationWidgetController extends Controller
      *     name = "claro_admin_create_desktop_widget",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Widget:widgetConfigRow.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Widget:adminWidgetConfigRow.html.twig")
      */
     public function createDesktopWidgetInstance(Widget $widget)
     {
