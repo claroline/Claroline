@@ -111,6 +111,11 @@ class PathController extends Controller
         $pathId = $this->get('request')->request->get('path-id');
         $path = $manager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
 
+        // On récupère la liste des steps avant modification pour supprimer ceux qui ne sont plus utilisés. TO DO : suppression
+        $steps = $manager->getRepository('InnovaPathBundle:Step')->findByPath($pathId);
+
+        //todo - lister les liens resources2step pour supprimer ceux inutilisés.
+
         // JSON string to Object - Récupération des childrens de la racine
         $json = json_decode($path->getPath());
         $json_root_steps = $json->steps;
@@ -171,52 +176,57 @@ class PathController extends Controller
             $order++;
 
             // STEP MANAGEMENT
-            $resourceNode = new ResourceNode();
+            if ($step->resourceId == null) {
+                $resourceNode = new ResourceNode();
+                $resourceNode->setClass("Innova\PathBundle\Entity\Step");
+                $resourceNode->setCreator($user);
+                $resourceNode->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("step"));
+                $resourceNode->setWorkspace($workspace);
+                $resourceNode->setParent($pathsDirectory);
+                $resourceNode->setMimeType("");
+                $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(1));
+
+                $currentStep = new Step();
+                $currentStep->setResourceNode($resourceNode);
+                $currentStep->setPath($path);
+            } else {
+                $resourceNode = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($step->resourceId);
+                $currentStep = $manager->getRepository('InnovaPathBundle:Step')->findOneByResourceNode($step->resourceId);
+            }
+
+            // STEP UPDATE
             $resourceNode->setName($step->name);
-            $resourceNode->setClass("Innova\PathBundle\Entity\Step");
-            $resourceNode->setCreator($user);
-            $resourceNode->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("step"));
-            $resourceNode->setWorkspace($workspace);
-            $resourceNode->setParent($pathsDirectory);
-            $resourceNode->setMimeType("");
-            $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(1));
-
             $manager->persist($resourceNode);
-            $manager->flush();
 
-            $rm->setLastPosition($pathsDirectory, $resourceNode);
-
-            // Création Step ou pas si resourceId :) TO DO
-            $newStep = new Step();
-            $newStep->setResourceNode($resourceNode);
-            $newStep->setParent($parent);
-            $newStep->setStepOrder($order);
+            $currentStep->setStepOrder($order);
             $stepType = $manager->getRepository('InnovaPathBundle:StepType')->findOneById($step->type);
-            $newStep->setStepType($stepType);
+            $currentStep->setStepType($stepType);
             $stepWho = $manager->getRepository('InnovaPathBundle:StepWho')->findOneById($step->who);
-            $newStep->setStepWho($stepWho);
+            $currentStep->setStepWho($stepWho);
             $stepWhere = $manager->getRepository('InnovaPathBundle:StepWhere')->findOneById($step->where);
-            $newStep->setStepWhere($stepWhere);
-            $newStep->setDuration(new \DateTime());
-            $newStep->setExpanded($step->expanded);
-            $newStep->setWithTutor($step->withTutor);
-            $newStep->setWithComputer($step->withComputer);
-            $newStep->setInstructions($step->instructions);
-            $newStep->setPath($path);
-            $manager->persist($newStep);
+            $currentStep->setParent($parent);
+            $currentStep->setStepWhere($stepWhere);
+            $currentStep->setDuration(new \DateTime());
+            $currentStep->setExpanded($step->expanded);
+            $currentStep->setWithTutor($step->withTutor);
+            $currentStep->setWithComputer($step->withComputer);
+            $currentStep->setInstructions($step->instructions);
 
+            $manager->persist($currentStep);
 
-            // RESOURCES MANAGEMENT
+            // STEP'S RESOURCES MANAGEMENT
             $resourceOrder = 0;
             foreach ($step->resources as $resource) {
                 $resourceOrder++;
 
-                $step2ressourceNode = new Step2ResourceNode();
-                $resourceNode = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId);
-                $step2ressourceNode->setResourceNode($resourceNode);
-                $step2ressourceNode->setStep($newStep);
+                if ($resource->resourceId == null) {
+                    $step2ressourceNode = new Step2ResourceNode();
+                } else {
+                    $step2ressourceNode = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')->findOneByRessourceNode($resource->resourceId);
+                }
+                $step2ressourceNode->setResourceNode($manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId));
+                $step2ressourceNode->setStep($currentStep);
                 $step2ressourceNode->setResourceOrder($resourceOrder);
-
                 $manager->persist($step2ressourceNode);
             }
 
@@ -243,7 +253,7 @@ class PathController extends Controller
             $manager->flush();
 
             // récursivité sur les enfants possibles.
-            $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $newStep->getId(), 0, $path);
+            $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $currentStep->getId(), 0, $path);
         }
 
         $manager->flush();
