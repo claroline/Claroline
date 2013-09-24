@@ -51,6 +51,18 @@ class WidgetManager
     
     public function createInstance(Widget $widget, $isAdmin, $isDesktop, User $user = null, AbstractWorkspace $ws = null)
     {
+        if (!$widget->isDisplayableInDesktop()) {
+            if ($isDesktop || $user) {
+                throw new \Exception("This widget doesn't support the desktop");
+            }
+        }
+        
+        if (!$widget->isDisplayableInWorkspace()) {
+            if (!$isDesktop || $ws) {
+                throw new \Exception("This widget doesn't support the workspace");
+            }
+        }
+        
         $instance = new WidgetInstance($widget);
         $instance->setName($widget->getName());
         $instance->setIsAdmin($isAdmin);
@@ -68,5 +80,15 @@ class WidgetManager
     {
         $this->om->remove($widgetInstance);
         $this->om->flush();
+    }
+    
+    public function getDesktopWidgets()
+    {
+        return $this->widgetRepo->findBy(array('isDisplayableInDesktop' => true));
+    }
+    
+    public function getWorkspaceWidgets()
+    {
+        return $this->widgetRepo->findBy(array('isDisplayableInWorkspace' => true));
     }
 }

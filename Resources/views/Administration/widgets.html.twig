@@ -23,7 +23,7 @@
     <div class="panel-body">
         <form id="create-workspace-widget">
             <select id="workspace-widgets" >
-                {% for widget in widgets %}
+                {% for widget in wwidgets %}
                     <option value="{{ widget.getId() }}"> {{ widget.getName() }} </option>
                 {% endfor %}
             </select>
@@ -55,7 +55,7 @@
         <hr>
         <form id="create-desktop-widget">
             <select id="desktop-widgets" >
-                {% for widget in widgets %}
+                {% for widget in dwidgets %}
                     <option value="{{ widget.getId() }}"> {{ widget.getName() }} </option>
                 {% endfor %}
             </select>

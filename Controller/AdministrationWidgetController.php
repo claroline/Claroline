@@ -51,10 +51,12 @@ class AdministrationWidgetController extends Controller
         $dconfigs = $em->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
             ->findBy(array('isAdmin' => true, 'isDesktop' => true));
         
-        $widgets = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findAll();
+        $dwidgets = $this->widgetManager->getDesktopWidgets();
+        $wwidgets = $this->widgetManager->getWorkspaceWidgets();
         
         return array(
-            'widgets' => $widgets,
+            'dwidgets' => $dwidgets,
+            'wwidgets' => $wwidgets,
             'wconfigs' => $wconfigs,
             'dconfigs' => $dconfigs
         );

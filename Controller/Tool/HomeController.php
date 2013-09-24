@@ -97,7 +97,7 @@ class HomeController extends Controller
         }
 
         $configs = $this->widgetManager->getWorkspaceInstances($workspace);
-        $widgets = $this->widgetManager->getAll();
+        $widgets = $this->widgetManager->getWorkspaceWidgets();
 
         return array(
             'workspace' => $workspace,
@@ -149,7 +149,7 @@ class HomeController extends Controller
     {
         $user = $this->securityContext->getToken()->getUser();
         $configs = $this->widgetManager->getDesktopInstances($user);
-        $widgets = $this->widgetManager->getAll();
+        $widgets = $this->widgetManager->getDesktopWidgets();
 
         return array(
             'configs' => $configs,
