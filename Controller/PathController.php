@@ -36,10 +36,9 @@ class PathController extends Controller
      *
      * @Template("InnovaPathBundle::path_desktop.html.twig")
      */
-                 public function fromDesktopAction()
-                 {
+    public function fromDesktopAction()
+    {
         return array();
-
     }
 
     /**
