@@ -6,10 +6,7 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Innova\PathBundle\Entity\Path;
-use ClarolineCoreBundle:Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use ClarolineCoreBundle:Resource\ResourceIcon;
-
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 /**
  * Class LoadPathData
@@ -28,9 +25,11 @@ class LoadPathData extends AbstractFixture
         $resourceNode->setName($name);
         $resourceNode->setClass("Innova\PathBundle\Entity\Path");
         //$resourceNode->setCreator($user);
+
+        $resourceNode->setCreator($manager->getRepository('ClarolineCoreBundle:User')->findOneById(1));
+
         $resourceNode->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("path"));
-        $resourceNode->setWorkspace($manager->getRepository('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace')->findOneById(2));
-        $resourceNode->setWorkspace($workspace);
+        $resourceNode->setWorkspace($manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById(2));
         $resourceNode->setMimeType("custom/activity");
         $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(1));
 
