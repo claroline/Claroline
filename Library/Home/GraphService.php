@@ -15,14 +15,14 @@ class GraphService
 
     public function get($url)
     {
-        $this->graph["url"] = $url;
+        $this->graph['url'] = $url;
 
         $headers = get_headers($url, 1);
-        $type = $headers["Content-Type"];
+        $type = $headers['Content-Type'];
 
-        if (strpos($type, "image/") === 0) {
-            $this->graph["type"] = "raw";
-            $this->graph["images"][] = $url;
+        if (strpos($type, 'image/') === 0) {
+            $this->graph['type'] = 'raw';
+            $this->graph['images'][] = $url;
         } else {
             $content = file_get_contents($url);
             $content = mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8');
@@ -32,14 +32,14 @@ class GraphService
             $this->openGraph();
             $this->twitter();
 
-            if (!isset($this->graph["title"]) and
-                !isset($this->graph["type"]) and
-                !isset($this->graph["description"])) {
+            if (!isset($this->graph['title']) and
+                !isset($this->graph['type']) and
+                !isset($this->graph['description'])) {
                 $this->html();
             }
 
             //for example in case of slideshare:presentation
-            $this->graph['type'] = str_replace(":", "-", $this->graph['type']);
+            $this->graph['type'] = str_replace(':', '-', $this->graph['type']);
         }
 
         return $this->graph;
@@ -49,8 +49,8 @@ class GraphService
     {
         $this->find(
             array('title', 'description', 'type', 'video', 'site_name', 'url', 'image'),
-            "og",
-            "property"
+            'og',
+            'property'
         );
     }
 
@@ -58,8 +58,8 @@ class GraphService
     {
         $this->find(
             array('card', 'site', 'player', 'player:width', 'player:height', 'image'),
-            "twitter",
-            "name"
+            'twitter',
+            'name'
         );
     }
 
@@ -67,37 +67,37 @@ class GraphService
     {
         foreach ($values as $value) {
             try {
-                $tmp = $this->crawler->filter("meta[$attribute='$name:$value']")->attr("content");
+                $tmp = $this->crawler->filter("meta[$attribute='$name:$value']")->attr('content');
 
                 if (!$tmp) {
-                    $tmp = $this->crawler->filter("meta[$attribute='$name:$value']")->attr("value");
+                    $tmp = $this->crawler->filter("meta[$attribute='$name:$value']")->attr('value');
                 }
 
                 $this->graph[$value] = $tmp;
             } catch (\Exception $e) {
-                $this->graph["error"] = 1;
+                $this->graph['error'] = 1;
             }
         }
     }
 
     public function html()
     {
-        $this->graph["title"] = $this->crawler->filter("title")->text();
-        $this->graph["type"] = "raw";
+        $this->graph['title'] = $this->crawler->filter('title')->text();
+        $this->graph['type'] = 'raw';
 
-        $this->graph["description"] = "";
+        $this->graph['description'] = '';
 
-        $this->crawler->filter("body p")->each(
+        $this->crawler->filter('body p')->each(
             function ($node, $i) {
-                if (strlen($this->graph["description"]) < 100) {
-                    $this->graph["description"] .= trim($node->text()) . " ";
+                if (strlen($this->graph['description']) < 100) {
+                    $this->graph['description'] .= trim($node->text()) . ' ';
                 }
             }
         );
 
-        $this->crawler->filter("img")->each(
+        $this->crawler->filter('img')->each(
             function ($node, $i) {
-                $this->graph["images"][$i] = $node->attr("src");
+                $this->graph['images'][$i] = $node->attr('src');
             }
         );
     }
