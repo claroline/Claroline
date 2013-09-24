@@ -21,8 +21,8 @@
     </div>
 
     <div class="panel-body">
-        <form id="create-widget">
-            <select id="widgets" >
+        <form id="create-workspace-widget">
+            <select id="workspace-widgets" >
                 {% for widget in widgets %}
                     <option value="{{ widget.getId() }}"> {{ widget.getName() }} </option>
                 {% endfor %}
