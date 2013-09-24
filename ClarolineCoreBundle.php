@@ -49,7 +49,7 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             'Symfony\Bundle\AsseticBundle\AsseticBundle' => 'assetic',
             'JMS\DiExtraBundle\JMSDiExtraBundle' => 'jms_di_extra',
             'JMS\SecurityExtraBundle\JMSSecurityExtraBundle' => 'jms_security_extra',
-            'Zenstruck\Bundle\FormBundle\ZenstruckFormBundle' => 'twig',
+            'Zenstruck\Bundle\FormBundle\ZenstruckFormBundle' => 'zenstruck_form',
             'Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle' => 'stof_doctrine_extensions',
             'BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle' => 'sso',
             'Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle' => 'stfalcon_tinymce',

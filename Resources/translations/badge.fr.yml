@@ -19,6 +19,8 @@ badge_form_frTranslation: 'Traduction française'
 badge_form_enTranslation: 'Traduction anglaise'
 badge_delete_confirm_title: "Suppression d'un badge"
 badge_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer le badge <strong>%badgeName%</strong> ?'
+badge_rule_delete_confirm_title: "Suppression d'une règle"
+badge_rule_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cette règle ?'
 badge_add_success_message: 'Badge ajouté avec succès.'
 badge_add_error_message: "Erreur lors de l'ajout du badge."
 badge_delete_success_message: 'Badge supprimé avec succès.'

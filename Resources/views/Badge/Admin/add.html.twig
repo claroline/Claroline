@@ -12,11 +12,8 @@
         <div class="row badges_rules" {{ block('widget_container_attributes') }}>
             <p class="row">{{ form_label(form) }}</p>
             {{ form_errors(form) }}
-            {% set tabPrototype = '<li id="tabrule__name__"><a href="#rule__name__" data-toggle="tab">' ~ "rule"|trans ~ ' __name__ <span class="btn btn-sm btn-danger icon-trash delete pull-right" data-id-tab="rule__name__" style="display: none;"></span></a></li>' %}
+            {% set tabPrototype = '<li id="tabrule__name__"><a href="#rule__name__" data-toggle="tab">' ~ "rule"|trans ~ ' __name__ <span class="btn btn-sm btn-danger icon-trash delete_rule delete_rule_no_confirm pull-right" data-id-tab="rule__name__" style="display: none;"></span></a></li>' %}
             <ul class="nav nav-tabs nav-stacked col-md-3" id="ruleTabs" data-tab-prototype="{{ tabPrototype|e }}">
-                {% for rows in form %}
-                    <li id="tabrule{{ loop.index }}"><a href="#rule{{ loop.index }}" data-toggle="tab">{{ 'rule'|trans }} {{ loop.index }}{% if allow_delete %} <span class="icon-trash delete pull-right" data-id-tab="rule{{ loop.index }}"></span>{% endif %}</a></li>
-                {% endfor %}
                 {% if allow_add %}
                 <li id="add_rule"><a href="#"><span class="icon-plus"></span>{{ 'add_rule'|trans }}</a></li>
                 {% endif %}
@@ -152,6 +149,7 @@
 {% block javascripts %}
 {{ parent() }}
 {{ tinymce_init() }}
+<script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
 <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/administration/badge/add.js') }}'></script>
 <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/administration/badge/rules.js') }}'></script>
 {% endblock %}
