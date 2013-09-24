@@ -11,8 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table("innova_nonDigitalResource")
  * @ORM\Entity
  */
-class NonDigitalResource extends AbstractResource
-{
+class NonDigitalResource extends AbstractResource {
 
     /**
      * @var string
