@@ -7,8 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="icap__wikibundle_section")
+ * @Gedmo\Tree(type="nested")
+ * @ORM\Table(name="icap__wiki_section")
+ * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
  */
 class Section
 {
@@ -19,35 +20,15 @@ class Section
      */
     protected $id;
 
-
-
-    /**
-     * @ORM\ManyToOne(
-     *      targetEntity="Icap\WikiBundle\Entity\Wiki",
-     *      inversedBy="sections"
-     * )
-     * @ORM\JoinColumn(name="wiki_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
-     */
-    protected $wiki;
-
-    /**
-     * @ORM\ManyToOne(
-     *      targetEntity="Icap\WikiBundle\Entity\Section",
-     *      inversedBy="sections"
-     * )
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
-     */
-    protected $parent;
-
     /**
      * @ORM\Column(type="string", length=255)
      */
-    protected $name;
+    protected $title;
 
     /**
-     * @ORM\Column(type="boolean", nullable=false, options={"default"=false})
+     * @ORM\Column(type="boolean", nullable=false)
      */
-    protected $visible;
+    protected $visible=true;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -61,23 +42,108 @@ class Section
     protected $creationDate;
 
     /**
-     * @ORM\OneToMany(
-     *      targetEntity="Icap\WikiBundle\Entity\Section",
-     *      mappedBy="section",
-     *      cascade={"all"},
-     *      orphanRemoval=true
-     * )
+     * @ORM\ManyToOne(targetEntity="Icap\WikiBundle\Entity\Wiki")
+     * @ORM\JoinColumn(name="wiki_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
-    protected $sections;
+    protected $wiki;
 
     /**
-    * Get id
-    *
-    * @return integer
-    */
+     * @Gedmo\TreeLeft
+     * @ORM\Column(name="lft", type="integer")
+     */
+    private $left;
+
+    /**
+     * @Gedmo\TreeLevel
+     * @ORM\Column(name="lvl", type="integer")
+     */
+    private $level;
+
+    /**
+     * @Gedmo\TreeRight
+     * @ORM\Column(name="rgt", type="integer")
+     */
+    private $right;
+    
+    /**
+     * @Gedmo\TreeRoot
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $root;
+
+    /**
+     * @Gedmo\TreeParent
+     * @ORM\ManyToOne(targetEntity="Icap\WikiBundle\Entity\Section")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    protected $parent;
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title)
+    {
+        return $this->title = $title;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVisible()
+    {
+        return $this->visible;
+    }
+
+    /**
+     * @param mixed $visible
+     */
+    public function setVisible($visible)
+    {
+        return $this->visible = $visible;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
+     * @param mixed $text
+     */
+    public function setText($text)
+    {
+        return $this->text = $text;
+    }
+
+    /**
+     * Returns the resource creation date.
+     *
+     * @return \DateTime
+     */
+    public function getCreationDate()
+    {
+        return $this->creationDate;
     }
 
     /**
@@ -104,9 +170,73 @@ class Section
     }
 
     /**
-     * Set wiki
+     * @param mixed
+     */
+    public function setLeft($left)
+    {
+        $this->left = $left;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLeft()
+    {
+        return $this->left;
+    }
+
+    /**
+     * @param mixed $level
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLevel()
+    {
+        return $this->level;
+    }
+
+    /**
+     * @param mixed $right
+     */
+    public function setRight($right)
+    {
+        $this->right = $right;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRight()
+    {
+        return $this->right;
+    }
+
+    /**
+     * @param mixed $root
+     */
+    public function setRoot($root)
+    {
+        $this->root = $root;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRoot()
+    {
+        return $this->root;
+    }
+
+    /**
+     * Set parent
      *
-     * @param \Icap\WikiBundle\Entity\Wiki $wiki
+     * @param \Icap\WikiBundle\Entity\Section $section
      * @return section
      */
     public function setParent(\Icap\WikiBundle\Entity\Section $section)
@@ -116,77 +246,12 @@ class Section
     }
 
     /**
-     * Get wiki
+     * Get parent
      *
-     * @return \Icap\WikiBundle\Entity\Wiki
+     * @return \Icap\WikiBundle\Entity\Section
      */
     public function getParent()
     {
         return $this->parent;
-    }
-
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function setName($name)
-    {
-        return $this->name = $name;
-    }
-
-    public function getVisible()
-    {
-        return $this->visible;
-    }
-
-    public function setVisible($visible)
-    {
-        return $this->visible = $visible;
-    }
-
-    public function getText()
-    {
-        return $this->text;
-    }
-
-    public function setText($text)
-    {
-        return $this->text = $text;
-    }
-
-    /**
-     * Set sections
-     *
-     * @param string $description
-     * @return section
-     */
-    public function setSections($sections)
-    {
-        $this->sections = $sections;
-        return $this;
-    }
-
-    /**
-     * Get section
-     *
-     * @return string
-     */
-    public function getSections()
-    {
-        return $this->sections;
-    }
-
-    /**
-     * Returns the resource creation date.
-     *
-     * @return \DateTime
-     */
-    public function getCreationDate()
-    {
-        return $this->creationDate;
-    }
-
-
+    }    
 }

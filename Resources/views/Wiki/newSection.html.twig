@@ -1,4 +1,4 @@
-<form id="createSection-form" name="icap_wiki_create_section" method="POST" class="form-vertical" action="{{ path("icap_wiki_create_section", {'resourceId': wiki.id}) }}">
+<form id="createSection-form" name="icap_wiki_create_section" method="POST" class="form-vertical" action="{{ path("icap_wiki_add_section", {'wikiId': wiki.id, 'parentSectionId' : parentSectionId }) }}">
     <div class="control-group">
         <div class="controls">
             {{ form_errors(form.name) }}

@@ -1,1 +1,7 @@
 icap_wiki_form_name: 'Name'
+create_new_section: 'Create new section'
+add_new_subsection: 'Add new subsection'
+back: 'Back'
+edit: 'Edit'
+delete: 'DElete'
+wiki_contents: 'Contents'

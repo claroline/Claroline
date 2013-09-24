@@ -6,5 +6,6 @@ plugin:
         - name: icap_wiki
           class: Icap\WikiBundle\Entity\Wiki
           is_visible: true
-          is_browsable: false
+          is_browsable: true
+          is_exportable: false
           icon: res_wiki.png

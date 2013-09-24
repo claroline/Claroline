@@ -7,3 +7,4 @@ services:
           - { name: kernel.event_listener, event: create_form_icap_wiki, method: onCreateForm }
           - { name: kernel.event_listener, event: create_icap_wiki, method: onCreate }
           - { name: kernel.event_listener, event: open_icap_wiki, method: onOpen }
+          - { name: kernel.event_listener, event: delete_icap_wiki, method: onDelete }

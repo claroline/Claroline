@@ -1,0 +1,18 @@
+{% macro wiki_contents(sections, isAdmin, delimeter, prefix) %}
+    {% for section in sections %}
+        {% if isAdmin or section.visible %}
+            <li>
+                <a href="#section-{{section.id}}">{{prefix ~ loop.index}}&nbsp;{{ section.title }}</a>
+                {% if section.__children is not empty %}
+                    <ul>
+                        {{ _self.wiki_contents(section.__children, isAdmin, delimeter, prefix ~ loop.index ~ delimeter) }}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+<ul id="wiki-contents-list">
+    {{ _self.wiki_contents(sections, isAdmin, delimeter, "") }}
+</ul>

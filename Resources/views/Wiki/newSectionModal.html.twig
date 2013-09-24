@@ -7,22 +7,22 @@
             </div>
             <div class="modal-body">
                 blalblalblalblalbla nlle section
-                {% include "IcapWikiBundle:Wiki:createSectionForm.html.twig"%}
+                {% include "IcapWikiBundle:Wiki:newSection.html.twig"%}
 
             </div>
             <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans %}Cancel{% endtrans %}</button>
-                <button id="createSectionModal-submit" class="btn btn-primary"><i class="icon-bookmark icon-white"></i> {% trans %}Create{% endtrans %}</button>
+                <button id="newSectionModal-submit" class="btn btn-primary"><i class="icon-bookmark icon-white"></i> {% trans %}Create{% endtrans %}</button>
             </div>
         </div>
     </div>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('form[id="createSection-form"] > input[type="submit"]').hide();
+            $('form[id="newSection-form"] > input[type="submit"]').hide();
 
             $('#createSectionModal-submit').on('click', function () {
                 //I do the "click" on submit button for keep html5 warning
-                $('form[id="createSection-form"] > input[type="submit"]').trigger('click');
+                $('form[id="newSection-form"] > input[type="submit"]').trigger('click');
             });
         });
     </script>

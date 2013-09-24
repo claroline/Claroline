@@ -3,85 +3,36 @@
 namespace Icap\WikiBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
 * @ORM\Entity
-* @ORM\Table(name="icap__wikibundle_wiki")
+* @ORM\Table(name="icap__wiki")
+* @ORM\HasLifecycleCallbacks()
 */
 class Wiki extends AbstractResource
 {
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\OneToOne(targetEntity="Icap\WikiBundle\Entity\Section", cascade={"all"})
+     * @ORM\JoinColumn(name="root_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    protected $id;
+    private $root;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @param mixed $root
      */
-    protected $text;
-
-    /**
-     * @ORM\OneToMany(
-     *      targetEntity="Icap\WikiBundle\Entity\Section",
-     *      mappedBy="wiki",
-     *      cascade={"all"},
-     *      orphanRemoval=true
-     * )
-     */
-    protected $sections;
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
+    public function setRoot($root)
     {
-        return $this->id;
+        $this->root = $root;
     }
 
     /**
-     * Set sections
-     *
-     * @param string $description
-     * @return Wiki
+     * @return mixed
      */
-    public function setSections($sections)
+    public function getRoot()
     {
-        $this->sections = $sections;
-        return $this;
-    }
-
-    /**
-     * Get section
-     *
-     * @return string
-     */
-    public function getSections()
-    {
-        return $this->sections;
-    }
-
-    /**
-     *  Get text (wiki's description)
-     *  @return wiki's text
-     */
-    public function getText()
-    {
-        return $this->text;
-    }
-
-    /**
-     *  Set text
-     *
-     *  @param string $text
-     */
-    public function setText($text)
-    {
-        return $this->text = $text;
+        return $this->root;
     }
 
     public function getPathArray()
@@ -99,5 +50,24 @@ class Wiki extends AbstractResource
         }
 
         return $pathArray;
+    }
+
+    /**
+     * @ORM\PostPersist
+     */
+    public function createRoot(LifecycleEventArgs $event){
+        if($this->getRoot() == null){
+            $em = $event->getEntityManager();
+            $rootSection = $this->getRoot();
+            if($rootSection == null){
+
+                $rootSection = new Section();
+                $rootSection->setWiki($this);
+                $this->setRoot($rootSection);
+
+                $em->getRepository('IcapWikiBundle:Section')->persistAsFirstChild($rootSection);
+                $em->flush();
+            }
+        }
     }
 }

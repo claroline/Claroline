@@ -15,13 +15,13 @@ class WikiType extends AbstractType
 
     public function getName()
     {
-        return 'icap_wiki_form';
+        return 'icap_wiki_type';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-           'translation_domain' => 'icap_wiki',
+            'translation_domain' => 'icap_wiki',
             'data_class' => 'Icap\WikiBundle\Entity\Wiki',
             'csrf_protection' => true,
             'intention' => 'create_wiki'

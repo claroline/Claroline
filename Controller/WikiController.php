@@ -9,70 +9,83 @@
 
 namespace Icap\WikiBundle\Controller;
 
+
+use Claroline\CoreBundle\Entity\User;
+use Icap\WikiBundle\Entity\Wiki;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Form\SectionType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class WikiController extends Controller{
 
-    public function indexAction()
-    {
-        return new Response("Index wiki");
-    }
-
-    private function getWiki($resourceId)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $wiki = $em
-            ->getRepository('IcapWikiBundle:Wiki')
-            ->findOneBy(array('id' => $resourceId ));
-        if (!$wiki) {
-            throw $this->createNotFoundException('The wiki does not exist');
-        }
-        return $wiki;
-    }
-
     /**
      * @Route(
-     *      "/{resourceId}",
-     *      requirements={"resourceId" = "\d+"},
-     *      name="icap_wiki_edition"
+     *      "/{wikiId}",
+     *      requirements={"wikiId" = "\d+"},
+     *      name="icap_wiki_view"
      * )
+     * @ParamConverter("wiki", class="IcapWikiBundle:Wiki", options={"id" = "wikiId"})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function editionAction($resourceId)
+    public function viewAction(Wiki $wiki, User $user)
     {
-        $wiki = $this->getWiki($resourceId);
+        $this->checkAccess("OPEN", $wiki);
+
+        $em = $this->getDoctrine()->getManager();
+        $chapterRepository = $em->getRepository('IcapLessonBundle:Chapter');
+        $query = $this->getDoctrine()->getManager()
+            ->createQueryBuilder()
+            ->select('node')
+            ->from('Icap\\WikiBundle\\Entity\\Section', 'node')
+            ->orderBy('node.root, node.left', 'ASC')
+            ->where('node.root = :rootId')
+            ->setParameter('rootId', $lesson->getRoot()->getId())
+            ->getQuery()
+        ;
+        $options = array('decorate' => false);
+        $tree = $sectionRepository->buildTree($query->getArrayResult(), $options);
 
         return array(
             'wiki' => $wiki,
+            'tree' => $tree,
+            'user' => $user,
             'workspace' => $wiki->getResourceNode()->getWorkspace(),
             'pathArray' => $wiki->getPathArray()
         );
     }
 
     /**
+     * Displays form for creating new section to wiki
+     * @param $wikiId, $parentSectionId
      * @Route(
-     *      "/{resourceId}/create_section_form",
-     *      requirements={"resourceId" = "\d+"},
-     *      name="icap_wiki_create_section_form"
+     *      "/{wikiId}/section/new/{parentSectionId}",
+     *      requirements = {
+     *          "wikiId" = "\d+", 
+     *          "parentSectionId" = "\d+"
+     *      },
+     *      defaults = {"parentSectionId" = 0},
+     *      name="icap_wiki_new_section"
      * )
+     * @ParamConverter("wiki", class="IcapWikiBundle:Wiki", options={"id" = "wikiId"})
      * @Template()
      */
-    public function createSectionFormAction(Request $request, $resourceId)
+    public function newSectionAction(Request $request, $wiki, $parentSectionId)
     {
-        $wiki = $this->getWiki($resourceId);
         $form = $this->createForm(new SectionType());
         if ($request->isXMLHttpRequest()) {
             return $this->render(
-                'IcapWikiBundle:Wiki:createSectionModal.html.twig',
+                'IcapWikiBundle:Wiki:newSectionModal.html.twig',
                 array(
                     'wiki' => $wiki,
+                    'parentSectionId' => $parentSectionId,
                     'workspace' => $wiki->getResourceNode()->getWorkspace(),
                     'form' => $form->createView()
                 )
@@ -81,6 +94,7 @@ class WikiController extends Controller{
 
         return array(
             'wiki' => $wiki,
+            'parentSectionId' => $parentSectionId,
             'workspace' => $wiki->getResourceNode()->getWorkspace(),
             'form' => $form->createView()
         );
@@ -89,20 +103,24 @@ class WikiController extends Controller{
 
     /**
      * @Route(
-     *      "/{resourceId}/create_section",
-     *      requirements={"resourceId" = "\d+"},
-     *      name="icap_wiki_create_section"
+     *      "/{wikiId}/section/add/{parentSectionId}",
+     *      requirements = {
+     *          "wikiId" = "\d+", 
+     *          "parentSectionId" = "\d+"
+     *      },
+     *      defaults = {"parentSectionId" = -1},
+     *      name="icap_wiki_add_section"
      * )
+     * @ParamConverter("wiki", class="IcapWikiBundle:Wiki", options={"id" = "wikiId"})
      * @Template()
      */
-    public function createSectionAction(Request $request, $resourceId)
+    public function addSectionAction(Request $request, $wiki, $parentSectionId)
     {
         $em = $this->getDoctrine()->getManager();
-        $wiki = $this->getWiki($resourceId);
-        $this->isAllowToEdit($wiki);
+        $this->checkAccess("EDIT", $wiki);
 
         $form = $this->createForm(new SectionType());
-        $form->bind($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $data = $form->getData();
@@ -114,14 +132,19 @@ class WikiController extends Controller{
             $section->setText($text);
             $section->setWiki($wiki);
 
+            if ($parentSectionId !== null && $parentSectionId > -1) {
+                $parent = $this->getSection($parentSectionId);
+                $section->setParent($parent);
+            }
+
             $em->persist($section);
             $em->flush();
 
             return $this->redirect(
                 $this->generateUrl(
-                    'icap_wiki_edition',
+                    'icap_wiki_view',
                     array(
-                        'resourceId' => $wiki->getId()
+                        'wikiId' => $wiki->getId()
                     )
                 )
             );
@@ -134,17 +157,35 @@ class WikiController extends Controller{
         );
     }
 
-    protected function isAllowToEdit($wiki)
+    /*
+     * Retrieve a wiki from database
+     */
+    private function getWiki($wikiId)
     {
-        $this->isAllow($wiki, 'EDIT');
-    }
-
-    protected function isAllow($wiki, $actionName)
-    {
-        $collection = new ResourceCollection(array($wiki));
-        if (false === $this->get('security.context')->isGranted($actionName, $collection)) {
-            throw new AccessDeniedException();
+        $em = $this->getDoctrine()->getManager();
+        $wiki = $em
+            ->getRepository('IcapWikiBundle:Wiki')
+            ->findOneBy(array('id' => $wikiId ));
+        if ($wiki === null) {
+            throw new NotFoundHttpException();
         }
+
+        return $wiki;
     }
 
+    /*
+     * Retrieve a section from database
+     */
+    private function getSection($wiki, $sectionId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $section = $em
+            ->getRepository('IcapWikiBundle:Section')
+            ->findOneBy(array('id' => $sectionId, 'wiki' => $wiki ));
+        if ($section === null) {
+            throw new NotFoundHttpException();
+        }
+
+        return $section;
+    }
 }

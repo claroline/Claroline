@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Event\LogCreateDelegateViewEvent;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -60,10 +61,18 @@ class WikiListener extends ContainerAware
         $route = $this->container
             ->get('router')
             ->generate(
-                'icap_wiki_edition',
-                array('resourceId' => $event->getResource()->getId())
+                'icap_wiki_view',
+                array('wikiId' => $event->getResource()->getId())
             );
         $event->setResponse(new RedirectResponse($route));
+        $event->stopPropagation();
+    }
+
+    public function onDelete(DeleteResourceEvent $event)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $em->remove($event->getResource());
+        $em->flush();
         $event->stopPropagation();
     }
 

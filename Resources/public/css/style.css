@@ -1,0 +1,17 @@
+div.panel-wiki {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border:1px solid #eee;	
+}
+
+.wiki-actions {
+	font-size: 14px;
+}
+
+/*Wiki contents*/
+div.wiki-contents-inner {float:left; min-width: 20%;}
+div.wiki-contents ul { list-style-type: none; padding-left:0;}
+div.wiki-contents-title {text-align: center; margin-bottom:5px;}
+
+/*Wiki sections*/
+div.wiki-sections ul { list-style-type: none; padding-left: 0;}

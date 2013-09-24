@@ -1,0 +1,44 @@
+{% extends 'IcapWikiBundle::layout.html.twig' %}
+
+{% trans_default_domain "icap_wiki" %}
+
+{% block title %}{{ wiki.resourceNode.name }}{% endblock %}
+
+{% block wiki_content %}
+    <div class="page-header">
+        <h1 class="wiki-title-header">
+            {{ wiki.resourceNode.name }} 
+            <small class="wiki-actions"> 
+                [ 
+                <a href="{{ path('icap_wiki_new_section', { 'wikiId': wiki.id }) }}" class="new-section" >
+                    {{ 'create_new_section'|trans({}, 'icap_wiki') }}
+                </a> 
+                ]
+            </small>
+        </h1>        
+    </div>
+
+    {% if tree is not empty and tree[0] is not empty %}
+        <div class="wiki-description">
+            {{ tree[0].text }}
+        </div>
+    {% endif %}
+
+    {% if tree is not empty and tree[0] is not empty and tree[0].__children is not empty %}
+        <div class="wiki-contents">
+            <div class="wiki-contents-inner well">
+                <div class="wiki-contents-title">{{ 'wiki_contents'|trans({},'icap_wiki') }}</div>
+                {% include "IcapWikiBundle:Wiki:wikiContents.html.twig" with {'sections' : tree[0].__children, 'isAdmin' : is_granted('EDIT', wiki), 'delimeter' : '.' } %}
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="wiki-sections">
+            {% include "IcapWikiBundle:Wiki:wikiSections.html.twig" with {'sections' : tree[0].__children, 'wikiId' : wiki.id, 'isAdmin' : is_granted('EDIT', wiki) } %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/icapwiki/js/new.js') }}"></script>
+{% endblock %}

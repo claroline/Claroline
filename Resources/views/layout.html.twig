@@ -1,43 +1,33 @@
-{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/icapwiki/css/styles.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/icapwiki/css/style.css') }}"/>
 {% endblock %}
 
-{% block section_content %}
-    <header>
-        <ul class="breadcrumb">
-            {% for item in pathArray %}
-                {% if not loop.last %}
-                    <li>
-                        <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}#resources/{{ item.id }}">
-                            {% if loop.first %}
-                                <span class="glyphicon icon-folder-open-alt"></span> {{ 'Resources'|trans }}
-                            {% else %}
-                                {{ item.name }}
-                            {% endif %}
-                        </a>
-                    </li>
-                {% endif %}
-            {% endfor %}
+{% block content %}
+        <div class="panel panel-wiki">
+            <div class="panel-body">            
+                {% for item in pathArray|slice(length-2, 1) %}
+                    <a href="{{ path('claro_desktop_open_tool', {"toolName": "resource_manager"}) ~ "#resources/" ~ item.id }}">
+                        <span class="icon-angle-left"></span>
+                        {{ 'back'|trans({}, 'icap_wiki') }}
+                    </a>
+                {% endfor %}
 
-            {% block reference_breadcrumb %}
-                <li>
-                    <a href="{{ path('icap_wiki_edition', { 'resourceId': wiki.id }) }}"><span class="glyphicon icon-file"></span> {{ wiki.resourceNode.name }}</a>
-                </li>
-            {% endblock %}
-        </ul>
-    </header>
-    <div>
-    template parent!
-        <div>
-            {% block wiki_content %}
-            {% endblock %}
+                {% block wiki_content %}
+                {% endblock %}
+            </div>            
         </div>
-    </div>
+    </div>    
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
 {% endblock %}
-
