@@ -14,9 +14,11 @@
             var numberOfChecked = $('.filter:checkbox:checked').length;
             var totalCheckboxes = $('.filter:checkbox').length;
             var selected = [];
+
             $('.filter:checkbox:checked').each(function () {
                 selected.push($(this).attr('name'));
             });
+            console.debug(selected);
             //if all checkboxes or none checkboxes are checked display all events
             if ((totalCheckboxes - numberOfChecked === 0) || (numberOfChecked === 0)) {
                 $('#calendar').fullCalendar('clientEvents', function (eventObject) {
@@ -26,12 +28,15 @@
             } else {
                 for (var i = 0; i < selected.length; i++) {
                     $('#calendar').fullCalendar('clientEvents', function (eventObject) {
-                        var reg = new RegExp('[:]+', 'g');
+                        var reg = new RegExp(' : ', 'g');
                         var title = eventObject.title.split(reg);
+
                         if (selected.indexOf(title[0]) < 0) {
+                            console.debug(['teset', title[0]]);
                             eventObject.visible = false;
                             return true;
                         } else {
+                            console.debug('ok');
                             eventObject.visible = true;
                             return false;
                         }
@@ -158,7 +163,7 @@
                 'processData': false,
                 'contentType': false,
                 'success': function (data, textStatus, xhr) {
-                    if (xhr.status === 200)  {
+                    if (xhr.status <= 200)  {
                         $('#myModal').modal('hide');
                         $('#updateBtn').removeAttr('disabled');
                         $('#calendar').fullCalendar('refetchEvents');
@@ -336,9 +341,11 @@
             editable: true,
             events: $('a#link').attr('href'),
             axisFormat: 'HH:mm',
-            timeFormat: {
-                agenda: 'H:mm{ - h:mm}'
-            },
+            timeFormat: 'H(:mm)',
+            agenda: 'h:mm{ - h:mm}',
+            '': 'h:mm{ - h:mm}',
+            minTime: 0,
+            maxTime: 24,
             allDayText: 'all-day',
             allDaySlot: true,
             lazyFetching : true,
@@ -348,6 +355,7 @@
             dayClick: dayClickFunction,
             eventClick:  function (calEvent) {
                 modifiedEvent(calEvent ,context);
+                $('#calendar').fullCalendar( 'updateEvent', calEvent );
             },
             eventRender: function (event) {
                 if (event.visible === false)

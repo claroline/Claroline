@@ -188,6 +188,16 @@ class ToolListener
         $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, true);
+        $usr = $this->container->get('security.context')->getToken()->getUser();
+        if( $usr === 'anon.')
+        {
+            return $this->templating->render(
+                'ClarolineCoreBundle:Tool/workspace/agenda:agenda_read_only.html.twig',
+                array('workspace' => $workspace,
+                    'form' => $form->createView(),
+                    'listEvents' => $listEvents )
+            );
+        }
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool/workspace/agenda:agenda.html.twig',
@@ -214,18 +224,21 @@ class ToolListener
         $event = new Event();
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
         $em = $this->container-> get('doctrine.orm.entity_manager');
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop(true);
+        $usr = $this->container->get('security.context')->getToken()->getUser();
+        $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
         $cours = array();
         $translator = $this->container->get('translator');
 
         foreach ($listEvents as $event) {
 
-            if (is_null($event->getWorkspace())){
-                $temp = $translator->trans('desktop', array(), 'platform');
-            } else {
-                $temp = $event->getWorkspace()->getName();
-            }
+            $temp = $event->getWorkspace()->getName();
             $cours[] = $temp;
+        }
+
+        if (count($listEventsDesktop) > 0) {
+
+            $cours[] = $translator->trans('desktop', array(), 'platform');
         }
 
         return $this->templating->render(

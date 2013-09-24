@@ -58,7 +58,7 @@ class DesktopAgendaController extends Controller
     {
         $usr = $this->get('security.context')->getToken()->getUser();
         $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
-        $desktopEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop(false);
+        $desktopEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, false);
         $data = array_merge($this->convertEventoArray($listEvents), $this->convertEventoArray($desktopEvents));
 
         return new Response(
@@ -159,21 +159,7 @@ class DesktopAgendaController extends Controller
             $event->setAllDay($postData['agenda_form']['allDay']);
             $this->om->flush();
 
-            return new Response(
-                json_encode(
-                    array(
-                        'id' => $event->getId(),
-                        'title' => $event->getTitle(),
-                        'start' => $event->getStart()->getTimestamp(),
-                        'end' => $event->getEnd()->getTimestamp(),
-                        'color' => $event->getPriority(),
-                        'allDay' => $event->getAllDay(),
-                        'description' => $event->getDescription()
-                    )
-                ),
-                200,
-                array('Content-Type' => 'application/json')
-            );
+            return new Response(204);
         }
 
         return new Response(
@@ -195,7 +181,8 @@ class DesktopAgendaController extends Controller
      */
     public function tasksAction()
     {
-        $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop(true);
+        $usr = $this->get('security.context')->getToken()->getUser();
+        $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
 
         return  array('listEvents' => $listEvents );
     }
