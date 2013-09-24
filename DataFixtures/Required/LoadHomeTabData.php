@@ -54,24 +54,24 @@ class LoadHomeTabData extends AbstractFixture implements OrderedFixtureInterface
         $workspaceHomeTabConfig->setTabOrder(1);
         $manager->persist($workspaceHomeTabConfig);
 
-        $desktopDisplayConfigs = $manager
-            ->getRepository('Claroline\CoreBundle\Entity\Widget\DisplayConfig')
-            ->findBy(
-                array(
-                    'parent' => null,
-                    'isVisible' => true,
-                    'isDesktop' => true
-                )
-            );
-        $workspaceDisplayConfigs = $manager
-            ->getRepository('Claroline\CoreBundle\Entity\Widget\DisplayConfig')
-            ->findBy(
-                array(
-                    'parent' => null,
-                    'isVisible' => true,
-                    'isDesktop' => false
-                )
-            );
+//        $desktopDisplayConfigs = $manager
+//            ->getRepository('Claroline\CoreBundle\Entity\Widget\DisplayConfig')
+//            ->findBy(
+//                array(
+//                    'parent' => null,
+//                    'isVisible' => true,
+//                    'isDesktop' => true
+//                )
+//            );
+//        $workspaceDisplayConfigs = $manager
+//            ->getRepository('Claroline\CoreBundle\Entity\Widget\DisplayConfig')
+//            ->findBy(
+//                array(
+//                    'parent' => null,
+//                    'isVisible' => true,
+//                    'isDesktop' => false
+//                )
+//            );
 
         $i = 1;
 

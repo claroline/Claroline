@@ -299,26 +299,6 @@ class DatabaseWriter
 
         $this->em->persist($widgetEntity);
 
-        $wWidgetConfig = new DisplayConfig();
-        $wWidgetConfig->setWidget($widgetEntity);
-        $wWidgetConfig->setLock(false);
-        $wWidgetConfig->setVisible(true);
-        $wWidgetConfig->setParent(null);
-        $wWidgetConfig->setDesktop(false);
-        $wWidgetConfig->setName($widget['name']);
-
-        $dWidgetConfig = new DisplayConfig();
-        $dWidgetConfig->setWidget($widgetEntity);
-        $dWidgetConfig->setLock(false);
-        $dWidgetConfig->setVisible(true);
-        $dWidgetConfig->setParent(null);
-        $dWidgetConfig->setDesktop(true);
-        $dWidgetConfig->setName($widget['name']);
-
-        $this->em->persist($wWidgetConfig);
-        $this->em->persist($dWidgetConfig);
-        $this->em->flush();
-
         if ($this->modifyTemplate) {
             $this->templateBuilder->addWidget($widget['name']);
         }

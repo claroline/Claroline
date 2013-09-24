@@ -430,8 +430,7 @@ class WorkspaceController extends Controller
     {
         // No right checking is done : security is delegated to each widget renderer.
         // The routing is now removed. Checking doesn't need to be done.
-        $configs = $this->get('claroline.manager.widget_manager')
-            ->generateWorkspaceDisplayConfig($workspace->getId());
+        $configs = $this->get('claroline.manager.widget_manager')->getWorkspaceInstances($workspace);
 
         if ($this->security->getToken()->getUser() !== 'anon.') {
             $rightToConfigure = $this->security->isGranted('parameters', $workspace);

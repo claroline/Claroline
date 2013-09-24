@@ -642,9 +642,8 @@ class HomeTabManager
 
             return $this->widgetDisplayConfigRepo->findBy(
                 array(
-                    'parent' => null,
+                    'isAdmin' => true,
                     'isDesktop' => true,
-                    'isVisible' => true
                 )
             );
         }
@@ -659,9 +658,8 @@ class HomeTabManager
 
             return $this->widgetDisplayConfigRepo->findBy(
                 array(
-                    'parent' => null,
+                    'isAdmin' => true,
                     'isDesktop' => false,
-                    'isVisible' => true
                 )
             );
         }

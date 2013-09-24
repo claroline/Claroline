@@ -18,23 +18,6 @@ class DisplayConfig
     protected $id;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Widget\DisplayConfig",
-     *     inversedBy="children"
-     * )
-     * @ORM\JoinColumn(onDelete="SET NULL")
-     */
-    protected $parent;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Widget\DisplayConfig",
-     *     mappedBy="parent"
-     * )
-     */
-    protected $children;
-
-    /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
@@ -55,17 +38,12 @@ class DisplayConfig
     protected $widget;
 
     /**
-     * @ORM\Column(name="is_locked", type="boolean")
+     * @ORM\Column(name="is_admin", type="boolean")
      */
-    protected $isLocked = false;
-
+    protected $isAdmin = false;
+    
     /**
-     * @ORM\Column(name="is_visible", type="boolean")
-     */
-    protected $isVisible = false;
-
-    /**
-     * @ORM\Column(name="is_desktop", type="boolean")
+     * @ORM\Column(name="is_°desktop", type="boolean")
      */
     protected $isDesktop = false;
 
@@ -91,47 +69,7 @@ class DisplayConfig
     {
         return $this->widget;
     }
-
-    public function setLock($bool)
-    {
-        $this->isLocked = $bool;
-    }
-
-    public function isLocked()
-    {
-        return $this->isLocked;
-    }
-
-    public function invertLock()
-    {
-        $this->isLocked = !$this->isLocked;
-    }
-
-    public function isVisible()
-    {
-        return $this->isVisible;
-    }
-
-    public function setVisible($bool)
-    {
-        $this->isVisible = $bool;
-    }
-
-    public function invertVisible()
-    {
-        $this->isVisible = !$this->isVisible;
-    }
-
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    public function setParent($parent)
-    {
-        $this->parent = $parent;
-    }
-
+  
     public function getWorkspace()
     {
         return $this->workspace;
@@ -142,14 +80,14 @@ class DisplayConfig
         $this->workspace = $workspace;
     }
 
-    public function setDesktop($bool)
+    public function setIsAdmin($bool)
     {
-        $this->isDesktop = $bool;
+        $this->isAdmin = $bool;
     }
 
-    public function isDesktop()
+    public function isAdmin()
     {
-        return $this->isDesktop;
+        return $this->isAdmin;
     }
 
     public function setUser($user)
@@ -170,5 +108,15 @@ class DisplayConfig
     public function getName()
     {
         return $this->name;
+    }
+    
+    public function isDesktop()
+    {
+        return $this->isDesktop;
+    }
+    
+    public function setIsDesktop($bool)
+    {
+        $this->isDesktop = $bool;
     }
 }

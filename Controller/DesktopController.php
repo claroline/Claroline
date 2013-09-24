@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Claroline\CoreBundle\Manager\WidgetManager;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -28,7 +27,6 @@ class DesktopController extends Controller
     private $homeTabManager;
     private $router;
     private $toolManager;
-    private $widgetManager;
 
 
     /**
@@ -38,7 +36,6 @@ class DesktopController extends Controller
      *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "router"             = @DI\Inject("router"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
-     *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
      * })
      */
     public function __construct(
@@ -46,8 +43,7 @@ class DesktopController extends Controller
         StrictDispatcher $eventDispatcher,
         HomeTabManager $homeTabManager,
         UrlGeneratorInterface $router,
-        ToolManager $toolManager,
-        WidgetManager $widgetManager
+        ToolManager $toolManager
     )
     {
         $this->em = $em;
@@ -55,7 +51,6 @@ class DesktopController extends Controller
         $this->homeTabManager = $homeTabManager;
         $this->router = $router;
         $this->toolManager = $toolManager;
-        $this->widgetManager = $widgetManager;
     }
 
     /**

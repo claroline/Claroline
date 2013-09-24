@@ -7,12 +7,7 @@ use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Event\ConfigureWidgetWorkspaceEvent;
-use Claroline\CoreBundle\Event\ConfigureWidgetDesktopEvent;
-use Claroline\CoreBundle\Entity\Log\LogWorkspaceWidgetConfig;
-use Claroline\CoreBundle\Entity\Log\LogDesktopWidgetConfig;
 use Claroline\CoreBundle\Form\Log\LogWorkspaceWidgetConfigType;
-use Claroline\CoreBundle\Form\Log\LogDesktopWidgetConfigType;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 
 /**
@@ -105,105 +100,26 @@ class LogWidgetListener
     }
 
     /**
-     * @DI\Observe("widget_core_resource_logger_configuration_workspace")
+     * @DI\Observe("widget_core_resource_logger_configuration")
      *
-     * @param ConfigureWidgetWorkspaceEvent $event
+     * @param ConfigureWidgetEvent $event
      */
-    public function onWorkspaceConfigure(ConfigureWidgetWorkspaceEvent $event)
+    public function onConfigure(ConfigureWidgetEvent $event)
     {
-        if ($event->isDefault() === true) {
-            $config = $this->logManager->getDefaultWorkspaceWidgetConfig();
-        } else {
-            $config = $this->logManager->getWorkspaceWidgetConfig($event->getWorkspace());
-            if ($config === null) {
-                $defaultConfig = $this->logManager->getDefaultWorkspaceWidgetConfig();
-                if ($defaultConfig !== null) {
-                    $config = new LogWorkspaceWidgetConfig();
-                    $config->copy($defaultConfig);
-                    $config
-                        ->setIsDefault(false)
-                        ->setWorkspace($event->getWorkspace())
-                        ->setRestrictions($this->logManager->getDefaultWorkspaceConfigRestrictions());
-                }
-            }
+        $config = $event->getConfig();
+        $txtConfig = $this->logManager->getLogConfig($config);
+        
+        if ($txtConfig === null) {
+            $txtConfig = new LogDesktopWidgetConfig();
         }
-
-        if ($config === null) {
-            $config = new LogWorkspaceWidgetConfig();
-            $config
-                ->setIsDefault($event->isDefault())
-                ->setWorkspace($event->getWorkspace())
-                ->setRestrictions($this->logManager->getDefaultWorkspaceConfigRestrictions());
-        }
-
-        $form    = $this->formFactory->create($this->logWorkspaceWidgetConfigForm, $config);
-        $content = $this->twig->render(
-            'ClarolineCoreBundle:Log:config_workspace_widget_form.html.twig',
-            array(
-                'form'      => $form->createView(),
-                'workspace' => $event->getWorkspace(),
-                'isDefault' => $event->isDefault() ? 1 : 0
-            )
-        );
-        $event->setContent($content);
-    }
-
-    /**
-     * @DI\Observe("widget_core_resource_logger_configuration_desktop")
-     *
-     * @param \Claroline\CoreBundle\Event\ConfigureWidgetDesktopEvent $event
-     */
-    public function onDesktopConfigure(ConfigureWidgetDesktopEvent $event)
-    {
-        $workspaces = array();
-
-        if ($event->isDefault() !== true) {
-            $workspaces = $this->workspaceManager->getWorkspacesByUserAndRoleNames(
-                $event->getUser(),
-                array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER')
-            );
-            $workspacesVisibility = $this
-                ->logManager
-                ->getWorkspaceVisibilityForDesktopWidget($event->getUser(), $workspaces);
-        } else {
-            $workspacesVisibility = array();
-        }
-
-        if ($event->isDefault() === true) {
-            $config = $this->logManager->getDefaultDesktopWidgetConfig();
-        } else {
-            $config = $this->logManager->getDesktopWidgetConfig($event->getUser());
-            if ($config === null) {
-                $defaultConfig = $this->logManager->getDefaultDesktopWidgetConfig();
-                if ($defaultConfig !== null) {
-                    $config = new LogDesktopWidgetConfig();
-                    $config->copy($defaultConfig);
-                    $config->setIsDefault(false);
-                    $config->setUser($event->getUser());
-                }
-            }
-        }
-
-        if ($config === null) {
-            $config = new LogDesktopWidgetConfig();
-            $config->setIsDefault($event->isDefault());
-            $config->setUser($event->getUser());
-        }
-
-        $workspacesVisibility['amount'] = $config->getAmount();
-
-        $form = $this
-            ->formFactory
-            ->create(
-                new LogDesktopWidgetConfigType(),
-                $workspacesVisibility,
-                array('workspaces' => $workspaces)
-            );
-        $content = $this->twig->render(
-            'ClarolineCoreBundle:Log:config_desktop_widget_form.html.twig',
+        
+        $form = $this->formFactory->create(FormFactory::TYPE_SIMPLE_TEXT, array(), $txtConfig);
+        $content = $this->templating->render(
+            'ClarolineCoreBundle:Widget:config_simple_text_form.html.twig',
             array(
                 'form' => $form->createView(),
-                'isDefault' => $event->isDefault() ? 1 : 0
+                'isAdmin' => $config->isAdmin(),
+                'config' => $config
             )
         );
         $event->setContent($content);

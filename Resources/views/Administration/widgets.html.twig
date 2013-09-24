@@ -21,13 +21,19 @@
     </div>
 
     <div class="panel-body">
+        <form id="create-widget">
+            <select id="widgets" >
+                {% for widget in widgets %}
+                    <option value="{{ widget.getId() }}"> {{ widget.getName() }} </option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="{{ 'add'|trans({}, 'platform') }}"></input>
+        </form>
         <h4> {{ 'workspace'|trans({}, 'platform') }}</h4>
         <table id="widget-table" class="table table-striped table-bordered table-condensed">
             <thead>
                 <tr>
                     <th>{{ 'name'|trans({}, 'platform') }}</th>
-                    <th>{{ 'visible'|trans({}, 'platform') }}</th>
-                    <th>{{ 'lock'|trans({}, 'platform') }}</th>
                     <th>{{ 'configuration'|trans({}, 'platform') }}</th>
                 </tr>
             </thead>
@@ -35,11 +41,9 @@
                 {% for wconfig in wconfigs %}
                 <tr class='row-widget-config' data-id="{{ wconfig.getId() }}">
                     <td>{% render controller('ClarolineCoreBundle:AdministrationWidget:editWidgetNameForm', {'config': wconfig}) %}</td>
-                    <td><input type="checkbox" class="chk-config-visible" value="1" {% if wconfig.isVisible() %} checked {% endif %}></td>
-                    <td><input type="checkbox" class="chk-admin-lock" value="1" {% if wconfig.isLocked() %} checked {% endif %}></td>
                     <td>
                         {% if wconfig.getWidget().isConfigurable() %}
-                        <a href="{{ path('claro_admin_widget_configuration_workspace', {'widgetId': wconfig.getWidget().getId()}) }}">{{ 'configure'|trans({}, 'platform') }}</a>
+                        <a href="{{ path('claro_admin_widget_configuration', {'config': wconfig.getId()}) }}">{{ 'configure'|trans({}, 'platform') }}</a>
                         {% endif %}
                     </td>
                 </tr>
@@ -47,14 +51,20 @@
             </tbody>
         </table>
         <hr>
+        <form id="create-desktop-widget">
+            <select id="desktop-widgets" >
+                {% for widget in widgets %}
+                    <option value="{{ widget.getId() }}"> {{ widget.getName() }} </option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="{{ 'add'|trans({}, 'platform') }}"></input>
+        </form>
         <h4> {{ 'desktop'|trans({}, 'platform') }}</h4>
 
         <table id="widget-table" class="table table-striped table-bordered table-condensed">
             <thead>
                 <tr>
                     <th>{{ 'name'|trans({}, 'platform') }}</th>
-                    <th>{{ 'visible'|trans({}, 'platform') }}</th>
-                    <th>{{ 'lock'|trans({}, 'platform') }}</th>
                     <th>{{ 'configuration'|trans({}, 'platform') }}</th>
                 </tr>
             </thead>
@@ -62,11 +72,9 @@
                 {% for dconfig in dconfigs %}
                 <tr class='row-widget-config' data-id="{{ dconfig.getId() }}">
                     <td>{% render controller('ClarolineCoreBundle:AdministrationWidget:editWidgetNameForm', {'config': dconfig}) %}</td>
-                    <td><input type="checkbox" class="chk-config-visible" value="1" {% if dconfig.isVisible() %} checked {% endif %}></td>
-                    <td><input type="checkbox" class="chk-admin-lock" value="1" {% if dconfig.isLocked() %} checked {% endif %}></td>
                     <td>
                         {% if dconfig.getWidget().isConfigurable() %}
-                        <a href="{{ path('claro_admin_widget_configuration_desktop', {'widgetId': dconfig.getWidget().getId()}) }}">{{ 'configure'|trans({}, 'platform') }}</a>
+                        <a href="{{ path('claro_admin_widget_configuration', {'config': dconfig.getId()}) }}">{{ 'configure'|trans({}, 'platform') }}</a>
                         {% endif %}
                     </td>
                 </tr>

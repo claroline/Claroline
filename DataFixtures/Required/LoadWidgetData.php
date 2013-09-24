@@ -37,28 +37,6 @@ class LoadWidgetData extends AbstractFixture implements OrderedFixtureInterface
             $widget->setDisplayableInDesktop($item[2]);
             $widget->setDisplayableInWorkspace($item[3]);
             $manager->persist($widget);
-
-            if ($item[3]) {
-                $wWidgetConfig = new DisplayConfig();
-                $wWidgetConfig->setWidget($widget);
-                $wWidgetConfig->setLock(false);
-                $wWidgetConfig->setVisible(true);
-                $wWidgetConfig->setParent(null);
-                $wWidgetConfig->setDesktop(false);
-                $wWidgetConfig->setName($item[0]);
-                $manager->persist($wWidgetConfig);
-            }
-
-            if ($item[2]) {
-                $dWidgetConfig = new DisplayConfig();
-                $dWidgetConfig->setWidget($widget);
-                $dWidgetConfig->setLock(false);
-                $dWidgetConfig->setVisible(true);
-                $wWidgetConfig->setParent(null);
-                $dWidgetConfig->setDesktop(true);
-                $dWidgetConfig->setName($item[0]);
-                $manager->persist($dWidgetConfig);
-            }
         }
 
         $manager->flush();

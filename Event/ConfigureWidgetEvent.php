@@ -9,32 +9,19 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 /**
  * Event dispatched when a widget is configured.
  */
-class ConfigureWidgetWorkspaceEvent extends Event implements DataConveyorEventInterface
+class ConfigureWidgetEvent extends Event implements DataConveyorEventInterface
 {
-    private $workspace;
-    private $content;
-    private $isDefault;
     private $isPopulated = false;
+    private $config;
 
     /**
      * Constructor.
      *
      * @param AbstractWorkspace $workspace
      */
-    public function __construct($workspace, $isDefault = false)
+    public function __construct($config)
     {
-        $this->workspace = $workspace;
-        $this->isDefault = $isDefault;
-    }
-
-    public function getWorkspace()
-    {
-        return $this->workspace;
-    }
-
-    public function setWorkspace($workspace)
-    {
-        $this->workspace = $workspace;
+        $this->config = $config;
     }
 
     public function setContent($content)
@@ -48,18 +35,13 @@ class ConfigureWidgetWorkspaceEvent extends Event implements DataConveyorEventIn
         return $this->content;
     }
 
-    public function isDefault()
-    {
-        return $this->isDefault;
-    }
-
-    public function setDefault($bool)
-    {
-        $this->isDefault = $bool;
-    }
-
     public function isPopulated()
     {
         return $this->isPopulated;
+    }
+    
+    public function getConfig()
+    {
+        return $this->config;
     }
 }

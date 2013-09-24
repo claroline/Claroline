@@ -8,21 +8,9 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class WidgetDisplayType extends AbstractType
 {
-    private $isLocked;
-    
-    public function __construct($isLocked = false)
-    {
-        $this->isLocked = $isLocked;
-    }
-    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($this->isLocked) {
-            $builder->add('name', 'text', array('read_only' => true));
-        }  else {
-            $builder->add('name', 'text');
-        }
-        
+        $builder->add('name', 'text');
     }
 
     public function getName()

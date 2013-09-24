@@ -8,9 +8,7 @@ use Claroline\CoreBundle\Event\ExportToolEvent;
 use Claroline\CoreBundle\Event\ImportToolEvent;
 use Claroline\CoreBundle\Event\ConfigureWorkspaceToolEvent;
 use Claroline\CoreBundle\Event\ConfigureDesktopToolEvent;
-use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Claroline\CoreBundle\Manager\HomeTabManager;
-use Claroline\CoreBundle\Manager\WidgetManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -29,7 +27,6 @@ class HomeListener
      *     "em"                 = @DI\Inject("doctrine.orm.entity_manager"),
      *     "ed"                 = @DI\Inject("claroline.event.event_dispatcher"),
      *     "templating"         = @DI\Inject("templating"),
-     *     "wm"                 = @DI\Inject("claroline.manager.widget_manager"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "securityContext"    = @DI\Inject("security.context")
@@ -39,7 +36,6 @@ class HomeListener
         $em,
         $ed,
         $templating,
-        WidgetManager $wm,
         WorkspaceManager $workspaceManager,
         HomeTabManager $homeTabManager,
         SecurityContextInterface $securityContext
@@ -48,7 +44,6 @@ class HomeListener
         $this->em = $em;
         $this->ed = $ed;
         $this->templating = $templating;
-        $this->wm = $wm;
         $this->workspaceManager = $workspaceManager;
         $this->homeTabManager = $homeTabManager;
         $this->securityContext = $securityContext;
@@ -108,58 +103,58 @@ class HomeListener
      */
     public function onImportHome(ImportToolEvent $event)
     {
-        $config = $event->getConfig();
-        $widgets = $this->em->getRepository('Claroline\CoreBundle\Entity\Widget\Widget')->findAll();
-        
-        foreach ($widgets as $widget) {
-            $found = false;
-            $parent = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
-                ->findOneBy(array('widget' => $widget, 'parent' => null, 'isDesktop' => false));
-            
-            if ($parent === null) {
-                break;
-            }
-            
-            if (isset($config['widget'])) {
-                foreach ($config['widget'] as $widgetConfig) {
-                     if ($widgetConfig['name'] === $widget->getName()) {
-                        $found = true;
-                        $widget = $this->em->getRepository('ClarolineCoreBundle:Widget\Widget')
-                            ->findOneByName($widgetConfig['name']);
-                        $displayConfig = new DisplayConfig();
-                        $displayConfig->setParent($parent);
-                        $displayConfig->setVisible($widgetConfig['is_visible']);
-                        $displayConfig->setWidget($widget);
-                        $displayConfig->setDesktop(false);
-                        $displayConfig->isLocked(true);
-                        $displayConfig->setWorkspace($event->getWorkspace());
-                        $displayConfig->setName($parent->getName());
-
-                        if (isset($widgetConfig['config'])) {
-                            $this->ed->dispatch(
-                                "widget_{$widgetConfig['name']}_from_template",
-                                'ImportWidgetConfig',
-                                array($widgetConfig['config'], $event->getWorkspace())
-                            );
-                        }
-
-                        $this->em->persist($displayConfig);
-                     }
-                }
-            }
-            
-            if (!$found) {
-                $displayConfig = new DisplayConfig();
-                $displayConfig->setParent($parent);
-                $displayConfig->setVisible(false);
-                $displayConfig->setWidget($widget);
-                $displayConfig->setDesktop(false);
-                $displayConfig->isLocked(true);
-                $displayConfig->setWorkspace($event->getWorkspace());
-                $displayConfig->setName($parent->getName());
-                $this->em->persist($displayConfig);
-            }
-        }
+//        $config = $event->getConfig();
+//        $widgets = $this->em->getRepository('Claroline\CoreBundle\Entity\Widget\Widget')->findAll();
+//        
+//        foreach ($widgets as $widget) {
+//            $found = false;
+//            $parent = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+//                ->findOneBy(array('widget' => $widget, 'parent' => null, 'isDesktop' => false));
+//            
+//            if ($parent === null) {
+//                break;
+//            }
+//          
+//            if (isset($config['widget'])) {
+//                foreach ($config['widget'] as $widgetConfig) {
+//                     if ($widgetConfig['name'] === $widget->getName()) {
+//                        $found = true;
+//                        $widget = $this->em->getRepository('ClarolineCoreBundle:Widget\Widget')
+//                            ->findOneByName($widgetConfig['name']);
+//                        $displayConfig = new DisplayConfig();
+//                        $displayConfig->setParent($parent);
+//                        $displayConfig->setVisible($widgetConfig['is_visible']);
+//                        $displayConfig->setWidget($widget);
+//                        $displayConfig->setDesktop(false);
+//                        $displayConfig->isLocked(true);
+//                        $displayConfig->setWorkspace($event->getWorkspace());
+//                        $displayConfig->setName($parent->getName());
+//
+//                        if (isset($widgetConfig['config'])) {
+//                            $this->ed->dispatch(
+//                                "widget_{$widgetConfig['name']}_from_template",
+//                                'ImportWidgetConfig',
+//                                array($widgetConfig['config'], $event->getWorkspace())
+//                            );
+//                        }
+//
+//                        $this->em->persist($displayConfig);
+//                     }
+//                }
+//            }
+//            
+//            if (!$found) {
+//                $displayConfig = new DisplayConfig();
+//                $displayConfig->setParent($parent);
+//                $displayConfig->setVisible(false);
+//                $displayConfig->setWidget($widget);
+//                $displayConfig->setDesktop(false);
+//                $displayConfig->isLocked(true);
+//                $displayConfig->setWorkspace($event->getWorkspace());
+//                $displayConfig->setName($parent->getName());
+//                $this->em->persist($displayConfig);
+//            }
+//        }
     }
 
     /**
