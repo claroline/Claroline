@@ -1525,7 +1525,7 @@ class HomeTabManagerTest extends MockeryTestCase
             ->once()
             ->andReturn($this->widgetHomeTabConfigRepo);
         $this->om->shouldReceive('getRepository')
-            ->with('ClarolineCoreBundle:Widget\DisplayConfig')
+            ->with('ClarolineCoreBundle:Widget\WidgetInstance')
             ->once()
             ->andReturn($this->widgetDisplayConfigRepo);
 

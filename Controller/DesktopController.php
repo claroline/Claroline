@@ -35,7 +35,7 @@ class DesktopController extends Controller
      *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "router"             = @DI\Inject("router"),
-     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager")
+     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
      * })
      */
     public function __construct(
@@ -127,14 +127,11 @@ class DesktopController extends Controller
 
                     if ($event->hasContent()) {
                         $widget['id'] = $config->getWidget()->getId();
-                        if ($event->hasTitle()) {
-                            $widget['title'] = $event->getTitle();
-                        } else {
-                            $widget['title'] = strtolower($config->getWidget()->getName());
-                        }
+                        $widget['title'] = $this->widgetManager
+                            ->getDesktopForcedConfig($widget['id'], $user->getId())->getName();
+                        
                         $widget['content'] = $event->getContent();
                         $widget['configurable'] = ($config->isLocked() !== true and $config->getWidget()->isConfigurable());
-
                         $widgets[] = $widget;
                     }
                 }

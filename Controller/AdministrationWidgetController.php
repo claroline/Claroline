@@ -4,8 +4,9 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\Widget;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -32,12 +33,15 @@ class AdministrationWidgetController extends Controller
     public function widgetListAction()
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $wconfigs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
-            ->findBy(array('parent' => null, 'isDesktop' => false));
-        $dconfigs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
-            ->findBy(array('parent' => null, 'isDesktop' => true));
-
+        $wconfigs = $em->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
+            ->findBy(array('isAdmin' => true, 'isDesktop' => false));
+        $dconfigs = $em->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
+            ->findBy(array('isAdmin' => true, 'isDesktop' => true));
+        
+        $widgets = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findAll();
+        
         return array(
+            'widgets' => $widgets,
             'wconfigs' => $wconfigs,
             'dconfigs' => $dconfigs
         );
@@ -52,17 +56,17 @@ class AdministrationWidgetController extends Controller
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *      "displayConfig",
-     *      class="ClarolineCoreBundle:Widget\DisplayConfig",
+     *      class="ClarolineCoreBundle:Widget\WidgetInstance",
      *      options={"id" = "displayConfigId", "strictId" = true}
      * )
      *
      * Sets true|false to the widget displayConfig isLockedByAdmin option.
      *
-     * @param DisplayConfig $displayConfig
+     * @param WidgetInstance $displayConfig
      *
      * @return Response
      */
-    public function invertLockWidgetAction(DisplayConfig $displayConfig)
+    public function invertLockWidgetAction(WidgetInstance $displayConfig)
     {
         $em = $this->getDoctrine()->getManager();
         $displayConfig->invertLock();
@@ -74,17 +78,12 @@ class AdministrationWidgetController extends Controller
 
     /**
      * @EXT\Route(
-     *     "widget/{widgetId}/configuration/workspace",
-     *     name="claro_admin_widget_configuration_workspace",
+     *     "widget/{config}/configuration/workspace",
+     *     name="claro_admin_widget_configuration",
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
-     * @EXT\ParamConverter(
-     *      "widget",
-     *      class="ClarolineCoreBundle:Widget\Widget",
-     *      options={"id" = "widgetId", "strictId" = true}
-     * )
-     *
+     * 
      * Asks a widget to render its configuration form for a workspace.
      *
      * @param Widget $widget
@@ -95,75 +94,107 @@ class AdministrationWidgetController extends Controller
      *
      * @throws \Exception
      */
-    public function configureWorkspaceWidgetAction(Widget $widget)
+    public function configureWidgetAction(WidgetInstance $config)
     {
         $event = $this->get('claroline.event.event_dispatcher')->dispatch(
-            "widget_{$widget->getName()}_configuration_workspace",
-            'ConfigureWidgetWorkspace',
-            array(null, true)
+            "widget_{$config->getWidget()->getName()}_configuration",
+            'ConfigureWidget',
+            array($config)
         );
 
         return array('content' => $event->getContent());
     }
-
+    
     /**
      * @EXT\Route(
-     *     "widget/{widgetId}/configuration/desktop",
-     *     name="claro_admin_widget_configuration_desktop",
+     *     "/widget/name/form/{config}",
+     *     name = "claro_admin_widget_name_form",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
-     * @EXT\ParamConverter(
-     *      "widget",
-     *      class="ClarolineCoreBundle:Widget\Widget",
-     *      options={"id" = "widgetId", "strictId" = true}
-     * )
-     *
-     * Asks a widget to render its configuration form for a workspace.
-     *
-     * @param Widget $widget
-     *
-     * @EXT\Template("ClarolineCoreBundle:Administration:widgetConfiguration.html.twig")
-     *
-     * @return Response
-     *
-     * @throws \Exception
+     * @EXT\Template("ClarolineCoreBundle:Administration:editWidgetNameForm.html.twig")
+     * 
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
+     * 
+     * @return array
      */
-    public function configureDesktopWidgetAction(Widget $widget)
-    {
-        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
-            "widget_{$widget->getName()}_configuration_desktop",
-            "ConfigureWidgetDesktop",
-            array(null, true)
-        );
-
-        return array('content' => $event->getContent());
+    public function editWidgetNameFormAction(WidgetInstance $config)
+    {   
+        $formFactory = $this->get("claroline.form.factory");
+        $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
+        
+        return array('form' => $form->createView(), 'config' => $config);
     }
 
     /**
      * @EXT\Route(
-     *     "/plugin/visible/{displayConfigId}",
-     *     name="claro_admin_invert_widgetconfig_visible",
+     *     "/widget/name/edit/{config}",
+     *     name = "claro_admin_widget_name_edit",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter(
-     *      "displayConfig",
-     *      class="ClarolineCoreBundle:Widget\DisplayConfig",
-     *      options={"id" = "displayConfigId", "strictId" = true}
-     * )
-     *
-     * Sets true|false to the widget displayConfig isVisible option.
-     *
-     * @param DisplayConfig $displayConfig
+     * @EXT\Template("ClarolineCoreBundle:Administration:editWidgetNameForm.html.twig")
+     * 
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
+     * 
+     * @return array
      */
-    public function invertVisibleWidgetAction(DisplayConfig $displayConfig)
+    public function editWidgetName(WidgetInstance $config)
+    {
+        $formFactory = $this->get("claroline.form.factory");
+        $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
+        $form->handleRequest($this->get('request'));
+        
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $config = $form->getData();
+            $em->persist($config);
+            $em->flush();
+            
+            return new Response('success', 204);
+        } else {
+            return array('form' => $form->createView(), 'config' => $config);
+        }
+    }
+    
+    /**
+     * @EXT\Route(
+     *     "/workspace/widget/{widget}/create",
+     *     name = "claro_admin_create_workspace_widget",
+     *     options={"expose"=true}
+     * )
+     */
+    public function createWorkspaceWidgetInstance(Widget $widget)
     {
         $em = $this->getDoctrine()->getManager();
-        $displayConfig->invertVisible();
-        $em->persist($displayConfig);
+        $config = new WidgetInstance($widget);
+        $config->setName($widget->getName());
+        $config->setIsAdmin(true);
+        $config->setIsDesktop(false);
+        $config->setWidget($widget);
+        $em->persist($config);
         $em->flush();
-
-        return new Response('success', 204);
+        
+        return new Response('success');
+    }
+    
+    /**
+     * @EXT\Route(
+     *     "/desktop/widget/{widget}/create",
+     *     name = "claro_admin_create_desktop_widget",
+     *     options={"expose"=true}
+     * )
+     */
+    public function createDesktopWidgetInstance(Widget $widget)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $config = new WidgetInstance($widget);
+        $config->setName($widget->getName());
+        $config->setIsAdmin(true);
+        $config->setIsDesktop(true);
+        $config->setWidget($widget);
+        $em->persist($config);
+        $em->flush();
+        
+        return new Response('success');
     }
 }
+   

@@ -3,12 +3,10 @@
 namespace  Claroline\CoreBundle\Listener;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Entity\Widget\SimpleTextWorkspaceConfig;
+use Claroline\CoreBundle\Entity\Widget\SimpleTextConfig;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
-use Claroline\CoreBundle\Entity\Widget\SimpleTextDesktopConfig;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Event\ConfigureWidgetWorkspaceEvent;
-use Claroline\CoreBundle\Event\ConfigureWidgetDesktopEvent;
+use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Manager\SimpleTextManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -85,77 +83,24 @@ class SimpleTextWidgetListener
     }
 
     /**
-     * @DI\Observe("widget_simple_text_configuration_desktop")
+     * @DI\Observe("widget_simple_text_configuration")
      */
-    public function onDesktopConfig(ConfigureWidgetDesktopEvent $event)
+    public function onConfig(ConfigureWidgetEvent $event)
     {
-        if ($event->isDefault() === true) {
-
-            $config = $this->simpleTextManager->getDefaultDesktopWidgetConfig();
-        } else {
-            $config = $this->simpleTextManager->getDesktopWidgetConfig($event->getUser());
-            if ($config === null) {
-                $defaultConfig = $this->simpleTextManager->getDefaultDesktopWidgetConfig();
-                if ($defaultConfig !== null) {
-                    $config = new SimpleTextDesktopConfig();
-                    $config->setContent($defaultConfig->getContent());
-                    $config->setIsDefault(false);
-                    $config->setUser($event->getUser());
-                }
-            }
+        $config = $event->getConfig();
+        $txtConfig = $this->simpleTextManager->getTextConfig($config);
+        
+        if ($txtConfig === null) {
+            $txtConfig = new SimpleTextConfig();
         }
-
-        if ($config === null) {
-            $config = new SimpleTextDesktopConfig();
-            $config->setIsDefault($event->isDefault());
-            $config->setUser($event->getUser());
-        }
-
-        $form = $this->formFactory->create(FormFactory::TYPE_SIMPLE_TEXT, array(), $config);
-
+        
+        $form = $this->formFactory->create(FormFactory::TYPE_SIMPLE_TEXT, array(), $txtConfig);
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Widget:config_desktop_widget_simple_text_form.html.twig',
+            'ClarolineCoreBundle:Widget:config_simple_text_form.html.twig',
             array(
                 'form' => $form->createView(),
-                'isDefault' => $event->isDefault() ? 1 : 0
-            )
-        );
-        $event->setContent($content);
-    }
-
-    /**
-     * @DI\Observe("widget_simple_text_configuration_workspace")
-     */
-    public function onWorkspaceConfig(ConfigureWidgetWorkspaceEvent $event)
-    {
-        if ($event->isDefault() === true) {
-            $config = $this->simpleTextManager->getDefaultWorkspaceWidgetConfig();
-        } else {
-            $config = $this->simpleTextManager->getWorkspaceWidgetConfig($event->getWorkspace());
-            if ($config === null) {
-                $defaultConfig = $this->simpleTextManager->getDefaultWorkspaceWidgetConfig();
-                if ($defaultConfig !== null) {
-                    $config = new SimpleTextWorkspaceConfig();
-                    $config->setContent($config->getContent());
-                    $config->setIsDefault(false);
-                    $config->setWorkspace($event->getWorkspace());
-                }
-            }
-        }
-
-        if ($config === null) {
-            $config = new SimpleTextWorkspaceConfig();
-            $config->setIsDefault($event->isDefault());
-            $config->setWorkspace($event->getWorkspace());
-        }
-
-        $form = $this->formFactory->create(FormFactory::TYPE_SIMPLE_TEXT, array(), $config);
-        $content = $this->templating->render(
-            'ClarolineCoreBundle:Widget:config_workspace_widget_simple_text_form.html.twig',
-            array(
-                'form' => $form->createView(),
-                'workspace' => $event->getWorkspace(),
-                'isDefault' => $event->isDefault() ? 1 : 0
+                'isAdmin' => $config->isAdmin(),
+                'config' => $config
             )
         );
         $event->setContent($content);

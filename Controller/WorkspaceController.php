@@ -26,6 +26,7 @@ use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
+use Claroline\CoreBundle\Manager\WidgetManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -50,6 +51,7 @@ class WorkspaceController extends Controller
     private $utils;
     private $formFactory;
     private $tokenUpdater;
+    private $widgetManager;
 
     /**
      * @DI\InjectParams({
@@ -65,7 +67,8 @@ class WorkspaceController extends Controller
      *     "router"             = @DI\Inject("router"),
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
-     *     "tokenUpdater"       = @DI\Inject("claroline.security.token_updater")
+     *     "tokenUpdater"       = @DI\Inject("claroline.security.token_updater"),
+     *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
      * })
      */
     public function __construct(
@@ -81,7 +84,8 @@ class WorkspaceController extends Controller
         UrlGeneratorInterface $router,
         Utilities $utils,
         FormFactory $formFactory,
-        TokenUpdater $tokenUpdater
+        TokenUpdater $tokenUpdater,
+        WidgetManager $widgetManager
     )
     {
         $this->homeTabManager = $homeTabManager;
@@ -97,6 +101,7 @@ class WorkspaceController extends Controller
         $this->utils = $utils;
         $this->formFactory = $formFactory;
         $this->tokenUpdater = $tokenUpdater;
+        $this->widgetManager = $widgetManager;
     }
 
     /**
@@ -425,8 +430,7 @@ class WorkspaceController extends Controller
     {
         // No right checking is done : security is delegated to each widget renderer.
         // The routing is now removed. Checking doesn't need to be done.
-        $configs = $this->get('claroline.widget.manager')
-            ->generateWorkspaceDisplayConfig($workspace->getId());
+        $configs = $this->get('claroline.manager.widget_manager')->getWorkspaceInstances($workspace);
 
         if ($this->security->getToken()->getUser() !== 'anon.') {
             $rightToConfigure = $this->security->isGranted('parameters', $workspace);
@@ -457,11 +461,9 @@ class WorkspaceController extends Controller
 
                     if ($event->hasContent()) {
                         $widget['id'] = $config->getWidget()->getId();
-                        if ($event->hasTitle()) {
-                            $widget['title'] = $event->getTitle();
-                        } else {
-                            $widget['title'] = strtolower($config->getWidget()->getName());
-                        }
+                        $widget['title'] = $this->widgetManager
+                            ->getWorkspaceForcedConfig($widget['id'], $workspace->getId())->getName();
+                        
                         $widget['content'] = $event->getContent();
                         $widget['configurable'] = (
                             $rightToConfigure

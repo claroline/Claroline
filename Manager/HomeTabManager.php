@@ -45,7 +45,7 @@ class HomeTabManager
             'ClarolineCoreBundle:Widget\WidgetHomeTabConfig'
         );
         $this->widgetDisplayConfigRepo = $om->getRepository(
-            'ClarolineCoreBundle:Widget\DisplayConfig'
+            'ClarolineCoreBundle:Widget\WidgetInstance'
         );
         $this->om = $om;
     }
@@ -642,9 +642,8 @@ class HomeTabManager
 
             return $this->widgetDisplayConfigRepo->findBy(
                 array(
-                    'parent' => null,
+                    'isAdmin' => true,
                     'isDesktop' => true,
-                    'isVisible' => true
                 )
             );
         }
@@ -659,9 +658,8 @@ class HomeTabManager
 
             return $this->widgetDisplayConfigRepo->findBy(
                 array(
-                    'parent' => null,
+                    'isAdmin' => true,
                     'isDesktop' => false,
-                    'isVisible' => true
                 )
             );
         }

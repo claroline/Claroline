@@ -11,7 +11,7 @@ class DisplayConfigRepositoryTest extends RepositoryTestCase
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        self::$repo = self::getRepository('ClarolineCoreBundle:Widget\DisplayConfig');
+        self::$repo = self::getRepository('ClarolineCoreBundle:Widget\WidgetInstance');
         self::createUser('user_a');
         self::createWorkspace('wsa');
         self::createWidget('widget_a', false, false, 'icon');
