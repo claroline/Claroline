@@ -86,7 +86,6 @@ class PathController extends Controller
             $manager->flush();
         }
 
-
         //lancement récursion
         $this->JSONParser($json_root_steps, $user, $workspace, $pathsDirectory, null, 0, $path);
 
@@ -113,45 +112,41 @@ class PathController extends Controller
             $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(1));
 
             $manager->persist($resourceNode);
-            $manager->flush();
 
             $rm->setLastPosition($pathsDirectory, $resourceNode);
-
-            // Création Step
-            $step1 = new Step();
-            $step1->setResourceNode($resourceNode);
-            $step1->setParent($parent);
-            $step1->setStepOrder($order);
+            
+            // Création Step ou pas si resourceId :) TO DO
+            $newStep = new Step();
+            $newStep->setResourceNode($resourceNode);
+            $newStep->setParent($parent);
+            $newStep->setStepOrder($order);
             $stepType = $manager->getRepository('InnovaPathBundle:StepType')->findOneById($step->type);
-            $step1->setStepType($stepType);
+            $newStep->setStepType($stepType);
             $stepWho = $manager->getRepository('InnovaPathBundle:StepWho')->findOneById($step->who);
-            $step1->setStepWho($stepWho);
+            $newStep->setStepWho($stepWho);
             $stepWhere = $manager->getRepository('InnovaPathBundle:StepWhere')->findOneById($step->where);
-            $step1->setStepWhere($stepWhere);
-            $step1->setDuration(new \DateTime());
-            $step1->setExpanded($step->expanded);
-            $step1->setWithTutor($step->withTutor);
-            $step1->setWithComputer($step->withComputer);
-            $step1->setInstructions($step->instructions);
-            $step1->setPath($path);
-            $manager->persist($step1);
-
+            $newStep->setStepWhere($stepWhere); 
+            $newStep->setDuration(new \DateTime());
+            $newStep->setExpanded($step->expanded);
+            $newStep->setWithTutor($step->withTutor);
+            $newStep->setWithComputer($step->withComputer);
+            $newStep->setInstructions($step->instructions);
+            $newStep->setPath($path);
+            $manager->persist($newStep);
+           
 
             // RESOURCES MANAGEMENT
             $resourceOrder = 0;
             foreach ($step->resources as $resource) {
                 $resourceOrder++;
-
-                $resourceNodeId = $resource->resourceId;
                 $step2ressourceNode = new Step2ResourceNode();
-                $resourceNode = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resourceNodeId);
+                $resourceNode = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId);
                 $step2ressourceNode->setResourceNode($resourceNode);
-                $step2ressourceNode->setStep($step1);
+                $step2ressourceNode->setStep($newStep);
                 $step2ressourceNode->setResourceOrder($resourceOrder);
 
                 $manager->persist($step2ressourceNode);
             }
-            $manager->flush();
 
             /*
             // Gestion de la jointure ResourceActivity - Ne sert plus à rien je crois
@@ -164,19 +159,19 @@ class PathController extends Controller
             $resourceActivity->setSequenceOrder($count);
 
             $manager->persist($resourceActivity);
-            $manager->flush();
-            */
+            $manager->flush();  
 
-            // Gestion des droits.
+            // TODO GSTION DES DROITS
             $right1 = new ResourceRights();
             $right1->setRole($manager->getRepository('ClarolineCoreBundle:Role')->findOneById(3));
             $right1->setResourceNode($resourceNode);
             $manager->persist($right1);
+            */
 
             $manager->flush();
 
             // récursivité sur les enfants possibles.
-            $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $step->id, 0, $path);
+            $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $newStep->getId(), 0, $path);
         }
 
         $manager->flush();
@@ -341,7 +336,8 @@ class PathController extends Controller
     public function resourceManager()
     {
         $rm = $this->get('claroline.manager.resource_manager');
-        //$rm = $this->getDoctrine()->getManager();
+        
+		//$rm = $this->getDoctrine()->getManager();
         return $rm;
     }
 
