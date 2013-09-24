@@ -14,6 +14,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Manager\MessageManager;
+use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 
 /**
@@ -26,26 +27,30 @@ class MessageController
     private $router;
     private $formFactory;
     private $messageManager;
+    private $userManager;
 
     /**
      * @DI\InjectParams({
      *     "request"        = @DI\Inject("request"),
      *     "router"         = @DI\Inject("router"),
      *     "formFactory"    = @DI\Inject("claroline.form.factory"),
-     *     "manager"        = @DI\Inject("claroline.manager.message_manager")
+     *     "manager"        = @DI\Inject("claroline.manager.message_manager"),
+     *     "userManager"    = @DI\Inject("claroline.manager.user_manager")
      * })
      */
     public function __construct(
         Request $request,
         UrlGeneratorInterface $router,
         FormFactory $formFactory,
-        MessageManager $manager
+        MessageManager $manager,
+        UserManager $userManager
     )
     {
         $this->request = $request;
         $this->router = $router;
         $this->formFactory = $formFactory;
         $this->messageManager = $manager;
+        $this->userManager = $userManager;
     }
 
     /**
@@ -230,7 +235,6 @@ class MessageController
      */
     public function showAction(User $user, array $receivers, Message $message = null)
     {
-
         if ($message) {
             $this->messageManager->markAsRead($user, array($message));
             $ancestors = $this->messageManager->getConversation($message);
@@ -343,6 +347,45 @@ class MessageController
         $this->messageManager->markAsRead($user, array($message));
 
         return new Response('Success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/contactable/users/page/{page}",
+     *     name="claro_message_contactable_users",
+     *     options={"expose"=true},
+     *     defaults={"page"=1, "search"=""}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "/contactable/users/page/{page}/search/{search}",
+     *     name="claro_message_contactable_users_search",
+     *     options={"expose"=true},
+     *     defaults={"page"=1}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     *
+     *
+     * Displays the list of users that the current user can send a message to,
+     * optionally filtered by a search on first name and last name
+     *
+     * @param integer $page
+     * @param string  $search
+     *
+     * @return Response
+     */
+    public function contactableUsersListAction(User $user, $page, $search)
+    {
+        if ($user->hasRole('ROLE_ADMIN')) {
+            $users = $this->userManager->getAllUsers($page);
+        }
+        else {
+            $users = $this->userManager->getAllUsers($page);
+        }
+
+        return array('users' => $users, 'search' => $search);
     }
 
     public function checkAccess(Message $message, User $user)

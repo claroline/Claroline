@@ -1,0 +1,51 @@
+{% macro renderPager(search, pager) %}
+    {% if search == '' %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_message_contactable_users'
+            }
+        )
+    }}
+    {% else %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_message_contactable_users_search',
+                    'routeParams': {'search': search}
+                }
+            )
+        }}
+    {% endif %}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
+{% if users is empty %}
+    {{ 'no_contact'|trans({}, 'platform') }}
+{% else %}
+    {{ renderPager(search, users) }}
+
+    <table class="table table-bordered">
+        <tr>
+            <th>{{ 'first_name'|trans({}, 'platform') }}</th>
+            <th>{{ 'last_name'|trans({}, 'platform') }}</th>
+            <th><input type="checkbox" class="all-user-chk"></th>
+        </tr>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.getFirstName() }}</td>
+                <td>{{ user.getLastName() }}</td>
+                <td><input type="checkbox" class="user-chk" user-id="{{ user.getId() }}"></td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    {{ renderPager(search, users) }}
+{% endif %}

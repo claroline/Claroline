@@ -31,6 +31,16 @@
                     id="generic-form"
                     class="form-horizontal">
                     <div class="panel-body">
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <label id="message-users-btn" class="control-label btn btn-default pull-right" for="message_form_users">
+                                    <b>{{ 'message_form_to'|trans({}, 'platform') }}</b>
+                                </label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" id="message_form_users" class="form-control">
+                            </div>
+                        </div>
                         {{ form_widget(form) }}
                         {{ form_rest(form) }}
                     </div>
@@ -41,10 +51,45 @@
             </div>
         </div>
     </div>
+
+    <div id="contacts-box" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h3>{{ 'contacts_title'|trans({}, 'platform') }}</h3>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs">
+                        <li class="active" id="users-nav-tab">
+                            <a href="#">
+                                {{ 'users'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                        <li id="groups-nav-tab">
+                            <a href="#">
+                                {{ 'groups'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                    </ul>
+                    <br>
+                    <div id="contacts-list"></div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="add-contacts-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
     {{ tinymce_init() }}
+    <script
+        src='{{ asset('bundles/clarolinecore/js/message/show.js') }}'
+        type="text/javascript">
+    </script>
 {% endblock %}
