@@ -16,10 +16,10 @@ class Version20130923121758 extends AbstractMigration
     {
         $this->addSql("
             CREATE TABLE innova_step2resourceNode (
-                id INTEGER NOT NULL, 
-                step_id INTEGER DEFAULT NULL, 
-                resourceOrder INTEGER NOT NULL, 
-                resourceNode_id INTEGER DEFAULT NULL, 
+                id INTEGER NOT NULL,
+                step_id INTEGER DEFAULT NULL,
+                resourceOrder INTEGER NOT NULL,
+                resourceNode_id INTEGER DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -31,10 +31,10 @@ class Version20130923121758 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE innova_user2path (
-                id INTEGER NOT NULL, 
-                user_id INTEGER NOT NULL, 
-                path_id INTEGER NOT NULL, 
-                status INTEGER NOT NULL, 
+                id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                path_id INTEGER NOT NULL,
+                status INTEGER NOT NULL,
                 PRIMARY KEY(id)
             )
         ");

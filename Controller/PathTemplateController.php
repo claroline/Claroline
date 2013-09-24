@@ -2,22 +2,18 @@
 
 namespace Innova\PathBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Response; 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request; 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 use Innova\PathBundle\Entity\PathTemplate;
 
-
-class PathTemplateController extends Controller 
+class PathTemplateController extends Controller
 {
 
     /**
@@ -33,7 +29,7 @@ class PathTemplateController extends Controller
     public function getPathTemplatesAction()
     {
         $em = $this->entityManager();
-        
+
         $results = $em->getRepository('InnovaPathBundle:PathTemplate')->findAll();
 
         $pathtemplates = array();
@@ -117,6 +113,3 @@ class PathTemplateController extends Controller
     }
 
 }
-     
-
-     

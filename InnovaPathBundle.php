@@ -13,7 +13,7 @@ use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
  */
 class InnovaPathBundle extends PluginBundle implements AutoConfigurableInterface, ConfigurationProviderInterface
 {
-	public function supports($environment)
+    public function supports($environment)
     {
         return true;
     }

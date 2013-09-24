@@ -2,19 +2,14 @@
 
 namespace Innova\PathBundle\Controller;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
-use Symfony\Component\HttpFoundation\Response; 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request; 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 use Innova\PathBundle\Entity\Path;
 use Innova\PathBundle\Entity\Step;
@@ -23,7 +18,6 @@ use Innova\PathBundle\Entity\StepType;
 use Innova\PathBundle\Entity\StepWho;
 use Innova\PathBundle\Entity\StepWhere;
 use Innova\PathBundle\Entity\Step2ResourceNode;
-use Innova\PathBundle\Entity\Step2Resource;
 
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -31,7 +25,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 
-class PathController extends Controller 
+class PathController extends Controller
 {
     /**
      * @Route(
@@ -62,7 +56,7 @@ class PathController extends Controller
         // Récupération vars HTTP
         $pathId = $this->get('request')->request->get('path-id');
         $path = $manager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
-        
+
         // JSON string to Object - Récupération des childrens de la racine
         $json = json_decode($path->getPath());
         $json_root_steps = $json->steps;
@@ -76,7 +70,7 @@ class PathController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
 
         // création du dossier _paths s'il existe pas.
-        if(!$pathsDirectory = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneByName("_paths")){
+        if (!$pathsDirectory = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneByName("_paths")) {
             $pathsDirectory = new ResourceNode();
             $pathsDirectory->setName("_paths");
             $pathsDirectory->setClass("Claroline\CoreBundle\Entity\Resource\Directory");
@@ -91,9 +85,9 @@ class PathController extends Controller
             $manager->persist($pathsDirectory);
             $manager->flush();
         }
-       
 
-        //lancement récursion 
+
+        //lancement récursion
         $this->JSONParser($json_root_steps, $user, $workspace, $pathsDirectory, null, 0, $path);
 
         return array('workspace' => $workspace, 'ok' => "Parcours déployé.");
@@ -122,7 +116,7 @@ class PathController extends Controller
             $manager->flush();
 
             $rm->setLastPosition($pathsDirectory, $resourceNode);
-            
+
             // Création Step
             $step1 = new Step();
             $step1->setResourceNode($resourceNode);
@@ -133,7 +127,7 @@ class PathController extends Controller
             $stepWho = $manager->getRepository('InnovaPathBundle:StepWho')->findOneById($step->who);
             $step1->setStepWho($stepWho);
             $stepWhere = $manager->getRepository('InnovaPathBundle:StepWhere')->findOneById($step->where);
-            $step1->setStepWhere($stepWhere); 
+            $step1->setStepWhere($stepWhere);
             $step1->setDuration(new \DateTime());
             $step1->setExpanded($step->expanded);
             $step1->setWithTutor($step->withTutor);
@@ -141,11 +135,11 @@ class PathController extends Controller
             $step1->setInstructions($step->instructions);
             $step1->setPath($path);
             $manager->persist($step1);
-           
+
 
             // RESOURCES MANAGEMENT
             $resourceOrder = 0;
-            foreach ($step->resources as $resource){
+            foreach ($step->resources as $resource) {
                 $resourceOrder++;
 
                 $resourceNodeId = $resource->resourceId;
@@ -170,7 +164,7 @@ class PathController extends Controller
             $resourceActivity->setSequenceOrder($count);
 
             $manager->persist($resourceActivity);
-            $manager->flush();  
+            $manager->flush();
             */
 
             // Gestion des droits.
@@ -179,13 +173,13 @@ class PathController extends Controller
             $right1->setResourceNode($resourceNode);
             $manager->persist($right1);
 
-            $manager->flush(); 
+            $manager->flush();
 
             // récursivité sur les enfants possibles.
             $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $step->id, 0, $path);
         }
 
-        $manager->flush();     
+        $manager->flush();
     }
 
     /**
@@ -200,11 +194,11 @@ class PathController extends Controller
     public function fromWorkspaceAction()
     {
         $manager = $this->container->get('doctrine.orm.entity_manager');
-       
+
         $id = $this->get('request')->query->get('id');
 
         $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($id);
-        
+
         $resourceType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('path');
 
         $paths = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findByWorkspaceAndResourceType($workspace, $resourceType);
@@ -225,7 +219,7 @@ class PathController extends Controller
     public function getPathsAction()
     {
         $em = $this->entityManager();
-        
+
         $results = $em->getRepository('InnovaPathBundle:Path')->findAll();
 
         $paths = array();
@@ -255,7 +249,7 @@ class PathController extends Controller
     {
         $newPath = json_decode($path->getPath());
         $newPath->id = $path->getId();
-    
+
         return new JsonResponse($newPath);
     }
 
@@ -276,7 +270,7 @@ class PathController extends Controller
         $editDate = new \DateTime();
         $user = "Arnaud";
         $content = $this->get('request')->getContent();
-        
+
         $new_path = New Path;
         $new_path->setUser($user)
                  ->setEditDate($editDate)
@@ -340,7 +334,7 @@ class PathController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $em = $this->getDoctrine()->getManager();
-        
+
         return $em;
     }
 
@@ -348,11 +342,7 @@ class PathController extends Controller
     {
         $rm = $this->get('claroline.manager.resource_manager');
         //$rm = $this->getDoctrine()->getManager();
-        
         return $rm;
     }
 
 }
-     
-
-     

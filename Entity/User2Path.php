@@ -38,13 +38,11 @@ class User2Path
      */
     private $status;
 
-
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
     */
     private $user;
-
 
     /**
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Path")
@@ -52,11 +50,10 @@ class User2Path
     */
     private $path;
 
-
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -66,7 +63,7 @@ class User2Path
     /**
      * Set status
      *
-     * @param integer $status
+     * @param  integer   $status
      * @return User2Path
      */
     public function setStatus($status)
@@ -79,7 +76,7 @@ class User2Path
     /**
      * Get status
      * Status : start/continue/finished
-     * @return integer 
+     * @return integer
      */
     public function getStatus()
     {
@@ -108,7 +105,6 @@ class User2Path
     {
         return $this->user;
     }
-
 
     /**
      * Set path

@@ -13,8 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Step extends AbstractResource
 {
-   
-  
+
     /**
      * @var integer
      *
@@ -87,7 +86,7 @@ class Step extends AbstractResource
     /**
      * Set expanded
      *
-     * @param boolean $expanded
+     * @param  boolean $expanded
      * @return Step
      */
     public function setExpanded($expanded)
@@ -100,7 +99,7 @@ class Step extends AbstractResource
     /**
      * Get expanded
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getExpanded()
     {
@@ -110,7 +109,7 @@ class Step extends AbstractResource
     /**
      * Set instructions
      *
-     * @param string $instructions
+     * @param  string $instructions
      * @return Step
      */
     public function setInstructions($instructions)
@@ -123,7 +122,7 @@ class Step extends AbstractResource
     /**
      * Get instructions
      *
-     * @return string 
+     * @return string
      */
     public function getInstructions()
     {
@@ -133,7 +132,7 @@ class Step extends AbstractResource
     /**
      * Set withTutor
      *
-     * @param boolean $withTutor
+     * @param  boolean $withTutor
      * @return Step
      */
     public function setWithTutor($withTutor)
@@ -146,7 +145,7 @@ class Step extends AbstractResource
     /**
      * Get withTutor
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getWithTutor()
     {
@@ -156,7 +155,7 @@ class Step extends AbstractResource
     /**
      * Set withComputer
      *
-     * @param boolean $withComputer
+     * @param  boolean $withComputer
      * @return Step
      */
     public function setWithComputer($withComputer)
@@ -169,7 +168,7 @@ class Step extends AbstractResource
     /**
      * Get withComputer
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getWithComputer()
     {
@@ -179,7 +178,7 @@ class Step extends AbstractResource
     /**
      * Set duration
      *
-     * @param \DateTime $duration
+     * @param  \DateTime $duration
      * @return Step
      */
     public function setDuration($duration)
@@ -192,7 +191,7 @@ class Step extends AbstractResource
     /**
      * Get duration
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDuration()
     {
@@ -202,7 +201,7 @@ class Step extends AbstractResource
     /**
      * Get deployable
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getDeployable()
     {
@@ -212,7 +211,7 @@ class Step extends AbstractResource
     /**
      * Set stepOrder
      *
-     * @param integer $stepOrder
+     * @param  integer $stepOrder
      * @return Step
      */
     public function setStepOrder($stepOrder)
@@ -225,7 +224,7 @@ class Step extends AbstractResource
     /**
      * Get stepOrder
      *
-     * @return integer 
+     * @return integer
      */
     public function getStepOrder()
     {
@@ -235,7 +234,7 @@ class Step extends AbstractResource
     /**
      * Set parent
      *
-     * @param string $parent
+     * @param  string $parent
      * @return Step
      */
     public function setParent($parent)
@@ -248,7 +247,7 @@ class Step extends AbstractResource
     /**
      * Get parent
      *
-     * @return string 
+     * @return string
      */
     public function getParent()
     {
@@ -258,7 +257,7 @@ class Step extends AbstractResource
     /**
      * Set resourceNode
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
+     * @param  \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
      * @return Step
      */
     public function setResourceNode(\Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode = null)
@@ -271,18 +270,17 @@ class Step extends AbstractResource
     /**
      * Get resourceNode
      *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode 
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
     public function getResourceNode()
     {
         return $this->resourceNode;
     }
 
-
     /**
      * Set stepType
      *
-     * @param \Innova\PathBundle\Entity\StepType $stepType
+     * @param  \Innova\PathBundle\Entity\StepType $stepType
      * @return Step
      */
     public function setStepType(\Innova\PathBundle\Entity\StepType $stepType = null)
@@ -295,7 +293,7 @@ class Step extends AbstractResource
     /**
      * Get stepType
      *
-     * @return \Innova\PathBundle\Entity\StepType 
+     * @return \Innova\PathBundle\Entity\StepType
      */
     public function getStepType()
     {
@@ -305,7 +303,7 @@ class Step extends AbstractResource
     /**
      * Set stepWho
      *
-     * @param \Innova\PathBundle\Entity\StepWho $stepWho
+     * @param  \Innova\PathBundle\Entity\StepWho $stepWho
      * @return Step
      */
     public function setStepWho(\Innova\PathBundle\Entity\StepWho $stepWho = null)
@@ -318,7 +316,7 @@ class Step extends AbstractResource
     /**
      * Get stepWho
      *
-     * @return \Innova\PathBundle\Entity\StepWho 
+     * @return \Innova\PathBundle\Entity\StepWho
      */
     public function getStepWho()
     {
@@ -328,7 +326,7 @@ class Step extends AbstractResource
     /**
      * Set stepWhere
      *
-     * @param \Innova\PathBundle\Entity\StepWhere $stepWhere
+     * @param  \Innova\PathBundle\Entity\StepWhere $stepWhere
      * @return Step
      */
     public function setStepWhere(\Innova\PathBundle\Entity\StepWhere $stepWhere = null)
@@ -341,18 +339,17 @@ class Step extends AbstractResource
     /**
      * Get stepWhere
      *
-     * @return \Innova\PathBundle\Entity\StepWhere 
+     * @return \Innova\PathBundle\Entity\StepWhere
      */
     public function getStepWhere()
     {
         return $this->stepWhere;
     }
 
-
     /**
      * Set path
      *
-     * @param \Innova\PathBundle\Entity\Path $path
+     * @param  \Innova\PathBundle\Entity\Path $path
      * @return Step
      */
     public function setPath(\Innova\PathBundle\Entity\Path $path = null)
@@ -365,7 +362,7 @@ class Step extends AbstractResource
     /**
      * Get path
      *
-     * @return \Innova\PathBundle\Entity\Path 
+     * @return \Innova\PathBundle\Entity\Path
      */
     public function getPath()
     {

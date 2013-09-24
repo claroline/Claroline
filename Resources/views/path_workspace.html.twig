@@ -7,7 +7,7 @@
 
 			<tr>
 		    	<td>{{ path.name }}</td>
-		    	<td class="text-right">		
+		    	<td class="text-right">
 		    		<form action="{{ path('innova_path_deploy') }}" method="post">
 		    			<input type="hidden" value="{{ workspace.id }}" name="workspace-id">
 						<input type="hidden" value="{{ path.id }}" name="path-id">
@@ -17,7 +17,7 @@
 		    </tr>
 	{% endfor %}
 	</table>
-	<p>{{ ok }}</p>	
+	<p>{{ ok }}</p>
 
 {% verbatim %}
 <!-- AngularJS Call -->

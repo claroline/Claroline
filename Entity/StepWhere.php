@@ -36,7 +36,7 @@ class StepWhere
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -46,7 +46,7 @@ class StepWhere
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string    $name
      * @return StepWhere
      */
     public function setName($name)
@@ -59,7 +59,7 @@ class StepWhere
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -76,7 +76,7 @@ class StepWhere
     /**
      * Add steps
      *
-     * @param \Innova\PathBundle\Entity\Step $steps
+     * @param  \Innova\PathBundle\Entity\Step $steps
      * @return StepWhere
      */
     public function addStep(\Innova\PathBundle\Entity\Step $steps)
@@ -99,7 +99,7 @@ class StepWhere
     /**
      * Get steps
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getSteps()
     {
