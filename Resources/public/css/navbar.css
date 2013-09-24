@@ -1,0 +1,110 @@
+@CHARSET "UTF-8";
+
+.navbar {
+    list-style-type: none;
+    border-bottom: 1px solid rgb(221, 221, 221);
+    padding: 0;
+    margin-bottom: 20px;
+    margin-left: 0px;
+}
+
+.navbar > li {
+    float: left;
+    line-height: 20px;
+    margin-right: 2px;
+    margin-bottom: -1px;
+    padding: 0;
+    
+    -webkit-border-top-left-radius: 4px;
+    -webkit-border-top-right-radius: 4px;
+    -moz-border-radius-topleft: 4px;
+    -moz-border-radius-topright: 4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.navbar .btn-group {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar .btn-group > .btn {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    color: rgb(0, 136, 204);
+    text-decoration: none;
+}
+
+.navbar > li:hover, 
+.navbar > li:focus,
+.navbar > li:active {
+    background-color: rgb(238, 238, 238);
+}
+
+.navbar .active:hover, 
+.navbar .active:focus, 
+.navbar .active:active {
+    background-color: #FFFFFF;
+}
+
+.navbar .btn-group > .btn:hover, 
+.navbar .btn-group > .btn:focus, 
+.navbar .btn-group > .btn:active {
+    color: rgb(0, 85, 128);
+    background: none !important;
+}
+
+.navbar .btn {
+    border: none;
+    background: none;
+    box-shadow: none !important;
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
+}
+
+.navbar .active .btn {
+	padding-top: 7px !important;
+}
+
+.navbar .active .btn:first-child {
+    padding-left: 11px !important;
+}
+
+.navbar .active .dropdown-toggle {
+    padding-right: 7px !important;
+}
+
+.navbar .active {
+    border: 1px solid rgb(221, 221, 221);
+    border-bottom: none;
+    background-color: #FFFFFF;
+}
+
+.navbar .active .btn-group > a {
+}
+
+.navbar .active .btn-group > a, 
+.navbar .active .btn-group > a:hover, 
+.navbar .active .btn-group > a:focus,
+.navbar .active .btn-group > a:active {
+    color: rgb(85, 85, 85) !important;
+    cursor: default !important;
+    background-color: #FFFFFF !important;
+}
+
+.navbar .active .btn:hover, 
+.navbar .active .btn:focus,
+.navbar .active .btn:active {
+    background-color: #FFFFFF !important;
+}
+
+.navbar .dropdown-toggle {
+    opacity: 0.6;
+}
+
+.navbar .dropdown-toggle:hover, 
+.navbar .dropdown-toggle:focus,
+.navbar .dropdown-toggle:active {
+    opacity: 1;
+}

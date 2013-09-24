@@ -4,11 +4,12 @@
     <div class="panel-heading">
         <h3 class="panel-title">Parcours</h3>
     </div>
-    <table class="table table-hover">
-    {% for path in paths %}
-    <tr>
-        <td>{{ path.name }}</td>
-                <td class="text-right">		
+    <div class="panel-body">
+        <table class="table table-hover">
+            {% for path in paths %}
+            <tr>
+                <td>{{ path.name }}</td>
+                <td class="text-right">
                     <form action="{{ path('innova_path_deploy') }}" method="post">
                         <input type="hidden" value="{{ workspace.id }}" name="workspace-id">
                         <input type="hidden" value="{{ path.id }}" name="path-id">
@@ -16,8 +17,11 @@
                     </form>
                 </td>
             </tr>
-    {% endfor %}
-    </table>
+            {% endfor %}
+        </table>
+        
+        <a href="#/path/global" class="btn btn-primary"><i class="icon-plus"></i></a>
+    </div>
 {% endblock %}
 
 {% block javascripts %}

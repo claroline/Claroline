@@ -1,0 +1,65 @@
+@CHARSET "UTF-8";
+
+/* START fix new modal width and enable use of grid system */
+.step-edit {
+    left: 0;
+    top: 10%;
+    margin: 0 auto;
+    text-align: center;
+    position: fixed;
+    display: inline-block;
+    width: 100%;
+    z-index: 100;
+}
+
+.step-edit .container {
+    text-align: left;
+    position: relative;
+    margin: 0 auto;
+    left: 0;
+}
+/* END fix new modal width */
+
+.step-edit h1 {
+    display: inline-block;
+    margin: 0;
+    line-height: 30px;
+}
+
+.step-edit form {
+    padding: 0;
+}
+
+.step-duration input {
+    text-align: center;
+}
+
+.step-duration span {
+    font-size: 16px;
+    display: inline-block;
+    height: 20px;
+    line-height: 20px;
+    padding: 5px 4px;
+    vertical-align: top;
+}
+
+.panel-documents h2, .panel-tools h2 {
+    padding-bottom: 4px;
+}
+
+.panel-image {
+    text-align: center;
+}
+
+.panel-documents h2 {
+    text-align: right;
+}
+
+.step-edit table {
+    margin-bottom: 0;
+}
+
+#step-name {
+	margin: 0;
+	font-size: 18px;
+}

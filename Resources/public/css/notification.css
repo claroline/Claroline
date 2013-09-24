@@ -1,0 +1,70 @@
+.dr-notification {
+  width: 380px;
+  background-color: rgba(0, 0, 0, 0.85);
+  clear: both;
+  min-height: 80px;
+  max-height: none;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  border-radius: 10px;
+  color: #eeeeee;
+  overflow: hidden;
+}
+
+.dr-notification-image {
+  width: 80px;
+  height: 80px;
+  border-right: none;
+  float: left;
+  display: block;
+  font-size: 40px;
+  color: white;
+  text-align: center;
+}
+
+.dr-notification-image i {
+  display: block;
+  width: 100%;
+  padding-top: 20px;
+}
+
+.dr-notification-image.dr-notification-type-info {
+  color: #3a87ad;
+}
+
+.dr-notification-image.dr-notification-type-warning {
+  color: #c09853;
+}
+
+.dr-notification-image.dr-notification-type-error {
+  color: #b94a48;
+}
+
+.dr-notification-image.dr-notification-type-success {
+  color: #468847;
+}
+
+.dr-notification-close-btn {
+  border: none;
+  display: inline-block;
+  padding: 3px;
+  background: none;
+  font-size: 14px;
+  color: #ccc;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  -webkit-transition: none;
+  -moz-transition: none;
+  transition: none;
+  cursor: pointer;
+}
+
+.dr-notification-close-btn:hover {
+  -webkit-transform: none;
+  -moz-transform: none;
+  -ms-transform: none;
+  transform: none;
+  color: #fff;
+}
