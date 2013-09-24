@@ -114,7 +114,7 @@ class HomeController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
-     *
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:widgetConfiguration.html.twig")
      * Asks a widget to render its configuration page for a workspace.
      *
      * @param AbstractWorkspace $workspace
@@ -130,7 +130,7 @@ class HomeController extends Controller
             array($config)
         );
 
-        return array('content' => $event->getContent(), 'tool' => $this->getHomeTool());
+        return array('workspace' => $config->getWorkspace(), 'content' => $event->getContent(), 'tool' => $this->getHomeTool());
     }
 
     /**

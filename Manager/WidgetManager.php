@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Symfony\Component\Routing\RouterInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -17,21 +18,22 @@ class WidgetManager
     private $om;
     private $repo;
     private $widgetRepo;
+    private $router;
     
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"     = @DI\Inject("claroline.persistence.object_manager"),
+     *     "router" = @DI\Inject("router")
      * })
      */
-    public function __construct(
-        ObjectManager $om
-    )
+    public function __construct(ObjectManager $om, RouterInterface $router)
     {
         $this->om = $om;
         $this->repo = $om->getRepository('ClarolineCoreBundle:Widget\WidgetInstance');
         $this->widgetRepo = $om->getRepository('ClarolineCoreBundle:Widget\Widget');
+        $this->router = $router;
     } 
     
     public function getDesktopInstances(User $user)
@@ -91,4 +93,20 @@ class WidgetManager
     {
         return $this->widgetRepo->findBy(array('isDisplayableInWorkspace' => true));
     }
+    
+    public function getRedirectRoute(WidgetInstance $instance)
+    {
+        if ($instance->isAdmin()) {
+            return $this->router->generate('claro_admin_widgets');
+        }
+        
+        if ($instance->getWorkspace() !== null) {
+            return $this->router->generate(
+                'claro_workspace_widget_properties', 
+                array('workspace' => $instance->getWorkspace()->getId())
+            );
+        } 
+        
+        return $this->router->generate('claro_desktop_widget_properties');
+    }   
 }

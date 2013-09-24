@@ -7,21 +7,22 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\SimpleTextConfig;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class SimpleTextController extends Controller
 {
     /**
      * @EXT\Route(
-     *     "/simple_text_update/config/{config}",
+     *     "/simple_text_update/config/{widget}",
      *     name="claro_simple_text_update_config"
      * )
      * @EXT\Method("POST")
      */
-    public function updateLogWorkspaceWidgetConfig(WidgetInstance $config)
+    public function updateLogWorkspaceWidgetConfig(WidgetInstance $widget)
     {
         //vérification d'accès ici
         
-       $simpleTextConfig = $this->get('claroline.manager.simple_text_manager')->getTextConfig($config);
+       $simpleTextConfig = $this->get('claroline.manager.simple_text_manager')->getTextConfig($widget);
        $form = $this->get('claroline.form.factory')->create(FormFactory::TYPE_SIMPLE_TEXT);
        $form->bind($this->getRequest());
        
@@ -32,7 +33,7 @@ class SimpleTextController extends Controller
        } else {
            if ($form->isValid()) {
                $simpleTextConfig = new SimpleTextConfig();
-               $simpleTextConfig->setDisplayConfig($config);
+               $simpleTextConfig->setDisplayConfig($widget);
                $simpleTextConfig->setContent($form->get('content')->getData());
            }
        }
@@ -41,6 +42,6 @@ class SimpleTextController extends Controller
        $em->persist($simpleTextConfig);
        $em->flush();
        
-       //redirection
+       return new RedirectResponse($this->get('claroline.manager.widget_manager')->getRedirectRoute($widget));
     }
 }

@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Event;
 use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 
 /**
  * Event dispatched when a widget is configured.

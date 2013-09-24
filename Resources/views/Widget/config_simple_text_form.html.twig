@@ -10,7 +10,7 @@
 {% set isDefault = 0 %}
 {% endif %}
 <form class="form-horizontal"
-      action="{{ path('claro_simple_text_update_config', {'config': config.getId()}) }}"
+      action="{{ path('claro_simple_text_update_config', {'widget': config.getId()}) }}"
       method="post" {{ form_enctype(form) }}
 >
     <div class="panel-body">
