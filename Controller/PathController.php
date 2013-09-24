@@ -61,7 +61,7 @@ class PathController extends Controller
 
         // Récupération vars HTTP
         $pathId = $this->get('request')->request->get('path-id');
-        $path = $manager->getRepository('InnovaPathBundle:Path')->findOneById($pathId);
+        $path = $manager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
         
         // JSON string to Object - Récupération des childrens de la racine
         $json = json_decode($path->getPath());
@@ -82,6 +82,7 @@ class PathController extends Controller
             $pathsDirectory->setClass("Claroline\CoreBundle\Entity\Resource\Directory");
             $pathsDirectory->setCreator($user);
             $pathsDirectory->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneById(2));
+            $root = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
             $pathsDirectory->setWorkspace($workspace);
             $pathsDirectory->setParent($root);
             $pathsDirectory->setMimeType("custom/directory");
@@ -111,11 +112,11 @@ class PathController extends Controller
             $resourceNode->setName($step->name);
             $resourceNode->setClass("Innova\PathBundle\Entity\Step");
             $resourceNode->setCreator($user);
-            $resourceNode->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneById(10));
+            $resourceNode->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("step"));
             $resourceNode->setWorkspace($workspace);
             $resourceNode->setParent($pathsDirectory);
-            $resourceNode->setMimeType("custom/activity");
-            $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(35));
+            $resourceNode->setMimeType("");
+            $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(1));
 
             $manager->persist($resourceNode);
             $manager->flush();
@@ -125,7 +126,6 @@ class PathController extends Controller
             // Création Step
             $step1 = new Step();
             $step1->setResourceNode($resourceNode);
-            $step1->setUuid($step->id);
             $step1->setParent($parent);
             $step1->setStepOrder($order);
             $stepType = $manager->getRepository('InnovaPathBundle:StepType')->findOneById($step->type);
@@ -145,7 +145,7 @@ class PathController extends Controller
 
             // RESOURCES MANAGEMENT
             $resourceOrder = 0;
-            foreach ($resources as $resource) {
+            foreach ($step->resources as $resource){
                 $resourceOrder++;
 
                 $resourceNodeId = $resource->resourceId;
