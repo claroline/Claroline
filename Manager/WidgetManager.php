@@ -28,7 +28,7 @@ class WidgetManager
     )
     {
         $this->om = $om;
-        $this->repo = $om->getRepository('ClarolineCoreBundle:Widget\DisplayConfig');
+        $this->repo = $om->getRepository('ClarolineCoreBundle:Widget\WidgetInstance');
         $this->widgetRepo = $om->getRepository('ClarolineCoreBundle:Widget\Widget');
     } 
     

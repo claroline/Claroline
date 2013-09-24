@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -33,9 +33,9 @@ class AdministrationWidgetController extends Controller
     public function widgetListAction()
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $wconfigs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+        $wconfigs = $em->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
             ->findBy(array('isAdmin' => true, 'isDesktop' => false));
-        $dconfigs = $em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+        $dconfigs = $em->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
             ->findBy(array('isAdmin' => true, 'isDesktop' => true));
         
         $widgets = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findAll();
@@ -56,17 +56,17 @@ class AdministrationWidgetController extends Controller
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *      "displayConfig",
-     *      class="ClarolineCoreBundle:Widget\DisplayConfig",
+     *      class="ClarolineCoreBundle:Widget\WidgetInstance",
      *      options={"id" = "displayConfigId", "strictId" = true}
      * )
      *
      * Sets true|false to the widget displayConfig isLockedByAdmin option.
      *
-     * @param DisplayConfig $displayConfig
+     * @param WidgetInstance $displayConfig
      *
      * @return Response
      */
-    public function invertLockWidgetAction(DisplayConfig $displayConfig)
+    public function invertLockWidgetAction(WidgetInstance $displayConfig)
     {
         $em = $this->getDoctrine()->getManager();
         $displayConfig->invertLock();
@@ -94,7 +94,7 @@ class AdministrationWidgetController extends Controller
      *
      * @throws \Exception
      */
-    public function configureWidgetAction(DisplayConfig $config)
+    public function configureWidgetAction(WidgetInstance $config)
     {
         $event = $this->get('claroline.event.event_dispatcher')->dispatch(
             "widget_{$config->getWidget()->getName()}_configuration",
@@ -113,11 +113,11 @@ class AdministrationWidgetController extends Controller
      * )
      * @EXT\Template("ClarolineCoreBundle:Administration:editWidgetNameForm.html.twig")
      * 
-     * @param \Claroline\CoreBundle\Entity\Widget\DisplayConfig $config
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
      * 
      * @return array
      */
-    public function editWidgetNameFormAction(DisplayConfig $config)
+    public function editWidgetNameFormAction(WidgetInstance $config)
     {   
         $formFactory = $this->get("claroline.form.factory");
         $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
@@ -133,11 +133,11 @@ class AdministrationWidgetController extends Controller
      * )
      * @EXT\Template("ClarolineCoreBundle:Administration:editWidgetNameForm.html.twig")
      * 
-     * @param \Claroline\CoreBundle\Entity\Widget\DisplayConfig $config
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
      * 
      * @return array
      */
-    public function editWidgetName(DisplayConfig $config)
+    public function editWidgetName(WidgetInstance $config)
     {
         $formFactory = $this->get("claroline.form.factory");
         $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
@@ -165,7 +165,7 @@ class AdministrationWidgetController extends Controller
     public function createWorkspaceWidgetInstance(Widget $widget)
     {
         $em = $this->getDoctrine()->getManager();
-        $config = new DisplayConfig($widget);
+        $config = new WidgetInstance($widget);
         $config->setName($widget->getName());
         $config->setIsAdmin(true);
         $config->setIsDesktop(false);
@@ -186,7 +186,7 @@ class AdministrationWidgetController extends Controller
     public function createDesktopWidgetInstance(Widget $widget)
     {
         $em = $this->getDoctrine()->getManager();
-        $config = new DisplayConfig($widget);
+        $config = new WidgetInstance($widget);
         $config->setName($widget->getName());
         $config->setIsAdmin(true);
         $config->setIsDesktop(true);

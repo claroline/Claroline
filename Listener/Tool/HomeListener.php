@@ -108,7 +108,7 @@ class HomeListener
 //        
 //        foreach ($widgets as $widget) {
 //            $found = false;
-//            $parent = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
+//            $parent = $this->em->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
 //                ->findOneBy(array('widget' => $widget, 'parent' => null, 'isDesktop' => false));
 //            
 //            if ($parent === null) {
@@ -121,7 +121,7 @@ class HomeListener
 //                        $found = true;
 //                        $widget = $this->em->getRepository('ClarolineCoreBundle:Widget\Widget')
 //                            ->findOneByName($widgetConfig['name']);
-//                        $displayConfig = new DisplayConfig();
+//                        $displayConfig = new WidgetInstance();
 //                        $displayConfig->setParent($parent);
 //                        $displayConfig->setVisible($widgetConfig['is_visible']);
 //                        $displayConfig->setWidget($widget);
@@ -144,7 +144,7 @@ class HomeListener
 //            }
 //            
 //            if (!$found) {
-//                $displayConfig = new DisplayConfig();
+//                $displayConfig = new WidgetInstance();
 //                $displayConfig->setParent($parent);
 //                $displayConfig->setVisible(false);
 //                $displayConfig->setWidget($widget);

@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Controller\Tool;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
@@ -122,7 +122,7 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function workspaceConfigureWidgetAction(DisplayConfig $config)
+    public function workspaceConfigureWidgetAction(WidgetInstance $config)
     {
         $event = $this->get('claroline.event.event_dispatcher')->dispatch(
             "widget_{$config->getWidget()->getName()}_configuration",
@@ -171,7 +171,7 @@ class HomeController extends Controller
     public function createDesktopWidgetInstance(Widget $widget)
     {
         $em = $this->getDoctrine()->getManager();
-        $config = new DisplayConfig();
+        $config = new WidgetInstance();
         $config->setName($widget->getName());
         $config->setIsAdmin(false);
         $config->setIsDesktop(true);
@@ -195,7 +195,7 @@ class HomeController extends Controller
     public function createWorkspaceWidgetInstance(Widget $widget, AbstractWorkspace $workspace)
     {
         $em = $this->getDoctrine()->getManager();
-        $config = new DisplayConfig();
+        $config = new WidgetInstance();
         $config->setName($widget->getName());
         $config->setIsAdmin(false);
         $config->setIsDesktop(true);
@@ -223,7 +223,7 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function dekstopConfigureWidgetAction(DisplayConfig $config)
+    public function dekstopConfigureWidgetAction(WidgetInstance $config)
     {
         $event = $this->get('claroline.event.event_dispatcher')->dispatch(
             "widget_{$config->getWidget()->getName()}_configuration",
@@ -1453,11 +1453,11 @@ class HomeController extends Controller
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:editWidgetNameForm.html.twig")
      * 
-     * @param \Claroline\CoreBundle\Entity\Widget\DisplayConfig $config
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
      * 
      * @return array
      */
-    public function editDesktopWidgetNameFormAction(DisplayConfig $config)
+    public function editDesktopWidgetNameFormAction(WidgetInstance $config)
     {   
         $formFactory = $this->get("claroline.form.factory");
         $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
@@ -1476,7 +1476,7 @@ class HomeController extends Controller
      * 
      * @return array
      */
-    public function editDesktopWidgetName(DisplayConfig $config, User $user)
+    public function editDesktopWidgetName(WidgetInstance $config, User $user)
     {
         $form = $this->request->request->get('widget_display_form');
         $config->setName($form['name']);
@@ -1495,11 +1495,11 @@ class HomeController extends Controller
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:editWidgetNameForm.html.twig")
      * 
-     * @param \Claroline\CoreBundle\Entity\Widget\DisplayConfig $config
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
      * 
      * @return array
      */
-    public function editWorkspaceWidgetNameFormAction(DisplayConfig $config)
+    public function editWorkspaceWidgetNameFormAction(WidgetInstance $config)
     {   
         $formFactory = $this->get("claroline.form.factory");
         $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
@@ -1515,11 +1515,11 @@ class HomeController extends Controller
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:editWidgetNameForm.html.twig")
      * 
-     * @param \Claroline\CoreBundle\Entity\Widget\DisplayConfig $config
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
      * 
      * @return array
      */
-    public function editWorkspaceWidgetName(DisplayConfig $config)
+    public function editWorkspaceWidgetName(WidgetInstance $config)
     {
         $form = $this->request->request->get('widget_display_form');
         $config->setName($form['name']);

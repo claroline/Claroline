@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\Entity\Widget;
 
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 
 /**
  * @ORM\Entity
@@ -24,7 +24,7 @@ class SimpleTextConfig
     protected $content;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\DisplayConfig")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $displayConfig;
@@ -62,7 +62,7 @@ class SimpleTextConfig
         return $this->content;
     }
 
-    public function setDisplayConfig(DisplayConfig $ds)
+    public function setDisplayConfig(WidgetInstance $ds)
     {
         $this->displayConfig = $ds;
     }

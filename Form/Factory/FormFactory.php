@@ -143,7 +143,7 @@ class FormFactory
         ),
         self::TYPE_WIDGET_CONFIG => array(
             'formType' => 'Claroline\CoreBundle\Form\WidgetDisplayType',
-            'entity' => 'Claroline\CoreBundle\Entity\Widget\DisplayConfig'
+            'entity' => 'Claroline\CoreBundle\Entity\Widget\WidgetInstance'
         )
     );
 

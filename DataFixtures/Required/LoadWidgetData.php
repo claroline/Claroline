@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\DataFixtures\Required;
 
 use Claroline\CoreBundle\Entity\Widget\Widget;
-use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;

@@ -55,7 +55,7 @@ class LoadHomeTabData extends AbstractFixture implements OrderedFixtureInterface
         $manager->persist($workspaceHomeTabConfig);
 
 //        $desktopDisplayConfigs = $manager
-//            ->getRepository('Claroline\CoreBundle\Entity\Widget\DisplayConfig')
+//            ->getRepository('Claroline\CoreBundle\Entity\Widget\WidgetInstance')
 //            ->findBy(
 //                array(
 //                    'parent' => null,
@@ -64,7 +64,7 @@ class LoadHomeTabData extends AbstractFixture implements OrderedFixtureInterface
 //                )
 //            );
 //        $workspaceDisplayConfigs = $manager
-//            ->getRepository('Claroline\CoreBundle\Entity\Widget\DisplayConfig')
+//            ->getRepository('Claroline\CoreBundle\Entity\Widget\WidgetInstance')
 //            ->findBy(
 //                array(
 //                    'parent' => null,

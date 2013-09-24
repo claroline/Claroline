@@ -8,7 +8,7 @@ use Symfony\Component\Console\Output\NullOutput;
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Claroline\CoreBundle\Entity\Widget\Widget;
-use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 use Claroline\InstallationBundle\Bundle\BundleVersion;
@@ -76,7 +76,7 @@ class AdditionalInstaller extends BaseInstaller
                 $em->persist($widget);
                 $em->flush();
 
-                $widgetConfig = new DisplayConfig();
+                $widgetConfig = new WidgetInstance();
                 $widgetConfig->setWidget($widget);
                 $widgetConfig->setLock(false);
                 $widgetConfig->setVisible(true);

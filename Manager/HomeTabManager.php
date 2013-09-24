@@ -45,7 +45,7 @@ class HomeTabManager
             'ClarolineCoreBundle:Widget\WidgetHomeTabConfig'
         );
         $this->widgetDisplayConfigRepo = $om->getRepository(
-            'ClarolineCoreBundle:Widget\DisplayConfig'
+            'ClarolineCoreBundle:Widget\WidgetInstance'
         );
         $this->om = $om;
     }

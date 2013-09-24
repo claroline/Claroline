@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Controller\Widget;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
-use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\SimpleTextConfig;
 
 class SimpleTextController extends Controller
@@ -17,7 +17,7 @@ class SimpleTextController extends Controller
      * )
      * @EXT\Method("POST")
      */
-    public function updateLogWorkspaceWidgetConfig(DisplayConfig $config)
+    public function updateLogWorkspaceWidgetConfig(WidgetInstance $config)
     {
         //vérification d'accès ici
         

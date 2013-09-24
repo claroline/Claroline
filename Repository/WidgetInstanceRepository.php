@@ -4,13 +4,13 @@ namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
-class DisplayConfigRepository extends EntityRepository
+class WidgetInstanceRepository extends EntityRepository
 {
     public function findVisibleAdminDesktopWidgetDisplayConfig(array $excludedWidgets)
     {
         $dql = "
             SELECT wdc
-            FROM Claroline\CoreBundle\Entity\Widget\DisplayConfig wdc
+            FROM Claroline\CoreBundle\Entity\Widget\WidgetInstance wdc
             WHERE wdc.parent IS NULL
             AND wdc.isVisible = true
             AND wdc.isDesktop = true
@@ -26,7 +26,7 @@ class DisplayConfigRepository extends EntityRepository
     {
         $dql = "
             SELECT wdc
-            FROM Claroline\CoreBundle\Entity\Widget\DisplayConfig wdc
+            FROM Claroline\CoreBundle\Entity\Widget\WidgetInstance wdc
             WHERE wdc.parent IS NULL
             AND wdc.isVisible = true
             AND wdc.isDesktop = false
