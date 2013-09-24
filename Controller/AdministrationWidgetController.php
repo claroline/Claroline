@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Manager\WidgetManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -17,6 +18,18 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class AdministrationWidgetController extends Controller
 {
+    private $widgetManager;
+    
+    /**
+     * @DI\InjectParams({
+     *     "widgetManager" = @DI\Inject("claroline.manager.widget_manager")
+     * })
+     */
+    public function __construct(WidgetManager $widgetManager)
+    {
+        $this->widgetManager = $widgetManager;
+    }
+    
     /**
      * @EXT\Route(
      *     "/widgets",
@@ -161,19 +174,13 @@ class AdministrationWidgetController extends Controller
      *     name = "claro_admin_create_workspace_widget",
      *     options={"expose"=true}
      * )
+     * @EXT\Template("ClarolineCoreBundle:Widget:widgetConfigRow.html.twig")
      */
     public function createWorkspaceWidgetInstance(Widget $widget)
     {
-        $em = $this->getDoctrine()->getManager();
-        $config = new WidgetInstance($widget);
-        $config->setName($widget->getName());
-        $config->setIsAdmin(true);
-        $config->setIsDesktop(false);
-        $config->setWidget($widget);
-        $em->persist($config);
-        $em->flush();
+       $instance = $this->widgetManager->createInstance($widget, true, false);
         
-        return new Response('success');
+        return array('config' => $instance);
     }
     
     /**
@@ -182,19 +189,27 @@ class AdministrationWidgetController extends Controller
      *     name = "claro_admin_create_desktop_widget",
      *     options={"expose"=true}
      * )
+     * @EXT\Template("ClarolineCoreBundle:Widget:widgetConfigRow.html.twig")
      */
     public function createDesktopWidgetInstance(Widget $widget)
     {
-        $em = $this->getDoctrine()->getManager();
-        $config = new WidgetInstance($widget);
-        $config->setName($widget->getName());
-        $config->setIsAdmin(true);
-        $config->setIsDesktop(true);
-        $config->setWidget($widget);
-        $em->persist($config);
-        $em->flush();
+        $instance = $this->widgetManager->createInstance($widget, true, true);
         
-        return new Response('success');
+        return array('config' => $instance);
+    }
+    
+    /**
+     * @EXT\Route(
+     *     "/desktop/widget/remove/{widgetInstance}",
+     *     name = "claro_admin_remove_widget",
+     *     options={"expose"=true}
+     * )
+     */
+    public function removeWidgetInstance(WidgetInstance $widgetInstance)
+    {
+        $this->widgetManager->removeInstance($widgetInstance);
+        
+        return new Response(204);
     }
 }
    

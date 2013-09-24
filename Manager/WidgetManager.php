@@ -5,6 +5,8 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Widget\Widget;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -45,5 +47,26 @@ class WidgetManager
     public function getAll()
     {
         return  $this->widgetRepo->findAll();
+    }
+    
+    public function createInstance(Widget $widget, $isAdmin, $isDesktop, User $user = null, AbstractWorkspace $ws = null)
+    {
+        $instance = new WidgetInstance($widget);
+        $instance->setName($widget->getName());
+        $instance->setIsAdmin($isAdmin);
+        $instance->setIsDesktop($isDesktop);
+        $instance->setWidget($widget);
+        $instance->setUser($user);
+        $instance->setWorkspace($ws);
+        $this->om->persist($instance);
+        $this->om->flush();
+        
+        return $instance;
+    }
+    
+    public function removeInstance(WidgetInstance $widgetInstance)
+    {
+        $this->om->remove($widgetInstance);
+        $this->om->flush();
     }
 }

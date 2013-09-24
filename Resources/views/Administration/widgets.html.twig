@@ -37,7 +37,7 @@
                     <th>{{ 'configuration'|trans({}, 'platform') }}</th>
                 </tr>
             </thead>
-            <tbody id="widget-table-body">
+            <tbody id="widget-workspace-table-body">
                 {% for wconfig in wconfigs %}
                 <tr class='row-widget-config' data-id="{{ wconfig.getId() }}">
                     <td>{% render controller('ClarolineCoreBundle:AdministrationWidget:editWidgetNameForm', {'config': wconfig}) %}</td>
@@ -68,7 +68,7 @@
                     <th>{{ 'configuration'|trans({}, 'platform') }}</th>
                 </tr>
             </thead>
-            <tbody id="widget-table-body">
+            <tbody id="widget-dekstop-table-body">
                 {% for dconfig in dconfigs %}
                 <tr class='row-widget-config' data-id="{{ dconfig.getId() }}">
                     <td>{% render controller('ClarolineCoreBundle:AdministrationWidget:editWidgetNameForm', {'config': dconfig}) %}</td>

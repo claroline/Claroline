@@ -1,0 +1,8 @@
+<tr class='row-widget-config' data-id="{{ config.getId() }}">
+    <td>{% render controller('ClarolineCoreBundle:AdministrationWidget:editWidgetNameForm', {'config': config}) %}</td>
+    <td>
+        {% if config.getWidget().isConfigurable() %}
+        <a href="{{ path('claro_admin_widget_configuration', {'config': config.getId()}) }}">{{ 'configure'|trans({}, 'platform') }}</a>
+        {% endif %}
+    </td>
+</tr>

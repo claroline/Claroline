@@ -15,10 +15,10 @@
       var widgetId = list.options[list.selectedIndex].value;
       $.ajax({
             url: Routing.generate('claro_admin_create_workspace_widget', {'widget': widgetId}),
-            success: function () {
+            success: function (data) {
+                $('#widget-workspace-table-body').append(data);
             }
-        });
-      
+        });      
    });
    
   $('#create-desktop-widget').on('submit', function (e) {
@@ -27,10 +27,10 @@
       var widgetId = list.options[list.selectedIndex].value;
       $.ajax({
             url: Routing.generate('claro_admin_create_desktop_widget', {'widget': widgetId}),
-            success: function () {
+            success: function (data) {
+                $('#widget-desktop-table-body').append(data);
             }
-        });
-      
+        });  
    });
    
    var submitForm = function (formAction, formData) {
@@ -41,7 +41,6 @@
             processData: false,
             contentType: false,
             success: function () {
-                //~ if 200 ~append form
             }
         });
     };
