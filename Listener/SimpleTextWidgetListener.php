@@ -43,42 +43,13 @@ class SimpleTextWidgetListener
     }
 
     /**
-     * @DI\Observe("widget_simple_text_desktop")
+     * @DI\Observe("widget_simple_text")
      *
      * @param DisplayWidgetEvent $event
      */
-    public function onDesktopDisplay(DisplayWidgetEvent $event)
+    public function onDisplay(DisplayWidgetEvent $event)
     {
-        $config = $this->simpleTextManager->getDisplayedConfigForDekstop($this->sc->getToken()->getUser());
-        //check if the config is correct
-        if ($config === null) {
-            $event->setContent('');
-            $event->stopPropagation();
-
-            return;
-        }
-
-        $event->setContent($config->getContent());
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("widget_simple_text_workspace")
-     *
-     * @param DisplayWidgetEvent $event
-     */
-    public function onWorkspaceDisplay(DisplayWidgetEvent $event)
-    {
-        $config = $this->simpleTextManager->getDisplayedConfigForWorkspace($event->getWorkspace());
-        //check if the config is correct
-        if ($config === null) {
-            $event->setContent('');
-            $event->stopPropagation();
-
-            return;
-        }
-
-        $event->setContent($config->getContent());
+        $event->setContent($this->simpleTextManager->getTextConfig($event->getInstance())->getContent());
         $event->stopPropagation();
     }
 
