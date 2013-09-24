@@ -200,7 +200,7 @@ class AdministrationWidgetController extends Controller
     
     /**
      * @EXT\Route(
-     *     "/desktop/widget/remove/{widgetInstance}",
+     *     "/widget/remove/{widgetInstance}",
      *     name = "claro_admin_remove_widget",
      *     options={"expose"=true}
      * )

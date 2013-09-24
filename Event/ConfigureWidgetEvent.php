@@ -12,16 +12,16 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 class ConfigureWidgetEvent extends Event implements DataConveyorEventInterface
 {
     private $isPopulated = false;
-    private $config;
+    private $instance;
 
     /**
      * Constructor.
      *
      * @param AbstractWorkspace $workspace
      */
-    public function __construct($config)
+    public function __construct(WidgetInstance $instance)
     {
-        $this->config = $config;
+        $this->instance = $instance;
     }
 
     public function setContent($content)
@@ -40,8 +40,8 @@ class ConfigureWidgetEvent extends Event implements DataConveyorEventInterface
         return $this->isPopulated;
     }
     
-    public function getConfig()
+    public function getInstance()
     {
-        return $this->config;
+        return $this->instance;
     }
 }

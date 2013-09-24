@@ -170,15 +170,7 @@ class HomeController extends Controller
      */
     public function createDesktopWidgetInstance(Widget $widget)
     {
-        $em = $this->getDoctrine()->getManager();
-        $config = new WidgetInstance();
-        $config->setName($widget->getName());
-        $config->setIsAdmin(false);
-        $config->setIsDesktop(true);
-        $config->setWidget($widget);
-        $config->setUser($this->securityContext->getToken()->getUser());
-        $em->persist($config);
-        $em->flush();
+        $instance = $this->widgetManager->createInstance($widget, false, true, $this->securityContext->getToken()->getUser());
         
         return new Response('success'); 
     }
@@ -194,17 +186,37 @@ class HomeController extends Controller
      */
     public function createWorkspaceWidgetInstance(Widget $widget, AbstractWorkspace $workspace)
     {
-        $em = $this->getDoctrine()->getManager();
-        $config = new WidgetInstance();
-        $config->setName($widget->getName());
-        $config->setIsAdmin(false);
-        $config->setIsDesktop(true);
-        $config->setWidget($widget);
-        $config->setWorkspace($workspace);
-        $em->persist($config);
-        $em->flush();
+        $instance = $this->widgetManager->createInstance($widget, false, false, null, $workspace);
         
         return new Response('success'); 
+    }
+    
+    /**
+     * @EXT\Route(
+     *     "/desktop/widget/remove/{widgetInstance}",
+     *     name = "claro_desktop_remove_widget",
+     *     options={"expose"=true}
+     * )
+     */
+    public function removeDesktopWidgetInstance(WidgetInstance $widgetInstance)
+    {
+        $this->widgetManager->removeInstance($widgetInstance);
+        
+        return new Response(204);
+    }
+    
+    /**
+     * @EXT\Route(
+     *     "/workspace/widget/remove/{widgetInstance}",
+     *     name = "claro_workspace_remove_widget",
+     *     options={"expose"=true}
+     * )
+     */
+    public function removeWidgetInstance(WidgetInstance $widgetInstance)
+    {
+        $this->widgetManager->removeInstance($widgetInstance);
+        
+        return new Response(204);
     }
 
     /**

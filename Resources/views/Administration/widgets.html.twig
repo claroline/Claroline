@@ -35,6 +35,7 @@
                 <tr>
                     <th>{{ 'name'|trans({}, 'platform') }}</th>
                     <th>{{ 'configuration'|trans({}, 'platform') }}</th>
+                    <th>{{ 'delete'|trans({}, 'platform') }}</th>
                 </tr>
             </thead>
             <tbody id="widget-workspace-table-body">
@@ -46,6 +47,7 @@
                         <a href="{{ path('claro_admin_widget_configuration', {'config': wconfig.getId()}) }}">{{ 'configure'|trans({}, 'platform') }}</a>
                         {% endif %}
                     </td>
+                    <td> <a class="delete-widget" href="{{ path('claro_admin_remove_widget', {'widgetInstance': wconfig.getId()}) }}">delete</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -66,6 +68,7 @@
                 <tr>
                     <th>{{ 'name'|trans({}, 'platform') }}</th>
                     <th>{{ 'configuration'|trans({}, 'platform') }}</th>
+                    <th>{{ 'delete'|trans({}, 'platform') }}</th>
                 </tr>
             </thead>
             <tbody id="widget-dekstop-table-body">
@@ -77,6 +80,7 @@
                         <a href="{{ path('claro_admin_widget_configuration', {'config': dconfig.getId()}) }}">{{ 'configure'|trans({}, 'platform') }}</a>
                         {% endif %}
                     </td>
+                    <td> <a class="delete-widget" href="{{ path('claro_admin_remove_widget', {'widgetInstance': dconfig.getId()}) }}">delete</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
