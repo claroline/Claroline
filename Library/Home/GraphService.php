@@ -17,21 +17,30 @@ class GraphService
     {
         $this->graph["url"] = $url;
 
-        $content = file_get_contents($url);
+        $headers = get_headers($url, 1);
+        $type = $headers["Content-Type"];
 
-        $content = mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8');
+        if (strpos($type, "image/") === 0) {
+            $this->graph["type"] = "raw";
+            $this->graph["images"][] = $url;
+        } else {
+            $content = file_get_contents($url);
+            $content = mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8');
 
-        $this->crawler = new Crawler($content);
+            $this->crawler = new Crawler($content);
 
-        $this->openGraph();
-        $this->twitter();
+            $this->openGraph();
+            $this->twitter();
 
-        if (!isset($this->graph["title"]) and !isset($this->graph["type"]) and !isset($this->graph["description"])) {
-            $this->html();
+            if (!isset($this->graph["title"]) and
+                !isset($this->graph["type"]) and
+                !isset($this->graph["description"])) {
+                $this->html();
+            }
+
+            //for example in case of slideshare:presentation
+            $this->graph['type'] = str_replace(":", "-", $this->graph['type']);
         }
-
-        //for example in case of slideshare:presentation
-        $this->graph['type'] = str_replace(":", "-", $this->graph['type']);
 
         return $this->graph;
     }
