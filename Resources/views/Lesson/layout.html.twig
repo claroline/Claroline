@@ -6,7 +6,7 @@
     {{ parent() }}
 {% endblock %}
 
-{% block section_content %}
+{% block content %}
 
     <header>
 
@@ -32,13 +32,13 @@
             {% block lesson_breadcrumb %}
 
                 <li>
-                    <a href="{{ path('icap_lesson', { 'resourceId': lesson.id }) }}">
+                    <a href="{{ path('icap_lesson', { 'resourceId': _resource.id }) }}">
                         <i class="icon-file"> &nbsp {{ lesson.name }}</i>
                     </a>
 
                     {% if chapter is defined and chapter != null %}
                         <span class="divider">/</span>
-                        <a href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': chapter.id}) }}">
+                        <a href="{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id}) }}">
                             <i class="icon-file-text">  &nbsp {{ chapter.title }}</i>
                         </a>
                     {% endif %}
@@ -51,6 +51,7 @@
     </header>
 
     {% block lesson_content %}
+
     {% endblock %}
 
 {% endblock %}

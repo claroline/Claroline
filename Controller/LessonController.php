@@ -39,16 +39,19 @@ class LessonController extends Controller
      */
     public function viewChapterAction($resourceId, $chapterId)
     {
+
         $lesson = $this->findLesson($resourceId);
         $em = $this->getDoctrine()->getManager();
         $chapterRepository = $em->getRepository('IcapLessonBundle:Chapter');
 
         $chapter = null;
-
+        $parent = null;
         if ($chapterId != 0) {
             $chapter = $this->findChapter($lesson, $chapterId);
+            $parent = $chapter;
         } else {
             $chapter = $chapterRepository->findOneBy(array('lesson' => $lesson, 'root' => $lesson->getRoot()->getId(), 'left' => 2));
+            $parent = $lesson->getRoot();
         }
 
         $query = $this->getDoctrine()->getManager()
@@ -64,11 +67,11 @@ class LessonController extends Controller
         $tree = $chapterRepository->buildTree($query->getArrayResult(), $options);
 
         return array(
-            'lesson' => $lesson,
+            '_resource' => $lesson,
             'tree' => $tree,
+            'parent' => $parent,
             'chapter' => $chapter,
-            'workspace' => $lesson->getWorkspace(),
-            'pathArray' => $lesson->getPathArray()
+            'workspace' => $lesson->getResourceNode()->getWorkspace()
         );
     }
 
@@ -93,11 +96,10 @@ class LessonController extends Controller
         $form = $this->createForm(new ChapterType(), $chapter);
 
         return array(
-            'lesson' => $lesson,
+            '_resource' => $lesson,
             'chapter' => $chapter,
             'form' => $form->createView(),
-            'workspace' => $lesson->getWorkspace(),
-            'pathArray' => $lesson->getPathArray()
+            'workspace' => $lesson->getResourceNode()->getWorkspace()
         );
     }
 
@@ -133,13 +135,17 @@ class LessonController extends Controller
             $this->get('session')->getFlashBag()->add('error',$translator->trans('Your chapter has not been modified',array(), 'icap_lesson'));
         }
 
-        return array(
-            'lesson' => $lesson,
+/*        return array(
+            '_resource' => $lesson,
             'chapter' => $chapter,
             'form' => $form->createView(),
-            'workspace' => $lesson->getWorkspace(),
-            'pathArray' => $lesson->getPathArray()
-        );
+            'workspace' => $lesson->getResourceNode()->getWorkspace()
+        );*/
+
+        return($this->redirect($this->generateUrl('icap_lesson_chapter', array(
+            'resourceId' => $resourceId,
+            'chapterId' => $chapterId
+        ))));
     }
 
     /**
@@ -264,11 +270,10 @@ class LessonController extends Controller
         }
 
         return array(
-            'lesson' => $lesson,
+            '_resource' => $lesson,
             'form' => $form->createView(),
             'chapterParent' => $chapterParent,
-            'workspace' => $lesson->getWorkspace(),
-            'pathArray' => $lesson->getPathArray()
+            'workspace' => $lesson->getResourceNode()->getWorkspace()
         );
     }
 

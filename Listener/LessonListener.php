@@ -2,13 +2,13 @@
 
 namespace Icap\LessonBundle\listener;
 
-use Claroline\CoreBundle\Library\Event\PluginOptionsEvent;
-use Claroline\CoreBundle\Library\Event\CreateFormResourceEvent;
-use Claroline\CoreBundle\Library\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Library\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Library\Event\OpenResourceEvent;
-use Claroline\CoreBundle\Library\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Library\Event\LogCreateDelegateViewEvent;
+use Claroline\CoreBundle\Event\PluginOptionsEvent;
+use Claroline\CoreBundle\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Event\LogCreateDelegateViewEvent;
 
 use Icap\LessonBundle\Entity\Chapter;
 use Symfony\Component\DependencyInjection\ContainerAware;
@@ -45,7 +45,7 @@ class LessonListener extends ContainerAware
         $form->handleRequest($request);
         if ($form->isValid()) {
             $lesson = $form->getData();
-            $event->setResource($lesson);
+            $event->setResources(array($lesson));
         } else {
             $content = $this->container->get('templating')->render(
                 'ClarolineCoreBundle:Resource:create_form.html.twig',

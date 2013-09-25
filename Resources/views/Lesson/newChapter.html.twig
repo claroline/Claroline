@@ -12,7 +12,7 @@
         }
     </style>
 
-    <form method="POST" action="{{ path('icap_lesson_add_chapter', { 'resourceId': lesson.id , 'parentChapterId': chapterParent.id }) }}" class="form-horizontal">
+    <form method="POST" action="{{ path('icap_lesson_add_chapter', { 'resourceId': _resource.id , 'parentChapterId': chapterParent.id }) }}" class="form-horizontal">
 
         <fieldset>
 
@@ -47,7 +47,7 @@
         <div class="form-actions">
 
             <input type="submit" class="btn btn-primary" value="{{ 'Ok'|trans({}, 'icap_lesson') }}"/>
-            <a href="{{ path('icap_lesson', { 'resourceId': lesson.id }) }}"><button type="button" class="btn">{{ 'Cancel'|trans({}, 'icap_lesson') }}</button></a>
+            <a href="{{ path('icap_lesson', { 'resourceId': _resource.id }) }}"><button type="button" class="btn">{{ 'Cancel'|trans({}, 'icap_lesson') }}</button></a>
 
         </div>
 

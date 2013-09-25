@@ -2,27 +2,26 @@
 
 {% block lesson_content %}
 
-    <h1 class="lesson-title">{{ lesson.name }}</h1>
+    <h1 class="lesson-title">{{ _resource.name }}</h1>
     <br/>
     {{ macros.flashBox() }}
 
-    <div class="row-fluid">
+    <div class="row">
 
-        <div class="span3">
+        <div class="col-md-3">
 
             {#{{ tree | json_encode | raw }}#}
-            {% include 'ICAPLessonBundle:Lesson:viewChild.html.twig' %}
-
+            {% include 'IcapLessonBundle:Lesson:viewChild.html.twig' %}
             <br/>
             <div class="btn-group pull-right">
 
                 {% if chapter is defined and chapter != null %}
-                    <a href="{{ path('icap_lesson_choice_move_chapter', { 'resourceId': lesson.id, 'chapterId': chapter.id })}}" class="btn"><i class="icon-ambulance"></i></a>
-                    <a href="{{ path('icap_lesson_new_chapter', { 'resourceId': lesson.id, 'parentChapterId': chapter.id })}}" class="btn"><i class="icon-plus"></i></a>
-                    <a href="{{ path('icap_lesson_edit_chapter', { 'resourceId': lesson.id, 'chapterId': chapter.id })}}" class="btn"><i class="icon-edit"></i></a>
-                    <a href="{{ path('icap_lesson_confirm_delete_chapter', { 'resourceId': lesson.id, 'chapterId': chapter.id })}}" class="btn"><i class="icon-trash"></i></a>
+                    <a href="{{ path('icap_lesson_choice_move_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id })}}" class="btn"><i class="icon-ambulance"></i></a>
+                    <a href="{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': parent.id })}}" class="btn"><i class="icon-plus"></i></a>
+                    <a href="{{ path('icap_lesson_edit_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id })}}" class="btn"><i class="icon-edit"></i></a>
+                    <a href="{{ path('icap_lesson_confirm_delete_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id })}}" class="btn"><i class="icon-trash"></i></a>
                 {% else %}
-                    <a href="{{ path('icap_lesson_new_chapter_without_parent', { 'resourceId': lesson.id })}}" class="btn"><i class="icon-plus"></i></a>
+                    <a href="{{ path('icap_lesson_new_chapter_without_parent', { 'resourceId': _resource.id })}}" class="btn"><i class="icon-plus"></i></a>
                 {% endif %}
 
             </div>
@@ -30,9 +29,9 @@
         </div>
 
         {% if chapter is defined and chapter != null %}
-            <div class="span9">{{ chapter.text }}</div>
+            <div class="col-md-9">{{ chapter.text }}</div>
         {% else %}
-            <div class="span9">{{ 'Welcome to the module course creation'|trans({}, 'icap_lesson') }}</div>
+            <div class="col-md-9">{{ 'Welcome to the module course creation'|trans({}, 'icap_lesson') }}</div>
         {% endif %}
 
     </div>
