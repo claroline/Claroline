@@ -5,62 +5,10 @@
 <project name="Claronext" default="build" basedir="./../../../">
 
     <property name="appdir" value="${basedir}/app"/>
-    <property name="srcdir" value="${basedir}/src"/>
+    <property name="srcdir" value="${basedir}/vendor/claroline"/>
     <property name="builddir" value="${appdir}/build"/>
 
-    <target name="build" depends="clean,rawInstall,parallelTasks,phpunit,phpcb"/>
-
-    <target name="clean"
-            description="Remove logs and plugin config files, clean up and create artifact directories">
-        <delete file="${appdir}/config/local/plugin/bundles"/>
-        <delete file="${appdir}/config/local/plugin/namespaces"/>
-        <delete file="${appdir}/config/local/plugin/routing.yml"/>
-        <delete file="${appdir}/logs/test.log"/>
-
-        <delete dir="${builddir}/api"/>
-        <delete dir="${builddir}/code-browser"/>
-        <delete dir="${builddir}/logs"/>
-        <delete dir="${builddir}/pdepend"/>
-
-        <mkdir dir="${builddir}/api"/>
-        <mkdir dir="${builddir}/code-browser"/>
-        <mkdir dir="${builddir}/logs"/>
-        <mkdir dir="${builddir}/pdepend"/>
-    </target>
-
-    <target name="rawInstall"
-            description="Install vendors, create database, tables, config files, install plugins">
-        <touch file="${appdir}/config/local/plugin/bundles"/>
-        <touch file="${appdir}/config/local/plugin/namespaces"/>
-        <touch file="${appdir}/config/local/plugin/routing.yml"/>
-        <exec executable="composer" failonerror="true">
-            <arg value="install" />
-            <arg value="--dev" />
-            <arg value="--prefer-source" />
-        </exec>
-        <exec executable="php" failonerror="true">
-            <arg path="${appdir}/console" />
-            <arg value="doctrine:database:drop" />
-            <arg value="--force" />
-            <arg value="--env=test" />
-        </exec>
-        <exec executable="php" failonerror="true">
-            <arg path="${appdir}/console" />
-            <arg value="doctrine:database:create" />
-            <arg value="--env=test" />
-        </exec>
-        <exec executable="php" failonerror="true">
-            <arg path="${appdir}/console" />
-            <arg value="claroline:install" />
-            <arg value="--env=test" />
-        </exec>
-        <exec executable="php" failonerror="true">
-            <arg path="${appdir}/console" />
-            <arg value="cache:clear" />
-            <arg value="--no-warmup" />
-            <arg value="--env=test" />
-        </exec>
-    </target>
+    <target name="build" depends="parallelTasks,phpunit,phpcb"/>
 
     <target name="phpunit"
             description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
