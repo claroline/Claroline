@@ -69,7 +69,7 @@
         <div class="row badges_infos">
             <div class="col-md-3 text-center{% if form.file.vars.errors|length > 0 %} has-error{% endif %}">
                 <a href="#" class="thumbnail upload_image_placeholder">
-                    <img title="{{ 'badge_form_choose_image'|trans }}" style="height: 128px; width: 128px" src="{{ asset('bundles/clarolinecore/images/upload-placeholder.jpg') }}">
+                    <img title="{{ 'badge_form_choose_image'|trans }}" class="badge_image" src="{{ asset('bundles/clarolinecore/images/upload-placeholder.jpg') }}">
                 </a>
                 {{ form_errors(form.file) }}
                 {{ form_widget(form.file) }}

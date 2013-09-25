@@ -10,7 +10,7 @@ To create a badge you need to provide some mandatories datas :
 
 - **version**: The version of the badge
 - **name**: Human-readable name of the badge being issued. Maximum of 128 characters.
-- **image**: Path to the image representing the badge. Should be a square and in PNG format. Maximum size is 256kb. Maximum size 128*128.
+- **image**: Path to the image representing the badge. Should be a square and in PNG format. Maximum size is 256kb. Maximum size 64*64.
 - **description**: Description of the badge being issued. Maximum of 128 characters.
 - **criteria**: Information describing the badge and criteria for earning the badge (not the specific instance of the badge).
 - **expired_at** (optional): Date when the badge expires. If omitted, the badge never expires.

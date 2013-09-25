@@ -17,19 +17,25 @@
   margin-left: 5px;
 }
 .badge_image {
-  width: 100px;
-  height: 100px;
+  width: 64px;
+  height: 64px;
 }
 .badges_infos .form-group {
   margin-left: 0;
 }
 .badges_infos #change_image {
   position: absolute;
-  bottom: 15%;
-  display: none;
+  top: 95px;
 }
 .badges_infos #current_image {
   background-color: #f5f5f5;
+}
+.badges_infos .thumbnail {
+  height: 128px;
+  padding-top: 20px;
+}
+.badges_infos .thumbnail > img {
+  height: 64px;
 }
 #translationFormTabs {
   margin-bottom: 0;

@@ -25,8 +25,8 @@
 }
 
 .badge_image {
-    width:  100px;
-    height: 100px;
+    width:  64px;
+    height: 64px;
 }
 
 .badges_infos {
@@ -35,11 +35,17 @@
     }
     #change_image {
         position: absolute;
-        bottom:   15%;
-        display:  none;
+        top:      95px;
     }
     #current_image {
         background-color: #f5f5f5;
+    }
+    .thumbnail {
+        height:      128px;
+        padding-top: 20px;
+        & > img {
+            height: 64px;
+        }
     }
 }
 

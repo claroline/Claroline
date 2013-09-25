@@ -26,6 +26,7 @@ $(function(){
     badgeFormFile.hide();
 
     var changeBadgeImageButton = $("#change_image");
+    changeBadgeImageButton.hide();
     changeBadgeImageButton
         .click(function(event) {
             badgeFormFile.click();
