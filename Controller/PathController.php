@@ -113,11 +113,14 @@ class PathController extends Controller
 
         // On récupère la liste des steps avant modification pour supprimer ceux qui ne sont plus utilisés. TO DO : suppression
         $steps = $manager->getRepository('InnovaPathBundle:Step')->findByPath($path->getId());
+        // initialisation array() de steps à ne pas supprimer. Sera rempli dans la function JSONParser
+        $stepsToNotDelete = array();
 
         //todo - lister les liens resources2step pour supprimer ceux inutilisés.
 
         // JSON string to Object - Récupération des childrens de la racine
         $json = json_decode($path->getPath());
+        print_r($json);
         $json_root_steps = $json->steps;
 
         // Récupération Workspace courant et la resource root
@@ -145,14 +148,12 @@ class PathController extends Controller
             $manager->flush();
         }
 
-        // initialisation array() de steps à ne pas supprimer. Sera rempli dans la function JSONParser
-        $stepsToNotDelete = array();
-
         //lancement récursion
         $this->JSONParser($json_root_steps, $user, $workspace, $pathsDirectory, null, 0, $path, $stepsToNotDelete);
 
+
         foreach ($steps as $step) {
-           if (!in_array($step->getResourceNode(),$stepsToNotDelete)) {
+           if (!in_array($step->getResourceNode()->getId(),$stepsToNotDelete)) {
                 $step2ressources = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')->findByStep($step->getId());
                 foreach ($step2ressources as $step2ressource) {
                     $manager->remove($step2ressource);
@@ -160,6 +161,11 @@ class PathController extends Controller
                 $manager->remove($step->getResourceNode());
             }
         }
+
+        // Mise à jour des resourceNodeId dans la base.
+        $json = json_encode($json);
+        $path->setPath($json);
+
         $manager->flush();
 
         return array('workspace' => $workspace, 'ok' => "Parcours déployé.");
