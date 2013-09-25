@@ -8,6 +8,7 @@
 }
 .badge_list .add_button:hover {
   background-color: #f5f5f5;
+  border-color: #428bca;
 }
 .nodes {
   padding: 0;
