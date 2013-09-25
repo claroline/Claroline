@@ -56,7 +56,6 @@ use Innova\PathBundle\Entity\Step2ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 
 /**
@@ -223,6 +222,7 @@ class PathController extends Controller
             // STEPSTONODELETE ARRAY UPDATE
             $stepsToNotDelete[] = $resourceNode->getId();
 
+            // CLARO STEP ATTRIBUTES UPDATE
             $currentStep->setStepOrder($order);
             $stepType = $manager->getRepository('InnovaPathBundle:StepType')->findOneById($step->type);
             $currentStep->setStepType($stepType);
@@ -251,31 +251,19 @@ class PathController extends Controller
                 }
                 $step2ressourceNode->setResourceNode($manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId));
                 $step2ressourceNode->setStep($currentStep);
+                $step2ressourceNode->setPropagated($resource->propagateToChildren);
                 $step2ressourceNode->setResourceOrder($resourceOrder);
 
                 $manager->persist($step2ressourceNode);
             }
 
             /*
-            // Gestion de la jointure ResourceActivity - Ne sert plus à rien je crois
-            $resourceActivity = new ResourceActivity();
-            $resourceActivity->setActivity($activity);
-            $resourceActivity->setResourceNode($resourceNode);
-            $resourceActivities = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
-                ->findByActivity($activity->getId());
-            $count = count($resourceActivities)+1; // TODO: A revoir
-            $resourceActivity->setSequenceOrder($count);
-
-            $manager->persist($resourceActivity);
-            $manager->flush();
-
-            // TODO GSTION DES DROITS
+            // TO DO : GESTION DES DROITS
             $right1 = new ResourceRights();
             $right1->setRole($manager->getRepository('ClarolineCoreBundle:Role')->findOneById(3));
             $right1->setResourceNode($resourceNode);
             $manager->persist($right1);
             */
-
             $manager->flush();
 
             // récursivité sur les enfants possibles.
