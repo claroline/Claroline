@@ -59,6 +59,14 @@ class BadgeRule
     protected $periodDuration;
 
     /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * @param string $action
      *
      * @return BadgeRule

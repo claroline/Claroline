@@ -139,6 +139,12 @@ class AdminController extends Controller
             throw new NotFoundHttpException();
         }
 
+        /** @var BadgeRule[] $originalRules */
+        $originalRules = array();
+        foreach ($badge->getBadgeRules() as $rule) {
+            $originalRules[] = $rule;
+        }
+
         $form = $this->createForm($this->get('claroline.form.badge'), $badge, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform')));
 
         if ($request->isMethod('POST')) {
@@ -149,6 +155,20 @@ class AdminController extends Controller
                 try {
                     /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
                     $entityManager = $doctrine->getManager();
+
+                    // Compute which rules was deleted
+                    foreach ($badge->getBadgeRules() as $rule) {
+                        foreach ($originalRules as $key => $originalRule) {
+                            if ($originalRule->getId() === $rule->getId()) {
+                                unset($originalRules[$key]);
+                            }
+                        }
+                    }
+
+                    // Delete rules
+                    foreach ($originalRules as $rule) {
+                        $entityManager->remove($rule);
+                    }
 
                     $entityManager->persist($badge);
                     $entityManager->flush();
