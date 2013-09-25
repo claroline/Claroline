@@ -120,7 +120,6 @@ class PathController extends Controller
 
         // JSON string to Object - Récupération des childrens de la racine
         $json = json_decode($path->getPath());
-        print_r($json);
         $json_root_steps = $json->steps;
 
         // Récupération Workspace courant et la resource root
