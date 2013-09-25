@@ -1,23 +1,24 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
 {% block section_content %}
-
+	{% if deployed is not defined %}
 	<table class="table">
-	{% for path in paths %}
-
-			<tr>
-		    	<td>{{ path.name }}</td>
-		    	<td class="text-right">
-		    		<form action="{{ path('innova_path_deploy') }}" method="post">
-		    			<input type="hidden" value="{{ workspace.id }}" name="workspace-id">
-						<input type="hidden" value="{{ path.id }}" name="path-id">
-						<input class="btn" value="deploy" type="submit"/>
-					</form>
-				</td>
-		    </tr>
-	{% endfor %}
+		{% for path in paths %}
+				<tr>
+			    	<td>{{ path.name }}</td>
+			    	<td class="text-right">
+			    		<form action="{{ path('innova_path_deploy') }}" method="post">
+			    			<input type="hidden" value="{{ workspace.id }}" name="workspace-id">
+							<input type="hidden" value="{{ path.id }}" name="path-id">
+							<input class="btn" value="deploy" type="submit"/>
+						</form>
+					</td>
+			    </tr>
+		{% endfor %}
 	</table>
-	<p>{{ ok }}</p>
+	{% else %}
+		<div class="alert alert-success">{{ deployed }}</div>
+	{% endif %}
 
 {% verbatim %}
 <!-- AngularJS Call -->
