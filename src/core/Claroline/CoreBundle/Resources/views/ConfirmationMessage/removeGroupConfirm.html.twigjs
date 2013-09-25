@@ -1,3 +1,0 @@
-{% twig_js name="removeGroupConfirm" %}
-
-{{ nbItems }} {{ 'remove_group_s_confirm_message'|trans({}, 'platform') }}
