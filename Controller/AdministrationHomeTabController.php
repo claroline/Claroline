@@ -134,7 +134,7 @@ class AdministrationHomeTabController extends Controller
             $homeTabConfig->setHomeTab($homeTab);
             $homeTabConfig->setType('admin_desktop');
             $homeTabConfig->setLocked(false);
-            $homeTabConfig->setVisible(false);
+            $homeTabConfig->setVisible(true);
             $lastOrder = $this->homeTabManager
                 ->getOrderOfLastAdminDesktopHomeTabConfig();
 
@@ -209,7 +209,7 @@ class AdministrationHomeTabController extends Controller
             $homeTabConfig->setHomeTab($homeTab);
             $homeTabConfig->setType('admin_workspace');
             $homeTabConfig->setLocked(false);
-            $homeTabConfig->setVisible(false);
+            $homeTabConfig->setVisible(true);
             $lastOrder = $this->homeTabManager
                 ->getOrderOfLastAdminWorkspaceHomeTabConfig();
 
@@ -580,7 +580,7 @@ class AdministrationHomeTabController extends Controller
         $widgetHomeTabConfig = new WidgetHomeTabConfig();
         $widgetHomeTabConfig->setHomeTab($homeTab);
         $widgetHomeTabConfig->setWidget($widget);
-        $widgetHomeTabConfig->setVisible(false);
+        $widgetHomeTabConfig->setVisible(true);
         $widgetHomeTabConfig->setLocked(false);
         $widgetHomeTabConfig->setType('admin');
 

@@ -1,5 +1,21 @@
 {% extends 'ZenstruckFormBundle:Twitter:form_bootstrap3_layout.html.twig' %}
 
+{% block form_row %}
+    {% spaceless %}
+        <div class="form-group row{% if errors|length > 0 %} has-error{% endif %}">
+            {{ form_label(form, label|default(null)) }}
+            {% set ctrl_width = theme_options.control_width is defined ? theme_options.control_width : 'col-md-10' %}
+            <div class="{{ ctrl_width }}">
+                {{ form_widget(form) }}
+                {{ form_errors(form) }}
+                {% if help is defined and help %}
+                    <div class="help-block">{{ help }}</div>
+                {% endif %}
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock form_row %}
+
 {% block form_label %}
     {% spaceless %}
         {% set is_multichoice_widget = (checked is defined) and ('choice' in form.parent.vars.block_prefixes) %}
@@ -7,7 +23,8 @@
         {% if is_multichoice_widget %}
             {% set label_attr = label_attr|merge({'class': 'radio' in block_prefixes ? 'radio' : 'checkbox'}) %}
         {% else %}
-            {% set label_attr = label_attr|merge({'class': 'control-label col-md-3'}) %}
+            {% set lbl_width = theme_options.label_width is defined ? theme_options.label_width : 'col-md-2' %}
+            {% set label_attr = label_attr|merge({'class': 'control-label ' ~ lbl_width}) %}
         {% endif %}
         {% if not compound %}
             {% set label_attr = label_attr|merge({'for': id}) %}
@@ -15,12 +32,11 @@
         {% if required %}
             {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
         {% endif %}
-        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
-        {% if label %}
-        {{ label|trans({}, translation_domain) }}
-        {% else %}
-        {{ id|trans({}, translation_domain) }}
+        {% if label is empty %}
+            {% set label = id|trans({}, translation_domain) %}
         {% endif %}
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+            {{ label|trans({}, translation_domain) }}
             {% if is_multichoice_widget %}
                 {{ form_widget(form) }}
             {% endif %}
@@ -34,19 +50,4 @@
     {% endif %}
     {{ parent() | replace({'form-control': ''}) | raw }}
 {% endblock checkbox_widget %}
-
-{% block form_row %}
-    {% spaceless %}
-        <div class="form-group row {% if errors|length > 0 %}has-error{% endif %}">
-            {{ form_label(form, label|default(null)) }}
-            <div class="col-md-9">
-                {{ form_widget(form) }}
-                {{ form_errors(form) }}
-                {% if help is defined and help %}
-                    <div class="help-block">{{ help }}</div>
-                {% endif %}
-            </div>
-        </div>
-    {% endspaceless %}
-{% endblock form_row %}
 
