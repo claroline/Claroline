@@ -44,11 +44,11 @@
                 </tr>
             </thead>
             <tbody id="widget-table-body" data-user-id="{{ user.getId() }}">
-                {% for config in configs %}
+                {% for widgetInstance in widgetInstances %}
                     <tr class='row-widget-config'>
-                        <th>{% render controller('ClarolineCoreBundle:AdministrationWidget:editWidgetNameForm', {'config': config}) %}</th>
+                        <th>{% render controller('ClarolineCoreBundle:AdministrationWidget:editWidgetNameForm', {'widgetInstanceId': widgetInstance.getId()}) %}</th>
                         <th>
-                            <a href="{{ path('claro_desktop_widget_configuration', {'config': config.getId()}) }}">
+                            <a href="{{ path('claro_desktop_widget_configuration', {'widgetInstanceId': widgetInstance.getId()}) }}">
                                 {{ 'configure'|trans({}, 'platform') }}
                             </a>
                         </th>

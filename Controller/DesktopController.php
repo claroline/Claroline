@@ -126,15 +126,11 @@ class DesktopController extends Controller
                         array($config->getWidgetInstance())
                     );
 
-                    if ($event->hasContent()) {
-                        $widget['id'] = $config->getWidget()->getId();
-                        $widget['title'] = $this->widgetManager
-                            ->getDesktopForcedConfig($widget['id'], $user->getId())->getName();
-
-                        $widget['content'] = $event->getContent();
-                        $widget['configurable'] = ($config->isLocked() !== true and $config->getWidgetInstance()->getWidget()->isConfigurable());
-                        $widgets[] = $widget;
-                    }
+                    $widget['id'] = $config->getWidgetInstance()->getId();
+                    $widget['title'] = $config->getWidgetInstance()->getName();
+                    $widget['content'] = $event->getContent();
+                    $widget['configurable'] = ($config->isLocked() !== true && $config->getWidgetInstance()->getWidget()->isConfigurable());
+                    $widgets[] = $widget;
                 }
             }
         }

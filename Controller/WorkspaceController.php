@@ -455,24 +455,19 @@ class WorkspaceController extends Controller
 
             foreach ($configs as $config) {
                 if ($config->isVisible()) {
-                    $eventName = "widget_{$config->getWidget()->getName()}_workspace";
-                    $event = $this->eventDispatcher
-                        ->dispatch($eventName, 'DisplayWidget', array($workspace));
+                    $event = $this->eventDispatcher->dispatch(
+                        "widget_{$config->getWidgetInstance()->getWidget()->getName()}",
+                        'DisplayWidget',
+                        array($config->getWidgetInstance())
+                    );
 
-                    if ($event->hasContent()) {
-                        $widget['id'] = $config->getWidget()->getId();
-                        $widget['title'] = $this->widgetManager
-                            ->getWorkspaceForcedConfig($widget['id'], $workspace->getId())->getName();
-                        
-                        $widget['content'] = $event->getContent();
-                        $widget['configurable'] = (
-                            $rightToConfigure
-                            and $config->isLocked() !== true
-                            and $config->getWidget()->isConfigurable()
-                        );
-
-                        $widgets[] = $widget;
-                    }
+                    $widget['id'] = $config->getWidgetInstance()->getId();
+                    $widget['title'] = $config->getWidgetInstance()->getName();
+                    $widget['content'] = $event->getContent();
+                    $widget['configurable'] = $rightToConfigure
+                        && $config->isLocked() !== true
+                        && $config->getWidgetInstance()->getWidget()->isConfigurable();
+                    $widgets[] = $widget;
                 }
             }
         }

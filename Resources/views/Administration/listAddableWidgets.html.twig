@@ -56,16 +56,15 @@
                 </tr>
             </thead>
             <tbody>
-                {% for widgetDisplayConfig in widgetDisplayConfigs %}
-                {% set widget = widgetDisplayConfig.getWidget() %}
+                {% for widgetInstance in widgetInstances %}
                 <tr>
                     <td>
-                        {{ widget.getName()|trans({}, 'widget') }}
+                        {{ widgetInstance.getName() }}
                     </td>
                     <td>
                         <input type="checkbox"
-                            class="chk-widget"
-                            value="{{ widget.getId() }}"
+                            class="chk-widget-instance"
+                            value="{{ widgetInstance.getId() }}"
                         >
                     </td
                 </tr>

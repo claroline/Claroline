@@ -12,11 +12,11 @@
                 </div>
                 {% if widget.configurable %}
                     {% if isDesktop %}
-                        <a data-url="{{ path('claro_desktop_widget_configuration', {'widget': widget.id}) }}" class="btn btn-primary hide">
+                        <a data-url="{{ path('claro_desktop_widget_configuration', {'widgetInstanceId': widget.id}) }}" class="btn btn-primary hide">
                             <i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}
                         </a>
                     {% else %}
-                        <a data-url="{{ path('claro_workspace_widget_configuration', {'workspace': workspaceId, 'widget': widget.id}) }}" class="btn btn-primary hide">
+                        <a data-url="{{ path('claro_desktop_widget_configuration', {'widgetInstanceId': widget.id}) }}" class="btn btn-primary hide">
                             <i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}
                         </a>
                     {% endif %}

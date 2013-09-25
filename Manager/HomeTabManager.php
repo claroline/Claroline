@@ -22,8 +22,6 @@ class HomeTabManager
     private $homeTabConfigRepo;
     /** @var WidgetHomeTabConfigRepository */
     private $widgetHomeTabConfigRepo;
-    /** @var WidgetInstanceRepository */
-    private $widgetInstanceRepo;
     private $om;
 
     /**
@@ -43,9 +41,6 @@ class HomeTabManager
         );
         $this->widgetHomeTabConfigRepo = $om->getRepository(
             'ClarolineCoreBundle:Widget\WidgetHomeTabConfig'
-        );
-        $this->widgetInstanceRepo = $om->getRepository(
-            'ClarolineCoreBundle:Widget\WidgetInstance'
         );
         $this->om = $om;
     }
@@ -214,7 +209,7 @@ class HomeTabManager
 
         foreach ($adminWidgetsHomeTabConfigs as $adminWHTC) {
             $workspaceWHTC = new WidgetHomeTabConfig();
-            $workspaceWHTC->setWidget($adminWHTC->getWidget());
+            $workspaceWHTC->setWidgetInstance($adminWHTC->getWidgetInstance());
             $workspaceWHTC->setHomeTab($homeTab);
             $workspaceWHTC->setWorkspace($workspace);
             $workspaceWHTC->setType('workspace');
@@ -630,41 +625,5 @@ class HomeTabManager
             $widgetInstance,
             $user
         );
-    }
-
-    /**
-     * WidgetInstanceRepository access methods
-     */
-
-    public function getAdminDesktopWidgetInstance(array $excludedWidgetInstances)
-    {
-        if (count($excludedWidgetInstances) === 0) {
-
-            return $this->widgetInstanceRepo->findBy(
-                array(
-                    'isAdmin' => true,
-                    'isDesktop' => true,
-                )
-            );
-        }
-
-        return $this->widgetInstanceRepo
-            ->findAdminDesktopWidgetInstance($excludedWidgetInstances);
-    }
-
-    public function getAdminWorkspaceWidgetInstance(array $excludedWidgetInstances)
-    {
-        if (count($excludedWidgetInstances) === 0) {
-
-            return $this->widgetInstanceRepo->findBy(
-                array(
-                    'isAdmin' => true,
-                    'isDesktop' => false,
-                )
-            );
-        }
-
-        return $this->widgetInstanceRepo
-            ->findAdminWorkspaceWidgetInstance($excludedWidgetInstances);
     }
 }

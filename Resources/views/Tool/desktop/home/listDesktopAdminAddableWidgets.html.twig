@@ -66,16 +66,28 @@
                 </tr>
             </thead>
             <tbody>
-                {% for widgetDisplayConfig in widgetDisplayConfigs %}
-                {% set widget = widgetDisplayConfig.getWidget() %}
+                {% for adminWidgetInstance in adminWidgetInstances %}
                 <tr>
                     <td>
-                        {{ widget.getName()|trans({}, 'widget') }}
+                        {{ adminWidgetInstance.getName() }}
                     </td>
                     <td>
                         <input type="checkbox"
-                            class="chk-widget"
-                            value="{{ widget.getId() }}"
+                            class="chk-widget-instance"
+                            value="{{ adminWidgetInstance.getId() }}"
+                        >
+                    </td
+                </tr>
+                {% endfor %}
+                {% for widgetInstance in widgetInstances %}
+                <tr>
+                    <td>
+                        {{ widgetInstance.getName() }}
+                    </td>
+                    <td>
+                        <input type="checkbox"
+                            class="chk-widget-instance"
+                            value="{{ widgetInstance.getId() }}"
                         >
                     </td
                 </tr>

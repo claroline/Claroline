@@ -53,10 +53,10 @@
                     <tr class='row-widget-config' data-id="{{ config.getParent().getId() }}" data-widget-id="{{ config.getWidget().getId() }}">
                         <th>{% render controller('ClarolineCoreBundle:Tool\\Home:editWorkspaceWidgetNameForm', {'config': config}) %}</th>
                         <th><input type="checkbox" class="chk-config-visible" value="1" {% if config.isVisible() %} checked {% endif %}></th>
-                        <th> 
-                            <a href="{{ path('claro_workspace_widget_configuration', {'config': config.getId()}) }}">
+                        <th>
+                            <a href="{{ path('claro_workspace_widget_configuration', {'widgetInstanceId': config.getId()}) }}">
                                 {{ 'configure'|trans({}, 'platform') }}
-                            </a> 
+                            </a>
                         </th>
                     </tr>
                 {% endfor %}
