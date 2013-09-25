@@ -1,0 +1,9 @@
+<tr class='row-widget-config'>
+    <th>{% render controller('ClarolineCoreBundle:AdministrationWidget:editWidgetNameForm', {'config': config}) %}</th>
+    <th>
+        <a href="{{ path('claro_desktop_widget_configuration', {'config': config.getId()}) }}">
+            {{ 'configure'|trans({}, 'platform') }}
+        </a>
+    </th>
+    <th> <a class="delete-widget" href="{{ path('claro_desktop_remove_widget', {'widgetInstance': config.getId()}) }}">delete</a></th>
+</tr>

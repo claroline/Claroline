@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   
-   $('.form-name-widget').on('submit', function (e) {
+   $('body').on('submit', '.form-name-widget', function (e) {
         e.preventDefault();
         var formAction = $(e.currentTarget).attr('action');
         var form = e.currentTarget;
@@ -9,16 +9,27 @@
         submitForm(formAction, formData);
    });
    
-  $('#create-widget').on('submit', function (e) {
+  $('body').on('submit', '#create-widget', function (e) {
       e.preventDefault();
       var list = document.getElementById("widgets");
       var widgetId = list.options[list.selectedIndex].value;
       var workspaceId = $('#twig-attributes').attr('data-workspace-id');
       $.ajax({
             url: Routing.generate('claro_workspace_widget_create', {'widget': widgetId, 'workspace': workspaceId}),
-            success: function () {
+            success: function (data) {
+                 $('#widget-table-body').append(data);
             }
         });
+   });
+   
+   $('body').on('click', '.delete-widget', function(e) {
+      e.preventDefault();
+      $.ajax({
+          url: $(e.target).attr('href'),
+          success: function (data) {
+              $(e.target.parentElement.parentElement).remove();
+          }
+      });  
    });
    
    var submitForm = function (formAction, formData) {

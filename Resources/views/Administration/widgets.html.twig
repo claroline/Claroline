@@ -23,8 +23,8 @@
     <div class="panel-body">
         <form id="create-workspace-widget">
             <select id="workspace-widgets" >
-                {% for widget in widgets %}
-                    <option value="{{ widget.getId() }}"> {{ widget.getName() }} </option>
+                {% for widget in wwidgets %}
+                    <option value="{{ widget.getId() }}"> {{ widget.getName()|trans({}, 'widget') }} </option>
                 {% endfor %}
             </select>
             <input type="submit" value="{{ 'add'|trans({}, 'platform') }}"></input>
@@ -35,6 +35,7 @@
                 <tr>
                     <th>{{ 'name'|trans({}, 'platform') }}</th>
                     <th>{{ 'configuration'|trans({}, 'platform') }}</th>
+                    <th>{{ 'delete'|trans({}, 'platform') }}</th>
                 </tr>
             </thead>
             <tbody id="widget-workspace-table-body">
@@ -46,6 +47,7 @@
                         <a href="{{ path('claro_admin_widget_configuration', {'widgetInstanceId': wconfig.getId()}) }}">{{ 'configure'|trans({}, 'platform') }}</a>
                         {% endif %}
                     </td>
+                    <td> <a class="delete-widget" href="{{ path('claro_admin_remove_widget', {'widgetInstance': wconfig.getId()}) }}">delete</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -53,8 +55,8 @@
         <hr>
         <form id="create-desktop-widget">
             <select id="desktop-widgets" >
-                {% for widget in widgets %}
-                    <option value="{{ widget.getId() }}"> {{ widget.getName() }} </option>
+                {% for widget in dwidgets %}
+                    <option value="{{ widget.getId() }}"> {{ widget.getName()|trans({}, 'widget') }} </option>
                 {% endfor %}
             </select>
             <input type="submit" value="{{ 'add'|trans({}, 'platform') }}"></input>
@@ -66,9 +68,10 @@
                 <tr>
                     <th>{{ 'name'|trans({}, 'platform') }}</th>
                     <th>{{ 'configuration'|trans({}, 'platform') }}</th>
+                    <th>{{ 'delete'|trans({}, 'platform') }}</th>
                 </tr>
             </thead>
-            <tbody id="widget-dekstop-table-body">
+            <tbody id="widget-desktop-table-body">
                 {% for dconfig in dconfigs %}
                 <tr class='row-widget-config' data-id="{{ dconfig.getId() }}">
                     <td>{% render controller('ClarolineCoreBundle:AdministrationWidget:editWidgetNameForm', {'widgetInstanceId': dconfig.getId()}) %}</td>
@@ -77,6 +80,7 @@
                         <a href="{{ path('claro_admin_widget_configuration', {'widgetInstanceId': dconfig.getId()}) }}">{{ 'configure'|trans({}, 'platform') }}</a>
                         {% endif %}
                     </td>
+                    <td> <a class="delete-widget" href="{{ path('claro_admin_remove_widget', {'widgetInstance': dconfig.getId()}) }}">delete</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

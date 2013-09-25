@@ -31,7 +31,7 @@
         <form id="create-widget">
             <select id="widgets" >
                 {% for widget in widgets %}
-                    <option value="{{ widget.getId() }}"> {{ widget.getName() }} </option>
+                    <option value="{{ widget.getId() }}"> {{ widget.getName()|trans({}, 'widget') }} </option>
                 {% endfor %}
             </select>
             <input type="submit" value="{{ 'add'|trans({}, 'platform') }}"></input>
@@ -41,6 +41,7 @@
                 <tr>
                     <th>{{ 'name'|trans({}, 'platform') }}</th>
                     <th>{{ 'configuration'|trans({}, 'platform') }}</th>
+                    <th>{{ 'delete'|trans({}, 'platform') }}</th>
                 </tr>
             </thead>
             <tbody id="widget-table-body" data-user-id="{{ user.getId() }}">
@@ -52,6 +53,7 @@
                                 {{ 'configure'|trans({}, 'platform') }}
                             </a>
                         </th>
+                        <th> <a class="delete-widget" href="{{ path('claro_desktop_remove_widget', {'widgetInstance': config.getId()}) }}">delete</a></th>
                     </tr>
                 {% endfor %}
             </tbody>

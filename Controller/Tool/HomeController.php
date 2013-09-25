@@ -97,7 +97,7 @@ class HomeController extends Controller
         }
 
         $configs = $this->widgetManager->getWorkspaceInstances($workspace);
-        $widgets = $this->widgetManager->getAll();
+        $widgets = $this->widgetManager->getWorkspaceWidgets();
 
         return array(
             'workspace' => $workspace,
@@ -119,6 +119,7 @@ class HomeController extends Controller
      *     class="ClarolineCoreBundle:Widget\WidgetInstance",
      *     options={"id" = "widgetInstanceId", "strictId" = true}
      * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:widgetConfiguration.html.twig")
      *
      * Asks a widget to render its configuration page for a workspace.
      *
@@ -135,7 +136,11 @@ class HomeController extends Controller
             array($widgetInstance)
         );
 
-        return array('content' => $event->getContent(), 'tool' => $this->getHomeTool());
+        return array(
+            'workspace' => $widgetInstance->getWorkspace(),
+            'content' => $event->getContent(),
+            'tool' => $this->getHomeTool()
+        );
     }
 
     /**
@@ -147,14 +152,12 @@ class HomeController extends Controller
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:widgetProperties.html.twig")
      *
      * Displays the widget configuration page.
-     *
-     * @return Response
      */
     public function desktopWidgetPropertiesAction()
     {
         $user = $this->securityContext->getToken()->getUser();
         $widgetInstances = $this->widgetManager->getDesktopInstances($user);
-        $widgets = $this->widgetManager->getAll();
+        $widgets = $this->widgetManager->getDesktopWidgets();
 
         return array(
             'widgetInstances' => $widgetInstances,
@@ -171,21 +174,18 @@ class HomeController extends Controller
      *     options={"expose"=true}
      * )
      *
-     * @return Response
+     * @EXT\Template("ClarolineCoreBundle:Widget:desktopWidgetConfigRow.html.twig")
      */
     public function createDesktopWidgetInstance(Widget $widget)
     {
-        $em = $this->getDoctrine()->getManager();
-        $config = new WidgetInstance();
-        $config->setName($widget->getName());
-        $config->setIsAdmin(false);
-        $config->setIsDesktop(true);
-        $config->setWidget($widget);
-        $config->setUser($this->securityContext->getToken()->getUser());
-        $em->persist($config);
-        $em->flush();
+        $instance = $this->widgetManager->createInstance(
+            $widget,
+            false,
+            true,
+            $this->securityContext->getToken()->getUser()
+        );
 
-        return new Response('success');
+        return array('config' => $instance);
     }
 
     /**
@@ -195,21 +195,41 @@ class HomeController extends Controller
      *     options={"expose"=true}
      * )
      *
-     * @return Response
+     * @EXT\Template("ClarolineCoreBundle:Widget:workspaceWidgetConfigRow.html.twig")
      */
     public function createWorkspaceWidgetInstance(Widget $widget, AbstractWorkspace $workspace)
     {
-        $em = $this->getDoctrine()->getManager();
-        $config = new WidgetInstance();
-        $config->setName($widget->getName());
-        $config->setIsAdmin(false);
-        $config->setIsDesktop(true);
-        $config->setWidget($widget);
-        $config->setWorkspace($workspace);
-        $em->persist($config);
-        $em->flush();
+        $instance = $this->widgetManager->createInstance($widget, false, false, null, $workspace);
 
-        return new Response('success');
+        return array('config' => $instance);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/desktop/widget/remove/{widgetInstance}",
+     *     name = "claro_desktop_remove_widget",
+     *     options={"expose"=true}
+     * )
+     */
+    public function removeDesktopWidgetInstance(WidgetInstance $widgetInstance)
+    {
+        $this->widgetManager->removeInstance($widgetInstance);
+
+        return new Response(204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/widget/remove/{widgetInstance}",
+     *     name = "claro_workspace_remove_widget",
+     *     options={"expose"=true}
+     * )
+     */
+    public function removeWidgetInstance(WidgetInstance $widgetInstance)
+    {
+        $this->widgetManager->removeInstance($widgetInstance);
+
+        return new Response(204);
     }
 
     /**

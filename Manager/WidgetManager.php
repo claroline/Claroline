@@ -7,6 +7,8 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\Translator;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -17,27 +19,43 @@ class WidgetManager
     private $om;
     private $widgetInstanceRepo;
     private $widgetRepo;
+    private $router;
+    private $translator;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
+     *     "router"     = @DI\Inject("router"),
+     *     "translator" = @DI\Inject("translator")
      * })
      */
-    public function __construct(
-        ObjectManager $om
-    )
+    public function __construct(ObjectManager $om, RouterInterface $router, Translator $translator)
     {
         $this->om = $om;
         $this->widgetInstanceRepo = $om->getRepository('ClarolineCoreBundle:Widget\WidgetInstance');
         $this->widgetRepo = $om->getRepository('ClarolineCoreBundle:Widget\Widget');
+        $this->router = $router;
+        $this->translator = $translator;
     }
 
     public function createInstance(Widget $widget, $isAdmin, $isDesktop, User $user = null, AbstractWorkspace $ws = null)
     {
+        if (!$widget->isDisplayableInDesktop()) {
+            if ($isDesktop || $user) {
+                throw new \Exception("This widget doesn't support the desktop");
+            }
+        }
+
+        if (!$widget->isDisplayableInWorkspace()) {
+            if (!$isDesktop || $ws) {
+                throw new \Exception("This widget doesn't support the workspace");
+            }
+        }
+
         $instance = new WidgetInstance($widget);
-        $instance->setName($widget->getName());
+        $instance->setName($this->translator->trans($widget->getName(), array(), 'widget'));
         $instance->setIsAdmin($isAdmin);
         $instance->setIsDesktop($isDesktop);
         $instance->setWidget($widget);
@@ -55,6 +73,23 @@ class WidgetManager
         $this->om->flush();
     }
 
+    public function getRedirectRoute(WidgetInstance $instance)
+    {
+        if ($instance->isAdmin()) {
+            return $this->router->generate('claro_admin_widgets');
+        }
+
+        if ($instance->getWorkspace() !== null) {
+            return $this->router->generate(
+                'claro_workspace_widget_properties',
+                array('workspace' => $instance->getWorkspace()->getId())
+            );
+        }
+
+        return $this->router->generate('claro_desktop_widget_properties');
+    }
+
+
     /**
      * WidgetRepository access methods
      */
@@ -62,6 +97,16 @@ class WidgetManager
     public function getAll()
     {
         return  $this->widgetRepo->findAll();
+    }
+
+    public function getDesktopWidgets()
+    {
+        return $this->widgetRepo->findBy(array('isDisplayableInDesktop' => true));
+    }
+
+    public function getWorkspaceWidgets()
+    {
+        return $this->widgetRepo->findBy(array('isDisplayableInWorkspace' => true));
     }
 
     /**

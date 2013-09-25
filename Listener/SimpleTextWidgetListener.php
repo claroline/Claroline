@@ -58,7 +58,7 @@ class SimpleTextWidgetListener
      */
     public function onConfig(ConfigureWidgetEvent $event)
     {
-        $config = $event->getConfig();
+        $config = $event->getInstance();
         $txtConfig = $this->simpleTextManager->getTextConfig($config);
         
         if ($txtConfig === null) {

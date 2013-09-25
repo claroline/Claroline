@@ -1,7 +1,7 @@
 (function () {
     'use strict';
     
-   $('.form-name-widget').on('submit', function (e) {
+   $('body').on('submit', '.form-name-widget', function (e) {
         e.preventDefault();
         var formAction = $(e.currentTarget).attr('action');
         var form = e.currentTarget;
@@ -9,7 +9,7 @@
         submitForm(formAction, formData);
    });
    
-  $('#create-workspace-widget').on('submit', function (e) {
+  $('body').on('submit', '#create-workspace-widget', function (e) {
       e.preventDefault();
       var list = document.getElementById("workspace-widgets");
       var widgetId = list.options[list.selectedIndex].value;
@@ -21,7 +21,7 @@
         });      
    });
    
-  $('#create-desktop-widget').on('submit', function (e) {
+  $('body').on('submit', '#create-desktop-widget', function (e) {
       e.preventDefault();
       var list = document.getElementById("desktop-widgets");
       var widgetId = list.options[list.selectedIndex].value;
@@ -31,6 +31,16 @@
                 $('#widget-desktop-table-body').append(data);
             }
         });  
+   });
+   
+   $('body').on('click', '.delete-widget', function(e) {
+      e.preventDefault();
+      $.ajax({
+          url: $(e.target).attr('href'),
+          success: function (data) {
+              $(e.target.parentElement.parentElement).remove();
+          }
+      });  
    });
    
    var submitForm = function (formAction, formData) {
