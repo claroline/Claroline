@@ -5,6 +5,7 @@ namespace Claroline\RssReaderBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Claroline\RssReaderBundle\Validator\Constraints as CustomAssert;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 
 /**
  * @ORM\Entity
@@ -20,16 +21,6 @@ class Config
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
-     */
-    protected $workspace;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     */
-    protected $user;
-
-    /**
      * @Assert\NotBlank()
      * @CustomAssert\IsRss()
      * @ORM\Column()
@@ -37,28 +28,14 @@ class Config
     protected $url;
 
     /**
-     * @ORM\Column(name="is_default", type="boolean")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    protected $isDefault = false;
-
-    /**
-     * @ORM\Column(name="is_desktop", type="boolean")
-     */
-    protected $isDesktop = false;
-
+    protected $widgetInstance;
+    
     public function getId()
     {
         return $this->id;
-    }
-
-    public function getWorkspace()
-    {
-        return $this->workspace;
-    }
-
-    public function setWorkspace($workspace)
-    {
-        $this->workspace = $workspace;
     }
 
     public function setUrl($url)
@@ -71,33 +48,13 @@ class Config
         return $this->url;
     }
 
-    public function isDefault()
+    public function setWidgetInstance(WidgetInstance $ds)
     {
-        return $this->isDefault;
+        $this->widgetInstance = $ds;
     }
-
-    public function isDesktop()
+    
+    public function getWidgetInstance()
     {
-        return $this->isDesktop;
-    }
-
-    public function setDefault($bool)
-    {
-        $this->isDefault = $bool;
-    }
-
-    public function setDesktop($bool)
-    {
-        $this->isDesktop = $bool;
-    }
-
-    public function setUser($user)
-    {
-        $this->user = $user;
-    }
-
-    public function getUser()
-    {
-        return $this->user;
+        return $this->widgetInstance;
     }
 }

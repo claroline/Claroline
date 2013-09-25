@@ -4,216 +4,98 @@ namespace Claroline\RssReaderBundle\Listener;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Event\ConfigureWidgetWorkspaceEvent;
-use Claroline\CoreBundle\Event\ConfigureWidgetDesktopEvent;
-use Claroline\CoreBundle\Event\ExportWidgetConfigEvent;
-use Claroline\CoreBundle\Event\ImportWidgetConfigEvent;
+use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\RssReaderBundle\Form\ConfigType;
 use Claroline\RssReaderBundle\Entity\Config;
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Claroline\RssReaderBundle\Library\RssManager;
+use Symfony\Component\Form\FormFactory;
+use Claroline\RssReaderBundle\Library\ReaderProvider;
+use JMS\DiExtraBundle\Annotation as DI;
 
+
+/**
+ * @DI\Service
+ */
 class RssReaderListener extends ContainerAware
 {
-    public function onWorkspaceDisplay(DisplayWidgetEvent $event)
+    private $rssManager;
+    private $formFactory;
+    private $templating;
+    private $sc;
+    private $rssReader;
+
+    /**
+     * @DI\InjectParams({
+     *      "rssManager" = @DI\Inject("claroline.manager.rss_manager"),
+     *      "formFactory"       = @DI\Inject("form.factory"),
+     *      "templating"        = @DI\Inject("templating"),
+     *      "sc"                = @DI\Inject("security.context"),
+     *      "rssReader"         = @DI\Inject("claroline.rss_reader.provider")
+     * })
+     */
+    public function __construct(
+        RssManager $rssManager,
+        FormFactory $formFactory,
+        TwigEngine $templating,
+        SecurityContextInterface $sc,
+        ReaderProvider $rssReader
+    )
     {
-        $repo = $this->container
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineRssReaderBundle:Config');
-        $widget = $this->container
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Widget\Widget')
-            ->findOneBy(array('name' => 'claroline_rssreader'));
-        $rssconfig = $repo->findOneBy(array('workspace' => $event->getWorkspace()->getId()));
-
-        $isDefaultConfig = $this->container
-            ->get('claroline.widget.manager')
-            ->isWorkspaceDefaultConfig($widget->getId(), $event->getWorkspace()->getId());
-
-        if ($isDefaultConfig || $rssconfig == null) {
-            $rssconfig = $repo->findOneBy(array('isDefault' => true, 'isDesktop' => false));
+        $this->rssManager = $rssManager;
+        $this->formFactory = $formFactory;
+        $this->templating = $templating;
+        $this->sc = $sc;
+        $this->rssReader = $rssReader;
+    }
+    
+    /**
+     * @DI\Observe("widget_claroline_rssreader")
+     *
+     * @param DisplayWidgetEvent $event
+     */
+    public function onDisplay(DisplayWidgetEvent $event)
+    {
+        $config = $this->rssManager->getConfig($event->getInstance());
+        if ($config) {
+            $event->setContent($this->getRssContent($config));
+        } else {
+            $event->setContent('');
         }
-
-        //check if the config is correct
-        if ($rssconfig == null) {
-            $event->setContent($this->container->get('translator')->trans('url_not_defined', array(), 'rss_reader'));
-            $event->stopPropagation();
-
-            return;
-        }
-
-        $content = $this->getRssContent($rssconfig);
-        $event->setContent($content);
         $event->stopPropagation();
     }
 
-    public function onDesktopDisplay(DisplayWidgetEvent $event)
+    /**
+     * @DI\Observe("widget_claroline_rssreader_configuration")
+     */
+    public function onConfigure(ConfigureWidgetEvent $event)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $repo = $em->getRepository('ClarolineRssReaderBundle:Config');
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
-            ->findOneBy(array('name' => 'claroline_rssreader'));
-        $rssconfig = $repo->findOneBy(array('user' => $user));
-        $isDefaultConfig = $this->container
-            ->get('claroline.widget.manager')
-            ->isDesktopDefaultConfig($widget->getId(), $user->getId());
-
-        if ($isDefaultConfig || $rssconfig == null) {
-            $rssconfig = $repo->findOneBy(array('isDefault' => true, 'isDesktop' => true));
-        }
-
-        //check if the config is correct
-        if ($rssconfig == null) {
-            $event->setContent($this->container->get('translator')->trans('url_not_defined', array(), 'rss_reader'));
-            $event->stopPropagation();
-
-            return;
-        }
-
-        try {
-            $content = $this->getRssContent($rssconfig);
-        } catch (\Exception $e) {
-            $em->remove($rssconfig);
-            $em->flush();
-            $event->setContent($this->container->get('translator')->trans('url_not_defined', array(), 'rss_reader'));
-            $event->stopPropagation();
-
-            return;
-        }
-        $event->setContent($content);
-        $event->stopPropagation();
-    }
-
-    public function onWorkspaceConfigure(ConfigureWidgetWorkspaceEvent $event)
-    {
-        $workspace = $event->getWorkspace();
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $repo = $em->getRepository('ClarolineRssReaderBundle:Config');
-
-        //find the correct config (if it exists)
-
-        if ($workspace != null) {
-            $config = $repo->findOneBy(array('workspace' => $workspace->getId()));
-            $workspaceId = $workspace->getId();
-        } else {
-            $config = $repo->findOneBy(array('isDesktop' => false, 'isDefault' => $event->isDefault()));
-            $workspaceId = 0;
-        }
-
-        if ($config == null) {
-            $form = $this->container->get('form.factory')->create(new ConfigType, new Config());
-
-            $content = $this->container->get('templating')->render(
-                'ClarolineRssReaderBundle::formCreate.html.twig',
-                array(
-                    'form' => $form->createView(),
-                    'workspaceId' => $workspaceId,
-                    'isDefault' => $event->isDefault(),
-                    'isDesktop' => false,
-                    'userId' => 0
-                )
-            );
-        } else {
-            $form = $this->container->get('form.factory')->create(new ConfigType, $config);
-            $content = $this->container->get('templating')->render(
-                'ClarolineRssReaderBundle::formUpdate.html.twig',
-                array(
-                    'form' => $form->createView(),
-                    'rssConfig' => $config,
-                    'layout' => 'none'
-                )
-            );
-        }
-        $event->setContent($content);
-    }
-
-    public function onDesktopConfigure(ConfigureWidgetDesktopEvent $event)
-    {
-        $user = $event->getUser();
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $repo = $em->getRepository('ClarolineRssReaderBundle:Config');
-
-        if ($user != null) {
-            $config = $repo->findOneBy(array('user' => $user->getId()));
-            $userId = $user->getId();
-        } else {
-            $config = $repo->findOneBy(array('isDesktop' => true, 'isDefault' => $event->isDefault()));
-            $userId = 0;
-        }
-
-        if ($config == null) {
-            $form = $this->container->get('form.factory')->create(new ConfigType, new Config());
-
-            $content = $this->container->get('templating')->render(
-                'ClarolineRssReaderBundle::formCreate.html.twig',
-                array(
-                    'form' => $form->createView(),
-                    'workspaceId' => 0,
-                    'isDefault' => $event->isDefault(),
-                    'isDesktop' => true,
-                    'userId' => $userId
-                )
-            );
-        } else {
-            $form = $this->container->get('form.factory')->create(new ConfigType, $config);
-            $content = $this->container->get('templating')->render(
-                'ClarolineRssReaderBundle::formUpdate.html.twig',
-                array(
-                    'form' => $form->createView(),
-                    'rssConfig' => $config,
-                )
-            );
-        }
-
-        $event->setContent($content);
-    }
-
-    public function onExportConfig(ExportWidgetConfigEvent $event)
-    {
-        $repo = $this->container
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineRssReaderBundle:Config');
-        $rssconfig = $repo->findOneBy(array('workspace' => $event->getWorkspace()->getId()));
-
-        $isDefaultConfig = $this->container
-            ->get('claroline.widget.manager')
-            ->isWorkspaceDefaultConfig($event->getWidget()->getId(), $event->getWorkspace()->getId());
-
-        if ($isDefaultConfig || $rssconfig == null) {
-            $rssconfig = $repo->findOneBy(array('isDefault' => true, 'isDesktop' => false));
-        }
-
-        if ($rssconfig !== null) {
-            $config['url'] = $rssconfig->getUrl();
-        } else {
-            $config['url'] = null;
-        }
-
-        $event->setConfig($config);
-        $event->stopPropagation();
-    }
-
-    public function onImportConfig(ImportWidgetConfigEvent $event)
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $data = $event->getConfig();
-        if ($data['url'] != null) {
+        $instance = $event->getInstance();
+        $config = $this->rssManager->getConfig($instance);
+        
+        if ($config === null) {
             $config = new Config();
-            $config->setWorkspace($event->getWorkspace());
-            $config->setUrl($data['url']);
-            $config->setDesktop(false);
-            $config->setDefault(false);
-            $config->setUser(null);
-            $em->persist($config);
-            $em->flush();
-            $event->stopPropagation();
         }
+        
+        $form = $this->formFactory->create(new ConfigType, new Config());
+        
+           $content = $this->templating->render(
+                'ClarolineRssReaderBundle::formRss.html.twig',
+                array(
+                    'form' => $form->createView(),
+                    'isAdmin' => $instance->isAdmin(),
+                    'config' => $instance
+                )
+           );
+        $event->setContent($content);
     }
 
     private function getRssContent($rssconfig)
     {
         // TODO : handle feed format exception...
 
-        $items = $this->container->get('claroline.rss_reader.provider')
+        $items = $this->rssReader
             ->getReaderFor(file_get_contents($rssconfig->getUrl()))
             ->getFeedItems();
 
@@ -221,7 +103,7 @@ class RssReaderListener extends ContainerAware
             $item->setDescription(preg_replace('/<[^>]+>/i', '', $item->getDescription()));
         }
 
-        return $this->container->get('templating')->render(
+        return $this->templating->render(
             'ClarolineRssReaderBundle::rss.html.twig', array('rss' => $items)
         );
     }
