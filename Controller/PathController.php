@@ -4,7 +4,7 @@
  * MIT License
  * ===========
  *
- * Copyright (c) 2012 Donovan Tengblad <contact@donovan-tengblad.com>
+ * Copyright (c) 2013 Innovalangues
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -28,11 +28,11 @@
  * @category   Entity
  * @package    InnovaPathBundle
  * @subpackage PathBundle
- * @author     Donovan Tengblad <contact@donovan-tengblad.com>
- * @copyright  2012 Donovan Tengblad.
+ * @author     Innovalangues <contact@innovalangues.net>
+ * @copyright  2013 Innovalangues
  * @license    http://www.opensource.org/licenses/mit-license.php  MIT License
  * @version    0.1
- * @link       http://donovan-tengblad.com
+ * @link       http://innovalangues.net
  */
 namespace Innova\PathBundle\Controller;
 
@@ -66,7 +66,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceRights;
  * @package    Innova
  * @subpackage PathBundle
  * @author     Innovalangues <contant@innovalangues.net>
- * @copyright  2012 Innovlangues.
+ * @copyright  2013 Innovalangues
  * @license    http://www.opensource.org/licenses/mit-license.php MIT License
  * @version    0.1
  * @link       http://innovalangues.net
@@ -112,7 +112,9 @@ class PathController extends Controller
         $path = $manager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
 
         // On récupère la liste des steps avant modification pour supprimer ceux qui ne sont plus utilisés. TO DO : suppression
-        $steps = $manager->getRepository('InnovaPathBundle:Step')->findByPath($pathId);
+        $steps = $manager->getRepository('InnovaPathBundle:Step')->findByPath($path->getId());
+        // initialisation array() de steps à ne pas supprimer. Sera rempli dans la function JSONParser
+        $stepsToNotDelete = array();
 
         //todo - lister les liens resources2step pour supprimer ceux inutilisés.
 
@@ -145,11 +147,27 @@ class PathController extends Controller
             $manager->flush();
         }
 
-
         //lancement récursion
-        $this->JSONParser($json_root_steps, $user, $workspace, $pathsDirectory, null, 0, $path);
+        $this->JSONParser($json_root_steps, $user, $workspace, $pathsDirectory, null, 0, $path, $stepsToNotDelete);
 
-        return array('workspace' => $workspace, 'ok' => "Parcours déployé.");
+
+        foreach ($steps as $step) {
+           if (!in_array($step->getResourceNode()->getId(),$stepsToNotDelete)) {
+                $step2ressources = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')->findByStep($step->getId());
+                foreach ($step2ressources as $step2ressource) {
+                    $manager->remove($step2ressource);
+                }
+                $manager->remove($step->getResourceNode());
+            }
+        }
+
+        // Mise à jour des resourceNodeId dans la base.
+        $json = json_encode($json);
+        $path->setPath($json);
+
+        $manager->flush();
+
+        return array('workspace' => $workspace, 'deployed' => "Parcours déployé.");
     }
 
 
@@ -167,7 +185,7 @@ class PathController extends Controller
      * @return array
      *
      */
-    private function JSONParser($steps, $user, $workspace, $pathsDirectory, $parent, $order, $path)
+    private function JSONParser($steps, $user, $workspace, $pathsDirectory, $parent, $order, $path, &$stepsToNotDelete)
     {
         $manager = $this->entityManager();
         $rm = $this->resourceManager();
@@ -175,7 +193,7 @@ class PathController extends Controller
         foreach ($steps as $step) {
             $order++;
 
-            // STEP MANAGEMENT
+            // CLARO_STEP MANAGEMENT
             if ($step->resourceId == null) {
                 $resourceNode = new ResourceNode();
                 $resourceNode->setClass("Innova\PathBundle\Entity\Step");
@@ -194,9 +212,16 @@ class PathController extends Controller
                 $currentStep = $manager->getRepository('InnovaPathBundle:Step')->findOneByResourceNode($step->resourceId);
             }
 
-            // STEP UPDATE
+            // CLARO_STEP UPDATE
             $resourceNode->setName($step->name);
             $manager->persist($resourceNode);
+            $manager->flush($resourceNode);
+
+            // JSON_STEP UPDATE
+            $step->resourceId = $resourceNode->getId();
+
+            // STEPSTONODELETE ARRAY UPDATE
+            $stepsToNotDelete[] = $resourceNode->getId();
 
             $currentStep->setStepOrder($order);
             $stepType = $manager->getRepository('InnovaPathBundle:StepType')->findOneById($step->type);
@@ -227,6 +252,7 @@ class PathController extends Controller
                 $step2ressourceNode->setResourceNode($manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId));
                 $step2ressourceNode->setStep($currentStep);
                 $step2ressourceNode->setResourceOrder($resourceOrder);
+
                 $manager->persist($step2ressourceNode);
             }
 
@@ -253,7 +279,7 @@ class PathController extends Controller
             $manager->flush();
 
             // récursivité sur les enfants possibles.
-            $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $currentStep->getId(), 0, $path);
+            $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $currentStep->getId(), 0, $path, $stepsToNotDelete);
         }
 
         $manager->flush();
@@ -377,7 +403,7 @@ class PathController extends Controller
         $user = "Arnaud";
         $content = $this->get('request')->getContent();
 
-        $new_path = New Path;
+        $new_path = new Path;
         $new_path->setUser($user)
                  ->setEditDate($editDate)
                  ->setPath($content);
@@ -385,7 +411,7 @@ class PathController extends Controller
         $em->persist($new_path);
         $em->flush();
 
-        return New Response(
+        return new Response(
             $new_path->getId()
         );
     }
@@ -418,7 +444,7 @@ class PathController extends Controller
         $em->persist($path);
         $em->flush();
 
-        return New Response(
+        return new Response(
             $path->getId()
         );
     }
@@ -445,7 +471,7 @@ class PathController extends Controller
         $em->remove($path);
         $em->flush();
 
-        return New Response("ok");
+        return new Response("ok");
     }
 
     /**

@@ -5,6 +5,7 @@
         <h3 class="panel-title">Parcours</h3>
     </div>
     <div class="panel-body">
+		{% if deployed is not defined %}
         <table class="table table-hover">
             {% for path in paths %}
             <tr>
@@ -19,7 +20,10 @@
             </tr>
             {% endfor %}
         </table>
-        
+        {% else %}
+			<div class="alert alert-success">{{ deployed }}</div>
+		{% endif %}
+
         <a href="{{ path('innova_path_editor') }}" class="btn btn-primary"><i class="icon-plus"></i></a>
     </div>
 {% endblock %}
