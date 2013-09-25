@@ -125,54 +125,54 @@ $(function () {
 
         // When stop drag
         stop: function(event, ui) {
+            if($('#AnswerImage').length){
+                var margin = $('#AnswerArray').offset().top - $('#AnswerImage').offset().top;
 
-            var margin = $('#AnswerArray').offset().top - $('#AnswerImage').offset().top;
+                var stoppos = $(this).position();
 
-            var stoppos = $(this).position();
+                // Create a new image
+                var img = new Image();
 
-            // Create a new image
-            var img = new Image();
+                // With the position of the dragged image
+                $(img).css({
+                    "position" : "absolute",
+                    "left" : String(stoppos.left) + 'px',
+                    "top"  : String(stoppos.top + margin) + 'px'
+                });
 
-            // With the position of the dragged image
-            $(img).css({
-                "position" : "absolute",
-                "left" : String(stoppos.left) + 'px',
-                "top"  : String(stoppos.top + margin) + 'px'
-            });
+                // Give it id corresonding of numbers of previous answer
+                img.id = 'img' + grade;
+                grade++;
 
-            // Give it id corresonding of numbers of previous answer
-            img.id = 'img' + grade;
-            grade++;
+                // With the url of the dragged image
+                $(img).attr('src', el.attr('src'));
 
-            // With the url of the dragged image
-            $(img).attr('src', el.attr('src'));
+                // Add it to the page
+                $('#Answer').append(img);
 
-            // Add it to the page
-            $('#Answer').append(img);
+                // Make the new answer zone draggable and save its new position when stop drag
+                $(img).resizable({
+                    aspectRatio: true,
+                    minWidth: 10,
+                    maxWidth: 500
+                })
+                .parent()
+                .draggable({
+                    containment : '#AnswerImage',
+                    cursor : 'move',
 
-            // Make the new answer zone draggable and save its new position when stop drag
-            $(img).resizable({
-                aspectRatio: true,
-                minWidth: 10,
-                maxWidth: 500
-            })
-            .parent()
-            .draggable({
-                containment : '#AnswerImage',
-                cursor : 'move',
+                    stop: function(event, ui) {
+                        $(img).css("left", $(this).css("left"));
+                        $(img).css("top", $(this).css("top"));
+                    }
+                });
 
-                stop: function(event, ui) {
-                    $(img).css("left", $(this).css("left"));
-                    $(img).css("top", $(this).css("top"));
-                }
-            });
+                // Alter symbol score in order to insert right score into the database
+                var score = $('#points').val().replace(/[.,]/, '/');
 
-            // Alter symbol score in order to insert right score into the database
-            var score = $('#points').val().replace(/[.,]/, '/');
-
-            // Save the score matching to an answer zone (thanks to its id)
-            point[img.id] = score;
-
+                // Save the score matching to an answer zone (thanks to its id)
+                point[img.id] = score;
+            }
             // If add a new answer zone, the reference image go back to its initial place
             if (event.target.id == 'movable') {
                 el.css({
