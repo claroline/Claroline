@@ -27,6 +27,13 @@ class Step2ResourceNode
     private $step;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="propagated", type="boolean")
+     */
+    private $propagated;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
     */
     private $resourceNode;
@@ -115,5 +122,28 @@ class Step2ResourceNode
     public function getResourceOrder()
     {
         return $this->resourceOrder;
+    }
+
+    /**
+     * Set propagated
+     *
+     * @param  boolean           $propagated
+     * @return Step2ResourceNode
+     */
+    public function setPropagated($propagated)
+    {
+        $this->propagated = $propagated;
+
+        return $this;
+    }
+
+    /**
+     * Get propagated
+     *
+     * @return boolean
+     */
+    public function getPropagated()
+    {
+        return $this->propagated;
     }
 }
