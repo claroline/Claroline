@@ -92,7 +92,7 @@
         {% endfor %}
         <li class="node-thumbnail node col-md-2">
             <a href="{{ path('claro_admin_badges_add') }}" title="{{ 'add_badge'|trans({}, 'badge') }}" class="add_button btn btn-lg col-md-12">
-                <span class="icon-plus"></span>
+                <img class="badge_image" src="{{ asset('bundles/clarolinecore/images/add-badge.png') }}" alt="{{ 'add_badge'|trans }}" />
             </a>
         </li>
     </ul>

@@ -3,8 +3,11 @@
 }
 .badge_list .add_button {
   height: 110px;
-  font-size: 68px;
-  border-color: #357ebd;
+  border: 3px dashed #8F8F8F;
+  padding-top: 20px;
+}
+.badge_list .add_button:hover {
+  background-color: #f5f5f5;
 }
 .nodes {
   padding: 0;
@@ -30,11 +33,11 @@
 .badges_infos #current_image {
   background-color: #f5f5f5;
 }
-.badges_infos .thumbnail {
+.thumbnail {
   height: 128px;
   padding-top: 20px;
 }
-.badges_infos .thumbnail > img {
+.thumbnail > img {
   height: 64px;
 }
 #translationFormTabs {
