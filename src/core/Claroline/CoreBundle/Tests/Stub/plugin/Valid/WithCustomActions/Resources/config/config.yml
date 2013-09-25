@@ -1,9 +1,0 @@
-plugin:
-  has_options: true
-
-  resources:
-    - class: Valid\WithCustomActions\Entity\ResourceXCustom
-      name: ResourceXCustom
-      actions:
-        - name: open
-          is_action_in_new_page: true
