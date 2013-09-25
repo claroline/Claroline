@@ -1009,14 +1009,26 @@
             });
         },
         remove: function (nodeIds) {
-            $.ajax({
-                context: this,
-                url: this.parameters.appPath + '/resource/delete',
-                data: {ids: nodeIds},
-                success: function () {
-                    this.views.main.subViews.nodes.removeResources(nodeIds);
-                    this.views.main.subViews.actions.setInitialState();
-                }
+            var trans = (nodeIds.length) > 1 ? 'resources_delete' : 'resource_delete'; 
+            var modal = Twig.render(ModalWindow, {
+                'body': Translator.get('platform' + ':' + trans),
+                'confirmFooter': true,
+                'modalId': 'confirm-modal'
+            });
+            $('body').append(modal);
+            $('#confirm-modal').modal('show');
+            var that = this;
+            $('#confirm-ok').click(function () {
+                $.ajax({
+                    context: that,
+                    url: that.parameters.appPath + '/resource/delete',
+                    data: {ids: nodeIds},
+                    success: function () {
+                        this.views.main.subViews.nodes.removeResources(nodeIds);
+                        this.views.main.subViews.actions.setInitialState();
+                        $('#confirm-modal').modal('hide');
+                    }
+                });
             });
         },
         copy: function (nodeIds, directoryId) {
