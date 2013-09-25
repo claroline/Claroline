@@ -58,8 +58,8 @@ class SimpleTextWidgetListener
      */
     public function onConfig(ConfigureWidgetEvent $event)
     {
-        $config = $event->getInstance();
-        $txtConfig = $this->simpleTextManager->getTextConfig($config);
+        $instance = $event->getInstance();
+        $txtConfig = $this->simpleTextManager->getTextConfig($instance);
         
         if ($txtConfig === null) {
             $txtConfig = new SimpleTextConfig();
@@ -70,8 +70,8 @@ class SimpleTextWidgetListener
             'ClarolineCoreBundle:Widget:config_simple_text_form.html.twig',
             array(
                 'form' => $form->createView(),
-                'isAdmin' => $config->isAdmin(),
-                'config' => $config
+                'isAdmin' => $instance->isAdmin(),
+                'config' => $instance
             )
         );
         $event->setContent($content);

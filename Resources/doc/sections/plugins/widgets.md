@@ -34,31 +34,22 @@ Where mywidgetname is the name you defined in your config file.
 
 ### Configuring the widget
 
+Each widget can be instanciated any number of time.
 You can create your own configuration table for a widget and
 use its datas to display different informations depending on the context.
 
 #### Workspace
 
-The Claroline kernel works using a default configuration (defined by the admin) and a specific configuration for each different widget.
-The kernel will fire the *widget_**your_widget_name**_configuration_workspace* each time the configuration form is asked.
+The kernel will fire the *widget_**your_widget_name**_configuration each time the configuration form is asked.
 First you must define a listener to catch the event.
 
 **listeners.yml file:**
 
-     - { name: kernel.event_listener, event: widget_claroline_my_widget_configuration_workspace, method: onWorkspaceConfigure }
+     - { name: kernel.event_listener, event: widget_claroline_my_widget_configuration, method: onConfigure 
 
-**listener class:**
+You can retrieve the instance wich is asking to be configured using
 
-    public function onWorkspaceConfigure(ConfigureWidgetWorkspaceEvent $event)
-    {
-        ...
-    }
-
-You can know for which workspace the configuration change is asked using
-
-    $workspace = $event->getWorkspace();
-
-If the $workspace is null, it means it's a change for the default configuration.
+    $instance = $event->getInstance();
 
 You'll need to return the configuration form html to the kernel.
 
@@ -75,85 +66,34 @@ You'll need to return the configuration form html to the kernel.
 
 **your_form.html.twig:**
 
-    {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
-    <form class="form-horizontal" id="rss-reader-form" action="{{ path('claro_rss_config_update', {'configId': rssConfig.getId(), 'redirectToHome': app.request.isXMLHttpRequest ? 1 : 0})}} " method="post" {{ form_enctype(form) }}>
-        <fieldset>
-            {{ form_widget(form) }}
-        </fieldset>
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-1.7.1.min.js') }}'></script>
+    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+    {{ tinymce_init() }}
 
-        {{ macros.flashBox() }}
+    {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
+    <form class="form-horizontal"
+          action="{{ path('claro_simple_text_update_config', {'widget': config.getId()}) }}"
+          method="post" {{ form_enctype(form) }}
+    >
+        <div class="panel-body">
+            {{ form_widget(form) }}
+        </div>
         <div class="panel-footer">
-            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_workspace_list') }}">
-                <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
+        <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a href="{{ cancelUrl }}">
+                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
             </a>
         </div>
     </form>
 
-The cancel button must have **claro-widget-form-cancel** for ajax form's injection.
-
-The action of the form should redirect to one of your controller which will persist the modification to the configuration.
-To know if the form is call from widget's list with ajax add **redirectToHome** parameter to your route.
-
-    'redirectToHome': app.request.isXMLHttpRequest ? 1 : 0
+The cancel button must have **claro-widget-form-cancel** for ajax form's injection
+The action of the form should redirect to one of your controller which will persist the modification to the configuration
 
 **controller class:**
 
 You'll have to take care of the redirection once the change are persisted.
-You'll want to redirect to these routes depending on the context:
 
-    if ($redirectToHome !== 0) {
-        if ($workspaceId === 0) {
-            return $this->redirect($this->generateUrl('claro_desktop_open', array()));
-        } else {
-            return $this->redirect(
-                $this->generateUrl(
-                    'claro_workspace_open_tool', array('workspaceId' => $workspaceId, 'toolName' => 'home')
-                )
-            );
-        }
-    }
-
-    if ($config->getWorkspace() != null) {
-        $url = $this->generateUrl(
-            'claro_workspace_open',
-            array('workspaceId' => $config->getWorkspace()->getId())
-        );
-
-        return new RedirectResponse($url);
-    }
-
-    if ($isDefault) {
-        return new RedirectResponse($this->generateUrl('claro_admin_widgets'));
-    }
-
-    return new RedirectResponse($this->generateUrl('claro_desktop_open'));
-
-*In this snippet, the $config var is an entity of the plugin widget configuration table.*
-
-
-#### Desktop
-
-The kernel use the same system for the desktop widgets where the different workspace are replaced by the users of the platform.
-You can catch the event using
-
-**listeners.yml file:**
-
-     - { name: kernel.event_listener, event: widget_claroline_my_widget_configuration_Desktop, method: onDesktopConfigure }
-
-**listener class:**
-
-    public function onDesktopConfigure(ConfigureWidgetDesktopEvent $event)
-    {
-        ...
-    }
-
-You can know for wich user the configuration change is asked using
-
-    $user = $event->getUser();
-
-If the $user is null, it means it's a change for the default configuration.
-
+     return new RedirectResponse($this->get('claroline.manager.widget_manager')->getRedirectRoute($widgetInstance);
 
 ### Displaying the widget
 

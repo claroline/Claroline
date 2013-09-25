@@ -3,12 +3,6 @@
 {{ tinymce_init() }}
  
 {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
-{% if isDesktop == false %}
-{% set isDesktop = 0 %}
-{% endif %}
-{% if isDefault == false %}
-{% set isDefault = 0 %}
-{% endif %}
 <form class="form-horizontal"
       action="{{ path('claro_simple_text_update_config', {'widget': config.getId()}) }}"
       method="post" {{ form_enctype(form) }}

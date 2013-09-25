@@ -49,7 +49,7 @@
                         <a href="{{ path('claro_admin_widget_configuration', {'config': wconfig.getId()}) }}">{{ 'configure'|trans({}, 'platform') }}</a>
                         {% endif %}
                     </td>
-                    <td> <a class="delete-widget" href="{{ path('claro_admin_remove_widget', {'widgetInstance': wconfig.getId()}) }}">delete</a></td>
+                    <td> <a class="delete-widget" href="{{ path('claro_admin_remove_widget', {'widgetInstance': wconfig.getId()}) }}">{{ 'delete'|trans({}, 'platform') }}</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
