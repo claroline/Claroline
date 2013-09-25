@@ -1,5 +1,0 @@
-plugin:
-  has_options: true
-
-  resources:
-    - icon: icn.gif
