@@ -1030,25 +1030,18 @@ class HomeController extends Controller
         $user = $this->securityContext->getToken()->getUser();
         $this->checkUserAccessForHomeTab($homeTab, $user);
 
-        $adminWidgetConfigs = $this->homeTabManager
-            ->getAdminWidgetConfigs($homeTab);
-
         $widgetConfigs = $this->homeTabManager
             ->getWidgetConfigsByUser($homeTab, $user);
-        $currentAdminWidgetInstanceList = array();
-        $currentWidgetInstanceList = array();
 
-        foreach ($adminWidgetConfigs as $adminWidgetConfig) {
-            $currentAdminWidgetInstanceList[] = $adminWidgetConfig->getWidgetInstance()->getId();
-        }
-        $adminWidgetInstances = $this->widgetManager
-            ->getAdminDesktopWidgetInstance($currentAdminWidgetInstanceList);
+        $exludedWidgetInstanceList = array();
 
         foreach ($widgetConfigs as $widgetConfig) {
-            $currentWidgetInstanceList[] = $widgetConfig->getWidgetInstance()->getId();
+            $exludedWidgetInstanceList[] = $widgetConfig->getWidgetInstance()->getId();
         }
+        $adminWidgetInstances = $this->widgetManager
+            ->getAdminDesktopWidgetInstance($exludedWidgetInstanceList);
         $widgetInstances = $this->widgetManager
-            ->getDesktopWidgetInstance($user, $currentAdminWidgetInstanceList);
+            ->getDesktopWidgetInstance($user, $exludedWidgetInstanceList);
 
         return array(
             'tool' => $this->getHomeTool(),
@@ -1084,23 +1077,27 @@ class HomeController extends Controller
 
         $adminWidgetConfigs = $this->homeTabManager
             ->getAdminWidgetConfigs($homeTab);
-
         $widgetConfigs = $this->homeTabManager
             ->getWidgetConfigsByUser($homeTab, $user);
+
         $currentAdminWidgetInstanceList = array();
         $currentWidgetInstanceList = array();
 
         foreach ($adminWidgetConfigs as $adminWidgetConfig) {
             $currentAdminWidgetInstanceList[] = $adminWidgetConfig->getWidgetInstance()->getId();
         }
-        $adminWidgetInstances = $this->widgetManager
-            ->getAdminDesktopWidgetInstance($currentAdminWidgetInstanceList);
 
         foreach ($widgetConfigs as $widgetConfig) {
             $currentWidgetInstanceList[] = $widgetConfig->getWidgetInstance()->getId();
         }
+        $excludedWidgetInstanceList = array_merge(
+            $currentAdminWidgetInstanceList,
+            $currentWidgetInstanceList
+        );
+        $adminWidgetInstances = $this->widgetManager
+            ->getAdminDesktopWidgetInstance($excludedWidgetInstanceList);
         $widgetInstances = $this->widgetManager
-            ->getDesktopWidgetInstance($user, $currentAdminWidgetInstanceList);
+            ->getDesktopWidgetInstance($user, $excludedWidgetInstanceList);
 
         return array(
             'tool' => $this->getHomeTool(),
@@ -1143,15 +1140,15 @@ class HomeController extends Controller
 
         $widgetConfigs = $this->homeTabManager
             ->getWidgetConfigsByWorkspace($homeTab, $workspace);
-        $currentWidgetInstanceList = array();
+        $excludedWidgetInstanceList = array();
 
         foreach ($widgetConfigs as $widgetConfig) {
-            $currentWidgetInstanceList[] = $widgetConfig->getWidget()->getId();
+            $excludedWidgetInstanceList[] = $widgetConfig->getWidgetInstance()->getId();
         }
         $adminWidgetInstances = $this->widgetManager
-            ->getAdminWorkspaceWidgetInstance($currentWidgetInstanceList);
+            ->getAdminWorkspaceWidgetInstance($excludedWidgetInstanceList);
         $widgetInstances = $this->widgetManager
-            ->getWorkspaceWidgetInstance($workspace, $currentWidgetInstanceList);
+            ->getWorkspaceWidgetInstance($workspace, $excludedWidgetInstanceList);
 
         return array(
             'tool' => $this->getHomeTool(),

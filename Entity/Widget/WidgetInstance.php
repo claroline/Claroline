@@ -41,9 +41,9 @@ class WidgetInstance
      * @ORM\Column(name="is_admin", type="boolean")
      */
     protected $isAdmin = false;
-    
+
     /**
-     * @ORM\Column(name="is_°desktop", type="boolean")
+     * @ORM\Column(name="is_desktop", type="boolean")
      */
     protected $isDesktop = false;
 
@@ -51,7 +51,7 @@ class WidgetInstance
      * @ORM\Column(name="name")
      */
     protected $name = 'Change me !';
-    
+
     public function getId()
     {
         return $this->id;
@@ -69,7 +69,7 @@ class WidgetInstance
     {
         return $this->widget;
     }
-  
+
     public function getWorkspace()
     {
         return $this->workspace;
@@ -99,22 +99,22 @@ class WidgetInstance
     {
         return $this->user;
     }
-    
+
     public function setName($name)
     {
         $this->name = $name;
     }
-    
+
     public function getName()
     {
         return $this->name;
     }
-    
+
     public function isDesktop()
     {
         return $this->isDesktop;
     }
-    
+
     public function setIsDesktop($bool)
     {
         $this->isDesktop = $bool;
