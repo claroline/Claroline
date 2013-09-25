@@ -33,11 +33,10 @@ class StepWho
     */
     protected $steps;
 
-
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -47,7 +46,7 @@ class StepWho
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string  $name
      * @return StepWho
      */
     public function setName($name)
@@ -60,7 +59,7 @@ class StepWho
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -77,7 +76,7 @@ class StepWho
     /**
      * Add steps
      *
-     * @param \Innova\PathBundle\Entity\Step $steps
+     * @param  \Innova\PathBundle\Entity\Step $steps
      * @return StepWho
      */
     public function addStep(\Innova\PathBundle\Entity\Step $steps)
@@ -100,7 +99,7 @@ class StepWho
     /**
      * Get steps
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getSteps()
     {

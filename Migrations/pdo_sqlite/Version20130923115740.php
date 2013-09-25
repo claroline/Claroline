@@ -16,34 +16,34 @@ class Version20130923115740 extends AbstractMigration
     {
         $this->addSql("
             CREATE TABLE innova_stepType (
-                id INTEGER NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
+                id INTEGER NOT NULL,
+                name VARCHAR(255) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
             CREATE TABLE innova_pathtemplate (
-                id INTEGER NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                description CLOB NOT NULL, 
-                step CLOB NOT NULL, 
-                user VARCHAR(255) NOT NULL, 
-                edit_date DATETIME NOT NULL, 
+                id INTEGER NOT NULL,
+                name VARCHAR(255) NOT NULL,
+                description CLOB NOT NULL,
+                step CLOB NOT NULL,
+                user VARCHAR(255) NOT NULL,
+                edit_date DATETIME NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
             CREATE TABLE innova_stepWhere (
-                id INTEGER NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
+                id INTEGER NOT NULL,
+                name VARCHAR(255) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
             CREATE TABLE innova_path (
-                id INTEGER NOT NULL, 
-                path CLOB NOT NULL, 
-                resourceNode_id INTEGER DEFAULT NULL, 
+                id INTEGER NOT NULL,
+                path CLOB NOT NULL,
+                resourceNode_id INTEGER DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -52,17 +52,17 @@ class Version20130923115740 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE innova_stepWho (
-                id INTEGER NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
+                id INTEGER NOT NULL,
+                name VARCHAR(255) NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
             CREATE TABLE innova_nonDigitalResource (
-                id INTEGER NOT NULL, 
-                description CLOB NOT NULL, 
-                type VARCHAR(255) NOT NULL, 
-                resourceNode_id INTEGER DEFAULT NULL, 
+                id INTEGER NOT NULL,
+                description CLOB NOT NULL,
+                type VARCHAR(255) NOT NULL,
+                resourceNode_id INTEGER DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -71,19 +71,19 @@ class Version20130923115740 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE innova_step (
-                id INTEGER NOT NULL, 
-                path_id INTEGER DEFAULT NULL, 
-                stepOrder INTEGER NOT NULL, 
-                parent VARCHAR(255) DEFAULT NULL, 
-                expanded BOOLEAN NOT NULL, 
-                instructions CLOB NOT NULL, 
-                withTutor BOOLEAN NOT NULL, 
-                withComputer BOOLEAN NOT NULL, 
-                duration DATETIME NOT NULL, 
-                stepType_id INTEGER DEFAULT NULL, 
-                stepWho_id INTEGER DEFAULT NULL, 
-                stepWhere_id INTEGER DEFAULT NULL, 
-                resourceNode_id INTEGER DEFAULT NULL, 
+                id INTEGER NOT NULL,
+                path_id INTEGER DEFAULT NULL,
+                stepOrder INTEGER NOT NULL,
+                parent VARCHAR(255) DEFAULT NULL,
+                expanded BOOLEAN NOT NULL,
+                instructions CLOB NOT NULL,
+                withTutor BOOLEAN NOT NULL,
+                withComputer BOOLEAN NOT NULL,
+                duration DATETIME NOT NULL,
+                stepType_id INTEGER DEFAULT NULL,
+                stepWho_id INTEGER DEFAULT NULL,
+                stepWhere_id INTEGER DEFAULT NULL,
+                resourceNode_id INTEGER DEFAULT NULL,
                 PRIMARY KEY(id)
             )
         ");

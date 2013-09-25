@@ -13,20 +13,22 @@ use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
  */
 class InnovaPathBundle extends PluginBundle implements AutoConfigurableInterface, ConfigurationProviderInterface
 {
-	public function supports($environment)
+    public function supports($environment)
     {
         return true;
     }
 
     public function getConfiguration($environment)
     {
-        return new ConfigurationBuilder();
+        $config = new ConfigurationBuilder();
+
+        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'innova_path');
     }
 
-     public function getRequiredFixturesDirectory($environment)
+    public function getRequiredFixturesDirectory($environment)
     {
-        return 'DataFixtures';
-    } 
+        return 'DataFixtures/Required';
+    }
 
     public function suggestConfigurationFor(Bundle $bundle, $environment)
     {
@@ -48,6 +50,6 @@ class InnovaPathBundle extends PluginBundle implements AutoConfigurableInterface
         //         __DIR__ . "/Resources/config/suggested/twig.yml"
         //     );
         // }
-    } 
-    
+    }
+
 }

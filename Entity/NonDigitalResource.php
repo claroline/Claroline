@@ -5,7 +5,6 @@ namespace Innova\PathBundle\Entity;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * NonDigitalResource
  *
@@ -14,7 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class NonDigitalResource extends AbstractResource
 {
-  
     /**
      * @var string
      *
@@ -29,13 +27,10 @@ class NonDigitalResource extends AbstractResource
      */
     private $type;
 
-    
-
-
     /**
      * Set name
      *
-     * @param string $name
+     * @param  string             $name
      * @return NonDigitalResource
      */
     public function setName($name)
@@ -48,7 +43,7 @@ class NonDigitalResource extends AbstractResource
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -58,7 +53,7 @@ class NonDigitalResource extends AbstractResource
     /**
      * Set description
      *
-     * @param string $description
+     * @param  string             $description
      * @return NonDigitalResource
      */
     public function setDescription($description)
@@ -71,7 +66,7 @@ class NonDigitalResource extends AbstractResource
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -81,7 +76,7 @@ class NonDigitalResource extends AbstractResource
     /**
      * Set type
      *
-     * @param string $type
+     * @param  string             $type
      * @return NonDigitalResource
      */
     public function setType($type)
@@ -94,19 +89,17 @@ class NonDigitalResource extends AbstractResource
     /**
      * Get type
      *
-     * @return string 
+     * @return string
      */
     public function getType()
     {
         return $this->type;
     }
 
-
-
     /**
      * Set resourceNode
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
+     * @param  \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
      * @return NonDigitalResource
      */
     public function setResourceNode(\Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode = null)
@@ -119,7 +112,7 @@ class NonDigitalResource extends AbstractResource
     /**
      * Get resourceNode
      *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode 
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
     public function getResourceNode()
     {

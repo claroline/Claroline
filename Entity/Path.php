@@ -3,7 +3,6 @@
 namespace Innova\PathBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace as Workspace;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 /**
  * Path
@@ -13,7 +12,6 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
  */
 class Path extends AbstractResource
 {
-   
 
     /**
      * @var string
@@ -21,17 +19,16 @@ class Path extends AbstractResource
      * @ORM\Column(name="path", type="text")
      */
     private $path;
-    
+
     /**
     * @ORM\OneToMany(targetEntity="Step", mappedBy="path")
     */
     protected $steps;
 
-
     /**
      * Set path
      *
-     * @param string $path
+     * @param  string $path
      * @return Path
      */
     public function setPath($path)
@@ -44,7 +41,7 @@ class Path extends AbstractResource
     /**
      * Get path
      *
-     * @return string 
+     * @return string
      */
     public function getPath()
     {
@@ -54,7 +51,7 @@ class Path extends AbstractResource
     /**
      * Set uuid
      *
-     * @param string $uuid
+     * @param  string $uuid
      * @return Path
      */
     public function setUuid($uuid)
@@ -75,7 +72,7 @@ class Path extends AbstractResource
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -85,7 +82,7 @@ class Path extends AbstractResource
     /**
      * Add steps
      *
-     * @param \Innova\PathBundle\Entity\Step $steps
+     * @param  \Innova\PathBundle\Entity\Step $steps
      * @return Path
      */
     public function addStep(\Innova\PathBundle\Entity\Step $steps)
@@ -108,7 +105,7 @@ class Path extends AbstractResource
     /**
      * Get steps
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getSteps()
     {
@@ -118,7 +115,7 @@ class Path extends AbstractResource
     /**
      * Set resourceNode
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
+     * @param  \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
      * @return Path
      */
     public function setResourceNode(\Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode = null)
@@ -131,7 +128,7 @@ class Path extends AbstractResource
     /**
      * Get resourceNode
      *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode 
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
     public function getResourceNode()
     {

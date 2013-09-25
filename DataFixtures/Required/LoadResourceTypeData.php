@@ -17,12 +17,11 @@ class LoadResourceTypeData extends AbstractFixture
      */
     public function load(ObjectManager $manager)
     {
-  
+
         $resourceType1 = new ResourceType();
         $resourceType1->setName("path");
         $resourceType1->setExportable(true);
         $manager->persist($resourceType1);
-
 
         $resourceType2 = new ResourceType();
         $resourceType2->setName("step");
