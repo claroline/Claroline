@@ -154,24 +154,10 @@ class ResourcePropertiesController extends Controller
             $file = $form->get('newIcon')->getData();
 
             if ($file) {
-                $icon = $this->resourceManager->changeIcon($node, $file);
+                $this->resourceManager->changeIcon($node, $file);
             }
 
             $this->resourceManager->rename($node, $name);
-
-            $content = "{";
-            $content .= (isset($icon)) ?
-                $content .= '"icon": "' . $icon->getRelativeUrl() . '"':
-                $content .= '"icon": "' . $node->getIcon()->getRelativeUrl() . '"';
-
-            $content .= ', "name": "' . $node->getName() . '"';
-            $content .= '}';
-
-//            $response = new Response($content);
-//            $response->headers->set('Content-Type', 'application/json');
-//            
-//            return $response;
-            
             $nodesArray[] = $this->resourceManager->toArray($node);
             
             return new JsonResponse($nodesArray);
