@@ -1,6 +1,6 @@
 <tr class='row-widget-config'>
     <th>{{ config.getWidget().getName()|trans({}, 'widget') }}</th>
-    <th>{% render controller('ClarolineCoreBundle:AdministrationWidget:editWidgetNameForm', {'widgetInstanceId': config.getId()}) %}</th>
+    <th>{% render controller('ClarolineCoreBundle:Tool\\Home:editDesktopWidgetNameForm', {'config': config.getId()}) %}</th>
     <th>
         <a href="{{ path('claro_desktop_widget_configuration', {'widgetInstanceId': config.getId()}) }}">
             {{ 'configure'|trans({}, 'platform') }}

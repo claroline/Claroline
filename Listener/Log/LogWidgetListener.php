@@ -5,10 +5,10 @@ namespace  Claroline\CoreBundle\Listener\Log;
 use Claroline\CoreBundle\Manager\LogManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Form\Log\LogWorkspaceWidgetConfigType;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service
@@ -56,47 +56,13 @@ class LogWidgetListener
     }
 
     /**
-     * @DI\Observe("widget_core_resource_logger_workspace")
-     *
-     * @param DisplayWidgetEvent $event
-     */
-    public function onWorkspaceDisplay(DisplayWidgetEvent $event)
-    {
-        $params = $this->logManager->getWorkspaceWidgetList($event->getWorkspace());
-
-        $view = null;
-        if ($params && count($params['logs']) > 0) {
-            $view = $this->twig->render(
-                'ClarolineCoreBundle:Log:view_short_list.html.twig',
-                $params
-            );
-        }
-
-        $event->setContent($view);
-        $event->setTitle($params['title']);
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("widget_core_resource_logger_desktop")
+     * @DI\Observe("widget_core_resource_logger")
      *
      * @param DisplayWidgetEvent $event
      */
     public function onDesktopDisplay(DisplayWidgetEvent $event)
     {
-        $params = $this->logManager->getDesktopWidgetList();
-
-        $view = null;
-        if ($params && count($params['logs']) > 0) {
-            $view = $this->twig->render(
-                'ClarolineCoreBundle:Log:view_short_list.html.twig',
-                $params
-            );
-        }
-
-        $event->setContent($view);
-        $event->setTitle($params['title']);
-        $event->stopPropagation();
+        $event->setContent('hi');
     }
 
     /**

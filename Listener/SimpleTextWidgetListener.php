@@ -49,7 +49,12 @@ class SimpleTextWidgetListener
      */
     public function onDisplay(DisplayWidgetEvent $event)
     {
-        $event->setContent($this->simpleTextManager->getTextConfig($event->getInstance())->getContent());
+        $txtConfig = $this->simpleTextManager->getTextConfig($event->getInstance());
+        if ($txtConfig) {
+            $event->setContent($txtConfig->getContent());
+        } else {
+            $event->setContent('');
+        }
         $event->stopPropagation();
     }
 
