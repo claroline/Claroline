@@ -112,7 +112,9 @@ class PathController extends Controller
         $path = $manager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
 
         // On récupère la liste des steps avant modification pour supprimer ceux qui ne sont plus utilisés. TO DO : suppression
-        $steps = $manager->getRepository('InnovaPathBundle:Step')->findByPath($pathId);
+        $steps = $manager->getRepository('InnovaPathBundle:Step')->findByPath($path->getId());
+        // initialisation array() de steps à ne pas supprimer. Sera rempli dans la function JSONParser
+        $stepsToNotDelete = array();
 
         //todo - lister les liens resources2step pour supprimer ceux inutilisés.
 
@@ -145,16 +147,32 @@ class PathController extends Controller
             $manager->flush();
         }
 
-
         //lancement récursion
-        $this->jsonParser($json_root_steps, $user, $workspace, $pathsDirectory, null, 0, $path);
+        $this->JSONParser($json_root_steps, $user, $workspace, $pathsDirectory, null, 0, $path, $stepsToNotDelete);
+
+
+        foreach ($steps as $step) {
+           if (!in_array($step->getResourceNode()->getId(),$stepsToNotDelete)) {
+                $step2ressources = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')->findByStep($step->getId());
+                foreach ($step2ressources as $step2ressource) {
+                    $manager->remove($step2ressource);
+                }
+                $manager->remove($step->getResourceNode());
+            }
+        }
+
+        // Mise à jour des resourceNodeId dans la base.
+        $json = json_encode($json);
+        $path->setPath($json);
+
+        $manager->flush();
 
         return array('workspace' => $workspace, 'ok' => "Parcours déployé.");
     }
 
 
     /**
-     * private jsonParser function
+     * private _jsonParser function
      *
      * @param is_object($steps)          $steps          step of activity
      * @param is_object($user)           $user           user of activity
@@ -167,7 +185,7 @@ class PathController extends Controller
      * @return array
      *
      */
-    private function jsonParser($steps, $user, $workspace, $pathsDirectory, $parent, $order, $path)
+    private function JSONParser($steps, $user, $workspace, $pathsDirectory, $parent, $order, $path, &$stepsToNotDelete)
     {
         $manager = $this->entityManager();
         $rm = $this->resourceManager();
@@ -175,7 +193,7 @@ class PathController extends Controller
         foreach ($steps as $step) {
             $order++;
 
-            // STEP MANAGEMENT
+            // CLARO_STEP MANAGEMENT
             if ($step->resourceId == null) {
                 $resourceNode = new ResourceNode();
                 $resourceNode->setClass("Innova\PathBundle\Entity\Step");
@@ -194,18 +212,16 @@ class PathController extends Controller
                 $currentStep = $manager->getRepository('InnovaPathBundle:Step')->findOneByResourceNode($step->resourceId);
             }
 
-            // STEP UPDATE
+            // CLARO_STEP UPDATE
             $resourceNode->setName($step->name);
-            $resourceNode->setClass("Innova\PathBundle\Entity\Step");
-            $resourceNode->setCreator($user);
-            $resourceNode->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("step"));
-            $resourceNode->setWorkspace($workspace);
-            $resourceNode->setParent($pathsDirectory);
-            $resourceNode->setMimeType("");
-            $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(1));
-
             $manager->persist($resourceNode);
-            $manager->flush();
+            $manager->flush($resourceNode);
+
+            // JSON_STEP UPDATE
+            $step->resourceId = $resourceNode->getId();
+
+            // STEPSTONODELETE ARRAY UPDATE
+            $stepsToNotDelete[] = $resourceNode->getId();
 
             $currentStep->setStepOrder($order);
             $stepType = $manager->getRepository('InnovaPathBundle:StepType')->findOneById($step->type);
@@ -263,7 +279,7 @@ class PathController extends Controller
             $manager->flush();
 
             // récursivité sur les enfants possibles.
-            $this->jsonParser($step->children, $user, $workspace, $pathsDirectory, $newStep->getId(), 0, $path);
+            $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $currentStep->getId(), 0, $path, $stepsToNotDelete);
         }
 
         $manager->flush();
