@@ -1,4 +1,4 @@
-<div ng-include="'partials/navbar.html'" onload="activeTab = 'Scenario'"></div>
+<div ng-include="templateRoute + 'Editor/navbar.html'" onload="activeTab = 'Scenario'"></div>
 
 <a class="btn btn-templates" pageslide="left" ps-speed="0.5" href="#templates-sidebar">
     <i class="icon-heart"></i> Templates
@@ -13,8 +13,8 @@
     
     <div class="preview-step well well-small span6">
         <div class="pull-right" ng-show="previewStep != null">
-            <button ng-click="editStep(previewStep)" class="btn btn-small" tooltip="Edit step"><i class="icon-pencil"></i></button>
-            <button class="btn btn-danger btn-small" ng-click="remove(previewStep)" tooltip="Delete step">
+            <button ng-click="editStep(previewStep)" class="btn btn-xs" tooltip="Edit step"><i class="icon-pencil"></i></button>
+            <button class="btn btn-danger btn-xs" ng-click="remove(previewStep)" tooltip="Delete step">
                 <i class="icon-trash"></i>
             </button>
         </div>
@@ -57,8 +57,8 @@
                         <td class="icon"><img src="images/icons/document/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
                         <td ng-class="{'excluded-resource' : resource.isExcluded}">{{ resource.name }}</td>
                         <td class="actions">
-                            <button ng-disabled="!resource.isExcluded" class="btn btn-mini btn-success" ng-click="includeParentResource(resource)"><i class="icon-eye-open"></i></button>
-                            <button ng-disabled="resource.isExcluded" class="btn btn-mini btn-danger" ng-click="excludeParentResource(resource)"><i class="icon-eye-close"></i></button>
+                            <button ng-disabled="!resource.isExcluded" class="btn btn-xs btn-success" ng-click="includeParentResource(resource)"><i class="icon-eye-open"></i></button>
+                            <button ng-disabled="resource.isExcluded" class="btn btn-xs btn-danger" ng-click="excludeParentResource(resource)"><i class="icon-eye-close"></i></button>
                         </td>
                     </tr>
                 </table>
@@ -68,7 +68,7 @@
                 <accordion-heading>
                     <i class="indent" style="margin-left: {{ inheritedResources.documents.length * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
                     {{ previewStep.name }}
-                    <button class="btn btn-mini btn-primary pull-right" ng-click="editResource('document')"><i class="icon-plus"></i></button>
+                    <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('document')"><i class="icon-plus"></i></button>
                 </accordion-heading>
                 
                 <table class="table table-condensed table-hover">
@@ -76,8 +76,8 @@
                         <td class="icon"><img src="images/icons/document/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
                         <td>{{ resource.name }}</td>
                         <td class="actions">
-                            <button class="btn btn-mini" ng-click="editResource('document', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
-                            <button class="btn btn-mini btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
+                            <button class="btn btn-xs" ng-click="editResource('document', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
+                            <button class="btn btn-xs btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
                         </td>
                     </tr>
                 </table>
@@ -99,8 +99,8 @@
                         <td class="icon"><img src="images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
                         <td ng-class="{'excluded-resource' : resource.isExcluded}">{{ resource.name }}</td>
                         <td class="actions">
-                            <button ng-disabled="!resource.isExcluded" class="btn btn-mini btn-success" ng-click="includeParentResource(resource)"><i class="icon-eye-open"></i></button>
-                            <button ng-disabled="resource.isExcluded" class="btn btn-mini btn-danger" ng-click="excludeParentResource(resource)"><i class="icon-eye-close"></i></button>
+                            <button ng-disabled="!resource.isExcluded" class="btn btn-xs btn-success" ng-click="includeParentResource(resource)"><i class="icon-eye-open"></i></button>
+                            <button ng-disabled="resource.isExcluded" class="btn btn-xs btn-danger" ng-click="excludeParentResource(resource)"><i class="icon-eye-close"></i></button>
                         </td>
                     </tr>
                 </table>
@@ -110,7 +110,7 @@
                 <accordion-heading>
                     <i class="indent" style="margin-left: {{ inheritedResources.tools.length * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
                     {{ previewStep.name }}
-                    <button class="btn btn-mini btn-primary pull-right" ng-click="editResource('tool')"><i class="icon-plus"></i></button>
+                    <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('tool')"><i class="icon-plus"></i></button>
                 </accordion-heading>
                 
                 <table class="table table-condensed table-hover">
@@ -118,8 +118,8 @@
                         <td class="icon"><img src="images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
                         <td>{{ resource.name }}</td>
                         <td class="actions">
-                            <button class="btn btn-mini" ng-click="editResource('tool', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
-                            <button class="btn btn-mini btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
+                            <button class="btn btn-xs" ng-click="editResource('tool', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
+                            <button class="btn btn-xs btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
                         </td>
                     </tr>
                 </table>

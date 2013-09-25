@@ -1,24 +1,52 @@
 'use strict';
 
 // Declare app level module which depends on filters, and services
-var EditorApp = angular.module('EditorApp', ['ui.bootstrap', 'pageslide-directive', 'notifications']);
+var EditorApp = angular.module('EditorApp', ['ui.bootstrap', 'pageslide-directive']);
 
 // Declare routes
 EditorApp.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/404', {templateUrl: 'partials/404.html'});
     
-    $routeProvider.when('/path/global', {templateUrl: 'partials/editing-steps/global.html', controller: 'TreeCtrl'});
-    $routeProvider.when('/path/global/:id', {templateUrl: 'partials/editing-steps/global.html', controller: 'TreeCtrl'});
-    $routeProvider.when('/path/skills/:id', {templateUrl: 'partials/editing-steps/skills.html', controller: 'TreeCtrl'});
-    $routeProvider.when('/path/scenario/:id', {templateUrl: 'partials/editing-steps/scenario.html', controller: 'TreeCtrl'});
-    $routeProvider.when('/path/validation/:id', {templateUrl: 'partials/editing-steps/validation.html', controller: 'TreeCtrl'});
-    $routeProvider.when('/path/planner/:id', {templateUrl: 'partials/editing-steps/planner.html', controller: 'TreeCtrl'});
+    $routeProvider.when('/', {
+        templateUrl: EditorApp.templateRoute + 'Editor/global.html', 
+        controller: 'TreeCtrl'
+    });
+    
+    $routeProvider.when('/global', {
+        templateUrl: EditorApp.templateRoute + 'Editor/global.html', 
+        controller: 'TreeCtrl'
+    });
+    
+    $routeProvider.when('/global/:id', {
+        templateUrl: EditorApp.templateRoute + 'Editor/global.html', 
+        controller: 'TreeCtrl'
+    });
+    
+    $routeProvider.when('/skills/:id', {
+        templateUrl: EditorApp.templateRoute + 'Editor/skills.html', 
+        controller: 'TreeCtrl'
+    });
+    
+    $routeProvider.when('/scenario/:id', {
+        templateUrl: EditorApp.templateRoute + 'Editor/scenario.html', 
+        controller: 'TreeCtrl'
+    });
+    
+    $routeProvider.when('/validation/:id', {
+        templateUrl: EditorApp.templateRoute + 'Editor/validation.html', 
+        controller: 'TreeCtrl'
+    });
+    
+    $routeProvider.when('/planner/:id', {
+        templateUrl: EditorApp.templateRoute + 'Editor/planner.html', 
+        controller: 'TreeCtrl'
+    });
     
     $routeProvider.otherwise({redirectTo: '/404'});
 }]);
 
 // History
-EditorApp.factory('HistoryFactory', historyFactoryProto);
+EditorApp.factory('HistoryFactory', HistoryFactoryProto);
 
 // Clipboard
 EditorApp.factory('ClipboardFactory', ClipboardFactoryProto);
@@ -28,7 +56,7 @@ EditorApp.factory('ClipboardFactory', ClipboardFactoryProto);
 //EditorApp.controller('AlertCtrl', AlertCtrlProto);
 
 // Help
-Editor.controller('HelpModalCtrl', HelpModalCtrlProto);
+EditorApp.controller('HelpModalCtrl', HelpModalCtrlProto);
 
 // Path
 EditorApp.factory('PathFactory', PathFactoryProto);

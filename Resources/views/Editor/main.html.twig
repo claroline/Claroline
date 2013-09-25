@@ -1,42 +1,70 @@
-{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+{% extends "ClarolineCoreBundle::layout.html.twig" %}
 
 {% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/app.css') }}"/>
+    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/step-edit.css') }}"/>
+    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/navbar.css') }}"/>
 {% endblock %}
 
-{% block section_content %}
-<div class="path-editor container">
-        <div class="panel-title">
-        
-        </div>
-        
-        <div class="panel-body">
-        
-        </div>
-        
-        <div ng-cloak ng-controller="AlertController">
-            <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{ alert.msg }}</alert>
-        </div>
+{% block content %}
+    <div ng-cloak class="col-md-12 section-content" ng-app="EditorApp">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Title</h3>
+            </div>
 
-        <div id="templates-sidebar" style="display:none" ng-controller="TemplateController">
-            <a id="templates-sidebar-close" href="#" class="btn btn-small pull-right"><i class="icon-remove"></i></a>
-        <div ng-include="'partials/sidebars/templates-sidebar.html'"></div>
+            <div class="panel-body">
+                <div ng-view></div>
+            </div>
+        </div>
     </div>
-    <div ng-view></div>
-        
-    <div notifications="top right"></div>
-</div>
 {% endblock %}
 
 {% block javascripts %}
+    {# Load Claroline JS #}
     {{ parent() }}
+    
+    {# Load Angular Libraries #}
     <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-cookies.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-loader.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-resource.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-sanitize.min.js') }}"></script>
-    
     <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/angular-ui.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/ui-bootstrap-tpls.min.js') }}"></script>
-    
     <script type="text/javascript" src="{{ asset('bundles/innovaangularpageslide/js/angular-pageslide-directive.js') }}"></script>
+    
+    {# History #}
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/History/Factory/HistoryFactory.js') }}"></script>
+    
+    {# Clipboard #}
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Clipboard/Factory/ClipboardFactory.js') }}"></script>
+    
+    {# Help  #}
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Help/Controller/HelpModalCtrl.js') }}"></script>
+    
+    {# Path #}
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Path/Factory/PathFactory.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Editor/Controller/TreeCtrl.js') }}"></script>
+    
+    {# Steps #}
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Step/Factory/StepFactory.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Step/Controller/StepModalCtrl.js') }}"></script>
+    
+    {# Resources #}
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Resource/Factory/ResourceFactory.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Resource/Controller/ResourceModalCtrl.js') }}"></script>
+    
+    {# Templates #}
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Template/Factory/TemplateFactory.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Template/Controller/TemplateCtrl.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Template/Controller/TemplateModalCtrl.js') }}"></script>
+    
+    {# Global APP #}
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Editor/EditorApp.js') }}"></script>
+    <script type="text/javascript">
+        // TODO : find more beautiful
+        EditorApp.templateRoute = "{{ asset('bundles/innovapath/partials/') }}";
+    </script>
 {% endblock %}

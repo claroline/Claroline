@@ -1,16 +1,22 @@
+'use strict';
+
+/**
+ * Tree Controller
+ * @todo : éclater en 5 Controllers minimum (Global / Skills / Scenario / Planner / Validation)
+ */
 var TreeCtrlProto = [
      '$scope',
      '$http',
-     '$notification',
      '$dialog',
      '$routeParams',
      '$location',
-     'PathFactory',
-     'StepFactory',
      'ClipboardFactory',
      'HistoryFactory',
+     'PathFactory',
+     'StepFactory',
      'ResourceFactory',
-     function($scope, $http, $notification, $dialog, $routeParams, $location, PathFactory, StepFactory, ClipboardFactory, HistoryFactory, ResourceFactory) {
+     function($scope, $http, $dialog, $routeParams, $location, ClipboardFactory, HistoryFactory, PathFactory, StepFactory, ResourceFactory) {
+         $scope.templateRoute = EditorApp.templateRoute;
          $scope.path = PathFactory.getPath();
          
          $scope.previewStep = null;
@@ -64,22 +70,18 @@ var TreeCtrlProto = [
          }
          else if (null === $scope.path) {
              // Create new path
-             $http.get('tree.json')
-                 .success(function(data) {
-                     $scope.path = data;
-                     PathFactory.setPath($scope.path);
-                     
-                     if ($scope.path.steps.length === 0) {
-                         // New path => add root step
-                         var rootStep = StepFactory.generateNewStep();
-                         rootStep.name = $scope.path.name;
-                         $scope.path.steps.push(rootStep);
-                     }
-                     
-                     HistoryFactory.update($scope.path);
-                     $scope.setPreviewStep();
-                 }
-             );
+             $scope.path = PathFactory.generateNewPath();
+             PathFactory.setPath($scope.path);
+             
+             if ($scope.path.steps.length === 0) {
+                 // New path => add root step
+                 var rootStep = StepFactory.generateNewStep();
+                 rootStep.name = $scope.path.name;
+                 $scope.path.steps.push(rootStep);
+             }
+             
+             HistoryFactory.update($scope.path);
+             $scope.setPreviewStep();
          }
          
          // Display Root node as default preview step
@@ -204,7 +206,7 @@ var TreeCtrlProto = [
                  $http
                      .put('../api/index.php/paths/' + $routeParams.id + '.json', path)
                      .success ( function (data) {
-                         $notification.success('Success', 'Path updated!');
+//                         $notification.success('Success', 'Path updated!');
                      });
              } 
              else {
@@ -217,7 +219,7 @@ var TreeCtrlProto = [
                          PathFactory.setPath(path);
                          $scope.path = PathFactory.getPath();
                          
-                         $notification.success('Success', 'New path saved!');
+//                         $notification.success('Success', 'New path saved!');
                          $location.path('/path/global/' + data);
                      });
              }
@@ -235,7 +237,7 @@ var TreeCtrlProto = [
          $scope.openTemplateEdit = function(step) {
              StepFactory.setStep(step);
              var d = $dialog.dialog(dialogOptions);
-             d.open('partials/modals/template-edit.html', 'TemplateModalController');
+             d.open('partials/modals/template-edit.html', 'TemplateModalCtrl');
          };
          
          $scope.editStep = function(step) {
@@ -246,7 +248,7 @@ var TreeCtrlProto = [
              options.dialogClass = 'step-edit';
              
              var d = $dialog.dialog(options);
-             d.open('partials/modals/step-edit.html', 'StepModalController')
+             d.open('partials/modals/step-edit.html', 'StepModalCtrl')
               .then(function(step) {
                   if (step) {
                       // Inject edited step in path
@@ -260,7 +262,7 @@ var TreeCtrlProto = [
          
          $scope.openHelp = function() {
              var d = $dialog.dialog(dialogOptions);
-             d.open('partials/modals/help.html', 'HelpModalController');
+             d.open('partials/modals/help.html', 'HelpModalCtrl');
          };
          
          // Resources management
@@ -283,7 +285,7 @@ var TreeCtrlProto = [
              };
              
              var d = $dialog.dialog(options);
-             d.open('partials/modals/resource-edit.html', 'ResourceModalController')
+             d.open('partials/modals/resource-edit.html', 'ResourceModalCtrl')
               .then(function(resource) {
                   if (resource) {
                       // Save resource

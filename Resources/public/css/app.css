@@ -3,48 +3,35 @@
     z-index: 1;
 }
 
-img {
-    border: none;
-}
+/* img { */
+/*     border: none; */
+/* } */
 
-h1 {
-    font-size: 20px;
-    margin: 4px 0;
-    line-height: 24px;
-    font-weight: normal;
-}
+/* h1 { */
+/*     font-size: 20px; */
+/*     margin: 4px 0; */
+/*     line-height: 24px; */
+/*     font-weight: normal; */
+/* } */
 
-h2 {
-    font-size: 18px;
-    margin: 4px 0;
-    line-height: 22px;
-    font-weight: normal;
-}
+/* h2 { */
+/*     font-size: 18px; */
+/*     margin: 4px 0; */
+/*     line-height: 22px; */
+/*     font-weight: normal; */
+/* } */
 
-h3 {
-    font-size: 16px;
-    margin: 4px 0;
-    line-height: 20px;
-}
+/* h3 { */
+/*     font-size: 16px; */
+/*     margin: 4px 0; */
+/*     line-height: 20px; */
+/* } */
 
-body {
-    background: #fff url(http://dev.claroline.net/bundles/clarolinecore/images/themes/claroline/bg2.jpg) repeat-x;
-}
-
-.path-editor {
-    padding: 10px;
-    margin: 26px auto;
-    background-color: #FFFFFF;
-    border-radius: 4px;
-    box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgb(221, 221, 221);
-}
-
-.page-title {
-    margin-bottom: 10px;
-    margin-left: 30px;
-    vertical-align: middle;
-}
+/* .page-title { */
+/*     margin-bottom: 10px; */
+/*     margin-left: 30px; */
+/*     vertical-align: middle; */
+/* } */
 
 li {
     list-style: none;
@@ -83,17 +70,13 @@ form {
     margin-bottom: 15px;
 }
 
-input.ng-invalid {
-    border: 1px solid red;
-}
+/* input.ng-invalid { */
+/*     border: 1px solid red; */
+/* } */
 
-input.ng-invalid {
-    border: 1px solid red;
-}
-
-input.ng-valid {
-    border: 1px solid green;
-}
+/* input.ng-valid { */
+/*     border: 1px solid green; */
+/* } */
 
 .btn-templates {
     position: fixed;

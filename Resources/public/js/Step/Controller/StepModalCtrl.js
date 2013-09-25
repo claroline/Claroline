@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Step Modal Controller
  */
@@ -62,7 +64,7 @@ var StepModalCtrlProto = [
             };
 
             var d = $dialog.dialog(options);
-            d.open('partials/modals/resource-edit.html', 'ResourceModalController')
+            d.open('partials/modals/resource-edit.html', 'ResourceModalCtrl')
              .then(function(resource) {
                  if (resource) {
                      // Save resource

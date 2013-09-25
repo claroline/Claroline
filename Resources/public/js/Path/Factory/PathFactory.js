@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Path Factory
  */
@@ -19,6 +21,28 @@ var PathFactoryProto = function() {
             maxResourceId = 0;
             
             return this;
+        },
+        
+        
+        /**
+         * 
+         */
+        generateNewPath: function() {
+            var path = {
+                id: null,
+                name: 'My Path Name',
+                description: 'This is the path description',
+                steps: [],
+                progression: {
+                    global     : 'todo',
+                    skills     : 'todo',
+                    scenario   : 'todo',
+                    validation : 'todo',
+                    planner    : 'todo'
+                }
+            };
+            
+            return path;
         },
         
         /**

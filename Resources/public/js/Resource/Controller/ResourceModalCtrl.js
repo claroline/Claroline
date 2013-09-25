@@ -1,7 +1,9 @@
+'use strict';
+
 /**
  * Resource Modal Controller
  */
-var ResourceModalCtrl = [
+var ResourceModalCtrlProto = [
     '$scope',
     'dialog',
     'PathFactory',

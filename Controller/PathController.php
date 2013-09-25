@@ -289,8 +289,8 @@ class PathController extends Controller
 
     /**
      * @Route(
-     *      "/path/edit",
-     *      name = "innova_path_edit",
+     *      "/path/editor",
+     *      name = "innova_path_editor",
      *      options = {"expose"=true}
      * )
      * 
@@ -298,6 +298,7 @@ class PathController extends Controller
      */
     public function editorAction()
     {
+//         return array('is_path_mode' => true);
         return array();
     }
     

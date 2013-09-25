@@ -1,9 +1,11 @@
+'use strict';
+
 /**
  * Resource Factory
  */
 var ResourceFactoryProto = [
-    'pathFactory', 
-    function(pathFactory) {
+    'PathFactory', 
+    function(PathFactory) {
         var resource = null;
         
         // Base template used to create new resource
@@ -71,7 +73,7 @@ var ResourceFactoryProto = [
              */
             generateNewResource: function() {
                 var newResource = jQuery.extend(true, {}, baseResource);
-                newResource.id = pathFactory.getNextResourceId();
+                newResource.id = PathFactory.getNextResourceId();
                 return newResource;
             },
             
@@ -87,7 +89,7 @@ var ResourceFactoryProto = [
                     tools: []
                 };
 
-                var path = pathFactory.getPath();
+                var path = PathFactory.getPath();
                 if (path) {
                     for (var i = 0; i < path.steps.length; i++) {
                         var currentStep = path.steps[i];

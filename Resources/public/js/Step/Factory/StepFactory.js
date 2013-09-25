@@ -1,6 +1,11 @@
+'use strict';
+
+/**
+ * Step Factory
+ */
 var StepFactoryProto = [
-    'pathFactory',
-    function(pathFactory) {
+    'PathFactory',
+    function(PathFactory) {
         // Stored step
         var step = null;
         
@@ -30,7 +35,7 @@ var StepFactoryProto = [
              * @returns object
              */
             generateNewStep: function(step) {
-                var stepId = pathFactory.getNextStepId();
+                var stepId = PathFactory.getNextStepId();
                 var newStep = jQuery.extend(true, {}, baseStep);
                 
                 if (undefined != step) {

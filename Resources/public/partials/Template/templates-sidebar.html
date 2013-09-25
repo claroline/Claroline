@@ -4,9 +4,9 @@
     <tr ng-repeat="(id, template) in templates">
         <td>{{ template.name }}</td>
         <td>
-            <button class="btn btn-mini" ng-click="copyToClipboard(template.step)" tooltip="Copy"><i class="icon-copy"></i></button>
-            <button class="btn btn-mini" ng-click="edit(template)" tooltip="Edit"><i class="icon-edit"></i></button>
-            <button class="btn btn-mini btn-danger" ng-click="delete(template, id)" tooltip="Delete"><i class="icon-trash"></i></button>
+            <button class="btn btn-xs" ng-click="copyToClipboard(template.step)" tooltip="Copy"><i class="icon-copy"></i></button>
+            <button class="btn btn-xs" ng-click="edit(template)" tooltip="Edit"><i class="icon-edit"></i></button>
+            <button class="btn btn-xs btn-danger" ng-click="delete(template, id)" tooltip="Delete"><i class="icon-trash"></i></button>
         </td>
     </tr>
 </table>
