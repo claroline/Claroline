@@ -20,20 +20,6 @@
             {% endfor %}
         </table>
         
-        <a href="#/path/global" class="btn btn-primary"><i class="icon-plus"></i></a>
+        <a href="{{ path('innova_path_edit') }}" class="btn btn-primary"><i class="icon-plus"></i></a>
     </div>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-cookies.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-loader.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-resource.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-sanitize.min.js') }}"></script>
-    
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/angular-ui.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/ui-bootstrap-tpls.min.js') }}"></script>
-    
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularpageslide/js/angular-pageslide-directive.js') }}"></script>
 {% endblock %}

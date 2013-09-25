@@ -1,0 +1,50 @@
+<div class="modal-header">
+    <h1><i class="icon-pencil"></i> Editing {{ resourceType }} : &lt;<strong>{{ formResource.name }}</strong>&gt;</h1>
+</div>
+
+<div class="modal-body">
+    <form novalidate name="resourceForm">
+        <fieldset class="row-fluid">
+            <div class="control-group span6">
+                <label for="resource-name" class="control-label">Name</label>
+                <input type="text" class="span12" name="resource-name" ng-model="formResource.name" required value="{{ formResource.name }}" placeholder="{{ resourceType }} name"/>
+            </div>
+            
+            <div class="control-group span6">
+                <label for="resource-type">Type</label>
+                <select name="resource-type" id="resource-type" class="span12" ng-model="formResource.subType" ng-options="subType.key as subType.label for subType in resourceSubTypes">
+                    <option value="">-- select {{ resourceType }} type --</option>
+                </select>
+            </div>
+        </fieldset>
+        
+        <fieldset class="row-fluid">
+            <label class="checkbox"> 
+                <input type="checkbox" name="is-digital" id="is-digital" ng-model="formResource.isDigital" />
+                Is digital ?
+            </label>
+            
+            <div class="control-group" ng-show="formResource.isDigital">
+                <br/>
+                <label for="resource-url">Tip document URL</label>
+                <input type="text" name="resource-url" id="resource-url" ng-model="formResource.url" value="" class="span12" />
+                
+                <label><strong>OR</strong> select a resource in database</label>
+                <button class="btn"><i class="icon-search"></i> Browse resources</button>
+            </div>
+        </fieldset>
+        
+        <fieldset class="row-fluid">
+            <br/>
+            <label class="checkbox">
+                <input type="checkbox" name="propagate-to-children" id="propagate-to-children" ng-model="formResource.propagateToChildren" />
+                Is available for children ?
+            </label>
+        </fieldset>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-warning cancel" ng-click="close()">Cancel</button>
+    <button class="btn btn-primary" ng-click="save(formResource)" ng-disabled="!resourceForm.$valid">Save {{ resourceType }}</button>
+</div>

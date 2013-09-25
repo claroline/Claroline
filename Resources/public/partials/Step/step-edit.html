@@ -1,0 +1,189 @@
+<div class="modal container">
+    <form novalidate name="stepForm" id="stepForm">
+        <div class="modal-header">
+            <div class="row-fluid">
+                <h1 class="span2"><i class="icon-pencil"></i> Editing step :</h1>
+                <input ng-disabled="isRootNode" class="span10 pull-right" type="text" id="step-name" ng-model="formStep.name" value="{{ formStep.name }}" required />
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <fieldset class="row-fluid">
+                <div class="control-group span12">
+                    <textarea class="span12" id="step-instructions" name="step-instructions" ng-model="formStep.instructions" placeholder="Tip step instructions here">{{ formStep.instructions }}</textarea>
+                </div>
+                
+                <div class="control-group span2">
+                    <label for="step-who" class="control-label">Who ?</label>
+                    <select class="span12" name="step-who" id="step-who" ng-model="formStep.who">
+                        <option value=""></option>
+                        <option value="student">Student</option>
+                        <option value="group">Group</option>
+                        <option value="class">Class</option>
+                    </select>
+                </div>
+                
+                <div class="control-group span2">
+                    <label for="step-where" class="control-label">Where ?</label>
+                    <select class="span12" name="step-where" id="step-where" ng-model="formStep.where">
+                        <option value=""></option>
+                        <option value="home">Home</option>
+                        <option value="classroom">Classroom</option>
+                        <option value="library">Library</option>
+                        <option value="anywhere">Anywhere</option>
+                    </select>
+                </div>
+                
+                <div class="step-duration control-group span3">
+                    <label for="step-duration-hours" class="control-label">Student duration (in hours)</label>
+                    <select class="span3" name="step-duration-hours" id="step-duration-hours" ng-model="formStep.durationHours">
+                        <option value="">00</option>
+                        <option value="1">01</option>
+                        <option value="2">02</option>
+                        <option value="3">03</option>
+                        <option value="4">04</option>
+                        <option value="5">05</option>
+                        <option value="6">06</option>
+                        <option value="7">07</option>
+                        <option value="8">08</option>
+                        <option value="9">09</option>
+                        <option value="10">10</option>
+                    </select>
+                    <span>h</span>
+                    <select class="span3" name="step-duration-minutes" id="step-duration-minutes" ng-model="formStep.durationMinutes">
+                        <option value="">00</option>
+                        <option value="5">05</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="25">25</option>
+                        <option value="30">30</option>
+                        <option value="35">35</option>
+                        <option value="40">40</option>
+                        <option value="45">45</option>
+                        <option value="50">50</option>
+                        <option value="55">55</option>
+                    </select>
+                    <span>min</span>
+                </div>
+                
+                <div class="control-group span2">
+                    <label class="checkbox">
+	                    <input type="checkbox" name="with-tutor" id="with-tutor" ng-model="formStep.withTutor" />
+	                    With tutor ?
+	                </label>
+                </div>
+                
+                <div class="control-group span2">
+                    <label class="checkbox">
+                        <input type="checkbox" name="with-computer" id="with-computer" ng-model="formStep.withComputer" />
+                        With computer ?
+                    </label>
+                </div>
+            </fieldset>
+
+            <div class="row-fluid">
+                <div class="panel-documents well well-small span4">
+                    <h2>Documents <i class="icon-briefcase"></i></h2>
+                    
+                    <accordion close-others="false">
+                        <accordion-group ng-repeat="parent in inheritedResources.documents">
+                            <accordion-heading>
+                                <i class="indent" style="margin-left: {{ $index * 20 }}px" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
+                                {{ parent.stepName }}
+                                <span class="pull-right parent-resources-count">{{ parent.resources.length }} documents</span>
+                            </accordion-heading>
+                            
+                            <table class="table table-condensed table-hover">
+                                <tr ng-repeat="resource in parent.resources">
+                                    <td class="icon"><img src="images/icons/document/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
+                                    <td ng-class="{'excluded-resource' : resource.isExcluded}">{{ resource.name }}</td>
+                                    <td class="actions">
+                                        <button ng-disabled="!resource.isExcluded" class="btn btn-mini btn-success" ng-click="includeParentResource(resource)"><i class="icon-eye-open"></i></button>
+                                        <button ng-disabled="resource.isExcluded" class="btn btn-mini btn-danger" ng-click="excludeParentResource(resource)"><i class="icon-eye-close"></i></button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </accordion-group>
+                        
+                        <accordion-group is-open="true">
+                            <accordion-heading>
+                                <i class="indent" style="margin-left: {{ inheritedResources.documents.length * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
+                                {{ formStep.name }}
+                                <button class="btn btn-mini btn-primary pull-right" ng-click="editResource('document')"><i class="icon-plus"></i></button>
+                            </accordion-heading>
+                            
+                            <table class="table table-condensed table-hover">
+                                <tr ng-repeat="resource in formStep.resources | filter: {type: 'document'}">
+                                    <td class="icon"><img src="images/icons/document/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
+	                                <td>{{ resource.name }}</td>
+	                                <td class="actions">
+	                                    <button class="btn btn-mini" ng-click="editResource('document', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
+	                                    <button class="btn btn-mini btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
+	                                </td>
+	                            </tr>
+	                        </table>
+	                    </accordion-group>
+	                </accordion>
+	            </div>
+	            
+	            <div class="panel-image well well-small span4">
+	               <div>
+	                    <img src="images/image.png" />
+	               </div>
+	               <br/>
+	               <button class="btn btn-small" ng-click="selectImage()"><i class="icon-picture"></i> Select image</button>
+	            </div>
+	            
+	            <div class="panel-tools well well-small span4">
+	                <h2><i class="icon-wrench"></i> Tools</h2>
+	                
+	                <accordion close-others="false">
+	                    <accordion-group ng-repeat="parent in inheritedResources.tools">
+	                        <accordion-heading>
+	                            <i class="indent" style="margin-left: {{ $index * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
+	                            {{ parent.stepName }}
+	                            <span class="pull-right parent-resources-count">{{ parent.resources.length }} tools</span>
+	                        </accordion-heading>
+	                        
+	                        <table class="table table-condensed table-hover">
+	                            <tr ng-repeat="resource in parent.resources">
+	                                <td class="icon"><img src="images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
+	                                <td ng-class="{'excluded-resource' : resource.isExcluded}">{{ resource.name }}</td>
+	                                <td class="actions">
+	                                    <button ng-disabled="!resource.isExcluded" class="btn btn-mini btn-success" ng-click="includeParentResource(resource)"><i class="icon-eye-open"></i></button>
+	                                    <button ng-disabled="resource.isExcluded" class="btn btn-mini btn-danger" ng-click="excludeParentResource(resource)"><i class="icon-eye-close"></i></button>
+	                                </td>
+	                            </tr>
+	                        </table>
+	                    </accordion-group>
+	                    
+	                    <accordion-group is-open="true">
+	                        <accordion-heading>
+	                            <i class="indent" style="margin-left: {{ inheritedResources.tools.length * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
+	                            {{ formStep.name }}
+	                            <button class="btn btn-mini btn-primary pull-right" ng-click="editResource('tool')"><i class="icon-plus"></i></button>
+	                        </accordion-heading>
+	                        
+	                        <table class="table table-condensed table-hover">
+	                            <tr ng-repeat="resource in formStep.resources | filter: {type: 'tool'}">
+	                                <td class="icon"><img src="images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
+	                                <td>{{ resource.name }}</td>
+	                                <td class="actions">
+	                                    <button class="btn btn-mini" ng-click="editResource('tool', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
+	                                    <button class="btn btn-mini btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
+	                                </td>
+	                            </tr>
+	                        </table>
+	                    </accordion-group>
+	                </accordion>
+	            </div>
+	        </div>
+	    </div>
+	
+	    <div class="modal-footer">
+	        <button class="btn btn-warning cancel" ng-click="close()" ng-disabled="buttonsDisabled">Cancel</button>
+	        <button class="btn btn-primary" ng-click="save(formStep)" ng-disabled="buttonsDisabled || !stepForm.$valid">Save step</button>
+	    </div>
+    </form>
+</div>

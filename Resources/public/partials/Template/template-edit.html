@@ -1,0 +1,32 @@
+<div class="modal-header">
+    <h1><i class="icon-pencil"></i> Editing template : <strong>&lt;{{ formTemplate.name }}&gt;</strong></h1>
+</div>
+
+<div class="modal-body">
+    <form novalidate name="templateForm">
+        <fieldset class="span4">
+            <label for="template-name" class="control-label">Name <span>*</span></label>
+            <input type="text" name="template-name" ng-model="formTemplate.name" class="warning" required value="{{ formTemplate.name }}" />
+            
+            <label for="template-description">Description</label>
+            <textarea name="template-description" id="template-description" cols="30" rows="10" ng-model="formTemplate.description">
+            </textarea>
+            
+            <label class="checkbox">
+                <input type="checkbox" ng-model="formTemplate.withResources" />
+                Save documents &amp; tools too ?
+            </label>
+            
+            <input type="hidden" ng-model="formTemplate.step" value="{{ step }}" name="template-step" />
+        </fieldset>
+        
+        <div class="well span4">
+            Step preview
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-warning cancel" ng-click="close()">Cancel</button>
+    <button class="btn btn-primary" ng-click="save(formTemplate)" ng-disabled="!templateForm.$valid">Save template</button>
+</div>

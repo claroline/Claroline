@@ -1,0 +1,42 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block section_content %}
+<div class="path-editor container">
+        <div class="panel-title">
+        
+        </div>
+        
+        <div class="panel-body">
+        
+        </div>
+        
+        <div ng-cloak ng-controller="AlertController">
+            <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{ alert.msg }}</alert>
+        </div>
+
+        <div id="templates-sidebar" style="display:none" ng-controller="TemplateController">
+            <a id="templates-sidebar-close" href="#" class="btn btn-small pull-right"><i class="icon-remove"></i></a>
+        <div ng-include="'partials/sidebars/templates-sidebar.html'"></div>
+    </div>
+    <div ng-view></div>
+        
+    <div notifications="top right"></div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-cookies.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-loader.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-resource.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-sanitize.min.js') }}"></script>
+    
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/angular-ui.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/ui-bootstrap-tpls.min.js') }}"></script>
+    
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularpageslide/js/angular-pageslide-directive.js') }}"></script>
+{% endblock %}

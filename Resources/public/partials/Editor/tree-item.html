@@ -1,0 +1,39 @@
+<form class="tree-item form-inline">
+    <span ng-mouseenter="show = true" ng-click="setPreviewStep(step)" ng-mouseleave="show = false" >
+    {{ step.name | limitTo:10 }}
+    </span>
+    
+    <span ng-show="show" ng-mouseenter="show = true;" ng-mouseleave="show = false">
+        <button class="btn btn-mini" ng-click="addChild(step)" tooltip="Add a child">
+            <i class="icon-plus"></i>
+        </button>
+        
+        <button ng-hide="isRootNode" class="btn btn-mini" ng-click="addSibling(step)" tooltip="Add a sibling">
+            <i class="icon-plus-sign"></i>
+        </button>
+        
+        <button class="btn btn-mini" ng-click="copyToClipboard(step)" tooltip="Copy">
+            <i class="icon-copy"></i>
+        </button>
+        
+        <button class="btn btn-mini" ng-click="paste(step)" ng-disabled="pasteDisabled" tooltip="Paste">
+            <i class="icon-paste"></i>
+        </button>
+        
+        <button class="btn btn-mini" ng-click="openTemplateEdit(step)" tooltip="Add to favorites">
+            <i class="icon-heart"></i>
+        </button>
+        
+        <button ng-hide="isRootNode" class="btn btn-danger btn-mini" ng-click="remove(step)" tooltip="Delete">
+            <i class="icon-trash"></i>
+        </button>
+        
+        <button class="btn btn-danger btn-mini" ng-click="removeChildren(step)" ng-show="step.children.length > 0" tooltip="Delete children">
+            <i class="icon-list"></i>
+        </button>
+    </span>
+</form>
+
+<ul ui-sortable="sortableOptions" ng-model="step.children">
+    <li ng-repeat="step in step.children" ng-include="'partials/tree-item.html'" onload="isRootNode = false"></li>
+</ul>

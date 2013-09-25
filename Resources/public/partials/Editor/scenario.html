@@ -1,0 +1,129 @@
+<div ng-include="'partials/navbar.html'" onload="activeTab = 'Scenario'"></div>
+
+<a class="btn btn-templates" pageslide="left" ps-speed="0.5" href="#templates-sidebar">
+    <i class="icon-heart"></i> Templates
+</a>
+
+<div class="row-fluid">
+    <div class="well well-small span6" id="zone">
+        <ul>
+            <li ng-repeat="step in path.steps" ng-include="'partials/tree-item.html'" onload="isRootNode = ($index == 0)"></li>
+        </ul>
+    </div>
+    
+    <div class="preview-step well well-small span6">
+        <div class="pull-right" ng-show="previewStep != null">
+            <button ng-click="editStep(previewStep)" class="btn btn-small" tooltip="Edit step"><i class="icon-pencil"></i></button>
+            <button class="btn btn-danger btn-small" ng-click="remove(previewStep)" tooltip="Delete step">
+                <i class="icon-trash"></i>
+            </button>
+        </div>
+        
+        <h2>Selected step : <a href="" ng-click="editStep(previewStep)"><strong>&lt;{{ previewStep.name | limitTo:10 }}&gt;</strong></a></h2>
+        
+        <div class="icons">
+            <img src="images/icons/who/{{ previewStep.who }}" alt="{{ previewStep.who }}" tooltip="{{ previewStep.who }}" />
+            <img src="images/icons/where/{{ previewStep.where }}" alt="{{ previewStep.where }}" tooltip="{{ previewStep.where }}" />
+            
+            <img ng-show="previewStep.withComputer" src="images/icons/computer.png" alt="With computer" tooltip="With computer" />
+            <img ng-show="!previewStep.withComputer" src="images/icons/no_computer.png" alt="Without computer" tooltip="Without computer" />
+            
+            <img ng-show="previewStep.withTutor" src="images/icons/tutor.png" alt="With tutor" tooltip="With tutor" />
+            <img ng-show="!previewStep.withTutor" src="images/icons/no_tutor.png" alt="Without tutor" tooltip="Without tutor" />
+            
+            <span class="duration pull-right">{{ previewStep.durationHours || "0" }}h{{ previewStep.durationMinutes || "00" }}min</span>
+            
+        </div>
+        
+        <div class="picture">
+            <img src="images/image.png" />
+        </div>
+        
+        <h3>Instructions</h3>
+        <p>{{ previewStep.instructions || "There is no instructions for this step" }}</p>
+        
+        <h3><i class="icon-briefcase"></i> Documents</h3>
+        
+        <accordion close-others="false">
+            <accordion-group ng-repeat="parent in inheritedResources.documents">
+                <accordion-heading>
+                    <i class="indent" style="margin-left: {{ $index * 20 }}px" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
+                    {{ parent.stepName }}
+                    <span class="pull-right parent-resources-count">{{ parent.resources.length }} documents</span>
+                </accordion-heading>
+                
+                <table class="table table-condensed table-hover">
+                    <tr ng-repeat="resource in parent.resources">
+                        <td class="icon"><img src="images/icons/document/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
+                        <td ng-class="{'excluded-resource' : resource.isExcluded}">{{ resource.name }}</td>
+                        <td class="actions">
+                            <button ng-disabled="!resource.isExcluded" class="btn btn-mini btn-success" ng-click="includeParentResource(resource)"><i class="icon-eye-open"></i></button>
+                            <button ng-disabled="resource.isExcluded" class="btn btn-mini btn-danger" ng-click="excludeParentResource(resource)"><i class="icon-eye-close"></i></button>
+                        </td>
+                    </tr>
+                </table>
+            </accordion-group>
+            
+            <accordion-group is-open="true">
+                <accordion-heading>
+                    <i class="indent" style="margin-left: {{ inheritedResources.documents.length * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
+                    {{ previewStep.name }}
+                    <button class="btn btn-mini btn-primary pull-right" ng-click="editResource('document')"><i class="icon-plus"></i></button>
+                </accordion-heading>
+                
+                <table class="table table-condensed table-hover">
+                    <tr ng-repeat="resource in previewStep.resources | filter: {type: 'document'}">
+                        <td class="icon"><img src="images/icons/document/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
+                        <td>{{ resource.name }}</td>
+                        <td class="actions">
+                            <button class="btn btn-mini" ng-click="editResource('document', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
+                            <button class="btn btn-mini btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
+                        </td>
+                    </tr>
+                </table>
+            </accordion-group>
+        </accordion>
+        
+        <h3><i class="icon-wrench"></i> Tools</h3>
+        
+        <accordion close-others="false">
+            <accordion-group ng-repeat="parent in inheritedResources.tools">
+                <accordion-heading>
+                    <i class="indent" style="margin-left: {{ $index * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
+                    {{ parent.stepName }}
+                    <span class="pull-right parent-resources-count">{{ parent.resources.length }} tools</span>
+                </accordion-heading>
+                
+                <table class="table table-condensed table-hover">
+                    <tr ng-repeat="resource in parent.resources">
+                        <td class="icon"><img src="images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
+                        <td ng-class="{'excluded-resource' : resource.isExcluded}">{{ resource.name }}</td>
+                        <td class="actions">
+                            <button ng-disabled="!resource.isExcluded" class="btn btn-mini btn-success" ng-click="includeParentResource(resource)"><i class="icon-eye-open"></i></button>
+                            <button ng-disabled="resource.isExcluded" class="btn btn-mini btn-danger" ng-click="excludeParentResource(resource)"><i class="icon-eye-close"></i></button>
+                        </td>
+                    </tr>
+                </table>
+            </accordion-group>
+            
+            <accordion-group is-open="true">
+                <accordion-heading>
+                    <i class="indent" style="margin-left: {{ inheritedResources.tools.length * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
+                    {{ previewStep.name }}
+                    <button class="btn btn-mini btn-primary pull-right" ng-click="editResource('tool')"><i class="icon-plus"></i></button>
+                </accordion-heading>
+                
+                <table class="table table-condensed table-hover">
+                    <tr ng-repeat="resource in previewStep.resources | filter: {type: 'tool'}">
+                        <td class="icon"><img src="images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
+                        <td>{{ resource.name }}</td>
+                        <td class="actions">
+                            <button class="btn btn-mini" ng-click="editResource('tool', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
+                            <button class="btn btn-mini btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
+                        </td>
+                    </tr>
+                </table>
+            </accordion-group>
+        </accordion>
+    </div>
+</div>
