@@ -2,7 +2,7 @@
 
 <!-- Ant build file used for Claronext's Jenkins job. See http://jenkins-php.org/ -->
 
-<project name="Claronext" default="build" basedir="./../../../../../../">
+<project name="Claronext" default="build" basedir="../../../../../..//">
 
     <property name="appdir" value="${basedir}/app"/>
     <property name="srcdir" value="${basedir}/vendor/claroline"/>
