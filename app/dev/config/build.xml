@@ -2,11 +2,12 @@
 
 <!-- Ant build file used for Claronext's Jenkins job. See http://jenkins-php.org/ -->
 
-<project name="Claronext" default="build" basedir="./../../../">
+<project name="Claronext" default="build" basedir="../../../../../..">
 
     <property name="appdir" value="${basedir}/app"/>
     <property name="srcdir" value="${basedir}/vendor/claroline"/>
     <property name="builddir" value="${appdir}/build"/>
+    <property name="configdir" value="${appdir}/dev/config"/>
 
     <target name="build" depends="parallelTasks,phpunit,phpcb"/>
 
@@ -16,9 +17,9 @@
             <arg value="-c" />
             <arg path="${appdir}/phpunit.xml" />
             <arg value="--log-junit" />
-            <arg path="${appdir}/build/logs/junit.xml" />
+            <arg path="${builddir}/logs/junit.xml" />
             <arg value="--coverage-html"/>
-            <arg path="${appdir}/build/coverage" />
+            <arg path="${builddir}/coverage" />
             <arg value="--verbose" />
             <arg value="--testsuite" />
             <arg value="core" />
@@ -56,7 +57,7 @@
         <exec executable="phpmd">
             <arg path="${srcdir}" />
             <arg value="xml" />
-            <arg value="${appdir}/build/tools/phpmd.xml" />
+            <arg value="${configdir}/phpmd.xml" />
             <arg value="--reportfile" />
             <arg value="${builddir}/logs/pmd.xml" />
             <arg value="--exclude" />
@@ -87,7 +88,7 @@
         <exec executable="phpcs" output="/dev/null">
             <arg value="--report=checkstyle" />
             <arg value="--report-file=${builddir}/logs/checkstyle.xml" />
-            <arg value="--standard=${appdir}/build/tools/phpcs.xml" />
+            <arg value="--standard=${configdir}/phpcs.xml" />
             <arg path="${srcdir}" />
         </exec>
     </target>
@@ -97,9 +98,9 @@
         <exec executable="phpdoc">
             <arg value="--quiet" />
             <arg value="--ignore" />
-            <arg path="${srcdir}/*/Claroline/*/Tests/*,${srcdir}/*/Claroline/*/Resources/*,${srcdir}/*/Claroline/*/Migrations/*" />
+            <arg path="${srcdir}/*/*/*/Tests/*,${srcdir}/*/*/*/Resources/*,${srcdir}/*/*/*/Migrations/*" />
             <arg value="--directory" />
-            <arg path="${srcdir}/core/Claroline,${srcdir}/plugin/Claroline" />
+            <arg path="${srcdir}" />
             <arg value="--target" />
             <arg path="${builddir}/api" />
         </exec>
@@ -120,9 +121,9 @@
     <target name="jshint"
          description="Generate checkstyle-jshint.xml using JSHint">
         <exec executable="jshint" output="${builddir}/logs/checkstyle-jshint.xml">
-            <arg value="--reporter=${appdir}/dev/checkstyle-errors.js" />
+            <arg value="--reporter=${configdir}/checkstyle-errors.js" />
             <arg value="--config" />
-            <arg path="${appdir}/build/tools/jshint.json" />
+            <arg path="${configdir}/jshint.json" />
             <arg path="${srcdir}" />
         </exec>
     </target>
@@ -132,7 +133,7 @@
         <exec executable="jshint" output="${builddir}/logs/jslint.xml">
             <arg value="--reporter=jslint" />
             <arg value="--config" />
-            <arg path="${appdir}/build/tools/jshint.json" />
+            <arg path="${configdir}/jshint.json" />
             <arg path="${srcdir}" />
         </exec>
     </target>
