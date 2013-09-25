@@ -133,21 +133,7 @@ class WorkspaceAgendaController extends Controller
             $event->setAllDay($postData['agenda_form']['allDay']);
             $this->om->flush();
 
-            return new Response(
-                json_encode(
-                    array(
-                        'id' => $event->getId(),
-                        'title' => $event->getTitle(),
-                        'start' => $event->getStart()->getTimestamp(),
-                        'end' => $event->getEnd()->getTimestamp(),
-                        'color' => $event->getPriority(),
-                        'allDay' => $event->getAllDay(),
-                        'description' => $event->getDescription()
-                    )
-                ),
-                200,
-                array('Content-Type' => 'application/json')
-            );
+            return new Response('', 204);
         }
 
         return new Response(
