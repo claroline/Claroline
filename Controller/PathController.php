@@ -315,6 +315,21 @@ class PathController extends Controller
 
     /**
      * @Route(
+     *      "/path/editor",
+     *      name = "innova_path_editor",
+     *      options = {"expose"=true}
+     * )
+     * 
+     * @Template("InnovaPathBundle:Editor:main.html.twig")
+     */
+    public function editorAction()
+    {
+//         return array('is_path_mode' => true);
+        return array();
+    }
+    
+    /**
+     * @Route(
      *     "/paths",
      *     name = "innova_path_get_paths",
      *     options = {"expose"=true}

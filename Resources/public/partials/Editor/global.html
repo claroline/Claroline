@@ -1,0 +1,21 @@
+<div ng-include="templateRoute + 'Editor/navbar.html'" onload="activeTab = 'Global'"></div>
+
+<div class="panel-body">
+    <form class="form-horizontal">
+        <div class="form-group row">
+            <label class="control-label col-md-3 required" for="path-name">Name</label>
+            <div class="col-md-7">
+                <input type="text" class="form-control" value="{{ path.name }}" ng-model="path.name" id="path-name" ng-change="rename()" required />
+            </div>
+        </div>
+        
+        <div class="form-group row">
+            <label class="control-label col-md-3" for="path-description">Description</label>
+            <div class="col-md-7">
+                <textarea class="form-control" id="path-description" ng-model="path.description" ng-change="rename()">
+                    {{ path.description }}
+                </textarea>
+            </div>
+        </div>
+    </form>
+</div>

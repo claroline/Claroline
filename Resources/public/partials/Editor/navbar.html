@@ -1,0 +1,94 @@
+<div class="buttons pull-right">
+    <div class="btn-group">
+        <button class="btn btn-xs" ng-click="undo()" ng-disabled="undoDisabled" tooltip="Undo"><i class="icon-reply"></i></button>
+        <button class="btn btn-xs" ng-click="redo()" ng-disabled="redoDisabled" tooltip="Redo"><i class="icon-share-alt"></i></button>
+    </div>
+    
+    <button class="btn btn-xs btn-primary" ng-click="save(path)" tooltip="Save"><i class="icon-save"></i></button>
+    
+    <a class="btn btn-xs btn-danger" href="#/path/list" tooltip="Back to list" ng-confirm=""><i class="icon-remove"></i></a>
+</div>
+
+<button class="btn btn-xs pull-left" ng-click="openHelp()" tooltip="Help"><i class="icon-question-sign"></i></button>
+<h1 class="page-title">Editing Path : &lt;<strong>{{ path.name }}</strong>&gt; in Workspace &lt;<strong>xxx</strong>&gt;</h1>
+<ul class="navbar clearfix">
+    <li ng-class="{active: activeTab == 'Global'}" tooltip="Task 1 : Defining General Properties">
+        <div class="btn-group">
+            <a class="btn" href="#/global/{{ path.id }}">
+                <span class="badge" ng-class="{'badge-warning': path.progression.global == 'in_progress', 'badge-success': path.progression.global == 'done'}">1</span> Global
+            </a>
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="" ng-click="path.progression.global = 'todo'"><i class="icon-ban-circle"></i> To do</a></li>
+                <li><a href="" ng-click="path.progression.global = 'in_progress'"><i class="icon-refresh"></i> In progress</a></li>
+                <li><a href="" ng-click="path.progression.global = 'done'"><i class="icon-ok"></i> Done</a></li>
+            </ul>
+        </div>
+    </li>
+    
+    <li ng-class="{active: activeTab == 'Skills'}" tooltip="Task 2 : Defining skills and competencies">
+        <div class="btn-group">
+            <a class="btn" href="#/skills/{{ path.id }}">
+                <span class="badge" ng-class="{'badge-warning': path.progression.skills == 'in_progress', 'badge-success': path.progression.skills == 'done'}">2</span> Skills
+            </a>
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="" ng-click="path.progression.skills = 'todo'"><i class="icon-ban-circle"></i> To do</a></li>
+                <li><a href="" ng-click="path.progression.skills = 'in_progress'"><i class="icon-refresh"></i> In progress</a></li>
+                <li><a href="" ng-click="path.progression.skills = 'done'"><i class="icon-ok"></i> Done</a></li>
+            </ul>
+        </div>
+    </li>
+    
+    <li ng-class="{active: activeTab == 'Scenario'}" tooltip="Task 3 : Defining scenario and steps">
+        <div class="btn-group">
+            <a class="btn" href="#/scenario/{{ path.id }}">
+                <span class="badge" ng-class="{'badge-warning': path.progression.scenario == 'in_progress', 'badge-success': path.progression.scenario == 'done'}">3</span> Scenario
+            </a>
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="" ng-click="path.progression.scenario = 'todo'"><i class="icon-ban-circle"></i> To do</a></li>
+                <li><a href="" ng-click="path.progression.scenario = 'in_progress'"><i class="icon-refresh"></i> In progress</a></li>
+                <li><a href="" ng-click="path.progression.scenario = 'done'"><i class="icon-ok"></i> Done</a></li>
+            </ul>
+        </div>
+    </li>
+    
+    <li ng-class="{active: activeTab == 'Planner'}" tooltip="Task 4 : Plan the path in an agenda">
+        <div class="btn-group">
+            <a class="btn" href="#/planner/{{ path.id }}">
+                <span class="badge" ng-class="{'badge-warning': path.progression.planner == 'in_progress', 'badge-success': path.progression.planner == 'done'}">4</span> Planner
+            </a>
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="" ng-click="path.progression.planner = 'todo'"><i class="icon-ban-circle"></i> To do</a></li>
+                <li><a href="" ng-click="path.progression.planner = 'in_progress'"><i class="icon-refresh"></i> In progress</a></li>
+                <li><a href="" ng-click="path.progression.planner = 'done'"><i class="icon-ok"></i> Done</a></li>
+            </ul>
+        </div>
+    </li>
+    
+    <li ng-class="{active: activeTab == 'Validation'}" tooltip="Task 5 : Validating the path">
+        <div class="btn-group">
+            <a class="btn" href="#/validation/{{ path.id }}">
+                <span class="badge" ng-class="{'badge-warning': path.progression.validation == 'in_progress', 'badge-success': path.progression.validation == 'done'}">5</span> Validation
+            </a>
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="" ng-click="path.progression.validation = 'todo'"><i class="icon-ban-circle"></i> To do</a></li>
+                <li><a href="" ng-click="path.progression.validation = 'in_progress'"><i class="icon-refresh"></i> In progress</a></li>
+                <li><a href="" ng-click="path.progression.validation = 'done'"><i class="icon-ok"></i> Done</a></li>
+            </ul>
+        </div>
+    </li>
+</ul>

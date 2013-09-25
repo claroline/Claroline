@@ -1,0 +1,49 @@
+<div ng-include="templateRoute + 'Editor/navbar.html'" onload="activeTab = 'Skills'"></div>
+
+<strong>[Non fonctionnel]</strong>
+<div class="row-fluid">
+    <form class="form-horizontal">
+        <div class="well well-small span5" id="left">
+            <fieldset>  
+                <div class="control-group">  
+                    <label class="control-label" for="select01">Select a pedagogical framework</label>  
+                    <div class="controls">  
+                        <select id="select01">  
+                            <option>CECRL</option>  
+                            <option>C2I</option>  
+                        </select>  
+                    </div>  
+                </div>  
+                <div class="control-group">  
+                    <label class="control-label" for="multiSelect">Select one or several item(s)</label>  
+                    <div class="controls">  
+                        <select multiple="multiple" id="multiSelect" size="20">  
+                            <option>Compréhension Orale</option>  
+                            <option>Production Orale</option>  
+                            <option>Compréhension Ecrite</option>  
+                            <option>Production Ecrite</option>  
+                            <option>Communication</option>  
+                        </select>  
+                    </div>  
+                </div>  
+            </fieldset>  
+        </div>  
+
+        <div class="well well-small span2" id="center" style="text-align: center">
+            <button class="btn" tooltip="Add selected items in your skills list"><i class="icon-chevron-right"></i></button>
+        </div>  
+
+        <div class="well well-small span5" id="right">
+            <button class="btn btn-danger pull-right" tooltip="Remove selected items"><i class="icon-trash"></i></button>
+            <div class="control-group">  
+                <label class="control-label" for="multiSelect">Skills list</label>  
+                <div class="controls">  
+                    <select multiple="multiple" id="multiSelect" size="20">  
+                        <option>Production Orale</option>  
+                        <option>Production Ecrite</option>  
+                    </select>  
+                </div>  
+            </div>  
+        </div>  
+    </form>
+</div>
