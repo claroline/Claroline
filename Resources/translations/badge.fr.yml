@@ -41,10 +41,10 @@ badge_form_expired_at: "Date d'expiration"
 badge_form_choose_image: "Choisir l'image du badge"
 badge_form_change_image: "Changer l'image du badge"
 badge_form_badgeRules: "Règles d'attribution"
-badge_form_action: 'Action associée :'
-badge_form_occurrence: "Nombre d'occurence :"
-badge_form_period: 'Sur une période de :'
-badge_form_period_duration: 'Durée de la période'
+badge_form_execute: "Exécuter"
+badge_form_times: "fois"
+badge_form_action: "l'action"
+badge_form_period: 'sur une période de'
 badge_award_form_group: 'Groupe'
 badge_award_form_user: 'Utilisateur'
 badge_expired_on_date: 'Expire le %expirationDate%'

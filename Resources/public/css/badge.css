@@ -139,3 +139,7 @@ table.no_margin {
 .badges_rules .nav-stacked > li + li {
   margin-top: 0;
 }
+.badges_rules .rules .row {
+  padding-left: 15px;
+  margin-bottom: 10px;
+}

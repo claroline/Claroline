@@ -47,7 +47,8 @@ class BadgeRuleType extends AbstractType
                     'label' => 'badge_form_occurrence',
                     'theme_options'      => array(
                         'label_width' => 'col-md-4'
-                    )
+                    ),
+                    'data'  => 1
                 )
             )
             ->add(
@@ -69,7 +70,8 @@ class BadgeRuleType extends AbstractType
                     'label' => 'badge_form_period_duration',
                     'theme_options'      => array(
                         'label_width' => 'col-md-4'
-                    )
+                    ),
+                    'data'  => 1
                 )
             );
     }
