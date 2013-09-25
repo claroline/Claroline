@@ -2,6 +2,7 @@ nbproject/*
 !.gitempty
 !placeholder
 *~
+.idea
 app/SymfonyRequirements.php
 app/bootstrap*
 app/build/api
@@ -11,12 +12,13 @@ app/build/logs
 app/build/pdepend
 app/build/tools/phpunit.xml
 app/cache/*
-app/config/local/install.yml
-app/config/local/parameters.yml
-app/config/local/plugin/*
+app/config/bundles.ini
+app/config/parameters.yml
 app/logs/*
 bin/*
 catalog.xml
+composer.json
+composer.lock
 files/*
 files/tmp/*
 templates/*

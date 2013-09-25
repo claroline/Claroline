@@ -37,27 +37,3 @@ function emptyDir($directory)
         }
     }
 }
-
-/**
- * Searches for the composer executable and launches it in a fork if possible (in
- * order to keep the user interaction required when building the parameters.yml
- * file with 'incenteev/composer-parameter-handler').
- */
-function execComposer()
-{
-    foreach (explode(':', getenv('PATH')) as $binDir) {
-        if (is_executable($path = "{$binDir}/composer")) {
-            $composer = $path;
-        }
-    }
-
-    if (!function_exists('pcntl_fork') || !isset($composer)) {
-        return system('composer install --dev --prefer-source');
-    }
-
-    if (0 === $pid = pcntl_fork()) {
-        pcntl_exec($composer, array('install', '--dev', '--prefer-source'));
-    }
-
-    pcntl_waitpid($pid, $status);
-}
