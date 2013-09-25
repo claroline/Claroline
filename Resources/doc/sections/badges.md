@@ -6,11 +6,11 @@ Claroline provides a badge system based on the [Open Badge][3] standard from [Mo
 Create badges
 -------------
 
-To create a badge you need to provide some datas :
+To create a badge you need to provide some mandatories datas :
 
 - **version**: The version of the badge
 - **name**: Human-readable name of the badge being issued. Maximum of 128 characters.
-- **image**: Path to the image representing the badge. Should be a square and in PNG format. Maximum size is 256kb.
+- **image**: Path to the image representing the badge. Should be a square and in PNG format. Maximum size is 256kb. Maximum size 128*128.
 - **description**: Description of the badge being issued. Maximum of 128 characters.
 - **criteria**: Information describing the badge and criteria for earning the badge (not the specific instance of the badge).
 - **expired_at** (optional): Date when the badge expires. If omitted, the badge never expires.
@@ -26,6 +26,9 @@ A user can ask for earning a badge.
 A badge manager must issue him the badge if criteria is reunited.
 Validation is now manual, but there will be an automatic process in the future.
 
+Rules can be added to a badge.
+This rules will be used to determine if a badge can be awarded or not, automatically or not.
+By the way you can now specify if a badge can be automatically awarded or not.
 
 
 ----------

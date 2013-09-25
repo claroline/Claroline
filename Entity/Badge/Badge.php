@@ -57,14 +57,13 @@ class Badge
     /**
      * @var UploadedFile
      *
-     * @Assert\File
+     * @Assert\Image(
+     *     maxSize = "256k",
+     *     maxWidth = 128,
+     *     maxHeight = 128
+     * )
      */
     protected $file;
-
-    /**
-     * @var string
-     */
-    protected $olfFileName;
 
     /**
      * @var ArrayCollection|UserBadge[]

@@ -67,10 +67,11 @@
 {% block section_body %}
     <form action="{{ path('claro_admin_badges_add') }}" method="post" class="form-horizontal" {{ form_enctype(form) }}>
         <div class="row badges_infos">
-            <div class="col-md-3">
+            <div class="col-md-3 text-center{% if form.file.vars.errors|length > 0 %} has-error{% endif %}">
                 <a href="#" class="thumbnail upload_image_placeholder">
-                    <img title="{{ 'badge_form_choose_image'|trans }}" alt="260x180" style="height: 180px" src="{{ asset('bundles/clarolinecore/images/upload-placeholder.jpg') }}">
+                    <img title="{{ 'badge_form_choose_image'|trans }}" style="height: 128px; width: 128px" src="{{ asset('bundles/clarolinecore/images/upload-placeholder.jpg') }}">
                 </a>
+                {{ form_errors(form.file) }}
                 {{ form_widget(form.file) }}
             </div>
             <div class="col-md-9">
