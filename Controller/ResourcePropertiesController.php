@@ -167,7 +167,14 @@ class ResourcePropertiesController extends Controller
             $content .= ', "name": "' . $node->getName() . '"';
             $content .= '}';
 
-            return new JsonResponse(array($node));
+//            $response = new Response($content);
+//            $response->headers->set('Content-Type', 'application/json');
+//            
+//            return $response;
+            
+            $nodesArray[] = $this->resourceManager->toArray($node);
+            
+            return new JsonResponse($nodesArray);
         }
 
         return array('form' => $form->createView());
