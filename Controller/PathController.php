@@ -4,7 +4,7 @@
  * MIT License
  * ===========
  *
- * Copyright (c) 2012 Donovan Tengblad <contact@donovan-tengblad.com>
+ * Copyright (c) 2013 Innovalangues
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -28,11 +28,11 @@
  * @category   Entity
  * @package    InnovaPathBundle
  * @subpackage PathBundle
- * @author     Donovan Tengblad <contact@donovan-tengblad.com>
- * @copyright  2012 Donovan Tengblad.
+ * @author     Innovalangues <contant@innovalangues.net>
+ * @copyright  2013 Innovalangues
  * @license    http://www.opensource.org/licenses/mit-license.php  MIT License
  * @version    0.1
- * @link       http://donovan-tengblad.com
+ * @link       http://innovalangues.net
  */
 namespace Innova\PathBundle\Controller;
 
@@ -66,7 +66,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceRights;
  * @package    Innova
  * @subpackage PathBundle
  * @author     Innovalangues <contant@innovalangues.net>
- * @copyright  2012 Innovlangues.
+ * @copyright  2013 Innovalangues
  * @license    http://www.opensource.org/licenses/mit-license.php MIT License
  * @version    0.1
  * @link       http://innovalangues.net
@@ -147,14 +147,14 @@ class PathController extends Controller
 
 
         //lancement récursion
-        $this->JSONParser($json_root_steps, $user, $workspace, $pathsDirectory, null, 0, $path);
+        $this->jsonParser($json_root_steps, $user, $workspace, $pathsDirectory, null, 0, $path);
 
         return array('workspace' => $workspace, 'ok' => "Parcours déployé.");
     }
 
 
     /**
-     * private _jsonParser function
+     * private jsonParser function
      *
      * @param is_object($steps)          $steps          step of activity
      * @param is_object($user)           $user           user of activity
@@ -167,7 +167,7 @@ class PathController extends Controller
      * @return array
      *
      */
-    private function JSONParser($steps, $user, $workspace, $pathsDirectory, $parent, $order, $path)
+    private function jsonParser($steps, $user, $workspace, $pathsDirectory, $parent, $order, $path)
     {
         $manager = $this->entityManager();
         $rm = $this->resourceManager();
@@ -196,7 +196,16 @@ class PathController extends Controller
 
             // STEP UPDATE
             $resourceNode->setName($step->name);
+            $resourceNode->setClass("Innova\PathBundle\Entity\Step");
+            $resourceNode->setCreator($user);
+            $resourceNode->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("step"));
+            $resourceNode->setWorkspace($workspace);
+            $resourceNode->setParent($pathsDirectory);
+            $resourceNode->setMimeType("");
+            $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(1));
+
             $manager->persist($resourceNode);
+            $manager->flush();
 
             $currentStep->setStepOrder($order);
             $stepType = $manager->getRepository('InnovaPathBundle:StepType')->findOneById($step->type);
@@ -227,6 +236,7 @@ class PathController extends Controller
                 $step2ressourceNode->setResourceNode($manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId));
                 $step2ressourceNode->setStep($currentStep);
                 $step2ressourceNode->setResourceOrder($resourceOrder);
+
                 $manager->persist($step2ressourceNode);
             }
 
@@ -253,7 +263,7 @@ class PathController extends Controller
             $manager->flush();
 
             // récursivité sur les enfants possibles.
-            $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $currentStep->getId(), 0, $path);
+            $this->jsonParser($step->children, $user, $workspace, $pathsDirectory, $newStep->getId(), 0, $path);
         }
 
         $manager->flush();
@@ -362,7 +372,7 @@ class PathController extends Controller
         $user = "Arnaud";
         $content = $this->get('request')->getContent();
 
-        $new_path = New Path;
+        $new_path = new Path;
         $new_path->setUser($user)
                  ->setEditDate($editDate)
                  ->setPath($content);
@@ -370,7 +380,7 @@ class PathController extends Controller
         $em->persist($new_path);
         $em->flush();
 
-        return New Response(
+        return new Response(
             $new_path->getId()
         );
     }
@@ -403,7 +413,7 @@ class PathController extends Controller
         $em->persist($path);
         $em->flush();
 
-        return New Response(
+        return new Response(
             $path->getId()
         );
     }
@@ -430,7 +440,7 @@ class PathController extends Controller
         $em->remove($path);
         $em->flush();
 
-        return New Response("ok");
+        return new Response("ok");
     }
 
     /**
