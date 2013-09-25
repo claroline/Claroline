@@ -505,8 +505,8 @@
                 }
             },
             changeThumbnailIcon: function (nodeId, newIconPath, successHandler) {
-                this.$('#' + nodeId + ' img').attr('src', this.parameters.webPath + newIconPath);
-
+                this.$('#node-element-' + nodeId).attr('style', "background-image:url('" + this.parameters.webPath + newIconPath + "');");
+                console.debug(this.parameters.webPath + newIconPath);
                 if (successHandler) {
                     successHandler();
                 }
@@ -1080,18 +1080,18 @@
                 contentType: false,
                 success: function (data, textStatus, jqXHR) {
                     if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
-                        if (data.name) {
+                        if (data[0].name) {
                             this.views.main.subViews.nodes.renameThumbnail(
                                 nodeId,
-                                data.name,
+                                data[0].name,
                                 this.views.form.close()
                             );
                         }
 
-                        if (data.icon) {
+                        if (data[0].large_icon) {
                             this.views.main.subViews.nodes.changeThumbnailIcon(
                                 nodeId,
-                                data.icon,
+                                data[0].large_icon,
                                 this.views.form.close()
                             );
                         }
