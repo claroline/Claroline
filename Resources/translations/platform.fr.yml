@@ -347,7 +347,8 @@ resource_action_denied_message: 'L''action %action% n''a pas pu être exécutée
 resource_creation_denied: 'Vous n''avez pas la permission de créer une ressource dans le répertoire ''%path'': accès refusé.'
 resource_creation_wrong_type: 'Vous n''avez pas la permission de créer un(e) %type% dans le répertoire ''%path%'': accès refusé.'
 resources: Ressources
-resource_delete: 'Etes-vous sûr de vouloir supprimer ?'
+resource_delete: 'Etes-vous sûr de vouloir supprimer cette resource ?'
+resources_delete: 'Etes-vous sûr de vouloir supprimer ces resources ?'
 resources_most_downloaded: 'Ressources les plus téléchargés'
 resources_rights: 'Droits des ressources'
 resources_rights_management: 'Gestion des droits des ressources'

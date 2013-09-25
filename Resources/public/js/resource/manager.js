@@ -1009,9 +1009,9 @@
             });
         },
         remove: function (nodeIds) {
-
+            var trans = (nodeIds.length) > 1 ? 'resources_delete' : 'resource_delete'; 
             var modal = Twig.render(ModalWindow, {
-                'body': Translator.get('platform' + ':' + 'resource_delete'),
+                'body': Translator.get('platform' + ':' + trans),
                 'confirmFooter': true,
                 'modalId': 'confirm-modal'
             });
