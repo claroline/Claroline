@@ -6,14 +6,18 @@
 
     $('#widget-validate-button').click(function () {
 
-        if ($('.chk-widget:checked').length > 0) {
-            $('.chk-widget:checked').each(function (index, element) {
-                var widgetId = element.value;
+        if ($('.chk-widget-instance:checked').length > 0) {
+            $('.chk-widget-instance:checked').each(function (index, element) {
+                var widgetInstanceId = element.value;
 
                 $.ajax({
                     url: Routing.generate(
                         'claro_workspace_associate_widget_to_home_tab',
-                        {'homeTabId': homeTabId, 'widgetId': widgetId, 'workspaceId': workspaceId}
+                        {
+                            'homeTabId': homeTabId,
+                            'widgetInstanceId': widgetInstanceId,
+                            'workspaceId': workspaceId
+                        }
                     ),
                     type: 'POST',
                     success: function () {

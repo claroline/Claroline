@@ -57,7 +57,10 @@
                 widget-config-id="{{ adminWidgetConfig.getId() }}"
             >
                 <div class="panel-body">
-                    {{ widgetInstance.getName()|trans({}, 'widget') }}
+                    {{ widgetInstance.getName() }}
+                    <small>
+                        [{{ widgetInstance.getWidget().getName()|trans({}, 'widget') }}]
+                    </small>
 
                     {% if not adminWidgetConfig.isLocked() %}
                     <span class="pull-right">
@@ -78,7 +81,10 @@
                 widget-config-id="{{ widgetConfig.getId() }}"
             >
                 <div class="panel-body">
-                    {{ widgetInstance.getName()|trans({}, 'widget') }}
+                    {{ widgetInstance.getName() }}
+                    <small>
+                        [{{ widgetInstance.getWidget().getName()|trans({}, 'widget') }}]
+                    </small>
                     <span class="pull-right">
                         {% if widgetConfig.getWidgetOrder() > 1 %}
                             <i class="icon-arrow-up widget-order-up pointer-hand"></i>

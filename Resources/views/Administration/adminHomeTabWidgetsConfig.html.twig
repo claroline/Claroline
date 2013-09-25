@@ -52,6 +52,9 @@
             >
                 <div class="panel-body">
                     {{ widgetInstance.getName() }}
+                    <small>
+                        [{{ widgetInstance.getWidget().getName()|trans({}, 'widget') }}]
+                    </small>
                     <span class="pull-right">
                         {% if widgetConfig.getWidgetOrder() > 1 %}
                             <i class="icon-arrow-up widget-order-up pointer-hand"></i>
