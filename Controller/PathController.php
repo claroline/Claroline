@@ -28,7 +28,7 @@
  * @category   Entity
  * @package    InnovaPathBundle
  * @subpackage PathBundle
- * @author     Innovalangues <contant@innovalangues.net>
+ * @author     Innovalangues <contact@innovalangues.net>
  * @copyright  2013 Innovalangues
  * @license    http://www.opensource.org/licenses/mit-license.php  MIT License
  * @version    0.1
@@ -167,7 +167,7 @@ class PathController extends Controller
 
         $manager->flush();
 
-        return array('workspace' => $workspace, 'ok' => "Parcours déployé.");
+        return array('workspace' => $workspace, 'deployed' => "Parcours déployé.");
     }
 
 
