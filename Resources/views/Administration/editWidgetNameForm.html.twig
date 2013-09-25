@@ -1,8 +1,10 @@
 <form class="form-name-widget" action="{{ path('claro_admin_widget_name_edit', {'config': config.getId()}) }}"> 
     <div class="col-md-10">
-        {{ form_widget(form) }}
+        {{ form_errors(form.name) }}
+        {{ form_widget(form.name) }}
     </div>
+    {{ form_rest(form) }}
     <div class="col-md-2">
-        <input class="btn btn-primary" type="submit" value="{{ 'validate'|trans({}, 'platform') }}"></input>
+        <button type="submit"><i class="icon-edit"></i></button>
     </div>
 </form>

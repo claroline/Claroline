@@ -1,9 +1,10 @@
 <tr class='row-widget-config' data-id="{{ config.getParent().getId() }}" data-widget-id="{{ config.getWidget().getId() }}">
+    <th>{{ config.getWidget().getName()|trans({}, 'widget') }}</th>
     <th>{% render controller('ClarolineCoreBundle:Tool\\Home:editWorkspaceWidgetNameForm', {'config': config}) %}</th>
     <th> 
         <a href="{{ path('claro_workspace_widget_configuration', {'config': config.getId()}) }}">
             {{ 'configure'|trans({}, 'platform') }}
         </a> 
     </th>
-    <th> <a class="delete-widget" href="{{ path('claro_desktop_remove_widget', {'widgetInstance': config.getId()}) }}">delete</a></th>
+    <th> <a class="delete-widget" href="{{ path('claro_desktop_remove_widget', {'widgetInstance': config.getId()}) }}">{{ 'delete'|trans({}, 'platform') }}</a></th>
 </tr>
