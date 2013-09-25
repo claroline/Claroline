@@ -64,7 +64,7 @@ class AdministrationWidgetController extends Controller
 
     /**
      * @EXT\Route(
-     *     "widget/{config}/configuration/workspace",
+     *     "widget/{widgetInstanceId}/configuration/workspace",
      *     name="claro_admin_widget_configuration",
      *     options={"expose"=true}
      * )
