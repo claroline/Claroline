@@ -195,7 +195,7 @@ class RoleManagerTest extends MockeryTestCase
     }
 
     /**
-     * @expectedException \LogicException
+     * @expectedException Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException
      */
     public function testCheckWorkspaceRoleEditionThrowsExceptionForUser( )
     {

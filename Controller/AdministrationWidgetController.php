@@ -19,7 +19,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 class AdministrationWidgetController extends Controller
 {
     private $widgetManager;
-    
+
     /**
      * @DI\InjectParams({
      *     "widgetManager" = @DI\Inject("claroline.manager.widget_manager")
@@ -29,7 +29,7 @@ class AdministrationWidgetController extends Controller
     {
         $this->widgetManager = $widgetManager;
     }
-    
+
     /**
      * @EXT\Route(
      *     "/widgets",
@@ -50,10 +50,10 @@ class AdministrationWidgetController extends Controller
             ->findBy(array('isAdmin' => true, 'isDesktop' => false));
         $dconfigs = $em->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
             ->findBy(array('isAdmin' => true, 'isDesktop' => true));
-        
+
         $dwidgets = $this->widgetManager->getDesktopWidgets();
         $wwidgets = $this->widgetManager->getWorkspaceWidgets();
-        
+
         return array(
             'dwidgets' => $dwidgets,
             'wwidgets' => $wwidgets,
@@ -64,15 +64,20 @@ class AdministrationWidgetController extends Controller
 
     /**
      * @EXT\Route(
-     *     "widget/{config}/configuration/workspace",
+     *     "widget/{widgetInstanceId}/configuration/workspace",
      *     name="claro_admin_widget_configuration",
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "widgetInstance",
+     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
+     *     options={"id" = "widgetInstanceId", "strictId" = true}
+     * )
      * @EXT\Method("GET")
-     * 
+     *
      * Asks a widget to render its configuration form for a workspace.
      *
-     * @param Widget $widget
+     * @param WidgetInstance $widgetInstance
      *
      * @EXT\Template("ClarolineCoreBundle:Administration:widgetConfiguration.html.twig")
      *
@@ -80,67 +85,89 @@ class AdministrationWidgetController extends Controller
      *
      * @throws \Exception
      */
-    public function configureWidgetAction(WidgetInstance $config)
+    public function configureWidgetAction(WidgetInstance $widgetInstance)
     {
         $event = $this->get('claroline.event.event_dispatcher')->dispatch(
-            "widget_{$config->getWidget()->getName()}_configuration",
+            "widget_{$widgetInstance->getWidget()->getName()}_configuration",
             'ConfigureWidget',
-            array($config)
+            array($widgetInstance)
         );
 
         return array('content' => $event->getContent());
     }
-    
+
     /**
      * @EXT\Route(
-     *     "/widget/name/form/{config}",
+     *     "/widget/name/form/{widgetInstanceId}",
      *     name = "claro_admin_widget_name_form",
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "widgetInstance",
+     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
+     *     options={"id" = "widgetInstanceId", "strictId" = true}
+     * )
      * @EXT\Template("ClarolineCoreBundle:Administration:editWidgetNameForm.html.twig")
-     * 
-     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
-     * 
+     *
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $widgetInstance
+     *
      * @return array
      */
-    public function editWidgetNameFormAction(WidgetInstance $config)
-    {   
+    public function editWidgetNameFormAction(WidgetInstance $widgetInstance)
+    {
         $formFactory = $this->get("claroline.form.factory");
-        $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
-        
-        return array('form' => $form->createView(), 'config' => $config);
+        $form = $formFactory->create(
+            FormFactory::TYPE_WIDGET_CONFIG,
+            array(),
+            $widgetInstance
+        );
+
+        return array('form' => $form->createView(), 'widgetInstance' => $widgetInstance);
     }
 
     /**
      * @EXT\Route(
-     *     "/widget/name/edit/{config}",
+     *     "/widget/name/edit/{widgetInstanceId}",
      *     name = "claro_admin_widget_name_edit",
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "widgetInstance",
+     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
+     *     options={"id" = "widgetInstanceId", "strictId" = true}
+     * )
      * @EXT\Template("ClarolineCoreBundle:Administration:editWidgetNameForm.html.twig")
-     * 
-     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
-     * 
+     *
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $widgetInstance
+     *
      * @return array
      */
-    public function editWidgetName(WidgetInstance $config)
+    public function editWidgetName(WidgetInstance $widgetInstance)
     {
         $formFactory = $this->get("claroline.form.factory");
-        $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
+        $form = $formFactory->create(
+            FormFactory::TYPE_WIDGET_CONFIG,
+            array(),
+            $widgetInstance
+        );
         $form->handleRequest($this->get('request'));
-        
+
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $config = $form->getData();
-            $em->persist($config);
+            $widgetInstance = $form->getData();
+            $em->persist($widgetInstance);
             $em->flush();
-            
+
             return new Response('success', 204);
         } else {
-            return array('form' => $form->createView(), 'config' => $config);
+
+            return array(
+                'form' => $form->createView(),
+                'widgetInstance' => $widgetInstance
+            );
         }
     }
-    
+
     /**
      * @EXT\Route(
      *     "/workspace/widget/{widget}/create",
@@ -152,10 +179,10 @@ class AdministrationWidgetController extends Controller
     public function createWorkspaceWidgetInstance(Widget $widget)
     {
        $instance = $this->widgetManager->createInstance($widget, true, false);
-        
+
         return array('config' => $instance);
     }
-    
+
     /**
      * @EXT\Route(
      *     "/desktop/widget/{widget}/create",
@@ -167,10 +194,10 @@ class AdministrationWidgetController extends Controller
     public function createDesktopWidgetInstance(Widget $widget)
     {
         $instance = $this->widgetManager->createInstance($widget, true, true);
-        
+
         return array('config' => $instance);
     }
-    
+
     /**
      * @EXT\Route(
      *     "/widget/remove/{widgetInstance}",
@@ -181,8 +208,8 @@ class AdministrationWidgetController extends Controller
     public function removeWidgetInstance(WidgetInstance $widgetInstance)
     {
         $this->widgetManager->removeInstance($widgetInstance);
-        
+
         return new Response(204);
     }
 }
-   
+

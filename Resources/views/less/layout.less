@@ -471,17 +471,21 @@ div.pagination
 /* special grid sistem for content in home page*/
 
 @content-iteration: 8;
-@content-margin: 1.6;
+@content-margin: 2;
 
 @media (min-width: 767px)
 {
     .content-size (@index) when (@index >= 1) {
 
         .content-@{index} {
-            width:unit(((@index * 100 / @content-iteration) - (@content-margin * 2)), "%");
-            margin-left: unit(@content-margin, "%");
+            width:unit(((@index * 100 / @content-iteration) - @content-margin), "%");
+            /*margin-left: unit(@content-margin, "%");*/
 		    margin-right: unit(@content-margin, "%");
             float:left;
+        }
+
+        .spacing-right{
+            padding-right: unit(@content-margin, "%");
         }
 
         .content-offset@{index} {
@@ -499,12 +503,16 @@ div.pagination
     .content-size (@index) when (@index >= 1) {
 
         .content-@{index} {
-            margin-left: 15px;
-		    margin-right: 15px;
+            margin-left: 0;
+		    margin-right: 0;
         }
 
         .content-offset@{index} {
-            margin-left:0;
+            margin-left: 0;
+        }
+
+        .spacing-right{
+            padding-right: 0;
         }
 
         .content-size(@index - 1);

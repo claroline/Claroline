@@ -43,10 +43,10 @@
                 {% for wconfig in wconfigs %}
                 <tr class='row-widget-config' data-id="{{ wconfig.getId() }}">
                     <td>{{ wconfig.getWidget().getName()|trans({}, 'widget') }}</td>
-                    <td>{% render controller('ClarolineCoreBundle:AdministrationWidget:editWidgetNameForm', {'config': wconfig}) %}</td>
+                    <td>{% render controller('ClarolineCoreBundle:AdministrationWidget:editWidgetNameForm', {'widgetInstanceId': wconfig.getId()}) %}</td>
                     <td>
                         {% if wconfig.getWidget().isConfigurable() %}
-                        <a href="{{ path('claro_admin_widget_configuration', {'config': wconfig.getId()}) }}">{{ 'configure'|trans({}, 'platform') }}</a>
+                        <a href="{{ path('claro_admin_widget_configuration', {'widgetInstanceId': wconfig.getId()}) }}">{{ 'configure'|trans({}, 'platform') }}</a>
                         {% endif %}
                     </td>
                     <td> <a class="delete-widget" href="{{ path('claro_admin_remove_widget', {'widgetInstance': wconfig.getId()}) }}">{{ 'delete'|trans({}, 'platform') }}</a></td>
@@ -78,10 +78,10 @@
                 {% for dconfig in dconfigs %}
                 <tr class='row-widget-config' data-id="{{ dconfig.getId() }}">
                     <td>{{ dconfig.getWidget().getName()|trans({}, 'widget') }}</td>
-                    <td>{% render controller('ClarolineCoreBundle:AdministrationWidget:editWidgetNameForm', {'config': dconfig}) %}</td>
+                    <td>{% render controller('ClarolineCoreBundle:AdministrationWidget:editWidgetNameForm', {'widgetInstanceId': dconfig.getId()}) %}</td>
                     <td>
                         {% if dconfig.getWidget().isConfigurable() %}
-                        <a href="{{ path('claro_admin_widget_configuration', {'config': dconfig.getId()}) }}">{{ 'configure'|trans({}, 'platform') }}</a>
+                        <a href="{{ path('claro_admin_widget_configuration', {'widgetInstanceId': dconfig.getId()}) }}">{{ 'configure'|trans({}, 'platform') }}</a>
                         {% endif %}
                     </td>
                     <td> <a class="delete-widget" href="{{ path('claro_admin_remove_widget', {'widgetInstance': dconfig.getId()}) }}">{{ 'delete'|trans({}, 'platform') }}</a></td>

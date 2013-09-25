@@ -89,13 +89,13 @@ class DesktopController extends Controller
                         $existingWidgetConfig = $this->homeTabManager
                             ->getUserAdminWidgetHomeTabConfig(
                                 $homeTab,
-                                $adminConfig->getWidget(),
+                                $adminConfig->getWidgetInstance(),
                                 $user
                             );
                         if (count($existingWidgetConfig) === 0) {
                             $newWHTC = new WidgetHomeTabConfig();
                             $newWHTC->setHomeTab($homeTab);
-                            $newWHTC->setWidget($adminConfig->getWidget());
+                            $newWHTC->setWidgetInstance($adminConfig->getWidgetInstance());
                             $newWHTC->setUser($user);
                             $newWHTC->setWidgetOrder($adminConfig->getWidgetOrder());
                             $newWHTC->setVisible($adminConfig->isVisible());
@@ -121,19 +121,16 @@ class DesktopController extends Controller
             foreach ($configs as $config) {
                 if ($config->isVisible()) {
                     $event = $this->eventDispatcher->dispatch(
-                        "widget_{$config->getWidget()->getName()}_desktop",
-                        'DisplayWidget'
+                        "widget_{$config->getWidgetInstance()->getWidget()->getName()}",
+                        'DisplayWidget',
+                        array($config->getWidgetInstance())
                     );
 
-                    if ($event->hasContent()) {
-                        $widget['id'] = $config->getWidget()->getId();
-                        $widget['title'] = $this->widgetManager
-                            ->getDesktopForcedConfig($widget['id'], $user->getId())->getName();
-                        
-                        $widget['content'] = $event->getContent();
-                        $widget['configurable'] = ($config->isLocked() !== true and $config->getWidget()->isConfigurable());
-                        $widgets[] = $widget;
-                    }
+                    $widget['id'] = $config->getWidgetInstance()->getId();
+                    $widget['title'] = $config->getWidgetInstance()->getName();
+                    $widget['content'] = $event->getContent();
+                    $widget['configurable'] = ($config->isLocked() !== true && $config->getWidgetInstance()->getWidget()->isConfigurable());
+                    $widgets[] = $widget;
                 }
             }
         }

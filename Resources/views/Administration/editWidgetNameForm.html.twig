@@ -1,4 +1,4 @@
-<form class="form-name-widget" action="{{ path('claro_admin_widget_name_edit', {'config': config.getId()}) }}"> 
+<form class="form-name-widget" action="{{ path('claro_admin_widget_name_edit', {'widgetInstanceId': widgetInstance.getId()}) }}">
     <div class="col-md-10">
         {{ form_errors(form.name) }}
         {{ form_widget(form.name) }}

@@ -122,18 +122,16 @@ class HomeControllerTest extends MockeryTestCase
 
     public function testRegionAction()
     {
-        $content = $this->mock('Claroline\CoreBundle\Entity\Home\Content');
-
-        $content->shouldReceive('getId')->once()->andReturn(1);
+        $this->content->shouldReceive('getId')->once()->andReturn(1);
         $this->manager
             ->shouldReceive('getRegion')
-            ->with($content)
             ->once()
+            ->with($this->content)
             ->andReturn('region');
 
         $this->assertEquals(
             array('id' => 1, 'region' => 'region'),
-            $this->controller->regionAction($content)
+            $this->controller->regionAction($this->content)
         );
     }
 

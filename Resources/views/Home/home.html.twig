@@ -23,11 +23,11 @@
                             </a>
                             <a class="list-group-item{{ "/type/menu" | compareRoute(" active") }}"
                                 href="{{ path("claro_get_content_by_type", { "type": "menu"}) }}">
-                                <i class="icon-th-list"></i> {{ "Menus" | trans({}, "home") }}
+                                <i class="icon-list"></i> {{ "Menus" | trans({}, "home") }}
                             </a>
                             <a class="list-group-item relative{{ "/types" | compareRoute(" active") }}"²
                                 href="{{ path("claroline_types_manager") }}">
-                                <i class="icon-th-large"></i> {{ "Content" | trans({}, "home") }}
+                                <i class="icon-file"></i> {{ "Pages" | trans({}, "home") }}
                             </a>
                         </div>
                     </div>
@@ -37,12 +37,11 @@
             </div>
         {% endif %}
 
-        <div class="{% if
-                (is_granted('ROLE_ADMIN') or region['left'] is defined) and
-                region['right'] is defined %}col-md-6{% elseif (is_granted('ROLE_ADMIN') or region['left'] is defined) or
-                    region['rigth'] is defined %}col-md-9{% else %}col-md-12{% endif %}">
+        <div class="{% if (is_granted('ROLE_ADMIN') or region['left'] is defined) and
+            region['right'] is defined %}col-md-6{% elseif (is_granted('ROLE_ADMIN') or region['left'] is defined) or
+            region['rigth'] is defined %}col-md-9{% else %}col-md-12{% endif %}">
             {% if region['content'] is defined %}
-                {{ region['content'] | raw }}
+                <div class="row spacing-right">{{ region['content'] | raw }}</div>
             {% endif %}
 
             {{ content | raw }}
@@ -50,7 +49,7 @@
 
         {% if region['right'] is defined %}
             <div class="col-md-3">
-                {{ region['right'] | raw }}
+                <div class="row">{{ region['right'] | raw }}</div>
             </div>
         {% endif %}
     </div>

@@ -17,11 +17,11 @@ use JMS\DiExtraBundle\Annotation as DI;
 class WidgetManager
 {
     private $om;
-    private $repo;
+    private $widgetInstanceRepo;
     private $widgetRepo;
     private $router;
     private $translator;
-    
+
     /**
      * Constructor.
      *
@@ -34,27 +34,12 @@ class WidgetManager
     public function __construct(ObjectManager $om, RouterInterface $router, Translator $translator)
     {
         $this->om = $om;
-        $this->repo = $om->getRepository('ClarolineCoreBundle:Widget\WidgetInstance');
+        $this->widgetInstanceRepo = $om->getRepository('ClarolineCoreBundle:Widget\WidgetInstance');
         $this->widgetRepo = $om->getRepository('ClarolineCoreBundle:Widget\Widget');
         $this->router = $router;
         $this->translator = $translator;
-    } 
-    
-    public function getDesktopInstances(User $user)
-    {
-        return  $this->repo->findBy(array('user' => $user));
     }
-    
-    public function getWorkspaceInstances(AbstractWorkspace $workspace)
-    {
-        return  $this->repo->findBy(array('workspace' => $workspace));
-    }
-    
-    public function getAll()
-    {
-        return  $this->widgetRepo->findAll();
-    }
-    
+
     public function createInstance(Widget $widget, $isAdmin, $isDesktop, User $user = null, AbstractWorkspace $ws = null)
     {
         if (!$widget->isDisplayableInDesktop()) {
@@ -62,13 +47,13 @@ class WidgetManager
                 throw new \Exception("This widget doesn't support the desktop");
             }
         }
-        
+
         if (!$widget->isDisplayableInWorkspace()) {
             if (!$isDesktop || $ws) {
                 throw new \Exception("This widget doesn't support the workspace");
             }
         }
-        
+
         $instance = new WidgetInstance($widget);
         $instance->setName($this->translator->trans($widget->getName(), array(), 'widget'));
         $instance->setIsAdmin($isAdmin);
@@ -78,39 +63,135 @@ class WidgetManager
         $instance->setWorkspace($ws);
         $this->om->persist($instance);
         $this->om->flush();
-        
+
         return $instance;
     }
-    
+
     public function removeInstance(WidgetInstance $widgetInstance)
     {
         $this->om->remove($widgetInstance);
         $this->om->flush();
     }
-    
-    public function getDesktopWidgets()
-    {
-        return $this->widgetRepo->findBy(array('isDisplayableInDesktop' => true));
-    }
-    
-    public function getWorkspaceWidgets()
-    {
-        return $this->widgetRepo->findBy(array('isDisplayableInWorkspace' => true));
-    }
-    
+
     public function getRedirectRoute(WidgetInstance $instance)
     {
         if ($instance->isAdmin()) {
             return $this->router->generate('claro_admin_widgets');
         }
-        
+
         if ($instance->getWorkspace() !== null) {
             return $this->router->generate(
-                'claro_workspace_widget_properties', 
+                'claro_workspace_widget_properties',
                 array('workspace' => $instance->getWorkspace()->getId())
             );
-        } 
-        
+        }
+
         return $this->router->generate('claro_desktop_widget_properties');
-    }   
+    }
+
+
+    /**
+     * WidgetRepository access methods
+     */
+
+    public function getAll()
+    {
+        return  $this->widgetRepo->findAll();
+    }
+
+    public function getDesktopWidgets()
+    {
+        return $this->widgetRepo->findBy(array('isDisplayableInDesktop' => true));
+    }
+
+    public function getWorkspaceWidgets()
+    {
+        return $this->widgetRepo->findBy(array('isDisplayableInWorkspace' => true));
+    }
+
+    /**
+     * WidgetInstanceRepository access methods
+     */
+
+    public function getDesktopInstances(User $user)
+    {
+        return  $this->widgetInstanceRepo->findBy(array('user' => $user));
+    }
+
+    public function getWorkspaceInstances(AbstractWorkspace $workspace)
+    {
+        return  $this->widgetInstanceRepo->findBy(array('workspace' => $workspace));
+    }
+
+    public function getAdminDesktopWidgetInstance(array $excludedWidgetInstances)
+    {
+        if (count($excludedWidgetInstances) === 0) {
+
+            return $this->widgetInstanceRepo->findBy(
+                array(
+                    'isAdmin' => true,
+                    'isDesktop' => true
+                )
+            );
+        }
+
+        return $this->widgetInstanceRepo
+            ->findAdminDesktopWidgetInstance($excludedWidgetInstances);
+    }
+
+    public function getAdminWorkspaceWidgetInstance(array $excludedWidgetInstances)
+    {
+        if (count($excludedWidgetInstances) === 0) {
+
+            return $this->widgetInstanceRepo->findBy(
+                array(
+                    'isAdmin' => true,
+                    'isDesktop' => false
+                )
+            );
+        }
+
+        return $this->widgetInstanceRepo
+            ->findAdminWorkspaceWidgetInstance($excludedWidgetInstances);
+    }
+
+    public function getDesktopWidgetInstance(
+        User $user,
+        array $excludedWidgetInstances
+    )
+    {
+        if (count($excludedWidgetInstances) === 0) {
+
+            return $this->widgetInstanceRepo->findBy(
+                array(
+                    'user' => $user,
+                    'isAdmin' => false,
+                    'isDesktop' => true
+                )
+            );
+        }
+
+        return $this->widgetInstanceRepo
+            ->findDesktopWidgetInstance($user, $excludedWidgetInstances);
+    }
+
+    public function getWorkspaceWidgetInstance(
+        AbstractWorkspace $workspace,
+        array $excludedWidgetInstances
+    )
+    {
+        if (count($excludedWidgetInstances) === 0) {
+
+            return $this->widgetInstanceRepo->findBy(
+                array(
+                    'workspace' => $workspace,
+                    'isAdmin' => false,
+                    'isDesktop' => false
+                )
+            );
+        }
+
+        return $this->widgetInstanceRepo
+            ->findWorkspaceWidgetInstance($workspace, $excludedWidgetInstances);
+    }
 }

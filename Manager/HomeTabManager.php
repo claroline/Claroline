@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Widget\Widget;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -22,8 +22,6 @@ class HomeTabManager
     private $homeTabConfigRepo;
     /** @var WidgetHomeTabConfigRepository */
     private $widgetHomeTabConfigRepo;
-    /** @var WidgetDisplayConfigRepository */
-    private $widgetDisplayConfigRepo;
     private $om;
 
     /**
@@ -43,9 +41,6 @@ class HomeTabManager
         );
         $this->widgetHomeTabConfigRepo = $om->getRepository(
             'ClarolineCoreBundle:Widget\WidgetHomeTabConfig'
-        );
-        $this->widgetDisplayConfigRepo = $om->getRepository(
-            'ClarolineCoreBundle:Widget\WidgetInstance'
         );
         $this->om = $om;
     }
@@ -214,7 +209,7 @@ class HomeTabManager
 
         foreach ($adminWidgetsHomeTabConfigs as $adminWHTC) {
             $workspaceWHTC = new WidgetHomeTabConfig();
-            $workspaceWHTC->setWidget($adminWHTC->getWidget());
+            $workspaceWHTC->setWidgetInstance($adminWHTC->getWidgetInstance());
             $workspaceWHTC->setHomeTab($homeTab);
             $workspaceWHTC->setWorkspace($workspace);
             $workspaceWHTC->setType('workspace');
@@ -621,50 +616,14 @@ class HomeTabManager
 
     public function getUserAdminWidgetHomeTabConfig(
         HomeTab $homeTab,
-        Widget $widget,
+        WidgetInstance $widgetInstance,
         User $user
     )
     {
         return $this->widgetHomeTabConfigRepo->findUserAdminWidgetHomeTabConfig(
             $homeTab,
-            $widget,
+            $widgetInstance,
             $user
         );
-    }
-
-    /**
-     * WidgetDisplayConfigRepository access methods
-     */
-
-    public function getVisibleDesktopWidgetConfig(array $excludedWidgets)
-    {
-        if (count($excludedWidgets) === 0) {
-
-            return $this->widgetDisplayConfigRepo->findBy(
-                array(
-                    'isAdmin' => true,
-                    'isDesktop' => true,
-                )
-            );
-        }
-
-        return $this->widgetDisplayConfigRepo
-            ->findVisibleAdminDesktopWidgetDisplayConfig($excludedWidgets);
-    }
-
-    public function getVisibleWorkspaceWidgetConfig(array $excludedWidgets)
-    {
-        if (count($excludedWidgets) === 0) {
-
-            return $this->widgetDisplayConfigRepo->findBy(
-                array(
-                    'isAdmin' => true,
-                    'isDesktop' => false,
-                )
-            );
-        }
-
-        return $this->widgetDisplayConfigRepo
-            ->findVisibleAdminWorkspaceWidgetDisplayConfig($excludedWidgets);
     }
 }
