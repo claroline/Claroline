@@ -84,6 +84,11 @@ class Step extends AbstractResource
     protected $stepWhere;
 
     /**
+    * @ORM\OneToMany(targetEntity="Step2ExcludedResource", mappedBy="step")
+    */
+    protected $excludedResources;
+
+    /**
      * Set expanded
      *
      * @param  boolean $expanded

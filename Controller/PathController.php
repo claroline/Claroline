@@ -243,7 +243,6 @@ class PathController extends Controller
             $resourceOrder = 0;
             foreach ($step->resources as $resource) {
                 $resourceOrder++;
-
                 if ($resource->resourceId == null) {
                     $step2ressourceNode = new Step2ResourceNode();
                 } else {
@@ -253,7 +252,6 @@ class PathController extends Controller
                 $step2ressourceNode->setStep($currentStep);
                 $step2ressourceNode->setPropagated($resource->propagateToChildren);
                 $step2ressourceNode->setResourceOrder($resourceOrder);
-
                 $manager->persist($step2ressourceNode);
             }
 
@@ -307,7 +305,7 @@ class PathController extends Controller
      *      name = "innova_path_editor",
      *      options = {"expose"=true}
      * )
-     * 
+     *
      * @Template("InnovaPathBundle:Editor:main.html.twig")
      */
     public function editorAction()
@@ -315,7 +313,7 @@ class PathController extends Controller
 //         return array('is_path_mode' => true);
         return array();
     }
-    
+
     /**
      * @Route(
      *     "/paths",
