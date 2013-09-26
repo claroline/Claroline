@@ -31,21 +31,11 @@
                     id="generic-form"
                     class="form-horizontal">
                     <div class="panel-body">
-                        <div class="form-group row">
-                            <div class="col-md-3">
-                                <label id="message-users-btn" class="control-label btn btn-default pull-right" for="message_form_users">
-                                    <b>{{ 'message_form_to'|trans({}, 'platform') }}</b>
-                                </label>
-                            </div>
-                            <div class="col-md-9">
-                                <input type="text" id="message_form_users" class="form-control">
-                            </div>
-                        </div>
                         {{ form_widget(form) }}
                         {{ form_rest(form) }}
                     </div>
                     <div class="panel-footer">
-                        <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                        <button id="submit-button" type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
                     </div>
                 </form>
             </div>

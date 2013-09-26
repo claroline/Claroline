@@ -1,7 +1,22 @@
 (function () {
     'use strict';
 
+    $('#message_form_to').offsetParent().html(
+        '<div class="input-group">' +
+            $('#message_form_to').offsetParent().html() +
+            '<span class="input-group-btn">' +
+                '<button id="contacts-button" class="btn btn-primary" type="button">' +
+                    '<i class="icon-user"></i>' +
+                '</button>' +
+            '</span>' +
+        '</div>'
+    );
+
     var currentType = 'user';
+    var users = [];
+    var groups = [];
+    var usersTemp = [];
+    var groupsTemp = [];
 
     function getPage(tab)
     {
@@ -35,6 +50,34 @@
         return search;
     }
 
+    function initTempTab()
+    {
+        usersTemp = users.slice();
+        groupsTemp = groups.slice();
+    }
+
+    function displayCheckBoxStatus()
+    {
+        if (currentType === 'user') {
+            $('.contact-chk').each(function () {
+                var contactId = $(this).attr('contact-id');
+
+                if (usersTemp.indexOf(contactId) >= 0) {
+                    $(this).attr('checked', 'checked');
+                }
+            });
+        }
+        else {
+            $('.contact-chk').each(function () {
+                var contactId = $(this).attr('contact-id');
+
+                if (groupsTemp.indexOf(contactId) >= 0) {
+                    $(this).attr('checked', 'checked');
+                }
+            });
+        }
+    }
+
     function displayUsers()
     {
         currentType = 'user';
@@ -49,6 +92,7 @@
                 $('#users-nav-tab').attr('class', 'active');
                 $('#contacts-list').empty();
                 $('#contacts-list').append(datas);
+                displayCheckBoxStatus();
             }
         });
     }
@@ -67,11 +111,57 @@
                 $('#users-nav-tab').attr('class', '');
                 $('#contacts-list').empty();
                 $('#contacts-list').append(datas);
+                displayCheckBoxStatus();
             }
         });
     }
 
-    $('#message-users-btn').click(function () {
+    function updateContactInput()
+    {
+        var parameters = {};
+        var route;
+
+        if (users.length > 0) {
+            parameters.userIds = users;
+            route = Routing.generate('claro_usernames_from_users');
+            route += '?' + $.param(parameters);
+
+            $.ajax({
+                url: route,
+                statusCode: {
+                    200: function (datas) {
+                        $('#message_form_to').attr('value', datas);
+                    }
+                },
+                type: 'GET',
+                async: false
+            });
+        }
+        else {
+            $('#message_form_to').attr('value', '');
+        }
+
+        if (groups.length > 0) {
+            parameters.groupIds = groups;
+            route = Routing.generate('claro_names_from_groups');
+            route += '?' + $.param(parameters);
+
+            $.ajax({
+                url: route,
+                statusCode: {
+                    200: function (datas) {
+                        var currentValue = $('#message_form_to').attr('value');
+                        currentValue += datas;
+                        $('#message_form_to').attr('value', currentValue);
+                    }
+                },
+                type: 'GET'
+            });
+        }
+    }
+
+    $('#contacts-button').click(function () {
+        initTempTab();
         displayUsers();
         $('#contacts-box').modal('show');
     });
@@ -132,9 +222,56 @@
                 success: function (datas) {
                     $('#contacts-list').empty();
                     $('#contacts-list').append(datas);
+                    displayCheckBoxStatus();
                 },
                 type: 'GET'
             });
         }
+    });
+
+    $('body').on('click', '.contact-chk', function () {
+        var contactId = $(this).attr('contact-id');
+        var checked = $(this).attr('checked');
+        var index;
+
+        if (currentType === 'user') {
+            if (checked === 'checked') {
+                index = usersTemp.indexOf(contactId);
+
+                if (index < 0) {
+                    usersTemp.push(contactId);
+                }
+            }
+            else {
+                index = usersTemp.indexOf(contactId);
+
+                if (index >= 0) {
+                    usersTemp.splice(index, 1);
+                }
+            }
+        }
+        else {
+            if (checked === 'checked') {
+                index = groupsTemp.indexOf(contactId);
+
+                if (index < 0) {
+                    groupsTemp.push(contactId);
+                }
+            }
+            else {
+                index = groupsTemp.indexOf(contactId);
+
+                if (index >= 0) {
+                    groupsTemp.splice(index, 1);
+                }
+            }
+        }
+    });
+
+    $('#add-contacts-confirm-ok').click(function () {
+        users = usersTemp.slice();
+        groups = groupsTemp.slice();
+        updateContactInput();
+        $('#contacts-box').modal('hide');
     });
 })();

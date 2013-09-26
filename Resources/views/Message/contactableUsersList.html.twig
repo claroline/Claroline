@@ -24,7 +24,7 @@
     {{ 'no_contact'|trans({}, 'platform') }}
 {% else %}
     {% set nbPages = users.getNbPages() %}
-    <div id="users-list-page" class="users-list-page">
+    <div id="contacts-list-page" class="contacts-list-page">
 
         {% if nbPages > 1 %}
             {{ renderPager(search, users) }}
@@ -34,13 +34,13 @@
             <tr>
                 <th>{{ 'first_name'|trans({}, 'platform') }}</th>
                 <th>{{ 'last_name'|trans({}, 'platform') }}</th>
-                <th><input type="checkbox" class="all-user-chk"></th>
+                <th><input type="checkbox" class="all-contacts-chk"></th>
             </tr>
             {% for user in users %}
                 <tr>
                     <td>{{ user.getFirstName() }}</td>
                     <td>{{ user.getLastName() }}</td>
-                    <td><input type="checkbox" class="user-chk" user-id="{{ user.getId() }}"></td>
+                    <td><input type="checkbox" class="contact-chk" contact-id="{{ user.getId() }}"></td>
                 </tr>
             {% endfor %}
         </table>
