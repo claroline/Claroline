@@ -1,0 +1,36 @@
+{% extends "IcapDropzoneBundle:Dropzone:documentFormDefault.html.twig" %}
+
+{% block document_body %}
+    <div class="row">
+        {{ form_row(form.document) }}
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <strong>{{ 'Resource selected'|trans }}</strong>
+        </div>
+        <div class="col-md-6">
+            <span class="selected-resource">-</span>
+            <strong class="add-document-pending" style="display: none;"> {{ 'loading'|trans }}</strong>
+        </div>
+    </div>
+
+    <div class="row" style="display: none;">
+        <div class="col-md-12">
+            <div class="form-group pull-right">
+                <a href="{{ path('icap_dropzone_drop', {'resourceId': dropzone.id}) }}" class="btn btn-default cancel-inline">{{ 'Cancel'|trans }}</a>
+                <button id="add-document-sumbit" disabled type="submit" class="btn btn-primary">
+                    {{ 'Add'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{ tinymce_init() }}
+    <script>
+        $(document).ready(function () {
+            'use strict';
+            Claroline.ResourceManager.picker('open');
+        });
+    </script>
+{% endblock %}
+
