@@ -13,6 +13,7 @@ use JMS\SecurityExtraBundle\Annotation as SEC;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\MessageManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
@@ -27,6 +28,7 @@ class MessageController
     private $router;
     private $formFactory;
     private $messageManager;
+    private $groupManager;
     private $userManager;
 
     /**
@@ -35,6 +37,7 @@ class MessageController
      *     "router"         = @DI\Inject("router"),
      *     "formFactory"    = @DI\Inject("claroline.form.factory"),
      *     "manager"        = @DI\Inject("claroline.manager.message_manager"),
+     *     "groupManager"   = @DI\Inject("claroline.manager.group_manager"),
      *     "userManager"    = @DI\Inject("claroline.manager.user_manager")
      * })
      */
@@ -43,6 +46,7 @@ class MessageController
         UrlGeneratorInterface $router,
         FormFactory $formFactory,
         MessageManager $manager,
+        GroupManager $groupManager,
         UserManager $userManager
     )
     {
@@ -50,6 +54,7 @@ class MessageController
         $this->router = $router;
         $this->formFactory = $formFactory;
         $this->messageManager = $manager;
+        $this->groupManager = $groupManager;
         $this->userManager = $userManager;
     }
 
@@ -386,6 +391,45 @@ class MessageController
         }
 
         return array('users' => $users, 'search' => $search);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/contactable/groups/page/{page}",
+     *     name="claro_message_contactable_groups",
+     *     options={"expose"=true},
+     *     defaults={"page"=1, "search"=""}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "/contactable/groups/page/{page}/search/{search}",
+     *     name="claro_message_contactable_groups_search",
+     *     options={"expose"=true},
+     *     defaults={"page"=1}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     *
+     *
+     * Displays the list of groups that the current user can send a message to,
+     * optionally filtered by a search on group name
+     *
+     * @param integer $page
+     * @param string  $search
+     *
+     * @return Response
+     */
+    public function contactableGroupsListAction(User $user, $page, $search)
+    {
+        if ($user->hasRole('ROLE_ADMIN')) {
+            $groups = $this->groupManager->getAllGroups($page);
+        }
+        else {
+            $groups = $this->groupManager->getAllGroups($page);
+        }
+
+        return array('groups' => $groups, 'search' => $search);
     }
 
     public function checkAccess(Message $message, User $user)

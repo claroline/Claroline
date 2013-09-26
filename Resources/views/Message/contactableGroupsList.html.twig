@@ -1,0 +1,50 @@
+{% macro renderPager(search, pager) %}
+    {% if search == '' %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {}
+        )
+    }}
+    {% else %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {}
+            )
+        }}
+    {% endif %}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
+{% if groups is empty %}
+    {{ 'no_contact'|trans({}, 'platform') }}
+{% else %}
+    {% set nbPages = groups.getNbPages() %}
+    <div id="groups-list-page" class="groups-list-page">
+
+        {% if nbPages > 1 %}
+            {{ renderPager(search, groups) }}
+        {% endif %}
+
+        <table class="table table-bordered">
+            <tr>
+                <th>{{ 'name'|trans({}, 'platform') }}</th>
+                <th><input type="checkbox" class="all-group-chk"></th>
+            </tr>
+            {% for group in groups %}
+                <tr>
+                    <td>{{ group.getName() }}</td>
+                    <td><input type="checkbox" class="group-chk" user-id="{{ group.getId() }}"></td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        {% if nbPages > 1 %}
+            {{ renderPager(search, groups) }}
+        {% endif %}
+    </div>
+{% endif %}
