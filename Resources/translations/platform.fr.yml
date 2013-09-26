@@ -278,6 +278,7 @@ not_allowed_message: Vous n'êtes pas autorisé(e) à effectuer cette action.
 object: Objet
 ok: Ok
 or: Ou
+only_for_workspace_creation: 'Seulement pour la création d''un espace d''activités'
 open: Ouvrir
 options: Options
 order: Ordre

@@ -295,6 +295,7 @@ not_allowed_message: You are not allowed to perform this action.
 object: Object
 ok: Ok
 or: Or
+only_for_workspace_creation: 'Only for workspace creation'
 open: Open
 options: Options
 order: Order
