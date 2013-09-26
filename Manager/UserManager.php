@@ -367,7 +367,6 @@ class UserManager
     public function preUpload(User $user)
     {
         if (null !== $user->pictureFile) {
-            // faites ce que vous voulez pour générer un nom unique
             $user->picture = sha1(uniqid(mt_rand(), true)).'.'.$user->pictureFile->guessExtension();
         }
     }
@@ -381,13 +380,7 @@ class UserManager
         if (null === $this->pictureFile) {
             return;
         }
-
-        // s'il y a une erreur lors du déplacement du fichier, une exception
-        // va automatiquement être lancée par la méthode move(). Cela va empêcher
-        // proprement l'entité d'être persistée dans la base de données si
-        // erreur il y a
         $user->pictureFile->move(__DIR__.'/../../../../../../web/uploads/pictures', $user->picture);
-
         unset($user->pictureFile);
     }
 

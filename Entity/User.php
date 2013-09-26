@@ -699,7 +699,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         $this->pictureFile = $pictureFile;
     }
 
-    public function getPicture() {
+    public function getPicture()
+    {
         return $this->picture;
     }
 
