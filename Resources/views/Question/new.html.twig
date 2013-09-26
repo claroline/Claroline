@@ -33,12 +33,26 @@
  # knowledge of the CeCILL license and that you accept its terms.
 #}
 
-{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
 
 {% block stylesheets %}
     {{ parent() }}
     <link href="{{ asset('bundles/ujmexo/css/new_category.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
+
+{% if _resource is defined %}
+    {% block resourceBreadcrumb %}
+        <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+        <li><a href="{{ path('ujm_exercise_questions', { 'id': exoID }) }}">{{ 'my questions' | trans }}</a></li>
+        <li class="active">{{ 'question creation' | trans }}</li>
+    {% endblock %}
+{% endif %}
 
 {% block section_content %}
 
@@ -50,40 +64,44 @@
 
     <input type="hidden" id="categoryArray" value="{{al}}"/>
 
-    <div class="panel-heading" style="padding-left: 50px;">
-        <h1>{{ 'question creation' | trans }}</h1>
-    </div><br/>
-
-    {% if exoID == -1 %}
-        <a href="{{ path('ujm_question_index') }}" style="margin-left: 50px;">
-            <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
-        </a>
-    {% else %}
-        <a href="{{ path('ujm_exercise_questions', { 'id': exoID }) }}" style="margin-left: 50px;">
-            <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
-        </a>
-    {% endif %}
-
-    <hr/>
-
-    <form name="form_type_question" style="padding-left: 50px;">
-        <label for="menu_type_question">{{ 'kind of question' | trans }} ?&nbsp;&nbsp;</label>
-        <select name="menu_type_question" id="menu_type_question" onchange="cherche_type('{{ 'warning_change_type_q' | trans }} ?', '{{ exoID }}', '{{ path('ujm_question_display_form_type')}}' )">
-            <option selected="selected">{{ 'choose_type' | trans }}</option>
-            <option>{{ 'hole' | trans }}</option>
-            <option>{{ 'qcm' | trans }}</option>
-            <option>{{ 'graphic' | trans }}</option>
-            <option>{{ 'open' | trans }}</option>
-        </select>
-    </form>
-
-    <br/>
-
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'question creation' | trans }}</h3>
+    </div>
+    <div class="panel-body">
+        {% if exoID == -1 %}
+            <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
+                <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
+            </a>
+        {% else %}
+            <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exoID }) }}">
+                <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
+            </a>
+        {% endif %}
+    </div>
+    <div class="list-group">
+        <div class="list-group-item">
+            <form name="form_type_question">
+                <div class="form-group row">
+                <label class="col-md-3 control-label" for="menu_type_question">{{ 'kind of question' | trans }}?&nbsp;&nbsp;</label>
+                <div class="col-md-9">
+                    <select class="form-control" name="menu_type_question" id="menu_type_question" onchange="cherche_type('{{ 'warning_change_type_q' | trans }} ?', '{{ exoID }}', '{{ path('ujm_question_display_form_type')}}' )">
+                        <option selected="selected">{{ 'choose_type' | trans }}</option>
+                        <option>{{ 'hole' | trans }}</option>
+                        <option>{{ 'qcm' | trans }}</option>
+                        <option>{{ 'graphic' | trans }}</option>
+                        <option>{{ 'open' | trans }}</option>
+                    </select>
+                </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>{# end div of extend panel #}
     <div id="formulaire_interactions">
         {% if formWithError is defined %}
             {{ formWithError | raw }}
         {% endif %}
-    </div>
+    {# no need end div (extend panel) #}
 {% endblock %}
 
 {% block javascripts %}

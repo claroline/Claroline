@@ -249,7 +249,8 @@ class ExerciseController extends Controller
                     'interactions'         => $interactionsPager,
                     'exerciseID'           => $id,
                     'questionWithResponse' => $questionWithResponse,
-                    'pagerQuestion'        => $pagerQuestion
+                    'pagerQuestion'        => $pagerQuestion,
+                    '_resource'            => $exercise
                 )
             );
         } else {
@@ -344,7 +345,8 @@ class ExerciseController extends Controller
                     'sharedWithMe' => $sharedWithMePager,
                     'pagerMy'      => $pagerfantaMy,
                     'pagerShared'  => $pagerfantaShared,
-                    'pageToGo'      => $pageGoNow
+                    'pageToGo'     => $pageGoNow,
+                    '_resource'    => $exercise
                 )
             );
         } else {

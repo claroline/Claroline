@@ -1,4 +1,4 @@
-$(".form-collection-add").each(function (index) {
+$('.form-collection-add').each(function () {
     $(this).hide();
 });
 
@@ -15,7 +15,7 @@ function hintCSS() {
     //deplacer tous les elementts du hint ds une ligne
     $('#newTable2 .ligne_choice2:last').append('<td class="colonne_choice2 classic" >  </td>');
     $('#newTable2 .colonne_choice2:last').append($('#newTable2 .ligne_choice2:last').children('div').children('label').first());
-    $('#newTable2 .ligne_choice2:last').children('div').children('div').children('div').each(function (index) {
+    $('#newTable2 .ligne_choice2:last').children('div').children('div').children('div').each(function () {
             $('#newTable2 .ligne_choice2:last').append('<td class="colonne_choice2 classic" >  </td>');
             $('#newTable2 .colonne_choice2:last').append($(this));
         }
@@ -124,14 +124,7 @@ function hintCSSEdit() {
 
 function addFormHintEdit(add_h, source_image_add) {
     //"use strict";
-    $("*[id$='_interaction_hints']").before('<a href="#" id="add_hint"><img src="' + source_image_add + '">&nbsp;' + add_h + '</a><br/>');
-    $('#add_hint').css({
-            'display': 'block',
-            'color': 'green',
-            'float': 'bottom'
-        }
-    );
-
+    $("*[id$='_interaction_hints']").before('<a class="btn btn-primary" id="add_hint"><i class="icon-plus"></i>&nbsp;' + add_h + '</a>');
     $('#add_hint').click(function () {
         addHint();
 
@@ -144,13 +137,7 @@ function addFormHintEdit(add_h, source_image_add) {
 
 function addFormHint(add_h, hint_number, hint, Penalty, source_image_add) {
     //"use strict";
-    $("*[id$='_interaction_hints']").before('<a href="#" id="add_hint"><img src="' + source_image_add + '">&nbsp;' + add_h + '</a><br/>');
-    $('#add_hint').css({
-            'display': 'block',
-            'color': 'green',
-            'float': 'bottom'
-        });
-
+    $("*[id$='_interaction_hints']").before('<a class="btn btn-primary" id="add_hint"><i class="icon-plus"></i>&nbsp;' + add_h + '</a>');
     $('#add_hint').click(function () {
         addHint(hint_number, hint, Penalty);
         if ($(this).attr('href') === '#') {

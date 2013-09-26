@@ -33,99 +33,96 @@
  # knowledge of the CeCILL license and that you accept its terms.
 #}
 
-<link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
-
-<fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
-    <legend style="border: transparent hidden 0; width: 80px;margin: 0; color: lightsteelblue;">
-        &nbsp;&nbsp;{{ 'title' | trans }} :
-    </legend>
-    <div style="float: left;">
-        {{ form_label(form.interaction.question.title) }} &nbsp;
-        {{ form_widget(form.interaction.question.title) }}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'title' | trans }}</h3>
     </div>
-</fieldset><br/>
-
-<fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 10px; padding-top: 10px;">
-    <legend style="border: transparent hidden 0; width: 130px;margin: 0; color: lightsteelblue;">
-        &nbsp;&nbsp;{{ 'category' | trans }} :
-    </legend>
-    {{ 'choose' | trans }} :&nbsp;&nbsp;{{ form_widget(form.interaction.question.category, { 'attr': {'style': 'width: 200px'} }) }}
-
-    <hr style=" height: 1px; color: powderblue; background-color: powderblue;"/>
-
-    <a href="#" id="lien_category_alter" onclick="show();"><i class="icon-pencil"></i> &nbsp;{{ 'alter category' | trans }}</a>
-
-    <div id="linkedCategory" style="display: none;">
-        <hr style=" height: 1px; color: powderblue; background-color: powderblue;"/>
-
-        <a href="#" id="lien_category_drop" onclick="dropCategory();"><i class="icon-trash"></i> &nbsp;{{ 'drop category' | trans }}</a>
+    <div class="panel-body">
+        <div class="form-group row">
+            {{ form_label(form.interaction.question.title) }}
+            <div class="col-md-9">{{ form_widget(form.interaction.question.title) }}</div>
+        </div>
     </div>
+</div>
 
-    <hr style=" height: 1px; color: teal; background-color: teal"/>
-
-    <a href="#" id="lien_category"><i class="icon-plus"></i> &nbsp;{{ 'create a new category' | trans }}</a>
-</fieldset><br/>
-
-<fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
-    <legend style="border: transparent hidden 0; width: 140px;margin: 0; color: lightsteelblue;">
-        &nbsp;&nbsp;{{ 'description' | trans }} :
-    </legend>
-    <a onclick="DisplayOptional('description');" id="descriptionOptionalShow"
-        onmouseover="document.body.style.cursor = 'pointer';"
-        onmouseout="document.body.style.cursor = 'default';"
-    >{{ 'Question.description' | trans }}</a>
-
-    <a onclick="HideOptional('description');" id="descriptionOptionalHide"
-        onmouseover="document.body.style.cursor = 'pointer';"
-        onmouseout="document.body.style.cursor = 'default';"
-    >{{ 'Question.description' | trans }}</a>
-
-    <div id="descriptionOptional">
-        {{ form_widget(form.interaction.question.description) }}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'category' | trans }}</h3>
     </div>
-</fieldset><br/>
+    <div class="panel-body">
+        <div class="form-group row">
+            <label class="control-label col-md-3">{{ 'choose' | trans }}</label>
+            <div class="col-md-9">{{ form_widget(form.interaction.question.category) }}</div>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <a class="btn btn-primary" id="lien_category_alter" onclick="show();"><i class="icon-pencil"></i> &nbsp;{{ 'alter category' | trans }}</a>
+        <a class="btn btn-primary" id="lien_category"><i class="icon-plus"></i> &nbsp;{{ 'create a new category' | trans }}</a>
+    </div>
+</div>
 
-<fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
-    <legend style="border: transparent hidden 0; width: 100px;margin: 0; color: lightsteelblue;">
-        &nbsp;&nbsp;{{ 'model' | trans }} :
-    </legend>
-    {{ form_widget(form.interaction.question.model, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }}
-    {{ form_label(form.interaction.question.model) }}
-</fieldset><br/>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'description' | trans }}</h3>
+    </div>
+    <div class="panel-body">
+        <a class="btn btn-primary" data-toggle="collapse" data-target="#collepsedescription">
+            <i class="icon-pencil"></i> {{ 'Question.description' | trans }}
+        </a>
+    </div>
+    <div id="collepsedescription" class="list-group collapse">
+        <div class="list-group-item">{{ form_widget(form.interaction.question.description) }}</div>
+    </div>
+</div>
 
-<fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
-    <legend style="border: transparent hidden 0; width: 130px;margin: 0; color: lightsteelblue;">
-        &nbsp;&nbsp;{{ 'question' | trans }} :
-    </legend>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'model' | trans }}</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-group row">
+            {{ form_label(form.interaction.question.model) }}
+            <div class="col-md-3">{{ form_widget(form.interaction.question.model) }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'question' | trans }}</h3>
+    </div>
+    <div class="panel-body">
         {{ form_widget(form.interaction.invite) }}
-</fieldset><br/>
-
-<fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
-    <legend style="border: transparent hidden 0; width: 170px;margin: 0; color: lightsteelblue;">
-        &nbsp;&nbsp;{{ 'comment' | trans }} :
-    </legend>
-    <a onclick="DisplayOptional('feedback');" id="feebackOptionalShow"
-        accesskey=""onmouseover="document.body.style.cursor = 'pointer';"
-        onmouseout="document.body.style.cursor = 'default';"
-    >{{ 'Interaction.feedback' | trans }}</a>
-
-    <a onclick="HideOptional('feedback');" id="feebackOptionalHide"
-        accesskey=""onmouseover="document.body.style.cursor = 'pointer';"
-        onmouseout="document.body.style.cursor = 'default';"
-    >{{ 'Interaction.feedback' | trans }}</a>
-
-    <div id="feedbackOptional">
-        {{ form_widget(form.interaction.feedBack) }}
     </div>
-</fieldset><br/>
+</div>
 
-<fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-top: 5px;">
-    <legend style="border: transparent hidden 0; width: 110px; margin: 0; color: lightsteelblue;">
-        &nbsp;&nbsp;{{ 'hints' | trans }} :
-    </legend>
-    {{ form_widget(form.interaction.hints) }}
-</fieldset><br/>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'comment' | trans }}</h3>
+    </div>
+    <div class="panel-body">
+        <a class="btn btn-primary" data-toggle="collapse" data-target="#collepseinteraction">
+            <i class="icon-pencil"></i> {{ 'Interaction.feedback' | trans }}
+        </a>
+    </div>
+    <div id="collepseinteraction" class="list-group collapse">
+        <div class="list-group-item">{{ form_widget(form.interaction.feedBack) }}</div>
+    </div>
+</div>
 
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'hints' | trans }}</h3>
+    </div>
+    <div class="panel-body">
+        {{ form_widget(form.interaction.hints) }}
+    </div>
+</div>
+
+<div id="linkedCategory" style="display: none;">
+    <hr style=" height: 1px; color: powderblue; background-color: powderblue;"/>
+    <a href="#" id="lien_category_drop" onclick="dropCategory();"><i class="icon-trash"></i> {{ 'drop category' | trans }}</a>
+</div>
 
 <div id="popupEA">
     <div id="popupContainer" class="hiddenCat">
@@ -153,12 +150,12 @@
 
     <h3 style="text-align: center;">{{ 'alter category' | trans }}</h3>
 
-        <p>{{ 'newCategoryName' | trans }} ?</p>
-        <input type="text" id='newlabel' name='newlabel'/><br/><br/>
-        <button id="updateSubmit" type="button" class="btn btn-primary">{{ 'change' | trans }} !</button>
+    <p>{{ 'newCategoryName' | trans }} ?</p>
+    <input type="text" id='newlabel' name='newlabel'/><br/><br/>
+    <button id="updateSubmit" type="button" class="btn btn-primary">{{ 'change' | trans }} !</button>
 
-        <input type="hidden" id="pathAlter" value="{{ path('ujm_category_alter') }}"/>
-        <input type="hidden" id="pathDrop" value="{{ path('ujm_category_drop') }}"/>
+    <input type="hidden" id="pathAlter" value="{{ path('ujm_category_alter') }}"/>
+    <input type="hidden" id="pathDrop" value="{{ path('ujm_category_drop') }}"/>
 </div>
 
 <script type="text/javascript">

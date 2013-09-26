@@ -33,151 +33,154 @@
  # knowledge of the CeCILL license and that you accept its terms.
 #}
 
-{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% set _resource = entity %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
 
 {% block title %} {{ 'exercise edit' | trans }} {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('bundles/frontend/jquery/plugin/datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset('bundles/ujmexo/css/dateTimePicker.css') }}">
+{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('claro_resource_open', { 'resourceType': entity.resourceNode.resourceType.name(), 'node': entity.resourceNode.id }) }}">{{ entity.getResourceNode().getName() }}</a></li>
+    <li class="active">{{ 'exercise edit' | trans }}</li>
+{% endblock %}
 
 {% block section_content %}
 
     {{ tinymce_init() }}
 
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script src="{{ asset('bundles/ujmexo/js/dateTimePicker.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
-
-    <div class="panel-heading" style="padding-left: 50px;">
-        <h1>{{'exercise edit'|trans}}</h1>
-    </div><br/>
-
-    <a href="{{ path('claro_resource_open', { 'resourceType': entity.resourceNode.resourceType.name(), 'node': entity.id }) }}" style="margin-left: 50px;">
-        <i class="icon-arrow-left"></i> {{ 'back' | trans }}
-    </a>
-
-    <hr/>
-
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'exercise edit' | trans }}</h3>
+    </div>
+    <div class="panel-body">
+        <a class="btn btn-primary" href="{{ path('claro_resource_open', { 'resourceType': entity.resourceNode.resourceType.name(), 'node': entity.resourceNode.id }) }}">
+            <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+        </a>
+    </div>
     <form action="{{ path('ujm_exercise_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
-<!--------------------------------------------- Definition of the exercise ----------------------------------------------->
-        <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; padding-top: 10px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
-            <legend style="border: transparent hidden 0; width: 190px; margin: 0; color: skyblue;">
-                <h4>&nbsp;{{ 'exercise definition' | trans }}</h4>
-            </legend>
-            {{ form_row(edit_form.title) }}
-
-            <hr style=" height: 1px; color: teal; background-color: teal"/>
-
-            {{ form_row(edit_form.description) }}
-
-            <hr style=" height: 1px; color: teal; background-color: teal"/>
-
-            <div class="input-append date picker">
-                <div style="float: left;">
-                    {{ form_label(edit_form.start_date) }} &nbsp;
-                    {{ form_widget(edit_form.start_date) }}
+        <div class="list-group">
+            <div class="list-group-item">
+                {#--------------------------------------------- Definition of the exercise -----------------------------------------------#}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'exercise definition' | trans }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        {{ form_row(edit_form.title) }}
+                        {{ form_row(edit_form.description) }}
+                        <div class="form-group row date picker">
+                            {{ form_label(edit_form.start_date) }}
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    {{ form_widget(edit_form.start_date) }}
+                                    <span class="input-group-btn add-on">
+                                        <a class="btn btn-default">
+                                            <i class="icon-calendar"></i>
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            {{ form_label(edit_form.useDateEnd) }}
+                            <div class="col-md-9">{{ form_widget(edit_form.useDateEnd) }}</div>
+                        </div>
+                        <div class="form-group row date picker" id="dateEnd" style="display: none;">
+                            {{ form_label(edit_form.end_date) }}
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    {{ form_widget(edit_form.end_date) }}
+                                    <span class="input-group-btn add-on">
+                                        <a class="btn btn-default"><i class="icon-calendar"></i></a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <span class="add-on" style="float: left; margin-left: 10px; position: relative; top: 3px; display: inline;">
-                    <i data-time-icon="icon-time" data-date-icon="icon-calendar">
-                    </i>
-                </span>
-            </div>
-
-            <br/><hr style=" height: 1px; color: teal; background-color: teal"/>
-
-            {{ form_widget(edit_form.useDateEnd, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }}
-            {{ form_label(edit_form.useDateEnd) }}
-
-            <div class="input-append date picker" id="dateEnd" style="display: none;">
-                <br/>
-                <div style="float: left;">
-                    {{ form_label(edit_form.end_date) }} &nbsp;
-                    {{ form_widget(edit_form.end_date) }}
+                {#--------------------------------------------- Questions -----------------------------------------------#}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'questions' | trans }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group row">
+                            {{ form_label(edit_form.shuffle) }}
+                            <div class="col-md-9">{{ form_widget(edit_form.shuffle) }}</div>
+                        </div>
+                            {{ form_row(edit_form.nbQuestion) }}
+                    </div>
                 </div>
-                <span class="add-on" style="float: left; margin-left: 10px; position: relative; top: 3px; display: inline;">
-                    <i data-time-icon="icon-time" data-date-icon="icon-calendar">
-                    </i>
-                </span>
-            </div>
-        </fieldset><br/>
-<!--------------------------------------------- Questions ----------------------------------------------->
-        <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; padding-top: 10px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
-            <legend style="border: transparent hidden 0; width: 90px; margin: 0; color: skyblue;">
-                <h4>&nbsp;{{ 'questions' | trans }}</h4>
-            </legend>
-            {{ form_widget(edit_form.shuffle, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }}
-            {{ form_label(edit_form.shuffle) }}
-
-            <hr style=" height: 1px; color: teal; background-color: teal"/>
-
-            {{ form_row(edit_form.nbQuestion) }}
-        </fieldset><br/>
-<!--------------------------------------------- End of Assessment ----------------------------------------------->
-        <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; padding-top: 10px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
-            <legend style="border: transparent hidden 0; width: 130px; margin: 0; color: skyblue;">
-                <h4>&nbsp;{{ 'At the end of assessment' | trans }}</h4>
-            </legend>
-            {{ form_widget(edit_form.doprint, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }}
-            {{ form_label(edit_form.doprint) }}
-
-            <hr style=" height: 1px; color: teal; background-color: teal"/>
-
-            {{ form_row(edit_form.correctionMode) }}
-
-            <div class="input-append date picker" id="CorrectionMode" style="display: none;">
-
-                <hr style=" height: 1px; color: powderblue; background-color: powderblue;"/>
-
-                <div style="float: left;">
-                    {{ form_label(edit_form.dateCorrection) }} &nbsp;
-                    {{ form_widget(edit_form.dateCorrection) }}
+                {#--------------------------------------------- End of Assessment ----------------------------------------------#}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'At the end of assessment' | trans }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group row">
+                            {{ form_label(edit_form.doprint) }}
+                            <div class="col-md-9">{{ form_widget(edit_form.doprint) }}</div>
+                        </div>
+                        {{ form_row(edit_form.correctionMode) }}
+                        <div class="form-group row date picker" id="CorrectionMode" style="display: none;">
+                            {{ form_label(edit_form.dateCorrection) }}
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    {{ form_widget(edit_form.dateCorrection) }}
+                                    <span class="input-group-btn add-on">
+                                        <a class="btn btn-default"><i class="icon-calendar"></i></a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        {{ form_row(edit_form.markMode) }}
+                    </div>
                 </div>
-                <span class="add-on" style="float: left; margin-left: 10px; position: relative; top: 3px; display: inline;">
-                    <i data-time-icon="icon-time" data-date-icon="icon-calendar">
-                    </i>
-                </span>
-                <br/>
+                {#--------------------------------------------- Passage ----------------------------------------------#}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'paper' | trans }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        {{ form_row(edit_form.duration) }}
+                        {{ form_row(edit_form.maxAttempts) }}
+                        <div class="form-group row">
+                            {{ form_label(edit_form.dispButtonInterrupt) }}
+                            <div class="col-md-9">{{ form_widget(edit_form.dispButtonInterrupt) }}</div>
+                        </div>
+                        <div class="form-group row">
+                            {{ form_label(edit_form.lockAttempt) }}
+                            <div class="col-md-9">{{ form_widget(edit_form.lockAttempt) }}</div>
+                        </div>
+                        {{ form_rest(edit_form) }}
+                    </div>
+                </div>
             </div>
-
-            <hr style=" height: 1px; color: teal; background-color: teal"/>
-
-            {{ form_row(edit_form.markMode) }}
-        </fieldset><br/>
-<!--------------------------------------------- Passage ----------------------------------------------->
-        <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; padding-top: 10px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
-            <legend style="border: transparent hidden 0; width: 80px; margin: 0; color: skyblue;">
-                <h4>&nbsp;{{ 'paper' | trans }}</h4>
-            </legend>
-            {{ form_row(edit_form.duration) }}
-
-            <hr style=" height: 1px; color: teal; background-color: teal"/>
-
-            {{ form_row(edit_form.maxAttempts) }}
-
-            <hr style=" height: 1px; color: teal; background-color: teal"/>
-
-            {{ form_widget(edit_form.dispButtonInterrupt, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }}
-            {{ form_label(edit_form.dispButtonInterrupt) }}
-
-            <hr style=" height: 1px; color: teal; background-color: teal"/>
-
-            {{ form_widget(edit_form.lockAttempt, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }}
-            {{ form_label(edit_form.lockAttempt) }}
-        </fieldset><br/>
-
-        {{ form_rest(edit_form) }}
-        <p>
+        </div>
+        <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ "edit" | trans }}</button>
-        </p>
+            <a class="btn btn-default" href="{{ path('claro_resource_open', { 'resourceType': entity.resourceNode.resourceType.name(), 'node': entity.resourceNode.id }) }}">
+                {{ 'cancel' | trans({}, 'platform') }}
+            </a>
+        </div>
     </form>
-
-{% endblock %}
-
-{% block stylesheets %}
-{{ parent() }}
-<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('bundles/frontend/jquery/plugin/datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}">
-<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('bundles/ujmexo/css/dateTimePicker.css') }}">
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="{{ asset('bundles/ujmexo/js/dateTimePicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script type="text/javascript">
         //To disable the feature not yet implemented
         $(document).ready(function() {

@@ -286,9 +286,19 @@ class QuestionController extends Controller
      */
     public function newAction($exoID)
     {
-        $linkedCategory = $this->getLinkedCategories();
+        $variables = array(
+            'exoID' => $exoID,
+            'linkedCategory' => $this->getLinkedCategories()
+        );
 
-        return $this->render('UJMExoBundle:Question:new.html.twig', array('exoID' => $exoID, 'linkedCategory' => $linkedCategory));
+        $em = $this->getDoctrine()->getManager();
+        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+
+        if ($exercise) {
+            $variables['_resource'] = $exercise;
+        }
+
+        return $this->render('UJMExoBundle:Question:new.html.twig', $variables);
     }
 
     /**
