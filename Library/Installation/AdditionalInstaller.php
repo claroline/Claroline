@@ -20,6 +20,7 @@ class AdditionalInstaller extends BaseInstaller
     {
         $this->createDatabaseIfNotExists();
         $this->buildDefaultTemplate();
+        $this->saveTextConfigs();
     }
 
      public function postUpdate(BundleVersion $current, BundleVersion $target)
@@ -134,6 +135,43 @@ class AdditionalInstaller extends BaseInstaller
         catch (MappingException $e) {
             $this->log('A MappingException has been thrown while trying to get HomeTabConfig or WidgetHomeTabConfig repository');
         }
+    }
+    
+    private function saveTextConfigs()
+    {
+        $cn = $this->container->get('doctrine.dbal.default_connection');
+        //create new table
+        $create = "
+            CREATE TABLE save_simple_text_dekstop_widget_config (
+                id INT AUTO_INCREMENT NOT NULL, 
+                user_id INT DEFAULT NULL, 
+                workspace_id INT DEFAULT NULL, 
+                is_default TINYINT(1) NOT NULL, 
+                content LONGTEXT NOT NULL, 
+                INDEX IDX_BAB9695A76ED395 (user_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ";
+        $cn->query($create);
+        
+        $dconfigs = "SELECT * FROM simple_text_dekstop_widget_config";
+        
+        foreach ($dconfigs as $config) {
+           $query = "INSERT INTO save_simple_text_dekstop_widget_config (workspace_id, user_id, is_default, content)
+               VALUES (null, {$config['user_id']}, {$config['is_default']}, {$config['content']})";
+           $cn->query($query);
+        }
+        
+        $wconfigs = "SELECT * FROM simple_text_dekstop_widget_config";
+        
+        foreach ($wconfigs as $config) {
+           $query = "INSERT INTO save_simple_text_dekstop_widget_config (workspace_id, user_id, is_default, content)
+               VALUES ({$config['workspace_id']}, null, {$config['is_default']}, {$config['content']})";
+           $cn->query($query);
+        }
+        
+        $cn->query('TRUNCATE simple_text_dekstop_widget_config');
+        $cn->query('TRUNCATE simple_text_workspace_widget_config');
     }
     
     private function updateWidgetsDatas()
