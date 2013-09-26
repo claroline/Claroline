@@ -144,8 +144,10 @@ class AdditionalInstaller extends BaseInstaller
         //
         foreach ($datas as $row) {
            $isAdmin = $row['parent_id'] == NULL ? true: false;
+           $wsId = $row['workspace_id'] ? $row['workspace_id']: 'null';
+           $userId = $row['user_id'] ? $row['user_id']: 'null';
            $query = "INSERT INTO claro_widget_instance (workspace_id, user_id, widget_id, is_admin, is_desktop, name)
-           VALUES ({$row['workspace_id']}, {$row['user_id']}, {$row['widget_id']}, {$isAdmin}, {$row['is_desktop']}, 'change me !')";
+           VALUES ({$wsId}, {$userId}, {$row['widget_id']}, {$isAdmin}, {$row['is_desktop']}, 'change me !')";
            $cn->query($query);
         }
     }
