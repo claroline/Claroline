@@ -13,6 +13,7 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 use Claroline\InstallationBundle\Bundle\BundleVersion;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 
 class AdditionalInstaller extends BaseInstaller
 {
@@ -22,12 +23,13 @@ class AdditionalInstaller extends BaseInstaller
         $this->buildDefaultTemplate();
     }
 
-    public function postUpdate(BundleVersion $current, BundleVersion $target)
+     public function postUpdate(BundleVersion $current, BundleVersion $target)
     {
-        $this->createWorkspacesListWidget();
+//        $this->createWorkspacesListWidget();
 
         if (version_compare($current->getVersion(), '1.4', '<')) {
-            $this->updateAdminWorkspaceHomeTabDatas();
+            $this->updateWidgetsDatas();
+//            $this->updateAdminWorkspaceHomeTabDatas();
         }
     }
 
@@ -132,6 +134,20 @@ class AdditionalInstaller extends BaseInstaller
         }
         catch (MappingException $e) {
             $this->log('A MappingException has been thrown while trying to get HomeTabConfig or WidgetHomeTabConfig repository');
+        }
+    }
+    
+    private function updateWidgetsDatas()
+    {  
+        $cn = $this->container->get('doctrine.dbal.default_connection');
+        $select = "SELECT * FROM claro_widget_display";
+        $datas =  $cn->query($select);
+        //
+        foreach ($datas as $row) {
+           $isAdmin = $row['parent_id'] == NULL ? true: false;
+           $query = "INSERT INTO claro_widget_instance (workspace_id, user_id, widget_id, is_admin, is_desktop, name)
+           VALUES ({$row['workspace_id']}, {$row['user_id']}, {$row['widget_id']}, {$isAdmin}, {$row['is_desktop']}, 'change me !')";
+           $cn->query($query);
         }
     }
 }
