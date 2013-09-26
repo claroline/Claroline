@@ -378,15 +378,16 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
                 new LoadForumData('Forum doc', 'JaneDoe', 5, 5, $this->getReference('directory/Premier semestre'))
             );
         }
-
-        if ($kernel->isClassInActiveBundle('Claroline\RssReaderBundle\Entity\Config')) {
-            $rssConfig = new \Claroline\RssReaderBundle\Entity\Config();
-            $rssConfig->setUrl('http://www.lesoir.be/feed/Actualit%C3%A9/Vie%20du%20net/destination_principale_block');
-            $rssConfig->setDefault(true);
-            $rssConfig->setDesktop(true);
-            $this->manager->persist($rssConfig);
-            $this->manager->flush();
-        }
+       
+            //The widget API changed.
+//        if ($kernel->isClassInActiveBundle('Claroline\RssReaderBundle\Entity\Config')) {
+//            $rssConfig = new \Claroline\RssReaderBundle\Entity\Config();
+//            $rssConfig->setUrl('http://www.lesoir.be/feed/Actualit%C3%A9/Vie%20du%20net/destination_principale_block');
+//            $rssConfig->setDefault(true);
+//            $rssConfig->setDesktop(true);
+//            $this->manager->persist($rssConfig);
+//            $this->manager->flush();
+//        }
     }
 
     private function getFirstNames()

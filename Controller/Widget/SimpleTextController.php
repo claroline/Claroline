@@ -18,7 +18,7 @@ class SimpleTextController extends Controller
      * )
      * @EXT\Method("POST")
      */
-    public function updateLogWorkspaceWidgetConfig(WidgetInstance $widget)
+    public function updateSimpleTextWidgetConfig(WidgetInstance $widget)
     {
         //vérification d'accès ici
         
