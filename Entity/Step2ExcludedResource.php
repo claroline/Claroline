@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Step2ExcludedResource
  *
- * @ORM\Table()
- * @ORM\Entity
+ * @ORM\Table("innova_step2excludedResource")
+ * @ORM\Entity(repositoryClass="Innova\PathBundle\Repository\Step2ExcludedResourceRepository")
  */
 class Step2ExcludedResource
 {
