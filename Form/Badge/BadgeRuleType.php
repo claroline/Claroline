@@ -33,7 +33,7 @@ class BadgeRuleType extends AbstractType
 
         $builder
             ->add('action', 'twolevelselect', array(
-                    'translation_domain' => 'badge',
+                    'translation_domain' => 'log',
                     'attr'               => array('class' => 'input-sm'),
                     'choices'            => $actionChoices,
                     'label'              => 'badge_form_action',
@@ -45,7 +45,7 @@ class BadgeRuleType extends AbstractType
             ->add(
                 'occurrence', 'integer', array(
                     'label' => 'badge_form_occurrence',
-                    'theme_options'      => array(
+                    'theme_options' => array(
                         'label_width' => 'col-md-4'
                     ),
                     'data'  => 1
@@ -54,10 +54,10 @@ class BadgeRuleType extends AbstractType
             ->add(
                 'period', 'choice', array(
                     'choices' => array(
-                        'day' => 'day',
-                        'week' => 'week',
+                        'day'   => 'day',
+                        'week'  => 'week',
                         'month' => 'month',
-                        'year' => 'year'
+                        'year'  => 'year'
                     ),
                     'label'    => 'badge_form_period',
                     'theme_options'      => array(
