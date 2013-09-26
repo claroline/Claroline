@@ -11,6 +11,7 @@ add_group: 'Add group'
 add_group_s_confirm_message: 'group(s) added'
 add_resource: 'Add resource'
 add_role: 'Add role'
+add_tag: 'Add tag'
 add_tag_to_workspace: 'Add tag to workspace'
 add_user: 'Add user'
 add_users: 'Add users'
@@ -39,6 +40,7 @@ admin_workspace_tag_form_name: Name
 advanced: Advanced
 agenda: Agenda
 all: All
+all_available_workspaces: 'All available workspaces'
 all_my_workspaces: 'All my workspaces'
 all_workspaces: 'All workspaces'
 anonymous: Anonymous
@@ -50,6 +52,7 @@ an_error_occured_message: An error occured. Please contact the administrator.
 apply: Apply
 available_widgets: 'Available widgets'
 available_workspaces: 'Available workspaces'
+back: 'Back'
 badges_management: 'Badges management'
 by: by
 cancel: Cancel
@@ -58,6 +61,8 @@ canCreate: 'Create %type%'
 canDelete: 'Right to delete'
 canEdit: 'Right to edit'
 canExport: 'Right to export'
+cannot_delete_unique_manager: 'Cannot remove the unique manager.'
+cannot_unsubscribe_from_workspace: 'Cannot unsubscribe from workspace'
 canOpen: 'Right to open'
 choose_resource_form_type: 'Resource type'
 Choose visible actions in the widget: 'Choose visible actions in the widget'
@@ -227,8 +232,11 @@ mail: Mail
 mail_config_problem : Please contact your administrator platform to reinitialize your password.
 mail_form_content: Content
 mail_form_object: Object
+mail_form_receiver : Receiver(s)
 mail_invalid : "Mail format is not valid"
+mail_login : 'Your Claroline''s login'
 mail_message : 'You received this message because you asked for a new password. Please click on the link below to reset it. If you did not ask to reset your password please ignore this message.'
+mail_not_available : 'The mail function is not available'
 mail_click: 'Click on this link to reset your password'
 mail_not_exist: 'This mail does not exist'
 mail_sent : 'A email has been sent to your address , check your inbox mail and your spam box'
@@ -278,6 +286,8 @@ new_message: 'New message'
 no: 'no'
 no_email: 'No email found, check the spelling'
 no_search_results: 'Your search hasn''t returned any result.'
+no_tag: 'There is no tag'
+no_workspace: 'There is no workspace'
 none: None
 note: Note
 not_allowed_message: You are not allowed to perform this action.
@@ -331,7 +341,9 @@ public_workspaces: 'Public workspaces'
 public_workspace_empty: 'There are no public workspaces.'
 recursive_dir_action: 'Apply to the contents of the directory and its subdirectories'
 register: Register
+register_to_a_public_workspace: 'Register to a public workspace'
 register_to_a_workspace: 'Register to a workspace'
+registered: 'Registered'
 registered_groups: 'Registered groups'
 registered_users: 'Registered users'
 registration_to_workspaces: 'Registration to workspaces'
@@ -351,6 +363,8 @@ resource: Resource
 resource_action_denied_message: 'The action %action% couldn''t be done on ''%path%'': access denied.'
 resource_creation_denied: 'You don''t have the permission to create in the directory ''%path'': access denied'
 resource_creation_wrong_type: 'You don''t have the permission to create a(n) %type% in the directory ''%path%'': access denied'
+resource_delete: 'Are you sure you want to delete this resource ?'
+resources_delete: 'Are you sure you want to delete these resources ?'
 Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the graph to zoom, double-click to cancel'
 Overview of recent activities of your workspaces: 'Overview of recent activities of your workspaces'
 Overview of recent activities in %workspaceName%: 'Overview of recent activities in %workspaceName%'
@@ -454,6 +468,7 @@ type: Type
 type_s: Type(s)
 unique connections: 'Nb unique Cnx.'
 unregister: Unregister
+unregister_from_a_workspace: 'Unregister from a workspace'
 unregistered: Unregistered
 unregistered_groups: 'Unregistered groups'
 unregistered_users: 'Unregistered users'

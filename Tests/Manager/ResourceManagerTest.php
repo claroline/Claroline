@@ -18,6 +18,7 @@ class ResourceManagerTest extends MockeryTestCase
     private $eventDispatcher;
     private $om;
     private $ut;
+    private $sc;
 
     public function setUp()
     {
@@ -34,6 +35,7 @@ class ResourceManagerTest extends MockeryTestCase
         $this->eventDispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->ut = $this->mock('Claroline\CoreBundle\Library\Utilities\ClaroUtilities');
+        $this->sc = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
     }
 
     public function testCreate()
@@ -728,7 +730,8 @@ class ResourceManagerTest extends MockeryTestCase
                 $this->rightsManager,
                 $this->eventDispatcher,
                 $this->om,
-                $this->ut
+                $this->ut,
+                $this->sc
             );
         } else {
             $stringMocked = '[';
@@ -748,7 +751,8 @@ class ResourceManagerTest extends MockeryTestCase
                     $this->rightsManager,
                     $this->eventDispatcher,
                     $this->om,
-                    $this->ut
+                    $this->ut,
+                    $this->sc
                 )
             );
         }

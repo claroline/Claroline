@@ -44,6 +44,13 @@ claro_content_confirm:
         _controller: FrameworkBundle:Template:template
         template: 'ClarolineCoreBundle:Home:confirm.html.twig'
 
+claro_content_link:
+    pattern: /content/link
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'ClarolineCoreBundle:Home:link.html.twig'
+
+
 claro_authentication:
     resource: "@ClarolineCoreBundle/Controller/AuthenticationController.php"
     type: annotation

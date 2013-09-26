@@ -10,13 +10,12 @@ use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
-class WorkspaceCalendarControllerTest extends MockeryTestCase
+class WorkspaceAgendaControllerTest extends MockeryTestCase
 {
     private $security;
     private $formFactory;
     private $om;
     private $request;
-    private $controller;
 
     protected function setUp()
     {
@@ -110,7 +109,7 @@ class WorkspaceCalendarControllerTest extends MockeryTestCase
         $this->security->shouldReceive('getToken')->once()->andReturn($token);
         $token->shouldReceive('getUser')->once()->andReturn($user);
         $this->request->request = $parameterBag;
-        $parameterBag->shouldReceive('all')->once()->andReturn(array('id' => '8'));
+        $parameterBag->shouldReceive('all')->once()->andReturn(array('id' => '8', 'agenda_form' => array('allDay' => true)));
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Event')->andReturn($eventRepo);
         $eventRepo->shouldReceive('find')->with('8')->andReturn($event);
         $form = $this->mock('Symfony\Component\Form\Form');
@@ -124,7 +123,7 @@ class WorkspaceCalendarControllerTest extends MockeryTestCase
              $form->shouldReceive('isValid')
                  ->once()
                  ->andReturn(true);
-        $this->om->shouldReceive('persist')->once()->with($event);
+        $event->shouldReceive('setAllDay')->with(true)->once();
         $this->om->shouldReceive('flush')->once();
         $event->shouldReceive('getId')->once()->andReturn('1');
         $event->shouldReceive('getTitle')->once()->andReturn('title');
@@ -137,8 +136,9 @@ class WorkspaceCalendarControllerTest extends MockeryTestCase
         $event->shouldReceive('getDescription')->once()->andReturn('blabla');
         $response = new Response(
             json_encode(
-                array('id' => '1'
-                    ,'title' => 'title',
+                array(
+                    'id' => '1',
+                    'title' => 'title',
                     'start' => '123456',
                     'end' => '123457',
                     'color' => '#BBBDDD',

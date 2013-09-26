@@ -9,7 +9,7 @@ html, body {
 }
 
 body {
-    padding:(@navbar-height + 20px) 0 (@navbar-height + 10px) 0;
+    padding: (@navbar-height + 20px) 0 (@navbar-height + 10px) 0;
 }
 
 #wrap {
@@ -31,7 +31,7 @@ body {
 #top_bar {
     @media (max-width: 993px) {
         .navbar-nav .divider{
-            display:none;
+            display: none;
          }
     }
 }
@@ -71,48 +71,48 @@ body {
     .list-group-item.disabled {
 
         padding: 8px 15px !important;
-        color:@panel-default-text;
+        color: @panel-default-text;
         font-size: (@font-size-base * 1.125);
-        background:@panel-default-heading-bg;
+        background: @panel-default-heading-bg;
     }
 }
 
 .content-element {
     > .nav.nav-pills{
-        margin-bottom:5px;
-        border:1px solid transparent;
-        &.admin:hover{
-            border:1px dashed @link-color;
+        margin-bottom: 5px;
+        border: 1px solid transparent;
+        &.admin: hover{
+            border: 1px dashed @link-color;
         }
     }
 
     > .list-group {
 
         > div.list-group-item {
-            padding:0;
+            padding: 0;
         }
 
         > a.list-group-item {
-            cursor:pointer;
+            cursor: pointer;
         }
 
         > .list-group-item  {
             > a {
-                display:block;
-                padding:10px 15px;
-                color:@gray;
+                display: block;
+                padding: 10px 15px;
+                color: @gray;
 
-                &:hover {
+                &: hover {
                     text-decoration: none;
-                    background:@panel-default-heading-bg;
+                    background: @panel-default-heading-bg;
                 }
             }
 
             //link inside a div case
             &.active > a,
-            &.active > a:hover {
-                color:#fff;
-                background:@link-color;
+            &.active > a: hover {
+                color: #fff;
+                background: @link-color;
             }
         }
     }
@@ -124,9 +124,9 @@ body {
 
 .panel-group > .panel .panel-heading .btn
 {
-    position:absolute;
-    right:3px;
-    top:3px
+    position: absolute;
+    right: 3px;
+    top: 3px
 }
 
 .notification-date {
@@ -139,17 +139,17 @@ body {
 /*********************/
 @media (max-width: 1024px)
 {
-    .resource-manager
-    {
+    .resource-manager, .creator {
         .navbar {
 
             > ul > li > a {
-                float:left;
+                float: left;
             }
 
             > .navbar-nav, > .navbar-form
             {
-                margin:0;
+                margin: 0;
+                border:none;
             }
         }
     }
@@ -160,20 +160,20 @@ body {
     position: relative;
 
     .navbar {
-        margin:0;
+        margin: 0;
 
         a.disabled {
-            &, &:hover {
-                color:lighten(@gray-light, 20%);
+            &, &: hover {
+                color: lighten(@gray-light, 20%);
             }
 
             & .caret {
-                visibility:hidden;
+                visibility: hidden;
             }
         }
 
     .nav.navbar-nav > li > a {
-            cursor:pointer;
+            cursor: pointer;
         }
     }
 
@@ -184,23 +184,23 @@ body {
     }
 
     .filters {
-        background:#fff;
-        border:1px solid @gray-lighter;
+        background: #fff;
+        border: 1px solid @gray-lighter;
         .box-shadow(0 1px 3px rgba(0,0,0,.25));
-        margin:5px;
-        padding:5px;
+        margin: 5px;
+        padding: 5px;
         .border-top-radius(@border-radius-base);
         .border-bottom-radius(@border-radius-base);
-        z-index:(@zindex-modal-background - 11);
+        z-index: (@zindex-modal-background - 11);
 
         .row {
-            position:relative;
+            position: relative;
         }
 
         label {
-            float:left;
-            padding:0 5px 0 0;
-            display:block;
+            float: left;
+            padding: 0 5px 0 0;
+            display: block;
         }
     }
 
@@ -232,12 +232,12 @@ body {
     border-color: transparent transparent @gray-lighter transparent;
     border-style: solid;
     border-width: 10px;
-    height:0;
-    width:0;
-    position:absolute;
-    top:-24px;
-    right:27px;
-    z-index:(@zindex-modal-background - 11);
+    height: 0;
+    width: 0;
+    position: absolute;
+    top: -24px;
+    right: 27px;
+    z-index: (@zindex-modal-background - 11);
 }
 
 .filters-arrow
@@ -245,18 +245,18 @@ body {
     border-color: transparent transparent #fff transparent;
     border-style: solid;
     border-width: 10px;
-    height:0;
-    width:0;
-    position:absolute;
-    top:-23px;
-    right:27px;
-    z-index:(@zindex-modal-background - 11);
+    height: 0;
+    width: 0;
+    position: absolute;
+    top: -23px;
+    right: 27px;
+    z-index: (@zindex-modal-background - 11);
 }
 
 .pointer-hand
 {
-    cursor:pointer;
-    cursor:hand;
+    cursor: pointer;
+    cursor: hand;
 }
 
 /************/
@@ -271,12 +271,12 @@ body {
 @resourceThumbnailHeight: 150;
 
 .nodes{
-    padding:5px;
+    padding: 5px;
 
     .node-zoom(@width, @height, @percent)
     {
-        width:unit(round((@width * @percent)/ 100), px);
-        height:unit(round((@height * @percent) / 100), px);
+        width: unit(round((@width * @percent)/ 100), px);
+        height: unit(round((@height * @percent) / 100), px);
     }
 
     .node-zoom-rules(@size, @font-size, @line-height)
@@ -290,8 +290,8 @@ body {
             }
 
             .node-name {
-                font-size:@font-size;
-                line-height:@font-height;
+                font-size: @font-size;
+                line-height: @font-height;
             }
         }
     }
@@ -307,16 +307,16 @@ body {
 
         .node-element {
             background-position: center center;
-            background-size:auto 100% ;
-            background-repeat:no-repeat;
+            background-size: auto 100% ;
+            background-repeat: no-repeat;
 
-            padding:0px;
-            margin:5px 0 5px 15%;
-            cursor:pointer;
+            padding: 0px;
+            margin: 5px 0 5px 15%;
+            cursor: pointer;
         }
 
         .checkbox {
-            float:left;
+            float: left;
         }
 
         input[type=checkbox] {
@@ -326,7 +326,7 @@ body {
         .node-name {
             display: block;
             text-align: center;
-            overflow:hidden;
+            overflow: hidden;
             word-wrap: break-word;
         }
 
@@ -337,21 +337,21 @@ body {
 
     .node-rights-form
     {
-        margin:0 10px 10px 10px;
+        margin: 0 10px 10px 10px;
 
         input.pull-right
         {
-            margin-bottom:10px;
+            margin-bottom: 10px;
         }
     }
 
     .node-thumbnail
     {
-        display:inline-block;
+        display: inline-block;
         margin: 10px 0 0 10px;
-        padding:0;
+        padding: 0;
         vertical-align: top;
-        position:relative;
+        position: relative;
     }
 }
 
@@ -394,7 +394,7 @@ body {
 
 .tabs.nav.nav-tabs
 {
-    margin-bottom:20px;
+    margin-bottom: 20px;
 }
 
 /****************/
@@ -403,7 +403,7 @@ body {
 
 div.pagination
 {
-    margin:0;
+    margin: 0;
 
     ul {
         .pagination
@@ -415,12 +415,12 @@ div.pagination
 /********/
 
 .please-wait {
-    width:100%;
+    width: 100%;
     position: fixed;
     z-index: @zindex-modal;
     top: 5px;
     display: none;
-    text-align:center;
+    text-align: center;
 }
 
 .loading {
@@ -437,25 +437,25 @@ div.pagination
     .workspace-list-pager > table tr td,
     .workspace-list-pager > table tr th
     {
-        padding-right:14px !important;
-        padding-left:14px !important;
+        padding-right: 14px !important;
+        padding-left: 14px !important;
     }
 }
 
 .impersonalitation {
     .spacer {
-        height:@navbar-height;
+        height: @navbar-height;
     }
 
     .navbar-fixed-top {
-        z-index:(@zindex-navbar - 1);
-        margin-top:@navbar-height;
+        z-index: (@zindex-navbar - 1);
+        margin-top: @navbar-height;
         background-color: darken(@brand-warning, 5%);
 
         .navbar-nav li a
         {
-            color:#fff;
-            font-weight:bold;
+            color: #fff;
+            font-weight: bold;
         }
 
         .navbar-nav.navbar-right li a {
@@ -471,21 +471,25 @@ div.pagination
 /* special grid sistem for content in home page*/
 
 @content-iteration: 8;
-@content-margin: 1.6;
+@content-margin: 2;
 
 @media (min-width: 767px)
 {
     .content-size (@index) when (@index >= 1) {
 
         .content-@{index} {
-            width:unit(((@index * 100 / @content-iteration) - (@content-margin * 2)), "%");
-            margin-left: unit(@content-margin, "%");
+            width: unit(((@index * 100 / @content-iteration) - @content-margin), "%");
+            /*margin-left: unit(@content-margin, "%");*/
 		    margin-right: unit(@content-margin, "%");
-            float:left;
+            float: left;
+        }
+
+        .spacing-right{
+            padding-right: unit(@content-margin, "%");
         }
 
         .content-offset@{index} {
-            margin-left:unit(((@index * 100 / @content-iteration)), "%");
+            margin-left: unit(((@index * 100 / @content-iteration)), "%");
         }
 
         .content-size(@index - 1);
@@ -499,12 +503,16 @@ div.pagination
     .content-size (@index) when (@index >= 1) {
 
         .content-@{index} {
-            margin-left: 15px;
-		    margin-right: 15px;
+            margin-left: 0;
+		    margin-right: 0;
         }
 
         .content-offset@{index} {
-            margin-left:0;
+            margin-left: 0;
+        }
+
+        .spacing-right{
+            padding-right: 0;
         }
 
         .content-size(@index - 1);
@@ -515,114 +523,120 @@ div.pagination
 
 .content-element {
     .dropdown-menu a {
-        cursor:pointer;
+        cursor: pointer;
     }
 
     .text-muted {
-        position:absolute;
+        position: absolute;
         bottom: 10px;
     }
 
     p {
-        padding-bottom:10px;
+        padding: 10px 0 10px  is defined0;
     }
 
     .content-menu button {
-        position:relative; top: -1px; right: -1px
+        position: relative;
+        top: -1px;
+        right: -1px;
+        z-index: (@zindex-navbar-fixed - 1);
     }
 
     .generated .generated-content
     {
-        margin:0;
-        padding:0 0 10px 0;
+        margin: 0;
+        padding: 0;
+    }
+}
+
+.generated {
+    height: auto;
+
+    .close {
+        margin: 10px;
+    }
+
+    .generated-content {
+        margin: 0;
+        padding: 10px;
+
+        .clearfix {
+            margin: 0;
+            padding: 10px 0 0 0;
+        }
+
+        img {
+            max-width: 100%;
+        }
     }
 }
 
 .float-right-top
 {
-    position:absolute;
-    right:3px;
-    top:3px
+    position: absolute;
+    right: 3px;
+    top: 3px
 }
 
 .relative
 {
-    position:relative;
+    position: relative;
 }
 
 .creator {
     .panel {
-        padding:0;
+        padding: 0;
 
         .form-control {
             .border-bottom-radius(0);
-            border:none;
+            border: none;
         }
     }
 
     .navbar.navbar-static-top {
-        border-top:1px solid @input-border;
+        border-top: 1px solid @input-border;
         .border-bottom-radius(@border-radius-base);
-        margin:0;
+        margin: 0;
     }
 
     textarea {
-        overflow:hidden;
+        overflow: hidden;
         resize: none;
         .transition(all .2s linear);
     }
 
     .generated {
         background: lighten(@state-success-bg, 5%);
-        padding:0;
-        margin:0;
+        padding: 0;
+        margin: 0;
     }
 }
 
 .creator-collapse {
-    border:1px solid @list-group-border;
-    padding:10px 10px 0 10px;
+    border: 1px solid @list-group-border;
+    padding: 10px 10px 0 10px;
 }
 
 #sizes .panel, #regions .panel
 {
-    cursor:pointer;
-    padding:5px;
+    cursor: pointer;
+    padding: 5px;
 }
 
 #regions .panel
 {
-    text-align:center;
-    padding:20px 5px 20px 5px;
+    text-align: center;
+    padding: 20px 5px 20px 5px;
 }
 
-#sizes .panel:hover, #sizes .panel.active,
-#regions .panel:hover, #regions .panel.active {
-    background:@link-color;
-    color:#fff;
+#sizes .panel: hover, #sizes .panel.active,
+#regions .panel: hover, #regions .panel.active {
+    background: @link-color;
+    color: #fff;
 }
 
 .align-right {
-    text-align:right;
-}
-
-.generated {
-    height:auto;
-
-    .close {
-        margin:10px;
-    }
-
-    .generated-content {
-        margin:0;
-        padding:0 10px 0 10px;
-        overflow:auto;
-        height:auto;
-
-        p {
-            margin:5px 0 5px 0;
-        }
-    }
+    text-align: right;
 }
 
 /**********************/
@@ -630,7 +644,7 @@ div.pagination
 /**********************/
 
 .bs-example {
-    border-bottom:1px solid @gray-lighter;
-    margin:0 0 20px 0;
-    padding:0 0 20px 0;
+    border-bottom: 1px solid @gray-lighter;
+    margin: 0 0 20px 0;
+    padding: 0 0 20px 0;
 }

@@ -34,7 +34,8 @@ class HomeExtension extends \Twig_Extension
             'timeAgo' => new \Twig_Filter_Method($this, 'timeAgo'),
             'homeLink' => new \Twig_Filter_Method($this, 'homeLink'),
             'activeLink' => new \Twig_Filter_Method($this, 'activeLink'),
-            'compareRoute' => new \Twig_Filter_Method($this, 'compareRoute')
+            'compareRoute' => new \Twig_Filter_Method($this, 'compareRoute'),
+            'autoLink' => new \Twig_Filter_Method($this, 'autoLink')
         );
     }
 
@@ -140,6 +141,30 @@ class HomeExtension extends \Twig_Extension
         }
 
         return '';
+    }
+
+    public function autoLink($text)
+    {
+        $rexProtocol = '(https?://)?';
+        $rexDomain   = '((?:[-a-zA-Z0-9]{1,63}\.)+[-a-zA-Z0-9]{2,63}|(?:[0-9]{1,3}\.){3}[0-9]{1,3})';
+        $rexPort     = '(:[0-9]{1,5})?';
+        $rexPath     = '(/[!$-/0-9:;=@_\':;!a-zA-Z\x7f-\xff]*?)?';
+        $rexQuery    = '(\?[!$-/0-9:;=@_\':;!a-zA-Z\x7f-\xff]+?)?';
+        $rexFragment = '(#[!$-/0-9:;=@_\':;!a-zA-Z\x7f-\xff]+?)?';
+
+        $text = preg_replace_callback(
+            "&\\b$rexProtocol$rexDomain$rexPort$rexPath$rexQuery$rexFragment(?=[?.!,;:\"]?(\s|$))&",
+            function ($match) {
+                // Prepend http:// if no protocol specified
+                $completeUrl = $match[1] ? $match[0] : "http://{$match[0]}";
+
+                return '<a href="' . $completeUrl . '" target="_blank">'
+                    . $match[2] . $match[3] . $match[4] . '</a>';
+            },
+            htmlspecialchars($text)
+        );
+
+        return $text;
     }
 
     /**

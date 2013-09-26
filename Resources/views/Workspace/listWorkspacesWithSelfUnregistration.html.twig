@@ -1,0 +1,120 @@
+{% macro renderPager(pager) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_list_workspaces_with_self_unregistration'
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% set nbPages = workspaces.getNbPages() %}
+
+{% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': 'my_workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_by_user')
+            },
+            {
+                'name': 'unregister_from_a_workspace'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'unregister_from_a_workspace'|trans({}, 'platform') }}
+        </h3>
+    </div>
+
+    <div id="workspace-list-div" class="panel-body">
+
+        <div id="custom-flashbag-div" class="alert alert-danger hide">
+            <a id="flashbag-close-button" class="close" href="#">×</a>
+            <div id="custom-flashbag-msg-div">
+            </div>
+        </div>
+
+        {% if workspaces is empty %}
+            {{ 'no_workspace' | trans({}, 'platform') }}
+        {% else %}
+            {% if nbPages > 1 %}
+                <div>
+                {{ renderPager(workspaces) }}
+                </div>
+            {% endif %}
+
+            {% for workspace in workspaces %}
+                <div id="workspace-{{ workspace.getId() }}" class="list-group-item">
+                    {{ workspace.getName() }}
+                    <span><small>({{ workspace.getCode() }})</small></span>
+                    <span class="pull-right pointer-hand label label-danger unregister-btn"
+                        data-workspace-id="{{ workspace.getId() }}"
+                        data-workspace-name="{{ workspace.getName() }}"
+                        data-workspace-code="{{ workspace.getCode() }}"
+                    >
+                        <i class="icon-remove-sign"></i>
+                        {{ 'unregister'|trans({}, 'platform') }}
+                    </span>
+                </div>
+            {% endfor %}
+
+            {% if nbPages > 1 %}
+                <div>
+                    {{ renderPager(workspaces) }}
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <div id="twig-self-registration-user-id" data-user-id="{{ user.getId() }}">
+    </div>
+
+    <div id="confirm-unregistration-validation-box" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>{{ 'workspace_unregistration_confirm_title'|trans({}, 'platform') }}</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="unregistration-confirm-message">{{ 'workspace_unregistration_confirm_message'|trans({}, 'platform') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="unregistration-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src='{{ asset('bundles/clarolinecore/js/workspace/self_unregistration.js') }}'
+        type="text/javascript">
+    </script>
+    <script
+        src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'platform' }) }}"
+        type="text/javascript">
+    </script>
+{% endblock %}

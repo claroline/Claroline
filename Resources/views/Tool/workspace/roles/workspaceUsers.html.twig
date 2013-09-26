@@ -80,7 +80,7 @@
 
         {{ displayControls(workspace.getId()) }}
         <div class="input-append pull-right">
-            <input class="input-medium" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}">
+            <input class="input-medium" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
             <button class="filter btn btn-default" type="button" id="search-button">
                 <i class="icon-search"></i>
             </button>
@@ -270,28 +270,6 @@
             route += '?' + $.param(queryString);
             window.location.href = route;
         });
-
-        $('#search-items-txt').keypress(function(e){
-            var search = document.getElementById('search-items-txt').value;
-            var withUnregistered = $('#chk-unregistered').is(':checked') ? 1: 0;
-            var queryString = {};
-            var i = 0;
-            var array = [];
-            $('.chk-search:checked').each(function (index, element) {
-                array[i] = element.value;
-                i++;
-            });
-            queryString.roleIds = array;
-
-            if (search !== '') {
-                var route = Routing.generate('claro_workspace_registered_user_list_search', {'workspace': {{ workspace.getId }}, 'withUnregistered': withUnregistered, 'search': search });
-                } else {
-                var route = Routing.generate('claro_workspace_registered_user_list', {'workspace': {{ workspace.getId }}, 'withUnregistered': withUnregistered });
-            }
-
-            route += '?' + $.param(queryString);
-            window.location.href = route;
-        })
 
         $('#chk-all').on('click', function(event) {
             if ($('#chk-all').is(':checked')) {

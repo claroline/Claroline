@@ -84,7 +84,9 @@ class WorkspaceManagerTest extends MockeryTestCase
         $config->shouldReceive('getToolsPermissions')->once()->andReturn($toolsInfos);
         $config->shouldReceive('getArchive')->times(2)->andReturn(new \ZipArchive());
         $config->shouldReceive('check')->once();
-        $config->shouldReceive('isDisplayable')->once()->andReturn('displayable');
+        $config->shouldReceive('isDisplayable')->once()->andReturn(true);
+        $config->shouldReceive('getSelfRegistration')->once()->andReturn(true);
+        $config->shouldReceive('getSelfUnregistration')->once()->andReturn(true);
         $this->ut->shouldReceive('generateGuid')->once()->andReturn('guid');
 
         $manager = $this->mock('Claroline\CoreBundle\Entity\User');
@@ -93,7 +95,9 @@ class WorkspaceManagerTest extends MockeryTestCase
         $workspace->shouldReceive('setPublic')->once()->with(true);
         $workspace->shouldReceive('setCode')->once()->with('wscode');
         $workspace->shouldReceive('setGuid')->once()->with('guid');
-        $workspace->shouldReceive('setDisplayable')->once()->with('displayable');
+        $workspace->shouldReceive('setDisplayable')->once()->with(true);
+        $workspace->shouldReceive('setSelfRegistration')->once()->with(true);
+        $workspace->shouldReceive('setSelfUnregistration')->once()->with(true);
         $workspace->shouldReceive('getName')->once()->andReturn('wsname');
         $workspace->shouldReceive('getCode')->once()->andReturn('wscode');
 
@@ -105,6 +109,7 @@ class WorkspaceManagerTest extends MockeryTestCase
         $dirType = new \Claroline\CoreBundle\Entity\Resource\ResourceType();
         m::getConfiguration()->allowMockingNonExistentMethods(true);
         $this->resourceTypeRepo->shouldReceive('findOneByName')->once()->with('directory')->andReturn($dirType);
+        m::getConfiguration()->allowMockingNonExistentMethods(false);
 
         $dir = $this->mock('Claroline\CoreBundle\Entity\Resource\Directory');
         $tool = new \Claroline\CoreBundle\Entity\Tool\Tool();

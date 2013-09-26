@@ -36,6 +36,8 @@ class PlatformTestConfigurationHandlerTest extends WebTestCase
 
     public function testHandlerCalledAsServiceInTestEnvironmentIsATestConfigHandler()
     {
+        $this->markTestSkipped('Claroline\CoreBundle\Library\Testing\PlatformTestConfigurationHandler should be deleted');
+
         $handler = self::createClient()
             ->getContainer()
             ->get('claroline.config.platform_config_handler');

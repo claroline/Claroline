@@ -507,10 +507,16 @@ class WorkspaceTagManager
             $displayable[$adminTagId] = $this->isTagDisplayable($adminTagId, $tagWorkspaces, $hierarchy);
         }
 
+        $tagWorkspacePager = array();
+
+        foreach ($tagWorkspaces as $key => $content) {
+            $tagWorkspacePager[$key] = $this->pagerFactory->createPagerFromArray($content, 1);
+        }
+
         $datas = array();
-        $datas['workspaces'] = $workspaces;
+        $datas['workspaces'] = $this->pagerFactory->createPagerFromArray($workspaces, 1);
         $datas['tags'] = $tags;
-        $datas['tagWorkspaces'] = $tagWorkspaces;
+        $datas['tagWorkspaces'] = $tagWorkspacePager;
         $datas['hierarchy'] = $hierarchy;
         $datas['rootTags'] = $rootTags;
         $datas['displayable'] = $displayable;
@@ -558,9 +564,23 @@ class WorkspaceTagManager
         return $this->pagerFactory->createPagerFromArray($relations, $page);
     }
 
+    public function getPagerRelationByTagForSelfReg(WorkspaceTag $workspaceTag, $page = 1)
+    {
+        $relations = $this->relTagRepo->findAdminRelationsByTagForSelfReg($workspaceTag);
+
+        return $this->pagerFactory->createPagerFromArray($relations, $page);
+    }
+
     public function getPagerAllWorkspaces($page = 1)
     {
         $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page);
+    }
+
+    public function getPagerAllWorkspacesWithSelfReg($page = 1)
+    {
+        $workspaces = $this->workspaceRepo->findWorkspacesWithSelfRegistration();
 
         return $this->pagerFactory->createPagerFromArray($workspaces, $page);
     }

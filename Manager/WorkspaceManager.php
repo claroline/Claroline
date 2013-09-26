@@ -183,6 +183,11 @@ class WorkspaceManager
 
     public function deleteWorkspace(AbstractWorkspace $workspace)
     {
+        $root = $this->resourceManager->getWorkspaceRoot($workspace);
+        
+        foreach ($root->getChildren() as $node) {
+            $this->resourceManager->delete($node);
+        }
         $this->om->remove($workspace);
         $this->om->flush();
     }
@@ -413,6 +418,14 @@ class WorkspaceManager
     public function getDisplayableWorkspacesBySearchPager($search, $page)
     {
         $workspaces = $this->workspaceRepo->findDisplayableWorkspacesBySearch($search);
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page);
+    }
+
+    public function getWorkspacesWithSelfUnregistrationByRoles($roles, $page)
+    {
+        $workspaces = $this->workspaceRepo
+            ->findWorkspacesWithSelfUnregistrationByRoles($roles);
 
         return $this->pagerFactory->createPagerFromArray($workspaces, $page);
     }
