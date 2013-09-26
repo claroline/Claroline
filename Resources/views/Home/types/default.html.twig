@@ -9,15 +9,15 @@
                 </div>
             {% endif %}
             <div class="panel-body">
+                {% if content.generatedcontent != "" and content.generatedcontent != null %}
+                    <div class="generated">
+                        <div class="generated-content">
+                            {{ content.generatedcontent | raw }}
+                        </div>
+                    </div>
+                {% endif %}
                 {% if content.content is defined and content.content != "" %}
                     <p class="text">{{ content.content | autoLink | raw | nl2br }}</p>
-                {% endif %}
-                {% if content.generatedcontent != "" and content.generatedcontent != null %}
-                <div class="generated">
-                    <div class="generated-content">
-                        {{ content.generatedcontent | raw }}
-                    </div>
-                </div>
                 {% endif %}
                 <i class="text-muted">{{ content.created | timeAgo }}</i>
             </div>

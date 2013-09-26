@@ -158,7 +158,7 @@ class HomeExtension extends \Twig_Extension
                 // Prepend http:// if no protocol specified
                 $completeUrl = $match[1] ? $match[0] : "http://{$match[0]}";
 
-                return '<a href="' . $completeUrl . '">'
+                return '<a href="' . $completeUrl . '" target="_blank">'
                     . $match[2] . $match[3] . $match[4] . '</a>';
             },
             htmlspecialchars($text)
