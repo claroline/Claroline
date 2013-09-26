@@ -83,10 +83,10 @@ class ProfileController extends Controller
         if ($user !== $loggedUser) {
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         }
-        
+
         $roles = $this->roleManager->getPlatformRoles($loggedUser);
         $form = $this->createForm(new ProfileType($roles, true), $user);
-       
+
         return array('profile_form' => $form->createView(), 'user' => $user);
     }
 
@@ -144,6 +144,7 @@ class ProfileController extends Controller
                 $changeSet['roles'] = $rolesChangeSet;
             }
 
+            $this->userManager->upload($user);
             $this->eventDispatcher->dispatch(
                 'log',
                 'Log\LogUserUpdate',
@@ -194,7 +195,7 @@ class ProfileController extends Controller
             'language' => $platformConfigHandler->getParameter('locale_language')
         );
     }
-    
+
     /**
      * @EXT\Route(
      *     "/admin/edition/form/user/{user}",
@@ -214,10 +215,10 @@ class ProfileController extends Controller
 
         $roles = $this->roleManager->getPlatformRoles($user);
         $form = $this->createForm(new UserEditForAdminType($roles), $user);
-       
+
         return array('profile_form' => $form->createView(), 'user' => $user);
     }
-    
+
     /**
      * @EXT\Route(
      *     "/admin/update/user/{user}",
@@ -234,7 +235,7 @@ class ProfileController extends Controller
         if (!$this->security->isGranted('ROLE_ADMIN')) {
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         }
-        
+
         $roles = $this->roleManager->getPlatformRoles($user);
         $form = $this->get('form.factory')->create(new UserEditForAdminType($roles), $user);
         $form->handleRequest($this->request);
@@ -279,5 +280,5 @@ class ProfileController extends Controller
         }
 
         return array('claro_profile_form_admin' => $form->createView(), 'user' => $user);
-    }         
+    }
 }

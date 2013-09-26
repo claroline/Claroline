@@ -13,10 +13,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserRepository")
  * @ORM\Table(name="claro_user")
+ * @ORM\HasLifecycleCallbacks
  * @DoctrineAssert\UniqueEntity("username")
  * @DoctrineAssert\UniqueEntity("mail")
  *
@@ -211,6 +213,16 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      * @ORM\JoinColumn(name="badge_claim_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     protected $badgeClaims;
+
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    protected $picture;
+
+    /**
+     * @Assert\File(maxSize="6000000")
+     */
+    protected $pictureFile;
 
     public function __construct()
     {
@@ -676,4 +688,19 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
         return false;
     }
+
+    public function getPictureFile()
+    {
+        return $this->pictureFile;
+    }
+
+    public function setPictureFile(UploadedFile $pictureFile)
+    {
+        $this->pictureFile = $pictureFile;
+    }
+
+    public function getPicture() {
+        return $this->picture;
+    }
+
 }

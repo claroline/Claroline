@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\DiExtraBundle\Annotation as DI;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @DI\Service("claroline.manager.user_manager")
@@ -357,5 +358,46 @@ class UserManager
     public function getResetPasswordHash($resetPassword)
     {
         return $this->userRepo->findOneByResetPasswordHash($resetPassword);
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function preUpload(User $user)
+    {
+        if (null !== $user->pictureFile) {
+            // faites ce que vous voulez pour générer un nom unique
+            $user->picture = sha1(uniqid(mt_rand(), true)).'.'.$user->pictureFile->guessExtension();
+        }
+    }
+
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function upload(User $user)
+    {
+        if (null === $this->pictureFile) {
+            return;
+        }
+
+        // s'il y a une erreur lors du déplacement du fichier, une exception
+        // va automatiquement être lancée par la méthode move(). Cela va empêcher
+        // proprement l'entité d'être persistée dans la base de données si
+        // erreur il y a
+        $user->pictureFile->move(__DIR__.'/../../../../../../web/uploads/pictures', $user->picture);
+
+        unset($user->pictureFile);
+    }
+
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeUpload()
+    {
+        if ($file = $this->getAbsolutePath()) {
+            unlink($file);
+        }
     }
 }

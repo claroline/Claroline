@@ -314,6 +314,7 @@ profile_form_mail: Mail
 profile_form_note: 'Note personnelle'
 profile_form_ownedRoles: Role(s)
 profile_form_phone: Téléphone
+profile_form_pictureFile : 'photo de profile'
 profile_form_plainPassword_first: 'Mot de passe'
 profile_form_plainPassword_second: Vérification
 profile_form_platformRoles: Rôles

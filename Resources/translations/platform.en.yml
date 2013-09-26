@@ -331,6 +331,7 @@ profile_form_mail: Mail
 profile_form_note: 'Personnal note'
 profile_form_ownedRoles: Role(s)
 profile_form_phone: Phone
+profile_form_pictureFile : 'Picture profile'
 profile_form_plainPassword_first: Password
 profile_form_plainPassword_second: Verification
 profile_form_platformRoles: Roles

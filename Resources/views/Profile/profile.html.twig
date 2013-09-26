@@ -17,12 +17,12 @@
             <div class="panel-body">
 
                 <div class="row">
-                    <div class="col-md-2">
-                        {% if user.getPhoto() != "" %}
-                            <img src="{{ user.getPhoto() }}">
+                    <div>
+                        {% if user.getPicture() != "" %}
+                            <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="col-md-2">
                         {% else %}
-                            <div class="jumbotron">
-                                <h1><i class="icon-user"></i><h1>
+                            <div class="col-md-2">
+                                <h1 ><i class="icon-user"></i><h1>
                             </div>
                         {% endif %}
                     </div>

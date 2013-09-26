@@ -22,7 +22,7 @@ class ProfileType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
-        
+
         if ($this->isFormCreation) {
             $builder->add('firstName', 'text', array('disabled' => true))
                 ->add('lastName', 'text', array('disabled' => true))
@@ -75,6 +75,21 @@ class ProfileType extends AbstractType
                 )
             );
         }
+            $builder->add(
+                'pictureFile',
+                'file',
+                array(
+                    'required' => false,
+                    'constraints' => new Image(
+                        array(
+                            'minWidth' => 50,
+                            'maxWidth' => 800,
+                            'minHeight' => 50,
+                            'maxHeight' => 800,
+                        )
+                    )
+                )
+            );
     }
 
     public function getName()
