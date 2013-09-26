@@ -330,7 +330,7 @@ class PathController extends Controller
         $manager = $this->container->get('doctrine.orm.entity_manager');
         $workspaceId = $this->get('request')->request->get('workspace-id');
         $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
-        
+
         return array('workspace' => $workspace);
     }
 
@@ -403,12 +403,12 @@ class PathController extends Controller
     public function addPathAction()
     {
         $manager = $this->container->get('doctrine.orm.entity_manager');
-        
+
         // Récupération utilisateur courant.
         $user = $this->get('security.context')->getToken()->getUser();
         $workspaceId = $this->get('request')->request->get('workspaceId');
         $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
-        
+
         // création du dossier _paths s'il existe pas.
         if (!$pathsDirectory = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneByName("_paths")) {
             $pathsDirectory = new ResourceNode();
@@ -421,11 +421,11 @@ class PathController extends Controller
             $pathsDirectory->setParent($root);
             $pathsDirectory->setMimeType("custom/directory");
             $pathsDirectory->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(7));
-        
+
             $manager->persist($pathsDirectory);
             $manager->flush();
         }
-        
+
         $resourceNode = new ResourceNode();
         $resourceNode->setClass("Innova\PathBundle\Entity\Path");
         $resourceNode->setCreator($user);
@@ -435,13 +435,13 @@ class PathController extends Controller
         $resourceNode->setMimeType("");
         $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(1));
         $resourceNode->setName('Path');
-        
+
         $content = $this->get('request')->request->get('path');
-        
+
         $new_path = new Path;
         $new_path->setPath($content);
         $new_path->setResourceNode($resourceNode);
-        
+
         $manager->persist($resourceNode);
         $manager->persist($new_path);
         $manager->flush();
@@ -468,15 +468,16 @@ class PathController extends Controller
     */
     public function editPathAction(Path $path)
     {
-        $em = $this->entityManager();
+        $manager = $this->container->get('doctrine.orm.entity_manager');
 
-        $editDate = new \DateTime();
-        $content = $this->get('request')->getContent();
+        $resourceNode = $path->getResourceNode();
+        $resourceNode->setName($this->get('request')->request->get('pathName'));
+        $manager->persist($resourceNode);
 
+        $content = $this->get('request')->request->get('path');
         $path->setPath($content);
-
-        $em->persist($path);
-        $em->flush();
+        $manager->persist($path);
+        $manager->flush();
 
         return new Response(
             $path->getId()
@@ -502,7 +503,9 @@ class PathController extends Controller
     {
         $em = $this->entityManager();
 
-        $em->remove($path);
+        $resourceNode = $path->getResourceNode();
+
+        $em->remove($resourceNode);
         $em->flush();
 
         return new Response("ok");
