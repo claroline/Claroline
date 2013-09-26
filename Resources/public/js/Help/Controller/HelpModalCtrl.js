@@ -5,10 +5,10 @@
  */
 var HelpModalCtrlProto = [
     '$scope',
-    'dialog',
-    function($scope, dialog) {
+    '$modalInstance',
+    function($scope, $modalInstance) {
         $scope.close = function() {
-            dialog.close();
+            $modalInstance.dismiss('cancel');
         };
     }
 ];

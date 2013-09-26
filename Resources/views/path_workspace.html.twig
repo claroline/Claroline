@@ -21,9 +21,14 @@
             {% endfor %}
         </table>
         {% else %}
-			<div class="alert alert-success">{{ deployed }}</div>
-		{% endif %}
-
-        <a href="{{ path('innova_path_editor') }}" class="btn btn-primary"><i class="icon-plus"></i></a>
+            <div class="alert alert-success">{{ deployed }}</div>
+        {% endif %}
+        
+        <form action="{{ path('innova_path_editor') }}" method="post">
+            <input type="hidden" value="{{ workspace.id }}" name="workspace-id" />
+            <button type="submit" class="btn btn-primary" value="new">
+                <span class="icon-plus"></span>
+            </button>
+        </form>
     </div>
 {% endblock %}

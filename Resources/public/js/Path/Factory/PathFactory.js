@@ -23,7 +23,6 @@ var PathFactoryProto = function() {
             return this;
         },
         
-        
         /**
          * 
          */

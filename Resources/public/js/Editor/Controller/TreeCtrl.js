@@ -7,7 +7,7 @@
 var TreeCtrlProto = [
      '$scope',
      '$http',
-     '$dialog',
+     '$modal',
      '$routeParams',
      '$location',
      'ClipboardFactory',
@@ -15,10 +15,7 @@ var TreeCtrlProto = [
      'PathFactory',
      'StepFactory',
      'ResourceFactory',
-     function($scope, $http, $dialog, $routeParams, $location, ClipboardFactory, HistoryFactory, PathFactory, StepFactory, ResourceFactory) {
-         $scope.templateRoute = EditorApp.templateRoute;
-         $scope.path = PathFactory.getPath();
-         
+     function($scope, $http, $modal, $routeParams, $location, ClipboardFactory, HistoryFactory, PathFactory, StepFactory, ResourceFactory) {
          $scope.previewStep = null;
          
          $scope.sortableOptions = {
@@ -38,55 +35,6 @@ var TreeCtrlProto = [
              $scope.inheritedResources = ResourceFactory.getInheritedResources($scope.previewStep);
          };
          
-         // Load current path
-         if ($routeParams.id) {
-             // Edit existing path
-             if (!PathFactory.getPathInstanciated($routeParams.id)) {
-                 PathFactory.addPathInstanciated($routeParams.id);
-                 $http.get('../api/index.php/paths/' + $routeParams.id + '.json')
-                     .success(function(data) {
-                         // Store Path ID
-                         data.id = $routeParams.id;
-
-                         $scope.path = data;
-                         PathFactory.setPath($scope.path);
-                         
-                         if ($scope.path.steps.length === 0) {
-                             // Missing root step => add it
-                             var rootStep = StepFactory.generateNewStep();
-                             rootStep.name = $scope.path.name;
-                             $scope.path.steps.push(rootStep);
-                         }
-                         
-                         // Update History if needed
-                         if (-1 === HistoryFactory.getHistoryState()) {
-                             HistoryFactory.update($scope.path);
-                         }
-                         
-                         $scope.setPreviewStep();
-                     }
-                 );
-             }
-         }
-         else if (null === $scope.path) {
-             // Create new path
-             $scope.path = PathFactory.generateNewPath();
-             PathFactory.setPath($scope.path);
-             
-             if ($scope.path.steps.length === 0) {
-                 // New path => add root step
-                 var rootStep = StepFactory.generateNewStep();
-                 rootStep.name = $scope.path.name;
-                 $scope.path.steps.push(rootStep);
-             }
-             
-             HistoryFactory.update($scope.path);
-             $scope.setPreviewStep();
-         }
-         
-         // Display Root node as default preview step
-         $scope.setPreviewStep();
-         
          $scope.update = function() {
              var e, i, _i, _len, _ref;
              _ref = $scope.path;
@@ -104,22 +52,6 @@ var TreeCtrlProto = [
                  step = PathFactory.getStepById($scope.previewStep.id);
              }
              $scope.setPreviewStep(step);
-         };
-         
-         $scope.undo = function() {
-             HistoryFactory.undo();
-             $scope.path = PathFactory.getPath();
-             
-             // Update preview step
-             $scope.updatePreviewStep();
-         };
-         
-         $scope.redo = function() {
-             HistoryFactory.redo();
-             $scope.path = PathFactory.getPath();
-             
-             // Update preview step
-             $scope.updatePreviewStep();
          };
          
          $scope.rename = function() {
@@ -200,34 +132,6 @@ var TreeCtrlProto = [
              HistoryFactory.update($scope.path);
          };
          
-         $scope.save = function(path) {
-             if ($routeParams.id) {
-                 // Update existing path
-                 $http
-                     .put('../api/index.php/paths/' + $routeParams.id + '.json', path)
-                     .success ( function (data) {
-//                         $notification.success('Success', 'Path updated!');
-                     });
-             } 
-             else {
-                 // Create new path
-                 $http
-                     .post('../api/index.php/paths.json', path)
-                     .success ( function (data) {
-                         // Store generated ID in Path
-                         path.id = data;
-                         PathFactory.setPath(path);
-                         $scope.path = PathFactory.getPath();
-                         
-//                         $notification.success('Success', 'New path saved!');
-                         $location.path('/path/global/' + data);
-                     });
-             }
-             
-             // Clear history to avoid possibility to get a history state without path ID
-             HistoryFactory.clear();
-         };
-         
          var dialogOptions = {
              backdrop: true,
              keyboard: false,
@@ -258,11 +162,6 @@ var TreeCtrlProto = [
                       HistoryFactory.update($scope.path);
                   }
               });
-         };
-         
-         $scope.openHelp = function() {
-             var d = $dialog.dialog(dialogOptions);
-             d.open('partials/modals/help.html', 'HelpModalCtrl');
          };
          
          // Resources management

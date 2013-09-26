@@ -9,37 +9,44 @@ EditorApp.config(['$routeProvider', function($routeProvider) {
     
     $routeProvider.when('/', {
         templateUrl: EditorApp.templateRoute + 'Editor/global.html', 
-        controller: 'TreeCtrl'
+        controller: 'TreeCtrl',
+        activeTab: 'Global',
     });
     
     $routeProvider.when('/global', {
         templateUrl: EditorApp.templateRoute + 'Editor/global.html', 
-        controller: 'TreeCtrl'
+        controller: 'TreeCtrl',
+        activeTab: 'Global',
     });
     
     $routeProvider.when('/global/:id', {
         templateUrl: EditorApp.templateRoute + 'Editor/global.html', 
-        controller: 'TreeCtrl'
+        controller: 'TreeCtrl',
+        activeTab: 'Global',
     });
     
     $routeProvider.when('/skills/:id', {
         templateUrl: EditorApp.templateRoute + 'Editor/skills.html', 
-        controller: 'TreeCtrl'
+        controller: 'TreeCtrl',
+        activeTab: 'Skills',
     });
     
     $routeProvider.when('/scenario/:id', {
         templateUrl: EditorApp.templateRoute + 'Editor/scenario.html', 
-        controller: 'TreeCtrl'
-    });
-    
-    $routeProvider.when('/validation/:id', {
-        templateUrl: EditorApp.templateRoute + 'Editor/validation.html', 
-        controller: 'TreeCtrl'
+        controller: 'TreeCtrl',
+        activeTab: 'Scenario',
     });
     
     $routeProvider.when('/planner/:id', {
         templateUrl: EditorApp.templateRoute + 'Editor/planner.html', 
-        controller: 'TreeCtrl'
+        controller: 'TreeCtrl',
+        activeTab: 'Planner',
+    });
+    
+    $routeProvider.when('/validation/:id', {
+        templateUrl: EditorApp.templateRoute + 'Editor/validation.html', 
+        controller: 'TreeCtrl',
+        activeTab: 'Validation',
     });
     
     $routeProvider.otherwise({redirectTo: '/404'});
@@ -54,6 +61,9 @@ EditorApp.factory('ClipboardFactory', ClipboardFactoryProto);
 // Alerts
 //EditorApp.factory('AlertFactory', AlertFactoryProto);
 //EditorApp.controller('AlertCtrl', AlertCtrlProto);
+
+// Main
+EditorApp.controller('MainCtrl', MainCtrlProto);
 
 // Help
 EditorApp.controller('HelpModalCtrl', HelpModalCtrlProto);
