@@ -9,14 +9,29 @@
 
 {% block content %}
     <div ng-cloak class="col-md-12 section-content" ng-app="EditorApp">
-        <div class="panel panel-default">
+        <div class="panel panel-default panel-path-editor" ng-controller="MainCtrl">
             <div class="panel-heading">
-                <h3 class="panel-title">Title</h3>
+                <h3 class="panel-title">
+                    <button class="btn btn-default btn-xs" ng-click="openHelp()" tooltip="Help">
+                        <span class="icon-question-sign"></span>
+                    </button>
+                    Editing Path : &lt;{% verbatim %}{{ path.name }}{% endverbatim %}&gt; in Workspace &lt;{{ workspace.name }}&gt;
+                </h3>
+                
+                <div class="editor-buttons">
+                    <div class="btn-group">
+                        <button class="btn btn-default btn-sm" ng-click="undo()" ng-disabled="undoDisabled"><span class="icon-reply"></span></button>
+                        <button class="btn btn-default btn-sm" ng-click="redo()" ng-disabled="redoDisabled"><span class="icon-share-alt"></span></button>
+                    </div>
+                    <button class="btn btn-sm btn-primary" ng-click="save(path)" tooltip="Save"><span class="icon-save"></span></button>
+                    <a href="{{ path('claro_workspace_open_tool', {workspaceId: workspace.id, toolName: 'innova_path'}) }}" class="btn btn-danger btn-sm" tooltip="Back to list"><span class="icon-remove"></span></a>
+                </div>
+                
             </div>
-
-            <div class="panel-body">
-                <div ng-view></div>
-            </div>
+            
+            <div ng-include="templateRoute + 'Editor/navbar.html'"></div>
+            
+            <div ng-view class="panel-body"></div>
         </div>
     </div>
 {% endblock %}
@@ -31,8 +46,10 @@
     <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-loader.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-resource.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-sanitize.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/angular-ui.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/ui-bootstrap-tpls.min.js') }}"></script>
+    
+    {# Angular UI #}
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/ui-bootstrap-0.6.0.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/ui-bootstrap-tpls-0.6.0.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovaangularpageslide/js/angular-pageslide-directive.js') }}"></script>
     
     {# History #}
@@ -40,6 +57,9 @@
     
     {# Clipboard #}
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Clipboard/Factory/ClipboardFactory.js') }}"></script>
+    
+    {# Main #}
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Editor/Controller/MainCtrl.js') }}"></script>
     
     {# Help  #}
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Help/Controller/HelpModalCtrl.js') }}"></script>

@@ -125,7 +125,6 @@ class PathController extends Controller
         // Récupération Workspace courant et la resource root
         $workspaceId = $this->get('request')->request->get('workspace-id');
         $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
-        $root = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
 
         // Récupération utilisateur courant.
         $user = $this->get('security.context')->getToken()->getUser();
@@ -328,8 +327,11 @@ class PathController extends Controller
      */
     public function editorAction()
     {
-//         return array('is_path_mode' => true);
-        return array();
+        $manager = $this->container->get('doctrine.orm.entity_manager');
+        $workspaceId = $this->get('request')->request->get('workspace-id');
+        $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
+        
+        return array('workspace' => $workspace);
     }
 
     /**
@@ -400,20 +402,49 @@ class PathController extends Controller
     */
     public function addPathAction()
     {
-
-        $em = $this->entityManager();
-
-        $editDate = new \DateTime();
-        $user = "Arnaud";
-        $content = $this->get('request')->getContent();
-
+        $manager = $this->container->get('doctrine.orm.entity_manager');
+        
+        // Récupération utilisateur courant.
+        $user = $this->get('security.context')->getToken()->getUser();
+        $workspaceId = $this->get('request')->request->get('workspaceId');
+        $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
+        
+        // création du dossier _paths s'il existe pas.
+        if (!$pathsDirectory = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneByName("_paths")) {
+            $pathsDirectory = new ResourceNode();
+            $pathsDirectory->setName("_paths");
+            $pathsDirectory->setClass("Claroline\CoreBundle\Entity\Resource\Directory");
+            $pathsDirectory->setCreator($user);
+            $pathsDirectory->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneById(2));
+            $root = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
+            $pathsDirectory->setWorkspace($workspace);
+            $pathsDirectory->setParent($root);
+            $pathsDirectory->setMimeType("custom/directory");
+            $pathsDirectory->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(7));
+        
+            $manager->persist($pathsDirectory);
+            $manager->flush();
+        }
+        
+        $resourceNode = new ResourceNode();
+        $resourceNode->setClass("Innova\PathBundle\Entity\Path");
+        $resourceNode->setCreator($user);
+        $resourceNode->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("path"));
+        $resourceNode->setWorkspace($workspace);
+        $resourceNode->setParent($pathsDirectory);
+        $resourceNode->setMimeType("");
+        $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(1));
+        $resourceNode->setName('Path');
+        
+        $content = $this->get('request')->request->get('path');
+        
         $new_path = new Path;
-        $new_path->setUser($user)
-                 ->setEditDate($editDate)
-                 ->setPath($content);
-
-        $em->persist($new_path);
-        $em->flush();
+        $new_path->setPath($content);
+        $new_path->setResourceNode($resourceNode);
+        
+        $manager->persist($resourceNode);
+        $manager->persist($new_path);
+        $manager->flush();
 
         return new Response(
             $new_path->getId()
@@ -442,8 +473,7 @@ class PathController extends Controller
         $editDate = new \DateTime();
         $content = $this->get('request')->getContent();
 
-        $path->setEditDate($editDate)
-             ->setPath($content);
+        $path->setPath($content);
 
         $em->persist($path);
         $em->flush();

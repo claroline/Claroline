@@ -3,9 +3,17 @@
     z-index: 1;
 }
 
-/* img { */
-/*     border: none; */
-/* } */
+.panel-path-editor {
+    position: relative;
+}
+
+.editor-buttons {
+    margin: 6px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 6px;
+}
 
 /* h1 { */
 /*     font-size: 20px; */
