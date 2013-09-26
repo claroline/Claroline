@@ -428,10 +428,6 @@ class WorkspaceController extends Controller
      */
     public function widgetsAction(AbstractWorkspace $workspace, $homeTabId)
     {
-        // No right checking is done : security is delegated to each widget renderer.
-        // The routing is now removed. Checking doesn't need to be done.
-        $configs = $this->get('claroline.manager.widget_manager')->getWorkspaceInstances($workspace);
-
         if ($this->security->getToken()->getUser() !== 'anon.') {
             $rightToConfigure = $this->security->isGranted('parameters', $workspace);
         } else {
@@ -445,7 +441,8 @@ class WorkspaceController extends Controller
         if (!is_null($homeTab) &&
             $this->homeTabManager->checkHomeTabVisibilityByWorkspace($homeTab, $workspace)) {
 
-            $configs = $this->homeTabManager->getWidgetConfigsByWorkspace($homeTab, $workspace);
+            $widgetHomeTabConfigs = $this->homeTabManager
+                ->getWidgetConfigsByWorkspace($homeTab, $workspace);
 
             if ($this->security->getToken()->getUser() !== 'anon.') {
                 $rightToConfigure = $this->security->isGranted('parameters', $workspace);
@@ -453,20 +450,21 @@ class WorkspaceController extends Controller
                 $rightToConfigure = false;
             }
 
-            foreach ($configs as $config) {
-                if ($config->isVisible()) {
+            foreach ($widgetHomeTabConfigs as $widgetHomeTabConfig) {
+                $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
+
+                if ($widgetHomeTabConfig->isVisible()) {
                     $event = $this->eventDispatcher->dispatch(
-                        "widget_{$config->getWidgetInstance()->getWidget()->getName()}",
+                        "widget_{$widgetInstance->getWidget()->getName()}",
                         'DisplayWidget',
-                        array($config->getWidgetInstance())
+                        array($widgetInstance)
                     );
 
-                    $widget['id'] = $config->getWidgetInstance()->getId();
-                    $widget['title'] = $config->getWidgetInstance()->getName();
+                    $widget['id'] = $widgetInstance->getId();
+                    $widget['title'] = $widgetInstance->getName();
                     $widget['content'] = $event->getContent();
                     $widget['configurable'] = $rightToConfigure
-                        && $config->isLocked() !== true
-                        && $config->getWidgetInstance()->getWidget()->isConfigurable();
+                        && $widgetInstance->getWidget()->isConfigurable();
                     $widgets[] = $widget;
                 }
             }
@@ -877,16 +875,11 @@ class WorkspaceController extends Controller
      */
     public function displayWorkspaceHomeTabsAction(AbstractWorkspace $workspace, $tabId)
     {
-        $adminHomeTabConfigsTemp = $this->homeTabManager
-            ->generateAdminHomeTabConfigsByWorkspace($workspace);
-        $adminHomeTabConfigs = $this->homeTabManager
-            ->filterVisibleHomeTabConfigs($adminHomeTabConfigsTemp);
         $workspaceHomeTabConfigs = $this->homeTabManager
             ->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
 
         return array(
             'workspace' => $workspace,
-            'adminHomeTabConfigs' => $adminHomeTabConfigs,
             'workspaceHomeTabConfigs' => $workspaceHomeTabConfigs,
             'tabId' => $tabId
         );

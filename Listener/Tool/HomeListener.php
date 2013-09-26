@@ -105,16 +105,16 @@ class HomeListener
     {
 //        $config = $event->getConfig();
 //        $widgets = $this->em->getRepository('Claroline\CoreBundle\Entity\Widget\Widget')->findAll();
-//        
+//
 //        foreach ($widgets as $widget) {
 //            $found = false;
 //            $parent = $this->em->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
 //                ->findOneBy(array('widget' => $widget, 'parent' => null, 'isDesktop' => false));
-//            
+//
 //            if ($parent === null) {
 //                break;
 //            }
-//          
+//
 //            if (isset($config['widget'])) {
 //                foreach ($config['widget'] as $widgetConfig) {
 //                     if ($widgetConfig['name'] === $widget->getName()) {
@@ -142,7 +142,7 @@ class HomeListener
 //                     }
 //                }
 //            }
-//            
+//
 //            if (!$found) {
 //                $displayConfig = new WidgetInstance();
 //                $displayConfig->setParent($parent);
@@ -199,17 +199,11 @@ class HomeListener
     public function workspaceHome($workspaceId)
     {
         $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
-        $adminHomeTabConfigsTemp = $this->homeTabManager
-            ->generateAdminHomeTabConfigsByWorkspace($workspace);
-        $adminHomeTabConfigs = $this->homeTabManager
-            ->filterVisibleHomeTabConfigs($adminHomeTabConfigsTemp);
         $workspaceHomeTabConfigs = $this->homeTabManager
             ->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
         $tabId = 0;
 
-        if (count($adminHomeTabConfigs) > 0) {
-            $tabId = $adminHomeTabConfigs[0]->getHomeTab()->getId();
-        } elseif (count($workspaceHomeTabConfigs) > 0) {
+        if (count($workspaceHomeTabConfigs) > 0) {
             $tabId = $workspaceHomeTabConfigs[0]->getHomeTab()->getId();
         }
 
@@ -217,7 +211,6 @@ class HomeListener
             'ClarolineCoreBundle:Tool\workspace\home:workspaceHomeTabs.html.twig',
             array(
                 'workspace' => $workspace,
-                'adminHomeTabConfigs' => $adminHomeTabConfigs,
                 'workspaceHomeTabConfigs' => $workspaceHomeTabConfigs,
                 'tabId' => $tabId
             )

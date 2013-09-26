@@ -164,71 +164,6 @@ class HomeTabManager
         return $adminHTC;
     }
 
-    public function generateAdminHomeTabConfigsByWorkspace(
-        AbstractWorkspace $workspace
-    )
-    {
-        $adminHTC = array();
-        $adminHomeTabConfigs = $this->homeTabConfigRepo
-            ->findAdminWorkspaceHomeTabConfigs();
-
-        foreach ($adminHomeTabConfigs as $adminHomeTabConfig) {
-            $existingCustomHTC = $this->homeTabConfigRepo->findOneBy(
-                array(
-                    'homeTab' => $adminHomeTabConfig->getHomeTab(),
-                    'workspace' => $workspace
-                )
-            );
-
-            if (is_null($existingCustomHTC)) {
-                $customHTC = $this->createWorkspaceVersion(
-                    $adminHomeTabConfig,
-                    $workspace
-                );
-                $adminHTC[] = $customHTC;
-                $this->generateAdminWidgetHomeTabConfigsByWorkspace(
-                    $adminHomeTabConfig->getHomeTab(),
-                    $workspace
-                );
-            }
-            else {
-                $adminHTC[] = $existingCustomHTC;
-            }
-        }
-
-        return $adminHTC;
-    }
-
-    public function generateAdminWidgetHomeTabConfigsByWorkspace(
-        HomeTab $homeTab,
-        AbstractWorkspace $workspace
-    )
-    {
-        $adminWidgetsHomeTabConfigs = $this->widgetHomeTabConfigRepo
-            ->findAdminWidgetConfigs($homeTab);
-
-        foreach ($adminWidgetsHomeTabConfigs as $adminWHTC) {
-            $workspaceWHTC = new WidgetHomeTabConfig();
-            $workspaceWHTC->setWidgetInstance($adminWHTC->getWidgetInstance());
-            $workspaceWHTC->setHomeTab($homeTab);
-            $workspaceWHTC->setWorkspace($workspace);
-            $workspaceWHTC->setType('workspace');
-            $workspaceWHTC->setVisible($adminWHTC->isVisible());
-            $workspaceWHTC->setLocked($adminWHTC->isLocked());
-
-            $lastWidgetOrder = $this->widgetHomeTabConfigRepo
-                ->findOrderOfLastWidgetInHomeTabByWorkspace($homeTab, $workspace);
-            $widgetOrder = is_null($lastWidgetOrder) ?
-                1 :
-                $lastWidgetOrder['order_max'] + 1;
-
-            $workspaceWHTC->setWidgetOrder($widgetOrder);
-
-            $this->om->persist($workspaceWHTC);
-            $this->om->flush();
-        }
-    }
-
     public function filterVisibleHomeTabConfigs(array $homeTabConfigs)
     {
         $visibleHomeTabConfigs = array();
@@ -284,38 +219,19 @@ class HomeTabManager
         AbstractWorkspace $workspace
     )
     {
-        $adminHomeTabConfig = $this->homeTabConfigRepo->findOneBy(
-            array(
-                'homeTab' => $homeTab,
-                'type' => 'admin_workspace',
-                'user' => null,
-                'workspace' => null
-            )
-        );
-        $workspaceHomeTabConfig = $this->homeTabConfigRepo->findOneBy(
+        $homeTabConfig = $this->homeTabConfigRepo->findOneBy(
             array(
                 'homeTab' => $homeTab,
                 'workspace' => $workspace
             )
         );
 
-        if (is_null($adminHomeTabConfig) && is_null($workspaceHomeTabConfig)) {
+        if (is_null($homeTabConfig)) {
 
             return false;
         }
-        elseif (is_null($workspaceHomeTabConfig)) {
 
-            return $adminHomeTabConfig->isVisible();
-        }
-        elseif (is_null($adminHomeTabConfig)) {
-
-            return $workspaceHomeTabConfig->isVisible();
-        }
-        else {
-            return $adminHomeTabConfig->isLocked() ?
-                $adminHomeTabConfig->isVisible() :
-                $workspaceHomeTabConfig->isVisible();
-        }
+        return $homeTabConfig->isVisible();
     }
 
     public function insertWidgetHomeTabConfig(
@@ -432,6 +348,59 @@ class HomeTabManager
         $isLocked = !$widgetHomeTabConfig->isLocked();
         $widgetHomeTabConfig->setLocked($isLocked);
         $this->om->flush();
+    }
+
+    public function generateCopyOfAdminWorkspaceHomeTabs(
+        AbstractWorkspace $workspace
+    )
+    {
+        $adminHomeTabConfigs = $this->homeTabConfigRepo
+            ->findAdminWorkspaceHomeTabConfigs();
+
+        foreach ($adminHomeTabConfigs as $adminHomeTabConfig) {
+            // Create HomeTab
+            $adminHomeTab = $adminHomeTabConfig->getHomeTab();
+            $homeTab = new HomeTab();
+            $homeTab->setName($adminHomeTab->getName());
+            $homeTab->setType('workspace');
+            $homeTab->setWorkspace($workspace);
+            $this->om->persist($homeTab);
+            $this->om->flush();
+
+            // Create HomeTabConfig
+            $homeTabConfig = new HomeTabConfig();
+            $homeTabConfig->setHomeTab($homeTab);
+            $homeTabConfig->setWorkspace($workspace);
+            $homeTabConfig->setType('workspace');
+            $homeTabConfig->setVisible($adminHomeTabConfig->isVisible());
+            $homeTabConfig->setLocked(false);
+            $homeTabConfig->setTabOrder($adminHomeTabConfig->getTabOrder());
+            $this->om->persist($homeTabConfig);
+
+            // Create WidgetHomeTabConfig
+            $adminWidgetHomeTabConfigs = $this->widgetHomeTabConfigRepo
+                ->findAdminWidgetConfigs($adminHomeTab);
+
+            foreach ($adminWidgetHomeTabConfigs as $adminWidgetHomeTabConfig) {
+                $widgetHomeTabConfig = new WidgetHomeTabConfig();
+                $widgetHomeTabConfig->setHomeTab($homeTab);
+                $widgetHomeTabConfig->setWidgetInstance(
+                    $adminWidgetHomeTabConfig->getWidgetInstance()
+                );
+                $widgetHomeTabConfig->setWorkspace($workspace);
+                $widgetHomeTabConfig->setType('workspace');
+                $widgetHomeTabConfig->setVisible(
+                    $adminWidgetHomeTabConfig->isVisible()
+                );
+                $widgetHomeTabConfig->setLocked(false);
+                $widgetHomeTabConfig->setWidgetOrder(
+                    $adminWidgetHomeTabConfig->getWidgetOrder()
+                );
+                $this->om->persist($widgetHomeTabConfig);
+            }
+
+            $this->om->flush();
+        }
     }
 
     /**

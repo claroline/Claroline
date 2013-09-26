@@ -575,21 +575,11 @@ class HomeController extends Controller
     {
         $this->checkWorkspaceAccess($workspace);
 
-        $adminHomeTabConfigs = $this->homeTabManager
-            ->generateAdminHomeTabConfigsByWorkspace($workspace);
         $homeTabConfigs = $this->homeTabManager
             ->getWorkspaceHomeTabConfigsByWorkspace($workspace);
 
         $nbWidgets = array();
 
-        foreach ($adminHomeTabConfigs as $adminHomeTabConfig) {
-            $workspaceWidgetConfigs = $this->homeTabManager
-                ->getVisibleWidgetConfigsByWorkspace(
-                    $adminHomeTabConfig->getHomeTab(),
-                    $workspace
-                );
-            $nbWidgets[$adminHomeTabConfig->getId()] = count($workspaceWidgetConfigs);
-        }
         foreach ($homeTabConfigs as $homeTabConfig) {
             $widgetConfigs = $this->homeTabManager
                 ->getVisibleWidgetConfigsByWorkspace(
@@ -601,7 +591,6 @@ class HomeController extends Controller
 
         return array(
             'workspace' => $workspace,
-            'adminHomeTabConfigs' => $adminHomeTabConfigs,
             'homeTabConfigs' => $homeTabConfigs,
             'tool' => $this->getHomeTool(),
             'nbWidgets' => $nbWidgets

@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\MaskManager;
@@ -27,6 +28,8 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class WorkspaceManager
 {
+    /** @var HomeTabManager */
+    private $homeTabManager;
     /** @var MaskManager */
     private $maskManager;
     /** @var OrderedToolRepository */
@@ -62,6 +65,7 @@ class WorkspaceManager
      * Constructor.
      *
      * @DI\InjectParams({
+     *     "homeTabManager"  = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
@@ -75,6 +79,7 @@ class WorkspaceManager
      */
 
     public function __construct(
+        HomeTabManager $homeTabManager,
         RoleManager $roleManager,
         MaskManager $maskManager,
         ResourceManager $resourceManager,
@@ -86,6 +91,7 @@ class WorkspaceManager
         PagerFactory $pagerFactory
     )
     {
+        $this->homeTabManager = $homeTabManager;
         $this->maskManager = $maskManager;
         $this->roleManager = $roleManager;
         $this->resourceManager = $resourceManager;
@@ -171,6 +177,8 @@ class WorkspaceManager
         $this->dispatcher->dispatch('log', 'Log\LogWorkspaceCreate', array($workspace));
         $this->om->persist($workspace);
         $this->om->endFlushSuite();
+
+        $this->homeTabManager->generateCopyOfAdminWorkspaceHomeTabs($workspace);
 
         return $workspace;
     }

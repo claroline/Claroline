@@ -285,6 +285,7 @@ new_message_alert: 'You have %count% new message(s)'
 new_message: 'New message'
 no: 'no'
 no_email: 'No email found, check the spelling'
+no_home_tab: "There is no Home tab"
 no_search_results: 'Your search hasn''t returned any result.'
 no_tag: 'There is no tag'
 no_workspace: 'There is no workspace'
@@ -294,6 +295,7 @@ not_allowed_message: You are not allowed to perform this action.
 object: Object
 ok: Ok
 or: Or
+only_for_workspace_creation: 'Only for workspace creation'
 open: Open
 options: Options
 order: Order
