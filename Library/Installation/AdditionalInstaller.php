@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
 use Doctrine\Common\Persistence\Mapping\MappingException;
+use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
@@ -24,6 +25,10 @@ class AdditionalInstaller extends BaseInstaller
     public function postUpdate(BundleVersion $current, BundleVersion $target)
     {
         $this->createWorkspacesListWidget();
+
+        if (version_compare($current->getVersion(), '1.4', '<')) {
+            $this->updateAdminWorkspaceHomeTabDatas();
+        }
     }
 
     private function createDatabaseIfNotExists()
@@ -89,6 +94,44 @@ class AdditionalInstaller extends BaseInstaller
         }
         catch (MappingException $e) {
             $this->log('A MappingException has been thrown while trying to get Widget repository');
+        }
+    }
+
+    private function updateAdminWorkspaceHomeTabDatas()
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+
+        try {
+            $homeTabConfigRepo = $em->getRepository('ClarolineCoreBundle:Home\HomeTabConfig');
+            $widgetHTCRepo = $em->getRepository('ClarolineCoreBundle:Widget\WidgetHomeTabConfig');
+
+            $homeTabConfigs = $homeTabConfigRepo->findWorkspaceHomeTabConfigsByAdmin();
+
+            foreach ($homeTabConfigs as $homeTabConfig) {
+                $homeTab = $homeTabConfig->getHomeTab();
+                $workspace = $homeTabConfig->getWorspace();
+
+                $newHomeTab = new HomeTab();
+                $newHomeTab->setType('workspace');
+                $newHomeTab->setWorkspace($workspace);
+                $newHomeTab->setName($homeTab->getName());
+                $em->persist($newHomeTab);
+                $em->flush();
+
+                $homeTabConfig->setType('workspace');
+                $homeTabConfig->setHomeTab($newHomeTab);
+
+                $widgetHomeTabConfigs = $widgetHTCRepo
+                    ->findWidgetConfigsByWorkspace($homeTab, $workspace);
+
+                foreach ($widgetHomeTabConfigs as $widgetHomeTabConfig) {
+                    $widgetHomeTabConfig->setHomeTab($newHomeTab);
+                }
+                $em->flush();
+            }
+        }
+        catch (MappingException $e) {
+            $this->log('A MappingException has been thrown while trying to get HomeTabConfig or WidgetHomeTabConfig repository');
         }
     }
 }
