@@ -318,17 +318,17 @@ class PathController extends Controller
 
     /**
      * @Route(
-     *      "/path/editor",
+     *      "workspace/{workspaceId}/path/editor/{pathId}",
      *      name = "innova_path_editor",
+     *      defaults={"pathId"= null},
      *      options = {"expose"=true}
      * )
      *
      * @Template("InnovaPathBundle:Editor:main.html.twig")
      */
-    public function editorAction()
+    public function editorAction($workspaceId, $pathId = null)
     {
         $manager = $this->container->get('doctrine.orm.entity_manager');
-        $workspaceId = $this->get('request')->request->get('workspace-id');
         $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
         
         return array('workspace' => $workspace);
@@ -490,14 +490,14 @@ class PathController extends Controller
      *
      * @return OK
      *
-    * @Route(
-    *     "/path/delete/{id}",
-    *     name = "innova_path_delete_path",
-    *     options = {"expose"=true}
-    * )
-    * @Method("DELETE")
-    *
-    */
+     * @Route(
+     *     "/path/delete/{id}",
+     *     name = "innova_path_delete_path",
+     *     options = {"expose"=true}
+     * )
+     * @Method("DELETE")
+     *
+     */
     public function deletePathAction(Path $path)
     {
         $em = $this->entityManager();

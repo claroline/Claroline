@@ -103,31 +103,32 @@ var MainCtrlProto = [
         $scope.save = function(path) {
             if ($routeParams.id) {
                 // Update existing path
-                $http
-                    .put(Routing.generate('innova_path_edit_path'), path)
-                    .success ( function (data) {
-                    });
+                $http({
+                    method: 'PUT',
+                    url: Routing.generate('innova_path_edit_path'),
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+                    data: 'path=' + angular.toJson(path) + '&workspaceId=2'
+                })
+                .success ( function (data) {
+                    alert('success');
+                });
             } 
             else {
                 // Create new path
-                var route = Routing.generate('innova_path_add_path');
-                
                 $http({
                     method: 'POST',
-                    url: route,
+                    url: Routing.generate('innova_path_add_path'),
                     headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
                     data: 'path=' + angular.toJson(path) + '&workspaceId=2'
+                })
+                .success ( function (data) {
+                    // Store generated ID in Path
+                    path.id = data;
+                    PathFactory.setPath(path);
+                    $scope.path = PathFactory.getPath();
+                    $location.path('/path/global/' + data);
+                    alert('success');
                 });
-                
-//                $http.post(route, data)
-//                    .success ( function (data) {
-//                        // Store generated ID in Path
-//                        path.id = data;
-//                        PathFactory.setPath(path);
-//                        $scope.path = PathFactory.getPath();
-//                        $location.path('/path/global/' + data);
-//                        alert('success');
-//                    });
             }
             
             // Clear history to avoid possibility to get a history state without path ID
