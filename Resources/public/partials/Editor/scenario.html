@@ -5,7 +5,7 @@
 <div class="row-fluid">
     <div class="well well-small span6" id="zone">
         <ul>
-            <li ng-repeat="step in path.steps" ng-include="'partials/tree-item.html'" onload="isRootNode = ($index == 0)"></li>
+            <li ng-repeat="step in path.steps" ng-include="templateRoute + 'Editor/tree-item.html'" onload="isRootNode = ($index == 0)"></li>
         </ul>
     </div>
     

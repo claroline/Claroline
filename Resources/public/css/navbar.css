@@ -24,7 +24,7 @@
 }
 
 .panel-path-editor .navbar > li > a {
-    width: 80%;
+    width: 70%;
     text-align: left;
     padding-left: 30px;
     padding-right: 4px;
@@ -103,12 +103,42 @@
     cursor: default !important;
 }
 
-.panel-path-editor .dropdown-toggle span {
+.panel-path-editor .dropdown-toggle {
+    vertical-align: middle;
+}
+
+.panel-path-editor .dropdown-toggle .caret {
 	opacity: 0.6;
 }
 
-.panel-path-editor .dropdown-toggle:hover span,
-.panel-path-editor .dropdown-toggle:focus span,
-.panel-path-editor .dropdown-toggle:active span {
+.panel-path-editor .dropdown-toggle:hover .caret,
+.panel-path-editor .dropdown-toggle:focus .caret,
+.panel-path-editor .dropdown-toggle:active .caret {
     opacity: 1;
+}
+
+/* Progression */
+.progression {
+    vertical-align: middle;
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    border-radius: 7px;
+    box-shadow: inset 0 0px 2px #000000;
+    margin-right: 4px;
+}
+
+.progression-todo {
+    background-color: rgb(255, 255, 255);
+    border-color: rgb(204, 204, 204);
+}
+
+.progression-inprogress {
+    background-color: rgb(240, 173, 78);
+    border-color: rgb(238, 162, 54);
+}
+
+.progression-done {
+    background-color: rgb(92, 184, 92);
+    border-color: rgb(76, 174, 76);
 }

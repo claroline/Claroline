@@ -85,6 +85,8 @@
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Editor/EditorApp.js') }}"></script>
     <script type="text/javascript">
         // TODO : find more beautiful
+        EditorApp.pathId = "{{ path.id }}";
+        EditorApp.workspaceId = "{{ workspace.id }}";
         EditorApp.templateRoute = "{{ asset('bundles/innovapath/partials/') }}";
     </script>
 {% endblock %}

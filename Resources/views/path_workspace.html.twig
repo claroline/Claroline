@@ -2,6 +2,7 @@
 
 {% block section_content %}
     <div class="panel-heading">
+        <a href="{{ path('innova_path_editor', {workspaceId: workspace.id}) }}" class="btn btn-primary btn-xs pull-right"><span class="icon-plus"></span></a>
         <h3 class="panel-title">Parcours</h3>
     </div>
     <div class="panel-body">
@@ -9,12 +10,12 @@
         <table class="table table-hover">
             {% for path in paths %}
             <tr>
-                <td>{{ path.name }}</td>
+                <td><a href="{{ path('innova_path_editor', {workspaceId: workspace.id, pathId: path.id}) }}">{{ path.name }}</a></td>
                 <td class="text-right">
                     <form action="{{ path('innova_path_deploy') }}" method="post">
                         <input type="hidden" value="{{ workspace.id }}" name="workspace-id">
                         <input type="hidden" value="{{ path.id }}" name="path-id">
-                        <input class="btn" value="deploy" type="submit"/>
+                        <input class="btn btn-sm" value="deploy" type="submit"/>
                     </form>
                 </td>
             </tr>
@@ -23,12 +24,5 @@
         {% else %}
             <div class="alert alert-success">{{ deployed }}</div>
         {% endif %}
-        
-        <form action="{{ path('innova_path_editor') }}" method="post">
-            <input type="hidden" value="{{ workspace.id }}" name="workspace-id" />
-            <button type="submit" class="btn btn-primary" value="new">
-                <span class="icon-plus"></span>
-            </button>
-        </form>
     </div>
 {% endblock %}
