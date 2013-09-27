@@ -17,25 +17,52 @@ class DropRepository extends EntityRepository {
     public function getDropIdNotCorrected($dropzone)
     {
         $query = $this->getEntityManager()->createQuery(
-            "SELECT d.id AS did, count(c.id) AS nb_corrections \n".
+            "SELECT d.id AS did, c.valid as valid, count(c.id) AS nb_corrections \n".
             "FROM Icap\\DropzoneBundle\\Entity\\Drop AS d \n".
             "LEFT OUTER JOIN d.corrections AS c \n".
             "WHERE d.dropzone = :dropzone \n".
-            "AND c.valid = true \n".
-            "AND c.editable = false \n".
-            "GROUP BY d.id \n".
-            "HAVING nb_corrections < :expectedTotalCorrection")
-            ->setParameter('dropzone', $dropzone)
-            ->setParameter('expectedTotalCorrection', $dropzone->getExpectedTotalCorrection());
+            "GROUP BY d.id, c.valid")
+            ->setParameter('dropzone', $dropzone);
 
         $result = $query->getResult();
 
         $dropIds = array();
         foreach($result as $line) {
-            $dropIds[] = $line['did'];
+            if ($line['valid'] === null) {
+                $dropIds[$line['did']] = 'has no correction';
+            }
         }
 
-        return $dropIds;
+        foreach($result as $line) {
+            if ($line['valid'] === false) {
+                $dropIds[$line['did']] = 'has only invalid corrections';
+            }
+        }
+
+        foreach($result as $line) {
+            if ($line['valid'] === true) {
+                if ($line['nb_corrections'] >= $dropzone->getExpectedTotalCorrection()) {
+                    $dropIds[$line['did']] = 'must be removed';
+                    unset($dropIds[$line['did']]);
+                } else {
+                    $dropIds[$line['did']] = 'have not enough valid correction for being exclude';
+                }
+            }
+        }
+
+        $arrayResult = array();
+        foreach($dropIds as $key => $value) {
+            $arrayResult[] = $key;
+        }
+//        echo('<pre>');
+//        var_dump($dropzone->getExpectedTotalCorrection());
+//        var_dump($result);
+//        var_dump($dropIds);
+//        var_dump($arrayResult);
+//        echo('</pre>');
+//        die();
+
+        return $arrayResult;
     }
 
     public function getDropIdNotFullyCorrected($dropzone)

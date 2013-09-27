@@ -56,14 +56,14 @@
                                 <a href="#" class="btn btn-default disabled">{{ 'Previous'|trans }}</a>
                             {% else %}
                                 {% set previousPage = pager.currentPage-1 %}
-                                <a href="{{ path('icap_dropzone_drops_detail_correction_paginated', {'resourceId': dropzone.id, 'state' : edit ? 'edit' : 'show', 'correctionId': correction.id, 'page': previousPage}) }}" class="btn btn-default">{{ 'Previous'|trans }}</a>
+                                <a href="{{ path('icap_dropzone_drops_detail_correction_paginated', {'resourceId': dropzone.id, 'state' : edit ? 'edit' : 'show', 'correctionId': correction.id, 'page': previousPage}) }}" class="btn btn-default back-button">{{ 'Previous'|trans }}</a>
                             {% endif %}
                         {% else %}
                             {% if pager.currentPage == 1 %}
                                 <a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
                             {% else %}
                                 {% set previousPage = pager.currentPage-1 %}
-                                <a href="{{ path('icap_dropzone_correct_paginated', {'resourceId': dropzone.id, 'page': previousPage}) }}" class="btn btn-default">{{ 'Retour'|trans }}</a>
+                                <a href="{{ path('icap_dropzone_correct_paginated', {'resourceId': dropzone.id, 'page': previousPage}) }}" class="btn btn-default back-button">{{ 'Previous'|trans }}</a>
                             {% endif %}
                         {% endif %}
 
@@ -117,15 +117,18 @@
     <script src="{{ asset('bundles/icapdropzone/js/popup.js') }}"></script>
     <script>
         $(document).on('ready', function () {
+            $('#icap_dropzone_correct_criteria_page_form_goBack').val(0);
+            $('.back-button').on('click', function(event) {
+                event.preventDefault();
+                $('#icap_dropzone_correct_criteria_page_form_goBack').val(1);
+                $('#correct-form button[type="submit"]').trigger('click');
+            });
+
             $('.column-container-div input[type="radio"]').on('click', function () {
                 var name = $(this).attr('name');
                 var value = $(this).val();
 
-                console.log(name + " = " + value);
-
                 $('.criterion-grade[data-criterion="'+name+'"]').html(value);
-
-
             });
 
             var calculateTotalGrade = function () {

@@ -195,3 +195,5 @@ You are about to make your correction. This action is final. The rating is %grad
 Select the types of documents that learners can make: 'Selectionnez les types de documents que les apprenants pourront rendre :'
 Select how copies will be corrected: 'Selectionnez la façon dont les copies seront corrigées :'
 Must be an integer: 'Doit être un entier'
+You have already begun a correction.: 'Vous avez déjà commencé une correction'
+Complete my correction: 'Compléter ma correction'

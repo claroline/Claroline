@@ -196,3 +196,5 @@ You are about to make your correction. This action is final. The rating is %grad
 Select the types of documents that learners can make: 'Select the types of documents that learners can make:'
 Select how copies will be corrected: 'Select how copies will be corrected:'
 Must be an integer: 'Must be an integer'
+You have already begun a correction.: 'You have already begun a correction.'
+Complete my correction: 'Complete my correction'

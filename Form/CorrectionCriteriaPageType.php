@@ -32,7 +32,9 @@ class CorrectionCriteriaPageType extends AbstractType
                 $params['disabled'] = 'disabled';
             }
 
-            $builder->add($criterion->getId(), 'choice', $params);
+            $builder
+                ->add('goBack', 'hidden', array('mapped' => false))
+                ->add($criterion->getId(), 'choice', $params);
         }
     }
 
