@@ -136,7 +136,7 @@
                                 <td>
                                     <a class="close delete" href="{{ path('claro_admin_badges_unaward', {'id': badge.id, 'username': user.username}) }}" data-toggle="tooltip" title="{{ 'badge_unaward_confirm_title'|trans }}" data-confirm-title="{{ 'badge_unaward_confirm_title'|trans }}" data-confirm-message="{{ 'badge_unaward_confirm_message'|trans({'%badgeName%': badge.name, '%user%': user.firstname ~ ' ' ~ user.lastname}) }}" data-confirm-ok="{{ 'unaward'|trans }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"><i class="icon-remove-circle"></i></a>
                                 </td>
-                                <td>{{ user.firstname }}</td>
+                                <td><a href="{{ path('claro_profile_view', {'userId': user.id}) }}" title="{{ user.firstname }} {{ user.lastname }}">{{ user.firstname }}</a></td>
                                 <td>{{ user.lastname }}</td>
                             </tr>
                         {% else %}
