@@ -59,8 +59,8 @@ class Badge
      *
      * @Assert\Image(
      *     maxSize = "256k",
-     *     maxWidth = 128,
-     *     maxHeight = 128
+     *     minWidth = 64,
+     *     minHeight = 64
      * )
      */
     protected $file;

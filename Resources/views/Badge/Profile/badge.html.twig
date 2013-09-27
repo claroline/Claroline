@@ -18,7 +18,7 @@
             <p>Attribué le {{ userBadge.issuedAt|date('date_format'|trans({}, 'platform')) }} par <a href="{{ path('claro_profile_view', {'userId': userBadge.issuer.id}) }}" title="{{ userBadge.issuer.firstname }} {{ userBadge.issuer.lastname }}">{{ userBadge.issuer.firstname }} {{ userBadge.issuer.lastname }}</a></p>
             <div class="media">
                 <a class="pull-left" href="#">
-                    <img class="media-object badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
+                    <img class="media-object badge_image_informations" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
                 </a>
                 <div class="media-body">
                     <h4 class="media-heading">{{ badge.description }}</h4>
