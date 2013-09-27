@@ -24,14 +24,11 @@ class ProfileController extends Controller
 {
     /**
      * @Route("/claim", name="claro_claim_badge")
-     *
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function claimAction(Request $request)
+    public function claimAction(Request $request, User $user)
     {
-        /** @var \Claroline\CoreBundle\Entity\User $user */
-        $user = $this->get('security.context')->getToken()->getUser();
-
         $badgeClaim = new BadgeClaim();
         $badgeClaim->setUser($user);
         $form = $this->createForm(new ClaimBadgeType(), $badgeClaim);
@@ -78,12 +75,11 @@ class ProfileController extends Controller
 
     /**
      * @Route("/view/{id}", name="claro_profile_view_badge")
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function badgeAction(Badge $badge)
+    public function badgeAction(Badge $badge, User $user)
     {
-        $user = $this->get('security.context')->getToken()->getUser();
-
         $userBadge = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findOneByBadgeAndUser($badge, $user);
 
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
