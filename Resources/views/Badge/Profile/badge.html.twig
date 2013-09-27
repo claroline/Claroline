@@ -49,7 +49,11 @@
                             <tr>
                                 <td>{{ action|trans({}, 'log') }}</td>
                                 <td>{{ checkedLog.creationDate|date('date_format'|trans({}, 'platform')) }}</td>
-                                <td>{{ checkedLog.resourceNode.path }}</td>
+                                <td>
+                                    {% if checkedLog.resourceNode != null %}
+                                        <a href="{{ path('claro_resource_open', {'resourceType': checkedLog.resourceType.name, 'action': 'open', 'node': checkedLog.resourceNode.id})}}">{{ checkedLog.resourceNode.path }}</a>
+                                    {% endif %}
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
