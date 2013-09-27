@@ -155,7 +155,6 @@ class InteractionQCMController extends Controller
             'UJMExoBundle:InteractionQCM:new.html.twig', array(
             'entity' => $interQCM,
             'form'   => $form->createView(),
-            'exoID'  => $exoID,
             'error'  => true
             )
         );
