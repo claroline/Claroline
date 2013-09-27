@@ -21,9 +21,14 @@ class Path extends AbstractResource
     private $path;
 
     /**
-    * @ORM\OneToMany(targetEntity="Step", mappedBy="path")
+    * @ORM\OneToMany(targetEntity="Step", mappedBy="path", cascade={"remove"})
     */
     protected $steps;
+
+    /**
+    * @ORM\OneToMany(targetEntity="User2Path", mappedBy="path", cascade={"remove"})
+    */
+    protected $users;
 
     /**
      * Set path
@@ -46,19 +51,6 @@ class Path extends AbstractResource
     public function getPath()
     {
         return $this->path;
-    }
-
-    /**
-     * Set uuid
-     *
-     * @param  string $uuid
-     * @return Path
-     */
-    public function setUuid($uuid)
-    {
-        $this->uuid = $uuid;
-
-        return $this;
     }
 
     /**
