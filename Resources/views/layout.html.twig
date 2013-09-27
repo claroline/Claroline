@@ -5,30 +5,6 @@
 {% endblock %}
 
 {% block section_content %}
-    <header>
-        <ul class="breadcrumb">
-            {% for item in pathArray %}
-                {% if not loop.last %}
-                    <li>
-                        <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}#resources/{{ item.id }}">
-                            {% if loop.first %}
-                                <span class="glyphicon icon-folder-open-alt"></span> {{ 'Resource'|trans }}
-                            {% else %}
-                                {{ item.name }}
-                            {% endif %}
-                        </a>
-                    </li>
-                {% endif %}
-            {% endfor %}
-
-            {% block dropzone_breadcrumb %}
-                <li>
-                    <a href="{{ path('icap_dropzone_open', { 'resourceId': dropzone.id }) }}"><span class="glyphicon icon-file"></span> {{ dropzone.resourceNode.name }}</a>
-                </li>
-            {% endblock %}
-        </ul>
-    </header>
-
     {% block dropzone_content %}
     {% endblock %}
 {% endblock %}

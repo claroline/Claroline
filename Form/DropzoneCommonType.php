@@ -11,14 +11,16 @@ class DropzoneCommonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('stayHere', 'hidden', array(
+                'mapped' => false
+            ))
             ->add('instruction', 'textarea', array(
-                    'attr' => array(
-                        'class' => 'tinymce',
-                        'data-theme' => 'advanced'
-                    ),
-                    'required' => false
-                ))
-            //->add('instruction', 'textarea', array('required' => false))
+                'attr' => array(
+                    'class' => 'tinymce',
+                    'data-theme' => 'advanced'
+                ),
+                'required' => false
+            ))
 
             ->add('allowWorkspaceResource', 'checkbox', array('required' => false))
             ->add('allowUpload', 'checkbox', array('required' => false))

@@ -1,13 +1,6 @@
-{% form_theme form "IcapDropzoneBundle::form_theme_bootstrap3.html.twig" %}
+{% extends "IcapDropzoneBundle:Dropzone:documentFormDefault.html.twig" %}
 
-<form class="form-inline" method="POST" action="{{ path('icap_dropzone_document', {'resourceId': dropzone.id, 'documentType': documentType, 'dropId': drop.id}) }}">
-
-    <div class="row">
-        <div class="col-md-12">
-            <h4>{{ documentType|trans }}</h4>
-        </div>
-    </div>
-
+{% block document_body %}
     <div class="row">
         {{ form_row(form.document, {'label_col_size': ' ', 'input_col_size': 'col-md-12', 'attr': {'placeholder': (documentType~'_placeholder')|trans}, 'label_attr': {'class': 'sr-only'} }) }}
     </div>
@@ -24,8 +17,6 @@
             </div>
         </div>
     </div>
+    {{ tinymce_init() }}
+{% endblock %}
 
-    {{ form_errors(form) }}
-{{ form_end(form) }}
-
-{{ tinymce_init() }}

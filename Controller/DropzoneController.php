@@ -7,6 +7,11 @@
 
 namespace Icap\DropzoneBundle\Controller;
 
+use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Resource\File;
+use Claroline\CoreBundle\Entity\Resource\Revision;
+use Claroline\CoreBundle\Entity\Resource\Text;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Icap\DropzoneBundle\Entity\Correction;
 use Icap\DropzoneBundle\Entity\Criterion;
@@ -37,7 +42,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
-class DropzoneController extends Controller {
+class DropzoneController extends Controller
+{
 
     const CRITERION_PER_PAGE = 10;
     const DROP_PER_PAGE = 10;
@@ -74,14 +80,12 @@ class DropzoneController extends Controller {
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      */
-    public function editCommonAction($dropzone)
+    public function editCommonAction(Dropzone $dropzone)
     {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
 
-//        $dropzone->setName($dropzone->getResourceNode()->getName());
-
-        $form = $this->createForm(new DropzoneCommonType(), $dropzone);//, array('language' => $this->container->getParameter('locale')));
+        $form = $this->createForm(new DropzoneCommonType(), $dropzone);
 
         if ($this->getRequest()->isMethod('POST')) {
             $form->handleRequest($this->getRequest());
@@ -95,15 +99,23 @@ class DropzoneController extends Controller {
                 $dropzone->setEditionState(2);
             }
 
-            if (!$dropzone->getDisplayNotationToLearners() and ! $dropzone->getDisplayNotationMessageToLearners()) {
+            if (!$dropzone->getDisplayNotationToLearners() and !$dropzone->getDisplayNotationMessageToLearners()) {
                 $form->get('displayNotationToLearners')->addError(new FormError('Choose at least one type of ranking'));
-                $form->get('displayNotationMessageToLearners')->addError(new FormError('Choose at least one type of ranking'));
+                $form
+                    ->get('displayNotationMessageToLearners')
+                    ->addError(new FormError('Choose at least one type of ranking'));
             }
 
-            if (!$dropzone->getAllowWorkspaceResource() and !$dropzone->getAllowUpload() and !$dropzone->getAllowUrl()) {
+            if (
+                !$dropzone->getAllowWorkspaceResource()
+                and !$dropzone->getAllowUpload()
+                and !$dropzone->getAllowUrl()
+                and !$dropzone->getAllowRichText()
+            ) {
                 $form->get('allowWorkspaceResource')->addError(new FormError('Choose at least one type of document'));
                 $form->get('allowUpload')->addError(new FormError('Choose at least one type of document'));
                 $form->get('allowUrl')->addError(new FormError('Choose at least one type of document'));
+                $form->get('allowRichText')->addError(new FormError('Choose at least one type of document'));
             }
 
             if (!$dropzone->getManualPlanning()) {
@@ -128,13 +140,13 @@ class DropzoneController extends Controller {
                         $form->get('endReview')->addError(new FormError('Must be after start peer review'));
                     }
                 }
-                if($dropzone->getStartAllowDrop() !== null && $dropzone->getStartReview() !== null) {
+                if ($dropzone->getStartAllowDrop() !== null && $dropzone->getStartReview() !== null) {
                     if ($dropzone->getStartAllowDrop()->getTimestamp() > $dropzone->getStartReview()->getTimestamp()) {
                         $form->get('startReview')->addError(new FormError('Must be after start allow drop'));
                         $form->get('startAllowDrop')->addError(new FormError('Must be before start peer review'));
                     }
                 }
-                if($dropzone->getEndAllowDrop() !== null && $dropzone->getEndReview() !== null) {
+                if ($dropzone->getEndAllowDrop() !== null && $dropzone->getEndReview() !== null) {
                     if ($dropzone->getEndAllowDrop()->getTimestamp() > $dropzone->getEndReview()->getTimestamp()) {
                         $form->get('endReview')->addError(new FormError('Must be after end allow drop'));
                         $form->get('endAllowDrop')->addError(new FormError('Must be before end peer review'));
@@ -143,29 +155,46 @@ class DropzoneController extends Controller {
             }
 
             if ($form->isValid()) {
+                if ($dropzone->getPeerReview() != true) {
+                    $dropzone->setExpectedTotalCorrection(1);
+                }
+
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($dropzone);
                 $em->flush();
 
                 if ($dropzone->getPeerReview()) {
-                    return $this->redirect(
-                        $this->generateUrl(
-                            'icap_dropzone_edit_criteria',
-                            array(
-                                'resourceId' => $dropzone->getId()
+
+                    $stayHere = $form->get('stayHere')->getData();
+
+                    if ($stayHere == 1) {
+                        $this->getRequest()->getSession()->getFlashBag()->add(
+                            'success',
+                            $this->get('translator')->trans('The evaluation has been successfully saved')
+                        );
+                    } else {
+                        return $this->redirect(
+                            $this->generateUrl(
+                                'icap_dropzone_edit_criteria',
+                                array(
+                                    'resourceId' => $dropzone->getId()
+                                )
                             )
-                        )
-                    );
+                        );
+                    }
                 } else {
-                    $this->getRequest()->getSession()->getFlashBag()->add('success', $this->get('translator')->trans('The evaluation has been successfully saved'));
+                    $this->getRequest()->getSession()->getFlashBag()->add(
+                        'success',
+                        $this->get('translator')->trans('The evaluation has been successfully saved')
+                    );
                 }
             }
         }
 
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
             'dropzone' => $dropzone,
-            'pathArray' => $dropzone->getPathArray(),
             'form' => $form->createView()
         );
 
@@ -202,7 +231,7 @@ class DropzoneController extends Controller {
             ->orderBy('criterion.id', 'ASC');
 
         $adapter = new DoctrineORMAdapter($query);
-        $pager   = new Pagerfanta($adapter);
+        $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage(self::CRITERION_PER_PAGE);
         try {
             $pager->setCurrentPage($page);
@@ -237,14 +266,17 @@ class DropzoneController extends Controller {
                 $em->persist($dropzone);
                 $em->flush();
 
-                $this->getRequest()->getSession()->getFlashBag()->add('success', $this->get('translator')->trans('The evaluation has been successfully saved'));
+                $this->getRequest()->getSession()->getFlashBag()->add(
+                    'success',
+                    $this->get('translator')->trans('The evaluation has been successfully saved')
+                );
             }
         }
 
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
             'dropzone' => $dropzone,
-            'pathArray' => $dropzone->getPathArray(),
             'pager' => $pager,
             'form' => $form->createView()
         );
@@ -284,8 +316,8 @@ class DropzoneController extends Controller {
                 'IcapDropzoneBundle:Dropzone:editAddCriterionModal.html.twig',
                 array(
                     'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+                    '_resource' => $dropzone,
                     'dropzone' => $dropzone,
-                    'pathArray' => $dropzone->getPathArray(),
                     'form' => $form->createView(),
                     'criterion' => $criterion,
                     'page' => $page
@@ -295,8 +327,8 @@ class DropzoneController extends Controller {
 
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
             'dropzone' => $dropzone,
-            'pathArray' => $dropzone->getPathArray(),
             'form' => $form->createView(),
             'criterion' => $criterion,
             'page' => $page
@@ -355,8 +387,8 @@ class DropzoneController extends Controller {
 
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
             'dropzone' => $dropzone,
-            'pathArray' => $dropzone->getPathArray(),
             'form' => $form->createView(),
             'criterion' => $criterion,
             'page' => $page
@@ -388,8 +420,8 @@ class DropzoneController extends Controller {
                 'IcapDropzoneBundle:Dropzone:editDeleteCriterionModal.html.twig',
                 array(
                     'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+                    '_resource' => $dropzone,
                     'dropzone' => $dropzone,
-                    'pathArray' => $dropzone->getPathArray(),
                     'criterion' => $criterion,
                     'form' => $form->createView(),
                     'page' => $page,
@@ -400,8 +432,8 @@ class DropzoneController extends Controller {
 
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
             'dropzone' => $dropzone,
-            'pathArray' => $dropzone->getPathArray(),
             'criterion' => $criterion,
             'form' => $form->createView(),
             'page' => $page,
@@ -448,8 +480,8 @@ class DropzoneController extends Controller {
 
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
             'dropzone' => $dropzone,
-            'pathArray' => $dropzone->getPathArray(),
             'criterion' => $criterion,
             'form' => $form->createView(),
             'page' => $page
@@ -466,23 +498,33 @@ class DropzoneController extends Controller {
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function openAction($dropzone, $user)
+    public function openAction(Dropzone $dropzone, $user)
     {
         //Participant view for a dropzone
         $this->isAllowToOpen($dropzone);
 
         $em = $this->getDoctrine()->getManager();
         $dropRepo = $em->getRepository('IcapDropzoneBundle:Drop');
-        $drop = $dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user, 'finished' => true));
+        $drop = $dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user));
 
-        $nbCorrections = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Correction')->countFinished($dropzone, $user);
+        $nbCorrections = $this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository('IcapDropzoneBundle:Correction')
+            ->countFinished($dropzone, $user);
+        $hasCopyToCorrect = $this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository('IcapDropzoneBundle:Drop')
+            ->hasCopyToCorrect($dropzone, $user);
 
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
-            'pathArray' => $dropzone->getPathArray(),
+            '_resource' => $dropzone,
             'dropzone' => $dropzone,
             'drop' => $drop,
             'nbCorrections' => $nbCorrections,
+            'hasCopyToCorrect' => $hasCopyToCorrect,
         );
     }
 
@@ -496,7 +538,7 @@ class DropzoneController extends Controller {
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function dropAction($dropzone, $user)
+    public function dropAction(Dropzone $dropzone, $user)
     {
         $this->isAllowToOpen($dropzone);
 
@@ -504,7 +546,10 @@ class DropzoneController extends Controller {
         $dropRepo = $em->getRepository('IcapDropzoneBundle:Drop');
 
         if ($dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user, 'finished' => true)) !== null) {
-            $this->getRequest()->getSession()->getFlashBag()->add('error', $this->get('translator')->trans('You ve already made ​​your copy for this review'));
+            $this->getRequest()->getSession()->getFlashBag()->add(
+                'error',
+                $this->get('translator')->trans('You ve already made ​​your copy for this review')
+            );
 
             return $this->redirect(
                 $this->generateUrl(
@@ -519,6 +564,9 @@ class DropzoneController extends Controller {
         $notFinishedDrop = $dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user, 'finished' => false));
         if ($notFinishedDrop === null) {
             $notFinishedDrop = new Drop();
+            $number = ($dropRepo->getLastNumber($dropzone) + 1);
+            $notFinishedDrop->setNumber($number);
+
             $notFinishedDrop->setUser($user);
             $notFinishedDrop->setDropzone($dropzone);
             $notFinishedDrop->setFinished(false);
@@ -562,14 +610,191 @@ class DropzoneController extends Controller {
         if ($dropzone->getAllowUrl()) $allowedTypes[] = 'url';
         if ($dropzone->getAllowRichText()) $allowedTypes[] = 'text';
 
+        $resourceTypes = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
+
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
             'dropzone' => $dropzone,
             'drop' => $drop,
-            'pathArray' => $dropzone->getPathArray(),
             'form' => $form->createView(),
-            'allowedTypes' => $allowedTypes
+            'allowedTypes' => $allowedTypes,
+            'resourceTypes' => $resourceTypes
         );
+    }
+
+    private function getDropZoneHiddenDirectory(Dropzone $dropzone)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $hiddenDirectory = $dropzone->getHiddenDirectory();
+
+        if ($hiddenDirectory === null) {
+            $hiddenDirectory = new Directory();
+            $name = $this->get('translator')->trans(
+                'Hidden folder for "%dropzoneName%"',
+                array('%dropzoneName%' => $dropzone->getResourceNode()->getName())
+            );
+            $hiddenDirectory->setName($name);
+
+            $role = $this
+                ->getDoctrine()
+                ->getRepository('ClarolineCoreBundle:Role')
+                ->findManagerRole($dropzone->getResourceNode()->getWorkspace());
+            $resourceManager = $this->get('claroline.manager.resource_manager');
+            $resourceManager->create(
+                $hiddenDirectory,
+                $resourceManager->getResourceTypeByName('directory'),
+                $dropzone->getResourceNode()->getCreator(),
+                $dropzone->getResourceNode()->getWorkspace(),
+                $dropzone->getResourceNode()->getParent(),
+                null,
+                array(
+                    'ROLE_WS_MANAGER' => array('open' => true, 'export' => true, 'create' => array(),
+                    'role' => $role)
+                )
+            );
+
+            $dropzone->setHiddenDirectory($hiddenDirectory->getResourceNode());
+            $em->persist($dropzone);
+            $em->flush();
+        }
+
+        return $dropzone->getHiddenDirectory();
+    }
+
+    private function getDropHiddenDirectory(Dropzone $dropzone, Drop $drop)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $hiddenDropDirectory = $drop->getHiddenDirectory();
+
+        if ($hiddenDropDirectory == null) {
+            $hiddenDropDirectory = new Directory();
+            $name = $this->get('translator')->trans('Copy n°%number%', array('%number%' => $drop->getNumber()));
+            $hiddenDropDirectory->setName($name);
+
+            $parent = $this->getDropZoneHiddenDirectory($dropzone);
+            $role = $this
+                ->getDoctrine()
+                ->getRepository('ClarolineCoreBundle:Role')
+                ->findManagerRole($dropzone->getResourceNode()->getWorkspace());
+
+            $resourceManager = $this->get('claroline.manager.resource_manager');
+            $resourceManager->create(
+                $hiddenDropDirectory,
+                $resourceManager->getResourceTypeByName('directory'),
+                $parent->getCreator(),
+                $parent->getWorkspace(),
+                $parent,
+                null,
+                array(
+                    'ROLE_WS_MANAGER' => array('open' => true, 'export' => true, 'create' => array(),
+                    'role' => $role)
+                )
+            );
+
+            $drop->setHiddenDirectory($hiddenDropDirectory->getResourceNode());
+            $em->persist($drop);
+            $em->flush();
+        }
+
+        return $drop->getHiddenDirectory();
+    }
+
+    private function createFile(Dropzone $dropzone, Drop $drop, $tmpFile)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $parent = $this->getDropHiddenDirectory($dropzone, $drop);
+
+        $file = new File();
+        $fileName = $tmpFile->getClientOriginalName();
+        $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+        $size = filesize($tmpFile);
+        $mimeType = $tmpFile->getClientMimeType();
+        $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() . "." . $extension;
+        $tmpFile->move($this->container->getParameter('claroline.param.files_directory'), $hashName);
+        $file->setSize($size);
+        $file->setName($fileName);
+        $file->setHashName($hashName);
+        $file->setMimeType($mimeType);
+
+        $resourceManager = $this->get('claroline.manager.resource_manager');
+        $resourceManager->create(
+            $file,
+            $resourceManager->getResourceTypeByName('file'),
+            $drop->getUser(),
+            $dropzone->getResourceNode()->getWorkspace(),
+            $parent
+        );
+        $em->flush();
+
+        return $file->getResourceNode();
+    }
+
+    private function createText(Dropzone $dropzone, Drop $drop, $richText)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $parent = $this->getDropHiddenDirectory($dropzone, $drop);
+
+        $revision = new Revision();
+        $revision->setContent($richText);
+        $revision->setUser($drop->getUser());
+        $text = new Text();
+        $text->setName($this->get('translator')->trans('Free text'));
+        $revision->setText($text);
+        $em->persist($text);
+        $em->persist($revision);
+
+        $resourceManager = $this->get('claroline.manager.resource_manager');
+        $resourceManager->create(
+            $text,
+            $resourceManager->getResourceTypeByName('text'),
+            $drop->getUser(),
+            $dropzone->getResourceNode()->getWorkspace(),
+            $parent
+        );
+        $em->flush();
+
+        return $text->getResourceNode();
+    }
+
+    private function createResource(Dropzone $dropzone, Drop $drop, $resourceId)
+    {
+        if ($resourceId == null) {
+            throw new \ErrorException();
+        }
+        $em = $this->getDoctrine()->getManager();
+        $parent = $this->getDropHiddenDirectory($dropzone, $drop);
+        $node = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->find($resourceId);
+        $resourceManager = $this->get('claroline.manager.resource_manager');
+        $copy = $resourceManager->copy($node, $parent, $drop->getUser())->getResourceNode();
+        $em->flush();
+
+        return $copy;
+    }
+
+    private function createDocument(Dropzone $dropzone, Drop $drop, $form, $documentType)
+    {
+        $document = new Document();
+        $document->setType($documentType);
+
+        $node = null;
+        if ($documentType == 'url') {
+            $document->setUrl($form->getData()['document']);
+        } else if ($documentType == 'file') {
+            $node = $this->createFile($dropzone, $drop, $form['document']->getData());
+        } else if ($documentType == 'text') {
+            $node = $this->createText($dropzone, $drop, $form->getData()['document']);
+        } else if ($documentType == 'resource') {
+            $node = $this->createResource($dropzone, $drop, $form->getData()['document']);
+        } else {
+            throw new \ErrorException();
+        }
+        $document->setResourceNode($node);
+        $document->setDrop($drop);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($document);
+        $em->flush();
     }
 
     /**
@@ -579,11 +804,10 @@ class DropzoneController extends Controller {
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+", "documentType" = "url|file|resource|text"}
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
      * @Template()
      */
-    public function documentAction($dropzone, $user, $documentType, $drop)
+    public function documentAction($dropzone, $documentType, $drop)
     {
         $this->isAllowToOpen($dropzone);
 
@@ -611,27 +835,7 @@ class DropzoneController extends Controller {
             $form->handleRequest($this->getRequest());
 
             if ($form->isValid()) {
-                $document = new Document();
-                if ($documentType == 'url') {
-                    $document->setUrl($form->getData()['document']);
-                } else if ($documentType == 'file') {
-                    $file = $form->getData()['document'];
-                    var_dump($file);
-                    die();
-                } else if ($documentType == 'text') {
-                    $text = $form->getData()['document'];
-
-
-                    throw new \ErrorException();
-                } else {
-                    throw new \ErrorException();
-                }
-
-                $document->setDrop($drop);
-
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($document);
-                $em->flush();
+                $this->createDocument($dropzone, $drop, $form, $documentType);
 
                 return $this->redirect(
                     $this->generateUrl(
@@ -653,10 +857,10 @@ class DropzoneController extends Controller {
             $view,
             array(
                 'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+                '_resource' => $dropzone,
                 'dropzone' => $dropzone,
                 'drop' => $drop,
                 'documentType' => $documentType,
-                'pathArray' => $dropzone->getPathArray(),
                 'form' => $form->createView(),
             )
         );
@@ -674,7 +878,7 @@ class DropzoneController extends Controller {
      * @ParamConverter("document", class="IcapDropzoneBundle:Document", options={"id" = "documentId"})
      * @Template()
      */
-    public function deleteDocumentAction($dropzone, $user, $drop, $document)
+    public function deleteDocumentAction(Dropzone $dropzone, $user, Drop $drop, Document $document)
     {
         $this->isAllowToOpen($dropzone);
 
@@ -692,6 +896,7 @@ class DropzoneController extends Controller {
             $form->handleRequest($this->getRequest());
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
+
                 $em->remove($document);
                 $em->flush();
 
@@ -715,10 +920,10 @@ class DropzoneController extends Controller {
             $view,
             array(
                 'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+                '_resource' => $dropzone,
                 'dropzone' => $dropzone,
                 'drop' => $drop,
                 'document' => $document,
-                'pathArray' => $dropzone->getPathArray(),
                 'form' => $form->createView(),
             )
         );
@@ -730,7 +935,10 @@ class DropzoneController extends Controller {
         $em = $this->getDoctrine()->getManager();
         // Check that the dropzone is in the process of peer review
         if ($dropzone->isPeerReview() == false) {
-            $this->getRequest()->getSession()->getFlashBag()->add('error', $this->get('translator')->trans('The peer review is not enabled'));
+            $this->getRequest()->getSession()->getFlashBag()->add(
+                'error',
+                $this->get('translator')->trans('The peer review is not enabled')
+            );
 
             return $this->redirect(
                 $this->generateUrl(
@@ -744,12 +952,15 @@ class DropzoneController extends Controller {
 
         // Check that the user has a finished dropzone for this drop.
         $userDrop = $em->getRepository('IcapDropzoneBundle:Drop')->findOneBy(array(
-                'user' => $user,
-                'dropzone' => $dropzone,
-                'finished' => true
-            ));
+            'user' => $user,
+            'dropzone' => $dropzone,
+            'finished' => true
+        ));
         if ($userDrop == null) {
-            $this->getRequest()->getSession()->getFlashBag()->add('error', $this->get('translator')->trans('You must have made ​​your copy before correcting'));
+            $this->getRequest()->getSession()->getFlashBag()->add(
+                'error',
+                $this->get('translator')->trans('You must have made ​​your copy before correcting')
+            );
 
             return $this->redirect(
                 $this->generateUrl(
@@ -764,7 +975,10 @@ class DropzoneController extends Controller {
         // Check that the user still make corrections
         $nbCorrection = $em->getRepository('IcapDropzoneBundle:Correction')->countFinished($dropzone, $user);
         if ($nbCorrection >= $dropzone->getExpectedTotalCorrection()) {
-            $this->getRequest()->getSession()->getFlashBag()->add('error', $this->get('translator')->trans('You no longer have any copies to correct'));
+            $this->getRequest()->getSession()->getFlashBag()->add(
+                'error',
+                $this->get('translator')->trans('You no longer have any copies to correct')
+            );
 
             return $this->redirect(
                 $this->generateUrl(
@@ -796,7 +1010,6 @@ class DropzoneController extends Controller {
 
                 $em->persist($correction);
                 $em->flush();
-            } else {
             }
         } else {
             $correction->setLastOpenDate(new \DateTime());
@@ -818,20 +1031,24 @@ class DropzoneController extends Controller {
             ->orderBy('criterion.id', 'ASC');
 
         $adapter = new DoctrineORMAdapter($criterionQuery);
-        $pager   = new Pagerfanta($adapter);
+        $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage(self::CRITERION_PER_PAGE);
 
         return $pager;
     }
 
-    private function persistGrade($grades, $criterionId, $value, $correction) {
+    private function persistGrade($grades, $criterionId, $value, $correction)
+    {
         $em = $this->getDoctrine()->getManager();
 
         $grade = null;
         $i = 0;
         while ($i < count($grades) and $grade == null) {
             $current = $grades[$i];
-            if ($current->getCriterion()->getId() == $criterionId and $current->getCorrection()->getId() == $correction->getId()) {
+            if (
+                $current->getCriterion()->getId() == $criterionId
+                and $current->getCorrection()->getId() == $correction->getId()
+            ) {
                 $grade = $current;
             }
             $i++;
@@ -861,7 +1078,10 @@ class DropzoneController extends Controller {
         $em->persist($correction);
         $em->flush();
 
-        $this->getRequest()->getSession()->getFlashBag()->add('success', $this->get('translator')->trans('Your correction has been saved'));
+        $this->getRequest()->getSession()->getFlashBag()->add(
+            'success',
+            $this->get('translator')->trans('Your correction has been saved')
+        );
 
         if ($admin === true) {
             return $this->redirect(
@@ -891,9 +1111,9 @@ class DropzoneController extends Controller {
         $correction->setTotalGrade(null);
 
         $nbCriteria = count($dropzone->getPeerReviewCriteria());
-        $maxGrade = $dropzone->getTotalCriteriaColumn()-1;
+        $maxGrade = $dropzone->getTotalCriteriaColumn() - 1;
         $sumGrades = 0;
-        foreach($correction->getGrades() as $grade) {
+        foreach ($correction->getGrades() as $grade) {
             ($grade->getValue() > $maxGrade) ? $sumGrades += $maxGrade : $sumGrades += $grade->getValue();
         }
 
@@ -936,7 +1156,12 @@ class DropzoneController extends Controller {
 
         $correction = $this->getCorrection($dropzone, $user);
         if ($correction === null) {
-            $this->getRequest()->getSession()->getFlashBag()->add('error', $this->get('translator')->trans('Unfortunately there is no copy to correct for the moment. Please try again later'));
+            $this->getRequest()->getSession()->getFlashBag()->add(
+                'error',
+                $this
+                    ->get('translator')
+                    ->trans('Unfortunately there is no copy to correct for the moment. Please try again later')
+            );
 
             return $this->redirect(
                 $this->generateUrl(
@@ -958,13 +1183,20 @@ class DropzoneController extends Controller {
         $oldData = array();
         $grades = array();
         if ($correction !== null) {
-            $grades = $em->getRepository('IcapDropzoneBundle:Grade')->findByCriteriaAndCorrection($pager->getCurrentPageResults(), $correction);
-            foreach($grades as $grade) {
-                $oldData[$grade->getCriterion()->getId()] = ($grade->getValue() >= $dropzone->getTotalCriteriaColumn()) ? ($dropzone->getTotalCriteriaColumn()-1) : $grade->getValue();
+            $grades = $em
+                ->getRepository('IcapDropzoneBundle:Grade')
+                ->findByCriteriaAndCorrection($pager->getCurrentPageResults(), $correction);
+            foreach ($grades as $grade) {
+                $oldData[$grade->getCriterion()->getId()] = ($grade->getValue() >= $dropzone->getTotalCriteriaColumn())
+                    ? ($dropzone->getTotalCriteriaColumn() - 1) : $grade->getValue();
             }
         }
 
-        $form = $this->createForm(new CorrectCriteriaPageType(), $oldData, array('criteria' => $pager->getCurrentPageResults(), 'totalChoice' => $dropzone->getTotalCriteriaColumn()));
+        $form = $this->createForm(
+            new CorrectCriteriaPageType(),
+            $oldData,
+            array('criteria' => $pager->getCurrentPageResults(), 'totalChoice' => $dropzone->getTotalCriteriaColumn())
+        );
 
         if ($this->getRequest()->isMethod('POST') and $correction !== null) {
             $form->handleRequest($this->getRequest());
@@ -981,7 +1213,7 @@ class DropzoneController extends Controller {
                             'icap_dropzone_correct_paginated',
                             array(
                                 'resourceId' => $dropzone->getId(),
-                                'page' => ($page+1)
+                                'page' => ($page + 1)
                             )
                         )
                     );
@@ -1008,10 +1240,10 @@ class DropzoneController extends Controller {
             $view,
             array(
                 'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+                '_resource' => $dropzone,
                 'dropzone' => $dropzone,
                 'correction' => $correction,
                 'pager' => $pager,
-                'pathArray' => $dropzone->getPathArray(),
                 'form' => $form->createView(),
                 'admin' => false,
                 'edit' => true
@@ -1042,7 +1274,16 @@ class DropzoneController extends Controller {
 
         $correction = $this->getCorrection($dropzone, $user);
         if ($correction === null) {
-            $this->getRequest()->getSession()->getFlashBag()->add('error', $this->get('translator')->trans('Unfortunately there is no copy to correct for the moment. Please try again later'));
+            $this
+                ->getRequest()
+                ->getSession()
+                ->getFlashBag()
+                ->add(
+                    'error',
+                    $this
+                        ->get('translator')
+                        ->trans('Unfortunately there is no copy to correct for the moment. Please try again later')
+                );
 
             return $this->redirect(
                 $this->generateUrl(
@@ -1071,9 +1312,9 @@ class DropzoneController extends Controller {
             $view,
             array(
                 'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+                '_resource' => $dropzone,
                 'dropzone' => $dropzone,
                 'correction' => $correction,
-                'pathArray' => $dropzone->getPathArray(),
                 'form' => $form->createView(),
                 'nbPages' => $pager->getNbPages(),
                 'admin' => false,
@@ -1084,8 +1325,9 @@ class DropzoneController extends Controller {
 
     private function addDropsStats($dropzone, $array)
     {
-        $array['nbDropCorrected'] = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop')->countDropsFullyCorrected($dropzone);
-        $array['nbDrop'] = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop')->countDrops($dropzone);
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
+        $array['nbDropCorrected'] = $dropRepo->countDropsFullyCorrected($dropzone);
+        $array['nbDrop'] = $dropRepo->countDrops($dropzone);
 
         return $array;
     }
@@ -1121,7 +1363,7 @@ class DropzoneController extends Controller {
         $dropsQuery = $dropRepo->getDropsFullyCorrectedOrderByUserQuery($dropzone);
 
         $adapter = new DoctrineORMAdapter($dropsQuery);
-        $pager   = new Pagerfanta($adapter);
+        $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage(self::DROP_PER_PAGE);
         try {
             $pager->setCurrentPage($page);
@@ -1143,8 +1385,8 @@ class DropzoneController extends Controller {
 
         return $this->addDropsStats($dropzone, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
             'dropzone' => $dropzone,
-            'pathArray' => $dropzone->getPathArray(),
             'pager' => $pager
         ));
     }
@@ -1174,7 +1416,7 @@ class DropzoneController extends Controller {
         $dropsQuery = $dropRepo->getDropsFullyCorrectedOrderByDropDateQuery($dropzone);
 
         $adapter = new DoctrineORMAdapter($dropsQuery);
-        $pager   = new Pagerfanta($adapter);
+        $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage(self::DROP_PER_PAGE);
         try {
             $pager->setCurrentPage($page);
@@ -1196,8 +1438,8 @@ class DropzoneController extends Controller {
 
         return $this->addDropsStats($dropzone, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
             'dropzone' => $dropzone,
-            'pathArray' => $dropzone->getPathArray(),
             'pager' => $pager
         ));
     }
@@ -1227,7 +1469,7 @@ class DropzoneController extends Controller {
         $dropsQuery = $dropRepo->getDropsAwaitingCorrectionQuery($dropzone);
 
         $adapter = new DoctrineORMAdapter($dropsQuery);
-        $pager   = new Pagerfanta($adapter);
+        $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage(self::DROP_PER_PAGE);
         try {
             $pager->setCurrentPage($page);
@@ -1248,11 +1490,11 @@ class DropzoneController extends Controller {
         }
 
         return $this->addDropsStats($dropzone, array(
-                'workspace' => $dropzone->getResourceNode()->getWorkspace(),
-                'dropzone' => $dropzone,
-                'pathArray' => $dropzone->getPathArray(),
-                'pager' => $pager
-            ));
+            'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
+            'dropzone' => $dropzone,
+            'pager' => $pager,
+        ));
     }
 
     /**
@@ -1274,7 +1516,7 @@ class DropzoneController extends Controller {
         $form = $this->createForm(new DropType(), $drop);
 
         $previousPath = 'icap_dropzone_drops_by_user_paginated';
-        if($tab == 1) {
+        if ($tab == 1) {
             $previousPath = 'icap_dropzone_drops_by_date_paginated';
         } elseif ($tab == 2) {
             $previousPath = 'icap_dropzone_drops_awaiting_paginated';
@@ -1306,8 +1548,8 @@ class DropzoneController extends Controller {
 
         return $this->render($view, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
             'dropzone' => $dropzone,
-            'pathArray' => $dropzone->getPathArray(),
             'drop' => $drop,
             'form' => $form->createView(),
             'previousPath' => $previousPath,
@@ -1331,12 +1573,15 @@ class DropzoneController extends Controller {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
 
-        $drop = $this->getDoctrine()->getRepository('IcapDropzoneBundle:Drop')->getDropAndCorrectionsAndDocumentsAndUser($dropzone, $dropId);
+        $drop = $this
+            ->getDoctrine()
+            ->getRepository('IcapDropzoneBundle:Drop')
+            ->getDropAndCorrectionsAndDocumentsAndUser($dropzone, $dropId);
 
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
             'dropzone' => $dropzone,
-            'pathArray' => $dropzone->getPathArray(),
             'drop' => $drop,
             'user' => $user
         );
@@ -1362,7 +1607,10 @@ class DropzoneController extends Controller {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
 
-        $correction = $this->getDoctrine()->getRepository('IcapDropzoneBundle:Correction')->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
+        $correction = $this
+            ->getDoctrine()
+            ->getRepository('IcapDropzoneBundle:Correction')
+            ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
 
         $edit = $state == 'edit';
 
@@ -1382,13 +1630,24 @@ class DropzoneController extends Controller {
         $oldData = array();
         $grades = array();
         if ($correction !== null) {
-            $grades = $em->getRepository('IcapDropzoneBundle:Grade')->findByCriteriaAndCorrection($pager->getCurrentPageResults(), $correction);
-            foreach($grades as $grade) {
-                $oldData[$grade->getCriterion()->getId()] = ($grade->getValue() >= $dropzone->getTotalCriteriaColumn()) ? ($dropzone->getTotalCriteriaColumn()-1) : $grade->getValue();
+            $grades = $em
+                ->getRepository('IcapDropzoneBundle:Grade')
+                ->findByCriteriaAndCorrection($pager->getCurrentPageResults(), $correction);
+            foreach ($grades as $grade) {
+                $oldData[$grade->getCriterion()->getId()] = ($grade->getValue() >= $dropzone->getTotalCriteriaColumn())
+                    ? ($dropzone->getTotalCriteriaColumn() - 1) : $grade->getValue();
             }
         }
 
-        $form = $this->createForm(new CorrectCriteriaPageType(), $oldData, array('edit' => $edit, 'criteria' => $pager->getCurrentPageResults(), 'totalChoice' => $dropzone->getTotalCriteriaColumn()));
+        $form = $this->createForm(
+            new CorrectCriteriaPageType(),
+            $oldData,
+            array(
+                'edit' => $edit,
+                'criteria' => $pager->getCurrentPageResults(),
+                'totalChoice' => $dropzone->getTotalCriteriaColumn()
+            )
+        );
 
         if ($edit) {
             if ($this->getRequest()->isMethod('POST') and $correction !== null) {
@@ -1415,7 +1674,7 @@ class DropzoneController extends Controller {
                                     'resourceId' => $dropzone->getId(),
                                     'state' => 'edit',
                                     'correctionId' => $correction->getId(),
-                                    'page' => ($page+1)
+                                    'page' => ($page + 1)
                                 )
                             )
                         );
@@ -1445,10 +1704,10 @@ class DropzoneController extends Controller {
             $view,
             array(
                 'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+                '_resource' => $dropzone,
                 'dropzone' => $dropzone,
                 'correction' => $correction,
                 'pager' => $pager,
-                'pathArray' => $dropzone->getPathArray(),
                 'form' => $form->createView(),
                 'admin' => true,
                 'edit' => $edit,
@@ -1471,7 +1730,10 @@ class DropzoneController extends Controller {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
 
-        $correction = $this->getDoctrine()->getRepository('IcapDropzoneBundle:Correction')->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
+        $correction = $this
+            ->getDoctrine()
+            ->getRepository('IcapDropzoneBundle:Correction')
+            ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
 
         $edit = $state == 'edit';
 
@@ -1498,9 +1760,9 @@ class DropzoneController extends Controller {
             $view,
             array(
                 'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+                '_resource' => $dropzone,
                 'dropzone' => $dropzone,
                 'correction' => $correction,
-                'pathArray' => $dropzone->getPathArray(),
                 'form' => $form->createView(),
                 'nbPages' => $pager->getNbPages(),
                 'admin' => true,
@@ -1600,7 +1862,10 @@ class DropzoneController extends Controller {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
 
-        $this->getDoctrine()->getRepository('IcapDropzoneBundle:Correction')->invalidateAllCorrectionForADrop($dropzone, $drop);
+        $this
+            ->getDoctrine()
+            ->getRepository('IcapDropzoneBundle:Correction')
+            ->invalidateAllCorrectionForADrop($dropzone, $drop);
 
         return $this->redirect(
             $this->generateUrl(
@@ -1644,7 +1909,11 @@ class DropzoneController extends Controller {
                 $em->persist($correction);
                 $em->flush();
 
-                $this->getRequest()->getSession()->getFlashBag()->add('success', $this->get('translator')->trans('Your report has been saved'));
+                $this
+                    ->getRequest()
+                    ->getSession()
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('Your report has been saved'));
 
                 return $this->redirect(
                     $this->generateUrl(
@@ -1664,26 +1933,26 @@ class DropzoneController extends Controller {
 
         return $this->render($view, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
             'dropzone' => $dropzone,
             'drop' => $drop,
             'correction' => $correction,
-            'pathArray' => $dropzone->getPathArray(),
             'form' => $form->createView(),
         ));
     }
 
     /**
      * @Route(
-     *      "/{resourceId}/remove/report/{dropId}/{state}/{correctionId}/{invalidate}",
+     *      "/{resourceId}/remove/report/{dropId}/{correctionId}/{invalidate}",
      *      name="icap_dropzone_remove_report",
-     *      requirements={"resourceId" = "\d+", "dropId" = "\d+", "correctionId" = "\d+", "state" = "show|edit", "invalidate" = "0|1"}
+     *      requirements={"resourceId" = "\d+", "dropId" = "\d+", "correctionId" = "\d+", "invalidate" = "0|1"}
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
      * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
      * @Template()
      */
-    public function removeReportAction($dropzone, $drop, $correction, $state, $invalidate)
+    public function removeReportAction(Dropzone $dropzone, Drop $drop, Correction $correction, $invalidate)
     {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
@@ -1720,7 +1989,7 @@ class DropzoneController extends Controller {
     /**
      * @Route(
      *      "/{resourceId}/recalculate/score/{correctionId}",
-     *      name="icap_dropzone_remove_report",
+     *      name="icap_dropzone_recalculate_score",
      *      requirements={"resourceId" = "\d+", "correctionId" = "\d+"}
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
@@ -1747,5 +2016,47 @@ class DropzoneController extends Controller {
                 )
             )
         );
+    }
+
+    /**
+     * @Route(
+     *      "/{resourceId}/open/resource/{documentId}",
+     *      name="icap_dropzone_open_resource",
+     *      requirements={"resourceId" = "\d+", "documentId" = "\d+"}
+     * )
+     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("document", class="IcapDropzoneBundle:Document", options={"id" = "documentId"})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
+     * @Template()
+     */
+    public function openResourceAction(Dropzone $dropzone, Document $document, $user)
+    {
+        $this->isAllowToOpen($dropzone);
+
+        if ($document->getType() == 'url') {
+            return $this->redirect($document->getUrl());
+        } elseif (
+            $document->getType() == 'text'
+            or $document->getType() == 'resource'
+            or $document->getType() == 'file'
+        ) {
+            $this->get('claroline.temporary_access_resource_manager')->addTemporaryAccess($document->getResourceNode(), $user);
+
+            if ($document->getResourceNode()->getResourceType()->getName() == 'file') {
+                return $this->redirect(
+                    $this->generateUrl('claro_resource_download') . '?ids[]=' . $document->getResourceNode()->getId()
+                );
+            } else {
+                return $this->redirect(
+                    $this->generateUrl(
+                        'claro_resource_open',
+                        array(
+                            'resourceType' => $document->getResourceNode()->getResourceType()->getName(),
+                            'node' => $document->getResourceNode()->getId()
+                        )
+                    )
+                );
+            }
+        }
     }
 }

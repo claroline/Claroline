@@ -1,5 +1,5 @@
 {% extends "IcapDropzoneBundle::layout.html.twig" %}
-{% block dropzone_breadcrumb %}
+{% block resourceBreadcrumb %}
     <li><a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-file"></span> {{ dropzone.resourceNode.name }}</a></li>
     <li><a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}">{{ 'List of copies'|trans }}</a></li>
     <li class="active">{{ 'Retail copy of %firstName% %lastName%'|trans({'%firstName%': drop.user.firstName, '%lastName%': drop.user.lastName}) }}</li>
@@ -77,7 +77,7 @@
                         </h3>
                         <div class="col-md-4">
                             <div class="btn-group pull-right">
-                                <a href="{{ path('icap_dropzone_remove_report', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}" class="btn btn-default btn-xs">{{ 'Recalculate the score'|trans }}</a>
+                                <a href="{{ path('icap_dropzone_recalculate_score', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}" class="btn btn-default btn-xs">{{ 'Recalculate the score'|trans }}</a>
                                 {% if correction.editable %}
                                     <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': 'edit'}) }}" class="btn btn-default btn-xs">{{ 'dropzone_edit'|trans }}</a>
                                 {% endif %}

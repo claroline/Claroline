@@ -14,11 +14,22 @@
                 </div>
             {% endif %}
             <div class="{{ input_col_size }}">
-                {{ form_widget(form) }}
-                {{ form_errors(form) }}
-                {% if help is defined and help %}
-                    <div class="help-block">{{ help }}</div>
-                {% endif %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <strong>{{ 'Not at all'|trans }}</strong>
+                        <strong class="pull-right">{{ 'Entirely'|trans }}</strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 column-container-div">
+                        {{ form_widget(form) }}
+                        {{ form_errors(form) }}
+                        {% if help is defined and help %}
+                            <div class="help-block">{{ help }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
             </div>
         </div>
     {% endspaceless %}
@@ -26,14 +37,14 @@
 
 {% block choice_widget_expanded %}
     {% spaceless %}
-        <div {{ block('widget_container_attributes') }}>
+        <span {{ block('widget_container_attributes') }}>
             {% for child in form %}
                 {{ form.vars.multiple }}
                 <div class="radio-inline {{ multiple ? 'checkbox' : 'radio' }}" style="margin-left: 0px;">
                     {{ form_widget(child) }}
                 </div>
             {% endfor %}
-        </div>
+        </span>
     {% endspaceless %}
 {% endblock choice_widget_expanded %}
 

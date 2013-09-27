@@ -6,3 +6,10 @@ plugin:
           class: Icap\DropzoneBundle\Entity\Dropzone
           is_visible: true
           is_browsable: false
+          actions:
+            - name: open
+              menu_name: open_dropzone
+            - name: edit
+              menu_name: edit_dropzone
+            - name: edit
+              menu_name: list_dropzone

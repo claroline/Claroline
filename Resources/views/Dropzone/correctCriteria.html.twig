@@ -83,6 +83,15 @@
     </div>
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .column-container-div {
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}}
 {% endblock %}

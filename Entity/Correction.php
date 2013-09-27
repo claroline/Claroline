@@ -7,6 +7,7 @@
 
 namespace Icap\DropzoneBundle\Entity;
 
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -218,7 +219,7 @@ class Correction {
     }
 
     /**
-     * @param mixed $user
+     * @param User $user
      */
     public function setUser($user)
     {
@@ -226,7 +227,7 @@ class Correction {
     }
 
     /**
-     * @return mixed
+     * @return User
      */
     public function getUser()
     {
@@ -250,7 +251,7 @@ class Correction {
     }
 
     /**
-     * @param mixed $drop
+     * @param Drop $drop
      */
     public function setDrop($drop)
     {
@@ -258,7 +259,7 @@ class Correction {
     }
 
     /**
-     * @return mixed
+     * @return Drop
      */
     public function getDrop()
     {
@@ -282,7 +283,7 @@ class Correction {
     }
 
     /**
-     * @param mixed $dropzone
+     * @param Dropzone $dropzone
      */
     public function setDropzone($dropzone)
     {
@@ -290,7 +291,7 @@ class Correction {
     }
 
     /**
-     * @return mixed
+     * @return Dropzone
      */
     public function getDropzone()
     {

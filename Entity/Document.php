@@ -7,10 +7,11 @@
 
 namespace Icap\DropzoneBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Icap\DropzoneBundle\Repository\DocumentRepository")
  * @ORM\Table(name="icap__dropzonebundle_document")
  */
 class Document {
@@ -21,13 +22,13 @@ class Document {
      */
     protected $id;
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=false)
      */
-    protected $url;
+    protected $type;
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $path;
+    protected $url;
     /**
      * @ORM\ManyToOne(
      *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode"
@@ -40,7 +41,7 @@ class Document {
      *      targetEntity="Icap\DropzoneBundle\Entity\Drop",
      *      inversedBy="documents"
      * )
-     * @ORM\JoinColumn(name="drop_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="drop_id", referencedColumnName="id", nullable=false)
      */
     protected $drop;
 
@@ -61,23 +62,7 @@ class Document {
     }
 
     /**
-     * @return mixed
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    /**
-     * @param mixed $path
-     */
-    public function setPath($path)
-    {
-        $this->path = $path;
-    }
-
-    /**
-     * @return mixed
+     * @return ResourceNode
      */
     public function getResourceNode()
     {
@@ -85,7 +70,7 @@ class Document {
     }
 
     /**
-     * @param mixed $resourceNode
+     * @param ResourceNode $resourceNode
      */
     public function setResourceNode($resourceNode)
     {
@@ -109,7 +94,7 @@ class Document {
     }
 
     /**
-     * @param mixed $drop
+     * @param Drop $drop
      */
     public function setDrop($drop)
     {
@@ -117,10 +102,26 @@ class Document {
     }
 
     /**
-     * @return mixed
+     * @return Drop
      */
     public function getDrop()
     {
         return $this->drop;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }
