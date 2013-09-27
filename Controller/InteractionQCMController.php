@@ -164,7 +164,8 @@ class InteractionQCMController extends Controller
 
         return $this->render(
             'UJMExoBundle:Question:new.html.twig', array(
-            'formWithError' => $formWithError
+            'formWithError' => $formWithError,
+            'exoID'  => $exoID
             )
         );
     }
