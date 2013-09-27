@@ -248,7 +248,7 @@ class AdminController extends Controller
                         }
                     } elseif (null !== $userName) {
                         list($firstName, $lastName) = explode(' ', $userName);
-                        $user = $doctrine->getRepository('ClarolineCoreBundle:User')->findOneByUsername($firstName . $lastName);
+                        $user = $doctrine->getRepository('ClarolineCoreBundle:User')->findOneBy(array('firstName' => $firstName, 'lastName' => $lastName));
 
                         if (null !== $user) {
                             $users[] = $user;
@@ -259,7 +259,7 @@ class AdminController extends Controller
                     $badgeManager = $this->get('claroline.manager.badge');
                     $awardedBadge = $badgeManager->addBadgeToUsers($badge, $users);
 
-                    $flashMessageType = 'alert';
+                    $flashMessageType = 'error';
 
                     if (0 < $awardedBadge) {
                         $flashMessageType = 'success';
