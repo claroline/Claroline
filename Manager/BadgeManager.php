@@ -22,12 +22,12 @@ class BadgeManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "entityManager"   = @DI\Inject("doctrine.orm.entity_manager")
+     *     "entityManager" = @DI\Inject("doctrine.orm.entity_manager")
      * })
      */
     public function __construct(EntityManager $entityManager)
     {
-        $this->entityManager   = $entityManager;
+        $this->entityManager = $entityManager;
     }
 
     /**
