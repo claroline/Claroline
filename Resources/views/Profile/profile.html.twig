@@ -46,7 +46,7 @@
         </div>
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">{{ 'badges'|trans({}, 'platform') }}</h3>
+                <h3 class="panel-title">{{ 'badges'|trans({}, 'badge') }}</h3>
             </div>
             <div class="panel panel-body">
                 {% include 'ClarolineCoreBundle:Badge/Badge:display.html.twig' with {'badgeUrl': 'claro_view_badge', 'paginationurl': 'claro_profile_view', 'routeParams': {'userId': user.id}} %}
