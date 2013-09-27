@@ -62,7 +62,7 @@
 
     <ul class="nodes badge_list">
         {% for badge in pager %}
-        <li class="node-thumbnail node col-md-2 ui-state-default">
+        <li class="node-thumbnail node ui-state-default">
             <a href="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}" title="{{ badge.name(language) }}" class="thumbnail">
                 <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name(language) }}" />
             </a>
@@ -90,7 +90,7 @@
             </div>
         </li>
         {% endfor %}
-        <li class="node-thumbnail node col-md-2">
+        <li class="node-thumbnail node">
             <a href="{{ path('claro_admin_badges_add') }}" title="{{ 'add_badge'|trans({}, 'badge') }}" class="add_button btn btn-lg col-md-12">
                 <img class="badge_image" src="{{ asset('bundles/clarolinecore/images/add-badge.png') }}" alt="{{ 'add_badge'|trans }}" />
             </a>

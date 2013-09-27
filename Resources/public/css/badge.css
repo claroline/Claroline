@@ -1,21 +1,21 @@
-.badge_list .thumbnail {
+.badge_list .node-thumbnail .thumbnail {
+  width: 150px;
+  font-size: 80px;
+  text-align: center;
   height: 110px;
 }
-.badge_list .add_button {
+.badge_list .node-thumbnail .add_button {
   height: 110px;
+  width: 150px;
   border: 3px dashed #8F8F8F;
   padding-top: 20px;
 }
-.badge_list .add_button:hover {
+.badge_list .node-thumbnail .add_button:hover {
   background-color: #f5f5f5;
   border-color: #428bca;
 }
 .nodes {
   padding: 0;
-}
-.nodes .node-thumbnail a.thumbnail {
-  font-size: 80px;
-  text-align: center;
 }
 .thumbnails.badge_user_list > li {
   margin-left: 5px;
