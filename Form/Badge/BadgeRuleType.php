@@ -50,29 +50,6 @@ class BadgeRuleType extends AbstractType
                     ),
                     'data'  => 1
                 )
-            )
-            ->add(
-                'period', 'choice', array(
-                    'choices' => array(
-                        'day'   => 'day',
-                        'week'  => 'week',
-                        'month' => 'month',
-                        'year'  => 'year'
-                    ),
-                    'label'    => 'badge_form_period',
-                    'theme_options'      => array(
-                        'label_width' => 'col-md-4'
-                    )
-                )
-            )
-            ->add(
-                'period_duration', 'integer', array(
-                    'label' => 'badge_form_period_duration',
-                    'theme_options'      => array(
-                        'label_width' => 'col-md-4'
-                    ),
-                    'data'  => 1
-                )
             );
     }
 

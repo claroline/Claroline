@@ -32,27 +32,23 @@
                     <div class="tab-pane" id="rule{{ loop.index }}">
                         <h4>{{ 'rule'|trans }} {{ loop.index }}</h4>
 
-                        <div class="form-group">
-                            {{ form_label(rows.children.occurrence) }}
+                        <div class="row">
+                            <div class="col-md-2">
+                                <p class="form-control-static">{{ 'badge_form_execute'|trans }}</p>
+                            </div>
                             <div class="col-md-2">
                                 {{ form_widget(rows.children.occurrence) }}
                             </div>
+                            <div class="col-md-2">
+                                <p class="form-control-static">{{ 'badge_form_times'|trans }}</p>
+                            </div>
                         </div>
-
-                        <div class="form-group">
-                            {{ form_label(rows.children.action) }}
+                        <div class="row">
+                            <div class="col-md-2">
+                                <p class="form-control-static">{{ 'badge_form_action'|trans }}</p>
+                            </div>
                             <div class="col-md-10">
                                 {{ form_widget(rows.children.action) }}
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            {{ form_label(rows.children.period) }}
-                            <div class="col-md-2">
-                                {{ form_widget(rows.children.period_duration) }}
-                            </div>
-                            <div class="col-md-3">
-                                {{ form_widget(rows.children.period) }}
                             </div>
                         </div>
                     </div>
@@ -73,27 +69,23 @@
         <div class="tab-pane" id="rule__name__">
             <h4>{{ 'rule'|trans }} __name__</h4>
 
-            <div class="form-group">
-                {{ form_label(rows.children.occurrence) }}
+            <div class="row">
+                <div class="col-md-2">
+                    <p class="form-control-static">{{ 'badge_form_execute'|trans }}</p>
+                </div>
                 <div class="col-md-2">
                     {{ form_widget(rows.children.occurrence) }}
                 </div>
+                <div class="col-md-2">
+                    <p class="form-control-static">{{ 'badge_form_times'|trans }}</p>
+                </div>
             </div>
-
-            <div class="form-group">
-                {{ form_label(rows.children.action) }}
+            <div class="row">
+                <div class="col-md-2">
+                    <p class="form-control-static">{{ 'badge_form_action'|trans }}</p>
+                </div>
                 <div class="col-md-10">
                     {{ form_widget(rows.children.action) }}
-                </div>
-            </div>
-
-            <div class="form-group">
-                {{ form_label(rows.children.period) }}
-                <div class="col-md-2">
-                    {{ form_widget(rows.children.period_duration) }}
-                </div>
-                <div class="col-md-3">
-                    {{ form_widget(rows.children.period) }}
                 </div>
             </div>
         </div>

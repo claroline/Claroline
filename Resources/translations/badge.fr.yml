@@ -48,7 +48,6 @@ badge_form_badgeRules: "Règles d'attribution"
 badge_form_execute: "Exécuter"
 badge_form_times: "fois"
 badge_form_action: "l'action"
-badge_form_period: 'sur une période de'
 badge_award_form_group: 'Groupe'
 badge_award_form_user: 'Utilisateur'
 badge_expired_on_date: 'Expire le %expirationDate%'

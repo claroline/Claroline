@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/19 10:59:18
+ * Generation date: 2013/09/26 04:08:29
  */
-class Version20130919105916 extends AbstractMigration
+class Version20130926160827 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -20,8 +20,6 @@ class Version20130919105916 extends AbstractMigration
                 badge_id NUMBER(10) NOT NULL, 
                 occurrence NUMBER(5) NOT NULL, 
                 action VARCHAR2(255) NOT NULL, 
-                period VARCHAR2(255) NOT NULL, 
-                periodDuration NUMBER(5) NOT NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -63,6 +61,24 @@ class Version20130919105916 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE claro_badge_claim 
+            ADD CONSTRAINT FK_487A496AA76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_claim 
+            ADD CONSTRAINT FK_487A496AF7A2C2FC FOREIGN KEY (badge_id) 
+            REFERENCES claro_badge (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_translation 
+            ADD CONSTRAINT FK_849BC831F7A2C2FC FOREIGN KEY (badge_id) 
+            REFERENCES claro_badge (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
             ALTER TABLE claro_badge 
             ADD (
                 automatic_award NUMBER(1) DEFAULT NULL
@@ -78,6 +94,18 @@ class Version20130919105916 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_badge 
             DROP (automatic_award)
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_claim 
+            DROP CONSTRAINT FK_487A496AA76ED395
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_claim 
+            DROP CONSTRAINT FK_487A496AF7A2C2FC
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_translation 
+            DROP CONSTRAINT FK_849BC831F7A2C2FC
         ");
     }
 }

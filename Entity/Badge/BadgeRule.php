@@ -45,20 +45,6 @@ class BadgeRule
     protected $action;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(type="string", nullable=false)
-     */
-    protected $period;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(type="smallint", nullable=false)
-     */
-    protected $periodDuration;
-
-    /**
      * @return int
      */
     public function getId()
@@ -125,46 +111,4 @@ class BadgeRule
     {
         return $this->occurrence;
     }
-
-    /**
-     * @param string $period
-     *
-     * @return BadgeRule
-     */
-    public function setPeriod($period)
-    {
-        $this->period = $period;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPeriod()
-    {
-        return $this->period;
-    }
-
-    /**
-     * @param int $periodDuration
-     *
-     * @return BadgeRule
-     */
-    public function setPeriodDuration($periodDuration)
-    {
-        $this->periodDuration = $periodDuration;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPeriodDuration()
-    {
-        return $this->periodDuration;
-    }
-
-
 }
