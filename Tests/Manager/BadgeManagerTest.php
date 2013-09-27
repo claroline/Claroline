@@ -18,7 +18,6 @@ class BadgeManagerTest extends MockeryTestCase
     {
         parent::setUp();
 
-        $this->badgeRepository = m::mock('Claroline\CoreBundle\Repository\Badge\BadgeRepository');
         $this->entityManager   = m::mock('Doctrine\ORM\EntityManager', function($mock) {
             $mock
                 ->shouldReceive('persist')
@@ -26,7 +25,7 @@ class BadgeManagerTest extends MockeryTestCase
                 ->shouldReceive('flush')
                 ->andReturn(null);
         });
-        $this->manager         = new BadgeManager($this->badgeRepository, $this->entityManager);
+        $this->manager         = new BadgeManager($this->entityManager);
     }
 
     public function testAddBadgeTo3Users()

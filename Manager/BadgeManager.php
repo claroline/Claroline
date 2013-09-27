@@ -14,11 +14,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 class BadgeManager
 {
     /**
-     * @var \Claroline\CoreBundle\Repository\Badge\BadgeRepository
-     */
-    protected $badgeRepository;
-
-    /**
      * @var \Doctrine\ORM\EntityManager
      */
     protected $entityManager;
@@ -27,13 +22,11 @@ class BadgeManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "badgeRepository" = @DI\Inject("claroline.repository.badge"),
      *     "entityManager"   = @DI\Inject("doctrine.orm.entity_manager")
      * })
      */
-    public function __construct(BadgeRepository $badgeRepository, EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->badgeRepository = $badgeRepository;
         $this->entityManager   = $entityManager;
     }
 
