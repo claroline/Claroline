@@ -438,10 +438,12 @@ class PathController extends Controller
         $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(1));
         $resourceNode->setName('Path');
 
+        $pathName = $this->get('request')->request->get('pathName');
         $content = $this->get('request')->request->get('path');
 
         $new_path = new Path;
         $new_path->setPath($content);
+        $resourceNode->setName($pathName);
         $new_path->setResourceNode($resourceNode);
 
         $manager->persist($resourceNode);
