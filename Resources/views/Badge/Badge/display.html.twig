@@ -1,13 +1,14 @@
-<ul class="list-unstyled list-inline thumbnails badge_user_list">
-{% for badge in pager.currentPageResults %}
-    <li>
+<ul class="nodes badge_list display_list">
+    {% for badge in pager.currentPageResults %}
+    <li class="node-thumbnail node">
         <a href="{{ path(badgeUrl, {'id': badge.id}) }}" title="{{ badge.name(language) }}" class="thumbnail">
             <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name(language) }}" />
+            <span class="node-name">{{ badge.name(language) }}</span>
         </a>
     </li>
-{% else %}
+    {% else %}
     <li>{{ 'no_badges'|trans({}, 'badge') }}</li>
-{% endfor %}
+    {% endfor %}
 </ul>
 
 {% if pager.haveToPaginate %}

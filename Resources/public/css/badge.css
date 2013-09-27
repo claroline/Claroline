@@ -1,8 +1,14 @@
 .badge_list .node-thumbnail .thumbnail {
   width: 150px;
-  font-size: 80px;
-  text-align: center;
   height: 110px;
+}
+.badge_list .node-thumbnail .thumbnail .node-name {
+  color: black;
+  text-decoration: none;
+}
+.badge_list .node-thumbnail .thumbnail:hover {
+  color: black;
+  text-decoration: none;
 }
 .badge_list .node-thumbnail .add_button {
   height: 110px;
