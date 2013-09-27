@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller\Badge;
 
+use Claroline\CoreBundle\Badge\BadgeRuleChecker;
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
 use Claroline\CoreBundle\Form\Badge\ClaimBadgeType;
@@ -87,9 +88,13 @@ class ProfileController extends Controller
 
         $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
 
+        $badgeRuleChecker = new BadgeRuleChecker($this->getDoctrine()->getRepository('ClarolineCoreBundle:Log\Log'));
+        $checkedLogs = $badgeRuleChecker->checkBadge($badge, $user);
+
         return array(
-            'userBadge' => $userBadge,
-            'badge'     => $badge
+            'userBadge'   => $userBadge,
+            'badge'       => $badge,
+            'checkedLogs' => $checkedLogs
         );
     }
 

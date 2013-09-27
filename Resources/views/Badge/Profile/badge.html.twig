@@ -15,16 +15,46 @@
             </h3>
         </div>
         <div class="panel-body">
-            <p>Attribué le {{ userBadge.issuedAt|date('date_format'|trans({}, 'platform')) }} par <a href="{{ path('claro_profile_view', {'userId': userBadge.issuer.id}) }}" title="{{ userBadge.issuer.firstname }} {{ userBadge.issuer.lastname }}">{{ userBadge.issuer.firstname }} {{ userBadge.issuer.lastname }}</a></p>
-            <div class="media">
-                <a class="pull-left" href="#">
-                    <img class="media-object badge_image_informations" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
-                </a>
-                <div class="media-body">
-                    <h4 class="media-heading">{{ badge.description }}</h4>
-                    {{ badge.criteria|raw }}
+            <div class="badge_infos">
+                {% if null == userBadge.issuer %}
+                    <p>{{ 'badge_awarded_automatically_on'|trans({'%awardingDate%': userBadge.issuedAt|date('date_format'|trans({}, 'platform'))}, 'badge') }}</p>
+                {% else %}
+                    <p>{{ 'badge_awarded_on_by'|trans({'%awardingDate%': userBadge.issuedAt|date('date_format'|trans({}, 'platform')), '%awardingIssuer%': '<a href="' ~ path("claro_profile_view", {"userId": userBadge.issuer.id}) ~ '" title="' ~ userBadge.issuer.firstname ~ ' ' ~ userBadge.issuer.lastname ~ '">' ~ userBadge.issuer.firstname ~ ' ' ~ userBadge.issuer.lastname ~ '</a>'}, 'badge')|raw }}</p>
+                {% endif %}
+                <div class="media">
+                    <img class="media-object pull-left badge_image_informations" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
+                    <div class="media-body">
+                        <h4 class="media-heading">{{ badge.description }}</h4>
+                        {{ badge.criteria|raw }}
+                    </div>
                 </div>
             </div>
+            {% if 0 < badge.badgeRules|length %}
+                {% if false == checkedLogs %}
+                <div class="alert alert-danger">{{ 'badge_awarding_rules_not_respected'|trans({}, 'badge') }}.</div>
+                {% else %}
+                <div class="badge_rules_resources">
+                    <h4>Actions qui ont amené à l'attribution de ce badge :</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>{{ 'action'|trans({}, 'platform') }}</th>
+                                <th>{{ 'resource'|trans({}, 'platform') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for checkedLog in checkedLogs %}
+                            {% set action = 'log_' ~ checkedLog.action ~ '_title' %}
+                            <tr>
+                                <td>{{ action|trans({}, 'log') }}</td>
+                                <td>{{ checkedLog.resourceNode.path }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            {% endif %}
         </div>
     </div>
 {% endblock %}

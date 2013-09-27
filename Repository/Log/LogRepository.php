@@ -479,7 +479,7 @@ class LogRepository extends EntityRepository
     {
         $query = $this->getEntityManager()
             ->createQuery(
-                'SELECT l.action, COUNT(l.id) as occurence
+                'SELECT l, COUNT(l.id) as occurence
                 FROM ClarolineCoreBundle:Log\Log l
                 WHERE l.action = :action
                 AND l.doer = :doer

@@ -10,6 +10,9 @@ back_to_users_badge: 'Back to users list'
 back_to_my_badges: 'Back to my badges'
 badge_awarded_to: 'Badge awarded to'
 bagde_awarded_to_none_user: 'Badge awarded to no users'
+badge_awarded_on_by: 'Badge awarded on %awardingDate% by %awardingIssuer%'
+badge_awarded_automatically_on: 'Badge automatically awarded on %awardingDate%'
+badge_awarding_rules_not_respected: "Badge awarding rules not respected"
 award_badge: 'Award the badge'
 unaward: 'Remove award'
 badge_unaward_confirm_title: "Removing of a badge"
