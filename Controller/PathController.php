@@ -160,6 +160,7 @@ class PathController extends Controller
                 foreach ($step2excludedRessources as $step2excludedRessource) {
                     $manager->remove($step2excludedRessource);
                 }
+
                 $manager->remove($step->getResourceNode());
             }
         }
@@ -247,6 +248,7 @@ class PathController extends Controller
             $resourceOrder = 0;
             foreach ($step->resources as $resource) {
                 $resourceOrder++;
+                // juste pour les tests. cette condition ne sera plus nécessaire après
                 if ($resource->resourceId == null) {
                     $step2ressourceNode = new Step2ResourceNode();
                 } else {
@@ -259,7 +261,7 @@ class PathController extends Controller
                 $manager->persist($step2ressourceNode);
             }
 
-            // STEP'S EXCLUDED RESOURCES MANAGEMENT $product = $repository->findOneBy(array('name' => 'foo', 'price' => 19.99));
+            // STEP'S EXCLUDED RESOURCES MANAGEMENT
             foreach ($step->excludedResources as $excludedResource) {
                 $resourceNodeToExclude = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($excludedResource);
                 if (!$alreadyExcluded = $manager->getRepository('InnovaPathBundle:Step2ExcludedResource')
@@ -503,9 +505,7 @@ class PathController extends Controller
     {
         $em = $this->entityManager();
 
-        $resourceNode = $path->getResourceNode();
-
-        $em->remove($resourceNode);
+        $em->remove($path->getResourceNode());
         $em->flush();
 
         return new Response("ok");
@@ -534,7 +534,7 @@ class PathController extends Controller
     public function resourceManager()
     {
         $rm = $this->get('claroline.manager.resource_manager');
-        //$rm = $this->getDoctrine()->getManager();
+
         return $rm;
     }
 

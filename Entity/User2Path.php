@@ -40,13 +40,13 @@ class User2Path
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false)
     */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Path")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Path", inversedBy="users")
+     * @ORM\JoinColumn(nullable=false)
     */
     private $path;
 
