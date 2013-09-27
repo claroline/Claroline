@@ -34,11 +34,12 @@
                 <div class="alert alert-danger">{{ 'badge_awarding_rules_not_respected'|trans({}, 'badge') }}.</div>
                 {% else %}
                 <div class="badge_rules_resources">
-                    <h4>Actions qui ont amené à l'attribution de ce badge :</h4>
-                    <table>
+                    <h4>{{ 'actions_lead_to_badge_awarding'|trans({}, 'badge') }} :</h4>
+                    <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>{{ 'action'|trans({}, 'platform') }}</th>
+                                <th>{{ 'date'|trans({}, 'platform') }}</th>
                                 <th>{{ 'resource'|trans({}, 'platform') }}</th>
                             </tr>
                         </thead>
@@ -47,6 +48,7 @@
                             {% set action = 'log_' ~ checkedLog.action ~ '_title' %}
                             <tr>
                                 <td>{{ action|trans({}, 'log') }}</td>
+                                <td>{{ checkedLog.creationDate|date('date_format'|trans({}, 'platform')) }}</td>
                                 <td>{{ checkedLog.resourceNode.path }}</td>
                             </tr>
                         {% endfor %}

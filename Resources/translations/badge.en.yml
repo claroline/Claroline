@@ -13,6 +13,7 @@ bagde_awarded_to_none_user: 'Badge awarded to no users'
 badge_awarded_on_by: 'Badge awarded on %awardingDate% by %awardingIssuer%'
 badge_awarded_automatically_on: 'Badge automatically awarded on %awardingDate%'
 badge_awarding_rules_not_respected: "Badge awarding rules not respected"
+actions_lead_to_badge_awarding: "Actions that lead to badge awarding"
 award_badge: 'Award the badge'
 unaward: 'Remove award'
 badge_unaward_confirm_title: "Removing of a badge"

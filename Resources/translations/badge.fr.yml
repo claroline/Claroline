@@ -13,6 +13,7 @@ bagde_awarded_to_none_user: 'Badge attribué à aucun utilisateur'
 badge_awarded_on_by: 'Badge attribué le %awardingDate% par %awardingIssuer%'
 badge_awarded_automatically_on: 'Badge attribué automatiquement le %awardingDate%'
 badge_awarding_rules_not_respected: "Règle d'attribution du badge non respectées"
+actions_lead_to_badge_awarding: "Actions qui ont mené à l'attribution de ce badge"
 award_badge: 'Attribuer le badge'
 unaward: 'Désattribuer'
 badge_unaward_confirm_title: "Désattribution d'un badge"
