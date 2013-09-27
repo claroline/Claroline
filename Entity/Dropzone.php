@@ -55,8 +55,10 @@ class Dropzone extends AbstractResource {
     protected $peerReview = false;
     /**
      * @ORM\Column(name="expected_total_correction", type="smallint", nullable=false)
-     * @Assert\LessThanOrEqual(value=10)
-     * @Assert\GreaterThanOrEqual(value=1)
+     * @Assert\Range(
+     *      min = 1,
+     *      max = 10
+     * )
      */
     protected $expectedTotalCorrection = 3;
     /**
@@ -68,9 +70,11 @@ class Dropzone extends AbstractResource {
      */
     protected $displayNotationMessageToLearners = false;
     /**
-     * @ORM\Column(name="minimum_score_to_pass", type="smallint", nullable=false)
-     * @Assert\LessThanOrEqual(value=20)
-     * @Assert\GreaterThanOrEqual(value=0)
+     * @ORM\Column(name="minimum_score_to_pass", type="float", nullable=false)
+     * @Assert\Range(
+     *      min = 0,
+     *      max = 20
+     * )
      */
     protected $minimumScoreToPass = 10;
     /**

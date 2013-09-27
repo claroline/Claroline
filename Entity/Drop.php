@@ -265,7 +265,7 @@ class Drop {
         }
 
         if ($nbFinishedCorrections > 0) {
-            $grade = number_format(($grade / $nbFinishedCorrections));
+            $grade = number_format(($grade / $nbFinishedCorrections), 2);
         } else {
             $grade = -1;
         }

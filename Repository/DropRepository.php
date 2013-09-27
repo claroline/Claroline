@@ -22,6 +22,7 @@ class DropRepository extends EntityRepository {
             "LEFT OUTER JOIN d.corrections AS c \n".
             "WHERE d.dropzone = :dropzone \n".
             "AND c.valid = true \n".
+            "AND c.editable = false \n".
             "GROUP BY d.id \n".
             "HAVING nb_corrections < :expectedTotalCorrection")
             ->setParameter('dropzone', $dropzone)

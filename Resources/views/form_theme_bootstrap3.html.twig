@@ -62,10 +62,10 @@
                 {{ form_errors(form.date) }}
                 {{ form_errors(form.time) }}
                 <div class="{{ date_col_size }}">
-                    {{ form_widget(form.date) }}
+                    {{ form_widget(form.date, {'attr': {'placeholder': 'aaaa-mm-jj'}}) }}
                 </div>
                 <div class="{{ time_col_size }}">
-                    {{ form_widget(form.time) }}
+                    {{ form_widget(form.time, {'attr': {'placeholder': '--:--'}}) }}
                 </div>
             </div>
         {% endif %}

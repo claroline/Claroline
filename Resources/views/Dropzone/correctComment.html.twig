@@ -9,7 +9,7 @@
 
     <div class="container">
         <div class="row">
-            <form method="POST" action="{% if edit == false %}#{% elseif admin == true %}{{ path('icap_dropzone_drops_detail_correction_comment', {'resourceId': dropzone.id, 'state' : edit ? 'edit' : 'show', 'correctionId': correction.id}) }}{% else %}{{ path('icap_dropzone_correct_comment', {'resourceId': dropzone.id}) }}{% endif %}" class="form-horizontal">
+            <form id="correct-form" method="POST" action="{% if edit == false %}#{% elseif admin == true %}{{ path('icap_dropzone_drops_detail_correction_comment', {'resourceId': dropzone.id, 'state' : edit ? 'edit' : 'show', 'correctionId': correction.id}) }}{% else %}{{ path('icap_dropzone_correct_comment', {'resourceId': dropzone.id}) }}{% endif %}" class="form-horizontal">
 
                 {% if edit %}
                     <div class="form-group">
@@ -28,7 +28,7 @@
                         {% if admin == true %}
                             <a href="{{ path('icap_dropzone_drops_detail_correction_paginated', {'resourceId': dropzone.id, 'state' : state, 'correctionId': correction.id, 'page': nbPages}) }}" class="btn btn-default">{{ 'Previous'|trans }}</a>
                         {% else %}
-                            <a href="{{ path('icap_dropzone_correct_paginated', {'resourceId': dropzone.id, 'page': nbPages}) }}" class="btn btn-default">{{ 'Retour'|trans }}</a>
+                            <a href="{{ path('icap_dropzone_correct_paginated', {'resourceId': dropzone.id, 'page': nbPages}) }}" class="btn btn-default">{{ 'Previous'|trans }}</a>
                         {% endif %}
                         <button type= "submit" class="btn btn-primary">{{ 'Save and finished'|trans }}</button>
                     </div>

@@ -58,6 +58,7 @@ class CorrectionRepository extends EntityRepository {
             ->andWhere('correction.user = :user')
             ->andWhere('correction.dropzone = :dropzone')
             ->andWhere('correction.finished = true')
+            ->andWhere('correction.valid = true')
             ->andWhere('correction.editable = false')
             ->setParameter('user', $user)
             ->setParameter('dropzone', $dropzone)

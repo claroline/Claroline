@@ -36,7 +36,7 @@ class DropzoneCommonType extends AbstractType
                 'expanded' => true,
                 'multiple' => false
             ))
-            ->add('expectedTotalCorrection', 'number', array('required' => true))
+            ->add('expectedTotalCorrection', 'integer', array('required' => true))
 
             ->add('displayNotationToLearners', 'checkbox', array('required' => false))
             ->add('displayNotationMessageToLearners', 'checkbox', array('required' => false))
