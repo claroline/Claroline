@@ -19,9 +19,10 @@ use Icap\DropzoneBundle\Entity\Document;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Entity\Grade;
-use Icap\DropzoneBundle\Form\CorrectCriteriaPageType;
 use Icap\DropzoneBundle\Form\CorrectionCommentType;
+use Icap\DropzoneBundle\Form\CorrectionCriteriaPageType;
 use Icap\DropzoneBundle\Form\CorrectionReportType;
+use Icap\DropzoneBundle\Form\CorrectionValidationType;
 use Icap\DropzoneBundle\Form\CriterionDeleteType;
 use Icap\DropzoneBundle\Form\CriterionType;
 use Icap\DropzoneBundle\Form\DocumentDeleteType;
@@ -266,10 +267,23 @@ class DropzoneController extends Controller
                 $em->persist($dropzone);
                 $em->flush();
 
-                $this->getRequest()->getSession()->getFlashBag()->add(
-                    'success',
-                    $this->get('translator')->trans('The evaluation has been successfully saved')
-                );
+                $goBack = $form->get('goBack')->getData();
+                if ($goBack == 0) {
+                    $this->getRequest()->getSession()->getFlashBag()->add(
+                        'success',
+                        $this->get('translator')->trans('The evaluation has been successfully saved')
+                    );
+                } else {
+                    return $this->redirect(
+                        $this->generateUrl(
+                            'icap_dropzone_edit_common',
+                            array(
+                                'resourceId' => $dropzone->getId()
+                            )
+                        )
+                    );
+                }
+
             }
         }
 
@@ -721,7 +735,7 @@ class DropzoneController extends Controller
         $resourceManager->create(
             $file,
             $resourceManager->getResourceTypeByName('file'),
-            $drop->getUser(),
+            $dropzone->getResourceNode()->getCreator(),
             $dropzone->getResourceNode()->getWorkspace(),
             $parent
         );
@@ -748,7 +762,7 @@ class DropzoneController extends Controller
         $resourceManager->create(
             $text,
             $resourceManager->getResourceTypeByName('text'),
-            $drop->getUser(),
+            $dropzone->getResourceNode()->getCreator(),
             $dropzone->getResourceNode()->getWorkspace(),
             $parent
         );
@@ -766,7 +780,11 @@ class DropzoneController extends Controller
         $parent = $this->getDropHiddenDirectory($dropzone, $drop);
         $node = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->find($resourceId);
         $resourceManager = $this->get('claroline.manager.resource_manager');
-        $copy = $resourceManager->copy($node, $parent, $drop->getUser())->getResourceNode();
+        $copy = $resourceManager->copy(
+            $node,
+            $parent,
+            $dropzone->getResourceNode()->getCreator()
+        )->getResourceNode();
         $em->flush();
 
         return $copy;
@@ -1073,7 +1091,8 @@ class DropzoneController extends Controller
 
         $correction->setEndDate(new \DateTime());
         $correction->setFinished(true);
-        $this->calculateCorrectionTotalGrade($dropzone, $correction);
+        $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
+        $correction->setTotalGrade($totalGrade);
 
         $em->persist($correction);
         $em->flush();
@@ -1106,7 +1125,7 @@ class DropzoneController extends Controller
 
     }
 
-    private function calculateCorrectionTotalGrade($dropzone, $correction)
+    private function calculateCorrectionTotalGrade(Dropzone $dropzone, Correction $correction)
     {
         $correction->setTotalGrade(null);
 
@@ -1124,7 +1143,7 @@ class DropzoneController extends Controller
             $totalGrade = ($totalGrade * 20) / ($maxGrade);
         }
 
-        $correction->setTotalGrade($totalGrade);
+        return $totalGrade;
     }
 
     /**
@@ -1193,7 +1212,7 @@ class DropzoneController extends Controller
         }
 
         $form = $this->createForm(
-            new CorrectCriteriaPageType(),
+            new CorrectionCriteriaPageType(),
             $oldData,
             array('criteria' => $pager->getCurrentPageResults(), 'totalChoice' => $dropzone->getTotalCriteriaColumn())
         );
@@ -1228,7 +1247,14 @@ class DropzoneController extends Controller
                             )
                         );
                     } else {
-                        return $this->endCorrection($dropzone, $correction, false);
+                        return $this->redirect(
+                            $this->generateUrl(
+                                'icap_dropzone_correct_validation',
+                                array(
+                                    'resourceId' => $dropzone->getId()
+                                )
+                            )
+                        );
                     }
                 }
             }
@@ -1302,7 +1328,17 @@ class DropzoneController extends Controller
             $form->handleRequest($this->getRequest());
             if ($form->isValid()) {
                 $correction = $form->getData();
-                return $this->endCorrection($dropzone, $correction, false);
+
+                $this->getDoctrine()->getManager()->persist($correction);
+
+                return $this->redirect(
+                    $this->generateUrl(
+                        'icap_dropzone_correct_validation',
+                        array(
+                            'resourceId' => $dropzone->getId()
+                        )
+                    )
+                );
             }
         }
 
@@ -1319,6 +1355,73 @@ class DropzoneController extends Controller
                 'nbPages' => $pager->getNbPages(),
                 'admin' => false,
                 'edit' => true
+            )
+        );
+    }
+
+    /**
+     * @Route(
+     *      "/{resourceId}/correct/validation",
+     *      name="icap_dropzone_correct_validation",
+     *      requirements={"resourceId" = "\d+"}
+     * )
+     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
+     * @Template()
+     */
+    public function correctValidationAction($dropzone, $user)
+    {
+        $this->isAllowToOpen($dropzone);
+        $check = $this->checkRightToCorrect($dropzone, $user);
+        if ($check !== null) {
+            return $check;
+        }
+
+        $correction = $this->getCorrection($dropzone, $user);
+        if ($correction === null) {
+            $this
+                ->getRequest()
+                ->getSession()
+                ->getFlashBag()
+                ->add(
+                    'error',
+                    $this
+                        ->get('translator')
+                        ->trans('Unfortunately there is no copy to correct for the moment. Please try again later')
+                );
+
+            return $this->redirect(
+                $this->generateUrl(
+                    'icap_dropzone_open',
+                    array(
+                        'resourceId' => $dropzone->getId()
+                    )
+                )
+            );
+        }
+
+        $form = $this->createForm(new CorrectionValidationType(), $correction);
+
+        if ($this->getRequest()->isMethod('POST')) {
+            return $this->endCorrection($dropzone, $correction, false);
+        }
+
+        $pager = $this->getCriteriaPager($dropzone);
+        $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
+
+        $view = 'IcapDropzoneBundle:Dropzone:correctValidation.html.twig';
+        return $this->render(
+            $view,
+            array(
+                'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+                '_resource' => $dropzone,
+                'dropzone' => $dropzone,
+                'correction' => $correction,
+                'form' => $form->createView(),
+                'nbPages' => $pager->getNbPages(),
+                'admin' => false,
+                'edit' => true,
+                'totalGrade' => $totalGrade
             )
         );
     }
@@ -1640,7 +1743,7 @@ class DropzoneController extends Controller
         }
 
         $form = $this->createForm(
-            new CorrectCriteriaPageType(),
+            new CorrectionCriteriaPageType(),
             $oldData,
             array(
                 'edit' => $edit,
@@ -1660,7 +1763,8 @@ class DropzoneController extends Controller
                     }
 
                     if ($correction->getFinished()) {
-                        $this->calculateCorrectionTotalGrade($dropzone, $correction);
+                        $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
+                        $correction->setTotalGrade($totalGrade);
 
                         $em->persist($correction);
                         $em->flush();
@@ -2001,7 +2105,8 @@ class DropzoneController extends Controller
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
 
-        $this->calculateCorrectionTotalGrade($dropzone, $correction);
+        $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
+        $correction->setTotalGrade($totalGrade);
         $em = $this->getDoctrine()->getManager();
 
         $em->persist($correction);

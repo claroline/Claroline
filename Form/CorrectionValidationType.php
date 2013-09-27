@@ -6,21 +6,16 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class DropzoneCriteriaType extends AbstractType
+class CorrectionValidationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('goBack', 'hidden', array(
-                'mapped' => false
-            ))
-            ->add('totalCriteriaColumn', 'number', array('required' => true))
-            ->add('allowCommentInCorrection', 'checkbox', array('required' => false));
+
     }
 
     public function getName()
     {
-        return 'icap_dropzone_criteria_form';
+        return 'icap_dropzone_correct_validation_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

@@ -1,5 +1,5 @@
 {% if document.url is not null %}
     <a target="_blank" href="{{ document.url }}">{{ 'Document n°%count%'|trans({'%count%': loop.index}) }} - {{ document.url }}</a>
 {% else %}
-    <a target="_blank" href="{{ path('icap_dropzone_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ 'Document n°%count%'|trans({'%count%': loop.index}) }} - {{ document.type|trans }}</a>
+    <a target="_blank" href="{{ path('icap_dropzone_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ 'Document n°%count%'|trans({'%count%': loop.index}) }} - {{ (document.type~'_type')|trans }}</a>
 {% endif %}

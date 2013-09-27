@@ -99,7 +99,7 @@
                         {% if drop is not null and drop.finished == false %}
                             <a href="{{ path('icap_dropzone_drop', {'resourceId': dropzone.id}) }}" class="btn btn-primary pull-right">{{ 'Complete my copy'|trans }}</a>
                         {% else %}
-                            <a href="{{ path('icap_dropzone_drop', {'resourceId': dropzone.id}) }}" class="btn btn-primary pull-right">{{ 'Make my copy'|trans }}</a>
+                            <a href="{{ path('icap_dropzone_drop', {'resourceId': dropzone.id}) }}" class="btn btn-primary pull-right">{{ 'Start evaluation'|trans }}</a>
                         {% endif %}
                     </div>
                 </div>
@@ -206,9 +206,11 @@
                         </div>
                     {% endif %}
                 {% else %}
-                    <strong>
-                        {{ 'Finished! You have realized the nb corrections expected. Patience your copy is being corrected.'|transchoice(dropzone.expectedTotalCorrection) }}
-                    </strong>
+                    <div class="col-md-12">
+                        <strong>
+                            {{ 'Finished! You have realized the nb corrections expected. Patience your copy is being corrected.'|transchoice(dropzone.expectedTotalCorrection) }}
+                        </strong>
+                    </div>
                 {% endif %}
             </div>
         {% endif %}

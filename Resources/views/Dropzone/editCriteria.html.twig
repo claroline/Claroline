@@ -3,22 +3,22 @@
 {% form_theme form "IcapDropzoneBundle::form_theme_bootstrap3.html.twig" %}
 
 {% block drop_zone_content_edit %}
-    <div class="navbar navbar-default" role="navigation">
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
-            <ul class="nav navbar-nav">
-                <li>
-                    <a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.id}) }}">
-                        {{ 'Common'|trans }}
-                    </a>
-                </li>
-                <li class="active {% if dropzone.editionState < 1 %}disabled{% endif %}">
-                    <a href="{% if dropzone.editionState < 1 %}#{% else %}{{ path('icap_dropzone_edit_criteria', {'resourceId': dropzone.id}) }}{% endif %}">
-                        {{ 'Peer review criteria'|trans }}
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
+    {#<div class="navbar navbar-default" role="navigation">#}
+        {#<div class="collapse navbar-collapse navbar-ex1-collapse">#}
+            {#<ul class="nav navbar-nav">#}
+                {#<li>#}
+                    {#<a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.id}) }}">#}
+                        {#{{ 'Common'|trans }}#}
+                    {#</a>#}
+                {#</li>#}
+                {#<li class="active {% if dropzone.editionState < 1 %}disabled{% endif %}">#}
+                    {#<a href="{% if dropzone.editionState < 1 %}#{% else %}{{ path('icap_dropzone_edit_criteria', {'resourceId': dropzone.id}) }}{% endif %}">#}
+                        {#{{ 'Peer review criteria'|trans }}#}
+                    {#</a>#}
+                {#</li>#}
+            {#</ul>#}
+        {#</div>#}
+    {#</div>#}
     <h3>{{ 'Evaluation Criteria'|trans }}</h3>
 
     <div class="container">
@@ -210,11 +210,17 @@
             {{ form_rest(form) }}
             <div class="row">
                 <div class="btn-group pull-right">
-                    <a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.getId()}) }}" class="btn btn-default criteria-form-button">{{ 'Return'|trans }}</a>
-                    <button type= "submit" class="btn btn-primary criteria-form-button">{{ 'Save and finished'|trans }}</button>
+                    <a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.getId()}) }}" class="btn btn-default criteria-form-button back-button">{{ 'Return'|trans }}</a>
+                    <button type= "submit" class="btn btn-primary criteria-form-button save-submit">{{ 'Save and finished'|trans }}</button>
                 </div>
             </div>
         </form>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <strong>2/2</strong>
+        </div>
     </div>
 {% endblock %}
 
@@ -237,6 +243,14 @@
     <script src="{{ asset('bundles/icapdropzone/js/popup.js') }}"></script>
     <script>
         $(document).ready(function () {
+
+            $('#icap_dropzone_criteria_form_goBack').val(0);
+            $('.back-button').on('click', function(event) {
+                event.preventDefault();
+                $('#icap_dropzone_criteria_form_goBack').val(1);
+                $('.save-submit').trigger('click');
+            });
+
             $('.column-input').hide();
             $('.column-input-js').show();
 

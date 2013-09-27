@@ -1,0 +1,35 @@
+{% extends "IcapDropzoneBundle:Dropzone:correct.html.twig" %}
+
+{% block dropzone_correct_content %}
+    <h3>
+        {{ 'Warning'|trans }}
+    </h3>
+{% form_theme form "IcapDropzoneBundle::form_theme_bootstrap3.html.twig" %}
+
+    <form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_correct_validation', {'resourceId': dropzone.id}) }}">
+        {{ form_errors(form) }}
+        <p>
+            {{ 'You are about to make your correction. This action is final. The rating is %grade%/20'|trans({'%grade%': (totalGrade|number_format(2)) }) }}
+        </p>
+        <p>
+            {{ 'Are you sure you have done?'|trans }}
+        </p>
+
+        <div class="row">
+            <div class="col-md-12 form-group">
+                <div class="btn-group form-buttons pull-right">
+                    {% if dropzone.allowCommentInCorrection == false %}
+                        <a href="{{ path('icap_dropzone_correct_paginated', {'resourceId': dropzone.id, 'page': nbPages}) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
+                    {% else %}
+                        <a href="{{ path('icap_dropzone_correct_comment', {'resourceId': dropzone.id}) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary">{{ 'Confirm and finished'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}}
+{% endblock %}

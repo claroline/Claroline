@@ -3,22 +3,22 @@
 {% form_theme form "IcapDropzoneBundle::form_theme_bootstrap3.html.twig" %}
 
 {% block drop_zone_content_edit %}
-    <div class="navbar navbar-default peer-review-options" role="navigation" {% if not dropzone.peerReview %}style="display: none;"{% endif %}>
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
-            <ul class="nav navbar-nav">
-                <li class="active">
-                    <a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.id}) }}">
-                        {{ 'Common'|trans }}
-                    </a>
-                </li>
-                <li class="{% if dropzone.editionState < 1 %}disabled{% endif %}">
-                    <a href="{% if dropzone.editionState < 1 %}#{% else %}{{ path('icap_dropzone_edit_criteria', {'resourceId': dropzone.id}) }}{% endif %}">
-                        {{ 'Peer review criteria'|trans }}
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
+    {#<div class="navbar navbar-default peer-review-options" role="navigation" {% if not dropzone.peerReview %}style="display: none;"{% endif %}>#}
+        {#<div class="collapse navbar-collapse navbar-ex1-collapse">#}
+            {#<ul class="nav navbar-nav">#}
+                {#<li class="active">#}
+                    {#<a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.id}) }}">#}
+                        {#{{ 'Common'|trans }}#}
+                    {#</a>#}
+                {#</li>#}
+                {#<li class="{% if dropzone.editionState < 1 %}disabled{% endif %}">#}
+                    {#<a href="{% if dropzone.editionState < 1 %}#{% else %}{{ path('icap_dropzone_edit_criteria', {'resourceId': dropzone.id}) }}{% endif %}">#}
+                        {#{{ 'Peer review criteria'|trans }}#}
+                    {#</a>#}
+                {#</li>#}
+            {#</ul>#}
+        {#</div>#}
+    {#</div>#}
     <h3>{{ 'Common information'|trans }}</h3>
     <form class="form-horizontal" role="form" method="POST" action="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.id}) }}" {{ form_enctype(form) }}>
 
@@ -30,6 +30,7 @@
         </div>
 
         <h4>{{ 'Document type allowed'|trans }}</h4>
+        <p>{{ 'Select the types of documents that learners can make'|trans }}</p>
 
         <div class="form-group">
             {{ form_row(form.allowWorkspaceResource, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
@@ -39,11 +40,13 @@
         </div>
 
         <h4>{{ 'Type of evaluation'|trans }}</h4>
+        <p>{{ 'Select how copies will be corrected'|trans }}</p>
         <div class="form-group">
+
             {{ form_row(form.peerReview, {'label_attr': {'style': 'display: none;'}}) }}
 
             <div class="col-lg-offset-3 col-lg-9 peer-review-options">
-                {{ form_row(form.expectedTotalCorrection, {'type': 'number', 'input_col_size': 'col-lg-4', 'label_col_size': 'col-lg-8', 'attr': {'style': 'width: 60px;'}, 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+                {{ form_row(form.expectedTotalCorrection, {'input_col_size': 'col-lg-4', 'label_col_size': 'col-lg-8', 'attr': {'style': 'width: 60px;'}, 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
             </div>
         </div>
         <h4>{{ 'Rating'|trans }}</h4>
@@ -52,7 +55,7 @@
             {{ form_row(form.displayNotationToLearners, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
             {{ form_row(form.displayNotationMessageToLearners, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
             <div class="col-lg-offset-3 col-lg-9">
-                {{ form_row(form.minimumScoreToPass, {'type': 'number', 'input_col_size': 'col-lg-4', 'label_col_size': 'col-lg-8', 'attr': {'style': 'width: 60px;'}, 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+                {{ form_row(form.minimumScoreToPass, {'input_col_size': 'col-lg-4', 'label_col_size': 'col-lg-8', 'attr': {'style': 'width: 60px;'}, 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
             </div>
         </div>
 
@@ -112,6 +115,12 @@
         </div>
         {{ form_rest(form) }}
     </form>
+
+    <div class="row peer-review-options" {% if dropzone.peerReview %}style="display: none;"{% endif %}>
+        <div class="col-md-12">
+            <strong>1/2</strong>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
@@ -119,6 +128,7 @@
     {{ tinymce_init() }}
     <script>
         $('document').ready(function() {
+            $('#icap_dropzone_common_form_stayHere').val(0);
             $('.save-button').on('click', function(event) {
                 event.preventDefault();
                 $('#icap_dropzone_common_form_stayHere').val(1);

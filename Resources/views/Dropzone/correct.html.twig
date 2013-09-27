@@ -21,6 +21,7 @@
                         {{ 'Correction by %firstName% %lastName%'|trans({'%firstName%': correction.user.firstName, '%lastName%': correction.user.lastName}) }}
                     </h2>
                 </div>
+
                 <div class="col-md-6">
                     {% if correction.reporter == true %}
                         <a href="#reportModal" data-toggle="modal" class="btn btn-danger pull-right">{{ 'Remove report'|trans }}</a>
@@ -55,6 +56,26 @@
                 </div>
             {% endif %}
 
+            {% if dropzone.instruction != null %}
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                    {{ 'Recall instructions'|trans }}
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                {{ dropzone.instruction|raw }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+            {% endif %}
+
             <div class="row">
                 <div class="text-muted col-md-4">Documents:</div>
                 <div class="col-md-8">
@@ -80,7 +101,7 @@
 
             <div class="row">
                 <div class="text-muted col-md-4">{{ 'Grade attribuated'|trans }}</div>
-                <div class="col-md-8">{% if correction.totalGrade != null %}{{ correction.totalGrade|number_format }}{% else %}--{% endif %}/20</div>
+                <div class="col-md-8">{% if correction.totalGrade != null %}{{ correction.totalGrade|number_format(2) }}{% else %}--{% endif %}/20</div>
             </div>
         {% else %}
             <div class="row">
@@ -96,10 +117,32 @@
                 </div>
             </div>
 
+            {% if dropzone.instruction != null %}
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                    {{ 'Recall instructions'|trans }}
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                {{ dropzone.instruction|raw }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
             {% if correction is not null %}
                 <h3>
                     {{ 'Relevant documents'|trans }}
                 </h3>
+                <p>
+                    {{ 'Here is the list of documents which you must correct'|trans }}
+                </p>
                 {% if correction.drop.documents|length > 0 %}
                     <ul>
                         {% for document in correction.drop.documents %}
@@ -126,5 +169,4 @@
 
 {% block javascripts %}
     {{ parent() }}}
-    <script src="{{ asset('bundles/icapdropzone/js/popup.js') }}"></script>
 {% endblock %}
