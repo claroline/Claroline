@@ -50,7 +50,6 @@
             </div>
             <div class="panel panel-body">
                 {% include 'ClarolineCoreBundle:Badge/Badge:display.html.twig' with {'badgeUrl': 'claro_view_badge', 'paginationurl': 'claro_profile_view', 'routeParams': {'userId': user.id}} %}
-
             </div>
         </div>
     </div>
@@ -75,3 +74,14 @@
         </script>
     {% endif %}
 {% endblock %}
+
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets debug=false filter='lessphp'  output='bundles/clarolinecore/css/badge.css'
+      "@ClarolineCoreBundle/Resources/views/Badge/less/badge.less"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+{% endblock %}
+

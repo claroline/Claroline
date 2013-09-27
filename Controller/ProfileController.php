@@ -190,7 +190,7 @@ class ProfileController extends Controller
 
         return array(
             'user'     => $user,
-            'pager'    => null,
+            'pager'    => $pager,
             'language' => $platformConfigHandler->getParameter('locale_language')
         );
     }

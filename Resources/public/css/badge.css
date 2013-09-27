@@ -3,11 +3,11 @@
   height: 110px;
 }
 .badge_list .node-thumbnail .thumbnail .node-name {
-  color: black;
+  color: #333333;
   text-decoration: none;
 }
 .badge_list .node-thumbnail .thumbnail:hover {
-  color: black;
+  color: #333333;
   text-decoration: none;
 }
 .badge_list .node-thumbnail .add_button {
@@ -100,9 +100,6 @@ ul.user_badges > li .close {
   clear: both;
   text-align: center;
   padding: 19px 20px 20px;
-}
-.panel-title {
-  font-size: 22px;
 }
 .panel-title .breadcrumb {
   margin-bottom: 0;
