@@ -2,7 +2,7 @@
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-file"></span> {{ dropzone.resourceNode.name }}</a></li>
     {% if admin == true %}
-        <li><a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}">Drops</a></li>
+        <li><a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}">{{ 'List of copies'|trans }}</a></li>
         <li><a href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': correction.drop.id}) }}">
             {{ 'Retail copy of %firstName% %lastName%'|trans({'%firstName%': correction.drop.user.firstName, '%lastName%': correction.drop.user.lastName}) }}
         </a></li>

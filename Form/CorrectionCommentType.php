@@ -16,7 +16,9 @@ class CorrectionCommentType extends AbstractType
                 'class' => 'tinymce',
                 'data-theme' => 'advanced'
             );
-            $builder->add('comment', 'textarea', $params);
+            $builder
+                ->add('goBack', 'hidden', array('mapped' => false))
+                ->add('comment', 'textarea', $params);
         }
     }
 

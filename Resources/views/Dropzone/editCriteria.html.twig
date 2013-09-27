@@ -169,19 +169,16 @@
                     </div>
                     <script>
                         $('.form-submit').on('click', function (event) {
-                            console.log('form-submit click');
                             event.preventDefault();
                             //I do the "click" on submit button for keep html5 warning
                             $('.modal-body button[type="submit"]').trigger('click');
                         });
 
                         $('.form-cancel').on('click', function (event) {
-                            console.log('form-cancel click');
                             event.preventDefault();
 
                             var criterionId = $(this).data('criterion');
                             if (criterionId == 'new') {
-                                console.log('cancel new');
                                 $('.new-criteria').hide();
                                 $('.add-criteria-zone').show();
 
@@ -189,7 +186,6 @@
                                     $('.add-remove-column').hide();
                                 }
                             } else {
-                                console.log('cancel : '+criterionId);
                                 $('#'+criterionId+' > .criterion-edit').hide();
                                 $('#'+criterionId+' > .criterion-show').show();
                             }
@@ -243,7 +239,6 @@
     <script src="{{ asset('bundles/icapdropzone/js/popup.js') }}"></script>
     <script>
         $(document).ready(function () {
-
             $('#icap_dropzone_criteria_form_goBack').val(0);
             $('.back-button').on('click', function(event) {
                 event.preventDefault();
@@ -286,7 +281,6 @@
             $('.remove-column').on('click', function (event) {
                 event.preventDefault();
                 if (totalColumn > 3) {
-                    console.log('remove');
                     totalColumn--;
                     setColumnInput();
 
@@ -329,7 +323,6 @@
                 $('.criteria-form-button').attr('disabled', 'disabled');
 
                 var criterionId = $(this).data('criterion');
-                console.log('edit click : '+criterionId);
 
                 $.get($(this).attr('href'))
                     .always(function () {

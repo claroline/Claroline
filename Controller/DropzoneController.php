@@ -46,7 +46,7 @@ use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 class DropzoneController extends Controller
 {
 
-    const CRITERION_PER_PAGE = 10;
+    const CRITERION_PER_PAGE = 2;
     const DROP_PER_PAGE = 10;
 
     protected function isAllow($dropzone, $actionName)
@@ -531,6 +531,7 @@ class DropzoneController extends Controller
             ->getManager()
             ->getRepository('IcapDropzoneBundle:Drop')
             ->hasCopyToCorrect($dropzone, $user);
+        $hasUnfinishedCorrection = $em->getRepository('IcapDropzoneBundle:Correction')->getNotFinished($dropzone, $user) != null;
 
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
@@ -539,6 +540,7 @@ class DropzoneController extends Controller
             'drop' => $drop,
             'nbCorrections' => $nbCorrections,
             'hasCopyToCorrect' => $hasCopyToCorrect,
+            'hasUnfinishedCorrection' => $hasUnfinishedCorrection,
         );
     }
 
@@ -1226,35 +1228,50 @@ class DropzoneController extends Controller
                     $this->persistGrade($grades, $criterionId, $value, $correction);
                 }
 
-                if ($pager->getCurrentPage() < $pager->getNbPages()) {
+                $goBack = $form->get('goBack')->getData();
+                if ($goBack == 1) {
+                    $pageNumber = max(($page - 1), 0);
+
                     return $this->redirect(
                         $this->generateUrl(
                             'icap_dropzone_correct_paginated',
                             array(
                                 'resourceId' => $dropzone->getId(),
-                                'page' => ($page + 1)
+                                'page' => $pageNumber
                             )
                         )
                     );
                 } else {
-                    if ($dropzone->getAllowCommentInCorrection()) {
+                    if ($pager->getCurrentPage() < $pager->getNbPages()) {
                         return $this->redirect(
                             $this->generateUrl(
-                                'icap_dropzone_correct_comment',
+                                'icap_dropzone_correct_paginated',
                                 array(
-                                    'resourceId' => $dropzone->getId()
+                                    'resourceId' => $dropzone->getId(),
+                                    'page' => ($page + 1)
                                 )
                             )
                         );
                     } else {
-                        return $this->redirect(
-                            $this->generateUrl(
-                                'icap_dropzone_correct_validation',
-                                array(
-                                    'resourceId' => $dropzone->getId()
+                        if ($dropzone->getAllowCommentInCorrection()) {
+                            return $this->redirect(
+                                $this->generateUrl(
+                                    'icap_dropzone_correct_comment',
+                                    array(
+                                        'resourceId' => $dropzone->getId()
+                                    )
                                 )
-                            )
-                        );
+                            );
+                        } else {
+                            return $this->redirect(
+                                $this->generateUrl(
+                                    'icap_dropzone_correct_validation',
+                                    array(
+                                        'resourceId' => $dropzone->getId()
+                                    )
+                                )
+                            );
+                        }
                     }
                 }
             }
@@ -1328,17 +1345,32 @@ class DropzoneController extends Controller
             $form->handleRequest($this->getRequest());
             if ($form->isValid()) {
                 $correction = $form->getData();
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($correction);
+                $em->flush();
 
-                $this->getDoctrine()->getManager()->persist($correction);
+                $goBack = $form->get('goBack')->getData();
+                if ($goBack == 1) {
 
-                return $this->redirect(
-                    $this->generateUrl(
-                        'icap_dropzone_correct_validation',
-                        array(
-                            'resourceId' => $dropzone->getId()
+                    return $this->redirect(
+                        $this->generateUrl(
+                            'icap_dropzone_correct_paginated',
+                            array(
+                                'resourceId' => $dropzone->getId(),
+                                'page' => $pager->getNbPages()
+                            )
                         )
-                    )
-                );
+                    );
+                } else {
+                    return $this->redirect(
+                        $this->generateUrl(
+                            'icap_dropzone_correct_validation',
+                            array(
+                                'resourceId' => $dropzone->getId()
+                            )
+                        )
+                    );
+                }
             }
         }
 
@@ -1690,6 +1722,9 @@ class DropzoneController extends Controller
         );
     }
 
+
+
+
     /**
      * @Route(
      *      "/{resourceId}/drops/detail/correction/{state}/{correctionId}",
@@ -1769,8 +1804,10 @@ class DropzoneController extends Controller
                         $em->persist($correction);
                         $em->flush();
                     }
+                    $goBack = $form->get('goBack')->getData();
+                    if ($goBack == 1) {
+                        $pageNumber = max(($page - 1), 0);
 
-                    if ($pager->getCurrentPage() < $pager->getNbPages()) {
                         return $this->redirect(
                             $this->generateUrl(
                                 'icap_dropzone_drops_detail_correction_paginated',
@@ -1778,24 +1815,38 @@ class DropzoneController extends Controller
                                     'resourceId' => $dropzone->getId(),
                                     'state' => 'edit',
                                     'correctionId' => $correction->getId(),
-                                    'page' => ($page + 1)
+                                    'page' => $pageNumber,
                                 )
                             )
                         );
                     } else {
-                        if ($dropzone->getAllowCommentInCorrection()) {
+                        if ($pager->getCurrentPage() < $pager->getNbPages()) {
                             return $this->redirect(
                                 $this->generateUrl(
-                                    'icap_dropzone_drops_detail_correction_comment',
+                                    'icap_dropzone_drops_detail_correction_paginated',
                                     array(
                                         'resourceId' => $dropzone->getId(),
                                         'state' => 'edit',
-                                        'correctionId' => $correction->getId()
+                                        'correctionId' => $correction->getId(),
+                                        'page' => ($page + 1)
                                     )
                                 )
                             );
                         } else {
-                            return $this->endCorrection($dropzone, $correction, true);
+                            if ($dropzone->getAllowCommentInCorrection()) {
+                                return $this->redirect(
+                                    $this->generateUrl(
+                                        'icap_dropzone_drops_detail_correction_comment',
+                                        array(
+                                            'resourceId' => $dropzone->getId(),
+                                            'state' => 'edit',
+                                            'correctionId' => $correction->getId()
+                                        )
+                                    )
+                                );
+                            } else {
+                                return $this->endCorrection($dropzone, $correction, true);
+                            }
                         }
                     }
                 }
@@ -1852,8 +1903,27 @@ class DropzoneController extends Controller
             if ($this->getRequest()->isMethod('POST')) {
                 $form->handleRequest($this->getRequest());
                 if ($form->isValid()) {
+                    $em = $this->getDoctrine()->getManager();
                     $correction = $form->getData();
-                    return $this->endCorrection($dropzone, $correction, true);
+                    $em->persist($correction);
+                    $em->flush();
+
+                    $goBack = $form->get('goBack')->getData();
+                    if ($goBack == 1) {
+                        return $this->redirect(
+                            $this->generateUrl(
+                                'icap_dropzone_drops_detail_correction_paginated',
+                                array(
+                                    'resourceId' => $dropzone->getId(),
+                                    'state' => 'edit',
+                                    'correctionId' => $correction->getId(),
+                                    'page' => $pager->getNbPages(),
+                                )
+                            )
+                        );
+                    } else {
+                        return $this->endCorrection($dropzone, $correction, true);
+                    }
                 }
             }
         }
@@ -1909,6 +1979,42 @@ class DropzoneController extends Controller
                     'resourceId' => $dropzone->getId(),
                     'state' => 'edit',
                     'correctionId' => $correction->getId(),
+                )
+            )
+        );
+    }
+
+    /**
+     * @Route(
+     *      "/{resourceId}/delete/correction/{correctionId}",
+     *      name="icap_dropzone_drops_detail_delete_correction",
+     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+"}
+     * )
+     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
+     * @Template()
+     */
+    public function deleteCorrectionAction($dropzone, $correction)
+    {
+        $this->isAllowToOpen($dropzone);
+        $this->isAllowToEdit($dropzone);
+
+        if ($correction->getEditable() === false) {
+            throw new AccessDeniedException();
+        }
+
+        $dropId = $correction->getDrop()->getId();
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($correction);
+        $em->flush();
+
+        return $this->redirect(
+            $this->generateUrl(
+                'icap_dropzone_drops_detail',
+                array(
+                    'resourceId' => $dropzone->getId(),
+                    'dropId' => $dropId,
                 )
             )
         );
@@ -2088,7 +2194,6 @@ class DropzoneController extends Controller
             )
         );
     }
-
 
     /**
      * @Route(

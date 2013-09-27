@@ -154,13 +154,23 @@
                     </div>
 
                     <div class="col-md-3">
-                        {% if hasCopyToCorrect == true %}
+                        {% if hasCopyToCorrect == true and hasUnfinishedCorrection == false %}
                             <a href="{{ path('icap_dropzone_correct', {'resourceId': dropzone.id}) }}" class="btn btn-primary pull-right">{{ 'Correct a copy'|trans }}</a>
                         {% endif %}
                     </div>
                 </div>
 
-                {% if hasCopyToCorrect == false %}
+                {% if hasUnfinishedCorrection == true %}
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-9 text-danger">
+                            {{ 'You have already begun a correction.'|trans }}
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{ path('icap_dropzone_correct', {'resourceId': dropzone.id}) }}" class="btn btn-primary pull-right">{{ 'Complete my correction'|trans }}</a>
+                        </div>
+                    </div>
+                {% elseif hasCopyToCorrect == false %}
                     <br/>
                     <div class="row">
                         <div class="col-md-9 text-danger">

@@ -191,13 +191,11 @@
 
             $('#modal-picker').bind('hidden.bs.modal', function () {
                 if (resourceNodeId == null) {
-                    console.log('close');
                     $('.cancel-inline').trigger('click');
                 }
             })
 
             var callBack = function(nodes){
-                console.debug(nodes[_.keys(nodes)][1]);
                 var id = _.keys(nodes)[0];
                 var name = nodes[_.keys(nodes)][0];
                 var resourceTypes = nodes[_.keys(nodes)][1];
@@ -205,12 +203,6 @@
                 var mimeType = nodes[_.keys(nodes)][2];
 
                 resourceNodeId = nodeId;
-
-                console.log('id: '+id);
-                console.log('name: '+name);
-                console.log('resourceTypes: '+resourceTypes);
-                console.log('nodeId: '+nodeId);
-                console.log('mimeType: '+mimeType);
 
                 $('.selected-resource').html(name);
                 $('#icap_dropzone_document_file_form_document').val(resourceNodeId);

@@ -39,12 +39,15 @@
         <div class="panel {% if drop.reported %}panel-danger{% else %}panel-default{% endif %}">
             <div class="panel-heading">
                 <div class="row">
-                    <h3 class="panel-title col-md-9">
+                    <h3 class="panel-title col-md-8">
                         {% if drop.reported %}<span class="glyphicon icon-warning-sign" data-toggle="tooltip" title="" data-original-title="{{ 'This copy has been reported'|trans }}"></span>{% endif %}
                         <a href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': drop.id}) }}">{{ drop.user.firstName }} {{ drop.user.lastName }}</a>
                     </h3>
-                    <div class="col-md-3">
-                        <a href="{{ path('icap_dropzone_drops_delete', {'resourceId': dropzone.id, 'dropId': drop.id, 'tab': 2, 'page': pager.currentPage}) }}" class="btn btn-danger btn-xs pull-right launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete'|trans }}</a>
+                    <div class="col-md-4">
+                        <div class="btn-group pull-right">
+                            <a href="{{ path('icap_dropzone_drops_detail_add_correction', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" type="button" class="btn btn-primary btn-xs">{{ 'Add a correction'|trans }}</a>
+                            <a href="{{ path('icap_dropzone_drops_delete', {'resourceId': dropzone.id, 'dropId': drop.id, 'tab': 2, 'page': pager.currentPage}) }}" class="btn btn-danger btn-xs launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete'|trans }}</a>
+                        </div>
                     </div>
                 </div>
             </div>

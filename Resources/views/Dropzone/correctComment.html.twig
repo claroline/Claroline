@@ -26,9 +26,9 @@
                 {% if edit == true %}
                     <div class="btn-group pull-right">
                         {% if admin == true %}
-                            <a href="{{ path('icap_dropzone_drops_detail_correction_paginated', {'resourceId': dropzone.id, 'state' : state, 'correctionId': correction.id, 'page': nbPages}) }}" class="btn btn-default">{{ 'Previous'|trans }}</a>
+                            <a href="{{ path('icap_dropzone_drops_detail_correction_paginated', {'resourceId': dropzone.id, 'state' : state, 'correctionId': correction.id, 'page': nbPages}) }}" class="btn btn-default back-button">{{ 'Previous'|trans }}</a>
                         {% else %}
-                            <a href="{{ path('icap_dropzone_correct_paginated', {'resourceId': dropzone.id, 'page': nbPages}) }}" class="btn btn-default">{{ 'Previous'|trans }}</a>
+                            <a href="{{ path('icap_dropzone_correct_paginated', {'resourceId': dropzone.id, 'page': nbPages}) }}" class="btn btn-default back-button">{{ 'Previous'|trans }}</a>
                         {% endif %}
                         <button type= "submit" class="btn btn-primary">{{ 'Save and finished'|trans }}</button>
                     </div>
@@ -52,4 +52,14 @@
 {% block javascripts %}
     {{ parent() }}}
     {{ tinymce_init() }}
+    <script>
+        $(document).on('ready', function () {
+            $('#icap_dropzone_correct_comment_form_goBack').val(0);
+            $('.back-button').on('click', function(event) {
+                event.preventDefault();
+                $('#icap_dropzone_correct_comment_form_goBack').val(1);
+                $('#correct-form button[type="submit"]').trigger('click');
+            });
+        });
+    </script>
 {% endblock %}

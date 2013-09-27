@@ -64,7 +64,7 @@
             <div class="panel {% if not correction.valid %}panel-danger{% elseif not correction.finished %}panel-warning{% else %}panel-default{% endif %}">
                 <div class="panel-heading">
                     <div class="row">
-                        <h3 class="panel-title col-md-8 {% if correction.reporter %}text-danger{% endif %}">
+                        <h3 class="panel-title col-md-7 {% if correction.reporter %}text-danger{% endif %}">
                             {% if correction.reporter %}
                                 <span class="glyphicon icon-warning-sign" data-toggle="tooltip" title="" data-original-title="{{ 'This correction has reported abuse'|trans }}"></span>
                             {% endif %}
@@ -74,12 +74,18 @@
                             {% if correction.editable %}
                                 <span class="label label-default">{{ 'created by a manager'|trans }}</span>
                             {% endif %}
+
+                            {% if correction.finished == false %}
+                                <span class="label label-default">{{ 'Not finished'|trans }}</span>
+                            {% endif %}
+
                         </h3>
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <div class="btn-group pull-right">
                                 <a href="{{ path('icap_dropzone_recalculate_score', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}" class="btn btn-default btn-xs">{{ 'Recalculate the score'|trans }}</a>
                                 {% if correction.editable %}
                                     <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': 'edit'}) }}" class="btn btn-default btn-xs">{{ 'dropzone_edit'|trans }}</a>
+                                    <a href="{{ path('icap_dropzone_drops_detail_delete_correction', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}" class="btn btn-danger btn-xs">{{ 'Delete'|trans }}</a>
                                 {% endif %}
                                 {% if correction.finished %}
                                     {% if correction.valid %}
@@ -87,8 +93,6 @@
                                     {% else %}
                                         <a href="{{ path('icap_dropzone_drops_detail_correction_validation', {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'yes'}) }}" class="btn btn-default btn-xs">{{ 'Validate'|trans }}</a>
                                     {% endif %}
-                                {% else %}
-                                    <strong class="pull-right">{{ 'Not finished'|trans }}</strong>
                                 {% endif %}
                             </div>
                         </div>
