@@ -1,5 +1,5 @@
 {% extends "IcapDropzoneBundle::layout.html.twig" %}
-{% block dropzone_breadcrumb %}
+{% block resourceBreadcrumb %}
     <li><a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-file"></span> {{ dropzone.resourceNode.name }}</a></li>
     {% if admin == true %}
         <li><a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}">Drops</a></li>
@@ -37,8 +37,8 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans }}</button>
-                                        <a href="{{ path('icap_dropzone_remove_report', {'resourceId': dropzone.id, 'dropId': correction.drop.id, 'correctionId': correction.id, 'state': state, 'invalidate': 0}) }}" class="btn btn-danger pull-right">{{ 'Keep this correction scored zero'|trans }}</a>
-                                        <a href="{{ path('icap_dropzone_remove_report', {'resourceId': dropzone.id, 'dropId': correction.drop.id, 'correctionId': correction.id, 'state': state, 'invalidate': 1}) }}" class="btn btn-danger pull-right">{{ 'Invalidate this correction'|trans }}</a>
+                                        <a href="{{ path('icap_dropzone_remove_report', {'resourceId': dropzone.id, 'dropId': correction.drop.id, 'correctionId': correction.id, 'invalidate': 0}) }}" class="btn btn-danger pull-right">{{ 'Keep this correction scored zero'|trans }}</a>
+                                        <a href="{{ path('icap_dropzone_remove_report', {'resourceId': dropzone.id, 'dropId': correction.drop.id, 'correctionId': correction.id, 'invalidate': 1}) }}" class="btn btn-danger pull-right">{{ 'Invalidate this correction'|trans }}</a>
                                     </div>
                                 </div><!-- /.modal-content -->
                             </div><!-- /.modal-dialog -->

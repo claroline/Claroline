@@ -105,6 +105,9 @@
 
         <div class="btn-group pull-right">
             <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
+
+            <a href="#" class="btn btn-primary peer-review-options save-button" {% if dropzone.peerReview %}style="display: none;"{% endif %}>{{ 'Save'|trans }}</a>
+
             <button type= "submit" class="btn btn-primary submit_button">{% if dropzone.peerReview %}{{ 'Save and continue'|trans }}{% else %}{{ 'Save and finished'|trans }}{% endif %}</button>
         </div>
         {{ form_rest(form) }}
@@ -112,10 +115,16 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}}
+    {{ parent() }}
     {{ tinymce_init() }}
     <script>
         $('document').ready(function() {
+            $('.save-button').on('click', function(event) {
+                event.preventDefault();
+                $('#icap_dropzone_common_form_stayHere').val(1);
+                $('.submit_button').trigger('click');
+            });
+
             $('#icap_dropzone_common_form_peerReview_0').on('click', function() {
                 enablePeerReviewOptions(false);
             });
@@ -167,7 +176,7 @@
             $('#icap_dropzone_common_form_manualPlanning_0').on('click', manualPlanning);
             $('#icap_dropzone_common_form_manualPlanning_1').on('click', datesPlanning);
 
-            if ({{ dropzone.manualPlanning }}) {
+            if ({{ dropzone.manualPlanning ? 'true' : 'false' }}) {
                 manualPlanning();
             } else {
                 datesPlanning();

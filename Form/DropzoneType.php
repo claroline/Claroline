@@ -21,7 +21,7 @@ class DropzoneType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'translation_domain' => 'icap_dropzone'
+            'translation_domain' => 'messages'
         ));
     }
 }

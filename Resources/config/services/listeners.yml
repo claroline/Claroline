@@ -13,6 +13,13 @@ services:
           - { name: kernel.event_listener, event: create_log_list_item_icap_dropzone, method: onCreateLogListItem }
           - { name: kernel.event_listener, event: create_log_details_icap_dropzone, method: onCreateLogDetails }
           - { name: kernel.event_listener, event: plugin_options_icapdropzone, method: onAdministrate }
-          - { name: kernel.event_listener, event: edit_icap_dropzone, method: onEdit }
-          - { name: kernel.event_listener, event: edit_icap_dropzone, method: onEdit }
-          - { name: kernel.event_listener, event: drops_icap_dropzone, method: onDrops }
+          - { name: kernel.event_listener, event: edit_dropzone_icap_dropzone, method: onEdit }
+          - { name: kernel.event_listener, event: list_dropzone_icap_dropzone, method: onList }
+          - { name: kernel.event_listener, event: open_dropzone_icap_dropzone, method: onOpenCustom }
+
+    icap.listener.document_listener:
+        class: Icap\DropzoneBundle\Listener\DocumentListener
+        calls:
+          - [setContainer, ["@service_container"]]
+        tags:
+          - { name: doctrine.event_listener, event: preRemove }

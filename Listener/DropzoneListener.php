@@ -81,6 +81,18 @@ class DropzoneListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    public function onOpenCustom(CustomActionResourceEvent $event)
+    {
+        $route = $this->container
+            ->get('router')
+            ->generate(
+                'icap_dropzone_open',
+                array('resourceId' => $event->getResource()->getId())
+            );
+        $event->setResponse(new RedirectResponse($route));
+        $event->stopPropagation();
+    }
+
     public function onEdit(CustomActionResourceEvent $event)
     {
         $route = $this->container
@@ -94,7 +106,7 @@ class DropzoneListener extends ContainerAware
     }
 
 
-    public function onDrops(CustomActionResourceEvent $event)
+    public function onList(CustomActionResourceEvent $event)
     {
         $route = $this->container
             ->get('router')

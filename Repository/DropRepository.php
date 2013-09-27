@@ -9,6 +9,8 @@ namespace Icap\DropzoneBundle\Repository;
 
 
 use Doctrine\ORM\EntityRepository;
+use Icap\DropzoneBundle\Entity\Drop;
+use Icap\DropzoneBundle\Entity\Dropzone;
 
 class DropRepository extends EntityRepository {
 
@@ -19,6 +21,7 @@ class DropRepository extends EntityRepository {
             "FROM Icap\\DropzoneBundle\\Entity\\Drop AS d \n".
             "LEFT OUTER JOIN d.corrections AS c \n".
             "WHERE d.dropzone = :dropzone \n".
+            "AND c.valid = true \n".
             "GROUP BY d.id \n".
             "HAVING nb_corrections < :expectedTotalCorrection")
             ->setParameter('dropzone', $dropzone)
@@ -57,13 +60,13 @@ class DropRepository extends EntityRepository {
         return $dropIds;
     }
 
-    public function drawDropForCorrection($dropzone, $user)
+    public function getPossibleDropIdsForDrawing(Dropzone $dropzone, $user)
     {
         // Only keep copies whose number correction (whether finished or not) does not exceed the dropzone ExpectedTotalCorrection
         $dropIdNotCorrected = $this->getDropIdNotCorrected($dropzone);
 
         if (count($dropIdNotCorrected) <= 0) {
-            return null;
+            return array();
         }
         // Remove copies that the logged user has already corrected
         $alreadyCorrectedDropIds = $this->getEntityManager()->getRepository('IcapDropzoneBundle:Correction')->getAlreadyCorrectedDropIds($dropzone, $user);
@@ -84,6 +87,18 @@ class DropRepository extends EntityRepository {
         }
 
         $possibleIds = $qb->getQuery()->getResult();
+
+        return $possibleIds;
+    }
+
+    public function hasCopyToCorrect(Dropzone $dropzone, $user)
+    {
+        return count($this->getPossibleDropIdsForDrawing($dropzone, $user)) > 0;
+    }
+
+    public function drawDropForCorrection(Dropzone $dropzone, $user)
+    {
+        $possibleIds = $this->getPossibleDropIdsForDrawing($dropzone, $user);
         if (count($possibleIds) == 0) {
             return null;
         }
@@ -218,5 +233,22 @@ class DropRepository extends EntityRepository {
             ->setParameter('dropId', $dropId);
 
         return $qb->getQuery()->getResult()[0];
+    }
+
+    public function getLastNumber($dropzone)
+    {
+        $query = $this->getEntityManager()->createQuery(
+            "SELECT max(drop.number) \n".
+            "FROM Icap\\DropzoneBundle\\Entity\\Drop AS drop \n".
+            "WHERE drop.dropzone = :dropzone")
+            ->setParameter('dropzone', $dropzone);
+
+        $result = $query->getResult();
+
+        if ($result[0][1] == null) {
+            return 0;
+        }else {
+            return $result[0][1];
+        }
     }
 }

@@ -1,5 +1,5 @@
 {% extends "IcapDropzoneBundle::layout.html.twig" %}
-{% block dropzone_breadcrumb %}
+{% block resourceBreadcrumb %}
     <li>
         <a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-file"></span> {{ dropzone.resourceNode.name }}</a>
     </li>

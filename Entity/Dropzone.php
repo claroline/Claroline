@@ -7,6 +7,7 @@
 
 namespace Icap\DropzoneBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -105,7 +106,7 @@ class Dropzone extends AbstractResource {
      * @Assert\LessThanOrEqual(value=10)
      * @Assert\GreaterThanOrEqual(value=3)
      */
-    protected $totalCriteriaColumn = 5;
+    protected $totalCriteriaColumn = 4;
     /**
      * @ORM\OneToMany(
      *     targetEntity="Icap\DropzoneBundle\Entity\Drop",
@@ -124,6 +125,15 @@ class Dropzone extends AbstractResource {
      * )
      */
     protected $peerReviewCriteria;
+
+    /**
+     * @ORM\OneToOne(
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
+     *      cascade={"all"}
+     * )
+     * @ORM\JoinColumn(name="hidden_directory_id", referencedColumnName="id", nullable=true)
+     */
+    protected $hiddenDirectory;
 
     public function __construct()
     {
@@ -177,22 +187,6 @@ class Dropzone extends AbstractResource {
     public function setAllowCommentInCorrection($allowCommentInCorrection)
     {
         $this->allowCommentInCorrection = $allowCommentInCorrection;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAllowDropInReview()
-    {
-        return $this->allowDropInReview;
-    }
-
-    /**
-     * @param mixed $allowDropInReview
-     */
-    public function setAllowDropInReview($allowDropInReview)
-    {
-        $this->allowDropInReview = $allowDropInReview;
     }
 
     /**
@@ -483,21 +477,20 @@ class Dropzone extends AbstractResource {
         return $this->allowRichText;
     }
 
-    public function getPathArray()
+    /**
+     * @param ResourceNode $hiddenDirectory
+     */
+    public function setHiddenDirectory($hiddenDirectory)
     {
-        $path = $this->getResourceNode()->getPath();
-        $pathItems = explode("`", $path);
-        $pathArray = array();
-        foreach ($pathItems as $item) {
-            preg_match("/-([0-9]+)$/", $item, $matches);
-            if (count($matches) > 0) {
-                $id = substr($matches[0], 1);
-                $name = preg_replace("/-([0-9]+)$/", "", $item);
-                $pathArray[] = array('id' => $id, 'name' => $name);
-            }
-        }
+        $this->hiddenDirectory = $hiddenDirectory;
+    }
 
-        return $pathArray;
+    /**
+     * @return ResourceNode
+     */
+    public function getHiddenDirectory()
+    {
+        return $this->hiddenDirectory;
     }
 
     public function isNotStarted()

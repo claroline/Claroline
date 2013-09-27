@@ -41,7 +41,7 @@ class Grade {
     protected $correction;
 
     /**
-     * @return mixed
+     * @return Criterion
      */
     public function getCriterion()
     {
@@ -49,7 +49,7 @@ class Grade {
     }
 
     /**
-     * @param mixed $criterion
+     * @param Criterion $criterion
      */
     public function setCriterion($criterion)
     {
@@ -89,7 +89,7 @@ class Grade {
     }
 
     /**
-     * @return mixed
+     * @return Correction
      */
     public function getCorrection()
     {
@@ -97,7 +97,7 @@ class Grade {
     }
 
     /**
-     * @param mixed $correction
+     * @param Correction $correction
      */
     public function setCorrection($correction)
     {

@@ -1,14 +1,11 @@
 {% extends "IcapDropzoneBundle::layout.html.twig" %}
-{% block dropzone_breadcrumb %}
+{% block resourceBreadcrumb %}
     <li class="active"><span class="glyphicon icon-file"></span> {{ dropzone.resourceNode.name }}</li>
 {% endblock %}
 
 {% block dropzone_content %}
     <div class="container container-dropzone">
-        <header>
-            <a href="{{ path('icap_dropzone_edit', {'resourceId': dropzone.id}) }}">Edit</a>
-        </header>
-        <h2>Open a drop zone</h2>
+        <h2>{{ dropzone.resourceNode.name|capitalize }}</h2>
 
         {{ macros.flashBox() }}
 
@@ -51,8 +48,9 @@
             </p>
         {% endif %}
 
+        <hr/>
 
-        {% if drop is not null %}
+        {% if drop is not null and drop.finished == true %}
             <div>
                 {% set nbDocument = drop.documents|length %}
                 {{ 'nbDocumentsInThisEvaluation'|transchoice(drop.documents|length) }}
@@ -65,7 +63,7 @@
                 </ul>
             </div>
         {% endif %}
-        {% if not dropzone.isAllowDrop and (drop is null and (dropzone.isPeerReview or dropzone.isFinished)) %}
+        {% if not dropzone.isAllowDrop and ((drop is null or drop.finished == false) and (dropzone.isPeerReview or dropzone.isFinished)) %}
             <div class="row">
                 <div class="text-danger col-md-12">
                     {{ 'You have not made ​​a copy. It is too late to take part in this evaluation.'|trans }}
@@ -74,7 +72,7 @@
         {% endif %}
 
         {% if dropzone.isAllowDrop %}
-            {% if drop is null %}
+            {% if drop is null or drop.finished == false %}
                 <div class="row">
                     <div class="text-danger col-md-8">
                         {% if not dropzone.manualPlanning %}
@@ -90,35 +88,49 @@
                                 {{ 'There are only nb minutes to get your copy'|transchoice(minutesRemainingBeforeEndAllowDrop|number_format) }}
                             {% endif %}
                         {% else %}
-                            {{ 'You have not yet made a copy'|trans }}
+                            {% if drop is not null and drop.finished == false %}
+                                {{ 'You have an incomplete copy in progress'|trans }}
+                            {% else %}
+                                {{ 'You have not yet made a copy'|trans }}
+                            {% endif %}
                         {% endif %}
                     </div>
                     <div class="col-md-4">
-                        <a href="{{ path('icap_dropzone_drop', {'resourceId': dropzone.id}) }}" class="btn btn-primary pull-right">Rendre sa copie</a>
+                        {% if drop is not null and drop.finished == false %}
+                            <a href="{{ path('icap_dropzone_drop', {'resourceId': dropzone.id}) }}" class="btn btn-primary pull-right">{{ 'Complete my copy'|trans }}</a>
+                        {% else %}
+                            <a href="{{ path('icap_dropzone_drop', {'resourceId': dropzone.id}) }}" class="btn btn-primary pull-right">{{ 'Make my copy'|trans }}</a>
+                        {% endif %}
                     </div>
                 </div>
             {% endif %}
         {% endif %}
 
-        {% if dropzone.timeRemainingBeforeStartReview > 0 and drop is not null %}
-            <div class="text-danger">
-                {% set minutesRemainingBeforeStartReview = (dropzone.timeRemainingBeforeStartReview/60) %}
-                {% set hoursRemainingBeforeStartReview = (minutesRemainingBeforeStartReview/60) %}
-                {% set daysRemainingBeforeStartReview = (hoursRemainingBeforeStartReview/24) %}
+        {% if dropzone.timeRemainingBeforeStartReview > 0 and drop is not null and drop.finished == true %}
+            <div class="row">
+                <div class="col-md-12 text-danger">
+                    {% set minutesRemainingBeforeStartReview = (dropzone.timeRemainingBeforeStartReview/60) %}
+                    {% set hoursRemainingBeforeStartReview = (minutesRemainingBeforeStartReview/60) %}
+                    {% set daysRemainingBeforeStartReview = (hoursRemainingBeforeStartReview/24) %}
 
-                {% if daysRemainingBeforeStartReview >= 1 %}
-                    {{ 'There are only nb days before the beginning of the peer review'|transchoice(daysRemainingBeforeStartReview|number_format) }}
-                {% elseif hoursRemainingBeforeStartReview >= 1 %}
-                    {{ 'There are only nb hours before the beginning of the peer review'|transchoice(hoursRemainingBeforeStartReview|number_format) }}
-                {% else %}
-                    {{ 'There are only nb minutes before the beginning of the peer review'|transchoice(minutesRemainingBeforeStartReview|number_format) }}
-                {% endif %}
+                    {% if daysRemainingBeforeStartReview >= 1 %}
+                        {{ 'There are only nb days before the beginning of the peer review'|transchoice(daysRemainingBeforeStartReview|number_format) }}
+                    {% elseif hoursRemainingBeforeStartReview >= 1 %}
+                        {{ 'There are only nb hours before the beginning of the peer review'|transchoice(hoursRemainingBeforeStartReview|number_format) }}
+                    {% else %}
+                        {{ 'There are only nb minutes before the beginning of the peer review'|transchoice(minutesRemainingBeforeStartReview|number_format) }}
+                    {% endif %}
+                </div>
             </div>
         {% endif %}
 
-        {% set expectedCorrections = dropzone.expectedTotalCorrection - nbCorrections %}
+        {% if dropzone.peerReview %}
+            {% set expectedCorrections = dropzone.expectedTotalCorrection - nbCorrections %}
+        {% else %}
+            {% set expectedCorrections = 0 %}
+        {% endif %}
         {% if dropzone.isPeerReview and expectedCorrections > 0 %}
-            {% if drop is not null %}
+            {% if drop is not null and drop.finished == true %}
                 {% if not dropzone.manualPlanning %}
                     <div class="row">
                         <div class="col-md-12 text-danger">
@@ -137,34 +149,70 @@
                 {% endif %}
 
                 <div class="row">
-                    <div class="text-danger col-md-8">
+                    <div class="text-danger col-md-9">
                         {{ 'nb correction remains'|transchoice(expectedCorrections) }}
                     </div>
 
-                    <div class="col-md-4">
-                        <a href="{{ path('icap_dropzone_correct', {'resourceId': dropzone.id}) }}" class="btn btn-primary pull-right">{{ 'Correct a copy'|trans }}</a>
+                    <div class="col-md-3">
+                        {% if hasCopyToCorrect == true %}
+                            <a href="{{ path('icap_dropzone_correct', {'resourceId': dropzone.id}) }}" class="btn btn-primary pull-right">{{ 'Correct a copy'|trans }}</a>
+                        {% endif %}
                     </div>
                 </div>
+
+                {% if hasCopyToCorrect == false %}
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-9 text-danger">
+                            {{ 'Unfortunately there is no copy to correct for the moment. Please try again later'|trans }}
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{ path('icap_dropzone_correct', {'resourceId': dropzone.id}) }}" class="btn btn-primary pull-right">{{ 'Retry'|trans }}</a>
+                        </div>
+                    </div>
+                {% endif %}
             {% endif %}
         {% endif %}
 
-        {% if drop is not null and expectedCorrections <= 0 %}
-            {#{% if drop.isCorrected %}#}
-            {% if true %}
-                <div class='text-success'>
-                    Note : "votre note"
-                    Bravo vous avez reussi cette évaluation
-                </div>
-                <div class='text-danger'>
-                    Note : "votre note"
-                    Dommage vous avez echoué cette évaluation
-                </div>
-            {% else %}
-                <div class='text-success'>
-                    {{ 'Finished! You have realized the nb corrections expected. Patience your copy is being corrected.'|transchoice(dropzone.expectedTotalCorrection) }}
-                </div>
-            {% endif %}
+        {% if drop is not null and drop.finished == true and expectedCorrections <= 0 %}
+            <hr/>
+            <div class="row">
+                {% if drop.countFinishedCorrections >= dropzone.expectedTotalCorrection %}
+                    {% if drop.calculatedGrade >= dropzone.minimumScoreToPass %}
+                        <div class='text-success'>
+                            {% if dropzone.displayNotationMessageToLearners %}
+                                <div class="col-md-6">
+                                    Bravo ! Vous avez reussi cette évaluation
+                                </div>
+                            {% endif %}
+                            {% if dropzone.displayNotationToLearners %}
+                                <div class="col-md-6">
+                                    Note : {% include 'IcapDropzoneBundle:Dropzone:dropsTotalGrade.html.twig' %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class='text-danger'>
+                            {% if dropzone.displayNotationMessageToLearners %}
+                                <div class="col-md-6">
+                                    Dommage... Vous avez echoué cette évaluation
+                                </div>
+                            {% endif %}
+                            {% if dropzone.displayNotationToLearners %}
+                                <div class="col-md-6">
+                                    Note : {% include 'IcapDropzoneBundle:Dropzone:dropsTotalGrade.html.twig' %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <strong>
+                        {{ 'Finished! You have realized the nb corrections expected. Patience your copy is being corrected.'|transchoice(dropzone.expectedTotalCorrection) }}
+                    </strong>
+                {% endif %}
+            </div>
         {% endif %}
+        <br/>
     </div>
 {% endblock %}
 

@@ -22,7 +22,15 @@ class DocumentType extends AbstractType
         } else if ($options['documentType'] == 'file') {
             $builder->add('document', 'file',  array('required' => true, 'label' => 'file document'));
         } else if ($options['documentType'] == 'resource') {
-            $builder->add('document', 'text',  array('required' => true, 'label' => 'resource document'));
+           $builder->add(
+               'document',
+               'hidden',
+               array(
+                   'required' => true,
+                   'label' => '',
+                   'label_attr' => array('style' => 'display: none;')
+               )
+           );
         } else {
             $builder->add('document', 'url',  array('required' => true, 'label' => 'url document'));
         }

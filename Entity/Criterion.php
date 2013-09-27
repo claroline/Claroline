@@ -34,7 +34,7 @@ class Criterion {
     protected $dropzone;
 
     /**
-     * @return mixed
+     * @return Dropzone
      */
     public function getDropzone()
     {
@@ -42,7 +42,7 @@ class Criterion {
     }
 
     /**
-     * @param mixed $dropzone
+     * @param Dropzone $dropzone
      */
     public function setDropzone($dropzone)
     {
