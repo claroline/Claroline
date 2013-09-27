@@ -55,7 +55,7 @@ class UserBadge
      *
      * @Gedmo\Blameable(on="create")
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User", inversedBy="issuedBadges")
-     * @ORM\JoinColumn(name="issuer_id", referencedColumnName="id", nullable=false, onDelete="SET NULL")
+     * @ORM\JoinColumn(name="issuer_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
     */
     protected $issuer;
 
