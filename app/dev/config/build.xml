@@ -21,8 +21,6 @@
             <arg value="--coverage-html"/>
             <arg path="${builddir}/coverage" />
             <arg value="--verbose" />
-            <arg value="--testsuite" />
-            <arg value="core" />
         </exec>
     </target>
 
@@ -48,6 +46,7 @@
             <arg value="--jdepend-xml=${builddir}/logs/jdepend.xml" />
             <arg value="--jdepend-chart=${builddir}/pdepend/dependencies.svg" />
             <arg value="--overview-pyramid=${builddir}/pdepend/overview-pyramid.svg" />
+            <arg value="--ignore=${srcdir}/*/*/*/Migrations" />
             <arg path="${srcdir}" />
         </exec>
     </target>
