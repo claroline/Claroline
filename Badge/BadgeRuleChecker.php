@@ -54,9 +54,10 @@ class BadgeRuleChecker
                 if (false === $checkedLogs) {
                     $isChecked = false;
                 }
-
-                foreach ($checkedLogs as $checkedLog) {
-                    $return[] = $checkedLog[0];
+                else {
+                    foreach ($checkedLogs as $checkedLog) {
+                        $return[] = $checkedLog[0];
+                    }
                 }
             }
         }

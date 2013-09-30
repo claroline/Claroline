@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Event\Log\LogUserDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceRoleDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogNotRepeatableInterface;
 use Claroline\CoreBundle\Entity\Log\Log;
+use Claroline\CoreBundle\Event\LogCreateEvent;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -166,6 +167,9 @@ class LogListener
 
         $this->om->persist($log);
         $this->om->flush();
+
+        $createLogEvent = new LogCreateEvent($log);
+        $this->container->get('event_dispatcher')->dispatch(LogCreateEvent::NAME, $createLogEvent);
     }
 
     /**
