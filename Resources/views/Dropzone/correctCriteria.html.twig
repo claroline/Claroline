@@ -39,7 +39,7 @@
                                         {% set criterionGrade = loop.index-1 %}
                                     {% endif %}
                                 {% endfor %}
-                                <span class="criterion-grade" data-criterion="icap_dropzone_correct_criteria_page_form[{{ loop.index }}]">{{ criterionGrade }}</span>/{{ dropzone.totalCriteriaColumn-1 }}
+                                <span class="criterion-grade" data-criterion="icap_dropzone_correct_criteria_page_form[{{ criterion.id }}]">{{ criterionGrade }}</span>/{{ dropzone.totalCriteriaColumn-1 }}
                             </div>
                         </div>
                     </div>
@@ -53,7 +53,7 @@
                     <div class="btn-group pull-right">
                         {% if admin == true %}
                             {% if pager.currentPage == 1 %}
-                                <a href="#" class="btn btn-default disabled">{{ 'Previous'|trans }}</a>
+                                <a href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': correction.drop.id}) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
                             {% else %}
                                 {% set previousPage = pager.currentPage-1 %}
                                 <a href="{{ path('icap_dropzone_drops_detail_correction_paginated', {'resourceId': dropzone.id, 'state' : edit ? 'edit' : 'show', 'correctionId': correction.id, 'page': previousPage}) }}" class="btn btn-default back-button">{{ 'Previous'|trans }}</a>
@@ -67,16 +67,12 @@
                             {% endif %}
                         {% endif %}
 
-                        {% if pager.currentPage == pager.nbPages and not dropzone.allowCommentInCorrection %}
-                            <button type="submit" class="btn btn-primary">{{ 'Save and finished'|trans }}</button>
-                        {% else %}
-                            <button type="submit" class="btn btn-primary">{{ 'Save and continue'|trans }}</button>
-                        {% endif %}
+                        <button type="submit" class="btn btn-primary">{{ 'Save and continue'|trans }}</button>
                     </div>
                 {% else %}
                     <div class="btn-group pull-right">
                         {% if pager.currentPage == 1 %}
-                            <a href="#" class="btn btn-default disabled">{{ 'Previous'|trans }}</a>
+                            <a href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': correction.drop.id}) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
                         {% else %}
                             {% set previousPage = pager.currentPage-1 %}
                             <a href="{{ path('icap_dropzone_drops_detail_correction_paginated', {'resourceId': dropzone.id, 'state' : edit ? 'edit' : 'show', 'correctionId': correction.id, 'page': previousPage}) }}" class="btn btn-default">{{ 'Previous'|trans }}</a>
@@ -97,7 +93,7 @@
 
         <div class="row">
             <strong>
-                {{ pager.currentPage }} / {% if dropzone.allowCommentInCorrection %}{{ pager.nbPages+1 }}{% else %}{{ pager.nbPages }}{% endif %}
+                {{ pager.currentPage }} / {% if edit == false and not dropzone.allowCommentInCorrection %}{{ pager.nbPages}}{% else %}{{ pager.nbPages+1 }}{% endif %}
             </strong>
         </div>
     </div>
@@ -128,7 +124,9 @@
                 var name = $(this).attr('name');
                 var value = $(this).val();
 
-                $('.criterion-grade[data-criterion="'+name+'"]').html(value);
+                var test = '.criterion-grade[data-criterion="'+name+'"]';
+                console.log(test);
+                $(test).html(value);
             });
 
             var calculateTotalGrade = function () {

@@ -94,9 +94,9 @@ class TemporaryAccessResourceManager
         }
         $this->container->get('request')->getSession()->set(TemporaryAccessResourceManager::RESOURCE_TEMPORARY_ACCESS_KEY, $temporaryAccessArray);
 
-        echo('<pre>');
-        var_dump($temporaryAccessArray);
-        echo('</pre>');
-        die();
+//        echo('<pre>');
+//        var_dump($temporaryAccessArray);
+//        echo('</pre>');
+//        die();
     }
 }

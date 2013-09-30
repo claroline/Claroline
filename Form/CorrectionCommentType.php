@@ -10,16 +10,20 @@ class CorrectionCommentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($options['edit'] === true) {
-            $params = array('required' => true);
-            $params['attr'] = array(
-                'class' => 'tinymce',
-                'data-theme' => 'advanced'
-            );
-            $builder
-                ->add('goBack', 'hidden', array('mapped' => false))
-                ->add('comment', 'textarea', $params);
+        if ($options['allowCommentInCorrection'] == true) {
+            if ($options['edit'] === true) {
+                $params = array('required' => true);
+                $params['attr'] = array(
+                    'class' => 'tinymce',
+                    'data-theme' => 'advanced'
+                );
+                $builder
+                    ->add('comment', 'textarea', $params);
+            }
         }
+
+        $builder
+            ->add('goBack', 'hidden', array('mapped' => false));
     }
 
     public function getName()
@@ -31,6 +35,7 @@ class CorrectionCommentType extends AbstractType
     {
         $resolver->setDefaults(array(
             'edit' => true,
+            'allowCommentInCorrection' => false,
         ));
     }
 }
