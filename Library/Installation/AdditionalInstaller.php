@@ -1,4 +1,3 @@
-
 <?php
 
 namespace Claroline\CoreBundle\Library\Installation;

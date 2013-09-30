@@ -24,7 +24,7 @@ class WidgetHomeTabConfig
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance"
      * )
-     * @ORM\JoinColumn(name="widget_instance_id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="widget_instance_id", onDelete="CASCADE", nullable=true)
      */
     protected $widgetInstance;
 

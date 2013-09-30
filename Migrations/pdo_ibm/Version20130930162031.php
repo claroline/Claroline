@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\ibm_db2;
+namespace Claroline\CoreBundle\Migrations\pdo_ibm;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/25 10:49:32
+ * Generation date: 2013/09/30 04:20:31
  */
-class Version20130925104931 extends AbstractMigration
+class Version20130930162031 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -54,6 +54,32 @@ class Version20130925104931 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE claro_widget 
+            ADD COLUMN is_displayable_in_workspace SMALLINT NOT NULL 
+            ADD COLUMN is_displayable_in_desktop SMALLINT NOT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget_home_tab_config 
+            ADD COLUMN widget_instance_id INTEGER DEFAULT NULL 
+            DROP COLUMN widget_id
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget_home_tab_config 
+            DROP FOREIGN KEY FK_D48CC23EFBE885E2
+        ");
+        $this->addSql("
+            DROP INDEX IDX_D48CC23EFBE885E2
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget_home_tab_config 
+            ADD CONSTRAINT FK_D48CC23E44BF891 FOREIGN KEY (widget_instance_id) 
+            REFERENCES claro_widget_instance (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D48CC23E44BF891 ON claro_widget_home_tab_config (widget_instance_id)
+        ");
+        $this->addSql("
             ALTER TABLE simple_text_workspace_widget_config 
             DROP COLUMN is_default RENAME workspace_id TO displayConfig_id
         ");
@@ -73,41 +99,17 @@ class Version20130925104931 extends AbstractMigration
         $this->addSql("
             CREATE INDEX IDX_11925ED3EF00646E ON simple_text_workspace_widget_config (displayConfig_id)
         ");
-        $this->addSql("
-            ALTER TABLE claro_widget_home_tab_config RENAME widget_id TO widget_instance_id
-        ");
-        $this->addSql("
-            ALTER TABLE claro_widget_home_tab_config 
-            DROP FOREIGN KEY FK_D48CC23EFBE885E2
-        ");
-        $this->addSql("
-            DROP INDEX IDX_D48CC23EFBE885E2
-        ");
-        $this->addSql("
-            ALTER TABLE claro_widget_home_tab_config 
-            ADD CONSTRAINT FK_D48CC23E44BF891 FOREIGN KEY (widget_instance_id) 
-            REFERENCES claro_widget_instance (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D48CC23E44BF891 ON claro_widget_home_tab_config (widget_instance_id)
-        ");
-        $this->addSql("
-            ALTER TABLE claro_widget 
-            ADD COLUMN is_displayable_in_workspace SMALLINT NOT NULL 
-            ADD COLUMN is_displayable_in_desktop SMALLINT NOT NULL
-        ");
     }
 
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE simple_text_workspace_widget_config 
-            DROP FOREIGN KEY FK_11925ED3EF00646E
-        ");
-        $this->addSql("
             ALTER TABLE claro_widget_home_tab_config 
             DROP FOREIGN KEY FK_D48CC23E44BF891
+        ");
+        $this->addSql("
+            ALTER TABLE simple_text_workspace_widget_config 
+            DROP FOREIGN KEY FK_11925ED3EF00646E
         ");
         $this->addSql("
             DROP TABLE claro_widget_instance
@@ -118,7 +120,9 @@ class Version20130925104931 extends AbstractMigration
             DROP COLUMN is_displayable_in_desktop
         ");
         $this->addSql("
-            ALTER TABLE claro_widget_home_tab_config RENAME widget_instance_id TO widget_id
+            ALTER TABLE claro_widget_home_tab_config 
+            ADD COLUMN widget_id INTEGER NOT NULL 
+            DROP COLUMN widget_instance_id
         ");
         $this->addSql("
             DROP INDEX IDX_D48CC23E44BF891

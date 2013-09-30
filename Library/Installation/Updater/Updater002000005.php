@@ -7,7 +7,9 @@ use Claroline\CoreBundle\Entity\Widget\Widget;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
-use Claroline\CoreBundle\DataFixtures\Required\LoadWidgetData;
+use Claroline\CoreBundle\DataFixtures\Required\LoadResourceTypeData;
+use Claroline\CoreBundle\DataFixtures\Required\LoadPlatformRolesData;
+use Claroline\CoreBundle\DataFixtures\Required\LoadToolsData;
 use Claroline\CoreBundle\Entity\User;
 
 class Updater002000005
@@ -21,33 +23,9 @@ class Updater002000005
 
     public function preUpdate()
     {
+        $this->addFixtureDebug();
         //these lines are usefull for debugging
-        
-        //widgets
-        $fixture = new LoadWidgetData();
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $referenceRepo = new ReferenceRepository($em);
-        $fixture->setReferenceRepository($referenceRepo);
-        $fixture->load($em);
-        
-       
-        //user
-        $user = new User();
-        $user->setUsername('root');
-        $user->setFirstName('root');
-        $user->setLastName('root');
-        $user->setAdministrativeCode('root');
-        $user->setMail('roo@t.root');
-        
         $cn = $this->container->get('doctrine.dbal.default_connection');
-        
-        //add some widgets
-        $cn->query('INSERT INTO widget_display (parent_id, workspace_id, user_id, widget_id, is_locked, is_visible, is_desktop)
-            VALUES 0, 1, 0, 1, 1, 1, 0');
-        $cn->query('INSERT INTO widget_display (parent_id, workspace_id, user_id, widget_id, is_locked, is_visible, is_desktop)
-            VALUES 1, 1, 0, 1, 1, 1, 0');
-        $cn->query('INSERT INTO widget_display (parent_id, workspace_id, user_id, widget_id, is_locked, is_visible, is_desktop)
-            VALUES 1, 0, 0, 1, 1, 1, 1');
         
         //$cn->query('TRUNCATE table claro_widget_home_tab_config');
         //$cn->query('TRUNCATE table claro_home_tab_config');
@@ -55,7 +33,7 @@ class Updater002000005
     }
     public function postUpdate()
     {
-        $this->saveTextConfigs();
+        //$this->saveTextConfigs();
         $this->updateWidgetsDatas();
     }
     
@@ -103,13 +81,18 @@ class Updater002000005
         $datas =  $cn->query($select);
 
         foreach ($datas as $row) {
-           $isAdmin = $row['parent_id'] == NULL ? true: false;
+           $isAdmin = $row['parent_id'] == NULL ? 'true': 'false';
            $wsId = $row['workspace_id'] ? $row['workspace_id']: 'null';
            $userId = $row['user_id'] ? $row['user_id']: 'null';
            $query = "INSERT INTO claro_widget_instance (workspace_id, user_id, widget_id, is_admin, is_desktop, name)
            VALUES ({$wsId}, {$userId}, {$row['widget_id']}, {$isAdmin}, {$row['is_desktop']}, 'change me !')";
            $cn->query($query);
         }
+    }
+    
+    private function dropTables()
+    {
+        
     }
     
     private function createWorkspacesListWidget()
@@ -183,5 +166,58 @@ class Updater002000005
         catch (MappingException $e) {
             $this->log('A MappingException has been thrown while trying to get HomeTabConfig or WidgetHomeTabConfig repository');
         }
+    }
+    
+    private function addFixtureDebug()
+    {
+        //these lines are usefull for debugging
+        $cn = $this->container->get('doctrine.dbal.default_connection');
+        
+        //resource types
+        $fixture = new LoadResourceTypeData();
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $referenceRepo = new ReferenceRepository($em);
+        $fixture->setReferenceRepository($referenceRepo);
+        $fixture->setContainer($this->container);
+        $fixture->load($em);
+        
+        //roles
+        $fixture = new LoadPlatformRolesData();
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $referenceRepo = new ReferenceRepository($em);
+        $fixture->setReferenceRepository($referenceRepo);
+        $fixture->setContainer($this->container);
+        $fixture->load($em);
+        
+        //tools
+        $fixture = new LoadToolsData();
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $referenceRepo = new ReferenceRepository($em);
+        $fixture->setReferenceRepository($referenceRepo);
+        $fixture->setContainer($this->container);
+        $fixture->load($em);
+        
+        //widgets
+        $cn->query('INSERT INTO claro_widget (plugin_id, name, is_configurable, icon, is_exportable)
+            VALUES (null, "text", 1, "fake/path", 0)');
+       
+        //user
+        $user = new User();
+        $user->setUsername('root');
+        $user->setFirstName('root');
+        $user->setLastName('root');
+        $user->setAdministrativeCode('root');
+        $user->setMail('roo@t.root');
+        $this->container->get('claroline.manager.user_manager')->createUser($user);
+        $em->flush();
+        
+        $cn->query('INSERT INTO claro_widget_display (parent_id, workspace_id, user_id, widget_id, is_locked, is_visible, is_desktop)
+            VALUES (null, 1, null, 1, 1, 1, 0)');
+        $cn->query('INSERT INTO claro_widget_display (parent_id, workspace_id, user_id, widget_id, is_locked, is_visible, is_desktop)
+            VALUES (1, 1, null, 1, 1, 1, 0)');
+        $cn->query('INSERT INTO claro_widget_display (parent_id, workspace_id, user_id, widget_id, is_locked, is_visible, is_desktop)
+            VALUES (null, 1, null, 1, 1, 1, 1)');
+        $cn->query('INSERT INTO claro_widget_display (parent_id, workspace_id, user_id, widget_id, is_locked, is_visible, is_desktop)
+            VALUES (3, null, 1, 1, 1, 1, 1)');
     }
 }
