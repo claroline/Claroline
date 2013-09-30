@@ -390,8 +390,7 @@ class MessageController
     {
         if ($user->hasRole('ROLE_ADMIN')) {
             $users = $this->userManager->getAllUsers($page);
-        }
-        else {
+        } else {
             $users = array();
             $workspaces = $this->workspaceManager
                 ->getWorkspacesByUserAndRoleNames($user, array('ROLE_WS_MANAGER'));
@@ -435,8 +434,7 @@ class MessageController
     {
         if ($user->hasRole('ROLE_ADMIN')) {
             $groups = $this->groupManager->getAllGroups($page);
-        }
-        else {
+        } else {
             $groups = array();
             $workspaces = $this->workspaceManager
                 ->getWorkspacesByUserAndRoleNames($user, array('ROLE_WS_MANAGER'));
@@ -464,8 +462,7 @@ class MessageController
         foreach ($names as $name) {
             if (substr($name, 0, 1) === '{') {
                 $groupNames[] = trim($name, '{}');
-            }
-            else {
+            } else {
                 $usernames[] = $name;
             }
         }
