@@ -150,3 +150,6 @@ table.no_margin {
   padding-left: 15px;
   margin-bottom: 10px;
 }
+.badge_infos .alert {
+  margin-top: 20px;
+}

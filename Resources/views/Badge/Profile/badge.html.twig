@@ -14,19 +14,17 @@
                 {% endif %}
             </h3>
         </div>
-        <div class="panel-body">
-            <div class="badge_infos">
-                {% if null == userBadge.issuer %}
-                    <p>{{ 'badge_awarded_automatically_on'|trans({'%awardingDate%': userBadge.issuedAt|date('date_format'|trans({}, 'platform'))}, 'badge') }}</p>
-                {% else %}
-                    <p>{{ 'badge_awarded_on_by'|trans({'%awardingDate%': userBadge.issuedAt|date('date_format'|trans({}, 'platform')), '%awardingIssuer%': '<a href="' ~ path("claro_profile_view", {"userId": userBadge.issuer.id}) ~ '" title="' ~ userBadge.issuer.firstname ~ ' ' ~ userBadge.issuer.lastname ~ '">' ~ userBadge.issuer.firstname ~ ' ' ~ userBadge.issuer.lastname ~ '</a>'}, 'badge')|raw }}</p>
-                {% endif %}
-                <div class="media">
-                    <img class="media-object pull-left badge_image_informations" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
-                    <div class="media-body">
-                        <h4 class="media-heading">{{ badge.description }}</h4>
-                        {{ badge.criteria|raw }}
-                    </div>
+        <div class="panel-body badge_infos">
+            {% if null == userBadge.issuer %}
+                <p>{{ 'badge_awarded_automatically_on'|trans({'%awardingDate%': userBadge.issuedAt|date('date_format'|trans({}, 'platform'))}, 'badge') }}</p>
+            {% else %}
+                <p>{{ 'badge_awarded_on_by'|trans({'%awardingDate%': userBadge.issuedAt|date('date_format'|trans({}, 'platform')), '%awardingIssuer%': '<a href="' ~ path("claro_profile_view", {"userId": userBadge.issuer.id}) ~ '" title="' ~ userBadge.issuer.firstname ~ ' ' ~ userBadge.issuer.lastname ~ '">' ~ userBadge.issuer.firstname ~ ' ' ~ userBadge.issuer.lastname ~ '</a>'}, 'badge')|raw }}</p>
+            {% endif %}
+            <div class="media">
+                <img class="media-object pull-left badge_image_informations" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
+                <div class="media-body">
+                    <h4 class="media-heading">{{ badge.description }}</h4>
+                    {{ badge.criteria|raw }}
                 </div>
             </div>
             {% if 0 < badge.badgeRules|length %}
