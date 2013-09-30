@@ -12,6 +12,8 @@ use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
+use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Icap\DropzoneBundle\Entity\Correction;
 use Icap\DropzoneBundle\Entity\Criterion;
@@ -22,6 +24,7 @@ use Icap\DropzoneBundle\Entity\Grade;
 use Icap\DropzoneBundle\Form\CorrectionCommentType;
 use Icap\DropzoneBundle\Form\CorrectionCriteriaPageType;
 use Icap\DropzoneBundle\Form\CorrectionReportType;
+use Icap\DropzoneBundle\Form\CorrectionStandardType;
 use Icap\DropzoneBundle\Form\CorrectionValidationType;
 use Icap\DropzoneBundle\Form\CriterionDeleteType;
 use Icap\DropzoneBundle\Form\CriterionType;
@@ -57,14 +60,19 @@ class DropzoneController extends Controller
         }
     }
 
-    protected function isAllowToEdit($dropzone)
+    protected function isAllowToEdit(Dropzone $dropzone)
     {
         $this->isAllow($dropzone, 'EDIT');
+//        $log = new LogResourceUpdateEvent($dropzone->getResourceNode(), array());
+//        $this->get('event_dispatcher')->dispatch('log', $log);
     }
 
-    protected function isAllowToOpen($dropzone)
+    protected function isAllowToOpen(Dropzone $dropzone)
     {
         $this->isAllow($dropzone, 'OPEN');
+
+        $log = new LogResourceReadEvent($dropzone->getResourceNode());
+        $this->get('event_dispatcher')->dispatch('log', $log);
     }
 
     /**
@@ -91,6 +99,7 @@ class DropzoneController extends Controller
         if ($this->getRequest()->isMethod('POST')) {
             $form->handleRequest($this->getRequest());
 
+            /** @var Dropzone $dropzone */
             $dropzone = $form->getData();
 
             if (!$dropzone->getPeerReview() and $dropzone->getManualState() == 'peerReview') {
@@ -158,6 +167,9 @@ class DropzoneController extends Controller
             if ($form->isValid()) {
                 if ($dropzone->getPeerReview() != true) {
                     $dropzone->setExpectedTotalCorrection(1);
+                    if ($dropzone->getManualState() == 'peerReview') {
+                        $dropzone->setManualState('notStarted');
+                    }
                 }
 
                 $em = $this->getDoctrine()->getManager();
@@ -608,6 +620,11 @@ class DropzoneController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($notFinishedDrop);
                 $em->flush();
+
+                $this->getRequest()->getSession()->getFlashBag()->add(
+                    'success',
+                    $this->get('translator')->trans('Your copy has been saved')
+                );
 
                 return $this->redirect(
                     $this->generateUrl(
@@ -1253,25 +1270,14 @@ class DropzoneController extends Controller
                             )
                         );
                     } else {
-                        if ($dropzone->getAllowCommentInCorrection()) {
-                            return $this->redirect(
-                                $this->generateUrl(
-                                    'icap_dropzone_correct_comment',
-                                    array(
-                                        'resourceId' => $dropzone->getId()
-                                    )
+                        return $this->redirect(
+                            $this->generateUrl(
+                                'icap_dropzone_correct_comment',
+                                array(
+                                    'resourceId' => $dropzone->getId()
                                 )
-                            );
-                        } else {
-                            return $this->redirect(
-                                $this->generateUrl(
-                                    'icap_dropzone_correct_validation',
-                                    array(
-                                        'resourceId' => $dropzone->getId()
-                                    )
-                                )
-                            );
-                        }
+                            )
+                        );
                     }
                 }
             }
@@ -1304,12 +1310,9 @@ class DropzoneController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function correctCommentAction($dropzone, $user)
+    public function correctCommentAction(Dropzone $dropzone, User $user)
     {
         $this->isAllowToOpen($dropzone);
-        if ($dropzone->getAllowCommentInCorrection() == false) {
-            throw new NotFoundHttpException();
-        }
         $check = $this->checkRightToCorrect($dropzone, $user);
         if ($check !== null) {
             return $check;
@@ -1339,7 +1342,7 @@ class DropzoneController extends Controller
         }
 
         $pager = $this->getCriteriaPager($dropzone);
-        $form = $this->createForm(new CorrectionCommentType(), $correction);
+        $form = $this->createForm(new CorrectionCommentType(), $correction, array('allowCommentInCorrection' => $dropzone->getAllowCommentInCorrection()));
 
         if ($this->getRequest()->isMethod('POST')) {
             $form->handleRequest($this->getRequest());
@@ -1362,86 +1365,14 @@ class DropzoneController extends Controller
                         )
                     );
                 } else {
-                    return $this->redirect(
-                        $this->generateUrl(
-                            'icap_dropzone_correct_validation',
-                            array(
-                                'resourceId' => $dropzone->getId()
-                            )
-                        )
-                    );
+                    return $this->endCorrection($dropzone, $correction, false);
                 }
             }
         }
 
         $view = 'IcapDropzoneBundle:Dropzone:correctComment.html.twig';
-
-        return $this->render(
-            $view,
-            array(
-                'workspace' => $dropzone->getResourceNode()->getWorkspace(),
-                '_resource' => $dropzone,
-                'dropzone' => $dropzone,
-                'correction' => $correction,
-                'form' => $form->createView(),
-                'nbPages' => $pager->getNbPages(),
-                'admin' => false,
-                'edit' => true
-            )
-        );
-    }
-
-    /**
-     * @Route(
-     *      "/{resourceId}/correct/validation",
-     *      name="icap_dropzone_correct_validation",
-     *      requirements={"resourceId" = "\d+"}
-     * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @ParamConverter("user", options={"authenticatedUser" = true})
-     * @Template()
-     */
-    public function correctValidationAction($dropzone, $user)
-    {
-        $this->isAllowToOpen($dropzone);
-        $check = $this->checkRightToCorrect($dropzone, $user);
-        if ($check !== null) {
-            return $check;
-        }
-
-        $correction = $this->getCorrection($dropzone, $user);
-        if ($correction === null) {
-            $this
-                ->getRequest()
-                ->getSession()
-                ->getFlashBag()
-                ->add(
-                    'error',
-                    $this
-                        ->get('translator')
-                        ->trans('Unfortunately there is no copy to correct for the moment. Please try again later')
-                );
-
-            return $this->redirect(
-                $this->generateUrl(
-                    'icap_dropzone_open',
-                    array(
-                        'resourceId' => $dropzone->getId()
-                    )
-                )
-            );
-        }
-
-        $form = $this->createForm(new CorrectionValidationType(), $correction);
-
-        if ($this->getRequest()->isMethod('POST')) {
-            return $this->endCorrection($dropzone, $correction, false);
-        }
-
-        $pager = $this->getCriteriaPager($dropzone);
         $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
 
-        $view = 'IcapDropzoneBundle:Dropzone:correctValidation.html.twig';
         return $this->render(
             $view,
             array(
@@ -1453,7 +1384,7 @@ class DropzoneController extends Controller
                 'nbPages' => $pager->getNbPages(),
                 'admin' => false,
                 'edit' => true,
-                'totalGrade' => $totalGrade
+                'totalGrade' => $totalGrade,
             )
         );
     }
@@ -1722,7 +1653,79 @@ class DropzoneController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *      "/{resourceId}/drops/detail/correction/standard/{state}/{correctionId}",
+     *      name="icap_dropzone_drops_detail_correction_standard",
+     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "state" = "show|edit"}
+     * )
+     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     */
+    public function dropsDetailCorrectionStandardAction(Dropzone $dropzone, $state, $correctionId)
+    {
+        $this->isAllowToOpen($dropzone);
+        $this->isAllowToEdit($dropzone);
 
+        $correction = $this
+            ->getDoctrine()
+            ->getRepository('IcapDropzoneBundle:Correction')
+            ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
+
+        $edit = $state == 'edit';
+
+        if ($edit === true and $correction->getEditable() === false) {
+            throw new AccessDeniedException();
+        }
+
+        $form = $this->createForm(new CorrectionStandardType(), $correction);
+
+        if ($this->getRequest()->isMethod('POST')) {
+            $form->handleRequest($this->getRequest());
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $correction = $form->getData();
+                $correction->setEndDate(new \DateTime());
+                $correction->setFinished(true);
+
+                $em->persist($correction);
+                $em->flush();
+
+//                var_dump($correction->getTotalGrade());
+//                die();
+
+                $this->getRequest()->getSession()->getFlashBag()->add(
+                    'success',
+                    $this->get('translator')->trans('Your correction has been saved')
+                );
+
+                return $this->redirect(
+                    $this->generateUrl(
+                        'icap_dropzone_drops_detail',
+                        array(
+                            'resourceId' => $dropzone->getId(),
+                            'dropId' => $correction->getDrop()->getId()
+                        )
+                    )
+                );
+            }
+        }
+
+        $view = 'IcapDropzoneBundle:Dropzone:correctStandard.html.twig';
+
+        return $this->render(
+            $view,
+            array(
+                'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+                '_resource' => $dropzone,
+                'dropzone' => $dropzone,
+                'correction' => $correction,
+                'form' => $form->createView(),
+                'admin' => true,
+                'edit' => $edit,
+                'state' => $state
+            )
+        );
+    }
 
 
     /**
@@ -1740,10 +1743,23 @@ class DropzoneController extends Controller
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      */
-    public function dropsDetailCorrectionAction($dropzone, $state, $correctionId, $page)
+    public function dropsDetailCorrectionAction(Dropzone $dropzone, $state, $correctionId, $page)
     {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
+
+        if (!$dropzone->getPeerReview()) {
+            return $this->redirect(
+                $this->generateUrl(
+                    'icap_dropzone_drops_detail_correction_standard',
+                    array(
+                        'resourceId' => $dropzone->getId(),
+                        'state' => $state,
+                        'correctionId' => $correctionId
+                    )
+                )
+            );
+        }
 
         $correction = $this
             ->getDoctrine()
@@ -1833,20 +1849,16 @@ class DropzoneController extends Controller
                                 )
                             );
                         } else {
-                            if ($dropzone->getAllowCommentInCorrection()) {
-                                return $this->redirect(
-                                    $this->generateUrl(
-                                        'icap_dropzone_drops_detail_correction_comment',
-                                        array(
-                                            'resourceId' => $dropzone->getId(),
-                                            'state' => 'edit',
-                                            'correctionId' => $correction->getId()
-                                        )
+                            return $this->redirect(
+                                $this->generateUrl(
+                                    'icap_dropzone_drops_detail_correction_comment',
+                                    array(
+                                        'resourceId' => $dropzone->getId(),
+                                        'state' => 'edit',
+                                        'correctionId' => $correction->getId()
                                     )
-                                );
-                            } else {
-                                return $this->endCorrection($dropzone, $correction, true);
-                            }
+                                )
+                            );
                         }
                     }
                 }
@@ -1880,7 +1892,7 @@ class DropzoneController extends Controller
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      */
-    public function dropsDetailCorrectionCommentAction($dropzone, $state, $correctionId)
+    public function dropsDetailCorrectionCommentAction(Dropzone $dropzone, $state, $correctionId)
     {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
@@ -1897,7 +1909,7 @@ class DropzoneController extends Controller
         }
 
         $pager = $this->getCriteriaPager($dropzone);
-        $form = $this->createForm(new CorrectionCommentType(), $correction, array('edit' => $edit));
+        $form = $this->createForm(new CorrectionCommentType(), $correction, array('edit' => $edit, 'allowCommentInCorrection' => $dropzone->getAllowCommentInCorrection()));
 
         if ($edit) {
             if ($this->getRequest()->isMethod('POST')) {
@@ -1929,6 +1941,7 @@ class DropzoneController extends Controller
         }
 
         $view = 'IcapDropzoneBundle:Dropzone:correctComment.html.twig';
+        $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
 
         return $this->render(
             $view,
@@ -1941,7 +1954,8 @@ class DropzoneController extends Controller
                 'nbPages' => $pager->getNbPages(),
                 'admin' => true,
                 'edit' => $edit,
-                'state' => $state
+                'state' => $state,
+                'totalGrade' => $totalGrade,
             )
         );
     }
@@ -2205,10 +2219,14 @@ class DropzoneController extends Controller
      * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
      * @Template()
      */
-    public function recalculateScoreAction($dropzone, $correction)
+    public function recalculateScoreAction(Dropzone $dropzone, Correction $correction)
     {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
+
+        if (!$dropzone->getPeerReview()) {
+            throw new AccessDeniedException();
+        }
 
         $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
         $correction->setTotalGrade($totalGrade);

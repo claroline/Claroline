@@ -45,10 +45,12 @@
         <div class="panel {% if drop.reported %}panel-danger{% else %}panel-default{% endif %}">
             <div class="panel-heading">
                 <div class="row">
-                    <h3 class="panel-title col-md-9">
-                        {% if drop.reported %}<span class="glyphicon icon-warning-sign" data-toggle="tooltip" title="" data-original-title="{{ 'This copy has been reported'|trans }}"></span>{% endif %}
-                        <a href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': drop.id}) }}">{{ drop.user.firstName }} {{ drop.user.lastName }}</a>
-                    </h3>
+                    <a href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': drop.id}) }}">
+                        <h3 class="panel-title col-md-9">
+                            {% if drop.reported %}<span class="glyphicon icon-warning-sign" data-toggle="tooltip" title="" data-original-title="{{ 'This copy has been reported'|trans }}"></span>{% endif %}
+                            {{ drop.user.firstName|capitalize }} {{ drop.user.lastName|upper }}
+                        </h3>
+                    </a>
                     <div class="col-md-3">
                         <a href="{{ path('icap_dropzone_drops_delete', {'resourceId': dropzone.id, 'dropId': drop.id, 'tab': 0, 'page': pager.currentPage}) }}" class="btn btn-danger btn-xs pull-right launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete'|trans }}</a>
                     </div>

@@ -1,0 +1,42 @@
+{% extends "IcapDropzoneBundle:Dropzone:correct.html.twig" %}
+
+{% form_theme form "IcapDropzoneBundle::form_theme_bootstrap3.html.twig" %}
+
+{% block dropzone_correct_content %}
+
+    {% if edit %}
+        <div class="row">
+            <div class="col-md-12">
+                <form id="correct-form" method="POST" action="{% if edit == false %}#{% elseif admin == true %}{{ path('icap_dropzone_drops_detail_correction_standard', {'resourceId': dropzone.id, 'state' : edit ? 'edit' : 'show', 'correctionId': correction.id}) }}{% else %}{{ path('icap_dropzone_correct_comment', {'resourceId': dropzone.id}) }}{% endif %}" class="form-horizontal">
+                    {{ form_errors(form) }}
+                    <br/>
+                    <p>
+                        Veuillez choisir la note a attribué (sur 20) :
+                    </p>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ form_row(form.totalGrade, {'attr': {'style': 'width: 80px;'}}) }}
+                        </div>
+                    </div>
+
+                    <br/>
+                    {{ form_rest(form) }}
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="btn-group pull-right">
+                                <a href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': correction.drop.id}) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
+                                <button type= "submit" class="btn btn-primary">{{ 'Save and finished'|trans }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+    <br/>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}}
+{% endblock %}

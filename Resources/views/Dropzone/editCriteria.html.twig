@@ -25,7 +25,7 @@
         <form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_edit_criteria', {'resourceId': dropzone.id}) }}">
             <div class="row">
                 <div class="col-md-6">
-                    <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage}) }}" class="btn btn-primary add-criterion-button disabled-during-edition">{{ 'Add a criterion'|trans }}</a>
+                    <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage}) }}" class="btn btn-primary add-criterion-button disabled-during-edition"><span class="glyphicon icon-plus"> {{ 'Add a criterion'|trans }}</span></a>
                 </div>
 
                 <div class="col-md-6 add-remove-column" {% if pager.nbResults == 0 %}style="display: none;"{% endif %}>

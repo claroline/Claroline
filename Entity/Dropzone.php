@@ -40,7 +40,7 @@ class Dropzone extends AbstractResource {
     /**
      * @ORM\Column(name="allow_upload", type="boolean", nullable=false)
      */
-    protected $allowUpload = false;
+    protected $allowUpload = true;
     /**
      * @ORM\Column(name="allow_url", type="boolean", nullable=false)
      */

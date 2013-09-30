@@ -10,6 +10,7 @@ namespace Icap\DropzoneBundle\Entity;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -26,6 +27,10 @@ class Correction {
     protected $id;
     /**
      * @ORM\Column(name="total_grade", type="decimal", scale=2, nullable=true)
+     * @Assert\Range(
+     *      min = 0,
+     *      max = 20
+     * )
      */
     protected $totalGrade = null;
     /**

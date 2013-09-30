@@ -1,6 +1,6 @@
 {% extends "IcapDropzoneBundle::layout.html.twig" %}
 {% block resourceBreadcrumb %}
-    <li><a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-file"></span> {{ dropzone.resourceNode.name }}</a></li>
+    <li><a href="{{ path('icap_dropzone_edit', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-edit"></span> {{ dropzone.resourceNode.name }}</a></li>
     <li><a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}">{{ 'List of copies'|trans }}</a></li>
     <li class="active">{{ 'Retail copy of %firstName% %lastName%'|trans({'%firstName%': drop.user.firstName, '%lastName%': drop.user.lastName}) }}</li>
 {% endblock %}
@@ -23,7 +23,6 @@
                 </div>
             </div>
         {% endif %}
-
 
         <div class="row">
             <div class="text-muted col-md-4">{{ 'Documents'|trans }}</div>
@@ -64,25 +63,28 @@
             <div class="panel {% if not correction.valid %}panel-danger{% elseif not correction.finished %}panel-warning{% else %}panel-default{% endif %}">
                 <div class="panel-heading">
                     <div class="row">
-                        <h3 class="panel-title col-md-7 {% if correction.reporter %}text-danger{% endif %}">
-                            {% if correction.reporter %}
-                                <span class="glyphicon icon-warning-sign" data-toggle="tooltip" title="" data-original-title="{{ 'This correction has reported abuse'|trans }}"></span>
-                            {% endif %}
-                            <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': 'show'}) }}">
-                                {{ 'Correction by %firstName% %lastName%'|trans({'%firstName%': correction.user.firstName, '%lastName%': correction.user.lastName}) }}
-                            </a>
-                            {% if correction.editable %}
-                                <span class="label label-default">{{ 'created by a manager'|trans }}</span>
-                            {% endif %}
+                        <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': 'show'}) }}">
+                            <h3 class="panel-title col-md-7 {% if correction.reporter %}text-danger{% endif %}">
+                                {% if correction.reporter %}
+                                    <span class="glyphicon icon-warning-sign" data-toggle="tooltip" title="" data-original-title="{{ 'This correction has reported abuse'|trans }}"></span>
+                                {% endif %}
 
-                            {% if correction.finished == false %}
-                                <span class="label label-default">{{ 'Not finished'|trans }}</span>
-                            {% endif %}
+                                {{ 'Correction by %firstName% %lastName%'|trans({'%firstName%': correction.user.firstName|capitalize, '%lastName%': correction.user.lastName|upper}) }}
 
-                        </h3>
+                                {% if correction.editable %}
+                                    <span class="label label-default">{{ 'created by a manager'|trans }}</span>
+                                {% endif %}
+
+                                {% if correction.finished == false %}
+                                    <span class="label label-default">{{ 'Not finished'|trans }}</span>
+                                {% endif %}
+                            </h3>
+                        </a>
                         <div class="col-md-5">
                             <div class="btn-group pull-right">
-                                <a href="{{ path('icap_dropzone_recalculate_score', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}" class="btn btn-default btn-xs">{{ 'Recalculate the score'|trans }}</a>
+                                {% if dropzone.peerReview %}
+                                    <a href="{{ path('icap_dropzone_recalculate_score', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}" class="btn btn-default btn-xs">{{ 'Recalculate the score'|trans }}</a>
+                                {% endif %}
                                 {% if correction.editable %}
                                     <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': 'edit'}) }}" class="btn btn-default btn-xs">{{ 'dropzone_edit'|trans }}</a>
                                     <a href="{{ path('icap_dropzone_drops_detail_delete_correction', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}" class="btn btn-danger btn-xs">{{ 'Delete'|trans }}</a>
@@ -110,7 +112,7 @@
                         <div class="col-md-3">{{ correction.startDate|date }}</div>
                         <div class="col-md-3">{{ correction.lastOpenDate|date }}</div>
                         <div class="col-md-3">{% if correction.endDate != null %}{{ correction.endDate|date }}{% else %}--{% endif %}</div>
-                        <div class="col-md-offset-1 col-md-2">{% if correction.totalGrade != null %}{{ correction.totalGrade|number_format }}{% else %}--{% endif %}/20</div>
+                        <div class="col-md-offset-1 col-md-2">{% if correction.totalGrade != null %}{{ correction.totalGrade|number_format(2) }}{% else %}--{% endif %}/20</div>
                     </div>
                 </div>
             </div>

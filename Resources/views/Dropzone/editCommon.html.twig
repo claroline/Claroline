@@ -33,10 +33,10 @@
         <p>{{ 'Select the types of documents that learners can make'|trans }}</p>
 
         <div class="form-group">
-            {{ form_row(form.allowWorkspaceResource, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
             {{ form_row(form.allowUpload, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
-            {{ form_row(form.allowUrl, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
             {{ form_row(form.allowRichText, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
+            {{ form_row(form.allowWorkspaceResource, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
+            {{ form_row(form.allowUrl, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
         </div>
 
         <h4>{{ 'Type of evaluation'|trans }}</h4>
