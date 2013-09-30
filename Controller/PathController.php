@@ -109,7 +109,7 @@ class PathController extends Controller
         $manager = $this->entityManager();
 
         // Récupération vars HTTP
-        $pathId = $this->get('request')->request->get('path-id');
+        $pathId = $this->get('request')->request->get('pathId');
         $path = $manager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
 
         // On récupère la liste des steps avant modification pour supprimer ceux qui ne sont plus utilisés. TO DO : suppression
@@ -124,7 +124,7 @@ class PathController extends Controller
         $json_root_steps = $json->steps;
 
         // Récupération Workspace courant et la resource root
-        $workspaceId = $this->get('request')->request->get('workspace-id');
+        $workspaceId = $this->get('request')->request->get('workspaceId');
         $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
 
         // Récupération utilisateur courant.
@@ -439,7 +439,7 @@ class PathController extends Controller
 
         // Récupération utilisateur courant.
         $user = $this->get('security.context')->getToken()->getUser();
-        $workspaceId = $this->get('request')->request->get('workspace-id');
+        $workspaceId = $this->get('request')->request->get('workspaceId');
         $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
 
         // création du dossier _paths s'il existe pas.

@@ -29,7 +29,7 @@
                 
             </div>
             
-            <div ng-include="templateRoute + 'Editor/navbar.html'"></div>
+            <div ng-include="templateRoute + 'Editor/Partial/navbar.html'"></div>
             
             <div ng-view class="panel-body"></div>
         </div>
@@ -87,6 +87,6 @@
         // TODO : find more beautiful
         EditorApp.pathId = "{{ pathId }}";
         EditorApp.workspaceId = "{{ workspace.id }}";
-        EditorApp.templateRoute = "{{ asset('bundles/innovapath/partials/') }}";
+        EditorApp.templateRoute = "{{ asset('bundles/innovapath/js/') }}";
     </script>
 {% endblock %}

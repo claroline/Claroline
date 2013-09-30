@@ -46,14 +46,14 @@
                     </td>
                     <td align="right">
                         <form action="{{ path('innova_path_delete_path') }}" method="post" style="display: inline-block">
-                            <input type="hidden" value="{{ workspace.id }}" name="workspace-id" />
+                            <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
                             <input type="hidden" value="{{ path.id }}" name="id" />
                             <button class="btn btn-xs btn-danger" type="submit"><span class="icon-trash"></span></button>
                         </form>
                         
                         <form action="{{ path('innova_path_deploy') }}" method="post" style="display: inline-block">
-                            <input type="hidden" value="{{ workspace.id }}" name="workspace-id" />
-                            <input type="hidden" value="{{ path.id }}" name="path-id" />
+                            <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
+                            <input type="hidden" value="{{ path.id }}" name="pathId" />
                             <button class="btn btn-xs btn-success" type="submit"><span class="icon-random"></span></button>
                         </form>
                     </td>

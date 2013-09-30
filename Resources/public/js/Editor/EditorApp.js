@@ -5,46 +5,40 @@ var EditorApp = angular.module('EditorApp', ['ui.bootstrap', 'pageslide-directiv
 
 // Declare routes
 EditorApp.config(['$routeProvider', function($routeProvider) {
-    $routeProvider.when('/404', {templateUrl: 'partials/404.html'});
+    $routeProvider.when('/404', {templateUrl: 'Editor/Partial/404.html'});
     
     $routeProvider.when('/', {
-        templateUrl: EditorApp.templateRoute + 'Editor/global.html', 
+        templateUrl: EditorApp.templateRoute + 'Editor/Partial/global.html', 
         controller: 'TreeCtrl',
         activeTab: 'Global',
     });
     
     $routeProvider.when('/global', {
-        templateUrl: EditorApp.templateRoute + 'Editor/global.html', 
+        templateUrl: EditorApp.templateRoute + 'Editor/Partial/global.html', 
         controller: 'TreeCtrl',
         activeTab: 'Global',
     });
     
-    $routeProvider.when('/global/:id', {
-        templateUrl: EditorApp.templateRoute + 'Editor/global.html', 
-        controller: 'TreeCtrl',
-        activeTab: 'Global',
-    });
-    
-    $routeProvider.when('/skills/:id', {
-        templateUrl: EditorApp.templateRoute + 'Editor/skills.html', 
+    $routeProvider.when('/skills', {
+        templateUrl: EditorApp.templateRoute + 'Editor/Partial/skills.html', 
         controller: 'TreeCtrl',
         activeTab: 'Skills',
     });
     
-    $routeProvider.when('/scenario/:id', {
-        templateUrl: EditorApp.templateRoute + 'Editor/scenario.html', 
+    $routeProvider.when('/scenario', {
+        templateUrl: EditorApp.templateRoute + 'Editor/Partial/scenario.html', 
         controller: 'TreeCtrl',
         activeTab: 'Scenario',
     });
     
-    $routeProvider.when('/planner/:id', {
-        templateUrl: EditorApp.templateRoute + 'Editor/planner.html', 
+    $routeProvider.when('/planner', {
+        templateUrl: EditorApp.templateRoute + 'Editor/Partial/planner.html', 
         controller: 'TreeCtrl',
         activeTab: 'Planner',
     });
     
-    $routeProvider.when('/validation/:id', {
-        templateUrl: EditorApp.templateRoute + 'Editor/validation.html', 
+    $routeProvider.when('/validation', {
+        templateUrl: EditorApp.templateRoute + 'Editor/Partial/validation.html', 
         controller: 'TreeCtrl',
         activeTab: 'Validation',
     });
