@@ -44,6 +44,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use Innova\PathBundle\Entity\Path;
 use Innova\PathBundle\Entity\Step;
@@ -315,6 +316,10 @@ class PathController extends Controller
 
         $paths = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findByWorkspaceAndResourceType($workspace, $resourceType);
 
+        echo '<pre>';
+        var_dump($paths);
+        die();
+        
         return array('workspace' => $workspace, 'paths' => $paths);
     }
 
@@ -333,7 +338,7 @@ class PathController extends Controller
         $manager = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
 
-        return array('workspace' => $workspace);
+        return array('workspace' => $workspace, 'pathId' => $pathId);
     }
 
     /**
@@ -377,7 +382,6 @@ class PathController extends Controller
      *     name = "innova_path_get_path",
      *     options = {"expose"=true}
      * )
-     *
      * @Method("GET")
      *
      */
@@ -392,23 +396,24 @@ class PathController extends Controller
     /**
      * addPathAction function
      *
-     * @return Response($new_path->getId()
+     * @return Response($new_path->getId())
      *
-    * @Route(
-    *     "/path/add",
-    *     name = "innova_path_add_path",
-    *     options = {"expose"=true}
-    * )
-    * @Method("POST")
-    *
-    */
+     * @Route(
+     *     "/path/add",
+     *     name = "innova_path_add_path",
+     *     options = {"expose"=true}
+     * )
+     * 
+     * @Method("POST")
+     *
+     */
     public function addPathAction()
     {
         $manager = $this->container->get('doctrine.orm.entity_manager');
 
         // Récupération utilisateur courant.
         $user = $this->get('security.context')->getToken()->getUser();
-        $workspaceId = $this->get('request')->request->get('workspaceId');
+        $workspaceId = $this->get('request')->request->get('workspace-id');
         $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
 
         // création du dossier _paths s'il existe pas.
@@ -458,20 +463,24 @@ class PathController extends Controller
      *
      * @param string $path path of activity
      *
-     * @return Response($new_path->getId()
+     * @return Response($new_path->getId())
      *
-    * @Route(
-    *     "/path/edit/{id}",
-    *     name = "innova_path_edit_path",
-    *     options = {"expose"=true}
-    * )
-    * @Method("PUT")
-    *
-    */
-    public function editPathAction(Path $path)
+     * @Route(
+     *     "/path/edit/{id}",
+     *     name = "innova_path_edit_path",
+     *     options = {"expose"=true}
+     * )
+     * @Method("PUT")
+     *
+     */
+    public function editPathAction($id)
     {
         $manager = $this->container->get('doctrine.orm.entity_manager');
 
+        $path = $manager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($id);
+        if ($path) {
+            
+        }
         $resourceNode = $path->getResourceNode();
         $resourceNode->setName($this->get('request')->request->get('pathName'));
         $manager->persist($resourceNode);
@@ -494,21 +503,33 @@ class PathController extends Controller
      * @return OK
      *
      * @Route(
-     *     "/path/delete/{id}",
+     *     "/path/delete",
      *     name = "innova_path_delete_path",
      *     options = {"expose"=true}
      * )
-     * @Method("DELETE")
+     * @Method("POST")
      *
      */
-    public function deletePathAction(Path $path)
+    public function deletePathAction()
     {
-        $em = $this->entityManager();
-
-        $em->remove($path->getResourceNode());
-        $em->flush();
-
-        return new Response("ok");
+        $id = $this->get('request')->request->get('id');
+        $workspaceId = $this->get('request')->request->get('workspaceId');
+        
+        if (!empty($id)) {
+            $em = $this->entityManager();
+            
+            $path = $em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($id);
+            
+            if ($path) {
+                $em->remove($path->getResourceNode());
+                $em->flush();
+            }
+        }
+        
+        
+        
+        $url = $this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspaceId, 'toolName' => 'innova_path'));
+        return $this->redirect($url);
     }
 
     /**

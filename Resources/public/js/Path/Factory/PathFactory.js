@@ -5,7 +5,6 @@
  */
 var PathFactoryProto = function() {
     var path = null;
-    var pathInstanciated = [];
     var maxStepId = 0;
     var maxResourceId = 0;
     
@@ -28,7 +27,6 @@ var PathFactoryProto = function() {
          */
         generateNewPath: function() {
             var path = {
-                id: null,
                 name: 'My Path Name',
                 description: 'This is the path description',
                 steps: [],
@@ -106,25 +104,6 @@ var PathFactoryProto = function() {
             }
             
             return step;
-        },
-        
-        /**
-         * 
-         * @param id
-         * @returns PathFactory
-         */
-        addPathInstanciated: function(id) {
-            pathInstanciated[id] = id;
-            return this;
-        },
-        
-        /**
-         * 
-         * @param id
-         * @returns boolean
-         */
-        getPathInstanciated: function(id) {
-            return typeof pathInstanciated[id] != 'undefined';
         },
         
         /**
