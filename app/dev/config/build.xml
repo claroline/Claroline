@@ -21,6 +21,7 @@
             <arg value="--coverage-html"/>
             <arg path="${builddir}/coverage" />
             <arg value="--verbose" />
+            <arg path="${srcdir}/core-bundle" />
         </exec>
     </target>
 
