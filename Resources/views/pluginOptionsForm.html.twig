@@ -1,5 +1,23 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
-
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'Plugins'|trans({}, 'platform'),
+                'href': path('claro_admin_plugins')
+            },
+            {
+                'name': 'forum_settings'|trans({}, 'forum'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
 {% block section_content %}
 {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
 <div class="panel-heading">

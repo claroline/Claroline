@@ -1,4 +1,10 @@
-{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
 
 {% block javascripts %}
 {{ parent() }}
@@ -7,9 +13,15 @@
 {{ tinymce_init() }}
 {% endblock %}
 
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('claro_forum_subjects', { 'forumId': _resource.getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+    <li><a href="{{ path('claro_forum_messages', {'subjectId': subject.getId()}) }}">{{ subject.getTitle() }}</a></li>
+    <li class="active">{{ 'new_message'|trans({}, 'forum') }}</li>
+{% endblock %}
+
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ _resource.getResourceNode().getName() }} ({{ 'new_message'|trans({}, 'forum') }} - {{ subject.getTitle() }})</h3>
+        <h3 class="panel-title">{{ 'new_message'|trans({}, 'forum') }} ({{ subject.getTitle() }})</h3>
     </div>
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
     <form novalidate="novalidate" action="{{path('claro_forum_create_message',{'subjectId':subject.getId() })}}" method="post" {{ form_enctype(form) }} id="message_form">
@@ -18,7 +30,7 @@
         </div>
         <div class="panel-footer">
             <button class="btn btn-primary" type="submit">{{ 'ok' | trans({}, 'platform' )}}</button>
-            <a class="btn btn-default" href="{{ _path('claro_forum_messages', {'subjectId': subject.getId()}) }}">{{ 'cancel' | trans({}, 'platform' )}}</a>
+            <a class="btn btn-default" href="{{ path('claro_forum_messages', {'subjectId': subject.getId()}) }}">{{ 'cancel' | trans({}, 'platform' )}}</a>
         </div>
     </form>
 {% endblock %}
