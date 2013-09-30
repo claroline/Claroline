@@ -62,8 +62,7 @@ class MessageManager
         foreach ($receiversNames as $receiverName) {
             if (substr($receiverName, 0, 1) === '{') {
                 $groupNames[] = trim($receiverName, '{}');
-            }
-            else {
+            } else {
                 $usernames[] = $receiverName;
             }
         }
