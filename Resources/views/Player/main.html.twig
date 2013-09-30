@@ -15,7 +15,7 @@
                     <button class="btn btn-default btn-xs" ng-click="openHelp()" tooltip="Help">
                         <span class="icon-question-sign"></span>
                     </button>
-                    PathName : {{ pathResourceNode.name }}
+                    PathName : {{ path.resourceNode.name }}
                 </h3>
                 
                 <div class="editor-buttons">
@@ -34,7 +34,7 @@
                 <div>
                     <h2>Bloc info step</h2>
                     <p>Durée :  {{ step.duration|date('H:i:s') }} </p>
-                    <p>Nom : {{ stepResourceNode.name }}</p>
+                    <p>Nom : {{ step.resourceNode.name }}</p>
 
                 </div>
                 <div class="">
@@ -46,6 +46,7 @@
                 </div>
                 <div class="">
                    <h2> Zone de visualisation de la progression dans le parcours</h2>
+
                    
                 </div>
             </div>
