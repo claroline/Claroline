@@ -585,4 +585,18 @@ class Dropzone extends AbstractResource {
             return -1;
         }
     }
+
+    /**
+     * Add criterion
+     *
+     * @param \Icap\DropzoneBundle\Entity\Criterion $criterion
+     * @return Dropzone
+     */
+    public function addCriterion(Criterion $criterion)
+    {
+        $criterion->setDropzone($this);
+        $this->peerReviewCriteria[] = $criterion;
+
+        return $this;
+    }
 }
