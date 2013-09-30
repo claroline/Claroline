@@ -36,10 +36,10 @@ article .highlight {
 .comment_list li.unpublished {
   border: 1px dotted orange;
 }
-#icap_blog_post_form label {
+#icap_blog_post_form label[for=icap_blog_post_form_content] {
   float: none;
 }
-.form-actions {
+#icap_blog_post_form .form-actions {
   clear: both;
   text-align: center;
   padding: 19px 20px 20px;

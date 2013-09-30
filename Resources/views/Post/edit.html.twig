@@ -21,6 +21,7 @@
 
 {% block javascripts %}
 {{ parent() }}
+{% render controller('ClarolineCoreBundle:Tool\\WorkspaceResourceParameters:initPicker') %}
 {{ tinymce_init() }}
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/tag-it/js/tag-it.min.js') }}"></script>
