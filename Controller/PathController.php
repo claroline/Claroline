@@ -315,10 +315,6 @@ class PathController extends Controller
         $resourceType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('path');
 
         $paths = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findByWorkspaceAndResourceType($workspace, $resourceType);
-
-        echo '<pre>';
-        var_dump($paths);
-        die();
         
         return array('workspace' => $workspace, 'paths' => $paths);
     }
@@ -371,9 +367,9 @@ class PathController extends Controller
     }
 
     /**
-     * getPathsAction function
+     * getPathAction function
      *
-     * @param string $path path of activity
+     * @param string $id
      *
      * @return JsonResponse
      *
@@ -385,12 +381,21 @@ class PathController extends Controller
      * @Method("GET")
      *
      */
-    public function getPathAction(Path $path)
+    public function getPathAction($id)
     {
-        $newPath = json_decode($path->getPath());
-        $newPath->id = $path->getId();
+        $manager = $this->container->get('doctrine.orm.entity_manager');
+        $path = $manager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($id);
 
-        return new JsonResponse($newPath);
+        if ($path) {
+            $newPath = json_decode($path->getPath());
+            $newPath->id = $path->getId();
+
+            return new JsonResponse($newPath);
+        }
+        else {
+            // Path not found
+            throw $this->createNotFoundException('The path does not exist');
+        }
     }
 
     /**
@@ -476,23 +481,26 @@ class PathController extends Controller
     public function editPathAction($id)
     {
         $manager = $this->container->get('doctrine.orm.entity_manager');
-
         $path = $manager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($id);
+
         if ($path) {
-            
+            $resourceNode = $path->getResourceNode();
+            $resourceNode->setName($this->get('request')->request->get('pathName'));
+            $manager->persist($resourceNode);
+
+            $content = $this->get('request')->request->get('path');
+            $path->setPath($content);
+            $manager->persist($path);
+            $manager->flush();
+
+            return new Response(
+                $path->getId()
+            );
         }
-        $resourceNode = $path->getResourceNode();
-        $resourceNode->setName($this->get('request')->request->get('pathName'));
-        $manager->persist($resourceNode);
-
-        $content = $this->get('request')->request->get('path');
-        $path->setPath($content);
-        $manager->persist($path);
-        $manager->flush();
-
-        return new Response(
-            $path->getId()
-        );
+        else {
+            // Path not found
+            throw $this->createNotFoundException('The path does not exist');
+        }
     }
 
     /**
