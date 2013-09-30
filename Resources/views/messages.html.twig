@@ -47,7 +47,11 @@
                 <tr class="row-message">
                     <td width="125px">
                         <div>
-                            <img src="{{ asset('bundles/clarolinecore/images/workspaces/tools/user_small.png') }}"/>
+                            {% if message.getCreator().getPicture() != "" %}
+                             <img src="{{ asset('uploads/pictures/') ~ message.getCreator().getPicture() }}" class="col-md-2">
+                        {% else %}
+                                <h1><i class="icon-user"></i><h1>
+                        {% endif %}
                         </div>
                         <div>
                            {{ message.getCreator().getFirstName() }} {{ message.getCreator().getLastName() }}
