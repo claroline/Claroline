@@ -37,7 +37,7 @@ class Container
             $templating->addHelpers(
                 array(
                     'trans' => $this->getTranslator()->toClosure(),
-                    'url' => function ($path) use ($baseUrl) {
+                    'path' => function ($path) use ($baseUrl) {
                         return rtrim($baseUrl . $path, '/');
                     }
                 )
