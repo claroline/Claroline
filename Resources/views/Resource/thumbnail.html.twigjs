@@ -10,7 +10,7 @@
         />
 </div>
 
-<div class="node-element"
+<div class="node-element" id="node-element-{{ node.id }}"
     style="background-image: url('{{ webRoot }}{{ node.large_icon }}');"
     data-id="{{ node.id }}"
     data-type="{{ node.type }}"

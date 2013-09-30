@@ -505,8 +505,8 @@
                 }
             },
             changeThumbnailIcon: function (nodeId, newIconPath, successHandler) {
-                this.$('#' + nodeId + ' img').attr('src', this.parameters.webPath + newIconPath);
-
+                this.$('#node-element-' + nodeId).attr('style', "background-image:url('" + this.parameters.webPath + newIconPath + "');");
+                console.debug(this.parameters.webPath + newIconPath);
                 if (successHandler) {
                     successHandler();
                 }
@@ -1009,14 +1009,26 @@
             });
         },
         remove: function (nodeIds) {
-            $.ajax({
-                context: this,
-                url: this.parameters.appPath + '/resource/delete',
-                data: {ids: nodeIds},
-                success: function () {
-                    this.views.main.subViews.nodes.removeResources(nodeIds);
-                    this.views.main.subViews.actions.setInitialState();
-                }
+            var trans = (nodeIds.length) > 1 ? 'resources_delete' : 'resource_delete'; 
+            var modal = Twig.render(ModalWindow, {
+                'body': Translator.get('platform' + ':' + trans),
+                'confirmFooter': true,
+                'modalId': 'confirm-modal'
+            });
+            $('body').append(modal);
+            $('#confirm-modal').modal('show');
+            var that = this;
+            $('#confirm-ok').click(function () {
+                $.ajax({
+                    context: that,
+                    url: that.parameters.appPath + '/resource/delete',
+                    data: {ids: nodeIds},
+                    success: function () {
+                        this.views.main.subViews.nodes.removeResources(nodeIds);
+                        this.views.main.subViews.actions.setInitialState();
+                        $('#confirm-modal').modal('hide');
+                    }
+                });
             });
         },
         copy: function (nodeIds, directoryId) {
@@ -1080,18 +1092,18 @@
                 contentType: false,
                 success: function (data, textStatus, jqXHR) {
                     if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
-                        if (data.name) {
+                        if (data[0].name) {
                             this.views.main.subViews.nodes.renameThumbnail(
                                 nodeId,
-                                data.name,
+                                data[0].name,
                                 this.views.form.close()
                             );
                         }
 
-                        if (data.icon) {
+                        if (data[0].large_icon) {
                             this.views.main.subViews.nodes.changeThumbnailIcon(
                                 nodeId,
-                                data.icon,
+                                data[0].large_icon,
                                 this.views.form.close()
                             );
                         }
