@@ -439,7 +439,28 @@ class MessageController
         }
 
         $receiverString = $message->getTo();
-        $usernames = explode(';', $receiverString);
+        $names = explode(';', $receiverString);
+        $usernames = array();
+        $groupNames = array();
+
+        foreach ($names as $name) {
+            if (substr($name, 0, 1) === '{') {
+                $groupNames[] = trim($name, '{}');
+            }
+            else {
+                $usernames[] = $name;
+            }
+        }
+
+        $groups = $this->groupManager->getGroupsByNames($groupNames);
+
+        foreach ($groups as $group) {
+            $users = $this->userManager->getUsersByGroupWithoutPager($group);
+
+            foreach ($users as $user) {
+                $usernames[] = $user->getUsername();
+            }
+        }
 
         foreach ($usernames as $username) {
             if ($user->getUsername() === $username) {

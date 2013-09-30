@@ -6,7 +6,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Message;
-use Claroline\CoreBundle\Entity\UserMessage;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 
@@ -22,6 +21,10 @@ class MessageManager
 
     private $om;
     private $pagerFactory;
+    private $groupRepo;
+    private $userRepo;
+    private $messageRepo;
+    private $userMessageRepo;
 
     /**
      * Constructor.
@@ -37,6 +40,7 @@ class MessageManager
     )
     {
         $this->om = $om;
+        $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->messageRepo = $om->getRepository('ClarolineCoreBundle:Message');
         $this->userMessageRepo = $om->getRepository('ClarolineCoreBundle:UserMessage');
@@ -49,8 +53,28 @@ class MessageManager
             $receiversString = substr_replace($receiversString, '', -1);
         }
 
-        $usernames = explode(';', $receiversString);
-        $receivers = $this->userRepo->findByUsernames($usernames);
+        $receiversNames = explode(';', $receiversString);
+        $usernames = array();
+        $groupNames = array();
+        $userReceivers = array();
+        $groupReceivers = array();
+
+        foreach ($receiversNames as $receiverName) {
+            if (substr($receiverName, 0, 1) === '{') {
+                $groupNames[] = trim($receiverName, '{}');
+            }
+            else {
+                $usernames[] = $receiverName;
+            }
+        }
+
+        if (count($usernames) > 0) {
+            $userReceivers = $this->userRepo->findByUsernames($usernames);
+        }
+        if (count($groupNames) > 0) {
+            $groupReceivers = $this->groupRepo->findGroupsByNames($groupNames);
+        }
+
         $message->setSender($sender);
 
         if (null !== $parent) {
@@ -64,11 +88,22 @@ class MessageManager
         $userMessage->setMessage($message);
         $this->om->persist($userMessage);
 
-        foreach ($receivers as $receiver) {
+        foreach ($userReceivers as $userReceiver) {
             $userMessage = $this->om->factory('Claroline\CoreBundle\Entity\UserMessage');
-            $userMessage->setUser($receiver);
+            $userMessage->setUser($userReceiver);
             $userMessage->setMessage($message);
             $this->om->persist($userMessage);
+        }
+
+        foreach ($groupReceivers as $groupReceiver) {
+            $users = $this->userRepo->findByGroup($groupReceiver);
+
+            foreach ($users as $user) {
+                $userMessage = $this->om->factory('Claroline\CoreBundle\Entity\UserMessage');
+                $userMessage->setUser($user);
+                $userMessage->setMessage($message);
+                $this->om->persist($userMessage);
+            }
         }
 
         $this->om->flush();

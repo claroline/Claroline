@@ -240,4 +240,13 @@ class GroupManager
 
         return $this->pagerFactory->createPager($query, $page);
     }
+
+    public function getGroupsByNames(array $names)
+    {
+        if (count($names) > 0) {
+            return $this->groupRepo->findGroupsByNames($names);
+        }
+
+        return array();
+    }
 }

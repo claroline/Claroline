@@ -7,12 +7,12 @@ use Symfony\Component\Validator\Constraint;
 /**
  * @Annotation
  */
-class SendToUsernames extends Constraint
+class SendToNames extends Constraint
 {
-    public $message = 'The user {{ username }} does not exist.';
+    public $message = 'The user or group {{ name }} does not exist.';
 
     public function validatedBy()
     {
-        return 'send_to_username_validator';
+        return 'send_to_name_validator';
     }
 }

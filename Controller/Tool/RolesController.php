@@ -499,7 +499,7 @@ class RolesController extends Controller
         $names = '';
 
         foreach ($groups as $group) {
-            $names .= $group->getName() . ';';
+            $names .= '{' . $group->getName() . '};';
         }
 
         return new Response($names, 200);

@@ -251,6 +251,11 @@ class UserManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
+    public function getUsersByGroupWithoutPager(Group $group)
+    {
+        return $this->userRepo->findByGroup($group);
+    }
+
     public function getUsersByNameAndGroup($search, Group $group, $page)
     {
         $query = $this->userRepo->findByNameAndGroup($search, $group, false);
