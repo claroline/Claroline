@@ -1,0 +1,20 @@
+{
+    "name": "claroline/web-installer",
+    "description": "Claroline web installer",
+    "keywords": ["Claroline", "Web installer"],
+    "homepage": "http://www.claroline.net",
+    "license": "",
+    "authors": [
+        {
+            "name": "Claroline development team",
+            "email": "dev@claroline.net",
+            "homepage": "http://github.com/claroline"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "autoload": {
+        "psr-0": { "Claroline\\WebInstaller": "lib" }
+    }
+}
