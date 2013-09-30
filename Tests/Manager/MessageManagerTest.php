@@ -10,6 +10,7 @@ class MessageManagerTest extends MockeryTestCase
 {
     private $om;
     private $pagerFactory;
+    private $groupRepo;
     private $userRepo;
     private $messageRepo;
     private $userMessageRepo;
@@ -20,9 +21,13 @@ class MessageManagerTest extends MockeryTestCase
         parent::setUp();
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->pagerFactory = $this->mock('Claroline\CoreBundle\Pager\PagerFactory');
+        $this->groupRepo = $this->mock('Claroline\CoreBundle\Repository\GroupRepository');
         $this->userRepo = $this->mock('Claroline\CoreBundle\Repository\UserRepository');
         $this->messageRepo = $this->mock('Claroline\CoreBundle\Repository\MessageRepository');
         $this->userMessageRepo = $this->mock('Claroline\CoreBundle\Repository\UserMessageRepository');
+        $this->om->shouldReceive('getRepository')
+            ->with('ClarolineCoreBundle:Group')
+            ->andReturn($this->groupRepo);
         $this->om->shouldReceive('getRepository')
             ->with('ClarolineCoreBundle:User')
             ->andReturn($this->userRepo);

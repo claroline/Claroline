@@ -269,8 +269,10 @@ new_message: 'Nouveau message'
 no: 'non'
 no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
 no_home_tab: 'Il n''y a aucun onglet'
+no_group: 'Aucun groupe'
 no_search_results: 'Votre recherche n''a retourné aucun résultat.'
 no_tag: 'Il n''y a aucun Tag'
+no_user: 'Aucun utilisateur'
 no_workspace: 'Il n''y a aucun espace d''activités'
 none: Aucun
 note: Note
@@ -349,6 +351,8 @@ resource_action_denied_message: 'L''action %action% n''a pas pu être exécutée
 resource_creation_denied: 'Vous n''avez pas la permission de créer une ressource dans le répertoire ''%path'': accès refusé.'
 resource_creation_wrong_type: 'Vous n''avez pas la permission de créer un(e) %type% dans le répertoire ''%path%'': accès refusé.'
 resources: Ressources
+resource_delete: 'Êtes-vous sûr de vouloir supprimer cette ressource ?'
+resources_delete: 'Êtes-vous sûr de vouloir supprimer ces ressources ?'
 resources_most_downloaded: 'Ressources les plus téléchargés'
 resources_rights: 'Droits des ressources'
 resources_rights_management: 'Gestion des droits des ressources'
@@ -385,6 +389,7 @@ See all: 'Voir tous'
 see_more: Voir plus
 select all: 'Tout sélectionner'
 select_all: 'Tout sélectionner'
+select_contacts_title: 'Sélectionnez les destinataires'
 select_groups_for_registration_to_workspace: 'Choississez les groupes à inscrire'
 select_roles_to_assign: 'Selectionnez les Rôles à attribuer'
 select_users_for_registration_to_workspace: 'Choississez les utilisateurs à inscrire'

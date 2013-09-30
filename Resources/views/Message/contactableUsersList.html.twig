@@ -1,0 +1,52 @@
+{% macro renderPager(search, pager) %}
+    {% if search == '' %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {}
+        )
+    }}
+    {% else %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {}
+            )
+        }}
+    {% endif %}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
+{% if users is empty %}
+    {{ 'no_user'|trans({}, 'platform') }}
+{% else %}
+    {% set nbPages = users.getNbPages() %}
+    <div id="contacts-list-page" class="contacts-list-page">
+
+        {% if nbPages > 1 %}
+            {{ renderPager(search, users) }}
+        {% endif %}
+
+        <table class="table table-bordered">
+            <tr>
+                <th>{{ 'first_name'|trans({}, 'platform') }}</th>
+                <th>{{ 'last_name'|trans({}, 'platform') }}</th>
+                <th></th>
+            </tr>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.getFirstName() }}</td>
+                    <td>{{ user.getLastName() }}</td>
+                    <td><input type="checkbox" class="contact-chk" contact-id="{{ user.getId() }}"></td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        {% if nbPages > 1 %}
+            {{ renderPager(search, users) }}
+        {% endif %}
+    </div>
+{% endif %}
