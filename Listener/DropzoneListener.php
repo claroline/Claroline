@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Icap\DropzoneBundle\Entity\Criterion;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Form\DropzoneType;
 use Symfony\Component\DependencyInjection\ContainerAware;
@@ -120,9 +121,9 @@ class DropzoneListener extends ContainerAware
 
     public function onDelete(DeleteResourceEvent $event)
     {
-//        $em = $this->container->get('doctrine.orm.entity_manager');
-//        $em->remove($event->getResource());
-//        $event->stopPropagation();
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $em->remove($event->getResource());
+        $event->stopPropagation();
     }
 
     public function onAdministrate(PluginOptionsEvent $event)
@@ -152,37 +153,44 @@ class DropzoneListener extends ContainerAware
 
     public function onCopy(CopyResourceEvent $event)
     {
-//        $em = $this->container->get('doctrine.orm.entity_manager');
-//        $resource = $event->getResource();
-//        $newReferenceBank = new ReferenceBank();
-//        $newReferenceBank->setName($resource->getName());
-//        $oldReferences = $resource->getReferences();
-//
-//        foreach ($oldReferences as $oldReference) {
-//            $newReference = new Reference();
-//            $newReference->setTitle($oldReference->getTitle());
-//            $newReference->setImageUrl($oldReference->getImageUrl());
-//            $newReference->setDescription($oldReference->getDescription());
-//            $newReference->setType($oldReference->getType());
-//            $newReference->setUrl($oldReference->getUrl());
-//            $newReference->setIconName($oldReference->getIconName());
-//            $newReference->setData($oldReference->getData());
-//
-//            $newReferenceBank->addReference($newReference);
-//
-//            $oldCustomFields = $oldReference->getCustomFields();
-//            foreach ($oldCustomFields as $oldCustomField) {
-//                $newCustomField = new CustomField();
-//                $newCustomField->setFieldKey($oldCustomField->getFieldKey());
-//                $newCustomField->setFieldValue($oldCustomField->getFieldValue());
-//
-//                $newReference->addCustomField($newCustomField);
-//            }
-//        }
-//        $em->persist($newReferenceBank);
-//
-//        $event->setCopy($newReferenceBank);
-//        $event->stopPropagation();
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        /** @var Dropzone $resource */
+        $resource = $event->getResource();
+
+        $newDropzone = new Dropzone();
+        $newDropzone->setName($resource->getName());
+        $newDropzone->setAllowCommentInCorrection($resource->getAllowCommentInCorrection());
+        $newDropzone->setAllowRichText($resource->getAllowRichText());
+        $newDropzone->setAllowUpload($resource->getAllowUpload());
+        $newDropzone->setAllowUrl($resource->getAllowUrl());
+        $newDropzone->setAllowWorkspaceResource($resource->getAllowWorkspaceResource());
+        $newDropzone->setDisplayNotationMessageToLearners($resource->getDisplayNotationMessageToLearners());
+        $newDropzone->setDisplayNotationToLearners($resource->getDisplayNotationToLearners());
+        $newDropzone->setEditionState($resource->getEditionState());
+        $newDropzone->setEndAllowDrop($resource->getEndAllowDrop());
+        $newDropzone->setEndReview($resource->getEndReview());
+        $newDropzone->setExpectedTotalCorrection($resource->getExpectedTotalCorrection());
+        $newDropzone->setInstruction($resource->getInstruction());
+        $newDropzone->setManualPlanning($resource->getManualPlanning());
+        $newDropzone->setManualState($resource->getManualState());
+        $newDropzone->setMinimumScoreToPass($resource->getMinimumScoreToPass());
+        $newDropzone->setPeerReview($resource->getPeerReview());
+        $newDropzone->setStartAllowDrop($resource->getStartAllowDrop());
+        $newDropzone->setStartReview($resource->getStartReview());
+        $newDropzone->setTotalCriteriaColumn($resource->getTotalCriteriaColumn());
+
+        $oldCriteria = $resource->getPeerReviewCriteria();
+
+        foreach ($oldCriteria as $oldCriterion) {
+            $newCriterion = new Criterion();
+            $newCriterion->setInstruction($oldCriterion->getInstruction());
+
+            $newDropzone->addCriterion($newCriterion);
+        }
+        $em->persist($newDropzone);
+
+        $event->setCopy($newDropzone);
+        $event->stopPropagation();
     }
 
     public function onCreateLogListItem(LogCreateDelegateViewEvent $event)

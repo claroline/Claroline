@@ -18,7 +18,7 @@ services:
           - { name: kernel.event_listener, event: open_dropzone_icap_dropzone, method: onOpenCustom }
 
     icap.listener.document_listener:
-        class: Icap\DropzoneBundle\Listener\DocumentListener
+        class: Icap\DropzoneBundle\Listener\DeleteListener
         calls:
           - [setContainer, ["@service_container"]]
         tags:
