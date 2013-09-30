@@ -30,7 +30,6 @@ var MainCtrlProto = [
                 url: Routing.generate('innova_path_get_path', {id: EditorApp.pathId})
             })
             .success(function (data) {
-                alert(data);
                 $scope.path = data;
                 PathFactory.setPath($scope.path);
                 
@@ -45,6 +44,9 @@ var MainCtrlProto = [
                 if (-1 === HistoryFactory.getHistoryState()) {
                     HistoryFactory.update($scope.path);
                 }
+            })
+            .error(function(data, status) {
+
             });
         }
         else {
