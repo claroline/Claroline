@@ -360,37 +360,12 @@ class UserManager
         return $this->userRepo->findOneByResetPasswordHash($resetPassword);
     }
 
-    /**
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
-     */
-    public function preUpload(User $user)
-    {
-        if (null !== $user->pictureFile) {
-            $user->picture = sha1(uniqid(mt_rand(), true)).'.'.$user->pictureFile->guessExtension();
-        }
-    }
 
-    /**
-     * @ORM\PostPersist()
-     * @ORM\PostUpdate()
-     */
-    public function upload(User $user)
+    public function uploadAvatar(User $user)
     {
-        if (null === $this->pictureFile) {
-            return;
-        }
-        $user->pictureFile->move(__DIR__.'/../../../../../../web/uploads/pictures', $user->picture);
-        unset($user->pictureFile);
-    }
-
-    /**
-     * @ORM\PostRemove()
-     */
-    public function removeUpload()
-    {
-        if ($file = $this->getAbsolutePath()) {
-            unlink($file);
+        if (null !== $user->getPictureFile()) {
+            $user->setPicture(sha1($user->getPictureFile()->getClientOriginalName()).'.'.$user->getPictureFile()->guessExtension());
+            $user->getPictureFile()->move(__DIR__.'/../../../../../../web/uploads/pictures', $user->getPicture());
         }
     }
 }

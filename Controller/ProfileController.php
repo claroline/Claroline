@@ -144,14 +144,15 @@ class ProfileController extends Controller
                 $changeSet['roles'] = $rolesChangeSet;
             }
 
-            $this->userManager->upload($user);
+            $this->userManager->uploadAvatar($user);
             $this->eventDispatcher->dispatch(
                 'log',
                 'Log\LogUserUpdate',
                 array($user, $changeSet)
             );
 
-            return $this->redirect($this->generateUrl('claro_profile_form', array('user' => $user->getId())));
+            return $this->redirect($this->generateUrl('claro_profile_view', array('userId' => $user->getId())));
+
         }
 
         return array('profile_form' => $form->createView(), 'user' => $user);
@@ -270,6 +271,7 @@ class ProfileController extends Controller
                 $changeSet['roles'] = $rolesChangeSet;
             }
 
+            $this->userManager->upload($user);
             $this->eventDispatcher->dispatch(
                 'log',
                 'Log\LogUserUpdate',

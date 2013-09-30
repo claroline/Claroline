@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Validator\Constraints\Image;
 
 class UserEditForAdminType extends AbstractType
 {
@@ -17,7 +18,7 @@ class UserEditForAdminType extends AbstractType
         $this->platformRoles = new ArrayCollection($platformRoles);
 
     }
-    
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('firstName', 'text')
@@ -41,6 +42,21 @@ class UserEditForAdminType extends AbstractType
                         ->where("r.type != " . Role::WS_ROLE)
                         ->andWhere("r.name != 'ROLE_ANONYMOUS'");
                 }
+            )
+        );
+        $builder->add(
+            'pictureFile',
+            'file',
+            array(
+                'required' => false,
+                'constraints' => new Image(
+                    array(
+                        'minWidth' => 50,
+                        'maxWidth' => 800,
+                        'minHeight' => 50,
+                        'maxHeight' => 800,
+                    )
+                )
             )
         );
     }
