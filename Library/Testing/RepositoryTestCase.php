@@ -9,7 +9,7 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
@@ -686,7 +686,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $isDesktop
     )
     {
-        $widgetDisplayConfig = new DisplayConfig();
+        $widgetDisplayConfig = new WidgetInstance();
         $widgetDisplayConfig->setWidget($widget);
         $widgetDisplayConfig->setVisible($isVisible);
         $widgetDisplayConfig->setLock($isLocked);
@@ -697,13 +697,13 @@ abstract class RepositoryTestCase extends WebTestCase
     }
 
     protected static function createUserWidgetDisplayConfig(
-        DisplayConfig $parent,
+        WidgetInstance $parent,
         Widget $widget,
         User $user,
         $isVisible
     )
     {
-        $widgetDisplayConfig = new DisplayConfig();
+        $widgetDisplayConfig = new WidgetInstance();
         $widgetDisplayConfig->setParent($parent);
         $widgetDisplayConfig->setWidget($widget);
         $widgetDisplayConfig->setUser($user);
@@ -716,13 +716,13 @@ abstract class RepositoryTestCase extends WebTestCase
     }
 
     protected static function createWorkspaceWidgetDisplayConfig(
-        DisplayConfig $parent,
+        WidgetInstance $parent,
         Widget $widget,
         AbstractWorkspace $workspace,
         $isVisible
     )
     {
-        $widgetDisplayConfig = new DisplayConfig();
+        $widgetDisplayConfig = new WidgetInstance();
         $widgetDisplayConfig->setParent($parent);
         $widgetDisplayConfig->setWidget($widget);
         $widgetDisplayConfig->setWorkspace($workspace);

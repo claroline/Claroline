@@ -4,10 +4,11 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
-use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\HomeTabManager;
+use Claroline\CoreBundle\Manager\WidgetManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,23 +20,27 @@ class AdministrationHomeTabController extends Controller
     private $formFactory;
     private $homeTabManager;
     private $request;
+    private $widgetManager;
 
     /**
      * @DI\InjectParams({
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
-     *     "request"            = @DI\Inject("request")
+     *     "request"            = @DI\Inject("request"),
+     *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
      * })
      */
     public function __construct(
         FormFactory $formFactory,
         HomeTabManager $homeTabManager,
-        Request $request
+        Request $request,
+        WidgetManager $widgetManager
     )
     {
         $this->formFactory = $formFactory;
         $this->homeTabManager = $homeTabManager;
         $this->request = $request;
+        $this->widgetManager = $widgetManager;
     }
 
     /**
@@ -529,30 +534,30 @@ class AdministrationHomeTabController extends Controller
     public function listAddableWidgetsAction(HomeTab $homeTab)
     {
         $widgetConfigs = $this->homeTabManager->getAdminWidgetConfigs($homeTab);
-        $currentWidgetList = array();
+        $currentWidgetInstanceList = array();
 
         foreach ($widgetConfigs as $widgetConfig) {
-            $currentWidgetList[] = $widgetConfig->getWidget()->getId();
+            $currentWidgetInstanceList[] = $widgetConfig->getWidgetInstance()->getId();
         }
 
         if ($homeTab->getType() === 'admin_desktop') {
-            $widgetDisplayConfigs = $this->homeTabManager
-                ->getVisibleDesktopWidgetConfig($currentWidgetList);
+            $widgetInstances = $this->widgetManager
+                ->getAdminDesktopWidgetInstance($currentWidgetInstanceList);
         }
         else {
-            $widgetDisplayConfigs = $this->homeTabManager
-                ->getVisibleWorkspaceWidgetConfig($currentWidgetList);
+            $widgetInstances = $this->widgetManager
+                ->getAdminWorkspaceWidgetInstance($currentWidgetInstanceList);
         }
 
         return array(
             'homeTab' => $homeTab,
-            'widgetDisplayConfigs' => $widgetDisplayConfigs
+            'widgetInstances' => $widgetInstances
         );
     }
 
     /**
      * @EXT\Route(
-     *     "/home_tab/{homeTabId}/associate/widget/{widgetId}",
+     *     "/home_tab/{homeTabId}/associate/widget/{widgetInstanceId}",
      *     name="claro_admin_associate_widget_to_home_tab",
      *     options = {"expose"=true}
      * )
@@ -563,23 +568,23 @@ class AdministrationHomeTabController extends Controller
      *     options={"id" = "homeTabId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
-     *     "widget",
-     *     class="ClarolineCoreBundle:Widget\Widget",
-     *     options={"id" = "widgetId", "strictId" = true}
+     *     "widgetInstance",
+     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
+     *     options={"id" = "widgetInstanceId", "strictId" = true}
      * )
      *
-     * Associate given Widget to given Home tab.
+     * Associate given WidgetInstance to given Home tab.
      *
      * @return Response
      */
     public function associateWidgetToHomeTabAction(
         HomeTab $homeTab,
-        Widget $widget
+        WidgetInstance $widgetInstance
     )
     {
         $widgetHomeTabConfig = new WidgetHomeTabConfig();
         $widgetHomeTabConfig->setHomeTab($homeTab);
-        $widgetHomeTabConfig->setWidget($widget);
+        $widgetHomeTabConfig->setWidgetInstance($widgetInstance);
         $widgetHomeTabConfig->setVisible(true);
         $widgetHomeTabConfig->setLocked(false);
         $widgetHomeTabConfig->setType('admin');

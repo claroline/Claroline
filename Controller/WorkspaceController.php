@@ -26,6 +26,7 @@ use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
+use Claroline\CoreBundle\Manager\WidgetManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -50,6 +51,7 @@ class WorkspaceController extends Controller
     private $utils;
     private $formFactory;
     private $tokenUpdater;
+    private $widgetManager;
 
     /**
      * @DI\InjectParams({
@@ -65,7 +67,8 @@ class WorkspaceController extends Controller
      *     "router"             = @DI\Inject("router"),
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
-     *     "tokenUpdater"       = @DI\Inject("claroline.security.token_updater")
+     *     "tokenUpdater"       = @DI\Inject("claroline.security.token_updater"),
+     *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
      * })
      */
     public function __construct(
@@ -81,7 +84,8 @@ class WorkspaceController extends Controller
         UrlGeneratorInterface $router,
         Utilities $utils,
         FormFactory $formFactory,
-        TokenUpdater $tokenUpdater
+        TokenUpdater $tokenUpdater,
+        WidgetManager $widgetManager
     )
     {
         $this->homeTabManager = $homeTabManager;
@@ -97,6 +101,7 @@ class WorkspaceController extends Controller
         $this->utils = $utils;
         $this->formFactory = $formFactory;
         $this->tokenUpdater = $tokenUpdater;
+        $this->widgetManager = $widgetManager;
     }
 
     /**
@@ -423,11 +428,6 @@ class WorkspaceController extends Controller
      */
     public function widgetsAction(AbstractWorkspace $workspace, $homeTabId)
     {
-        // No right checking is done : security is delegated to each widget renderer.
-        // The routing is now removed. Checking doesn't need to be done.
-        $configs = $this->get('claroline.widget.manager')
-            ->generateWorkspaceDisplayConfig($workspace->getId());
-
         if ($this->security->getToken()->getUser() !== 'anon.') {
             $rightToConfigure = $this->security->isGranted('parameters', $workspace);
         } else {
@@ -441,7 +441,8 @@ class WorkspaceController extends Controller
         if (!is_null($homeTab) &&
             $this->homeTabManager->checkHomeTabVisibilityByWorkspace($homeTab, $workspace)) {
 
-            $configs = $this->homeTabManager->getWidgetConfigsByWorkspace($homeTab, $workspace);
+            $widgetHomeTabConfigs = $this->homeTabManager
+                ->getWidgetConfigsByWorkspace($homeTab, $workspace);
 
             if ($this->security->getToken()->getUser() !== 'anon.') {
                 $rightToConfigure = $this->security->isGranted('parameters', $workspace);
@@ -449,28 +450,22 @@ class WorkspaceController extends Controller
                 $rightToConfigure = false;
             }
 
-            foreach ($configs as $config) {
-                if ($config->isVisible()) {
-                    $eventName = "widget_{$config->getWidget()->getName()}_workspace";
-                    $event = $this->eventDispatcher
-                        ->dispatch($eventName, 'DisplayWidget', array($workspace));
+            foreach ($widgetHomeTabConfigs as $widgetHomeTabConfig) {
+                $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
 
-                    if ($event->hasContent()) {
-                        $widget['id'] = $config->getWidget()->getId();
-                        if ($event->hasTitle()) {
-                            $widget['title'] = $event->getTitle();
-                        } else {
-                            $widget['title'] = strtolower($config->getWidget()->getName());
-                        }
-                        $widget['content'] = $event->getContent();
-                        $widget['configurable'] = (
-                            $rightToConfigure
-                            and $config->isLocked() !== true
-                            and $config->getWidget()->isConfigurable()
-                        );
+                if ($widgetHomeTabConfig->isVisible()) {
+                    $event = $this->eventDispatcher->dispatch(
+                        "widget_{$widgetInstance->getWidget()->getName()}",
+                        'DisplayWidget',
+                        array($widgetInstance)
+                    );
 
-                        $widgets[] = $widget;
-                    }
+                    $widget['id'] = $widgetInstance->getId();
+                    $widget['title'] = $widgetInstance->getName();
+                    $widget['content'] = $event->getContent();
+                    $widget['configurable'] = $rightToConfigure
+                        && $widgetInstance->getWidget()->isConfigurable();
+                    $widgets[] = $widget;
                 }
             }
         }
@@ -880,16 +875,11 @@ class WorkspaceController extends Controller
      */
     public function displayWorkspaceHomeTabsAction(AbstractWorkspace $workspace, $tabId)
     {
-        $adminHomeTabConfigsTemp = $this->homeTabManager
-            ->generateAdminHomeTabConfigsByWorkspace($workspace);
-        $adminHomeTabConfigs = $this->homeTabManager
-            ->filterVisibleHomeTabConfigs($adminHomeTabConfigsTemp);
         $workspaceHomeTabConfigs = $this->homeTabManager
             ->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
 
         return array(
             'workspace' => $workspace,
-            'adminHomeTabConfigs' => $adminHomeTabConfigs,
             'workspaceHomeTabConfigs' => $workspaceHomeTabConfigs,
             'tabId' => $tabId
         );

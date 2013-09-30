@@ -5,36 +5,24 @@ namespace Claroline\CoreBundle\Event;
 use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 
 /**
  * Event dispatched when a widget is configured.
  */
-class ConfigureWidgetWorkspaceEvent extends Event implements DataConveyorEventInterface
+class ConfigureWidgetEvent extends Event implements DataConveyorEventInterface
 {
-    private $workspace;
-    private $content;
-    private $isDefault;
     private $isPopulated = false;
+    private $instance;
 
     /**
      * Constructor.
      *
      * @param AbstractWorkspace $workspace
      */
-    public function __construct($workspace, $isDefault = false)
+    public function __construct(WidgetInstance $instance)
     {
-        $this->workspace = $workspace;
-        $this->isDefault = $isDefault;
-    }
-
-    public function getWorkspace()
-    {
-        return $this->workspace;
-    }
-
-    public function setWorkspace($workspace)
-    {
-        $this->workspace = $workspace;
+        $this->instance = $instance;
     }
 
     public function setContent($content)
@@ -48,18 +36,13 @@ class ConfigureWidgetWorkspaceEvent extends Event implements DataConveyorEventIn
         return $this->content;
     }
 
-    public function isDefault()
-    {
-        return $this->isDefault;
-    }
-
-    public function setDefault($bool)
-    {
-        $this->isDefault = $bool;
-    }
-
     public function isPopulated()
     {
         return $this->isPopulated;
+    }
+    
+    public function getInstance()
+    {
+        return $this->instance;
     }
 }

@@ -216,7 +216,7 @@ mail_config_problem : Veuillez contacter l'administrateur pour reinitialiser vot
 mail_form_content: Contenu
 mail_form_receiver : destinataire(s)
 mail_form_object: Objet
-mail_login : 'Cliquez sur le lien' 
+mail_login : 'Cliquez sur le lien'
 mail_invalid : 'Le format de votre email n''est pas valide'
 mail_message : 'Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur lien ci-dessous pour le réinitialiser. Si vous n''êtes pas à l''origine de cette action, veuillez ignorer ce message.'
 mail_not_available : 'La fonction d''envoi de mail n''est pas disponible'
@@ -268,6 +268,7 @@ new: Nouveau
 new_message: 'Nouveau message'
 no: 'non'
 no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
+no_home_tab: 'Il n''y a aucun onglet'
 no_search_results: 'Votre recherche n''a retourné aucun résultat.'
 no_tag: 'Il n''y a aucun Tag'
 no_workspace: 'Il n''y a aucun espace d''activités'
@@ -277,6 +278,7 @@ not_allowed_message: Vous n'êtes pas autorisé(e) à effectuer cette action.
 object: Objet
 ok: Ok
 or: Ou
+only_for_workspace_creation: 'Seulement pour la création d''un espace d''activités'
 open: Ouvrir
 options: Options
 order: Ordre
@@ -489,6 +491,7 @@ widget: Widget
 widget_home_tab_delete_confirm_message: 'Voulez-vous vraiment retirer ce widget de cet onglet ?'
 widget_home_tab_delete_confirm_title: 'Suppression du widget de l''onglet'
 widgets: Widgets
+widget_display_form_name: Nom
 widgets_configuration: 'Configuration des widgets'
 workspace: 'Espace d''activités'
 workspace.create: 'Créer un nouvel espace d''activités'

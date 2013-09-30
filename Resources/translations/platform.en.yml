@@ -285,6 +285,7 @@ new_message_alert: 'You have %count% new message(s)'
 new_message: 'New message'
 no: 'no'
 no_email: 'No email found, check the spelling'
+no_home_tab: "There is no Home tab"
 no_search_results: 'Your search hasn''t returned any result.'
 no_tag: 'There is no tag'
 no_workspace: 'There is no workspace'
@@ -294,6 +295,7 @@ not_allowed_message: You are not allowed to perform this action.
 object: Object
 ok: Ok
 or: Or
+only_for_workspace_creation: 'Only for workspace creation'
 open: Open
 options: Options
 order: Order
@@ -510,6 +512,7 @@ warning_workspace_impersonation: 'You are connected as %role% from the workspace
 warning_user_impersonation: 'You are connected as %user%.'
 widget_settings: 'Widget settings'
 widget: Widget
+widget_display_form_name: Name
 widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab ?'
 widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
 widgets: Widgets

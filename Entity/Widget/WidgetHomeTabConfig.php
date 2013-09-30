@@ -22,11 +22,11 @@ class WidgetHomeTabConfig
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Widget\Widget"
+     *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance"
      * )
-     * @ORM\JoinColumn(name="widget_id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="widget_instance_id", onDelete="CASCADE", nullable=false)
      */
-    protected $widget;
+    protected $widgetInstance;
 
     /**
      * @ORM\ManyToOne(
@@ -82,14 +82,14 @@ class WidgetHomeTabConfig
         $this->id = $id;
     }
 
-    public function getWidget()
+    public function getWidgetInstance()
     {
-        return $this->widget;
+        return $this->widgetInstance;
     }
 
-    public function setWidget(Widget $widget)
+    public function setWidgetInstance(WidgetInstance $widgetInstance)
     {
-        $this->widget = $widget;
+        $this->widgetInstance = $widgetInstance;
     }
 
     public function getHomeTab()

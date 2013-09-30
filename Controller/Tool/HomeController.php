@@ -5,16 +5,16 @@ namespace Claroline\CoreBundle\Controller\Tool;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
-use Claroline\CoreBundle\Library\Widget\Manager;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\WidgetManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,7 +49,7 @@ class HomeController extends Controller
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "securityContext"    = @DI\Inject("security.context"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
-     *     "widgetManager"      = @DI\Inject("claroline.widget.manager")
+     *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
      * })
      */
     public function __construct(
@@ -61,7 +61,7 @@ class HomeController extends Controller
         RoleManager $roleManager,
         SecurityContextInterface $securityContext,
         ToolManager $toolManager,
-        Manager $widgetManager
+        WidgetManager $widgetManager
     )
     {
         $this->em = $em;
@@ -96,115 +96,78 @@ class HomeController extends Controller
             throw new AccessDeniedException();
         }
 
-        $configs = $this->widgetManager
-            ->generateWorkspaceDisplayConfig($workspace->getId());
+        $configs = $this->widgetManager->getWorkspaceInstances($workspace);
+        $widgets = $this->widgetManager->getWorkspaceWidgets();
 
         return array(
             'workspace' => $workspace,
             'configs' => $configs,
+            'tool' => $this->getHomeTool(),
+            'widgets' => $widgets
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/widget/workspace/config/{widgetInstanceId}",
+     *     name="claro_workspace_widget_configuration",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "widgetInstance",
+     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
+     *     options={"id" = "widgetInstanceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:widgetConfiguration.html.twig")
+     *
+     * Asks a widget to render its configuration page for a workspace.
+     *
+     * @param AbstractWorkspace $workspace
+     * @param WidgetInstance $widgetInstance
+     *
+     * @return Response
+     */
+    public function workspaceConfigureWidgetAction(WidgetInstance $widgetInstance)
+    {
+        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+            "widget_{$widgetInstance->getWidget()->getName()}_configuration",
+            'ConfigureWidget',
+            array($widgetInstance)
+        );
+
+        return array(
+            'workspace' => $widgetInstance->getWorkspace(),
+            'content' => $event->getContent(),
             'tool' => $this->getHomeTool()
         );
     }
 
     /**
      * @EXT\Route(
-     *     "workspace/{workspace}/widget/{widget}/baseconfig/{adminConfig}/invertvisible",
-     *     name="claro_workspace_widget_invertvisible",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     *
-     * Inverts the visibility boolean of a widget in the specified workspace.
-     * If the DisplayConfig entity for the workspace doesn't exist in the database
-     * yet, it's created here.
-     *
-     * @param AbstractWorkspace workspace
-     * @param Widget        $widget
-     * @param DisplayConfig $adminConfig The displayConfig defined by the administrator: it's the
-     * configuration entity for widgets
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function workspaceInvertVisibleWidgetAction(
-        AbstractWorkspace $workspace,
-        Widget $widget,
-        DisplayConfig $adminConfig
-    )
-    {
-        if (!$this->securityContext->isGranted('parameters', $workspace)) {
-            throw new AccessDeniedException();
-        }
-
-        $displayConfig = $this->em
-            ->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
-            ->findOneBy(array('workspace' => $workspace, 'widget' => $widget));
-
-        if ($displayConfig === null) {
-            $displayConfig = new DisplayConfig();
-            $displayConfig->setParent($adminConfig);
-            $displayConfig->setWidget($widget);
-            $displayConfig->setWorkspace($workspace);
-            $displayConfig->setVisible($adminConfig->isVisible());
-            $displayConfig->setLock(true);
-            $displayConfig->setDesktop(false);
-        }
-
-        $displayConfig->invertVisible();
-        $this->em->persist($displayConfig);
-        $this->em->flush();
-
-        return new Response('success');
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/{workspace}/widget/{widget}/configuration",
-     *     name="claro_workspace_widget_configuration",
+     *     "/widget/form/{widgetInstance}",
+     *     name="claro_widget_configuration",
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
+
+     * @EXT\Template("ClarolineCoreBundle:Widget:config_simple_text_form.html.twig")
      *
      * Asks a widget to render its configuration page for a workspace.
      *
-     * @param AbstractWorkspace $workspace
-     * @param Widget            $widget
+     * @param WidgetInstance $widgetInstance
      *
      * @return Response
      */
-    public function workspaceConfigureWidgetAction(AbstractWorkspace $workspace, Widget $widget)
+    public function getWidgetFormConfigurationAction(WidgetInstance $widgetInstance)
     {
-        if (!$this->securityContext->isGranted('parameters', $workspace)) {
-            throw new AccessDeniedException();
-        }
-
-        $event = $this->eventDispatcher->dispatch(
-            "widget_{$widget->getName()}_configuration_workspace",
-            'ConfigureWidgetWorkspace',
-            array($workspace)
+        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+            "widget_{$widgetInstance->getWidget()->getName()}_configuration",
+            'ConfigureWidget',
+            array($widgetInstance)
         );
 
-        if ($event->getContent() !== '') {
-            if ($this->request->isXMLHttpRequest()) {
-                return $this->render(
-                    'ClarolineCoreBundle:Tool\workspace\home:widgetConfigurationForm.html.twig',
-                    array(
-                        'content' => $event->getContent(),
-                        'workspace' => $workspace,
-                        'tool' => $this->getHomeTool()
-                    )
-                );
-            }
-
-            return $this->render(
-                'ClarolineCoreBundle:Tool\workspace\home:widgetConfiguration.html.twig',
-                array(
-                    'content' => $event->getContent(),
-                    'workspace' => $workspace,
-                    'tool' => $this->getHomeTool()
-                )
-            );
-        }
-
+        return new Response($event->getContent());
     }
 
     /**
@@ -216,96 +179,116 @@ class HomeController extends Controller
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:widgetProperties.html.twig")
      *
      * Displays the widget configuration page.
-     *
-     * @return Response
      */
     public function desktopWidgetPropertiesAction()
     {
         $user = $this->securityContext->getToken()->getUser();
-        $configs = $this->widgetManager
-            ->generateDesktopDisplayConfig($user->getId());
+        $widgetInstances = $this->widgetManager->getDesktopInstances($user);
+        $widgets = $this->widgetManager->getDesktopWidgets();
 
         return array(
-            'configs' => $configs,
+            'widgetInstances' => $widgetInstances,
             'user' => $user,
-            'tool' => $this->getHomeTool()
+            'tool' => $this->getHomeTool(),
+            'widgets' => $widgets
         );
     }
 
     /**
      * @EXT\Route(
-     *     "desktop/config/{adminConfig}/widget/{widget}/invertvisible",
-     *     name="claro_desktop_widget_invertvisible",
+     *     "desktop/widget/{widget}/create",
+     *     name="claro_desktop_widget_create",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("POST")
      *
-     * Inverts the visibility boolean for a widget for the current user.
-     *
-     * @param Widget        $widget      the widget
-     * @param DisplayConfig $adminConfig the display config (the configuration entity for widgets)
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @EXT\Template("ClarolineCoreBundle:Widget:desktopWidgetConfigRow.html.twig")
      */
-    public function desktopInvertVisibleUserWidgetAction(Widget $widget, DisplayConfig $adminConfig)
+    public function createDesktopWidgetInstance(Widget $widget)
     {
-        $user = $this->securityContext->getToken()->getUser();
-        $displayConfig = $this->em->getRepository('ClarolineCoreBundle:Widget\DisplayConfig')
-            ->findOneBy(array('user' => $user, 'widget' => $widget));
+        $instance = $this->widgetManager->createInstance(
+            $widget,
+            false,
+            true,
+            $this->securityContext->getToken()->getUser()
+        );
 
-        if ($displayConfig === null) {
-            $displayConfig = new DisplayConfig();
-            $displayConfig->setParent($adminConfig);
-            $displayConfig->setWidget($widget);
-            $displayConfig->setUser($user);
-            $displayConfig->setVisible($adminConfig->isVisible());
-            $displayConfig->setLock(true);
-            $displayConfig->setDesktop(true);
-        }
-
-        $displayConfig->invertVisible();
-        $this->em->persist($displayConfig);
-        $this->em->flush();
-
-        return new Response('success');
+        return array('config' => $instance);
     }
 
     /**
      * @EXT\Route(
-     *     "desktop/widget/{widget}/configuration/desktop",
+     *     "/workspace/{workspace}/widget/{widget}/create",
+     *     name="claro_workspace_widget_create",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Widget:workspaceWidgetConfigRow.html.twig")
+     */
+    public function createWorkspaceWidgetInstance(Widget $widget, AbstractWorkspace $workspace)
+    {
+        $instance = $this->widgetManager->createInstance($widget, false, false, null, $workspace);
+
+        return array('config' => $instance);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/desktop/widget/remove/{widgetInstance}",
+     *     name = "claro_desktop_remove_widget",
+     *     options={"expose"=true}
+     * )
+     */
+    public function removeDesktopWidgetInstance(WidgetInstance $widgetInstance)
+    {
+        $this->widgetManager->removeInstance($widgetInstance);
+
+        return new Response(204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/widget/remove/{widgetInstance}",
+     *     name = "claro_workspace_remove_widget",
+     *     options={"expose"=true}
+     * )
+     */
+    public function removeWidgetInstance(WidgetInstance $widgetInstance)
+    {
+        $this->widgetManager->removeInstance($widgetInstance);
+
+        return new Response(204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/widget/desktop/config/{widgetInstanceId}",
      *     name="claro_desktop_widget_configuration",
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "widgetInstance",
+     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
+     *     options={"id" = "widgetInstanceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:widgetConfiguration.html.twig")
      *
-     * Asks a widget to display its configuration page.
+     * Asks a widget to render its configuration page for a workspace.
      *
-     * @param Widget $widget the widget
+     * @param AbstractWorkspace $workspace
+     * @param WidgetInstance $widgetInstance
      *
      * @return Response
      */
-    public function desktopConfigureWidgetAction(Widget $widget)
+    public function dekstopConfigureWidgetAction(WidgetInstance $widgetInstance)
     {
-        $user = $this->securityContext->getToken()->getUser();
-        $event = $this->eventDispatcher->dispatch(
-            "widget_{$widget->getName()}_configuration_desktop",
-            'ConfigureWidgetDesktop',
-            array($user)
+        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+            "widget_{$widgetInstance->getWidget()->getName()}_configuration",
+            'ConfigureWidget',
+            array($widgetInstance)
         );
 
-        if ($event->getContent() !== '') {
-            if ($this->request->isXmlHttpRequest()) {
-                return $this->render(
-                    'ClarolineCoreBundle:Tool\desktop\home:widgetConfigurationForm.html.twig',
-                    array('content' => $event->getContent(), 'tool' => $this->getHomeTool())
-                );
-            }
-
-            return $this->render(
-                'ClarolineCoreBundle:Tool\desktop\home:widgetConfiguration.html.twig',
-                array('content' => $event->getContent(), 'tool' => $this->getHomeTool())
-            );
-        }
+        return array('content' => $event->getContent(), 'tool' => $this->getHomeTool());
     }
 
     /**
@@ -592,21 +575,11 @@ class HomeController extends Controller
     {
         $this->checkWorkspaceAccess($workspace);
 
-        $adminHomeTabConfigs = $this->homeTabManager
-            ->generateAdminHomeTabConfigsByWorkspace($workspace);
         $homeTabConfigs = $this->homeTabManager
             ->getWorkspaceHomeTabConfigsByWorkspace($workspace);
 
         $nbWidgets = array();
 
-        foreach ($adminHomeTabConfigs as $adminHomeTabConfig) {
-            $workspaceWidgetConfigs = $this->homeTabManager
-                ->getVisibleWidgetConfigsByWorkspace(
-                    $adminHomeTabConfig->getHomeTab(),
-                    $workspace
-                );
-            $nbWidgets[$adminHomeTabConfig->getId()] = count($workspaceWidgetConfigs);
-        }
         foreach ($homeTabConfigs as $homeTabConfig) {
             $widgetConfigs = $this->homeTabManager
                 ->getVisibleWidgetConfigsByWorkspace(
@@ -618,7 +591,6 @@ class HomeController extends Controller
 
         return array(
             'workspace' => $workspace,
-            'adminHomeTabConfigs' => $adminHomeTabConfigs,
             'homeTabConfigs' => $homeTabConfigs,
             'tool' => $this->getHomeTool(),
             'nbWidgets' => $nbWidgets
@@ -1013,13 +985,13 @@ class HomeController extends Controller
                 $existingWidgetConfig = $this->homeTabManager
                     ->getUserAdminWidgetHomeTabConfig(
                         $homeTab,
-                        $adminWidgetConfig->getWidget(),
+                        $adminWidgetConfig->getWidgetInstance(),
                         $user
                     );
                 if (count($existingWidgetConfig) === 0) {
                     $newWHTC = new WidgetHomeTabConfig();
                     $newWHTC->setHomeTab($homeTab);
-                    $newWHTC->setWidget($adminWidgetConfig->getWidget());
+                    $newWHTC->setWidgetInstance($adminWidgetConfig->getWidgetInstance());
                     $newWHTC->setUser($user);
                     $newWHTC->setWidgetOrder($adminWidgetConfig->getWidgetOrder());
                     $newWHTC->setVisible($adminWidgetConfig->isVisible());
@@ -1076,18 +1048,22 @@ class HomeController extends Controller
 
         $widgetConfigs = $this->homeTabManager
             ->getWidgetConfigsByUser($homeTab, $user);
-        $currentWidgetList = array();
+
+        $exludedWidgetInstanceList = array();
 
         foreach ($widgetConfigs as $widgetConfig) {
-            $currentWidgetList[] = $widgetConfig->getWidget()->getId();
+            $exludedWidgetInstanceList[] = $widgetConfig->getWidgetInstance()->getId();
         }
-        $widgetDisplayConfigs = $this->homeTabManager
-            ->getVisibleDesktopWidgetConfig($currentWidgetList);
+        $adminWidgetInstances = $this->widgetManager
+            ->getAdminDesktopWidgetInstance($exludedWidgetInstanceList);
+        $widgetInstances = $this->widgetManager
+            ->getDesktopWidgetInstance($user, $exludedWidgetInstanceList);
 
         return array(
             'tool' => $this->getHomeTool(),
             'homeTab' => $homeTab,
-            'widgetDisplayConfigs' => $widgetDisplayConfigs
+            'adminWidgetInstances' => $adminWidgetInstances,
+            'widgetInstances' => $widgetInstances
         );
     }
 
@@ -1117,25 +1093,33 @@ class HomeController extends Controller
 
         $adminWidgetConfigs = $this->homeTabManager
             ->getAdminWidgetConfigs($homeTab);
-
         $widgetConfigs = $this->homeTabManager
             ->getWidgetConfigsByUser($homeTab, $user);
-        $currentWidgetList = array();
+
+        $currentAdminWidgetInstanceList = array();
+        $currentWidgetInstanceList = array();
 
         foreach ($adminWidgetConfigs as $adminWidgetConfig) {
-            $currentWidgetList[] = $adminWidgetConfig->getWidget()->getId();
+            $currentAdminWidgetInstanceList[] = $adminWidgetConfig->getWidgetInstance()->getId();
         }
 
         foreach ($widgetConfigs as $widgetConfig) {
-            $currentWidgetList[] = $widgetConfig->getWidget()->getId();
+            $currentWidgetInstanceList[] = $widgetConfig->getWidgetInstance()->getId();
         }
-        $widgetDisplayConfigs = $this->homeTabManager
-            ->getVisibleDesktopWidgetConfig($currentWidgetList);
+        $excludedWidgetInstanceList = array_merge(
+            $currentAdminWidgetInstanceList,
+            $currentWidgetInstanceList
+        );
+        $adminWidgetInstances = $this->widgetManager
+            ->getAdminDesktopWidgetInstance($excludedWidgetInstanceList);
+        $widgetInstances = $this->widgetManager
+            ->getDesktopWidgetInstance($user, $excludedWidgetInstanceList);
 
         return array(
             'tool' => $this->getHomeTool(),
             'homeTab' => $homeTab,
-            'widgetDisplayConfigs' => $widgetDisplayConfigs
+            'adminWidgetInstances' => $adminWidgetInstances,
+            'widgetInstances' => $widgetInstances
         );
     }
 
@@ -1172,25 +1156,28 @@ class HomeController extends Controller
 
         $widgetConfigs = $this->homeTabManager
             ->getWidgetConfigsByWorkspace($homeTab, $workspace);
-        $currentWidgetList = array();
+        $excludedWidgetInstanceList = array();
 
         foreach ($widgetConfigs as $widgetConfig) {
-            $currentWidgetList[] = $widgetConfig->getWidget()->getId();
+            $excludedWidgetInstanceList[] = $widgetConfig->getWidgetInstance()->getId();
         }
-        $widgetDisplayConfigs = $this->homeTabManager
-            ->getVisibleWorkspaceWidgetConfig($currentWidgetList);
+        $adminWidgetInstances = $this->widgetManager
+            ->getAdminWorkspaceWidgetInstance($excludedWidgetInstanceList);
+        $widgetInstances = $this->widgetManager
+            ->getWorkspaceWidgetInstance($workspace, $excludedWidgetInstanceList);
 
         return array(
             'tool' => $this->getHomeTool(),
             'workspace' => $workspace,
             'homeTab' => $homeTab,
-            'widgetDisplayConfigs' => $widgetDisplayConfigs
+            'adminWidgetInstances' => $adminWidgetInstances,
+            'widgetInstances' => $widgetInstances
         );
     }
 
     /**
      * @EXT\Route(
-     *     "/desktop/home_tab/{homeTabId}/associate/widget/{widgetId}",
+     *     "/desktop/home_tab/{homeTabId}/associate/widget/{widgetInstanceId}",
      *     name="claro_desktop_associate_widget_to_home_tab",
      *     options = {"expose"=true}
      * )
@@ -1201,18 +1188,18 @@ class HomeController extends Controller
      *     options={"id" = "homeTabId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
-     *     "widget",
-     *     class="ClarolineCoreBundle:Widget\Widget",
-     *     options={"id" = "widgetId", "strictId" = true}
+     *     "widgetInstance",
+     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
+     *     options={"id" = "widgetInstanceId", "strictId" = true}
      * )
      *
-     * Associate given Widget to given Home tab.
+     * Associate given WidgetInstance to given Home tab.
      *
      * @return Response
      */
     public function associateDesktopWidgetToHomeTabAction(
         HomeTab $homeTab,
-        Widget $widget
+        WidgetInstance $widgetInstance
     )
     {
         $this->checkUserAccess();
@@ -1220,7 +1207,7 @@ class HomeController extends Controller
 
         $widgetHomeTabConfig = new WidgetHomeTabConfig();
         $widgetHomeTabConfig->setHomeTab($homeTab);
-        $widgetHomeTabConfig->setWidget($widget);
+        $widgetHomeTabConfig->setWidgetInstance($widgetInstance);
         $widgetHomeTabConfig->setUser($user);
         $widgetHomeTabConfig->setVisible(true);
         $widgetHomeTabConfig->setLocked(false);
@@ -1243,7 +1230,7 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/workspace/{workspaceId}/home_tab/{homeTabId}/associate/widget/{widgetId}",
+     *     "/workspace/{workspaceId}/home_tab/{homeTabId}/associate/widget/{widgetInstanceId}",
      *     name="claro_workspace_associate_widget_to_home_tab",
      *     options = {"expose"=true}
      * )
@@ -1254,9 +1241,9 @@ class HomeController extends Controller
      *     options={"id" = "homeTabId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
-     *     "widget",
-     *     class="ClarolineCoreBundle:Widget\Widget",
-     *     options={"id" = "widgetId", "strictId" = true}
+     *     "widgetInstance",
+     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
+     *     options={"id" = "widgetInstanceId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
      *      "workspace",
@@ -1264,13 +1251,13 @@ class HomeController extends Controller
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
-     * Associate given Widget to given Home tab.
+     * Associate given WidgetInstance to given Home tab.
      *
      * @return Response
      */
     public function associateWorkspaceWidgetToHomeTabAction(
         HomeTab $homeTab,
-        Widget $widget,
+        WidgetInstance $widgetInstance,
         AbstractWorkspace $workspace
     )
     {
@@ -1278,7 +1265,7 @@ class HomeController extends Controller
 
         $widgetHomeTabConfig = new WidgetHomeTabConfig();
         $widgetHomeTabConfig->setHomeTab($homeTab);
-        $widgetHomeTabConfig->setWidget($widget);
+        $widgetHomeTabConfig->setWidgetInstance($widgetInstance);
         $widgetHomeTabConfig->setWorkspace($workspace);
         $widgetHomeTabConfig->setVisible(true);
         $widgetHomeTabConfig->setLocked(false);
@@ -1515,6 +1502,91 @@ class HomeController extends Controller
             $widgetHomeTabConfig,
             $direction
         );
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/desktop/widget/name/form/{config}",
+     *     name = "claro_desktop_widget_name_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:editWidgetNameForm.html.twig")
+     *
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
+     *
+     * @return array
+     */
+    public function editDesktopWidgetNameFormAction(WidgetInstance $config)
+    {
+        $formFactory = $this->get("claroline.form.factory");
+        $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
+
+        return array('form' => $form->createView(), 'config' => $config);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/desktop/widget/name/edit/{config}",
+     *     name = "claro_desktop_widget_name_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:editWidgetNameForm.html.twig")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * @return array
+     */
+    public function editDesktopWidgetName(WidgetInstance $config, User $user)
+    {
+        $form = $this->request->request->get('widget_display_form');
+        $config->setName($form['name']);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($config);
+        $em->flush();
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/widget/name/form/{config}",
+     *     name = "claro_workspace_widget_name_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:editWidgetNameForm.html.twig")
+     *
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
+     *
+     * @return array
+     */
+    public function editWorkspaceWidgetNameFormAction(WidgetInstance $config)
+    {
+        $formFactory = $this->get("claroline.form.factory");
+        $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
+
+        return array('form' => $form->createView(), 'config' => $config);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/widget/name/edit/{config}",
+     *     name = "claro_workspace_widget_name_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:editWidgetNameForm.html.twig")
+     *
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
+     *
+     * @return array
+     */
+    public function editWorkspaceWidgetName(WidgetInstance $config)
+    {
+        $form = $this->request->request->get('widget_display_form');
+        $config->setName($form['name']);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($config);
+        $em->flush();
 
         return new Response('success', 204);
     }

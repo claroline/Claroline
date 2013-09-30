@@ -1,0 +1,10 @@
+<form class="form-name-widget" action="{{ path('claro_workspace_widget_name_edit', {'config': config.getId() }) }}"> 
+    <div class="col-md-10">
+        {{ form_errors(form.name) }}
+        {{ form_widget(form.name) }}
+    </div>
+    {{ form_rest(form) }}
+    <div class="col-md-2">
+        <button type="submit"><i class="icon-edit"></i></button>
+    </div>
+</form>

@@ -30,25 +30,36 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'widgets_configuration'|trans({}, 'platform') }}</h3>
     </div>
+    <div id="twig-attributes" data-workspace-id="{{ workspace.getId() }}"></div>
     <div class="panel-body">
+        <form id="create-widget">
+            <select id="widgets" >
+                {% for widget in widgets %}
+                    <option value="{{ widget.getId() }}"> {{ widget.getName()|trans({}, 'widget') }} </option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="{{ 'add'|trans({}, 'platform') }}"></input>
+        </form>
         <table id="widget-table"  class="table table-striped table-bordered table-condensed">
             <thead>
                 <tr>
+                    <th>{{ 'widget'|trans({}, 'widget') }}</th>
                     <th>{{ 'name'|trans({}, 'platform') }}</th>
-                    <th>{{ 'visible'|trans({}, 'platform') }}</th>
                     <th>{{ 'configuration'|trans({}, 'platform') }}</th>
+                    <th>{{ 'delete'|trans({}, 'platform') }}</th>
                 </tr>
             </thead>
             <tbody id="widget-table-body" data-workspace-id="{{ workspace.getId() }}">
                 {% for config in configs %}
                     <tr class='row-widget-config' data-id="{{ config.getParent().getId() }}" data-widget-id="{{ config.getWidget().getId() }}">
-                        <th>{{ config.getWidget().getName()|lower|trans({}, 'widget') }}</th>
-                        <th><input type="checkbox" class="chk-config-visible" value="1" {% if config.isVisible() %} checked {% endif %} {% if config.getParent().isLocked() %} disabled {% endif %}></th>
-                        <th> {% if config.getWidget().isConfigurable() and config.getParent().isLocked() == false %}
-                            <a href="{{ path('claro_workspace_widget_configuration', {'widget': config.getWidget().getId(), 'workspace': workspace.getId()}) }}">
+                        <th>{{ config.getWidget().getName()|trans({}, 'widget') }}</th>
+                        <th>{% render controller('ClarolineCoreBundle:Tool\\Home:editWorkspaceWidgetNameForm', {'config': config}) %}</th>
+                        <th>
+                            <a href="{{ path('claro_workspace_widget_configuration', {'widgetInstanceId': config.getId()}) }}">
                                 {{ 'configure'|trans({}, 'platform') }}
-                            </a> {% endif %}
+                            </a>
                         </th>
+                        <th> <a class="delete-widget" href="{{ path('claro_desktop_remove_widget', {'widgetInstance': config.getId()}) }}">{{ 'delete'|trans({}, 'platform') }}</a></th>
                     </tr>
                 {% endfor %}
             </tbody>

@@ -63,57 +63,42 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for adminHomeTabConfig in adminHomeTabConfigs %}
-                    {% set adminHomeTab = adminHomeTabConfig.getHomeTab() %}
-                        <tr class='row-home-tab-config {% if adminHomeTabConfig.isLocked() %}text-muted{% endif %}'
-                            data-id={{ adminHomeTabConfig.getId() }}
-                        >
-                            <td>
-                                {{ adminHomeTab.getName() }}
-                            </td>
-                            <td>
-                                <input type="checkbox"
-                                    class="chk-visible"
-                                   {% if adminHomeTabConfig.isVisible() %} checked {% endif %}
-                                   {% if adminHomeTabConfig.isLocked() %} disabled {% endif %}
-                                >
-                            </td>
-                            <td>
-                                <a href="{{ path('claro_workspace_home_tab_widgets_configuration',
-                                    {'homeTabId': adminHomeTab.getId(), 'workspaceId': workspace.getId()}) }}">
-                                    {{ nbWidgets[adminHomeTabConfig.getId()] }}
-                                </a>
+                    {% if homeTabConfigs is empty %}
+                        <tr>
+                            <td colspan="3">
+                                {{ 'no_home_tab'|trans({}, 'platform') }}
                             </td>
                         </tr>
-                    {% endfor %}
-                    {% for homeTabConfig in homeTabConfigs %}
-                    {% set homeTab = homeTabConfig.getHomeTab() %}
-                        <tr class='row-home-tab-config' data-id={{ homeTabConfig.getId() }}>
-                            <td>
-                                <a href="{{
-                                    path(
-                                        'claro_user_workspace_home_tab_edit_form',
-                                        {'workspaceId': workspace.getId(), 'homeTabConfigId': homeTabConfig.getId()})
-                                }}">
-                                    <i class="icon-edit"></i>
-                                </a>
-                                {{ homeTab.getName() }}
-                            </td>
-                            <td>
-                                <input type="checkbox"
-                                    class="chk-visible"
-                                   {% if homeTabConfig.isVisible() %} checked {% endif %}
-                                >
-                            </td>
-                            <td>
-                                <a href="{{ path('claro_workspace_home_tab_widgets_configuration',
-                                    {'homeTabId': homeTab.getId(), 'workspaceId': workspace.getId()}) }}"
-                                >
-                                    {{ nbWidgets[homeTabConfig.getId()] }}
-                                </a>
-                            </td>
-                        </tr>
-                    {% endfor %}
+                    {% else %}
+                        {% for homeTabConfig in homeTabConfigs %}
+                        {% set homeTab = homeTabConfig.getHomeTab() %}
+                            <tr class='row-home-tab-config' data-id={{ homeTabConfig.getId() }}>
+                                <td>
+                                    <a href="{{
+                                        path(
+                                            'claro_user_workspace_home_tab_edit_form',
+                                            {'workspaceId': workspace.getId(), 'homeTabConfigId': homeTabConfig.getId()})
+                                    }}">
+                                        <i class="icon-edit"></i>
+                                    </a>
+                                    {{ homeTab.getName() }}
+                                </td>
+                                <td>
+                                    <input type="checkbox"
+                                        class="chk-visible"
+                                       {% if homeTabConfig.isVisible() %} checked {% endif %}
+                                    >
+                                </td>
+                                <td>
+                                    <a href="{{ path('claro_workspace_home_tab_widgets_configuration',
+                                        {'homeTabId': homeTab.getId(), 'workspaceId': workspace.getId()}) }}"
+                                    >
+                                        {{ nbWidgets[homeTabConfig.getId()] }}
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
                 </tbody>
             </table>
         </div>

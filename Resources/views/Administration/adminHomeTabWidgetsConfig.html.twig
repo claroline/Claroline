@@ -44,13 +44,16 @@
             <br>
 
             {% for widgetConfig in widgetConfigs %}
-            {% set widget = widgetConfig.getWidget() %}
+            {% set widgetInstance = widgetConfig.getWidgetInstance() %}
             <div id="widget-panel-{{ widgetConfig.getId() }}"
                 class="panel panel-default"
                 widget-config-id="{{ widgetConfig.getId() }}"
             >
                 <div class="panel-body">
-                    {{ widget.getName()|trans({}, 'widget') }}
+                    {{ widgetInstance.getName() }}
+                    <small>
+                        [{{ widgetInstance.getWidget().getName()|trans({}, 'widget') }}]
+                    </small>
                     <span class="pull-right">
                         {% if widgetConfig.getWidgetOrder() > 1 %}
                             <i class="icon-arrow-up widget-order-up pointer-hand"></i>
