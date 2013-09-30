@@ -268,8 +268,10 @@ new: Nouveau
 new_message: 'Nouveau message'
 no: 'non'
 no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
+no_group: 'Aucun groupe'
 no_search_results: 'Votre recherche n''a retourné aucun résultat.'
 no_tag: 'Il n''y a aucun Tag'
+no_user: 'Aucun utilisateur'
 no_workspace: 'Il n''y a aucun espace d''activités'
 none: Aucun
 note: Note

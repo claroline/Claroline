@@ -185,6 +185,13 @@ class GroupManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
+    public function getGroupsByWorkspaces(array $workspaces, $page)
+    {
+        $query = $this->groupRepo->findGroupsByWorkspaces($workspaces, false);
+
+        return $this->pagerFactory->createPager($query, $page);
+    }
+
     public function getGroupsByWorkspaceAndName(AbstractWorkspace $workspace, $search, $page)
     {
         $query = $this->groupRepo->findByWorkspaceAndName($workspace, $search, false);

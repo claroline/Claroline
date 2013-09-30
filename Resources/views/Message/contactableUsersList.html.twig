@@ -21,7 +21,7 @@
 {% from _self import renderPager %}
 
 {% if users is empty %}
-    {{ 'no_contact'|trans({}, 'platform') }}
+    {{ 'no_user'|trans({}, 'platform') }}
 {% else %}
     {% set nbPages = users.getNbPages() %}
     <div id="contacts-list-page" class="contacts-list-page">

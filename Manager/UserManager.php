@@ -7,7 +7,6 @@ use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
@@ -35,7 +34,6 @@ class UserManager
     private $ch;
     private $pagerFactory;
     private $om;
-    private $mailer;
 
     /**
      * Constructor.
@@ -266,6 +264,13 @@ class UserManager
     public function getUsersByWorkspace(AbstractWorkspace $workspace, $page)
     {
         $query = $this->userRepo->findByWorkspace($workspace, false);
+
+        return $this->pagerFactory->createPager($query, $page);
+    }
+
+    public function getUsersByWorkspaces(array $workspaces, $page)
+    {
+        $query = $this->userRepo->findUsersByWorkspaces($workspaces, false);
 
         return $this->pagerFactory->createPager($query, $page);
     }

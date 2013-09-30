@@ -21,7 +21,7 @@
 {% from _self import renderPager %}
 
 {% if groups is empty %}
-    {{ 'no_contact'|trans({}, 'platform') }}
+    {{ 'no_group'|trans({}, 'platform') }}
 {% else %}
     {% set nbPages = groups.getNbPages() %}
     <div id="contacts-list-page" class="contacts-list-page">

@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\MessageManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 
 /**
@@ -30,15 +31,19 @@ class MessageController
     private $messageManager;
     private $groupManager;
     private $userManager;
+    private $workspaceManager;
+    private $securityContext;
+    private $utils;
 
     /**
      * @DI\InjectParams({
-     *     "request"        = @DI\Inject("request"),
-     *     "router"         = @DI\Inject("router"),
-     *     "formFactory"    = @DI\Inject("claroline.form.factory"),
-     *     "manager"        = @DI\Inject("claroline.manager.message_manager"),
-     *     "groupManager"   = @DI\Inject("claroline.manager.group_manager"),
-     *     "userManager"    = @DI\Inject("claroline.manager.user_manager")
+     *     "request"            = @DI\Inject("request"),
+     *     "router"             = @DI\Inject("router"),
+     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
+     *     "manager"            = @DI\Inject("claroline.manager.message_manager"),
+     *     "groupManager"       = @DI\Inject("claroline.manager.group_manager"),
+     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
@@ -47,7 +52,8 @@ class MessageController
         FormFactory $formFactory,
         MessageManager $manager,
         GroupManager $groupManager,
-        UserManager $userManager
+        UserManager $userManager,
+        WorkspaceManager $workspaceManager
     )
     {
         $this->request = $request;
@@ -56,6 +62,7 @@ class MessageController
         $this->messageManager = $manager;
         $this->groupManager = $groupManager;
         $this->userManager = $userManager;
+        $this->workspaceManager = $workspaceManager;
     }
 
     /**
@@ -387,7 +394,13 @@ class MessageController
             $users = $this->userManager->getAllUsers($page);
         }
         else {
-            $users = $this->userManager->getAllUsers($page);
+            $users = array();
+            $workspaces = $this->workspaceManager
+                ->getWorkspacesByUserAndRoleNames($user, array('ROLE_WS_MANAGER'));
+
+            if (count($workspaces) > 0) {
+                $users = $this->userManager->getUsersByWorkspaces($workspaces, $page);
+            }
         }
 
         return array('users' => $users, 'search' => $search);
@@ -426,7 +439,14 @@ class MessageController
             $groups = $this->groupManager->getAllGroups($page);
         }
         else {
-            $groups = $this->groupManager->getAllGroups($page);
+            $groups = array();
+            $workspaces = $this->workspaceManager
+                ->getWorkspacesByUserAndRoleNames($user, array('ROLE_WS_MANAGER'));
+
+            if (count($workspaces) > 0) {
+                $groups = $this->groupManager
+                    ->getGroupsByWorkspaces($workspaces, $page);
+            }
         }
 
         return array('groups' => $groups, 'search' => $search);

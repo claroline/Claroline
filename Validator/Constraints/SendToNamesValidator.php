@@ -41,7 +41,11 @@ class SendToNamesValidator extends ConstraintValidator
                 $groupNames[] = trim(trim($name), '{}');
             }
             else {
-                $usernames[] = trim($name);
+                $username = trim($name);
+
+                if ($username !== '') {
+                    $usernames[] = $username;
+                }
             }
         }
 
