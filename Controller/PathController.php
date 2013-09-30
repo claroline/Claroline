@@ -237,7 +237,7 @@ class PathController extends Controller
             $parent = $manager->getRepository('InnovaPathBundle:Step')->findOneById($parent);
             $currentStep->setParent($parent);
             $currentStep->setStepWhere($stepWhere);
-            $currentStep->setDuration(new \DateTime());
+            $currentStep->setDuration(new \DateTime("00-00-00 ".intval($step->durationHours).":".intval($step->durationMinutes).":00"));
             $currentStep->setExpanded($step->expanded);
             $currentStep->setWithTutor($step->withTutor);
             $currentStep->setWithComputer($step->withComputer);
