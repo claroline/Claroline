@@ -36,29 +36,15 @@
  */
 namespace Innova\PathBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use Innova\PathBundle\Entity\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\Resource;
-use Innova\PathBundle\Entity\StepType;
-use Innova\PathBundle\Entity\StepWho;
-use Innova\PathBundle\Entity\StepWhere;
-use Innova\PathBundle\Entity\Step2ResourceNode;
-use Innova\PathBundle\Entity\Step2ExcludedResource;
-
-use Claroline\CoreBundle\Entity\Resource\Activity;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 
 /**
  * Class StepController
@@ -84,20 +70,14 @@ class StepController extends Controller
     public function showAction($workspaceId, $pathId, $stepId)
     {
         $manager = $this->entityManager();
+
         $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-
-        $pathResourceNode = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($pathId);
-        $stepResourceNode = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($stepId);
-
-        $step = $manager->getRepository('InnovaPathBundle:Step')->findOneByResourceNode($stepResourceNode->getId());
-        $path = $manager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathResourceNode->getId());
-
+        $step = $manager->getRepository('InnovaPathBundle:Step')->findOneByResourceNode($stepId);
+        $path = $manager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
         $resources = $step->getResources();
 
         return array(
             'step' => $step,
-            'stepResourceNode' => $stepResourceNode,
-            'pathResourceNode' => $pathResourceNode,
             'resources' => $resources,
             'path' => $path,
             'workspace' => $workspace,
