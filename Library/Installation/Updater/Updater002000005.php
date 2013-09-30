@@ -16,6 +16,13 @@ class Updater002000005
         $this->container = $container;
     }
 
+    public function preUpdate()
+    {
+        $cn = $this->container->get('doctrine.dbal.default_connection');
+        $cn->query('TRUNCATE table claro_widget_home_tab_config');
+        $cn->query('TRUNCATE table claro_home_tab_config');
+        $cn->query('TRUNCATE table claro_home_tab');
+    }
     public function postUpdate()
     {
         $this->saveTextConfigs();

@@ -19,6 +19,11 @@ class AdditionalInstaller extends BaseInstaller
 
     public function preUpdate(BundleVersion $current, BundleVersion $target)
     {
+        $updater002000005 = new Updater\Updater002000005($this->container);
+                
+        if (version_compare($current->getVersion(), '1.4', '<')) {
+            $updater002000005->preUpdate();
+        }
     }
     
     public function postUpdate(BundleVersion $current, BundleVersion $target)

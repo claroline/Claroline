@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Command;
+namespace Claroline\CoreBundle\Command\Dev;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
