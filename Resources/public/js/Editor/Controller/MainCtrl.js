@@ -23,32 +23,29 @@ var MainCtrlProto = [
         });
         
         // Load current path
-        if ($routeParams.id) {
+        if (EditorApp.pathId) {
             // Edit existing path
-            if (!PathFactory.getPathInstanciated($routeParams.id)) {
-                PathFactory.addPathInstanciated($routeParams.id);
-                $http.get('../api/index.php/paths/' + $routeParams.id + '.json')
-                    .success(function(data) {
-                        // Store Path ID
-                        data.id = $routeParams.id;
-
-                        $scope.path = data;
-                        PathFactory.setPath($scope.path);
-                        
-                        if ($scope.path.steps.length === 0) {
-                            // Missing root step => add it
-                            var rootStep = StepFactory.generateNewStep();
-                            rootStep.name = $scope.path.name;
-                            $scope.path.steps.push(rootStep);
-                        }
-                        
-                        // Update History if needed
-                        if (-1 === HistoryFactory.getHistoryState()) {
-                            HistoryFactory.update($scope.path);
-                        }
-                    }
-                );
-            }
+            $http({
+                method: 'GET',
+                url: Routing.generate('innova_path_get_path', {id: EditorApp.pathId})
+            })
+            .success(function (data) {
+                alert(data);
+                $scope.path = data;
+                PathFactory.setPath($scope.path);
+                
+                if ($scope.path.steps.length === 0) {
+                    // Missing root step => add it
+                    var rootStep = StepFactory.generateNewStep();
+                    rootStep.name = $scope.path.name;
+                    $scope.path.steps.push(rootStep);
+                }
+                
+                // Update History if needed
+                if (-1 === HistoryFactory.getHistoryState()) {
+                    HistoryFactory.update($scope.path);
+                }
+            });
         }
         else {
             // Create new path
@@ -56,13 +53,16 @@ var MainCtrlProto = [
             PathFactory.setPath($scope.path);
             
             if ($scope.path.steps.length === 0) {
-                // New path => add root step
+                // Missing root step => add it
                 var rootStep = StepFactory.generateNewStep();
                 rootStep.name = $scope.path.name;
                 $scope.path.steps.push(rootStep);
             }
             
-            HistoryFactory.update($scope.path);
+            // Update History if needed
+            if (-1 === HistoryFactory.getHistoryState()) {
+                HistoryFactory.update($scope.path);
+            }
         }
         
         /**
@@ -101,15 +101,15 @@ var MainCtrlProto = [
          * @todo add confirm messages
          */
         $scope.save = function(path) {
-            if ($routeParams.id) {
+            if (EditorApp.pathId) {
                 // Update existing path
                 $http({
                     method: 'PUT',
                     url: Routing.generate('innova_path_edit_path'),
                     headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
-                    data: 'path=' + angular.toJson(path) + '&workspaceId=2'
+                    data: 'path-id=' + EditorApp.pathId + '&path-name=' + path.name + '&path=' + angular.toJson(path) + '&workspace-id=' + EditorApp.workspaceId
                 })
-                .success ( function (data) {
+                .success(function (data) {
                     alert('success');
                 });
             } 
@@ -119,14 +119,11 @@ var MainCtrlProto = [
                     method: 'POST',
                     url: Routing.generate('innova_path_add_path'),
                     headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
-                    data: 'path=' + angular.toJson(path) + '&workspaceId=2'
+                    data: 'path-name=' + path.name + '&path=' + angular.toJson(path) + '&workspace-id=' + EditorApp.workspaceId
                 })
-                .success ( function (data) {
-                    // Store generated ID in Path
-                    path.id = data;
-                    PathFactory.setPath(path);
-                    $scope.path = PathFactory.getPath();
-                    $location.path('/path/global/' + data);
+                .success(function (data) {
+                    // Store generated ID
+                    EditorApp.pathId = data;
                     alert('success');
                 });
             }

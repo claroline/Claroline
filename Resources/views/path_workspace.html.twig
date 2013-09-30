@@ -1,28 +1,65 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': workspace.getName() ~ ' - ' ~  workspace.getCode(),
+                'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
+            },
+            {
+                'name': 'paths'|trans({}, 'tools'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
 {% block section_content %}
     <div class="panel-heading">
-        <a href="{{ path('innova_path_editor', {workspaceId: workspace.id}) }}" class="btn btn-primary btn-xs pull-right"><span class="icon-plus"></span></a>
         <h3 class="panel-title">Parcours</h3>
     </div>
+    
     <div class="panel-body">
-		{% if deployed is not defined %}
-        <table class="table table-hover">
-            {% for path in paths %}
-            <tr>
-                <td><a href="{{ path('innova_path_editor', {workspaceId: workspace.id, pathId: path.id}) }}">{{ path.name }}</a></td>
-                <td class="text-right">
-                    <form action="{{ path('innova_path_deploy') }}" method="post">
-                        <input type="hidden" value="{{ workspace.id }}" name="workspace-id">
-                        <input type="hidden" value="{{ path.id }}" name="path-id">
-                        <input class="btn btn-sm" value="deploy" type="submit"/>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-        {% else %}
+        {% if deployed is defined %}
             <div class="alert alert-success">{{ deployed }}</div>
         {% endif %}
+        
+        <a href="{{ path('innova_path_editor', {workspaceId: workspace.id}) }}" class="btn btn-default"><span class="icon-pencil"></span> Créer un parcours</a>
+    
+        <hr />
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <span class="icon-align-justify"></span>
+                Tous mes parcours
+            </div>
+            <table class="table table-hover" style="margin-top: -1px;">
+                {% for path in paths %}
+                <tr>
+                    <td>
+                        <a href="{{ path('innova_path_editor', {workspaceId: workspace.id, pathId: path.id}) }}">{{ path.name }}</a>
+                    </td>
+                    <td align="right">
+                        <form action="{{ path('innova_path_delete_path') }}" method="post" style="display: inline-block">
+                            <input type="hidden" value="{{ workspace.id }}" name="workspace-id" />
+                            <input type="hidden" value="{{ path.id }}" name="id" />
+                            <button class="btn btn-xs btn-danger" type="submit"><span class="icon-trash"></span></button>
+                        </form>
+                        
+                        <form action="{{ path('innova_path_deploy') }}" method="post" style="display: inline-block">
+                            <input type="hidden" value="{{ workspace.id }}" name="workspace-id" />
+                            <input type="hidden" value="{{ path.id }}" name="path-id" />
+                            <button class="btn btn-xs btn-success" type="submit"><span class="icon-random"></span></button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
     </div>
 {% endblock %}
