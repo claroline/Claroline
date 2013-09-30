@@ -47,10 +47,12 @@ class BadgeListener
             $user             = $event->getLog()->getDoer();
 
             foreach ($badges as $badge) {
-                $resources = $badgeRuleChecker->checkBadge($badge, $user);
+                if (!$user->hasBadge($badge)) {
+                    $resources = $badgeRuleChecker->checkBadge($badge, $user);
 
-                if ($resources) {
-                    $this->badgeManager->addBadgeToUsers($badge, array($user));
+                    if ($resources) {
+                        $this->badgeManager->addBadgeToUsers($badge, array($user));
+                    }
                 }
             }
         }
