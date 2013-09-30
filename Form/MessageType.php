@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Claroline\CoreBundle\Validator\Constraints\SendToUsernames;
+use Claroline\CoreBundle\Validator\Constraints\SendToNames;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class MessageType extends AbstractType
@@ -50,9 +50,9 @@ class MessageType extends AbstractType
                         'mapped' => true,
                         'constraints' => array(
                             new NotBlank(),
-                            new SendToUsernames()
-                            )
+                            new SendToNames()
                         )
+                    )
                 );
         } else {
             $builder
@@ -65,9 +65,9 @@ class MessageType extends AbstractType
                         'mapped' => true,
                         'constraints' => array(
                             new NotBlank(),
-                            new SendToUsernames()
-                            )
+                            new SendToNames()
                         )
+                    )
                 );
         }
 

@@ -13,7 +13,10 @@ use JMS\SecurityExtraBundle\Annotation as SEC;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\MessageManager;
+use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 
 /**
@@ -26,26 +29,38 @@ class MessageController
     private $router;
     private $formFactory;
     private $messageManager;
+    private $groupManager;
+    private $userManager;
+    private $workspaceManager;
 
     /**
      * @DI\InjectParams({
-     *     "request"        = @DI\Inject("request"),
-     *     "router"         = @DI\Inject("router"),
-     *     "formFactory"    = @DI\Inject("claroline.form.factory"),
-     *     "manager"        = @DI\Inject("claroline.manager.message_manager")
+     *     "request"            = @DI\Inject("request"),
+     *     "router"             = @DI\Inject("router"),
+     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
+     *     "manager"            = @DI\Inject("claroline.manager.message_manager"),
+     *     "groupManager"       = @DI\Inject("claroline.manager.group_manager"),
+     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
         Request $request,
         UrlGeneratorInterface $router,
         FormFactory $formFactory,
-        MessageManager $manager
+        MessageManager $manager,
+        GroupManager $groupManager,
+        UserManager $userManager,
+        WorkspaceManager $workspaceManager
     )
     {
         $this->request = $request;
         $this->router = $router;
         $this->formFactory = $formFactory;
         $this->messageManager = $manager;
+        $this->groupManager = $groupManager;
+        $this->userManager = $userManager;
+        $this->workspaceManager = $workspaceManager;
     }
 
     /**
@@ -230,7 +245,6 @@ class MessageController
      */
     public function showAction(User $user, array $receivers, Message $message = null)
     {
-
         if ($message) {
             $this->messageManager->markAsRead($user, array($message));
             $ancestors = $this->messageManager->getConversation($message);
@@ -345,6 +359,95 @@ class MessageController
         return new Response('Success', 204);
     }
 
+    /**
+     * @EXT\Route(
+     *     "/contactable/users/page/{page}",
+     *     name="claro_message_contactable_users",
+     *     options={"expose"=true},
+     *     defaults={"page"=1, "search"=""}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "/contactable/users/page/{page}/search/{search}",
+     *     name="claro_message_contactable_users_search",
+     *     options={"expose"=true},
+     *     defaults={"page"=1}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     *
+     *
+     * Displays the list of users that the current user can send a message to,
+     * optionally filtered by a search on first name and last name
+     *
+     * @param integer $page
+     * @param string  $search
+     *
+     * @return Response
+     */
+    public function contactableUsersListAction(User $user, $page, $search)
+    {
+        if ($user->hasRole('ROLE_ADMIN')) {
+            $users = $this->userManager->getAllUsers($page);
+        } else {
+            $users = array();
+            $workspaces = $this->workspaceManager
+                ->getWorkspacesByUserAndRoleNames($user, array('ROLE_WS_MANAGER'));
+
+            if (count($workspaces) > 0) {
+                $users = $this->userManager->getUsersByWorkspaces($workspaces, $page);
+            }
+        }
+
+        return array('users' => $users, 'search' => $search);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/contactable/groups/page/{page}",
+     *     name="claro_message_contactable_groups",
+     *     options={"expose"=true},
+     *     defaults={"page"=1, "search"=""}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "/contactable/groups/page/{page}/search/{search}",
+     *     name="claro_message_contactable_groups_search",
+     *     options={"expose"=true},
+     *     defaults={"page"=1}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     *
+     *
+     * Displays the list of groups that the current user can send a message to,
+     * optionally filtered by a search on group name
+     *
+     * @param integer $page
+     * @param string  $search
+     *
+     * @return Response
+     */
+    public function contactableGroupsListAction(User $user, $page, $search)
+    {
+        if ($user->hasRole('ROLE_ADMIN')) {
+            $groups = $this->groupManager->getAllGroups($page);
+        } else {
+            $groups = array();
+            $workspaces = $this->workspaceManager
+                ->getWorkspacesByUserAndRoleNames($user, array('ROLE_WS_MANAGER'));
+
+            if (count($workspaces) > 0) {
+                $groups = $this->groupManager
+                    ->getGroupsByWorkspaces($workspaces, $page);
+            }
+        }
+
+        return array('groups' => $groups, 'search' => $search);
+    }
+
     public function checkAccess(Message $message, User $user)
     {
         if ($message->getSenderUsername() === $user->getUsername()) {
@@ -352,7 +455,27 @@ class MessageController
         }
 
         $receiverString = $message->getTo();
-        $usernames = explode(';', $receiverString);
+        $names = explode(';', $receiverString);
+        $usernames = array();
+        $groupNames = array();
+
+        foreach ($names as $name) {
+            if (substr($name, 0, 1) === '{') {
+                $groupNames[] = trim($name, '{}');
+            } else {
+                $usernames[] = $name;
+            }
+        }
+
+        $groups = $this->groupManager->getGroupsByNames($groupNames);
+
+        foreach ($groups as $group) {
+            $users = $this->userManager->getUsersByGroupWithoutPager($group);
+
+            foreach ($users as $user) {
+                $usernames[] = $user->getUsername();
+            }
+        }
 
         foreach ($usernames as $username) {
             if ($user->getUsername() === $username) {

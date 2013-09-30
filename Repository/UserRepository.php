@@ -327,6 +327,33 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
+     * Returns the users who are members of one of the given workspaces. Users's groups are not
+     * taken into account.
+     *
+     * @param array     $workspaces
+     * @param boolean   $executeQuery
+     *
+     * @return array[User]|Query
+     */
+    public function findUsersByWorkspaces(array $workspaces,$executeQuery = true)
+    {
+        $dql = '
+            SELECT DISTINCT u from Claroline\CoreBundle\Entity\User u
+            JOIN u.roles wr WITH wr IN (
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::WS_ROLE . '
+            )
+            LEFT JOIN wr.workspace w
+            LEFT JOIN u.personalWorkspace ws
+            WHERE w IN (:workspaces)
+            ORDER BY u.id
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaces', $workspaces);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    /**
      * Returns the users of a workspace whose first name, last name or username
      * match a given search string.
      *

@@ -216,7 +216,7 @@ mail_config_problem : Veuillez contacter l'administrateur pour reinitialiser vot
 mail_form_content: Contenu
 mail_form_receiver : destinataire(s)
 mail_form_object: Objet
-mail_login : 'Cliquez sur le lien' 
+mail_login : 'Cliquez sur le lien'
 mail_invalid : 'Le format de votre email n''est pas valide'
 mail_message : 'Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur lien ci-dessous pour le réinitialiser. Si vous n''êtes pas à l''origine de cette action, veuillez ignorer ce message.'
 mail_not_available : 'La fonction d''envoi de mail n''est pas disponible'
@@ -268,8 +268,10 @@ new: Nouveau
 new_message: 'Nouveau message'
 no: 'non'
 no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
+no_group: 'Aucun groupe'
 no_search_results: 'Votre recherche n''a retourné aucun résultat.'
 no_tag: 'Il n''y a aucun Tag'
+no_user: 'Aucun utilisateur'
 no_workspace: 'Il n''y a aucun espace d''activités'
 none: Aucun
 note: Note
@@ -385,6 +387,7 @@ See all: 'Voir tous'
 see_more: Voir plus
 select all: 'Tout sélectionner'
 select_all: 'Tout sélectionner'
+select_contacts_title: 'Sélectionnez les destinataires'
 select_groups_for_registration_to_workspace: 'Choississez les groupes à inscrire'
 select_roles_to_assign: 'Selectionnez les Rôles à attribuer'
 select_users_for_registration_to_workspace: 'Choississez les utilisateurs à inscrire'

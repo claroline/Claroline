@@ -1,4 +1,4 @@
-The user {{ username }} does not exist.: L'utilisateur {{ username }} n'existe pas.
+The user or group {{ name }} does not exist.: L'utilisateur ou le groupe [{{ name }}] n'existe pas.
 The name {{ name }} is already in use.: Le nom {{ name }} est déjà utilisé.
 'The code {{ code }} is already assigned to another workspace.': Le code {{ code }} est déjà attribué à un autre workspace.
 'special_char_not_allowed': 'Les caractères spéciaux ne sont pas autorisés.'
