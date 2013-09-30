@@ -33,7 +33,7 @@
         "jms/twig-js-bundle": "dev-master",
         "white-october/pagerfanta-bundle": "~1.0.0",
         "idci/exporter-bundle": "~1.0",
-        "leafo/lessphp": "~0.4.0",
+        "leafo/lessphp": "dev-master#887e3c3",
         "twbs/bootstrap": "~3.0.0",
         "fortawesome/font-awesome": "~3.2.1",
         "xaguilars/bootstrap-colorpicker": "dev-master",
