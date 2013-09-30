@@ -174,7 +174,6 @@
             </h3>
             <form action="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}#!edit" method="post" class="form-horizontal" {{ form_enctype(form) }} novalidate>
                 {{ form_errors(form) }}
-
                 <div class="row badges_infos">
                     <div class="col-md-3{% if form.file.vars.errors|length > 0 %} has-error{% endif %}">
                         <button type="button" id="change_image" class="btn btn-xs btn-default"><span class="icon-edit">{{ 'badge_form_change_image'|trans }}</span></button>

@@ -3,3 +3,4 @@ The name {{ name }} is already in use.: Le nom {{ name }} est déjà utilisé.
 'The code {{ code }} is already assigned to another workspace.': Le code {{ code }} est déjà attribué à un autre workspace.
 'special_char_not_allowed': 'Les caractères spéciaux ne sont pas autorisés.'
 'Each row requires at least 5 parameters.': 'Chaque ligne nécessite au moins 5 paramètres'
+badge_automatic_awarding_need_rules: "Des règles d'attribution doivent être définies pour pouvoir attribuer le badge automatiquement"

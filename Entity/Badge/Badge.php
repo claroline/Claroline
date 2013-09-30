@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
+use Claroline\CoreBundle\Form\Badge\Constraints as BadgeAssert;
 
 /**
  * Class Badge
@@ -14,6 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="claro_badge")
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Badge\BadgeRepository")
  * @ORM\HasLifecycleCallbacks
+ * @BadgeAssert\AutomaticWithRules
  */
 class Badge
 {

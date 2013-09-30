@@ -31,7 +31,9 @@ class BadgeType extends AbstractType
         $builder
             ->add('frTranslation', new BadgeTranslationType())
             ->add('enTranslation', new BadgeTranslationType())
-            ->add('version', 'integer')
+            ->add('version', 'integer', array(
+                'data'  => 1
+            ))
             ->add('automatic_award', 'checkbox', array(
                 'required' => false
             ))
