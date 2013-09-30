@@ -15,6 +15,9 @@ class MessageControllerTest extends MockeryTestCase
     private $router;
     private $formFactory;
     private $messageManager;
+    private $groupManager;
+    private $userManager;
+    private $workspaceManager;
     private $controller;
 
     protected function setUp()
@@ -25,13 +28,19 @@ class MessageControllerTest extends MockeryTestCase
         $this->router = $this->mock('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
         $this->formFactory = $this->mock('Claroline\CoreBundle\Form\Factory\FormFactory');
         $this->messageManager = $this->mock('Claroline\CoreBundle\Manager\MessageManager');
+        $this->groupManager = $this->mock('Claroline\CoreBundle\Manager\GroupManager');
+        $this->userManager = $this->mock('Claroline\CoreBundle\Manager\UserManager');
+        $this->workspaceManager = $this->mock('Claroline\CoreBundle\Manager\WorkspaceManager');
         $this->controller = $this->mock(
             'Claroline\CoreBundle\Controller\MessageController[checkAccess]',
             array(
                 $this->request,
                 $this->router,
                 $this->formFactory,
-                $this->messageManager
+                $this->messageManager,
+                $this->groupManager,
+                $this->userManager,
+                $this->workspaceManager
             )
         );
     }
@@ -135,7 +144,10 @@ class MessageControllerTest extends MockeryTestCase
             $this->request,
             $this->router,
             $this->formFactory,
-            $this->messageManager
+            $this->messageManager,
+            $this->groupManager,
+            $this->userManager,
+            $this->workspaceManager
         );
 
         $user = $this->mock('Claroline\CoreBundle\Entity\User');
@@ -143,6 +155,11 @@ class MessageControllerTest extends MockeryTestCase
         $user->shouldReceive('getUsername')->andReturn($username);
         $message->shouldReceive('getSenderUsername')->andReturn($senderName);
         $message->shouldReceive('getTo')->andReturn($receiversString);
+        $this->groupManager
+            ->shouldReceive('getGroupsByNames')
+            ->with(array())
+            ->once()
+            ->andReturn(array());
 
         if (!$isCorrect) {
             $this->setExpectedException('\Symfony\Component\Security\Core\Exception\AccessDeniedException');

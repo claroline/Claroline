@@ -32,8 +32,6 @@ class MessageController
     private $groupManager;
     private $userManager;
     private $workspaceManager;
-    private $securityContext;
-    private $utils;
 
     /**
      * @DI\InjectParams({
