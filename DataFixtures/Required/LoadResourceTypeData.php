@@ -58,20 +58,26 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
         }
 
         //add special actions.
-        $maskDecoder = new MaskDecoder();
-        $maskDecoder->setValue(pow(2, 6));
-        $maskDecoder->setName('compose');
-        $maskDecoder->setResourceType($types['activity']);
-        $manager->persist($maskDecoder);
+        $composeDecoder = new MaskDecoder();
+        $composeDecoder->setValue(pow(2, 6));
+        $composeDecoder->setName('compose');
+        $composeDecoder->setResourceType($types['activity']);
+        $manager->persist($composeDecoder);
 
-        $menu = new MenuAction();
-        $menu->setName('compose');
-        $menu->setAsync(false);
-        $menu->setIsCustom(true);
-        $menu->setValue(pow(2, 6));
-        $menu->setResourceType($types['activity']);
-        $menu->setIsForm(false);
-        $manager->persist($menu);
+        $activityMenu = new MenuAction();
+        $activityMenu->setName('compose');
+        $activityMenu->setAsync(false);
+        $activityMenu->setIsCustom(true);
+        $activityMenu->setValue(pow(2, 6));
+        $activityMenu->setResourceType($types['activity']);
+        $activityMenu->setIsForm(false);
+        $manager->persist($activityMenu);
+        
+        $updateTextDecoder = new MaskDecoder();
+        $updateTextDecoder->setValue(pow(2, 6));
+        $updateTextDecoder->setName('write');
+        $updateTextDecoder->setResourceType($types['text']);
+        $manager->persist($updateTextDecoder);
 
         $manager->flush();
     }

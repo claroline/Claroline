@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * TextManager will redirect to this controller once a directory is "open" or "edit".
@@ -207,7 +208,7 @@ class TextController extends Controller
     public function editFormAction(Text $text)
     {
         $collection = new ResourceCollection(array($text->getResourceNode()));
-        $this->checkAccess('OPEN', $collection);
+        $this->checkAccess('WRITE', $collection);
 
         $em = $this->container->get('doctrine.orm.entity_manager');
         $revisionRepo = $em->getRepository('ClarolineCoreBundle:Resource\Revision');
@@ -233,7 +234,7 @@ class TextController extends Controller
     public function editAction(Text $old)
     {
         $collection = new ResourceCollection(array($old->getResourceNode()));
-        $this->checkAccess('OPEN', $collection);
+        $this->checkAccess('WRITE', $collection);
 
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
@@ -273,12 +274,15 @@ class TextController extends Controller
     {
         $revisionRepo = $this->getDoctrine()->getManager()
             ->getRepository('ClarolineCoreBundle:Resource\Revision');
-
+        $collection = new ResourceCollection(array($text->getResourceNode()));
+        $isGranted = $this->container->get('security.context')->isGranted('WRITE', $collection);
+        
         return $this->render(
             'ClarolineCoreBundle:Text:index.html.twig',
             array(
                 'text' => $revisionRepo->getLastRevision($text)->getContent(),
-                '_resource' => $text
+                '_resource' => $text,
+                'isEditGranted' => $isGranted
             )
         );
     }

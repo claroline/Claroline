@@ -83,10 +83,14 @@ class ProfileController extends Controller
         if ($user !== $loggedUser) {
             throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         }
-        
+
         $roles = $this->roleManager->getPlatformRoles($loggedUser);
-        $form = $this->createForm(new ProfileType($roles, true), $user);
-       
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            $form = $this->createForm(new ProfileType($roles, false), $user);
+        } else {
+            $form = $this->createForm(new ProfileType($roles, true), $user);
+        }
+
         return array('profile_form' => $form->createView(), 'user' => $user);
     }
 
