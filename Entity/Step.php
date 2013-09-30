@@ -21,12 +21,11 @@ class Step extends AbstractResource
      */
     private $stepOrder;
 
+
     /**
-     * @var string
-     *
-     * @ORM\Column(name="parent", type="string", length=255, nullable=true)
-     */
-    private $parent;
+    * @ORM\ManyToOne(targetEntity="Step")
+    */
+    protected $parent;
 
     /**
      * @var boolean
@@ -88,7 +87,7 @@ class Step extends AbstractResource
     */
     protected $excludedResources;
 
-     /**
+    /**
     * @ORM\OneToMany(targetEntity="Step2ResourceNode", mappedBy="step", cascade={"remove"})
     */
     protected $resources;
@@ -241,29 +240,7 @@ class Step extends AbstractResource
         return $this->stepOrder;
     }
 
-    /**
-     * Set parent
-     *
-     * @param  string $parent
-     * @return Step
-     */
-    public function setParent($parent)
-    {
-        $this->parent = $parent;
-
-        return $this;
-    }
-
-    /**
-     * Get parent
-     *
-     * @return string
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
+   
     /**
      * Set resourceNode
      *
@@ -388,15 +365,6 @@ class Step extends AbstractResource
         $this->resources = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Add excludedResources
@@ -462,5 +430,30 @@ class Step extends AbstractResource
     public function getResources()
     {
         return $this->resources;
+    }
+  
+
+
+    /**
+     * Set parent
+     *
+     * @param \Innova\PathBundle\Entity\Step $parent
+     * @return Step
+     */
+    public function setParent(\Innova\PathBundle\Entity\Step $parent = null)
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return \Innova\PathBundle\Entity\Step 
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 }

@@ -234,6 +234,7 @@ class PathController extends Controller
             $stepWho = $manager->getRepository('InnovaPathBundle:StepWho')->findOneById($step->who);
             $currentStep->setStepWho($stepWho);
             $stepWhere = $manager->getRepository('InnovaPathBundle:StepWhere')->findOneById($step->where);
+            $parent = $manager->getRepository('InnovaPathBundle:Step')->findOneById($parent);
             $currentStep->setParent($parent);
             $currentStep->setStepWhere($stepWhere);
             $currentStep->setDuration(new \DateTime());
@@ -252,7 +253,7 @@ class PathController extends Controller
                 if ($resource->resourceId == null) {
                     $step2ressourceNode = new Step2ResourceNode();
                 } else {
-                    $step2ressourceNode = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')->findOneByRessourceNode($resource->resourceId);
+                    $step2ressourceNode = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')->findOneByResourceNode($resource->resourceId);
                 }
                 $step2ressourceNode->setResourceNode($manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId));
                 $step2ressourceNode->setStep($currentStep);
@@ -335,6 +336,26 @@ class PathController extends Controller
 
         return array('workspace' => $workspace);
     }
+
+
+    /**
+     * @Route(
+     *      "workspace/{workspaceId}/path/player/{pathId}",
+     *      name = "innova_path_player",
+     *      defaults={"pathId"= null},
+     *      options = {"expose"=true}
+     * )
+     *
+     * @Template("InnovaPathBundle:Player:main.html.twig")
+     */
+    public function PlayerAction($workspaceId, $pathId = null)
+    {
+        $manager = $this->container->get('doctrine.orm.entity_manager');
+        $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
+
+        return array('workspace' => $workspace);
+    }
+
 
     /**
      * @Route(

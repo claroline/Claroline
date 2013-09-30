@@ -1,0 +1,96 @@
+{% extends "ClarolineCoreBundle::layout.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/app.css') }}"/>
+    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/step-edit.css') }}"/>
+    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/navbar.css') }}"/>
+{% endblock %}
+
+{% block content %}
+    <div ng-cloak class="col-md-12 section-content" ng-app="playerApp">
+        <div class="panel panel-default panel-path-editor" ng-controller="mainCtrl">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <button class="btn btn-default btn-xs" ng-click="openHelp()" tooltip="Help">
+                        <span class="icon-question-sign"></span>
+                    </button>
+                    PathName : {{ pathResourceNode.name }}
+                </h3>
+                
+                <div class="editor-buttons">
+                    <button class="btn btn-sm btn-primary" ng-click="fullscreen()" tooltip="Fullscreen"><span class="icon-fullscreen"></span></button>
+                    <a href="{{ path('claro_workspace_open_tool', {workspaceId: workspace.id, toolName: 'innova_path'}) }}" class="btn btn-danger btn-sm" tooltip="Back to list"><span class="icon-reply"></span></a>
+                </div>
+            </div>
+            <div ng-include="templateRoute + 'Editor/navbar.html'"></div>
+            <div ng-view class="panel-body">
+                <div>
+                    <h1>Bloc principal</h1>
+                    <p>Consigne du step: {{ step.instructions }}</p>
+                    <p>Cliquer sur la ressource ou l'outil de votre choix dans l'une des zones latérales + logo</p>
+
+                </div>
+                <div>
+                    <h2>Bloc info step</h2>
+                    <p>Durée :  {{ step.duration|date('H:i:s') }} </p>
+                    <p>Nom : {{ stepResourceNode.name }}</p>
+
+                </div>
+                <div class="">
+                    <h2>Zone des ressources</h2>
+                    {{ resources|length }} ressource(s) (mélangé avec les outils pour le moment)
+                </div>
+                <div class="">
+                    <h2>Zone des outils</h2>
+                </div>
+                <div class="">
+                   <h2> Zone de visualisation de la progression dans le parcours</h2>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {# Load Claroline JS #}
+    {{ parent() }}
+    
+    {# Load Angular Libraries #}
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-cookies.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-loader.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-resource.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-sanitize.min.js') }}"></script>
+    
+    {# Angular UI #}
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/ui-bootstrap-0.6.0.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/ui-bootstrap-tpls-0.6.0.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovaangularpageslide/js/angular-pageslide-directive.js') }}"></script>
+    
+   
+    {# Main #}
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Player/Controller/MainCtrl.js') }}"></script>
+    
+    {# Help  #}
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Help/Controller/HelpModalCtrl.js') }}"></script>
+    
+    {# Resources #}
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Resource/Factory/ResourceFactory.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Resource/Controller/ResourceModalCtrl.js') }}"></script>
+    
+    {# Templates #}
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Template/Factory/TemplateFactory.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Template/Controller/TemplateCtrl.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Template/Controller/TemplateModalCtrl.js') }}"></script>
+    
+    {# Global APP #}
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Player/PlayerApp.js') }}"></script>
+    <script type="text/javascript">
+        // TODO : find more beautiful
+        playerApp.pathId = "{{ path.id }}";
+        playerApp.workspaceId = "{{ workspace.id }}";
+        playerApp.templateRoute = "{{ asset('bundles/innovapath/js/Player/Partial/') }}";
+    </script>
+{% endblock %}
