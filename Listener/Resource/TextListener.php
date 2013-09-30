@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 
 /**
  * @DI\Service
@@ -128,13 +129,16 @@ class TextListener implements ContainerAwareInterface
     public function onOpen(OpenResourceEvent $event)
     {
         $text = $event->getResource();
+        $collection = new ResourceCollection(array($text->getResourceNode()));
+        $isGranted = $this->container->get('security.context')->isGranted('WRITE', $collection);
         $revisionRepo = $this->container->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\Revision');
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Text:index.html.twig',
             array(
                 'text' => $revisionRepo->getLastRevision($text)->getContent(),
-                '_resource' => $text
+                '_resource' => $text,
+                'isEditGranted' => $isGranted
             )
         );
         $response = new Response($content);
