@@ -21,6 +21,8 @@ class PlatformUpdateCommand extends ContainerAwareCommand
             ->setDescription('Update the platform.');
         $this->setDefinition(
             array(
+                new InputArgument('from_version', InputArgument::REQUIRED, 'from version'),
+                new InputArgument('from_migration', InputArgument::REQUIRED, 'from migration'),
                 new InputArgument('to_version', InputArgument::REQUIRED, 'to version'),
                 new InputArgument('to_migration', InputArgument::REQUIRED, 'to migration')
             )
@@ -30,6 +32,8 @@ class PlatformUpdateCommand extends ContainerAwareCommand
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $params = array(
+            'from_version' => 'from version: ',
+            'from_migration' => 'from migration: ',
             'to_version' => 'to version: ',
             'to_migration' => 'to migration: '
         );
@@ -49,7 +53,7 @@ class PlatformUpdateCommand extends ContainerAwareCommand
             $output,
             $argumentName,
             function ($argument) {
-                if (empty($argument)) {
+                if ($argument === null) {
                     throw new \Exception('This argument is required');
                 }
 
@@ -78,9 +82,13 @@ class PlatformUpdateCommand extends ContainerAwareCommand
 
         $vto = $input->getArgument('to_version');
         $mto = $input->getArgument('to_migration');
+        $vfrom = $input->getArgument('from_version');
+        $mfrom = $input->getArgument('from_migration');
         
-        $from = new BundleVersion('0.0', '0', '0');
+        $from = new BundleVersion($vfrom . '.0', $vfrom, $mfrom);
         $to = new BundleVersion($vto . '.0', $vto, $mto);
         $installer->update($bundle, $from, $to);
     }
 }
+
+

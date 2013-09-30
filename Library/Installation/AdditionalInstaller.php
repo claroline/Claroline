@@ -1,3 +1,4 @@
+
 <?php
 
 namespace Claroline\CoreBundle\Library\Installation;
@@ -21,7 +22,7 @@ class AdditionalInstaller extends BaseInstaller
     {
         $updater002000005 = new Updater\Updater002000005($this->container);
                 
-        if (version_compare($current->getVersion(), '1.4', '<')) {
+        if (version_compare($current->getVersion(), '1.3', '>') && version_compare($target->getVersion(), '2.1', '<') ) {
             $updater002000005->preUpdate();
         }
     }
@@ -30,7 +31,7 @@ class AdditionalInstaller extends BaseInstaller
     {
         $updater002000005 = new Updater\Updater002000005($this->container);
                 
-        if (version_compare($current->getVersion(), '1.4', '<')) {
+        if (version_compare($current->getVersion(), '1.3', '>')  && version_compare($target->getVersion(), '2.1', '<') ) {
             $updater002000005->postUpdate();
         }
     }

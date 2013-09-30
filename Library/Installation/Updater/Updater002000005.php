@@ -6,6 +6,9 @@ use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Doctrine\Common\DataFixtures\ReferenceRepository;
+use Claroline\CoreBundle\DataFixtures\Required\LoadWidgetData;
+use Claroline\CoreBundle\Entity\User;
 
 class Updater002000005
 {
@@ -18,10 +21,37 @@ class Updater002000005
 
     public function preUpdate()
     {
+        //these lines are usefull for debugging
+        
+        //widgets
+        $fixture = new LoadWidgetData();
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $referenceRepo = new ReferenceRepository($em);
+        $fixture->setReferenceRepository($referenceRepo);
+        $fixture->load($em);
+        
+       
+        //user
+        $user = new User();
+        $user->setUsername('root');
+        $user->setFirstName('root');
+        $user->setLastName('root');
+        $user->setAdministrativeCode('root');
+        $user->setMail('roo@t.root');
+        
         $cn = $this->container->get('doctrine.dbal.default_connection');
-        $cn->query('TRUNCATE table claro_widget_home_tab_config');
-        $cn->query('TRUNCATE table claro_home_tab_config');
-        $cn->query('TRUNCATE table claro_home_tab');
+        
+        //add some widgets
+        $cn->query('INSERT INTO widget_display (parent_id, workspace_id, user_id, widget_id, is_locked, is_visible, is_desktop)
+            VALUES 0, 1, 0, 1, 1, 1, 0');
+        $cn->query('INSERT INTO widget_display (parent_id, workspace_id, user_id, widget_id, is_locked, is_visible, is_desktop)
+            VALUES 1, 1, 0, 1, 1, 1, 0');
+        $cn->query('INSERT INTO widget_display (parent_id, workspace_id, user_id, widget_id, is_locked, is_visible, is_desktop)
+            VALUES 1, 0, 0, 1, 1, 1, 1');
+        
+        //$cn->query('TRUNCATE table claro_widget_home_tab_config');
+        //$cn->query('TRUNCATE table claro_home_tab_config');
+        //$cn->query('TRUNCATE table claro_home_tab');
     }
     public function postUpdate()
     {
