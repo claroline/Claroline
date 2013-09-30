@@ -1,12 +1,10 @@
 <h2><?php echo $trans('requirements_check') ?></h2>
 
-<form action="<?php echo $path('/') ?>" method="get">
-    <input type="submit" value="<?php echo $trans('previous_step') ?>"/>
-</form>
+<a href="<?php echo $path('/') ?>" class="button">
+    <?php echo $trans('previous_step') ?>
+</a>
 
-<form action="<?php echo $path('/database') ?>" method="get">
-    <input type="submit"
-           value="<?php echo $trans('next_step') ?>"
-           <?php if ($var('no_next')) echo 'disabled' ?>
-    />
-</form>
+<a href="<?php echo $path('/database') ?>"
+   class="button <?php if ($var('no_next')) echo 'disabled' ?>">
+    <?php echo $trans('next_step') ?>
+</a>

@@ -23,7 +23,7 @@ class Controller
     {
         $_SESSION['language'] = $_POST['language'];
         $this->container->getTranslator()->setLanguage($_SESSION['language']);
-        $this->redirect('/requirements');
+        $this->languageStep();
     }
 
     public function requirementStep()
