@@ -36,7 +36,7 @@
 <form method="post" {{ form_enctype(form) }}>
     {{ form_widget(form) }}
 </form>
-<br/>
+
 <p>
     <button type="button" id="submit_category" class="btn btn-primary">{{'create'|trans}}</button>
 </p>
@@ -83,7 +83,7 @@
                         $("#popupCategory").fadeOut("slow");
                         $("#closeCategory").fadeOut("slow");
 
-                        $('#linkedCategory').css({"display" : "block"});
+                        $('#linkedCategory').css({"display" : "inline-block"});
                     }
                 });
             }

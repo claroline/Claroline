@@ -33,70 +33,66 @@
  # knowledge of the CeCILL license and that you accept its terms.
 #}
 
-<link href="{{ asset('bundles/ujmexo/css/errorValidation.css') }}" type="text/css" rel="stylesheet" />
-<link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
-
-<fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
-    <legend style="border: transparent hidden 0; width: 620px; margin: 0; color: skyblue;">
-        <h1>&nbsp;{{ 'qcm creation' | trans }}</h1>
-    </legend>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'qcm creation' | trans }}</h3>
+    </div>
 
     <form onsubmit="return check_form('{{ 'nbr_choices' | trans }}', '{{ 'answer_coched' | trans }}', '{{ 'label_empty' | trans }}', '{{ 'point_answers' | trans }}', '{{ 'point_answer' | trans }}', '{{ 'invite_question' | trans }}');"
           action="{{ path('ujm_interactionqcm_create') }}" method="post" {{ form_enctype(form) }}>
+        <div class="panel-body">
+            {% include "UJMExoBundle:Partial:question.html.twig" %}
+        </div>
+        <div class="list-group">
+            <div class="list-group-item">
+                <h4 class="list-group-item-heading">
+                    {{ 'response' | trans }}:
+                </h4>
+                <br>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'points' | trans }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group row">
+                            {{ form_label(form.scoreRightResponse) }}
+                            <div class="col-md-9">{{ form_widget(form.scoreRightResponse) }}</div>
+                        </div>
+                        <div class="form-group row">
+                            {{ form_label(form.scoreFalseResponse) }}
+                            <div class="col-md-9">{{ form_widget(form.scoreFalseResponse) }}</div>
+                        </div>
+                        <div class="form-group row">
+                            {{ form_label(form.weightResponse) }}
+                            <div class="col-md-9">{{ form_widget(form.weightResponse) }}</div>
+                        </div>
+                    </div>
+                </div>
 
-        {% include "UJMExoBundle:Partial:question.html.twig" %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'choice' | trans }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group row">
+                            {{ form_label(form.shuffle) }}
+                            <div class="col-md-9">{{ form_widget(form.shuffle) }}</div>
+                        </div>
+                        {{ form_row(form.typeQCM) }}
+                        {{ form_row(form.choices) | replace({"col-md-3": "col-md-12"}) | raw }}
+                    </div>
+                </div>
 
-        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 5px; padding-bottom: 5px; padding-top: 5px;">
-            <legend style="border: transparent hidden 0; width: 120px; margin: 0; color: lightsteelblue;">
-                &nbsp;&nbsp;{{ 'response' | trans }} :
-            </legend>
-
-            <fieldset style="border: #ccf dotted thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
-                <legend style="border: transparent hidden 0; width: 100px; margin: 0; color: lightsteelblue;">
-                    &nbsp;&nbsp;{{ 'points' | trans }} :
-                </legend>
-                {{ form_label(form.scoreRightResponse) }} &nbsp;
-                {{ form_widget(form.scoreRightResponse, { 'attr': {'style': 'width:50px; text-align: end;'} }) }}
-
-                <hr style=" height: 1px; color: teal; background-color: teal"/>
-
-                {{ form_label(form.scoreFalseResponse) }} &nbsp;
-                {{ form_widget(form.scoreFalseResponse, { 'attr': {'style': 'width:50px; text-align: end;'} }) }}
-
-                <hr style=" height: 1px; color: teal; background-color: teal"/>
-
-                {{ form_widget(form.weightResponse, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }}
-                {{ form_label(form.weightResponse) }}
-            </fieldset><br/>
-
-            <fieldset style="border: #ccf dotted thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
-                <legend style="border: transparent hidden 0; width: 90px; margin: 0; color: lightsteelblue;">
-                    &nbsp;&nbsp;{{ 'choice' | trans }} :
-                </legend>
-                {{ form_widget(form.shuffle, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }}
-                {{ form_label(form.shuffle) }}
-
-                <hr style=" height: 1px; color: teal; background-color: teal"/>
-
-                {{ form_row(form.typeQCM) }}
-
-                <hr style=" height: 1px; color: teal; background-color: teal"/>
-
-                {{ form_row(form.choices) }}
-            </fieldset>
-
-            <div style="display: none;">{{ form_rest(form) }}</div>
-            {{ form_errors(form) }}
-        </fieldset>
-
-        <br/>
-
-        <p>
+                <div style="display: none;">{{ form_rest(form) }}</div>
+                {{ form_errors(form) }}
+            </div>
+        </div>
+        <div class="panel-footer">
             <input type="hidden" name="exercise" value="{{ exoID }}" />
             <button type="submit" id="button_submit" class="btn btn-primary">{{ 'create' | trans }}</button>
-        </p>
+        </div>
     </form>
-</fieldset>
+</div>
 
 {# tiny MCE #}
 {{ tinymce_init() }}

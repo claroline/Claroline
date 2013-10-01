@@ -33,55 +33,59 @@
  # knowledge of the CeCILL license and that you accept its terms.
 #}
 
-{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
 
 {% block title %} {{ 'findQuestion' | trans }} {% endblock %}
 
 {% block section_content %}
 
-    <div class="panel-heading" style="padding-left: 50px;">
-        <h1>{{ 'findQuestion' | trans }}</h1>
-    </div><br/>
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'findQuestion' | trans }}</h3>
+    </div>
 
-    <a href="{{ path('ujm_question_index') }}" style="margin-left: 50px;"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
+    <a href="{{ path('ujm_question_index') }}"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
 
-    <hr>
-
-    <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
-        <legend style="border: transparent hidden 0; width: 400px; margin: 0; color: skyblue;">
-            <h1>&nbsp;{{ 'searchQuestion' | trans }}</h1>
-        </legend>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ 'searchQuestion' | trans }}</h3>
+        </div>
         <div id="searchQuestions">
 
             <form id="searchQuestionForm" enctype="multipart/form-data" method="post" action="{{ path('ujm_question_searchQuestion') }}">
 
-                <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 15px;">
-                    <legend style="border: transparent hidden 0; width: 120px;margin: 0; color: lightsteelblue;">
-                        <h4>&nbsp;&nbsp;{{ 'findBy'|trans }} :</h4>
-                    </legend>
-                    <input type="radio" name="QuestionSearch" value="Category" style=" position: relative; top: 1px;" checked/> {{ 'category'|trans }}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'findBy'|trans }}</h3>
+                    </div>
+                    <input type="radio" name="QuestionSearch" value="Category" checked/> {{ 'category'|trans }}
                     &nbsp;&nbsp;|&nbsp;&nbsp;
-                    <input type="radio" name="QuestionSearch" value="Type" style=" position: relative; top: 1px;"/> {{ 'type'|trans }}
+                    <input type="radio" name="QuestionSearch" value="Type"/> {{ 'type'|trans }}
                     &nbsp;&nbsp;|&nbsp;&nbsp;
-                    <input type="radio" name="QuestionSearch" value="Title" style=" position: relative; top: 1px;"/> {{ 'title'|trans }}
+                    <input type="radio" name="QuestionSearch" value="Title"/> {{ 'title'|trans }}
                     &nbsp;&nbsp;|&nbsp;&nbsp;
-                    <input type="radio" name="QuestionSearch" value="Contain" style=" position: relative; top: 1px;"/> {{ 'containSearch'|trans }} ...
-                </fieldset><br/>
+                    <input type="radio" name="QuestionSearch" value="Contain"/> {{ 'containSearch'|trans }} ...
+                </div>
 
-                <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 15px;">
-                    <legend style="border: transparent hidden 0; width: 140px;margin: 0; color: lightsteelblue;">
-                        <h4>&nbsp;&nbsp;{{ 'findIn'|trans }} :</h4>
-                    </legend>
-                    <input type="radio" name="WhereSearch" value="my" style=" position: relative; top: 1px;" checked/> {{ 'my questions'|trans }}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'findIn'|trans }}</h3>
+                    </div>
+                    <input type="radio" name="WhereSearch" value="my" checked/> {{ 'my questions'|trans }}
                     &nbsp;&nbsp;|&nbsp;&nbsp;
-                    <input type="radio" name="WhereSearch" value="shared" style=" position: relative; top: 1px;"/> {{ 'my shared questions'|trans }}
-                </fieldset><br/>
+                    <input type="radio" name="WhereSearch" value="shared"/> {{ 'my shared questions'|trans }}
+                </div>
 
-                <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 15px;">
-                    <legend style="border: transparent hidden 0; width: 210px;margin: 0; color: lightsteelblue;">
-                        <h4>&nbsp;&nbsp;{{ 'findWhat'|trans }} :</h4>
-                    </legend>
-                    <div class="input-group" style="width: 200px;">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'findWhat'|trans }}</h3>
+                    </div>
+                    <div class="input-group">
                     <input type="text" class="form-control" id="what2search" placeholder="{{ 'search'|trans({}, 'platform') }}"
                         onkeydown="if (event.keyCode == 13) { searchQuestion('{{ path('ujm_question_searchQuestion') }}', 1);return false; }">
                         <span class="input-group-btn">
@@ -90,10 +94,10 @@
                             <i class="icon-search"></i></button>
                         </span>
                     </div>
-                </fieldset>
+                </div>
             </form>
         </div>
-    </fieldset><br/>
+    </div>
 
     <div id="resultSearch">
         {% if divResultSearch is defined %}

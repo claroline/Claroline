@@ -12,7 +12,7 @@ var value = 0; // Size of the resizing
 
 // Instructions aren't displayed (by default) for more visibility
 $('#Instructions').css({"display" : "none"});
-$('#Order').css({"display" : "block"});
+$('#Order').css({"display" : "inline-block"});
 $('#hide').css({"display" : "none"});
 
 // Initialize reference answer zone position
@@ -23,16 +23,16 @@ el.css({
 
 // If click, instructions are displayed
 function DisplayInstruction() {
-    $('#Instructions').css({"display" : "block"});
+    $('#Instructions').css({"display" : "inline-block"});
     $('#Order').css({"display" : "none"});
-    $('#hide').css({"display" : "block"});
+    $('#hide').css({"display" : "inline-block"});
 }
 
 // If click, instructions are hidden
 function HideInstruction() {
     $('#Instructions').css({"display" : "none"});
     $('#hide').css({"display" : "none"});
-    $('#Order').css({"display" : "block"});
+    $('#Order').css({"display" : "inline-block"});
 }
 
 // Get the url's picture matching to the label in the list

@@ -32,7 +32,14 @@
  # The fact that you are presently reading this means that you have had
  # knowledge of the CeCILL license and that you accept its terms.
 #}
-{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -43,44 +50,39 @@
 
 {% block section_content %}
 
-    <div class="panel-heading" style="padding-left: 50px;">
-        <h1>{{'open edition'|trans}}</h1>
-    </div><br/>
+    <div class="panel-heading">
+        <h3 class="panel-title">{{'open edition'|trans}}</h3>
+    </div>
 
-    <a href="{{ path('ujm_question_index') }}" style="margin-left: 50px;">
+    <a href="{{ path('ujm_question_index') }}">
         <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
     </a>
-
-    <hr/>
-
-    <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
-        <legend style="border: transparent hidden 0; width: 640px; margin: 0; color: skyblue;">
-            <h1>&nbsp;{{ 'open edition' | trans }}</h1>
-        </legend>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ 'open edition' | trans }}</h3>
+        </div>
 
         <form action="{{ path('ujm_interactionopen_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
 
             {% include "UJMExoBundle:Partial:questionEdit.html.twig" %}
 
-            <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
-                <legend style="border: transparent hidden 0; width: 120px; margin: 0; color: lightsteelblue;">
-                    &nbsp;&nbsp;{{ 'response' | trans }} :
-                </legend>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'response' | trans }}</h3>
+                </div>
 
                 {{ form_row(edit_form.typeopenquestion) }}
-
-                <hr style=" height: 1px; color: teal; background-color: teal"/>
 
                 <div id="qOpenScoreMaxLongResp">
                     <p>
                         {{ form_label(edit_form.scoreMaxLongResp) }} &nbsp;
-                        {{ form_widget(edit_form.scoreMaxLongResp, { 'attr': {'style': 'width: 50px;  text-align: end;'} }) }}
+                        {{ form_widget(edit_form.scoreMaxLongResp) }}
                     </p>
                 </div>
 
                 <div id="qOpenOrthography" style="display: none;">
                     <p>
-                        {{ form_widget(edit_form.orthographyCorrect, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }}
+                        {{ form_widget(edit_form.orthographyCorrect) }}
                         {{ form_label(edit_form.orthographyCorrect) }}
                     </p>
                 </div>
@@ -96,9 +98,9 @@
                         {{ form_row(edit_form.wordResponses) }}
                     </p>
                 </div>
-            </fieldset>
+            </div>
 
-            <br/>
+
 
             <p>
                 <input type="hidden" name="exercise" value="{{ exoID }}" />
@@ -108,7 +110,7 @@
             <div style="display: none;">{{ form_rest(edit_form) }}</div>
             {{ form_errors(edit_form) }}
         </form>
-    </fieldset>
+    </div>
 {% endblock %}
 
 {% block javascripts %}

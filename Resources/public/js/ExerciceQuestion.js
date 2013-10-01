@@ -2,7 +2,7 @@
 $(document).ready(function (){
     $('tbody').sortable({
         update: function (event, ui) {
-            $('#SaveOrder').css({"display" : "block"}); // Display button to save the new order
+            $('#SaveOrder').css({"display" : "inline-block"}); // Display button to save the new order
         }
     });
 });

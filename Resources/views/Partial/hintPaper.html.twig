@@ -1,6 +1,6 @@
 {% if interactionToDisplayed.interaction.hints is not empty %}
-    <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
-        <legend style="border: transparent hidden 0; width: 110px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'hints' | trans }} :</legend>
+    <div class="panel panel-default">
+        <div class="panel-heading"><h3 class="panel-title">{{ 'hints' | trans }}</h3></div>
         <table>
             {% set penalties = app.session.get('penalties') %}
             {% set nbr_hint = 1 %}
@@ -28,5 +28,5 @@
                 {% set nbr_hint = nbr_hint + 1 %}
             {% endfor %}
         </table>
-    </fieldset><br/>
+    </div>
 {% endif %}

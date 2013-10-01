@@ -133,22 +133,22 @@ function switchType(type, array) {
         case 'Category':
             if (clickC == 'no') {
                 sortTable(array, 0, ASC, type);
-                downC.css({"display" : "block"});
+                downC.css({"display" : "inline-block"});
                 clickC = 'yes';
             } else {
                 sortTable(array, 0, DESC, type);
-                upC.css({"display" : "block"});
+                upC.css({"display" : "inline-block"});
                 clickC = 'no';
             }
             break;
         case 'Title':
             if (clickTi == 'no') {
                 sortTable(array, 1, ASC, type);
-                downTi.css({"display" : "block"});
+                downTi.css({"display" : "inline-block"});
                 clickTi = 'yes';
             } else {
                 sortTable(array, 1, DESC, type);
-                upTi.css({"display" : "block"});
+                upTi.css({"display" : "inline-block"});
                 clickTi = 'no';
             }
 
@@ -156,22 +156,22 @@ function switchType(type, array) {
         case 'Type':
             if (clickTy == 'no') {
                 sortTable(array, 2, ASC, type);
-                downTy.css({"display" : "block"});
+                downTy.css({"display" : "inline-block"});
                 clickTy = 'yes';
             } else {
                 sortTable(array, 2, DESC, type);
-                upTy.css({"display" : "block"});
+                upTy.css({"display" : "inline-block"});
                 clickTy = 'no';
             }
             break;
         case 'Invite':
             if (clickI == 'no') {
                 sortTable(array, 3, ASC, type);
-                downI.css({"display" : "block"});
+                downI.css({"display" : "inline-block"});
                 clickI = 'yes';
             } else {
                 sortTable(array, 3, DESC, type);
-                upI.css({"display" : "block"});
+                upI.css({"display" : "inline-block"});
                 clickI = 'no';
             }
             break;
@@ -179,22 +179,22 @@ function switchType(type, array) {
         case 'Label':
             if (clickL == 'no') {
                 sortTable(array, 2, ASC, type);
-                downL.css({"display" : "block"});
+                downL.css({"display" : "inline-block"});
                 clickL = 'yes';
             } else {
                 sortTable(array, 2, DESC, type);
-                upL.css({"display" : "block"});
+                upL.css({"display" : "inline-block"});
                 clickL = 'no';
             }
             break;
         case 'kind':
             if (clickT == 'no') {
                 sortTable(array, 0, ASC, type);
-                downT.css({"display" : "block"});
+                downT.css({"display" : "inline-block"});
                 clickT = 'yes';
             } else {
                 sortTable(array, 0, DESC, type);
-                upT.css({"display" : "block"});
+                upT.css({"display" : "inline-block"});
                 clickT = 'no';
             }
             break;
@@ -202,44 +202,44 @@ function switchType(type, array) {
         case 'user':
             if (clickU == 'no') {
                 sortTable(array, 0, ASC, type);
-                downU.css({"display" : "block"});
+                downU.css({"display" : "inline-block"});
                 clickU = 'yes';
             } else {
                 sortTable(array, 0, DESC, type);
-                upU.css({"display" : "block"});
+                upU.css({"display" : "inline-block"});
                 clickU = 'no';
             }
             break;
         case 'numPaper':
             if (clickN == 'no') {
                 sortTable(array, 1, NUMA, type);
-                downN.css({"display" : "block"});
+                downN.css({"display" : "inline-block"});
                 clickN = 'yes';
             } else {
                 sortTable(array, 1, NUMD, type);
-                upN.css({"display" : "block"});
+                upN.css({"display" : "inline-block"});
                 clickN = 'no';
             }
             break;
         case 'startDate':
             if (clickS == 'no') {
                 sortTable(array, 2, DATEA, type);
-                downS.css({"display" : "block"});
+                downS.css({"display" : "inline-block"});
                 clickS = 'yes';
             } else {
                 sortTable(array, 2, DATED, type);
-                upS.css({"display" : "block"});
+                upS.css({"display" : "inline-block"});
                 clickS = 'no';
             }
             break;
         case 'endDate':
             if (clickE == 'no') {
                 sortTable(array, 3, DATEA, type);
-                downE.css({"display" : "block"});
+                downE.css({"display" : "inline-block"});
                 clickE = 'yes';
             } else {
                 sortTable(array, 3, DATED, type);
-                upE.css({"display" : "block"});
+                upE.css({"display" : "inline-block"});
                 clickE = 'no';
             }
             break;
@@ -247,33 +247,33 @@ function switchType(type, array) {
             case 'pseudo':
             if (clickSps == 'no') {
                 sortTable(array, 0, ASC, type);
-                downSps.css({"display" : "block"});
+                downSps.css({"display" : "inline-block"});
                 clickSps = 'yes';
             } else {
                 sortTable(array, 0, DESC, type);
-                upSps.css({"display" : "block"});
+                upSps.css({"display" : "inline-block"});
                 clickSps = 'no';
             }
             break;
         case 'name':
             if (clickSn == 'no') {
                 sortTable(array, 1, ASC, type);
-                downSn.css({"display" : "block"});
+                downSn.css({"display" : "inline-block"});
                 clickSn = 'yes';
             } else {
                 sortTable(array, 1, DESC, type);
-                upSn.css({"display" : "block"});
+                upSn.css({"display" : "inline-block"});
                 clickSn = 'no';
             }
             break;
         case 'fname':
             if (clickSp == 'no') {
                 sortTable(array, 2, ASC, type);
-                downSp.css({"display" : "block"});
+                downSp.css({"display" : "inline-block"});
                 clickSp = 'yes';
             } else {
                 sortTable(array, 2, DESC, type);
-                upSp.css({"display" : "block"});
+                upSp.css({"display" : "inline-block"});
                 clickSp = 'no';
             }
             break;
@@ -281,66 +281,66 @@ function switchType(type, array) {
         case 'dateL':
             if (clickDl == 'no') {
                 sortTable(array, 0, DATEA, type);
-                downDl.css({"display" : "block"});
+                downDl.css({"display" : "inline-block"});
                 clickDl = 'yes';
             } else {
                 sortTable(array, 0, DATED, type);
-                upDl.css({"display" : "block"});
+                upDl.css({"display" : "inline-block"});
                 clickDl = 'no';
             }
             break;
         case 'titleL':
             if (clickTl == 'no') {
                 sortTable(array, 1, ASC, type);
-                downTl.css({"display" : "block"});
+                downTl.css({"display" : "inline-block"});
                 clickTl = 'yes';
             } else {
                 sortTable(array, 1, DESC, type);
-                upTl.css({"display" : "block"});
+                upTl.css({"display" : "inline-block"});
                 clickTl = 'no';
             }
             break;
         case 'QuestionL':
             if (clickQl == 'no') {
                 sortTable(array, 2, ASC, type);
-                downQl.css({"display" : "block"});
+                downQl.css({"display" : "inline-block"});
                 clickQl = 'yes';
             } else {
                 sortTable(array, 2, DESC, type);
-                upQl.css({"display" : "block"});
+                upQl.css({"display" : "inline-block"});
                 clickQl = 'no';
             }
             break;
         case 'CategoryL':
             if (clickCl == 'no') {
                 sortTable(array, 3, ASC, type);
-                downCl.css({"display" : "block"});
+                downCl.css({"display" : "inline-block"});
                 clickCl = 'yes';
             } else {
                 sortTable(array, 3, DESC, type);
-                upCl.css({"display" : "block"});
+                upCl.css({"display" : "inline-block"});
                 clickCl = 'no';
             }
             break;
         case 'paperL':
             if (clickPl == 'no') {
                 sortTable(array, 4, ASC, type);
-                downPl.css({"display" : "block"});
+                downPl.css({"display" : "inline-block"});
                 clickPl = 'yes';
             } else {
                 sortTable(array, 4, DESC, type);
-                upPl.css({"display" : "block"});
+                upPl.css({"display" : "inline-block"});
                 clickPl = 'no';
             }
             break;
         case 'responseL':
             if (clickRl == 'no') {
                 sortTable(array, 5, ASC, type);
-                downRl.css({"display" : "block"});
+                downRl.css({"display" : "inline-block"});
                 clickRl = 'yes';
             } else {
                 sortTable(array, 5, DESC, type);
-                upRl.css({"display" : "block"});
+                upRl.css({"display" : "inline-block"});
                 clickRl = 'no';
             }
             break;
@@ -527,15 +527,15 @@ window.onload = function () {
         }
     }
 
-    // If has already done a document research, put the values of the research and display selected block when changing page
+    // If has already done a document research, put the values of the research and display selected inline-block when changing page
     if ($('#label2Find').length > 0 && $('#whichAction').length > 0) {
         if ($('#label2Find').val() != '') {
             $('#labelToFind').val($('#label2Find').val());
-            $('#searchDocuments').css({"display" : "block"});
+            $('#searchDocuments').css({"display" : "inline-block"});
         }
 
         if ($('#whichAction').val() == 'sort') {
-            $('#sortDocuments').css({"display" : "block"});
+            $('#sortDocuments').css({"display" : "inline-block"});
         }
     }
 };

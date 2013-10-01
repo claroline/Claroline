@@ -35,62 +35,59 @@
 
 <link href="{{ asset('bundles/ujmexo/css/errorValidation.css') }}" type="text/css" rel="stylesheet" />
 
-<fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
-    <legend style="border: transparent hidden 0; width: 530px; margin: 0; color: skyblue;">
-        <h1>&nbsp;{{ 'interactionOpen creation' | trans }}</h1>
-    </legend>
-
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'interactionOpen creation' | trans }}</h3>
+    </div>
     <form action="{{ path('ujm_interactionopen_create') }}" method="post" {{ form_enctype(form) }}>
+        <div class="panel-body">
+            {% include "UJMExoBundle:Partial:question.html.twig" %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'response' | trans }}</h3>
+                </div>
+                <div class="panel-body">
+                    {{ form_row(form.typeopenquestion) }}
 
-        {% include "UJMExoBundle:Partial:question.html.twig" %}
+                    <div id="qOpenScoreMaxLongResp">
+                        <div class="form-group row">
+                            {{ form_label(form.scoreMaxLongResp) }}
+                            <div class="col-md-9">{{ form_widget(form.scoreMaxLongResp) }}</div>
+                        </div>
+                    </div>
 
-        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
-            <legend style="border: transparent hidden 0; width: 120px; margin: 0; color: lightsteelblue;">
-                &nbsp;&nbsp;{{ 'response' | trans }} :
-            </legend>
+                    <div id="qOpenOrthography" style="display: none;">
+                        <p>
+                            {{ form_label(form.orthographyCorrect) }}
+                            {{ form_widget(form.orthographyCorrect) }}
+                        </p>
+                    </div>
 
-            {{ form_row(form.typeopenquestion) }}
+                    <!--<div id="qOpenUnit" style="display: none;">
+                        <p>
+                            {#{ form_row(form.unit) }#}
+                        </p>
+                    </div>-->
 
-            <hr style=" height: 1px; color: teal; background-color: teal"/>
+                    <div id="qOpenKeyword" style="display: none;">
+                        <p>
+                            {{ form_row(form.wordResponses) }}
+                        </p>
+                    </div>
+                </div>
 
-            <div id="qOpenScoreMaxLongResp">
-                <p>
-                    {{ form_label(form.scoreMaxLongResp) }} &nbsp;
-                    {{ form_widget(form.scoreMaxLongResp, { 'attr': {'style': 'width: 50px;  text-align: end;'} }) }}
-                </p>
+                <div style="display: none;">
+                    {{ form_rest(form) }}
+                </div>
+                {{ form_errors(form) }}
             </div>
-
-            <div id="qOpenOrthography" style="display: none;">
-                <p>
-                    {{ form_widget(form.orthographyCorrect, { 'attr': {'style': 'display inline;float:left;position: relative; top: -1px;margin-right: 7px;'} }) }}
-                    {{ form_label(form.orthographyCorrect) }}
-                </p>
-            </div>
-
-        <!--<div id="qOpenUnit" style="display: none;">
-            <p>
-                {#{ form_row(form.unit) }#}
-            </p>
-        </div>-->
-
-            <div id="qOpenKeyword" style="display: none;">
-                <p>
-                    {{ form_row(form.wordResponses) }}
-                </p>
-            </div>
-        </fieldset>
-
-        <br/>
-
-        <p>
+        </div>
+        <div class="panel-footer">
             <input type="hidden" name="exercise" value="{{ exoID }}" />
             <button type="submit" id="button_submit" class="btn btn-primary">{{ 'create' | trans }}</button>
-        </p>
-
-        <div style="display: none;">{{ form_rest(form) }}</div>
-        {{ form_errors(form) }}
+        </div>
     </form>
-</fieldset>
+</div>
 
 {# tiny MCE #}
 {{ tinymce_init() }}
