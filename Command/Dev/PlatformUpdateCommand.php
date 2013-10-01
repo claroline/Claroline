@@ -24,7 +24,8 @@ class PlatformUpdateCommand extends ContainerAwareCommand
                 new InputArgument('from_version', InputArgument::REQUIRED, 'from version'),
                 new InputArgument('from_migration', InputArgument::REQUIRED, 'from migration'),
                 new InputArgument('to_version', InputArgument::REQUIRED, 'to version'),
-                new InputArgument('to_migration', InputArgument::REQUIRED, 'to migration')
+                new InputArgument('to_migration', InputArgument::REQUIRED, 'to migration'),
+                new InputArgument('bundle', InputArgument::REQUIRED, 'bundle')
             )
         );
     }
@@ -35,7 +36,8 @@ class PlatformUpdateCommand extends ContainerAwareCommand
             'from_version' => 'from version: ',
             'from_migration' => 'from migration: ',
             'to_version' => 'to version: ',
-            'to_migration' => 'to migration: '
+            'to_migration' => 'to migration: ',
+            'bundle' => 'bundle: '
         );
 
         foreach ($params as $argument => $argumentName) {
@@ -70,7 +72,9 @@ class PlatformUpdateCommand extends ContainerAwareCommand
         $installer->setLogger(function ($message) use ($output) {
            $output->writeln($message);
         });
-        $bundle = $this->getContainer()->get('kernel')->getBundle('ClarolineCoreBundle');
+        
+        $bundleName = $input->getArgument('bundle');
+        $bundle = $this->getContainer()->get('kernel')->getBundle($bundleName);
         
         $createDbCommand = $this->getApplication()->find('doctrine:database:create');
         $createDbInput = new ArrayInput(
