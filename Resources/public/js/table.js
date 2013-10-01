@@ -110,7 +110,7 @@
                 url: route,
                 type: type,
                 success: function () {
-                    if (currentAction === 'remove') {
+                    if (parameters.route.action[currentAction].delete) {
                         $('.chk-item:checked').each(function (index, element) {
                             $(element).parent().parent().remove();
                         });

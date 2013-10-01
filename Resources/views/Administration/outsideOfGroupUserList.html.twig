@@ -139,7 +139,7 @@
         parameters.route.action = {};
         parameters.route.normal = {"route": "claro_admin_outside_of_group_user_list", "parameters": {'groupId': {{ group.getId() }} }};
         parameters.route.search = {"route": "claro_admin_outside_of_group_user_list_search", "parameters": {'groupId': {{ group.getId() }}}};
-        parameters.route.action.add = {"route": "claro_admin_multiadd_user_to_group", "parameters": {'groupId': {{ group.getId() }}}, 'type': 'PUT', "confirmTemplate": addUserConfirm};
+        parameters.route.action.add = {"route": "claro_admin_multiadd_user_to_group", "parameters": {'groupId': {{ group.getId() }}}, 'type': 'PUT', "confirmTemplate": addUserConfirm, "delete": true};
         Claroline.Table.initialize(parameters);
     </script>
 {% endblock %}

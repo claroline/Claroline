@@ -165,7 +165,7 @@
         parameters.route.action = {};
         parameters.route.normal = {"route": "claro_admin_user_list", "parameters": {}};
         parameters.route.search = {"route": "claro_admin_user_list_search", "parameters": {}};
-        parameters.route.action.remove = {"route": "claro_admin_multidelete_user", "parameters": {}, "type": "DELETE", "confirmTemplate": removeUserConfirm};
+        parameters.route.action.remove = {"route": "claro_admin_multidelete_user", "parameters": {}, "type": "DELETE", "confirmTemplate": removeUserConfirm, "delete": true};
         parameters.route.action.password = {"route": "claro_security_initialize_password", "parameters": {}, "type": "POST", "confirmTemplate": resetPasswordConfirm};
         Claroline.Table.initialize(parameters);
     </script>
