@@ -74,7 +74,7 @@
                     {% if interactions is not empty %}
                         <table class="table table-striped table-bordered table-condensed" id="QuestionArrayMy">
                             <thead>
-                                <tr style="background-color: lightsteelblue;">
+                                <tr>
                                     <th class="classic" onclick="SortQuestions('Category', 'QuestionArrayMy');"
                                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
@@ -117,32 +117,23 @@
                                     <td class="classic">{{ interaction.type }}</td>
                                     <td class="classic">{{ interaction.invite|raw }}</td>
                                     <td class="classic">
-                                        <ul style="text-align: center; vertical-align: middle; list-style-type: none; margin-left: 0; padding-left: 0;">
-                                            <li>
-                                                <a href="{{ path('ujm_question_share', { 'questionID': interaction.question.id }) }}">
-                                                    <i class="icon-share-alt"></i>&nbsp;{{ 'share' | trans }}</a>
-                                            </li>
-                                            {% if(questionWithResponse[x] == 0) %}
-                                                <li>
-                                                    <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}">
-                                                        <i class="icon-pencil"></i>&nbsp;{{ 'edit' | trans }}
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{ path('ujm_question_delete', {
-                                                        'id': interaction.question.id, 'pageNow': pagerMy.getCurrentPage, 'maxPage': pagerMy.maxPerPage,
-                                                        'nbItem': pagerMy.getNbResults, 'lastPage': pagerMy.getNbPages }) }}">
-                                                        <i class="icon-trash"></i>&nbsp;{{ 'delete of my bank' | trans }}
-                                                    </a>
-                                                </li>
-                                            {% else %}
-                                                <li>
-                                                    <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}" style="color: red;">
-                                                        <i class="icon-pencil"></i>&nbsp;{{ 'edit' | trans }}
-                                                    </a>
-                                                </li>
-                                            {% endif %}
-                                        </ul>
+                                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'share' | trans }}" href="{{ path('ujm_question_share', { 'questionID': interaction.question.id }) }}">
+                                            <i class="icon-share-alt"></i>
+                                        </a>
+                                        {% if(questionWithResponse[x] == 0) %}
+                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}" href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}">
+                                                <i class="icon-pencil"></i>
+                                            </a>
+                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete of my bank' | trans }}" href="{{ path('ujm_question_delete', {
+                                            'id': interaction.question.id, 'pageNow': pagerMy.getCurrentPage, 'maxPage': pagerMy.maxPerPage,
+                                            'nbItem': pagerMy.getNbResults, 'lastPage': pagerMy.getNbPages }) }}">
+                                                <i class="icon-trash"></i>
+                                            </a>
+                                        {% else %}
+                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}" href="{{ path('ujm_question_edit', { 'id': interaction.question.id }) }}">
+                                                <i class="icon-pencil"></i>
+                                            </a>
+                                        {% endif %}
                                     </td>
                                     {% if(alreadyShared[x] == 1) %}
                                         <td class="classic">
@@ -156,7 +147,7 @@
                             {% endfor %}
                             </tbody>
                         </table>
-                        <div style="text-align: center;">
+                        <div>
                             {% if pagerMy.haveToPaginate %}
                                 {{ pagerfanta(pagerMy, 'twitter_bootstrap_translated',
                                 {'routeName': 'ujm_question_index', 'routeParams':
@@ -177,7 +168,7 @@
                     {% if sharedWithMe is not empty %}
                         <table class="table table-striped table-bordered table-condensed" id="QuestionArrayShared">
                             <thead>
-                                <tr style="background-color: lightsteelblue;">
+                                <tr>
                                     <th class="classic" onclick="SortQuestions('Category', 'QuestionArrayShared');"
                                         onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                         onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
@@ -232,7 +223,7 @@
                             {% endfor %}
                             </tbody>
                         </table>
-                        <div style="text-align: center;">
+                        <div>
                             {% if pagerShared.haveToPaginate %}
                                 {{ pagerfanta(pagerShared, 'twitter_bootstrap_translated',
                                 {'routeName': 'ujm_question_index', 'routeParams':

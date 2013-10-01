@@ -1,8 +1,8 @@
 // Hide description and feeback by default for more visibility
 $('#descriptionOptional').css({"display" : "none"});
 $('#feedbackOptional').css({"display" : "none"});
-$('#descriptionOptionalShow').css({"display" : "block"});
-$('#feebackOptionalShow').css({"display" : "block"});
+$('#descriptionOptionalShow').css({"display" : "inline-block"});
+$('#feebackOptionalShow').css({"display" : "inline-block"});
 $('#descriptionOptionalHide').css({"display" : "none"});
 $('#feebackOptionalHide').css({"display" : "none"});
 
@@ -10,27 +10,27 @@ $('#feebackOptionalHide').css({"display" : "none"});
 function DisplayOptional(type) {
     if (type == 'feedback') {
         $('#feebackOptionalShow').css({"display" : "none"});
-        $('#feebackOptionalHide').css({"display" : "block"});
-        $('#feedbackOptional').css({"display" : "block"});
+        $('#feebackOptionalHide').css({"display" : "inline-block"});
+        $('#feedbackOptional').css({"display" : "inline-block"});
     }
 
     if (type == 'description') {
         $('#descriptionOptionalShow').css({"display" : "none"});
-        $('#descriptionOptionalHide').css({"display" : "block"});
-        $('#descriptionOptional').css({"display" : "block"});
+        $('#descriptionOptionalHide').css({"display" : "inline-block"});
+        $('#descriptionOptional').css({"display" : "inline-block"});
     }
 }
 
 // Hide the textarea
 function HideOptional(type) {
     if (type == 'feedback') {
-        $('#feebackOptionalShow').css({"display" : "block"});
+        $('#feebackOptionalShow').css({"display" : "inline-block"});
         $('#feebackOptionalHide').css({"display" : "none"});
         $('#feedbackOptional').css({"display" : "none"});
     }
 
     if (type == 'description') {
-        $('#descriptionOptionalShow').css({"display" : "block"});
+        $('#descriptionOptionalShow').css({"display" : "inline-block"});
         $('#descriptionOptionalHide').css({"display" : "none"});
         $('#descriptionOptional').css({"display" : "none"});
     }
@@ -38,7 +38,7 @@ function HideOptional(type) {
 
 // Show pop up to alter category label
 function show() {
-    $('#alterCategory').css({ "display" : "block" });
+    $('#alterCategory').css({ "display" : "inline-block" });
 }
 
 // Hide pop up to alter category label
@@ -131,14 +131,14 @@ function displayDeleteCategory() {
 
         if (idCat == index) {
             if (contain == 0) {
-                $('#linkedCategory').css({"display" : "block"});
+                $('#linkedCategory').css({"display" : "inline-block"});
                 break;
             } else {
                 $('#linkedCategory').css({"display" : "none"});
                  break;
             }
         } else {
-            $('#linkedCategory').css({"display" : "block"});
+            $('#linkedCategory').css({"display" : "inline-block"});
         }
     }
 }

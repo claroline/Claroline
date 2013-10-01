@@ -33,7 +33,13 @@
  # knowledge of the CeCILL license and that you accept its terms.
 #}
 
-{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -44,53 +50,51 @@
 
 {% block section_content %}
 
-    <div class="panel-heading" style="padding-left: 50px;">
-        <h1>{{ 'paper' | trans }} {{ 'question' | trans }}</h1>
-    </div><br/>
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'paper' | trans }} {{ 'question' | trans }}</h3>
+    </div>
 
-    <a href="{{ path('ujm_question_index') }}" style="margin-left: 50px;"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
+    <a href="{{ path('ujm_question_index') }}"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
 
-    <hr/>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ 'question' | trans }} {{ 'open' | trans }}</h3>
+        </div>
 
-    <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
-        <legend style="border: transparent hidden 0; width: 330px; margin: 0; color: skyblue;">
-            <h1>&nbsp;{{ 'question' | trans }} {{ 'open' | trans }} :</h1>
-        </legend>
-
-        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
-            <legend style="border: transparent hidden 0; width: 80px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'title' | trans }} :</legend>
+        <div class="panel panel-default">
+            <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
             <h1>{{ interactionOpen.interaction.question.title }}</h1>
-        </fieldset><br/>
+        </div>
 
         {% if interactionOpen.interaction.question.description != null %}
-            <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
-                <legend style="border: transparent hidden 0; width: 150px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'description' | trans }} :</legend>
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
                 <div name="description">
                     <p>{{ interactionOpen.interaction.question.description|raw }}<p/>
                 </div>
-            </fieldset><br/>
+            </div>
         {% endif %}
 
-        <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px;">
-            <legend style="border: transparent hidden 0; width: 130px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'question' | trans }} :</legend>
+        <div class="panel panel-default">
+            <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
             <h3 name="question">
                 <p>{{ interactionOpen.interaction.invite|raw }}<p/>
             </h3>
-        </fieldset><br/>
+        </div>
 
         <form action="{{ path('ujm_interactionopen_response') }}" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
 
             {% if interactionOpen.typeopenquestion == 'long' %}
-                <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
-                    <legend style="border: transparent hidden 0; width: 120px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'response' | trans }} :</legend>
-                    <textarea name="interOpenLong" class="tinymce" data-theme="medium"></textarea>
-                </fieldset><br/>
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
+                    <textarea class="form-control" name="interOpenLong" class="tinymce" data-theme="medium"></textarea>
+                </div>
             {% endif %}
 
             {% if interactionOpen.interaction.hints is not empty %}
-                <fieldset style="border: lightsteelblue dashed thin; padding-left: 20px; padding-right: 20px; padding-bottom: 5px; padding-top: 5px;">
-                    <legend style="border: transparent hidden 0; width: 110px; margin: 0; color: lightsteelblue;">&nbsp;&nbsp;{{ 'hints' | trans }} :</legend>
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">{{ 'hints' | trans }}</h3></div>
                     <table>
                         {% set nbr_hint = 1 %}
                         {% for hint in interactionOpen.interaction.hints %}
@@ -101,14 +105,14 @@
                            {% set nbr_hint = nbr_hint + 1 %}
                         {% endfor %}
                    </table>
-                </fieldset><br/>
+                </div>
             {% endif %}
 
             <input type="hidden" name="testOpen" value="testOpen" />
             <input type="hidden" name="interactionOpenToValidated" value="{{ interactionOpen.id }}" />
             <button type="submit" id="submit_response" class="btn btn-primary">{{ 'validate' | trans }}</button>
         </form>
-    </fieldset>
+    </div>
 {% endblock %}
 
 {% block javascripts %}

@@ -18,13 +18,13 @@ function insertStyle() {
                                <div> <button id="button_up_click" type="button" class="button_up" >Up</button>\n\
                                <button type="button" class="button_down" >Down</button> </div>  </td>');
                 $('#newTable .button_down').css({
-                    'display': 'block',
+                    'display': 'inline-block',
                     'color': 'red',
                     'float': 'right',
                     'margin-right': '10px'
                 });
                 $('#newTable .button_up').css({
-                    'display': 'block',
+                    'display': 'inline-block',
                     'color':  'red',
                     'float': 'left',
                     'margin-left': '10px'
@@ -156,13 +156,13 @@ function choiceCSS(sourceImageDel) {
                        <div> <button id="button_up_click" type="button" class="button_up" >Up</button>\n\
                        <button type="button" class="button_down" >Down</button> </div>  </td>');
         $('#newTable .button_down').css({
-            'display': 'block',
+            'display': 'inline-block',
             'color': 'red',
             'float': 'right',
             'margin-right': '10px'
         });
         $('#newTable .button_up').css({
-            'display': 'block',
+            'display': 'inline-block',
             'color': 'red',
             'float': 'left',
             'margin-left': '10px'
@@ -210,7 +210,7 @@ function choiceCSS(sourceImageDel) {
     $('#newTable .ligne_choice:last').contents('td:nth-child(1)').children('div')
             .before('<button id="button_editionA" type="button" class="button_editionA" >édition avancée</button>');
     $('#newTable .button_editionA').css({
-        'display': 'block',
+        'display': 'inline-block',
         'color': 'red',
         'float': 'right',
         'margin': '10px'
@@ -281,13 +281,13 @@ function choiceCSSEdit(sourceImageDel, nbResponses) {
                            <button type="button" class="button_down" >Down</button> </div>  </td>');
         });
         $('#newTable .button_down').css({
-            'display': 'block',
+            'display': 'inline-block',
             'color': 'red',
             'float': 'right',
             'margin-right': '10px'
         });
         $('#newTable .button_up').css({
-            'display': 'block',
+            'display': 'inline-block',
             'color': 'red',
             'float': 'left',
             'margin-left': '10px'
@@ -357,7 +357,7 @@ function choiceCSSEdit(sourceImageDel, nbResponses) {
                 .before('<button id="button_editionA" type="button" class="button_editionA" >édition avancée</button>');
     });
     $('#newTable .button_editionA').css({
-        'display': 'block',
+        'display': 'inline-block',
         'color': 'red',
         'float': 'right',
         'margin-right': '10px',
@@ -461,7 +461,7 @@ function addFormChoice(multipleResponse, uniqueResponse, add, responseNumber, re
         '">&nbsp;' + add + '</a>');
 
     $('#add_choice').css({
-        'display': 'block',
+        'display': 'inline-block',
         'color': 'green'
         //'float': 'right'
     });
@@ -507,7 +507,7 @@ function addFormChoiceEdit(multipleResponse, uniqueResponse, add, responseNumber
         expectedResponse + '</th> <th class="classic">' + order + '</th> <th class="classic">' + ChoicepositionForce + '</th> \n\
         <th class="classic">------</th> </tr></table>');
     $('#add_choice').css({
-            'display':'block',
+            'display':'inline-block',
             'color': 'green',
             //'float':'right'
             });

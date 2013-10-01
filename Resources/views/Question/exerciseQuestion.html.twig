@@ -75,13 +75,13 @@
     <div class="list-group">
         <div class="list-group-item">
             {% if interactions is not empty %}
-                <p>{{ 'changeOrder' | trans }}.</p><hr/>
+                <p>{{ 'changeOrder' | trans }}.</p>
             {%endif%}
 
             <button type="button" id="SaveOrder" style="display: none; margin-left: 50px;" class="btn btn-primary"
                 onclick="SaveNewOrder('{{ path('ujm_exercise_question_order') }}', {{exerciseID}});">
                 {{ 'saveNewOrder' | trans }}
-            </button><br/>
+            </button>
 
             {% if interactions is not empty %}
 

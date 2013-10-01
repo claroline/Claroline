@@ -5,7 +5,7 @@ var inputselected = false; // If the input is selected, the pop up cannot be clo
 
 // Display or not the button to upload
 list.css({"display" : "none"});
-button.css({"display" : "block"});
+button.css({"display" : "inline-block"});
 
 
 // Resize the pop up to show all the component
@@ -20,7 +20,7 @@ window.onload = function () {
 function ChangeList(idDoc, label, type, NotImageMesssage) {
 
     list.css({"display" : "none"});
-    button.css({"display" : "block"});
+    button.css({"display" : "inline-block"});
 
     if (type == '.png' || type == '.jpeg' || type == '.jpg' || type == '.gif' || type == '.bmp') {
 
@@ -41,7 +41,7 @@ function ChangeList(idDoc, label, type, NotImageMesssage) {
 
 // Display the loading message
 function DisplayMessage() {
-    list.css({"display" : "block"});
+    list.css({"display" : "inline-block"});
     button.css({"display" : "none"});
 }
 

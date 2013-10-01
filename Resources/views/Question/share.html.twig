@@ -33,27 +33,33 @@
  # knowledge of the CeCILL license and that you accept its terms.
 #}
 
-{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
 
 {% block title %} {{ 'sharedUser' | trans }} {% endblock %}
 
 {% block section_content %}
 
-    <div class="panel-heading" style="padding-left: 50px;">
-        <h1>{{ 'sharedUser' | trans }}</h1>
-    </div><br/>
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'sharedUser' | trans }}</h3>
+    </div>
 
-    <a href="{{ path('ujm_question_index') }}" style="margin-left: 50px;"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
+    <a href="{{ path('ujm_question_index') }}"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
 
     <hr/>
 
-    <fieldset style="border: skyblue ridge medium; padding-left: 50px; padding-right: 50px; padding-bottom: 20px; border-radius: 10px; box-shadow: 5px 5px 5px #ccf;">
-        <legend style="border: transparent hidden 0; width: 250px; margin: 0; color: skyblue;">
-            <h1>&nbsp;{{ 'shared with' | trans }}</h1>
-        </legend>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ 'shared with' | trans }}</h3>
+        </div>
 
-        {{ 'nameUser2Shared' | trans }} :<br/><br/>
-        <div class="input-group" style="width: 200px;">
+        {{ 'nameUser2Shared' | trans }} :
+        <div class="input-group">
             <input class="input-medium" type="text" id="search-user-txt" placeholder="{{ 'search'|trans({}, 'platform') }}"
                 onkeydown="if (event.keyCode == 13) { search_user_ajax('{{ path('ujm_question_share_search_user') }}', 1);return false; }">
             <span class="input-group-btn">
@@ -62,7 +68,7 @@
                 </button>
             </span>
         </div>
-    </fieldset><br/>
+    </div>
 
     <div id="searchUserList">
         {% if divResultSearch is defined %}

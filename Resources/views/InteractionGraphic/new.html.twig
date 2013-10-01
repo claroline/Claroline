@@ -52,40 +52,55 @@
             <br>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">{{ 'image' | trans }}:
+                    <h3 class="panel-title">{{ 'image' | trans }}</h3>
                 </div>
-                <div class="pane-body">
-                    <div class="form-group">
+                <div class="panel-body">
+                    <div class="form-group row">
                         <label class="control-label col-md-3">{{ 'choose' | trans }}</label>
-                        <div class="col-md-9">{{ form_widget(form.document) }}</div>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                {{ form_widget(form.document) }}
+                                <span class="input-group-btn">
+                                    <a class="btn btn-primary" id="LoadImg" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}', '{{ asset('bundles') }}', {{ form.document.vars.id }});" class="btn btn-primary">
+                                        {{ 'select' | trans }}
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    <input id="LoadImg" type="button" value="{{ 'select' | trans }}" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}',
-                        '{{ asset('bundles') }}', {{ form.document.vars.id }});" class="btn btn-primary"/>
+                    <div id="Instructions" class="alert alert-info">
+                        <a class="close" onclick="HideInstruction();">&times;</a>
+                        <p>{{ 'resizeZone' | trans }}.</p>
+                        <hr>
+                        <p>{{ 'selectZone' | trans }}.</p>
+                        <hr>
+                        <p>{{ 'erase' | trans }}.</p>
+                        <hr>
+                        <p>{{ 'pointInstruction' | trans }}.</p>
 
-                    <a href="{{ path('ujm_interactiongraphic_SavePic') }}" onclick="window.open(this.href, 'NewPic',
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    {# ------------------------------- Zone affichage image ---------------------------------------- #}
+                    <a class="btn btn-primary" href="{{ path('ujm_interactiongraphic_SavePic') }}" onclick="window.open(this.href, 'NewPic',
                         'height=167, width=287, top=300, left=570, toolbar=no, menubar=no, location=no, resizable=yes, scrollbars=no, status=no'
                         ); return false;">
-                            {{ "add a new picture" | trans }} ...
+                        <i class="icon-picture"></i> {{ "add a new picture" | trans }}
+                    </a>
+                    <a class="btn btn-default" onclick="DisplayInstruction();" id="Order">
+                       <i class="icon-question"></i> {{ 'show Instructions' | trans }}
                     </a>
 
-                    {# ------------------------------- Zone affichage image -------------------------------------------- #}
-
-                    <a onclick="DisplayInstruction();" id="Order"
-                       onmouseover="document.body.style.cursor = 'pointer';"
-                       onmouseout="document.body.style.cursor = 'default';"
-                    >{{ 'show Instructions' | trans }}</a>
-
-                    <a onclick="HideInstruction();" id="hide"
-                       onmouseover="document.body.style.cursor = 'pointer';"
-                       onmouseout="document.body.style.cursor = 'default';"
-                    >{{ 'hide Instructions' | trans }}</a>
-
-                    <div id="Instructions">
-                        ~ {{ 'resizeZone' | trans }}<hr/>~ {{ 'selectZone' | trans }}<hr/>
-                        ~ {{ 'erase' | trans }}<hr/>~ {{ 'pointInstruction' | trans }}
-                    </div><br/>
-
-                    {{ 'selected Image' | trans }} :<br/>
+                    <a class="btn btn-default" onclick="HideInstruction();" id="hide">
+                        <i class="icon-question"></i> {{ 'hide Instructions' | trans }}
+                    </a>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'selected Image' | trans }}</h3>
+                </div>
+                <div class="panel-body">
                     <div id="Answer"></div>
                 </div>
             </div>
@@ -109,13 +124,13 @@
                                          id="movable"/>
                                 </td>
                                 <td class="classic">
-                                    <select id="shape" name="shape" size="1" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
+                                    <select class="form-control" id="shape" name="shape" size="1" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
                                         <option value="circle"  selected>{{ 'cercle' | trans }}</option>
                                         <option value="rect" >{{ 'rectangle' | trans }}</option>
                                     </select>
                                 </td>
                                 <td class="classic">
-                                    <select id="color" name="color" size="1" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
+                                    <select class="form-control" id="color" name="color" size="1" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
                                         <option value="white"   selected> &nbsp;&nbsp;&nbsp; </option>
                                         <option value="red"      style="background-color:#FF0000;">         &nbsp;&nbsp;&nbsp; </option>
                                         <option value="blue"     style="background-color:#002FFF;">         &nbsp;&nbsp;&nbsp; </option>
@@ -126,7 +141,7 @@
                                     </select>
                                 </td>
                                 <td class="classic">
-                                    <input type="TEXT" id="points" name="points" value="1" onblur="CheckScore('{{ 'wrongPoint' | trans }}');">
+                                    <input class="form-control" type="TEXT" id="points" name="points" value="1" onblur="CheckScore('{{ 'wrongPoint' | trans }}');">
                                 </td>
                             </tr>
                         </table>
@@ -135,15 +150,15 @@
             </div>
         </div>
 
-        <input type="hidden" id="imgwidth" name="imgwidth" value="0"/>
-        <input type="hidden" id="imgheight" name="imgheight" value="0"/>
-        <input type="hidden" id="coordsZone" name="coordsZone" value=""/>
+        <input class="form-control" type="hidden" id="imgwidth" name="imgwidth" value="0"/>
+        <input class="form-control" type="hidden" id="imgheight" name="imgheight" value="0"/>
+        <input class="form-control" type="hidden" id="coordsZone" name="coordsZone" value=""/>
 
-        <input type="hidden" name="exercise" value="{{ exoID }}"/>
+        <input class="form-control" type="hidden" name="exercise" value="{{ exoID }}"/>
 
-        <input type="hidden" id="message" name="message" value="{{ 'inside' | trans }} ..."/>
+        <input class="form-control" type="hidden" id="message" name="message" value="{{ 'inside' | trans }} ..."/>
 
-    {# ------------------------------------------------- Boutton validation formulaire ---------------------------------------------------------------------------- #}
+        {# ---------------------------------- Boutton validation formulaire ---------------------------------------- #}
         <div style="display: none;">{{ form_rest(form) }}</div>
         {{ form_errors(form) }}
 
@@ -164,7 +179,7 @@
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphic.js') }}"></script>
 
-{# ------------------------------------------------- Javascript ---------------------------------------------------------------------------- #}
+{# ---------------------------------------------- Javascript ------------------------------------------------------- #}
 
 <script type="text/javascript">
     addFormHint('{{ 'add hint' | trans }}', '{{ 'hint number' | trans }}', '{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
