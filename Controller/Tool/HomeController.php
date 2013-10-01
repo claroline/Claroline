@@ -498,8 +498,9 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/tab/{tabId}",
-     *     name="claro_display_desktop_home_tabs"
+     *     "/tab/{tabId}/{withConfig}",
+     *     name="claro_display_desktop_home_tabs",
+     *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      *
@@ -509,20 +510,21 @@ class HomeController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function displayDesktopHomeTabsAction($tabId)
+    public function displayDesktopHomeTabsAction($tabId, $withConfig = 1)
     {
         $user = $this->securityContext->getToken()->getUser();
         $adminHomeTabConfigsTemp = $this->homeTabManager
             ->generateAdminHomeTabConfigsByUser($user);
-        $adminHomeTabConfigs = $this->homeTabManager
-            ->filterVisibleHomeTabConfigs($adminHomeTabConfigsTemp);
+//        $adminHomeTabConfigs = $this->homeTabManager
+//            ->filterVisibleHomeTabConfigs($adminHomeTabConfigsTemp);
         $userHomeTabConfigs = $this->homeTabManager
-            ->getVisibleDesktopHomeTabConfigsByUser($user);
+            ->getDesktopHomeTabConfigsByUser($user);
 
         return array(
-            'adminHomeTabConfigs' => $adminHomeTabConfigs,
+            'adminHomeTabConfigs' => $adminHomeTabConfigsTemp,
             'userHomeTabConfigs' => $userHomeTabConfigs,
-            'tabId' => $tabId
+            'tabId' => $tabId,
+            'withConfig' => $withConfig
         );
     }
 
