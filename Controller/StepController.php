@@ -42,9 +42,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
+use Innova\PathBundle\Manager\StepManager;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
+
 use Innova\PathBundle\Entity\Path;
 use Innova\PathBundle\Entity\Step;
-use Innova\PathBundle\Entity\Resource;
 
 /**
  * Class StepController
@@ -60,27 +63,43 @@ use Innova\PathBundle\Entity\Resource;
 */
 class StepController extends Controller
 {
+    private $manager;
+
+    /**
+     * @InjectParams({
+     *     "manager"        = @Inject("innova.manager.step_manager"),
+     * })
+     */
+    public function __construct(StepManager $manager)
+    {
+        $this->manager = $manager;
+    }
+
      /**
      * Finds and displays a Step entity.
      *
-     * @Route("workspace/{workspaceId}/path/{pathId}/step/{stepId}", name="step_show")
+     * @Route("workspace/{workspaceId}/path/{pathId}/step/{stepId}", name="innova_step_show")
      * @Method("GET")
      * @Template("InnovaPathBundle:Player:main.html.twig")
      */
     public function showAction($workspaceId, $pathId, $stepId)
     {
-        $manager = $this->entityManager();
+        $em = $this->entityManager();
 
-        $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $step = $manager->getRepository('InnovaPathBundle:Step')->findOneByResourceNode($stepId);
-        $path = $manager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
-        $resources = $step->getResources();
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+        $step = $em->getRepository('InnovaPathBundle:Step')->findOneByResourceNode($stepId);
+        $path = $em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
+
+        $children = $em->getRepository('InnovaPathBundle:Step')->findByParent($step);
+
+        $resources = $this->manager->getStepResourceNodes($step);
 
         return array(
             'step' => $step,
             'resources' => $resources,
             'path' => $path,
             'workspace' => $workspace,
+            'children' => $children
         );
     }
 

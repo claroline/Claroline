@@ -5,6 +5,7 @@
     <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/app.css') }}"/>
     <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/step-edit.css') }}"/>
     <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/navbar.css') }}"/>
+    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/player.css') }}"/>
 {% endblock %}
 
 {% block content %}
@@ -24,30 +25,56 @@
                 </div>
             </div>
             <div ng-include="templateRoute + 'Editor/navbar.html'"></div>
+
             <div ng-view class="panel-body">
-                <div>
-                    <h1>Bloc principal</h1>
-                    <p>Consigne du step: {{ step.instructions }}</p>
-                    <p>Cliquer sur la ressource ou l'outil de votre choix dans l'une des zones latérales + logo</p>
+                <div class="row">
+                    <div class="col-md-3">
+                        <h2>Zone des ressources</h2>
+                        {{ resources|length }} ressource(s) (mélangé avec les outils pour le moment)
+                        {% for resource in resources %}
+                            <p>{{ resource.name }}</p>
+                        {% endfor %}
 
+                    </div>
+                    <div class="col-md-6">
+                        <h1>Bloc principal</h1>
+                         <p>Durée :  {{ step.duration|date('H:i:s') }} </p>
+                        <p>Nom : {{ step.resourceNode.name }}</p>
+                        <p>Consigne du step: {{ step.instructions }}</p>
+                        <p>Cliquer sur la ressource ou l'outil de votre choix dans l'une des zones latérales + logo</p>
+                    </div>
+                    <div class="col-md-3">
+                        <h2>Zone des outils</h2>
+                    </div>
                 </div>
-                <div>
-                    <h2>Bloc info step</h2>
-                    <p>Durée :  {{ step.duration|date('H:i:s') }} </p>
-                    <p>Nom : {{ step.resourceNode.name }}</p>
+                <div class="row">
+                    <table id="smallTree" class="table" >
+                        <tbody>
+                            <tr>
+                                <td>
+                                    {% if step.parent.resourceNode.id %}
+                                        <a class="btn btn-default btn-lg btn-block" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.parent.resourceNode.id }) }}">{{step.parent.resourceNode.name}}</a>
+                                    {% else %}
+                                        <a class="btn btn-success btn-lg btn-block" disabled=disabled href="#">Début</a>
+                                    {% endif %}
 
-                </div>
-                <div class="">
-                    <h2>Zone des ressources</h2>
-                    {{ resources|length }} ressource(s) (mélangé avec les outils pour le moment)
-                </div>
-                <div class="">
-                    <h2>Zone des outils</h2>
-                </div>
-                <div class="">
-                   <h2> Zone de visualisation de la progression dans le parcours</h2>
+                                </td>
+                                <td>
+                                    <a class="btn btn-lg btn-block btn-primary" disabled=disabled href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.resourceNode.id }) }}">{{step.resourceNode.name}}</a>
+                                </td>
+                                <td>
+                                {% if children %}
+                                    {% for child in children %}
+                                         <a class="btn btn-default btn-lg btn-block" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : child.resourceNode.id }) }}">{{child.resourceNode.name}}</a>
+                                     {% endfor %}
+                                {% else %}
+                                        <a class="btn btn-danger btn-lg btn-block" disabled=disabled href="#">Fin</a>
+                                {% endif %}
 
-                   
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
