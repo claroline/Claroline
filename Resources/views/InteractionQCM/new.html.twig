@@ -56,10 +56,12 @@
                     <div class="panel-body">
                         <div class="form-group row">
                             {{ form_label(form.scoreRightResponse) }}
+                            {{ form_errors(form.scoreRightResponse) }}
                             <div class="col-md-9">{{ form_widget(form.scoreRightResponse) }}</div>
                         </div>
                         <div class="form-group row">
                             {{ form_label(form.scoreFalseResponse) }}
+                            {{ form_errors(form.scoreFalseResponse) }}
                             <div class="col-md-9">{{ form_widget(form.scoreFalseResponse) }}</div>
                         </div>
                         <div class="form-group row">
@@ -79,7 +81,10 @@
                             <div class="col-md-9">{{ form_widget(form.shuffle) }}</div>
                         </div>
                         {{ form_row(form.typeQCM) }}
-                        {{ form_row(form.choices) | replace({"col-md-3": "col-md-12"}) | raw }}
+                         <div id="choiceError"></div>
+                         <div id="tableChoice"></div>
+                         {{ form_row(form.choices) | replace({"col-md-3": "col-md-12"}) | raw }}
+                         {{ form_errors(form.choices) }}
                     </div>
                 </div>
 
@@ -89,7 +94,7 @@
         </div>
         <div class="panel-footer">
             <input type="hidden" name="exercise" value="{{ exoID }}" />
-            <button type="submit" id="button_submit" class="btn btn-primary">{{ 'create' | trans }}</button>
+            <button type="submit" id="button_submit" class="btn btn-primary" onclick="setOrder();">{{ 'create' | trans }}</button>
         </div>
     </form>
 </div>
@@ -97,6 +102,7 @@
 {# tiny MCE #}
 {{ tinymce_init() }}
 
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionQCM.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/editionAv.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
@@ -105,20 +111,15 @@
 {# functions javascript #}
 {% if error is defined %}
     <script type="text/javascript">
+        creationQCMEdit('{{ 'expected answer' | trans }}', '{{ 'response' | trans }}', '{{ 'point' | trans }}', '{{ 'comment' | trans }}', '{{ 'Choice.positionForce' | trans }}');
         linkCategory('{{ path('ujm_category_new_pop') }}');
-        insertStyle();
-        addFormChoiceEdit('{{ 'multiple response' | trans }}', '{{ 'unique response' | trans }}', '{{ 'add' | trans }}', '{{ 'Response number' | trans }}', '{{ 'response' | trans }}', '{{ 'point' | trans }}', '{{ 'comment' | trans }}', '{{ 'expected answer' | trans }}', '{{ 'order' | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '0', '{{entity.typeQCM.id}}', '{{ 'Choice.positionForce' | trans }}', '{{ asset('bundles/ujmexo/images/delete.png') }}');
-        choiceCSSEdit('{{ asset('bundles/ujmexo/images/delete.png') }}', '0');
-        editionAv();
         hintCSSEdit();
         addFormHintEdit('{{ "add hint" | trans }}',  '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
     </script>
 {% else %}
     <script type="text/javascript">
+        creationQCM('{{ 'expected answer' | trans }}', '{{ 'response' | trans }}', '{{ 'point' | trans }}', '{{ 'comment' | trans }}', '{{ 'Choice.positionForce' | trans }}');
         linkCategory('{{ path('ujm_category_new_pop') }}');
-        insertStyle();
-        editionAv();
-        addFormChoice('{{ 'multiple response' | trans }}', '{{ 'unique response' | trans }}', '{{ 'add' | trans }}', '{{ 'Response number' | trans }}', '{{ 'response' | trans }}', '{{ 'point' | trans }}', '{{ 'comment' | trans }}', '{{ 'expected answer' | trans }}', '{{ 'order' | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '{{ asset('bundles/ujmexo/images/delete.png') }}', '{{ 'Choice.positionForce' | trans }}');
         addFormHint('{{ 'add hint' | trans }}', '{{ 'hint number' | trans }}', '{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
     </script>
 {% endif %}

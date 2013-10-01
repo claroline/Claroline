@@ -43,21 +43,13 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('bundles/ujmexo/css/new_QI.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('bundles/ujmexo/css/errorValidation.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
 {% block title %} {{ 'edit a question' | trans }} {% endblock %}
 
 {% block section_content %}
-
-    <div class="panel-heading">
-        <h3 class="panel-title">{{'qcm edition'|trans}}</h3>
-    </div>
-
-    <a href="{{ path('ujm_question_index') }}">
-        <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
-    </a>
 
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -66,46 +58,62 @@
 
         <form onsubmit="return check_form('{{ 'nbr_choices' | trans }}', '{{ 'answer_coched' | trans }}', '{{ 'label_empty' | trans }}', '{{ 'point_answers' | trans }}', '{{ 'point_answer' | trans }}', '{{ 'invite_question' | trans }}');"
               action="{{ path('ujm_interactionqcm_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
-            {#{ form_widget(edit_form) }#}
-
-            {% include "UJMExoBundle:Partial:questionEdit.html.twig" %}
-
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{ 'response' | trans }}</h3>
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'points' | trans }}</h3>
-                    </div>
-                    {{ form_label(edit_form.scoreRightResponse) }}
-                    {{ form_widget(edit_form.scoreRightResponse) }}
-                    {{ form_label(edit_form.scoreFalseResponse) }}
-                    {{ form_widget(edit_form.scoreFalseResponse) }}
-                    {{ form_widget(edit_form.weightResponse) }}
-                    {{ form_label(edit_form.weightResponse) }}
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'choice' | trans }}</h3>
-                    </div>
-                    {{ form_widget(edit_form.shuffle) }}
-                    {{ form_label(edit_form.shuffle) }}
-                    {{ form_row(edit_form.typeQCM) }}
+            <div class="panel-body">
+                {% include "UJMExoBundle:Partial:questionEdit.html.twig" %}
             </div>
+            <div class="list-group">
+                <div class="list-group-item">
+                    <h4 class="list-group-item-heading">
+                        {{ 'response' | trans }}:
+                    </h4>
+                    <br>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{{ 'points' | trans }}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group row">
+                                {{ form_label(edit_form.scoreRightResponse) }}
+                                {{ form_errors(edit_form.scoreRightResponse) }}
+                                <div class="col-md-9">{{ form_widget(edit_form.scoreRightResponse) }}</div>
+                            </div>
+                            <div class="form-group row">
+                                {{ form_label(edit_form.scoreFalseResponse) }}
+                                {{ form_errors(edit_form.scoreFalseResponse) }}
+                                <div class="col-md-9">{{ form_widget(edit_form.scoreFalseResponse) }}</div>
+                            </div>
+                            <div class="form-group row">
+                                {{ form_label(edit_form.weightResponse) }}
+                                <div class="col-md-9">{{ form_widget(edit_form.weightResponse) }}</div>
+                            </div>
+                        </div>
+                    </div>
 
-            <div style="display: none;">{{ form_rest(edit_form) }}</div>
-            {{ form_errors(edit_form) }}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{{ 'choice' | trans }}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group row">
+                                {{ form_label(edit_form.shuffle) }}
+                                <div class="col-md-9">{{ form_widget(edit_form.shuffle) }}</div>
+                            </div>
+                            {{ form_row(edit_form.typeQCM) }}
+                             <div id="choiceError"></div>
+                             <div id="tableChoice"></div>
+                             {{ form_row(edit_form.choices) | replace({"col-md-3": "col-md-12"}) | raw }}
+                             {{ form_errors(edit_form.choices) }}
+                        </div>
+                    </div>
 
-            <input type="hidden" name="exercise" value="{{ exoID }}"/>
-
-
-
-            <p>
-                <button type="submit" id="button_submit" class="btn btn-primary">{{ 'edit' | trans }}</button>
-            </p>
+                    <div style="display: none;">{{ form_rest(edit_form) }}</div>
+                    {{ form_errors(edit_form) }}
+                </div>
+            </div>
+            <div class="panel-footer">
+                <input type="hidden" name="exercise" value="{{ exoID }}" />
+                <button type="submit" id="button_submit" class="btn btn-primary" onclick="setOrder();">{{ 'create' | trans }}</button>
+            </div>
         </form>
     </div>
 {% endblock %}
@@ -115,7 +123,7 @@
 
 {# tiny MCE #}
 {{ tinymce_init() }}
-
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionQCM.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/editionAv.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
@@ -124,11 +132,8 @@
 {# add form choice #}
 <script type="text/javascript">
 $(document).ready(function() {
+    creationQCMEdit('{{ 'expected answer' | trans }}', '{{ 'response' | trans }}', '{{ 'point' | trans }}', '{{ 'comment' | trans }}', '{{ 'Choice.positionForce' | trans }}');
     linkCategory('{{ path('ujm_category_new_pop') }}');
-    insertStyle();
-    addFormChoiceEdit('{{ 'multiple response' | trans }}', '{{ 'unique response' | trans }}', '{{ 'add' | trans }}', '{{ 'Response number' | trans }}', '{{ 'response' | trans }}', '{{ 'point' | trans }}', '{{ 'comment' | trans }}', '{{ 'expected answer' | trans }}', '{{ 'order' | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}', '{{ nbResponses }}', '{{entity.typeQCM.id}}', '{{ 'Choice.positionForce' | trans }}', '{{ asset('bundles/ujmexo/images/delete.png') }}');
-    choiceCSSEdit('{{ asset('bundles/ujmexo/images/delete.png') }}', {{ nbResponses }});
-    editionAv();
     hintCSSEdit();
     addFormHintEdit('{{ 'add hint' | trans }}',  '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
 });

@@ -47,15 +47,17 @@ class ChoiceType extends AbstractType
     {
         $builder
             ->add(
+                'ordre', 'text'
+            )
+            ->add(
+                'rightResponse', 'checkbox', array(
+                    'required' => false, 'label' => ' '
+                )
+            )
+            ->add(
                 'label', 'textarea', array(
                     'label' => ' '
                 )
-            )
-                                             //, array('attr' => array('class' => 'tinymce', 'data-theme' => 'medium'),
-                                             //'label' => 'Choice.label'
-                                            //))
-            ->add(
-                'ordre', 'text'
             )
             ->add(
                 'weight', 'text', array(
@@ -64,11 +66,6 @@ class ChoiceType extends AbstractType
             )
             ->add(
                 'feedback', 'textarea', array(
-                    'required' => false, 'label' => ' '
-                )
-            )
-            ->add(
-                'rightResponse', 'checkbox', array(
                     'required' => false, 'label' => ' '
                 )
             )
