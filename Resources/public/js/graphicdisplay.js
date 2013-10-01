@@ -7,36 +7,7 @@ var validGraphic = $('#ValidGraphic'); // The form to validate
 var ox = $('#ContainerCursor').position().left; // The start position to display the cursor inline
 var size = $('#nbpointer').val(); // Number of pointers + 1
 
-window.onload = function () {
-    // Display the cursor to answer
-    // If test as paper
-    if ($('#PositionInit').val() == 'true') {
-        for (h = 1 ; h < size ; h++) {
-            cur = 'cursor' + h;
-
-            $("#" + cur).css({
-                "left" : String(ox - 20 + h * 37) + 'px',
-                "top"  : String(length) + 'px'
-            });
-        }
-    // Or test only the question
-    } else {
-        for (h = 1 ; h < size ; h++) {
-            cur = 'cursor' + h;
-
-            if ($("#" + cur).css("top") == '0px') {
-                $("#" + cur).css({
-                    "left" : String(ox - 20 + h * 37) + 'px',
-                    "top"  : String(length) + 'px'
-                });
-            }
-        }
-    }
-};
-
 $(function () {
-
-    var marginTop = $('#AnswerImg').css("margin-top");
 
     for (j = 1 ; j < size ; j++) {
 
@@ -49,7 +20,10 @@ $(function () {
 
                 var stoppos = $(this).position();
 
-                tempCoords[event.target.id] = (stoppos.left + 10) + ' - ' + ((stoppos.top - (marginTop.substr(0, marginTop.indexOf('p')))) + 10);
+                var x = stoppos.left - $('#AnswerImg').position().left;
+                var y = stoppos.top - $('#AnswerImg').position().top;
+
+                tempCoords[event.target.id] = x + ' - ' + y;
             }
         });
     }

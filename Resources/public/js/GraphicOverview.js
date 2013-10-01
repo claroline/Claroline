@@ -92,15 +92,17 @@ function whichImg(shape, color, i, x, y, rx, ry, prefix, size, id) {
 
     // Place the right answer zones
     $('#' + id + 'ra' + i).css({
-        "left" : String(parseInt(x) - (size / 2)) + 'px',
-        "top"  : String(parseInt(y) - (size / 2)) + 'px'
+        "position" : "absolute",
+        "left" : x + 'px',
+        "top"  : y + 'px'
     });
+
     // Place student's answer zones if defined
     if (rx != 'a' && ry != 'a' && rx != '' && ry != '') {
-
         $('#' + id + 'cursor' + i).css({
-            "left" : String(parseInt(rx) - 10) + 'px',
-            "top"  : String(parseInt(ry) - 10) + 'px'
+            "position" : "absolute",
+            "left" : rx.trim() + 'px',
+            "top"  : ry + 'px'
         });
 
     } else { // Else don't display the unplaced answer zone of the student

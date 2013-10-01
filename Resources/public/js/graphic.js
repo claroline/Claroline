@@ -15,12 +15,6 @@ $('#Instructions').css({"display" : "none"});
 $('#Order').css({"display" : "inline-block"});
 $('#hide').css({"display" : "none"});
 
-// Initialize reference answer zone position
-el.css({
-    "left" : "75px",
-    "top"  : "40px"
-});
-
 // If click, instructions are displayed
 function DisplayInstruction() {
     $('#Instructions').css({"display" : "inline-block"});
@@ -126,7 +120,6 @@ $(function () {
         // When stop drag
         stop: function(event, ui) {
             if($('#AnswerImage').length){
-                var margin = $('#AnswerArray').offset().top - $('#AnswerImage').offset().top;
 
                 var stoppos = $(this).position();
 
@@ -137,7 +130,7 @@ $(function () {
                 $(img).css({
                     "position" : "absolute",
                     "left" : String(stoppos.left) + 'px',
-                    "top"  : String(stoppos.top + margin) + 'px'
+                    "top"  : String(stoppos.top) + 'px'
                 });
 
                 // Give it id corresonding of numbers of previous answer
@@ -176,8 +169,8 @@ $(function () {
             // If add a new answer zone, the reference image go back to its initial place
             if (event.target.id == 'movable') {
                 el.css({
-                    "left" : "75px",
-                    "top"  : "40px"
+                    "left" : "0px",
+                    "top"  : "0px"
                 });
             }
         }
@@ -259,13 +252,11 @@ function Check(noTitle, noQuestion, noImg, noAnswerZone, questiontitle, invite) 
 
             if (selectedZone.length) { // If at least one answer zone is defined
 
-                imgx = parseInt(selectedZone.css("left").substring(0, selectedZone.css("left").indexOf('p'))) +
-                    (selectedZone.prop("width") / 2);
-                imgx -= $('#AnswerImage').prop('offsetLeft'); // Position x answer zone
+                imgx = parseInt(selectedZone.css("left").substring(0, selectedZone.css("left").indexOf('p')));
+                imgx -= parseInt($('div.ui-draggable').css('left').substring(0, $('div.ui-draggable').css('left').indexOf('p'))); // Position x answer zone
 
-                imgy = parseInt(selectedZone.css("top").substring(0, selectedZone.css("top").indexOf('p'))) +
-                    (selectedZone.prop("height") / 2);
-                imgy -= $('#AnswerImage').prop('offsetTop'); // Position y answer zone
+                imgy = parseInt(selectedZone.css("top").substring(0, selectedZone.css("top").indexOf('p')));
+                imgy -= parseInt($('div.ui-draggable').css('top').substring(0, $('div.ui-draggable').css('top').indexOf('p'))); // Position y answer zone
 
                 // Concatenate informations of the answer zones
                 var val = selectedZone.attr("src") + ';' + imgx + '_' + imgy + '-' + point[imgN] + '~' + selectedZone.prop("width");
