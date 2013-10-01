@@ -21,7 +21,6 @@ class Step extends AbstractResource
      */
     private $stepOrder;
 
-
     /**
     * @ORM\ManyToOne(targetEntity="Step")
     */
@@ -83,14 +82,9 @@ class Step extends AbstractResource
     protected $stepWhere;
 
     /**
-    * @ORM\OneToMany(targetEntity="Step2ExcludedResource", mappedBy="step", cascade={"remove"})
+    * @ORM\OneToMany(targetEntity="Step2ExcludedResourceNode", mappedBy="step", cascade={"remove"})
     */
-    protected $excludedResources;
-
-    /**
-    * @ORM\OneToMany(targetEntity="Step2ResourceNode", mappedBy="step", cascade={"remove"})
-    */
-    protected $resources;
+    protected $excludedResourceNodes;
 
     /**
      * Set expanded
@@ -240,7 +234,6 @@ class Step extends AbstractResource
         return $this->stepOrder;
     }
 
-   
     /**
      * Set resourceNode
      *
@@ -361,83 +354,47 @@ class Step extends AbstractResource
      */
     public function __construct()
     {
-        $this->excludedResources = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->excludedResourceNodes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->resources = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-
     /**
-     * Add excludedResources
+     * Add excludedResourceNodes
      *
-     * @param  \Innova\PathBundle\Entity\Step2ExcludedResource $excludedResources
+     * @param  \Innova\PathBundle\Entity\Step2ExcludedResourceNode $excludedResourceNodes
      * @return Step
      */
-    public function addExcludedResource(\Innova\PathBundle\Entity\Step2ExcludedResource $excludedResources)
+    public function addExcludedResource(\Innova\PathBundle\Entity\Step2ExcludedResourceNode $excludedResourceNodes)
     {
-        $this->excludedResources[] = $excludedResources;
+        $this->excludedResourceNodes[] = $excludedResourceNodes;
 
         return $this;
     }
 
     /**
-     * Remove excludedResources
+     * Remove excludedResourceNodes
      *
-     * @param \Innova\PathBundle\Entity\Step2ExcludedResource $excludedResources
+     * @param \Innova\PathBundle\Entity\Step2ExcludedResourceNode $excludedResourceNodes
      */
-    public function removeExcludedResource(\Innova\PathBundle\Entity\Step2ExcludedResource $excludedResources)
+    public function removeExcludedResource(\Innova\PathBundle\Entity\Step2ExcludedResourceNode $excludedResourceNodes)
     {
-        $this->excludedResources->removeElement($excludedResources);
+        $this->excludedResourceNodes->removeElement($excludedResourceNodes);
     }
 
     /**
-     * Get excludedResources
+     * Get excludedResourceNodes
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getExcludedResources()
+    public function getExcludedResourceNodes()
     {
-        return $this->excludedResources;
+        return $this->excludedResourceNodes;
     }
-
-    /**
-     * Add resources
-     *
-     * @param  \Innova\PathBundle\Entity\Step2ResourceNode $resources
-     * @return Step
-     */
-    public function addResource(\Innova\PathBundle\Entity\Step2ResourceNode $resources)
-    {
-        $this->resources[] = $resources;
-
-        return $this;
-    }
-
-    /**
-     * Remove resources
-     *
-     * @param \Innova\PathBundle\Entity\Step2ResourceNode $resources
-     */
-    public function removeResource(\Innova\PathBundle\Entity\Step2ResourceNode $resources)
-    {
-        $this->resources->removeElement($resources);
-    }
-
-    /**
-     * Get resources
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getResources()
-    {
-        return $this->resources;
-    }
-  
-
 
     /**
      * Set parent
      *
-     * @param \Innova\PathBundle\Entity\Step $parent
+     * @param  \Innova\PathBundle\Entity\Step $parent
      * @return Step
      */
     public function setParent(\Innova\PathBundle\Entity\Step $parent = null)
@@ -450,7 +407,7 @@ class Step extends AbstractResource
     /**
      * Get parent
      *
-     * @return \Innova\PathBundle\Entity\Step 
+     * @return \Innova\PathBundle\Entity\Step
      */
     public function getParent()
     {

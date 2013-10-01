@@ -52,7 +52,7 @@ use Innova\PathBundle\Entity\StepType;
 use Innova\PathBundle\Entity\StepWho;
 use Innova\PathBundle\Entity\StepWhere;
 use Innova\PathBundle\Entity\Step2ResourceNode;
-use Innova\PathBundle\Entity\Step2ExcludedResource;
+use Innova\PathBundle\Entity\Step2ExcludedResourceNode;
 
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -156,9 +156,9 @@ class PathController extends Controller
                 foreach ($step2ressources as $step2ressource) {
                     $manager->remove($step2ressource);
                 }
-                $step2excludedRessources = $manager->getRepository('InnovaPathBundle:Step2ExcludedResource')->findByStep($step->getId());
-                foreach ($step2excludedRessources as $step2excludedRessource) {
-                    $manager->remove($step2excludedRessource);
+                $step2excludedRessourceNodes = $manager->getRepository('InnovaPathBundle:Step2ExcludedResourceNode')->findByStep($step->getId());
+                foreach ($step2excludedRessourceNodes as $step2excludedRessourceNode) {
+                    $manager->remove($step2excludedRessourceNode);
                 }
 
                 $manager->remove($step->getResourceNode());
@@ -263,15 +263,15 @@ class PathController extends Controller
             }
 
             // STEP'S EXCLUDED RESOURCES MANAGEMENT
-            foreach ($step->excludedResources as $excludedResource) {
-                $resourceNodeToExclude = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($excludedResource);
-                if (!$alreadyExcluded = $manager->getRepository('InnovaPathBundle:Step2ExcludedResource')
+            foreach ($step->excludedResourceNodes as $excludedResourceNode) {
+                $resourceNodeToExclude = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($excludedResourceNode);
+                if (!$alreadyExcluded = $manager->getRepository('InnovaPathBundle:Step2ExcludedResourceNode')
                                                 ->findOneBy(array('step' => $currentStep, 'resourceNode' => $resourceNodeToExclude)))
                 {
-                    $step2excludedResource = new Step2ExcludedResource();
-                    $step2excludedResource->setResourceNode($resourceNodeToExclude);
-                    $step2excludedResource->setStep($currentStep);
-                    $manager->persist($step2excludedResource);
+                    $step2excludedResourceNode = new Step2ExcludedResourceNode();
+                    $step2excludedResourceNode->setResourceNode($resourceNodeToExclude);
+                    $step2excludedResourceNode->setStep($currentStep);
+                    $manager->persist($step2excludedResourceNode);
                 }
             }
 

@@ -18,6 +18,7 @@ class StepManager
     private $step;
     private $step2resource;
     private $resource;
+    private $step2excludedResourceNode;
     private $manager;
 
     /**
@@ -31,13 +32,9 @@ class StepManager
         $this->step = $manager->getRepository('InnovaPathBundle:Step');
         $this->resource = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
         $this->step2resource = $manager->getRepository('InnovaPathBundle:Step2ResourceNode');
+        $this->step2excludedResourceNode = $manager->getRepository('InnovaPathBundle:Step2ExcludedResourceNode');
     }
 
-    /**
-     * Get the content of the regions of the front page.
-     *
-     * @return array The content of regions.
-     */
     public function getStepResourceNodes(Step $step)
     {
         $resourceNodes = array();
@@ -48,5 +45,17 @@ class StepManager
         }
 
         return $resourceNodes;
+    }
+
+    public function getStepExcludedResourceNodes(Step $step)
+    {
+        $excludedResourceNodes = array();
+        $step2excludedResourceNodes = $this->manager->getRepository('InnovaPathBundle:Step2ExcludedResourceNode')->findByStep($step);
+
+        foreach ($step2excludedResourceNodes as $step2excludedResourceNode) {
+           $excludedResourceNodes[] = $step2excludedResourceNode->getResourceNode();
+        }
+
+        return $excludedResourceNodes;
     }
 }
