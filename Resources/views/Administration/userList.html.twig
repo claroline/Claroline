@@ -31,6 +31,10 @@
             <i class="icon-trash"></i>
             {{ 'delete'|trans({}, 'platform') }}
         </button>
+        <button class="btn btn-default action-button" data-action="password">
+            <i class="icon-trash"></i>
+            {{ 'reset_password'|trans({}, 'platform') }}
+        </button>
     {% endif %}
 {% endmacro %}
 
@@ -147,6 +151,7 @@
     {% javascripts
         vars=["locale"]
         "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeUserConfirm.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/resetPasswordConfirm.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
         filter="twig_js"
@@ -161,6 +166,7 @@
         parameters.route.normal = {"route": "claro_admin_user_list", "parameters": {}};
         parameters.route.search = {"route": "claro_admin_user_list_search", "parameters": {}};
         parameters.route.action.remove = {"route": "claro_admin_multidelete_user", "parameters": {}, "type": "DELETE", "confirmTemplate": removeUserConfirm};
+        parameters.route.action.password = {"route": "claro_security_initialize_password", "parameters": {}, "type": "POST", "confirmTemplate": resetPasswordConfirm};
         Claroline.Table.initialize(parameters);
     </script>
 {% endblock %}
