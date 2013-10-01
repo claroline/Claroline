@@ -24,6 +24,7 @@ class AdministrationControllerTest extends MockeryTestCase
     private $analyticsManager;
     private $translator;
     private $request;
+    private $mailManager;
 
     protected function setUp()
     {
@@ -40,6 +41,7 @@ class AdministrationControllerTest extends MockeryTestCase
         $this->analyticsManager = $this->mock('Claroline\CoreBundle\Manager\AnalyticsManager');
         $this->translator = $this->mock('Symfony\Component\Translation\Translator');
         $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
+        $this->mailManager = $this->mock('Claroline\CoreBundle\Manager\MailManager');
     }
 
     public function testIndexAction()
@@ -63,6 +65,10 @@ class AdministrationControllerTest extends MockeryTestCase
             ->with(FormFactory::TYPE_USER, array($roles))
             ->once()
             ->andReturn($form);
+        $this->mailManager
+            ->shouldReceive('isMailerAvailable')
+            ->once()
+            ->andReturn(true);
         $form->shouldReceive('createView')
             ->once()
             ->andReturn('view');
@@ -77,7 +83,7 @@ class AdministrationControllerTest extends MockeryTestCase
     {
         $controller = $this->getController(array('redirect', 'generateUrl'));
         $currentUser = new User();
-        $user = new User();
+        $user = $this->mock('Claroline\CoreBundle\Entity\User');
         $roleA = new Role();
         $roleB = new Role();
         $roleC = new Role();
@@ -114,6 +120,38 @@ class AdministrationControllerTest extends MockeryTestCase
         $this->userManager->shouldReceive('insertUserWithRoles')
             ->with($user, $newRoles)
             ->once();
+        $this->mailManager
+            ->shouldReceive('isMailerAvailable')
+            ->once()
+            ->andReturn(true);
+        $this->translator
+            ->shouldReceive('trans')
+            ->with('admin_form_username', array(), 'platform')
+            ->once()
+            ->andReturn('admin form username');
+        $user->shouldReceive('getUsername')
+            ->once()
+            ->andReturn('username');
+        $this->translator
+            ->shouldReceive('trans')
+            ->with('admin_form_plainPassword_first', array(), 'platform')
+            ->once()
+            ->andReturn('admin form plainPassword first');
+        $user->shouldReceive('getPlainPassword')
+            ->once()
+            ->andReturn('password');
+        $user->shouldReceive('getMail')
+            ->once()
+            ->andReturn('mail');
+        $this->mailManager
+            ->shouldReceive('sendPlainPassword')
+            ->with(
+                'noreply@claroline.net',
+                'mail',
+                'admin form username: usernameadmin form plainPassword first: password'
+            )
+            ->once()
+            ->andReturn(true);
         $controller->shouldReceive('generateUrl')
             ->with('claro_admin_user_list')
             ->once()
@@ -1016,7 +1054,8 @@ class AdministrationControllerTest extends MockeryTestCase
                 $this->formFactory,
                 $this->analyticsManager,
                 $this->translator,
-                $this->request
+                $this->request,
+                $this->mailManager
             );
         }
 
@@ -1043,7 +1082,8 @@ class AdministrationControllerTest extends MockeryTestCase
                 $this->formFactory,
                 $this->analyticsManager,
                 $this->translator,
-                $this->request
+                $this->request,
+                $this->mailManager
             )
         );
     }
