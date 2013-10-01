@@ -24,60 +24,60 @@ class Updater002000005
     public function preUpdate()
     {
         $this->addFixtureDebug();
-        //these lines are usefull for debugging
-        $cn = $this->container->get('doctrine.dbal.default_connection');
-        
-        //$cn->query('TRUNCATE table claro_widget_home_tab_config');
-        //$cn->query('TRUNCATE table claro_home_tab_config');
-        //$cn->query('TRUNCATE table claro_home_tab');
-    }
-    public function postUpdate()
-    {
-        //$this->saveTextConfigs();
-        $this->updateWidgetsDatas();
     }
     
-    private function saveTextConfigs()
+    public function postUpdate()
+    {
+        $this->updateWidgetsDatas();
+        $this->updateTextWidgets();
+        $this->dropTables();
+    }
+    
+    private function updateTextWidgets()
     {
         $cn = $this->container->get('doctrine.dbal.default_connection');
         //create new table
-        $create = "
-            CREATE TABLE save_simple_text_dekstop_widget_config (
-                id INT AUTO_INCREMENT NOT NULL, 
-                user_id INT DEFAULT NULL, 
-                workspace_id INT DEFAULT NULL, 
-                is_default TINYINT(1) NOT NULL, 
-                content LONGTEXT NOT NULL, 
-                INDEX IDX_BAB9695A76ED395 (user_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ";
-        $cn->query($create);
         
-        $dconfigs = "SELECT * FROM simple_text_dekstop_widget_config";
+        $dconfigs = $cn->query("SELECT * FROM simple_text_dekstop_widget_config");
+        //text_widget_id
+        $result = $cn->query("SELECT id FROM claro_widget WHERE name = 'simple_text'");
+        $widget = $result->fetch();
+        $widgetId = $widget['id'];
         
         foreach ($dconfigs as $config) {
-           $query = "INSERT INTO save_simple_text_dekstop_widget_config (workspace_id, user_id, is_default, content)
-               VALUES (null, {$config['user_id']}, {$config['is_default']}, {$config['content']})";
-           $cn->query($query);
+            //find the correct widget.
+            if ($config['is_default']) {
+                $result = $cn->query("SELECT id FROM claro_widget_instance where is_desktop = true and is_admin = true and widget_id = {$widgetId}");
+            } else {
+                $result = $cn->query("SELECT id FROM claro_widget_instance where user_id = {$config['user_id']} and widget_id = {$widgetId}");
+            }
+            
+            $instance = $result->fetch();
+            
+            $cn->query("INSERT into claro_simple_text_widget_config (content, widgetInstance_id)
+                VALUES ('{$config['content']}', {$instance['id']})");
         }
         
-        $wconfigs = "SELECT * FROM simple_text_dekstop_widget_config";
+        $wconfigs = $cn->query("SELECT * FROM simple_text_workspace_widget_config");
         
         foreach ($wconfigs as $config) {
-           $query = "INSERT INTO save_simple_text_dekstop_widget_config (workspace_id, user_id, is_default, content)
-               VALUES ({$config['workspace_id']}, null, {$config['is_default']}, {$config['content']})";
-           $cn->query($query);
+            if ($config['is_default']) {
+                $result = $cn->query("SELECT id FROM claro_widget_instance where is_desktop = false and is_admin = true and widget_id = {$widgetId}");
+            } else {
+                $result = $cn->query("SELECT id FROM claro_widget_instance where workspace_id = {$config['workspace_id']} and widget_id = {$widgetId} and is_admin = false");
+            }
+            
+            $instance = $result->fetch();
+            
+            $cn->query("INSERT into claro_simple_text_widget_config (content, widgetInstance_id)
+                VALUES ('{$config['content']}', {$instance['id']})");
         }
-        
-        $cn->query('DROP TABLE simple_text_dekstop_widget_config');
-        $cn->query('DROP TABLE simple_text_workspace_widget_config');
     }
     
     private function updateWidgetsDatas()
     {  
         $cn = $this->container->get('doctrine.dbal.default_connection');
-        $select = "SELECT * FROM claro_widget_display";
+        $select = "SELECT * FROM claro_widget_display ORDER BY id";
         $datas =  $cn->query($select);
 
         foreach ($datas as $row) {
@@ -85,14 +85,17 @@ class Updater002000005
            $wsId = $row['workspace_id'] ? $row['workspace_id']: 'null';
            $userId = $row['user_id'] ? $row['user_id']: 'null';
            $query = "INSERT INTO claro_widget_instance (workspace_id, user_id, widget_id, is_admin, is_desktop, name)
-           VALUES ({$wsId}, {$userId}, {$row['widget_id']}, {$isAdmin}, {$row['is_desktop']}, 'change me !')";
+               VALUES ({$wsId}, {$userId}, {$row['widget_id']}, {$isAdmin}, {$row['is_desktop']}, 'change me !')";
            $cn->query($query);
         }
     }
-    
+   
     private function dropTables()
     {
-        
+        $cn = $this->container->get('doctrine.dbal.default_connection');
+        $cn->query('DROP table claro_widget_display');
+        $cn->query('DROP TABLE simple_text_dekstop_widget_config');
+        $cn->query('DROP TABLE simple_text_workspace_widget_config');
     }
     
     private function createWorkspacesListWidget()
@@ -199,7 +202,7 @@ class Updater002000005
         
         //widgets
         $cn->query('INSERT INTO claro_widget (plugin_id, name, is_configurable, icon, is_exportable)
-            VALUES (null, "text", 1, "fake/path", 0)');
+            VALUES (null, "simple_text", 1, "fake/path", 0)');
        
         //user
         $user = new User();
@@ -212,12 +215,29 @@ class Updater002000005
         $em->flush();
         
         $cn->query('INSERT INTO claro_widget_display (parent_id, workspace_id, user_id, widget_id, is_locked, is_visible, is_desktop)
-            VALUES (null, 1, null, 1, 1, 1, 0)');
+            VALUES (null, null, null, 1, 1, 1, 0)');
         $cn->query('INSERT INTO claro_widget_display (parent_id, workspace_id, user_id, widget_id, is_locked, is_visible, is_desktop)
             VALUES (1, 1, null, 1, 1, 1, 0)');
         $cn->query('INSERT INTO claro_widget_display (parent_id, workspace_id, user_id, widget_id, is_locked, is_visible, is_desktop)
-            VALUES (null, 1, null, 1, 1, 1, 1)');
+            VALUES (null, null, null, 1, 1, 1, 1)');
         $cn->query('INSERT INTO claro_widget_display (parent_id, workspace_id, user_id, widget_id, is_locked, is_visible, is_desktop)
             VALUES (3, null, 1, 1, 1, 1, 1)');
+        
+        $cn->query('INSERT INTO simple_text_dekstop_widget_config 
+            (user_id, is_default, content)
+            VALUES (null, true, "dadmin_default")'
+        );
+        $cn->query('INSERT INTO simple_text_dekstop_widget_config 
+            (user_id, is_default, content)
+            VALUES (1, false, "duser_default")'
+        );
+        $cn->query('INSERT INTO simple_text_workspace_widget_config 
+            (workspace_id, is_default, content)
+            VALUES (null, true, "wadmin_default")'
+        );
+        $cn->query('INSERT INTO simple_text_workspace_widget_config 
+            (workspace_id, is_default, content)
+            VALUES (1, false, "wuser_default")'
+        );
     }
 }

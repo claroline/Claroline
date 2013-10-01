@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/30 04:20:31
+ * Generation date: 2013/09/30 05:54:13
  */
-class Version20130930162031 extends AbstractMigration
+class Version20130930175413 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -64,6 +64,45 @@ class Version20130930162031 extends AbstractMigration
             CREATE INDEX IDX_5F89A385FBE885E2 ON claro_widget_instance (widget_id)
         ");
         $this->addSql("
+            CREATE TABLE claro_simple_text_widget_config (
+                id NUMBER(10) NOT NULL, 
+                content CLOB NOT NULL, 
+                widgetInstance_id NUMBER(10) DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_SIMPLE_TEXT_WIDGET_CONFIG' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_SIMPLE_TEXT_WIDGET_CONFIG ADD CONSTRAINT CLARO_SIMPLE_TEXT_WIDGET_CONFIG_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_SIMPLE_TEXT_WIDGET_CONFIG_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_SIMPLE_TEXT_WIDGET_CONFIG_AI_PK BEFORE INSERT ON CLARO_SIMPLE_TEXT_WIDGET_CONFIG FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_SIMPLE_TEXT_WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_SIMPLE_TEXT_WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_SIMPLE_TEXT_WIDGET_CONFIG_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_SIMPLE_TEXT_WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_C389EBCCAB7B5A55 ON claro_simple_text_widget_config (widgetInstance_id)
+        ");
+        $this->addSql("
             ALTER TABLE claro_widget_instance 
             ADD CONSTRAINT FK_5F89A38582D40A1F FOREIGN KEY (workspace_id) 
             REFERENCES claro_workspace (id) 
@@ -79,6 +118,12 @@ class Version20130930162031 extends AbstractMigration
             ALTER TABLE claro_widget_instance 
             ADD CONSTRAINT FK_5F89A385FBE885E2 FOREIGN KEY (widget_id) 
             REFERENCES claro_widget (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_simple_text_widget_config 
+            ADD CONSTRAINT FK_C389EBCCAB7B5A55 FOREIGN KEY (widgetInstance_id) 
+            REFERENCES claro_widget_instance (id) 
             ON DELETE CASCADE
         ");
         $this->addSql("
@@ -114,29 +159,6 @@ class Version20130930162031 extends AbstractMigration
         $this->addSql("
             CREATE INDEX IDX_D48CC23E44BF891 ON claro_widget_home_tab_config (widget_instance_id)
         ");
-        $this->addSql("
-            ALTER TABLE simple_text_workspace_widget_config RENAME COLUMN workspace_id TO displayConfig_id
-        ");
-        $this->addSql("
-            ALTER TABLE simple_text_workspace_widget_config 
-            DROP (is_default)
-        ");
-        $this->addSql("
-            ALTER TABLE simple_text_workspace_widget_config 
-            DROP CONSTRAINT FK_11925ED382D40A1F
-        ");
-        $this->addSql("
-            DROP INDEX IDX_11925ED382D40A1F
-        ");
-        $this->addSql("
-            ALTER TABLE simple_text_workspace_widget_config 
-            ADD CONSTRAINT FK_11925ED3EF00646E FOREIGN KEY (displayConfig_id) 
-            REFERENCES claro_widget_instance (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_11925ED3EF00646E ON simple_text_workspace_widget_config (displayConfig_id)
-        ");
     }
 
     public function down(Schema $schema)
@@ -146,11 +168,14 @@ class Version20130930162031 extends AbstractMigration
             DROP CONSTRAINT FK_D48CC23E44BF891
         ");
         $this->addSql("
-            ALTER TABLE simple_text_workspace_widget_config 
-            DROP CONSTRAINT FK_11925ED3EF00646E
+            ALTER TABLE claro_simple_text_widget_config 
+            DROP CONSTRAINT FK_C389EBCCAB7B5A55
         ");
         $this->addSql("
             DROP TABLE claro_widget_instance
+        ");
+        $this->addSql("
+            DROP TABLE claro_simple_text_widget_config
         ");
         $this->addSql("
             ALTER TABLE claro_widget 
@@ -179,27 +204,6 @@ class Version20130930162031 extends AbstractMigration
         ");
         $this->addSql("
             CREATE INDEX IDX_D48CC23EFBE885E2 ON claro_widget_home_tab_config (widget_id)
-        ");
-        $this->addSql("
-            ALTER TABLE simple_text_workspace_widget_config 
-            ADD (
-                is_default NUMBER(1) NOT NULL
-            )
-        ");
-        $this->addSql("
-            ALTER TABLE simple_text_workspace_widget_config RENAME COLUMN displayconfig_id TO workspace_id
-        ");
-        $this->addSql("
-            DROP INDEX IDX_11925ED3EF00646E
-        ");
-        $this->addSql("
-            ALTER TABLE simple_text_workspace_widget_config 
-            ADD CONSTRAINT FK_11925ED382D40A1F FOREIGN KEY (workspace_id) 
-            REFERENCES claro_workspace (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_11925ED382D40A1F ON simple_text_workspace_widget_config (workspace_id)
         ");
     }
 }
