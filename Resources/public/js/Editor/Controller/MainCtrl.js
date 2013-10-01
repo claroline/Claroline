@@ -10,9 +10,10 @@ var MainCtrlProto = [
     '$http',
     '$modal',
     'HistoryFactory',
+    'ClipboardFactory',
     'PathFactory',
     'StepFactory',
-    function($scope, $routeParams, $location, $http, $modal, HistoryFactory, PathFactory, StepFactory) {
+    function($scope, $routeParams, $location, $http, $modal, HistoryFactory, ClipboardFactory, PathFactory, StepFactory) {
         // Store symfony base partials route
         $scope.templateRoute = EditorApp.templateRoute;
         
@@ -73,6 +74,24 @@ var MainCtrlProto = [
                 templateUrl: EditorApp.templateRoute + 'Help/Partial/help-modal.html',
                 controller: 'HelpModalCtrl'
             });
+        };
+        
+        
+        /**
+         * Copy data into clipboard
+         * @returns void
+         */
+        $scope.copy = function(data) {
+            ClipboardFactory.copy(data);
+        };
+        
+        /**
+         * Paste current clipboard content
+         * @returns void
+         */
+        $scope.paste = function(step) {
+            ClipboardFactory.paste(step);
+            HistoryFactory.update($scope.path);
         };
         
         /**

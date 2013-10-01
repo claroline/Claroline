@@ -6,16 +6,12 @@
  */
 var TreeCtrlProto = [
      '$scope',
-     '$http',
      '$modal',
-     '$routeParams',
-     '$location',
-     'ClipboardFactory',
      'HistoryFactory',
      'PathFactory',
      'StepFactory',
      'ResourceFactory',
-     function($scope, $http, $modal, $routeParams, $location, ClipboardFactory, HistoryFactory, PathFactory, StepFactory, ResourceFactory) {
+     function($scope, $modal, HistoryFactory, PathFactory, StepFactory, ResourceFactory) {
          $scope.previewStep = null;
          
          $scope.sortableOptions = {
@@ -88,15 +84,6 @@ var TreeCtrlProto = [
          
          $scope.removeChildren = function(step) {
              step.children = [];
-             HistoryFactory.update($scope.path);
-         };
-         
-         $scope.copyToClipboard = function(step) {
-             ClipboardFactory.copy(step);
-         };
-         
-         $scope.paste = function(step) {
-             ClipboardFactory.paste(step);
              HistoryFactory.update($scope.path);
          };
          

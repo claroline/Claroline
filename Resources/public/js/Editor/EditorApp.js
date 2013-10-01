@@ -1,7 +1,7 @@
 'use strict';
 
 // Declare app level module which depends on filters, and services
-var EditorApp = angular.module('EditorApp', ['ui.bootstrap', 'pageslide-directive']);
+var EditorApp = angular.module('EditorApp', ['ui.bootstrap']);
 
 // Declare routes
 EditorApp.config(['$routeProvider', function($routeProvider) {
@@ -10,41 +10,44 @@ EditorApp.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/', {
         templateUrl: EditorApp.templateRoute + 'Editor/Partial/global.html', 
         controller: 'TreeCtrl',
-        activeTab: 'Global',
+        activeTab: 'Global'
     });
     
     $routeProvider.when('/global', {
         templateUrl: EditorApp.templateRoute + 'Editor/Partial/global.html', 
         controller: 'TreeCtrl',
-        activeTab: 'Global',
+        activeTab: 'Global'
     });
     
     $routeProvider.when('/skills', {
         templateUrl: EditorApp.templateRoute + 'Editor/Partial/skills.html', 
         controller: 'TreeCtrl',
-        activeTab: 'Skills',
+        activeTab: 'Skills'
     });
     
     $routeProvider.when('/scenario', {
         templateUrl: EditorApp.templateRoute + 'Editor/Partial/scenario.html', 
         controller: 'TreeCtrl',
-        activeTab: 'Scenario',
+        activeTab: 'Scenario'
     });
     
     $routeProvider.when('/planner', {
         templateUrl: EditorApp.templateRoute + 'Editor/Partial/planner.html', 
         controller: 'TreeCtrl',
-        activeTab: 'Planner',
+        activeTab: 'Planner'
     });
     
     $routeProvider.when('/validation', {
         templateUrl: EditorApp.templateRoute + 'Editor/Partial/validation.html', 
         controller: 'TreeCtrl',
-        activeTab: 'Validation',
+        activeTab: 'Validation'
     });
     
     $routeProvider.otherwise({redirectTo: '/404'});
 }]);
+
+// Page Slide
+EditorApp.directive('pageslide', PageslideProto);
 
 // History
 EditorApp.factory('HistoryFactory', HistoryFactoryProto);

@@ -12,7 +12,6 @@
     position: absolute;
     top: 0;
     right: 0;
-    margin: 6px;
 }
 
 /* h1 { */
@@ -33,12 +32,6 @@
 /*     font-size: 16px; */
 /*     margin: 4px 0; */
 /*     line-height: 20px; */
-/* } */
-
-/* .page-title { */
-/*     margin-bottom: 10px; */
-/*     margin-left: 30px; */
-/*     vertical-align: middle; */
 /* } */
 
 li {
@@ -77,14 +70,6 @@ form {
     border: 1px dashed #010101;
     margin-bottom: 15px;
 }
-
-/* input.ng-invalid { */
-/*     border: 1px solid red; */
-/* } */
-
-/* input.ng-valid { */
-/*     border: 1px solid green; */
-/* } */
 
 .btn-templates {
     position: fixed;
@@ -200,4 +185,30 @@ table td.icon {
 .panel-documents .accordion,
 .panel-tools .accordion {
     margin-bottom: 0;
+}
+
+.step-buttons {
+    margin: 4px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.preview-step {
+    position: relative;
+}
+
+.tree {
+    padding-left: 10px;
+}
+
+#templates-sidebar {
+    margin-top: 50px;
+}
+
+#templates-sidebar h2 {
+    font-size: 18px;
+    margin: 4px 0;
+    line-height: 22px;
+    font-weight: normal;
 }
