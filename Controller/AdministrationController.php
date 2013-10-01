@@ -160,7 +160,7 @@ class AdministrationController extends Controller
             $this->userManager->insertUserWithRoles($user, $newRoles);
 
             if ($this->mailManager->isMailerAvailable()) {
-                $body = $this->translator->trans('admin_form_username', array(), 'platform').': '.$user->getUsername(). $this->translator->trans('admin_form_plainPassword_first', array(), 'platform'). ': '.$user->getPlainPassword();
+                $body = $this->translator->trans('admin_form_username', array(), 'platform').': '.$user->getUsername().' '.$this->translator->trans('admin_form_plainPassword_first', array(), 'platform'). ': '.$user->getPlainPassword();
 
                 if ($this->mailManager->sendPlainPassword('noreply@claroline.net', $user->getMail(), $body)) {
                     return $this->redirect($this->generateUrl('claro_admin_user_list'));

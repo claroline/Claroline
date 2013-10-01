@@ -181,7 +181,7 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
                     function (HomeTabConfig $newHomeTabConfig) {
 
                         return $newHomeTabConfig->getType() === 'admin_desktop'
-                            && !$newHomeTabConfig->isVisible()
+                            && $newHomeTabConfig->isVisible()
                             && !$newHomeTabConfig->isLocked()
                             && $newHomeTabConfig->getTabOrder() === 4;
                     }
@@ -268,7 +268,7 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
                     function (HomeTabConfig $newHomeTabConfig) {
 
                         return $newHomeTabConfig->getType() === 'admin_workspace'
-                            && !$newHomeTabConfig->isVisible()
+                            && $newHomeTabConfig->isVisible()
                             && !$newHomeTabConfig->isLocked()
                             && $newHomeTabConfig->getTabOrder() === 4;
                     }
@@ -638,7 +638,7 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
                     function (WidgetHomeTabConfig $widgetHomeTabConfig) {
 
                         return $widgetHomeTabConfig->getType() === 'admin'
-                            && !$widgetHomeTabConfig->isVisible()
+                            && $widgetHomeTabConfig->isVisible()
                             && !$widgetHomeTabConfig->isLocked()
                             && $widgetHomeTabConfig->getWidgetOrder() === 4;
                     }
