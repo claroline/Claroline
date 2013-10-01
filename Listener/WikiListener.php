@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 use Icap\WikiBundle\Entity\Wiki;
+use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Form\WikiType;
 
 class WikiListener extends ContainerAware
@@ -73,7 +74,44 @@ class WikiListener extends ContainerAware
         $em = $this->container->get('doctrine.orm.entity_manager');
         $em->remove($event->getResource());
         $em->flush();
-        $event->stopPropagation();
+        $event->stopPropagation(); 
     }
 
+    public function onCopy(CopyResourceEvent $event)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        
+        $wiki = $event->getResource();
+        $oldRoot = $wiki->getRoot();
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        $sectionRepository = $em->getRepository('IcapWikiBundle:Section');
+        $sections = $sectionRepository->children($oldRoot);
+        $newSectionsMap = array();
+
+        $newWiki = new Wiki();
+        $newWiki->setName($wiki->getName());
+        $em->persist($newWiki);
+        $em->flush($newWiki);
+        
+        $newRoot = $newWiki->getRoot();
+        $newRoot->setText($oldRoot->getText());
+        $newSectionsMap[$oldRoot->getId()] = $newRoot;
+
+        foreach ($sections as $section) {
+            $newSection = new Section();
+            $newSection->setWiki($newWiki);
+            $newSection->setTitle($section->getTitle());
+            $newSection->setText($section->getText());
+            $newSection->setVisible($section->getVisible());
+            $newSectionParent = $newSectionsMap[$section->getParent()->getId()];
+            $newSection->setParent($newSectionParent);
+
+            $newSectionsMap[$section->getId()] = $newSection;
+            $sectionRepository->persistAsLastChildOf($newSection, $newSectionParent);
+        }
+
+        $event->setCopy($newWiki);
+        $event->stopPropagation(); 
+    }
 }

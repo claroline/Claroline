@@ -1,0 +1,30 @@
+{% trans_default_domain "icap_wiki" %}
+
+<div id="deleteSectionModal-{{ section.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel">{{ 'delete_section'|trans({}, 'icap_wiki') }}</h3>
+            </div>
+            <div class="modal-body">
+                {% include "IcapWikiBundle:Wiki:deleteSectionForm.html.twig"%}
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans %}Cancel{% endtrans %}</button>
+                <button id="deleteSectionModal-submit-{{ section.id }}" class="btn btn-primary">{% trans %}Confirm{% endtrans %}</button>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('form[id="deleteSection-form-{{ section.id }}"] > input[type="submit"]').hide();
+            $('form[id="deleteSection-form-{{ section.id }}"] > a.cancel-btn').hide();
+
+            $('#deleteSectionModal-submit-{{ section.id }}').on('click', function () {
+                //I do the "click" on submit button for keep html5 warning
+                $('form[id="deleteSection-form-{{ section.id }}"] > input[type="submit"]').trigger('click');
+            });
+        });
+    </script>
+</div>

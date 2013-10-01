@@ -11,8 +11,14 @@ class SectionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title',      'text')
-            ->add('text',   'textarea');
+            ->add('title', 'text')
+            ->add('text', 'textarea', array(
+                    'attr' => array(
+                        'class' => 'tinymce',
+                        'data-theme' => 'advanced'
+                    )
+                )
+            );
     }
 
     public function getName()
@@ -23,14 +29,8 @@ class SectionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
+            'translation_domain' => 'icap_wiki',
             'data_class' => 'Icap\WikiBundle\Entity\Section'
         ));
-    }
-
-    public function getDefaultOptions(array $options)
-    {
-        return array(
-            'translation_domain' => 'icap_section'
-        );
     }
 }

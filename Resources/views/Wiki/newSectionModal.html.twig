@@ -1,28 +1,29 @@
-<div id="newSectionModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+{% trans_default_domain "icap_wiki" %}
+
+<div id="newSectionModal-{{ parentSectionId }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h3 id="myModalLabel">Nouvelle section</h3>
+                <h3 id="myModalLabel">{% trans %}New section{% endtrans %}</h3>
             </div>
             <div class="modal-body">
-                blalblalblalblalbla nlle section
-                {% include "IcapWikiBundle:Wiki:newSection.html.twig"%}
-
+                {% include "IcapWikiBundle:Wiki:newSectionForm.html.twig"%}
             </div>
             <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans %}Cancel{% endtrans %}</button>
-                <button id="newSectionModal-submit" class="btn btn-primary"><i class="icon-bookmark icon-white"></i> {% trans %}Create{% endtrans %}</button>
+                <button id="newSectionModal-submit-{{ parentSectionId }}" class="btn btn-primary"><i class="icon-bookmark icon-white"></i> {% trans %}Create{% endtrans %}</button>
             </div>
         </div>
     </div>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('form[id="newSection-form"] > input[type="submit"]').hide();
+            $('form[id="newSection-form-{{ parentSectionId }}"] > input[type="submit"]').hide();
+            $('form[id="newSection-form-{{ parentSectionId }}"] > a.cancel-btn').hide();
 
-            $('#createSectionModal-submit').on('click', function () {
+            $('#newSectionModal-submit-{{ parentSectionId }}').on('click', function () {
                 //I do the "click" on submit button for keep html5 warning
-                $('form[id="newSection-form"] > input[type="submit"]').trigger('click');
+                $('form[id="newSection-form-{{ parentSectionId }}"] > input[type="submit"]').trigger('click');
             });
         });
     </script>

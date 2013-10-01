@@ -8,10 +8,32 @@ div.panel-wiki {
 	font-size: 14px;
 }
 
+.wiki-page-header {
+	margin-top: 20px;
+}
+
+.wiki-page-header h1.wiki-title-header {
+	margin-bottom: 0px;
+}
+
+.wiki-description {
+	margin-bottom: 30px;
+}
+
 /*Wiki contents*/
 div.wiki-contents-inner {float:left; min-width: 20%;}
-div.wiki-contents ul { list-style-type: none; padding-left:0;}
+div.wiki-contents ul { list-style-type: none; padding-left: 10px;}
+div.wiki-contents ul#wiki-contents-list{padding-left: 0px;}
 div.wiki-contents-title {text-align: center; margin-bottom:5px;}
+ul.sortable-list.sortable-enable li, ul.sortable-list.sortable-enable li a {cursor: move !important;}
 
 /*Wiki sections*/
 div.wiki-sections ul { list-style-type: none; padding-left: 0;}
+div.subsection-header h3, div.subsection-header h4 {font-weight: 800 !important; margin-bottom: 5px;}
+div.subsection-header h3 {margin-top: 15px;}
+div.subsection-header h4 {margin-top: 10px;}
+div.wiki-sections div.page-header {padding-bottom: 0px; margin:25px 0 10px 0;}
+div.wiki-sections div.page-header h2 {margin-bottom:2px;}
+
+/*Delete form*/
+.icap-wiki-delete-section-message {margin: 10px 0 20px 0; font-size: 16px;}

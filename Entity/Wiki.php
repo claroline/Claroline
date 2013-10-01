@@ -62,6 +62,7 @@ class Wiki extends AbstractResource
             if($rootSection == null){
 
                 $rootSection = new Section();
+                $rootSection->setTitle("");
                 $rootSection->setWiki($this);
                 $this->setRoot($rootSection);
 

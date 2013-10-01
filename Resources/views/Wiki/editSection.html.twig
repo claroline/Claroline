@@ -1,0 +1,33 @@
+{% extends 'IcapWikiBundle::layout.html.twig' %}
+
+{% trans_default_domain "icap_wiki" %}
+
+{% block title %}{{ wiki.resourceNode.name }}{% endblock %}
+
+{% block wiki_panel %}
+    <p>           
+        <a href="{{ path('icap_wiki_view', {"wikiId": wiki.id}) }}">
+            <span class="icon-angle-left"></span>
+            {{ 'back_to_wiki'|trans({}, 'icap_wiki') }}
+        </a>
+    </p>
+    {% block wiki_content %}
+        <div>
+            <form id="editSection-form" name="icap_wiki_edit_section" method="POST" class="form-vertical" action="{{ path("icap_wiki_update_section", {'wikiId': wiki.id, 'sectionId' : section.id }) }}">
+                <div class="control-group">
+                    <div class="controls">
+                        {{ form_widget(form) }}
+                    </div>
+                </div>
+                {{ form_rest(form) }}
+                <a class="btn btn-default" href="{{ path('icap_wiki_view', {"wikiId": wiki.id}) }}">{% trans %}Cancel{% endtrans %}</a>&nbsp;
+                <input type="submit" value="{% trans %}Save{% endtrans %}" class="btn btn-primary"/>
+            </form>
+        </div>
+    {% endblock %}
+{% endblock%}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ tinymce_init() }}
+{% endblock %}

@@ -1,0 +1,29 @@
+log_resource-icap_wiki-section_create_shortname: "Section creation"
+log_resource-icap_wiki-section_create_title: "Section creation in a wiki"
+log_resource-icap_wiki-section_create_filter: "Section creation in a wiki"
+
+log_resource-icap_wiki-section_update_shortname: "Section updating"
+log_resource-icap_wiki-section_update_title: "Section updating"
+log_resource-icap_wiki-section_update_filter: "Section updating"
+
+log_resource-icap_wiki-section_delete_shortname: "Section deletion"
+log_resource-icap_wiki-section_delete_title: "Section deletion"
+log_resource-icap_wiki-section_delete_filter: "Section deletion"
+
+log_resource-icap_wiki-section_move_shortname: "Section move"
+log_resource-icap_wiki-section_move_title: "Section move"
+log_resource-icap_wiki-section_move_filter: "Section move"
+
+log_created_section: "Created section"
+log_moved_section: "Moved section"
+log_deleted_section: "Deleted section"
+
+log_section_title: "Title"
+log_section_author: "Author"
+
+content: "Content"
+
+log.wiki.moved_section: "moved section %section% of wiki %wiki%"
+log.wiki.update_section: "updated section %section% in wiki %wiki%"
+log.wiki.create_section: "created section %section% in wiki %wiki%"
+log.wiki.delete_section: "deleted section %section% from wiki %wiki%"

@@ -5,29 +5,36 @@
 {% block title %}{{ wiki.resourceNode.name }}{% endblock %}
 
 {% block wiki_content %}
-    <div class="page-header">
+    <div class="wiki-page-header page-header">
         <h1 class="wiki-title-header">
             {{ wiki.resourceNode.name }} 
             <small class="wiki-actions"> 
                 [ 
-                <a href="{{ path('icap_wiki_new_section', { 'wikiId': wiki.id }) }}" class="new-section" >
+                <a href="{{ path('icap_wiki_new_section', { 'wikiId': wiki.id, 'parentSectionId' : 0 }) }}" class="new-section" data-section="0" >
                     {{ 'create_new_section'|trans({}, 'icap_wiki') }}
-                </a> 
+                </a>
+                |
+                <a href="{{ path('icap_wiki_edit_section', { 'wikiId': wiki.id, 'sectionId' : 0 }) }}" class="edit-section" data-section="{{section.id}}" >
+                    {{ 'edit'|trans({}, 'icap_wiki') }}
+                </a>  
                 ]
             </small>
         </h1>        
     </div>
 
-    {% if tree is not empty and tree[0] is not empty %}
+    {% if tree is not empty and tree[0] is not empty and tree[0].text is not empty%}
         <div class="wiki-description">
-            {{ tree[0].text }}
+            {{ tree[0].text|raw }}
         </div>
     {% endif %}
 
     {% if tree is not empty and tree[0] is not empty and tree[0].__children is not empty %}
         <div class="wiki-contents">
             <div class="wiki-contents-inner well">
-                <div class="wiki-contents-title">{{ 'wiki_contents'|trans({},'icap_wiki') }}</div>
+                <div class="wiki-contents-title">
+                    {{ 'wiki_contents'|trans({},'icap_wiki') }}&nbsp;
+                    <a id="move-contents-trigger" class="btn btn-default btn-xs pull-right"><i class="icon-move"></i></a>
+                </div>
                 {% include "IcapWikiBundle:Wiki:wikiContents.html.twig" with {'sections' : tree[0].__children, 'isAdmin' : is_granted('EDIT', wiki), 'delimeter' : '.' } %}
             </div>
             <div class="clearfix"></div>
@@ -38,7 +45,20 @@
     {% endif %}
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/sortable/css/jquery.sortable.css') }}'/>
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('bundles/icapwiki/js/new.js') }}"></script>
+    <script type='text/javascript'src='{{ asset('bundles/frontend/jquery/plugin/sortable/js/jquery-sortable-min.js') }}'></script>
+    <script type='text/javascript'>
+        var moveSectionRoute = "{{ path('icap_wiki_move_section', { 
+            'wikiId' : wiki.id, 
+            'sectionId' : "0", 
+            'referenceSectionId' : "0",
+            'isBrother' : "true"}) }}";
+    </script>
+    <script type='text/javascript' src="{{ asset('bundles/icapwiki/js/new.js') }}"></script>
 {% endblock %}

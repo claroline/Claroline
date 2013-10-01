@@ -1,18 +1,18 @@
 {% macro wiki_contents(sections, isAdmin, delimeter, prefix) %}
     {% for section in sections %}
         {% if isAdmin or section.visible %}
-            <li>
+            <li id="li-{{ section.id }}" data-section="{{ section.id }}">
                 <a href="#section-{{section.id}}">{{prefix ~ loop.index}}&nbsp;{{ section.title }}</a>
-                {% if section.__children is not empty %}
-                    <ul>
+                <ul id="ul-{{ section.id }}" class="sortable-list" data-section="{{ section.id }}">
+                    {% if section.__children is not empty %}
                         {{ _self.wiki_contents(section.__children, isAdmin, delimeter, prefix ~ loop.index ~ delimeter) }}
-                    </ul>
-                {% endif %}
+                    {% endif %}
+                </ul>                
             </li>
         {% endif %}
     {% endfor %}
 {% endmacro %}
 
-<ul id="wiki-contents-list">
+<ul id="wiki-contents-list" data-section="0" class="jquery-sortable-list sortable-list">
     {{ _self.wiki_contents(sections, isAdmin, delimeter, "") }}
 </ul>

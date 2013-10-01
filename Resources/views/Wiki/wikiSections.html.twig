@@ -1,32 +1,36 @@
 {% macro wiki_sections(sections, isAdmin, wikiId) %}
     {% for section in sections %}
         {% if isAdmin or section.visible %}
-            {% set level = section.level %}
-            {% if section.level > 3 %}
-                {% set level = 3 %}
+            {% set level = section.level + 1 %}
+            {% set fontsize = 0 %}
+            {% if level > 4 %}
+                {% set level = 4 %}
+                {% set fontsize = (section.level<8)?21 - section.level:14 %}
             {% endif %}
             <li id="section-{{section.id}}">
-                <div class="page-header"><h{{level}}>
-                    {{section.title}}
-                    {% if isAdmin %}
-                        <small class="wiki-actions">
-                            [
-                                <a href="{{ path('icap_wiki_new_section', { 'wikiId': wikiId, 'parentSectionId' : section.id }) }}" class="new-section" >
-                                    {{ 'add_new_subsection'|trans({}, 'icap_wiki') }}
-                                </a> 
-                                | 
-                                <a href="{{ path('icap_wiki_new_section', { 'wikiId': wikiId, 'parentSectionId' : section.id }) }}" class="edit-section" >
-                                    {{ 'edit'|trans({}, 'icap_wiki') }}
-                                </a> 
-                                | 
-                                <a href="{{ path('icap_wiki_new_section', { 'wikiId': wikiId, 'parentSectionId' : section.id }) }}" class="delete-section" >
-                                    {{ 'delete'|trans({}, 'icap_wiki') }}
-                                </a> 
-                            ]
-                        </small>
-                    {% endif%}
-                </h{{level}}></div>
-                <p>{{section.text}}</p>
+                <div class="{{level>2?"subsection-header":"page-header"}}" >
+                    <h{{level}} {{ fontsize!=0?"style=font-size:" ~ fontsize ~ "px;":"" }}>
+                        {{section.title}}
+                        {% if isAdmin %}
+                            <small class="wiki-actions">
+                                [
+                                    <a href="{{ path('icap_wiki_new_section', { 'wikiId': wikiId, 'parentSectionId' : section.id }) }}" class="new-section" data-section="{{section.id}}" >
+                                        {{ 'add_new_subsection'|trans({}, 'icap_wiki') }}
+                                    </a> 
+                                    | 
+                                    <a href="{{ path('icap_wiki_edit_section', { 'wikiId': wikiId, 'sectionId' : section.id }) }}" class="edit-section" data-section="{{section.id}}" >
+                                        {{ 'edit'|trans({}, 'icap_wiki') }}
+                                    </a> 
+                                    | 
+                                    <a href="{{ path('icap_wiki_delete_section', { 'wikiId': wikiId, 'sectionId' : section.id }) }}" class="delete-section" data-section="{{section.id}}" >
+                                        {{ 'delete'|trans({}, 'icap_wiki') }}
+                                    </a> 
+                                ]
+                            </small>
+                        {% endif%}
+                    </h{{level}}>
+                </div>
+                <p>{{section.text|raw}}</p>
                 {% if section.__children is not empty %}
                     <ul>
                         {{ _self.wiki_sections(section.__children, isAdmin, wikiId) }}

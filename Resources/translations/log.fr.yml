@@ -1,0 +1,29 @@
+log_resource-icap_wiki-section_create_shortname: "Création d'une section"
+log_resource-icap_wiki-section_create_title: "Création d'une section dans un wiki"
+log_resource-icap_wiki-section_create_filter: "Création d'une section dans un wiki"
+
+log_resource-icap_wiki-section_update_shortname: "Modification d'une section"
+log_resource-icap_wiki-section_update_title: "Modification d'une section d'un wiki"
+log_resource-icap_wiki-section_update_filter: "Modification d'une section d'un wiki"
+
+log_resource-icap_wiki-section_delete_shortname: "Suppression d'une section"
+log_resource-icap_wiki-section_delete_title: "Suppression d'une section"
+log_resource-icap_wiki-section_delete_filter: "Suppression d'une section"
+
+log_resource-icap_wiki-section_move_shortname: "Déplacement d'une section"
+log_resource-icap_wiki-section_move_title: "Déplacement d'une section"
+log_resource-icap_wiki-section_move_filter: "Déplacement d'une section"
+
+log_created_section: "Section créée"
+log_moved_section: "Section déplacée"
+log_deleted_section: "Section supprimée"
+
+log_section_title: "Titre"
+log_section_author: "Auteur"
+
+content: "Content"
+
+log.wiki.moved_section: "a déplacé la section %section% du wiki %wiki%"
+log.wiki.update_section: "a mis à jour la section %section% du wiki %wiki%"
+log.wiki.create_section: "a crée la %section% dans le wiki %wiki%"
+log.wiki.delete_section: "a supprimée la section %section% du wiki %wiki%"
