@@ -15,7 +15,7 @@ var MainCtrlProto = [
     'StepFactory',
     function($scope, $routeParams, $location, $http, $modal, HistoryFactory, ClipboardFactory, PathFactory, StepFactory) {
         // Store symfony base partials route
-        $scope.templateRoute = EditorApp.templateRoute;
+        $scope.webDir = EditorApp.webDir;
         
         // Set active tab
         $scope.activeTab = 'Global';
@@ -71,7 +71,7 @@ var MainCtrlProto = [
          */
         $scope.openHelp = function() {
             var modalInstance = $modal.open({
-                templateUrl: EditorApp.templateRoute + 'Help/Partial/help-modal.html',
+                templateUrl: EditorApp.webDir + 'js/Help/Partial/help.html',
                 controller: 'HelpModalCtrl'
             });
         };

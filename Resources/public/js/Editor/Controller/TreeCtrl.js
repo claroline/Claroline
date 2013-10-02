@@ -20,6 +20,10 @@ var TreeCtrlProto = [
              connectWith: '.ui-sortable'
          };
          
+         /**
+          * 
+          * @returns void
+          */
          $scope.setPreviewStep = function(step) {
              if (step) {
                  $scope.previewStep = step;
@@ -31,6 +35,10 @@ var TreeCtrlProto = [
              $scope.inheritedResources = ResourceFactory.getInheritedResources($scope.previewStep);
          };
          
+         /**
+          * 
+          * @returns void
+          */
          $scope.update = function() {
              var e, i, _i, _len, _ref;
              _ref = $scope.path;
@@ -41,6 +49,10 @@ var TreeCtrlProto = [
              HistoryFactory.update(_ref);
          };
          
+         /**
+          * 
+          * @returns void
+          */
          $scope.updatePreviewStep = function() {
              // Update preview step
              var step = null;
@@ -50,6 +62,10 @@ var TreeCtrlProto = [
              $scope.setPreviewStep(step);
          };
          
+         /**
+          * 
+          * @returns void
+          */
          $scope.rename = function() {
              if (undefined != $scope.path.steps[0]) {
                  $scope.path.steps[0].name = $scope.path.name;
@@ -58,6 +74,10 @@ var TreeCtrlProto = [
              HistoryFactory.update($scope.path);
          };
          
+         /**
+          * 
+          * @returns void
+          */
          $scope.remove = function(step) {
              function walk(path) {
                  var children = path.children;
@@ -82,17 +102,29 @@ var TreeCtrlProto = [
              $scope.updatePreviewStep();
          };
          
+         /**
+          * 
+          * @returns void
+          */
          $scope.removeChildren = function(step) {
              step.children = [];
              HistoryFactory.update($scope.path);
          };
          
+         /**
+          * 
+          * @returns void
+          */
          $scope.addChild = function(step) {
              var newStep = StepFactory.generateNewStep(step);
              step.children.push(newStep);
              HistoryFactory.update($scope.path);
          };
          
+         /**
+          * 
+          * @returns void
+          */
          $scope.addSibling = function(step) {
              var newStep = StepFactory.generateNewStep(step);
              
@@ -119,39 +151,47 @@ var TreeCtrlProto = [
              HistoryFactory.update($scope.path);
          };
          
-         var dialogOptions = {
-             backdrop: true,
-             keyboard: false,
-             backdropClick: false,
-         };
-         
-         $scope.openTemplateEdit = function(step) {
+         /**
+          * 
+          * @returns void
+          */
+         $scope.editTemplate = function(step) {
              StepFactory.setStep(step);
-             var d = $dialog.dialog(dialogOptions);
-             d.open('partials/modals/template-edit.html', 'TemplateModalCtrl');
+             var modalInstance = $modal.open({
+                 templateUrl: EditorApp.webDir + 'js/Template/Partial/template-edit.html',
+                 controller: 'TemplateModalCtrl'
+             });
          };
          
+         /**
+          * 
+          * @returns void
+          */
          $scope.editStep = function(step) {
              StepFactory.setStep(step);
              
-             // Create modal form
-             var options = jQuery.extend(true, {}, dialogOptions);
-             options.dialogClass = 'step-edit';
-             
-             var d = $dialog.dialog(options);
-             d.open('partials/modals/step-edit.html', 'StepModalCtrl')
-              .then(function(step) {
-                  if (step) {
-                      // Inject edited step in path
-                      PathFactory.replaceStep(step);
-                      
-                      // Update history
-                      HistoryFactory.update($scope.path);
-                  }
-              });
+             var modalInstance = $modal.open({
+                 templateUrl: EditorApp.webDir + 'js/Step/Partial/step-edit.html',
+                 controller: 'StepModalCtrl',
+                 windowClass: 'step-edit'
+             });
+
+             // Process modal results
+             modalInstance.result.then(function(step) {
+                 if (step) {
+                     // Inject edited step in path
+                     PathFactory.replaceStep(step);
+                     
+                     // Update history
+                     HistoryFactory.update($scope.path);
+                 }
+             });
          };
          
-         // Resources management
+         /**
+          * 
+          * @returns void
+          */
          $scope.editResource = function(resourceType, resource) {
              var editResource = false;
              
@@ -196,6 +236,10 @@ var TreeCtrlProto = [
               });
          };
          
+         /**
+          * 
+          * @returns void
+          */
          $scope.removeResource = function(resource) {
              // Search resource to remove
              for (var i = 0; i < $scope.previewStep.resources.length; i++) {
@@ -209,6 +253,10 @@ var TreeCtrlProto = [
              }
          };
          
+         /**
+          * 
+          * @returns void
+          */
          $scope.excludeParentResource= function(resource) {
              resource.isExcluded = true;
              $scope.previewStep.excludedResources.push(resource.id);
@@ -217,6 +265,10 @@ var TreeCtrlProto = [
              HistoryFactory.update($scope.path);
          };
          
+         /**
+          * 
+          * @returns void
+          */
          $scope.includeParentResource= function(resource) {
              resource.isExcluded = false;
              for (var i = 0; i < $scope.previewStep.excludedResources.length; i++) {

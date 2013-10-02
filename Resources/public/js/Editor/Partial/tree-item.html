@@ -1,9 +1,8 @@
-<form class="tree-item form-inline">
-    <span ng-mouseenter="show = true" ng-click="setPreviewStep(step)" ng-mouseleave="show = false" >
-    {{ step.name | limitTo:10 }}
-    </span>
+<a href=""><span class="icon-chevron-right"></span></a>
+<form class="tree-item form-inline" ng-click="setPreviewStep(step)" ng-mouseenter="showButtons = true" ng-mouseleave="showButtons = false" >
+    <span>{{ step.name | limitTo:10 }}</span>
     
-    <span ng-show="show" ng-mouseenter="show = true;" ng-mouseleave="show = false">
+    <span ng-show="showButtons">
         <button class="btn btn-default btn-xs" ng-click="addChild(step)" tooltip="Add a child">
             <i class="icon-plus"></i>
         </button>
@@ -20,7 +19,7 @@
             <i class="icon-paste"></i>
         </button>
         
-        <button class="btn btn-info btn-xs" ng-click="openTemplateEdit(step)" tooltip="Add to favorites">
+        <button class="btn btn-info btn-xs" ng-click="editTemplate(step)" tooltip="Add to favorites">
             <i class="icon-heart"></i>
         </button>
         
@@ -35,5 +34,5 @@
 </form>
 
 <ul ui-sortable="sortableOptions" ng-model="step.children">
-    <li ng-repeat="step in step.children" ng-include="templateRoute + 'Editor/Partial/tree-item.html'" onload="isRootNode = false"></li>
+    <li ng-repeat="step in step.children" ng-include="webDir + 'js/Editor/Partial/tree-item.html'" onload="isRootNode = false"></li>
 </ul>

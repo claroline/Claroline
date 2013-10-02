@@ -13,6 +13,7 @@ var StepFactoryProto = [
         var baseStep = {
             id                : null,
             resourceId        : null,
+            image             : null,
             name              : 'Step',
             type              : 'seq',
             instructions      : null,
@@ -68,6 +69,7 @@ var StepFactoryProto = [
             },
             
             /**
+             * Search resource in path and replace it by a new one
              * 
              * @param newResource
              * @returns StepFactory
@@ -86,6 +88,7 @@ var StepFactoryProto = [
             },
             
             /**
+             * Update resource properties
              * 
              * @param oldResource
              * @param newResource

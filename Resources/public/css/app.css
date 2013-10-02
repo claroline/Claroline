@@ -107,6 +107,7 @@ table td.icon {
     padding: 6px;
     border: 1px solid rgb(227, 227, 227);
     box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
+    min-height: 32px;
 }
 
 .preview-step .icons img {
@@ -129,29 +130,33 @@ table td.icon {
     text-align: center;
 }
 
-.preview-step .accordion-group,
-.panel-documents .accordion-group,
-.panel-tools .accordion-group {
-    background-color: #FFF;
-    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
-}
+/* .preview-step .accordion-group, */
+/* .panel-documents .accordion-group, */
+/* .panel-tools .accordion-group { */
+/*     background-color: #FFF; */
+/*     box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05); */
+/* } */
 
-.preview-step .accordion-inner,
-.panel-documents .accordion-inner,
-.panel-tools .accordion-inner {
-    padding: 0;
-}
+/* .preview-step .accordion-inner, */
+/* .panel-documents .accordion-inner, */
+/* .panel-tools .accordion-inner { */
+/*     padding: 0; */
+/* } */
 
-.preview-step .accordion-inner .table,
-.panel-documents .accordion-inner .table,
-.panel-tools .accordion-inner .table {
-    margin: 0;
-}
+/* .preview-step .accordion-inner .table, */
+/* .panel-documents .accordion-inner .table, */
+/* .panel-tools .accordion-inner .table { */
+/*     margin: 0; */
+/* } */
 
-.preview-step .accordion-inner .table tr:first-child td,
-.panel-documents .accordion-inner .table tr:first-child td,
-.panel-tools .accordion-inner .table tr:first-child td {
-    border-top: none;
+/* .preview-step .accordion-inner .table tr:first-child td, */
+/* .panel-documents .accordion-inner .table tr:first-child td, */
+/* .panel-tools .accordion-inner .table tr:first-child td { */
+/*     border-top: none; */
+/* } */
+
+.preview-step .panel-heading {
+	position: relative;
 }
 
 .excluded-resource {
@@ -165,15 +170,15 @@ table td.icon {
     font-weight: normal;
 }
 
-.preview-step .accordion-heading,
-.panel-documents .accordion-heading,
-.panel-tools .accordion-heading {
-    font-weight: bold;
-}
+/* .preview-step .panel-heading, */
+/* .panel-documents .panel-heading, */
+/* .panel-tools .panel-heading { */
+/*     font-weight: bold; */
+/* } */
 
-.preview-step .accordion-heading a:hover,
-.panel-documents .accordion-heading a:hover,
-.panel-tools .accordion-heading a:hover {
+.preview-step .panel-heading a:hover,
+.panel-documents .panel-heading a:hover,
+.panel-tools .panel-heading a:hover {
     text-decoration: none;
 }
 
@@ -181,14 +186,14 @@ table td.icon {
     padding-right: 8px;
 }
 
-.preview-step .accordion,
-.panel-documents .accordion,
-.panel-tools .accordion {
-    margin-bottom: 0;
-}
+/* .preview-step .accordion, */
+/* .panel-documents .accordion, */
+/* .panel-tools .accordion { */
+/*     margin-bottom: 0; */
+/* } */
 
 .step-buttons {
-    margin: 4px;
+    margin: 2px;
     position: absolute;
     top: 0;
     right: 0;
@@ -199,7 +204,18 @@ table td.icon {
 }
 
 .tree {
-    padding-left: 10px;
+    padding-left: 0;
+}
+
+.tree a:hover,
+.tree a:focus,
+.tree a:active {
+	text-decoration: none;
+}
+
+.tree-item {
+	display: inline-block;
+	margin-left: 4px;
 }
 
 #templates-sidebar {
@@ -211,4 +227,13 @@ table td.icon {
     margin: 4px 0;
     line-height: 22px;
     font-weight: normal;
+}
+
+.tree-item {
+	padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.tree-item:hover {
+	background-color: rgb(235, 235, 235);
 }

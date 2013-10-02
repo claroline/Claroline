@@ -6,12 +6,10 @@
 var TemplateModalCtrlProto = [
     '$scope',
     '$http',
-//    '$notification',
-    'dialog',
+    '$modalInstance',
     'StepFactory',
     'TemplateFactory',
-    'AlertFactory',
-    function($scope, $http, dialog, StepFactory, TemplateFactory, AlertFactory) {
+    function($scope, $http, $modalInstance, StepFactory, TemplateFactory) {
         var editTemplate = false;
         
         var currentTemplate = TemplateFactory.getCurrentTemplate();
@@ -32,10 +30,18 @@ var TemplateModalCtrlProto = [
             $scope.formTemplate = jQuery.extend(true, {}, currentTemplate); // Create a copy to not affect original data before user save
         }
         
+        /**
+         * Close template edit
+         * @returns void
+         */
         $scope.close = function() {
-            dialog.close();
+            $modalInstance.dismiss('cancel');
         };
         
+        /**
+         * Save template modifications in DB
+         * return void
+         */
         $scope.save = function (formTemplate) {
             function removeResources(step) {
                 step.excludedResources = [];
@@ -58,10 +64,9 @@ var TemplateModalCtrlProto = [
                 $http
                     .post('../api/index.php/path/templates.json', formTemplate)
                     .success(function(response) {
-//                        $notification.success('Success', 'Template saved!');
                         formTemplate.id = response;
                         TemplateFactory.addTemplate(formTemplate);
-                        dialog.close();
+                        $modalInstance.close();
                     });
             }
             else {
@@ -69,9 +74,8 @@ var TemplateModalCtrlProto = [
                 $http
                     .put('../api/index.php/path/templates/' + formTemplate.id + '.json', formTemplate)
                     .success ( function (response) {
-//                        $notification.success('Success', 'Template updated!');
                         TemplateFactory.replaceTemplate(formTemplate);
-                        dialog.close();
+                        $modalInstance.close();
                     });
             }
         }

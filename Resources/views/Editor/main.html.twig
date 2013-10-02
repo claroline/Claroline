@@ -16,7 +16,7 @@
                     <button class="btn btn-default btn-xs" ng-click="openHelp()" tooltip="Help">
                         <span class="icon-question-sign"></span>
                     </button>
-                    Editing Path : &lt;{% verbatim %}{{ path.name }}{% endverbatim %}&gt; in Workspace &lt;{{ workspace.name }}&gt;
+                    Editing Path : <strong>&lt;{% verbatim %}{{ path.name }}{% endverbatim %}&gt;</strong> in Workspace <strong>&lt;{{ workspace.name }}&gt;</strong>
                 </h3>
                 
                 <div class="editor-buttons">
@@ -30,7 +30,7 @@
                 
             </div>
             
-            <div ng-include="templateRoute + 'Editor/Partial/navbar.html'"></div>
+            <div ng-include="webDir + 'js/Editor/Partial/navbar.html'"></div>
             
             <div ng-view class="panel-body"></div>
         </div>
@@ -53,8 +53,9 @@
     <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/ui-bootstrap-tpls-dev.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovaangularpageslide/js/angular-pageslide-directive.js') }}"></script>
     
-    {# ng-pageslide #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/PageSlide/Directive/NgPageslide.js') }}"></script>
+    
+    {# ng-uisortable #}
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/UISortable/Directive/UISortable.js') }}"></script>
     
     {# History #}
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/History/Factory/HistoryFactory.js') }}"></script>
@@ -91,6 +92,6 @@
         // TODO : find more beautiful
         EditorApp.pathId = "{{ pathId }}";
         EditorApp.workspaceId = "{{ workspace.id }}";
-        EditorApp.templateRoute = "{{ asset('bundles/innovapath/js/') }}";
+        EditorApp.webDir = "{{ asset('bundles/innovapath/') }}";
     </script>
 {% endblock %}

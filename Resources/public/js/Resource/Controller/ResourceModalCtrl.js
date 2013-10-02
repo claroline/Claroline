@@ -5,11 +5,11 @@
  */
 var ResourceModalCtrlProto = [
     '$scope',
-    'dialog',
+    '$modalInstance',
     'PathFactory',
     'ResourceFactory',
     'resourceType',
-    function($scope, dialog, PathFactory, ResourceFactory, resourceType) {
+    function($scope, $modalInstance, PathFactory, ResourceFactory, resourceType) {
         $scope.resourceType = resourceType;
         $scope.resourceSubTypes = ResourceFactory.getResourceSubTypes(resourceType);
         
@@ -29,13 +29,20 @@ var ResourceModalCtrlProto = [
             $scope.formResource = jQuery.extend(true, {}, currentResource);
         }
         
+        /**
+         * Close resource edit
+         * @returns void
+         */
         $scope.close = function() {
-            dialog.close();
+            $modalInstance.dismiss('cancel');
         };
         
+        /**
+         * Send back edited document to step
+         * @returns void
+         */
         $scope.save = function(formResource) {
-            // Send back edited document to step
-            dialog.close(formResource);
+            $modalInstance.close(formResource);
         };
     }
 ];

@@ -1,28 +1,34 @@
 {
-    "name": "innova/path-bundle",
-    "type": "claroline-plugin",
-    "description": "Claroline Path Bundle",
-    "keywords": ["Claroline", "Path"],
-    "homepage": "http://github.com/InnovaLangues/PathBundle",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Arnaud Bey",
-            "email": "arnaud.bey@u-grenoble3.fr"
-        }
-    ],
-    "require": {
-        "php": ">=5.3.0",
-        "symfony/framework-bundle":  "2.*",
-        "symfony/symfony":           "2.*",
-        "innova/angularjs":          "dev-master",
-        "innova/angular-ui":         "dev-master",
-        "innova/angular-pageslide":  "dev-master",
-        "doctrine/doctrine-fixtures-bundle": "dev-master"
-    },
-    "autoload": {
-        "psr-0": { "Innova\\PathBundle": "." }
-    },
-    "target-dir": "Innova/PathBundle"
+	"name" : "innova/path-bundle",
+	"description" : "Claroline Path Bundle",
+	"type" : "claroline-plugin",
+	"authors" : [{
+			"name" : "Arnaud Bey",
+			"email" : "arnaud.bey@u-grenoble3.fr"
+		}
+	],
+	"keywords" : [
+		"Claroline",
+		"Path"
+	],
+	"homepage" : "http://github.com/InnovaLangues/PathBundle",
+	"license" : [
+		"MIT"
+	],
+	"require" : {
+		"symfony/symfony" : "2.*",
+		"innova/angular-uisortable" : "dev-master",
+		"doctrine/doctrine-fixtures-bundle" : "dev-master",
+		"php" : ">=5.3.0",
+		"symfony/framework-bundle" : "2.*",
+		"innova/angular-ui" : "dev-master",
+		"innova/angular-pageslide" : "dev-master",
+		"innova/angular-uisortable" : "dev-master"
+	},
+	"autoload" : {
+		"psr-0" : {
+			"Innova\\PathBundle" : "."
+		}
+	},
+	"target-dir" : "Innova/PathBundle"
 }
-

@@ -5,13 +5,13 @@
  */
 var StepModalCtrlProto = [
     '$scope',
-    'dialog',
-    '$dialog',
+    '$modal',
+    '$modalInstance',
     'PathFactory',
     'StepFactory',
     'HistoryFactory',
     'ResourceFactory',
-    function($scope, dialog, $dialog, PathFactory, StepFactory, HistoryFactory, ResourceFactory) {
+    function($scope, $modal, $modalInstance, PathFactory, StepFactory, HistoryFactory, ResourceFactory) {
         $scope.buttonsDisabled = false;
 
         var localStep = jQuery.extend(true, {}, StepFactory.getStep()); // Create a copy to not affect original data before user save
@@ -26,22 +26,27 @@ var StepModalCtrlProto = [
             $scope.isRootNode = true;
         }
 
+        /**
+         * Close step edit
+         * @returns void
+         */
         $scope.close = function() {
-            dialog.close();
+            $modalInstance.dismiss('cancel');
         };
 
+        /**
+         * Send back edited step to path
+         * @returns void
+         */
         $scope.save = function(formStep) {
-            // Send back edited step to path
-            dialog.close(formStep);
+            $modalInstance.close(formStep);
         };
 
-        var dialogOptions = {
-            backdrop: true,
-            keyboard: false,
-            backdropClick: false,
-        };
-
-        // Resources Management
+        
+        /**
+         * Edit or add resource
+         * @returns void
+         */
         $scope.editResource = function(resourceType, resource) {
             var editResource = false;
 
@@ -54,41 +59,46 @@ var StepModalCtrlProto = [
                 ResourceFactory.setResource(resource);
             }
 
-            var options = jQuery.extend(true, {}, dialogOptions);
-
-            // Send resource type to form
-            options.resolve = {
-                resourceType: function() {
-                    return resourceType;
+            var modalInstance = $modal.open({
+                templateUrl: EditorApp.webDir + 'js/Resource/Partial/resource-edit.html',
+                controller: 'ResourceModalCtrl',
+                resolve: {
+                    // Send resource type to form
+                    resourceType: function() {
+                        return resourceType;
+                    }
                 }
-            };
+            });
 
-            var d = $dialog.dialog(options);
-            d.open('partials/modals/resource-edit.html', 'ResourceModalCtrl')
-             .then(function(resource) {
-                 if (resource) {
-                     // Save resource
-                     if (editResource) {
-                         // Edit existing resource
-                         // Replace old resource by the new one
-                         for (var i = 0; i < $scope.formStep.resources.length; i++) {
-                             if ($scope.formStep.resources[i].id === resource.id) {
-                                 $scope.formStep.resources[i] = resource;
-                                 break;
-                             }
-                         }
-                     }
-                     else {
-                         // Create new resource
-                         $scope.formStep.resources.push(resource);
-                     }
-                 }
+            // Process modal results
+            modalInstance.result.then(function(resource) {
+                if (resource) {
+                    // Save resource
+                    if (editResource) {
+                        // Edit existing resource
+                        // Replace old resource by the new one
+                        for (var i = 0; i < $scope.formStep.resources.length; i++) {
+                            if ($scope.formStep.resources[i].id === resource.id) {
+                                $scope.formStep.resources[i] = resource;
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        // Create new resource
+                        $scope.formStep.resources.push(resource);
+                    }
+                }
 
-                 // Modal is now close, enable buttons
-                 $scope.buttonsDisabled = false; 
-             });
+                // Modal is now close, enable buttons
+                $scope.buttonsDisabled = false; 
+            });
         };
 
+        /**
+         * Delete resource from step
+         * @returns void
+         */
         $scope.removeResource = function(resource) {
             // Search resource to remove
             for (var i = 0; i < $scope.formStep.resources.length; i++) {
@@ -99,6 +109,10 @@ var StepModalCtrlProto = [
             }
         };
 
+        /**
+         * Exclude herited resource from parent step
+         * @returns void
+         */
         $scope.excludeParentResource= function(resource) {
             resource.isExcluded = true;
             $scope.formStep.excludedResources.push(resource.id);
@@ -107,6 +121,10 @@ var StepModalCtrlProto = [
             HistoryFactory.update($scope.path);
         };
 
+        /**
+         * Include herited resource from parent step
+         * @returns void
+         */
         $scope.includeParentResource= function(resource) {
             resource.isExcluded = false;
             for (var i = 0; i < $scope.previewStep.excludedResources.length; i++) {
@@ -119,6 +137,10 @@ var StepModalCtrlProto = [
             HistoryFactory.update($scope.path);
         };
         
+        /**
+         * Select step image in library
+         * @returns void
+         */
         $scope.selectImage = function() {
             
         };

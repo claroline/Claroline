@@ -18,16 +18,11 @@ var TemplateCtrlProto = [
              });
         
         $scope.edit = function(template) {
-//            TemplateFactory.setCurrentTemplate(template);
-//            
-//            var dialogOptions = {
-//                backdrop: true,
-//                keyboard: true,
-//                backdropClick: true
-//            };
-//            
-//            var d = $dialog.dialog(dialogOptions);
-//            d.open('partials/modals/template-edit.html', 'TemplateModalCtrl');
+            TemplateFactory.setCurrentTemplate(template);
+            var modalInstance = $modal.open({
+                templateUrl: EditorApp.webDir + 'js/Template/Partial/template-edit.html',
+                controller: 'TemplateModalCtrl'
+            });
         };
         
         $scope.delete = function(template, id) {

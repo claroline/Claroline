@@ -3,25 +3,39 @@
 </div>
 
 <div class="modal-body">
-    <form novalidate name="templateForm">
-        <fieldset class="span4">
-            <label for="template-name" class="control-label">Name <span>*</span></label>
-            <input type="text" name="template-name" ng-model="formTemplate.name" class="warning" required value="{{ formTemplate.name }}" />
+    <form novalidate name="templateForm" role="form">
+        <fieldset class="row">
+            <div class="form-group col-md-12">
+	            <label for="template-name">Name</label>
+	            <input type="text" name="template-name" ng-model="formTemplate.name" class="form-control" required value="{{ formTemplate.name }}" />
+            </div>
             
-            <label for="template-description">Description</label>
-            <textarea name="template-description" id="template-description" cols="30" rows="10" ng-model="formTemplate.description">
-            </textarea>
+            <div class="form-group col-md-12">
+	            <label for="template-description">Description</label>
+	            <textarea class="form-control" name="template-description" id="template-description" cols="30" rows="4" ng-model="formTemplate.description"></textarea>
+            </div>
             
-            <label class="checkbox">
-                <input type="checkbox" ng-model="formTemplate.withResources" />
-                Save documents &amp; tools too ?
-            </label>
+            <div class="form-group col-md-12">
+	            <label class="checkbox">
+	                <input type="checkbox" ng-model="formTemplate.withResources" />
+	                Save documents &amp; tools too ?
+	            </label>
+            </div>
             
             <input type="hidden" ng-model="formTemplate.step" value="{{ step }}" name="template-step" />
         </fieldset>
         
-        <div class="well span4">
-            Step preview
+        <div class="row">
+            <div class="col-md-12">
+	            <div class="panel panel-default">
+	                <div class="panel-heading">
+	                    <span class="icon-road"></span> Preview steps which will be saved
+	                </div>
+	                <div class="panel-body">
+	                
+	                </div>
+	            </div>
+            </div>
         </div>
     </form>
 </div>
