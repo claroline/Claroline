@@ -78,9 +78,9 @@
 {% block section_content %}
     <div class="panel-body">
         <ul class="nav nav-tabs">
-            <li> <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'users'}) }}">{{ 'roles'|trans({}, 'platform') }}</a> </li>
             <li> <a href="{{ path('claro_workspace_registered_user_list', {'workspace': workspace.getId() })~'?'~queryString }}"> {{'users'|trans({}, 'platform') }} </a> </li>
             <li class="active"> <a href="#"> {{'groups'|trans({}, 'platform') }} </a> </li>
+            <li> <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'users'}) }}">{{ 'roles'|trans({}, 'platform') }}</a> </li>
         </ul>
 
         {{ macros.flashBox() }}
@@ -118,33 +118,13 @@
                         </input>
                         </li>
                     {% endfor %}
-                    <li class="divider"></li>
-                    <li>
-                    <input id="chk-unregistered"
-                    class="chk-item"
-                    type="checkbox"
-                    value="1"
-                    {% if withUnregistered == 1 %}
-                        checked
-                    {% endif %}
-                    data-name="{{ 'unregistered'|trans({}, 'platform') }}">
-                    {{ 'unregistered'|trans({}, 'platform') }}
-                    </input>
-                    </li>
                 </ul>
             </div>
         </div>
         <div class="btn-group">
-            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                {{ 'roles'|trans({}, 'platform') }}
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" >
-                {% for role in wsRoles %}
-                    <li> <input class="chk-role" type="checkbox" value="{{ role.getId() }}" data-name="{{ role.getTranslationKey()|trans({}, 'platform') }}"> {{ role.getTranslationKey()|trans({}, 'platform') }}  </input> </li>
-                {% endfor %}
-            </ul>
-            <button id="add-role-button" class="btn btn-default"> {{ 'apply'|trans({}, 'platform' ) }} </button>
+            <a href="#" class="btn btn-default dropdown-toggle">
+                {{ 'add_groups'|trans({}, 'platform') }}
+            </a>
         </div>
         <br>
 
