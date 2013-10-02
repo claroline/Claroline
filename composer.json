@@ -22,8 +22,8 @@
 		"php" : ">=5.3.0",
 		"symfony/framework-bundle" : "2.*",
 		"innova/angular-ui" : "dev-master",
-		"innova/angular-pageslide" : "dev-master",
-		"innova/angular-uisortable" : "dev-master"
+		"innova/angular-uisortable" : "dev-master",
+		"innova/angular-pageslide" : "dev-master"
 	},
 	"autoload" : {
 		"psr-0" : {
