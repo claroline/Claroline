@@ -399,6 +399,7 @@ class PathController extends Controller
      *     name = "innova_path_get_path",
      *     options = {"expose"=true}
      * )
+     *
      * @Method("GET")
      *
      */
