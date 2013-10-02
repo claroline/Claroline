@@ -1,7 +1,7 @@
 'use strict';
 
 // Declare app level module which depends on filters, and services
-var EditorApp = angular.module('EditorApp', ['ui.bootstrap', 'pageslide-directive']);
+var EditorApp = angular.module('EditorApp', ['ui.bootstrap', 'pageslide-directive', 'ui.sortable']);
 
 // Declare routes
 EditorApp.config(['$routeProvider', function($routeProvider) {
@@ -45,12 +45,6 @@ EditorApp.config(['$routeProvider', function($routeProvider) {
     
     $routeProvider.otherwise({redirectTo: '/404'});
 }]);
-
-// Page Slide
-//EditorApp.directive('pageslide', PageslideProto);
-
-// Sortable
-//EditorApp.directive('uiSortable', UISortableProto);
 
 // History
 EditorApp.factory('HistoryFactory', HistoryFactoryProto);
