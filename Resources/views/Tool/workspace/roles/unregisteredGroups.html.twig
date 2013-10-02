@@ -143,13 +143,16 @@
     {{ parent() }}
     {% javascripts
     vars=["locale"]
-    "@ClarolineCoreBundle/Resources/views/Tool/workspace/roles/roleGroupLabel.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/confirmAddRole.html.twigjs"
     "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
     filter="twig_js"
     %}
     <script language="javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script>
+        createValidationBox();
+        
         $('.popover-block').popover();
         $('.remove-role-button').live('click', function (event) {
             var target = $(event.currentTarget);
@@ -164,6 +167,43 @@
         });
 
         $('#add-role-button').on('click', function (event) {
+            var roles = [];
+            var i = 0;
+            $('.chk-role:checked').each(function (index, element) {
+                console.debug(element);
+                roles[i] = $(element).attr('data-name');
+                i++;
+            });
+            
+            var html = Twig.render(confirmAddRole,
+                    {'nbItems': $('.chk-grp:checked').length, 'roles': roles}
+            );
+            $('#table-modal .modal-body').html(html);
+            $('#table-modal').modal('show');
+        });
+
+        $('#search-button').click(function () {
+            var search = document.getElementById('search-items-txt').value;
+            var queryString = {};
+            var i = 0;
+            var array = [];
+            $('.chk-search:checked').each(function (index, element) {
+                array[i] = element.value;
+                i++;
+            });
+            queryString.roleIds = array;
+
+            if (search !== '') {
+                var route = Routing.generate('claro_workspace_unregistered_group_list_search', {'workspace': {{ workspace.getId }}, 'search': search });
+                } else {
+                var route = Routing.generate('claro_workspace_unregistered_group_list', {'workspace': {{ workspace.getId }} });
+            }
+
+            route += '?' + $.param(queryString);
+            window.location.href = route;
+        });
+        
+         $('#modal-valid-button').on('click', function () {
             var i = 0;
             var queryString = {};
             var array = [];
@@ -189,36 +229,19 @@
                 success: function() {
                 }
             });
+         
+            $('#table-modal').modal('hide');
+            $('.modal-body').empty();
         });
-
-        function addLabel(groupId, roleId, roleName) {
-            var td = $("#row-" + groupId)[0].children[2];
-            console.debug(td);
-            console.debug(roleName);
-            var html = Twig.render(roleGroupLabel, {'roleName': roleName, 'workspaceId': {{ workspace.getId() }}, 'groupId': groupId, 'roleId': roleId });
-            $(td).append(html);
+         
+                        
+        function createValidationBox() {
+            var html = Twig.render(
+                ModalWindow,
+                {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'table-modal', 'body': ''}
+            );
+            $('body').append(html);
         }
-
-        $('#search-button').click(function () {
-            var search = document.getElementById('search-items-txt').value;
-            var queryString = {};
-            var i = 0;
-            var array = [];
-            $('.chk-search:checked').each(function (index, element) {
-                array[i] = element.value;
-                i++;
-            });
-            queryString.roleIds = array;
-
-            if (search !== '') {
-                var route = Routing.generate('claro_workspace_unregistered_group_list_search', {'workspace': {{ workspace.getId }}, 'search': search });
-                } else {
-                var route = Routing.generate('claro_workspace_unregistered_group_list', {'workspace': {{ workspace.getId }} });
-            }
-
-            route += '?' + $.param(queryString);
-            window.location.href = route;
-        });
 
     </script>
 {% endblock %}

@@ -17,6 +17,7 @@ add_tag_to_workspace: 'Add tag to workspace'
 add_user: 'Add user'
 add_users: 'Add users'
 add_user_s_confirm_message: 'users(s) added'
+add_roles_confirm_message: 'Do you want to add the following roles to the %count% selected elements'
 add_widget_to_home_tab: 'Add widget to Home tab'
 admin: Administrator
 admin_analytics: 'Platform analytics'

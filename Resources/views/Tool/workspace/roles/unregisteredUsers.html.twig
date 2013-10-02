@@ -148,13 +148,16 @@
     {{ parent() }}
     {% javascripts
     vars=["locale"]
-    "@ClarolineCoreBundle/Resources/views/Tool/workspace/roles/roleUserLabel.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/confirmAddRole.html.twigjs"
     "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
     filter="twig_js"
     %}
     <script language="javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script>
+        createValidationBox();
+        
         $('#search-button').click(function () {
             var search = document.getElementById('search-items-txt').value;
             var queryString = {};
@@ -177,6 +180,23 @@
         });
         
         $('#add-role-button').on('click', function (event) {
+        
+            var roles = [];
+            var i = 0;
+            $('.chk-role:checked').each(function (index, element) {
+                console.debug(element);
+                roles[i] = $(element).attr('data-name');
+                i++;
+            });
+            
+            var html = Twig.render(confirmAddRole,
+                    {'nbItems': $('.chk-user:checked').length, 'roles': roles}
+            );
+            $('#table-modal .modal-body').html(html);
+            $('#table-modal').modal('show');
+        });
+        
+        $('#modal-valid-button').on('click', function () {
             var i = 0;
             var queryString = {};
             var array = [];
@@ -202,6 +222,16 @@
                 success: function() {
                 }
             });
+            $('#table-modal').modal('hide');
+            $('.modal-body').empty();
         });
+                
+        function createValidationBox() {
+            var html = Twig.render(
+                ModalWindow,
+                {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'table-modal', 'body': ''}
+            );
+            $('body').append(html);
+        }
     </script>
 {% endblock %}
