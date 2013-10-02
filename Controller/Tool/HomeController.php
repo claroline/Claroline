@@ -510,7 +510,7 @@ class HomeController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function displayDesktopHomeTabsAction($tabId, $withConfig = 1)
+    public function displayDesktopHomeTabsAction($tabId, $withConfig = 0)
     {
         $user = $this->securityContext->getToken()->getUser();
         $adminHomeTabConfigsTemp = $this->homeTabManager
@@ -519,11 +519,29 @@ class HomeController extends Controller
 //            ->filterVisibleHomeTabConfigs($adminHomeTabConfigsTemp);
         $userHomeTabConfigs = $this->homeTabManager
             ->getDesktopHomeTabConfigsByUser($user);
+        $homeTabId = $tabId;
+
+        if ($homeTabId == -1) {
+            foreach ($adminHomeTabConfigsTemp as $adminHomeTabConfig) {
+                if ($adminHomeTabConfig->isVisible() || ($withConfig === 1)) {
+                    $homeTabId = $adminHomeTabConfig->getHomeTab()->getId();
+                    break;
+                }
+            }
+        }
+        if ($homeTabId == -1) {
+            foreach ($userHomeTabConfigs as $userHomeTabConfig) {
+                if ($userHomeTabConfig->isVisible() || ($withConfig === 1)) {
+                    $homeTabId = $userHomeTabConfig->getHomeTab()->getId();
+                    break;
+                }
+            }
+        }
 
         return array(
             'adminHomeTabConfigs' => $adminHomeTabConfigsTemp,
             'userHomeTabConfigs' => $userHomeTabConfigs,
-            'tabId' => $tabId,
+            'tabId' => $homeTabId,
             'withConfig' => $withConfig
         );
     }

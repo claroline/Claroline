@@ -1,9 +1,12 @@
 (function () {
     'use strict';
 
+    var displayedHomeTabId = $('#hometab-id-div').attr('hometab-id');
     var configValue = ($('#config-value-div').attr('config-value')).trim();
     var withConfig = (configValue === '') ? 0 : parseInt(configValue);
     var currentHomeTabId;
+    var currentHomeTabOrder;
+    var currentElement;
 
     $('#switch-config-mode').click(function () {
         withConfig = (withConfig + 1) % 2;
@@ -12,6 +15,15 @@
             $('.toggle-visible').each(function () {
                 $(this).addClass('hidden');
             });
+
+            var currentVisibilityElement = $('#visible-hometab-id-' + displayedHomeTabId);
+
+            if (currentVisibilityElement.hasClass('icon-eye-close')) {
+                window.location = Routing.generate(
+                    'claro_display_desktop_home_tabs',
+                    {'tabId': -1, 'withConfig': withConfig}
+                );
+            }
         } else {
             $('.toggle-visible').each(function () {
                 $(this).removeClass('hidden');
@@ -24,7 +36,7 @@
         e.stopPropagation();
         var homeTabId = $(this).attr('home-tab-id');
 
-        window.location.href = Routing.generate(
+        window.location = Routing.generate(
             'claro_display_desktop_home_tabs',
             {'tabId': homeTabId, 'withConfig' : withConfig}
         );
@@ -70,7 +82,41 @@
         e.preventDefault();
         e.stopPropagation();
 
+        currentElement = $(this).parent().parent();
         currentHomeTabId = $(this).parent().attr('home-tab-id');
-        alert(currentHomeTabId);
+        currentHomeTabOrder = $(this).parent().attr('home-tab-order');
+        $('#delete-home-tab-validation-box').modal('show');
+    });
+
+    $('.hometab-rename-btn').click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    });
+
+    $('#add-hometab-btn').click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    });
+
+    $('#delete-home-tab-confirm-ok').click(function () {
+        $.ajax({
+            url: Routing.generate(
+                'claro_user_desktop_home_tab_delete',
+                {'homeTabId': currentHomeTabId, 'tabOrder': currentHomeTabOrder}
+            ),
+            type: 'DELETE',
+            success: function () {
+                $('#delete-home-tab-validation-box').modal('hide');
+
+                if (displayedHomeTabId === currentHomeTabId) {
+                    window.location = Routing.generate(
+                        'claro_display_desktop_home_tabs',
+                        {'tabId': -1, 'withConfig': withConfig}
+                    );
+                } else {
+                    currentElement.remove();
+                }
+            }
+        });
     });
 })();
