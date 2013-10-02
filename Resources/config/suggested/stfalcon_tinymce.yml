@@ -21,20 +21,21 @@ stfalcon_tinymce:
         medium:
             theme: 'modern'
             plugins:
-                     - '  fullscreen, emoticons code autolink lists link image charmap print preview hr anchor pagebreak'
+                     - ' -ressourceLinker fullscreen, emoticons code autolink lists link image charmap print preview hr anchor pagebreak'
                      - 'searchreplace wordcount visualblocks visualchars  fullscreen'
                      - 'insertdatetime media nonbreaking save table contextmenu directionality'
             menubar: false
-            toolbar1: 'bold,italic,underline,undo,redo,removeformat,cleanup,code | ressourceLinker | fullscreenToggle '
+            toolbar1: 'bold,italic,underline,undo,redo,removeformat cleanup code | ressourceLinker | fullscreenToggle '
             toolbar2: 'alignleft aligncenter alignright alignjustify | emoticons lists link image charmap print preview hr anchor pagebreak '
             relative_urls : false
         advanced:
             plugins:
-                - 'advlist autolink lists link image charmap print preview hr anchor pagebreak'
+                - '-ressourceLinker -fullscreenToggle advlist autolink lists link image charmap print preview hr anchor pagebreak'
                 - 'searchreplace wordcount visualblocks visualchars code fullscreen'
                 - 'insertdatetime media nonbreaking save table contextmenu directionality'
                 - 'emoticons template paste textcolor'
-            toolbar1: ' undo redo | styleselect | bold italic | advlist autolink lists link image charmap print preview hr anchor pagebreak '
+            menubar: false
+            toolbar1: ' undo redo | styleselect | bold italic | ressourceLinker | fullscreenToggle advlist autolink lists link image charmap print preview hr anchor pagebreak '
             toolbar2: "print preview media | forecolor backcolor emoticons | stfalcon | insertdatetime media nonbreaking save table contextmenu directionality"
             toolbar3: 'searchreplace wordcount visualblocks visualchars code'
             image_advtab: true
