@@ -15,12 +15,10 @@ stfalcon_tinymce:
                 image : null
     theme:
         simple:
-            #content_css: 'vendor/fortawesome/font-awesome/css/font-awesome.css'
             theme: 'modern'
             menubar: false
             toolbar1: 'bold italic underline | ressourceLinker | alignleft aligncenter alignright alignjustify | fullscreenToggle'
         medium:
-            #content_css: 'asset[vendor/fortawesome/font-awesome/css/font-awesome.css]'
             theme: 'modern'
             plugins:
                      - ' -ressourceLinker fullscreen, emoticons code autolink lists link image charmap print preview hr anchor pagebreak'
@@ -31,7 +29,6 @@ stfalcon_tinymce:
             toolbar2: 'alignleft aligncenter alignright alignjustify | emoticons lists link image charmap print preview hr anchor pagebreak '
             relative_urls : false
         advanced:
-            #content_css: '../../../../web/vendor/fortawesome/font-awesome/css/font-awesome.css'
             plugins:
                 - '-ressourceLinker -fullscreenToggle advlist autolink lists link image charmap print preview hr anchor pagebreak'
                 - 'searchreplace wordcount visualblocks visualchars code fullscreen'

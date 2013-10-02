@@ -5,9 +5,16 @@ function callback_tinymce_init() {
             b.setAttribute('style', 'display: none'); 
     });
 
-    $('div [aria-label="toggle"] button').html("<i class='icon-plus' style='font-family: FontAwesome'></i>");
+    $('div [aria-label="toggle"] button').html("<i class='icon-resize-full' style='font-family: FontAwesome'></i>");
     $('div [aria-label="Resource Linker"] button').html("<i class='icon-file' style='font-family: FontAwesome'></i>");
 
+    $('body').on('click', 'div [aria-label="toggle"] button', function(){
+        if ($(this).parents('.mce-fullscreen').get(0) === undefined) {
+            $('i', this).attr('class', 'icon-resize-full');
+        } else {
+            $('i', this).attr('class', 'icon-resize-small');
+        }
+    });
 }
 function tinymce_button_ressourceLinker (ed) {
     ed.focus();
