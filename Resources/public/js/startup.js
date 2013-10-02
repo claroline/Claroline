@@ -14,6 +14,7 @@
             alert(Translator.get('platform:' + msg + '_message'));
         }
     };
+    
     var ajaxAuthenticationErrorHandler = function (form) {
         $('#ajax-login-validation-box-body').append(form);
         $('#ajax-login-modal').modal('show');

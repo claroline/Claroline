@@ -62,8 +62,8 @@
         parameters.route.action = {};
         parameters.route.normal = {"route": "claro_message_list_removed", "parameters": {}};
         parameters.route.search = {"route": "claro_message_list_removed_search", "parameters": {}};
-        parameters.route.action.remove = {"route": "claro_message_delete", "parameters": {}, "btn": "action-delete-button", "type": "DELETE", 'confirmTemplate': removeMessageConfirm};
-        parameters.route.action.restore = {"route": "claro_message_restore_from_trash", "parameters": {}, "btn": "action-restore-button", 'confirmTemplate': restoreMessageConfirm};
+        parameters.route.action.remove = {"route": "claro_message_delete", "parameters": {}, "btn": "action-delete-button", "type": "DELETE", 'confirmTemplate': removeMessageConfirm, "delete": true};
+        parameters.route.action.restore = {"route": "claro_message_restore_from_trash", "parameters": {}, "btn": "action-restore-button", 'confirmTemplate': restoreMessageConfirm, "delete": true};
         Claroline.Table.initialize(parameters);
         $('.mark-as-read').live('click', function (e) {
             e.preventDefault();
