@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Controller\Badge;
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
 use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
-use Claroline\CoreBundle\Entity\Badge\UserBadge;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\Badge\BadgeAwardType;
 use Claroline\CoreBundle\Form\Badge\BadgeType;

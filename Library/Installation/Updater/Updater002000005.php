@@ -82,7 +82,11 @@ class Updater002000005
     private function updateWidgetsDatas()
     {
         $cn = $this->container->get('doctrine.dbal.default_connection');
-        $select = "SELECT * FROM claro_widget_display ORDER BY id";
+        $select = "SELECT instance.* FROM claro_widget_display instance, claro_widget widget WHERE 
+            instance.widget_id = widget.id
+            and widget.is_configurable = false
+            or widget.name = 'simple_text'
+            ORDER BY id";
         $datas =  $cn->query($select);
 
         foreach ($datas as $row) {

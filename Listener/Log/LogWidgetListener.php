@@ -60,7 +60,7 @@ class LogWidgetListener
      *
      * @param DisplayWidgetEvent $event
      */
-    public function onDesktopDisplay(DisplayWidgetEvent $event)
+    public function onDisplay(DisplayWidgetEvent $event)
     {
         $event->setContent('hi');
     }
