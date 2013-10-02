@@ -372,7 +372,7 @@ Overview of recent activities of your workspaces: 'Overview of recent activities
 Overview of recent activities in %workspaceName%: 'Overview of recent activities in %workspaceName%'
 Overview of all recent activities in %workspaceName% : 'Overview of all recent activities in %workspaceName%'
 reset_password: Reset password
-reset_password_message: 'Reset the password ?'
+reset_password_message: 'Do you really want to reset these passwords ?'
 resource_properties_form_sharable: 'Share this resource'
 resource_properties_form_shareType: 'Share type'
 resource_properties_form_userIcon: Icon
