@@ -82,11 +82,6 @@ class Step extends AbstractResource
     protected $stepWhere;
 
     /**
-    * @ORM\OneToMany(targetEntity="Step2ExcludedResourceNode", mappedBy="step", cascade={"remove"})
-    */
-    protected $excludedResourceNodes;
-
-    /**
      * Set expanded
      *
      * @param  boolean $expanded
@@ -350,48 +345,6 @@ class Step extends AbstractResource
     }
 
     /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->excludedResourceNodes = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->resources = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * Add excludedResourceNodes
-     *
-     * @param  \Innova\PathBundle\Entity\Step2ExcludedResourceNode $excludedResourceNodes
-     * @return Step
-     */
-    public function addExcludedResource(\Innova\PathBundle\Entity\Step2ExcludedResourceNode $excludedResourceNodes)
-    {
-        $this->excludedResourceNodes[] = $excludedResourceNodes;
-
-        return $this;
-    }
-
-    /**
-     * Remove excludedResourceNodes
-     *
-     * @param \Innova\PathBundle\Entity\Step2ExcludedResourceNode $excludedResourceNodes
-     */
-    public function removeExcludedResource(\Innova\PathBundle\Entity\Step2ExcludedResourceNode $excludedResourceNodes)
-    {
-        $this->excludedResourceNodes->removeElement($excludedResourceNodes);
-    }
-
-    /**
-     * Get excludedResourceNodes
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getExcludedResourceNodes()
-    {
-        return $this->excludedResourceNodes;
-    }
-
-    /**
      * Set parent
      *
      * @param  \Innova\PathBundle\Entity\Step $parent
@@ -413,4 +366,5 @@ class Step extends AbstractResource
     {
         return $this->parent;
     }
+
 }

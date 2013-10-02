@@ -52,7 +52,6 @@ use Innova\PathBundle\Entity\StepType;
 use Innova\PathBundle\Entity\StepWho;
 use Innova\PathBundle\Entity\StepWhere;
 use Innova\PathBundle\Entity\Step2ResourceNode;
-use Innova\PathBundle\Entity\Step2ExcludedResourceNode;
 
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -156,11 +155,6 @@ class PathController extends Controller
                 foreach ($step2ressources as $step2ressource) {
                     $manager->remove($step2ressource);
                 }
-                $step2excludedRessourceNodes = $manager->getRepository('InnovaPathBundle:Step2ExcludedResourceNode')->findByStep($step->getId());
-                foreach ($step2excludedRessourceNodes as $step2excludedRessourceNode) {
-                    $manager->remove($step2excludedRessourceNode);
-                }
-
                 $manager->remove($step->getResourceNode());
             }
         }
@@ -257,22 +251,26 @@ class PathController extends Controller
                 }
                 $step2ressourceNode->setResourceNode($manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId));
                 $step2ressourceNode->setStep($currentStep);
+                $step2ressourceNode->setExcluded(false);
                 $step2ressourceNode->setPropagated($resource->propagateToChildren);
                 $step2ressourceNode->setResourceOrder($resourceOrder);
                 $manager->persist($step2ressourceNode);
             }
 
             // STEP'S EXCLUDED RESOURCES MANAGEMENT
-            foreach ($step->excludedResourceNodes as $excludedResourceNode) {
-                $resourceNodeToExclude = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($excludedResourceNode);
-                if (!$alreadyExcluded = $manager->getRepository('InnovaPathBundle:Step2ExcludedResourceNode')
-                                                ->findOneBy(array('step' => $currentStep, 'resourceNode' => $resourceNodeToExclude)))
-                {
-                    $step2excludedResourceNode = new Step2ExcludedResourceNode();
-                    $step2excludedResourceNode->setResourceNode($resourceNodeToExclude);
-                    $step2excludedResourceNode->setStep($currentStep);
-                    $manager->persist($step2excludedResourceNode);
+            foreach ($step->excludedResources as $excludedResource) {
+                // juste pour les tests. cette condition ne sera plus nécessaire après
+                if ($resource->resourceId == null) {
+                    $step2ressourceNode = new Step2ResourceNode();
+                } else {
+                    $step2ressourceNode = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')->findOneByResourceNode($resource->resourceId);
                 }
+                $step2ressourceNode->setResourceNode($manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId));
+                $step2ressourceNode->setStep($currentStep);
+                $step2ressourceNode->setExcluded(true);
+                $step2ressourceNode->setPropagated(false);
+                $step2ressourceNode->setResourceOrder(null);
+                $manager->persist($step2ressourceNode);
             }
 
             /*
