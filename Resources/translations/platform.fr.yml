@@ -282,6 +282,7 @@ object: Objet
 ok: Ok
 or: Ou
 open: Ouvrir
+operation_done: Opération effectuée.
 options: Options
 order: Ordre
 organize_admin_tags: 'Organiser les Tags administrateur'

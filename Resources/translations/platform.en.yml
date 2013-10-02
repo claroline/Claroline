@@ -299,6 +299,7 @@ object: Object
 ok: Ok
 or: Or
 open: Open
+operation_done: Operation done.
 options: Options
 order: Order
 organize_admin_tags: 'Organize admin tags'

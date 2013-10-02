@@ -80,6 +80,14 @@
             ])
         }}
 
+        <div>
+            <div id="custom-flashbag-div" class="alert alert-success hide">
+                <a id="flashbag-close-button" class="close" href="#">×</a>
+                <ul id="custom-flashbag-ul">
+                </ul>
+            </div>
+        </div>
+
         {{ displayControls(workspace.getId()) }}
         <div class="input-append pull-right">
             <input class="input-medium" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
@@ -152,7 +160,7 @@
     {% endjavascripts %}
     <script>
         createValidationBox();
-        
+
         $('.popover-block').popover();
         $('.remove-role-button').live('click', function (event) {
             var target = $(event.currentTarget);
@@ -174,7 +182,7 @@
                 roles[i] = $(element).attr('data-name');
                 i++;
             });
-            
+
             var html = Twig.render(confirmAddRole,
                     {'nbItems': $('.chk-grp:checked').length, 'roles': roles}
             );
@@ -202,7 +210,7 @@
             route += '?' + $.param(queryString);
             window.location.href = route;
         });
-        
+
          $('#modal-valid-button').on('click', function () {
             var i = 0;
             var queryString = {};
@@ -227,14 +235,17 @@
             $.ajax({
                 url:route,
                 success: function() {
+                    var flashbag = $('#custom-flashbag-ul');
+                    flashbag.append('<li>' +  Translator.get('platform:operation_done') + '</li>');
+                    $('#custom-flashbag-div').removeClass('hide');
                 }
             });
-         
+
             $('#table-modal').modal('hide');
             $('.modal-body').empty();
         });
-         
-                        
+
+
         function createValidationBox() {
             var html = Twig.render(
                 ModalWindow,
@@ -242,6 +253,11 @@
             );
             $('body').append(html);
         }
+
+        $('#flashbag-close-button').click(function () {
+            $(this).parent().addClass('hide');
+            $('#custom-flashbag-ul').empty();
+        });
 
     </script>
 {% endblock %}
