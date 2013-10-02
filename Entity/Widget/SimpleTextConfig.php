@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="simple_text_workspace_widget_config")
+ * @ORM\Table(name="claro_simple_text_widget_config")
  */
 class SimpleTextConfig
 {
@@ -27,7 +27,7 @@ class SimpleTextConfig
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    protected $displayConfig;
+    protected $widgetInstance;
 
     /**
      * Get id
@@ -64,12 +64,12 @@ class SimpleTextConfig
 
     public function setDisplayConfig(WidgetInstance $ds)
     {
-        $this->displayConfig = $ds;
+        $this->widgetInstance = $ds;
     }
     
     public function getDisplayConfig()
     {
-        return $this->displayConfig;
+        return $this->widgetInstance;
     }
     
 }

@@ -11,15 +11,9 @@
                     </a>
                 </div>
                 {% if widget.configurable %}
-                    {% if isDesktop %}
-                        <a data-url="{{ path('claro_desktop_widget_configuration', {'widgetInstanceId': widget.id}) }}" class="btn btn-primary hide">
-                            <i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}
-                        </a>
-                    {% else %}
-                        <a data-url="{{ path('claro_desktop_widget_configuration', {'widgetInstanceId': widget.id}) }}" class="btn btn-primary hide">
-                            <i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}
-                        </a>
-                    {% endif %}
+                    <a data-url="{{ path('claro_widget_configuration', {'widgetInstance': widget.id}) }}" class="btn btn-primary hide">
+                        <i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}
+                    </a>
                 {% endif %}
             </div>
             <div id="collapse{{ widget.id }}" class="collapse-widget collapse in">
@@ -89,5 +83,29 @@
             $('.view', accordionGroup).removeClass('hide');
             $('.edition', accordionGroup).addClass('hide');
         });
+        
+        $('body').on('submit', '.panel form', function(e) {
+            e.preventDefault();
+            var formAction = $(e.currentTarget).attr('action');
+            var form = e.currentTarget;
+            var formData = new FormData(form);
+            submitForm(formAction, formData);
+            var accordionGroup = $(this).parents('.panel-group');
+            $('.edition', accordionGroup).addClass('hide');
+            $('.view', accordionGroup).removeClass('hide');
+        });
     });
-</script>
+       
+   var submitForm = function (formAction, formData) {
+        $.ajax({
+            url: formAction,
+            data: formData,
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            success: function () {
+                
+            }
+        });
+    };
+</script>.

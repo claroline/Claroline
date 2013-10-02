@@ -49,7 +49,7 @@
                 {% for widgetInstance in widgetInstances %}
                     <tr class='row-widget-config'>
                         <th>{{ widgetInstance.getWidget().getName()|trans({}, 'widget') }}</th>
-                        <th>{% render controller('ClarolineCoreBundle:AdministrationWidget:editWidgetNameForm', {'widgetInstanceId': widgetInstance.getId()}) %}</th>
+                        <th>{% render controller('ClarolineCoreBundle:Tool\\Home:editDesktopWidgetNameForm', {'config': widgetInstance.getId()}) %}</th>
                         <th>
                             <a href="{{ path('claro_desktop_widget_configuration', {'widgetInstanceId': widgetInstance.getId()}) }}">
                                 {{ 'configure'|trans({}, 'platform') }}

@@ -2,14 +2,9 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
-use Doctrine\Common\Persistence\Mapping\MappingException;
-use Claroline\CoreBundle\Entity\Home\HomeTab;
-use Claroline\CoreBundle\Entity\Widget\Widget;
-use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 use Claroline\InstallationBundle\Bundle\BundleVersion;
@@ -22,12 +17,21 @@ class AdditionalInstaller extends BaseInstaller
         $this->buildDefaultTemplate();
     }
 
+    public function preUpdate(BundleVersion $current, BundleVersion $target)
+    {
+        $updater002000005 = new Updater\Updater002000005($this->container);
+                
+        if (version_compare($current->getVersion(), '1.3', '>') && version_compare($target->getVersion(), '2.1', '<') ) {
+            $updater002000005->preUpdate();
+        }
+    }
+    
     public function postUpdate(BundleVersion $current, BundleVersion $target)
     {
-        $this->createWorkspacesListWidget();
-
-        if (version_compare($current->getVersion(), '1.4', '<')) {
-            $this->updateAdminWorkspaceHomeTabDatas();
+        $updater002000005 = new Updater\Updater002000005($this->container);
+                
+        if (version_compare($current->getVersion(), '1.3', '>')  && version_compare($target->getVersion(), '2.1', '<') ) {
+            $updater002000005->postUpdate();
         }
     }
 
@@ -60,78 +64,5 @@ class AdditionalInstaller extends BaseInstaller
         $this->log('Creating default workspace template...');
         $defaultTemplatePath = $this->container->getParameter('kernel.root_dir') . '/../templates/default.zip';
         TemplateBuilder::buildDefault($defaultTemplatePath);
-    }
-
-    private function createWorkspacesListWidget()
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-
-        try {
-            $workspaceWidget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
-                ->findOneByName('my_workspaces');
-
-            if (is_null($workspaceWidget)) {
-                $this->log('Creating workspaces list widget...');
-                $widget = new Widget();
-                $widget->setName('my_workspaces');
-                $widget->setConfigurable(false);
-                $widget->setIcon('fake/icon/path');
-                $widget->setPlugin(null);
-                $widget->setExportable(false);
-                $em->persist($widget);
-                $em->flush();
-
-                $widgetConfig = new WidgetInstance();
-                $widgetConfig->setWidget($widget);
-                $widgetConfig->setLock(false);
-                $widgetConfig->setVisible(true);
-                $widgetConfig->setParent(null);
-                $widgetConfig->setDesktop(true);
-
-                $em->persist($widgetConfig);
-                $em->flush();
-            }
-        }
-        catch (MappingException $e) {
-            $this->log('A MappingException has been thrown while trying to get Widget repository');
-        }
-    }
-
-    private function updateAdminWorkspaceHomeTabDatas()
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-
-        try {
-            $homeTabConfigRepo = $em->getRepository('ClarolineCoreBundle:Home\HomeTabConfig');
-            $widgetHTCRepo = $em->getRepository('ClarolineCoreBundle:Widget\WidgetHomeTabConfig');
-
-            $homeTabConfigs = $homeTabConfigRepo->findWorkspaceHomeTabConfigsByAdmin();
-
-            foreach ($homeTabConfigs as $homeTabConfig) {
-                $homeTab = $homeTabConfig->getHomeTab();
-                $workspace = $homeTabConfig->getWorspace();
-
-                $newHomeTab = new HomeTab();
-                $newHomeTab->setType('workspace');
-                $newHomeTab->setWorkspace($workspace);
-                $newHomeTab->setName($homeTab->getName());
-                $em->persist($newHomeTab);
-                $em->flush();
-
-                $homeTabConfig->setType('workspace');
-                $homeTabConfig->setHomeTab($newHomeTab);
-
-                $widgetHomeTabConfigs = $widgetHTCRepo
-                    ->findWidgetConfigsByWorkspace($homeTab, $workspace);
-
-                foreach ($widgetHomeTabConfigs as $widgetHomeTabConfig) {
-                    $widgetHomeTabConfig->setHomeTab($newHomeTab);
-                }
-                $em->flush();
-            }
-        }
-        catch (MappingException $e) {
-            $this->log('A MappingException has been thrown while trying to get HomeTabConfig or WidgetHomeTabConfig repository');
-        }
     }
 }

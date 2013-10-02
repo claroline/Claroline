@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/25 10:49:32
+ * Generation date: 2013/09/30 05:54:13
  */
-class Version20130925104931 extends AbstractMigration
+class Version20130930175413 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -26,6 +26,15 @@ class Version20130925104931 extends AbstractMigration
                 INDEX IDX_5F89A38582D40A1F (workspace_id), 
                 INDEX IDX_5F89A385A76ED395 (user_id), 
                 INDEX IDX_5F89A385FBE885E2 (widget_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ");
+        $this->addSql("
+            CREATE TABLE claro_simple_text_widget_config (
+                id INT AUTO_INCREMENT NOT NULL, 
+                content LONGTEXT NOT NULL, 
+                widgetInstance_id INT DEFAULT NULL, 
+                INDEX IDX_C389EBCCAB7B5A55 (widgetInstance_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
@@ -48,25 +57,15 @@ class Version20130925104931 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE simple_text_workspace_widget_config 
-            DROP FOREIGN KEY FK_11925ED382D40A1F
-        ");
-        $this->addSql("
-            DROP INDEX IDX_11925ED382D40A1F ON simple_text_workspace_widget_config
-        ");
-        $this->addSql("
-            ALTER TABLE simple_text_workspace_widget_config 
-            DROP is_default, 
-            CHANGE workspace_id displayConfig_id INT DEFAULT NULL
-        ");
-        $this->addSql("
-            ALTER TABLE simple_text_workspace_widget_config 
-            ADD CONSTRAINT FK_11925ED3EF00646E FOREIGN KEY (displayConfig_id) 
+            ALTER TABLE claro_simple_text_widget_config 
+            ADD CONSTRAINT FK_C389EBCCAB7B5A55 FOREIGN KEY (widgetInstance_id) 
             REFERENCES claro_widget_instance (id) 
             ON DELETE CASCADE
         ");
         $this->addSql("
-            CREATE INDEX IDX_11925ED3EF00646E ON simple_text_workspace_widget_config (displayConfig_id)
+            ALTER TABLE claro_widget 
+            ADD is_displayable_in_workspace TINYINT(1) NOT NULL, 
+            ADD is_displayable_in_desktop TINYINT(1) NOT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_widget_home_tab_config 
@@ -76,7 +75,9 @@ class Version20130925104931 extends AbstractMigration
             DROP INDEX IDX_D48CC23EFBE885E2 ON claro_widget_home_tab_config
         ");
         $this->addSql("
-            ALTER TABLE claro_widget_home_tab_config CHANGE widget_id widget_instance_id INT NOT NULL
+            ALTER TABLE claro_widget_home_tab_config 
+            ADD widget_instance_id INT DEFAULT NULL, 
+            DROP widget_id
         ");
         $this->addSql("
             ALTER TABLE claro_widget_home_tab_config 
@@ -87,25 +88,23 @@ class Version20130925104931 extends AbstractMigration
         $this->addSql("
             CREATE INDEX IDX_D48CC23E44BF891 ON claro_widget_home_tab_config (widget_instance_id)
         ");
-        $this->addSql("
-            ALTER TABLE claro_widget 
-            ADD is_displayable_in_workspace TINYINT(1) NOT NULL, 
-            ADD is_displayable_in_desktop TINYINT(1) NOT NULL
-        ");
     }
 
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE simple_text_workspace_widget_config 
-            DROP FOREIGN KEY FK_11925ED3EF00646E
-        ");
-        $this->addSql("
             ALTER TABLE claro_widget_home_tab_config 
             DROP FOREIGN KEY FK_D48CC23E44BF891
         ");
         $this->addSql("
+            ALTER TABLE claro_simple_text_widget_config 
+            DROP FOREIGN KEY FK_C389EBCCAB7B5A55
+        ");
+        $this->addSql("
             DROP TABLE claro_widget_instance
+        ");
+        $this->addSql("
+            DROP TABLE claro_simple_text_widget_config
         ");
         $this->addSql("
             ALTER TABLE claro_widget 
@@ -116,7 +115,9 @@ class Version20130925104931 extends AbstractMigration
             DROP INDEX IDX_D48CC23E44BF891 ON claro_widget_home_tab_config
         ");
         $this->addSql("
-            ALTER TABLE claro_widget_home_tab_config CHANGE widget_instance_id widget_id INT NOT NULL
+            ALTER TABLE claro_widget_home_tab_config 
+            ADD widget_id INT NOT NULL, 
+            DROP widget_instance_id
         ");
         $this->addSql("
             ALTER TABLE claro_widget_home_tab_config 
@@ -126,23 +127,6 @@ class Version20130925104931 extends AbstractMigration
         ");
         $this->addSql("
             CREATE INDEX IDX_D48CC23EFBE885E2 ON claro_widget_home_tab_config (widget_id)
-        ");
-        $this->addSql("
-            DROP INDEX IDX_11925ED3EF00646E ON simple_text_workspace_widget_config
-        ");
-        $this->addSql("
-            ALTER TABLE simple_text_workspace_widget_config 
-            ADD is_default TINYINT(1) NOT NULL, 
-            CHANGE displayconfig_id workspace_id INT DEFAULT NULL
-        ");
-        $this->addSql("
-            ALTER TABLE simple_text_workspace_widget_config 
-            ADD CONSTRAINT FK_11925ED382D40A1F FOREIGN KEY (workspace_id) 
-            REFERENCES claro_workspace (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_11925ED382D40A1F ON simple_text_workspace_widget_config (workspace_id)
         ");
     }
 }

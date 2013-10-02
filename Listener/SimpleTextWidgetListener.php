@@ -49,7 +49,12 @@ class SimpleTextWidgetListener
      */
     public function onDisplay(DisplayWidgetEvent $event)
     {
-        $event->setContent($this->simpleTextManager->getTextConfig($event->getInstance())->getContent());
+        $txtConfig = $this->simpleTextManager->getTextConfig($event->getInstance());
+        if ($txtConfig) {
+            $event->setContent($txtConfig->getContent());
+        } else {
+            $event->setContent('');
+        }
         $event->stopPropagation();
     }
 
@@ -58,8 +63,8 @@ class SimpleTextWidgetListener
      */
     public function onConfig(ConfigureWidgetEvent $event)
     {
-        $config = $event->getInstance();
-        $txtConfig = $this->simpleTextManager->getTextConfig($config);
+        $instance = $event->getInstance();
+        $txtConfig = $this->simpleTextManager->getTextConfig($instance);
         
         if ($txtConfig === null) {
             $txtConfig = new SimpleTextConfig();
@@ -70,8 +75,8 @@ class SimpleTextWidgetListener
             'ClarolineCoreBundle:Widget:config_simple_text_form.html.twig',
             array(
                 'form' => $form->createView(),
-                'isAdmin' => $config->isAdmin(),
-                'config' => $config
+                'isAdmin' => $instance->isAdmin(),
+                'config' => $instance
             )
         );
         $event->setContent($content);

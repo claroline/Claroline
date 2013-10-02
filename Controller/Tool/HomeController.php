@@ -145,6 +145,33 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/widget/form/{widgetInstance}",
+     *     name="claro_widget_configuration",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+
+     * @EXT\Template("ClarolineCoreBundle:Widget:config_simple_text_form.html.twig")
+     *
+     * Asks a widget to render its configuration page for a workspace.
+     *
+     * @param WidgetInstance $widgetInstance
+     *
+     * @return Response
+     */
+    public function getWidgetFormConfigurationAction(WidgetInstance $widgetInstance)
+    {
+        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+            "widget_{$widgetInstance->getWidget()->getName()}_configuration",
+            'ConfigureWidget',
+            array($widgetInstance)
+        );
+
+        return new Response($event->getContent());
+    }
+
+    /**
+     * @EXT\Route(
      *     "desktop/widget/properties",
      *     name="claro_desktop_widget_properties"
      * )
