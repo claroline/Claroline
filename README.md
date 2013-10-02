@@ -54,6 +54,7 @@ Project setup
     - `$ composer require claroline/bundle-recorder "~1.1"`
     - `$ cp composer.dist.json composer.json`
     - `$ composer update --prefer-source`
+    - `$ php app/console assets:install --symlink` (On systems that support symlinks)
     - `$ php app/console assetic:dump`
 
 You can then create a first admin user with:
