@@ -8,6 +8,7 @@ activity_form_instructions: Instructions
 activity_form_name: Name
 add: Add
 add_group: 'Add group'
+add_groups: 'Add groups'
 add_group_s_confirm_message: 'group(s) added'
 add_resource: 'Add resource'
 add_role: 'Add role'

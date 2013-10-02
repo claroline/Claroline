@@ -7,7 +7,7 @@
     {
     'proximity' : 1,
     'routeName': 'claro_workspace_registered_user_list',
-    'routeParams': {'workspace': workspaceId, 'withUnregistered': withUnregistered},
+    'routeParams': {'workspace': workspaceId},
     'queryString': queryString
     }
     )
@@ -20,7 +20,7 @@
     {
     'proximity' : 1,
     'routeName': 'claro_workspace_registered_user_list_search',
-    'routeParams': {'search': search, 'workspace': workspaceId, 'withUnregistered': withUnregistered},
+    'routeParams': {'search': search, 'workspace': workspaceId},
     'queryString': queryString
     }
     )
@@ -35,14 +35,6 @@
 
 {% from _self import renderPager %}
 {% from _self import displayControls %}
-
-{% set queryString = '' %}
-{% for role in roles %}
-    {% set queryString = queryString~'roleIds[]='~role.getId() %}
-    {% if not loop.last %}
-        {% set queryString = queryString~'&' %}
-    {% endif %}
-{% endfor %}
 
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 {% block breadcrumb %}
@@ -69,50 +61,29 @@
     <div class="panel-body">
         <ul class="nav nav-tabs">
             <li class="active"> <a  href="#"> {{'users'|trans({}, 'platform') }} </a> </li>
-            <li> <a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId() })~'?'~queryString }}"> {{'groups'|trans({}, 'platform') }} </a> </li>
+            <li> <a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId() }) }}"> {{'groups'|trans({}, 'platform') }} </a> </li>
             <li> <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'users'}) }}">{{ 'roles'|trans({}, 'platform') }}</a> </li>
         </ul>
 
         {{ macros.flashBox() }}
 
-        <h3>{{ 'users_list'|trans({}, 'platform') }}</h3>
-        <br>
-
+        {{
+            macros.breadcrumbs([
+                {
+                    'name': 'users_list'|trans({}, 'platform'),
+                    'href': ''
+                },
+            ])
+        }}
+            
         {{ displayControls(workspace.getId()) }}
         <div class="input-append pull-right">
             <input class="input-medium" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
             <button class="filter btn btn-default" type="button" id="search-button">
                 <i class="icon-search"></i>
-            </button>
-            <div class="btn-group">
-                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    {{ 'roles'|trans({}, 'platform') }}
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu" >
-                    <li> <input id="chk-all" type="checkbox"> {{ 'select_all'|trans({}, 'platform') }}  </input> </li>
-                    <li class="divider"></li>
-                    {% for role in wsRoles %}
-                        <li>
-                        <input
-                        class="chk-search chk-item"
-                        type="checkbox"
-                        value="{{ role.getId() }}"
-                        data-name="{{ role.getTranslationKey()|trans({}, 'platform') }}"
-                        {% for toCheck in roles %}
-                            {% if toCheck.getId() == role.getId() %}
-                                checked
-                            {% endif %}
-                        {% endfor %}
-                        > {{ role.getTranslationKey()|trans({}, 'platform') }}
-                        </input>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
         </div>
         <div class="btn-group">
-            <a href="#" class="btn btn-default dropdown-toggle">
+            <a href="{{ path('claro_workspace_unregistered_user_list', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle">
                 {{ 'add_users'|trans({}, 'platform') }}
             </a>
         </div>
@@ -149,6 +120,18 @@
                                         </i>
                                     </span>
                                 {% endif %}
+                            {% endfor %}
+                               
+                            {% set groups = user.getGroups() %}
+                                {% for group in groups %}
+                                {% for role in group.getEntityRoles() %}
+                                    {% if role.getWorkspace() == workspace %}
+                                        <span title="{{ group.getName() }}" class="label label-default" id="label-{{ role.getId () }}-{{ user.getId()}}">
+                                            {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                        </span>
+                                            
+                                    {% endif %}
+                                {% endfor %}
                             {% endfor %}
                         </td>
                     </tr>
@@ -203,15 +186,6 @@
 
             route += '?' + $.param(queryString);
             window.location.href = route;
-        });
-
-        $('#chk-all').on('click', function(event) {
-            if ($('#chk-all').is(':checked')) {
-                $('.chk-item').attr('checked', true);
-            }
-            else {
-                $('.chk-item').attr('checked', false);
-            }
         });
     </script>
 {% endblock %}

@@ -6,7 +6,7 @@
     'twitter_bootstrap_translated',
     {
     'proximity' : 1,
-    'routeName': 'claro_workspace_registered_group_list',
+    'routeName': 'claro_workspace_unregistered_group_list',
     'routeParams': {'workspace': workspaceId}
     }
     )
@@ -71,8 +71,12 @@
             macros.breadcrumbs([
                 {
                     'name': 'groups_list'|trans({}, 'platform'),
-                    'href': ''
+                    'href': path('claro_workspace_registered_group_list', {'workspace': workspace.getId()})
                 },
+                {
+                    'name': 'groups_registration_in_workspace'|trans({}, 'platform'),
+                    'href': ''
+                }
             ])
         }}
 
@@ -84,9 +88,33 @@
             </button>
         </div>
         <div class="btn-group">
-            <a href="{{ path('claro_workspace_unregistered_group_list', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle">
-                {{ 'add_groups'|trans({}, 'platform') }}
-            </a>
+            <div class="btn-group">
+                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    {{ 'roles'|trans({}, 'platform') }}
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" >
+                    {% for role in wsRoles %}
+                        <li>
+                        <input
+                        class="chk-role chk-item"
+                        type="checkbox"
+                        value="{{ role.getId() }}"
+                        data-name="{{ role.getTranslationKey()|trans({}, 'platform') }}"
+                        {% for toCheck in roles %}
+                            {% if toCheck.getId() == role.getId() %}
+                                checked
+                            {% endif %}
+                        {% endfor %}
+                        > {{ role.getTranslationKey()|trans({}, 'platform') }}
+                        </input>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <btn id="add-role-button" class="btn btn-default dropdown-toggle">
+                {{ 'add'|trans({}, 'platform') }}
+            </btn>
         </div>
         <br>
 
@@ -96,7 +124,6 @@
                 <tr>
                     <td></td>
                     <td>{{ 'name'|trans({}, 'platform') }}</td>
-                    <td>{{ 'role'|trans({}, 'platform') }}</td>
                 </tr>
             </thead>
             <tbody id="user-table-body">
@@ -104,19 +131,6 @@
                     <tr id="row-{{ group.id }}" class="row-group" data-group-id="{{ group.getId() }}">
                         <td> <input class="chk-grp" type="checkbox" value="{{ group.getId() }}"> </input></td>
                         <td>  {{ group.name }} </td>
-                        <td>
-                            {% for role in group.getEntityRoles() %}
-                                {% if role.getWorkspace() == workspace %}
-                                    <span class="label label-success" id="label-{{ role.getId () }}-{{ group.getId()}}">
-                                        {{ role.getTranslationKey()|trans({}, 'platform') }}
-                                        <i class="icon-remove-sign pointer-hand remove-role-button"
-                                            href="{{ path('claro_workspace_remove_role_from_group', {'workspace': workspace.getId(), 'group': group.getId(), 'role': role.getId() } ) }}"
-                                            >
-                                        </i>
-                                    </span>
-                                {% endif %}
-                            {% endfor %}
-                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -149,6 +163,42 @@
             });
         });
 
+        $('#add-role-button').on('click', function (event) {
+            var i = 0;
+            var queryString = {};
+            var array = [];
+            $('.chk-grp:checked').each(function (index, element) {
+                array[i] = element.value;
+                i++;
+            });
+            queryString.groupIds = array;
+
+            var i = 0;
+            var array = [];
+            $('.chk-role:checked').each(function (index, element) {
+                array[i] = element.value;
+                i++;
+            });
+            queryString.roleIds = array;
+
+            var route = Routing.generate('claro_workspace_add_roles_to_groups', {'workspace': {{ workspace.getId() }} });
+            route += '?' + $.param(queryString);
+
+            $.ajax({
+                url:route,
+                success: function() {
+                }
+            });
+        });
+
+        function addLabel(groupId, roleId, roleName) {
+            var td = $("#row-" + groupId)[0].children[2];
+            console.debug(td);
+            console.debug(roleName);
+            var html = Twig.render(roleGroupLabel, {'roleName': roleName, 'workspaceId': {{ workspace.getId() }}, 'groupId': groupId, 'roleId': roleId });
+            $(td).append(html);
+        }
+
         $('#search-button').click(function () {
             var search = document.getElementById('search-items-txt').value;
             var queryString = {};
@@ -161,9 +211,9 @@
             queryString.roleIds = array;
 
             if (search !== '') {
-                var route = Routing.generate('claro_workspace_registered_group_list_search', {'workspace': {{ workspace.getId }}, 'search': search });
+                var route = Routing.generate('claro_workspace_unregistered_group_list_search', {'workspace': {{ workspace.getId }}, 'search': search });
                 } else {
-                var route = Routing.generate('claro_workspace_registered_group_list', {'workspace': {{ workspace.getId }} });
+                var route = Routing.generate('claro_workspace_unregistered_group_list', {'workspace': {{ workspace.getId }} });
             }
 
             route += '?' + $.param(queryString);
