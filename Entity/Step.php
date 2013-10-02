@@ -21,7 +21,6 @@ class Step extends AbstractResource
      */
     private $stepOrder;
 
-
     /**
     * @ORM\ManyToOne(targetEntity="Step")
     */
@@ -81,16 +80,6 @@ class Step extends AbstractResource
     * @ORM\ManyToOne(targetEntity="StepWhere", inversedBy="steps")
     */
     protected $stepWhere;
-
-    /**
-    * @ORM\OneToMany(targetEntity="Step2ExcludedResource", mappedBy="step", cascade={"remove"})
-    */
-    protected $excludedResources;
-
-    /**
-    * @ORM\OneToMany(targetEntity="Step2ResourceNode", mappedBy="step", cascade={"remove"})
-    */
-    protected $resources;
 
     /**
      * Set expanded
@@ -240,7 +229,6 @@ class Step extends AbstractResource
         return $this->stepOrder;
     }
 
-   
     /**
      * Set resourceNode
      *
@@ -357,87 +345,9 @@ class Step extends AbstractResource
     }
 
     /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->excludedResources = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->resources = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-
-    /**
-     * Add excludedResources
-     *
-     * @param  \Innova\PathBundle\Entity\Step2ExcludedResource $excludedResources
-     * @return Step
-     */
-    public function addExcludedResource(\Innova\PathBundle\Entity\Step2ExcludedResource $excludedResources)
-    {
-        $this->excludedResources[] = $excludedResources;
-
-        return $this;
-    }
-
-    /**
-     * Remove excludedResources
-     *
-     * @param \Innova\PathBundle\Entity\Step2ExcludedResource $excludedResources
-     */
-    public function removeExcludedResource(\Innova\PathBundle\Entity\Step2ExcludedResource $excludedResources)
-    {
-        $this->excludedResources->removeElement($excludedResources);
-    }
-
-    /**
-     * Get excludedResources
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getExcludedResources()
-    {
-        return $this->excludedResources;
-    }
-
-    /**
-     * Add resources
-     *
-     * @param  \Innova\PathBundle\Entity\Step2ResourceNode $resources
-     * @return Step
-     */
-    public function addResource(\Innova\PathBundle\Entity\Step2ResourceNode $resources)
-    {
-        $this->resources[] = $resources;
-
-        return $this;
-    }
-
-    /**
-     * Remove resources
-     *
-     * @param \Innova\PathBundle\Entity\Step2ResourceNode $resources
-     */
-    public function removeResource(\Innova\PathBundle\Entity\Step2ResourceNode $resources)
-    {
-        $this->resources->removeElement($resources);
-    }
-
-    /**
-     * Get resources
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getResources()
-    {
-        return $this->resources;
-    }
-  
-
-
-    /**
      * Set parent
      *
-     * @param \Innova\PathBundle\Entity\Step $parent
+     * @param  \Innova\PathBundle\Entity\Step $parent
      * @return Step
      */
     public function setParent(\Innova\PathBundle\Entity\Step $parent = null)
@@ -450,10 +360,11 @@ class Step extends AbstractResource
     /**
      * Get parent
      *
-     * @return \Innova\PathBundle\Entity\Step 
+     * @return \Innova\PathBundle\Entity\Step
      */
     public function getParent()
     {
         return $this->parent;
     }
+
 }

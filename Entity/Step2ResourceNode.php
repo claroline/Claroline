@@ -22,7 +22,7 @@ class Step2ResourceNode
     private $id;
 
     /**
-    * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Step", inversedBy="resources")
+    * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Step")
     */
     private $step;
 
@@ -39,6 +39,20 @@ class Step2ResourceNode
     private $resourceNode;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="excluded", type="boolean")
+     */
+    private $excluded;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="resourceOrder", type="integer", nullable=true)
+     */
+    private $resourceOrder;
+
+    /**
      * Get id
      *
      * @return integer
@@ -47,13 +61,6 @@ class Step2ResourceNode
     {
         return $this->id;
     }
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="resourceOrder", type="integer")
-     */
-    private $resourceOrder;
 
     /**
      * Set step
@@ -145,5 +152,28 @@ class Step2ResourceNode
     public function getPropagated()
     {
         return $this->propagated;
+    }
+
+    /**
+     * Set excluded
+     *
+     * @param  boolean           $excluded
+     * @return Step2ResourceNode
+     */
+    public function setExcluded($excluded)
+    {
+        $this->excluded = $excluded;
+
+        return $this;
+    }
+
+    /**
+     * Get excluded
+     *
+     * @return boolean
+     */
+    public function getExcluded()
+    {
+        return $this->excluded;
     }
 }
