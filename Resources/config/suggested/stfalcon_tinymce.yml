@@ -9,16 +9,18 @@ stfalcon_tinymce:
     tinymce_buttons:
             ressourceLinker: # Id of the first button
                 title: 'Resource Linker'
-                image: 'asset[bundles/clarolinecore/images/resources/icons/res_folder.png]'
+                image: null
             fullscreenToggle: # Put in fullscreen in avanced mode
                 title : 'toggle'
-                image : 'http://claroline.net/favicon.ico'
+                image : null
     theme:
         simple:
+            #content_css: 'vendor/fortawesome/font-awesome/css/font-awesome.css'
             theme: 'modern'
             menubar: false
             toolbar1: 'bold italic underline | ressourceLinker | alignleft aligncenter alignright alignjustify | fullscreenToggle'
         medium:
+            #content_css: 'asset[vendor/fortawesome/font-awesome/css/font-awesome.css]'
             theme: 'modern'
             plugins:
                      - ' -ressourceLinker fullscreen, emoticons code autolink lists link image charmap print preview hr anchor pagebreak'
@@ -29,13 +31,14 @@ stfalcon_tinymce:
             toolbar2: 'alignleft aligncenter alignright alignjustify | emoticons lists link image charmap print preview hr anchor pagebreak '
             relative_urls : false
         advanced:
+            #content_css: '../../../../web/vendor/fortawesome/font-awesome/css/font-awesome.css'
             plugins:
                 - '-ressourceLinker -fullscreenToggle advlist autolink lists link image charmap print preview hr anchor pagebreak'
                 - 'searchreplace wordcount visualblocks visualchars code fullscreen'
                 - 'insertdatetime media nonbreaking save table contextmenu directionality'
                 - 'emoticons template paste textcolor'
             menubar: false
-            toolbar1: ' undo redo | styleselect | bold italic | ressourceLinker | fullscreenToggle advlist autolink lists link image charmap print preview hr anchor pagebreak '
+            toolbar1: ' undo redo | styleselect | bold italic | ressourceLinker fullscreenToggle | advlist autolink lists link image charmap print preview hr anchor pagebreak '
             toolbar2: "print preview media | forecolor backcolor emoticons | stfalcon | insertdatetime media nonbreaking save table contextmenu directionality"
             toolbar3: 'searchreplace wordcount visualblocks visualchars code'
             image_advtab: true

@@ -1,9 +1,13 @@
 
 function callback_tinymce_init() {
-    $('.mce-toolbar').each(function (a, b) {
-        if (a > 0) 
+    $('.mce-toolbar').each(function (index, b) {
+        if (index > 0) 
             b.setAttribute('style', 'display: none'); 
     });
+
+    $('div [aria-label="toggle"] button').html("<i class='icon-plus' style='font-family: FontAwesome'></i>");
+    $('div [aria-label="Resource Linker"] button').html("<i class='icon-file' style='font-family: FontAwesome'></i>");
+
 }
 function tinymce_button_ressourceLinker (ed) {
     ed.focus();
@@ -13,23 +17,10 @@ function tinymce_button_ressourceLinker (ed) {
 function tinymce_button_fullscreenToggle (ed) {
     ed.focus();
     tinyMCE.execCommand('mceFullScreen');
-    if( $('.mce-toolbar').last().css('display') === 'none')
-    {
-        $('.mce-toolbar').each(function (a, b) {
-            if (a > 0)
-            {
-                b.setAttribute('style', 'display: block') 
-            } 
+    var lastElementStyle = ($('.mce-toolbar').last().css('display') === 'none' ) ? 'display: block' : 'display: none' ;
+    $('.mce-toolbar').each(function (index) {
+        if (index > 0 )
+            $(this).attr('style', lastElementStyle);
         });
-    }
-    else
-    {
-        $('.mce-toolbar').each(function (a, b) {
-            if (a > 0)
-            {
-                b.setAttribute('style', 'display: none') 
-            } 
-        });   
-    }
 }
 
