@@ -138,7 +138,8 @@ class InteractionOpenController extends Controller
 
         return $this->render(
             'UJMExoBundle:Question:new.html.twig', array(
-            'formWithError' => $formWithError
+            'formWithError' => $formWithError,
+            'exoID'  => $exoID
             )
         );
     }
@@ -159,11 +160,12 @@ class InteractionOpenController extends Controller
             throw $this->createNotFoundException('Unable to find InteractionOpen entity.');
         }
 
-        $editForm   = $this->createForm(
+        $editForm = $this->createForm(
             new InteractionOpenType(
                 $this->container->get('security.context')->getToken()->getUser()
             ), $interOpen
         );
+
         $formHandler = new InteractionOpenHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('security.context')->getToken()->getUser()

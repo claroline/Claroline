@@ -41,8 +41,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use UJM\ExoBundle\Entity\InteractionGraphic;
 use UJM\ExoBundle\Form\InteractionGraphicType;
-use UJM\ExoBundle\Entity\Coords;
-use UJM\ExoBundle\Entity\ExerciseQuestion;
+use UJM\ExoBundle\Form\InteractionGraphicHandler;
 
 /**
  * InteractionGraphic controller.
@@ -96,7 +95,7 @@ class InteractionGraphicController extends Controller
      * Displays a form to create a new InteractionGraphic entity.
      *
      */
-    public function newAction()
+    /*public function newAction()
     {
         $entity = new InteractionGraphic();
         $form = $this->createForm(new InteractionGraphicType(), $entity);
@@ -107,7 +106,7 @@ class InteractionGraphicController extends Controller
             'form' => $form->createView()
             )
         );
-    }
+    }*/
 
     /**
      * Creates a new InteractionGraphic entity.
@@ -115,45 +114,18 @@ class InteractionGraphicController extends Controller
      */
     public function createAction()
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-
         $interGraph = new InteractionGraphic();
-        $request = $this->getRequest();
+        $user = $this->container->get('security.context')->getToken()->getUser();
         $form = $this->createForm(new InteractionGraphicType($user), $interGraph);
-        $form->handleRequest($request);
 
         $exoID = $this->container->get('request')->request->get('exercise');
 
-        $interGraph->getInteraction()->getQuestion()->setDateCreate(new \Datetime()); // Set Creation Date to today
-        $interGraph->getInteraction()->getQuestion()->setUser($user); // add the user to the question
-        $interGraph->getInteraction()->setType('InteractionGraphic'); // set the type of the question
+        $formHandler = new InteractionGraphicHandler(
+            $form, $this->get('request'), $this->getDoctrine()->getManager(),
+            $user, $exoID
+        );
 
-        $width = $this->get('request')->get('imgwidth'); // Get the width of the image
-        $height = $this->get('request')->get('imgheight'); // Get the height of the image
-
-        $interGraph->setHeight($height);
-        $interGraph->setWidth($width);
-
-        $coords = $this->get('request')->get('coordsZone'); // Get the answer zones
-
-        $coord = preg_split('[,]', $coords); // Split all informations of one answer zones into a cell
-
-        $lengthCoord = count($coord) - 1; // Number of answer zones
-
-        $allCoords = $this->persitNewCoords($coord, $interGraph, $lengthCoord);
-
-        if ($form->isValid()) {
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($interGraph);
-            $em->persist($interGraph->getInteraction()->getQuestion());
-            $em->persist($interGraph->getInteraction());
-
-            for ($i = 0; $i < $lengthCoord; $i++) {
-                $em->persist($allCoords[$i]);
-            }
-            $em->flush();
-
+         if ($formHandler->processAdd()) {
             $categoryToFind = $interGraph->getInteraction()->getQuestion()->getCategory();
             $titleToFind = $interGraph->getInteraction()->getQuestion()->getTitle();
 
@@ -181,13 +153,23 @@ class InteractionGraphicController extends Controller
                     )
                 );
             }
-        }
+         }
+
+         $formWithError = $this->render(
+            'UJMExoBundle:InteractionGraphic:new.html.twig', array(
+            'entity' => $interGraph,
+            'form'   => $form->createView(),
+            'error'  => true,
+            'exoID'  => $exoID
+            )
+        );
+
+        $formWithError = substr($formWithError, strrpos($formWithError, 'GMT') + 3);
 
         return $this->render(
-            'UJMExoBundle:InteractionGraphic:new.html.twig', array(
-            'interGraph' => $interGraph,
-            'form' => $form->createView(),
-            'exoID'  => $exoID,
+            'UJMExoBundle:Question:new.html.twig', array(
+            'formWithError' => $formWithError,
+            'exoID'  => $exoID
             )
         );
     }
@@ -231,8 +213,6 @@ class InteractionGraphicController extends Controller
     {
         $exoID = $this->container->get('request')->request->get('exercise');
 
-        $originalHints = array();
-
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
@@ -247,69 +227,12 @@ class InteractionGraphicController extends Controller
             ), $entity
         );
 
-        foreach ($entity->getInteraction()->getHints() as $hint) {
-            $originalHints[] = $hint;
-        }
+        $formHandler = new InteractionGraphicHandler(
+            $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
+            $this->container->get('security.context')->getToken()->getUser()
+        );
 
-        $deleteForm = $this->createDeleteForm($id);
-
-        $request = $this->getRequest();
-
-        $editForm->handleRequest($request);
-
-        $width = $this->get('request')->get('imgwidth'); // Get the width of the image
-        $height = $this->get('request')->get('imgheight'); // Get the height of the image
-
-        $entity->setHeight($height);
-        $entity->setWidth($width);
-
-        $coordsToDel = $em->getRepository('UJMExoBundle:Coords')->findBy(array('interactionGraphic' => $entity->getId()));
-
-        $coords = $this->get('request')->get('coordsZone'); // Get the answer zones
-
-        $coord = preg_split('[,]', $coords); // Split all informations of one answer zones into a cell
-
-        $lengthCoord = count($coord) - 1; // Number of answer zones
-
-        $allCoords = $this->persitNewCoords($coord, $entity, $lengthCoord);
-
-        if ($editForm->isValid()) {
-
-            foreach ($entity->getInteraction()->getHints() as $hint) {
-                foreach ($originalHints as $key => $toDel) {
-                    if ($toDel->getId() == $hint->getId()) {
-                        unset($originalHints[$key]);
-                    }
-                }
-            }
-
-            // remove the relationship between the hint and the interactionGraphic
-            foreach ($originalHints as $hint) {
-                // remove the Hint from the interactionGraphic
-                $entity->getInteraction()->getHints()->removeElement($hint);
-
-                // if you wanted to delete the Hint entirely, you can also do that
-                $em->remove($hint);
-            }
-
-            //Persit all the  hints of entity Interaction
-            foreach ($entity->getInteraction()->getHints() as $hint) {
-                $entity->getInteraction()->addHint($hint);
-                $em->persist($hint);
-            }
-
-            foreach ($coordsToDel as $ctd) {
-                // if you wanted to delete the Hint entirely, you can also do that
-                $em->remove($ctd);
-            }
-
-            for ($i = 0; $i < $lengthCoord; $i++) {
-                $em->persist($allCoords[$i]);
-            }
-
-            $em->persist($entity);
-            $em->flush();
-
+        if ($formHandler->processUpdate($entity)) {
             if ($exoID == -1) {
 
                 return $this->redirect($this->generateUrl('ujm_question_index'));
@@ -326,11 +249,10 @@ class InteractionGraphicController extends Controller
             }
         }
 
-        return $this->render(
-            'UJMExoBundle:InteractionGraphic:edit.html.twig', array(
-            'entity' => $entity,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+        return $this->forward(
+            'UJMExoBundle:Question:edit', array(
+                'id' => $entity->getInteraction()->getQuestion()->getId(),
+                'form' => $editForm
             )
         );
     }
@@ -438,96 +360,5 @@ class InteractionGraphicController extends Controller
         return $this->createFormBuilder(array('id' => $id))
             ->add('id', 'hidden')
             ->getForm();
-    }
-
-    /**
-     * Persist coordonates of the answer zones into the database.
-     *
-     */
-    private function persitNewCoords($coord, $interGraph, $lengthCoord)
-    {
-        $result = array();
-        for ($i = 0; $i < $lengthCoord; $i++) {
-
-            $inter = preg_split('[;]', $coord[$i]); // Divide the src of the answer zone and the other informations
-
-            $before = array("-","~");
-            $after = array(",",",");
-
-            $data = str_replace($before, $after, $inter[1]); // replace separation punctuation of the informations ...
-
-            list(${'value'.$i}, ${'point'.$i}, ${'size'.$i}) = explode(",", $data); //... in order to split informations
-
-            ${'point'.$i} = str_replace('/', '.', ${'point'.$i}); // set the score to a correct value
-
-            // And persist it into the Database
-            ${'url'.$i} = $inter[0];
-
-            ${'value'.$i} = str_replace("_", ",", ${'value'.$i});
-            ${'url'.$i} = substr(${'url'.$i}, strrpos(${'url'.$i}, '/bundles'));
-
-            ${'shape'.$i} = $this->getShape(${'url'.$i});
-            ${'color'.$i} = $this->getColor(${'url'.$i});
-
-            ${'co'.$i} = new Coords();
-
-            ${'co'.$i}->setValue(${'value'.$i});
-            ${'co'.$i}->setShape(${'shape'.$i});
-            ${'co'.$i}->setColor(${'color'.$i});
-            ${'co'.$i}->setScoreCoords(${'point'.$i});
-            ${'co'.$i}->setInteractionGraphic($interGraph);
-            ${'co'.$i}->setSize(${'size'.$i});
-
-            $result[$i] = ${'co'.$i};
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get the shape of the answer zone
-     *
-     */
-    private function getShape($url)
-    {
-        // Recover the shape of an answer zone thanks to its src
-        $temp = strrpos($url, 'graphic/') + 8;
-        $chain = substr($url, $temp, 1);
-
-        if ($chain == "r") {
-            return "rectangle";
-        } else if ($chain == "c") {
-            return "circle";
-        }
-    }
-
-    /**
-     * Get the color of the answer zone
-     *
-     */
-    private function getColor($url)
-    {
-        // Recover the color of an answer zone thanks to its src
-        $temp = strrpos($url, '.') - 1;
-        $chain = substr($url, $temp, 1);
-
-        switch ($chain) {
-            case "w" :
-                return "white";
-            case "g" :
-                return "green";
-            case "p" :
-                return "purple";
-            case "b" :
-                return "blue";
-            case "r" :
-                return "red";
-            case "o" :
-                return "orange";
-            case "y" :
-                return "yellow";
-            default :
-                return "white";
-        }
     }
 }

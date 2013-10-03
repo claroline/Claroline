@@ -100,7 +100,7 @@
                         {% set numb = coords[i].value|split(',') %}
                         {% set respcoo = rep[i]|split('-') %}
 
-                            <img src="/Claroline/web/bundles/ujmexo/images/graphic/circlew.png" alt="RightAnswer{{i}}" id="1ra{{i}}"
+                            <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" alt="RightAnswer{{i}}" id="1ra{{i}}"
                                 style="z-index: 2;"/>
                             <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{i}}" id="1cursor{{i}}"
                                style="z-index: 7;"/>
@@ -137,5 +137,5 @@
     </div>
     <input type="hidden" id="info" name="info" value="{{i}}~{{allInfo}}"/>
 
-    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicOverview.js') }}"></script>
 {% endblock %}

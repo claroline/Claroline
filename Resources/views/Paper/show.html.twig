@@ -222,7 +222,7 @@
 
                     <div class="panel panel-default">
                         <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
-                        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicOverview.js') }}"></script>
+                        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicOverview.js') }}"></script>
 
                         <div id="Answer" style="position: relative;">
                             <img src="{{asset (interG.document.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
@@ -373,7 +373,7 @@
 
                                 <input type="hidden" value="{{ responses[i].mark }}" id="currentOpenMark_{{ responses[i].id }}" />
                                 <a id="open_mark_{{ responses[i].id }}"
-                                    accesskey=""onmouseover="body.style.cursor = 'pointer';" onmouseout="body.style.cursor = 'default';"
+                                    onmouseover="body.style.cursor = 'pointer';" onmouseout="body.style.cursor = 'default';"
                                     onClick="openMark('{{ url }}');"
                                 >{{ 'mark this question' | trans }}</a>
                             {% endif %}

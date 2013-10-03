@@ -116,7 +116,10 @@
         <h3 class="panel-title">{{ 'hints' | trans }}</h3>
     </div>
     <div class="panel-body">
+        <div id="hintError"></div>
+        <div id="tableHint"></div>
         {{ form_widget(form.interaction.hints) }}
+        {{ form_errors(form.interaction.hints) }}
     </div>
 </div>
 

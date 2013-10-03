@@ -93,8 +93,9 @@ function position(shape, color, i, prefix, value, size, points) {
     var y = value.substr(value.indexOf(',') + 1);
 
     $('#img' + i).css({
-        "left" : String(parseInt(x) - (size / 2)) + 'px',
-        "top"  : String(parseInt(y) - (size / 2)) + 'px'
+        "position" : "absolute",
+        "left" : x + 'px',
+        "top"  : y + 'px'
     });
 
     // Set the id of the right answer zone already placed

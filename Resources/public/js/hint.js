@@ -1,169 +1,142 @@
-$('.form-collection-add').each(function () {
-    $(this).hide();
-});
+var containerH = $('div#*[id$="_interaction_hints"]'); // Div which contain the dataprototype
+var tableHints = $('#tableHint'); // div which contain the hints array
+var index; // number of hints
 
-//css hint
-function hintCSS() {
-    //"use strict";
-    //creer une ligne
-    $("*[id$='_interaction_hints']").children('div').each(function (index) {
-            $('#newTable2').append('<tr class="ligne_choice2" >  </tr>');
-            $('#newTable2 .ligne_choice2:last').append($(this));
+function newHint(label, penalty, addHint, deleteHint) {
+
+    $('.panel-body').find('a:contains("Add")').remove();
+
+    var begin = true;
+
+    index = 0;
+
+    // create the button to add a hint
+    var add = $('<a href="#" id="add_hint" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;'+addHint+'</a>');
+
+    // Add the button after the table
+    tableHints.append(add);
+
+    // When click, add a new hint in the table
+    add.click(function (e) {
+        if (begin == true) {
+            tableHints.append('<table id="newTable2" class="table table-striped table-bordered table-condensed" style="width:500px;"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+label+'</th><th class="classic">'+penalty+'</th><th class="classic">-----</th></tr></thead><tbody></tbody></table>');
+            begin = false;
         }
-    );
+        $('#newTable2').find('tbody').append('<tr></tr>');
+        addHints(containerH, deleteHint);
+        e.preventDefault(); // prevent add # in the url
+        return false;
+    });
+}
 
-    //deplacer tous les elementts du hint ds une ligne
-    $('#newTable2 .ligne_choice2:last').append('<td class="colonne_choice2 classic" >  </td>');
-    $('#newTable2 .colonne_choice2:last').append($('#newTable2 .ligne_choice2:last').children('div').children('label').first());
-    $('#newTable2 .ligne_choice2:last').children('div').children('div').children('div').each(function () {
-            $('#newTable2 .ligne_choice2:last').append('<td class="colonne_choice2 classic" >  </td>');
-            $('#newTable2 .colonne_choice2:last').append($(this));
-        }
-    );
+// QCM Edition
+function newHintEdit(label, penalty, addHint, deleteHint) {
 
+    // create the button to add a hint
+    var add = $('<a href="#" id="add_hint" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;'+addHint+'</a><br/><br/>');
 
-    $('#newTable2 .ligne_choice2:last').find('div').first().remove();
+    // Add the button after the table
+    tableHints.append(add);
 
-    // css th
-    $('#newTable2 th').css({
-            'background-color': 'lightsteelblue'
-        }
-    );
+    tableHints.append('<table id="newTable2" class="table table-striped table-bordered table-condensed" style="width:500px;"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+label+'</th><th class="classic">'+penalty+'</th><th class="classic">-----</th></tr></thead><tbody></tbody></table>');
 
+    // When click, add a new hint in the table
+    add.click(function (e) {
+        $('#newTable2').find('tbody').append('<tr></tr>');
+        addHints(containerH, deleteHint);
+        e.preventDefault(); // prevent add # in the url
+        return false;
+    });
 
-    //ajout de la derniere colonne pr l'ajout et la supression
-    $('#newTable2 .ligne_choice2:last').contents('td:last').after('<td class="classic"><a href="#" id="delete_choice2">supprimer</a></td>');
+    // Get the form field to fill rows of the hints' table
+    $('.form-collection-element').each(function () {
 
+        // Add a row to the table
+        $('#newTable2').find('tbody').append('<tr></tr>');
 
-    // clique boutons supprimer lignes du tableau
-    $('#delete_choice2').live('click', function () {
-        $(this).parents('tr.ligne_choice2:first').remove();
-        //changer l'index de la ligne
-        var i2 = 0;
-        $('#newTable2 .ligne_choice2').each(function (index) {
-            $(this).find('label:first').text(i2);
-            i2 = i2 + 1;
+         $(this).find('.row').each(function () {
+
+            // Add the field of type input
+            if ($(this).find('input').length) {
+                $('#newTable2').find('tr:last').append('<td class="classic"></td>');
+                $('#newTable2').find('td:last').append($(this).find('input'));
+            }
+
+            // Add the field of type textarea
+            if ($(this).find('textarea').length) {
+                $('#newTable2').find('tr:last').append('<td class="classic"></td>');
+                $('#newTable2').find('td:last').append($(this).find('textarea'));
+            }
+
+            // Add the form errors
+            $('#hintError').append($(this).find('span'));
         });
-        if ($(this).attr('href') === '#') {
-            return false;
+
+        // Add the delete button
+        $('#newTable2').find('tr:last').append('<td class="classic"></td>');
+        addDelete($('#newTable2').find('td:last'), deleteHint);
+    });
+
+    // Remove the useless fields form
+    containerH.remove();
+    tableHints.next().remove();
+
+    // Get the number of hints
+    index = $('#newTable2').find('tr:not(:first)').length;
+}
+
+// Add a hint
+function addHints(container, deleteHint) {
+     // change the "name" by the index and delete the symfony delete form button
+    var contain = $(container.attr('data-prototype').replace(/__name__/g, index)
+        .replace('<a class="btn btn-danger remove" href="#">Delete</a>', '')
+    );
+
+    // Add tne button to delete a hint
+    addDelete(contain, deleteHint);
+
+    // Add the modified dataprototype to the page
+    container.append(contain);
+
+    // Get the form field to fill rows of the hints' table
+    container.find('.row').each(function () {
+        if ($(this).find('input').length) {
+            $('#newTable2').find('tr:last').append('<td class="classic"></td>');
+            $('#newTable2').find('td:last').append($(this).find('input'));
+        }
+
+        // Add the field of type textarea
+        if ($(this).find('textarea').length) {
+            $('#newTable2').find('tr:last').append('<td class="classic"></td>');
+            $('#newTable2').find('td:last').append($(this).find('textarea'));
         }
     });
 
-    //css td
-    $('#newTable2 tr').contents('td').css({'border': '1px solid #aaaaaa'});
+    // Add the delete button
+    $('#newTable2').find('tr:last').append('<td class="classic"></td>');
+    $('#newTable2').find('td:last').append(container.find('a:contains("Supprimer")'));
+
+    // Remove the useless fileds form
+    container.remove();
+    tableHints.next().remove();
+
+    // Increase number of hints
+    index++;
 }
 
-//css hint
-function hintCSSEdit() {
-    //"use strict";
-    $("*[id$='_interaction_hints']").after('<table style="border: 1px solid black;" id="newTable2"><tr> <th class="classic">Num indice</th> <th class="classic">Indice</th> <th class="classic">Pénalité</th> <th class="classic">------</th> </tr></table>');
+// Delete a hint
+function addDelete(tr, deleteHint) {
 
-    //creer une ligne
-    $("*[id$='_interaction_hints']").children().first().children('div').each(function (index) {
-            $('#newTable2').append('<tr class="ligne_choice2" >  </tr>');
-            $('#newTable2 .ligne_choice2:last').append($(this));
-        }
-    );
+    // Create the button to delete a hint
+    var delLink = $('<a href="#" class="btn btn-danger">'+deleteHint+'</a>');
 
-    //deplacer tous les elements du hint ds une ligne
+    // Add the button to the row
+    tr.append(delLink);
 
-    $('#newTable2 .ligne_choice2').each(function (index) {
-            $(this).append('<td class="colonne_choice2" >  </td>');
-            $(this).children('td').first().append($(this).children('div').children('label').first());
-        }
-    );
-
-    $('#newTable2 .ligne_choice2').each(function (index) {
-        var row = $(this);
-        row.children('div').children('div').children('div').each(function (index) {
-                row.append('<td class="colonne_choice2" >  </td>');
-                row.children('td').last().append($(this));
-            }
-        );
-    }
-    );
-
-
-    $('#newTable2 .ligne_choice2').each(function (index) {
-        $(this).find('div').first().remove();
-    }
-    );
-
-
-    // css th
-    $('#newTable2 th').css({
-            'background-color': 'lightsteelblue'
-        }
-    );
-
-    //ajout de la derniere colonne pr l'ajout et la supression
-    $('#newTable2 .ligne_choice2').each(function (index) {
-        $(this).contents('td:last').after('<td><a href="#" id="delete_choice2">supprimer</a> </td> ');
-    }
-    );
-
-    // clique boutons supprimer lignes du tableau
-    $('#delete_choice2').live('click', function () {
-        $(this).parents('tr.ligne_choice2:first').remove();
-        //changer l'index de la ligne
-        var i2 = 0;
-        $('#newTable2 .ligne_choice2').each(function (index) {
-            $(this).find('label:first').text(i2);
-            i2 = i2 + 1;
-        });
-        if ($(this).attr('href') === '#') {
-            return false;
-        }
-    }
-    );
-
-    //css td
-    $('#newTable2 tr').contents('td').css({'border': '1px solid #aaaaaa'});
-}
-
-
-function addFormHintEdit(add_h, source_image_add) {
-    //"use strict";
-    $("*[id$='_interaction_hints']").before('<a class="btn btn-primary" id="add_hint"><i class="icon-plus"></i>&nbsp;' + add_h + '</a>');
-    $('#add_hint').click(function () {
-        addHint();
-
-        if ($(this).attr('href') === '#') {
-            return false;
-        }
-    }
-    );
-}
-
-function addFormHint(add_h, hint_number, hint, Penalty, source_image_add) {
-    //"use strict";
-    $("*[id$='_interaction_hints']").before('<a class="btn btn-primary" id="add_hint"><i class="icon-plus"></i>&nbsp;' + add_h + '</a>');
-    $('#add_hint').click(function () {
-        addHint(hint_number, hint, Penalty);
-        if ($(this).attr('href') === '#') {
-            return false;
-        }
-    }
-    );
-}
-
-function addHint(hint_number, hint, Penalty) {
-    //"use strict";
-
-    var $container = $("*[id$='_interaction_hints']");
-    if ($('#newTable2').length) {
-        index2 = $('#newTable2 .ligne_choice2').length;
-    } else {
-        index2 = 0;
-        if(typeof hint_number != 'undefined') {
-            $("*[id$='_interaction_hints']").after('<table style="border: 1px solid black;" id="newTable2"><tr> <th class="classic">'
-                + hint_number + '</th> <th class="classic">' + hint + '</th> <th class="classic">' + Penalty
-                + '</th> <th class="classic">------</th> </tr></table>');
-        }
-    }
-
-    $container.append(
-        $($container.attr('data-prototype').replace(/__name__/g, index2))
-    );
-    hintCSS();
+    // When click, delete the matching hint's row in the table
+    delLink.click(function(e) {
+        $(this).parent('td').parent('tr').remove();
+        e.preventDefault();
+        return false;
+    });
 }

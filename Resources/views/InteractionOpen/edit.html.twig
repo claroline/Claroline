@@ -127,8 +127,9 @@
 $(document).ready(function() {
     linkCategory('{{ path('ujm_category_new_pop') }}');
     insertStyle();
-    hintCSSEdit();
-    addFormHintEdit('{{ 'add hint' | trans }}',  '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
+    newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
+    //hintCSSEdit();
+    //addFormHintEdit('{{ 'add hint' | trans }}',  '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
     editionAv();
 });
 </script>

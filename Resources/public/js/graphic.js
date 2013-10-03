@@ -126,11 +126,18 @@ $(function () {
                 // Create a new image
                 var img = new Image();
 
+                imgx = parseInt(stoppos.left);
+                imgx -= $('#Answer').position().left; // $('#Answer').prop('offsetLeft');
+
+                // Position y answer zone
+                imgy = parseInt(stoppos.top);
+                imgy -= $('#Answer').position().top;
+
                 // With the position of the dragged image
                 $(img).css({
                     "position" : "absolute",
-                    "left" : String(stoppos.left) + 'px',
-                    "top"  : String(stoppos.top) + 'px'
+                    "left" : String(imgx) + 'px',
+                    "top"  : String(imgy) + 'px'
                 });
 
                 // Give it id corresonding of numbers of previous answer
@@ -191,18 +198,12 @@ function CheckScore(message) {
 // Submit form without an empty field
 function Check(noTitle, noQuestion, noImg, noAnswerZone, questiontitle, invite) {
 
-    var imgOk = false; // Image is upload
-    var questionOk = false; // Question is asked
-    var titleOk = false; // Question has a title
-    var zoneOk = false; // Answer zones are defined
     var empty = false; // Answer zone aren't defined
 
     for (j = 0 ; j < grade ; j++) {
 
-        var choice = $('#img' + j);
-
         // If at least one answer zone exist
-        if (choice.length > 0) {
+        if ($('#img' + j).length > 0) {
             empty = true;
             break;
         }
@@ -213,60 +214,52 @@ function Check(noTitle, noQuestion, noImg, noAnswerZone, questiontitle, invite) 
         alert(noTitle);
         return false;
     } else {
-        titleOk = true;
-    }
 
-    // No question asked
-    if (tinyMCE.get(invite).getContent() == '' && titleOk == true) {
-        alert(noQuestion);
-        return false;
-    } else {
-        questionOk = true;
-    }
+        // No question asked
+        if (tinyMCE.get(invite).getContent() == '') {
+            alert(noQuestion);
+            return false;
+        } else {
 
-    // No picture load
-    if ($('#AnswerImage').attr('src').indexOf('users_document') == -1 && titleOk == true && questionOk == true) {
-        alert(noImg);
-        return false;
-    } else {
-        imgOk = true;
-    }
+            // No picture load
+            if ($('#AnswerImage').length == 0) {
+                alert(noImg);
+                return false;
+            } else {
 
-    // No answer zone
-    if (empty == false && imgOk == true && titleOk == true && questionOk == true) {
-        alert(noAnswerZone);
-        return false;
-    } else {
-        zoneOk = true;
-    }
+                // No answer zone
+                if (empty == false) {
+                    alert(noAnswerZone);
+                    return false;
+                } else {
 
-    // Submit if required fields not empty
-    if (imgOk == true && zoneOk == true && titleOk == true && questionOk == true) {
-        $('#imgwidth').val($('#AnswerImage').width()); // Pass width of the image to the controller
-        $('#imgheight').val($('#AnswerImage').height()); // Pass height of the image to the controller
+                    // Submit if required fields not empty
+                    $('#imgwidth').val($('#AnswerImage').width()); // Pass width of the image to the controller
+                    $('#imgheight').val($('#AnswerImage').height()); // Pass height of the image to the controller
 
-        for (j = 0 ; j < grade ; j++) {
+                    for (j = 0 ; j < grade ; j++) {
 
-            var imgN = 'img' + j;
-            var selectedZone = $('#' + imgN); // An answer zone
+                        var imgN = 'img' + j;
+                        var selectedZone = $('#' + imgN); // An answer zone
 
-            if (selectedZone.length) { // If at least one answer zone is defined
+                        if (selectedZone.length) { // If at least one answer zone is defined
 
-                imgx = parseInt(selectedZone.css("left").substring(0, selectedZone.css("left").indexOf('p')));
-                imgx -= parseInt($('div.ui-draggable').css('left').substring(0, $('div.ui-draggable').css('left').indexOf('p'))); // Position x answer zone
+                            // Position x answer zone
+                            imgx = parseInt(selectedZone.css("left").substring(0, selectedZone.css("left").indexOf('p')));
 
-                imgy = parseInt(selectedZone.css("top").substring(0, selectedZone.css("top").indexOf('p')));
-                imgy -= parseInt($('div.ui-draggable').css('top').substring(0, $('div.ui-draggable').css('top').indexOf('p'))); // Position y answer zone
+                            // Position y answer zone
+                            imgy = parseInt(selectedZone.css("top").substring(0, selectedZone.css("top").indexOf('p')));
 
-                // Concatenate informations of the answer zones
-                var val = selectedZone.attr("src") + ';' + imgx + '_' + imgy + '-' + point[imgN] + '~' + selectedZone.prop("width");
+                            // Concatenate informations of the answer zones
+                            var val = selectedZone.attr("src") + ';' + imgx + '_' + imgy + '-' + point[imgN] + '~' + selectedZone.prop("width");
 
-                // And send it to the controller
-                $('#coordsZone').val($('#coordsZone').val() + val + ',');
+                            // And send it to the controller
+                            $('#coordsZone').val($('#coordsZone').val() + val + ',');
+                        }
+                    }
+                }
             }
         }
-        // Then submit the form
-        $('#InterGraphForm').submit();
     }
 }
 

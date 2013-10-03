@@ -1,79 +1,30 @@
-var container = $('div#ujm_exobundle_interactionqcmtype_choices');
-var tableChoices = $('#tableChoice');
-var index;
+var container = $('div#ujm_exobundle_interactionqcmtype_choices'); // Div which contain the dataprototype
+var tableChoices = $('#tableChoice'); // div which contain the choices array
+var index; // number of choices
 
-function creationQCM(expectedAnswer, response, point, comment, positionForce) {
+// QCM Creation
+function creationQCM(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice) {
 
-    tableChoices.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="classic">'+point+'</th><th class="classic">'+comment+'</th><th class="classic">'+positionForce+'</th><th class="classic">-----</th></tr></thead><tbody><tr></tr></tbody></table>');
+    tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice);
 
-    var add = $('<a href="#" id="add_choice" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;Ajouter un choix</a>');
-
-    tableChoices.append(add);
-
-    add.click(function (e) {
-        $('#newTable').find('tbody').append('<tr></tr>');
-        addChoice(container);
-        e.preventDefault();
-        return false;
-    });
-
+    // Number of choice initially
     index = container.find(':input').length;
 
+    // If no choice exist, add two choices by default
     if (index == 0) {
-        addChoice(container);
+        addChoice(container, deleteChoice);
         $('#newTable').find('tbody').append('<tr></tr>');
-        addChoice(container);
+        addChoice(container, deleteChoice);
+    // If choice already exist, add button to delete it
     } else {
         tableChoices.children('tr').each(function() {
-        addDelete($(this));
+            addDelete($(this), deleteChoice);
         });
     }
 
-    $('#ujm_exobundle_interactionqcmtype_weightResponse').change(function () {
-        if ($(this).is(':checked')) {
-            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').prop('disabled', true);
-            $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').prop('disabled', true);
+    whichChange();
 
-            $("*[id$='_weight']").each(function() {
-                $(this).prop('disabled', false);
-            });
-        } else {
-            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').prop('disabled', false);
-            $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').prop('disabled', false);
-
-            $("*[id$='_weight']").each(function() {
-                $(this).prop('disabled', true);
-            });
-        }
-    });
-
-    $('#ujm_exobundle_interactionqcmtype_shuffle').change(function () {
-        if ($(this).is(':checked')) {
-            tableChoices.find('th').eq(4).show();
-            $("*[id$='_positionForce']").each(function () {
-                $(this).parent('td').show();
-            });
-        } else {
-            tableChoices.find('th').eq(4).hide();
-            $("*[id$='_positionForce']").each(function () {
-               $(this).parent('td').hide();
-           });
-        }
-    });
-
-    $('#ujm_exobundle_interactionqcmtype_typeQCM').change(function () {
-        var type = $('#ujm_exobundle_interactionqcmtype_typeQCM option:selected').val();
-
-        $("*[id$='_rightResponse']").each(function () {
-            if (type == 1) {
-                $(this).prop('type', 'checkbox');
-            } else {
-                $(this).prop('type', 'radio');
-                $(this).attr('checked', false);
-            }
-        });
-    });
-
+    // when select a radio box, deselect the other because can only have one selected
     $(':radio').live('click', function () {
        if ($(this).is(':checked')) {
            $('#newTable').find(('tr:not(:first)')).each(function () {
@@ -84,171 +35,114 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce) {
        }
     });
 
+    // Make the choices' table sortable with jquery ui plugin
     $('tbody').sortable();
 }
 
-// -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_ //
+// QCM Edition
+function creationQCMEdit(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice) {
 
-function creationQCMEdit(expectedAnswer, response, point, comment, positionForce) {
+    tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice);
 
-    tableChoices.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="classic">'+point+'</th><th class="classic">'+comment+'</th><th class="classic">'+positionForce+'</th><th class="classic">-----</th></tr></thead><tbody></tbody></table>');
-
-    var add = $('<a href="#" id="add_choice" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;Ajouter un choix</a>');
-
-    tableChoices.append(add);
-
+    // Get the form field to fill rows of the choices' table
     container.children().first().children('div').each(function () {
 
+        // Add a row to the table
         $('#newTable').find('tbody').append('<tr></tr>');
 
          $(this).find('.row').each(function () {
 
-            if ($(this).find('input').length) {
-                if ($(this).find('input').attr('id').indexOf('ordre') == -1) {
-                    $('#newTable').find('tr:last').append('<td class="classic"></td>');
-                    $('#newTable').find('td:last').append($(this).find('input'));
-                } else {
-                    $('#newTable').find('tr:last').append('<td class="classic" style="display:none;"></td>');
-                    $('#newTable').find('td:last').append($(this).find('input'));
-                }
-            }
+            fillChoicesArray($(this));
 
-            if ($(this).find('textarea').length) {
-                $('#newTable').find('tr:last').append('<td class="classic"></td>');
-                $('#newTable').find('td:last').append($(this).find('textarea'));
-            }
-            
+            // Add the form errors
             $('#choiceError').append($(this).find('span'));
         });
 
+        // Add the delete button
         $('#newTable').find('tr:last').append('<td class="classic"></td>');
-        addDelete($('#newTable').find('td:last'));
+        addDelete($('#newTable').find('td:last'), deleteChoice);
     });
 
+    // Remove the useless fields form
     container.remove();
     tableChoices.next().remove();
 
+    // Get the number of choices
     index = $('#newTable').find('tr:not(:first)').length;
 
-    add.click(function (e) {
-        $('#newTable').find('tbody').append('<tr></tr>');
-        addChoice(container);
-        e.preventDefault();
-        return false;
-    });
+    whichChecked();
+    whichChange();
 
-    if ($('#ujm_exobundle_interactionqcmtype_shuffle').is(':checked')) {
-        tableChoices.find('th').eq(4).show();
-        $("*[id$='_positionForce']").each(function () {
-            $(this).parent('td').show();
-        });
-    } else {
-        tableChoices.find('th').eq(4).hide();
-        $("*[id$='_positionForce']").each(function () {
-           $(this).parent('td').hide();
-       });
-    }
-
-    if ($('#ujm_exobundle_interactionqcmtype_weightResponse').is(':checked')) {
-        $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').prop('disabled', true);
-        $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').prop('disabled', true);
-
-        $("*[id$='_weight']").each(function() {
-            $(this).prop('disabled', false);
-        });
-    } else {
-        $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').prop('disabled', false);
-        $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').prop('disabled', false);
-
-        $("*[id$='_weight']").each(function() {
-            $(this).prop('disabled', true);
-        });
-    }
-
-    var type = $('#ujm_exobundle_interactionqcmtype_typeQCM option:selected').val();
-
-    $("*[id$='_rightResponse']").each(function () {
-        if (type == 1) {
-            $(this).prop('type', 'checkbox');
-        } else {
-            $(this).prop('type', 'radio');
-        }
-    });
-
-    $('#ujm_exobundle_interactionqcmtype_weightResponse').change(function () {
-        if ($(this).is(':checked')) {
-            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').prop('disabled', true);
-            $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').prop('disabled', true);
-
-            $("*[id$='_weight']").each(function() {
-                $(this).prop('disabled', false);
-            });
-        } else {
-            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').prop('disabled', false);
-            $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').prop('disabled', false);
-
-            $("*[id$='_weight']").each(function() {
-                $(this).prop('disabled', true);
-            });
-        }
-    });
-
-    $('#ujm_exobundle_interactionqcmtype_shuffle').change(function () {
-        if ($(this).is(':checked')) {
-            tableChoices.find('th').eq(4).show();
-            $("*[id$='_positionForce']").each(function () {
-                $(this).parent('td').show();
-            });
-        } else {
-            tableChoices.find('th').eq(4).hide();
-            $("*[id$='_positionForce']").each(function () {
-               $(this).parent('td').hide();
-           });
-        }
-    });
-
-    $('#ujm_exobundle_interactionqcmtype_typeQCM').change(function () {
-        var type = $('#ujm_exobundle_interactionqcmtype_typeQCM option:selected').val();
-
-        $("*[id$='_rightResponse']").each(function () {
-            if (type == 1) {
-                $(this).prop('type', 'checkbox');
-            } else {
-                $(this).prop('type', 'radio');
-                $(this).attr('checked', false);
-            }
-        });
-    });
-
+    // Make the choices' table sortable with jquery ui plugin
     $('tbody').sortable();
 }
 
-// -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_ //
+// Add a choice
+function addChoice(container, deleteChoice) {
 
-function setOrder() {
+    // change the "name" by the index and delete the symfony delete form button
+    var contain = $(container.attr('data-prototype').replace(/__name__label__/g, 'Choice n°' + (index))
+        .replace(/__name__/g, index)
+        .replace('<a class="btn btn-danger remove" href="#">Delete</a>', '')
+    );
 
-    var order = 1;
+    // Add tne button to delete a choice
+    addDelete(contain, deleteChoice);
 
-    $('#newTable').find('tr:not(:first)').each(function () {
-        $(this).find('input:first').val(order);
-        order++;
+    // Add the modified dataprototype to the page
+    container.append(contain);
+
+    // Get the form field to fill rows of the choices' table
+    container.find('.row').each(function () {
+        fillChoicesArray($(this));
+    });
+
+    // Add the delete button
+    $('#newTable').find('tr:last').append('<td class="classic"></td>');
+    $('#newTable').find('td:last').append(container.find('a:contains("Supprimer")'));
+
+    // Remove the useless fileds form
+    container.remove();
+    tableChoices.next().remove();
+
+    // Increase number of choices
+    index++;
+
+    whichChecked();
+}
+
+// Delete a choice
+function addDelete(tr, deleteChoice) {
+
+    // Create the button to delete a choice
+    var delLink = $('<a href="#" class="btn btn-danger">'+deleteChoice+'</a>');
+
+    // Add the button to the row
+    tr.append(delLink);
+
+    // When click, delete the matching choice's row in the table
+    delLink.click(function(e) {
+        $(this).parent('td').parent('tr').remove();
+        e.preventDefault();
+        return false;
     });
 }
 
+// Check if form is valid
 function check_form(nbrChoices, answerCoched, labelEmpty, pointAnswers, pointAnswer, inviteQuestion) {
     //"use strict";
 
-    //vérifier que l'invite de la question est rempli
+    // If no question is asked
     if ($('#ujm_exobundle_interactionqcmtype_interaction_invite').val() == '') {
         alert(inviteQuestion);
         return false;
     } else {
-        //vérifier qu'il y a au moins deux choix
+        // If there is no at least two choices
         if (($('#newTable').find('tr:not(:first)').length) < 2) {
             alert(nbrChoices);
             return false;
         } else {
-            //vérifier qu'il y a des réponse attendue
+            // If no expected answer is selected
             var nbr_rep_coched = 0;
             $('#newTable').find('tr:not(:first)').each(function (index) {
                 if ($(this).find('td').eq(1).find('input').is(':checked')) {
@@ -259,11 +153,10 @@ function check_form(nbrChoices, answerCoched, labelEmpty, pointAnswers, pointAns
                 alert(answerCoched);
                 return false;
             } else {
-            //vérifier les points des reponses
+                // If all the points fields are fill
                 if ($('#ujm_exobundle_interactionqcmtype_weightResponse').is(':checked')) {
                     var checked = true;
                     $('#newTable').find('tr:not(:first)').each(function (index) {
-
                         if ($(this).find('td').eq(3).find('input').val() == '') {
                             checked = false;
                             return false;
@@ -280,55 +173,19 @@ function check_form(nbrChoices, answerCoched, labelEmpty, pointAnswers, pointAns
     }
 }
 
-function addChoice(container) {
+// Set the choices order
+function setOrder() {
 
-    var contain = $(container.attr('data-prototype').replace(/__name__label__/g, 'Choice n°' + (index))
-        .replace(/__name__/g, index)
-        .replace('<a class="btn btn-danger remove" href="#">Delete</a>', '')
-    );
+    var order = 1;
 
-    addDelete(contain);
-
-    container.append(contain);
-
-    container.find('.row').each(function () {
-
-        if ($(this).find('input').length) {
-            if ($(this).find('input').attr('id').indexOf('ordre') == -1) {
-                $('#newTable').find('tr:last').append('<td class="classic"></td>');
-                $('#newTable').find('td:last').append($(this).find('input'));
-            } else {
-                $('#newTable').find('tr:last').append('<td class="classic" style="display:none;"></td>');
-                $('#newTable').find('td:last').append($(this).find('input'));
-            }
-        }
-
-        if ($(this).find('textarea').length) {
-            $('#newTable').find('tr:last').append('<td class="classic"></td>');
-            $('#newTable').find('td:last').append($(this).find('textarea'));
-        }
+    $('#newTable').find('tr:not(:first)').each(function () {
+        $(this).find('input:first').val(order);
+        order++;
     });
+}
 
-    $('#newTable').find('tr:last').append('<td class="classic"></td>');
-    $('#newTable').find('td:last').append(container.find('a:contains("Supprimer")'));
-
-    container.remove();
-    tableChoices.next().remove();
-
-    index++;
-
-    if ($('#ujm_exobundle_interactionqcmtype_weightResponse').is(':checked')) {
-
-        $("*[id$='_weight']").each(function () {
-            $(this).prop('disabled', false);
-        });
-    } else {
-
-        $("*[id$='_weight']").each(function () {
-            $(this).prop('disabled', true);
-        });
-    }
-
+function whichChecked() {
+     // Show or hide positionForce if shuffle is checked
     if ($('#ujm_exobundle_interactionqcmtype_shuffle').is(':checked')) {
         tableChoices.find('th').eq(4).show();
         $("*[id$='_positionForce']").each(function () {
@@ -340,27 +197,120 @@ function addChoice(container) {
            $(this).parent('td').hide();
        });
     }
+    // Disable or not the score by response if weightResponse is checked
+    if ($('#ujm_exobundle_interactionqcmtype_weightResponse').is(':checked')) {
+        $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').prop('disabled', true);
+        $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').prop('disabled', true);
 
-    if ($('#ujm_exobundle_interactionqcmtype_typeQCM option:selected').val() == 1) {
-        $("*[id$='_rightResponse']").each(function () {
-            $(this).prop('type', 'checkbox');
+        $("*[id$='_weight']").each(function() {
+            $(this).prop('disabled', false);
         });
     } else {
-        $("*[id$='_rightResponse']").each(function () {
-            $(this).prop('type', 'radio');
+        $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').prop('disabled', false);
+        $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').prop('disabled', false);
+
+        $("*[id$='_weight']").each(function() {
+            $(this).prop('disabled', true);
         });
+    }
+
+    // Change the type od ExpectedAnswer (radio or checkbox) depending on which typeQCM is choose
+    var type = $('#ujm_exobundle_interactionqcmtype_typeQCM option:selected').val();
+
+    $("*[id$='_rightResponse']").each(function () {
+        if (type == 1) {
+            $(this).prop('type', 'checkbox');
+        } else {
+            $(this).prop('type', 'radio');
+        }
+    });
+}
+
+function whichChange() {
+    // When "choices shuffle" change, show position force possibility
+    $('#ujm_exobundle_interactionqcmtype_shuffle').change(function () {
+        if ($(this).is(':checked')) {
+            tableChoices.find('th').eq(4).show();
+            $("*[id$='_positionForce']").each(function () {
+                $(this).parent('td').show();
+            });
+        } else {
+            tableChoices.find('th').eq(4).hide();
+            $("*[id$='_positionForce']").each(function () {
+               $(this).parent('td').hide();
+           });
+        }
+    });
+
+    // When "set points by response" change, disable or not single choice point
+    $('#ujm_exobundle_interactionqcmtype_weightResponse').change(function () {
+        if ($(this).is(':checked')) {
+            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').prop('disabled', true);
+            $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').prop('disabled', true);
+
+            $("*[id$='_weight']").each(function() {
+                $(this).prop('disabled', false);
+            });
+        } else {
+            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').prop('disabled', false);
+            $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').prop('disabled', false);
+
+            $("*[id$='_weight']").each(function() {
+                $(this).prop('disabled', true);
+            });
+        }
+    });
+
+    // When "type of QCM (unique/multiple)" change, change the expected response to radio or checkbox
+    $('#ujm_exobundle_interactionqcmtype_typeQCM').change(function () {
+        var type = $('#ujm_exobundle_interactionqcmtype_typeQCM option:selected').val();
+
+        $("*[id$='_rightResponse']").each(function () {
+            if (type == 1) {
+                $(this).prop('type', 'checkbox');
+            } else {
+                $(this).prop('type', 'radio');
+                $(this).attr('checked', false);
+            }
+        });
+    });
+}
+
+function fillChoicesArray(row) {
+    // Add the field of type input
+    if (row.find('input').length) {
+        if (row.find('input').attr('id').indexOf('ordre') == -1) {
+            $('#newTable').find('tr:last').append('<td class="classic"></td>');
+            $('#newTable').find('td:last').append(row.find('input'));
+        } else {
+            // Add the field positionForced as hidden td
+            $('#newTable').find('tr:last').append('<td class="classic" style="display:none;"></td>');
+            $('#newTable').find('td:last').append(row.find('input'));
+        }
+    }
+
+    // Add the field of type textarea
+    if (row.find('textarea').length) {
+        $('#newTable').find('tr:last').append('<td class="classic"></td>');
+        $('#newTable').find('td:last').append(row.find('textarea'));
     }
 }
 
-function addDelete(tr) {
+function tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice) {
+    // Add the structure od the table
+    tableChoices.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="classic">'+point+'</th><th class="classic">'+comment+'</th><th class="classic">'+positionForce+'</th><th class="classic">-----</th></tr></thead><tbody><tr></tr></tbody></table>');
 
-    var delLink = $('<a href="#" class="btn btn-danger">Supprimer</a>');
+    // create the button to add a choice
+    var add = $('<a href="#" id="add_choice" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;'+addchoice+'</a>');
 
-    tr.append(delLink);
+    // Add the button after the table
+    tableChoices.append(add);
 
-    delLink.click(function(e) {
-        $(this).parent('td').parent('tr').remove();
-        e.preventDefault();
+    // When click, add a new choice in the table
+    add.click(function (e) {
+        $('#newTable').find('tbody').append('<tr></tr>');
+        addChoice(container, deleteChoice);
+        e.preventDefault(); // prevent add # in the url
         return false;
     });
 }

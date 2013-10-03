@@ -59,7 +59,10 @@
             <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
         </a>
     </div>
-    <form id="InterGraphForm" action="{{ path('ujm_interactiongraphic_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+    <form id="InterGraphForm" onsubmit="return Check('{{ 'noTitle' | trans }}', '{{ 'noQuestion' | trans }} ...','{{ 'noImg' | trans }} !',
+        '{{ 'noAnswerZone' | trans }} ...', '{{ edit_form.interaction.question.title.vars.id }}', '{{ edit_form.interaction.invite.vars.id }}');"
+        action="{{ path('ujm_interactiongraphic_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+
         <div class="list-group">
             <div class="list-group-item">
                 {#{ form_widget(edit_form) }#}
@@ -75,39 +78,50 @@
                     <div class="panel-body">
                         <div class="form-group row">
                             <label class="label-control col-md-3">{{ 'choose' | trans }}</label>
-                            <div class="col-me-9">{{ form_widget(edit_form.document) }}</div>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    {{ form_widget(edit_form.document) }}
+                                    <span class="input-group-btn">
+                                        <a class="btn btn-primary" id="LoadImg" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}', '{{ asset('bundles') }}', {{ edit_form.document.vars.id }});" class="btn btn-primary">
+                                            {{ 'select' | trans }}
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                        <input id="LoadImg" type="button" value="{{ 'select' | trans }}" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}',
-                            '{{ asset('bundles') }}', {{ edit_form.document.vars.id }});" class="btn btn-primary"/>
-                        <a href="{{ path('ujm_interactiongraphic_SavePic') }}" onclick="window.open(this.href, 'NewPic',
+                        <div id="Instructions" class="alert alert-info">
+                            <a class="close" onclick="HideInstruction();">&times;</a>
+                            <p>{{ 'resizeZone' | trans }}.</p>
+                            <hr>
+                            <p>{{ 'selectZone' | trans }}.</p>
+                            <hr>
+                            <p>{{ 'erase' | trans }}.</p>
+                            <hr>
+                            <p>{{ 'pointInstruction' | trans }}.</p>
+
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <a class="btn btn-primary" href="{{ path('ujm_interactiongraphic_SavePic') }}" onclick="window.open(this.href, 'NewPic',
                             'height=167, width=287, top=300, left=570, toolbar=no, menubar=no, location=no, resizable=yes, scrollbars=no, status=no'
                             ); return false;">
-                                {{ "add a new picture" | trans }} ...
+                            <i class="icon-picture"></i> {{ "add a new picture" | trans }}
+                        </a>
+                        <a class="btn btn-default" onclick="DisplayInstruction();" id="Order">
+                           <i class="icon-question"></i> {{ 'show Instructions' | trans }}
                         </a>
 
-                        {# ------------------------------------------------- Zone affichage image ---------------------------------------------------------------------------- #}
-
-                        <a onclick="DisplayInstruction();" id="Order"
-                           onmouseover="document.body.style.cursor = 'pointer';"
-                           onmouseout="document.body.style.cursor = 'default';"
-                        >{{ 'show Instructions' | trans }}</a>
-
-                        <a onclick="HideInstruction();" id="hide"
-                           onmouseover="document.body.style.cursor = 'pointer';"
-                           onmouseout="document.body.style.cursor = 'default';"
-                        >{{ 'hide Instructions' | trans }}</a>
-
-                        <div id="Instructions">
-                            ~ {{ 'resizeZone' | trans }}
-                            ~ {{ 'selectZone' | trans }}
-                            ~ {{ 'placeZone' | trans }}
-                            ~ {{ 'resize' | trans }}
-                            ~ {{ 'erase' | trans }}
-                            ~ {{ 'pointInstruction' | trans }}
-                        </div>
-
-                        {{ 'selected Image' | trans }}
-                        <div id="Answer">
+                        <a class="btn btn-default" onclick="HideInstruction();" id="hide">
+                            <i class="icon-question"></i> {{ 'hide Instructions' | trans }}
+                        </a>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'selected Image' | trans }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div id="Answer" style="position: relative;">
                             <img src="{{ asset(entity.document.url) }}" width="{{entity.width}}" height="{{entity.height}}"
                                  id="AnswerImage"/>
 
@@ -123,8 +137,6 @@
                         </div>
                     </div>
                 </div>
-
-                {# ------------------------------------------------- tableau zone de reponse ---------------------------------------------------------------------------- #}
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">{{ 'Score' | trans }}</h3>
@@ -192,10 +204,7 @@
 
         </div>
         <div class="panel-footer">
-            <button type="submit" id="button_submit"
-                onclick="Check('{{ 'noTitle' | trans }}', '{{ 'noQuestion' | trans }} ...','{{ 'noImg' | trans }} !',
-                '{{ 'noAnswerZone' | trans }} ...', '{{ edit_form.interaction.question.title.vars.id }}',
-                '{{ edit_form.interaction.invite.vars.id }}');return false;" class="btn btn-primary">{{ 'edit' | trans }}</button>
+            <button type="submit" id="button_submit" class="btn btn-primary">{{ 'edit' | trans }}</button>
             <a class="btn btn-default" href="{{ path('ujm_question_index') }}">{{ "cancel" | trans({}, "platform") }}</a>
         </div>
     </form>
@@ -214,14 +223,15 @@
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/editionAv.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphic.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/GraphicEdit.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicEdit.js') }}"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {
             linkCategory('{{ path('ujm_category_new_pop') }}');
-            hintCSSEdit();
+            //hintCSSEdit();
             editionAv();
-            addFormHintEdit('{{ "add hint" | trans }}',  '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
+            //addFormHintEdit('{{ "add hint" | trans }}',  '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
+            newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
         });
     </script>
 {% endblock %}
