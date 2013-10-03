@@ -374,16 +374,19 @@ class QuestionController extends Controller
                     }
                     $deleteForm = $this->createDeleteForm($interactionQCM[0]->getId());
 
-                    return $this->render(
-                        'UJMExoBundle:InteractionQCM:edit.html.twig', array(
-                        'entity'      => $interactionQCM[0],
-                        'edit_form'   => $editForm->createView(),
-                        'delete_form' => $deleteForm->createView(),
-                        'nbResponses' => $nbResponses,
-                        'linkedCategory' => $linkedCategory,
-                        'exoID' => $exoID
-                        )
-                    );
+                    $variables['entity']         = $interactionQCM[0];
+                    $variables['edit_form']      = $editForm->createView();
+                    $variables['delete_form']    = $deleteForm->createView();
+                    $variables['nbResponses']    = $nbResponses;
+                    $variables['linkedCategory'] = $linkedCategory;
+                    $variables['exoID']          = $exoID;
+
+                    if($exoID != -1) {
+                        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+                        $variables['_resource'] = $exercise;
+                    }
+
+                    return $this->render('UJMExoBundle:InteractionQCM:edit.html.twig', $variables);
 
                 case "InteractionGraphic":
                     $interactionGraph = $this->getDoctrine()
@@ -405,17 +408,20 @@ class QuestionController extends Controller
 
                     $deleteForm = $this->createDeleteForm($interactionGraph[0]->getId());
 
-                    return $this->render(
-                        'UJMExoBundle:InteractionGraphic:edit.html.twig', array(
-                        'entity'      => $interactionGraph[0],
-                        'edit_form'   => $editForm->createView(),
-                        'delete_form' => $deleteForm->createView(),
-                        'nbResponses' => $nbResponses,
-                        'position'    => $position,
-                        'linkedCategory' => $linkedCategory,
-                        'exoID' => $exoID
-                        )
-                    );
+                    $variables['entity']         = $interactionGraph[0];
+                    $variables['edit_form']      = $editForm->createView();
+                    $variables['delete_form']    = $deleteForm->createView();
+                    $variables['nbResponses']    = $nbResponses;
+                    $variables['linkedCategory'] = $linkedCategory;
+                    $variables['position']       = $position;
+                    $variables['exoID']          = $exoID;
+                    
+                    if($exoID != -1) {
+                        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+                        $variables['_resource'] = $exercise;
+                    }
+
+                    return $this->render('UJMExoBundle:InteractionGraphic:edit.html.twig', $variables);
 
                 case "InteractionHole":
                     $interactionHole = $this->getDoctrine()
@@ -457,16 +463,24 @@ class QuestionController extends Controller
                     );
                     $deleteForm = $this->createDeleteForm($interactionOpen[0]->getId());
 
-                    return $this->render(
-                        'UJMExoBundle:InteractionOpen:edit.html.twig', array(
-                        'entity'      => $interactionOpen[0],
-                        'edit_form'   => $editForm->createView(),
-                        'delete_form' => $deleteForm->createView(),
-                        'nbResponses' => $nbResponses,
-                        'linkedCategory' => $linkedCategory,
-                        'exoID' => $exoID
-                        )
-                    );
+                    if($exoID != -1) {
+                        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+                        $variables['_resource'] = $exercise;
+                    }
+
+                    $variables['entity']         = $interactionOpen[0];
+                    $variables['edit_form']      = $editForm->createView();
+                    $variables['delete_form']    = $deleteForm->createView();
+                    $variables['nbResponses']    = $nbResponses;
+                    $variables['linkedCategory'] = $linkedCategory;
+                    $variables['exoID']          = $exoID;
+                    
+                    if($exoID != -1) {
+                        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+                        $variables['_resource'] = $exercise;
+                    }
+                    
+                    return $this->render('UJMExoBundle:InteractionOpen:edit.html.twig', $variables);
 
                     break;
             }
