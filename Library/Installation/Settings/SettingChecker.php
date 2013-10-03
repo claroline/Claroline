@@ -102,7 +102,7 @@ class SettingChecker
             $category->addRecommendation(
                 'Parameter %parameter% should be set to %value% in your php.ini',
                 array('parameter' => $parameter, 'value' => $value ? 'true' : 'false'),
-                false === ini_get($parameter)
+                $value == ini_get($parameter)
             );
         }
 
