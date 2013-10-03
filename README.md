@@ -1,5 +1,5 @@
-PathBundle!!
-===========
+PathBundle
+==========
 
 ### Install
 add "innova/path-bundle" to composer.json >> require
