@@ -48,7 +48,7 @@
                 <ul>
                     {%  for document in drop.documents%}
                         <li>
-                            {% include 'IcapDropzoneBundle:Dropzone:simpleShowDocument.html.twig' %}
+                            {% include 'IcapDropzoneBundle:Document:simpleShowDocument.html.twig' %}
                         </li>
                     {% endfor %}
                 </ul>
@@ -188,7 +188,7 @@
                             {% endif %}
                             {% if dropzone.displayNotationToLearners %}
                                 <div class="col-md-6">
-                                    Note : {% include 'IcapDropzoneBundle:Dropzone:dropsTotalGrade.html.twig' %}
+                                    Note : {% include 'IcapDropzoneBundle:Drop:dropsTotalGrade.html.twig' %}
                                 </div>
                             {% endif %}
                         </div>
@@ -201,7 +201,7 @@
                             {% endif %}
                             {% if dropzone.displayNotationToLearners %}
                                 <div class="col-md-6">
-                                    Note : {% include 'IcapDropzoneBundle:Dropzone:dropsTotalGrade.html.twig' %}
+                                    Note : {% include 'IcapDropzoneBundle:Drop:dropsTotalGrade.html.twig' %}
                                 </div>
                             {% endif %}
                         </div>

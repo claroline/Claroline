@@ -19,14 +19,16 @@
             {#</ul>#}
         {#</div>#}
     {#</div>#}
-    <h3>{{ 'Common information'|trans }}</h3>
+    {#<h3>{{ 'Common information'|trans }}</h3>#}
     <form class="form-horizontal" role="form" method="POST" action="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.id}) }}" {{ form_enctype(form) }}>
 
         {{ form_errors(form) }}
 
+        <p>{{ 'common_explication'|trans|raw }}</p>
+
         <h4>{{ 'Instruction'|trans }}</h4>
         <div class="form-group">
-            {{ form_row(form.instruction, {'label_attr': {'style': 'display: none;'}}) }}
+            {{ form_row(form.instruction, {'input_col_size': 'col-md-12', 'label_col_size': '', 'label_attr': {'style': 'display: none;'}}) }}
         </div>
 
         <h4>{{ 'Document type allowed'|trans }}</h4>
@@ -46,7 +48,10 @@
             {{ form_row(form.peerReview, {'label_attr': {'style': 'display: none;'}}) }}
 
             <div class="col-lg-offset-3 col-lg-9 peer-review-options">
-                {{ form_row(form.expectedTotalCorrection, {'input_col_size': 'col-lg-4', 'label_col_size': 'col-lg-8', 'attr': {'style': 'width: 60px;'}, 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+                <div id="expected-total-correction-explication" class="col-lg-8 control-label" style="text-align: left;" data-toggle="popover" data-placement="bottom" data-content="{{ 'expected_total_correction'|trans|raw }}">
+                    <span class="glyphicon icon-question-sign"></span> {{ 'Expected total correction'|trans }}
+                </div>
+                {{ form_row(form.expectedTotalCorrection, {'input_col_size': 'col-lg-4', 'label_col_size': '', 'attr': {'style': 'width: 60px;'}, 'label_attr': {'style': 'display: none;'}}) }}
             </div>
         </div>
         <h4>{{ 'Rating'|trans }}</h4>
@@ -128,6 +133,12 @@
     {{ tinymce_init() }}
     <script>
         $('document').ready(function() {
+
+            $('#expected-total-correction-explication').popover({
+                'trigger': 'hover',
+                'html': true
+            });
+
             $('#icap_dropzone_common_form_stayHere').val(0);
             $('.save-button').on('click', function(event) {
                 event.preventDefault();
@@ -146,11 +157,13 @@
                 if (peerReviewEnabled) {
                     $('.peer-review-options').show();
                     $('#icap_dropzone_common_form_manualState_2').parent().show();
+                    $('#icap_dropzone_common_form_manualState_3').parent().show();
 
                     $('.submit_button').html('{{ 'Save and continue'|trans }}');
                 } else {
                     $('.peer-review-options').hide();
                     $('#icap_dropzone_common_form_manualState_2').parent().hide();
+                    $('#icap_dropzone_common_form_manualState_3').parent().hide();
 
                     if ($('#icap_dropzone_common_form_expectedTotalCorrection').val() < 1 || $('#icap_dropzone_common_form_expectedTotalCorrection').val() > 10) {
                         $('#icap_dropzone_common_form_expectedTotalCorrection').val(3);

@@ -5,14 +5,10 @@
 
 {% block dropzone_content %}
     <div class="container container-dropzone">
-        <div class="row">
-            <div class="col-md-6">
-                <h2>{{ 'Edit evaluation'|trans }}</h2>
-            </div>
-            <div class="col-md-6">
-                <a class="pull-right" href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}">{{ 'Check the list of copies made'|trans }}</a>
-            </div>
-        </div>
+        <h2>
+            {{ 'Edit evaluation'|trans }}
+            <a class="btn btn-default pull-right" href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-list"></span> {{ 'See copies'|trans }}</a>
+        </h2>
         {{ macros.flashBox() }}
         {% block drop_zone_content_edit %}
         {% endblock %}

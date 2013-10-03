@@ -511,7 +511,7 @@ class Dropzone extends AbstractResource {
     public function isAllowDrop()
     {
         if ($this->manualPlanning) {
-            return $this->manualState == 'allowDrop';
+            return $this->manualState == 'allowDrop' or $this->manualState == 'allowDropAndPeerReview';
         } else {
             $now = new \DateTime();
 
@@ -523,7 +523,7 @@ class Dropzone extends AbstractResource {
     {
         if ($this->peerReview) {
             if ($this->manualPlanning) {
-                return $this->manualState == 'peerReview';
+                return $this->manualState == 'peerReview' or $this->manualState == 'allowDropAndPeerReview';
             } else {
                 $now = new \DateTime();
 
