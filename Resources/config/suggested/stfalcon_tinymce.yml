@@ -28,7 +28,7 @@ stfalcon_tinymce:
                 - 'searchreplace wordcount visualblocks visualchars code fullscreen'
                 - 'insertdatetime media nonbreaking save table contextmenu directionality'
                 - 'emoticons template paste textcolor example'
-            toolbar1: ' undo redo | styleselect | bold italic | -example'
+            toolbar1: ' undo redo | styleselect | bold italic | -example | ressourceLinker'
             image_advtab: true
             templates:
                 - {title: 'Test template 1', content: 'Test 1'}
