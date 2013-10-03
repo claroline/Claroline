@@ -64,6 +64,7 @@ class Wiki extends AbstractResource
                 $rootSection = new Section();
                 $rootSection->setTitle("");
                 $rootSection->setWiki($this);
+                $rootSection->setAuthor($this->getResourceNode()->getCreator());
                 $this->setRoot($rootSection);
 
                 $em->getRepository('IcapWikiBundle:Section')->persistAsFirstChild($rootSection);

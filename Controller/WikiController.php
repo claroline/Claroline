@@ -119,9 +119,10 @@ class WikiController extends Controller{
      *      name="icap_wiki_add_section"
      * )
      * @ParamConverter("wiki", class="IcapWikiBundle:Wiki", options={"id" = "wikiId"})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template("IcapWikiBundle:Wiki:newSection.html.twig")
      */
-    public function addSectionAction(Request $request, $wiki, $parentSectionId)
+    public function addSectionAction(Request $request, $wiki, $user, $parentSectionId)
     {
         $em = $this->getDoctrine()->getManager();
         $this->checkAccess("EDIT", $wiki);
@@ -132,6 +133,7 @@ class WikiController extends Controller{
         if ($form->isValid()) {
             $section = $form->getData();
             $section->setWiki($wiki);
+            $section->setAuthor($user);
 
             $parent = null;
             if ($parentSectionId == 0) {
@@ -147,6 +149,8 @@ class WikiController extends Controller{
             $sectionRepository = $this->getDoctrine()->getManager()->getRepository('IcapWikiBundle:Section');
             $sectionRepository->persistAsLastChildOf($section, $parent);
             $em->flush();
+
+            $this->dispatchSectionCreateEvent($wiki, $section);
 
             return $this->redirect(
                 $this->generateUrl(
@@ -271,22 +275,34 @@ class WikiController extends Controller{
         if ($form->isValid()) {
             $sectionForm = $form->getData();
             $em = $this->getDoctrine()->getManager();
+            $unitOfWork = $em->getUnitOfWork();
+            $changeSet = $unitOfWork->getEntityChangeSet($sectionForm);
 
             $position = $form->get('position')->getData();
             if ($isRootSection || $position == $sectionId) {
                 $em->persist($sectionForm);
+                $em->flush();
             }
             else {
                 $isBrother = $form->get('brother')->getData();
+                $oldParent = $section->getParent();
+                $oldLeft = $section->getLeft();
                 $positionSection = $this->getSection($wiki, $position);
                 if ($isBrother==true) {
                     $repo->persistAsNextSiblingOf($sectionForm, $positionSection);
+                    $newParent = $positionSection->getParent();
                 }
                 else {
                     $repo->persistAsFirstChildOf($sectionForm, $positionSection);
+                    $newParent = $positionSection;
                 }
-            }            
-            $em->flush();
+                $em->flush();
+
+                $moveChangeSet = $this->getMoveEventChangeSet($section, $oldLeft, $newParent, $sectionForm);        
+                $this->dispatchSectionMoveEvent($wiki, $section, $changeSet);
+            }           
+
+            $this->dispatchSectionUpdateEvent($wiki, $sectionForm, $changeSet);
 
             return $this->redirect(
                 $this->generateUrl(
@@ -309,7 +325,7 @@ class WikiController extends Controller{
     /**
      * Updates a wiki section
      * @param $wikiId, $sectionId, $isBrother
-     * @return  
+     * @return $form
      * @Route(
      *      "/{wikiId}/section/move/{sectionId}/{referenceSectionId}/{isBrother}",
      *      requirements = {
@@ -327,9 +343,12 @@ class WikiController extends Controller{
     {
         $this->checkAccess("EDIT", $wiki);
         $section = $this->getSection($wiki, $sectionId);
-        $isBrother = $isBrother==='true';
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('IcapWikiBundle:Section');
+        $oldParent = $section->getParent();
+        $oldLeft = $section->getLeft();
+        $isBrother = $isBrother==='true';
+        
         $referenceSection = null;
         
         if ($referenceSectionId > 0) {
@@ -342,11 +361,17 @@ class WikiController extends Controller{
 
         if ($isBrother===true) {
             $repo->persistAsNextSiblingOf($section, $referenceSection);
+            $newParent = $referenceSection->getParent();
         }
         else {
             $repo->persistAsFirstChildOf($section, $referenceSection);
+            $newParent = $referenceSection;            
         }
         $em->flush();
+        //$em->refresh($section);
+        
+        $changeSet = $this->getMoveEventChangeSet($oldParent, $oldLeft, $newParent, $section);        
+        $this->dispatchSectionMoveEvent($wiki, $section, $changeSet);
 
         return new Response($this->generateUrl(
                     'icap_wiki_view',
@@ -439,6 +464,8 @@ class WikiController extends Controller{
             }
             $em->flush();
 
+            $this->dispatchSectionDeleteEvent($wiki, $section);
+
             return $this->redirect(
                 $this->generateUrl(
                     'icap_wiki_view',
@@ -458,8 +485,11 @@ class WikiController extends Controller{
 
     }
 
-    /*
+    /**
      * Retrieve a wiki from database
+     * @param integer $wikiId
+     *
+     * @return Wiki $wiki
      */
     private function getWiki($wikiId)
     {
@@ -474,8 +504,12 @@ class WikiController extends Controller{
         return $wiki;
     }
 
-    /*
+    /**
      * Retrieve a section from database
+     * @param Wiki $wiki
+     * @param integer $sectionId
+     *
+     * @return Section $section
      */
     private function getSection($wiki, $sectionId)
     {
@@ -488,5 +522,35 @@ class WikiController extends Controller{
         }
 
         return $section;
+    }
+
+    /**
+     * Retrieve changeSet for move event
+     * @param Section $oldParent
+     * @param integer $oldPosition
+     * @param Section $newParent
+     * @param Section $section
+     *
+     * @return array $changeSet
+     */
+    private function getMoveEventChangeSet ($oldParent, $oldLeft, $newParent, $section)
+    {
+        /** Create change set for move log event
+         * If section's parent has changed, return old and new parent
+         * Otherwise return old and new left to mark move up or down in the same parent
+         */
+        $changeSet = array();
+        if ($newParent->getId() !== $oldParent->getId()) {
+            $changeSet = array(
+                'parentId' => array($oldParent->getId(), $newParent->getId()),
+                'parentName' => array($oldParent->getName(), $newParent->getName())
+            );
+        }
+        else {
+            $newLeft = $section->getLeft();
+            $changeSet = array(
+                'left' => array($oldLeft, $newLeft);
+            );
+        }
     }
 }

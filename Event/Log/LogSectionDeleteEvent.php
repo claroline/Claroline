@@ -23,7 +23,7 @@ class LogSectionDeleteEvent extends AbstractLogResourceEvent
                 'id' => $section->getId(),
                 'title' => $section->getTitle(),
                 'text' => $section->getText(),
-                'creator' => $section->getCreator()->getFirstName() . ' ' . $section->getCreator()->getLastName()
+                'author' => $section->getAuthor()->getFirstName() . ' ' . $section->getAuthor()->getLastName()
             )
         );
 

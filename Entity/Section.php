@@ -36,10 +36,26 @@ class Section
     protected $text;
 
     /**
-     * @ORM\Column(type="datetime", name="created")
+     * @ORM\Column(type="datetime", name="creation_date")
      * @Gedmo\Timestampable(on="create")
      */
     protected $creationDate;
+
+    /**
+     * @var \Datetime $modificationDate
+     *
+     * @ORM\Column(type="datetime", name="modification_date")
+     * @Gedmo\Timestampable(on="update")
+     */
+    protected $modificationDate;
+
+    /**
+     * @var User $author
+     *
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    protected $author;
 
     /**
      * @ORM\ManyToOne(targetEntity="Icap\WikiBundle\Entity\Wiki")
@@ -144,6 +160,39 @@ class Section
     public function getCreationDate()
     {
         return $this->creationDate;
+    }
+
+    /**
+     * Returns the resource modification date.
+     *
+     * @return \DateTime
+     */
+    public function getModificationDate()
+    {
+        return $this->modificationDate;
+    }
+
+    /**
+     * Set author
+     *
+     * @param User $author
+     * @return Post
+     */
+    public function setAuthor(User $author = null)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author
+     *
+     * @return User
+     */
+    public function getAuthor()
+    {
+        return $this->author;
     }
 
     /**
