@@ -13,5 +13,6 @@
 
 {% block javascripts %}
     {{ parent() }}}
+    {% render controller('ClarolineCoreBundle:Tool\\WorkspaceResourceParameters:initPicker') %}
     {{ tinymce_init() }}
 {% endblock %}

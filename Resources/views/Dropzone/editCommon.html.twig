@@ -20,6 +20,7 @@
         {#</div>#}
     {#</div>#}
     {#<h3>{{ 'Common information'|trans }}</h3>#}
+
     <form class="form-horizontal" role="form" method="POST" action="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.id}) }}" {{ form_enctype(form) }}>
 
         {{ form_errors(form) }}
@@ -130,6 +131,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    {% render controller('ClarolineCoreBundle:Tool\\WorkspaceResourceParameters:initPicker') %}
     {{ tinymce_init() }}
     <script>
         $('document').ready(function() {
