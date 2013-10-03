@@ -39,8 +39,6 @@ comments: 'commentaires'
 see_comments: 'Voir les commentaires'
 publish: 'Publier'
 unpublish: 'Dépublier'
-written_by: 'Ecrit par'
-published_on: 'Publié le'
 Post: 'Article'
 post_deletion_confirm_title: "Suppression d'un article"
 post_deletion_confirm_message: "Etes-vous sûr de vouloir supprimer l'article <strong>%postName%</strong> ?"
