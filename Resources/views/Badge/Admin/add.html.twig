@@ -40,7 +40,7 @@
                     <p class="form-control-static">{{ 'badge_form_execute'|trans }}</p>
                 </div>
                 <div class="col-md-2">
-                    {{ form_widget(rows.children.occurrence) }}
+                    {{ form_widget(rows.children.occurrence, {'attr': {'value': 1}}) }}
                 </div>
                 <div class="col-md-2">
                     <p class="form-control-static">{{ 'badge_form_times'|trans }}</p>
