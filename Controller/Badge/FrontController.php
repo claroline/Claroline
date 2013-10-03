@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller\Badge;
 
-use Claroline\CoreBundle\Entity\Badge\Badge;
+use Claroline\CoreBundle\Entity\Badge\UserBadge;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -19,11 +19,12 @@ class FrontController extends Controller
      *
      * @Template()
      */
-    public function viewAction(Badge $badge)
+    public function viewAction(UserBadge $userBadge)
     {
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
+        $badge = $userBadge->getBadge();
         $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
 
         return array(

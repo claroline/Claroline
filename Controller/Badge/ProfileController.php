@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Controller\Badge;
 
 use Claroline\CoreBundle\Badge\BadgeRuleChecker;
 use Claroline\CoreBundle\Entity\Badge\Badge;
+use Claroline\CoreBundle\Entity\Badge\UserBadge;
 use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
 use Claroline\CoreBundle\Form\Badge\ClaimBadgeType;
 use Claroline\CoreBundle\Entity\User;
@@ -79,13 +80,12 @@ class ProfileController extends Controller
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function badgeAction(Badge $badge, User $user)
+    public function badgeAction(UserBadge $userBadge, User $user)
     {
-        $userBadge = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findOneByBadgeAndUser($badge, $user);
-
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
+        $badge = $userBadge->getBadge();
         $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
 
         $badgeRuleChecker = new BadgeRuleChecker($this->getDoctrine()->getRepository('ClarolineCoreBundle:Log\Log'));
@@ -105,7 +105,7 @@ class ProfileController extends Controller
      */
     public function badgesAction($page, User $user)
     {
-        $query = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findByUser($user, false);
+        $query   = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($user, false);
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new Pagerfanta($adapter);
 

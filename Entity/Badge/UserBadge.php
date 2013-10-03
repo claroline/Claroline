@@ -112,7 +112,7 @@ class UserBadge
     }
 
     /**
-     * @return UserBadge
+     * @return Badge
      */
     public function getBadge()
     {
