@@ -180,7 +180,30 @@ class HomeTabManager
         return $visibleHomeTabConfigs;
     }
 
-    public function checkHomeTabVisibilityByUser(HomeTab $homeTab, User $user)
+    public function checkHomeTabLock(HomeTab $homeTab)
+    {
+        $adminHomeTabConfig = $this->homeTabConfigRepo->findOneBy(
+            array(
+                'homeTab' => $homeTab,
+                'type' => 'admin_desktop',
+                'user' => null,
+                'workspace' => null
+            )
+        );
+
+        if (!is_null($adminHomeTabConfig)) {
+
+            return $adminHomeTabConfig->isLocked();
+        }
+
+        return false;
+    }
+
+    public function checkHomeTabVisibilityByUser(
+        HomeTab $homeTab,
+        User $user,
+        $withConfig
+    )
     {
         $adminHomeTabConfig = $this->homeTabConfigRepo->findOneBy(
             array(
@@ -203,22 +226,25 @@ class HomeTabManager
         }
         elseif (is_null($userHomeTabConfig)) {
 
-            return $adminHomeTabConfig->isVisible();
+            return $adminHomeTabConfig->isVisible() || $withConfig == 1;
         }
         elseif (is_null($adminHomeTabConfig)) {
 
-            return $userHomeTabConfig->isVisible();
+            return $userHomeTabConfig->isVisible() || $withConfig == 1;
         }
         else {
-            return $adminHomeTabConfig->isLocked() ?
+            $visible = $adminHomeTabConfig->isLocked() ?
                 $adminHomeTabConfig->isVisible() :
-                $userHomeTabConfig->isVisible();
+                ($userHomeTabConfig->isVisible() || ($withConfig == 1));
+
+            return $visible;
         }
     }
 
     public function checkHomeTabVisibilityByWorkspace(
         HomeTab $homeTab,
-        AbstractWorkspace $workspace
+        AbstractWorkspace $workspace,
+        $withConfig
     )
     {
         $homeTabConfig = $this->homeTabConfigRepo->findOneBy(
@@ -233,7 +259,7 @@ class HomeTabManager
             return false;
         }
 
-        return $homeTabConfig->isVisible();
+        return $homeTabConfig->isVisible() || ($withConfig == 1);
     }
 
     public function insertWidgetHomeTabConfig(

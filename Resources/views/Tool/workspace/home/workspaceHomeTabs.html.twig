@@ -8,15 +8,7 @@
     <div class="welcome-home">
         {% render controller(
             "ClarolineCoreBundle:Workspace:widgets",
-            {'workspaceId': workspace.getId(), 'homeTabId': tabId})
-        %}
-    </div>
-    <br>
-    <div class="panel panel-default toggle-visible {% if withConfig == 0 %} hiddens {% endif %}">
-        <div class="panel-heading pointer-hand text-center">
-            <i class="icon-plus-sign">
-                {{ 'add_widget_to_home_tab'|trans({}, 'platform') }}
-            </i>
-        </div>
+            {'workspaceId': workspace.getId(), 'homeTabId': tabId, 'withConfig': withConfig}
+        ) %}
     </div>
 {% endblock %}

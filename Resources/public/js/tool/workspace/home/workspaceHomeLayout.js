@@ -1,6 +1,7 @@
 (function () {
     'use strict';
 
+    var workspaceId = $('#workspace-id-div').attr('workspace-id');
     var displayedHomeTabId = $('#hometab-id-div').attr('hometab-id');
     var configValue = ($('#config-value-div').attr('config-value')).trim();
     var withConfig = (configValue === '') ? 0 : parseInt(configValue);
@@ -35,8 +36,12 @@
 
             if (currentVisibilityElement.hasClass('icon-eye-close')) {
                 window.location = Routing.generate(
-                    'claro_display_desktop_home_tabs',
-                    {'tabId': -1, 'withConfig': withConfig}
+                    'claro_display_workspace_home_tabs',
+                    {
+                        'tabId': -1,
+                        'withConfig': withConfig,
+                        'workspaceId': workspaceId
+                    }
                 );
             }
         } else {
@@ -53,9 +58,18 @@
         var homeTabId = $(this).attr('hometab-id');
 
         window.location = Routing.generate(
-            'claro_display_desktop_home_tabs',
-            {'tabId': homeTabId, 'withConfig' : withConfig}
+            'claro_display_workspace_home_tabs',
+            {
+                'tabId': homeTabId,
+                'withConfig' : withConfig,
+                'workspaceId': workspaceId
+            }
         );
+    });
+
+    $('.admin-hometab-visibility-btn').click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
     });
 
     $('.hometab-visibility-btn').on('click', function (e) {
@@ -107,8 +121,8 @@
 
         $.ajax({
             url: Routing.generate(
-                'claro_desktop_home_tab_edit_form',
-                {'homeTabId': currentHomeTabId}
+                'claro_workspace_home_tab_edit_form',
+                {'homeTabId': currentHomeTabId, 'workspaceId': workspaceId}
             ),
             type: 'GET',
             success: function (datas) {
@@ -125,7 +139,10 @@
         e.stopPropagation();
 
         $.ajax({
-            url: Routing.generate('claro_desktop_home_tab_create_form'),
+            url: Routing.generate(
+                'claro_workspace_home_tab_create_form',
+                {'workspaceId' : workspaceId}
+            ),
             type: 'GET',
             success: function (datas) {
                 openHomeTabModal(
@@ -140,8 +157,12 @@
     $('#delete-hometab-confirm-ok').click(function () {
         $.ajax({
             url: Routing.generate(
-                'claro_desktop_home_tab_delete',
-                {'homeTabId': currentHomeTabId, 'tabOrder': currentHomeTabOrder}
+                'claro_workspace_home_tab_delete',
+                {
+                    'homeTabId': currentHomeTabId,
+                    'tabOrder': currentHomeTabOrder,
+                    'workspaceId': workspaceId
+                }
             ),
             type: 'DELETE',
             success: function () {
@@ -149,8 +170,12 @@
 
                 if (displayedHomeTabId === currentHomeTabId) {
                     window.location = Routing.generate(
-                        'claro_display_desktop_home_tabs',
-                        {'tabId': -1, 'withConfig': withConfig}
+                        'claro_display_workspace_home_tabs',
+                        {
+                            'tabId': -1,
+                            'withConfig': withConfig,
+                            'workspaceId': workspaceId
+                        }
                     );
                 } else {
                     currentElement.remove();
@@ -179,15 +204,23 @@
                     case 201:
                         closeHomeTabModal();
                         window.location = Routing.generate(
-                            'claro_display_desktop_home_tabs',
-                            {'tabId': 0, 'withConfig': 1}
+                            'claro_display_workspace_home_tabs',
+                            {
+                                'tabId': 0,
+                                'withConfig': 1,
+                                'workspaceId': workspaceId
+                            }
                         );
                         break;
                     case 204:
                         closeHomeTabModal();
                         window.location = Routing.generate(
-                            'claro_display_desktop_home_tabs',
-                            {'tabId': currentHomeTabId, 'withConfig': 1}
+                            'claro_display_workspace_home_tabs',
+                            {
+                                'tabId': currentHomeTabId,
+                                'withConfig': 1,
+                                'workspaceId': workspaceId
+                            }
                         );
                         break;
                     default:
