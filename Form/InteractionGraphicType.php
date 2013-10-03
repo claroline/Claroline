@@ -81,6 +81,7 @@ class InteractionGraphicType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\InteractionGraphic',
+                'cascade_validation' => true
             )
         );
     }
