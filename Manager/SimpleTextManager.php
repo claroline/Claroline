@@ -27,6 +27,6 @@ class SimpleTextManager
     {
         return $this->om
             ->getRepository('ClarolineCoreBundle:Widget\SimpleTextConfig')
-            ->findOneBy(array('displayConfig' => $config));
+            ->findOneBy(array('widgetInstance' => $config));
     }
 }

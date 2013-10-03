@@ -138,7 +138,9 @@ class HomeTabManager
         foreach ($adminHomeTabConfigs as $adminHomeTabConfig) {
 
             if ($adminHomeTabConfig->isLocked()) {
-                $adminHTC[] = $adminHomeTabConfig;
+                if ($adminHomeTabConfig->isVisible()) {
+                    $adminHTC[] = $adminHomeTabConfig;
+                }
             }
             else {
                 $existingCustomHTC = $this->homeTabConfigRepo->findOneBy(

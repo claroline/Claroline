@@ -338,6 +338,153 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
+     *     "desktop/home_tab/create/form",
+     *     name="claro_desktop_home_tab_create_form",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabCreateForm.html.twig")
+     *
+     * Displays the homeTab form.
+     *
+     * @return Response
+     */
+    public function desktopHomeTabCreateFormAction()
+    {
+        $this->checkUserAccess();
+
+        $homeTab = new HomeTab();
+        $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
+
+        return array(
+            'form' => $form->createView()
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "desktop/home_tab/create",
+     *     name="claro_desktop_home_tab_create",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabCreateForm.html.twig")
+     *
+     * Create a new homeTab.
+     *
+     * @return Response
+     */
+    public function desktopHomeTabCreateAction()
+    {
+        $this->checkUserAccess();
+
+        $user = $this->securityContext->getToken()->getUser();
+        $homeTab = new HomeTab();
+
+        $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $homeTab->setType('desktop');
+            $homeTab->setUser($user);
+            $this->homeTabManager->insertHomeTab($homeTab);
+
+            $homeTabConfig = new HomeTabConfig();
+            $homeTabConfig->setHomeTab($homeTab);
+            $homeTabConfig->setType('desktop');
+            $homeTabConfig->setUser($user);
+            $homeTabConfig->setLocked(false);
+            $homeTabConfig->setVisible(true);
+
+            $lastOrder = $this->homeTabManager->getOrderOfLastDesktopHomeTabConfigByUser($user);
+
+            if (is_null($lastOrder['order_max'])) {
+                $homeTabConfig->setTabOrder(1);
+            }
+            else {
+                $homeTabConfig->setTabOrder($lastOrder['order_max'] + 1);
+            }
+            $this->homeTabManager->insertHomeTabConfig($homeTabConfig);
+
+            return new Response('success', 201);
+        }
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "desktop/home_tab/{homeTabId}/edit/form",
+     *     name="claro_desktop_home_tab_edit_form",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "homeTab",
+     *     class="ClarolineCoreBundle:Home\HomeTab",
+     *     options={"id" = "homeTabId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabEditForm.html.twig")
+     *
+     * Displays the homeTab edition form.
+     *
+     * @return Response
+     */
+    public function desktopHomeTabEditFormAction(HomeTab $homeTab)
+    {
+        $this->checkUserAccess();
+        $user = $this->securityContext->getToken()->getUser();
+        $this->checkUserAccessForHomeTab($homeTab, $user);
+
+        $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
+
+        return array(
+            'form' => $form->createView(),
+            'homeTab' => $homeTab
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "desktop/home_tab/{homeTabId}/edit",
+     *     name="claro_desktop_home_tab_edit",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "homeTab",
+     *     class="ClarolineCoreBundle:Home\HomeTab",
+     *     options={"id" = "homeTabId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabEditForm.html.twig")
+     *
+     * Edit the homeTab.
+     *
+     * @return Response
+     */
+    public function desktopHomeTabEditAction(HomeTab $homeTab)
+    {
+        $this->checkUserAccess();
+        $user = $this->securityContext->getToken()->getUser();
+        $this->checkUserAccessForHomeTab($homeTab, $user);
+
+        $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->homeTabManager->insertHomeTab($homeTab);
+
+            return new Response('success', 204);
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'homeTab' => $homeTab
+        );
+    }
+
+    /**
+     * @EXT\Route(
      *     "desktop/user/home_tab/create/form",
      *     name="claro_user_desktop_home_tab_create_form"
      * )
@@ -540,16 +687,14 @@ class HomeController extends Controller
     public function displayDesktopHomeTabsAction($tabId, $withConfig = 0)
     {
         $user = $this->securityContext->getToken()->getUser();
-        $adminHomeTabConfigsTemp = $this->homeTabManager
+        $adminHomeTabConfigs = $this->homeTabManager
             ->generateAdminHomeTabConfigsByUser($user);
-//        $adminHomeTabConfigs = $this->homeTabManager
-//            ->filterVisibleHomeTabConfigs($adminHomeTabConfigsTemp);
         $userHomeTabConfigs = $this->homeTabManager
             ->getDesktopHomeTabConfigsByUser($user);
         $homeTabId = $tabId;
 
         if ($homeTabId == -1) {
-            foreach ($adminHomeTabConfigsTemp as $adminHomeTabConfig) {
+            foreach ($adminHomeTabConfigs as $adminHomeTabConfig) {
                 if ($adminHomeTabConfig->isVisible() || ($withConfig === 1)) {
                     $homeTabId = $adminHomeTabConfig->getHomeTab()->getId();
                     break;
@@ -564,9 +709,16 @@ class HomeController extends Controller
                 }
             }
         }
+        if (($withConfig == 1) && ($homeTabId == 0)) {
+            $userHomeTabConfig = end($userHomeTabConfigs);
+
+            if (!is_null($userHomeTabConfig)) {
+                $homeTabId = $userHomeTabConfig->getHomeTab()->getId();
+            }
+        }
 
         return array(
-            'adminHomeTabConfigs' => $adminHomeTabConfigsTemp,
+            'adminHomeTabConfigs' => $adminHomeTabConfigs,
             'userHomeTabConfigs' => $userHomeTabConfigs,
             'tabId' => $homeTabId,
             'withConfig' => $withConfig

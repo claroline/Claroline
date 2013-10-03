@@ -1,14 +1,12 @@
-{% extends 'ClarolineCoreBundle:Tool\\desktop\\home:desktopHomeLayout2.html.twig' %}
+{% extends 'ClarolineCoreBundle:Tool\\desktop\\home:desktopHomeLayout.html.twig' %}
 {% block homeTab %}
     {% render controller('ClarolineCoreBundle:Desktop:widgets', {'homeTabId': tabId}) %}
     <br>
     <div class="panel panel-default toggle-visible {% if withConfig == 0 %} hidden {% endif %}">
-        <div class="panel-heading">
-            <a href="">
-                <i class="icon-plus-sign">
-                    {{ 'add_widget_to_home_tab'|trans({}, 'platform') }}
-                </i>
-            </a>
+        <div class="panel-heading pointer-hand text-center">
+            <i class="icon-plus-sign">
+                {{ 'add_widget_to_home_tab'|trans({}, 'platform') }}
+            </i>
         </div>
     </div>
 {% endblock %}

@@ -8,6 +8,20 @@
     var currentHomeTabOrder;
     var currentElement;
 
+    function openHomeTabModal(title, content)
+    {
+        $('#hometab-modal-title').html(title);
+        $('#hometab-modal-body').html(content);
+        $('#hometab-modal-box').modal('show');
+    }
+
+    function closeHomeTabModal()
+    {
+        $('#hometab-modal-box').modal('hide');
+        $('#hometab-modal-title').empty();
+        $('#hometab-modal-body').empty();
+    }
+
     $('#switch-config-mode').click(function () {
         withConfig = (withConfig + 1) % 2;
 
@@ -34,7 +48,7 @@
     $('.hometab-link').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
-        var homeTabId = $(this).attr('home-tab-id');
+        var homeTabId = $(this).attr('hometab-id');
 
         window.location = Routing.generate(
             'claro_display_desktop_home_tabs',
@@ -83,22 +97,49 @@
         e.stopPropagation();
 
         currentElement = $(this).parent().parent();
-        currentHomeTabId = $(this).parent().attr('home-tab-id');
-        currentHomeTabOrder = $(this).parent().attr('home-tab-order');
-        $('#delete-home-tab-validation-box').modal('show');
+        currentHomeTabId = $(this).parent().attr('hometab-id');
+        currentHomeTabOrder = $(this).parent().attr('hometab-order');
+        $('#delete-hometab-validation-box').modal('show');
     });
 
     $('.hometab-rename-btn').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
+
+        currentHomeTabId = $(this).parent().attr('hometab-id');
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_desktop_home_tab_edit_form',
+                {'homeTabId': currentHomeTabId}
+            ),
+            type: 'GET',
+            success: function (datas) {
+                openHomeTabModal(
+                    Translator.get('platform' + ':' + 'home_tab_edition'),
+                    datas
+                );
+            }
+        });
     });
 
     $('#add-hometab-btn').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
+
+        $.ajax({
+            url: Routing.generate('claro_desktop_home_tab_create_form'),
+            type: 'GET',
+            success: function (datas) {
+                openHomeTabModal(
+                    Translator.get('platform' + ':' + 'home_tab_creation'),
+                    datas
+                );
+            }
+        });
     });
 
-    $('#delete-home-tab-confirm-ok').click(function () {
+    $('#delete-hometab-confirm-ok').click(function () {
         $.ajax({
             url: Routing.generate(
                 'claro_user_desktop_home_tab_delete',
@@ -106,7 +147,7 @@
             ),
             type: 'DELETE',
             success: function () {
-                $('#delete-home-tab-validation-box').modal('hide');
+                $('#delete-hometab-validation-box').modal('hide');
 
                 if (displayedHomeTabId === currentHomeTabId) {
                     window.location = Routing.generate(
@@ -118,5 +159,46 @@
                 }
             }
         });
+    });
+
+    $('body').on('click', '#form-hometab-ok-btn', function (e) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+
+        var form = document.getElementById('hometab-form');
+        var action = form.getAttribute('action');
+        var formData = new FormData(form);
+
+        $.ajax({
+            url: action,
+            data: formData,
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            complete: function(jqXHR, textStatus) {
+                switch (jqXHR.status) {
+                    case 201:
+                        closeHomeTabModal();
+                        window.location = Routing.generate(
+                            'claro_display_desktop_home_tabs',
+                            {'tabId': 0, 'withConfig': 1}
+                        );
+                        break;
+                    case 204:
+                        closeHomeTabModal();
+                        window.location = Routing.generate(
+                            'claro_display_desktop_home_tabs',
+                            {'tabId': currentHomeTabId, 'withConfig': 1}
+                        );
+                        break;
+                    default:
+                        $('#hometab-modal-body').html(jqXHR.responseText);
+                }
+            }
+        });
+    });
+
+    $('body').on('click', '#form-hometab-cancel-btn', function () {
+        closeHomeTabModal();
     });
 })();
