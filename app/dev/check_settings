@@ -1,0 +1,21 @@
+<?php
+
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+$checker = new Claroline\CoreBundle\Library\Installation\Settings\SettingChecker();
+
+foreach ($checker->getSettingCategories() as $category) {
+    echo strtoupper($category->getName()) . ': ';
+
+    if (!$category->hasIncorrectSetting()) {
+        echo "OK\n";
+    } else {
+        echo "\n";
+
+        foreach ($category->getIncorrectSettings() as $setting) {
+            echo '    ' . $setting->getRawDescription() . "\n";
+        }
+    }
+}
+
+return (int) $checker->hasFailedRequirement();

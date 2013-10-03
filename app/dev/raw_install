@@ -20,7 +20,6 @@ $directories = array(
     "{$rootDirectory}/templates",
     "{$rootDirectory}/test/files",
     "{$rootDirectory}/test/templates",
-    "{$rootDirectory}/web/HTMLPage",
     "{$rootDirectory}/test/thumbnails",
     "{$rootDirectory}/web/thumbnails"
 );
@@ -32,7 +31,7 @@ foreach ($directories as $directory) {
 
 echo "Checking requirements\n";
 
-system("php {$rootDirectory}/app/console claroline:requirements", $returnCode);
+$returnCode = require __DIR__ . '/check_settings';
 
 if ($returnCode === 0) {
     system("php {$rootDirectory}/app/console doctrine:database:drop --force");
