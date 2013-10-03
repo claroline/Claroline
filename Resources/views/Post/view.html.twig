@@ -49,7 +49,7 @@
             {% set countComments = is_granted('EDIT', blog) ? post.countComments(true) : post.countComments %}
             {% if countComments > 0 %}{{ 'add_comment'|trans }}{% else %}{{ 'be_the_first_to_comment'|trans }}{% endif %} :
             <form action="{{ path('icap_blog_post_view', {'blogId': _resource.id, 'postSlug': post.slug}) }}" method="post" {{ form_enctype(form) }}>
-                {{ form_widget(form) }}
+                {{ form_widget(form.message) }}
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">{{ 'to_comment'|trans }}</button>
                 </div>
@@ -60,5 +60,6 @@
 
 {% block javascripts %}
 {{ parent() }}
+{% render controller('ClarolineCoreBundle:Tool\\WorkspaceResourceParameters:initPicker') %}
 {{ tinymce_init() }}
 {% endblock %}
