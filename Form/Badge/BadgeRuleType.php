@@ -47,8 +47,7 @@ class BadgeRuleType extends AbstractType
                     'label' => 'badge_form_occurrence',
                     'theme_options' => array(
                         'label_width' => 'col-md-4'
-                    ),
-                    'data'  => 1
+                    )
                 )
             );
     }

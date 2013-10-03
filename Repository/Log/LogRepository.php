@@ -479,15 +479,14 @@ class LogRepository extends EntityRepository
     {
         $query = $this->getEntityManager()
             ->createQuery(
-                'SELECT l, COUNT(l.id) as occurence
+                'SELECT l
                 FROM ClarolineCoreBundle:Log\Log l
                 WHERE l.action = :action
                 AND l.doer = :doer
-                GROUP BY l.id
-                HAVING occurence >= :occurence'
+                ORDER BY l.dateLog'
             )
+            ->setMaxResults($badgeRule->getOccurrence())
             ->setParameter('action', $badgeRule->getAction())
-            ->setParameter('occurence', $badgeRule->getOccurrence())
             ->setParameter('doer', $user);
 
         return $executeQuery ? $query->getResult(): $query;

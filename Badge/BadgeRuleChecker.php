@@ -21,16 +21,22 @@ class BadgeRuleChecker
     }
 
     /**
-     * @param BadgeRule $rule
+     * @param BadgeRule $badgeRule
      * @param User      $user
      *
      * @return bool|Log[]
      */
-    public function checkRule(BadgeRule $rule, User $user)
+    public function checkRule(BadgeRule $badgeRule, User $user)
     {
-        $associatedLogs = $this->logRepository->findByBadgeRuleAndUser($rule, $user);
+        $associatedLogs = $this->logRepository->findByBadgeRuleAndUser($badgeRule, $user);
 
-        return (0 < count($associatedLogs)) ? $associatedLogs : false;
+        $checkRule = false;
+
+        if (0 < count($associatedLogs) && count($associatedLogs) >= $badgeRule->getOccurrence()) {
+            $checkRule = $associatedLogs;
+        }
+
+        return $checkRule;
     }
 
     /**
@@ -56,7 +62,7 @@ class BadgeRuleChecker
                 }
                 else {
                     foreach ($checkedLogs as $checkedLog) {
-                        $return[] = $checkedLog[0];
+                        $return[] = $checkedLog;
                     }
                 }
             }

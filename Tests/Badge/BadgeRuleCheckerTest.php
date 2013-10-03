@@ -144,7 +144,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $badge = new Badge();
         $badge->setBadgeRules($badgeRules);
 
-        $this->assertEquals(array(array($log), array($log2)), $this->badgeRuleChecker->checkBadge($badge, $user));
+        $this->assertEquals(array($log, $log2), $this->badgeRuleChecker->checkBadge($badge, $user));
     }
 
     public function testNoRule()
