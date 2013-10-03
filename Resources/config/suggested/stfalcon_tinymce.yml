@@ -2,33 +2,42 @@ stfalcon_tinymce:
     include_jquery: false
     tinymce_jquery: true
     selector: '.tinymce'
+    use_callback_tinymce_init: true
     external_plugins:
             imagemanager:
                 url: 'asset[bundles/clarolinecore/js/tinymce/config.js]'
     tinymce_buttons:
             ressourceLinker: # Id of the first button
                 title: 'Resource Linker'
-                image: 'http://claroline.net/favicon.ico'
+                image: null
+            fullscreenToggle: # Put in fullscreen in avanced mode
+                title : 'toggle'
+                image : null
     theme:
         simple:
             theme: 'modern'
             menubar: false
-            toolbar1: 'bold italic underline | ressourceLinker | alignleft aligncenter alignright alignjustify'
+            toolbar1: 'bold italic underline | ressourceLinker | alignleft aligncenter alignright alignjustify | fullscreenToggle'
         medium:
             theme: 'modern'
             plugins:
-                     - ' preview, fullscreen, emoticons'
+                     - ' -ressourceLinker fullscreen, emoticons code autolink lists link image charmap print preview hr anchor pagebreak'
+                     - 'searchreplace wordcount visualblocks visualchars  fullscreen'
+                     - 'insertdatetime media nonbreaking save table contextmenu directionality'
             menubar: false
-            toolbar1: 'bold,italic,underline,undo,redo,removeformat,cleanup,code | ressourceLinker | preview '
-            toolbar2: 'alignleft aligncenter alignright alignjustify | emoticons'
+            toolbar1: 'bold,italic,underline,undo,redo,removeformat cleanup code | ressourceLinker | fullscreenToggle '
+            toolbar2: 'alignleft aligncenter alignright alignjustify | emoticons lists link image charmap print preview hr anchor pagebreak '
             relative_urls : false
         advanced:
             plugins:
-                - 'advlist autolink lists link image charmap print preview hr anchor pagebreak'
+                - '-ressourceLinker -fullscreenToggle advlist autolink lists link image charmap print preview hr anchor pagebreak'
                 - 'searchreplace wordcount visualblocks visualchars code fullscreen'
                 - 'insertdatetime media nonbreaking save table contextmenu directionality'
-                - 'emoticons template paste textcolor example'
-            toolbar1: ' undo redo | styleselect | bold italic | -example'
+                - 'emoticons template paste textcolor'
+            menubar: false
+            toolbar1: ' undo redo | styleselect | bold italic | ressourceLinker fullscreenToggle | advlist autolink lists link image charmap print preview hr anchor pagebreak '
+            toolbar2: "print preview media | forecolor backcolor emoticons | stfalcon | insertdatetime media nonbreaking save table contextmenu directionality"
+            toolbar3: 'searchreplace wordcount visualblocks visualchars code'
             image_advtab: true
             templates:
                 - {title: 'Test template 1', content: 'Test 1'}

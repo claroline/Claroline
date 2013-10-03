@@ -590,7 +590,7 @@ class HomeControllerTest extends MockeryTestCase
                     function (HomeTabConfig $homeTabConfig) {
 
                         return $homeTabConfig->getType() === 'desktop'
-                            && !$homeTabConfig->isVisible()
+                            && $homeTabConfig->isVisible()
                             && !$homeTabConfig->isLocked()
                             && $homeTabConfig->getTabOrder() === 4;
                     }

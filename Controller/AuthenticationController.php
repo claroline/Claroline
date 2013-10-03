@@ -16,8 +16,9 @@ use Claroline\CoreBundle\Library\Security\Authenticator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
 use Symfony\Component\HttpFoundation\Response;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Manager\MailManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Authentication/login controller.
@@ -115,6 +116,33 @@ class AuthenticationController
         return array(
             'error' => $this->translator->trans('mail_config_problem', array(), 'platform')
         );
+    }
+    
+    /**
+     * @Route(
+     *     "/passwords/reset",
+     *     name="claro_security_initialize_password",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "name" = "ids"}
+     * )
+     */
+    public function passwordInitializationAction(array $users)
+    {
+        foreach ($users as $user) {
+            $mail = $user->getMail();
+            $user->setHashTime(time());
+            $password = sha1(rand(1000, 10000) . $user->getUsername() . $user->getSalt());
+            $user->setResetPasswordHash($password);
+            $this->om->persist($user);
+            $this->om->flush();
+            $this->mailManager->sendForgotPassword('noreply@claroline.net', $mail, $user->getResetPasswordHash());
+        }
+        
+        return new Response(204);
     }
 
     /**

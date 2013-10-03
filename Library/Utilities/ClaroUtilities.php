@@ -1,13 +1,28 @@
 <?php
 
 namespace Claroline\CoreBundle\Library\Utilities;
+
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.utilities.misc")
  */
-class ClaroUtilities
+class ClaroUtilities implements ContainerAwareInterface
 {
+    /**
+     * @DI\InjectParams({
+     *     "container" = @DI\Inject("service_container")
+     * })
+     *
+     * @param ContainerInterface $container
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+    
     /**
      * Fill the empty value on $fillable with $array and sort it.
      *
@@ -112,5 +127,22 @@ class ClaroUtilities
             mt_rand(0, 65535),
             mt_rand(0, 65535)
         );
+    }
+    
+    public function getDefaultEncoding()
+    {
+        $headers = $this->container->get('request')->server->getHeaders();
+        $userAgent = $headers['USER_AGENT'];
+        
+        if (strpos($userAgent, 'Linux') !== false) {
+            return 'ISO-8859-1';
+        }
+        
+        if (strpos($userAgent, 'Windows') !== false) {
+            return 'CP437';
+        }
+        
+        //default
+        return 'ISO-8859-1';
     }
 }
