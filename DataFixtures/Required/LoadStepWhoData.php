@@ -26,7 +26,7 @@ class LoadStepWhoData extends AbstractFixture
         $manager->persist($stepWho2);
 
         $stepWho3 = new stepWho();
-        $stepWho3->setName("group");
+        $stepWho3->setName("class");
         $manager->persist($stepWho3);
 
         $manager->flush();

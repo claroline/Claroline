@@ -119,17 +119,19 @@ var MainCtrlProto = [
          * @todo add confirm messages
          */
         $scope.save = function(path) {
+            var method = null;
+            var route = null;
             var data = 'pathName=' + path.name + '&path=' + angular.toJson(path) + '&workspaceId=' + EditorApp.workspaceId;
-
+            
             if (EditorApp.pathId) {
                 // Update existing path
-                var method = 'PUT';
-                var route = Routing.generate('innova_path_edit_path', {id: EditorApp.pathId});
+                method = 'PUT';
+                route = Routing.generate('innova_path_edit_path', {id: EditorApp.pathId});
             }
             else {
                 // Create new path
-                var method = 'POST';
-                var route = Routing.generate('innova_path_add_path');
+                method = 'POST';
+                route = Routing.generate('innova_path_add_path');
             }
 
             $http({

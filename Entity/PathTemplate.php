@@ -31,7 +31,7 @@ class PathTemplate
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
@@ -41,20 +41,6 @@ class PathTemplate
      * @ORM\Column(name="step", type="text")
      */
     private $step;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="user", type="string", length=255)
-     */
-    private $user;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="edit_date", type="datetime")
-     */
-    private $editDate;
 
     /**
      * Get id
@@ -133,51 +119,5 @@ class PathTemplate
     public function getstep()
     {
         return $this->step;
-    }
-
-    /**
-     * Set user
-     *
-     * @param  string       $user
-     * @return PathTemplate
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return string
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * Set editDate
-     *
-     * @param  \DateTime    $editDate
-     * @return PathTemplate
-     */
-    public function setEditDate($editDate)
-    {
-        $this->editDate = $editDate;
-
-        return $this;
-    }
-
-    /**
-     * Get editDate
-     *
-     * @return \DateTime
-     */
-    public function getEditDate()
-    {
-        return $this->editDate;
     }
 }

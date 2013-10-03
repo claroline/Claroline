@@ -1,33 +1,39 @@
 @CHARSET "UTF-8";
 
 /* START fix new modal width and enable use of grid system */
-.step-edit {
-/*     left: 0; */
-/*     top: 10%; */
-/*     margin: 0 auto; */
-/*     text-align: center; */
-/*     position: fixed; */
-/*     display: inline-block; */
-/*     width: 100%; */
-/*     z-index: 100; */
+.step-edit .modal-dialog {
+	width: auto;
 }
+
+@media (min-width: 768px) {
+  .step-edit .modal-dialog {
+    max-width: 750px;
+  }
+}
+
+@media (min-width: 992px) {
+  .step-edit .modal-dialog {
+    max-width: 970px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .step-edit .modal-dialog {
+    max-width: 1170px;
+  }
+}
+/* END fix new modal width */
 
 .step-edit .modal-footer {
 	margin-top: 0;
 }
 
-.step-edit .container {
-/*     text-align: left; */
-/*     position: relative; */
-/*     margin: 0 auto; */
-/*     left: 0; */
+.step-edit .panel-heading {
+	position: relative;
 }
-/* END fix new modal width */
 
-.step-edit h1 {
-/*     display: inline-block; */
-/*     margin: 0; */
-/*     line-height: 30px; */
+.step-edit .accordion-toggle {
+	font-size: 16px !important;
 }
 
 .step-edit form {
@@ -46,10 +52,6 @@
     padding: 5px 4px;
     vertical-align: top;
 }
-
-/* .panel-documents h2, .panel-tools h2 { */
-/*     padding-bottom: 4px; */
-/* } */
 
 .step-edit .panel {
 	margin-bottom: 0;

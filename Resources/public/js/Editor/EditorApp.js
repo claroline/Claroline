@@ -9,13 +9,13 @@ EditorApp.config(['$routeProvider', function($routeProvider) {
     
     $routeProvider.when('/', {
         templateUrl: EditorApp.webDir + 'js/Editor/Partial/global.html', 
-        controller: 'TreeCtrl',
+        controller: 'GlobalCtrl',
         activeTab: 'Global'
     });
     
     $routeProvider.when('/global', {
         templateUrl: EditorApp.webDir + 'js/Editor/Partial/global.html', 
-        controller: 'TreeCtrl',
+        controller: 'GlobalCtrl',
         activeTab: 'Global'
     });
     
@@ -64,6 +64,7 @@ EditorApp.controller('HelpModalCtrl', HelpModalCtrlProto);
 
 // Path
 EditorApp.factory('PathFactory', PathFactoryProto);
+EditorApp.controller('GlobalCtrl', GlobalCtrlProto);
 EditorApp.controller('TreeCtrl', TreeCtrlProto);
 
 // Steps

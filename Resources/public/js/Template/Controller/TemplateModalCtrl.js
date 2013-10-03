@@ -30,6 +30,8 @@ var TemplateModalCtrlProto = [
             $scope.formTemplate = jQuery.extend(true, {}, currentTemplate); // Create a copy to not affect original data before user save
         }
         
+        console.log($scope.formTemplate);
+        
         /**
          * Close template edit
          * @returns void
@@ -40,7 +42,7 @@ var TemplateModalCtrlProto = [
         
         /**
          * Save template modifications in DB
-         * return void
+         * @returns void
          */
         $scope.save = function (formTemplate) {
             function removeResources(step) {
@@ -59,25 +61,44 @@ var TemplateModalCtrlProto = [
                 removeResources(formTemplate.step);
             }
             
-            if (!editTemplate) {
-                // Create new template
-                $http
-                    .post('../api/index.php/path/templates.json', formTemplate)
-                    .success(function(response) {
-                        formTemplate.id = response;
-                        TemplateFactory.addTemplate(formTemplate);
-                        $modalInstance.close();
-                    });
+            var method = null;
+            var route = null;
+            var data = 'name=' + formTemplate.name + '&description=' + formTemplate.description + '&step=' + angular.toJson(formTemplate.step);
+            
+            if (editTemplate) {
+                // Update existing path
+                method = 'PUT';
+                route = Routing.generate('innova_path_edit_pathtemplate', {id: formTemplate.id});
             }
             else {
-                // Update existing template
-                $http
-                    .put('../api/index.php/path/templates/' + formTemplate.id + '.json', formTemplate)
-                    .success ( function (response) {
-                        TemplateFactory.replaceTemplate(formTemplate);
-                        $modalInstance.close();
-                    });
+                // Create new path
+                method = 'POST';
+                route = Routing.generate('innova_path_add_pathtemplate');
             }
+            
+            $http({
+                method: method,
+                url: route,
+                headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+                data: data
+            })
+            .success(function (data) {
+                if (editTemplate) {
+                    // Update success
+                    alert('updated');
+                }
+                else {
+                    // Create success
+                    alert('created');
+                    formTemplate.id = data;
+                }
+                
+                TemplateFactory.replaceTemplate(formTemplate);
+                $modalInstance.close();
+            })
+            .error(function(data, status) {
+                // TODO
+            });
         }
     }
 ];

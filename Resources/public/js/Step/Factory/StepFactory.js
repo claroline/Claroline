@@ -4,8 +4,9 @@
  * Step Factory
  */
 var StepFactoryProto = [
+    '$http',
     'PathFactory',
-    function(PathFactory) {
+    function($http, PathFactory) {
         // Stored step
         var step = null;
         
@@ -14,6 +15,7 @@ var StepFactoryProto = [
             id                : null,
             resourceId        : null,
             image             : null,
+            expanded          : false,
             name              : 'Step',
             type              : 'seq',
             instructions      : null,
@@ -28,7 +30,39 @@ var StepFactoryProto = [
             excludedResources : []
         };
         
+        
+        var whoList = [];
+        var whereList = [];
+        
         return {
+            /**
+             * 
+             * @returns array
+             */
+            getWhoList: function() {
+                if (whoList.length === 0) {
+                    // Load list from AJAX
+                    $http.get(Routing.generate('innova_path_get_stepwho')).success(function(data) { whoList = data; return whoList; });
+                }
+                else {
+                    return whoList;
+                }
+            },
+            
+            /**
+             * 
+             * @returns array
+             */
+            getWhereList: function() {
+                if (whereList.length === 0) {
+                    // Load list from AJAX
+                    $http.get(Routing.generate('innova_path_get_stepwhere')).success(function(data) { whereList = data; return whereList; });
+                }
+                else {
+                    return whereList;
+                }
+            },
+            
             /**
              * Generate a new empty step
              * 

@@ -12,10 +12,11 @@ var StepModalCtrlProto = [
     'HistoryFactory',
     'ResourceFactory',
     function($scope, $modal, $modalInstance, PathFactory, StepFactory, HistoryFactory, ResourceFactory) {
-        $scope.buttonsDisabled = false;
-
         var localStep = jQuery.extend(true, {}, StepFactory.getStep()); // Create a copy to not affect original data before user save
 
+        $scope.stepWho = StepFactory.getWhoList();
+        $scope.stepWhere = StepFactory.getWhereList();
+        
         $scope.formStep = localStep;
         $scope.inheritedResources = ResourceFactory.getInheritedResources(localStep);
 
@@ -49,9 +50,6 @@ var StepModalCtrlProto = [
          */
         $scope.editResource = function(resourceType, resource) {
             var editResource = false;
-
-            // Disable current modal button to prevent close step modal before close document/tool modal
-            $scope.buttonsDisabled = true;
 
             if (undefined != resource && null != resource) {
                 editResource = true;
@@ -88,10 +86,7 @@ var StepModalCtrlProto = [
                         // Create new resource
                         $scope.formStep.resources.push(resource);
                     }
-                }
-
-                // Modal is now close, enable buttons
-                $scope.buttonsDisabled = false; 
+                } 
             });
         };
 

@@ -19,27 +19,32 @@
         </fieldset>
         
         <fieldset class="row">
-            <label class="checkbox"> 
-                <input type="checkbox" name="is-digital" id="is-digital" ng-model="formResource.isDigital" />
-                Is digital ?
-            </label>
+            <div class="form-group col-md-12">
+	            <label class="checkbox"> 
+	                <input type="checkbox" name="is-digital" id="is-digital" ng-model="formResource.isDigital" />
+	                Is digital ?
+	            </label>
+            </div>
             
-            <div class="form-group" ng-show="formResource.isDigital">
-                <br/>
+            <div class="form-group col-md-12" ng-show="formResource.isDigital">
                 <label for="resource-url">Tip document URL</label>
                 <input type="text" name="resource-url" id="resource-url" ng-model="formResource.url" value="" class="form-control" />
-                
-                <label><strong>OR</strong> select a resource in database</label>
-                <button class="btn"><i class="icon-search"></i> Browse resources</button>
             </div>
+            
+            <div class="form-group col-md-12" ng-show="formResource.isDigital">
+                <label>OR select a resource in database</label>
+                <button class="btn btn-default"><i class="icon-search"></i> Browse resources</button>
+            </div>
+            
         </fieldset>
         
         <fieldset class="row">
-            <br/>
-            <label class="checkbox">
-                <input type="checkbox" name="propagate-to-children" id="propagate-to-children" ng-model="formResource.propagateToChildren" />
-                Is available for children ?
-            </label>
+            <div class="form-group col-md-12">
+	            <label class="checkbox">
+	                <input type="checkbox" name="propagate-to-children" id="propagate-to-children" ng-model="formResource.propagateToChildren" />
+	                Is available for children ?
+	            </label>
+            </div>
         </fieldset>
     </form>
 </div>

@@ -26,7 +26,7 @@ var TemplateFactoryProto = function() {
         replaceTemplate: function(template) {
             var templateFound = false;
             for (var i = 0; i < templates.length; i++) {
-                if (templates[i].id === template.id)
+                if (templates[i].id == template.id)
                 {
                     templates[i] = template;
                     templateFound = true;

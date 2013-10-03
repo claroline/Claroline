@@ -15,6 +15,7 @@ var ResourceFactoryProto = [
             name                : null,
             type                : null,
             subType             : null,
+            url                 : null,
             isDigital           : false,
             propagateToChildren : true
         };

@@ -7,9 +7,9 @@
 <div class="modal-body">
     <form novalidate name="stepForm" id="stepForm">
         <fieldset class="row">
-            <div class="form-group col-md-12">
+            <div ng-hide="isRootNode" class="form-group col-md-12">
                 <label>Name</label>
-                <input ng-disabled="isRootNode" class="form-control" type="text" id="step-name" ng-model="formStep.name" value="{{ formStep.name }}" required />
+                <input class="form-control" type="text" id="step-name" ng-model="formStep.name" value="{{ formStep.name }}" required />
             </div>
             
             <div class="form-group col-md-12">
@@ -18,67 +18,66 @@
             
             <div class="form-group col-md-2">
                 <label for="step-who">Who ?</label>
-                <select class="form-control" name="step-who" id="step-who" ng-model="formStep.who">
+                <select class="form-control" name="step-who" id="step-who" ng-model="formStep.who" ng-options="el.id as el.name for el in stepWho">
                     <option value=""></option>
-                    <option value="student">Student</option>
-                    <option value="group">Group</option>
-                    <option value="class">Class</option>
                 </select>
             </div>
             
             <div class="form-group col-md-2">
                 <label for="step-where">Where ?</label>
-                <select class="form-control" name="step-where" id="step-where" ng-model="formStep.where">
+                <select class="form-control" name="step-where" id="step-where" ng-model="formStep.where" ng-options="el.id as el.name for el in stepWhere">
                     <option value=""></option>
-                    <option value="home">Home</option>
-                    <option value="classroom">Classroom</option>
-                    <option value="library">Library</option>
-                    <option value="anywhere">Anywhere</option>
                 </select>
             </div>
             
             <div class="step-duration form-group col-md-3">
                 <label for="step-duration-hours">Student duration (in hours)</label>
-                <select class="form-control" name="step-duration-hours" id="step-duration-hours" ng-model="formStep.durationHours">
-                    <option value="">00</option>
-                    <option value="1">01</option>
-                    <option value="2">02</option>
-                    <option value="3">03</option>
-                    <option value="4">04</option>
-                    <option value="5">05</option>
-                    <option value="6">06</option>
-                    <option value="7">07</option>
-                    <option value="8">08</option>
-                    <option value="9">09</option>
-                    <option value="10">10</option>
-                </select>
-                <span>h</span>
-                <select class="form-control" name="step-duration-minutes" id="step-duration-minutes" ng-model="formStep.durationMinutes">
-                    <option value="">00</option>
-                    <option value="5">05</option>
-                    <option value="10">10</option>
-                    <option value="15">15</option>
-                    <option value="20">20</option>
-                    <option value="25">25</option>
-                    <option value="30">30</option>
-                    <option value="35">35</option>
-                    <option value="40">40</option>
-                    <option value="45">45</option>
-                    <option value="50">50</option>
-                    <option value="55">55</option>
-                </select>
-                <span>min</span>
+                <div class="row">
+                    <div class="col-md-4">
+                        <select class="col-md-4 form-control" name="step-duration-hours" id="step-duration-hours" ng-model="formStep.durationHours">
+                            <option value="">00</option>
+                            <option value="1">01</option>
+                            <option value="2">02</option>
+                            <option value="3">03</option>
+                            <option value="4">04</option>
+                            <option value="5">05</option>
+                            <option value="6">06</option>
+                            <option value="7">07</option>
+                            <option value="8">08</option>
+                            <option value="9">09</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                    <span class="col-md-1">h</span>
+                    <div class="col-md-4">
+                        <select class="col-md-4 form-control" name="step-duration-minutes" id="step-duration-minutes" ng-model="formStep.durationMinutes">
+                            <option value="">00</option>
+                            <option value="5">05</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                            <option value="25">25</option>
+                            <option value="30">30</option>
+                            <option value="35">35</option>
+                            <option value="40">40</option>
+                            <option value="45">45</option>
+                            <option value="50">50</option>
+                            <option value="55">55</option>
+                        </select>
+                    </div>
+                    <span class="col-md-1">min</span>
+                </div>
             </div>
             
             <div class="form-group col-md-2">
-                <label class="checkbox">
-                 <input type="checkbox" name="with-tutor" id="with-tutor" ng-model="formStep.withTutor" />
-                 With tutor ?
-             </label>
+                <label>
+                     <input type="checkbox" name="with-tutor" id="with-tutor" ng-model="formStep.withTutor" />
+                     With tutor ?
+                </label>
             </div>
             
             <div class="form-group col-md-2">
-                <label class="checkbox">
+                <label>
                     <input type="checkbox" name="with-computer" id="with-computer" ng-model="formStep.withComputer" />
                     With computer ?
                 </label>
@@ -118,7 +117,7 @@
                             <accordion-heading>
                                 <i class="indent" style="margin-left: {{ inheritedResources.documents.length * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
                                 {{ formStep.name }}
-                                <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('document')"><i class="icon-plus"></i></button>
+                                <button class="btn btn-sm btn-primary pull-right" ng-click="editResource('document')"><i class="icon-plus"></i></button>
                             </accordion-heading>
                             
                             <table class="table table-condensed table-hover">
@@ -184,7 +183,7 @@
                             <accordion-heading>
                                 <i class="indent" style="margin-left: {{ inheritedResources.tools.length * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
                                 {{ formStep.name }}
-                                <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('tool')"><i class="icon-plus"></i></button>
+                                <button class="btn btn-sm btn-primary pull-right" ng-click="editResource('tool')"><i class="icon-plus"></i></button>
                             </accordion-heading>
                             
                             <table class="table table-condensed table-hover">
@@ -206,6 +205,6 @@
 </div>
     
 <div class="modal-footer">
-    <button class="btn btn-warning cancel" ng-click="close()" ng-disabled="buttonsDisabled">Cancel</button>
-    <button class="btn btn-primary" ng-click="save(formStep)" ng-disabled="buttonsDisabled || !stepForm.$valid">Save step</button>
+    <button class="btn btn-warning cancel" ng-click="close()">Cancel</button>
+    <button class="btn btn-primary" ng-click="save(formStep)" ng-disabled="!stepForm.$valid">Save step</button>
 </div>
