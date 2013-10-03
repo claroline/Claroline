@@ -331,6 +331,20 @@ class UserManager
         return $this->userRepo->find($userId);
     }
 
+    public function getByRolesIncludingGroups(array $roles, $page = 1)
+    {
+        $res = $this->userRepo->findByRolesIncludingGroups($roles, true);
+
+        return $this->pagerFactory->createPager($res, $page);
+    }
+    
+    public function getByRolesAndNameIncludingGroups(array $roles, $search, $page = 1)
+    {
+        $res = $this->userRepo->findByRolesAndNameIncludingGroups($roles, $search, true);
+
+        return $this->pagerFactory->createPager($res, $page);
+    }
+    
     public function getUsersByRoles(array $roles, $page = 1)
     {
         $res = $this->userRepo->findByRoles($roles, true);

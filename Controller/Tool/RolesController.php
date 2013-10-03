@@ -241,6 +241,74 @@ class RolesController extends Controller
 
         return new Response('success');
     }
+    
+    /**
+     * @todo security is missing
+     * @EXT\Route(
+     *     "/{workspace}/users/unregistered/page/{page}",
+     *     name="claro_workspace_unregistered_user_list",
+     *     defaults={"page"=1, "search"=""},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "/{workspace}/users/unregistered/page/{page}/search/{search}",
+     *     name="claro_workspace_unregistered_user_list_search",
+     *     defaults={"page"=1},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:unregisteredUsers.html.twig")
+     */
+    public function unregisteredUserListAction($page, $search, AbstractWorkspace $workspace)
+    {
+        $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
+        
+        $pager = ($search === '') ?
+            $this->userManager->getAllUsers($page):
+            $this->userManager->getUsersByName($search, $page);
+        
+        return array(
+            'workspace' => $workspace,
+            'pager' => $pager,
+            'search' => $search,
+            'wsRoles' => $wsRoles
+        );
+    }
+    
+    /**
+     * @todo security is missing
+     * @EXT\Route(
+     *     "/{workspace}/groups/unregistered/page/{page}",
+     *     name="claro_workspace_unregistered_group_list",
+     *     defaults={"page"=1, "search"=""},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "/{workspace}/groups/unregistered/page/{page}/search/{search}",
+     *     name="claro_workspace_unregistered_group_list_search",
+     *     defaults={"page"=1},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:unregisteredGroups.html.twig")
+     */
+    public function unregisteredGroupListAction($page, $search, AbstractWorkspace $workspace)
+    {
+        $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
+        
+        $pager = ($search === '') ?
+            $this->groupManager->getAllGroups($page):
+            $this->groupManager->getGroupsByName($search, $page);
+        
+        return array(
+            'workspace' => $workspace,
+            'pager' => $pager,
+            'search' => $search,
+            'wsRoles' => $wsRoles
+        );
+    }
 
     /**
      * @EXT\Route(
@@ -316,14 +384,14 @@ class RolesController extends Controller
     /**
      * @todo security is missing
      * @EXT\Route(
-     *     "/{workspace}/users/registered/page/{page}/{withUnregistered}",
+     *     "/{workspace}/users/registered/page/{page}",
      *     name="claro_workspace_registered_user_list",
      *     defaults={"page"=1, "search"="", "withUnregistered"=0},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/{workspace}/users/registered/page/{page}/search/{search}/{withUnregistered}",
+     *     "/{workspace}/users/registered/page/{page}/search/{search}",
      *     name="claro_workspace_registered_user_list_search",
      *     defaults={"page"=1, "withUnregistered"=0},
      *     options = {"expose"=true}
@@ -339,65 +407,38 @@ class RolesController extends Controller
     public function usersListAction(
         AbstractWorkspace $workspace,
         $page,
-        $search,
-        $withUnregistered,
-        array $roles = array()
+        $search
     )
     {
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
-        if ($withUnregistered === '1') {
-            if ($search === '') {
-                $pager = $this->userManager->getOutsidersByWorkspaceRoles(
-                    array_map(
-                        'unserialize',
-                        array_diff(array_map('serialize', $wsRoles), array_map('serialize', $roles))
-                    ),
-                    $workspace,
-                    $page
-                );
-            } else {
-                $pager = $this->userManager->getOutsidersByWorkspaceRolesAndName(
-                    array_map(
-                        'unserialize',
-                        array_diff(array_map('serialize', $wsRoles), array_map('serialize', $roles))
-                    ),
-                    $search,
-                    $workspace,
-                    $page
-                );
-            }
-        } else {
-            if ($search === '') {
-                $pager = $this->userManager->getUsersByRoles($roles, $page);
-            } else {
-                $pager = $this->userManager->getUsersByRolesAndName($roles, $search, $page);
-            }
-        }
+        $pager = ($search === '') ?
+            $this->userManager->getByRolesIncludingGroups($wsRoles, $page):
+            $this->userManager->getByRolesAndNameIncludingGroups($wsRoles, $search, $page);
+        
+        //groups
 
         return array(
             'workspace' => $workspace,
             'pager' => $pager,
             'search' => $search,
-            'wsRoles' => $wsRoles,
-            'roles' => $roles,
-            'withUnregistered' => $withUnregistered
+            'wsRoles' => $wsRoles
         );
     }
 
     /**
      * @todo security is missing
      * @EXT\Route(
-     *     "/{workspace}/groups/registered/page/{page}/{withUnregistered}",
+     *     "/{workspace}/groups/registered/page/{page}",
      *     name="claro_workspace_registered_group_list",
-     *     defaults={"page"=1, "search"="", "withUnregistered"=0},
+     *     defaults={"page"=1, "search"=""},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/{workspace}/groups/registered/page/{page}/search/{search}/{withUnregistered}",
+     *     "/{workspace}/groups/registered/page/{page}/search/{search}",
      *     name="claro_workspace_registered_group_list_search",
-     *     defaults={"page"=1, "withUnregistered"=0},
+     *     defaults={"page"=1},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -411,49 +452,20 @@ class RolesController extends Controller
     public function groupsListAction(
         AbstractWorkspace $workspace,
         $page,
-        $search,
-        $withUnregistered,
-        array $roles = array()
+        $search
     )
     {
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
-        if ($withUnregistered === '1') {
-            if ($search === '') {
-                $pager = $this->groupManager->getOutsidersByWorkspaceRoles(
-                    array_map(
-                        'unserialize',
-                        array_diff(array_map('serialize', $wsRoles), array_map('serialize', $roles))
-                    ),
-                    $workspace,
-                    $page
-                );
-            } else {
-                $pager = $this->groupManager->getOutsidersByWorkspaceRolesAndName(
-                    array_map(
-                        'unserialize',
-                        array_diff(array_map('serialize', $wsRoles), array_map('serialize', $roles))
-                    ),
-                    $search,
-                    $workspace,
-                    $page
-                );
-            }
-        } else {
-            if ($search === '') {
-                $pager = $this->groupManager->getGroupsByRoles($roles, $page);
-            } else {
-                $pager = $this->groupManager->getGroupsByRolesAndName($roles, $search, $page);
-            }
-        }
+        $pager = ($search === '') ?
+            $pager = $this->groupManager->getGroupsByRoles($wsRoles, $page):
+            $pager = $this->groupManager->getGroupsByRolesAndName($wsRoles, $search, $page);
 
         return array(
             'workspace' => $workspace,
             'pager' => $pager,
             'search' => $search,
-            'wsRoles' => $wsRoles,
-            'roles' => $roles,
-            'withUnregistered' => $withUnregistered
+            'wsRoles' => $wsRoles
         );
     }
 
