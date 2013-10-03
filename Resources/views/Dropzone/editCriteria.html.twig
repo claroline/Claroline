@@ -19,45 +19,51 @@
             {#</ul>#}
         {#</div>#}
     {#</div>#}
+
+    <p>{{ 'criteria_explication'|trans|raw }}</p>
+
     <h3>{{ 'Evaluation Criteria'|trans }}</h3>
 
     <div class="container">
         <form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_edit_criteria', {'resourceId': dropzone.id}) }}">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-9">
                     <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage}) }}" class="btn btn-primary add-criterion-button disabled-during-edition"><span class="glyphicon icon-plus"> {{ 'Add a criterion'|trans }}</span></a>
                 </div>
 
-                <div class="col-md-6 add-remove-column" {% if pager.nbResults == 0 %}style="display: none;"{% endif %}>
+                <div class="col-md-3 add-remove-column" {% if pager.nbResults == 0 %}style="display: none;"{% endif %}>
                     <div class="form-group column-input">
                         {{ form_row(form.totalCriteriaColumn, {'type': 'number', 'label_col_size': 'col-md-3', 'input_col_size': 'col-md-9', 'label_attr': {'style': 'font-weight: normal;'}, 'attr': {'class': 'form-control', 'style': 'width: 60px;'}}) }}
                     </div>
 
                     <div class="row column-input-js" style="display: none;">
-                        <label class="col-md-12 control-label pull-right">
-                            Ajouter ou retirer une colonne
-                            <a href="#" class="remove-column"><span class="glyphicon icon-minus-sign-alt"></span> </a>
-                            <a href="#" class="add-column"><span class="glyphicon icon-plus-sign-alt"></span> </a>
+                        <label class="col-md-12 control-label pull-right" style="text-align: center;">
+                            <div>{{ 'Change scale'|trans }}</div>
+                            <span>
+                                <a href="#" class="remove-column"><span class="glyphicon icon-minus-sign-alt"></span> </a>
+                                <a href="#" class="add-column"><span class="glyphicon icon-plus-sign-alt"></span> </a>
+                            </span>
+
                         </label>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
             {% if pager.haveToPaginate %}
-                {{
-                pagerfanta(
-                pager,
-                'twitter_bootstrap_translated',
-                {
-                'proximity' : 1,
-                'routeName': 'icap_dropzone_edit_criteria_paginated',
-                'routeParams': {'resourceId': dropzone.id}
-                }
-                )
-                }}
+                <div class="row">
+                    {{
+                    pagerfanta(
+                    pager,
+                    'twitter_bootstrap_translated',
+                    {
+                    'proximity' : 1,
+                    'routeName': 'icap_dropzone_edit_criteria_paginated',
+                    'routeParams': {'resourceId': dropzone.id}
+                    }
+                    )
+                    }}
+                </div>
             {% endif %}
-            </div>
 
             {% if pager %}
                 {% for criterion in pager.currentPageResults %}
@@ -74,8 +80,8 @@
                                 <div class="col-md-3">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <strong>{{ 'Not at all'|trans }}</strong>
-                                            <strong class="pull-right">{{ 'Entirely'|trans }}</strong>
+                                            <span>{{ 'Not at all'|trans }}</span>
+                                            <span class="pull-right">{{ 'Entirely'|trans }}</span>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -103,8 +109,8 @@
                 {% endfor %}
             {% endif %}
 
-            <div class="row">
-                {% if pager.haveToPaginate %}
+            {% if pager.haveToPaginate %}
+                <div class="row">
                     {{
                     pagerfanta(
                     pager,
@@ -116,8 +122,8 @@
                     }
                     )
                     }}
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
 
             <hr/>
             <div class="row add-criteria-zone">
@@ -144,8 +150,8 @@
                         <div class="col-md-3">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <strong>{{ 'Not at all'|trans }}</strong>
-                                    <strong class="pull-right">{{ 'Entirely'|trans }}</strong>
+                                    <span>{{ 'Not at all'|trans }}</span>
+                                    <span class="pull-right">{{ 'Entirely'|trans }}</span>
                                 </div>
                             </div>
                             <div class="row">
@@ -228,6 +234,11 @@
         }
         .column-container-div {
             text-align: center;
+        }
+
+        hr {
+            margin-bottom: 0px;
+            margin-top: 0px;
         }
     </style>
 {% endblock %}

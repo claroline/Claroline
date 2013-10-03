@@ -57,6 +57,7 @@ class DropzoneCommonType extends AbstractType
                     'notStarted' => 'notStartedManualState',
                     'allowDrop' => 'allowDropManualState',
                     'peerReview' => 'peerReviewManualState',
+                    'allowDropAndPeerReview' => 'allowDropAndPeerReviewManualState',
                     'finished' => 'finishedManualState',
                 ),
                 'expanded' => true,
