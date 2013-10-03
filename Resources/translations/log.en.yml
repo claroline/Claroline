@@ -11,20 +11,20 @@ log_resource-icap_blog-configure_title:     "Blog configuration"
 log_resource-icap_blog-configure_filter:    "Blog configuration"
 
 log_resource-icap_blog-post_update_shortname: "Post updating"
-log_resource-icap_blog-post_update_title:     "Post updating"
-log_resource-icap_blog-post_update_filter:    "Post updating"
+log_resource-icap_blog-post_update_title:     "Post updating in a blog"
+log_resource-icap_blog-post_update_filter:    "Post updating in a blog"
 
 log_resource-icap_blog-post_delete_shortname: "Post deletion"
-log_resource-icap_blog-post_delete_title:     "Post deletion"
-log_resource-icap_blog-post_delete_filter:    "Post deletion"
+log_resource-icap_blog-post_delete_title:     "Post deletion in a blog"
+log_resource-icap_blog-post_delete_filter:    "Post deletion in a blog"
 
 log_resource-icap_blog-comment_create_shortname: "Comment creation"
-log_resource-icap_blog-comment_create_filter:    "Comment creation"
-log_resource-icap_blog-comment_create_title:     "Comment creation"
+log_resource-icap_blog-comment_create_filter:    "Comment creation in a post"
+log_resource-icap_blog-comment_create_title:     "Comment creation in a post"
 
 log_resource-icap_blog-comment_delete_shortname: "Comment deletion"
-log_resource-icap_blog-comment_delete_filter:    "Comment deletion"
-log_resource-icap_blog-comment_delete_title:     "Comment deletion"
+log_resource-icap_blog-comment_delete_filter:    "Comment deletion in a post"
+log_resource-icap_blog-comment_delete_title:     "Comment deletion in a post"
 
 log_created_post: "Created post"
 log_readed_post:  "Readed post"
