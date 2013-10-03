@@ -1,4 +1,4 @@
-PathBundle
+PathBundle!
 ===========
 
 ### Install
