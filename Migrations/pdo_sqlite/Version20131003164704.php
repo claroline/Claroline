@@ -8,27 +8,32 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/24 02:30:54
+ * Generation date: 2013/10/03 04:47:05
  */
-class Version20130924143051 extends AbstractMigration
+class Version20131003164704 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE icap__wiki_section (
                 id INTEGER NOT NULL, 
+                user_id INTEGER DEFAULT NULL, 
                 wiki_id INTEGER NOT NULL, 
                 parent_id INTEGER DEFAULT NULL, 
-                title VARCHAR(255) NOT NULL, 
+                title VARCHAR(255) DEFAULT NULL, 
                 visible BOOLEAN NOT NULL, 
                 text CLOB DEFAULT NULL, 
-                created DATETIME NOT NULL, 
+                creation_date DATETIME NOT NULL, 
+                modification_date DATETIME NOT NULL, 
                 lft INTEGER NOT NULL, 
                 lvl INTEGER NOT NULL, 
                 rgt INTEGER NOT NULL, 
                 root INTEGER DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_82904AAA76ED395 ON icap__wiki_section (user_id)
         ");
         $this->addSql("
             CREATE INDEX IDX_82904AAAA948DBE ON icap__wiki_section (wiki_id)

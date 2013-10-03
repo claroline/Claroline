@@ -8,26 +8,29 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/24 02:30:54
+ * Generation date: 2013/10/03 04:47:05
  */
-class Version20130924143051 extends AbstractMigration
+class Version20131003164704 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE icap__wiki_section (
                 id INT AUTO_INCREMENT NOT NULL, 
+                user_id INT DEFAULT NULL, 
                 wiki_id INT NOT NULL, 
                 parent_id INT DEFAULT NULL, 
-                title VARCHAR(255) NOT NULL, 
+                title VARCHAR(255) DEFAULT NULL, 
                 visible BOOLEAN NOT NULL, 
                 text TEXT DEFAULT NULL, 
-                created DATETIME NOT NULL, 
+                creation_date DATETIME NOT NULL, 
+                modification_date DATETIME NOT NULL, 
                 lft INT NOT NULL, 
                 lvl INT NOT NULL, 
                 rgt INT NOT NULL, 
                 root INT DEFAULT NULL, 
                 PRIMARY KEY(id), 
+                INDEX IDX_82904AAA76ED395 (user_id), 
                 INDEX IDX_82904AAAA948DBE (wiki_id), 
                 INDEX IDX_82904AA727ACA70 (parent_id)
             )
@@ -41,6 +44,11 @@ class Version20130924143051 extends AbstractMigration
                 UNIQUE INDEX UNIQ_1FAD6B8179066886 (root_id), 
                 UNIQUE INDEX UNIQ_1FAD6B81B87FAB32 (resourceNode_id)
             )
+        ");
+        $this->addSql("
+            ALTER TABLE icap__wiki_section 
+            ADD CONSTRAINT FK_82904AAA76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id)
         ");
         $this->addSql("
             ALTER TABLE icap__wiki_section 

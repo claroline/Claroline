@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\WikiBundle\Migrations\pdo_oci;
+namespace Icap\WikiBundle\Migrations\oci8;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,21 +8,23 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/24 02:30:54
+ * Generation date: 2013/10/03 04:47:05
  */
-class Version20130924143051 extends AbstractMigration
+class Version20131003164704 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE icap__wiki_section (
                 id NUMBER(10) NOT NULL, 
+                user_id NUMBER(10) DEFAULT NULL, 
                 wiki_id NUMBER(10) NOT NULL, 
                 parent_id NUMBER(10) DEFAULT NULL, 
-                title VARCHAR2(255) NOT NULL, 
+                title VARCHAR2(255) DEFAULT NULL, 
                 visible NUMBER(1) NOT NULL, 
                 text CLOB DEFAULT NULL, 
-                created TIMESTAMP(0) NOT NULL, 
+                creation_date TIMESTAMP(0) NOT NULL, 
+                modification_date TIMESTAMP(0) NOT NULL, 
                 lft NUMBER(10) NOT NULL, 
                 lvl NUMBER(10) NOT NULL, 
                 rgt NUMBER(10) NOT NULL, 
@@ -57,6 +59,9 @@ class Version20130924143051 extends AbstractMigration
             FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
             SELECT ICAP__WIKI_SECTION_ID_SEQ.NEXTVAL INTO last_Sequence 
             FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_82904AAA76ED395 ON icap__wiki_section (user_id)
         ");
         $this->addSql("
             CREATE INDEX IDX_82904AAAA948DBE ON icap__wiki_section (wiki_id)
@@ -105,6 +110,11 @@ class Version20130924143051 extends AbstractMigration
         ");
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_1FAD6B81B87FAB32 ON icap__wiki (resourceNode_id)
+        ");
+        $this->addSql("
+            ALTER TABLE icap__wiki_section 
+            ADD CONSTRAINT FK_82904AAA76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id)
         ");
         $this->addSql("
             ALTER TABLE icap__wiki_section 

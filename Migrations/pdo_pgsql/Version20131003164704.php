@@ -8,27 +8,32 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/24 02:30:54
+ * Generation date: 2013/10/03 04:47:05
  */
-class Version20130924143051 extends AbstractMigration
+class Version20131003164704 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE icap__wiki_section (
                 id SERIAL NOT NULL, 
+                user_id INT DEFAULT NULL, 
                 wiki_id INT NOT NULL, 
                 parent_id INT DEFAULT NULL, 
-                title VARCHAR(255) NOT NULL, 
+                title VARCHAR(255) DEFAULT NULL, 
                 visible BOOLEAN NOT NULL, 
                 text TEXT DEFAULT NULL, 
-                created TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, 
+                creation_date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, 
+                modification_date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, 
                 lft INT NOT NULL, 
                 lvl INT NOT NULL, 
                 rgt INT NOT NULL, 
                 root INT DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_82904AAA76ED395 ON icap__wiki_section (user_id)
         ");
         $this->addSql("
             CREATE INDEX IDX_82904AAAA948DBE ON icap__wiki_section (wiki_id)
@@ -49,6 +54,11 @@ class Version20130924143051 extends AbstractMigration
         ");
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_1FAD6B81B87FAB32 ON icap__wiki (resourceNode_id)
+        ");
+        $this->addSql("
+            ALTER TABLE icap__wiki_section 
+            ADD CONSTRAINT FK_82904AAA76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
             ALTER TABLE icap__wiki_section 
