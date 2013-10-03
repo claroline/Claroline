@@ -12,7 +12,8 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3"
+        "php": ">=5.3.3",
+        "claroline/core-bundle": "*"
     },
     "autoload": {
         "psr-0": { "Claroline\\WebInstaller": "lib" }

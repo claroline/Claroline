@@ -1,9 +1,38 @@
 <?php
 
 return array(
-    'welcome_message' => 'Bienvenue dans l\'installateur de Claroline',
-    'choose_language' => 'Choisissez la langue de l\'installation',
+    'welcome' => 'Bienvenue',
+    'welcome_message' => 'Cet assistant vous guidera à travers l\'installation de la plateforme.',
+    'choose_language' => 'Langue de l\'installation',
     'requirements_check' => 'Vérification de la configuration',
+    'correct_config' => 'Votre configuration est correcte.',
+    'PHP version' => 'Version de PHP',
+    'PHP version must be at least %version% (installed version is %installed_version%)'
+        => 'La version de PHP doit être supérieure ou égale à %version% (la version actuellement installée est %installed_version%)',
+    'PHP version 5.3.16 has known bugs which will prevent the application from working properly'
+        => 'La version 5.3.16 de PHP comporte des bugs connus qui empêcheront l\'application de fonctionner correctement.',
+    'PHP versions prior to 5.3.8 have known bugs which may prevent the application from working properly'
+        => 'Les versions de PHP en-dessous de 5.3.8 comportent des bugs connus pouvant empêcher l\'application de fonctionner correctement.',
+    'PHP version 5.4.0 has known bugs which may prevent the application from working properly'
+        => 'La version 5.4.0 comporte des bugs connus pouvant empêcher l\'application de fonctionner correctement.',
+    'PHP configuration' => 'Configuration de PHP',
+    'Parameter date.timezone must be set in your php.ini' => 'Le paramètre <em>date.timezone</em> doit être présent dans votre <em>php.ini</em>.',
+    'Your default timezone (%timezone%) is not supported' => 'Votre timezone par défaut (<em>%timezone%</em>) n\'est pas supportée.',
+    'Parameter %parameter% must be set to %value% in your php.ini' => 'Le paramètre <em>%parameter%</em> doit être réglé à <em>%value%</em> dans votre php.ini.',
+    'Parameter %parameter% should be set to %value% in your php.ini' => 'Le paramètre <em>%parameter%</em> devrait être réglé à <em>%value%</em> dans votre php.ini.',
+    'PHP extensions' => 'Extensions de PHP',
+    'Extension %extension% must be installed and enabled' => 'L\'extension <em>%extension%</em> doit être installée et activée.',
+    'Extension %extension% should be installed and enabled' => 'L\'extension <em>%extension%</em> devrait être installée et activée.',
+    'PDO must have some drivers installed (i.e. for MySQL, PostgreSQL, etc.)'
+        => 'PDO doit avoir au moins un driver installé (i.e. pour MySQL, PostgreSQL, etc.).',
+    'A PHP accelerator (like APC or XCache) should be installed and enabled (highly recommended)'
+        => 'Un accélérateur PHP (comme APC or XCache) devrait être installé et activé (hautement recommandé).',
+    'APC version must be at least %version%' => 'La version d\'APC doit être supérieur ou égale à %version%.',
+    'Extension %extension% should not be enabled' => 'L\'extension <em>%extension%</em> ne devrait pas être active.',
+    'Parameter %parameter% should be above 100 in php.ini' => 'Le paramètre <em>%parameter%</em> doit être réglé à plus de 100 dans votre php.ini.',
+    'File permissions' => 'Permissions sur les fichiers',
+    'The directory %directory% must be writable' => 'Le répertoire <em>%directory%</em> doit être accessible en écriture.',
+    'The file %file% must be writable' => 'Le fichier <em>%file%</em> doit être accessible en écriture.',
     'previous_step' => 'Précédent',
     'next_step' => 'Suivant'
 );

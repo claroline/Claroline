@@ -19,8 +19,10 @@ class Router
             return $controller->languageStep();
         } elseif ($pathInfo === '/' && $method === 'POST') {
             return $controller->languageStepSubmit();
-        } elseif ($pathInfo === '/requirements' && $method = 'GET') {
+        } elseif ($pathInfo === '/requirements' && $method === 'GET') {
             return $controller->requirementStep();
+        } elseif ($pathInfo === '/database' && $method === 'GET') {
+            return $controller->databaseStep();
         }
 
         header("HTTP/1.0 404 Not Found");

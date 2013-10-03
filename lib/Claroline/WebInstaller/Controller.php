@@ -2,6 +2,8 @@
 
 namespace Claroline\WebInstaller;
 
+use Claroline\CoreBundle\Library\Installation\Settings\SettingChecker;
+
 class Controller
 {
     private $container;
@@ -21,14 +23,38 @@ class Controller
 
     public function languageStepSubmit()
     {
-        $_SESSION['language'] = $_POST['language'];
-        $this->container->getTranslator()->setLanguage($_SESSION['language']);
+        switch ($_POST['language']) {
+            case 'Français':
+                $language = 'fr';
+                break;
+            case 'English':
+            default:
+                $language = 'en';
+        }
+
+        $_SESSION['language'] = $language;
+        $this->container->getTranslator()->setLanguage($language);
         $this->languageStep();
     }
 
     public function requirementStep()
     {
-        $this->displayStep('requirements', array('no_next' => true));
+        $settingChecker = new SettingChecker();
+        $this->displayStep(
+            'requirements',
+            array(
+                'setting_categories' => $settingChecker->getSettingCategories(),
+                'has_failed_requirement' => $settingChecker->hasFailedRequirement()
+            )
+        );
+    }
+
+    public function databaseStep()
+    {
+        $this->displayStep(
+            'requirements',
+            array()
+        );
     }
 
     private function displayStep($template, array $variables)

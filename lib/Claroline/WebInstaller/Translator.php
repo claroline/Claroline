@@ -29,13 +29,23 @@ class Translator
         return $this->language;
     }
 
-    public function translate($key, array $parameters = array())
+    public function translate($key, array $parameters = null)
     {
         if (!$this->catalogue) {
             $this->catalogue = $this->buildCatalogue();
         }
 
         if (isset($this->catalogue[$key])) {
+            if ($parameters) {
+                $translation = $this->catalogue[$key];
+
+                foreach ($parameters as $name => $parameter) {
+                    $translation = str_replace("%{$name}%", $parameter, $translation);
+                }
+
+                return $translation;
+            }
+
             return $this->catalogue[$key];
         }
 
@@ -46,7 +56,7 @@ class Translator
     {
         $translator = $this;
 
-        return function ($key, array $parameters = array()) use ($translator) {
+        return function ($key, array $parameters = null) use ($translator) {
             return $translator->translate($key, $parameters);
         };
     }

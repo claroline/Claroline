@@ -2,28 +2,28 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <style>
-        .button {
-            border: solid #999 1px;
-            color: #000;
-            background-color: #EEE;
-            text-decoration: none;
-        }
-        .disabled {
-            color: #AAA;
-        }
-    </style>
-
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+    <script src="//code.jquery.com/jquery-git1.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <h1>Claroline</h1>
-
-    <?php echo $render($var('stepTemplate'), $var('stepVariables')) ?>
-
+    <nav class="navbar" role="navigation">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Claroline Connect</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <?php echo $render($var('stepTemplate'), $var('stepVariables')) ?>
+            </div>
+        </div>
+    </div>
     <script>
-        for (var i = 0, disabled = document.getElementsByClassName('disabled'); i < disabled.length; ++i) {
-            disabled[i].setAttribute('onclick', 'return false');
-        }
+        $('.auto-submit').on('change', function () {
+            this.form.submit();
+        });
     </script>
 </body>
 </html>

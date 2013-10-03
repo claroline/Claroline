@@ -1,14 +1,23 @@
-<h2><?php echo $trans('welcome_message') ?></h2>
+<h4><?php echo $trans('welcome') ?></h4>
+<p><?php echo $trans('welcome_message') ?></p>
 
-<form action="<?php echo $path('/') ?>" method="post">
-    <label><?php echo $trans('choose_language') ?> :</label>
-    <select name="language" onchange="this.form.submit()">
-        <option <?php if ($var('language') === 'en') echo 'selected' ?>>en</option>
-        <option <?php if ($var('language') === 'fr') echo 'selected' ?>>fr</option>
-    </select>
-    <input type="submit" style="visibility: hidden" value=""/>
+<form action="<?php echo $path('/') ?>" method="post" class="form-horizontal">
+    <div class="form-group">
+        <label class="control-label col-lg-2"><?php echo $trans('choose_language') ?></label>
+        <div class="col-lg-2">
+            <select name="language" class="form-control auto-submit">
+                <option <?php if ($var('language') === 'en') echo 'selected' ?>>
+                    English
+                </option>
+                <option <?php if ($var('language') === 'fr') echo 'selected' ?>>
+                    Français
+                </option>
+            </select>
+        </div>
+    </div>
+    <input type="submit" class="hidden"/>
 </form>
 
-<a href="<?php echo $path('/requirements') ?>" class="button">
+<a href="<?php echo $path('/requirements') ?>" class="btn btn-default">
     <?php echo $trans('next_step') ?>
 </a>
