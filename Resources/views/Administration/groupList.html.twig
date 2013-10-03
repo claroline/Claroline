@@ -132,7 +132,7 @@
         parameters.route.action = {};
         parameters.route.normal = {"route": "claro_admin_group_list", "parameters": {}};
         parameters.route.search = {"route": "claro_admin_group_list_search", "parameters": {}};
-        parameters.route.action.remove = {"route": "claro_admin_multidelete_group", "parameters": {}, "type": "DELETE", "confirmTemplate": removeGroupConfirm};
+        parameters.route.action.remove = {"route": "claro_admin_multidelete_group", "parameters": {}, "type": "DELETE", "confirmTemplate": removeGroupConfirm, "delete": true};
         Claroline.Table.initialize(parameters);
     </script>
 {% endblock %}

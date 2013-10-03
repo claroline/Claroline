@@ -8,6 +8,7 @@ activity_form_instructions: Instructions
 activity_form_name: Nom
 add: Ajouter
 add_group: 'Ajouter un groupe'
+add_groups: 'Ajouter des groupes'
 add_group_s_confirm_message: 'groupe(s) ajouté(s)'
 add_resource: 'Ajouter une ressource'
 add_role: 'Ajouter un role'
@@ -16,6 +17,7 @@ add_tag_to_workspace: 'Ajouter un Tag à l''espace d''activités'
 add_user: 'Ajouter un utilisateur'
 add_users: 'Ajouter des utilisateurs'
 add_user_s_confirm_message: 'utilisateur(s) ajouté(s)'
+add_roles_confirm_message: 'Voulez vous ajouter le(s) role(s) suivant(s) aux %count% élément(s) sélectionné(s): '
 add_widget_to_home_tab: 'Ajouter un widget à l''onglet'
 admin: Administrateur
 admin_analytics: 'Statistiques plateforme'
@@ -216,7 +218,7 @@ mail_config_problem : Veuillez contacter l'administrateur pour reinitialiser vot
 mail_form_content: Contenu
 mail_form_receiver : destinataire(s)
 mail_form_object: Objet
-mail_login : 'Cliquez sur le lien' 
+mail_login : 'Cliquez sur le lien'
 mail_invalid : 'Le format de votre email n''est pas valide'
 mail_message : 'Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur lien ci-dessous pour le réinitialiser. Si vous n''êtes pas à l''origine de cette action, veuillez ignorer ce message.'
 mail_not_available : 'La fonction d''envoi de mail n''est pas disponible'
@@ -268,8 +270,10 @@ new: Nouveau
 new_message: 'Nouveau message'
 no: 'non'
 no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
+no_group: 'Aucun groupe'
 no_search_results: 'Votre recherche n''a retourné aucun résultat.'
 no_tag: 'Il n''y a aucun Tag'
+no_user: 'Aucun utilisateur'
 no_workspace: 'Il n''y a aucun espace d''activités'
 none: Aucun
 note: Note
@@ -278,6 +282,7 @@ object: Objet
 ok: Ok
 or: Ou
 open: Ouvrir
+operation_done: Opération effectuée.
 options: Options
 order: Ordre
 organize_admin_tags: 'Organiser les Tags administrateur'
@@ -366,6 +371,8 @@ restore : Restaurer
 restore_messages_confirm_message: 'message(s) restaurés'
 results: Résultats
 results_for_search_on: 'Resultat(s) de la recherche sur'
+reset_password: 'Réinitialiser mot de passe'
+reset_password_message: 'Etes vous sur de vouloir réinitialiser le mot de passe ?'
 rights: Droits
 rights_management: 'Gestion des droits'
 role: Rôle
@@ -385,6 +392,7 @@ See all: 'Voir tous'
 see_more: Voir plus
 select all: 'Tout sélectionner'
 select_all: 'Tout sélectionner'
+select_contacts_title: 'Sélectionnez les destinataires'
 select_groups_for_registration_to_workspace: 'Choississez les groupes à inscrire'
 select_roles_to_assign: 'Selectionnez les Rôles à attribuer'
 select_users_for_registration_to_workspace: 'Choississez les utilisateurs à inscrire'

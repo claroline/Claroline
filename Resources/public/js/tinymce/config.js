@@ -1,8 +1,8 @@
 
 function callback_tinymce_init() {
-    $('.mce-toolbar').each(function (index, b) {
+    $('.mce-toolbar').each(function (index, element) {
         if (index > 0) 
-            b.setAttribute('style', 'display: none'); 
+            element.setAttribute('style', 'display: none'); 
     });
 
     $('div [aria-label="toggle"] button').html("<i class='icon-resize-full' style='font-family: FontAwesome'></i>");

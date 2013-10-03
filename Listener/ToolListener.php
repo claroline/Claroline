@@ -66,36 +66,6 @@ class ToolListener
     }
 
     /**
-     * @DI\Observe("open_tool_workspace_user_management")
-     *
-     * @param DisplayToolEvent $event
-     */
-    public function onDisplayWorkspaceUserManagement(DisplayToolEvent $event)
-    {
-        $workspaceId = $event->getWorkspace()->getId();
-        $response = $this->forward(
-            'ClarolineCoreBundle:Tool\User:registeredUsersList',
-            array('workspaceId' => $workspaceId, 'page' => 1, 'search' => '')
-        );
-        $event->setContent($response->getContent());
-    }
-
-    /**
-     * @DI\Observe("open_tool_workspace_group_management")
-     *
-     * @param DisplayToolEvent $event
-     */
-    public function onDisplayWorkspaceGroupManagement(DisplayToolEvent $event)
-    {
-        $workspaceId = $event->getWorkspace()->getId();
-        $response = $this->forward(
-            'ClarolineCoreBundle:Tool\Group:registeredGroupsList',
-            array('workspaceId' => $workspaceId, 'page' => 1, 'search' => '')
-        );
-        $event->setContent($response->getContent());
-    }
-
-    /**
      * @DI\Observe("open_tool_workspace_agenda")
      *
      * @param DisplayToolEvent $event
@@ -133,16 +103,6 @@ class ToolListener
     public function onDisplayDesktopAgenda(DisplayToolEvent $event)
     {
         $event->setContent($this->desktopAgenda());
-    }
-
-    /**
-     * @DI\Observe("open_tool_workspace_workgroup")
-     *
-     * @param \Claroline\CoreBundle\Event\DisplayToolEvent $event
-     */
-    public function onDisplayWorkgroup(DisplayToolEvent $event)
-    {
-        $event->setContent($this->workgroup($event->getWorkspace()->getId()));
     }
 
     /**
@@ -250,16 +210,6 @@ class ToolListener
                 'listEvents' => $listEvents,
                 'cours' => array_unique($cours)
             )
-        );
-    }
-
-    public function workgroup($workspaceId)
-    {
-        $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
-
-        return $this->templating->render(
-            'ClarolineCoreBundle:Tool/workspace/workgroup:workgroup.html.twig',
-            array('workspace' => $workspace)
         );
     }
 
