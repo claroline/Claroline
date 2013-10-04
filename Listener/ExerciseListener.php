@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
@@ -14,8 +15,10 @@ use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Form\ExerciseType;
+use UJM\ExoBundle\Entity\ExerciseQuestion;
+use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Subscription;
+use UJM\ExoBundle\Form\ExerciseType;
 
 class ExerciseListener extends ContainerAware
 {
@@ -156,5 +159,57 @@ class ExerciseListener extends ContainerAware
         $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 
         $event->setContent($response->getContent());
+    }
+    
+    public function onCopy(CopyResourceEvent $event)
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $resource = $event->getResource();
+
+        $exerciseToCopy = $em->getRepository('UJMExoBundle:Exercise')->find($resource->getId());
+        $listQuestionsExoToCopy = $em->getRepository('UJMExoBundle:ExerciseQuestion')
+                                     ->findBy(array('exercise' => $exerciseToCopy->getId()));
+        
+        $newExercise = new Exercise();
+        $newExercise->setName($resource->getName());
+        $newExercise->setTitle($exerciseToCopy->getTitle());
+        $newExercise->setDescription($exerciseToCopy->getDescription());
+        $newExercise->setShuffle($exerciseToCopy->getShuffle());
+        $newExercise->setNbQuestion($exerciseToCopy->getNbQuestion());
+        $newExercise->setDateCreate($exerciseToCopy->getDateCreate());
+        $newExercise->setDuration($exerciseToCopy->getDuration());
+        $newExercise->setNbQuestionPage($exerciseToCopy->getNbQuestionPage());
+        $newExercise->setDoprint($exerciseToCopy->getDoprint());
+        $newExercise->setMaxAttempts($exerciseToCopy->getMaxAttempts());
+        $newExercise->setCorrectionMode($exerciseToCopy->getCorrectionMode());
+        $newExercise->setDateCorrection($exerciseToCopy->getDateCorrection());
+        $newExercise->setMarkMode($exerciseToCopy->getMarkMode());
+        $newExercise->setStartDate($exerciseToCopy->getStartDate());
+        $newExercise->setUseDateEnd($exerciseToCopy->getUseDateEnd());
+        $newExercise->setEndDate($exerciseToCopy->getEndDate());
+        $newExercise->setDispButtonInterrupt($exerciseToCopy->getDispButtonInterrupt());
+        $newExercise->setLockAttempt($exerciseToCopy->getLockAttempt());
+        
+        $em->persist($newExercise);
+        $em->flush();
+        
+        foreach ($listQuestionsExoToCopy as $eq) {
+            $questionToAdd = $em->getRepository('UJMExoBundle:Question')->find($eq->getQuestion());;
+            $exerciseQuestion = new ExerciseQuestion($newExercise, $questionToAdd);
+            $exerciseQuestion->setOrdre($eq->getOrdre());
+            
+            $em->persist($exerciseQuestion);
+        }
+        
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $subscription = new Subscription($user, $newExercise);
+        $subscription->setAdmin(true);
+        $subscription->setCreator(true);
+        $em->persist($subscription);
+        
+        $em->flush();
+        
+        $event->setCopy($newExercise);
+        $event->stopPropagation();
     }
 }
