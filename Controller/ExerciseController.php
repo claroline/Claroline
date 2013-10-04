@@ -89,6 +89,7 @@ class ExerciseController extends Controller
                     'workspace'   => $workspace,
                     'entity'      => $exercise,
                     'edit_form'   => $editForm->createView(),
+                    '_resource'   => $exercise
                 )
             );
         } else {
@@ -174,7 +175,8 @@ class ExerciseController extends Controller
                 'exoAdmin'       => $exoAdmin,
                 'allowToCompose' => $allowToCompose,
                 'userId'         => $user->getId(),
-                'nbQuestion'     => $nbQuestions['nbq']
+                'nbQuestion'     => $nbQuestions['nbq'],
+                '_resource'      => $exercise
             )
         );
     }
@@ -729,7 +731,8 @@ class ExerciseController extends Controller
                     'seriesResponsesTab'    => $histoSuccess['seriesResponsesTab'],
                     'maxY2'                 => $histoSuccess['maxY'],
                     'coeffQ'                => $histoDiscrimination['coeffQ'],
-                    'MeasureDifficulty'     => $histoMeasureDifficulty
+                    'MeasureDifficulty'     => $histoMeasureDifficulty,
+                    '_resource'             => $exercise
                 )
             );
         } else {

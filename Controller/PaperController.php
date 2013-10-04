@@ -120,9 +120,10 @@ class PaperController extends Controller
                 'workspace' => $workspace,
                 'papers'    => $papers,
                 'isAdmin'   => $exoAdmin,
-                'pager' => $pagerfanta,
-                'exoID' => $exoID,
-                'display' => $display
+                'pager'     => $pagerfanta,
+                'exoID'     => $exoID,
+                'display'   => $display,
+                '_resource' => $exercise
             )
         );
     }
@@ -183,7 +184,8 @@ class PaperController extends Controller
                 'hintViewed'   => $hintViewed,
                 'correction'   => $paper->getExercise()->getCorrectionMode(),
                 'display'      => $display,
-                'admin'        => $admin
+                'admin'        => $admin,
+                '_resource'    => $paper->getExercise()
             )
         );
     }
