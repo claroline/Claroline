@@ -12,6 +12,9 @@ var StepModalCtrlProto = [
     'HistoryFactory',
     'ResourceFactory',
     function($scope, $modal, $modalInstance, PathFactory, StepFactory, HistoryFactory, ResourceFactory) {
+        // Store symfony base partials route
+        $scope.webDir = EditorApp.webDir;
+        
         var localStep = jQuery.extend(true, {}, StepFactory.getStep()); // Create a copy to not affect original data before user save
 
         $scope.stepWho = StepFactory.getWhoList();

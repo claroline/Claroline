@@ -40,13 +40,19 @@ var StepFactoryProto = [
              * @returns array
              */
             getWhoList: function() {
-                if (whoList.length === 0) {
-                    // Load list from AJAX
-                    $http.get(Routing.generate('innova_path_get_stepwho')).success(function(data) { whoList = data; return whoList; });
-                }
-                else {
-                    return whoList;
-                }
+                // TODO : replace by AJAX call
+//                if (whoList.length === 0) {
+//                    // Load list from AJAX
+//                    $http.get(Routing.generate('innova_path_get_stepwho')).success(function(data) { whoList = data; return whoList; });
+//                }
+//                else {
+//                    return whoList;
+//                }
+                return [
+                    {id: 1, name: 'student'},
+                    {id: 2, name: 'group'},
+                    {id: 3, name: 'class'}
+                ];
             },
             
             /**
@@ -54,13 +60,20 @@ var StepFactoryProto = [
              * @returns array
              */
             getWhereList: function() {
-                if (whereList.length === 0) {
-                    // Load list from AJAX
-                    $http.get(Routing.generate('innova_path_get_stepwhere')).success(function(data) { whereList = data; return whereList; });
-                }
-                else {
-                    return whereList;
-                }
+                // TODO : replace by AJAX call
+//                if (whereList.length === 0) {
+//                    // Load list from AJAX
+//                    $http.get(Routing.generate('innova_path_get_stepwhere')).success(function(data) { whereList = data; return whereList; });
+//                }
+//                else {
+//                    return whereList;
+//                }
+                return [
+                    {id: 1, name: 'home'},
+                    {id: 2, name: 'classroom'},
+                    {id: 3, name: 'library'},
+                    {id: 4, name: 'anywhere'}
+                ];
             },
             
             /**

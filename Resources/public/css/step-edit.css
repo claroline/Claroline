@@ -24,16 +24,16 @@
 }
 /* END fix new modal width */
 
+.step-edit .panel > .table {
+    margin-top: -1px;
+}
+
 .step-edit .modal-footer {
 	margin-top: 0;
 }
 
 .step-edit .panel-heading {
 	position: relative;
-}
-
-.step-edit .accordion-toggle {
-	font-size: 16px !important;
 }
 
 .step-edit form {
@@ -53,7 +53,13 @@
     vertical-align: top;
 }
 
-.step-edit .panel {
+.step-edit .panel .panel:last-child {
+	margin-bottom: 0;
+}
+
+.panel-documents,
+.panel-image,
+.panel-tools {
 	margin-bottom: 0;
 }
 

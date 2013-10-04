@@ -60,87 +60,83 @@
                 
                 <h3><i class="icon-briefcase"></i> Documents</h3>
                 
-                <accordion close-others="false">
-                    <accordion-group ng-repeat="parent in inheritedResources.documents">
-                        <accordion-heading>
-                            <i class="indent" style="margin-left: {{ $index * 20 }}px" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
-                            {{ parent.stepName }}
-                            <span class="pull-right parent-resources-count">{{ parent.resources.length }} documents</span>
-                        </accordion-heading>
-                        
-                        <table class="table table-condensed table-hover">
-                            <tr ng-repeat="resource in parent.resources">
-                                <td class="icon"><img src="images/icons/document/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
-                                <td ng-class="{'excluded-resource' : resource.isExcluded}">{{ resource.name }}</td>
-                                <td class="actions">
-                                    <button ng-disabled="!resource.isExcluded" class="btn btn-xs btn-success" ng-click="includeParentResource(resource)"><i class="icon-eye-open"></i></button>
-                                    <button ng-disabled="resource.isExcluded" class="btn btn-xs btn-danger" ng-click="excludeParentResource(resource)"><i class="icon-eye-close"></i></button>
-                                </td>
-                            </tr>
-                        </table>
-                    </accordion-group>
+                <div class="panel panel-default" ng-repeat="parent in inheritedResources.documents">
+                    <div class="panel-heading">
+                        <i class="indent" style="margin-left: {{ $index * 20 }}px" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
+                        {{ parent.stepName }}
+                        <span class="pull-right parent-resources-count">{{ parent.resources.length }} documents</span>
+                    </div>
                     
-                    <accordion-group is-open="true">
-                        <accordion-heading>
-                            <i class="indent" style="margin-left: {{ inheritedResources.documents.length * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
-                            {{ previewStep.name }}
-                            <button class="btn btn-sm btn-primary pull-right" ng-click="editResource('document')"><i class="icon-plus"></i></button>
-                        </accordion-heading>
-                        
-                        <table class="table table-condensed table-hover">
-                            <tr ng-repeat="resource in previewStep.resources | filter: {type: 'document'}">
-                                <td class="icon"><img src="images/icons/document/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
-                                <td>{{ resource.name }}</td>
-                                <td class="actions">
-                                    <button class="btn btn-xs" ng-click="editResource('document', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
-                                    <button class="btn btn-xs btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
-                                </td>
-                            </tr>
-                        </table>
-                    </accordion-group>
-                </accordion>
+                    <table class="table table-condensed table-hover">
+                        <tr ng-repeat="resource in parent.resources">
+                            <td class="icon"><img src="{{ webDir }}images/icons/document/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
+                            <td ng-class="{'excluded-resource' : resource.isExcluded}">{{ resource.name }}</td>
+                            <td class="actions">
+                                <button ng-disabled="!resource.isExcluded" class="btn btn-xs btn-success" ng-click="includeParentResource(resource)"><i class="icon-eye-open"></i></button>
+                                <button ng-disabled="resource.isExcluded" class="btn btn-xs btn-danger" ng-click="excludeParentResource(resource)"><i class="icon-eye-close"></i></button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="indent" style="margin-left: {{ inheritedResources.documents.length * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
+                        {{ previewStep.name }}
+                        <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('document')"><i class="icon-plus"></i></button>
+                    </div>
+                    
+                    <table class="table table-condensed table-hover">
+                        <tr ng-repeat="resource in previewStep.resources | filter: {type: 'document'}">
+                            <td class="icon"><img src="{{ webDir }}images/icons/document/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
+                            <td>{{ resource.name }}</td>
+                            <td class="actions">
+                                <button class="btn btn-xs btn-default" ng-click="editResource('document', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
+                                <button class="btn btn-xs btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
                 
                 <h3><i class="icon-wrench"></i> Tools</h3>
                 
-                <accordion close-others="false">
-                    <accordion-group ng-repeat="parent in inheritedResources.tools">
-                        <accordion-heading>
-                            <i class="indent" style="margin-left: {{ $index * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
-                            {{ parent.stepName }}
-                            <span class="pull-right parent-resources-count">{{ parent.resources.length }} tools</span>
-                        </accordion-heading>
-                        
-                        <table class="table table-condensed table-hover">
-                            <tr ng-repeat="resource in parent.resources">
-                                <td class="icon"><img src="images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
-                                <td ng-class="{'excluded-resource' : resource.isExcluded}">{{ resource.name }}</td>
-                                <td class="actions">
-                                    <button ng-disabled="!resource.isExcluded" class="btn btn-xs btn-success" ng-click="includeParentResource(resource)"><i class="icon-eye-open"></i></button>
-                                    <button ng-disabled="resource.isExcluded" class="btn btn-xs btn-danger" ng-click="excludeParentResource(resource)"><i class="icon-eye-close"></i></button>
-                                </td>
-                            </tr>
-                        </table>
-                    </accordion-group>
+                <div class="panel panel-default" ng-repeat="parent in inheritedResources.tools">
+                    <div class="panel-heading">
+                        <i class="indent" style="margin-left: {{ $index * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
+                        {{ parent.stepName }}
+                        <span class="pull-right parent-resources-count">{{ parent.resources.length }} tools</span>
+                    </div>
                     
-                    <accordion-group is-open="true">
-                        <accordion-heading>
-                            <i class="indent" style="margin-left: {{ inheritedResources.tools.length * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
-                            {{ previewStep.name }}
-                            <button class="btn btn-sm btn-primary pull-right" ng-click="editResource('tool')"><i class="icon-plus"></i></button>
-                        </accordion-heading>
-                        
-                        <table class="table table-condensed table-hover">
-                            <tr ng-repeat="resource in previewStep.resources | filter: {type: 'tool'}">
-                                <td class="icon"><img src="images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
-                                <td>{{ resource.name }}</td>
-                                <td class="actions">
-                                    <button class="btn btn-xs" ng-click="editResource('tool', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
-                                    <button class="btn btn-xs btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
-                                </td>
-                            </tr>
-                        </table>
-                    </accordion-group>
-                </accordion>
+                    <table class="table table-condensed table-hover">
+                        <tr ng-repeat="resource in parent.resources">
+                            <td class="icon"><img src="{{ webDir }}images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
+                            <td ng-class="{'excluded-resource' : resource.isExcluded}">{{ resource.name }}</td>
+                            <td class="actions">
+                                <button ng-disabled="!resource.isExcluded" class="btn btn-xs btn-success" ng-click="includeParentResource(resource)"><i class="icon-eye-open"></i></button>
+                                <button ng-disabled="resource.isExcluded" class="btn btn-xs btn-danger" ng-click="excludeParentResource(resource)"><i class="icon-eye-close"></i></button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="indent" style="margin-left: {{ inheritedResources.tools.length * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
+                        {{ previewStep.name }}
+                        <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('tool')"><i class="icon-plus"></i></button>
+                    </div>
+                    
+                    <table class="table table-condensed table-hover">
+                        <tr ng-repeat="resource in previewStep.resources | filter: {type: 'tool'}">
+                            <td class="icon"><img src="{{ webDir }}images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
+                            <td>{{ resource.name }}</td>
+                            <td class="actions">
+                                <button class="btn btn-xs btn-default" ng-click="editResource('tool', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
+                                <button class="btn btn-xs btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
