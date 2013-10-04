@@ -8,7 +8,7 @@
     {% if is_granted('EDIT', blog) %}
     <p>
         <a href="{{ _path('icap_blog_post_new', {'blogId': _resource.id}) }}" class="btn btn-default">
-            {{ 'new_post'|trans }}
+            <span class="icon-plus"></span> {{ 'new_post'|trans }}
         </a>
     </p>
     {% endif %}

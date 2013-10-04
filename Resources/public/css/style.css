@@ -7,7 +7,6 @@ article {
   border: 1px solid #ddd;
   border-top-right-radius: 3px;
   border-top-left-radius: 3px;
-  box-shadow: 0 1px 10px rgba(0,0,0,0.2);
 }
 article.unpublished {
   border-color: #fbeed5;
@@ -26,9 +25,16 @@ article header {
 }
 article header h1 {
   margin-top: 0;
+  font-size: 24px;
 }
 article header .post_infos {
   margin-bottom: 0;
+}
+article header .options .btn-red {
+  color: #d9534f;
+}
+article header .options .btn-green {
+  color: #47a447;
 }
 article .content {
   padding: 15px;
