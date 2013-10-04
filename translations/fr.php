@@ -5,6 +5,12 @@ return array(
     'welcome_message' => 'Cet assistant vous guidera à travers l\'installation de la plateforme.',
     'choose_language' => 'Langue de l\'installation',
     'requirements_check' => 'Vérification de la configuration',
+    'failed_requirement_msg' => 'L\'application ne fonctionnera pas correctement sur votre configuration actuelle. Veuillez résoudre les problèmes signalés en rouge et rafraîchir cette page.',
+    'additional_failed_recommendation_msg'
+        => 'Il est également recommandé de résoudre les problèmes signalés en orange, qui indiquent un défaut de configuration pouvant affecter négativement le comportement de l\'application ou ses performances.',
+    'failed_recommendation_msg'
+        => 'Votre configuration rencontre les exigences minimales pour faire tourner l\'application correctement, mais certains réglages peuvent affecter négativement son comportement ou ses performances. Pour résoudre ce problème, modifier les éléments indiqués en orange et rafraîchissez cette page.',
+    'correct_configuration_msg' => 'Votre configuration répond à tous les critères requis et recommandés pour faire tourner l\'application correctement.',
     'correct_config' => 'Votre configuration est correcte.',
     'PHP version' => 'Version de PHP',
     'PHP version must be at least %version% (installed version is %installed_version%)'
@@ -33,6 +39,7 @@ return array(
     'File permissions' => 'Permissions sur les fichiers',
     'The directory %directory% must be writable' => 'Le répertoire <em>%directory%</em> doit être accessible en écriture.',
     'The file %file% must be writable' => 'Le fichier <em>%file%</em> doit être accessible en écriture.',
+    'database_parameters' => 'Paramètres de la base de données',
     'previous_step' => 'Précédent',
     'next_step' => 'Suivant'
 );

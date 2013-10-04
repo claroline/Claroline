@@ -1,5 +1,18 @@
 <h4><?php echo $trans('requirements_check') ?></h4>
 
+<?php if ($var('has_failed_requirement')): ?>
+    <p>
+        <?php echo $trans('failed_requirement_msg') ?>
+        <?php if ($var('has_failed_recommendation')): ?>
+            <?php echo $trans('additional_failed_recommendation_msg') ?>
+        <?php endif ?>
+    </p>
+<?php elseif ($var('has_failed_recommendation')): ?>
+    <p><?php echo $trans('failed_recommendation_msg') ?></p>
+<?php else: ?>
+    <p><?php echo $trans('correct_configuration_msg') ?></p>
+<?php endif ?>
+
 <table class="table table-bordered">
 
 <?php foreach ($var('setting_categories') as $category): ?>

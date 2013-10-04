@@ -44,6 +44,7 @@ class Controller
             'requirements',
             array(
                 'setting_categories' => $settingChecker->getSettingCategories(),
+                'has_failed_recommendation' => $settingChecker->hasFailedRecommendation(),
                 'has_failed_requirement' => $settingChecker->hasFailedRequirement()
             )
         );
@@ -52,7 +53,7 @@ class Controller
     public function databaseStep()
     {
         $this->displayStep(
-            'requirements',
+            'database',
             array()
         );
     }

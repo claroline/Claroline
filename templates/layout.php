@@ -8,9 +8,9 @@
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <nav class="navbar" role="navigation">
+    <nav class="navbar navbar-static-top navbar-inverse" role="navigation">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">Claroline Connect</a>
+            <img src="<?php echo $path('/../test-logo-2.png') ?>"/>
         </div>
     </nav>
     <div class="container">
