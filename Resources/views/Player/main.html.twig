@@ -73,18 +73,15 @@
                          <p>Durée :  {{ step.duration|date('H:i:s') }} </p>
                         <p>Consigne du step: {{ step.instructions }}</p>
                         <p>Cliquer sur la ressource ou l'outil de votre choix dans l'une des zones latérales</p>
-
                         
-                            {% block section_content %}
-                            {% endblock %}
+                        {% block section_content %}
+                        {% endblock %}
+
                     </div>
                     <div class="col-md-3">
                         <h2>Outils</h2>
                     </div>
                 </div>
-
-                
-                
             </div>
         </div>
     </div>

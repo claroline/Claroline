@@ -49,28 +49,29 @@ class ToolListener
         $event->setContent($response->getContent());
     }
 
-    /**
-     * @DI\Observe("innova_player_text")
-     *
-     * @param OpenResourceEvent $event
-     */
-    public function onTextOpen(OpenResourceEvent $event)
-    {
-        $text = $event->getResource();
-        $collection = new ResourceCollection(array($text->getResourceNode()));
-        $isGranted = $this->container->get('security.context')->isGranted('WRITE', $collection);
-        $revisionRepo = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\Revision');
-        $content = $this->container->get('templating')->render(
-            'InnovaPathBundle::Player/text.html.twig',
-            array(
-                'text' => $revisionRepo->getLastRevision($text)->getContent(),
-                '_resource' => $text,
-                'isEditGranted' => $isGranted
-            )
-        );
-        $response = new Response($content);
-        $event->setResponse($response);
-        $event->stopPropagation();
-    }
+
+    // /**
+    //  * @DI\Observe("innova_player_text")
+    //  *
+    //  * @param OpenResourceEvent $event
+    //  */
+    // public function onTextOpen(OpenResourceEvent $event)
+    // {
+    //     $text = $event->getResource();
+    //     $collection = new ResourceCollection(array($text->getResourceNode()));
+    //     $isGranted = $this->container->get('security.context')->isGranted('WRITE', $collection);
+    //     $revisionRepo = $this->container->get('doctrine.orm.entity_manager')
+    //         ->getRepository('ClarolineCoreBundle:Resource\Revision');
+    //     $content = $this->container->get('templating')->render(
+    //         'InnovaPathBundle::Player/text.html.twig',
+    //         array(
+    //             'text' => $revisionRepo->getLastRevision($text)->getContent(),
+    //             '_resource' => $text,
+    //             'isEditGranted' => $isGranted
+    //         )
+    //     );
+    //     $response = new Response($content);
+    //     $event->setResponse($response);
+    //     $event->stopPropagation();
+    // }
 }

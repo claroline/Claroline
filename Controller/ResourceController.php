@@ -45,16 +45,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContext;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Claroline\CoreBundle\Manager\Exception\ResourceMoveException;
-use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Manager\MaskManager;
-use Claroline\CoreBundle\Manager\RightsManager;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Event\StrictDispatcher;
+
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -65,10 +56,23 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 use Innova\PathBundle\Entity\Path;
 use Innova\PathBundle\Entity\Step;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-
-
 use Innova\PathBundle\Manager\StepManager;
+
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
+use Claroline\CoreBundle\Entity\Resource\Activity;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
+use Claroline\CoreBundle\Entity\User;
+
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Manager\Exception\ResourceMoveException;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Event\StrictDispatcher;
+
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 
@@ -134,21 +138,6 @@ class ResourceController extends Controller
         $this->stepManager = $stepManager;
     }
 
-    private function preOpenAction(ResourceNode $node)
-    {  
-        $collection = new ResourceCollection(array($node));
-
-        $node = $this->getRealTarget($node);
-        $this->checkAccess('OPEN', $collection);
-
-    }
-
-    private function postOpenAction(ResourceNode $node)
-    {  
-         $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
-    }
-
-
     /**
      *
      * @Route(
@@ -158,13 +147,6 @@ class ResourceController extends Controller
      * )
      * @Template("InnovaPathBundle::Player/text.html.twig")
      *
-     * @param ResourceNode $resource     the node
-     * @param string       $resourceType the resource type
-     *
-     * @return Response
-     *
-     * @throws AccessDeniedException
-     * @throws \Exception
      */
     public function openTextAction(AbstractWorkspace $workspace, $path, $step, ResourceNode $node)
     {  
@@ -193,6 +175,41 @@ class ResourceController extends Controller
             'text' => $revisionRepo->getLastRevision($text)->getContent(),
             '_resource' => $text,
             'isEditGranted' => $isGranted
+        );
+    }
+
+     /**
+     *
+     * @Route(
+     *     "workspace/{workspace}/path/{path}/step/{step}/activity/{node}",
+     *     name = "innova_activity_open",
+     *     options = {"expose"=true}
+     * )
+     * @Template("InnovaPathBundle::Player/activity.html.twig")
+     *
+     */
+    public function openActivityAction(AbstractWorkspace $workspace, $path, $step, $node)
+    {
+        $em = $this->entityManager();
+
+        $activity = $em->getRepository('ClarolineCoreBundle:Resource\Activity')->findOneByResourceNode($node);
+        $step = $em->getRepository('InnovaPathBundle:Step')->findOneByResourceNode($step);
+        $path = $em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($path);
+        $resources = $this->stepManager->getStepResourceNodes($step);
+        $children = $em->getRepository('InnovaPathBundle:Step')->findByParent($step);
+
+        $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
+            ->findResourceActivities($activity);
+        $resource = isset($resourceActivities[0]) ? $resourceActivities[0]->getResourceNode(): null;
+
+        return array(
+            'workspace' => $workspace,
+            'resources' => $resources,
+            'children' => $children,
+            'step' => $step,
+            'path' => $path,
+            'resource' => $resource,
+            'activity' => $activity
         );
     }
 
@@ -249,5 +266,19 @@ class ResourceController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         return $em;
+    }
+
+    private function preOpenAction(ResourceNode $node)
+    {  
+        $collection = new ResourceCollection(array($node));
+
+        $node = $this->getRealTarget($node);
+        $this->checkAccess('OPEN', $collection);
+
+    }
+
+    private function postOpenAction(ResourceNode $node)
+    {  
+         $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
     }
 }
