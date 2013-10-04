@@ -2,13 +2,38 @@
 
 namespace Innova\PathBundle\Listener;
 
-use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use JMS\DiExtraBundle\Annotation as DI;
 
-class ToolListener extends ContainerAware
+use Claroline\CoreBundle\Form\TextType;
+use Claroline\CoreBundle\Entity\Resource\Text;
+use Claroline\CoreBundle\Entity\Resource\Revision;
+use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+
+
+class ToolListener
 {
+    private $container;
+
+    /**
+     * @DI\InjectParams({
+     *     "container" = @DI\Inject("service_container")
+     * })
+     *
+     * @param ContainerInterface $container
+     */
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+
     public function onWorkspaceOpen(DisplayToolEvent $event)
     {
         $id = $event->getWorkspace()->getId();
@@ -24,4 +49,28 @@ class ToolListener extends ContainerAware
         $event->setContent($response->getContent());
     }
 
+    /**
+     * @DI\Observe("innova_player_text")
+     *
+     * @param OpenResourceEvent $event
+     */
+    public function onTextOpen(OpenResourceEvent $event)
+    {
+        $text = $event->getResource();
+        $collection = new ResourceCollection(array($text->getResourceNode()));
+        $isGranted = $this->container->get('security.context')->isGranted('WRITE', $collection);
+        $revisionRepo = $this->container->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Resource\Revision');
+        $content = $this->container->get('templating')->render(
+            'InnovaPathBundle::Player/text.html.twig',
+            array(
+                'text' => $revisionRepo->getLastRevision($text)->getContent(),
+                '_resource' => $text,
+                'isEditGranted' => $isGranted
+            )
+        );
+        $response = new Response($content);
+        $event->setResponse($response);
+        $event->stopPropagation();
+    }
 }

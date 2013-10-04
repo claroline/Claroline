@@ -18,7 +18,6 @@
                     </button>
                     PathName : {{ path.resourceNode.name }}
                 </h3>
-                
                 <div class="editor-buttons">
                     <button class="btn btn-sm btn-primary" ng-click="fullscreen()" tooltip="Fullscreen"><span class="icon-fullscreen"></span></button>
                     <a href="{{ path('claro_workspace_open_tool', {workspaceId: workspace.id, toolName: 'innova_path'}) }}" class="btn btn-danger btn-sm" tooltip="Back to list"><span class="icon-reply"></span></a>
@@ -50,32 +49,41 @@
                                 {% else %}
                                         <a class="btn btn-danger btn-lg btn-block" disabled=disabled href="#">Fin</a>
                                 {% endif %}
+            
 
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+
                 <div class="row">
                     <div class="col-md-3">
-                        <h2>Zone des ressources</h2>
-                        {{ resources|length }} ressource(s) (mélangé avec les outils pour le moment)
+                        <h2>{{ resources|length }} ressource(s)</h2>
+                        <ul>
                         {% for resource in resources %}
-                            <p>{{ resource.name }}</p>
+                            {% if resource.id %}
+                                <li>{{ resource.resourceType.name }} : <a href="{{ path('innova_'~ resource.resourceType.name ~'_open', {workspace: workspace.id, path: path.resourceNode.id, step: step.resourceNode.id, node: resource.id}) }}">{{ resource.name }}</a></li>
+                            {% endif %}
                         {% endfor %}
-
+                        </ul>
                     </div>
                     <div class="col-md-6">
-                        <h1>Bloc principal</h1>
+                        <h1>{{ step.resourceNode.name }}</h1>
                          <p>Durée :  {{ step.duration|date('H:i:s') }} </p>
-                        <p>Nom : {{ step.resourceNode.name }}</p>
                         <p>Consigne du step: {{ step.instructions }}</p>
-                        <p>Cliquer sur la ressource ou l'outil de votre choix dans l'une des zones latérales + logo</p>
+                        <p>Cliquer sur la ressource ou l'outil de votre choix dans l'une des zones latérales</p>
+
+                        
+                            {% block section_content %}
+                            {% endblock %}
                     </div>
                     <div class="col-md-3">
-                        <h2>Zone des outils</h2>
+                        <h2>Outils</h2>
                     </div>
                 </div>
+
+                
                 
             </div>
         </div>

@@ -1,0 +1,27 @@
+{% extends 'InnovaPathBundle::Player/main.html.twig' %}
+
+
+{% block section_content %}
+    <div class='panel panel-default' id="resource-container">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}</h3>
+             <div>
+                <a class="btn btn-lg btn-primary pull-right" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.resourceNode.id }) }}">Revenir sur {{step.resourceNode.name}}</a>
+            </div>
+        </div>
+        <div class="panel-body" id="text_content">
+            {{ text|raw }}
+            dzqdzq
+            dzqdzq <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> dzqdzq<br/> <br/>dzqdzqdzq <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> dzqdzq<br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>dzqdzfqdzqqzqdqbr/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>dzqdzfqdzqqzqdqbr/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>dzqdzfqdzqqzqdqbr/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>dzqdzfqdzqqzqdqbr/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>dzqdzfqdzqqzqdq
+            </div>
+            {#
+            <div class="panel-footer">
+            <a class="btn btn-default" href="{{ _path('claro_text_history', {'text': _resource.getId()}) }}">{{ 'history' | trans({}, 'platform') }}</a>
+            {% if isEditGranted %}
+            <a class="btn btn-primary" href="{{ _path('claro_text_edit_form', {'text': _resource.getId()}) }}">{{ 'edit' | trans({}, 'platform') }}</a>
+            {% endif %}
+            
+             </div>
+        #}
+    </div>
+{% endblock %}
