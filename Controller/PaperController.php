@@ -325,7 +325,7 @@ class PaperController extends Controller
             (($paper->getExercise()->getCorrectionMode() == 3) &&
             ($paper->getExercise()->getDateCorrection()->format('Y-m-d H:i:s') <= date("Y-m-d H:i:s"))) ||
             (($paper->getExercise()->getCorrectionMode() == 2) &&
-            ($paper->getExercise()->getMaxAttemps() <= $this->container->get('UJM_Exo.exerciseServices')->getNbPaper(
+            ($paper->getExercise()->getMaxAttempts() <= $this->container->get('ujm.exercise_services')->getNbPaper(
                 $user->getId(), $paper->getExercise()->getId()
             )
             ))
