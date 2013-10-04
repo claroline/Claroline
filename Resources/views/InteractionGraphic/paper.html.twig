@@ -86,7 +86,7 @@
             <h5>{{ 'orders' | trans }} :</h5>
             <h6><em>{{ 'position' | trans }}{{ 'onlyOnce' | trans }}</em></h6>
 
-            <div id="Answer">
+            <div id="Answer" style="position: relative;">
                 <p id="ContainerCursor">
                     {% set i = 1 %}
                     {% for coords in listeCoords %}
@@ -106,7 +106,6 @@
             <input type="hidden" id="nbpointer" name="nbpointer" value="{{ i }}"/>
             <input type="hidden" id="answers" name="answers" value=""/>
             <input type="hidden" id="graphId" name="graphId" value="{{ interactionGraphic.id }}"/>
-            <input type="hidden" id="PositionInit" name="PositionInit" value="true"/>
 
             {% if interactionGraphic.interaction.hints is not empty %}
                 <div class="panel panel-default">
