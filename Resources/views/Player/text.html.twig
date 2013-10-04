@@ -11,17 +11,15 @@
         </div>
         <div class="panel-body" id="text_content">
             {{ text|raw }}
-            dzqdzq
-            dzqdzq <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> dzqdzq<br/> <br/>dzqdzqdzq <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> dzqdzq<br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>dzqdzfqdzqqzqdqbr/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>dzqdzfqdzqqzqdqbr/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>dzqdzfqdzqqzqdqbr/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>dzqdzfqdzqqzqdqbr/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>dzqdzfqdzqqzqdq
-            </div>
-            {#
-            <div class="panel-footer">
-            <a class="btn btn-default" href="{{ _path('claro_text_history', {'text': _resource.getId()}) }}">{{ 'history' | trans({}, 'platform') }}</a>
-            {% if isEditGranted %}
-            <a class="btn btn-primary" href="{{ _path('claro_text_edit_form', {'text': _resource.getId()}) }}">{{ 'edit' | trans({}, 'platform') }}</a>
-            {% endif %}
-            
-             </div>
-        #}
+        </div>
+        {#
+        <div class="panel-footer">
+        <a class="btn btn-default" href="{{ _path('claro_text_history', {'text': _resource.getId()}) }}">{{ 'history' | trans({}, 'platform') }}</a>
+        {% if isEditGranted %}
+        <a class="btn btn-primary" href="{{ _path('claro_text_edit_form', {'text': _resource.getId()}) }}">{{ 'edit' | trans({}, 'platform') }}</a>
+        {% endif %}
+        
+         </div>
+    #}
     </div>
 {% endblock %}
