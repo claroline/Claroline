@@ -404,7 +404,7 @@ class LogRepository extends EntityRepository
 
     /**
      * @param QueryBuilder $queryBuilder
-     * @param \Claroline\CoreBundle\Entity\Log\LogWorkspaceWidgetConfig[] $configs
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance[] $configs
      *
      * @return mixed
      */
@@ -412,7 +412,7 @@ class LogRepository extends EntityRepository
     {
         $actionIndex = 0;
         foreach ($configs as $config) {
-            $workspaceId = $config->getWorkspace()->getId();
+            $workspaceId = $config->getWidgetInstance()->getWorkspace()->getId();
             $queryBuilder
                 ->where('workspace.id = :workspaceId')
                 ->setParameter('workspaceId', $workspaceId);

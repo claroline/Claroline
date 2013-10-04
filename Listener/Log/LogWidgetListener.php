@@ -7,7 +7,10 @@ use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Form\Log\LogWorkspaceWidgetConfigType;
+use Claroline\CoreBundle\Form\Log\LogDesktopWidgetConfigType;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Entity\Log\LogWidgetConfig;
+use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -62,7 +65,21 @@ class LogWidgetListener
      */
     public function onDisplay(DisplayWidgetEvent $event)
     {
-        $event->setContent('hi');
+        $instance = $event->getInstance();
+        $params = ($instance->isDesktop()) ?
+            $this->logManager->getDesktopWidgetList($instance):
+            $this->logManager->getWorkspaceWidgetList($instance);
+
+        $view = null;
+        if ($params && count($params['logs']) > 0) {
+            $view = $this->twig->render(
+                'ClarolineCoreBundle:Log:view_short_list.html.twig',
+                $params
+            );
+        }
+
+        $event->setContent($view);
+        $event->stopPropagation();
     }
 
     /**
@@ -72,22 +89,55 @@ class LogWidgetListener
      */
     public function onConfigure(ConfigureWidgetEvent $event)
     {
-        $config = $event->getConfig();
-        $txtConfig = $this->logManager->getLogConfig($config);
-        
-        if ($txtConfig === null) {
-            $txtConfig = new LogDesktopWidgetConfig();
+        $instance = $event->getInstance();
+        $config = $this->logManager->getLogConfig($instance);
+
+        if ($config === null) {
+            $config = new LogWidgetConfig();
+            $config->setWidgetInstance($instance);
         }
-        
-        $form = $this->formFactory->create(FormFactory::TYPE_SIMPLE_TEXT, array(), $txtConfig);
-        $content = $this->templating->render(
-            'ClarolineCoreBundle:Widget:config_simple_text_form.html.twig',
-            array(
-                'form' => $form->createView(),
-                'isAdmin' => $config->isAdmin(),
-                'config' => $config
-            )
-        );
+
+        if ($instance->isDesktop()) {
+            $workspaces = array();
+            $workspacesVisibility = array();
+            if (!$instance->isAdmin()) {
+               $workspaces = $this->workspaceManager->getWorkspacesByUserAndRoleNames(
+                    $instance->getUser(),
+                    array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER')
+                );
+                $workspacesVisibility = $this
+                    ->logManager
+                    ->getWorkspaceVisibilityForDesktopWidget($instance->getUser(), $workspaces);
+            }
+
+
+            $workspacesVisibility['amount'] = $config->getAmount();
+
+            $form = $this
+                ->formFactory
+                ->create(
+                    new LogDesktopWidgetConfigType(),
+                    $workspacesVisibility,
+                    array('workspaces' => $workspaces)
+                );
+            $content = $this->twig->render(
+                'ClarolineCoreBundle:Log:config_desktop_widget_form.html.twig',
+                array(
+                    'form' => $form->createView(),
+                    'instance' => $instance
+                )
+            );
+        } else {
+            $form    = $this->formFactory->create($this->logWorkspaceWidgetConfigForm, $config);
+            $content = $this->twig->render(
+                'ClarolineCoreBundle:Log:config_workspace_widget_form.html.twig',
+                array(
+                    'form'      => $form->createView(),
+                    'instance' => $instance
+                )
+            );
+        }
+
         $event->setContent($content);
     }
 }

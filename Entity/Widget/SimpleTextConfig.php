@@ -62,14 +62,14 @@ class SimpleTextConfig
         return $this->content;
     }
 
-    public function setDisplayConfig(WidgetInstance $ds)
+    public function setWidgetInstance(WidgetInstance $ds)
     {
         $this->widgetInstance = $ds;
     }
-    
-    public function getDisplayConfig()
+
+    public function getWidgetInstance()
     {
         return $this->widgetInstance;
     }
-    
+
 }

@@ -21,27 +21,27 @@ class SimpleTextController extends Controller
     public function updateSimpleTextWidgetConfig(WidgetInstance $widget)
     {
         //vérification d'accès ici
-        
+
        $simpleTextConfig = $this->get('claroline.manager.simple_text_manager')->getTextConfig($widget);
        $form = $this->get('claroline.form.factory')->create(FormFactory::TYPE_SIMPLE_TEXT);
        $form->bind($this->getRequest());
-       
-       if ($simpleTextConfig) {
-          if ($form->isValid()) {
-            $simpleTextConfig->setContent($form->get('content')->getData());
-          }
-       } else {
-           if ($form->isValid()) {
+
+       if ($form->isValid()) {
+           if ($simpleTextConfig) {
+               $simpleTextConfig->setContent($form->get('content')->getData());
+           } else {
                $simpleTextConfig = new SimpleTextConfig();
-               $simpleTextConfig->setDisplayConfig($widget);
+               $simpleTextConfig->setWidgetInstance($widget);
                $simpleTextConfig->setContent($form->get('content')->getData());
            }
+       } else {
+           throw new \Exception('invalid form');
        }
-       
+
        $em = $this->get('doctrine.orm.entity_manager');
        $em->persist($simpleTextConfig);
        $em->flush();
-       
+
        return new RedirectResponse($this->get('claroline.manager.widget_manager')->getRedirectRoute($widget));
     }
 }
