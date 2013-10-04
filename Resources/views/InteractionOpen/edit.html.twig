@@ -80,50 +80,51 @@
         <form action="{{ path('ujm_interactionopen_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
 
             {% include "UJMExoBundle:Partial:questionEdit.html.twig" %}
-
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">{{ 'response' | trans }}</h3>
                 </div>
+                <div class="panel-body">
+                    {{ form_row(edit_form.typeopenquestion) }}
 
-                {{ form_row(edit_form.typeopenquestion) }}
+                    <div id="qOpenScoreMaxLongResp">
+                        <div class="form-group row">
+                            {{ form_label(edit_form.scoreMaxLongResp) }}
+                            <div class="col-md-9">{{ form_widget(edit_form.scoreMaxLongResp) }}</div>
+                        </div>
+                    </div>
 
-                <div id="qOpenScoreMaxLongResp">
-                    <p>
-                        {{ form_label(edit_form.scoreMaxLongResp) }} &nbsp;
-                        {{ form_widget(edit_form.scoreMaxLongResp) }}
-                    </p>
+                    <div id="qOpenOrthography" style="display: none;">
+                        <p>
+                            {{ form_label(edit_form.orthographyCorrect) }}
+                            {{ form_widget(edit_form.orthographyCorrect) }}
+                        </p>
+                    </div>
+
+                    <!--<div id="qOpenUnit" style="display: none;">
+                        <p>
+                            {#{ form_row(edit_form.unit) }#}
+                        </p>
+                    </div>-->
+
+                    <div id="qOpenKeyword" style="display: none;">
+                        <p>
+                            {{ form_row(edit_form.wordResponses) }}
+                        </p>
+                    </div>
                 </div>
 
-                <div id="qOpenOrthography" style="display: none;">
-                    <p>
-                        {{ form_widget(edit_form.orthographyCorrect) }}
-                        {{ form_label(edit_form.orthographyCorrect) }}
-                    </p>
+                <div style="display: none;">
+                    {{ form_rest(edit_form) }}
                 </div>
-
-            <!--<div id="qOpenUnit" style="display: none;">
-                <p>
-                    {#{ form_row(edit_form.unit) }#}
-                </p>
-            </div>-->
-
-                <div id="qOpenKeyword" style="display: none;">
-                    <p>
-                        {{ form_row(edit_form.wordResponses) }}
-                    </p>
-                </div>
+                {{ form_errors(edit_form) }}
+                    
+                <input type="hidden" name="exercise" value="{{ exoID }}"/>
             </div>
-
-
-
-            <p>
-                <input type="hidden" name="exercise" value="{{ exoID }}" />
+            <div class="panel-footer">
                 <button type="submit" id="button_submit" class="btn btn-primary">{{ 'edit' | trans }}</button>
-            </p>
-
-            <div style="display: none;">{{ form_rest(edit_form) }}</div>
-            {{ form_errors(edit_form) }}
+                <a class="btn btn-default" href="{{ path('ujm_question_index') }}">{{ "cancel" | trans({}, "platform") }}</a>
+            </div>
         </form>
     </div>
 {% endblock %}
