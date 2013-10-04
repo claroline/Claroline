@@ -1,6 +1,9 @@
 .btn-toolbar {
   margin-bottom: 10px;
 }
+.search_form {
+  padding-bottom: 0;
+}
 article {
   margin-bottom: 20px;
   background-color: #fff;

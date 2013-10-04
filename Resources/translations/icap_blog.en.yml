@@ -59,3 +59,11 @@ add_comment: 'Add a comment'
 be_the_first_to_comment: 'Be the first to comment this post'
 icap_blog_post_comment_form_message: 'Comment'
 to_comment: 'Comment'
+search: "Search"
+search_in_title_and_content: "Search in title, contents."
+info_bar: "Info bar"
+informations: "Informations"
+tag_cloud: "Tag cloud"
+editor: "Editors"
+calendar: "Calendar"
+archives: "Archives"

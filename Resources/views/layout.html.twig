@@ -2,6 +2,8 @@
 
 {% block breadcrumb %}{% endblock %}
 
+{% block title %}{{ _resource.resourceNode.name }}{% endblock %}
+
 {% block content %}
         {% if is_granted('ROLE_ADMIN') or is_granted('EDIT', blog) %}
         <div class="btn-toolbar">
@@ -50,89 +52,119 @@
                 {% block blog_content %}{% endblock %}
             </section>
             <aside class="col-lg-4">
-                <form action="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" method="get" class="form-horisontal well" role="search">
-                    <div class="input-group">
-                        <input type="search" class="form-control" name="search" id="search_query" placeholder="Recherche..." {% if search is defined %}value="{{ search }}" {% endif %}/>
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="submit"><span class="glyphicon icon-search"></span></button>
-                        </span>
-                    </div>
-                    <p class="help-block"><small>Recherche dans les titres, contenus.</small></p>
-                </form>
-                <div class="well">
-                    <h3>
-                        Info bar
-                        {% if is_granted('ROLE_ADMIN') or is_granted('EDIT', blog) %}
-                        <a href="{{ path('icap_blog_edit_infos', {'blogId': _resource.id}) }}" title="{{ 'edit_blog_infos'|trans({}, 'icap_blog') }}" class="btn btn-default btn-xs">
-                            <span class="gluphicon icon-edit"></span>
-                        </a>
-                        {% endif %}
-                    </h3>
-                    <div>
-                        <p>
-                            {{ _resource.infos|raw }}
-                        </p>
+
+                <div class="panel panel-default">
+                    <div class="panel-body search_form">
+                        <form action="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" method="get" class="form-horisontal" role="search">
+                            <div class="input-group">
+                                <input type="search" class="form-control" name="search" id="search_query" placeholder="{{ 'search'|trans({}, 'icap_blog') }}..." {% if search is defined %}value="{{ search }}" {% endif %}/>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="submit"><span class="glyphicon icon-search"></span></button>
+                                </span>
+                            </div>
+                            <p class="help-block"><small>{{ 'search_in_title_and_content'|trans({}, 'icap_blog') }}</small></p>
+                        </form>
                     </div>
                 </div>
-                <div class="well collapse in">
-                    <h3>
-                        Informations
-                        <button type="button" class="btn btn-default btn-xs pull-right" data-toggle="collapse" data-target="#informations">
-                            <i class="icon-chevron-down"></i>
-                        </button>
-                    </h3>
-                    <div id="informations" class="collapse out">
-                        <p>
-                            Date de création : {{ _resource.creationDate|date('date_format'|trans({}, 'platform')) }}<br />
-                            Commentaires autorisés : {% if _resource.options.authorizeComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
-                            Commentaires anonymes autorisés : {% if _resource.options.authorizeAnonymousComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
-                            Nb d'article/pages : {{ _resource.options.postPerPage }}<br />
-                            Publication automatique des billets : {% if _resource.options.autoPublishPost %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
-                            Publication automatique des commentaires : {% if _resource.options.autoPublishComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
-                        </p>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            {{ 'info_bar'|trans({}, 'icap_blog') }}
+                            {% if is_granted('ROLE_ADMIN') or is_granted('EDIT', blog) %}
+                            <a href="{{ path('icap_blog_edit_infos', {'blogId': _resource.id}) }}" title="{{ 'edit_blog_infos'|trans({}, 'icap_blog') }}" class="btn btn-default btn-xs">
+                                <span class="gluphicon icon-edit"></span>
+                            </a>
+                            {% endif %}
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        {{ _resource.infos|raw }}
                     </div>
                 </div>
-                <div class="well">
-                    <h3>Nuage de tag</h3>
-                    {{ for }}
-                    <ul class="list-unstyled list-inline">
-                        {% for tag in blog_tags(_resource) %}
-                        <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': tag}) }}" title="{{ tag }}">{{ tag }}</a></li>
-                        {% else %}
-                        <li>{{ 'no_tags'|trans({}, 'icap_blog') }}</li>
-                        {% endfor %}
-                    </ul>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            {{ 'informations'|trans({}, 'icap_blog') }}
+                            <button type="button" class="btn btn-default btn-xs pull-right" data-toggle="collapse" data-target="#informations">
+                                <i class="icon-chevron-down"></i>
+                            </button>
+                        </h3>
+                    </div>
+                    <div id="informations" class="panel-collapse collapse out">
+                        <div class="panel-body">
+                            <p>
+                                Date de création : {{ _resource.creationDate|date('date_format'|trans({}, 'platform')) }}<br />
+                                Commentaires autorisés : {% if _resource.options.authorizeComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
+                                Commentaires anonymes autorisés : {% if _resource.options.authorizeAnonymousComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
+                                Nb d'article/pages : {{ _resource.options.postPerPage }}<br />
+                                Publication automatique des billets : {% if _resource.options.autoPublishPost %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
+                                Publication automatique des commentaires : {% if _resource.options.autoPublishComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <div class="well">
-                    <h3>Rédacteurs</h3>
-                    <ul class="list-unstyled list-inline">
-                        {% for author in blog_authors(_resource) %}
-                        <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': author.username}) }}" title="{{ author.firstName ~ ' ' ~ author.lastName }}">{{ author.firstName ~ ' ' ~ author.lastName }}</a></li>
-                        {% else %}
-                        <li>{{ 'no_authors'|trans({}, 'icap_blog') }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="well">
-                    <h3>Calendrier</h3>
-                    <div id='calendar'></div>
-                </div>
-                <div class="well">
-                    <h3>Archives</h3>
-                    <ul class="tree">
-                        {% for year, datas in archives %}
-                        <li>
-                            <span>{{ year }}</span>
-                            <ul>
-                            {% for data in datas %}
-                                <li><a href="#">{{ data.month }} ({{ data.count }})</a></li>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'tag_cloud'|trans({}, 'icap_blog') }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-unstyled list-inline">
+                            {% for tag in blog_tags(_resource) %}
+                            <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': tag}) }}" title="{{ tag }}">{{ tag }}</a></li>
+                            {% else %}
+                            <li>{{ 'no_tags'|trans({}, 'icap_blog') }}</li>
                             {% endfor %}
-                            </ul>
-                        </li>
-                        {% else %}
-                        <li>{{ 'no_archives'|trans({}, 'icap_blog') }}</li>
-                        {% endfor %}
-                    </ul>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'editor'|trans({}, 'icap_blog') }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-unstyled list-inline">
+                            {% for author in blog_authors(_resource) %}
+                            <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': author.username}) }}" title="{{ author.firstName ~ ' ' ~ author.lastName }}">{{ author.firstName ~ ' ' ~ author.lastName }}</a></li>
+                            {% else %}
+                            <li>{{ 'no_authors'|trans({}, 'icap_blog') }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'calendar'|trans({}, 'icap_blog') }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div id='calendar'></div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'archives'|trans({}, 'icap_blog') }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="tree">
+                            {% for year, datas in archives %}
+                            <li>
+                                <span>{{ year }}</span>
+                                <ul>
+                                {% for data in datas %}
+                                    <li><a href="#">{{ data.month }} ({{ data.count }})</a></li>
+                                {% endfor %}
+                                </ul>
+                            </li>
+                            {% else %}
+                            <li>{{ 'no_archives'|trans({}, 'icap_blog') }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
             </aside>
         </div>

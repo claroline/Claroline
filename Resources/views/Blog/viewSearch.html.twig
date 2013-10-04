@@ -2,8 +2,6 @@
 
 {% trans_default_domain "icap_blog" %}
 
-{% block title %}{{ _resource.name }}{% endblock %}
-
 {% block blog_content %}
     {% if is_granted('EDIT', blog) %}
     <p>
