@@ -124,7 +124,8 @@ class ExerciseController extends Controller
             return $this->redirect(
                 $this->generateUrl(
                     'claro_resource_open', array(
-                    'resourceType' => $exercise->getResourceNode()->getResourceType()->getName(), 'node' => $id)
+                    'resourceType' => $exercise->getResourceNode()->getResourceType()->getName(), 
+                    'node' => $exercise->getResourceNode()->getId())
                 )
             );
         }
