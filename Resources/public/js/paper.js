@@ -1,6 +1,6 @@
 function show_hint(idHint, path_hint_show, confirm_hint, nbr_hint, paper) {
     //"use strict";
-    
+
     if (confirm(confirm_hint)) {
         show_hint2(idHint, path_hint_show, nbr_hint, paper);
     }
@@ -69,8 +69,8 @@ function recordGraph() {
             // If answer is placed
             if (parseInt(top.substring(0, top.indexOf('px'))) > 2) {
                 // Get coordonates of the answer
-                var abs = parseInt($('#' + label).position().left) + 10;
-                var ord = parseInt($('#' + label).position().top) - parseInt(margin) + 10;
+                var abs = parseInt($('#' + label).position().left);
+                var ord = parseInt($('#' + label).position().top) - parseInt(margin);
 
                 // And push into an array in order to save it
                 tempCoords[label] = abs + '-' + ord;
@@ -89,10 +89,10 @@ function displayAnswersGraph(response) {
 
     // margin top of the answer image
     var marg = $('#AnswerImg').css("margin-top");
+    var taille = $('#nbpointer').val();
 
     // If answer zone has been placed, display it on the image
     if (response != 'empty') {
-        var taille = $('#nbpointer').val();
         var coords = response.split(';');
 
         for (var x = 1 ; x < taille ; x++) {
@@ -100,8 +100,17 @@ function displayAnswersGraph(response) {
             var cur = 'cursor' + x;
 
             $('#' + cur).css({
-                "left" : String(parseInt(xy[0]) - 10) + 'px',
-                "top"  : String(parseInt(xy[1]) + parseInt(marg) - 10) + 'px'
+                "left" : String(parseInt(xy[0])) + 'px',
+                "top" : String(parseInt(xy[1]) + parseInt(marg)) + 'px'
+            });
+        }
+    } else {
+        for (var h = 1 ; h < taille ; h++) {
+            cur = 'cursor' + h;
+
+            $("#" + cur).css({
+                "left" : String(h * 30) + 'px',
+                "top"  : '0px'
             });
         }
     }

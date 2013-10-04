@@ -2,9 +2,7 @@ var j; // For for instruction
 var h; // For for instruction
 var cur; // For the name of the cursor
 var tempCoords = {}; // The coordonates of the answer zones
-var length = 2; // margin which separate the cursor and the instructions
 var validGraphic = $('#ValidGraphic'); // The form to validate
-var ox = $('#ContainerCursor').position().left; // The start position to display the cursor inline
 var size = $('#nbpointer').val(); // Number of pointers + 1
 
 $(function () {
@@ -20,8 +18,10 @@ $(function () {
 
                 var stoppos = $(this).position();
 
+                var marginTop = $('#AnswerImg').css("margin-top");
+
                 var x = stoppos.left - $('#AnswerImg').position().left;
-                var y = stoppos.top - $('#AnswerImg').position().top;
+                var y = stoppos.top - $('#AnswerImg').position().top - parseInt(marginTop);
 
                 tempCoords[event.target.id] = x + ' - ' + y;
             }
@@ -31,13 +31,21 @@ $(function () {
 
 document.addEventListener('keydown', function (e) { // Reset all the pointers at initial place
 
+    var space;
+
+    if ($('#ContainerCursorPaper').length == 0) {
+        space = 2;
+    } else {
+        space = 30;
+    }
+
     if (e.keyCode == 67) { // Press c
         for (h = 1 ; h < size ; h++) {
             cur = 'cursor' + h;
 
             $("#" + cur).css({
-                "left" : String(ox - 20 + h * 37) + 'px',
-                "top"  : String(length) + 'px'
+                "left" : String(h * space) + 'px',
+                "top"  : '0px'
             });
         }
 
