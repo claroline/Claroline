@@ -13,10 +13,9 @@ use Claroline\CoreBundle\Form\DataTransformer\DateRangeToTextTransformer;
 use Claroline\CoreBundle\Form\Log\WorkspaceLogFilterType;
 use Claroline\CoreBundle\Form\Log\AdminLogFilterType;
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
-use Claroline\CoreBundle\Entity\Log\LogWorkspaceWidgetConfig;
-use Claroline\CoreBundle\Entity\Log\LogDesktopWidgetConfig;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\CoreBundle\Entity\Log\LogWidgetConfig;
 
 /**
  * @DI\Service("claroline.log.manager")
@@ -76,6 +75,7 @@ class LogManager
             $defaultConfig->setRestrictions(
                 $this->container->get('claroline.log.manager')->getDefaultWorkspaceConfigRestrictions()
             );
+            $defaultConfig->setAmount(5);
         }
 
         // Complete missing configs
@@ -92,6 +92,9 @@ class LogManager
             if ($config === null) {
                 $config = new LogWidgetConfig();
                 $config->copy($defaultConfig);
+                $widgetInstance = new WidgetInstance();
+                $widgetInstance->setWorkspace($workspace);
+                $config->setWidgetInstance($widgetInstance);
                 $configs[] = $config;
             }
         }
@@ -116,8 +119,9 @@ class LogManager
         $logRepository = $em->getRepository('ClarolineCoreBundle:Log\Log');
 
         $desktopConfig = $this->getLogConfig($instance);
-        $query     = $logRepository->findLogsThroughConfigs($configs, $desktopConfig->getAmount());
-        $logs      = $query->getResult();
+        $desktopConfig = $desktopConfig === null ? $defaultConfig: $desktopConfig;
+        $query = $logRepository->findLogsThroughConfigs($configs, $desktopConfig->getAmount());
+        $logs = $query->getResult();
         $chartData = $logRepository->countByDayThroughConfigs($configs, $this->getDefaultRange());
 
         //List item delegation
@@ -151,7 +155,7 @@ class LogManager
         $config = $this->getLogConfig($instance);
 
         if ($config === null) {
-            $defaultConfig = $this->em->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
+            $defaultConfig = $em->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
                 ->findOneBy(array('isDesktop' => false, 'isAdmin' => true));
 
             $config = new LogWidgetConfig();
@@ -163,6 +167,9 @@ class LogManager
             $config->setRestrictions(
                 $this->container->get('claroline.log.manager')->getDefaultWorkspaceConfigRestrictions()
             );
+            $widgetInstance = new WidgetInstance();
+            $widgetInstance->setWorkspace($workspace);
+            $config->setWidgetInstance($widgetInstance);
         }
 
         /** @var \Claroline\CoreBundle\Manager\EventManager $eventManager */
@@ -440,7 +447,7 @@ class LogManager
         return $workspaceIds;
     }
 
-    public function getLogConfig(WidgetInstance $config)
+    public function getLogConfig(WidgetInstance $config = null)
     {
         return $this->container->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Log\LogWidgetConfig')
