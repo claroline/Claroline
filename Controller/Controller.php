@@ -74,34 +74,14 @@ class Controller extends BaseController
 
         foreach ($postDatas as $postData) {
             $archiveDatas[$postData['year']][] = array(
-                'year'  => $postData['year'],
-                'month' => $translator->trans('month.' . date("F", mktime(0, 0, 0, $postData['month'], 10)), array(), 'platform'),
-                'count' => $postData['number']
+                'year'          => $postData['year'],
+                'month'         => $translator->trans('month.' . date("F", mktime(0, 0, 0, $postData['month'], 10)), array(), 'platform'),
+                'count'         => $postData['number'],
+                'urlParameters' => $postData['month'] . '-' . $postData['year']
             );
         }
 
         return $archiveDatas;
-    }
-
-    /***
-     * @param Blog   $blog
-     * @param string $childType
-     * @param string $action
-     * @param array  $details
-     * @return Controller
-     */
-    protected function dispatchChildEvent(Blog $blog, $childType, $action, $details = array())
-    {
-        $log = new LogResourceChildUpdateEvent(
-            $blog->getResourceNode(),
-            $childType,
-            $action,
-            $details
-        );
-
-        $this->get('event_dispatcher')->dispatch('log', $log);
-
-        return $this;
     }
 
     protected function dispatch($event)
@@ -121,9 +101,8 @@ class Controller extends BaseController
     protected function dispatchBlogUpdateEvent(Blog $blog, $changeSet)
     {
         $logEvent = new LogResourceUpdateEvent($blog->getResourceNode(), $changeSet);
-        $this->get('event_dispatcher')->dispatch('log', $logEvent);
 
-        return $this;
+       return $this->dispatch($logEvent);
     }
 
     /**

@@ -51,6 +51,7 @@ delete_filter: 'Delete filter'
 post_filtered_by_tag: 'Post list filtred by tag <strong>%tagName%</strong>'
 post_filtered_by_author: 'Post list filtred by author <strong>%authorName%</strong>'
 post_filtered_by_search: 'Post list filtered by search <strong>%searchTerms%</strong>'
+post_filtered_by_date: 'Post list filtered by date <strong>%date%</strong>'
 edit_blog_infos: "Edit blog's information"
 icap_blog_edit_infos_success: 'Blog information edited with success'
 icap_blog_edit_infos_error: 'An error occured while editing blog information'

@@ -156,7 +156,7 @@
                                 <span>{{ year }}</span>
                                 <ul>
                                 {% for data in datas %}
-                                    <li><a href="#">{{ data.month }} ({{ data.count }})</a></li>
+                                    <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': data.urlParameters}) }}">{{ data.month }} ({{ data.count }})</a></li>
                                 {% endfor %}
                                 </ul>
                             </li>

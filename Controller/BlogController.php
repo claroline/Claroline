@@ -45,12 +45,17 @@ class BlogController extends Controller
 
         $tag    = null;
         $author = null;
+        $date   = null;
 
         if (null !== $filter) {
             $tag = $this->get('icap.blog.tag_repository')->findOneByName($filter);
 
             if (null === $tag) {
                 $author = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByUsername($filter);
+
+                if (null === $author) {
+                    $date = $filter;
+                }
             }
         }
 
@@ -79,6 +84,29 @@ class BlogController extends Controller
                 ->andWhere('post.author = :authorId')
                 ->setParameter('authorId', $author->getId())
             ;
+        } elseif (null !== $date) {
+            $dates     = explode('-', $filter);
+            $startDate = new \DateTime();
+            $endDate   = new \DateTime();
+
+            $countDateParts = count($dates);
+            if (2 === $countDateParts) {
+                $startDate->setDate($dates[1], $dates[0], 1);
+                $endDate->setTimestamp(strtotime('+1 month', $startDate->getTimestamp()));
+            }
+            elseif (2 < $countDateParts) {
+                $startDate->setDate($dates[1], $dates[0], $dates[0]);
+                $endDate->setDate($dates[1], $dates[0], $dates[0]);
+            }
+            else {
+                throw new \InvalidArgumentException('Invalid format for date filter argument');
+            }
+
+            $query
+                ->andWhere('post.publicationDate >= :startDate')
+                ->andWhere('post.publicationDate <= :endDate')
+                ->setParameter('startDate', $startDate)
+                ->setParameter('endDate', $endDate);
         }
 
         $query
@@ -103,7 +131,8 @@ class BlogController extends Controller
             'pager'     => $pager,
             'archives'  => $this->getArchiveDatas($blog),
             'tag'       => $tag,
-            'author'    => $author
+            'author'    => $author,
+            'date'      => $date
         );
     }
 
