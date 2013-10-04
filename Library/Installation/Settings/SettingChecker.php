@@ -21,6 +21,17 @@ class SettingChecker
         return $this->categories;
     }
 
+    public function hasFailedRecommendation()
+    {
+        foreach ($this->categories as $category) {
+            if ($category->hasFailedRecommendation()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function hasFailedRequirement()
     {
         foreach ($this->categories as $category) {
@@ -97,7 +108,6 @@ class SettingChecker
             'register_globals' => false,
             'session.auto_start' => false
         );
-
         foreach ($recommendedSettings as $parameter => $value) {
             $category->addRecommendation(
                 'Parameter %parameter% should be set to %value% in your php.ini',
