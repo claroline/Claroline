@@ -40,6 +40,15 @@ return array(
     'The directory %directory% must be writable' => 'Le répertoire <em>%directory%</em> doit être accessible en écriture.',
     'The file %file% must be writable' => 'Le fichier <em>%file%</em> doit être accessible en écriture.',
     'database_parameters' => 'Paramètres de la base de données',
+    'not_blank_expected' => 'Cette valeur ne peut pas être vide',
+    'number_expected' => 'Cette valeur doit être un nombre positif',
+    'invalid_driver' => 'Driver non valide',
+    'driver' => 'Driver',
+    'host' => 'Hôte',
+    'database' => 'Base de données',
+    'user' => 'Utilisateur',
+    'password' => 'Mot de passe',
+    'port' => 'Port',
     'previous_step' => 'Précédent',
     'next_step' => 'Suivant'
 );

@@ -32,9 +32,13 @@ class TemplateEngine
     {
         $dir = $this->templateDirectory;
         $render = function ($template, array $variables = array()) use ($dir, &$render) {
-            $var = function ($name) use ($variables) {
+            $var = function ($name, $default = null) use ($variables) {
                 if (isset($variables[$name])) {
                     return $variables[$name];
+                }
+
+                if (func_num_args() > 1) {
+                    return func_get_arg(1);
                 }
 
                 throw new \Exception("Unknown variable '{$name}'");

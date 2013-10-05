@@ -13,6 +13,8 @@
     ],
     "require": {
         "php": ">=5.3.3",
+        "symfony/http-foundation": "*",
+        "symfony/http-kernel": "*",
         "claroline/core-bundle": "*"
     },
     "autoload": {
