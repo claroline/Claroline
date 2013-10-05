@@ -381,7 +381,7 @@ class QuestionController extends Controller
                     $variables['linkedCategory'] = $linkedCategory;
                     $variables['exoID']          = $exoID;
 
-                    if($exoID != -1) {
+                    if ($exoID != -1) {
                         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
                         $variables['_resource'] = $exercise;
                     }
@@ -415,8 +415,8 @@ class QuestionController extends Controller
                     $variables['linkedCategory'] = $linkedCategory;
                     $variables['position']       = $position;
                     $variables['exoID']          = $exoID;
-                    
-                    if($exoID != -1) {
+
+                    if ($exoID != -1) {
                         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
                         $variables['_resource'] = $exercise;
                     }
@@ -463,7 +463,7 @@ class QuestionController extends Controller
                     );
                     $deleteForm = $this->createDeleteForm($interactionOpen[0]->getId());
 
-                    if($exoID != -1) {
+                    if ($exoID != -1) {
                         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
                         $variables['_resource'] = $exercise;
                     }
@@ -474,12 +474,12 @@ class QuestionController extends Controller
                     $variables['nbResponses']    = $nbResponses;
                     $variables['linkedCategory'] = $linkedCategory;
                     $variables['exoID']          = $exoID;
-                    
-                    if($exoID != -1) {
+
+                    if ($exoID != -1) {
                         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
                         $variables['_resource'] = $exercise;
                     }
-                    
+
                     return $this->render('UJMExoBundle:InteractionOpen:edit.html.twig', $variables);
 
                     break;
@@ -1435,7 +1435,7 @@ class QuestionController extends Controller
         $sharedWith = array();
         $stop = count($questionsharedWith);
 
-        for ($i = 0 ; $i < $stop ; $i++) {
+        for ($i = 0; $i < $stop; $i++) {
             $sharedWith[] = $em->getRepository('ClarolineCoreBundle:User')->find($questionsharedWith[$i]->getUser()->getId());
         }
 
@@ -1513,47 +1513,47 @@ class QuestionController extends Controller
      * To paginate two tables on one page
      *
      */
-    private function doublePaginationWithIf($entityToPaginate1, $entityToPaginate2, $max, $page1, $page2, $pageNow1, $pageNow2)
+    private function doublePaginationWithIf($entityToPaginateOne, $entityToPaginateTwo, $max, $pageOne, $pageTwo, $pageNowOne, $pageNowTwo)
     {
-        $adapter1 = new ArrayAdapter($entityToPaginate1);
-        $pager1 = new Pagerfanta($adapter1);
+        $adapterOne = new ArrayAdapter($entityToPaginateOne);
+        $pagerOne = new Pagerfanta($adapterOne);
 
-        $adapter2 = new ArrayAdapter($entityToPaginate2);
-        $pager2 = new Pagerfanta($adapter2);
+        $adapterTwo = new ArrayAdapter($entityToPaginateTwo);
+        $pagerTwo = new Pagerfanta($adapterTwo);
 
         try {
-            if ($pageNow1 == 0) {
-                $entityPaginated1 = $pager1
+            if ($pageNowOne == 0) {
+                $entityPaginatedOne = $pagerOne
                     ->setMaxPerPage($max)
-                    ->setCurrentPage($page1)
+                    ->setCurrentPage($pageOne)
                     ->getCurrentPageResults();
             } else {
-                $entityPaginated1 = $pager1
+                $entityPaginatedOne = $pagerOne
                     ->setMaxPerPage($max)
-                    ->setCurrentPage($pageNow1)
+                    ->setCurrentPage($pageNowOne)
                     ->getCurrentPageResults();
             }
 
-            if ($pageNow2 == 0) {
-                $entityPaginated2 = $pager2
+            if ($pageNowTwo == 0) {
+                $entityPaginatedTwo = $pagerTwo
                     ->setMaxPerPage($max)
-                    ->setCurrentPage($page2)
+                    ->setCurrentPage($pageTwo)
                     ->getCurrentPageResults();
             } else {
-                $entityPaginated2 = $pager2
+                $entityPaginatedTwo = $pagerTwo
                     ->setMaxPerPage($max)
-                    ->setCurrentPage($pageNow2)
-                    ->getCurrentPageResults();
+                    ->setCurrentPage($pageNowTwo
+)                    ->getCurrentPageResults();
             }
         } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
             throw $this->createNotFoundException("Cette page n'existe pas.");
         }
 
-        $doublePagination[0] = $entityPaginated1;
-        $doublePagination[1] = $pager1;
+        $doublePagination[0] = $entityPaginatedOne;
+        $doublePagination[1] = $pagerOne;
 
-        $doublePagination[2] = $entityPaginated2;
-        $doublePagination[3] = $pager2;
+        $doublePagination[2] = $entityPaginatedTwo;
+        $doublePagination[3] = $pagerTwo;
 
         return $doublePagination;
     }

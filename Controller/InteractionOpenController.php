@@ -175,7 +175,7 @@ class InteractionOpenController extends Controller
            if ($exoID == -1) {
 
                 return $this->redirect($this->generateUrl('ujm_question_index'));
-            } else {
+           } else {
 
                 return $this->redirect(
                     $this->generateUrl(
@@ -185,7 +185,7 @@ class InteractionOpenController extends Controller
                         )
                     )
                 );
-            }
+           }
         }
 
         return $this->forward(

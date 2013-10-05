@@ -323,7 +323,7 @@ class exerciseServices
         $em = $this->doctrine->getManager();
         $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')->find($interactionOpenID);
 
-        if($interOpen->getTypeOpenQuestion() == 'long'){
+        if ($interOpen->getTypeOpenQuestion() == 'long') {
             $response = $request->request->get('interOpenLong');
         }
 
@@ -346,7 +346,7 @@ class exerciseServices
             $penalty = $this->getPenalty($interOpen->getInteraction(), $paperID);
         }
 
-        if($interOpen->getTypeOpenQuestion() == 'long'){
+        if ($interOpen->getTypeOpenQuestion() == 'long') {
             $score = -1;
         }
 
@@ -526,7 +526,7 @@ class exerciseServices
             ->getRepository('UJMExoBundle:InteractionOpen')
             ->getInteractionOpen($interaction->getId());*/
 
-        if($interOpen->getTypeOpenQuestion() == 'long'){
+        if ($interOpen->getTypeOpenQuestion() == 'long') {
             $scoreMax = $interOpen->getScoreMaxLongResp();
         }
 

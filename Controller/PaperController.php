@@ -140,10 +140,9 @@ class PaperController extends Controller
 
         $subscription = $this->getSubscription($user, $paper->getExercise()->getId());
 
-        if(isset($subscription[0])) {
+        if (isset($subscription[0])) {
             $admin = $subscription[0]->getAdmin();
-        }
-        else {
+        } else {
             $admin = 0;
         }
 

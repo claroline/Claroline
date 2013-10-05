@@ -124,7 +124,7 @@ class ExerciseController extends Controller
             return $this->redirect(
                 $this->generateUrl(
                     'claro_resource_open', array(
-                    'resourceType' => $exercise->getResourceNode()->getResourceType()->getName(), 
+                    'resourceType' => $exercise->getResourceNode()->getResourceType()->getName(),
                     'node' => $exercise->getResourceNode()->getId())
                 )
             );
@@ -667,7 +667,7 @@ class ExerciseController extends Controller
                 $exoQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(array('exercise' => $exoID));
 
                 foreach ($exoQuestions as $exoQuestion) {
-                    for ($i = 0 ; $i < $length ; $i++) {
+                    for ($i = 0; $i < $length; $i++) {
                         if ($exoQuestion->getQuestion()->getId() == $order[$i]) {
                             $exoQuestion->setOrdre($i + 1);
                         }
@@ -1062,8 +1062,9 @@ class ExerciseController extends Controller
                 $flag = $em->getRepository('UJMExoBundle:Response')->findOneBy(
                     array(
                         'interaction' => $interQuestion,
-                        'paper' => $paper->getId())
-                    );
+                        'paper' => $paper->getId()
+                    )
+                );
 
                 if (!$flag || $flag->getResponse() == '') {
                     $interaction = $em->getRepository('UJMExoBundle:Interaction')->find($interQuestion);
@@ -1190,12 +1191,26 @@ class ExerciseController extends Controller
         return $histoDiscrimination;
     }
 
+    /**
+     * Docimology, to calulate the standard deviation for the discrimination coefficient
+     * 
+     * @param type $x
+     * @param type $mean
+     * @return type
+     */
     private function sd_square($x, $mean)
     {
         return pow($x - $mean, 2);
 
     }
 
+    /**
+     * 
+     * Docimology, to calulate the standard deviation for the discrimination coefficient
+     * 
+     * @param type $array
+     * @return type
+     */
     private function sd($array)
     {
 
@@ -1203,8 +1218,10 @@ class ExerciseController extends Controller
     }
 
     /**
-     * To draw histogram of measure of difficulty
-     *
+     * 
+     * @param type $exerciseId
+     * @param type $eqs
+     * @return type
      */
     private function histoMeasureOfDifficulty($exerciseId, $eqs)
     {
@@ -1224,7 +1241,7 @@ class ExerciseController extends Controller
 
         $stop = count($up);
 
-        for ($i = 0 ; $i < $stop ; $i++) {
+        for ($i = 0; $i < $stop; $i++) {
 
             $measureTab[$i] = $exerciseSer->roundUpDown(($up[$i] / $down[$i]) * 100);
         }
@@ -1250,12 +1267,12 @@ class ExerciseController extends Controller
                         ->getExerciseInterResponsesWithCount($exerciseId, $interaction[0]->getId());
 
         switch ( $interaction[0]->getType()) {
-           case "InteractionQCM":
+            case "InteractionQCM":
                 $interQCM = $em->getRepository('UJMExoBundle:InteractionQCM')
                                ->getInteractionQCM($interaction[0]->getId());
                 $scoreMax = $exerciseSer->qcmMaxScore($interQCM[0]);
                 $responsesTab = $this->responseStatus($responses, $scoreMax);
-              break;
+                break;
 
             case "InteractionGraphic":
                 $interGraphic = $em->getRepository('UJMExoBundle:InteractionGraphic')
@@ -1283,33 +1300,34 @@ class ExerciseController extends Controller
      * To paginate two tables on one page
      *
      */
-    private function doublePagination($entityToPaginate1, $entityToPaginate2, $max, $page1, $page2)
+    private function doublePagination($entityToPaginateOne, $entityToPaginateTwo, $max, $pageOne, $pageTwo)
     {
-        $adapter1 = new ArrayAdapter($entityToPaginate1);
-        $pager1 = new Pagerfanta($adapter1);
+        $adapterOne = new ArrayAdapter($entityToPaginateOne);
+        $pagerOne = new Pagerfanta($adapterOne);
 
-        $adapter2 = new ArrayAdapter($entityToPaginate2);
-        $pager2 = new Pagerfanta($adapter2);
+        $adapterTwo = new ArrayAdapter($entityToPaginateTwo);
+        $pagerTwo = new Pagerfanta($adapterTwo);
 
         try {
-            $entityPaginated1 = $pager1
+            $entityPaginatedOne = $pagerOne
                 ->setMaxPerPage($max)
-                ->setCurrentPage($page1)
+                ->setCurrentPage($pageOne)
                 ->getCurrentPageResults();
 
-            $entityPaginated2 = $pager2
+            $entityPaginatedTwo = $pagerTwo
                 ->setMaxPerPage($max)
-                ->setCurrentPage($page2)
+                ->setCurrentPage($pageTwo)
                 ->getCurrentPageResults();
         } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
             throw $this->createNotFoundException("Cette page n'existe pas.");
         }
 
-        $doublePagination[0] = $entityPaginated1;
-        $doublePagination[1] = $pager1;
 
-        $doublePagination[2] = $entityPaginated2;
-        $doublePagination[3] = $pager2;
+        $doublePagination[0] = $entityPaginatedOne;
+        $doublePagination[1] = $pagerOne;
+
+        $doublePagination[2] = $entityPaginatedTwo;
+        $doublePagination[3] = $pagerTwo;
 
         return $doublePagination;
     }

@@ -160,7 +160,7 @@ class ExerciseListener extends ContainerAware
 
         $event->setContent($response->getContent());
     }
-    
+
     public function onCopy(CopyResourceEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
@@ -169,7 +169,7 @@ class ExerciseListener extends ContainerAware
         $exerciseToCopy = $em->getRepository('UJMExoBundle:Exercise')->find($resource->getId());
         $listQuestionsExoToCopy = $em->getRepository('UJMExoBundle:ExerciseQuestion')
                                      ->findBy(array('exercise' => $exerciseToCopy->getId()));
-        
+
         $newExercise = new Exercise();
         $newExercise->setName($resource->getName());
         $newExercise->setTitle($exerciseToCopy->getTitle());
@@ -189,26 +189,26 @@ class ExerciseListener extends ContainerAware
         $newExercise->setEndDate($exerciseToCopy->getEndDate());
         $newExercise->setDispButtonInterrupt($exerciseToCopy->getDispButtonInterrupt());
         $newExercise->setLockAttempt($exerciseToCopy->getLockAttempt());
-        
+
         $em->persist($newExercise);
         $em->flush();
-        
+
         foreach ($listQuestionsExoToCopy as $eq) {
             $questionToAdd = $em->getRepository('UJMExoBundle:Question')->find($eq->getQuestion());;
             $exerciseQuestion = new ExerciseQuestion($newExercise, $questionToAdd);
             $exerciseQuestion->setOrdre($eq->getOrdre());
-            
+
             $em->persist($exerciseQuestion);
         }
-        
+
         $user = $this->container->get('security.context')->getToken()->getUser();
         $subscription = new Subscription($user, $newExercise);
         $subscription->setAdmin(true);
         $subscription->setCreator(true);
         $em->persist($subscription);
-        
+
         $em->flush();
-        
+
         $event->setCopy($newExercise);
         $event->stopPropagation();
     }

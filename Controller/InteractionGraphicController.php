@@ -155,7 +155,7 @@ class InteractionGraphicController extends Controller
             }
          }
 
-         $formWithError = $this->render(
+        $formWithError = $this->render(
             'UJMExoBundle:InteractionGraphic:new.html.twig', array(
             'entity' => $interGraph,
             'form'   => $form->createView(),
@@ -281,7 +281,7 @@ class InteractionGraphicController extends Controller
         }
 
         $stop = count($coords);
-        for ($i = 0 ; $i < $stop ; $i++) {
+        for ($i = 0; $i < $stop; $i++) {
             $em->remove($coords[$i]);
         }
 
