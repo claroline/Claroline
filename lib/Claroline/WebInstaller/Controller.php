@@ -4,7 +4,7 @@ namespace Claroline\WebInstaller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Library\Installation\Settings\SettingChecker;
-use Claroline\CoreBundle\Library\Installation\Settings\DatabaseSettings;
+use Claroline\CoreBundle\Library\Installation\Settings\DatabaseChecker;
 
 class Controller
 {
@@ -56,15 +56,22 @@ class Controller
         );
     }
 
-    public function databaseStep(array $formData = array(), $errors = array())
+    public function databaseStep()
     {
         $session = $this->request->getSession();
-        $formData = $formData ?: $session->get('database_settings', array());
-        $errors = $errors ?: $session->get('database_settings_errors', array());
+        $formData = $session->get('database_settings', array());
+        $formErrors = $session->get('database_settings_errors', array());
+        $globalError = $session->get('database_global_error', false);
 
         return $this->renderStep(
             'database',
-            array_merge($formData, array('errors' => $errors))
+            array_merge(
+                $formData,
+                array(
+                    'global_error' => $globalError,
+                    'form_errors' => $formErrors
+                )
+            )
         );
     }
 
@@ -72,34 +79,56 @@ class Controller
     {
         $settings = $this->request->request->all();
 
-        if (isset($settings['database_driver'])) {
-            switch ($settings['database_driver']) {
+        if (isset($settings['driver'])) {
+            switch ($settings['driver']) {
                 case 'PostgreSQL':
-                    $settings['database_driver'] = 'pdo_pgsql';
+                    $settings['driver'] = 'pdo_pgsql';
                     break;
                 case 'MySQL':
                 default:
-                    $settings['database_driver'] = 'pdo_mysql';
+                    $settings['driver'] = 'pdo_mysql';
             }
         }
 
-        $checker = new DatabaseSettings($settings);
-        $errors = $checker->validate();
-        $this->request->getSession()->set('database_settings', $settings);
-        $this->request->getSession()->set('database_settings_errors', $errors);
+        $session = $this->request->getSession();
+        $session->set('database_settings', $settings);
+        $checker = new DatabaseChecker($settings);
+        $globalError = false;
 
-        if (count($errors) > 0) {
-            return $this->databaseStep($settings, $errors);
-        } elseif ($checker->canConnect()) {
-            return $this->adminUserStep();
+        if (!$checker->areSettingsValid()) {
+            $errors = $checker->getValidationErrors();
+            $session->set('database_settings_errors', $errors);
+            $session->remove('database_global_error');
+
+            return $this->databaseStep();
+        } elseif ($checker->canConnectToDatabase()) {
+            if (!$checker->isDatabaseEmpty()) {
+                $globalError = 'not_empty_database';
+            }
+        } elseif ($checker->canConnectToServer()) {
+            if (!$checker->canCreateDatabase()) {
+                $globalError = 'cannot_connect_or_create_database';
+            }
         } else {
-            echo 'UNABLE TO CONNECT/CREATE DB';
+            $globalError = 'cannot_connect_to_db_server';
         }
+
+        if ($globalError) {
+            $session->remove('database_settings_errors');
+            $session->set('database_global_error', $globalError);
+
+            return $this->databaseStep();
+        }
+
+        $session->remove('database_global_error');
+        $session->remove('database_settings_errors');
+
+        return $this->adminUserStep();
     }
 
     private function adminUserStep()
     {
-        echo 'OK -> admin user';
+        return new Response('Admin creation');
     }
 
     private function renderStep($template, array $variables)

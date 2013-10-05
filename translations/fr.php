@@ -49,6 +49,12 @@ return array(
     'user' => 'Utilisateur',
     'password' => 'Mot de passe',
     'port' => 'Port',
+    'not_empty_database'
+        => 'La base de données que vous avez sélectionnée n\'est pas vide. Veuillez en choisir une autre ou laisser cet installateur la créer pour vous.',
+    'cannot_connect_to_db_server'
+        => 'La connexion avec le serveur de bases de données ne peut pas être établie. Veuillez vérifier que les paramètres que vous avez fournis sont corrects.',
+    'cannot_connect_or_create_database'
+        => 'La connexion avec la base de données ne peut pas être établie et la base ne peut pas être créée. Vérifiez que l\'utilisateur que vous avez renseigné dispose des permissions nécessaires.',
     'previous_step' => 'Précédent',
     'next_step' => 'Suivant'
 );

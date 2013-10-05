@@ -49,6 +49,12 @@ return array(
     'user' => 'User',
     'password' => 'Password',
     'port' => 'Port',
+    'not_empty_database'
+        => 'The database you have selected is not empty. Please choose another one or let this installer create it for you.',
+    'cannot_connect_to_db_server'
+        => 'The connection with the database server cannot be established. Please check the parameters you provided are correct.',
+    'cannot_connect_create_database'
+        => 'The connection with the database cannot be established and it cannot be created. Please check that the database user you have selected has sufficient permissions.',
     'previous_step' => 'Previous',
     'next_step' => 'Next'
 );
