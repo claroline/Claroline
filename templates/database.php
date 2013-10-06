@@ -1,4 +1,4 @@
-<h4><?php echo $trans('parameters') ?></h4>
+<h4><?php echo $trans('database_parameters') ?></h4>
 
 <?php if ($var('global_error')): ?>
     <div class="alert alert-danger">

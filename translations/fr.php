@@ -1,5 +1,7 @@
 <?php
 
+use Claroline\CoreBundle\Library\Installation\Settings\DatabaseChecker;
+
 return array(
     'welcome' => 'Bienvenue',
     'welcome_message' => 'Cet assistant vous guidera à travers l\'installation de la plateforme.',
@@ -40,20 +42,20 @@ return array(
     'The directory %directory% must be writable' => 'Le répertoire <em>%directory%</em> doit être accessible en écriture.',
     'The file %file% must be writable' => 'Le fichier <em>%file%</em> doit être accessible en écriture.',
     'database_parameters' => 'Paramètres de la base de données',
-    'not_blank_expected' => 'Cette valeur ne peut pas être vide',
-    'number_expected' => 'Cette valeur doit être un nombre positif',
-    'invalid_driver' => 'Driver non valide',
     'driver' => 'Driver',
     'host' => 'Hôte',
     'database' => 'Base de données',
     'user' => 'Utilisateur',
     'password' => 'Mot de passe',
     'port' => 'Port',
-    'not_empty_database'
+    DatabaseChecker::INVALID_DRIVER => 'Driver non valide',
+    DatabaseChecker::NOT_BLANK_EXPECTED => 'Cette valeur ne peut pas être vide',
+    DatabaseChecker::NUMBER_EXPECTED => 'Cette valeur doit être un nombre positif',
+    DatabaseChecker::DATABASE_NOT_EMPTY
         => 'La base de données que vous avez sélectionnée n\'est pas vide. Veuillez en choisir une autre ou laisser cet installateur la créer pour vous.',
-    'cannot_connect_to_db_server'
+    DatabaseChecker::CANNOT_CONNECT_TO_SERVER
         => 'La connexion avec le serveur de bases de données ne peut pas être établie. Veuillez vérifier que les paramètres que vous avez fournis sont corrects.',
-    'cannot_connect_or_create_database'
+    DatabaseChecker::CANNOT_CONNECT_OR_CREATE
         => 'La connexion avec la base de données ne peut pas être établie et la base ne peut pas être créée. Vérifiez que l\'utilisateur que vous avez renseigné dispose des permissions nécessaires.',
     'previous_step' => 'Précédent',
     'next_step' => 'Suivant'

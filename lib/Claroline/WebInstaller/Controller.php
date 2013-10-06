@@ -93,29 +93,15 @@ class Controller
         $session = $this->request->getSession();
         $session->set('database_settings', $settings);
         $checker = new DatabaseChecker($settings);
-        $globalError = false;
 
-        if (!$checker->areSettingsValid()) {
-            $errors = $checker->getValidationErrors();
+        if (count($errors = $checker->getValidationErrors()) > 0) {
             $session->set('database_settings_errors', $errors);
             $session->remove('database_global_error');
 
             return $this->databaseStep();
-        } elseif ($checker->canConnectToDatabase()) {
-            if (!$checker->isDatabaseEmpty()) {
-                $globalError = 'not_empty_database';
-            }
-        } elseif ($checker->canConnectToServer()) {
-            if (!$checker->canCreateDatabase()) {
-                $globalError = 'cannot_connect_or_create_database';
-            }
-        } else {
-            $globalError = 'cannot_connect_to_db_server';
-        }
-
-        if ($globalError) {
+        } elseif (true !== $status = $checker->connectToDatabase()) {
             $session->remove('database_settings_errors');
-            $session->set('database_global_error', $globalError);
+            $session->set('database_global_error', $status);
 
             return $this->databaseStep();
         }

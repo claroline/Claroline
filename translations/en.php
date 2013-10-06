@@ -1,5 +1,7 @@
 <?php
 
+use Claroline\CoreBundle\Library\Installation\Settings\DatabaseChecker;
+
 return array(
     'welcome' => 'Welcome',
     'welcome_message' => 'This assistant will guide you through the platform installation.',
@@ -40,20 +42,20 @@ return array(
     'The directory %directory% must be writable' => 'The directory <em>%directory%</em> must be writable.',
     'The file %file% must be writable' => 'The file <em>%file%</em> must be writable.',
     'database_parameters' => 'Database parameters',
-    'not_blank_expected' => 'This value should not be blank',
-    'number_expected' => 'This value should be a positive number',
-    'invalid_driver' => 'Invalid driver',
     'driver' => 'Driver',
     'host' => 'Host',
     'database' => 'Database',
     'user' => 'User',
     'password' => 'Password',
     'port' => 'Port',
-    'not_empty_database'
+    DatabaseChecker::NOT_BLANK_EXPECTED => 'This value should not be blank',
+    DatabaseChecker::NUMBER_EXPECTED => 'This value should be a positive number',
+    DatabaseChecker::INVALID_DRIVER => 'Invalid driver',
+    DatabaseChecker::DATABASE_NOT_EMPTY
         => 'The database you have selected is not empty. Please choose another one or let this installer create it for you.',
-    'cannot_connect_to_db_server'
+    DatabaseChecker::CANNOT_CONNECT_TO_SERVER
         => 'The connection with the database server cannot be established. Please check the parameters you provided are correct.',
-    'cannot_connect_create_database'
+    DatabaseChecker::CANNOT_CONNECT_OR_CREATE
         => 'The connection with the database cannot be established and it cannot be created. Please check that the database user you have selected has sufficient permissions.',
     'previous_step' => 'Previous',
     'next_step' => 'Next'
