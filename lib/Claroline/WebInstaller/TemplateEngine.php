@@ -33,7 +33,7 @@ class TemplateEngine
         $dir = $this->templateDirectory;
         $render = function ($template, array $variables = array()) use ($dir, &$render) {
             $var = function ($name, $default = null) use ($variables) {
-                if (isset($variables[$name])) {
+                if (array_key_exists($name, $variables)) {
                     return $variables[$name];
                 }
 

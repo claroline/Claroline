@@ -17,11 +17,31 @@ class Container
         $this->cachedServices = array();
     }
 
+    /**
+     * @return Request
+     */
     public function getRequest()
     {
         return $this->request;
     }
 
+    /**
+     * @return ParameterBag
+     */
+    public function getParameterBag()
+    {
+        $session = $this->request->getSession();
+
+        if (!$session->has('parameter_bag')) {
+            $session->set('parameter_bag', new ParameterBag());
+        }
+
+        return $session->get('parameter_bag');
+    }
+
+    /**
+     * @return Translator
+     */
     public function getTranslator()
     {
         if (!isset($this->cachedServices['translator'])) {
@@ -31,12 +51,15 @@ class Container
         }
 
         $this->cachedServices['translator']->setLanguage(
-            $this->request->getSession()->get('language', 'en')
+            $this->getParameterBag()->getInstallationLanguage()
         );
 
         return $this->cachedServices['translator'];
     }
 
+    /**
+     * @return TemplateEngine
+     */
     public function getTemplateEngine()
     {
         if (!isset($this->cachedServices['templating'])) {

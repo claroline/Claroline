@@ -15,29 +15,23 @@ class Controller
     {
         $this->container = $container;
         $this->request = $this->container->getRequest();
+        $this->parameters = $this->container->getParameterBag();
     }
 
     public function languageStep()
     {
         return $this->renderStep(
-            'language',
-            array('language' => $this->container->getTranslator()->getLanguage())
+            'language.html.php',
+            array('install_language' => $this->parameters->getInstallationLanguage())
         );
     }
 
     public function languageStepSubmit()
     {
-        switch ($this->request->request->get('language')) {
-            case 'Français':
-                $language = 'fr';
-                break;
-            case 'English':
-            default:
-                $language = 'en';
-        }
-
-        $this->request->getSession()->set('language', $language);
-        $this->container->getTranslator()->setLanguage($language);
+        $language = $this->request->request->get('install_language');
+        $languageCode = $this->getLanguageCode($language);
+        $this->parameters->setInstallationLanguage($languageCode);
+        $this->container->getTranslator()->setLanguage($languageCode);
 
         return $this->languageStep();
     }
@@ -47,7 +41,7 @@ class Controller
         $settingChecker = new SettingChecker();
 
         return $this->renderStep(
-            'requirements',
+            'requirements.html.php',
             array(
                 'setting_categories' => $settingChecker->getSettingCategories(),
                 'has_failed_recommendation' => $settingChecker->hasFailedRecommendation(),
@@ -58,75 +52,82 @@ class Controller
 
     public function databaseStep()
     {
-        $session = $this->request->getSession();
-        $formData = $session->get('database_settings', array());
-        $formErrors = $session->get('database_settings_errors', array());
-        $globalError = $session->get('database_global_error', false);
-
         return $this->renderStep(
-            'database',
-            array_merge(
-                $formData,
-                array(
-                    'global_error' => $globalError,
-                    'form_errors' => $formErrors
-                )
+            'database.html.php',
+            array(
+                'settings' => $this->parameters->getDatabaseSettings(),
+                'global_error' => $this->parameters->getDatabaseGlobalError(),
+                'validation_errors' => $this->parameters->getDatabaseValidationErrors()
             )
         );
     }
 
     public function databaseStepSubmit()
     {
-        $settings = $this->request->request->all();
+        $postSettings = $this->request->request->all();
+        $databaseSettings = $this->parameters->getDatabaseSettings();
+        $databaseSettings->bindData($postSettings);
+        $checker = new DatabaseChecker($databaseSettings);
+        $errors = $checker->validateSettings();
+        $this->parameters->setDatabaseValidationErrors($errors);
 
-        if (isset($settings['driver'])) {
-            switch ($settings['driver']) {
-                case 'PostgreSQL':
-                    $settings['driver'] = 'pdo_pgsql';
-                    break;
-                case 'MySQL':
-                default:
-                    $settings['driver'] = 'pdo_mysql';
-            }
-        }
-
-        $session = $this->request->getSession();
-        $session->set('database_settings', $settings);
-        $checker = new DatabaseChecker($settings);
-
-        if (count($errors = $checker->getValidationErrors()) > 0) {
-            $session->set('database_settings_errors', $errors);
-            $session->remove('database_global_error');
-
+        if (count($errors) > 0) {
             return $this->databaseStep();
         } elseif (true !== $status = $checker->connectToDatabase()) {
-            $session->remove('database_settings_errors');
-            $session->set('database_global_error', $status);
+            $this->parameters->setDatabaseGlobalError($status);
 
             return $this->databaseStep();
+        } else {
+            $this->parameters->setDatabaseGlobalError(null);
         }
 
-        $session->remove('database_global_error');
-        $session->remove('database_settings_errors');
-
-        return $this->adminUserStep();
+        return $this->platformStep();
     }
 
-    private function adminUserStep()
+    public function platformStep()
     {
-        return new Response('Admin creation');
+        if (!$this->parameters->getPlatformLanguage()) {
+            $this->parameters->setPlatformLanguage($this->parameters->getInstallationLanguage());
+        }
+
+        return $this->renderStep(
+            'platform.html.php',
+            array(
+                'platform_language' => $this->parameters->getPlatformLanguage()
+            )
+        );
+    }
+
+    public function platformSubmitStep()
+    {
+        $this->parameters->setPlatformLanguage(
+            $this->getLanguageCode($this->request->request->get('platform_language'))
+        );
+
+        return new Response('platform submit');
     }
 
     private function renderStep($template, array $variables)
     {
         return new Response(
             $this->container->getTemplateEngine()->render(
-                'layout.php',
+                'layout.html.php',
                 array(
-                    'stepTemplate' => $template . '.php',
+                    'stepTemplate' => $template,
                     'stepVariables' => $variables
                 )
             )
         );
+    }
+
+    private function getLanguageCode($language)
+    {
+        switch ($language) {
+            case 'Français':
+                return 'fr';
+            case 'English':
+            default:
+                return 'en';
+        }
     }
 }

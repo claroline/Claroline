@@ -5,7 +5,7 @@ use Claroline\CoreBundle\Library\Installation\Settings\DatabaseChecker;
 return array(
     'welcome' => 'Welcome',
     'welcome_message' => 'This assistant will guide you through the platform installation.',
-    'choose_language' => 'Installation language',
+    'install_language' => 'Installation language',
     'requirements_check' => 'Configuration checking',
     'failed_requirement_msg' => 'The application will not run correctly on your current configuration. Please fix the items highlighted in red and refresh this page.',
     'additional_failed_recommendation_msg'
@@ -56,7 +56,9 @@ return array(
     DatabaseChecker::CANNOT_CONNECT_TO_SERVER
         => 'The connection with the database server cannot be established. Please check the parameters you provided are correct.',
     DatabaseChecker::CANNOT_CONNECT_OR_CREATE
-        => 'The connection with the database cannot be established and it cannot be created. Please check that the database user you have selected has sufficient permissions.',
+        => 'The connection with the database cannot be established and the database cannot be created. Please check that the database user you have selected has sufficient permissions.',
+    'platform_parameters' => 'Platform parameters',
+    'platform_language' => 'Language',
     'previous_step' => 'Previous',
     'next_step' => 'Next'
 );

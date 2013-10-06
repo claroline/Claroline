@@ -6,7 +6,7 @@
     </div>
 <?php endif ?>
 
-<?php $errors = $var('form_errors') ?>
+<?php $errors = $var('validation_errors') ?>
 
 <form action="<?php echo $path('/database') ?>" method="post" class="form-horizontal" autocomplete="off">
     <div class="form-group <?php if (isset($errors['driver'])) echo 'has-error' ?>">
@@ -15,10 +15,10 @@
         </label>
         <div class="col-lg-3">
             <select name="driver" class="form-control">
-                <option <?php if ($var('driver', '') === 'pdo_mysql') echo 'selected' ?>>
+                <option <?php if ($var('settings')->getDriver() === 'pdo_mysql') echo 'selected' ?>>
                     MySQL
                 </option>
-                <option <?php if ($var('driver', '') === 'pdo_pgsql') echo 'selected' ?>>
+                <option <?php if ($var('settings')->getDriver() === 'pdo_pgsql') echo 'selected' ?>>
                     PostgreSQL
                 </option>
             </select>
@@ -37,7 +37,7 @@
             <input type="text"
                    name="host"
                    class="form-control"
-                   value="<?php echo $var('host', 'localhost') ?>"
+                   value="<?php echo $var('settings')->getHost() ?>"
             >
         </div>
         <?php if (isset($errors['host'])): ?>
@@ -46,20 +46,20 @@
             </span>
         <?php endif ?>
     </div>
-    <div class="form-group <?php if (isset($errors['dbname'])) echo 'has-error' ?>">
+    <div class="form-group <?php if (isset($errors['name'])) echo 'has-error' ?>">
         <label class="control-label col-lg-2">
             <?php echo $trans('database') ?>
         </label>
         <div class="col-lg-3">
             <input type="text"
-                   name="dbname"
+                   name="name"
                    class="form-control"
-                   value="<?php echo $var('dbname', 'claroline') ?>"
+                   value="<?php echo $var('settings')->getName() ?>"
             >
         </div>
-        <?php if (isset($errors['dbname'])): ?>
+        <?php if (isset($errors['name'])): ?>
             <span class="help-block">
-                <?php echo $trans($errors['dbname']) ?>
+                <?php echo $trans($errors['name']) ?>
             </span>
         <?php endif ?>
     </div>
@@ -71,7 +71,7 @@
             <input type="text"
                    name="user"
                    class="form-control"
-                   value="<?php echo $var('user', 'root') ?>"
+                   value="<?php echo $var('settings')->getUser() ?>"
             >
         </div>
         <?php if (isset($errors['user'])): ?>
@@ -88,7 +88,7 @@
             <input type="password"
                    name="password"
                    class="form-control"
-                   value="<?php echo $var('password', '') ?>"
+                   value="<?php echo $var('settings')->getPassword() ?>"
             >
         </div>
         <?php if (isset($errors['password'])): ?>
@@ -105,7 +105,7 @@
             <input type="text"
                    name="port"
                    class="form-control"
-                   value="<?php echo $var('port', '') ?>"
+                   value="<?php echo $var('settings')->getPort() ?>"
             >
         </div>
         <?php if (isset($errors['port'])): ?>

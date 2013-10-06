@@ -3,13 +3,13 @@
 
 <form action="<?php echo $path('/') ?>" method="post" class="form-horizontal">
     <div class="form-group">
-        <label class="control-label col-lg-2"><?php echo $trans('choose_language') ?></label>
+        <label class="control-label col-lg-2"><?php echo $trans('install_language') ?></label>
         <div class="col-lg-2">
-            <select name="language" class="form-control auto-submit">
-                <option <?php if ($var('language') === 'en') echo 'selected' ?>>
+            <select name="install_language" class="form-control auto-submit">
+                <option <?php if ($var('install_language') === 'en') echo 'selected' ?>>
                     English
                 </option>
-                <option <?php if ($var('language') === 'fr') echo 'selected' ?>>
+                <option <?php if ($var('install_language') === 'fr') echo 'selected' ?>>
                     Français
                 </option>
             </select>

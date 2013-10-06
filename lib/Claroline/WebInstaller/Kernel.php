@@ -35,6 +35,10 @@ class Kernel implements HttpKernelInterface
             $response = $controller->databaseStep();
         } elseif ($pathInfo === '/database' && $method === 'POST') {
             $response = $controller->databaseStepSubmit();
+        } elseif ($pathInfo === '/platform' && $method === 'GET') {
+            $response = $controller->platformStep();
+        } elseif ($pathInfo === '/platform' && $method === 'POST') {
+            $response = $controller->platformSubmitStep();
         }
 
         $response = $response ?: new Response('<h1>Page not found</h1>', 404);
