@@ -14,19 +14,35 @@ class DatabaseChecker
     const DATABASE_NOT_EMPTY = 'not_empty_database';
 
     private $settings;
-    private $errors;
+    private $errors = array();
+    private $hadValidationCall = false;
     private $serverConnection;
     private $databaseConnection;
 
-    public function __construct(array $connectionSettings)
+    public function __construct(DatabaseSettings $settings)
     {
-        $this->settings = $connectionSettings;
-        $this->errors = array();
-        $this->validateSettings();
+        $this->settings = $settings;
     }
 
-    public function getValidationErrors()
+    public function validateSettings()
     {
+        if (false !== $this->checkIsNotBlank('driver')) {
+            if (!in_array($this->settings->getDriver(), $this->getDrivers())) {
+                $this->errors['driver'] = static::INVALID_DRIVER;
+            }
+        }
+
+        $this->checkIsNotBlank('host');
+        $this->checkIsNotBlank('name');
+        $this->checkIsNotBlank('user');
+        $port = $this->settings->getPort();
+
+        if (!empty($port) && (!is_numeric($port) || (int) $port < 0)) {
+            $this->errors['port'] = static::NUMBER_EXPECTED;
+        }
+
+        $this->hadValidationCall = true;
+
         return $this->errors;
     }
 
@@ -47,31 +63,12 @@ class DatabaseChecker
         return true;
     }
 
-    private function validateSettings()
-    {
-        if (false !== $this->checkIsNotBlank('driver')) {
-            if (!in_array($this->settings['driver'], $this->getDrivers())) {
-                $this->errors['driver'] = static::INVALID_DRIVER;
-            }
-        }
-
-        $this->checkIsNotBlank('host');
-        $this->checkIsNotBlank('dbname');
-        $this->checkIsNotBlank('user');
-        $this->checkIsNotBlank('password');
-
-        if (isset($this->settings['port']) && '' !== trim($this->settings['port'])) {
-            if (!is_numeric($this->settings['port']) || (int) $this->settings['port'] < 0) {
-                $this->errors['port'] = static::NUMBER_EXPECTED;
-            }
-        }
-
-        return $this->errors;
-    }
-
     private function checkIsNotBlank($option)
     {
-        if (!isset($this->settings[$option]) || '' === trim($this->settings[$option])) {
+        $method = 'get' . ucfirst($option);
+        $value = $this->settings->{$method}();
+
+        if (empty($value)) {
             $this->errors[$option] = static::NOT_BLANK_EXPECTED;
 
             return false;
@@ -112,15 +109,21 @@ class DatabaseChecker
 
     private function getConnection($useDatabase)
     {
-        if (count($this->errors) !== 0) {
-            throw new \Exception('Connection settings are not valid');
+        if (!$this->hadValidationCall || count($this->errors) !== 0) {
+            throw new \Exception('Connection settings must be validated first');
         }
 
-        $parameters = $this->settings;
-        $parameters['charset'] = 'UTF8';
+        $parameters = array(
+            'driver' => $this->settings->getDriver(),
+            'host' => $this->settings->getHost(),
+            'user' => $this->settings->getUser(),
+            'password' => $this->settings->getPassword(),
+            'port' => $this->settings->getPort(),
+            'charset' => $this->settings->getCharset()
+        );
 
-        if (!$useDatabase) {
-            unset($parameters['dbname']);
+        if ($useDatabase) {
+            $parameters['dbname'] = $this->settings->getName();
         }
 
         return DriverManager::getConnection($parameters);
@@ -141,9 +144,7 @@ class DatabaseChecker
     {
         if ($this->canConnect(false)) {
             try {
-                $this->serverConnection->getSchemaManager()->createDatabase(
-                    $this->settings['dbname']
-                );
+                $this->serverConnection->getSchemaManager()->createDatabase($this->settings->getName());
 
                 return true;
             } catch (\Exception $ex) {
