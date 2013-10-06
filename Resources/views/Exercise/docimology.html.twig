@@ -41,6 +41,11 @@
 
 {% extends layout %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ujmexo/css/docimology.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
 {% block title %} {{ 'docimology' | trans }} {% endblock %}
 
 {% block resourceBreadcrumb %}
@@ -50,12 +55,12 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'docimology' | trans }}</h3>
+        <h1>{{ 'docimology' | trans }}</h1>
     </div>
     <div class="panel-body">
-        <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}">
+        <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" class="btn btn-primary">
             <i class="icon-arrow-left"></i> {{ "back" | trans }}
-        </a>
+        </a><br/><br/>
 
         {#--------------------------------------------------- Legend -----------------------------------------------------------------------------------#}
         <div class="panel panel-default">
@@ -84,7 +89,7 @@
             <div class="panel-heading">
                 <h3 class="panel-title">{{ "histoSuccess" | trans }}</h3>
             </div>
-            <div class="panel-body" id="histoSuccess"></div>
+            <div class="panel-body" id="histoSuccess"  style="margin-bottom: 100px;"></div>
         </div>
         {#--------------------------------------------------- Histogramm of discrimination -----------------------------------------------------------#}
         <div class="panel panel-default">
@@ -146,7 +151,11 @@
 
                 seriesDefaults:{
                     color: '#06A1E3',
-                    rendererOptions: {fillToZero: true}
+                    rendererOptions: {fillToZero: true},
+                    pointLabels: {
+                        show: true,
+                        hideZeros: true
+                    }
                 },
 
                 axes: {

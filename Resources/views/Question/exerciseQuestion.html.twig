@@ -44,7 +44,6 @@
 {% block stylesheets %}
     {{ parent() }}
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
 {% endblock %}
 
 {% block title %} {{ 'list of question' | trans }} {% endblock %}
@@ -55,9 +54,8 @@
 {% endblock %}
 
 {% block section_content %}
-
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'my questions' | trans }}</h3>
+        <h1>{{ 'my questions' | trans }}</h1>
     </div>
     <div class="panel-body">
         <a class="btn btn-primary" href="{{ path('ujm_exercise_open', { 'exerciseId':  exerciseID }) }}">
@@ -78,28 +76,22 @@
                 <p>{{ 'changeOrder' | trans }}.</p>
             {%endif%}
 
-            <button type="button" id="SaveOrder" style="display: none; margin-left: 50px;" class="btn btn-primary"
-                onclick="SaveNewOrder('{{ path('ujm_exercise_question_order') }}', {{exerciseID}});">
-                {{ 'saveNewOrder' | trans }}
-            </button>
+            <div id="SaveOrder" style="display: none;">
+                <button type="button" class="btn btn-primary"
+                    onclick="SaveNewOrder('{{ path('ujm_exercise_question_order') }}', {{exerciseID}});">
+                    {{ 'saveNewOrder' | trans }}
+                </button>
+                <br/><br/>
+            </div>
 
             {% if interactions is not empty %}
-
                 <table class="table table-striped table-bordered table-condensed" id="QuestionArray">
                     <thead>
-                        <tr>
-                            <th class="classic">
-                                {{ 'category' | trans }}
-                            </th>
-                            <th class="classic">
-                                {{ 'title' | trans }}
-                            </th>
-                            <th class="classic">
-                                {{ 'type' | trans }}
-                            </th>
-                            <th class="classic">
-                                {{ 'question' | trans }}
-                            </th>
+                        <tr style="background-color: lightsteelblue;">
+                            <th class="classic">{{ 'category' | trans }}</th>
+                            <th class="classic">{{ 'title' | trans }}</th>
+                            <th class="classic">{{ 'type' | trans }}</th>
+                            <th class="classic">{{ 'question' | trans }}</th>
                             <th class="classic">{{ 'actions' | trans }}</th>
                         </tr>
                     </thead>
@@ -113,29 +105,24 @@
                             <td class="classic">{{ interaction.type }}</td>
                             <td class="classic">{{ interaction.invite|raw }}</td>
                             <td class="classic">
-                                <ul >
-                                    {% if(questionWithResponse[x] == 0) %}
-                                        <li>
-                                            <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id, 'exoID': exerciseID }) }}">
-                                                <i class="icon-pencil"></i>&nbsp;{{ 'edit' | trans }}
-                                            </a>
-                                        </li>
-                                    {% else %}
-                                        <li>
-                                            <a href="{{ path('ujm_question_edit', { 'id': interaction.question.id, 'exoID': exerciseID }) }}">
-                                                 <i class="icon-pencil"></i>&nbsp;{{ 'edit' | trans }}
-                                            </a>
-                                        </li>
-                                    {% endif %}
-                                    <li>
-                                        <a href="{{ path('ujm_exercise_question_delete', {
-                                                'exoID': exerciseID, 'qid': interaction.question.id, 'pageNow': pagerQuestion.getCurrentPage,
-                                                'maxPage': pagerQuestion.maxPerPage, 'nbItem': pagerQuestion.getNbResults,
-                                                'lastPage': pagerQuestion.getNbPages }) }}">
-                                            <i class="icon-trash"></i>&nbsp;{{ 'delete of my exercise' | trans }}
-                                        </a>
-                                    </li>
-                                </ul>
+                                {% if (questionWithResponse[x] == 0) %}
+                                    <a class="btn btn-default" title="{{ 'edit' | trans }}"
+                                       href="{{ path('ujm_question_edit', { 'id': interaction.question.id, 'exoID': exerciseID }) }}">
+                                        <i class="icon-pencil"></i>
+                                    </a>
+                                {% else %}
+                                    <a class="btn btn-default" title="{{ 'edit' | trans }}" 
+                                       href="{{ path('ujm_question_edit', { 'id': interaction.question.id, 'exoID': exerciseID }) }}">
+                                        <i class="icon-pencil"></i>
+                                    </a>
+                                {% endif %}
+                                <a class="btn btn-default" title="{{ 'delete of my exercise' | trans }}" 
+                                   href="{{ path('ujm_exercise_question_delete', {
+                                        'exoID': exerciseID, 'qid': interaction.question.id, 'pageNow': pagerQuestion.getCurrentPage,
+                                        'maxPage': pagerQuestion.maxPerPage, 'nbItem': pagerQuestion.getNbResults,
+                                        'lastPage': pagerQuestion.getNbPages }) }}">
+                                    <i class="icon-trash"></i>
+                                </a>
                             </td>
                             <td style="display: none;" id="qid{{i}}">
                                 {{ interaction.question.id }}
@@ -145,24 +132,21 @@
                     {% endfor %}
                     </tbody>
                 </table>
-
-                <div>
-                    {% if pagerQuestion.haveToPaginate %}
-                        {{ pagerfanta(pagerQuestion, 'twitter_bootstrap_translated', {'routeName': 'ujm_exercise_questions', 'routeParams':
-                        { 'id': exerciseID } }) }}
-                    {% endif %}
-                </div>
-            {% else %}
-                <div class="alert alert-info">{{ 'noQuestionFound'|trans }} ...</div>
-            {% endif %}
+            </div>
         </div>
-    </div>
+        {% if pagerQuestion.haveToPaginate %}
+            <div class="text-center panel-footer">
+                {{ pagerfanta(pagerQuestion, 'twitter_bootstrap_translated', {'routeName': 'ujm_exercise_questions', 'routeParams':
+                { 'id': exerciseID } }) }}
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-info">{{ 'noQuestionFound'|trans }} ...</div>
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/exerciceQuestion.js') }}"></script>
-
 {% endblock %}

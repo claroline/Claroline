@@ -56,9 +56,9 @@
         </div>
     </div>
     <div class="panel-footer">
-        <a class="btn btn-primary" id="lien_category_alter" onclick="show();"><i class="icon-pencil"></i> &nbsp;{{ 'alter category' | trans }}</a>
-        <a class="btn btn-default" id="lien_category"><i class="icon-plus"></i> &nbsp;{{ 'create a new category' | trans }}</a>
-        <a id="linkedCategory" style="display: none;" class="btn btn-default" id="lien_category_drop" onclick="dropCategory();"><i class="icon-trash"></i> {{ 'drop category' | trans }}</a>
+        <a class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop', {'edit': 1} ) }}');"><i class="icon-pencil"></i> {{ 'alter category' | trans }}</a>
+        <a class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop') }}');"><i class="icon-plus"></i> {{ 'create a new category' | trans }}</a>
+        <a id="linkedCategory" style="display: none;" class="btn btn-primary" id="lien_category_drop" onclick="dropCategory();"><i class="icon-trash"></i> {{ 'drop category' | trans }}</a>
     </div>
 </div>
 
@@ -133,35 +133,6 @@
     <div id="overlayEffect"> </div>
 </div>
 
-<div id="listeCategory">
-    <div id="popupCategory" class="hiddenCat">
-        <a id="closeCategory" class="hiddenCat" title="close popup">{{ 'close' | trans }}</a>
-        <h1>{{ 'create a new category' | trans }}</h1>
-        <div id="div_input_category"></div>
-    </div>
-    <div id="overlayEffect_cat"></div>
-</div>
-
-<div id="alterCategory" style="position: fixed; left: 40%; top: 20%; background-color: #ccf; border: #000 thin solid;
-    width: 400px; height: 200px; display: none; opacity: 0.95; text-align: center;">
-
-    <a href="#" onclick="hide();"><i class="icon-remove"></i> {{ 'close' | trans }}&nbsp;</a>
-
-    <h3>{{ 'alter category' | trans }}</h3>
-
-    <p>{{ 'newCategoryName' | trans }} ?</p>
-    <input class="form-control" type="text" id='newlabel' name='newlabel'/>
-    <button id="updateSubmit" type="button" class="btn btn-primary">{{ 'change' | trans }} !</button>
-
-    <input type="hidden" id="pathAlter" value="{{ path('ujm_category_alter') }}"/>
-    <input type="hidden" id="pathDrop" value="{{ path('ujm_category_drop') }}"/>
-</div>
-
-<script type="text/javascript">
-    var translations = {
-        'alreadyExist' : '{{ 'alreadyExist'|trans }}',
-        'wrongName' : '{{ 'wrongName'|trans }}'
-    };
-</script>
+<input type="hidden" id="pathDrop" value="{{ path('ujm_category_drop') }}"/>
 
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/allQuestionsType.js') }}"></script>

@@ -50,81 +50,100 @@
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'paper' | trans }} {{ 'question' | trans }}</h3>
+        <h1>{{ 'paper' | trans }} {{ 'question' | trans }}</h1>
     </div>
 
-    <a href="{{ path('ujm_question_index') }}"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">{{ 'question' | trans }} {{ 'graphic' | trans }}</h3>
-        </div>
+    <div class="panel-body">
+        <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
+            <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+        </a>
+    </div>
 
-        <div class="panel panel-default">
-            <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
-        </div>
-            <h1>{{ interactionGraphic.interaction.question.title }}</h1>
+    <div class="list-group">
+        <div class="list-group-item">
 
-        {% if interactionGraphic.interaction.question.description != '' %}
             <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
-                <div name="description">
-                    {{ interactionGraphic.interaction.question.description|raw }}
+                <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
+                <div class="panel-body">
+                    {{ interactionGraphic.interaction.question.title }}
                 </div>
             </div>
-        {% endif %}
 
-        <div class="panel panel-default">
-            <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
-            <h3 name="question">
-                <p>{{ interactionGraphic.interaction.invite|raw }}</p>
-            </h3>
-        </div>
-
-        <div class="panel panel-default">
-            <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
-
-            <h5>{{ 'orders' | trans }} :</h5>
-            <h6><em>{{ 'position' | trans }}{{ 'onlyOnce' | trans }}</em></h6>
-
-            <div id="Answer" style="position: relative;">
-                <p id="ContainerCursor">
-                    {% set i = 1 %}
-                    {% for coords in listeCoords %}
-                        <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}" id="cursor{{ i }}"
-                            />
-                        {% set i = i + 1 %}
-                   {% endfor %}
-                </p><p>
-                   <img src="{{ asset(interactionGraphic.document.url) }}" alt="AnswerImg" id="AnswerImg"
-                         width="{{ interactionGraphic.width }}" height="{{ interactionGraphic.height }}"
-                        />
-                </p>
-            </div>
-        </div>
-
-        <form name="ValidGraphic" id="ValidGraphic" action="{{ path('ujm_interactiongraphic_response') }}" method="post">
-            <input type="hidden" id="nbpointer" name="nbpointer" value="{{ i }}"/>
-            <input type="hidden" id="answers" name="answers" value=""/>
-            <input type="hidden" id="graphId" name="graphId" value="{{ interactionGraphic.id }}"/>
-
-            {% if interactionGraphic.interaction.hints is not empty %}
+            {% if interactionGraphic.interaction.question.description != '' %}
                 <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">{{ 'hints' | trans }}</h3></div>
-                    <table>
-                        {% set nbr_hint = 1 %}
-                        {% for hint in interactionGraphic.interaction.hints %}
-                            <tr>
-                                <td><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}', '{{path('ujm_hint_show')}}', '{{ 'consult_hint' | trans }} ?', '{{nbr_hint}}')">{{ 'hint' | trans }} {{nbr_hint}} </a></td>
-                                <td id="div_hint{{nbr_hint}}"></td>
-                            </tr>
-                            {% set nbr_hint = nbr_hint + 1 %}
-                        {% endfor %}
-                    </table>
+                    <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
+                    <div class="panel-body">
+                        {{ interactionGraphic.interaction.question.description|raw }}
+                    </div>
                 </div>
             {% endif %}
 
-            <button type="submit" onclick="NoEmptyAnswer();return false;" class="btn btn-primary">{{ 'validate' | trans }}</button>
-        </form>
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
+                <div class="panel-body">
+                    <p>{{ interactionGraphic.interaction.invite|raw }}</p>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
+                <div class="panel-body">
+                    <h5>{{ 'orders' | trans }} :</h5>
+                    <h6><em>{{ 'position' | trans }}{{ 'onlyOnce' | trans }}</em></h6>
+
+                    <div id="Answer" style="position: relative;">
+                        <p id="ContainerCursor">
+                            {% set i = 1 %}
+                            {% for coords in listeCoords %}
+                                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}" id="cursor{{ i }}"
+                                    />
+                                {% set i = i + 1 %}
+                           {% endfor %}
+                        </p><p>
+                           <img src="{{ asset(interactionGraphic.document.url) }}" alt="AnswerImg" id="AnswerImg"
+                                 width="{{ interactionGraphic.width }}" height="{{ interactionGraphic.height }}"
+                                />
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <form name="ValidGraphic" id="ValidGraphic" action="{{ path('ujm_interactiongraphic_response') }}" method="post">
+                <input type="hidden" id="nbpointer" name="nbpointer" value="{{ i }}"/>
+                <input type="hidden" id="answers" name="answers" value=""/>
+                <input type="hidden" id="graphId" name="graphId" value="{{ interactionGraphic.id }}"/>
+
+                {% if interactionGraphic.interaction.hints is not empty %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h3 class="panel-title">{{ 'hints' | trans }}</h3></div>
+                        <div class="panel-body">
+                            <table>
+                                {% set nbr_hint = 1 %}
+                                {% for hint in interactionGraphic.interaction.hints %}
+                                    <tr>
+                                        <td>
+                                            <a href="#" id="indice_popup" onclick="show_hint('{{hint.id}}',
+                                                '{{path('ujm_hint_show')}}', '{{ 'consult_hint' | trans }} ?',
+                                                '{{nbr_hint}}');event.preventDefault();">
+                                                    {{ 'hint' | trans }} {{nbr_hint}}
+                                            </a>
+                                        </td>
+                                        <td id="div_hint{{nbr_hint}}"></td>
+                                    </tr>
+                                    {% set nbr_hint = nbr_hint + 1 %}
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="panel-footer">
+                    <button type="submit" onclick="NoEmptyAnswer();return false;" class="btn btn-primary">
+                        {{ 'validate' | trans }}
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 {% endblock %}
 

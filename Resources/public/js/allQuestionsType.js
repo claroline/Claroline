@@ -36,64 +36,6 @@ function HideOptional(type) {
     }
 }
 
-// Show pop up to alter category label
-function show() {
-    $('#alterCategory').css({ "display" : "inline-block" });
-}
-
-// Hide pop up to alter category label
-function hide() {
-    $('#alterCategory').css({ "display" : "none" });
-}
-
-// Change the name of the category
-$("#updateSubmit").click(function () {
-    var idOldCategory = $("*[id$='_interaction_question_category']").val(); // Id of the category to update
-    var newlabel = $('#newlabel').val(); // New label of the category
-    var path = $('#pathAlter').val(); // Path to the controller
-
-    // If new label is empty
-    if (newlabel == '') {
-        alert(translations['wrongName']);
-        return false;
-    } else {
-        // If new label already exist
-        var exists = false;
-        $("*[id$='_interaction_question_category']  option").each(function () {
-            if (this.text == newlabel) {
-                exists = true;
-                return false;
-            }
-        });
-
-        if (exists) {
-           alert(translations['alreadyExist']);
-        } else {
-            $.ajax({
-                type: "POST",
-                url: path,
-                data: {
-                    newlabel: newlabel,
-                    idOldCategory: idOldCategory
-                },
-                cache: false,
-                success: function (data) {
-                    // Remove the old label from the list
-                    $("*[id$='_interaction_question_category'] option[value=\""+idOldCategory+"\"]").remove();
-
-                    // Add the new one to the list
-                    $("*[id$='_interaction_question_category']")
-                        .append($('<option selected="selected" value="'+data+'"></option>')
-                        .text(newlabel));
-
-                    // Hide the pop up to update the name
-                    hide();
-                }
-            });
-        }
-    }
-});
-
 // Delete the name of the category
 function dropCategory() {
     var idCategory = $("*[id$='_interaction_question_category']").val(); // Id of the category to delete

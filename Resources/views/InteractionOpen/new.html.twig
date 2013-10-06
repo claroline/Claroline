@@ -34,7 +34,7 @@
 #}
 
 <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
-<link href="{{ asset('bundles/ujmexo/css/errorValidation.css') }}" type="text/css" rel="stylesheet" />
+<link href="{{ asset('bundles/ujmexo/css/errorValidation.css') }}" type="text/css" rel="stylesheet"/>
 
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -42,7 +42,9 @@
     </div>
     <form action="{{ path('ujm_interactionopen_create') }}" method="post" {{ form_enctype(form) }}>
         <div class="panel-body">
+
             {% include "UJMExoBundle:Partial:question.html.twig" %}
+
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">{{ 'response' | trans }}</h3>
@@ -101,16 +103,11 @@
 {% if error is defined %}
     <script type="text/javascript">
         insertStyle();
-        linkCategory('{{ path('ujm_category_new_pop') }}');
         newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
-        //hintCSSEdit();
-        //addFormHintEdit('{{ "add hint" | trans }}',  '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
     </script>
 {% else %}
     <script type="text/javascript">
         insertStyle();
-        linkCategory('{{ path('ujm_category_new_pop') }}');
-        //addFormHint('{{ 'add hint' | trans }}', '{{ 'hint number' | trans }}', '{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
         newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% endif %}

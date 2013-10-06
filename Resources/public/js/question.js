@@ -47,3 +47,5 @@ function search_user_ajax(ujm_question_share_search_user, page) {
         }
     });
 }
+
+$('#menu_type_question option[value="1"]').attr('disabled', 'disabled');

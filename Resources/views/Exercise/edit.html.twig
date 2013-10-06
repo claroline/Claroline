@@ -56,17 +56,17 @@
 {% endblock %}
 
 {% block section_content %}
-
     {{ tinymce_init() }}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'exercise edit' | trans }}</h3>
+        <h1>{{ 'exercise edit' | trans }}</h1>
     </div>
     <div class="panel-body">
         <a class="btn btn-primary" href="{{ path('claro_resource_open', { 'resourceType': entity.resourceNode.resourceType.name(), 'node': entity.resourceNode.id }) }}">
             <i class="icon-arrow-left"></i> {{ 'back' | trans }}
         </a>
     </div>
+
     <form action="{{ path('ujm_exercise_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
         <div class="list-group">
             <div class="list-group-item">
@@ -212,7 +212,5 @@
                 $('#CorrectionMode').css({"display" : "none"});
             }
         });
-
-
     </script>
 {% endblock %}

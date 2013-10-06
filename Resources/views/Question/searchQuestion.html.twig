@@ -46,60 +46,73 @@
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'findQuestion' | trans }}</h3>
+        <h1>{{ 'findQuestion' | trans }}</h1>
     </div>
 
-    <a href="{{ path('ujm_question_index') }}"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
-
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">{{ 'searchQuestion' | trans }}</h3>
-        </div>
-        <div id="searchQuestions">
-
-            <form id="searchQuestionForm" enctype="multipart/form-data" method="post" action="{{ path('ujm_question_searchQuestion') }}">
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'findBy'|trans }}</h3>
-                    </div>
-                    <input type="radio" name="QuestionSearch" value="Category" checked/> {{ 'category'|trans }}
-                    &nbsp;&nbsp;|&nbsp;&nbsp;
-                    <input type="radio" name="QuestionSearch" value="Type"/> {{ 'type'|trans }}
-                    &nbsp;&nbsp;|&nbsp;&nbsp;
-                    <input type="radio" name="QuestionSearch" value="Title"/> {{ 'title'|trans }}
-                    &nbsp;&nbsp;|&nbsp;&nbsp;
-                    <input type="radio" name="QuestionSearch" value="Contain"/> {{ 'containSearch'|trans }} ...
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'findIn'|trans }}</h3>
-                    </div>
-                    <input type="radio" name="WhereSearch" value="my" checked/> {{ 'my questions'|trans }}
-                    &nbsp;&nbsp;|&nbsp;&nbsp;
-                    <input type="radio" name="WhereSearch" value="shared"/> {{ 'my shared questions'|trans }}
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'findWhat'|trans }}</h3>
-                    </div>
-                    <div class="input-group">
-                    <input type="text" class="form-control" id="what2search" placeholder="{{ 'search'|trans({}, 'platform') }}"
-                        onkeydown="if (event.keyCode == 13) { searchQuestion('{{ path('ujm_question_searchQuestion') }}', 1);return false; }">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" id="SubmitSearchQuestion"
-                                onClick="searchQuestion('{{ path('ujm_question_searchQuestion') }}', 1);">
-                            <i class="icon-search"></i></button>
-                        </span>
-                    </div>
-                </div>
-            </form>
-        </div>
+    <div class="panel-body">
+        <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
+            <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+        </a>
     </div>
 
-    <div id="resultSearch">
+    <div class="list-group">
+        <div class="list-group-item">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'searchQuestion' | trans }}</h3>
+                </div>
+                <div id="searchQuestions" class="panel-body">
+
+                    <form id="searchQuestionForm" enctype="multipart/form-data" method="post" action="{{ path('ujm_question_searchQuestion') }}">
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">{{ 'findBy'|trans }}</h3>
+                            </div>
+                            <div class="panel-body">
+                                <input type="radio" name="QuestionSearch" value="Category" checked/> {{ 'category'|trans }}
+                                &nbsp;&nbsp;|&nbsp;&nbsp;
+                                <input type="radio" name="QuestionSearch" value="Type"/> {{ 'type'|trans }}
+                                &nbsp;&nbsp;|&nbsp;&nbsp;
+                                <input type="radio" name="QuestionSearch" value="Title"/> {{ 'title'|trans }}
+                                &nbsp;&nbsp;|&nbsp;&nbsp;
+                                <input type="radio" name="QuestionSearch" value="Contain"/> {{ 'containSearch'|trans }} ...
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">{{ 'findIn'|trans }}</h3>
+                            </div>
+                            <div class="panel-body">
+                                <input type="radio" name="WhereSearch" value="my" checked/> {{ 'my questions'|trans }}
+                                &nbsp;&nbsp;|&nbsp;&nbsp;
+                                <input type="radio" name="WhereSearch" value="shared"/> {{ 'my shared questions'|trans }}
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">{{ 'findWhat'|trans }}</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="what2search" placeholder="{{ 'search'|trans({}, 'platform') }}"
+                                        onkeydown="if (event.keyCode == 13) { searchQuestion('{{ path('ujm_question_searchQuestion') }}', 1);return false; }">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button" id="SubmitSearchQuestion"
+                                            onClick="searchQuestion('{{ path('ujm_question_searchQuestion') }}', 1);">
+                                        <i class="icon-search"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="resultSearch"  class="panel-body">
         {% if divResultSearch is defined %}
             {{ divResultSearch | raw }}
         {% endif %}
@@ -108,7 +121,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/sortAndSearch.js') }}"></script>
-
 {% endblock %}

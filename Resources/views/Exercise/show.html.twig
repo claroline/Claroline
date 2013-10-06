@@ -52,7 +52,7 @@
     {{ tinymce_init() }}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'exercise'|trans }}</h3>
+        <h1>{{ 'exercise'|trans }}</h1>
     </div>
     <div class="panel-body">
         {% if isDesktop() %}
@@ -64,7 +64,7 @@
                 <i class="icon-arrow-left"></i> {{ 'back' | trans }}
             </a>
         {% endif %}
-        <a class="btn btn-default" href="{{ path('ujm_question_index') }}">
+        <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
             <i class="icon-question"></i> {{ 'access my question bank' | trans }}
         </a>
     </div>
@@ -207,7 +207,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="panel-footer">
+        <div class="text-center panel-footer">
             {% if allowToCompose == 1 and nbQuestion > 0 %}
                 <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': entity.id }) }}">
                     <i class="icon-check"></i> {{ 'compose' | trans }}
@@ -217,11 +217,11 @@
                 <a class="btn btn-primary" href="{{ path('ujm_exercise_edit', { 'id': entity.id }) }}">
                     <i class="icon-pencil"></i> {{ 'edit' | trans }}
                 </a>
-                <a class="btn btn-default" href="{{ path('ujm_exercise_questions', { 'id': entity.id }) }} " >
+                <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': entity.id }) }} " >
                     <i class="icon-question"></i> {{ 'list of question' | trans }}
                 </a>
             {% endif %}
-            <a class="btn btn-default" href="{{ path('ujm_paper_list', { 'exoID': entity.id }) }}">
+            <a class="btn btn-primary" href="{{ path('ujm_paper_list', { 'exoID': entity.id }) }}">
                 <i class="icon-list"></i> {{ 'paper list' | trans }}
             </a>
         </div>

@@ -37,11 +37,10 @@
     <h1>{{'exercise creation'|trans}}</h1>
 
     <form action="{{ path('claro_resource_create', {resourceType: 'ujm_exercise', parentId: '_nodeId'}) }}"
-          method="post" {{ form_enctype(form) }}
-          id="generic-form"
-          class="form-horizontal">
-        {#{ form_widget(form) }#}
+          method="post" {{ form_enctype(form) }} id="generic-form" class="form-horizontal">
+
         {{ form_row(form.title) }}
+
         <div style='display: none'>
             {{ form_rest(form) }}
         </div>

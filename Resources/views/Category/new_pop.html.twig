@@ -1,71 +1,47 @@
-{#
- # ExoOnLine
- # Copyright or © or Copr. Université Jean Monnet (France), 2012
- # dsi.dev@univ-st-etienne.fr
- #
- # This software is a computer program whose purpose is to [describe
- # functionalities and technical features of your software].
- #
- # This software is governed by the CeCILL license under French law and
- # abiding by the rules of distribution of free software.  You can  use,
- # modify and/ or redistribute the software under the terms of the CeCILL
- # license as circulated by CEA, CNRS and INRIA at the following URL
- # "http://www.cecill.info".
- #
- # As a counterpart to the access to the source code and  rights to copy,
- # modify and redistribute granted by the license, users are provided only
- # with a limited warranty  and the software's author,  the holder of the
- # economic rights,  and the successive licensors  have only  limited
- # liability.
- #
- # In this respect, the user's attention is drawn to the risks associated
- # with loading,  using,  modifying and/or developing or reproducing the
- # software by the user in light of its specific status of free software,
- # that may mean  that it is complicated to manipulate,  and  that  also
- # therefore means  that it is reserved for developers  and  experienced
- # professionals having in-depth computer knowledge. Users are therefore
- # encouraged to load and test the software's suitability as regards their
- # requirements in conditions enabling the security of their systems and/or
- # data to be ensured and,  more generally, to use and operate it in the
- # same conditions as regards security.
- #
- # The fact that you are presently reading this means that you have had
- # knowledge of the CeCILL license and that you accept its terms.
-#}
+<div class="modal fade" id="modalcategory" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </br>
+            </div>
+            <div class="modal-body">
+                <h1>{{'category'|trans}}</h1>
+                <input class="form-control" type="text" required="required" id='category' name="category" />
+                <input type="hidden" value="{{ edit }}" id="edit" />
 
-<form method="post" {{ form_enctype(form) }}>
-    {{ form_widget(form) }}
-</form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
+                    <button type="submit" class="btn btn-primary" id="submit_category">{{ 'ok'|trans({}, 'platform') }}</button>
 
-<p>
-    <button type="button" id="submit_category" class="btn btn-primary">{{'create'|trans}}</button>
-</p>
+                </div>
+           </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
-
-    $("#submit_category").click(function() {
-        var nom_cat = $("#ujm_exobundle_categorytype_value").val();
+    $("#submit_category").click(function () {
+        var nom_cat = $("#category").val();
 
         if (nom_cat == '') {
-
             alert('{{ 'wrongName'|trans }}');
             return false;
+        }
 
+        var exists = false;
+        $("*[id$='_interaction_question_category'] option").each(function() {
+
+            if ($(this).text() == nom_cat) {
+                exists = true;
+                return false;
+            }
+        });
+
+        if (exists) {
+            alert('{{ 'alreadyExist'|trans }}');
         } else {
-
-            var exists = false;
-            $("*[id$='_interaction_question_category'] option").each(function() {
-
-                if (this.text == nom_cat) {
-                    exists = true;
-                    return false;
-                }
-            });
-
-            if (exists) {
-                alert('{{ 'alreadyExist'|trans }}');
-            } else {
-            //apler l'action create2 avec ajax
+            if ($('#edit').val() == 0) {
                 $.ajax({
                     type: "POST",
                     url: "{{path('ujm_category_create_pop')}}",
@@ -79,15 +55,43 @@
                             .append($('<option selected="selected" value="'+data+'"></option>')
                             .text(nom_cat));
 
-                        $("#overlayEffect_cat").fadeOut("slow");
-                        $("#popupCategory").fadeOut("slow");
-                        $("#closeCategory").fadeOut("slow");
-
                         $('#linkedCategory').css({"display" : "inline-block"});
+                        $('#modalcategory').modal('hide');
+                    }
+                });
+            } else {
+                // Id of the category to update
+                var idOldCategory = $("*[id$='_interaction_question_category']").val();
+                // New label of the category
+                var newlabel = $('#category').val();
+                $.ajax({
+                    type: "POST",
+                    url: "{{path('ujm_category_alter')}}",
+                    data: {
+                        newlabel: newlabel,
+                        idOldCategory: idOldCategory
+                    },
+                    cache: false,
+                    success: function (data) {
+                        // Remove the old label from the list
+                        $("*[id$='_interaction_question_category'] option[value=\""+idOldCategory+"\"]").remove();
+
+                        // Add the new one to the list
+                        $("*[id$='_interaction_question_category']")
+                            .append($('<option selected="selected" value="'+data+'"></option>')
+                            .text(newlabel));
+
+                        // Hide the pop up to update the name
+                        $('#modalcategory').modal('hide');
                     }
                 });
             }
         }
+
     });
 
+    if ($('#edit').val() == 1) {
+        $('#category').val($("*[id$='_interaction_question_category'] option:selected").text());
+    }
+    $('#modalcategory').modal('toggle', 'show');
 </script>

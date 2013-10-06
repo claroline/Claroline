@@ -1,6 +1,6 @@
 {% if interactionToDisplayed.interaction.hints is not empty %}
-    <div class="panel panel-default">
-        <div class="panel-heading"><h3 class="panel-title">{{ 'hints' | trans }}</h3></div>
+    <div class="panel-heading"><h3 class="panel-title">{{ 'hints' | trans }}</h3></div>
+    <div class="panel-body">
         <table>
             {% set penalties = app.session.get('penalties') %}
             {% set nbr_hint = 1 %}
@@ -19,7 +19,7 @@
 
                         <td class="classic"><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
                                 '{{path('ujm_hint_show')}}', '{{ "consult_hint" | trans }} ?', '{{nbr_hint}}',
-                                '{{paper}}')">{{ "hint" | trans }} {{nbr_hint}}</a>
+                                '{{paper}}');event.preventDefault();">{{ "hint" | trans }} {{nbr_hint}}</a>
                         </td>
 
                     {% endif %}

@@ -46,34 +46,45 @@
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'sharedUser' | trans }}</h3>
+        <h1>{{ 'sharedUser' | trans }}</h1>
     </div>
 
-    <a href="{{ path('ujm_question_index') }}"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
-
-    <hr/>
-
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">{{ 'shared with' | trans }}</h3>
-        </div>
-
-        {{ 'nameUser2Shared' | trans }} :
-        <div class="input-group">
-            <input class="input-medium" type="text" id="search-user-txt" placeholder="{{ 'search'|trans({}, 'platform') }}"
-                onkeydown="if (event.keyCode == 13) { search_user_ajax('{{ path('ujm_question_share_search_user') }}', 1);return false; }">
-            <span class="input-group-btn">
-                <button class="filter btn" type="button" id="search-user-button" onClick="search_user_ajax('{{ path('ujm_question_share_search_user') }}', 1)">
-                    <i class="icon-search"></i>
-                </button>
-            </span>
-        </div>
+    <div class="panel-body">
+        <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
+            <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+        </a>
     </div>
 
-    <div id="searchUserList">
-        {% if divResultSearch is defined %}
-            {{ divResultSearch | raw }}
-        {% endif %}
+    <div class="list-group">
+        <div class="list-group-item">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'shared with' | trans }} ...</h3>
+                </div>
+
+                <div class="panel-body">
+                    {{ 'nameUser2Shared' | trans }} :
+                    <div class="panel-body">
+                        <div class="input-group">
+                            <input class="form-control" type="text" id="search-user-txt" placeholder="{{ 'search'|trans({}, 'platform') }}"
+                                onkeydown="if (event.keyCode == 13) { search_user_ajax('{{ path('ujm_question_share_search_user') }}', 1);return false; }">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" id="search-user-button" onClick="search_user_ajax('{{ path('ujm_question_share_search_user') }}', 1)">
+                                    <i class="icon-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="searchUserList">
+                {% if divResultSearch is defined %}
+                    {{ divResultSearch | raw }}
+                {% endif %}
+            </div>
+        </div>
     </div>
 
     <div id="QID" style="display: none;">{{ questionID }}</div>

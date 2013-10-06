@@ -50,30 +50,29 @@
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'correction' | trans }}</h3>
+        <h1>{{ 'correction' | trans }}</h1>
     </div>
+
     <div class="panel-body">
-        <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
+        <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
             <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
         </a>
     </div>
+
     <div class="list-group">
         <div class="list-group-item">
-            <h4 class="panel-heading">
-                <h3 class="panel-title">{{ 'question' | trans }} {{ 'graphic' | trans }}</h3>
-            </div>
 
             <div class="panel panel-default">
                 <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
-                <h1 name="title">
+                <div class="panel-body">
                     {{ interG.interaction.question.title }}
-                </h1>
+                </div>
             </div>
 
             {% if interG.interaction.question.description != '' %}
                 <div class="panel panel-default">
                     <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
-                    <div name="description">
+                    <div class="panel-body">
                         {{ interG.interaction.question.description|raw }}
                     </div>
                 </div>
@@ -81,57 +80,57 @@
 
             <div class="panel panel-default">
                 <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
-                <h3 name="invite">
+                <div class="panel-body">
                     {{ interG.interaction.invite|raw }}
-                </h3>
+                </div>
             </div>
 
             <div class="panel panel-default">
                 <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
+                <div class="panel-body">
+                    <div id="Answer" style="position: relative;">
+                        <img src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
+                            alt="AnswerImage" id="AnswerImage1"/>
 
-                <div id="Answer" style="position: relative;">
-                    <img src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
-                        alt="AnswerImage" id="AnswerImage1"/>
+                        {% set i = 0 %}{% set allInfo = '' %}
 
-                    {% set i = 0 %}{% set allInfo = '' %}
+                        {% for c in coords %}
 
-                    {% for c in coords %}
+                            {% set numb = coords[i].value|split(',') %}
+                            {% set respcoo = rep[i]|split('-') %}
 
-                        {% set numb = coords[i].value|split(',') %}
-                        {% set respcoo = rep[i]|split('-') %}
+                                <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" alt="RightAnswer{{i}}" id="1ra{{i}}"
+                                    style="z-index: 2;"/>
+                                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{i}}" id="1cursor{{i}}"
+                                   style="z-index: 7;"/>
 
-                            <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" alt="RightAnswer{{i}}" id="1ra{{i}}"
-                                style="z-index: 2;"/>
-                            <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{i}}" id="1cursor{{i}}"
-                               style="z-index: 7;"/>
+                            {% set allInfo = coords[i].shape~';'~coords[i].color~';'~asset('bundles/ujmexo/images/graphic/')~';'
+                                ~numb[0]~';'~numb[1]~';'~respcoo[0]~';'~respcoo[1]~';'~coords[i].size~'^'~allInfo %}
 
-                        {% set allInfo = coords[i].shape~';'~coords[i].color~';'~asset('bundles/ujmexo/images/graphic/')~';'
-                            ~numb[0]~';'~numb[1]~';'~respcoo[0]~';'~respcoo[1]~';'~coords[i].size~'^'~allInfo %}
+                            {% set i = i + 1 %}
 
-                        {% set i = i + 1 %}
-
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
 
             {% if interG.interaction.feedback != '' %}
                 <div class="panel panel-default">
                     <div class="panel-heading"><h3 class="panel-title">{{ 'comment' | trans }}</h3></div>
-                    {{ interG.interaction.feedback|raw }}
+                    <div class="panel-body">
+                        {{ interG.interaction.feedback|raw }}
+                    </div>
                 </div>
             {% endif %}
 
             <div class="panel panel-default">
                 <div class="panel-heading"><h3 class="panel-title">{{ 'mark' | trans }}</h3></div>
-                {{ 'mark' | trans }} : {{ score }} / {{ total }}
-
-                {% if score == 0 and penalty == 0 %}
-                    {{ 'noRightAnswer' | trans }}.
-                {% elseif penalty == 0 %}
-                    {{ 'noHintShow' | trans }}.
-                {% else %}
-                    {{ 'pointRightResponse' | trans }} : {{ point }} {{ 'with' | trans }} : -{{ penalty }} {{ 'sawHint' | trans }}.
-                {% endif %}
+                <div class="panel-body">
+                    {% if penalty > 0 %}
+                        {{ 'penalty' | trans }} : {{ penalty }}.<br/>
+                    {% endif %}
+                    {{ 'mark' | trans }} : {{ score }} / {{ total }}.
+                </div>
             </div>
         </div>
     </div>

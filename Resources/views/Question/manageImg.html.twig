@@ -51,201 +51,259 @@
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'docManage' | trans }}</h3>
+        <h1>{{ 'docManage' | trans }}</h1>
     </div>
 
-    <a href="{{ path('ujm_question_index') }}"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">{{ 'actions' | trans }}</h3>
-        </div>
-
-        <a href="#" onclick="AddDocument();"><i class="icon-plus" id="icon"></i> {{ 'addDoc' | trans }} ...</a>
-
-        <div id="AddDocuments" style="display: none;">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{ 'newDoc' | trans }}</h3>
-                </div>
-                <form id="uploadForm" enctype="multipart/form-data" onsubmit="DisplayMessage();"
-                  method="post" action="{{ path('ujm_interactiongraphic_AddImg', { 'redirection': 1, 'pageToGo': pagerDoc.getNbPages,
-                                            'maxPage': pagerDoc.maxPerPage, 'nbItem': pagerDoc.getNbResults }) }}">
-                    <label for="label">{{ 'docName' | trans }} ?</label>
-                    <input class="form-control" type="text" id='label' name='label' required="true"/>
-                    <input class="form-control" id="picture" name="picture" type="file" required="true"/>
-
-                    <input id="uploadSubmit" type="submit" value="{{ 'upload' | trans }} !"
-                        onclick="ValidName('{{ 'wrongName' | trans }}','label', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'alreadyExist' | trans }}', 'uploadForm');
-                        return false;" class="btn btn-primary"/><p id="Result">{{ 'uploading' | trans }}</p>
-                </form>
-            </div>
-        </div>
-        <a href="#" onclick="searchDocuments();"><i class="icon-search"></i> {{ 'search' | trans }}</a>
-
-        <div id="searchDocuments" style="display: none;">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{ 'findLabel' | trans }}</h3>
-                </div>
-                {{ 'findWhat' | trans }} :
-                <div class="input-group">
-                <input type="text" class="form-control" id="labelToFind" placeholder="{{ 'search'|trans({}, 'platform') }}"
-                    onkeydown="if (event.keyCode == 13) { searchDoc('{{ path('ujm_question_searchDocuments') }}', 1);return false; }">
-                    <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" id="searchDocbutton"
-                            onClick="searchDoc('{{ path('ujm_question_searchDocuments') }}', 1);">
-                    <i class="icon-search"></i></button>
-                    </span>
-                </div>
-             </div>
-        </div>
-
-        <a href="#SortDoc" onclick="sortDoc();"><i class="icon-filter"></i> {{ 'sort' | trans }}</a>
-
-        <div id="sortDocuments" style="display: none;">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{ 'choose_type' | trans }}</h3>
-                </div>
-                {{ 'chooseType' | trans }} :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="#" onclick="sortDocument('image', '{{ path('ujm_question_sortDocuments') }}', 1);"><i class="icon-picture"></i></a>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="#" onclick="sortDocument('music', '{{ path('ujm_question_sortDocuments') }}', 1);"><i class="icon-music"></i></a>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="#" onclick="sortDocument('video', '{{ path('ujm_question_sortDocuments') }}', 1);"><i class="icon-film"></i></a>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="#" onclick="sortDocument('file', '{{ path('ujm_question_sortDocuments') }}', 1);"><i class="icon-file"></i></a>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="#" onclick="sortDocument('all', '{{ path('ujm_question_sortDocuments') }}', 1);"><i class="icon-list-alt"></i></a>
-            </div>
-        </div>
-
-        <a href="{{ path('ujm_question_manage_doc') }}">
-            <button type="button" class="btn btn-primary">{{ 'reset' | trans }}</button>
+    <div class="panel-body">
+        <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
+            <i class="icon-arrow-left"></i> {{ 'back' | trans }}
         </a>
+    </div>
+
+    <div class="panel-body">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ 'actions' | trans }}</h3>
+            </div>
+
+            <div class="panel-body">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'newDoc' | trans }}</h3>
+                    </div>
+
+                    <div class="panel-body">
+                        <p><a href="#" onclick="AddDocument();event.preventDefault();" class="btn btn-primary">
+                            <i class="icon-plus" id="icon"></i> {{ 'addDoc' | trans }} ...
+                        </a></p>
+
+                        <div id="AddDocuments" style="display: none;">
+                            <form id="uploadForm" enctype="multipart/form-data" onsubmit="DisplayMessage();" method="post"
+                                action="{{ path('ujm_interactiongraphic_AddImg', { 'redirection': 1, 'pageToGo': pagerDoc.getNbPages,
+                                    'maxPage': pagerDoc.maxPerPage, 'nbItem': pagerDoc.getNbResults }) }}">
+                                <label for="label">{{ 'docName' | trans }} ?</label>
+                                <input class="form-control" type="text" id='label' name='label' required="true"/>
+                                <input id="picture" name="picture" type="file" required="true"/>
+
+                                <input id="uploadSubmit" type="submit" value="{{ 'upload' | trans }} !"
+                                    onclick="ValidName('{{ 'wrongName' | trans }}','label', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'alreadyExist' | trans }}', 'uploadForm');
+                                    return false;" class="btn btn-primary"/><p id="Result">{{ 'uploading' | trans }}</p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'findLabel' | trans }}</h3>
+                    </div>
+
+                    <div class="panel-body">
+                        <p><a href="#" onclick="searchDocuments();event.preventDefault();" class="btn btn-primary">
+                            <i class="icon-search"></i> {{ 'search' | trans }}
+                        </a></p>
+
+                        <div id="searchDocuments" style="display: none;">
+                            {{ 'findWhat' | trans }} :
+                            <div class="input-group">
+                            <input type="text" class="form-control" id="labelToFind" placeholder="{{ 'search'|trans({}, 'platform') }}"
+                                onkeydown="if (event.keyCode == 13) { searchDoc('{{ path('ujm_question_searchDocuments') }}', 1);return false; }">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" id="searchDocbutton"
+                                        onClick="searchDoc('{{ path('ujm_question_searchDocuments') }}', 1);">
+                                <i class="icon-search"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'choose_type' | trans }}</h3>
+                    </div>
+
+                    <div class="panel-body">
+                        <p><a href="#" onclick="sortDoc();event.preventDefault();" class="btn btn-primary">
+                            <i class="icon-filter"></i> {{ 'sort' | trans }}
+                        </a></p>
+
+                        <div id="sortDocuments" style="display: none;">
+                            {{ 'chooseType' | trans }} :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="#" onclick="sortDocument('image', '{{ path('ujm_question_sortDocuments') }}', 1);
+                                event.preventDefault();">
+                                <i class="icon-picture"></i>
+                            </a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="#" onclick="sortDocument('music', '{{ path('ujm_question_sortDocuments') }}', 1);
+                                event.preventDefault();">
+                                <i class="icon-music"></i>
+                            </a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="#" onclick="sortDocument('video', '{{ path('ujm_question_sortDocuments') }}', 1);
+                                event.preventDefault();">
+                                <i class="icon-film"></i>
+                            </a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="#" onclick="sortDocument('file', '{{ path('ujm_question_sortDocuments') }}', 1);
+                                event.preventDefault();">
+                                <i class="icon-file"></i>
+                            </a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="#" onclick="sortDocument('all', '{{ path('ujm_question_sortDocuments') }}', 1);
+                                event.preventDefault();">
+                                <i class="icon-list-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="{{ path('ujm_question_manage_doc') }}">
+                    <button type="button" class="btn btn-primary">{{ 'reset' | trans }}</button>
+                </a>
 
 
-        <div id="UpdateName" style="position: fixed; left: 40%; top: 20%; background-color: #ccf; border: #000 thin solid;
-             width: 400px; height: 200px; display: none; opacity: 0.95; text-align: center;">
+                <div id="UpdateName" style="position: fixed; left: 40%; top: 20%; background-color: #ccf; border: #000 thin solid;
+                     width: 400px; height: 200px; display: none; opacity: 0.95; text-align: center;">
 
-            <a href="#" onclick="ChangeName();"><i class="icon-remove"></i> {{ 'close' | trans }}&nbsp;</a>
+                         <a href="#" onclick="ChangeName();event.preventDefault();"><i class="icon-remove"></i> {{ 'close' | trans }}&nbsp;</a>
 
-            <h3>{{ 'changeName' | trans }}</h3>
+                    <h3>{{ 'changeName' | trans }}</h3>
 
-            <form id="updateName" enctype="multipart/form-data" method="post" action="{{ path('ujm_question_name_update') }}">
+                    <form id="updateName" enctype="multipart/form-data" method="post" action="{{ path('ujm_question_name_update') }}">
 
-                <p>{{ 'newName' | trans }} ?</p>
-                <input class="form-control" type="text" id='newlabel' name='newlabel' required="true"/>
-                <input id="updateSubmit" type="submit" value="{{ 'change' | trans }} !"
-                    onclick="ValidName('{{ 'wrongName' | trans }}','newlabel', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'alreadyExist' | trans }}', 'updateName');
-                        return false;" class="btn btn-primary"/>
+                        <p>{{ 'newName' | trans }} ?</p>
+                        <input class="form-control" type="text" id='newlabel' name='newlabel' required="true"/>
+                        <input id="updateSubmit" type="submit" value="{{ 'change' | trans }} !"
+                            onclick="ValidName('{{ 'wrongName' | trans }}','newlabel', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'alreadyExist' | trans }}', 'updateName');
+                                return false;" class="btn btn-primary"/>
 
-                <input type="hidden" id="oldName" name="oldName" value=""/>
-            </form>
+                        <input type="hidden" id="oldName" name="oldName" value=""/>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">{{ 'preview' | trans }}</h3>
-        </div>
-        <div id="sorting">
-            {% if divResultSearch is defined %}
-                {{ 'result' | trans }} :
-                {{ divResultSearch | raw }}
-            {% else %}
-
-                {% if listDoc is not empty %}
-                    <table class="table table-striped table-bordered table-condensed" id="table">
-                        <thead>
-                            <tr>
-                                <th class="classic" onclick="SortQuestions('kind', 'table');"
-                                    onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                    onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                    <i class="icon-chevron-up" id="upT" ></i>
-                                    <i class="icon-chevron-down" id="downT" ></i>
-                                    {{ 'type' | trans }}
-                                </th>
-                                <th class="classic">{{ "preview" | trans }}</th>
-                                <th class="classic" onclick="SortQuestions('Label', 'table');"
-                                    onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                    onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                    <i class="icon-chevron-up" id="upL" ></i>
-                                    <i class="icon-chevron-down" id="downL" ></i>
-                                    {{ 'label' | trans }}
-                                </th>
-                                <th class="classic">{{ 'actions' | trans }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for myDoc in listDoc %}
-                                <tr>
-                                    <td class="classic">
-                                        {% if myDoc.type == ".png" or myDoc.type == ".jpeg"
-                                            or myDoc.type == ".jpg" or myDoc.type == ".gif" or myDoc.type == ".bmp" %}
-                                            <i class="icon-picture"></i>
-                                        {% elseif myDoc.type == ".mp3" or myDoc.type == ".wav" %}
-                                            <i class="icon-music"></i>
-                                        {% elseif myDoc.type == ".avi" or myDoc.type == ".mpeg"
-                                            or myDoc.type == ".wmv" or myDoc.type == ".flv" or myDoc.type == ".mov" %}
-                                            <i class="icon-film"></i>
-                                        {% else %}
-                                            <i class="icon-file"></i>
-                                        {% endif %}
-                                    </td>
-
-                                     <td class="classic">
-                                         {% if myDoc.type == ".png" or myDoc.type == ".jpeg"
-                                            or myDoc.type == ".jpg" or myDoc.type == ".gif" or myDoc.type == ".bmp" %}
-                                            <img src="{{ asset(myDoc.url) }}" width="100px" height="100px"/>
-                                        {% elseif myDoc.type == ".mp3" or myDoc.type == ".wav" %}
-                                            <a href="{{ asset(myDoc.url) }}" onclick="window.open(this.href, 'ListenSong',
-                                                'height=200, width=300, toolbar=no, menubar=no, location=no, resizable=yes, scrollbars=no, status=no');
-                                                return false;"><i class="icon-play"></i>
-                                            </a>
-                                        {% elseif myDoc.type == ".avi" or myDoc.type == ".mpeg"
-                                            or myDoc.type == ".wmv" or myDoc.type == ".flv" or myDoc.type == ".mov" %}
-                                            <a href="{{ asset(myDoc.url) }}"><i class="icon-play"></i></a>
-                                        {% else %}
-                                            <a href="{{ asset(myDoc.url) }}"><i class="icon-download-alt"></i></a>
-                                        {% endif %}
-                                    </td>
-
-                                    <td class="classic">
-                                        {{ myDoc.label }}
-                                    </td>
-
-                                    <td class="classic">
-                                        <a href="#" onclick="ChangeName('{{ myDoc.label }}');"><i class="icon-pencil"></i></a>
-
-                                        <a href="{{ path('ujm_document_del', { 'label': myDoc.label, 'pageNow': pagerDoc.currentPage,
-                                                    'maxPage': pagerDoc.maxPerPage,'nbItem': pagerDoc.getNbResults, 'lastPage': pagerDoc.getNbPages }) }}"
-                                           onclick="return confirm('{{ 'warning' | trans }} ?');"><i class="icon-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-
-                    <div>
-                        {% if pagerDoc.haveToPaginate %}
-                            {{ pagerfanta(pagerDoc, 'twitter_bootstrap_translated', {'routeName': 'ujm_question_manage_doc'}) }}
-                        {% endif %}
-                    </div>
+    <div class="panel-body">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ 'preview' | trans }}</h3>
+            </div>
+            <div id="sorting" class="panel-body">
+                {% if divResultSearch is defined %}
+                    {{ 'result' | trans }} :
+                    {{ divResultSearch | raw }}
                 {% else %}
-                    <p>{{ 'noDocFound'|trans }} ...</p>
+
+                    {% if listDoc is not empty %}
+                        <table class="table table-striped table-bordered table-condensed" id="table">
+                            <thead>
+                                <tr style="background-color: lightsteelblue;">
+                                    <th class="classic" onclick="SortQuestions('kind', 'table');"
+                                        onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                                        onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                                        <i class="icon-chevron-up" id="upT" style="display: none;"></i>
+                                        <i class="icon-chevron-down" id="downT" style="display: none;"></i>
+                                        {{ 'type' | trans }}
+                                    </th>
+                                    <th class="classic">{{ "preview" | trans }}</th>
+                                    <th class="classic" onclick="SortQuestions('Label', 'table');"
+                                        onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
+                                        onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
+                                        <i class="icon-chevron-up" id="upL" style="display: none;"></i>
+                                        <i class="icon-chevron-down" id="downL" style="display: none;"></i>
+                                        {{ 'label' | trans }}
+                                    </th>
+                                    <th class="classic">{{ 'actions' | trans }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for myDoc in listDoc %}
+                                    <tr>
+                                        <td class="classic">
+                                            {% if myDoc.type == ".png" or myDoc.type == ".jpeg"
+                                                or myDoc.type == ".jpg" or myDoc.type == ".gif" or myDoc.type == ".bmp" %}
+                                                <i class="icon-picture"></i>
+                                            {% elseif myDoc.type == ".mp3" or myDoc.type == ".wav" %}
+                                                <i class="icon-music"></i>
+                                            {% elseif myDoc.type == ".avi" or myDoc.type == ".mpeg"
+                                                or myDoc.type == ".wmv" or myDoc.type == ".flv" or myDoc.type == ".mov" %}
+                                                <i class="icon-film"></i>
+                                            {% else %}
+                                                <i class="icon-file"></i>
+                                            {% endif %}
+                                        </td>
+
+                                         <td class="classic">
+                                             {% if myDoc.type == ".png" or myDoc.type == ".jpeg"
+                                                or myDoc.type == ".jpg" or myDoc.type == ".gif" or myDoc.type == ".bmp" %}
+                                                <img src="{{ asset(myDoc.url) }}" width="100px" height="100px"/>
+                                            {% elseif myDoc.type == ".mp3" or myDoc.type == ".wav" %}
+                                                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'play' | trans }}"
+                                                   href="{{ asset(myDoc.url) }}" onclick="window.open(this.href, 'ListenSong',
+                                                    'height=200, width=300, toolbar=no, menubar=no, location=no, resizable=yes, scrollbars=no, status=no');
+                                                    return false;">
+                                                    <i class="icon-play"></i>
+                                                </a>
+                                            {% elseif myDoc.type == ".avi" or myDoc.type == ".mpeg"
+                                                or myDoc.type == ".wmv" or myDoc.type == ".flv" or myDoc.type == ".mov" %}
+                                                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'play' | trans }}"
+                                                   href="{{ asset(myDoc.url) }}">
+                                                    <i class="icon-play"></i>
+                                                </a>
+                                            {% else %}
+                                                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'download' | trans }}"
+                                                   href="{{ asset(myDoc.url) }}">
+                                                    <i class="icon-download-alt"></i>
+                                                </a>
+                                            {% endif %}
+                                        </td>
+
+                                        <td class="classic">
+                                            {{ myDoc.label }}
+                                        </td>
+
+                                        <td class="classic">
+                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
+                                                href="#" onclick="ChangeName('{{ myDoc.label }}');event.preventDefault();">
+                                                <i class="icon-pencil"></i>
+                                            </a>
+
+                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}"
+                                               href="{{ path('ujm_document_del', { 'label': myDoc.label,
+                                                    'pageNow': pagerDoc.currentPage, 'maxPage': pagerDoc.maxPerPage,
+                                                    'nbItem': pagerDoc.getNbResults, 'lastPage': pagerDoc.getNbPages }) }}"
+                                               onclick="return confirm('{{ 'warning' | trans }} ?');">
+                                                <i class="icon-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <div>
+                            {% if pagerDoc.haveToPaginate %}
+                                <div class="text-center panel-footer">
+                                    {{ pagerfanta(pagerDoc, 'twitter_bootstrap_translated',
+                                        {'routeName': 'ujm_question_manage_doc'}) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">{{ 'noDocFound'|trans }} ...</div>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
+            </div>
         </div>
     </div>
 {% endblock %}
 
 {% block javascripts %}
-{{ parent() }}
-
+    {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/addImage.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/manageDoc.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/sortAndSearch.js') }}"></script>
-
 {% endblock %}

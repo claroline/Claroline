@@ -151,7 +151,7 @@ class exerciseServices
                 $score = 0;
             }
 
-            $score .= '/'.$scoreMax;
+            $score .= ' / '.$scoreMax;
         } else {
             //points par réponse
             foreach ($allChoices as $choice) {

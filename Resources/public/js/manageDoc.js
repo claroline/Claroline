@@ -1,6 +1,6 @@
 // Display inline-block to add a new document
 function AddDocument() {
-    if ($('#AddDocuments').css({"display" : "none"})) {
+    if ($('#AddDocuments').css("display") == "none") {
         $('#AddDocuments').css({"display" : "inline-block"});
         $('#icon').attr('class', 'icon-minus');
     } else {
@@ -11,7 +11,7 @@ function AddDocument() {
 
 // Display pop up to change name of a document
 function ChangeName(oldname) {
-    if ($('#UpdateName').css({"display" : "none"})) {
+    if ($('#UpdateName').css("display") == "none") {
         $('#UpdateName').css({"display" : "inline-block"});
         $('#oldName').val(oldname);
     } else {
@@ -24,7 +24,7 @@ function ChangeName(oldname) {
 
 // Display inline-block to sort documents
 function sortDoc() {
-    if ($('#sortDocuments').css({"display" : "none"})) {
+    if ($('#sortDocuments').css("display") == "none") {
         $('#sortDocuments').css({"display" : "inline-block"});
     } else {
         $('#sortDocuments').css({"display" : "none"});
@@ -33,7 +33,7 @@ function sortDoc() {
 
 // Display inline-block to search documents
 function searchDocuments() {
-    if ($('#searchDocuments').css({"display" : "none"})) {
+    if ($('#searchDocuments').css("display") == "none") {
         $('#searchDocuments').css({"display" : "inline-block"});
     } else {
         $('#searchDocuments').css({"display" : "none"});

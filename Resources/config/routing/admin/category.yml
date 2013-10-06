@@ -5,8 +5,8 @@ ujm_category_create_pop:
       _method: POST
 
 ujm_category_new_pop:
-    pattern:  /new_pop
-    defaults: { _controller: UJMExoBundle:Category:newPop }
+    pattern:  /new_pop/{edit}
+    defaults: { _controller: UJMExoBundle:Category:newPop, edit: 0 }
 
 ujm_category_drop:
     pattern: /category/drop

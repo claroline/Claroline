@@ -51,76 +51,93 @@
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'paper' | trans }} {{ 'question' | trans }}</h3>
+        <h1>{{ 'paper' | trans }} {{ 'question' | trans }}</h1>
     </div>
 
-    <a href="{{ path('ujm_question_index') }}"><i class="icon-arrow-left"></i> {{ 'back' | trans }}</a>
+    <div class="panel-body">
+        <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
+            <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+        </a>
+    </div>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">{{ 'question' | trans }} {{ 'qcm' | trans }} </h3>
-        </div>
+    <div class="list-group">
+        <div class="list-group-item">
 
-        <div class="panel panel-default">
-            <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
-            <h1>{{ interactionQCM.interaction.question.title }}</h1>
-        </div>
-
-        {% if interactionQCM.interaction.question.description != null %}
             <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
-                <div name="description">
-                    <p>{{ interactionQCM.interaction.question.description|raw }}<p/>
+                <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
+                <div class="panel-body">
+                    {{ interactionQCM.interaction.question.title }}
                 </div>
             </div>
-        {% endif %}
 
-        <div class="panel panel-default">
-            <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
-            <h3 name="question">
-                <p>{{ interactionQCM.interaction.invite|raw }}<p/>
-            </h3>
-        </div>
-
-        <form action="{{ path('ujm_interactionqcm_response') }}" method="post" {{ form_enctype(form) }}>
-            {{ form_widget(form) }}
-
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
-                <table class="table table-striped table-bordered table-condensed">
-                    {% for choice in interactionQCM.choices %}
-                        <tr>
-                            <td class="classic">{{ choice.label|raw }}</td>
-                            {% if interactionQCM.typeQCM.id == 2 %}
-                                <td class="classic"><INPUT type="radio" id="{{ choice.label}}" name="choice" value="{{ choice.id }}" /></td>
-                            {% else %}
-                                <td class="classic"><INPUT type="checkbox" id="{{ choice.label}}" name="choice[]" value="{{ choice.id }}" /></td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>
-
-            {% if interactionQCM.interaction.hints is not empty %}
+            {% if interactionQCM.interaction.question.description != null %}
                 <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">{{ 'hints' | trans }}</h3></div>
-                    <table>
-                        {% set nbr_hint = 1 %}
-                        {% for hint in interactionQCM.interaction.hints %}
-                            <tr>
-                                <td class="classic"><a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}', '{{path('ujm_hint_show')}}', '{{ 'consult_hint' | trans }} ?', '{{nbr_hint}}')">{{ 'hint' | trans }} {{nbr_hint}} </a></td>
-                                <td id="div_hint{{nbr_hint}}" class="classic"></td>
-                            </tr>
-                            {% set nbr_hint = nbr_hint + 1 %}
-                        {% endfor %}
-                    </table>
+                    <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
+                    <div class="panel-body">
+                        {{ interactionQCM.interaction.question.description|raw }}
+                    </div>
                 </div>
             {% endif %}
 
-            <input type="hidden" name="testQCM" value="testQCM" />
-            <input type="hidden" name="interactionQCMToValidated" value="{{ interactionQCM.id }}" />
-            <button type="submit" id="submit_response" class="btn btn-primary">{{ 'validate' | trans }}</button>
-        </form>
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
+                <div class="panel-body">
+                    {{ interactionQCM.interaction.invite|raw }}
+                </div>
+            </div>
+
+            <form action="{{ path('ujm_interactionqcm_response') }}" method="post" {{ form_enctype(form) }}>
+                {{ form_widget(form) }}
+
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
+                    <div class="panel-body">
+                        <table class="table table-striped table-bordered table-condensed">
+                            {% for choice in interactionQCM.choices %}
+                                <tr>
+                                    <td class="classic">{{ choice.label | raw }}</td>
+                                    {% if interactionQCM.typeQCM.id == 2 %}
+                                        <td class="classic"><INPUT type="radio" id="{{ choice.label }}" name="choice" value="{{ choice.id }}"/></td>
+                                    {% else %}
+                                        <td class="classic"><INPUT type="checkbox" id="{{ choice.label }}" name="choice[]" value="{{ choice.id }}"/></td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+
+                {% if interactionQCM.interaction.hints is not empty %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h3 class="panel-title">{{ 'hints' | trans }}</h3></div>
+                        <div class="panel-body">
+                            <table>
+                                {% set nbr_hint = 1 %}
+                                {% for hint in interactionQCM.interaction.hints %}
+                                    <tr>
+                                        <td class="classic">
+                                            <a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',
+                                                '{{path('ujm_hint_show')}}', '{{ 'consult_hint' | trans }} ?',
+                                                '{{nbr_hint}}');event.preventDefault();">
+                                                    {{ 'hint' | trans }} {{nbr_hint}}
+                                            </a>
+                                        </td>
+                                        <td id="div_hint{{nbr_hint}}" class="classic"></td>
+                                    </tr>
+                                    {% set nbr_hint = nbr_hint + 1 %}
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="panel-footer">
+                    <input type="hidden" name="testQCM" value="testQCM" />
+                    <input type="hidden" name="interactionQCMToValidated" value="{{ interactionQCM.id }}" />
+                    <button type="submit" id="submit_response" class="btn btn-primary">{{ 'validate' | trans }}</button>
+                </div>
+            </form>
+        </div>
     </div>
 {% endblock %}
 

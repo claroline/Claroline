@@ -50,67 +50,72 @@
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'correction' | trans }}</h3>
+        <h1>{{ 'correction' | trans }}</h1>
     </div>
 
-    <a href="{{ path('ujm_question_index') }}">
-        <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
-    </a>
+    <div class="panel-body">
+        <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
+            <i class="icon-arrow-left"></i> {{ 'back to the list' | trans }}
+        </a>
+    </div>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">{{ 'question' | trans }} {{ 'open' | trans }}</h3>
-        </div>
+    <div class="list-group">
+        <div class="list-group-item">
 
-        <div class="panel panel-default">
-            <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
-            <h1 name="title">
-                {{ interOpen.interaction.question.title }}
-            </h1>
-        </div>
-
-        {% if interOpen.interaction.question.description != '' %}
             <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
-                <div name="description">
-                    {{ interOpen.interaction.question.description|raw }}
-                </div>
-            </div>
-        {% endif %}
-
-        <div class="panel panel-default">
-            <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
-            <h3 name="invite">
-                {{ interOpen.interaction.invite|raw }}
-            </h3>
-        </div>
-
-        <div class="panel panel-default">
-            <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
-                {{ 'your answer' | trans }} :
-
-                <div>
-                    {% if interOpen.typeopenquestion == 'long' %}
-                       {{ response|raw}}
-                    {% endif %}
+                <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
+                <div class="panel-body">
+                    {{ interOpen.interaction.question.title }}
                 </div>
             </div>
 
-        {% if interOpen.interaction.feedback != '' %}
-            <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">{{ 'comment' | trans }}</h3></div>
-                <div name="feddback">
-                    {{ interOpen.interaction.feedback|raw }}
+            {% if interOpen.interaction.question.description != '' %}
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">{{ 'description' | trans }}</h3></div>
+                    <div class="panel-body">
+                        {{ interOpen.interaction.question.description|raw }}
+                    </div>
                 </div>
-            </div>
-        {% endif %}
-
-        <div class="panel panel-default">
-            <div class="panel-heading"><h3 class="panel-title">{{ 'mark' | trans }}</h3></div>
-            {% if penalty > 0 %}
-                {{ 'penalty' | trans }} : {{ penalty }}
             {% endif %}
-            {{ 'not yet mark' | trans }}.
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">{{ 'question' | trans }}</h3></div>
+                <div class="panel-body">
+                    {{ interOpen.interaction.invite|raw }}
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
+                <div class="panel-body">
+                    {{ 'your answer' | trans }} :
+
+                    <div>
+                        {% if interOpen.typeopenquestion == 'long' %}
+                           {{ response|raw}}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {% if interOpen.interaction.feedback != '' %}
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">{{ 'comment' | trans }}</h3></div>
+                    <div class="panel-body">
+                        {{ interOpen.interaction.feedback|raw }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">{{ 'mark' | trans }}</h3></div>
+                <div class="panel-body">
+                    {% if penalty > 0 %}
+                        {{ 'penalty' | trans }} : {{ penalty }}.<br/>
+                    {% endif %}
+                    {{ 'not yet mark' | trans }}.
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

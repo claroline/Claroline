@@ -115,7 +115,7 @@ class CategoryController extends Controller
      * Displays a form to create a new Category entity in AJAX window.
      *
      */
-    public function newPopAction()
+    public function newPopAction($edit)
     {
         $entity = new Category();
         $form   = $this->createForm(new CategoryType(), $entity);
@@ -123,7 +123,8 @@ class CategoryController extends Controller
         return $this->render(
             'UJMExoBundle:Category:new_pop.html.twig', array(
             'entity' => $entity,
-            'form'   => $form->createView()
+            'form'   => $form->createView(),
+            'edit'    => $edit
             )
         );
     }

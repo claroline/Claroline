@@ -52,7 +52,7 @@
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
 
      <div class="panel-heading">
-        <h3 class="panel-title">{{'paper exo'|trans}}</h3>
+        <h1>{{'paper exo'|trans}}</h1>
     </div>
     <div class="panel-body">
         <form action="{{ path('ujm_exercise_paper_nav') }}" method="post" name="formResponse" id="formResponse">
@@ -64,13 +64,13 @@
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">{{ 'nQuestion' | trans }}{{numQ}}</h3>
+                    <h3>{{ 'nQuestion' | trans }}{{numQ}} :</h3>
                 </div>
                 <div class="panel-body">
                     <div class="panel panel-default">
                         <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
                         <div class="panel-body">
-                            <h1>{{ interactionToDisplayed.interaction.question.title }}</h1>
+                            {{ interactionToDisplayed.interaction.question.title }}
 
                             <input class="form-control" type="hidden" name="interactionQCMToValidated" value="{{ interactionToDisplayed.id }}"/>
                             <input class="form-control" type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
@@ -114,8 +114,11 @@
                             </table>
                         </div>
                     </div>
+
+                    <div class="panel panel-default">
+                        {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
+                    </div>
                 </div>
-                {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
 
                 <input type="hidden" name="testQCM" value="testQCM" />
                 <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
@@ -127,13 +130,13 @@
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">{{ 'nQuestion' | trans }}{{numQ}} :</h3>
+                    <h3>{{ 'nQuestion' | trans }}{{numQ}} :</h3>
                 </div>
                 <div class="panel-body">
                     <div class="panel panel-default">
                         <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
                         <div class="panel-body">
-                            <h1>{{ interactionToDisplayed.interaction.question.title }}</h1>
+                            {{ interactionToDisplayed.interaction.question.title }}
 
                             <input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
                             <input type="hidden" name="typeInteraction" value="InteractionGraphic"/>
@@ -189,7 +192,9 @@
                     <input type="hidden" id="answers" name="answers" value=""/>
                     <input type="hidden" id="graphId" name="graphId" value="{{ interactionToDisplayed.id }}"/>
 
-                    {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
+                    <div class="panel panel-default">
+                        {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
+                    </div>
 
                     <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
 
@@ -201,13 +206,13 @@
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">{{ 'nQuestion' | trans }}{{numQ}}</h3>
+                    <h3>{{ 'nQuestion' | trans }}{{numQ}} :</h3>
                 </div>
                 <div class="panel-body">
                     <div class="panel panel-default">
                         <div class="panel-heading"><h3 class="panel-title">{{ 'title' | trans }}</h3></div>
                         <div class="panel-body">
-                            <h1>{{ interactionToDisplayed.interaction.question.title }}</h1>
+                            {{ interactionToDisplayed.interaction.question.title }}
                             <input type="hidden" name="interactionOpenToValidated" value="{{ interactionToDisplayed.id }}"/>
                             <input type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
                             <input type="hidden" name="typeInteraction" value="InteractionOpen"/>
@@ -240,7 +245,9 @@
                         </div>
                     {% endif %}
 
-                    {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
+                    <div class="panel panel-default">
+                        {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
+                    </div>
 
                     <input type="hidden" name="testOpen" value="testOpen" />
                     <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
@@ -255,7 +262,7 @@
     </div>
     {#--------------------------------------------------- Pagination ----------------------------------------------------#}
 
-    <div>
+    <div class="text-center panel-footer">
         {% set indexMax = 1 %}
         <ul class="pagination">
             {% if numQ != 1 %}
@@ -301,10 +308,12 @@
             {% endif %}
 
             {% if dispButtonInterrupt %}
+                <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
                 <li>
                     <input type="button" value="{{ "interupt" | trans }}" onClick="interupt('{{ interactionType }}');" class="btn btn-primary"/>
                 </li>
             {% endif %}
+            <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
             <li>
                 <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}', '{{ 'alert ending' | trans }}');"
                     class="btn btn-primary"/>

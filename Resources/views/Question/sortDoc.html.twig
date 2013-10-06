@@ -35,12 +35,10 @@
 
 <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 
-{{ 'result' | trans }} :
-
 {% if listFindDoc is not empty %}
     <table class="table table-striped table-bordered table-condensed" id="table">
         <thead>
-            <tr>
+            <tr style="background-color: lightsteelblue;">
                 <th class="classic" onclick="SortQuestions('kind', 'table');"
                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
@@ -76,21 +74,29 @@
                         {% endif %}
                     </td>
 
-                     <td class="classic">
-                         {% if myDoc.type == ".png" or myDoc.type == ".jpeg"
-                            or myDoc.type == ".jpg" or myDoc.type == ".gif" or myDoc.type == ".bmp" %}
-                            <img src="{{ asset(myDoc.url) }}" width="100px" height="100px"/>
-                        {% elseif myDoc.type == ".mp3" or myDoc.type == ".wav" %}
-                            <a href="{{ asset(myDoc.url) }}" onclick="window.open(this.href, 'ListenSong',
-                                'height=200, width=300, toolbar=no, menubar=no, location=no, resizable=yes, scrollbars=no, status=no');
-                                return false;"><i class="icon-play"></i>
-                            </a>
-                        {% elseif myDoc.type == ".avi" or myDoc.type == ".mpeg"
-                            or myDoc.type == ".wmv" or myDoc.type == ".flv" or myDoc.type == ".mov" %}
-                            <a href="{{ asset(myDoc.url) }}"><i class="icon-play"></i></a>
-                        {% else %}
-                            <a href="{{ asset(myDoc.url) }}"><i class="icon-download-alt"></i></a>
-                        {% endif %}
+                    <td class="classic">
+                        {% if myDoc.type == ".png" or myDoc.type == ".jpeg"
+                           or myDoc.type == ".jpg" or myDoc.type == ".gif" or myDoc.type == ".bmp" %}
+                           <img src="{{ asset(myDoc.url) }}" width="100px" height="100px"/>
+                       {% elseif myDoc.type == ".mp3" or myDoc.type == ".wav" %}
+                           <a class="btn btn-default" data-toggle="tooltip" title="{{ 'play' | trans }}"
+                              href="{{ asset(myDoc.url) }}" onclick="window.open(this.href, 'ListenSong',
+                               'height=200, width=300, toolbar=no, menubar=no, location=no, resizable=yes, scrollbars=no, status=no');
+                               return false;">
+                               <i class="icon-play"></i>
+                           </a>
+                       {% elseif myDoc.type == ".avi" or myDoc.type == ".mpeg"
+                           or myDoc.type == ".wmv" or myDoc.type == ".flv" or myDoc.type == ".mov" %}
+                           <a class="btn btn-default" data-toggle="tooltip" title="{{ 'play' | trans }}"
+                              href="{{ asset(myDoc.url) }}">
+                               <i class="icon-play"></i>
+                           </a>
+                       {% else %}
+                           <a class="btn btn-default" data-toggle="tooltip" title="{{ 'download' | trans }}"
+                              href="{{ asset(myDoc.url) }}">
+                               <i class="icon-download-alt"></i>
+                           </a>
+                       {% endif %}
                     </td>
 
                     <td class="classic">
@@ -98,10 +104,15 @@
                     </td>
 
                     <td class="classic">
-                        <a href="#" onclick="ChangeName('{{ myDoc.label }}');"><i class="icon-pencil"></i></a>
+                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
+                            href="#" onclick="ChangeName('{{ myDoc.label }}');event.preventDefault();">
+                            <i class="icon-pencil"></i>
+                        </a>
 
-                        <a href="{{ path('ujm_document_del', { 'label': myDoc.label }) }}"
-                           onclick="return confirm('{{ "warning" | trans }} ?');"><i class="icon-trash"></i>
+                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}"
+                           href="{{ path('ujm_document_del', { 'label': myDoc.label }) }}"
+                           onclick="return confirm('{{ 'warning' | trans }} ?');">
+                            <i class="icon-trash"></i>
                         </a>
                     </td>
                 </tr>
@@ -112,8 +123,8 @@
     <input type="hidden" id="label2Find" value="{{ labelToFind }}"/>
     <input type="hidden" id="whichAction" value="{{ whichAction }}"/>
 
-    <div>
-        {% if pagerFindDoc.haveToPaginate %}
+    {% if pagerFindDoc.haveToPaginate %}
+        <div class="text-center panel-footer">
             {% if whichAction == 'sort' %}
                 {{ pagerfanta(pagerFindDoc, 'twitter_bootstrap_translated',{ 'routeName': 'ujm_question_sortDocuments',
                     'routeParams': { 'searchLabel': labelToFind, 'doctype': doctype } }) }}
@@ -121,10 +132,10 @@
                 {{ pagerfanta(pagerFindDoc, 'twitter_bootstrap_translated',{ 'routeName': 'ujm_question_searchDocuments',
                     'routeParams': { 'labelToFind': labelToFind } }) }}
             {% endif %}
-        {% endif %}
-    </div>
+        </div>
+    {% endif %}
 {% else %}
-    <p>{{ 'noDocFound'|trans }} ...</p>
+    <div class="alert alert-info">{{ 'noDocFound'|trans }} ...</div>
 {% endif %}
 
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/sortAndSearch.js') }}"></script>

@@ -43,7 +43,9 @@
     <form onsubmit="return check_form('{{ 'nbr_choices' | trans }}', '{{ 'answer_coched' | trans }}', '{{ 'label_empty' | trans }}', '{{ 'point_answers' | trans }}', '{{ 'point_answer' | trans }}', '{{ 'invite_question' | trans }}');"
           action="{{ path('ujm_interactionqcm_create') }}" method="post" {{ form_enctype(form) }}>
         <div class="panel-body">
+
             {% include "UJMExoBundle:Partial:question.html.twig" %}
+
         </div>
         <div class="list-group">
             <div class="list-group-item">
@@ -114,16 +116,11 @@
 {% if error is defined %}
     <script type="text/javascript">
         creationQCMEdit('{{ 'expected answer' | trans }}', '{{ 'response' | trans }}', '{{ 'point' | trans }}', '{{ 'comment' | trans }}', '{{ 'Choice.positionForce' | trans }}', '{{ 'addChoice' | trans }}', '{{ 'delete' | trans }}');
-        linkCategory('{{ path('ujm_category_new_pop') }}');
         newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
-        //hintCSSEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}');
-        //addFormHintEdit('{{ "add hint" | trans }}',  '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
     </script>
 {% else %}
     <script type="text/javascript">
         creationQCM('{{ 'expected answer' | trans }}', '{{ 'response' | trans }}', '{{ 'point' | trans }}', '{{ 'comment' | trans }}', '{{ 'Choice.positionForce' | trans }}', '{{ 'addChoice' | trans }}', '{{ 'delete' | trans }}');
-        linkCategory('{{ path('ujm_category_new_pop') }}');
-        //addFormHint('{{ 'add hint' | trans }}', '{{ 'hint number' | trans }}', '{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
         newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% endif %}
