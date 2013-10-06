@@ -67,44 +67,62 @@ class Controller
         $postSettings = $this->request->request->all();
         $databaseSettings = $this->parameters->getDatabaseSettings();
         $databaseSettings->bindData($postSettings);
-        $checker = new DatabaseChecker($databaseSettings);
-        $errors = $checker->validateSettings();
+        $errors = $databaseSettings->validate();
         $this->parameters->setDatabaseValidationErrors($errors);
 
         if (count($errors) > 0) {
             return $this->databaseStep();
-        } elseif (true !== $status = $checker->connectToDatabase()) {
+        }
+
+        $checker = new DatabaseChecker($databaseSettings);
+
+        if (true !== $status = $checker->connectToDatabase()) {
             $this->parameters->setDatabaseGlobalError($status);
 
             return $this->databaseStep();
-        } else {
-            $this->parameters->setDatabaseGlobalError(null);
         }
+
+        $this->parameters->setDatabaseGlobalError(null);
 
         return $this->platformStep();
     }
 
     public function platformStep()
     {
-        if (!$this->parameters->getPlatformLanguage()) {
-            $this->parameters->setPlatformLanguage($this->parameters->getInstallationLanguage());
+        $platformSettings = $this->parameters->getPlatformSettings();
+
+        if (!$platformSettings->getLanguage()) {
+            $platformSettings->setLanguage($this->parameters->getInstallationLanguage());
         }
 
         return $this->renderStep(
             'platform.html.php',
             array(
-                'platform_language' => $this->parameters->getPlatformLanguage()
+                'platform_settings' => $platformSettings,
+                'errors' => $this->parameters->getPlatformValidationErrors()
             )
         );
     }
 
     public function platformSubmitStep()
     {
-        $this->parameters->setPlatformLanguage(
-            $this->getLanguageCode($this->request->request->get('platform_language'))
-        );
+        $postSettings = $this->request->request->all();
+        $postSettings['language'] = $this->getLanguageCode($postSettings['language']);
+        $platformSettings = $this->parameters->getPlatformSettings();
+        $platformSettings->bindData($postSettings);
+        $errors = $platformSettings->validate();
+        $this->parameters->setPlatformValidationErrors($errors);
 
-        return new Response('platform submit');
+        if (count($errors) > 0) {
+            return $this->platformStep();
+        }
+
+        return $this->adminUserStep();
+    }
+
+    private function adminUserStep()
+    {
+        return new Response('Admin user step');
     }
 
     private function renderStep($template, array $variables)

@@ -3,6 +3,7 @@
 namespace Claroline\WebInstaller;
 
 use Claroline\CoreBundle\Library\Installation\Settings\DatabaseSettings;
+use Claroline\CoreBundle\Library\Installation\Settings\PlatformSettings;
 
 class ParameterBag
 {
@@ -10,7 +11,8 @@ class ParameterBag
     private $databaseSettings = null;
     private $databaseValidationErrors = array();
     private $databaseGlobalError = null;
-    private $platformLanguage = null;
+    private $platformSettings = null;
+    private $platformValidationErrors = array();
 
     public function setInstallationLanguage($language)
     {
@@ -55,13 +57,22 @@ class ParameterBag
         return $this->databaseGlobalError;
     }
 
-    public function setPlatformLanguage($language)
+    public function getPlatformSettings()
     {
-        $this->platformLanguage = $language;
+        if (!$this->platformSettings) {
+            $this->platformSettings = new PlatformSettings();
+        }
+
+        return $this->platformSettings;
     }
 
-    public function getPlatformLanguage()
+    public function setPlatformValidationErrors(array $errors)
     {
-        return $this->platformLanguage;
+        $this->platformValidationErrors = $errors;
+    }
+
+    public function getPlatformValidationErrors()
+    {
+        return $this->platformValidationErrors;
     }
 }

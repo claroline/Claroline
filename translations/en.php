@@ -1,5 +1,6 @@
 <?php
 
+use Claroline\CoreBundle\Library\Installation\Settings\AbstractValidator;
 use Claroline\CoreBundle\Library\Installation\Settings\DatabaseChecker;
 
 return array(
@@ -48,9 +49,9 @@ return array(
     'user' => 'User',
     'password' => 'Password',
     'port' => 'Port',
-    DatabaseChecker::NOT_BLANK_EXPECTED => 'This value should not be blank',
-    DatabaseChecker::NUMBER_EXPECTED => 'This value should be a positive number',
-    DatabaseChecker::INVALID_DRIVER => 'Invalid driver',
+    AbstractValidator::NOT_BLANK_EXPECTED => 'This value should not be blank',
+    AbstractValidator::NUMBER_EXPECTED => 'This value should be a positive number',
+    AbstractValidator::INVALID_DRIVER => 'Invalid driver',
     DatabaseChecker::DATABASE_NOT_EMPTY
         => 'The database you have selected is not empty. Please choose another one or let this installer create it for you.',
     DatabaseChecker::CANNOT_CONNECT_TO_SERVER
@@ -58,7 +59,8 @@ return array(
     DatabaseChecker::CANNOT_CONNECT_OR_CREATE
         => 'The connection with the database cannot be established and the database cannot be created. Please check that the database user you have selected has sufficient permissions.',
     'platform_parameters' => 'Platform parameters',
-    'platform_language' => 'Language',
+    'language' => 'Language',
+    'name' => 'Name',
     'previous_step' => 'Previous',
     'next_step' => 'Next'
 );

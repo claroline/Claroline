@@ -31,6 +31,7 @@
     </div>
     <div class="form-group <?php if (isset($errors['host'])) echo 'has-error' ?>">
         <label class="control-label col-lg-2">
+            <span class="required">*</span>
             <?php echo $trans('host') ?>
         </label>
         <div class="col-lg-3">
@@ -48,6 +49,7 @@
     </div>
     <div class="form-group <?php if (isset($errors['name'])) echo 'has-error' ?>">
         <label class="control-label col-lg-2">
+            <span class="required">*</span>
             <?php echo $trans('database') ?>
         </label>
         <div class="col-lg-3">
@@ -65,6 +67,7 @@
     </div>
     <div class="form-group <?php if (isset($errors['user'])) echo 'has-error' ?>">
         <label class="control-label col-lg-2">
+            <span class="required">*</span>
             <?php echo $trans('user') ?>
         </label>
         <div class="col-lg-3">
