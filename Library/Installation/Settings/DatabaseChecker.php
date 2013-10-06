@@ -6,44 +6,17 @@ use Doctrine\DBAL\DriverManager;
 
 class DatabaseChecker
 {
-    const INVALID_DRIVER = 'invalid_driver';
-    const NOT_BLANK_EXPECTED = 'not_blank_expected';
-    const NUMBER_EXPECTED = 'positive_number_expected';
     const CANNOT_CONNECT_TO_SERVER = 'cannot_connect_to_db_server';
     const CANNOT_CONNECT_OR_CREATE = 'cannot_connect_to_or_create_database';
     const DATABASE_NOT_EMPTY = 'not_empty_database';
 
     private $settings;
-    private $errors = array();
-    private $hadValidationCall = false;
     private $serverConnection;
     private $databaseConnection;
 
     public function __construct(DatabaseSettings $settings)
     {
         $this->settings = $settings;
-    }
-
-    public function validateSettings()
-    {
-        if (false !== $this->checkIsNotBlank('driver')) {
-            if (!in_array($this->settings->getDriver(), $this->getDrivers())) {
-                $this->errors['driver'] = static::INVALID_DRIVER;
-            }
-        }
-
-        $this->checkIsNotBlank('host');
-        $this->checkIsNotBlank('name');
-        $this->checkIsNotBlank('user');
-        $port = $this->settings->getPort();
-
-        if (!empty($port) && (!is_numeric($port) || (int) $port < 0)) {
-            $this->errors['port'] = static::NUMBER_EXPECTED;
-        }
-
-        $this->hadValidationCall = true;
-
-        return $this->errors;
     }
 
     public function connectToDatabase()
@@ -61,25 +34,6 @@ class DatabaseChecker
         }
 
         return true;
-    }
-
-    private function checkIsNotBlank($option)
-    {
-        $method = 'get' . ucfirst($option);
-        $value = $this->settings->{$method}();
-
-        if (empty($value)) {
-            $this->errors[$option] = static::NOT_BLANK_EXPECTED;
-
-            return false;
-        }
-
-        return true;
-    }
-
-    private function getDrivers()
-    {
-        return array('pdo_mysql', 'pdo_pgsql');
     }
 
     private function canConnect($useDatabase)
@@ -109,7 +63,7 @@ class DatabaseChecker
 
     private function getConnection($useDatabase)
     {
-        if (!$this->hadValidationCall || count($this->errors) !== 0) {
+        if (!$this->settings->isValid()) {
             throw new \Exception('Connection settings must be validated first');
         }
 

@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Settings;
 
-class DatabaseSettings
+class DatabaseSettings extends AbstractValidator
 {
     private $driver = 'pdo_mysql';
     private $host = 'localhost';
@@ -134,6 +134,21 @@ class DatabaseSettings
             if (method_exists($this, $method = 'set' . ucfirst($name))) {
                 $this->{$method}($value);
             }
+        }
+    }
+
+    protected function doValidate()
+    {
+        if ($this->checkIsNotBlank('driver', $this->driver)) {
+            $this->checkIsValidDriver('driver', $this->driver);
+        }
+
+        $this->checkIsNotBlank('host', $this->host);
+        $this->checkIsNotBlank('name', $this->name);
+        $this->checkIsNotBlank('user', $this->user);
+
+        if (!empty($this->port)) {
+            $this->checkIsPositiveNumber('port', $this->port);
         }
     }
 }
