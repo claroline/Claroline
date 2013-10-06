@@ -6,6 +6,13 @@ use Doctrine\DBAL\DriverManager;
 
 class DatabaseChecker
 {
+    const INVALID_DRIVER = 'invalid_driver';
+    const NOT_BLANK_EXPECTED = 'not_blank_expected';
+    const NUMBER_EXPECTED = 'positive_number_expected';
+    const CANNOT_CONNECT_TO_SERVER = 'cannot_connect_to_db_server';
+    const CANNOT_CONNECT_OR_CREATE = 'cannot_connect_to_or_create_database';
+    const DATABASE_NOT_EMPTY = 'not_empty_database';
+
     private $settings;
     private $errors;
     private $serverConnection;
@@ -18,59 +25,33 @@ class DatabaseChecker
         $this->validateSettings();
     }
 
-    public function areSettingsValid()
-    {
-        return count($this->errors) === 0;
-    }
-
     public function getValidationErrors()
     {
         return $this->errors;
     }
 
-    public function canConnectToServer()
+    public function connectToDatabase()
     {
-        return $this->canConnect(false);
-    }
-
-    public function canConnectToDatabase()
-    {
-        return $this->canConnect(true);
-    }
-
-    public function isDatabaseEmpty()
-    {
-        if ($this->canConnectToDatabase()) {
-            $tables = $this->databaseConnection->getSchemaManager()->listTableNames();
-
-            return count($tables) === 0;
-        }
-
-        throw new \Exception('Cannot connect to database');
-    }
-
-    public function canCreateDatabase()
-    {
-        if ($this->canConnectToServer()) {
-            try {
-                $this->serverConnection->getSchemaManager()->createDatabase(
-                    $this->settings['dbname']
-                );
-
-                return true;
-            } catch (\Exception $ex) {
-                return false;
+        if ($this->canConnect(true)) {
+            if (!$this->isDatabaseEmpty()) {
+                return static::DATABASE_NOT_EMPTY;
             }
+        } elseif ($this->canConnect(false)) {
+            if (!$this->canCreateDatabase()) {
+                return static::CANNOT_CONNECT_OR_CREATE;
+            }
+        } else {
+            return static::CANNOT_CONNECT_TO_SERVER;
         }
 
-        throw new \Exception('Cannot connect to database server');
+        return true;
     }
 
     private function validateSettings()
     {
         if (false !== $this->checkIsNotBlank('driver')) {
             if (!in_array($this->settings['driver'], $this->getDrivers())) {
-                $this->errors['driver'] = 'invalid_driver';
+                $this->errors['driver'] = static::INVALID_DRIVER;
             }
         }
 
@@ -81,7 +62,7 @@ class DatabaseChecker
 
         if (isset($this->settings['port']) && '' !== trim($this->settings['port'])) {
             if (!is_numeric($this->settings['port']) || (int) $this->settings['port'] < 0) {
-                $this->errors['port'] = 'number_expected';
+                $this->errors['port'] = static::NUMBER_EXPECTED;
             }
         }
 
@@ -91,7 +72,7 @@ class DatabaseChecker
     private function checkIsNotBlank($option)
     {
         if (!isset($this->settings[$option]) || '' === trim($this->settings[$option])) {
-            $this->errors[$option] = 'not_blank_expected';
+            $this->errors[$option] = static::NOT_BLANK_EXPECTED;
 
             return false;
         }
@@ -131,7 +112,7 @@ class DatabaseChecker
 
     private function getConnection($useDatabase)
     {
-        if (!$this->areSettingsValid()) {
+        if (count($this->errors) !== 0) {
             throw new \Exception('Connection settings are not valid');
         }
 
@@ -143,5 +124,33 @@ class DatabaseChecker
         }
 
         return DriverManager::getConnection($parameters);
+    }
+
+    private function isDatabaseEmpty()
+    {
+        if ($this->canConnect(true)) {
+            $tables = $this->databaseConnection->getSchemaManager()->listTableNames();
+
+            return count($tables) === 0;
+        }
+
+        throw new \Exception('Cannot connect to database');
+    }
+
+    private function canCreateDatabase()
+    {
+        if ($this->canConnect(false)) {
+            try {
+                $this->serverConnection->getSchemaManager()->createDatabase(
+                    $this->settings['dbname']
+                );
+
+                return true;
+            } catch (\Exception $ex) {
+                return false;
+            }
+        }
+
+        throw new \Exception('Cannot connect to database server');
     }
 }
