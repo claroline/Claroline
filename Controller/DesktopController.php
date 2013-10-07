@@ -69,6 +69,7 @@ class DesktopController extends Controller
     {
         $widgets = array();
         $configs = array();
+        $lastWidgetOrder = 1;
 
         $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
 
@@ -86,6 +87,10 @@ class DesktopController extends Controller
                 $adminConfigs = $this->homeTabManager->getAdminWidgetConfigs($homeTab);
                 $userWidgetsConfigs = $this->homeTabManager
                     ->getWidgetConfigsByUser($homeTab, $user);
+
+                if (count($userWidgetsConfigs) > 0) {
+                    $lastWidgetOrder = count($userWidgetsConfigs);
+                }
 
                 foreach ($adminConfigs as $adminConfig) {
 
@@ -122,9 +127,12 @@ class DesktopController extends Controller
                 foreach ($userWidgetsConfigs as $userWidgetsConfig) {
                     $configs[] = $userWidgetsConfig;
                 }
-            }
-            else {
+            } else {
                 $configs = $this->homeTabManager->getWidgetConfigsByUser($homeTab, $user);
+
+                if (count($configs) > 0) {
+                    $lastWidgetOrder = count($configs);
+                }
             }
 
             foreach ($configs as $config) {
@@ -135,8 +143,6 @@ class DesktopController extends Controller
                 );
 
                 $widget['config']= $config;
-                $widget['id'] = $config->getWidgetInstance()->getId();
-                $widget['title'] = $config->getWidgetInstance()->getName();
                 $widget['content'] = $event->getContent();
                 $widget['configurable'] = ($config->isLocked() !== true && $config->getWidgetInstance()->getWidget()->isConfigurable());
                 $widgets[] = $widget;
@@ -144,11 +150,12 @@ class DesktopController extends Controller
         }
 
         return array(
-            'widgets' => $widgets,
+            'widgetsDatas' => $widgets,
             'isDesktop' => true,
             'withConfig' => $withConfig,
             'isVisibleHomeTab' => $isVisibleHomeTab,
-            'isLockedHomeTab' => $isLockedHomeTab
+            'isLockedHomeTab' => $isLockedHomeTab,
+            'lastWidgetOrder' => $lastWidgetOrder
         );
     }
 

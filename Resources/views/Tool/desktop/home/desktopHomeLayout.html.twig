@@ -16,10 +16,14 @@
             {% for adminHomeTabConfig in adminHomeTabConfigs %}
             {% set adminHomeTab = adminHomeTabConfig.getHomeTab() %}
             <li class="
-                {% if adminHomeTab.getId() == tabId %} active {% endif %}
-                {% if not adminHomeTabConfig.isVisible() %} toggle-visible {% endif %}
-                {% if (withConfig == 0 and not adminHomeTabConfig.isVisible()) %}
-                    hidden
+                {% if adminHomeTab.getId() == tabId %}
+                    active
+                {% endif %}
+                {% if not adminHomeTabConfig.isVisible() %}
+                    toggle-visible
+                    {% if (withConfig == 0) %}
+                        hidden
+                    {% endif %}
                 {% endif %}"
             >
                 <a href="" class="hometab-link" hometab-id="{{ adminHomeTab.getId() }}">

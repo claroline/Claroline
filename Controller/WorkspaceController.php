@@ -439,6 +439,7 @@ class WorkspaceController extends Controller
         }
 
         $widgets = array();
+        $lastWidgetOrder = 1;
 
         $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
 
@@ -453,6 +454,10 @@ class WorkspaceController extends Controller
 
             $widgetHomeTabConfigs = $this->homeTabManager
                 ->getWidgetConfigsByWorkspace($homeTab, $workspace);
+
+            if (count($widgetHomeTabConfigs) > 0) {
+                $lastWidgetOrder = count($widgetHomeTabConfigs);
+            }
 
             if ($this->security->getToken()->getUser() !== 'anon.') {
                 $rightToConfigure = $this->security->isGranted('parameters', $workspace);
@@ -469,8 +474,7 @@ class WorkspaceController extends Controller
                     array($widgetInstance)
                 );
 
-                $widget['id'] = $widgetInstance->getId();
-                $widget['title'] = $widgetInstance->getName();
+                $widget['config'] = $widgetHomeTabConfig;
                 $widget['content'] = $event->getContent();
                 $widget['configurable'] = $rightToConfigure
                     && $widgetInstance->getWidget()->isConfigurable();
@@ -479,12 +483,13 @@ class WorkspaceController extends Controller
         }
 
         return array(
-            'widgets' => $widgets,
+            'widgetsDatas' => $widgets,
             'isDesktop' => false,
             'workspaceId' => $workspace->getId(),
             'withConfig' => $withConfig,
             'isVisibleHomeTab' => $isVisibleHomeTab,
-            'isLockedHomeTab' => false
+            'isLockedHomeTab' => false,
+            'lastWidgetOrder' => $lastWidgetOrder
         );
     }
 

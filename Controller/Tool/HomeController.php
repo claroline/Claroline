@@ -1453,12 +1453,12 @@ class HomeController extends Controller
         $user = $this->securityContext->getToken()->getUser();
         $this->checkUserAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $user);
 
-        $this->homeTabManager->changeOrderWidgetHomeTabConfig(
+        $status = $this->homeTabManager->changeOrderWidgetHomeTabConfig(
             $widgetHomeTabConfig,
             $direction
         );
 
-        return new Response('success', 204);
+        return new Response($status, 200);
     }
 
     /**
@@ -1495,12 +1495,12 @@ class HomeController extends Controller
             $workspace
         );
 
-        $this->homeTabManager->changeOrderWidgetHomeTabConfig(
+        $status = $this->homeTabManager->changeOrderWidgetHomeTabConfig(
             $widgetHomeTabConfig,
             $direction
         );
 
-        return new Response('success', 204);
+        return new Response($status, 200);
     }
 
     /**
