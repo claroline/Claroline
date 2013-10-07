@@ -1,10 +1,11 @@
 var container = $('div#ujm_exobundle_interactionqcmtype_choices'); // Div which contain the dataprototype
 var tableChoices = $('#tableChoice'); // div which contain the choices array
-var index; // number of choices
 
 // QCM Creation
 function creationQCM(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice) {
 
+    var index; // number of choices
+    
     tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice);
 
     // Number of choice initially
@@ -42,6 +43,8 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
 // QCM Edition
 function creationQCMEdit(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice) {
 
+    var index;
+    
     tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice);
 
     // Get the form field to fill rows of the choices' table
@@ -80,6 +83,7 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
 // Add a choice
 function addChoice(container, deleteChoice) {
 
+    var index = $('#newTable').find('tr:not(:first)').length;
     // change the "name" by the index and delete the symfony delete form button
     var contain = $(container.attr('data-prototype').replace(/__name__label__/g, 'Choice n°' + (index))
         .replace(/__name__/g, index)
