@@ -3,6 +3,7 @@
 namespace Innova\PathBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Innova\PathBundle\Entity\Step2ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,9 +37,9 @@ class Step extends AbstractResource
     /**
      * @var string
      *
-     * @ORM\Column(name="instructions", type="text")
+     * @ORM\Column(name="instructions", type="text", nullable=true)
      */
-    private $instructions;
+    private $instructions = null;
 
     /**
      * @var boolean
@@ -80,6 +81,11 @@ class Step extends AbstractResource
     * @ORM\ManyToOne(targetEntity="StepWhere", inversedBy="steps")
     */
     protected $stepWhere;
+
+    /**
+    * @ORM\OneToMany(targetEntity="Step2ResourceNode", mappedBy="step", cascade={"remove"})
+    */
+    protected $step2ResourceNodes;
 
     /**
      * Set expanded
@@ -229,29 +235,7 @@ class Step extends AbstractResource
         return $this->stepOrder;
     }
 
-    /**
-     * Set resourceNode
-     *
-     * @param  \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
-     * @return Step
-     */
-    public function setResourceNode(\Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode = null)
-    {
-        $this->resourceNode = $resourceNode;
-
-        return $this;
-    }
-
-    /**
-     * Get resourceNode
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
-     */
-    public function getResourceNode()
-    {
-        return $this->resourceNode;
-    }
-
+  
     /**
      * Set stepType
      *

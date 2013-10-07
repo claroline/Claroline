@@ -22,7 +22,7 @@ class Step2ResourceNode
     private $id;
 
     /**
-    * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Step")
+    * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Step", inversedBy="step2ResourceNodes")
     */
     private $step;
 

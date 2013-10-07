@@ -152,10 +152,13 @@ class PathController extends Controller
         // On nettoie la base.
         foreach ($steps as $step) {
            if (!in_array($step->getResourceNode()->getId(),$stepsToNotDelete)) {
+
+                /*
                 $step2ressources = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')->findByStep($step->getId());
                 foreach ($step2ressources as $step2ressource) {
                     $manager->remove($step2ressource);
                 }
+                */
                 $manager->remove($step->getResourceNode());
             }
         }
@@ -560,21 +563,27 @@ class PathController extends Controller
 
     private function deleteStep($step){
         $em = $this->entityManager();
+        // if the step get children, chidlren are deleted first (recursively)
         if($children = $em->getRepository('InnovaPathBundle:Step')->findByParent($step)){
-            echo $step->getId()." ce step a des enfants";
             foreach ($children as $child){
-                echo "<br/>ce step (enfant)";
                 $this->deleteStep($child);
             }
         }
-        else{
-            echo "<br/>tentative de suppression";
-            $em = $this->entityManager();
-            $em->remove($step->getResourceNode());
-            $em->flush();
-            echo "<br/>suppression";
+        // then step is deleted.
+        $this->deleteStep2ResourceNode($step);
+        $em->remove($step->getResourceNode());
+    }
+
+    private function deleteStep2ResourceNode($step){
+        $em = $this->entityManager();
+        if($step2ResourceNodes = $em->getRepository('InnovaPathBundle:Step2ResourceNode')->findByStep($step)){
+            foreach ($step2ResourceNodes as $step2ResourceNode){
+                $em->remove($step2ResourceNode);
+            }
         }
     }
+
+
     /**
      * entityManager function
      *

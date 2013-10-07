@@ -26,7 +26,7 @@ class Path extends AbstractResource
     protected $steps;
 
     /**
-    * @ORM\OneToMany(targetEntity="User2Path", mappedBy="path", cascade={"remove"})
+    * @ORM\OneToMany(targetEntity="User2Path", mappedBy="path")
     */
     protected $users;
 
@@ -104,26 +104,4 @@ class Path extends AbstractResource
         return $this->steps;
     }
 
-    /**
-     * Set resourceNode
-     *
-     * @param  \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
-     * @return Path
-     */
-    public function setResourceNode(\Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode = null)
-    {
-        $this->resourceNode = $resourceNode;
-
-        return $this;
-    }
-
-    /**
-     * Get resourceNode
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
-     */
-    public function getResourceNode()
-    {
-        return $this->resourceNode;
-    }
 }
