@@ -3,7 +3,7 @@
 /**
  * Resource Modal Controller
  */
-function ResourceModalCtrl($scope, $modalInstance, PathFactory, ResourceFactory, resourceType) {
+function ResourceModalCtrl($scope, $modal, $q, $http, $modalInstance, PathFactory, ResourceFactory, resourceType) {
     $scope.resourceType = resourceType;
     $scope.resourceSubTypes = ResourceFactory.getResourceSubTypes(resourceType);
     
@@ -37,5 +37,41 @@ function ResourceModalCtrl($scope, $modalInstance, PathFactory, ResourceFactory,
      */
     $scope.save = function(formResource) {
         $modalInstance.close(formResource);
+    };
+
+
+     /**
+     * Edit or add resource
+     * @returns void
+     */
+    $scope.pickResource = function() {
+        var modalInstance = $modal.open({
+            templateUrl: EditorApp.webDir + 'js/Resource/Partial/resource-picker.html',
+            controller: 'ResourcePickerModalCtrl',
+            resolve: {
+
+                // Send resource type to form
+                resources: function() {
+                    var deferred = $q.defer();
+                    $http.get(Routing.generate("innova_user_resources"))
+                         .success(function (data) {
+                            var resources = data;
+                             return deferred.resolve(resources);
+                         });
+                         /*
+                         .error(function(data, status) {
+                             return deferred.reject('error loading path');
+                         });
+                        */
+
+                    return deferred.promise;
+                }
+            }
+        });
+        
+        // Process modal results
+        modalInstance.result.then(function(resourcePicked) {
+            $scope.formResource.resourceId = resourcePicked;
+        });
     };
 }

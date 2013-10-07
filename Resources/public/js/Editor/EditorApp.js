@@ -91,6 +91,7 @@ EditorApp.controller('StepModalCtrl', StepModalCtrl);
 
 // Resources
 EditorApp.factory('ResourceFactory', ResourceFactory);
+EditorApp.controller('ResourcePickerModalCtrl', ResourcePickerModalCtrl);
 EditorApp.controller('ResourceModalCtrl', ResourceModalCtrl);
 
 // Templates
