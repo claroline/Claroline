@@ -16,40 +16,40 @@ class Version20130926160827 extends AbstractMigration
     {
         $this->addSql("
             CREATE TABLE claro_badge_rule (
-                id INT AUTO_INCREMENT NOT NULL, 
-                badge_id INT NOT NULL, 
-                occurrence SMALLINT NOT NULL, 
-                action VARCHAR(255) NOT NULL, 
-                INDEX IDX_805FCB8FF7A2C2FC (badge_id), 
+                id INT AUTO_INCREMENT NOT NULL,
+                badge_id INT NOT NULL,
+                occurrence SMALLINT NOT NULL,
+                action VARCHAR(255) NOT NULL,
+                INDEX IDX_805FCB8FF7A2C2FC (badge_id),
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
-            ALTER TABLE claro_badge_rule 
-            ADD CONSTRAINT FK_805FCB8FF7A2C2FC FOREIGN KEY (badge_id) 
-            REFERENCES claro_badge (id) 
+            ALTER TABLE claro_badge_rule
+            ADD CONSTRAINT FK_805FCB8FF7A2C2FC FOREIGN KEY (badge_id)
+            REFERENCES claro_badge (id)
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE claro_badge_claim 
-            ADD CONSTRAINT FK_487A496AA76ED395 FOREIGN KEY (user_id) 
-            REFERENCES claro_user (id) 
+            ALTER TABLE claro_badge_claim
+            ADD CONSTRAINT FK_487A496AA76ED395 FOREIGN KEY (user_id)
+            REFERENCES claro_user (id)
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE claro_badge_claim 
-            ADD CONSTRAINT FK_487A496AF7A2C2FC FOREIGN KEY (badge_id) 
-            REFERENCES claro_badge (id) 
+            ALTER TABLE claro_badge_claim
+            ADD CONSTRAINT FK_487A496AF7A2C2FC FOREIGN KEY (badge_id)
+            REFERENCES claro_badge (id)
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE claro_badge_translation 
-            ADD CONSTRAINT FK_849BC831F7A2C2FC FOREIGN KEY (badge_id) 
-            REFERENCES claro_badge (id) 
+            ALTER TABLE claro_badge_translation
+            ADD CONSTRAINT FK_849BC831F7A2C2FC FOREIGN KEY (badge_id)
+            REFERENCES claro_badge (id)
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE claro_badge 
+            ALTER TABLE claro_badge
             ADD automatic_award TINYINT(1) DEFAULT NULL
         ");
     }
