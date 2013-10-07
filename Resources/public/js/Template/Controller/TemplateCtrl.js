@@ -43,10 +43,9 @@ function TemplateCtrl($scope, $http, $modal, TemplateFactory) {
                     break;
                 }
             }
-            // Delete template from ui
         })
         .error(function(data, status) {
-            // TODO
+            AlertFactory.addAlert('danger', 'Error while removing Path template.');
         });
     };
 }

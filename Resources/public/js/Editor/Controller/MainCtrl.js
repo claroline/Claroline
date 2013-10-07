@@ -3,7 +3,7 @@
 /**
  * Main Controller
  */
-function MainCtrl($scope, $http, $q, $route, $location, $modal, HistoryFactory, ClipboardFactory, PathFactory, StepFactory) {
+function MainCtrl($scope, $http, $q, $route, $location, $modal, HistoryFactory, ClipboardFactory, PathFactory, StepFactory, AlertFactory) {
     // Store symfony base partials route
     $scope.webDir = EditorApp.webDir;
     
@@ -13,6 +13,7 @@ function MainCtrl($scope, $http, $q, $route, $location, $modal, HistoryFactory, 
         $scope.activeTab = current.activeTab;
     });
     
+    $scope.alerts = AlertFactory.getAlerts();
     $scope.path = null;
     $scope.initPath = function(path) {
         $scope.path = path;
@@ -80,8 +81,6 @@ function MainCtrl($scope, $http, $q, $route, $location, $modal, HistoryFactory, 
     /**
      * Save Path modifications in DB
      * @returns void
-     * 
-     * @todo add confirm messages
      */
     $scope.save = function(path) {
         var method = null;
@@ -108,15 +107,17 @@ function MainCtrl($scope, $http, $q, $route, $location, $modal, HistoryFactory, 
         .success(function (data) {
             if (EditorApp.pathId) {
                 // Update success
-                alert('updated');
+                AlertFactory.addAlert('success', 'Path updated.');
             }
             else {
                 // Create success
-                alert('created');
+                AlertFactory.addAlert('success', 'Path created.');
             }
+            
+            EditorApp.pathId = data;
         })
         .error(function(data, status) {
-            // TODO
+            AlertFactory.addAlert('danger', 'Error while saving Path.');
         });
         
         // Clear history to avoid possibility to get a history state without path ID

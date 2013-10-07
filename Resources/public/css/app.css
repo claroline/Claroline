@@ -217,3 +217,8 @@ input.form-control.ng-valid:focus {
 .preview-step .panel:last-child {
     margin-bottom: 0;
 }
+
+#panel-documents .panel-collapse .table,
+#panel-tools .panel-collapse .table {
+	margin-bottom: 0;
+}

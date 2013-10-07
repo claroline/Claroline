@@ -79,11 +79,11 @@ function TemplateModalCtrl($scope, $http, $modalInstance, StepFactory, TemplateF
         .success(function (data) {
             if (editTemplate) {
                 // Update success
-                alert('updated');
+                AlertFactory.addAlert('success', 'Template updated.');
             }
             else {
                 // Create success
-                alert('created');
+                AlertFactory.addAlert('success', 'Template created.');
                 formTemplate.id = data;
             }
             
@@ -91,7 +91,7 @@ function TemplateModalCtrl($scope, $http, $modalInstance, StepFactory, TemplateF
             $modalInstance.close();
         })
         .error(function(data, status) {
-            // TODO
+            AlertFactory.addAlert('danger', 'Error while saving template.');
         });
     }
 }

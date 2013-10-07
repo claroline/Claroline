@@ -2,7 +2,6 @@
 
 /**
  * Tree Controller
- * @todo : éclater en 5 Controllers minimum (Global / Skills / Scenario / Planner / Validation)
  */
 function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, ResourceFactory) {
     $scope.initPath(PathFactory.getPath());
@@ -10,7 +9,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
     $scope.previewStep = null;
     
     $scope.sortableOptions = {
-        update: $scope.update,
+        update: function(e, ui) { $scope.applyTreeChanges(); },
         placeholder: 'placeholder',
         connectWith: '.ui-sortable'
     };
@@ -20,13 +19,24 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
      * @returns void
      */
     $scope.setPreviewStep = function(step) {
+        var isRootStep = false;
+        var rootStep = null;
+        if (undefined !== $scope.path && null !== $scope.path && undefined !== $scope.path.steps[0]) {
+            rootStep = $scope.path.steps[0];
+        }
+        
         if (step) {
             $scope.previewStep = step;
+            if (step.id === rootStep.id) {
+                isRootStep = true;
+            }
         }
-        else if (undefined !== $scope.path && null !== $scope.path && undefined !== $scope.path.steps[0]) {
-            $scope.previewStep = $scope.path.steps[0];
+        else if (rootStep) {
+            $scope.previewStep = rootStep;
+            isRootStep = true;
         }
-
+        
+        $scope.stepIsRootNode = isRootStep;
         $scope.inheritedResources = ResourceFactory.getInheritedResources($scope.previewStep);
     };
     
@@ -51,7 +61,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
      * Update Path when Tree is modified with drag n drop
      * @returns void
      */
-    $scope.update = function() {
+    $scope.applyTreeChanges = function() {
         var e, i, _i, _len, _ref;
         _ref = $scope.path;
         for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
@@ -97,6 +107,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
     $scope.removeChildren = function(step) {
         step.children = [];
         HistoryFactory.update($scope.path);
+        $scope.updatePreviewStep();
     };
 
     /**
@@ -107,6 +118,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
         var newStep = StepFactory.generateNewStep(step);
         step.children.push(newStep);
         HistoryFactory.update($scope.path);
+        $scope.updatePreviewStep();
     };
      
     /**
@@ -137,6 +149,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
         insertStep($scope.path.steps);
         
         HistoryFactory.update($scope.path);
+        $scope.updatePreviewStep();
     };
      
     /**
@@ -172,6 +185,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
                 
                 // Update history
                 HistoryFactory.update($scope.path);
+                $scope.updatePreviewStep();
             }
         });
     };

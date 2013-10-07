@@ -3,7 +3,7 @@
 /**
  * Alert Factory
  */
-var AlertFactoryProto = function() {
+function AlertFactory() {
     var alerts = [];
 
     return {
@@ -21,7 +21,7 @@ var AlertFactoryProto = function() {
          * @param type
          * @returns AlertFactory
          */
-        addAlert: function(msg, type) {
+        addAlert: function(type, msg) {
             alerts.push({ type: type, msg: msg });
             return this;
         },
@@ -36,4 +36,4 @@ var AlertFactoryProto = function() {
             return this;
         }
     };
-};
+}

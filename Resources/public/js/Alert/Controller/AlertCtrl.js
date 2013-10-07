@@ -3,14 +3,10 @@
 /**
  * Alert Controller
  */
-var AlertCtrlProto = [
-    '$scope',
-    'alertFactory',
-    function($scope, alertFactory) {
-        $scope.alerts = alertFactory.getAlerts();
+function AlertCtrl($scope, AlertFactory) {
+    $scope.alerts = AlertFactory.getAlerts();
 
-        $scope.closeAlert  = function() {
-            alertFactory.closeAlert();
-        };
-    }
-];
+    $scope.closeAlert  = function() {
+        AlertFactory.closeAlert();
+    };
+}
