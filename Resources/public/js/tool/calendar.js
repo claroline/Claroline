@@ -309,9 +309,9 @@
                 right: 'month,agendaWeek,agendaDay',      
             },
             columnFormat: {
-            month: 'ddd',
-            week: 'ddd d/M',
-            day: 'dddd d/M'
+                month: 'ddd',
+                week: 'ddd d/M',
+                day: 'dddd d/M'
             },
             buttonText: {
                 prev: Translator.get('agenda' + ':' + 'prev'),
