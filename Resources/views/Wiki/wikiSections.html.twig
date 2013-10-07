@@ -2,17 +2,21 @@
     {% for section in sections %}
         {% if isAdmin or section.visible %}
             {% set level = section.level + 1 %}
+            {% set visibleClass = section.visible is sameas (true)?"":"invisible-wiki-section" %}
             {% set fontsize = 0 %}
             {% if level > 4 %}
                 {% set level = 4 %}
                 {% set fontsize = (section.level<8)?21 - section.level:14 %}
             {% endif %}
-            <li id="section-{{section.id}}">
+            <li id="section-{{section.id}}" class="{{ visibleClass }}">
                 <div class="{{level>2?"subsection-header":"page-header"}}" >
                     <h{{level}} {{ fontsize!=0?"style=font-size:" ~ fontsize ~ "px;":"" }}>
                         {{section.title}}
                         {% if isAdmin %}
                             <small class="wiki-actions">
+                                {% if section.visible is sameas (false) %}
+                                    <span class="invisible-section-text">({{"invisible"|trans({},'icap_wiki')}})</span>
+                                {% endif %} 
                                 [
                                     <a href="{{ path('icap_wiki_new_section', { 'wikiId': wikiId, 'parentSectionId' : section.id }) }}" class="new-section" data-section="{{section.id}}" >
                                         {{ 'add_new_subsection'|trans({}, 'icap_wiki') }}
@@ -30,7 +34,7 @@
                         {% endif%}
                     </h{{level}}>
                 </div>
-                <p>{{section.text|raw}}</p>
+                <div class="wiki-section-text">{{section.text|raw}}</div>
                 {% if section.__children is not empty %}
                     <ul>
                         {{ _self.wiki_sections(section.__children, isAdmin, wikiId) }}

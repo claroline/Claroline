@@ -10,6 +10,7 @@ icap_wiki_delete_section_type_children: 'Voulez-vous supprimer les sous-sections
 delete_section: 'Suppression de section'
 create_new_section: 'Créer une nouvelle section'
 add_new_subsection: 'Ajouter une nouvelle sous-section'
+move_section: 'Déplacer la section'
 back: 'Retour'
 back_to_wiki: 'Retour au wiki'
 edit: 'Modifier'
@@ -22,3 +23,11 @@ Save: 'Sauvegarder'
 New section: 'Nouvelle section'
 wiki_contents: 'Sommaire'
 delete_confirmation: 'Êtes-vous sûr de vouloir supprimer la section "%sectionTitle%" ?'
+icap_wiki_section_add_success: "La section a été créée avec succès"
+icap_wiki_section_add_error: "Erreur durant la création de la section"
+icap_wiki_section_update_success: "La section a été modifiée avec succès"
+icap_wiki_section_update_error: "Erreur durant la modification de la section"
+icap_wiki_section_move_success: "La section a été déplacée avec succès"
+icap_wiki_section_move_error: "Erreur durant le déplacement de la section"
+icap_wiki_section_delete_success: "La section a été supprimée avec succès"
+icap_wiki_section_delete_error: "Erreur durant la suppression de la section"

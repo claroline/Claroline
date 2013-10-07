@@ -33,7 +33,7 @@
             <div class="wiki-contents-inner well">
                 <div class="wiki-contents-title">
                     {{ 'wiki_contents'|trans({},'icap_wiki') }}&nbsp;
-                    <a id="move-contents-trigger" class="btn btn-default btn-xs pull-right"><i class="icon-move"></i></a>
+                    <a id="move-contents-trigger" class="btn btn-default btn-xs pull-right"><i class="icon-hand-up"></i></a>
                 </div>
                 {% include "IcapWikiBundle:Wiki:wikiContents.html.twig" with {'sections' : tree[0].__children, 'isAdmin' : is_granted('EDIT', wiki), 'delimeter' : '.' } %}
             </div>
@@ -60,5 +60,5 @@
             'referenceSectionId' : "0",
             'isBrother' : "true"}) }}";
     </script>
-    <script type='text/javascript' src="{{ asset('bundles/icapwiki/js/new.js') }}"></script>
+    <script type='text/javascript' src="{{ asset('bundles/icapwiki/js/script.js') }}"></script>
 {% endblock %}

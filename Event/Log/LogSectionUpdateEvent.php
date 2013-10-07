@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Entity\Section;
 
-class LogWikiUpdateEvent extends AbstractLogResourceEvent
+class LogSectionUpdateEvent extends AbstractLogResourceEvent
 {
     const ACTION = 'resource-icap_wiki-section_update';
 

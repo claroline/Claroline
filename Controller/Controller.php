@@ -9,7 +9,7 @@ use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Event\Log\LogSectionCreateEvent;
 use Icap\WikiBundle\Event\Log\LogSectionDeleteEvent;
-use Icap\WikiBundle\Event\Log\LogSectionReadEvent;
+use Icap\WikiBundle\Event\Log\LogSectionMoveEvent;
 use Icap\WikiBundle\Event\Log\LogSectionUpdateEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;

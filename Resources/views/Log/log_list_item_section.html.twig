@@ -1,3 +1,3 @@
 {% if log.details.section is defined %}
-    <strong>{{ log.details.section.title }}</strong>
+    <a href="{{ path('icap_wiki_view', {"wikiId": log.details.section.wiki}) ~ "#section-" ~ log.details.section.id }}"><strong>{{ log.details.section.title }}</strong></a>
 {% endif %}

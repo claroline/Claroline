@@ -134,6 +134,9 @@ class WikiController extends Controller{
             $section = $form->getData();
             $section->setWiki($wiki);
             $section->setAuthor($user);
+            $flashBag = $this->get('session')->getFlashBag();
+            $translator = $this->get('translator');
+            $em = $this->getDoctrine()->getManager();
 
             $parent = null;
             if ($parentSectionId == 0) {
@@ -145,12 +148,18 @@ class WikiController extends Controller{
 
             $section->setParent($parent);
 
-            $em = $this->getDoctrine()->getManager();
-            $sectionRepository = $this->getDoctrine()->getManager()->getRepository('IcapWikiBundle:Section');
-            $sectionRepository->persistAsLastChildOf($section, $parent);
-            $em->flush();
+            try{
+                $sectionRepository = $this->getDoctrine()->getManager()->getRepository('IcapWikiBundle:Section');
+                $sectionRepository->persistAsLastChildOf($section, $parent);
+                $em->flush();
 
-            $this->dispatchSectionCreateEvent($wiki, $section);
+                $this->dispatchSectionCreateEvent($wiki, $section);
+
+                $flashBag->add('success', $translator->trans('icap_wiki_section_add_success', array(), 'icap_wiki'));
+            } catch (\Exception $exception) {
+                $flashBag->add('error', $translator->trans('icap_wiki_section_add_error', array(), 'icap_wiki'));
+            }
+            
 
             return $this->redirect(
                 $this->generateUrl(
@@ -222,7 +231,8 @@ class WikiController extends Controller{
             'wiki' => $wiki,
             'section' => $section,
             'form' => $form->createView(),
-            'pathArray' => $wiki->getPathArray()
+            'pathArray' => $wiki->getPathArray(),
+            'isRootSection' => $isRootSection
         );
     }
 
@@ -276,34 +286,48 @@ class WikiController extends Controller{
             $sectionForm = $form->getData();
             $em = $this->getDoctrine()->getManager();
             $unitOfWork = $em->getUnitOfWork();
+            $unitOfWork->computeChangeSets();
             $changeSet = $unitOfWork->getEntityChangeSet($sectionForm);
+            $flashBag = $this->get('session')->getFlashBag();
+            $translator = $this->get('translator');
 
-            $position = $form->get('position')->getData();
-            if ($isRootSection || $position == $sectionId) {
-                $em->persist($sectionForm);
-                $em->flush();
+            $position = $sectionId;
+            if (!$isRootSection) {
+                $position = $form->get('position')->getData();
             }
-            else {
-                $isBrother = $form->get('brother')->getData();
-                $oldParent = $section->getParent();
-                $oldLeft = $section->getLeft();
-                $positionSection = $this->getSection($wiki, $position);
-                if ($isBrother==true) {
-                    $repo->persistAsNextSiblingOf($sectionForm, $positionSection);
-                    $newParent = $positionSection->getParent();
+            try {
+                if ($isRootSection || $position == $sectionId) {
+                    $em->persist($sectionForm);
+                    $em->flush();
                 }
                 else {
-                    $repo->persistAsFirstChildOf($sectionForm, $positionSection);
-                    $newParent = $positionSection;
+                    $isBrother = $form->get('brother')->getData();
+                    $oldParent = $section->getParent();
+                    $oldLeft = $section->getLeft();
+                    $positionSection = $this->getSection($wiki, $position);
+                    if ($isBrother==true) {
+                        $repo->persistAsNextSiblingOf($sectionForm, $positionSection);
+                        $newParent = $positionSection->getParent();
+                    }
+                    else {
+                        $repo->persistAsFirstChildOf($sectionForm, $positionSection);
+                        $newParent = $positionSection;
+                    }
+                    $em->flush();
+
+                    $moveChangeSet = $this->getMoveEventChangeSet($oldParent, $oldLeft, $newParent, $sectionForm);        
+                    $this->dispatchSectionMoveEvent($wiki, $section, $moveChangeSet);
+                }           
+
+                if ($changeSet) {
+                    $this->dispatchSectionUpdateEvent($wiki, $sectionForm, $changeSet);
                 }
-                $em->flush();
 
-                $moveChangeSet = $this->getMoveEventChangeSet($section, $oldLeft, $newParent, $sectionForm);        
-                $this->dispatchSectionMoveEvent($wiki, $section, $changeSet);
-            }           
-
-            $this->dispatchSectionUpdateEvent($wiki, $sectionForm, $changeSet);
-
+                $flashBag->add('success', $translator->trans('icap_wiki_section_update_success', array(), 'icap_wiki'));
+            } catch (\Exception $exception) {
+                $flashBag->add('error', $translator->trans('icap_wiki_section_update_error', array(), 'icap_wiki'));
+            }
+            
             return $this->redirect(
                 $this->generateUrl(
                     'icap_wiki_view',
@@ -318,7 +342,8 @@ class WikiController extends Controller{
             'wiki' => $wiki,
             'section' => $section,
             'form' => $form->createView(),
-            'pathArray' => $wiki->getPathArray()
+            'pathArray' => $wiki->getPathArray(),
+            'isRootSection' => $isRootSection
         );
     }
 
@@ -348,30 +373,39 @@ class WikiController extends Controller{
         $oldParent = $section->getParent();
         $oldLeft = $section->getLeft();
         $isBrother = $isBrother==='true';
+        $flashBag = $this->get('session')->getFlashBag();
+        $translator = $this->get('translator');
         
         $referenceSection = null;
         
-        if ($referenceSectionId > 0) {
-            $referenceSection = $this->getSection($wiki, $referenceSectionId);
-        }
-        else {
-            $referenceSection = $wiki->getRoot();
-            $isBrother = false;
+        try {
+            if ($referenceSectionId > 0) {
+                $referenceSection = $this->getSection($wiki, $referenceSectionId);
+            }
+            else {
+                $referenceSection = $wiki->getRoot();
+                $isBrother = false;
+            }
+
+            if ($isBrother===true) {
+                $repo->persistAsNextSiblingOf($section, $referenceSection);
+                $newParent = $referenceSection->getParent();
+            }
+            else {
+                $repo->persistAsFirstChildOf($section, $referenceSection);
+                $newParent = $referenceSection;            
+            }
+            $em->flush();
+                    
+            $changeSet = $this->getMoveEventChangeSet($oldParent, $oldLeft, $newParent, $section);
+            $this->dispatchSectionMoveEvent($wiki, $section, $changeSet);
+
+            $flashBag->add('success', $translator->trans('icap_wiki_section_move_success', array(), 'icap_wiki'));
+        } catch (\Exception $exception) {
+            $flashBag->add('error', $translator->trans('icap_wiki_section_move_error', array(), 'icap_wiki'));
         }
 
-        if ($isBrother===true) {
-            $repo->persistAsNextSiblingOf($section, $referenceSection);
-            $newParent = $referenceSection->getParent();
-        }
-        else {
-            $repo->persistAsFirstChildOf($section, $referenceSection);
-            $newParent = $referenceSection;            
-        }
-        $em->flush();
-        //$em->refresh($section);
         
-        $changeSet = $this->getMoveEventChangeSet($oldParent, $oldLeft, $newParent, $section);        
-        $this->dispatchSectionMoveEvent($wiki, $section, $changeSet);
 
         return new Response($this->generateUrl(
                     'icap_wiki_view',
@@ -454,17 +488,27 @@ class WikiController extends Controller{
 
         if($form->isValid()){
             $em = $this->getDoctrine()->getManager();
-            if ($form->get('children')->getData() == false) {
-                $repo = $em->getRepository('IcapWikiBundle:Section');
-                $repo->removeFromTree($section);
-                $em->clear();
-            }
-            else {
-                $em->remove($section);
-            }
-            $em->flush();
+            $flashBag = $this->get('session')->getFlashBag();
+            $translator = $this->get('translator');
 
-            $this->dispatchSectionDeleteEvent($wiki, $section);
+            try{
+                if ($form->get('children')->getData() == false) {
+                    $repo = $em->getRepository('IcapWikiBundle:Section');
+                    $repo->removeFromTree($section);
+                    $em->clear();
+                }
+                else {
+                    $em->remove($section);
+                }
+                $em->flush();
+
+                $this->dispatchSectionDeleteEvent($wiki, $section);
+
+                $flashBag->add('success', $translator->trans('icap_wiki_section_delete_success', array(), 'icap_wiki'));
+            } catch (\Exception $exception) {
+                $flashBag->add('error', $translator->trans('icap_wiki_section_delete_error', array(), 'icap_wiki'));
+            }
+            
 
             return $this->redirect(
                 $this->generateUrl(
@@ -539,18 +583,15 @@ class WikiController extends Controller{
          * If section's parent has changed, return old and new parent
          * Otherwise return old and new left to mark move up or down in the same parent
          */
-        $changeSet = array();
-        if ($newParent->getId() !== $oldParent->getId()) {
-            $changeSet = array(
-                'parentId' => array($oldParent->getId(), $newParent->getId()),
-                'parentName' => array($oldParent->getName(), $newParent->getName())
-            );
-        }
-        else {
-            $newLeft = $section->getLeft();
-            $changeSet = array(
-                'left' => array($oldLeft, $newLeft);
-            );
-        }
+        $newLeft = $section->getLeft();
+        $rootId = $section->getRoot();
+        $changeSet = array(
+            'parentId' => array($oldParent->getId(), $newParent->getId()),
+            'parentName' => array($oldParent->getTitle(), $newParent->getTitle()),
+            'isParentRoot' => array($oldParent->getId()==$rootId, $newParent->getId()==$rootId),
+            'left' => array($oldLeft, $newLeft)
+        );
+        
+        return $changeSet;
     }
 }

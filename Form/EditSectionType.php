@@ -16,13 +16,24 @@ class EditSectionType extends AbstractType
 
         if (!$isRootSection) {
             $forbidenIds = array($sectionId);
-            foreach ($options['sections'] as $section){
+            $prefixesArray = array();
+            $childrens = array();
+            foreach ($options['sections'] as $index=>$section){
+                if ($childrens[$section->getParent()->getId()] !== null) {
+                    $childrens[$section->getParent()->getId()] += 1;
+                }
+                else {
+                    $childrens[$section->getParent()->getId()] = 1;
+                }
+                $prefixe = $prefixesArray[$section->getParent()->getId()].$childrens[$section->getParent()->getId()];
                 if (!in_array($section->getParent()->getId(), $forbidenIds)) {
-                    $choices[$section->getId()] = $section->getTitle();
+                    $choices[$section->getId()] = $prefixe." ".$section->getTitle();
                 }
                 else {
                     array_push($forbidenIds, $section->getId());
                 }
+
+                $prefixesArray[$section->getId()] = $prefixe.".";
             }
 
             $builder

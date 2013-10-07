@@ -5,7 +5,7 @@ div.panel-wiki {
 }
 
 .wiki-actions {
-	font-size: 14px;
+	font-size: 12px;
 }
 
 .wiki-page-header {
@@ -21,19 +21,32 @@ div.panel-wiki {
 }
 
 /*Wiki contents*/
-div.wiki-contents-inner {float:left; min-width: 20%;}
-div.wiki-contents ul { list-style-type: none; padding-left: 10px;}
-div.wiki-contents ul#wiki-contents-list{padding-left: 0px;}
-div.wiki-contents-title {text-align: center; margin-bottom:5px;}
-ul.sortable-list.sortable-enable li, ul.sortable-list.sortable-enable li a {cursor: move !important;}
+div.wiki-contents-inner { float:left; min-width: 20%; }
+div.wiki-contents ul { list-style-type: none; padding-left: 10px; }
+div.wiki-contents ul#wiki-contents-list{padding-left: 0px; }
+div.wiki-contents-title { text-align: center; margin-bottom:5px; }
+ul.sortable-list.sortable-enable li, ul.sortable-list.sortable-enable li a { cursor: move !important; }
+ul#wiki-contents-list li.invisible-wiki-content a { color:#999; }
+
 
 /*Wiki sections*/
-div.wiki-sections ul { list-style-type: none; padding-left: 0;}
-div.subsection-header h3, div.subsection-header h4 {font-weight: 800 !important; margin-bottom: 5px;}
+div.wiki-sections ul { list-style-type: none; padding-left: 0; }
+div.subsection-header h3, div.subsection-header h4 { font-weight: 800 !important; margin-bottom: 5px; }
 div.subsection-header h3 {margin-top: 15px;}
 div.subsection-header h4 {margin-top: 10px;}
 div.wiki-sections div.page-header {padding-bottom: 0px; margin:25px 0 10px 0;}
 div.wiki-sections div.page-header h2 {margin-bottom:2px;}
+div.wiki-sections li.invisible-wiki-section { color: #aaa; }
 
-/*Delete form*/
+div.wiki-sections li.invisible-wiki-section div.wiki-section-text,  
+div.wiki-sections li.invisible-wiki-section div.wiki-section-text *
+{ color: #aaa!important; }
+
+span.invisible-section-text {font-style: italic;}
+
+/*Delete section form*/
 .icap-wiki-delete-section-message {margin: 10px 0 20px 0; font-size: 16px;}
+
+
+/*Move section form*/
+.move-wiki-section-header {margin: 50px 0 20px; font-size: 20px;}

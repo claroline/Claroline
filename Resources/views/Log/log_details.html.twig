@@ -5,7 +5,7 @@
     {% if constant('Icap\\WikiBundle\\Event\\Log\\LogSectionCreateEvent::ACTION') == log.action %}
         {% include 'IcapWikiBundle:Log:log_details_section_create.html.twig' %}
     {% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogSectionMoveEvent::ACTION') == log.action %}
-        {% include 'IcapWikiBundle:Log:log_details_section_read.html.twig' %}
+        {% include 'IcapWikiBundle:Log:log_details_section_move.html.twig' %}
     {% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogSectionUpdateEvent::ACTION') == log.action %}
         {% include 'IcapWikiBundle:Log:log_details_section_update.html.twig' %}
     {% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogSectionDeleteEvent::ACTION') == log.action %}

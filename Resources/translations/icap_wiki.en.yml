@@ -10,6 +10,7 @@ icap_wiki_delete_section_type_children: 'Do you also want to delete its subsecti
 delete_section: 'Delete section'
 create_new_section: 'Create new section'
 add_new_subsection: 'Add new subsection'
+move_section: 'Move section'
 back: 'Back'
 back_to_wiki: 'Back to wiki'
 edit: 'Edit'
@@ -19,3 +20,12 @@ Confirm: 'Confirm'
 Cancel: 'Cancel'
 wiki_contents: 'Contents'
 delete_confirmation: 'Do you really want to delete "%sectionTitle%" section?'
+icap_wiki_section_add_success: "Section was created successfully"
+icap_wiki_section_add_error: "Error during section creation"
+icap_wiki_section_update_success: "Section was updated successfully"
+icap_wiki_section_update_error: "Error during section update"
+icap_wiki_section_move_success: "Section was moved successfully"
+icap_wiki_section_move_error: "Error during section move"
+icap_wiki_section_delete_success: "Section was deleted successfully"
+icap_wiki_section_delete_error: "Error during section deletion"
+
