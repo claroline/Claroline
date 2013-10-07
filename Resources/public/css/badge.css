@@ -109,6 +109,9 @@ ul.user_badges > li .close {
   margin-bottom: 0;
   padding: 0;
 }
+.panel-body {
+  padding-left: 10px;
+}
 table.no_margin {
   margin: 0;
 }

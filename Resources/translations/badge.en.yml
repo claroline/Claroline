@@ -1,6 +1,7 @@
 actions: 'Actions'
 badges: 'Badges'
 badge: 'Badge'
+workspace_badges: "Workspace badges"
 day: 'day'
 week: 'week'
 month: 'month'

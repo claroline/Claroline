@@ -60,57 +60,8 @@
     </div>
     {% endif %}
 
-    <ul class="nodes badge_list">
-        {% for badge in pager %}
-        <li class="node-thumbnail node">
-            <a href="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}" title="{{ badge.name(language) }}" class="thumbnail">
-                <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name(language) }}" />
-            </a>
-            <div class="dropdown">
-                <a href="#" class="dropdown-toggle name dropdown-thumbnail" role="button" data-toggle="dropdown" >
-                    <div class="node-name">{{ badge.name(language) }} <i class="icon-caret-down"></i></div>
-                </a>
-                <ul class="dropdown-menu" role="menu">
-                    <li>
-                        <a href="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}" class="node-menu-action">
-                            {{ 'view'|trans({}, 'platform') }}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}#!edit" class="node-menu-action">
-                            {{ 'edit'|trans({}, 'platform') }}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path('claro_admin_badges_delete', {'id': badge.id}) }}" class="node-menu-action confirm" data-confirm-title="{{ 'badge_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name(language)}) }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">
-                            {{ 'delete'|trans({}, 'platform') }}
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </li>
-        {% endfor %}
-        <li class="node-thumbnail node">
-            <a href="{{ path('claro_admin_badges_add') }}" title="{{ 'add_badge'|trans({}, 'badge') }}" class="add_button btn btn-lg col-md-12">
-                <img class="badge_image" src="{{ asset('bundles/clarolinecore/images/add-badge.png') }}" alt="{{ 'add_badge'|trans }}" />
-            </a>
-        </li>
-    </ul>
+    {{ render(controller('ClarolineCoreBundle:Badge/Badge:list', {'parameters': parameters})) }}
 
-    {% if pager.haveToPaginate %}
-    <div>
-        {{
-            pagerfanta(
-                pager,
-                'twitter_bootstrap_translated',
-                {
-                    'proximity' : 1,
-                    'routeName': 'claro_admin_badges'
-                }
-            )
-        }}
-    </div>
-    {%  endif %}
 {% endblock %}
 
 {% block javascripts %}

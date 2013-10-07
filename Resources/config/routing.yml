@@ -236,3 +236,7 @@ claro_badge_front:
 claro_badge_profil:
     resource: "@ClarolineCoreBundle/Controller/Badge/ProfileController.php"
     type:     annotation
+
+claro_badge_workspace_tool:
+    resource: "@ClarolineCoreBundle/Controller/Badge/Tool/WorkspaceController.php"
+    type:     annotation

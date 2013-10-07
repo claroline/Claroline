@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 
 class BadgeRepository extends EntityRepository
 {
@@ -59,21 +60,17 @@ class BadgeRepository extends EntityRepository
      *
      * @param bool $executeQuery
      *
-     * @return Query|array
+     * @return QueryBuilder|array
      */
     public function findOrderedByName($locale = null, $executeQuery = true)
     {
-        $query = $this->getEntityManager()
-            ->createQuery(
-                'SELECT b, t
-                FROM ClarolineCoreBundle:Badge\Badge b
-                JOIN b.translations t
-                WHERE t.locale = :locale
-                ORDER BY t.name ASC'
-            )
+        $queryBuilder = $this->createQueryBuilder('badge')
+            ->join('badge.translations', 'bt')
+            ->where('bt.locale = :locale')
+            ->orderBy('bt.name', 'ASC')
             ->setParameter('locale', $locale);
 
-        return $executeQuery ? $query->getResult(): $query;
+        return $executeQuery ? $queryBuilder->getQuery()->getResult() : $queryBuilder;
     }
 
     /**

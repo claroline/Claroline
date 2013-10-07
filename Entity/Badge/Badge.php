@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Entity\Badge;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -87,6 +88,14 @@ class Badge
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\BadgeRule", mappedBy="badge", cascade={"persist"})
      */
     protected $badgeRules;
+
+    /**
+     * @var AbstractWorkspace
+     *
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
+     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
+     */
+    protected $workspace;
 
     /**
      * @var ArrayCollection|BadgeTranslation[]
@@ -452,6 +461,18 @@ class Badge
     public function getBadgeRules()
     {
         return $this->badgeRules;
+    }
+
+    /**
+     * @param AbstractWorkspace $workspace
+     *
+     * @return Badge
+     */
+    public function setWorkspace(AbstractWorkspace $workspace)
+    {
+        $this->workspace = $workspace;
+
+        return $this;
     }
 
     /**

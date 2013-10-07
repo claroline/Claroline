@@ -39,32 +39,23 @@ class AdminController extends Controller
      */
     public function listAction($page)
     {
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-
-        /** @var \Claroline\CoreBundle\Repository\BadgeRepository $badgeRepository */
-        $badgeRepository = $this->get('claroline.repository.badge');
-
-        /** @var Badge[] $badges */
-        $badgeQuery = $badgeRepository->findOrderedByName($platformConfigHandler->getParameter('locale_language'), false);
-
-        $language = $platformConfigHandler->getParameter('locale_language');
-
         $badgeClaims = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')->findAll();
 
-        $adapter = new DoctrineORMAdapter($badgeQuery);
-        $pager   = new PagerFanta($adapter);
-
-        try {
-            $pager->setCurrentPage($page);
-        } catch (NotValidCurrentPageException $exception) {
-            throw new NotFoundHttpException();
-        }
-
+        $parameters = array(
+            'page'             => $page,
+            'add_link'         => 'claro_admin_badges_add',
+            'edit_link'        => array(
+                'url'    => 'claro_admin_badges_edit',
+                'suffix' => '#!edit'
+            ),
+            'delete_link'      => 'claro_admin_badges_delete',
+            'view_link'        => 'claro_admin_badges_edit',
+            'current_link'     => 'claro_admin_badges',
+            'route_parameters' => array()
+        );
         return array(
-            'pager'       => $pager,
             'badgeClaims' => $badgeClaims,
-            'language'    => $language
+            'parameters'  => $parameters
         );
     }
 
