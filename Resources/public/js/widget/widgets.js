@@ -1,0 +1,312 @@
+(function () {
+    'use strict';
+
+    var currentElement;
+    var currentWidgetHomeTabConfigId;
+    var currentWidgetInstanceId;
+    var currentWidgetViewElement;
+    var currentWidgetEditionElement;
+    var homeTabType = $('#hometab-type-div').attr('hometab-type-value');
+
+    if (homeTabType === 'workspace') {
+        var workspaceId = $('#workspace-id-div').attr('workspace-id');
+    }
+
+    function openWidgetModal(content)
+    {
+        $('#widget-modal-body').html(content);
+        $('#widget-modal-box').modal('show');
+    }
+
+    function closeWidgetModal()
+    {
+        $('#widget-modal-box').modal('hide');
+        $('#widget-modal-body').empty();
+    }
+
+    $('.widget-delete-btn').click(function () {
+        currentElement = $(this).parent().parent().parent().parent();
+        currentWidgetHomeTabConfigId = $(this).parent().attr('widget-hometab-config-id');
+        $('#delete-widget-hometab-validation-box').modal('show');
+    });
+
+    // Click on OK button of delete confirmation modal
+    $('#delete-widget-hometab-confirm-ok').click(function () {
+        var route;
+
+        if (homeTabType === 'desktop') {
+            route = Routing.generate(
+                'claro_desktop_widget_home_tab_config_delete',
+                {'widgetHomeTabConfigId': currentWidgetHomeTabConfigId}
+            );
+        } else {
+            route = Routing.generate(
+                'claro_workspace_widget_home_tab_config_delete',
+                {
+                    'widgetHomeTabConfigId': currentWidgetHomeTabConfigId,
+                    'workspaceId': workspaceId
+                }
+            );
+        }
+
+        $.ajax({
+            url: route,
+            type: 'DELETE',
+            success: function () {
+                currentElement.remove();
+                $('#delete-widget-hometab-validation-box').modal('hide');
+            }
+        });
+    });
+
+    $('.widget-visibility-btn').on('click', function () {
+        var visibilityBtn = $(this);
+        currentElement = visibilityBtn.parent().parent().parent().parent();
+        currentWidgetHomeTabConfigId = visibilityBtn.parent().attr('widget-hometab-config-id');
+        var visible = visibilityBtn.attr('visiblility-value');
+        var newVisible = (visible === 'visible') ? 'invisible' : 'visible';
+        var route;
+
+        if (homeTabType === 'desktop') {
+            route = Routing.generate(
+                'claro_desktop_widget_home_tab_config_change_visibility',
+                {'widgetHomeTabConfigId': currentWidgetHomeTabConfigId}
+            );
+        } else {
+            route = Routing.generate(
+                'claro_workspace_widget_home_tab_config_change_visibility',
+                {
+                    'widgetHomeTabConfigId': currentWidgetHomeTabConfigId,
+                    'workspaceId': workspaceId
+                }
+            );
+        }
+
+        $.ajax({
+            url: route,
+            type: 'POST',
+            success: function () {
+                if (newVisible === 'visible') {
+                    visibilityBtn.attr('visiblility-value', 'visible')
+                    visibilityBtn.removeClass('icon-eye-close');
+                    visibilityBtn.addClass('icon-eye-open');
+                    visibilityBtn.parent().parent().parent().parent().removeClass('toggle-visible');
+                } else {
+                    visibilityBtn.attr('visiblility-value', 'invisible')
+                    visibilityBtn.removeClass('icon-eye-open');
+                    visibilityBtn.addClass('icon-eye-close');
+                    visibilityBtn.parent().parent().parent().parent().addClass('toggle-visible');
+                }
+            }
+        });
+    });
+
+    $('#widgets-list-panel').on('click', '.widget-order-up', function () {
+        currentElement = $(this).parent().parent().parent().parent().parent();
+        currentWidgetHomeTabConfigId = $(this).parent().parent().attr('widget-hometab-config-id');
+        var route;
+
+        if (homeTabType === 'desktop') {
+            route = Routing.generate(
+                'claro_desktop_widget_home_tab_config_change_order',
+                {
+                    'widgetHomeTabConfigId': currentWidgetHomeTabConfigId,
+                    'direction': -1
+                }
+            );
+        } else {
+            route = Routing.generate(
+                'claro_workspace_widget_home_tab_config_change_order',
+                {
+                    'widgetHomeTabConfigId': currentWidgetHomeTabConfigId,
+                    'workspaceId': workspaceId,
+                    'direction': -1
+                }
+            );
+        }
+
+        $.ajax({
+            url: route,
+            type: 'POST',
+            success: function (status) {
+                if (status === '-1') {
+                    var previousSibling = currentElement.prev();
+                    previousSibling.before(currentElement);
+                    var currentOrderBtns = currentElement.find('.widget-order-btn-group');
+                    var previousOrderBtns = previousSibling.find('.widget-order-btn-group');
+                    var currentHtml = currentOrderBtns.html();
+                    var previousHtml = previousOrderBtns.html();
+                    currentOrderBtns.html(previousHtml);
+                    previousOrderBtns.html(currentHtml);
+                }
+            }
+        });
+    });
+
+    $('#widgets-list-panel').on('click', '.widget-order-down', function () {
+        currentElement = $(this).parent().parent().parent().parent().parent();
+        currentWidgetHomeTabConfigId = $(this).parent().parent().attr('widget-hometab-config-id');
+        var route;
+
+        if (homeTabType === 'desktop') {
+            route = Routing.generate(
+                'claro_desktop_widget_home_tab_config_change_order',
+                {
+                    'widgetHomeTabConfigId': currentWidgetHomeTabConfigId,
+                    'direction': 1
+                }
+            );
+        } else {
+            route = Routing.generate(
+                'claro_workspace_widget_home_tab_config_change_order',
+                {
+                    'widgetHomeTabConfigId': currentWidgetHomeTabConfigId,
+                    'workspaceId': workspaceId,
+                    'direction': 1
+                }
+            );
+        }
+
+        $.ajax({
+            url: route,
+            type: 'POST',
+            success: function (status) {
+                if (status === '1') {
+                    var nextSibling = currentElement.next();
+                    nextSibling.after(currentElement);
+                    var currentOrderBtns = currentElement.find('.widget-order-btn-group');
+                    var nextOrderBtns = nextSibling.find('.widget-order-btn-group');
+                    var currentHtml = currentOrderBtns.html();
+                    var nextHtml = nextOrderBtns.html();
+                    currentOrderBtns.html(nextHtml);
+                    nextOrderBtns.html(currentHtml);
+                }
+            }
+        });
+    });
+
+    $('.widget-instance-rename').on('click', function () {
+        currentElement = $(this).parent().parent().parent().parent();
+        currentWidgetInstanceId = $(this).parent().attr('widget-instance-id');
+        var route;
+
+        if (homeTabType === 'desktop') {
+            route = Routing.generate(
+                'claro_desktop_widget_name_edit_form',
+                {'widgetInstanceId': currentWidgetInstanceId}
+            );
+        } else {
+            route = Routing.generate(
+                'claro_workspace_widget_name_edit_form',
+                {
+                    'widgetInstanceId': currentWidgetInstanceId,
+                    'workspaceId': workspaceId
+                }
+            );
+        }
+
+        $.ajax({
+            url: route,
+            type: 'GET',
+            success: function (datas) {
+                openWidgetModal(datas);
+            }
+        });
+    });
+
+    // Click on OK button of the Rename Widget form modal
+    $('body').on('click', '#form-widget-ok-btn', function (e) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+
+        var form = document.getElementById('widget-instance-form');
+        var action = form.getAttribute('action');
+        var formData = new FormData(form);
+
+        $.ajax({
+            url: action,
+            data: formData,
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            complete: function(jqXHR) {
+                switch (jqXHR.status) {
+                    case 204:
+                        var value = $('#widget_display_form_name').val();
+                        currentElement.find('.widget-instance-name').html(value);
+                        closeWidgetModal();
+                        break;
+                    default:
+                        $('#widget-modal-body').html(jqXHR.responseText);
+                }
+            }
+        });
+    });
+
+    // Click on CANCEL button of the Rename Widget form modal
+    $('body').on('click', '#form-widget-cancel-btn', function () {
+        closeWidgetModal();
+    });
+
+    $('.widget-instance-config').on('click', function () {
+        currentElement = $(this).parent().parent().parent().parent();
+        currentWidgetInstanceId = $(this).parent().attr('widget-instance-id');
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_widget_configuration',
+                {'widgetInstance': currentWidgetInstanceId}
+            ),
+            type: 'GET',
+            success: function (datas) {
+                currentWidgetViewElement = currentElement.find('.widget-instance-view');
+                currentWidgetEditionElement = currentElement.find('.widget-instance-edition');
+                currentWidgetViewElement.addClass('hide');
+                currentWidgetEditionElement.html(datas);
+                currentWidgetEditionElement.removeClass('hide');
+            }
+        });
+    });
+
+    // Click on OK button of the configuration Widget form modal
+    $('body').on(
+        'submit',
+        '#widgets-list-panel > .panel > .collapse-widget > .widget-instance-edition > form',
+        function(e) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+
+            var form = e.currentTarget;
+            var action = $(e.currentTarget).attr('action');
+            var formData = new FormData(form);console.log(formData);
+
+            $.ajax({
+                url: action,
+                data: formData,
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                success: function() {
+                    window.location.reload();
+                }
+            });
+        }
+    );
+
+    // Click on CANCEL button of the configuration Widget form modal
+    $('body').on(
+        'click',
+        '#widgets-list-panel > .panel > .collapse-widget > .widget-instance-edition > form > .panel-footer > a > button',
+        function (e) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            currentWidgetEditionElement.addClass('hide');
+            currentWidgetEditionElement.empty();
+            currentWidgetViewElement.removeClass('hide');
+        }
+    );
+
+    $('.add-widget-instance').on('click', function () {
+        alert('add widget instance');
+    });
+})();

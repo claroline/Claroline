@@ -345,6 +345,7 @@ remove_user_confirm_message: Êtes-vous sûr de vouloir supprimer cet utilisateu
 remove_user_s_confirm_message: Êtes-vous sûr de vouloir supprimer ces %count% utilisateurs?
 rename: Renommer
 rename_tool: 'Renommage d''un outil'
+rename_widget_instance: 'Renommage du Widget'
 reset: Réinitialiser
 reset_pwd: 'Réinitialisation de votre mot de passe'
 reset_pwd_form_plainPassword_first: 'Nouveau mot de passe'

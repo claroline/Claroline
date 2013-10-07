@@ -338,17 +338,18 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "desktop/user/home_tab/create/form",
-     *     name="claro_user_desktop_home_tab_create_form"
+     *     "desktop/home_tab/create/form",
+     *     name="claro_desktop_home_tab_create_form",
+     *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
-     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:userDesktopHomeTabCreateForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabCreateForm.html.twig")
      *
      * Displays the homeTab form.
      *
      * @return Response
      */
-    public function userDesktopHomeTabCreateFormAction()
+    public function desktopHomeTabCreateFormAction()
     {
         $this->checkUserAccess();
 
@@ -356,24 +357,24 @@ class HomeController extends Controller
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
 
         return array(
-            'form' => $form->createView(),
-            'tool' => $this->getHomeTool()
+            'form' => $form->createView()
         );
     }
 
     /**
      * @EXT\Route(
-     *     "desktop/user/home_tab/create",
-     *     name="claro_user_desktop_home_tab_create"
+     *     "desktop/home_tab/create",
+     *     name="claro_desktop_home_tab_create",
+     *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:userDesktopHomeTabCreateForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabCreateForm.html.twig")
      *
      * Create a new homeTab.
      *
      * @return Response
      */
-    public function userDesktopHomeTabCreateAction()
+    public function desktopHomeTabCreateAction()
     {
         $this->checkUserAccess();
 
@@ -405,38 +406,33 @@ class HomeController extends Controller
             }
             $this->homeTabManager->insertHomeTabConfig($homeTabConfig);
 
-            return $this->redirect(
-                $this->generateUrl('claro_desktop_home_tab_properties')
-            );
+            return new Response('success', 201);
         }
 
-        return array(
-            'form' => $form->createView(),
-            'tool' => $this->getHomeTool()
-        );
+        return array('form' => $form->createView());
     }
 
     /**
      * @EXT\Route(
-     *     "desktop/user/home_tab/{homeTabConfigId}/edit/form",
-     *     name="claro_user_desktop_home_tab_edit_form"
+     *     "desktop/home_tab/{homeTabId}/edit/form",
+     *     name="claro_desktop_home_tab_edit_form",
+     *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
-     *     "homeTabConfig",
-     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
-     *     options={"id" = "homeTabConfigId", "strictId" = true}
+     *     "homeTab",
+     *     class="ClarolineCoreBundle:Home\HomeTab",
+     *     options={"id" = "homeTabId", "strictId" = true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:userDesktopHomeTabEditForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabEditForm.html.twig")
      *
      * Displays the homeTab edition form.
      *
      * @return Response
      */
-    public function userDesktopHomeTabEditFormAction(HomeTabConfig $homeTabConfig)
+    public function desktopHomeTabEditFormAction(HomeTab $homeTab)
     {
         $this->checkUserAccess();
-        $homeTab = $homeTabConfig->getHomeTab();
         $user = $this->securityContext->getToken()->getUser();
         $this->checkUserAccessForHomeTab($homeTab, $user);
 
@@ -444,34 +440,31 @@ class HomeController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'tool' => $this->getHomeTool(),
-            'homeTabConfig' => $homeTabConfig,
-            'homeTab' => $homeTab,
-            'homeTabName' => $homeTab->getName()
+            'homeTab' => $homeTab
         );
     }
 
     /**
      * @EXT\Route(
-     *     "desktop/user/home_tab/{homeTabConfigId}/{homeTabName}/edit",
-     *     name="claro_user_desktop_home_tab_edit"
+     *     "desktop/home_tab/{homeTabId}/edit",
+     *     name="claro_desktop_home_tab_edit",
+     *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
-     *     "homeTabConfig",
-     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
-     *     options={"id" = "homeTabConfigId", "strictId" = true}
+     *     "homeTab",
+     *     class="ClarolineCoreBundle:Home\HomeTab",
+     *     options={"id" = "homeTabId", "strictId" = true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:userDesktopHomeTabEditForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabEditForm.html.twig")
      *
      * Edit the homeTab.
      *
      * @return Response
      */
-    public function userDesktopHomeTabEditAction(HomeTabConfig $homeTabConfig, $homeTabName)
+    public function desktopHomeTabEditAction(HomeTab $homeTab)
     {
         $this->checkUserAccess();
-        $homeTab = $homeTabConfig->getHomeTab();
         $user = $this->securityContext->getToken()->getUser();
         $this->checkUserAccessForHomeTab($homeTab, $user);
 
@@ -481,24 +474,19 @@ class HomeController extends Controller
         if ($form->isValid()) {
             $this->homeTabManager->insertHomeTab($homeTab);
 
-            return $this->redirect(
-                $this->generateUrl('claro_desktop_home_tab_properties')
-            );
+            return new Response('success', 204);
         }
 
         return array(
             'form' => $form->createView(),
-            'tool' => $this->getHomeTool(),
-            'homeTabConfig' => $homeTabConfig,
-            'homeTab' => $homeTab,
-            'homeTabName' => $homeTabName
+            'homeTab' => $homeTab
         );
     }
 
     /**
      * @EXT\Route(
-     *     "desktop/user/home_tab/{homeTabId}/{tabOrder}/delete",
-     *     name="claro_user_desktop_home_tab_delete",
+     *     "desktop/home_tab/{homeTabId}/{tabOrder}/delete",
+     *     name="claro_desktop_home_tab_delete",
      *     options = {"expose"=true}
      * )
      * @EXT\Method("DELETE")
@@ -512,7 +500,7 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function userDesktopHomeTabDeleteAction(HomeTab $homeTab, $tabOrder)
+    public function desktopHomeTabDeleteAction(HomeTab $homeTab, $tabOrder)
     {
         $this->checkUserAccess();
         $user = $this->securityContext->getToken()->getUser();
@@ -525,8 +513,9 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/tab/{tabId}",
-     *     name="claro_display_desktop_home_tabs"
+     *     "/tab/{tabId}/{withConfig}",
+     *     name="claro_display_desktop_home_tabs",
+     *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      *
@@ -536,20 +525,44 @@ class HomeController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function displayDesktopHomeTabsAction($tabId)
+    public function displayDesktopHomeTabsAction($tabId, $withConfig = 0)
     {
         $user = $this->securityContext->getToken()->getUser();
-        $adminHomeTabConfigsTemp = $this->homeTabManager
-            ->generateAdminHomeTabConfigsByUser($user);
         $adminHomeTabConfigs = $this->homeTabManager
-            ->filterVisibleHomeTabConfigs($adminHomeTabConfigsTemp);
+            ->generateAdminHomeTabConfigsByUser($user);
         $userHomeTabConfigs = $this->homeTabManager
-            ->getVisibleDesktopHomeTabConfigsByUser($user);
+            ->getDesktopHomeTabConfigsByUser($user);
+        $homeTabId = $tabId;
+
+        if ($homeTabId == -1) {
+            foreach ($adminHomeTabConfigs as $adminHomeTabConfig) {
+                if ($adminHomeTabConfig->isVisible() || ($withConfig === 1)) {
+                    $homeTabId = $adminHomeTabConfig->getHomeTab()->getId();
+                    break;
+                }
+            }
+        }
+        if ($homeTabId == -1) {
+            foreach ($userHomeTabConfigs as $userHomeTabConfig) {
+                if ($userHomeTabConfig->isVisible() || ($withConfig === 1)) {
+                    $homeTabId = $userHomeTabConfig->getHomeTab()->getId();
+                    break;
+                }
+            }
+        }
+        if (($withConfig == 1) && ($homeTabId == 0)) {
+            $userHomeTabConfig = end($userHomeTabConfigs);
+
+            if ($userHomeTabConfig !== false) {
+                $homeTabId = $userHomeTabConfig->getHomeTab()->getId();
+            }
+        }
 
         return array(
             'adminHomeTabConfigs' => $adminHomeTabConfigs,
             'userHomeTabConfigs' => $userHomeTabConfigs,
-            'tabId' => $tabId
+            'tabId' => $homeTabId,
+            'withConfig' => $withConfig
         );
     }
 
@@ -600,7 +613,8 @@ class HomeController extends Controller
     /**
      * @EXT\Route(
      *     "workspace/{workspaceId}/user/home_tab/create/form",
-     *     name="claro_user_workspace_home_tab_create_form"
+     *     name="claro_workspace_home_tab_create_form",
+     *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
@@ -608,30 +622,31 @@ class HomeController extends Controller
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:userWorkspaceHomeTabCreateForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceHomeTabCreateForm.html.twig")
      *
      * Displays the homeTab form.
      *
      * @return Response
      */
-    public function userWorkspaceHomeTabCreateFormAction(AbstractWorkspace $workspace)
+    public function workspaceHomeTabCreateFormAction(AbstractWorkspace $workspace)
     {
         $this->checkWorkspaceAccess($workspace);
 
         $homeTab = new HomeTab();
-        $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
+        $form = $this->formFactory
+            ->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
 
         return array(
             'workspace' => $workspace,
-            'form' => $form->createView(),
-            'tool' => $this->getHomeTool()
+            'form' => $form->createView()
         );
     }
 
     /**
      * @EXT\Route(
-     *     "workspace/{workspaceId}/user/home_tab/create",
-     *     name="claro_user_workspace_home_tab_create"
+     *     "workspace/{workspaceId}/home_tab/create",
+     *     name="claro_workspace_home_tab_create",
+     *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
@@ -639,13 +654,13 @@ class HomeController extends Controller
      *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:userWorkspaceHomeTabCreateForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceHomeTabCreateForm.html.twig")
      *
      * Create a new homeTab.
      *
      * @return Response
      */
-    public function userWorkspaceHomeTabCreateAction(AbstractWorkspace $workspace)
+    public function workspaceHomeTabCreateAction(AbstractWorkspace $workspace)
     {
         $this->checkWorkspaceAccess($workspace);
 
@@ -666,7 +681,8 @@ class HomeController extends Controller
             $homeTabConfig->setLocked(false);
             $homeTabConfig->setVisible(true);
 
-            $lastOrder = $this->homeTabManager->getOrderOfLastWorkspaceHomeTabConfigByWorkspace($workspace);
+            $lastOrder = $this->homeTabManager
+                ->getOrderOfLastWorkspaceHomeTabConfigByWorkspace($workspace);
 
             if (is_null($lastOrder['order_max'])) {
                 $homeTabConfig->setTabOrder(1);
@@ -676,25 +692,20 @@ class HomeController extends Controller
             }
             $this->homeTabManager->insertHomeTabConfig($homeTabConfig);
 
-            return $this->redirect(
-                $this->generateUrl(
-                    'claro_workspace_home_tab_properties',
-                    array('workspaceId' => $workspace->getId())
-                )
-            );
+            return new Response('success', 201);
         }
 
         return array(
             'workspace' => $workspace,
-            'form' => $form->createView(),
-            'tool' => $this->getHomeTool()
+            'form' => $form->createView()
         );
     }
 
     /**
      * @EXT\Route(
-     *     "workspace/{workspaceId}/user/home_tab/{homeTabConfigId}/edit/form",
-     *     name="claro_user_workspace_home_tab_edit_form"
+     *     "workspace/{workspaceId}/home_tab/{homeTabId}/edit/form",
+     *     name="claro_workspace_home_tab_edit_form",
+     *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
@@ -703,23 +714,22 @@ class HomeController extends Controller
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
-     *     "homeTabConfig",
-     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
-     *     options={"id" = "homeTabConfigId", "strictId" = true}
+     *     "homeTab",
+     *     class="ClarolineCoreBundle:Home\HomeTab",
+     *     options={"id" = "homeTabId", "strictId" = true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:userWorkspaceHomeTabEditForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceHomeTabEditForm.html.twig")
      *
      * Displays the homeTab edition form.
      *
      * @return Response
      */
-    public function userWorkspaceHomeTabEditFormAction(
+    public function workspaceHomeTabEditFormAction(
         AbstractWorkspace $workspace,
-        HomeTabConfig $homeTabConfig
+        HomeTab $homeTab
     )
     {
         $this->checkWorkspaceAccess($workspace);
-        $homeTab = $homeTabConfig->getHomeTab();
         $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
 
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
@@ -727,17 +737,14 @@ class HomeController extends Controller
         return array(
             'workspace' => $workspace,
             'form' => $form->createView(),
-            'tool' => $this->getHomeTool(),
-            'homeTabConfig' => $homeTabConfig,
-            'homeTab' => $homeTab,
-            'homeTabName' => $homeTab->getName()
+            'homeTab' => $homeTab
         );
     }
 
     /**
      * @EXT\Route(
-     *     "workspace/{workspaceId}/user/home_tab/{homeTabConfigId}/{homeTabName}/edit/form",
-     *     name="claro_user_workspace_home_tab_edit"
+     *     "workspace/{workspaceId}/home_tab/{homeTabId}/edit/form",
+     *     name="claro_workspace_home_tab_edit"
      * )
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
@@ -746,24 +753,22 @@ class HomeController extends Controller
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
-     *     "homeTabConfig",
-     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
-     *     options={"id" = "homeTabConfigId", "strictId" = true}
+     *     "homeTab",
+     *     class="ClarolineCoreBundle:Home\HomeTab",
+     *     options={"id" = "homeTabId", "strictId" = true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:userWorkspaceHomeTabEditForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceHomeTabEditForm.html.twig")
      *
      * Edit the homeTab.
      *
      * @return Response
      */
-    public function userWorkspaceHomeTabEditAction(
+    public function workspaceHomeTabEditAction(
         AbstractWorkspace $workspace,
-        HomeTabConfig $homeTabConfig,
-        $homeTabName
+        HomeTab $homeTab
     )
     {
         $this->checkWorkspaceAccess($workspace);
-        $homeTab = $homeTabConfig->getHomeTab();
         $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
 
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
@@ -772,28 +777,20 @@ class HomeController extends Controller
         if ($form->isValid()) {
             $this->homeTabManager->insertHomeTab($homeTab);
 
-            return $this->redirect(
-                $this->generateUrl(
-                    'claro_workspace_home_tab_properties',
-                    array('workspaceId' => $workspace->getId())
-                )
-            );
+            return new Response('success', 204);
         }
 
         return array(
             'workspace' => $workspace,
             'form' => $form->createView(),
-            'tool' => $this->getHomeTool(),
-            'homeTabConfig' => $homeTabConfig,
-            'homeTab' => $homeTab,
-            'homeTabName' => $homeTabName
+            'homeTab' => $homeTab
         );
     }
 
     /**
      * @EXT\Route(
-     *     "workspace/{workspaceId}/user/home_tab/{homeTabId}/{tabOrder}/delete",
-     *     name="claro_user_workspace_home_tab_delete",
+     *     "workspace/{workspaceId}home_tab/{homeTabId}/{tabOrder}/delete",
+     *     name="claro_workspace_home_tab_delete",
      *     options = {"expose"=true}
      * )
      * @EXT\Method("DELETE")
@@ -812,7 +809,7 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function userWorkspaceHomeTabDeleteAction(
+    public function workspaceHomeTabDeleteAction(
         AbstractWorkspace $workspace,
         HomeTab $homeTab,
         $tabOrder
@@ -1456,12 +1453,12 @@ class HomeController extends Controller
         $user = $this->securityContext->getToken()->getUser();
         $this->checkUserAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $user);
 
-        $this->homeTabManager->changeOrderWidgetHomeTabConfig(
+        $status = $this->homeTabManager->changeOrderWidgetHomeTabConfig(
             $widgetHomeTabConfig,
             $direction
         );
 
-        return new Response('success', 204);
+        return new Response($status, 200);
     }
 
     /**
@@ -1498,98 +1495,266 @@ class HomeController extends Controller
             $workspace
         );
 
-        $this->homeTabManager->changeOrderWidgetHomeTabConfig(
+        $status = $this->homeTabManager->changeOrderWidgetHomeTabConfig(
             $widgetHomeTabConfig,
             $direction
         );
 
-        return new Response('success', 204);
+        return new Response($status, 200);
     }
 
     /**
      * @EXT\Route(
-     *     "/desktop/widget/name/form/{config}",
-     *     name = "claro_desktop_widget_name_form",
+     *     "/desktop/widget/{widgetInstanceId}/name/edit/form",
+     *     name = "claro_desktop_widget_name_edit_form",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:editWidgetNameForm.html.twig")
+     * @EXT\ParamConverter(
+     *     "widgetInstance",
+     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
+     *     options={"id" = "widgetInstanceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopWidgetNameEditForm.html.twig")
      *
-     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $widgetInstance
      *
      * @return array
      */
-    public function editDesktopWidgetNameFormAction(WidgetInstance $config)
+    public function editDesktopWidgetNameFormAction(WidgetInstance $widgetInstance)
     {
-        $formFactory = $this->get("claroline.form.factory");
-        $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
+        $this->checkUserAccess();
+        $user = $this->securityContext->getToken()->getUser();
+        $this->checkUserAccessForWidgetInstance($widgetInstance, $user);
 
-        return array('form' => $form->createView(), 'config' => $config);
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_WIDGET_CONFIG,
+            array(),
+            $widgetInstance
+        );
+
+        return array(
+            'form' => $form->createView(),
+            'widgetInstance' => $widgetInstance
+        );
     }
 
     /**
      * @EXT\Route(
-     *     "/desktop/widget/name/edit/{config}",
+     *     "/desktop/widget/{widgetInstanceId}/name/edit",
      *     name = "claro_desktop_widget_name_edit",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:editWidgetNameForm.html.twig")
+     * @EXT\ParamConverter(
+     *     "widgetInstance",
+     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
+     *     options={"id" = "widgetInstanceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopWidgetNameEditForm.html.twig")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @return array
      */
-    public function editDesktopWidgetName(WidgetInstance $config, User $user)
+    public function editDesktopWidgetNameAction(
+        WidgetInstance $widgetInstance,
+        User $user
+    )
     {
-        $form = $this->request->request->get('widget_display_form');
-        $config->setName($form['name']);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($config);
-        $em->flush();
+        $this->checkUserAccess();
+        $user = $this->securityContext->getToken()->getUser();
+        $this->checkUserAccessForWidgetInstance($widgetInstance, $user);
 
-        return new Response('success', 204);
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_WIDGET_CONFIG,
+            array(),
+            $widgetInstance
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->widgetManager->insertWidgetInstance($widgetInstance);
+
+            return new Response('success', 204);
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'widgetInstance' => $widgetInstance
+        );
     }
 
     /**
      * @EXT\Route(
-     *     "/workspace/widget/name/form/{config}",
-     *     name = "claro_workspace_widget_name_form",
+     *     "/workspace/{workspaceId}/widget/{widgetInstanceId}/name/edit/form",
+     *     name = "claro_workspace_widget_name_edit_form",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:editWidgetNameForm.html.twig")
-     *
-     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
+     * @EXT\ParamConverter(
+     *     "widgetInstance",
+     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
+     *     options={"id" = "widgetInstanceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceWidgetNameEditForm.html.twig")
      *
      * @return array
      */
-    public function editWorkspaceWidgetNameFormAction(WidgetInstance $config)
+    public function editWorkspaceWidgetNameFormAction(
+        WidgetInstance $widgetInstance,
+        AbstractWorkspace $workspace
+    )
     {
-        $formFactory = $this->get("claroline.form.factory");
-        $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
+        $this->checkWorkspaceAccess($workspace);
+        $this->checkWorkspaceAccessForWidgetInstance($widgetInstance, $workspace);
 
-        return array('form' => $form->createView(), 'config' => $config);
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_WIDGET_CONFIG,
+            array(),
+            $widgetInstance
+        );
+
+        return array(
+            'form' => $form->createView(),
+            'widgetInstance' => $widgetInstance,
+            'workspace' => $workspace
+        );
     }
 
     /**
      * @EXT\Route(
-     *     "/workspace/widget/name/edit/{config}",
+     *     "/workspace/{workspaceId}/widget/{widgetInstanceId}/name/edit",
      *     name = "claro_workspace_widget_name_edit",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:editWidgetNameForm.html.twig")
-     *
-     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
+     * @EXT\ParamConverter(
+     *     "widgetInstance",
+     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
+     *     options={"id" = "widgetInstanceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceWidgetNameEditForm.html.twig")
      *
      * @return array
      */
-    public function editWorkspaceWidgetName(WidgetInstance $config)
+    public function editWorkspaceWidgetNameAction(
+        WidgetInstance $widgetInstance,
+        AbstractWorkspace $workspace
+    )
     {
-        $form = $this->request->request->get('widget_display_form');
-        $config->setName($form['name']);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($config);
-        $em->flush();
+        $this->checkWorkspaceAccess($workspace);
+        $this->checkWorkspaceAccessForWidgetInstance($widgetInstance, $workspace);
 
-        return new Response('success', 204);
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_WIDGET_CONFIG,
+            array(),
+            $widgetInstance
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->widgetManager->insertWidgetInstance($widgetInstance);
+
+            return new Response('success', 204);
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'widgetInstance' => $widgetInstance,
+            'workspace' => $workspace
+        );
     }
+
+//    /**
+//     * @EXT\Route(
+//     *     "/desktop/widget/name/form/{config}",
+//     *     name = "claro_desktop_widget_name_form",
+//     *     options={"expose"=true}
+//     * )
+//     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:editWidgetNameForm.html.twig")
+//     *
+//     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
+//     *
+//     * @return array
+//     */
+//    public function editDesktopWidgetNameFormAction(WidgetInstance $config)
+//    {
+//        $formFactory = $this->get("claroline.form.factory");
+//        $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
+//
+//        return array('form' => $form->createView(), 'config' => $config);
+//    }
+//
+//    /**
+//     * @EXT\Route(
+//     *     "/desktop/widget/name/edit/{config}",
+//     *     name = "claro_desktop_widget_name_edit",
+//     *     options={"expose"=true}
+//     * )
+//     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:editWidgetNameForm.html.twig")
+//     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+//     *
+//     * @return array
+//     */
+//    public function editDesktopWidgetName(WidgetInstance $config, User $user)
+//    {
+//        $form = $this->request->request->get('widget_display_form');
+//        $config->setName($form['name']);
+//        $em = $this->getDoctrine()->getManager();
+//        $em->persist($config);
+//        $em->flush();
+//
+//        return new Response('success', 204);
+//    }
+
+//    /**
+//     * @EXT\Route(
+//     *     "/workspace/widget/name/form/{config}",
+//     *     name = "claro_workspace_widget_name_form",
+//     *     options={"expose"=true}
+//     * )
+//     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:editWidgetNameForm.html.twig")
+//     *
+//     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
+//     *
+//     * @return array
+//     */
+//    public function editWorkspaceWidgetNameFormAction(WidgetInstance $config)
+//    {
+//        $formFactory = $this->get("claroline.form.factory");
+//        $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
+//
+//        return array('form' => $form->createView(), 'config' => $config);
+//    }
+//
+//    /**
+//     * @EXT\Route(
+//     *     "/workspace/widget/name/edit/{config}",
+//     *     name = "claro_workspace_widget_name_edit",
+//     *     options={"expose"=true}
+//     * )
+//     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:editWidgetNameForm.html.twig")
+//     *
+//     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
+//     *
+//     * @return array
+//     */
+//    public function editWorkspaceWidgetName(WidgetInstance $config)
+//    {
+//        $form = $this->request->request->get('widget_display_form');
+//        $config->setName($form['name']);
+//        $em = $this->getDoctrine()->getManager();
+//        $em->persist($config);
+//        $em->flush();
+//
+//        return new Response('success', 204);
+//    }
 
     private function checkUserAccess()
     {
@@ -1699,8 +1864,450 @@ class HomeController extends Controller
         }
     }
 
+    private function checkUserAccessForWidgetInstance(
+        WidgetInstance $widgetInstance,
+        User $user
+    )
+    {
+        $widgetUser = $widgetInstance->getUser();
+
+        if (is_null($widgetUser) || ($widgetUser->getId() !== $user->getId())) {
+            throw new AccessDeniedException();
+        }
+    }
+
+    private function checkWorkspaceAccessForWidgetInstance(
+        WidgetInstance $widgetInstance,
+        AbstractWorkspace $workspace
+    )
+    {
+        $widgetWorkspace = $widgetInstance->getWorkspace();
+
+        if (is_null($widgetWorkspace) || ($widgetWorkspace->getId() !== $workspace->getId())) {
+            throw new AccessDeniedException();
+        }
+    }
+
     private function getHomeTool()
     {
         return $this->toolManager->getOneToolByName('home');
+    }
+
+    // TO DELETE
+
+    /**
+     * @EXT\Route(
+     *     "desktop/user/home_tab/create/form",
+     *     name="claro_user_desktop_home_tab_create_form"
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:userDesktopHomeTabCreateForm.html.twig")
+     *
+     * Displays the homeTab form.
+     *
+     * @return Response
+     */
+    public function userDesktopHomeTabCreateFormAction()
+    {
+        $this->checkUserAccess();
+
+        $homeTab = new HomeTab();
+        $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
+
+        return array(
+            'form' => $form->createView(),
+            'tool' => $this->getHomeTool()
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "desktop/user/home_tab/create",
+     *     name="claro_user_desktop_home_tab_create"
+     * )
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:userDesktopHomeTabCreateForm.html.twig")
+     *
+     * Create a new homeTab.
+     *
+     * @return Response
+     */
+    public function userDesktopHomeTabCreateAction()
+    {
+        $this->checkUserAccess();
+
+        $user = $this->securityContext->getToken()->getUser();
+        $homeTab = new HomeTab();
+
+        $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $homeTab->setType('desktop');
+            $homeTab->setUser($user);
+            $this->homeTabManager->insertHomeTab($homeTab);
+
+            $homeTabConfig = new HomeTabConfig();
+            $homeTabConfig->setHomeTab($homeTab);
+            $homeTabConfig->setType('desktop');
+            $homeTabConfig->setUser($user);
+            $homeTabConfig->setLocked(false);
+            $homeTabConfig->setVisible(true);
+
+            $lastOrder = $this->homeTabManager->getOrderOfLastDesktopHomeTabConfigByUser($user);
+
+            if (is_null($lastOrder['order_max'])) {
+                $homeTabConfig->setTabOrder(1);
+            }
+            else {
+                $homeTabConfig->setTabOrder($lastOrder['order_max'] + 1);
+            }
+            $this->homeTabManager->insertHomeTabConfig($homeTabConfig);
+
+            return $this->redirect(
+                $this->generateUrl('claro_desktop_home_tab_properties')
+            );
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'tool' => $this->getHomeTool()
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "desktop/user/home_tab/{homeTabConfigId}/edit/form",
+     *     name="claro_user_desktop_home_tab_edit_form"
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "homeTabConfig",
+     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
+     *     options={"id" = "homeTabConfigId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:userDesktopHomeTabEditForm.html.twig")
+     *
+     * Displays the homeTab edition form.
+     *
+     * @return Response
+     */
+    public function userDesktopHomeTabEditFormAction(HomeTabConfig $homeTabConfig)
+    {
+        $this->checkUserAccess();
+        $homeTab = $homeTabConfig->getHomeTab();
+        $user = $this->securityContext->getToken()->getUser();
+        $this->checkUserAccessForHomeTab($homeTab, $user);
+
+        $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
+
+        return array(
+            'form' => $form->createView(),
+            'tool' => $this->getHomeTool(),
+            'homeTabConfig' => $homeTabConfig,
+            'homeTab' => $homeTab,
+            'homeTabName' => $homeTab->getName()
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "desktop/user/home_tab/{homeTabConfigId}/{homeTabName}/edit",
+     *     name="claro_user_desktop_home_tab_edit"
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "homeTabConfig",
+     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
+     *     options={"id" = "homeTabConfigId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:userDesktopHomeTabEditForm.html.twig")
+     *
+     * Edit the homeTab.
+     *
+     * @return Response
+     */
+    public function userDesktopHomeTabEditAction(HomeTabConfig $homeTabConfig, $homeTabName)
+    {
+        $this->checkUserAccess();
+        $homeTab = $homeTabConfig->getHomeTab();
+        $user = $this->securityContext->getToken()->getUser();
+        $this->checkUserAccessForHomeTab($homeTab, $user);
+
+        $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->homeTabManager->insertHomeTab($homeTab);
+
+            return $this->redirect(
+                $this->generateUrl('claro_desktop_home_tab_properties')
+            );
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'tool' => $this->getHomeTool(),
+            'homeTabConfig' => $homeTabConfig,
+            'homeTab' => $homeTab,
+            'homeTabName' => $homeTabName
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "desktop/user/home_tab/{homeTabId}/{tabOrder}/delete",
+     *     name="claro_user_desktop_home_tab_delete",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("DELETE")
+     * @EXT\ParamConverter(
+     *     "homeTab",
+     *     class="ClarolineCoreBundle:Home\HomeTab",
+     *     options={"id" = "homeTabId", "strictId" = true}
+     * )
+     *
+     * Delete the given homeTab.
+     *
+     * @return Response
+     */
+    public function userDesktopHomeTabDeleteAction(HomeTab $homeTab, $tabOrder)
+    {
+        $this->checkUserAccess();
+        $user = $this->securityContext->getToken()->getUser();
+        $this->checkUserAccessForHomeTab($homeTab, $user);
+
+        $this->homeTabManager->deleteHomeTab($homeTab, 'desktop', $tabOrder);
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "workspace/{workspaceId}/user/home_tab/create/form",
+     *     name="claro_user_workspace_home_tab_create_form"
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:userWorkspaceHomeTabCreateForm.html.twig")
+     *
+     * Displays the homeTab form.
+     *
+     * @return Response
+     */
+    public function userWorkspaceHomeTabCreateFormAction(AbstractWorkspace $workspace)
+    {
+        $this->checkWorkspaceAccess($workspace);
+
+        $homeTab = new HomeTab();
+        $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
+
+        return array(
+            'workspace' => $workspace,
+            'form' => $form->createView(),
+            'tool' => $this->getHomeTool()
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "workspace/{workspaceId}/user/home_tab/create",
+     *     name="claro_user_workspace_home_tab_create"
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:userWorkspaceHomeTabCreateForm.html.twig")
+     *
+     * Create a new homeTab.
+     *
+     * @return Response
+     */
+    public function userWorkspaceHomeTabCreateAction(AbstractWorkspace $workspace)
+    {
+        $this->checkWorkspaceAccess($workspace);
+
+        $homeTab = new HomeTab();
+
+        $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $homeTab->setType('workspace');
+            $homeTab->setWorkspace($workspace);
+            $this->homeTabManager->insertHomeTab($homeTab);
+
+            $homeTabConfig = new HomeTabConfig();
+            $homeTabConfig->setHomeTab($homeTab);
+            $homeTabConfig->setType('workspace');
+            $homeTabConfig->setWorkspace($workspace);
+            $homeTabConfig->setLocked(false);
+            $homeTabConfig->setVisible(true);
+
+            $lastOrder = $this->homeTabManager->getOrderOfLastWorkspaceHomeTabConfigByWorkspace($workspace);
+
+            if (is_null($lastOrder['order_max'])) {
+                $homeTabConfig->setTabOrder(1);
+            }
+            else {
+                $homeTabConfig->setTabOrder($lastOrder['order_max'] + 1);
+            }
+            $this->homeTabManager->insertHomeTabConfig($homeTabConfig);
+
+            return $this->redirect(
+                $this->generateUrl(
+                    'claro_workspace_home_tab_properties',
+                    array('workspaceId' => $workspace->getId())
+                )
+            );
+        }
+
+        return array(
+            'workspace' => $workspace,
+            'form' => $form->createView(),
+            'tool' => $this->getHomeTool()
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "workspace/{workspaceId}/user/home_tab/{homeTabConfigId}/edit/form",
+     *     name="claro_user_workspace_home_tab_edit_form"
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *     "homeTabConfig",
+     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
+     *     options={"id" = "homeTabConfigId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:userWorkspaceHomeTabEditForm.html.twig")
+     *
+     * Displays the homeTab edition form.
+     *
+     * @return Response
+     */
+    public function userWorkspaceHomeTabEditFormAction(
+        AbstractWorkspace $workspace,
+        HomeTabConfig $homeTabConfig
+    )
+    {
+        $this->checkWorkspaceAccess($workspace);
+        $homeTab = $homeTabConfig->getHomeTab();
+        $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
+
+        $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
+
+        return array(
+            'workspace' => $workspace,
+            'form' => $form->createView(),
+            'tool' => $this->getHomeTool(),
+            'homeTabConfig' => $homeTabConfig,
+            'homeTab' => $homeTab,
+            'homeTabName' => $homeTab->getName()
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "workspace/{workspaceId}/user/home_tab/{homeTabConfigId}/{homeTabName}/edit/form",
+     *     name="claro_user_workspace_home_tab_edit"
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *     "homeTabConfig",
+     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
+     *     options={"id" = "homeTabConfigId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:userWorkspaceHomeTabEditForm.html.twig")
+     *
+     * Edit the homeTab.
+     *
+     * @return Response
+     */
+    public function userWorkspaceHomeTabEditAction(
+        AbstractWorkspace $workspace,
+        HomeTabConfig $homeTabConfig,
+        $homeTabName
+    )
+    {
+        $this->checkWorkspaceAccess($workspace);
+        $homeTab = $homeTabConfig->getHomeTab();
+        $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
+
+        $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->homeTabManager->insertHomeTab($homeTab);
+
+            return $this->redirect(
+                $this->generateUrl(
+                    'claro_workspace_home_tab_properties',
+                    array('workspaceId' => $workspace->getId())
+                )
+            );
+        }
+
+        return array(
+            'workspace' => $workspace,
+            'form' => $form->createView(),
+            'tool' => $this->getHomeTool(),
+            'homeTabConfig' => $homeTabConfig,
+            'homeTab' => $homeTab,
+            'homeTabName' => $homeTabName
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "workspace/{workspaceId}/user/home_tab/{homeTabId}/{tabOrder}/delete",
+     *     name="claro_user_workspace_home_tab_delete",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("DELETE")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *     "homeTab",
+     *     class="ClarolineCoreBundle:Home\HomeTab",
+     *     options={"id" = "homeTabId", "strictId" = true}
+     * )
+     *
+     * Delete the given homeTab.
+     *
+     * @return Response
+     */
+    public function userWorkspaceHomeTabDeleteAction(
+        AbstractWorkspace $workspace,
+        HomeTab $homeTab,
+        $tabOrder
+    )
+    {
+        $this->checkWorkspaceAccess($workspace);
+        $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
+
+        $this->homeTabManager->deleteHomeTab($homeTab, 'workspace', $tabOrder);
+
+        return new Response('success', 204);
     }
 }

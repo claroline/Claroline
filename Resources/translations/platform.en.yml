@@ -362,6 +362,7 @@ remove_user_confirm_message: Are you sure you want to delete this user ?
 remove_user_s_confirm_message: Are you sure you want to delete these %count% users ?
 rename: Rename
 rename_tool: 'Rename tool'
+rename_widget_instance: 'Rename widget'
 reset: Reset
 reset_pwd: 'Reset Your Password'
 reset_pwd_form_plainPassword_first: 'New password'

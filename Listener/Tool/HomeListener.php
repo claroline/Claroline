@@ -129,11 +129,14 @@ class HomeListener
     {
         $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
         $workspaceHomeTabConfigs = $this->homeTabManager
-            ->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
+            ->getWorkspaceHomeTabConfigsByWorkspace($workspace);
         $tabId = 0;
 
-        if (count($workspaceHomeTabConfigs) > 0) {
-            $tabId = $workspaceHomeTabConfigs[0]->getHomeTab()->getId();
+        foreach ($workspaceHomeTabConfigs as $workspaceHomeTabConfig) {
+            if ($workspaceHomeTabConfig->isVisible()) {
+                $tabId = $workspaceHomeTabConfig->getHomeTab()->getId();
+                break;
+            }
         }
 
         return $this->templating->render(
@@ -141,7 +144,8 @@ class HomeListener
             array(
                 'workspace' => $workspace,
                 'workspaceHomeTabConfigs' => $workspaceHomeTabConfigs,
-                'tabId' => $tabId
+                'tabId' => $tabId,
+                'withConfig' => 0
             )
         );
     }
@@ -154,18 +158,27 @@ class HomeListener
     public function desktopHome()
     {
         $user = $this->securityContext->getToken()->getUser();
-        $adminHomeTabConfigsTemp = $this->homeTabManager
-            ->generateAdminHomeTabConfigsByUser($user);
         $adminHomeTabConfigs = $this->homeTabManager
-            ->filterVisibleHomeTabConfigs($adminHomeTabConfigsTemp);
+            ->generateAdminHomeTabConfigsByUser($user);
         $userHomeTabConfigs = $this->homeTabManager
-            ->getVisibleDesktopHomeTabConfigsByUser($user);
+            ->getDesktopHomeTabConfigsByUser($user);
         $tabId = 0;
 
-        if (count($adminHomeTabConfigs) > 0) {
-            $tabId = $adminHomeTabConfigs[0]->getHomeTab()->getId();
-        } elseif (count($userHomeTabConfigs) > 0) {
-            $tabId = $userHomeTabConfigs[0]->getHomeTab()->getId();
+        if ($tabId === 0) {
+            foreach ($adminHomeTabConfigs as $adminHomeTabConfig) {
+                if ($adminHomeTabConfig->isVisible()) {
+                    $tabId = $adminHomeTabConfig->getHomeTab()->getId();
+                    break;
+                }
+            }
+        }
+        if ($tabId === 0) {
+            foreach ($userHomeTabConfigs as $userHomeTabConfig) {
+                if ($userHomeTabConfig->isVisible()) {
+                    $tabId = $userHomeTabConfig->getHomeTab()->getId();
+                    break;
+                }
+            }
         }
 
         return $this->templating->render(
@@ -173,7 +186,8 @@ class HomeListener
             array(
                 'adminHomeTabConfigs' => $adminHomeTabConfigs,
                 'userHomeTabConfigs' => $userHomeTabConfigs,
-                'tabId' => $tabId
+                'tabId' => $tabId,
+                'withConfig' => 0
             )
         );
     }

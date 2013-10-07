@@ -426,7 +426,11 @@ class WorkspaceController extends Controller
      *
      * @todo Reduce the number of sql queries for this action (-> dql)
      */
-    public function widgetsAction(AbstractWorkspace $workspace, $homeTabId)
+    public function widgetsAction(
+        AbstractWorkspace $workspace,
+        $homeTabId,
+        $withConfig
+    )
     {
         if ($this->security->getToken()->getUser() !== 'anon.') {
             $rightToConfigure = $this->security->isGranted('parameters', $workspace);
@@ -435,14 +439,25 @@ class WorkspaceController extends Controller
         }
 
         $widgets = array();
+        $lastWidgetOrder = 1;
 
         $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
 
-        if (!is_null($homeTab) &&
-            $this->homeTabManager->checkHomeTabVisibilityByWorkspace($homeTab, $workspace)) {
+        if (is_null($homeTab)) {
+            $isVisibleHomeTab = false;
+        } else {
+            $isVisibleHomeTab = $this->homeTabManager
+                ->checkHomeTabVisibilityByWorkspace($homeTab, $workspace, $withConfig);
+        }
+
+        if ($isVisibleHomeTab) {
 
             $widgetHomeTabConfigs = $this->homeTabManager
                 ->getWidgetConfigsByWorkspace($homeTab, $workspace);
+
+            if (count($widgetHomeTabConfigs) > 0) {
+                $lastWidgetOrder = count($widgetHomeTabConfigs);
+            }
 
             if ($this->security->getToken()->getUser() !== 'anon.') {
                 $rightToConfigure = $this->security->isGranted('parameters', $workspace);
@@ -453,27 +468,28 @@ class WorkspaceController extends Controller
             foreach ($widgetHomeTabConfigs as $widgetHomeTabConfig) {
                 $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
 
-                if ($widgetHomeTabConfig->isVisible()) {
-                    $event = $this->eventDispatcher->dispatch(
-                        "widget_{$widgetInstance->getWidget()->getName()}",
-                        'DisplayWidget',
-                        array($widgetInstance)
-                    );
+                $event = $this->eventDispatcher->dispatch(
+                    "widget_{$widgetInstance->getWidget()->getName()}",
+                    'DisplayWidget',
+                    array($widgetInstance)
+                );
 
-                    $widget['id'] = $widgetInstance->getId();
-                    $widget['title'] = $widgetInstance->getName();
-                    $widget['content'] = $event->getContent();
-                    $widget['configurable'] = $rightToConfigure
-                        && $widgetInstance->getWidget()->isConfigurable();
-                    $widgets[] = $widget;
-                }
+                $widget['config'] = $widgetHomeTabConfig;
+                $widget['content'] = $event->getContent();
+                $widget['configurable'] = $rightToConfigure
+                    && $widgetInstance->getWidget()->isConfigurable();
+                $widgets[] = $widget;
             }
         }
 
         return array(
-            'widgets' => $widgets,
+            'widgetsDatas' => $widgets,
             'isDesktop' => false,
-            'workspaceId' => $workspace->getId()
+            'workspaceId' => $workspace->getId(),
+            'withConfig' => $withConfig,
+            'isVisibleHomeTab' => $isVisibleHomeTab,
+            'isLockedHomeTab' => false,
+            'lastWidgetOrder' => $lastWidgetOrder
         );
     }
 
@@ -858,8 +874,9 @@ class WorkspaceController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspaceId}/open/tool/home/tab/{tabId}",
-     *     name="claro_display_workspace_home_tabs"
+     *     "/{workspaceId}/open/tool/home/tab/{tabId}/{withConfig}",
+     *     name="claro_display_workspace_home_tabs",
+     *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter(
      *      "workspace",
@@ -873,15 +890,37 @@ class WorkspaceController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function displayWorkspaceHomeTabsAction(AbstractWorkspace $workspace, $tabId)
+    public function displayWorkspaceHomeTabsAction(
+        AbstractWorkspace $workspace,
+        $tabId,
+        $withConfig = 0
+    )
     {
         $workspaceHomeTabConfigs = $this->homeTabManager
-            ->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
+            ->getWorkspaceHomeTabConfigsByWorkspace($workspace);
+        $homeTabId = $tabId;
+
+        if ($homeTabId == -1) {
+            foreach ($workspaceHomeTabConfigs as $workspaceHomeTabConfig) {
+                if ($workspaceHomeTabConfig->isVisible() || ($withConfig === 1)) {
+                    $homeTabId = $workspaceHomeTabConfig->getHomeTab()->getId();
+                    break;
+                }
+            }
+        }
+        if (($withConfig == 1) && ($homeTabId == 0)) {
+            $workspaceHomeTabConfig = end($workspaceHomeTabConfigs);
+
+            if ($workspaceHomeTabConfig !== false) {
+                $homeTabId = $workspaceHomeTabConfig->getHomeTab()->getId();
+            }
+        }
 
         return array(
             'workspace' => $workspace,
             'workspaceHomeTabConfigs' => $workspaceHomeTabConfigs,
-            'tabId' => $tabId
+            'tabId' => $homeTabId,
+            'withConfig' => $withConfig
         );
     }
 

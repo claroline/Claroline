@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\SimpleTextConfig;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Response;
 
 class SimpleTextController extends Controller
 {
@@ -45,6 +46,6 @@ class SimpleTextController extends Controller
        $em->persist($simpleTextConfig);
        $em->flush();
 
-       return new RedirectResponse($this->get('claroline.manager.widget_manager')->getRedirectRoute($widget));
+       return new Response('success', 204);
     }
 }

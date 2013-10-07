@@ -138,7 +138,9 @@ class HomeTabManager
         foreach ($adminHomeTabConfigs as $adminHomeTabConfig) {
 
             if ($adminHomeTabConfig->isLocked()) {
-                $adminHTC[] = $adminHomeTabConfig;
+                if ($adminHomeTabConfig->isVisible()) {
+                    $adminHTC[] = $adminHomeTabConfig;
+                }
             }
             else {
                 $existingCustomHTC = $this->homeTabConfigRepo->findOneBy(
@@ -178,7 +180,30 @@ class HomeTabManager
         return $visibleHomeTabConfigs;
     }
 
-    public function checkHomeTabVisibilityByUser(HomeTab $homeTab, User $user)
+    public function checkHomeTabLock(HomeTab $homeTab)
+    {
+        $adminHomeTabConfig = $this->homeTabConfigRepo->findOneBy(
+            array(
+                'homeTab' => $homeTab,
+                'type' => 'admin_desktop',
+                'user' => null,
+                'workspace' => null
+            )
+        );
+
+        if (!is_null($adminHomeTabConfig)) {
+
+            return $adminHomeTabConfig->isLocked();
+        }
+
+        return false;
+    }
+
+    public function checkHomeTabVisibilityByUser(
+        HomeTab $homeTab,
+        User $user,
+        $withConfig
+    )
     {
         $adminHomeTabConfig = $this->homeTabConfigRepo->findOneBy(
             array(
@@ -201,22 +226,25 @@ class HomeTabManager
         }
         elseif (is_null($userHomeTabConfig)) {
 
-            return $adminHomeTabConfig->isVisible();
+            return $adminHomeTabConfig->isVisible() || $withConfig == 1;
         }
         elseif (is_null($adminHomeTabConfig)) {
 
-            return $userHomeTabConfig->isVisible();
+            return $userHomeTabConfig->isVisible() || $withConfig == 1;
         }
         else {
-            return $adminHomeTabConfig->isLocked() ?
+            $visible = $adminHomeTabConfig->isLocked() ?
                 $adminHomeTabConfig->isVisible() :
-                $userHomeTabConfig->isVisible();
+                ($userHomeTabConfig->isVisible() || ($withConfig == 1));
+
+            return $visible;
         }
     }
 
     public function checkHomeTabVisibilityByWorkspace(
         HomeTab $homeTab,
-        AbstractWorkspace $workspace
+        AbstractWorkspace $workspace,
+        $withConfig
     )
     {
         $homeTabConfig = $this->homeTabConfigRepo->findOneBy(
@@ -231,7 +259,7 @@ class HomeTabManager
             return false;
         }
 
-        return $homeTabConfig->isVisible();
+        return $homeTabConfig->isVisible() || ($withConfig == 1);
     }
 
     public function insertWidgetHomeTabConfig(
@@ -289,8 +317,11 @@ class HomeTabManager
         if (is_null($user) && is_null($workspace)) {
             $lastWidgetOrder = $this->widgetHomeTabConfigRepo
                 ->findOrderOfLastWidgetInAdminHomeTab($homeTab);
+            $lastOrder = (count($lastWidgetOrder) > 0) ?
+                $lastWidgetOrder['order_max'] :
+                1;
 
-            if ($newWidgetOrder > 0 && $newWidgetOrder <= $lastWidgetOrder) {
+            if ($newWidgetOrder > 0 && $newWidgetOrder <= $lastOrder) {
                 $this->widgetHomeTabConfigRepo->updateAdminWidgetOrder(
                     $homeTab,
                     $newWidgetOrder,
@@ -298,13 +329,18 @@ class HomeTabManager
                 );
                 $widgetHomeTabConfig->setWidgetOrder($newWidgetOrder);
                 $this->om->flush();
+
+                return $direction;
             }
         }
         elseif (is_null($workspace)) {
             $lastWidgetOrder = $this->widgetHomeTabConfigRepo
                 ->findOrderOfLastWidgetInHomeTabByUser($homeTab, $user);
+            $lastOrder = (count($lastWidgetOrder) > 0) ?
+                $lastWidgetOrder['order_max'] :
+                1;
 
-            if ($newWidgetOrder > 0 && $newWidgetOrder <= $lastWidgetOrder) {
+            if ($newWidgetOrder > 0 && $newWidgetOrder <= $lastOrder) {
                 $this->widgetHomeTabConfigRepo->updateWidgetOrderByUser(
                     $homeTab,
                     $newWidgetOrder,
@@ -313,13 +349,18 @@ class HomeTabManager
                 );
                 $widgetHomeTabConfig->setWidgetOrder($newWidgetOrder);
                 $this->om->flush();
+
+                return $direction;
             }
         }
         else {
             $lastWidgetOrder = $this->widgetHomeTabConfigRepo
                 ->findOrderOfLastWidgetInHomeTabByWorkspace($homeTab, $workspace);
+            $lastOrder = (count($lastWidgetOrder) > 0) ?
+                $lastWidgetOrder['order_max'] :
+                1;
 
-            if ($newWidgetOrder > 0 && $newWidgetOrder <= $lastWidgetOrder) {
+            if ($newWidgetOrder > 0 && $newWidgetOrder <= $lastOrder) {
                 $this->widgetHomeTabConfigRepo->updateWidgetOrderByWorkspace(
                     $homeTab,
                     $newWidgetOrder,
@@ -328,8 +369,12 @@ class HomeTabManager
                 );
                 $widgetHomeTabConfig->setWidgetOrder($newWidgetOrder);
                 $this->om->flush();
+
+                return $direction;
             }
         }
+
+        return 0;
     }
 
     public function changeVisibilityWidgetHomeTabConfig(

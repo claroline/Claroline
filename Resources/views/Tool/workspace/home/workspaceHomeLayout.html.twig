@@ -1,28 +1,100 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
 {% block section_content %}
+    <div id="config-value-div" config-value="{{ withConfig }}"></div>
+    <div id="hometab-id-div" hometab-id="{{ tabId }}"></div>
+    <div id="workspace-id-div" workspace-id="{{ workspace.getId() }}"></div>
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'home'|trans({}, 'tools') }}</h3>
+        <h3 class="panel-title">
+            {{ 'home'|trans({}, 'tools') }}
+            <i id="switch-config-mode" class="icon-cog pull-right pointer-hand"></i>
+        </h3>
     </div>
 
     <div class="panel-body">
         <ul class="nav nav-tabs tabs">
             {% for workspaceHomeTabConfig in workspaceHomeTabConfigs %}
             {% set workspaceHomeTab = workspaceHomeTabConfig.getHomeTab() %}
-            <li {% if workspaceHomeTab.getId() == tabId %}class="active"{% endif %}>
-                <a href="{{ path(
-                        'claro_display_workspace_home_tabs',
-                        {'workspaceId': workspace.getId(), 'tabId': workspaceHomeTab.getId()})
-                    }}"
-                    id="{{ workspaceHomeTab.getName() }}_link"
+            <li class="
+                {% if workspaceHomeTab.getId() == tabId %} active {% endif %}
+                {% if not workspaceHomeTabConfig.isVisible() %} toggle-visible {% endif %}
+                {% if (withConfig == 0 and not workspaceHomeTabConfig.isVisible()) %}
+                    hidden
+                {% endif %}"
+            >
+                <a href=""
+                    class="hometab-link"
+                    hometab-id="{{ workspaceHomeTab.getId() }}"
+                    hometab-order="{{ workspaceHomeTabConfig.getTabOrder() }}"
                 >
                     {{ workspaceHomeTab.getName() }}
-               </a>
+                    <i class="toggle-visible pointer-hand hometab-rename-btn icon-edit
+                        {% if withConfig == 0 %} hidden {% endif %}"
+                    ></i>
+                    <i class="toggle-visible pointer-hand hometab-visibility-btn
+                        {% if withConfig == 0 %} hidden {% endif %}
+                        {% if workspaceHomeTabConfig.isVisible() %} icon-eye-open {% else %} icon-eye-close {% endif %}"
+                        visiblility-value="{% if workspaceHomeTabConfig.isVisible() %} visible {% else %} invisible {% endif %}"
+                        hometab-config-id="{{ workspaceHomeTabConfig.getId() }}"
+                        id="visible-hometab-id-{{ workspaceHomeTab.getId() }}"
+                    ></i>
+                    <i class="toggle-visible pointer-hand hometab-delete-btn icon-trash
+                        {% if withConfig == 0 %} hidden {% endif %}"
+                    ></i>
+                </a>
             </li>
             {% endfor %}
+            <li id="add-hometab-btn" class="toggle-visible {% if withConfig == 0 %} hidden {% endif %}">
+                <a href="">
+                    <i id="add-hometab-button" class="icon-plus"></i>
+                </a>
+            </li>
         </ul>
 
         {% block homeTab %}{% endblock %}
     </div>
+
+    <div id="delete-hometab-validation-box" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h3>{{ 'home_tab_delete_confirm_title'|trans({}, 'platform') }}</h3>
+                </div>
+                <div class="modal-body">
+                    <p>{{ 'home_tab_delete_confirm_message'|trans({}, 'platform') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="delete-hometab-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="hometab-modal-box" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h3 id="hometab-modal-title"></h3>
+                </div>
+                <div id="hometab-modal-body" class="modal-body">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src='{{ asset('bundles/clarolinecore/js/tool/workspace/home/workspaceHomeLayout.js') }}'
+        type="text/javascript">
+    </script>
+    <script
+        src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'platform' }) }}"
+        type="text/javascript">
+    </script>
 {% endblock %}
