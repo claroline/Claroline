@@ -34,3 +34,4 @@ web/themes/*
 web/thumbnails/*
 web/vendor/*
 web/uploads/*
+!web/uploads/logos/*
