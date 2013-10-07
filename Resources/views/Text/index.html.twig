@@ -14,7 +14,9 @@
         {{ text|raw }}
     </div>
     <div class="panel-footer">
-        <a class="btn btn-primary" href="{{ _path('claro_text_edit_form', {'text': _resource.getId()}) }}">{{ 'edit' | trans({}, 'platform') }}</a>
         <a class="btn btn-default" href="{{ _path('claro_text_history', {'text': _resource.getId()}) }}">{{ 'history' | trans({}, 'platform') }}</a>
+        {% if isEditGranted %}
+            <a class="btn btn-primary" href="{{ _path('claro_text_edit_form', {'text': _resource.getId()}) }}">{{ 'edit' | trans({}, 'platform') }}</a>
+        {% endif %}
     </div>
 {% endblock %}

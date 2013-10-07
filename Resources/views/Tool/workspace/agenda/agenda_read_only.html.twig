@@ -1,0 +1,67 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% set calendarPath = 'bundles/frontend/jquery/plugin/calendar/' %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.css') }}'/>
+<link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
+<link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
+{% endblock %}
+{% block breadcrumb %}
+{{
+macros.breadcrumbs([
+{
+'icon': 'icon-book',
+'name': 'workspaces'|trans({}, 'platform'),
+'href': path('claro_workspace_list')
+},
+{
+'name': workspace.getName(),
+'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
+},
+{
+'name': 'agenda'|trans({}, 'tools'),
+'href': ''
+}
+])
+}}
+{% endblock %}
+{% block section_content %}
+<div class="panel-heading">
+    <h3 class="panel-title">{{ 'agenda'|trans({}, 'platform') }}</h3>
+</div>
+<div class="panel-body">
+    <div class="row">
+        <div id='calendar' class="col-md-9"></div>  
+        <a href="{{ path('claro_workspace_agenda_show', {workspaceId: workspace.getId()}) }}" id="link"></a>
+        <div class="col-md-3">
+         <h4> <u>{{'tasks'|trans({}, 'agenda')}} </u></h4>  
+            <div id="tasks">
+                {% include('ClarolineCoreBundle:Tool\\desktop\\agenda:tasks.html.twig') %}
+            </div> 
+            <h4><u>{{ 'agenda_form_priority'|trans({}, 'agenda') }}</u></h4>
+            <div>
+                <span style="color:#FF0000">  {{ 'high'|trans({}, 'agenda') }} </span>
+                <span style="color:#01A9DB"> {{ 'medium'|trans({}, 'agenda') }} </span>
+                <span style="color:#848484"> {{ 'low'|trans({}, 'agenda') }} </span>
+            </div>
+        </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+{% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+{{ tinymce_init() }}
+<script type='text/javascript' src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}' ></script>
+<script type='text/javascript' src='{{ asset(calendarPath ~ 'js/fullcalendar.js') }}' ></script>
+<script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/calendar_read_only.js') }}'></script>
+<script type='text/javascript'>
+    $(function () {
+            Claroline.Calendar.initialize('workspace');
+            });
+</script>
+<script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'agenda' }) }}"></script>
+{% endblock javascripts %}

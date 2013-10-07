@@ -183,6 +183,11 @@ class WorkspaceManager
 
     public function deleteWorkspace(AbstractWorkspace $workspace)
     {
+        $root = $this->resourceManager->getWorkspaceRoot($workspace);
+        
+        foreach ($root->getChildren() as $node) {
+            $this->resourceManager->delete($node);
+        }
         $this->om->remove($workspace);
         $this->om->flush();
     }

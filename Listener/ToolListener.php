@@ -66,36 +66,6 @@ class ToolListener
     }
 
     /**
-     * @DI\Observe("open_tool_workspace_user_management")
-     *
-     * @param DisplayToolEvent $event
-     */
-    public function onDisplayWorkspaceUserManagement(DisplayToolEvent $event)
-    {
-        $workspaceId = $event->getWorkspace()->getId();
-        $response = $this->forward(
-            'ClarolineCoreBundle:Tool\User:registeredUsersList',
-            array('workspaceId' => $workspaceId, 'page' => 1, 'search' => '')
-        );
-        $event->setContent($response->getContent());
-    }
-
-    /**
-     * @DI\Observe("open_tool_workspace_group_management")
-     *
-     * @param DisplayToolEvent $event
-     */
-    public function onDisplayWorkspaceGroupManagement(DisplayToolEvent $event)
-    {
-        $workspaceId = $event->getWorkspace()->getId();
-        $response = $this->forward(
-            'ClarolineCoreBundle:Tool\Group:registeredGroupsList',
-            array('workspaceId' => $workspaceId, 'page' => 1, 'search' => '')
-        );
-        $event->setContent($response->getContent());
-    }
-
-    /**
      * @DI\Observe("open_tool_workspace_agenda")
      *
      * @param DisplayToolEvent $event
@@ -133,16 +103,6 @@ class ToolListener
     public function onDisplayDesktopAgenda(DisplayToolEvent $event)
     {
         $event->setContent($this->desktopAgenda());
-    }
-
-    /**
-     * @DI\Observe("open_tool_workspace_workgroup")
-     *
-     * @param \Claroline\CoreBundle\Event\DisplayToolEvent $event
-     */
-    public function onDisplayWorkgroup(DisplayToolEvent $event)
-    {
-        $event->setContent($this->workgroup($event->getWorkspace()->getId()));
     }
 
     /**
@@ -188,12 +148,25 @@ class ToolListener
         $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, true);
+        $usr = $this->container->get('security.context')->getToken()->getUser();
+        if ($usr === 'anon.') {
+            return $this->templating->render(
+                'ClarolineCoreBundle:Tool/workspace/agenda:agenda_read_only.html.twig',
+                array(
+                    'workspace' => $workspace,
+                    'form' => $form->createView(),
+                    'listEvents' => $listEvents
+                )
+            );
+        }
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool/workspace/agenda:agenda.html.twig',
-            array('workspace' => $workspace,
+            array(
+                'workspace' => $workspace,
                 'form' => $form->createView(),
-                'listEvents' => $listEvents )
+                'listEvents' => $listEvents
+            )
         );
 
     }
@@ -214,18 +187,20 @@ class ToolListener
         $event = new Event();
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
         $em = $this->container-> get('doctrine.orm.entity_manager');
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop(true);
+        $usr = $this->container->get('security.context')->getToken()->getUser();
+        $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, false);
         $cours = array();
         $translator = $this->container->get('translator');
 
         foreach ($listEvents as $event) {
 
-            if (is_null($event->getWorkspace())){
-                $temp = $translator->trans('desktop', array(), 'platform');
-            } else {
-                $temp = $event->getWorkspace()->getName();
-            }
+            $temp = $event->getWorkspace()->getName();
             $cours[] = $temp;
+        }
+        if (count($listEventsDesktop) > 0) {
+
+            $cours[] = $translator->trans('desktop', array(), 'platform');
         }
 
         return $this->templating->render(
@@ -235,16 +210,6 @@ class ToolListener
                 'listEvents' => $listEvents,
                 'cours' => array_unique($cours)
             )
-        );
-    }
-
-    public function workgroup($workspaceId)
-    {
-        $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
-
-        return $this->templating->render(
-            'ClarolineCoreBundle:Tool/workspace/workgroup:workgroup.html.twig',
-            array('workspace' => $workspace)
         );
     }
 

@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Repository\GroupRepository;
@@ -186,6 +185,13 @@ class GroupManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
+    public function getGroupsByWorkspaces(array $workspaces, $page)
+    {
+        $query = $this->groupRepo->findGroupsByWorkspaces($workspaces, false);
+
+        return $this->pagerFactory->createPager($query, $page);
+    }
+
     public function getGroupsByWorkspaceAndName(AbstractWorkspace $workspace, $search, $page)
     {
         $query = $this->groupRepo->findByWorkspaceAndName($workspace, $search, false);
@@ -233,5 +239,21 @@ class GroupManager
         $query = $this->groupRepo->findOutsidersByWorkspaceRolesAndName($roles, $name, $workspace, true);
 
         return $this->pagerFactory->createPager($query, $page);
+    }
+
+    public function getAllGroups($page)
+    {
+        $query = $this->groupRepo->findAll(false);
+
+        return $this->pagerFactory->createPager($query, $page);
+    }
+
+    public function getGroupsByNames(array $names)
+    {
+        if (count($names) > 0) {
+            return $this->groupRepo->findGroupsByNames($names);
+        }
+
+        return array();
     }
 }

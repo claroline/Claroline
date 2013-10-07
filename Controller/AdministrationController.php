@@ -324,7 +324,7 @@ class AdministrationController extends Controller
     {
         $pager = $search === '' ?
             $this->userManager->getGroupOutsiders($group, $page) :
-            $this->userManager->getGroupOutsidersByName($group, $search, $page);
+            $this->userManager->getGroupOutsidersByName($group, $page, $search);
 
         return array('pager' => $pager, 'search' => $search, 'group' => $group);
     }
