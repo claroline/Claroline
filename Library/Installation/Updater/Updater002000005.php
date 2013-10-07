@@ -29,13 +29,25 @@ class Updater002000005
 
     public function postUpdate()
     {
+        $this->initWidgets();
         $this->updateWidgetsDatas();
         $this->updateTextWidgets();
         $this->updateWidgetHomeTabConfigsDatas();
         $this->updateAdminWorkspaceHomeTabDatas();
         $this->createWorkspacesListWidget();
-        //$this->dropTables();
+        $this->dropTables();
         $this->dropWidgetHomeTabConfigTableCopy();
+    }
+
+    private function initWidgets()
+    {
+        $cn = $this->container->get('doctrine.dbal.default_connection');
+        $cn->query("UPDATE claro_widget set is_displayable_in_workspace = true, is_displayable_in_desktop = true
+            WHERE name = 'core_resource_logger' or name = 'simple_text' or name = 'claroline_announcement_widget'
+            or name = 'claroline_rssreader'");
+
+        $cn->query("UPDATE claro_widget set is_displayable_in_workspace = false, is_displayable_in_desktop = true
+            WHERE name = 'my_workspaces'");
     }
 
     private function updateTextWidgets()
