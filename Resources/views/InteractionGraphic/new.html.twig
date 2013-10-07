@@ -152,24 +152,26 @@ presently reading this means that you have had
                         </div>
                     </div>
                 </div>
+            
+
+                <input class="form-control" type="hidden" id="imgwidth" name="imgwidth" value="0"/>
+                <input class="form-control" type="hidden" id="imgheight" name="imgheight" value="0"/>
+                <input class="form-control" type="hidden" id="coordsZone" name="coordsZone" value=""/>
+
+                <input class="form-control" type="hidden" name="exercise" value="{{ exoID }}"/>
+
+                <input class="form-control" type="hidden" id="message" name="message" value="{{ 'inside' | trans }} ..."/>
+
+                {# ---------------------------------- Boutton validation formulaire ---------------------------------------- #}
+                <div style="display: none;">{{ form_rest(form) }}</div>
+                {{ form_errors(form) }}
             </div>
-
-            <input class="form-control" type="hidden" id="imgwidth" name="imgwidth" value="0"/>
-            <input class="form-control" type="hidden" id="imgheight" name="imgheight" value="0"/>
-            <input class="form-control" type="hidden" id="coordsZone" name="coordsZone" value=""/>
-
-            <input class="form-control" type="hidden" name="exercise" value="{{ exoID }}"/>
-
-            <input class="form-control" type="hidden" id="message" name="message" value="{{ 'inside' | trans }} ..."/>
-
-            {# ---------------------------------- Boutton validation formulaire ---------------------------------------- #}
-            <div style="display: none;">{{ form_rest(form) }}</div>
-            {{ form_errors(form) }}
+            
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-primary">{{ 'create' | trans }}</button>
+            </form>
         </div>
-        <div class="panel-footer">
-            <button type="submit" class="btn btn-primary">{{ 'create' | trans }}</button>
-        </div>
-    </form>
+    </div>
 </div>
 
 {{ tinymce_init() }}
