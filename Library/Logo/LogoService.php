@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\DiExtraBundle\Annotation\Service;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @Service("claroline.common.logo_service")
@@ -19,7 +20,7 @@ class LogoService
 
     public function __construct()
     {
-        $this->path = __DIR__."/../../../../../../../web/logos/";
+        $this->path = __DIR__."/../../../../../../../web/uploads/logos/";
         $this->fileTypes = '/\.jpg$|\.png$|\.gif$|\.jpeg$/';
         $this->finder = new Finder();
     }
@@ -39,12 +40,10 @@ class LogoService
     /**
      * @Secure(roles="ROLE_ADMIN")
      */
-    public function createLogo($files)
+    public function createLogo(UploadedFile $file)
     {
-        foreach ($files as $file) {
-            if (is_object($file) and $file->getMimeType() and strpos($file->getMimeType(), 'image/') === 0) {
-                $file->move($this->path, uniqid().".".$file->guessExtension());
-            }
+        if ($file->getMimeType() and strpos($file->getMimeType(), 'image/') === 0) {
+            $file->move($this->path, uniqid().'.'.$file->guessExtension());
         }
     }
 

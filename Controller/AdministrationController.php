@@ -629,7 +629,11 @@ class AdministrationController extends Controller
                     $this->request->get('selectlogo')
                 );
 
-                $this->get('claroline.common.logo_service')->createLogo($this->request->files);
+                $logo = $this->request->files->get('logo');
+
+                if ($logo) {
+                    $this->get('claroline.common.logo_service')->createLogo($logo);
+                }
 
             } catch (UnwritableException $e) {
                 $form->addError(
