@@ -1,0 +1,44 @@
+# Template for the 'parameters.yml' config file (same directory).
+# Currently only the db parameters are required.
+
+parameters:
+
+# database
+
+    database_driver: pdo_mysql
+    database_host: localhost
+    database_port: ~
+    database_name: claroline_prod
+    database_user: root
+    database_password: ~
+
+    test_database_driver: pdo_mysql
+    test_database_host: localhost
+    test_database_port: ~
+    test_database_name: claroline_test
+    test_database_user: root
+    test_database_password: ~
+
+# mail
+
+    mailer_transport: smtp
+    mailer_encryption: ~
+    mailer_auth_mode: ~
+    mailer_host: ~
+    mailer_port: ~
+    mailer_user: ~
+    mailer_password: ~
+
+# others
+
+    locale: fr
+    secret: ThisTokenIsNotSoSecretChangeIt
+
+# logs
+    non_repeatable_log_time_in_seconds: 600
+
+# Forms
+    # Presets for date range picker
+    # All possible values:
+    # ['today', 'yesterday', 'this_week', 'last_week', 'this_month', 'last_month', 'this_year', 'last_year', 'this_school_year', 'last_school_year', 'last_seven_days', 'last_thirty_days']
+    chosenRangeKeys: "['yesterday', 'last_seven_days', 'last_thirty_days', 'this_month', 'last_month', 'this_school_year', 'last_school_year']"

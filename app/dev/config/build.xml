@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Ant build file used for Claroline's Jenkins job. See http://jenkins-php.org/ -->
+
+<project name="Claronext" default="build" basedir="../../..">
+
+    <property name="appdir" value="${basedir}/app"/>
+    <property name="srcdir" value="${basedir}/vendor/claroline"/>
+    <property name="builddir" value="${appdir}/build"/>
+    <property name="configdir" value="${appdir}/dev/config"/>
+
+    <target name="build" depends="parallelTasks,phpunit,phpcb"/>
+
+    <target name="phpunit"
+            description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
+        <exec executable="phpunit" failonerror="true">
+            <arg value="-c" />
+            <arg path="${appdir}/phpunit.xml" />
+            <arg value="--log-junit" />
+            <arg path="${builddir}/logs/junit.xml" />
+            <arg value="--coverage-html"/>
+            <arg path="${builddir}/coverage" />
+            <arg value="--verbose" />
+            <arg path="${srcdir}/core-bundle" />
+        </exec>
+    </target>
+
+    <target name="parallelTasks"
+            description="Run the pdepend, phpmd, phpcpd, phpcs, phpdoc, phploc, jshint and jslint tasks in parallel using a maximum of 2 threads.">
+        <parallel threadCount="2">
+            <sequential>
+                <antcall target="pdepend"/>
+                <antcall target="phpmd"/>
+            </sequential>
+            <antcall target="phpcpd"/>
+            <antcall target="phpcs"/>
+            <antcall target="phpdoc"/>
+            <antcall target="phploc"/>
+            <antcall target="jshint"/>
+            <antcall target="jslint"/>
+        </parallel>
+    </target>
+
+    <target name="pdepend"
+            description="Generate jdepend.xml and software metrics charts using PHP_Depend">
+        <exec executable="pdepend">
+            <arg value="--jdepend-xml=${builddir}/logs/jdepend.xml" />
+            <arg value="--jdepend-chart=${builddir}/pdepend/dependencies.svg" />
+            <arg value="--overview-pyramid=${builddir}/pdepend/overview-pyramid.svg" />
+            <arg value="--ignore=${srcdir}/*/*/*/Migrations" />
+            <arg path="${srcdir}" />
+        </exec>
+    </target>
+
+    <target name="phpmd"
+            description="Generate pmd.xml using PHPMD">
+        <exec executable="phpmd">
+            <arg path="${srcdir}" />
+            <arg value="xml" />
+            <arg value="${configdir}/phpmd.xml" />
+            <arg value="--reportfile" />
+            <arg value="${builddir}/logs/pmd.xml" />
+            <arg value="--exclude" />
+            <arg value="${srcdir}/*/*/*/Migrations" />
+        </exec>
+    </target>
+
+    <target name="phpcpd"
+            description="Generate pmd-cpd.xml using PHPCPD">
+        <exec executable="phpcpd">
+            <arg value="--log-pmd" />
+            <arg value="${builddir}/logs/pmd-cpd.xml" />
+            <arg path="${srcdir}" />
+        </exec>
+    </target>
+
+    <target name="phploc"
+            description="Generate phploc.csv">
+        <exec executable="phploc">
+            <arg value="--log-csv" />
+            <arg value="${builddir}/logs/phploc.csv" />
+            <arg path="${srcdir}" />
+        </exec>
+    </target>
+
+    <target name="phpcs"
+            description="Generate checkstyle.xml using PHP_CodeSniffer">
+        <exec executable="phpcs" output="/dev/null">
+            <arg value="--report=checkstyle" />
+            <arg value="--report-file=${builddir}/logs/checkstyle.xml" />
+            <arg value="--standard=${configdir}/phpcs.xml" />
+            <arg path="${srcdir}" />
+        </exec>
+    </target>
+
+    <target name="phpdoc"
+            description="Generate API documentation using PHPDocumentor">
+        <exec executable="phpdoc">
+            <arg value="--quiet" />
+            <arg value="--ignore" />
+            <arg path="${srcdir}/*/*/*/Tests/*,${srcdir}/*/*/*/Resources/*,${srcdir}/*/*/*/Migrations/*" />
+            <arg value="--directory" />
+            <arg path="${srcdir}" />
+            <arg value="--target" />
+            <arg path="${builddir}/api" />
+        </exec>
+    </target>
+
+    <target name="phpcb"
+         description="Aggregate tool output with PHP_CodeBrowser">
+        <exec executable="phpcb">
+            <arg value="--log" />
+            <arg path="${builddir}/logs" />
+            <arg value="--source" />
+            <arg path="${srcdir}" />
+            <arg value="--output" />
+            <arg path="${builddir}/code-browser" />
+        </exec>
+    </target>
+
+    <target name="jshint"
+         description="Generate checkstyle-jshint.xml using JSHint">
+        <exec executable="jshint" output="${builddir}/logs/checkstyle-jshint.xml">
+            <arg value="--reporter=${configdir}/checkstyle-errors.js" />
+            <arg value="--config" />
+            <arg path="${configdir}/jshint.json" />
+            <arg path="${srcdir}" />
+        </exec>
+    </target>
+
+    <target name="jslint"
+         description="Generate jslint.xml using JSHint">
+        <exec executable="jshint" output="${builddir}/logs/jslint.xml">
+            <arg value="--reporter=jslint" />
+            <arg value="--config" />
+            <arg path="${configdir}/jshint.json" />
+            <arg path="${srcdir}" />
+        </exec>
+    </target>
+</project>

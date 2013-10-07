@@ -1,3 +1,0 @@
-{% twig_js name="removeMessageConfirm" %}
-
-{{ nbItems }} {{ 'remove_messages_confirm_message'|trans({}, 'platform') }}
