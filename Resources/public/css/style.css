@@ -57,11 +57,17 @@ article footer .tags {
 article .highlight {
   background-color: #DFFF00;
 }
-.comment_list li {
-  margin-bottom: 20px;
-}
 .comment_list li.unpublished {
   border: 1px dotted orange;
+}
+.comment_list li .panel-heading {
+  padding: 5px;
+}
+.comment_list li .panel-body {
+  padding: 10px;
+}
+.comment_list li .panel-body p {
+  margin-bottom: 0;
 }
 #icap_blog_post_form label[for=icap_blog_post_form_content] {
   float: none;

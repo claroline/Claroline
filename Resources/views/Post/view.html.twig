@@ -22,25 +22,35 @@
         {% for comment in postComments %}
             {% set isPublished = comment.isPublished %}
             {% if is_granted('EDIT', blog) or isPublished %}
-            <li{% if isPublished == false %} class="unpublished"{% endif %}>
-                {% if is_granted('EDIT', blog) %}
-                <div class="btn-group pull-right">
-                    <a href="{{ path('icap_blog_comment_delete', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" class="btn btn-sm btn-danger delete" data-confirm-title="{{ 'comment_deletion_confirm_title'|trans }}" data-confirm-message="{{ 'comment_deletion_confirm_message'|trans }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-toggle="tooltip" title="{{ 'delete'|trans({}, 'platform') }}" data-placement="top" data-original-title="{{ 'delete'|trans({}, 'platform') }}">
-                        <i class="icon-trash"></i>
-                    </a>
-                    {% if isPublished %}
-                    <a href="{{ path('icap_blog_comment_unpublish', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" data-toggle="tooltip" title="{{ 'unpublish'|trans }}" data-placement="top" data-original-title="{{ 'unpublish'|trans }}" class="btn btn-sm">
-                        <i class="icon-eye-close"></i>
-                    </a>
-                    {% else %}
-                    <a href="{{ path('icap_blog_comment_publish', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" data-toggle="tooltip" title="{{ 'publish'|trans }}" data-placement="top" data-original-title="{{ 'publish'|trans }}" class="btn btn-default btn-sm">
-                        <i class="icon-eye-open"></i>
-                    </a>
-                    {% endif %}
+            <li>
+                <div class="panel {% if isPublished == false %}panel-warning{% else %}panel-default{% endif %}">
+                    <div class="panel-heading">
+                        {% if is_granted('EDIT', blog) %}
+                        <div class="btn-group pull-right">
+                            <a href="{{ path('icap_blog_comment_delete', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" class="btn btn-xs btn-danger delete" data-confirm-title="{{ 'comment_deletion_confirm_title'|trans }}" data-confirm-message="{{ 'comment_deletion_confirm_message'|trans }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-toggle="tooltip" title="{{ 'delete'|trans({}, 'platform') }}" data-placement="top" data-original-title="{{ 'delete'|trans({}, 'platform') }}">
+                                <i class="icon-trash"></i>
+                            </a>
+                            {% if isPublished %}
+                            <a href="{{ path('icap_blog_comment_unpublish', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" data-container="body" title="{{ 'unpublish'|trans }}" data-placement="top" data-original-title="{{ 'unpublish'|trans }}">
+                                <i class="icon-eye-close"></i>
+                            </a>
+                            {% else %}
+                            <a href="{{ path('icap_blog_comment_publish', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" class="btn btn-xs btn-default" data-toggle="tooltip" data-container="body" title="{{ 'publish'|trans }}" data-placement="top" data-original-title="{{ 'publish'|trans }}">
+                                <i class="icon-eye-open"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+                        <ul class="list-inline">
+                            <li><span class="icon-user"> </span>{{ comment.author.firstname ~ ' ' ~ comment.author.lastname }}</li>
+                            {% if isPublished %}<li><span class="icon-calendar"></span>  {{ comment.publicationDate|date('date_format'|trans({}, 'platform')) }}</li>{% endif %}
+                        </ul>
+                    </div>
+                    <div class="panel-body">
+                        {{ comment.message|raw }}
+                    </div>
                 </div>
-                {% endif %}
-                <p>{{ comment.author.firstname ~ ' ' ~ comment.author.lastname }}{% if isPublished %}, {{ comment.publicationDate|date('date_format'|trans({}, 'platform')) }}{% endif %}</p>
-                <p>{{ comment.message|raw }}</p>
             </li>
             {% endif %}
         {% endfor %}
@@ -49,7 +59,9 @@
             {% set countComments = is_granted('EDIT', blog) ? post.countComments(true) : post.countComments %}
             {% if countComments > 0 %}{{ 'add_comment'|trans }}{% else %}{{ 'be_the_first_to_comment'|trans }}{% endif %} :
             <form action="{{ path('icap_blog_post_view', {'blogId': _resource.id, 'postSlug': post.slug}) }}" method="post" {{ form_enctype(form) }}>
+                {{ form_errors(form) }}
                 {{ form_widget(form.message) }}
+                {{ form_rest(form) }}
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">{{ 'to_comment'|trans }}</button>
                 </div>
