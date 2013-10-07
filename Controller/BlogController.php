@@ -41,6 +41,7 @@ class BlogController extends Controller
             return $this->redirect($this->generateUrl('icap_blog_view_search', array('blogId' => $blog->getId(), 'search' => $search)));
         }
 
+        /** @var \Icap\BlogBundle\Repository\PostRepository $postRepository */
         $postRepository = $this->get('icap.blog.post_repository');
 
         $tag    = null;
@@ -66,53 +67,17 @@ class BlogController extends Controller
         ;
 
         if (!$this->isUserGranted("EDIT", $blog)) {
-            $query
-                ->andWhere('post.publicationDate IS NOT NULL')
-                ->andWhere('post.status = :publishedStatus')
-                ->setParameter('publishedStatus', Statusable::STATUS_PUBLISHED)
-            ;
+            $query = $postRepository->filterByPublishPost($query);
         }
 
-        if (null !== $tag) {
-            $query
-                ->join('post.tags', 't')
-                ->andWhere('t.id = :tagId')
-                ->setParameter('tagId', $tag->getId())
-            ;
-        } elseif (null !== $author) {
-            $query
-                ->andWhere('post.author = :authorId')
-                ->setParameter('authorId', $author->getId())
-            ;
-        } elseif (null !== $date) {
-            $dates     = explode('-', $filter);
-            $startDate = new \DateTime();
-            $endDate   = new \DateTime();
+        $criterias = array(
+            'tag'    => $tag,
+            'author' => $author,
+            'date'   => $date,
+            'blogId' => $blog->getId()
+        );
 
-            $countDateParts = count($dates);
-            if (2 === $countDateParts) {
-                $startDate->setDate($dates[1], $dates[0], 1);
-                $endDate->setTimestamp(strtotime('+1 month', $startDate->getTimestamp()));
-            }
-            elseif (2 < $countDateParts) {
-                $startDate->setDate($dates[1], $dates[0], $dates[0]);
-                $endDate->setDate($dates[1], $dates[0], $dates[0]);
-            }
-            else {
-                throw new \InvalidArgumentException('Invalid format for date filter argument');
-            }
-
-            $query
-                ->andWhere('post.publicationDate >= :startDate')
-                ->andWhere('post.publicationDate <= :endDate')
-                ->setParameter('startDate', $startDate)
-                ->setParameter('endDate', $endDate);
-        }
-
-        $query
-            ->setParameter('blogId', $blog->getId())
-            ->orderBy('post.publicationDate', 'DESC')
-        ;
+        $query = $postRepository->createCriteriaQueryBuilder($criterias, $query);
 
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new PagerFanta($adapter);
@@ -288,16 +253,17 @@ class BlogController extends Controller
         $endDate           = $requestParameters['end'];
         $calendarDatas     = array();
 
+        /** @var \Icap\BlogBundle\Repository\PostRepository $postRepository */
         $postRepository = $this->getDoctrine()->getManager()->getRepository('IcapBlogBundle:Post');
 
-        $posts = $postRepository->findPublishedByBlogAndDates($blog, $startDate, $endDate);
+        $posts = $postRepository->findCalendarDatas($blog, $startDate, $endDate);
 
         foreach ($posts as $post) {
             $calendarDatas[] = array(
-                'id'    => $post->getId(),
-                'start' => $post->getPublicationDate()->format('Y-m-d'),
-                'title' => $post->getTitle(),
-                'url'   => $this->generateUrl('icap_blog_post_view', array('blogId' => $blog->getId(), 'postSlug' => $post->getSlug()))
+                'id'    => '12',
+                'start' => $post['publicationDate']->format('Y-m-d'),
+                'title' => $post['nbPost'],
+                'url'   => $this->generateUrl('icap_blog_view_filter', array('blogId' => $blog->getId(), 'filter' => $post['publicationDate']->format('d-m-Y')))
             );
         }
 

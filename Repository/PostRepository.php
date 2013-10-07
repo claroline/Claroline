@@ -3,6 +3,7 @@
 namespace Icap\BlogBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Statusable;
 use Icap\BlogBundle\Exception\TooMuchResultException;
@@ -89,7 +90,7 @@ class PostRepository extends EntityRepository
      *
      * @return array|\Doctrine\ORM\AbstractQuery
      */
-    public function findPublishedByBlogAndDates(Blog $blog, $startDate, $endDate, $executeQuery = true)
+    public function findCalendarDatas(Blog $blog, $startDate, $endDate, $executeQuery = true)
     {
         $startDateTime = new \DateTime();
         $startDateTime->setTimestamp($startDate);
@@ -98,6 +99,7 @@ class PostRepository extends EntityRepository
         $endDateTime->setTimestamp($endDate);
 
         $query = $this->createQueryBuilder('post')
+            ->select(array('post.publicationDate', 'SUBSTRING(post.publicationDate, 1, 7) as groupDate', 'COUNT(post.id) as nbPost'))
             ->andWhere('post.blog = :blogId')
             ->andWhere('post.status = :postStatus')
             ->andWhere('post.publicationDate IS NOT NULL')
@@ -106,6 +108,7 @@ class PostRepository extends EntityRepository
             ->setParameter('postStatus', Statusable::STATUS_PUBLISHED)
             ->setParameter('startDate', $startDateTime)
             ->setParameter('endDate', $endDateTime)
+            ->groupBy('groupDate')
             ->getQuery()
         ;
 
@@ -132,5 +135,80 @@ class PostRepository extends EntityRepository
         ;
 
         return $executeQuery ? $query->getResult(): $query;
+    }
+
+    /**
+     * @param QueryBuilder $query
+     *
+     * @return QueryBuilder
+     */
+    public function filterByPublishPost(QueryBuilder $query)
+    {
+        return $query
+            ->andWhere('post.publicationDate IS NOT NULL')
+            ->andWhere('post.status = :publishedStatus')
+            ->setParameter('publishedStatus', Statusable::STATUS_PUBLISHED);
+    }
+
+    /**
+     * @param array        $criterias
+     * @param QueryBuilder $query
+     *
+     * @return QueryBuilder
+     * @throws \InvalidArgumentException
+     */
+    public function createCriteriaQueryBuilder($criterias, QueryBuilder $query)
+    {
+        $tag    = $criterias['tag'];
+        $author = $criterias['author'];
+        $date   = $criterias['date'];
+        $blogId = $criterias['blogId'];
+
+        if (null !== $tag) {
+            $query
+                ->join('post.tags', 't')
+                ->andWhere('t.id = :tagId')
+                ->setParameter('tagId', $tag->getId())
+            ;
+        } elseif (null !== $author) {
+            $query
+                ->andWhere('post.author = :authorId')
+                ->setParameter('authorId', $author->getId())
+            ;
+        } elseif (null !== $date) {
+            $dates     = explode('-', $date);
+            $startDate = new \DateTime();
+            $endDate   = new \DateTime();
+
+            $countDateParts = count($dates);
+            if (2 === $countDateParts) {
+                $startDate
+                    ->setDate($dates[1], $dates[0], 1)
+                    ->setTime(0, 0);
+                $endDate->setTimestamp(strtotime('+1 month', $startDate->getTimestamp()));
+            }
+            elseif (2 < $countDateParts) {
+                $startDate
+                    ->setDate($dates[2], $dates[1], $dates[0])
+                    ->setTime(0, 0);
+                $endDate->setTimestamp(strtotime('+1 day', $startDate->getTimestamp()));
+            }
+            else {
+                throw new \InvalidArgumentException('Invalid format for date filter argument');
+            }
+
+            $query
+                ->andWhere('post.publicationDate >= :startDate')
+                ->andWhere('post.publicationDate <= :endDate')
+                ->setParameter('startDate', $startDate)
+                ->setParameter('endDate', $endDate);
+        }
+
+        $query
+            ->setParameter('blogId', $blogId)
+            ->orderBy('post.publicationDate', 'DESC')
+        ;
+
+        return $query;
     }
 }
