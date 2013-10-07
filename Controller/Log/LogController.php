@@ -111,6 +111,10 @@ class LogController extends Controller
      */
     public function updateLogWorkspaceWidgetConfig(WidgetInstance $widgetInstance)
     {
+        if (!$this->get('security.context')->isGranted('edit', $widgetInstance)) {
+            throw new AccessDeniedException();
+        }
+
         $config = $this->get('claroline.log.manager')->getLogConfig($widgetInstance);
         $form = $this->get('form.factory')->create($this->get('claroline.form.logWorkspaceWidgetConfig'), $config);
 
@@ -146,6 +150,10 @@ class LogController extends Controller
      */
     public function updateLogDesktopWidgetConfig(WidgetInstance $widgetInstance)
     {
+        if (!$this->get('security.context')->isGranted('edit', $widgetInstance)) {
+            throw new AccessDeniedException();
+        }
+
         $em = $this->getDoctrine()->getManager();
         $config = $this->get('claroline.log.manager')->getLogConfig($widgetInstance);
 

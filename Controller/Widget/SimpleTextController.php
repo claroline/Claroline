@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\SimpleTextConfig;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class SimpleTextController extends Controller
 {
@@ -20,7 +21,9 @@ class SimpleTextController extends Controller
      */
     public function updateSimpleTextWidgetConfig(WidgetInstance $widget)
     {
-        //vérification d'accès ici
+        if (!$this->get('security.context')->isGranted('edit', $widget)) {
+            throw new AccessDeniedException();
+        }
 
        $simpleTextConfig = $this->get('claroline.manager.simple_text_manager')->getTextConfig($widget);
        $form = $this->get('claroline.form.factory')->create(FormFactory::TYPE_SIMPLE_TEXT);

@@ -103,58 +103,7 @@ class HomeListener
      */
     public function onImportHome(ImportToolEvent $event)
     {
-//        $config = $event->getConfig();
-//        $widgets = $this->em->getRepository('Claroline\CoreBundle\Entity\Widget\Widget')->findAll();
-//
-//        foreach ($widgets as $widget) {
-//            $found = false;
-//            $parent = $this->em->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
-//                ->findOneBy(array('widget' => $widget, 'parent' => null, 'isDesktop' => false));
-//
-//            if ($parent === null) {
-//                break;
-//            }
-//
-//            if (isset($config['widget'])) {
-//                foreach ($config['widget'] as $widgetConfig) {
-//                     if ($widgetConfig['name'] === $widget->getName()) {
-//                        $found = true;
-//                        $widget = $this->em->getRepository('ClarolineCoreBundle:Widget\Widget')
-//                            ->findOneByName($widgetConfig['name']);
-//                        $displayConfig = new WidgetInstance();
-//                        $displayConfig->setParent($parent);
-//                        $displayConfig->setVisible($widgetConfig['is_visible']);
-//                        $displayConfig->setWidget($widget);
-//                        $displayConfig->setDesktop(false);
-//                        $displayConfig->isLocked(true);
-//                        $displayConfig->setWorkspace($event->getWorkspace());
-//                        $displayConfig->setName($parent->getName());
-//
-//                        if (isset($widgetConfig['config'])) {
-//                            $this->ed->dispatch(
-//                                "widget_{$widgetConfig['name']}_from_template",
-//                                'ImportWidgetConfig',
-//                                array($widgetConfig['config'], $event->getWorkspace())
-//                            );
-//                        }
-//
-//                        $this->em->persist($displayConfig);
-//                     }
-//                }
-//            }
-//
-//            if (!$found) {
-//                $displayConfig = new WidgetInstance();
-//                $displayConfig->setParent($parent);
-//                $displayConfig->setVisible(false);
-//                $displayConfig->setWidget($widget);
-//                $displayConfig->setDesktop(false);
-//                $displayConfig->isLocked(true);
-//                $displayConfig->setWorkspace($event->getWorkspace());
-//                $displayConfig->setName($parent->getName());
-//                $this->em->persist($displayConfig);
-//            }
-//        }
+        //no implementation yet
     }
 
     /**
@@ -164,28 +113,8 @@ class HomeListener
      */
     public function onExportHome(ExportToolEvent $event)
     {
+        //no implementation yet
         $home = array();
-        $workspace = $event->getWorkspace();
-        $configs = $this->wm->generateWorkspaceDisplayConfig($workspace->getId());
-
-        foreach ($configs as $config) {
-            $widgetArray = array();
-            $widgetArray['name'] = $config->getWidget()->getName();
-            $widgetArray['is_visible'] = $config->isVisible();
-            if ($config->getWidget()->isExportable()) {
-                $newEvent = $this->ed->dispatch(
-                    "widget_{$config->getWidget()->getName()}_to_template",
-                    'ExportWidgetConfig',
-                    array($config->getWidget(), $workspace)
-                );
-
-                $widgetArray['config'] = $newEvent->getConfig();
-            }
-
-            $perms[] = $widgetArray;
-        }
-
-        $home['widget'] = $perms;
         $event->setConfig($home);
     }
 

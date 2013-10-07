@@ -242,7 +242,7 @@ class HomeController extends Controller
     {
         $this->widgetManager->removeInstance($widgetInstance);
 
-        return new Response(204);
+        return new Response('success', 204);
     }
 
     /**
@@ -256,7 +256,7 @@ class HomeController extends Controller
     {
         $this->widgetManager->removeInstance($widgetInstance);
 
-        return new Response(204);
+        return new Response('success', 204);
     }
 
     /**
@@ -1049,15 +1049,15 @@ class HomeController extends Controller
         $widgetConfigs = $this->homeTabManager
             ->getWidgetConfigsByUser($homeTab, $user);
 
-        $exludedWidgetInstanceList = array();
+        $excludedWidgetInstanceList = array();
 
         foreach ($widgetConfigs as $widgetConfig) {
-            $exludedWidgetInstanceList[] = $widgetConfig->getWidgetInstance()->getId();
+            $excludedWidgetInstanceList[] = $widgetConfig->getWidgetInstance()->getId();
         }
         $adminWidgetInstances = $this->widgetManager
-            ->getAdminDesktopWidgetInstance($exludedWidgetInstanceList);
+            ->getAdminDesktopWidgetInstance($excludedWidgetInstanceList);
         $widgetInstances = $this->widgetManager
-            ->getDesktopWidgetInstance($user, $exludedWidgetInstanceList);
+            ->getDesktopWidgetInstance($user, $excludedWidgetInstanceList);
 
         return array(
             'tool' => $this->getHomeTool(),
