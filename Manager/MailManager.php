@@ -48,7 +48,7 @@ class MailManager
         }
     }
 
-    public function sendForgotPassword($from,$sender, $hash)
+    public function sendForgotPassword($from, $sender, $hash)
     {
         $msg = $this->translator->trans('mail_click', array(), 'platform');
         $link = $this->request->server->get('HTTP_ORIGIN') . $this->router->generate(
