@@ -1,8 +1,8 @@
-<a href=""><span class="icon-chevron-right"></span></a>
 <form class="tree-item form-inline" ng-click="setPreviewStep(step)" ng-mouseenter="showButtons = true" ng-mouseleave="showButtons = false" >
-    <span>{{ step.name | limitTo:10 }}</span>
+    <a href=""><span class="icon-chevron-right"></span></a>
+    <span class="step-name">{{ step.name | limitTo:10 }}</span>
     
-    <span ng-show="showButtons">
+    <span ng-show="showButtons" class="pull-right">
         <button class="btn btn-default btn-xs" ng-click="addChild(step)" tooltip="Add a child">
             <i class="icon-plus"></i>
         </button>

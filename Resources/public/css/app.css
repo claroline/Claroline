@@ -166,8 +166,7 @@ table td.icon {
     text-decoration: none;
 }
 
-.tree-item {
-    display: inline-block;
+.step-name {
     margin-left: 4px;
 }
 
@@ -183,7 +182,7 @@ table td.icon {
 }
 
 .tree-item {
-    padding: 2px 6px;
+    padding: 2px 8px;
     border-radius: 4px;
 }
 

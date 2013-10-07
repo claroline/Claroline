@@ -3,12 +3,45 @@
 /**
  * Path Factory
  */
-var PathFactoryProto = function() {
+function PathFactory($http, $q) {
     var path = null;
     var maxStepId = 0;
     var maxResourceId = 0;
     
     return {
+        /**
+         * Load path on page load
+         * @returns object
+         */
+        loadPath: function(pathId) {
+            var deferred = $q.defer();
+            if (null !== path) {
+                // Current path already loaded
+                return deferred.resolve(path);
+            }
+            else {
+                // Load path from AJAX if not creating a new path
+                if (pathId) {
+                    // Edit existing path
+                    $http.get(Routing.generate('innova_path_get_path', {id: EditorApp.pathId}))
+                         .success(function (data) {
+                            path = data;
+                            return deferred.resolve(path);
+                         })
+                         .error(function(data, status) {
+                             return deferred.reject('error loading path');
+                         });
+                }
+                else {
+                    // Create new path
+                    path = this.generateNewPath();
+                    return deferred.resolve(path);
+                }
+            }
+            
+            return deferred.promise;
+        },
+        
         /**
          * 
          * @returns PathFactory
@@ -267,4 +300,4 @@ var PathFactoryProto = function() {
             return this;
         }
     };
-};
+}

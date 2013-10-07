@@ -3,7 +3,7 @@
 /**
  * Template Factory
  */
-var TemplateFactoryProto = function() {
+function TemplateFactory() {
     var templates = [];
     var currentTemplate = null;
     
@@ -77,4 +77,4 @@ var TemplateFactoryProto = function() {
             return this;
         }
     };
-};
+}
