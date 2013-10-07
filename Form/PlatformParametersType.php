@@ -18,6 +18,8 @@ class PlatformParametersType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('name', 'text', array('required' => false))
+            ->add('footer', 'text', array('required' => false))
             ->add('selfRegistration', 'checkbox', array('required' => false))
             ->add(
                 'localLanguage',
@@ -33,7 +35,7 @@ class PlatformParametersType extends AbstractType
                     'choices' => $this->themes
                 )
             );
-    }
+   }
 
     public function getName()
     {

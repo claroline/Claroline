@@ -47,12 +47,13 @@
 {% endblock %}
 
 {% block layout %}
-    <div id="sf-environement" data-env="{{ app.environment }}"></div>
+    <div id="sf-environement" data-env="{{ app.environment }}" class="hide"></div>
+    <div id="homePath" class="hide">{{ path("claro_index") }}</div>
     <div id="wrap">
         <div class="please-wait">
             <h4><span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span></h4>
         </div>
-            
+
         {% if not is_path_mode and not has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
             {% if workspace is defined %}
             {% render controller('ClarolineCoreBundle:Layout:topBar', {'workspaceId': workspace.getId()}) %}
@@ -60,9 +61,9 @@
             {% render controller('ClarolineCoreBundle:Layout:topBar') %}
             {% endif %}
         {% endif %}
-            
+
        {% block impersonation %}
-            {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') or is_impersonated() %} 
+            {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') or is_impersonated() %}
                 {% render controller('ClarolineCoreBundle:Layout:renderWarningImpersonation') %}
             {% endif %}
         {% endblock %}
