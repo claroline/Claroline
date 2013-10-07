@@ -33,7 +33,9 @@
             <div class="wiki-contents-inner well">
                 <div class="wiki-contents-title">
                     {{ 'wiki_contents'|trans({},'icap_wiki') }}&nbsp;
-                    <a id="move-contents-trigger" class="btn btn-default btn-xs pull-right"><i class="icon-hand-up"></i></a>
+                    <a id="move-contents-trigger" class="btn btn-default btn-xs pull-right">
+                        <i class="icon-resize-vertical"></i> <i class="icon-reorder"></i>
+                    </a>
                 </div>
                 {% include "IcapWikiBundle:Wiki:wikiContents.html.twig" with {'sections' : tree[0].__children, 'isAdmin' : is_granted('EDIT', wiki), 'delimeter' : '.' } %}
             </div>
