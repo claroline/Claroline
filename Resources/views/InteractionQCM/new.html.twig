@@ -42,58 +42,57 @@
 
     <form onsubmit="return check_form('{{ 'nbr_choices' | trans }}', '{{ 'answer_coched' | trans }}', '{{ 'label_empty' | trans }}', '{{ 'point_answers' | trans }}', '{{ 'point_answer' | trans }}', '{{ 'invite_question' | trans }}');"
           action="{{ path('ujm_interactionqcm_create') }}" method="post" {{ form_enctype(form) }}>
-        <div class="panel-body">
 
+        <div class="panel-body">
             {% include "UJMExoBundle:Partial:question.html.twig" %}
 
-        </div>
-        <div class="list-group">
-            <div class="list-group-item">
-                <h4 class="list-group-item-heading">
-                    {{ 'response' | trans }}:
-                </h4>
-                <br>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'points' | trans }}</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group row">
-                            {{ form_label(form.scoreRightResponse) }}
-                            {{ form_errors(form.scoreRightResponse) }}
-                            <div class="col-md-9">{{ form_widget(form.scoreRightResponse) }}</div>
-                        </div>
-                        <div class="form-group row">
-                            {{ form_label(form.scoreFalseResponse) }}
-                            {{ form_errors(form.scoreFalseResponse) }}
-                            <div class="col-md-9">{{ form_widget(form.scoreFalseResponse) }}</div>
-                        </div>
-                        <div class="form-group row">
-                            {{ form_label(form.weightResponse) }}
-                            <div class="col-md-9">{{ form_widget(form.weightResponse) }}</div>
-                        </div>
-                    </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'response' | trans }}</h3>
                 </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'choice' | trans }}</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group row">
-                            {{ form_label(form.shuffle) }}
-                            <div class="col-md-9">{{ form_widget(form.shuffle) }}</div>
+                <div class="panel-body">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{{ 'points' | trans }}</h3>
                         </div>
-                        {{ form_row(form.typeQCM) }}
-                         <div id="choiceError"></div>
-                         <div id="tableChoice"></div>
-                         {{ form_row(form.choices) | replace({"col-md-3": "col-md-12"}) | raw }}
-                         {{ form_errors(form.choices) }}
+                        <div class="panel-body">
+                            <div class="form-group row">
+                                {{ form_label(form.scoreRightResponse) }}
+                                {{ form_errors(form.scoreRightResponse) }}
+                                <div class="col-md-9">{{ form_widget(form.scoreRightResponse) }}</div>
+                            </div>
+                            <div class="form-group row">
+                                {{ form_label(form.scoreFalseResponse) }}
+                                {{ form_errors(form.scoreFalseResponse) }}
+                                <div class="col-md-9">{{ form_widget(form.scoreFalseResponse) }}</div>
+                            </div>
+                            <div class="form-group row">
+                                {{ form_label(form.weightResponse) }}
+                                <div class="col-md-9">{{ form_widget(form.weightResponse) }}</div>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div style="display: none;">{{ form_rest(form) }}</div>
-                {{ form_errors(form) }}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{{ 'choice' | trans }}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group row">
+                                {{ form_label(form.shuffle) }}
+                                <div class="col-md-9">{{ form_widget(form.shuffle) }}</div>
+                            </div>
+                            {{ form_row(form.typeQCM) }}
+                             <div id="choiceError"></div>
+                             <div id="tableChoice"></div>
+                             {{ form_row(form.choices) | replace({"col-md-3": "col-md-12"}) | raw }}
+                             {{ form_errors(form.choices) }}
+                        </div>
+                    </div>
+
+                    <div style="display: none;">{{ form_rest(form) }}</div>
+                    {{ form_errors(form) }}
+                </div>
             </div>
         </div>
         <div class="panel-footer">
@@ -108,7 +107,6 @@
 
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionQCM.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/editionAv.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
 
