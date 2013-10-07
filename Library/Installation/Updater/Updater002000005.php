@@ -23,7 +23,7 @@ class Updater002000005
 
     public function preUpdate()
     {
-        //$this->addFixtureDebug();
+//        $this->addFixtureDebug();
         $this->copyWidgetHomeTabConfigTable();
     }
 
@@ -67,7 +67,7 @@ class Updater002000005
     private function updateWidgetsDatas()
     {
         $cn = $this->container->get('doctrine.dbal.default_connection');
-        $select = "SELECT instance.* FROM claro_widget_display instance WHERE is_desktop = 0 and parent_id is not null
+        $select = "SELECT instance.* FROM claro_widget_display instance where parent_id is not null
             ORDER BY id";
         $datas =  $cn->query($select);
 
