@@ -20,11 +20,14 @@ class RssReaderController extends Controller
      */
     public function updateSimpleTextWidgetConfig(WidgetInstance $widget)
     {
-        //vérification d'accès ici
+        if (!$this->get('security.context')->isGranted('edit', $widget)) {
+            throw new AccessDeniedException();
+        }
+
        $rssConfig = $this->get('claroline.manager.rss_manager')->getConfig($widget);
        $form = $this->container->get('form.factory')->create(new ConfigType, new Config());
        $form->bind($this->getRequest());
-       
+
        if ($rssConfig) {
           if ($form->isValid()) {
             $rssConfig->setUrl($form->get('url')->getData());
@@ -36,11 +39,11 @@ class RssReaderController extends Controller
                $rssConfig->setUrl($form->get('url')->getData());
            }
        }
-       
+
        $em = $this->get('doctrine.orm.entity_manager');
        $em->persist($rssConfig);
        $em->flush();
-       
+
        return new RedirectResponse($this->get('claroline.manager.widget_manager')->getRedirectRoute($widget));
     }
 }
