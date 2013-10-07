@@ -52,7 +52,7 @@
             $('#agenda_form').find('input:radio, input:checkbox')
                 .removeAttr('checked')
                 .removeAttr('selected');
-             $('#myModalLabel').text(Translator.get('agenda' + ':' + 'add_event'));
+            $('#myModalLabel').text(Translator.get('agenda' + ':' + 'add_event'));
             var  currentDate = $.fullCalendar.formatDate( new Date(),'dd/MM/yyyy HH:mm'); 
             var pickedDate = $.fullCalendar.formatDate( date,'dd/MM/yyyy HH:mm');
             $('#agenda_form_start').val(pickedDate);
