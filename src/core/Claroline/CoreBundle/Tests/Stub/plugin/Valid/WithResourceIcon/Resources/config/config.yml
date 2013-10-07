@@ -1,7 +1,0 @@
-plugin:
-  has_options: true
-
-  resources:
-    - class: Valid\WithResourceIcon\Entity\ResourceX
-      name: ResourceX
-      icon: validwithlargeicon.gif

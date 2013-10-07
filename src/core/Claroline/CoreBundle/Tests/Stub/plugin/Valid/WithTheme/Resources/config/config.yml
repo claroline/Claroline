@@ -1,6 +1,0 @@
-plugin:
-  has_options: true
-
-  themes:
-    - name: test
-      path: testpath.less

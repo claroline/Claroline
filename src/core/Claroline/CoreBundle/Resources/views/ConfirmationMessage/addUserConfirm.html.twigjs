@@ -1,3 +1,0 @@
-{% twig_js name="addUserConfirm" %}
-
-{{ nbItems }} {{ 'add_user_s_confirm_message'|trans({}, 'platform') }}
