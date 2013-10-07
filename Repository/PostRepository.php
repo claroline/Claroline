@@ -99,7 +99,7 @@ class PostRepository extends EntityRepository
         $endDateTime->setTimestamp($endDate);
 
         $query = $this->createQueryBuilder('post')
-            ->select(array('post.publicationDate', 'SUBSTRING(post.publicationDate, 1, 7) as groupDate', 'COUNT(post.id) as nbPost'))
+            ->select(array('post.publicationDate', 'SUBSTRING(post.publicationDate, 1, 10) as groupDate', 'COUNT(post.id) as nbPost'))
             ->andWhere('post.blog = :blogId')
             ->andWhere('post.status = :postStatus')
             ->andWhere('post.publicationDate IS NOT NULL')
