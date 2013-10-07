@@ -1,6 +1,6 @@
 plugin:
     has_options: false
-    icon: icap_wiki_icon.png
+    icon: icap_wiki_icon_admin.png
 
     resources:
         - class: Icap\WikiBundle\Entity\Wiki
