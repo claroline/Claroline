@@ -23,7 +23,7 @@ class Updater002000005
 
     public function preUpdate()
     {
-        $this->addFixtureDebug();
+        //$this->addFixtureDebug();
         $this->copyWidgetHomeTabConfigTable();
     }
 
@@ -34,7 +34,7 @@ class Updater002000005
         $this->updateWidgetHomeTabConfigsDatas();
         $this->updateAdminWorkspaceHomeTabDatas();
         $this->createWorkspacesListWidget();
-        $this->dropTables();
+        //$this->dropTables();
         $this->dropWidgetHomeTabConfigTableCopy();
     }
 
@@ -43,49 +43,31 @@ class Updater002000005
         $cn = $this->container->get('doctrine.dbal.default_connection');
         //create new table
 
-        $dconfigs = $cn->query("SELECT * FROM simple_text_dekstop_widget_config");
         //text_widget_id
         $result = $cn->query("SELECT id FROM claro_widget WHERE name = 'simple_text'");
         $widget = $result->fetch();
         $widgetId = $widget['id'];
-
-        foreach ($dconfigs as $config) {
-            //find the correct widget.
-            if ($config['is_default']) {
-                $result = $cn->query("SELECT id FROM claro_widget_instance where is_desktop = true and is_admin = true and widget_id = {$widgetId}");
-            } else {
-                $result = $cn->query("SELECT id FROM claro_widget_instance where user_id = {$config['user_id']} and widget_id = {$widgetId}");
-            }
-
-            $instance = $result->fetch();
-
-            $cn->query("INSERT into claro_simple_text_widget_config (content, widgetInstance_id)
-                VALUES ('{$config['content']}', {$instance['id']})");
-        }
-
         $wconfigs = $cn->query("SELECT * FROM simple_text_workspace_widget_config");
 
         foreach ($wconfigs as $config) {
-            if ($config['is_default']) {
-                $result = $cn->query("SELECT id FROM claro_widget_instance where is_desktop = false and is_admin = true and widget_id = {$widgetId}");
-            } else {
-                $result = $cn->query("SELECT id FROM claro_widget_instance where workspace_id = {$config['workspace_id']} and widget_id = {$widgetId} and is_admin = false");
+            if (!$config['is_default']) {
+               $query = "INSERT INTO claro_widget_instance (workspace_id, user_id, widget_id, is_admin, is_desktop, name)
+                   VALUES ({$config['workspace_id']}, null, {$widgetId}, false, false, 'simple_text' )";
+               $cn->query($query);
             }
 
-            $instance = $result->fetch();
+            $query = "SELECT * FROM claro_widget_instance WHERE workspace_id = {$config['workspace_id']} and widget_id = {$widgetId}";
+            $instance = $cn->query($query)->fetch();
 
             $cn->query("INSERT into claro_simple_text_widget_config (content, widgetInstance_id)
-                VALUES ('{$config['content']}', {$instance['id']})");
+                VALUES (". $cn->quote($config['content']) . ", {$instance['id']})");
         }
     }
 
     private function updateWidgetsDatas()
     {
         $cn = $this->container->get('doctrine.dbal.default_connection');
-        $select = "SELECT instance.* FROM claro_widget_display instance, claro_widget widget WHERE 
-            instance.widget_id = widget.id
-            and widget.is_configurable = false
-            or widget.name = 'simple_text'
+        $select = "SELECT instance.* FROM claro_widget_display instance WHERE is_desktop = 0 and parent_id is not null
             ORDER BY id";
         $datas =  $cn->query($select);
 
@@ -94,7 +76,7 @@ class Updater002000005
            $wsId = $row['workspace_id'] ? $row['workspace_id']: 'null';
            $userId = $row['user_id'] ? $row['user_id']: 'null';
            $query = "INSERT INTO claro_widget_instance (workspace_id, user_id, widget_id, is_admin, is_desktop, name)
-               VALUES ({$wsId}, {$userId}, {$row['widget_id']}, {$isAdmin}, {$row['is_desktop']}, 'change me !')";
+               VALUES ({$wsId}, {$userId}, {$row['widget_id']}, {$isAdmin}, {$row['is_desktop']}, 'nom' )";
            $cn->query($query);
         }
     }
@@ -105,6 +87,8 @@ class Updater002000005
         $cn->query('DROP table claro_widget_display');
         $cn->query('DROP TABLE simple_text_dekstop_widget_config');
         $cn->query('DROP TABLE simple_text_workspace_widget_config');
+        $cn->query('DROP TABLE claro_log_workspace_widget_config');
+        $cn->query('DROP TABLE claro_log_desktop_widget_config');
     }
 
     private function updateWidgetHomeTabConfigsDatas()
@@ -131,10 +115,10 @@ class Updater002000005
             $homeTabType = $homeTab['type'];
 
             $widgetInstanceReq = "
-                SELECT id
+                SELECT *
                 FROM claro_widget_instance
                 WHERE widget_id = {$widgetId}
-                AND is_admin = true
+                AND is_admin = false
             ";
 
             if ($homeTabType === 'admin_desktop' || $homeTabType === 'desktop') {
@@ -143,10 +127,22 @@ class Updater002000005
                 $widgetInstanceReq .= " AND is_desktop = false";
             }
 
-            $widgetInstances = $cn->query($widgetInstanceReq);
+            if (is_null($row['user_id'])) {
+                $widgetInstanceReq .= " AND user_id IS NULL";
+            } else {
+                $widgetInstanceReq .= " AND user_id = {$row['user_id']}";
+            }
 
-            if (count($widgetInstances) > 0) {
-                $widgetInstance = $widgetInstances->fetch();
+            if (is_null($row['workspace_id'])) {
+                $widgetInstanceReq .= " AND workspace_id IS NULL";
+            } else {
+                $widgetInstanceReq .= " AND workspace_id = {$row['workspace_id']}";
+            }
+
+            $widgetInstances = $cn->query($widgetInstanceReq);
+            $widgetInstance = $widgetInstances->fetch();
+
+            if ($widgetInstance) {
                 $widgetInstanceId = $widgetInstance['id'];
                 $updateReq = "
                     UPDATE claro_widget_home_tab_config
