@@ -32,6 +32,13 @@
             
             <div ng-include="webDir + 'js/Editor/Partial/navbar.html'"></div>
             
+            <div class="alerts col-md-12" ng-controller="AlertCtrl">
+                <div ng-repeat="alert in alerts" class="alert alert-dismissable alert-{% verbatim %}{{ alert.type }}{% endverbatim %}">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="closeAlert({% verbatim %}{{ $index }}{% endverbatim %})">&times;</button>
+                    {% verbatim %}{{ alert.msg }}{% endverbatim %}
+                </div>
+            </div>
+            
             <div ng-view class="panel-body"></div>
         </div>
     </div>
@@ -58,6 +65,10 @@
     
     {# ng-uisortable #}
     <script type="text/javascript" src="{{ asset('bundles/innovaangularuisortable/js/sortable.js') }}"></script>
+    
+    {# Alert #}
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Alert/Factory/AlertFactory.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Alert/Controller/AlertCtrl.js') }}"></script>
     
     {# History #}
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/History/Factory/HistoryFactory.js') }}"></script>

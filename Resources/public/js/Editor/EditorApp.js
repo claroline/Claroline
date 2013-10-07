@@ -71,8 +71,8 @@ EditorApp.factory('HistoryFactory', HistoryFactory);
 EditorApp.factory('ClipboardFactory', ClipboardFactory);
 
 // Alerts
-//EditorApp.factory('AlertFactory', AlertFactoryProto);
-//EditorApp.controller('AlertCtrl', AlertCtrlProto);
+EditorApp.factory('AlertFactory', AlertFactory);
+EditorApp.controller('AlertCtrl', AlertCtrl);
 
 // Main
 EditorApp.controller('MainCtrl', MainCtrl);
