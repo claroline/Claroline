@@ -79,8 +79,11 @@ class Updater002000005
     private function updateWidgetsDatas()
     {
         $cn = $this->container->get('doctrine.dbal.default_connection');
-        $select = "SELECT instance.* FROM claro_widget_display instance where parent_id is not null
-            ORDER BY id";
+        $select = "SELECT instance. * , widget.name as widget_name
+            FROM claro_widget_display instance
+            RIGHT JOIN claro_widget widget ON instance.widget_id = widget.id
+            WHERE parent_id IS NOT NULL ";
+
         $datas =  $cn->query($select);
 
         foreach ($datas as $row) {
@@ -88,7 +91,7 @@ class Updater002000005
            $wsId = $row['workspace_id'] ? $row['workspace_id']: 'null';
            $userId = $row['user_id'] ? $row['user_id']: 'null';
            $query = "INSERT INTO claro_widget_instance (workspace_id, user_id, widget_id, is_admin, is_desktop, name)
-               VALUES ({$wsId}, {$userId}, {$row['widget_id']}, {$isAdmin}, {$row['is_desktop']}, 'nom' )";
+               VALUES ({$wsId}, {$userId}, {$row['widget_id']}, {$isAdmin}, {$row['is_desktop']}, '{$row['widget_name']}' )";
            $cn->query($query);
         }
     }
