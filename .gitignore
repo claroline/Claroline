@@ -33,5 +33,4 @@ web/js/*
 web/themes/*
 web/thumbnails/*
 web/vendor/*
-web/uploads/*
-!web/uploads/logos/*
+web/uploads/*/logos/*
