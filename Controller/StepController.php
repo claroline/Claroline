@@ -48,6 +48,9 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 
 use Innova\PathBundle\Entity\Path;
 use Innova\PathBundle\Entity\Step;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+
 
 /**
  * Class StepController
@@ -85,7 +88,6 @@ class StepController extends Controller
     public function showAction($workspaceId, $pathId, $stepId)
     {
         $em = $this->entityManager();
-
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
         $step = $em->getRepository('InnovaPathBundle:Step')->findOneByResourceNode($stepId);
         $path = $em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
@@ -102,6 +104,7 @@ class StepController extends Controller
             'children' => $children
         );
     }
+
 
     /**
      * entityManager function

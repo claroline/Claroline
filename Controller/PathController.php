@@ -544,21 +544,37 @@ class PathController extends Controller
         
         if (!empty($id)) {
             $em = $this->entityManager();
-            
             $path = $em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($id);
             
-            if ($path) {
-                $em->remove($path->getResourceNode());
-                $em->flush();
+            if ($pathRoot = $em->getRepository('InnovaPathBundle:Step')->findOneBy(array('path' => $path, 'parent' => null))) {
+                $this->deleteStep($pathRoot);
             }
+            $em->remove($path->getResourceNode());
+            $em->flush();
         }
-        
-        
         
         $url = $this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspaceId, 'toolName' => 'innova_path'));
         return $this->redirect($url);
     }
 
+
+    private function deleteStep($step){
+        $em = $this->entityManager();
+        if($children = $em->getRepository('InnovaPathBundle:Step')->findByParent($step)){
+            echo $step->getId()." ce step a des enfants";
+            foreach ($children as $child){
+                echo "<br/>ce step (enfant)";
+                $this->deleteStep($child);
+            }
+        }
+        else{
+            echo "<br/>tentative de suppression";
+            $em = $this->entityManager();
+            $em->remove($step->getResourceNode());
+            $em->flush();
+            echo "<br/>suppression";
+        }
+    }
     /**
      * entityManager function
      *
