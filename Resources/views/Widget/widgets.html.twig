@@ -18,13 +18,28 @@
          >
             <div class="panel-heading relative">
                 <div class="panel-title">
-                    <a class="accordion-toggle" data-toggle="collapse" href="#collapse{{ widgetInstance.getId() }}">
+                    <a class="accordion-toggle widget-instance-name"
+                        data-toggle="collapse"
+                        href="#collapse{{ widgetInstance.getId() }}"
+                    >
                         {{ widgetInstance.getName() }}
                     </a>
                     <span class="toggle-visible {% if withConfig == 0 %} hidden {% endif %}">
                         <small>
                             [{{ widget.getName()|trans({}, 'widget') }}]
                         </small>
+                    </span>
+                    <span class="toggle-visible {% if withConfig == 0 %} hidden {% endif %}"
+                        widget-instance-id="{{ widgetInstance.getId() }}"
+                    >
+
+                        {% if not widgetInstance.isAdmin() %}
+                            <i class="icon-pencil widget-instance-rename pointer-hand"></i>
+
+                            {% if widgetDatas.configurable %}
+                                <i class="icon-cog widget-instance-config pointer-hand"></i>
+                            {% endif %}
+                        {% endif %}
                     </span>
                     <span class="toggle-visible {% if withConfig == 0 %} hidden {% endif %} pull-right"
                         widget-hometab-config-id="{{ widgetHomeTabConfig.getId() }}"
@@ -64,17 +79,17 @@
                 {% endif %}#}
             </div>
             <div id="collapse{{ widgetInstance.getId() }}" class="collapse-widget collapse in">
-                <div class="panel-body view">
+                <div class="panel-body widget-instance-view">
                    {{ widgetDatas.content|raw }}
                </div>
-               <div class="edition hide"></div>
+               <div class="panel-body widget-instance-edition hide"></div>
             </div>
         </div>
     {% endfor %}
 
     {% if isVisibleHomeTab and not isLockedHomeTab %}
         <br>
-        <div class="panel panel-default toggle-visible {% if withConfig == 0 %} hidden {% endif %}">
+        <div class="panel panel-default add-widget-instance toggle-visible {% if withConfig == 0 %} hidden {% endif %}">
             <div class="panel-heading pointer-hand text-center">
                 <i class="icon-plus-sign">
                     {{ 'add_widget_to_home_tab'|trans({}, 'platform') }}
@@ -102,90 +117,22 @@
     </div>
 </div>
 
+<div id="widget-modal-box" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h3 id="widget-modal-title">
+                    {{ 'rename_widget_instance'|trans({}, 'platform') }}
+                </h3>
+            </div>
+            <div id="widget-modal-body" class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
 {% block javascripts %}
-    <script type="text/javascript">
-        $(document).ready(function () {
-            'use strict';
-
-            $('body').on('mouseenter', '.panel-group > .panel', function () {
-                $('.panel-heading', this).find('.btn').removeClass('hide');
-            });
-
-            $('body').on('mouseleave', '.panel-group > .panel', function () {
-                $('.panel-heading', this).find('.btn').addClass('hide');
-            });
-
-            $('body').on('click', '.panel-group > .panel .panel-heading .btn', function (event) {
-                event.preventDefault();
-
-                var accordionGroup = $(this).parent().parent();
-
-                if ($(this).hasClass('editing')) {
-
-                    $(this).removeClass('btn-danger editing');
-                    $(this).addClass('btn-primary');
-                    $(this).html('<i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}');
-                    $('.view', accordionGroup).removeClass('hide');
-                    $('.edition', accordionGroup).addClass('hide');
-
-                } else {
-
-                    if ($('.edition', accordionGroup).html() == '') {
-                        $.get($(this).data('url'))
-                        .done(function (data) {
-                            $('.edition', accordionGroup).html(data);
-                        });
-                    }
-
-                    $(this).removeClass('btn-primary');
-                    $(this).addClass('btn-danger editing');
-                    $(this).html('<i class="icon-ban-circle"></i> {{ 'cancel'|trans({}, 'platform') }}');
-                    $('.view', accordionGroup).addClass('hide');
-                    $('.edition', accordionGroup).removeClass('hide');
-                }
-
-                if(!$('.collapse-widget', accordionGroup).hasClass('collapse in')){
-                    $('.collapse-widget', accordionGroup).collapse('show'); //show if is hide
-                }
-            });
-
-            $('body').on('click', '.panel-group > .panel .panel-group .claro-widget-form-cancel', function (event) {
-                event.preventDefault();
-
-                var accordionGroup = $(this).parents('.panel-group');
-
-                $('.panel-heading .btn', accordionGroup).removeClass('btn-danger editing');
-                $('.panel-heading .btn', accordionGroup).addClass('btn-primary');
-                $('.panel-heading .btn', accordionGroup).html('<i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}');
-                $('.view', accordionGroup).removeClass('hide');
-                $('.edition', accordionGroup).addClass('hide');
-            });
-
-            $('body').on('submit', '.panel form', function(e) {
-                e.preventDefault();
-                var formAction = $(e.currentTarget).attr('action');
-                var form = e.currentTarget;
-                var formData = new FormData(form);
-                submitForm(formAction, formData);
-                var accordionGroup = $(this).parents('.panel-group');
-                $('.edition', accordionGroup).addClass('hide');
-                $('.view', accordionGroup).removeClass('hide');
-            });
-        });
-
-       var submitForm = function (formAction, formData) {
-            $.ajax({
-                url: formAction,
-                data: formData,
-                type: 'POST',
-                processData: false,
-                contentType: false,
-                success: function () {
-
-                }
-            });
-        };
-    </script>
     <script
         src='{{ asset('bundles/clarolinecore/js/widget/widgets.js') }}'
         type="text/javascript">

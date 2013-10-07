@@ -1505,88 +1505,256 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/desktop/widget/name/form/{config}",
-     *     name = "claro_desktop_widget_name_form",
+     *     "/desktop/widget/{widgetInstanceId}/name/edit/form",
+     *     name = "claro_desktop_widget_name_edit_form",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:editWidgetNameForm.html.twig")
+     * @EXT\ParamConverter(
+     *     "widgetInstance",
+     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
+     *     options={"id" = "widgetInstanceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopWidgetNameEditForm.html.twig")
      *
-     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $widgetInstance
      *
      * @return array
      */
-    public function editDesktopWidgetNameFormAction(WidgetInstance $config)
+    public function editDesktopWidgetNameFormAction(WidgetInstance $widgetInstance)
     {
-        $formFactory = $this->get("claroline.form.factory");
-        $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
+        $this->checkUserAccess();
+        $user = $this->securityContext->getToken()->getUser();
+        $this->checkUserAccessForWidgetInstance($widgetInstance, $user);
 
-        return array('form' => $form->createView(), 'config' => $config);
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_WIDGET_CONFIG,
+            array(),
+            $widgetInstance
+        );
+
+        return array(
+            'form' => $form->createView(),
+            'widgetInstance' => $widgetInstance
+        );
     }
 
     /**
      * @EXT\Route(
-     *     "/desktop/widget/name/edit/{config}",
+     *     "/desktop/widget/{widgetInstanceId}/name/edit",
      *     name = "claro_desktop_widget_name_edit",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:editWidgetNameForm.html.twig")
+     * @EXT\ParamConverter(
+     *     "widgetInstance",
+     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
+     *     options={"id" = "widgetInstanceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopWidgetNameEditForm.html.twig")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @return array
      */
-    public function editDesktopWidgetName(WidgetInstance $config, User $user)
+    public function editDesktopWidgetNameAction(
+        WidgetInstance $widgetInstance,
+        User $user
+    )
     {
-        $form = $this->request->request->get('widget_display_form');
-        $config->setName($form['name']);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($config);
-        $em->flush();
+        $this->checkUserAccess();
+        $user = $this->securityContext->getToken()->getUser();
+        $this->checkUserAccessForWidgetInstance($widgetInstance, $user);
 
-        return new Response('success', 204);
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_WIDGET_CONFIG,
+            array(),
+            $widgetInstance
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->widgetManager->insertWidgetInstance($widgetInstance);
+
+            return new Response('success', 204);
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'widgetInstance' => $widgetInstance
+        );
     }
 
     /**
      * @EXT\Route(
-     *     "/workspace/widget/name/form/{config}",
-     *     name = "claro_workspace_widget_name_form",
+     *     "/workspace/{workspaceId}/widget/{widgetInstanceId}/name/edit/form",
+     *     name = "claro_workspace_widget_name_edit_form",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:editWidgetNameForm.html.twig")
-     *
-     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
+     * @EXT\ParamConverter(
+     *     "widgetInstance",
+     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
+     *     options={"id" = "widgetInstanceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceWidgetNameEditForm.html.twig")
      *
      * @return array
      */
-    public function editWorkspaceWidgetNameFormAction(WidgetInstance $config)
+    public function editWorkspaceWidgetNameFormAction(
+        WidgetInstance $widgetInstance,
+        AbstractWorkspace $workspace
+    )
     {
-        $formFactory = $this->get("claroline.form.factory");
-        $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
+        $this->checkWorkspaceAccess($workspace);
+        $this->checkWorkspaceAccessForWidgetInstance($widgetInstance, $workspace);
 
-        return array('form' => $form->createView(), 'config' => $config);
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_WIDGET_CONFIG,
+            array(),
+            $widgetInstance
+        );
+
+        return array(
+            'form' => $form->createView(),
+            'widgetInstance' => $widgetInstance,
+            'workspace' => $workspace
+        );
     }
 
     /**
      * @EXT\Route(
-     *     "/workspace/widget/name/edit/{config}",
+     *     "/workspace/{workspaceId}/widget/{widgetInstanceId}/name/edit",
      *     name = "claro_workspace_widget_name_edit",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:editWidgetNameForm.html.twig")
-     *
-     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
+     * @EXT\ParamConverter(
+     *     "widgetInstance",
+     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
+     *     options={"id" = "widgetInstanceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceWidgetNameEditForm.html.twig")
      *
      * @return array
      */
-    public function editWorkspaceWidgetName(WidgetInstance $config)
+    public function editWorkspaceWidgetNameAction(
+        WidgetInstance $widgetInstance,
+        AbstractWorkspace $workspace
+    )
     {
-        $form = $this->request->request->get('widget_display_form');
-        $config->setName($form['name']);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($config);
-        $em->flush();
+        $this->checkWorkspaceAccess($workspace);
+        $this->checkWorkspaceAccessForWidgetInstance($widgetInstance, $workspace);
 
-        return new Response('success', 204);
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_WIDGET_CONFIG,
+            array(),
+            $widgetInstance
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->widgetManager->insertWidgetInstance($widgetInstance);
+
+            return new Response('success', 204);
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'widgetInstance' => $widgetInstance,
+            'workspace' => $workspace
+        );
     }
+
+//    /**
+//     * @EXT\Route(
+//     *     "/desktop/widget/name/form/{config}",
+//     *     name = "claro_desktop_widget_name_form",
+//     *     options={"expose"=true}
+//     * )
+//     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:editWidgetNameForm.html.twig")
+//     *
+//     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
+//     *
+//     * @return array
+//     */
+//    public function editDesktopWidgetNameFormAction(WidgetInstance $config)
+//    {
+//        $formFactory = $this->get("claroline.form.factory");
+//        $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
+//
+//        return array('form' => $form->createView(), 'config' => $config);
+//    }
+//
+//    /**
+//     * @EXT\Route(
+//     *     "/desktop/widget/name/edit/{config}",
+//     *     name = "claro_desktop_widget_name_edit",
+//     *     options={"expose"=true}
+//     * )
+//     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:editWidgetNameForm.html.twig")
+//     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+//     *
+//     * @return array
+//     */
+//    public function editDesktopWidgetName(WidgetInstance $config, User $user)
+//    {
+//        $form = $this->request->request->get('widget_display_form');
+//        $config->setName($form['name']);
+//        $em = $this->getDoctrine()->getManager();
+//        $em->persist($config);
+//        $em->flush();
+//
+//        return new Response('success', 204);
+//    }
+
+//    /**
+//     * @EXT\Route(
+//     *     "/workspace/widget/name/form/{config}",
+//     *     name = "claro_workspace_widget_name_form",
+//     *     options={"expose"=true}
+//     * )
+//     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:editWidgetNameForm.html.twig")
+//     *
+//     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
+//     *
+//     * @return array
+//     */
+//    public function editWorkspaceWidgetNameFormAction(WidgetInstance $config)
+//    {
+//        $formFactory = $this->get("claroline.form.factory");
+//        $form = $formFactory->create(FormFactory::TYPE_WIDGET_CONFIG, array(), $config);
+//
+//        return array('form' => $form->createView(), 'config' => $config);
+//    }
+//
+//    /**
+//     * @EXT\Route(
+//     *     "/workspace/widget/name/edit/{config}",
+//     *     name = "claro_workspace_widget_name_edit",
+//     *     options={"expose"=true}
+//     * )
+//     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:editWidgetNameForm.html.twig")
+//     *
+//     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
+//     *
+//     * @return array
+//     */
+//    public function editWorkspaceWidgetName(WidgetInstance $config)
+//    {
+//        $form = $this->request->request->get('widget_display_form');
+//        $config->setName($form['name']);
+//        $em = $this->getDoctrine()->getManager();
+//        $em->persist($config);
+//        $em->flush();
+//
+//        return new Response('success', 204);
+//    }
 
     private function checkUserAccess()
     {
@@ -1692,6 +1860,30 @@ class HomeController extends Controller
             is_null($widgetHomeTabConfigWorkspace) ||
             ($widgetHomeTabConfigWorkspace->getId() !== $workspace->getId())) {
 
+            throw new AccessDeniedException();
+        }
+    }
+
+    private function checkUserAccessForWidgetInstance(
+        WidgetInstance $widgetInstance,
+        User $user
+    )
+    {
+        $widgetUser = $widgetInstance->getUser();
+
+        if (is_null($widgetUser) || ($widgetUser->getId() !== $user->getId())) {
+            throw new AccessDeniedException();
+        }
+    }
+
+    private function checkWorkspaceAccessForWidgetInstance(
+        WidgetInstance $widgetInstance,
+        AbstractWorkspace $workspace
+    )
+    {
+        $widgetWorkspace = $widgetInstance->getWorkspace();
+
+        if (is_null($widgetWorkspace) || ($widgetWorkspace->getId() !== $workspace->getId())) {
             throw new AccessDeniedException();
         }
     }

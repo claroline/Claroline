@@ -7,7 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\SimpleTextConfig;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class SimpleTextController extends Controller
 {
@@ -21,11 +21,11 @@ class SimpleTextController extends Controller
     public function updateSimpleTextWidgetConfig(WidgetInstance $widget)
     {
         //vérification d'accès ici
-        
+
        $simpleTextConfig = $this->get('claroline.manager.simple_text_manager')->getTextConfig($widget);
        $form = $this->get('claroline.form.factory')->create(FormFactory::TYPE_SIMPLE_TEXT);
        $form->bind($this->getRequest());
-       
+
        if ($simpleTextConfig) {
           if ($form->isValid()) {
             $simpleTextConfig->setContent($form->get('content')->getData());
@@ -37,11 +37,11 @@ class SimpleTextController extends Controller
                $simpleTextConfig->setContent($form->get('content')->getData());
            }
        }
-       
+
        $em = $this->get('doctrine.orm.entity_manager');
        $em->persist($simpleTextConfig);
        $em->flush();
-       
-       return new RedirectResponse($this->get('claroline.manager.widget_manager')->getRedirectRoute($widget));
+
+       return new Response('success', 204);
     }
 }

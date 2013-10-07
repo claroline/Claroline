@@ -174,7 +174,7 @@
             type: 'POST',
             processData: false,
             contentType: false,
-            complete: function(jqXHR, textStatus) {
+            complete: function(jqXHR) {
                 switch (jqXHR.status) {
                     case 201:
                         closeHomeTabModal();

@@ -73,6 +73,12 @@ class WidgetManager
         $this->om->flush();
     }
 
+    public function insertWidgetInstance(WidgetInstance $widgetInstance)
+    {
+        $this->om->persist($widgetInstance);
+        $this->om->flush();
+    }
+
     public function getRedirectRoute(WidgetInstance $instance)
     {
         if ($instance->isAdmin()) {
