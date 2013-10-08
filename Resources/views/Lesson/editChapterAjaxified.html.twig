@@ -1,0 +1,21 @@
+
+{% include "IcapLessonBundle:Lesson:editChapterForm.html.twig"%}
+{#
+<div>
+    <button id="editchapter-submit" class="btn btn-primary">{% trans %}Save{% endtrans %}</button>
+    <button class="btn" aria-hidden="true">{% trans %}Cancel{% endtrans %}</button>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('form[id="editchapterform"] > input[type="submit"]').hide();
+        $('form[id="editchapterform"] > a.cancel-btn').hide();
+
+        $('#editchapter-submit').on('click', function () {
+            //I do the "click" on submit button for keep html5 warning
+            $('form[id="editchapterform"] > input[type="submit"]').trigger('click');
+        });
+    });
+</script>
+#}

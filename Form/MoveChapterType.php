@@ -17,8 +17,14 @@ class MoveChapterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $choices = array();
+        $root = true;
         foreach ($options['chapters'] as $child) {
-            $choices[$child->getId()] = $child->getTitle();
+            if($root){
+                $choices[$child->getId()] = 'Racine';
+                $root = false;
+            }else{
+                $choices[$child->getId()] = $child->getTitle();
+            }
         }
 
         $builder
@@ -28,7 +34,6 @@ class MoveChapterType extends AbstractType
                 'choices' => $choices
             ));
         $builder ->add('brother', 'checkbox', array(
-            'label' => 'Voulez-vous que ce chapitre soit au même niveau que celui selectionné ?',
             'required' => false,
             'mapped' => false
         ));

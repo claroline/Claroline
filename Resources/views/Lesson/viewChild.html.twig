@@ -1,26 +1,33 @@
-{% macro recursiveChapter(tree, chapter, lesson) %}
-
-    {% if tree.id == chapter.id %}
-        <li class="active" ><a style="padding-left: {{ tree.level * 20 }}px" href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': tree.id }) }}"> {{ tree.title }}</a>
+{% macro recursiveChapter(root, chapter, lesson, isRoot) %}
+    {% if isRoot %}
+        <ul class='jquery-sortable-list list-group menu' id = '{{ root.id }}'>
     {% else %}
-        <li><a style="padding-left: {{ tree.level * 20 }}px" href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': tree.id }) }}"> {{ tree.title }}</a>
+        <ul class='' id = '{{ root.id }}'>
     {% endif %}
-
-    {% if tree.__children|length %}
-        {% for child in tree.__children %}
-            {{ _self.recursiveChapter(child, chapter, lesson) }}
+    {% if root.__children|length %}
+        {% for child in root.__children %}
+            <li id = '{{ child.id }}' data-path = '{{ path('icap_lesson_move_chapter', { 'resourceId': lesson.id, 'chapterId': child.id })}}' >
+            {% if child.id == chapter.id %}
+                <div class='menu-item active'>
+            {% else %}
+                <div class='menu-item'>
+            {% endif %}
+                <i class="icon-move"></i><a href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': child.id }) }}">{{ child.title }}</a>
+            </div>
+            {{ _self.recursiveChapter(child, chapter, lesson, false) }}
+            </li>
         {% endfor %}
     {% endif %}
-    </li>
+    </ul>
 {% endmacro %}
 
-{% if tree is defined and tree != null and tree[0] is defined and tree[0] != null and tree[0].__children is defined and tree[0].__children|length %}
-    <div id="tree">
-        <ul  class="nav nav-list">
-            {% for child in tree[0].__children %}
-                {{ _self.recursiveChapter(child, chapter, _resource) }}
-            {% endfor %}
-        </ul>
+{% if tree is defined and tree != null and tree.__children is defined and tree.__children|length %}
+    <div>
+        {{ _self.recursiveChapter(tree, chapter, _resource, true) }}
+        <form id='moveform' action ='' method='post' style='display:none;'>
+            {{ form_rest(form) }}
+           {# {{ form_row(form._token) }}#}
+        </form>
     </div>
 {% else %}
     {{ 'There is no chapter'|trans({}, 'icap_lesson') }}

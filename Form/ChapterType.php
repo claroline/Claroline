@@ -17,8 +17,16 @@ class ChapterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title',        'text')
-            ->add('text',     'textarea');
+            ->add('title','text')
+            ->add('text', 'textarea', array(
+                    'attr' => array(
+                        'class'      => 'tinymce',
+                        'data-theme' => 'advanced',
+                        'height' => '500'
+                    )
+                )
+            )
+        ;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

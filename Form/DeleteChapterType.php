@@ -16,11 +16,9 @@ class DeleteChapterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('title', 'text', array('disabled' => true));
-
+        //$builder->add('title', 'text', array('disabled' => true));
         if ($options['hasChildren'] == true){
             $builder ->add('children', 'checkbox', array(
-                'label' => 'Voulez-vous supprimer les sous-chapitres ?',
                 'required' => false,
                 'mapped' => false
             ));

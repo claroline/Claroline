@@ -4,58 +4,35 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/icaplesson/css/styles.css') }}" screen="media" />
+{% endblock %}
+
+{% block resourceBreadcrumb %}
+{#    {{ parent() }}#}
+    {% if path != null and path is defined %}
+        <li>
+            <a href="{{ path('icap_lesson', { 'resourceId': _resource.id}) }}">{{ _resource.getResourceNode().getName() }}</a>
+        </li>
+        {{ _self.chapterBreadcrumb(path, _resource, chapter) }}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
 {% endblock %}
 
 {% block content %}
-
-    <header>
-
-        <ul class="breadcrumb">
-
-            {% for item in pathArray %}
-
-                <li>
-                    {% if not loop.last %}
-                        <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}#resources/{{ item.id }}">
-                            {% if loop.first %}
-                                <i class="icon-folder-open-alt">{{ 'Resources'|trans({}, 'icap_lesson') }}</i>
-                            {% else %}
-                                {{ item.name }}
-                            {% endif %}
-                        </a>
-                        <span class="divider">/</span>
-                    {% endif %}
-                </li>
-
-            {% endfor %}
-
-            {% block lesson_breadcrumb %}
-
-                <li>
-                    <a href="{{ path('icap_lesson', { 'resourceId': _resource.id }) }}">
-                        <i class="icon-file"> &nbsp {{ lesson.name }}</i>
-                    </a>
-
-                    {% if chapter is defined and chapter != null %}
-                        <span class="divider">/</span>
-                        <a href="{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id}) }}">
-                            <i class="icon-file-text">  &nbsp {{ chapter.title }}</i>
-                        </a>
-                    {% endif %}
-
-                </li>
-
-            {% endblock %}
-        </ul>
-
-    </header>
-
     {% block lesson_content %}
-
     {% endblock %}
-
 {% endblock %}
-
 {% block javascripts %}
     {{ parent() }}
 {% endblock %}
+
+{% macro chapterBreadcrumb(path, _resource, chapter) %}
+    {% for path_part in path %}
+        {% if chapter.id != path_part.id%}
+            <li><a href="{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': path_part.id}) }}">{{ path_part.title }}</a></li>
+        {%  else %}
+            <li class="active">{{ path_part.title }}</li>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}

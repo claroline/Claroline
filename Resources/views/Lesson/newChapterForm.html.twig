@@ -1,0 +1,26 @@
+<form method="POST" action="{{ path('icap_lesson_add_chapter', { 'resourceId': _resource.id , 'parentChapterId': chapterParent.id }) }}" class="form-horizontal">
+    <fieldset>
+        <legend>{{ 'Chapter Creation'|trans({}, 'icap_lesson') }}</legend>
+        <div class="control-group">
+            <label class="control-label" for="icap_lesson_chaptertype_title">{{ 'Title'|trans({}, 'icap_lesson') }}</label>
+            <div class="controls">
+                {{ form_widget(form.title) }}
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="icap_lesson_chaptertype_text">{{ 'Text'|trans({}, 'icap_lesson') }}</label>
+            <div class="controls">
+                {{ form_widget(form.text) }}
+            </div>
+        </div>
+        {{ form_rest(form) }}
+    </fieldset>
+    {{ macros.flashBox() }}
+    <div class="form-actions">
+        <input type="submit" class="btn btn-primary" value="{{ 'Ok'|trans({}, 'icap_lesson') }}"/>
+        <a href="{{ path('icap_lesson', { 'resourceId': _resource.id }) }}"><button type="button" class="btn">{{ 'Cancel'|trans({}, 'icap_lesson') }}</button></a>
+    </div>
+</form>
+{% block javascripts %}
+    {{ tinymce_init() }}
+{% endblock %}

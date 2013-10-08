@@ -82,3 +82,97 @@ li.custom_field div div {
 .breadcrumb > li> span.divider {
     padding: 0px;
 }
+
+.welcome{
+    margin-top:50px;
+    text-align:center;
+    font-size:1.4em;
+    color: #BBBBBB;
+}
+
+.welcome div{
+    padding:10px;
+}
+
+.chapter_content_text{
+  margin-top:10px;
+}
+
+.delete_chapter_title{
+    font-weight:bold;
+    padding:0px 0px 10px 0px;
+}
+
+.delete_chapter_warning{
+   text-align: center;
+    margin-top:40px;
+    margin-bottom:40px;
+}
+
+
+/*sortable styles*/
+
+body.dragging, body.dragging * {
+    cursor: move !important;
+}
+
+.dragged {
+    position: absolute;
+    opacity: 0.5;
+    z-index: 2000;
+}
+
+ul.jquery-sortable-list {
+    padding-left:10px;
+    background-color: #f5f5f5;
+    margin-bottom:5px;
+
+}
+
+ul.jquery-sortable-list li {
+    display: block;
+}
+
+ul.jquery-sortable-list li .menu-item{
+    padding:5px;
+}
+
+ul.jquery-sortable-list li .menu-item .icon-move{
+    color:#2a6496;
+    margin-right:5px;
+}
+
+ul.jquery-sortable-list li .menu-item:hover{
+    background-color: #eeeeee;
+}
+
+ul.jquery-sortable-list li .active a{
+    color: #999999;
+}
+
+ul.jquery-sortable-list li.placeholder {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+ul.jquery-sortable-list li.placeholder:before {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+    margin-top: -5px;
+    left: -5px;
+    top: -4px;
+    border: 5px solid transparent;
+    border-left-color: red;
+    border-right: none;
+}
+
+.icon-move{
+    cursor: pointer;
+}
+
+
+

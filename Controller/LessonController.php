@@ -39,16 +39,18 @@ class LessonController extends Controller
      */
     public function viewChapterAction($resourceId, $chapterId)
     {
-
         $lesson = $this->findLesson($resourceId);
         $em = $this->getDoctrine()->getManager();
         $chapterRepository = $em->getRepository('IcapLessonBundle:Chapter');
-
         $chapter = null;
         $parent = null;
+        $path = null;
         if ($chapterId != 0) {
             $chapter = $this->findChapter($lesson, $chapterId);
             $parent = $chapter;
+            $path = $chapterRepository->getPath($chapter);
+            //path first element is the lesson root, we don't show it in the breadcrumb
+            unset($path[0]);
         } else {
             $chapter = $chapterRepository->findOneBy(array('lesson' => $lesson, 'root' => $lesson->getRoot()->getId(), 'left' => 2));
             $parent = $lesson->getRoot();
@@ -66,11 +68,17 @@ class LessonController extends Controller
         $options = array('decorate' => false);
         $tree = $chapterRepository->buildTree($query->getArrayResult(), $options);
 
+        //form used to move chapters, used by dragndrop methods
+        $chapters = array_merge(array($lesson->getRoot()), $chapterRepository->children($lesson->getRoot()));
+        $form = $this->createForm(new MoveChapterType(), $chapter, array('chapters' => $chapters));
+
         return array(
             '_resource' => $lesson,
-            'tree' => $tree,
+            'tree' => $tree[0],
             'parent' => $parent,
             'chapter' => $chapter,
+            'form' => $form->createView(),
+            'path' => $path,
             'workspace' => $lesson->getResourceNode()->getWorkspace()
         );
     }
@@ -90,10 +98,20 @@ class LessonController extends Controller
     public function editChapterAction($resourceId, $chapterId)
     {
         $lesson = $this->findLesson($resourceId);
-
         $chapter = $this->findChapter($lesson, $chapterId);
-
         $form = $this->createForm(new ChapterType(), $chapter);
+        //for ajaxification
+        if ($this->getRequest()->isXMLHttpRequest()) {
+            return $this->render(
+                'IcapLessonBundle:Lesson:editChapterAjaxified.html.twig',
+                array(
+                    '_resource' => $lesson,
+                    'chapter' => $chapter,
+                    'form' => $form->createView(),
+                    'workspace' => $lesson->getResourceNode()->getWorkspace()
+                )
+            );
+        }
 
         return array(
             '_resource' => $lesson,
@@ -134,14 +152,6 @@ class LessonController extends Controller
         } else {
             $this->get('session')->getFlashBag()->add('error',$translator->trans('Your chapter has not been modified',array(), 'icap_lesson'));
         }
-
-/*        return array(
-            '_resource' => $lesson,
-            'chapter' => $chapter,
-            'form' => $form->createView(),
-            'workspace' => $lesson->getResourceNode()->getWorkspace()
-        );*/
-
         return($this->redirect($this->generateUrl('icap_lesson_chapter', array(
             'resourceId' => $resourceId,
             'chapterId' => $chapterId
@@ -171,12 +181,25 @@ class LessonController extends Controller
         $form = $this->createForm(new DeleteChapterType(), $chapter, array('hasChildren' => $childrenChapter > 0));
         $form->handleRequest($this->getRequest());
 
+        //for ajaxification
+        if ($this->getRequest()->isXMLHttpRequest()) {
+            return $this->render(
+                'IcapLessonBundle:Lesson:deleteChapterPopup.html.twig',
+                array(
+                    'lesson' => $lesson,
+                    'chapter' => $chapter,
+                    'form' => $form->createView(),
+                    'haschild' => $childrenChapter,
+                    'workspace' => $lesson->getResourceNode()->getWorkspace()
+                )
+            );
+        }
         return array(
             'lesson' => $lesson,
             'chapter' => $chapter,
             'form' => $form->createView(),
-            'workspace' => $lesson->getWorkspace(),
-            'pathArray' => $lesson->getPathArray()
+            'haschild' => $childrenChapter,
+            'workspace' => $lesson->getResourceNode()->getWorkspace()
         );
     }
 
@@ -194,6 +217,15 @@ class LessonController extends Controller
      */
     public function deleteChapterAction($resourceId, $chapterId)
     {
+
+/*        if ($this->getRequest()->isXMLHttpRequest()) {
+            var_dump("ajax");
+            die();
+        }else{
+            var_dump("form");
+            die();
+        }*/
+
         $translator = $this->get('translator');
 
         $lesson = $this->findLesson($resourceId);
@@ -203,6 +235,8 @@ class LessonController extends Controller
         $form->handleRequest($this->getRequest());
 
         if($form->isValid()){
+/*            var_dump("valide");
+            die();*/
             if ($form->get('children')->getData() == false) {
                 $em = $this->getDoctrine()->getManager();
                 $repo = $em->getRepository('IcapLessonBundle:Chapter');
@@ -225,16 +259,15 @@ class LessonController extends Controller
 
                 }
         } else {
+/*            var_dump("invalide");
+            die();*/
             $this->get('session')->getFlashBag()->add('error',$translator->trans('Your chapter has not been deleted',array(), 'icap_lesson'));
         }
-
-
         return array(
             'lesson' => $lesson,
             'chapter' => $chapter,
             'form' => $form->createView(),
-            'workspace' => $lesson->getWorkspace(),
-            'pathArray' => $lesson->getPathArray()
+            'workspace' => $lesson->getResourceNode()->getWorkspace()
         );
     }
 
@@ -267,6 +300,19 @@ class LessonController extends Controller
         }
         else{
             $chapterParent = $this->findChapter($lesson, $parentChapterId);
+        }
+
+        //for ajaxification
+        if ($this->getRequest()->isXMLHttpRequest()) {
+            return $this->render(
+                'IcapLessonBundle:Lesson:newChapterAjaxified.html.twig',
+                array(
+                    '_resource' => $lesson,
+                    'form' => $form->createView(),
+                    'chapterParent' => $chapterParent,
+                    'workspace' => $lesson->getResourceNode()->getWorkspace()
+                )
+            );
         }
 
         return array(
@@ -323,7 +369,6 @@ class LessonController extends Controller
         );
     }
 
-
     /**
      *
      * @Route(
@@ -340,17 +385,29 @@ class LessonController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('IcapLessonBundle:Chapter');
-        $chapters = $repo->children($lesson->getRoot());
+        $chapters = array_merge(array($lesson->getRoot()), $repo->children($lesson->getRoot()));
 
         $form = $this->createForm(new MoveChapterType(), $chapter,  array('chapters' => $chapters));
         $form->handleRequest($this->getRequest());
 
+        //for ajaxification
+        if ($this->getRequest()->isXMLHttpRequest()) {
+            return $this->render(
+                'IcapLessonBundle:Lesson:choiceMoveChapterAjaxified.html.twig',
+                array(
+                    '_resource' => $lesson,
+                    'chapter' => $chapter,
+                    'form' => $form->createView(),
+                    'workspace' => $lesson->getResourceNode()->getWorkspace()
+                )
+            );
+        }
+
         return array(
-            'lesson' => $lesson,
+            '_resource' => $lesson,
             'chapter' => $chapter,
             'form' => $form->createView(),
-            'workspace' => $lesson->getWorkspace(),
-            'pathArray' => $lesson->getPathArray()
+            'workspace' => $lesson->getResourceNode()->getWorkspace()
         );
     }
 
@@ -372,38 +429,47 @@ class LessonController extends Controller
         $chapter = $this->findChapter($lesson, $chapterId);
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('IcapLessonBundle:Chapter');
-        $chapters = $repo->children($lesson->getRoot());
+        $chapters = array_merge(array($lesson->getRoot()), $repo->children($lesson->getRoot()));
 
         $form = $this->createForm(new MoveChapterType(), $chapter,  array('chapters' => $chapters));
         $form->handleRequest($this->getRequest());
-
         if ($form->isValid()) {
             $newParentId = $form->get('choiceChapter')->getData();
-            $newParent = $this->findChapter($lesson, $newParentId);
-
-            $path = $repo->getPath($newParent);
-            foreach ($path as $currentParent) {
-                if ($currentParent->getId() == $chapterId) {
-                    throw new \InvalidArgumentException();
-                }
-            }
-            if ($form->get('brother')->getData() == true){
-                $repo->persistAsNextSiblingOf($chapter, $newParent);
-                $em->flush();
-            } else {
-                $repo->persistAsLastChildOf($chapter, $newParent);
-                $em->flush();
-            }
-            return $this->redirect($this->generateUrl('icap_lesson', array('resourceId' => $lesson->getId())));
+            $brother = $form->get('brother')->getData();
+        }else{
+            return array(
+                'lesson' => $lesson,
+                'chapter' => $chapter,
+                'form' => $form->createView(),
+                'workspace' => $lesson->getResourceNode()->getWorkspace()
+            );
         }
 
-        return array(
-            'lesson' => $lesson,
-            'chapter' => $chapter,
-            'form' => $form->createView(),
-            'workspace' => $lesson->getWorkspace(),
-            'pathArray' => $lesson->getPathArray()
-        );
+        $newParent = $this->findChapter($lesson, $newParentId);
+        $path = $repo->getPath($newParent);
+        foreach ($path as $currentParent) {
+            if ($currentParent->getId() == $chapterId) {
+                throw new \InvalidArgumentException();
+            }
+        }
+/*        var_dump("vardump:");
+        var_dump($newParentId);
+        var_dump($brother);
+        var_dump("fin vardump");
+        die();*/
+
+        if ($brother == true){
+            $repo->persistAsNextSiblingOf($chapter, $newParent);
+        } else {
+            $repo->persistAsFirstChildOf($chapter, $newParent);
+        }
+        $em->flush();
+        //return $this->redirect($this->generateUrl('icap_lesson', array('resourceId' => $lesson->getId())));
+
+        return($this->redirect($this->generateUrl('icap_lesson_chapter', array(
+            'resourceId' => $resourceId,
+            'chapterId' => $chapterId
+        ))));
     }
 
     /*
