@@ -432,6 +432,10 @@ class WorkspaceController extends Controller
         $withConfig
     )
     {
+        if ($withConfig === 1) {
+            $this->checkWorkspaceManagerAccess($workspace);
+        }
+
         if ($this->security->getToken()->getUser() !== 'anon.') {
             $rightToConfigure = $this->security->isGranted('parameters', $workspace);
         } else {
@@ -896,6 +900,10 @@ class WorkspaceController extends Controller
         $withConfig = 0
     )
     {
+        if ($withConfig == 1) {
+            $this->checkWorkspaceManagerAccess($workspace);
+        }
+
         $workspaceHomeTabConfigs = $this->homeTabManager
             ->getWorkspaceHomeTabConfigsByWorkspace($workspace);
         $homeTabId = $tabId;
@@ -927,6 +935,15 @@ class WorkspaceController extends Controller
     private function assertIsGranted($attributes, $object = null)
     {
         if (false === $this->security->isGranted($attributes, $object)) {
+            throw new AccessDeniedException();
+        }
+    }
+
+    private function checkWorkspaceManagerAccess(AbstractWorkspace $workspace)
+    {
+        $role = $this->roleManager->getManagerRole($workspace);
+
+        if (is_null($role) || !$this->security->isGranted($role->getName())) {
             throw new AccessDeniedException();
         }
     }

@@ -8,7 +8,9 @@
     <div class="panel-heading">
         <h3 class="panel-title">
             {{ 'home'|trans({}, 'tools') }}
-            <i id="switch-config-mode" class="icon-cog pull-right pointer-hand"></i>
+            {% if is_granted('ROLE_WS_MANAGER_' ~ workspace.getGuid()) %}
+                <i id="switch-config-mode" class="icon-cog pull-right pointer-hand"></i>
+            {% endif %}
         </h3>
     </div>
 

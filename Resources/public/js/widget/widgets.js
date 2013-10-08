@@ -278,7 +278,7 @@
 
             var form = e.currentTarget;
             var action = $(e.currentTarget).attr('action');
-            var formData = new FormData(form);console.log(formData);
+            var formData = new FormData(form);
 
             $.ajax({
                 url: action,
@@ -287,7 +287,19 @@
                 processData: false,
                 contentType: false,
                 success: function() {
-                    window.location.reload();
+                    $.ajax({
+                        url: Routing.generate(
+                            'claro_widget_content',
+                            {'widgetInstanceId': currentWidgetInstanceId}
+                        ),
+                        type: 'GET',
+                        success: function (datas) {
+                            currentWidgetEditionElement.addClass('hide');
+                            currentWidgetEditionElement.empty();
+                            currentWidgetViewElement.html(datas);
+                            currentWidgetViewElement.removeClass('hide');
+                        }
+                    });
                 }
             });
         }

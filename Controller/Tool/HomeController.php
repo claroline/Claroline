@@ -172,6 +172,36 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/widget/content/{widgetInstanceId}",
+     *     name="claro_widget_content",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "widgetInstance",
+     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
+     *     options={"id" = "widgetInstanceId", "strictId" = true}
+     * )
+     *
+     * Asks a widget to render its content.
+     *
+     * @param WidgetInstance $widgetInstance
+     *
+     * @return Response
+     */
+    public function getWidgetContentAction(WidgetInstance $widgetInstance)
+    {
+        $event = $this->eventDispatcher->dispatch(
+            "widget_{$widgetInstance->getWidget()->getName()}",
+            'DisplayWidget',
+            array($widgetInstance)
+        );
+
+        return new Response($event->getContent());
+    }
+
+    /**
+     * @EXT\Route(
      *     "desktop/widget/properties",
      *     name="claro_desktop_widget_properties"
      * )
@@ -1767,7 +1797,7 @@ class HomeController extends Controller
     {
         $role = $this->roleManager->getManagerRole($workspace);
 
-        if (!$this->securityContext->isGranted($role->getName())) {
+        if (is_null($role) || !$this->securityContext->isGranted($role->getName())) {
             throw new AccessDeniedException();
         }
     }
