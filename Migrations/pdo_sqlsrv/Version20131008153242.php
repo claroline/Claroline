@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\oci8;
+namespace Claroline\CoreBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,48 +8,20 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/26 04:08:29
+ * Generation date: 2013/10/08 03:32:45
  */
-class Version20130926160827 extends AbstractMigration
+class Version20131008153242 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_badge_rule (
-                id NUMBER(10) NOT NULL, 
-                badge_id NUMBER(10) NOT NULL, 
-                occurrence NUMBER(5) NOT NULL, 
-                action VARCHAR2(255) NOT NULL, 
-                PRIMARY KEY(id)
+                id INT IDENTITY NOT NULL, 
+                badge_id INT NOT NULL, 
+                occurrence SMALLINT NOT NULL, 
+                action NVARCHAR(255) NOT NULL, 
+                PRIMARY KEY (id)
             )
-        ");
-        $this->addSql("
-            DECLARE constraints_Count NUMBER; BEGIN 
-            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
-            FROM USER_CONSTRAINTS 
-            WHERE TABLE_NAME = 'CLARO_BADGE_RULE' 
-            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
-            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_BADGE_RULE ADD CONSTRAINT CLARO_BADGE_RULE_AI_PK PRIMARY KEY (ID)'; END IF; END;
-        ");
-        $this->addSql("
-            CREATE SEQUENCE CLARO_BADGE_RULE_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
-        ");
-        $this->addSql("
-            CREATE TRIGGER CLARO_BADGE_RULE_AI_PK BEFORE INSERT ON CLARO_BADGE_RULE FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
-            SELECT CLARO_BADGE_RULE_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; IF (
-                : NEW.ID IS NULL 
-                OR : NEW.ID = 0
-            ) THEN 
-            SELECT CLARO_BADGE_RULE_ID_SEQ.NEXTVAL INTO : NEW.ID 
-            FROM DUAL; ELSE 
-            SELECT NVL(Last_Number, 0) INTO last_Sequence 
-            FROM User_Sequences 
-            WHERE Sequence_Name = 'CLARO_BADGE_RULE_ID_SEQ'; 
-            SELECT : NEW.ID INTO last_InsertID 
-            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
-            SELECT CLARO_BADGE_RULE_ID_SEQ.NEXTVAL INTO last_Sequence 
-            FROM DUAL; END LOOP; END IF; END;
         ");
         $this->addSql("
             CREATE INDEX IDX_805FCB8FF7A2C2FC ON claro_badge_rule (badge_id)
@@ -80,9 +52,19 @@ class Version20130926160827 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_badge 
-            ADD (
-                automatic_award NUMBER(1) DEFAULT NULL
-            )
+            ADD workspace_id INT
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge 
+            ADD automatic_award BIT
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge 
+            ADD CONSTRAINT FK_74F39F0F82D40A1F FOREIGN KEY (workspace_id) 
+            REFERENCES claro_workspace (id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_74F39F0F82D40A1F ON claro_badge (workspace_id)
         ");
     }
 
@@ -93,7 +75,25 @@ class Version20130926160827 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_badge 
-            DROP (automatic_award)
+            DROP COLUMN workspace_id
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge 
+            DROP COLUMN automatic_award
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge 
+            DROP CONSTRAINT FK_74F39F0F82D40A1F
+        ");
+        $this->addSql("
+            IF EXISTS (
+                SELECT * 
+                FROM sysobjects 
+                WHERE name = 'IDX_74F39F0F82D40A1F'
+            ) 
+            ALTER TABLE claro_badge 
+            DROP CONSTRAINT IDX_74F39F0F82D40A1F ELSE 
+            DROP INDEX IDX_74F39F0F82D40A1F ON claro_badge
         ");
         $this->addSql("
             ALTER TABLE claro_badge_claim 

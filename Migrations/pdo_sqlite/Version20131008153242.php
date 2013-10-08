@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/26 04:08:29
+ * Generation date: 2013/10/08 03:32:44
  */
-class Version20130926160827 extends AbstractMigration
+class Version20131008153242 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -152,8 +152,42 @@ class Version20130926160827 extends AbstractMigration
             CREATE INDEX IDX_849BC831F7A2C2FC ON claro_badge_translation (badge_id)
         ");
         $this->addSql("
-            ALTER TABLE claro_badge 
-            ADD COLUMN automatic_award BOOLEAN DEFAULT NULL
+            CREATE TEMPORARY TABLE __temp__claro_badge AS 
+            SELECT id, 
+            version, 
+            image, 
+            expired_at 
+            FROM claro_badge
+        ");
+        $this->addSql("
+            DROP TABLE claro_badge
+        ");
+        $this->addSql("
+            CREATE TABLE claro_badge (
+                id INTEGER NOT NULL, 
+                workspace_id INTEGER DEFAULT NULL, 
+                version INTEGER NOT NULL, 
+                image VARCHAR(255) NOT NULL, 
+                expired_at DATETIME DEFAULT NULL, 
+                automatic_award BOOLEAN DEFAULT NULL, 
+                PRIMARY KEY(id), 
+                CONSTRAINT FK_74F39F0F82D40A1F FOREIGN KEY (workspace_id) 
+                REFERENCES claro_workspace (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+            )
+        ");
+        $this->addSql("
+            INSERT INTO claro_badge (id, version, image, expired_at) 
+            SELECT id, 
+            version, 
+            image, 
+            expired_at 
+            FROM __temp__claro_badge
+        ");
+        $this->addSql("
+            DROP TABLE __temp__claro_badge
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_74F39F0F82D40A1F ON claro_badge (workspace_id)
         ");
     }
 
@@ -161,6 +195,9 @@ class Version20130926160827 extends AbstractMigration
     {
         $this->addSql("
             DROP TABLE claro_badge_rule
+        ");
+        $this->addSql("
+            DROP INDEX IDX_74F39F0F82D40A1F
         ");
         $this->addSql("
             CREATE TEMPORARY TABLE __temp__claro_badge AS 

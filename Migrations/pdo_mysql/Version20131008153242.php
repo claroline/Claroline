@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\sqlsrv;
+namespace Claroline\CoreBundle\Migrations\pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,23 +8,21 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/26 04:08:31
+ * Generation date: 2013/10/08 03:32:44
  */
-class Version20130926160827 extends AbstractMigration
+class Version20131008153242 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_badge_rule (
-                id INT IDENTITY NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 badge_id INT NOT NULL, 
                 occurrence SMALLINT NOT NULL, 
-                action NVARCHAR(255) NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_805FCB8FF7A2C2FC ON claro_badge_rule (badge_id)
+                action VARCHAR(255) NOT NULL, 
+                INDEX IDX_805FCB8FF7A2C2FC (badge_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             ALTER TABLE claro_badge_rule 
@@ -52,7 +50,16 @@ class Version20130926160827 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_badge 
-            ADD automatic_award BIT
+            ADD workspace_id INT DEFAULT NULL, 
+            ADD automatic_award TINYINT(1) DEFAULT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge 
+            ADD CONSTRAINT FK_74F39F0F82D40A1F FOREIGN KEY (workspace_id) 
+            REFERENCES claro_workspace (id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_74F39F0F82D40A1F ON claro_badge (workspace_id)
         ");
     }
 
@@ -63,19 +70,27 @@ class Version20130926160827 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_badge 
-            DROP COLUMN automatic_award
+            DROP FOREIGN KEY FK_74F39F0F82D40A1F
+        ");
+        $this->addSql("
+            DROP INDEX IDX_74F39F0F82D40A1F ON claro_badge
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge 
+            DROP workspace_id, 
+            DROP automatic_award
         ");
         $this->addSql("
             ALTER TABLE claro_badge_claim 
-            DROP CONSTRAINT FK_487A496AA76ED395
+            DROP FOREIGN KEY FK_487A496AA76ED395
         ");
         $this->addSql("
             ALTER TABLE claro_badge_claim 
-            DROP CONSTRAINT FK_487A496AF7A2C2FC
+            DROP FOREIGN KEY FK_487A496AF7A2C2FC
         ");
         $this->addSql("
             ALTER TABLE claro_badge_translation 
-            DROP CONSTRAINT FK_849BC831F7A2C2FC
+            DROP FOREIGN KEY FK_849BC831F7A2C2FC
         ");
     }
 }

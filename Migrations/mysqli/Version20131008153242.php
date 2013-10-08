@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\drizzle_pdo_mysql;
+namespace Claroline\CoreBundle\Migrations\mysqli;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/26 04:08:31
+ * Generation date: 2013/10/08 03:32:46
  */
-class Version20130926160827 extends AbstractMigration
+class Version20131008153242 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -18,11 +18,11 @@ class Version20130926160827 extends AbstractMigration
             CREATE TABLE claro_badge_rule (
                 id INT AUTO_INCREMENT NOT NULL, 
                 badge_id INT NOT NULL, 
-                occurrence INT NOT NULL, 
+                occurrence SMALLINT NOT NULL, 
                 action VARCHAR(255) NOT NULL, 
-                PRIMARY KEY(id), 
-                INDEX IDX_805FCB8FF7A2C2FC (badge_id)
-            )
+                INDEX IDX_805FCB8FF7A2C2FC (badge_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             ALTER TABLE claro_badge_rule 
@@ -50,7 +50,16 @@ class Version20130926160827 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_badge 
-            ADD automatic_award BOOLEAN DEFAULT NULL
+            ADD workspace_id INT DEFAULT NULL, 
+            ADD automatic_award TINYINT(1) DEFAULT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge 
+            ADD CONSTRAINT FK_74F39F0F82D40A1F FOREIGN KEY (workspace_id) 
+            REFERENCES claro_workspace (id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_74F39F0F82D40A1F ON claro_badge (workspace_id)
         ");
     }
 
@@ -61,6 +70,14 @@ class Version20130926160827 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_badge 
+            DROP FOREIGN KEY FK_74F39F0F82D40A1F
+        ");
+        $this->addSql("
+            DROP INDEX IDX_74F39F0F82D40A1F ON claro_badge
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge 
+            DROP workspace_id, 
             DROP automatic_award
         ");
         $this->addSql("
