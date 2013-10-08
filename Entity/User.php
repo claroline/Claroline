@@ -224,6 +224,11 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      */
     protected $pictureFile;
 
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    protected $description;
+
     public function __construct()
     {
         parent::__construct();
@@ -707,5 +712,12 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     {
         return $this->picture;
     }
+    
+    public function getDescription() {
+        return $this->description;
+    }
 
+    public function setDescription($description) {
+        $this->description = $description;
+    }
 }

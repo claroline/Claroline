@@ -308,6 +308,7 @@ please_wait: 'Veuillez patienter...'
 position: Position
 private: Privée
 profile_form_administrativeCode: 'Code administratif'
+profile_form_description : 'Description'
 profile_form_firstName: Prénom
 profile_form_lastName: Nom
 profile_form_mail: Mail
