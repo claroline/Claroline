@@ -124,14 +124,20 @@ class LogController extends Controller
                 $config->setWidgetInstance($widgetInstance);
             }
         } else {
-            throw new \Exception("invalid form");
+            return $this->render(
+                'ClarolineCoreBundle:Log:config_workspace_widget_form.html.twig',
+                array(
+                    'form' => $form->createView(),
+                    'instance' => $widgetInstance
+                )
+            );
         }
 
         $em = $this->get('doctrine.orm.entity_manager');
         $em->persist($config);
         $em->flush();
 
-        return new Response('', 204);
+        return new Response('success', 204);
     }
 
     /**
@@ -196,7 +202,13 @@ class LogController extends Controller
             $em->flush();
 
         } else {
-            throw new \Exception("invalid form");
+            return $this->render(
+                'ClarolineCoreBundle:Log:config_desktop_widget_form.html.twig',
+                array(
+                    'form' => $form->createView(),
+                    'instance' => $widgetInstance
+                )
+            );
         }
 
         return new Response('', 204);

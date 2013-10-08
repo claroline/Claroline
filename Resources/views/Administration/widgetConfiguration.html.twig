@@ -49,10 +49,14 @@
                 type: 'POST',
                 processData: false,
                 contentType: false,
-                complete: function(jqXHR) {
-                    if (jqXHR) {
+                success: function(data, textStatus, jqXHR) {
+                    console.debug(jqXHR);
+                    if (jqXHR.status === 204) {
                         var location = Routing.generate('claro_admin_widgets');
                         window.location.href = location;
+                    } else {
+                        $('#form-div').empty();
+                        $('#form-div').append(data);
                     }
                 }
             });

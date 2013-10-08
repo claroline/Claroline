@@ -39,13 +39,19 @@ class SimpleTextController extends Controller
                $simpleTextConfig->setContent($form->get('content')->getData());
            }
        } else {
-           throw new \Exception('invalid form');
+           return $$this->render(
+               'ClarolineCoreBundle:Widget:config_simple_text_form.html.twig',
+               array(
+                   'form' => $form->createView(),
+                   'config' => $widget
+               )
+           );
        }
 
        $em = $this->get('doctrine.orm.entity_manager');
        $em->persist($simpleTextConfig);
        $em->flush();
 
-       return new Response('');
+       return new Response('success', 204);
     }
 }
