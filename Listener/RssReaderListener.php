@@ -49,7 +49,7 @@ class RssReaderListener extends ContainerAware
         $this->sc = $sc;
         $this->rssReader = $rssReader;
     }
-    
+
     /**
      * @DI\Observe("widget_claroline_rssreader")
      *
@@ -73,13 +73,13 @@ class RssReaderListener extends ContainerAware
     {
         $instance = $event->getInstance();
         $config = $this->rssManager->getConfig($instance);
-        
+
         if ($config === null) {
             $config = new Config();
         }
-        
-        $form = $this->formFactory->create(new ConfigType, new Config());
-        
+
+        $form = $this->formFactory->create(new ConfigType, $config);
+
            $content = $this->templating->render(
                 'ClarolineRssReaderBundle::formRss.html.twig',
                 array(
