@@ -22,9 +22,6 @@ class BadgeController extends Controller
         /** @var \Claroline\CoreBundle\Repository\Badge\BadgeRepository $badgeRepository */
         $badgeRepository = $this->get('claroline.repository.badge');
 
-
-
-
         /** @var QueryBuilder $badgeQueryBuilder */
         $badgeQueryBuilder = $badgeRepository->findOrderedByName($platformConfigHandler->getParameter('locale_language'), false);
 
