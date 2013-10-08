@@ -39,7 +39,8 @@ class AdminController extends Controller
      */
     public function listAction($page)
     {
-        $badgeClaims = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')->findAll();
+        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
+        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
         $parameters = array(
             'page'             => $page,
@@ -51,11 +52,13 @@ class AdminController extends Controller
             'delete_link'      => 'claro_admin_badges_delete',
             'view_link'        => 'claro_admin_badges_edit',
             'current_link'     => 'claro_admin_badges',
+            'claim_link'       => 'claro_admin_manage_claim',
+            'claim_link'       => 'claro_admin_manage_claim',
             'route_parameters' => array()
         );
         return array(
-            'badgeClaims' => $badgeClaims,
-            'parameters'  => $parameters
+            'parameters'  => $parameters,
+            'language'    => $platformConfigHandler->getParameter('locale_language')
         );
     }
 

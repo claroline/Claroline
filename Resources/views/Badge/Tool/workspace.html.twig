@@ -1,7 +1,0 @@
-{% extends 'ClarolineCoreBundle:Badge/Tool:layout.html.twig' %}
-
-{% trans_default_domain "badge" %}
-
-{% block section_body %}
-    {{ render(controller('ClarolineCoreBundle:Badge/Badge:list', {'parameters': parameters})) }}
-{% endblock %}

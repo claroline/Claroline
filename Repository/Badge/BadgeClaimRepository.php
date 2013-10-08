@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Repository\Badge;
 
 use Claroline\CoreBundle\Entity;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Doctrine\ORM\EntityRepository;
 
 class BadgeClaimRepository extends EntityRepository
@@ -43,5 +44,33 @@ class BadgeClaimRepository extends EntityRepository
                 JOIN b.translations bt
             ')
             ->getResult();
+    }
+
+    /**
+     * @param AbstractWorkspace $workspace
+     *
+     * @return array
+     */
+    public function findByWorkspace(AbstractWorkspace $workspace = null)
+    {
+        $workspaceConstraint = 'b.workspace = :workspace';
+
+        if (null === $workspace) {
+            $workspaceConstraint = 'b.workspace IS NULL';
+        }
+
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT bc, b, bt
+                FROM ClarolineCoreBundle:Badge\BadgeClaim bc
+                JOIN bc.badge b
+                JOIN b.translations bt
+                WHERE ' . $workspaceConstraint);
+
+        if (null !== $workspace) {
+            $query->setParameter('workspace', $workspace);
+        }
+
+        return $query->getResult();
     }
 }

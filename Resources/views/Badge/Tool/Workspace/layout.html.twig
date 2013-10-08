@@ -15,6 +15,9 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'workspace_badges'|trans }}</h3>
     </div>
+
+    {{ macros.flashBox() }}
+
     <div class="panel-body">
         {% block section_body %}{% endblock %}
     </div>

@@ -22,6 +22,9 @@ class BadgeController extends Controller
         /** @var \Claroline\CoreBundle\Repository\Badge\BadgeRepository $badgeRepository */
         $badgeRepository = $this->get('claroline.repository.badge');
 
+
+
+
         /** @var QueryBuilder $badgeQueryBuilder */
         $badgeQueryBuilder = $badgeRepository->findOrderedByName($platformConfigHandler->getParameter('locale_language'), false);
 
@@ -29,7 +32,14 @@ class BadgeController extends Controller
             $badgeQueryBuilder
                 ->andWhere('badge.workspace = :workspace')
                 ->setParameter('workspace', $parameters['workspace']);
+
+            $badgeClaimsWorkspace = $parameters['workspace'];
         }
+        else {
+            $badgeClaimsWorkspace = null;
+        }
+
+        $badgeClaims = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')->findByWorkspace($badgeClaimsWorkspace);
 
         $language = $platformConfigHandler->getParameter('locale_language');
 
@@ -43,7 +53,8 @@ class BadgeController extends Controller
             array(
                 'pager'       => $pager,
                 'language'    => $language,
-                'parameters'  => $parameters
+                'parameters'  => $parameters,
+                'badgeClaims' => $badgeClaims
             )
         );
     }

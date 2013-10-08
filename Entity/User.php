@@ -654,7 +654,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\BadgeClaim[]|\Doctrine\Common\Collections\ArrayCollection
+     * @return \Claroline\CoreBundle\Entity\Badge\BadgeClaim[]|\Doctrine\Common\Collections\ArrayCollection
      */
     public function getBadgeClaims()
     {
@@ -669,7 +669,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     public function hasClaimedFor(Badge $badge)
     {
         foreach ($this->getBadgeClaims() as $claimedBadge) {
-            if ($badge->getId() === $claimedBadge->getId()) {
+            if ($badge->getId() === $claimedBadge->getBadge()->getId()) {
                 return true;
             }
         }

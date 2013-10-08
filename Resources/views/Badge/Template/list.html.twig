@@ -1,7 +1,46 @@
+{% if 0 < badgeClaims|length %}
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <a class="accordion-toggle" data-toggle="collapse" href="#claimedBadges">
+            {{ 'badge_current_claimed_badges'|transchoice(badgeClaims|length, {'%claimedBadgeCount%': badgeClaims|length}, 'badge') }}
+        </a>
+    </div>
+    <div id="claimedBadges" class="panel-collapse collapse">
+        <div class="panel-body">
+            <table class="table no_margin">
+                <thead>
+                    <th>{{ 'actions'|trans({}, 'badge') }}</th>
+                    <th>{{ 'badge'|trans({}, 'badge') }}</th>
+                    <th>{{ 'user'|trans({}, 'platform') }}</th>
+                    <th>{{ 'claim_date'|trans({}, 'badge') }}</th>
+                </thead>
+                <tbody>
+                {% for badgeClaim in badgeClaims %}
+                    <tr>
+                        <td>
+                            <a href="{{ path(parameters.claim_link, {'id': badgeClaim.id, 'validate': true}|merge(parameters.route_parameters)) }}" class="btn confirm" data-toggle="tooltip" title="{{ 'badge_validate_award'|trans({}, 'badge') }}" data-confirm-title="{{ 'badge_award_confirm_title'|trans({}, 'badge') }}" data-confirm-message="{{ 'badge_award_confirm_message'|trans({'%badgeName%': badgeClaim.badge.name(language), '%user%': badgeClaim.user.firstname ~ ' ' ~ badgeClaim.user.lastname }, 'badge') }}" data-confirm-ok="{{ 'award'|trans({}, 'badge') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}">
+                                <i class="icon-ok-circle"></i>
+                            </a>
+                            <a href="{{ path(parameters.claim_link, {'id': badgeClaim.id, 'validate': false}|merge(parameters.route_parameters)) }}" class="btn confirm" data-toggle="tooltip" title="{{ 'badge_reject_award'|trans({}, 'badge') }}" data-confirm-title="{{ 'badge_dont_award_confirm_title'|trans({}, 'badge') }}" data-confirm-message="{{ 'badge_dont_award_confirm_message'|trans({'%badgeName%': badgeClaim.badge.name(language), '%user%': badgeClaim.user.firstname ~ ' ' ~ badgeClaim.user.lastname}, 'badge') }}" data-confirm-ok="{{ 'dont_award'|trans({}, 'badge') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}">
+                                <i class="icon-remove-circle"></i>
+                            </a>
+                        </td>
+                        <td><a href="{{ path('claro_view_badge', {'id': badgeClaim.badge.id}) }}" title="{{ badgeClaim.badge.name(language) }}">{{ badgeClaim.badge.name(language) }}</a></td>
+                        <td><a href="{{ path('claro_profile_view', {'userId': badgeClaim.user.id}) }}" title="{{ badgeClaim.user.firstname }} {{ badgeClaim.user.lastname }}">{{ badgeClaim.user.firstname }} {{ badgeClaim.user.lastname }}</a></td>
+                        <td>{{ badgeClaim.claimedAt|date('date_format'|trans({}, 'platform')) }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <ul class="nodes badge_list">
     {% for badge in pager %}
     <li class="node-thumbnail node">
-        <a href="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}" title="{{ badge.name(language) }}" class="thumbnail">
+        <a href="{{ path(parameters.edit_link.url, {'id': badge.id}|merge(parameters.route_parameters)) }}" title="{{ badge.name(language) }}" class="thumbnail">
             <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name(language) }}" />
         </a>
         <div class="dropdown">
@@ -20,7 +59,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ path(parameters.delete_link, {'id': badge.id}|merge(parameters.route_parameters)) }}" class="node-menu-action confirm" data-confirm-title="{{ 'badge_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name(language)}) }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">
+                    <a href="{{ path(parameters.delete_link, {'id': badge.id}|merge(parameters.route_parameters)) }}" class="node-menu-action confirm" data-confirm-title="{{ 'badge_delete_confirm_title'|trans({}, 'badge') }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name(language)}, 'badge') }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">
                         {{ 'delete'|trans({}, 'platform') }}
                     </a>
                 </li>
@@ -30,7 +69,7 @@
     {% endfor %}
     <li class="node-thumbnail node">
         <a href="{{ path(parameters.add_link, parameters.route_parameters) }}" title="{{ 'add_badge'|trans({}, 'badge') }}" class="add_button btn btn-lg col-md-12">
-            <img class="badge_image" src="{{ asset('bundles/clarolinecore/images/add-badge.png') }}" alt="{{ 'add_badge'|trans }}" />
+            <img class="badge_image" src="{{ asset('bundles/clarolinecore/images/add-badge.png') }}" alt="{{ 'add_badge'|trans({}, 'badge') }}" />
         </a>
     </li>
 </ul>

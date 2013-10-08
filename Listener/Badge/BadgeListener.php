@@ -88,21 +88,21 @@ class BadgeListener
         $workspace = $this->entityManager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         $parameters = array(
-            'page'             => 1,
-            'add_link'         => 'claro_workspace_tool_badges_add',
-            'edit_link'        => array(
-                'url'    => 'claro_admin_badges_edit',
+            'page'         => 1,
+            'workspace'    => $workspace,
+            'add_link'     => 'claro_workspace_tool_badges_add',
+            'edit_link'    => array(
+                'url'    => 'claro_workspace_tool_badges_edit',
                 'suffix' => '#!edit'
             ),
-            'delete_link'      => 'claro_admin_badges_delete',
-            'view_link'        => 'claro_admin_badges_edit',
-            'current_link'     => 'claro_workspace_tool_badges',
-            'workspace'        => $workspace,
+            'delete_link'  => 'claro_workspace_tool_badges_delete',
+            'view_link'    => 'claro_workspace_tool_badges_edit',
+            'current_link' => 'claro_workspace_tool_badges',
             'route_parameters' => array(
-                'workspaceId' => $workspace->getId()
+                'workspaceId' => $workspaceId
             ),
         );
 
-        return $this->templateingEngine->render('ClarolineCoreBundle:Badge:Tool\workspace.html.twig', array('workspace' => $workspace, 'parameters' => $parameters));
+        return $this->templateingEngine->render('ClarolineCoreBundle:Badge:Tool\Workspace\list.html.twig', array('workspace' => $workspace, 'parameters' => $parameters));
     }
 }
