@@ -59,7 +59,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
+    <link rel="stylesheet" href="{{ asset('bundles/ujmexo/js/ext/jquery-ui-smoothness.css') }}"/>
 {% endblock %}
 
 {% block title %} {{ 'edit a question' | trans }} {% endblock %}
@@ -102,7 +102,7 @@
                                     <div class="input-group">
                                         {{ form_widget(edit_form.document) }}
                                         <span class="input-group-btn">
-                                            <a class="btn btn-primary" id="LoadImg" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}', '{{ asset('bundles') }}', {{ edit_form.document.vars.id }});" class="btn btn-primary">
+                                            <a class="btn btn-primary" id="LoadImg" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}', '{{ asset('bundles') }}', '{{ edit_form.document.vars.id }}');" class="btn btn-primary">
                                                 {{ 'select' | trans }}
                                             </a>
                                         </span>
