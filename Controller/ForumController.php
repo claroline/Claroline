@@ -160,11 +160,13 @@ class ForumController extends Controller
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage($limit);
         $pager->setCurrentPage($page);
+        $isModerator = $this->get('security.context')->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
 
         return array(
             'subject' => $subject,
             'pager' => $pager,
-            '_resource' => $forum
+            '_resource' => $forum,
+            'isModerator' => $isModerator
         );
     }
 
@@ -262,6 +264,63 @@ class ForumController extends Controller
         }
 
         return array('form' => $form->createView());
+    }
+
+    /**
+     * @Route(
+     *     "/edit/message/{message}/form",
+     *     name="claro_forum_edit_message_form"
+     * )
+     *
+     * @Template("ClarolineForumBundle::editMessageForm.html.twig")
+     */
+    public function editMessageFormAction(Message $message)
+    {
+        $form = $this->get('form.factory')->create(new MessageType(), $message);
+        $subject = $message->getSubject();
+        $forum = $subject->getForum();
+        $this->checkAccess($forum);
+
+        return array(
+            'subject' => $subject,
+            'form' => $form->createView(),
+            'message' => $message,
+            '_resource' => $forum
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/edit/message/{message}",
+     *     name="claro_forum_edit_message"
+     * )
+     *
+     * @Template("ClarolineForumBundle::editMessageForm.html.twig")
+     */
+    public function editMessageAction(Message $message)
+    {
+        $form = $this->container->get('form.factory')->create(new MessageType, new Message());
+        $form->handleRequest($this->get('request'));
+        $em = $this->getDoctrine()->getManager();
+        $subject = $message->getSubject();
+        $forum = $subject->getForum();
+
+        if ($form->isValid()) {
+            $message->setContent($form->get('content')->getData());
+            $em->persist($message);
+            $em->flush();
+
+            return new RedirectResponse(
+                $this->generateUrl('claro_forum_messages', array('subjectId' => $subject->getId()))
+            );
+        }
+
+        return array(
+            'subject' => $subject,
+            'form' => $form->createView(),
+            'message' => $message,
+            '_resource' => $forum
+        );
     }
 
     private function checkAccess(Forum $forum)
