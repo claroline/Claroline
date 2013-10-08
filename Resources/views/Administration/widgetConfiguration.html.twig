@@ -21,11 +21,48 @@
     }}
 {% endblock %}
 {% block section_content %}
-
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'widgets_configuration'|trans({}, 'platform') }}</h3>
     </div>
+    <div id='form-div'>
+        {{ content | raw }}
+    </div>
 
-    {{ content | raw }}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
 
+    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+    {{ tinymce_init() }}
+
+    <script type="text/javascript">
+        $('body').on('submit', '#form-div form', function (e) {
+            e.preventDefault();
+            //ajax submission
+            var form = $('#form-div form').get(0);
+            var action = form.getAttribute('action');
+            var formData = new FormData(form);
+
+            $.ajax({
+                url: action,
+                data: formData,
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                complete: function(jqXHR) {
+                    if (jqXHR) {
+                        var location = Routing.generate('claro_admin_widgets');
+                        window.location.href = location;
+                    }
+                }
+            });
+
+        });
+
+        $('body').on('click', '.claro-widget-form-cancel', function(e) {
+            e.preventDefault();
+            var location = Routing.generate('claro_admin_widgets');
+            window.location.href = location;
+        });
+    </script>
 {% endblock %}

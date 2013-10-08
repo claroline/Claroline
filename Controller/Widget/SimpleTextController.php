@@ -46,6 +46,6 @@ class SimpleTextController extends Controller
        $em->persist($simpleTextConfig);
        $em->flush();
 
-       return new Response('success', 204);
+       return new Response('');
     }
 }

@@ -161,7 +161,7 @@ class LogManager
             $config = new LogWidgetConfig();
 
             if ($defaultConfig !== null) {
-                $config->copy($defaultConfig);
+                $config->copy($this->getLogConfig($defaultConfig));
             }
 
             $config->setRestrictions(

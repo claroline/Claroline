@@ -3,27 +3,20 @@
 namespace Claroline\CoreBundle\Controller\Log;
 
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\Translator;
-use Claroline\CoreBundle\Event\Log\LogResourceChildUpdateEvent;
-use Claroline\CoreBundle\Form\Log\LogWorkspaceWidgetConfigType;
 use Claroline\CoreBundle\Form\Log\LogDesktopWidgetConfigType;
 use Claroline\CoreBundle\Entity\Log\Log;
-use Claroline\CoreBundle\Entity\Log\LogWorkspaceWidgetConfig;
-use Claroline\CoreBundle\Entity\Log\LogDesktopWidgetConfig;
 use Claroline\CoreBundle\Entity\Log\LogHiddenWorkspaceWidgetConfig;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Entity\Log\LogWidgetConfig;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -138,7 +131,7 @@ class LogController extends Controller
         $em->persist($config);
         $em->flush();
 
-        return new RedirectResponse($this->get('claroline.manager.widget_manager')->getRedirectRoute($widgetInstance));
+        return new Response('', 204);
     }
 
     /**
@@ -184,7 +177,7 @@ class LogController extends Controller
             }
 
             $data = $form->getData();
-            // remove all hiddenConfigs for user
+            //remove all hiddenConfigs for user
             foreach ($hiddenConfigs as $hiddenConfig) {
                 $em->remove($hiddenConfig);
             }
@@ -206,6 +199,6 @@ class LogController extends Controller
             throw new \Exception("invalid form");
         }
 
-        return new RedirectResponse($this->get('claroline.manager.widget_manager')->getRedirectRoute($widgetInstance));
+        return new Response('', 204);
     }
 }
