@@ -160,7 +160,10 @@ class AdministrationController extends Controller
             $this->userManager->insertUserWithRoles($user, $newRoles);
 
             if ($this->mailManager->isMailerAvailable()) {
-                $body = $this->translator->trans('admin_form_username', array(), 'platform').': '.$user->getUsername().' '.$this->translator->trans('admin_form_plainPassword_first', array(), 'platform'). ': '.$user->getPlainPassword();
+                $body = $this->translator->trans('admin_form_username', array(), 'platform').
+                    ': '.$user->getUsername().
+                    $this->translator->trans('admin_form_plainPassword_first', array(), 'platform').
+                    ': '.$user->getPlainPassword();
 
                 if ($this->mailManager->sendPlainPassword('noreply@claroline.net', $user->getMail(), $body)) {
                     return $this->redirect($this->generateUrl('claro_admin_user_list'));
@@ -571,7 +574,10 @@ class AdministrationController extends Controller
             $platformConfig
         );
 
-        return array('form_settings' => $form->createView());
+        return array(
+            'form_settings' => $form->createView(),
+            'logos' => $this->get('claroline.common.logo_service')->listLogos()
+        );
     }
 
     /**
@@ -610,6 +616,25 @@ class AdministrationController extends Controller
                     'theme',
                     $form['theme']->getData()
                 );
+                $this->configHandler->setParameter(
+                    'name',
+                    $form['name']->getData()
+                );
+                $this->configHandler->setParameter(
+                    'footer',
+                    $form['footer']->getData()
+                );
+                $this->configHandler->setParameter(
+                    'logo',
+                    $this->request->get('selectlogo')
+                );
+
+                $logo = $this->request->files->get('logo');
+
+                if ($logo) {
+                    $this->get('claroline.common.logo_service')->createLogo($logo);
+                }
+
             } catch (UnwritableException $e) {
                 $form->addError(
                     new FormError(
@@ -626,6 +651,22 @@ class AdministrationController extends Controller
         }
 
         return $this->redirect($this->generateUrl('claro_admin_platform_settings_form'));
+    }
+
+    /**
+     * @EXT\Route("delete/logo/{file}", name="claro_admin_delete_logo")
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function deleteLogoAction($file)
+    {
+        try {
+            $this->get('claroline.common.logo_service')->deleteLogo($file);
+
+            return new Response('true');
+        } catch (\Exeption $e) {
+            return new Response('false'); //useful in ajax
+        }
     }
 
     /**
@@ -749,8 +790,10 @@ class AdministrationController extends Controller
                         'error',
                         $this->translator->trans('users_minimum_requirement_msg', array(), 'platform')
                     );
+
                     return array('form' => $form->createView());
                 }
+
                 return $this->redirect($this->generateUrl('claro_admin_user_list'));
             }
         }
@@ -952,8 +995,8 @@ class AdministrationController extends Controller
             FormFactory::TYPE_ADMIN_ANALYTICS_CONNECTIONS,
             array(),
             array(
-                "range"=>$this->analyticsManager->getDefaultRange(),
-                "unique"=>"false"
+                "range" => $this->analyticsManager->getDefaultRange(),
+                "unique" => "false"
             )
         );
 
@@ -1024,15 +1067,15 @@ class AdministrationController extends Controller
      *
      * @throws \Exception
      */
-    public function analyticsTopAction($top_type)
+    public function analyticsTopAction($topType)
     {
         $criteriaForm = $this->formFactory->create(
             FormFactory::TYPE_ADMIN_ANALYTICS_TOP,
             array(),
             array(
-                "top_type"=>$top_type,
-                "top_number"=>30,
-                "range"=>$this->analyticsManager->getDefaultRange()
+                "top_type" => $topType,
+                "top_number" => 30,
+                "range" => $this->analyticsManager->getDefaultRange()
             )
         );
 

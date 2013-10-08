@@ -22,7 +22,9 @@
 
     {% block leftSide %}
         {% import _self as topbar %}
-
+        {% if config.getParameter('name') == "" and config.getParameter('logo') == "" %}
+            {{ topbar.item('home', path('claro_index'), 'home') }}
+        {% endif %}
         {{ topbar.item('desktop', path('claro_desktop_open'), 'briefcase', '/desktop/tool/') }}
         {% if is_granted('ROLE_ADMIN') %}
             {{ topbar.item('administration', path('claro_admin_index'), 'cog', '/admin/') }}
