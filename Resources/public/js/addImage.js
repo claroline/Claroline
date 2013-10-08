@@ -24,8 +24,13 @@ function ChangeList(idDoc, label, type, NotImageMesssage) {
 
     if (type == '.png' || type == '.jpeg' || type == '.jpg' || type == '.gif' || type == '.bmp') {
 
-        this_select = window.opener.InterGraphForm.ujm_exobundle_interactiongraphictype_document;
-        this_select.options[this_select.length] = new Option(label, idDoc, true, true);
+        //this_select = window.opener.InterGraphForm.ujm_exobundle_interactiongraphictype_document;
+        //this_select.options[this_select.length] = new Option(label, idDoc, true, true);
+
+       var this_select = $(window.opener.document).find('#ujm_exobundle_interactiongraphictype_document');
+
+       this_select.append($('<option selected="selected" value="'+idDoc+'"></option>')
+                            .text(label));
 
         for (var i = 0; i < this_select.options.length; i++) {
             if (this_select.options[i].value == idDoc) {
