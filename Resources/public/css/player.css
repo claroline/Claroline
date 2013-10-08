@@ -3,15 +3,8 @@
 	vertical-align:middle;
 }
 
-#resource-container{
-	background-color:white;
-	position:fixed;
-	z-index:10000;
-	left:25px;
-	right:25px;
-	top:25px;
-	bottom:25px;
-	overflow: auto;
-	padding:10px;
-	border:2px solid #F89406;
+
+
+#step-map{
 }
+
