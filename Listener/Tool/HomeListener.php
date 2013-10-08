@@ -71,32 +71,6 @@ class HomeListener
     }
 
     /**
-     * @DI\Observe("configure_workspace_tool_home")
-     */
-    public function onWorkspaceConfigure(ConfigureWorkspaceToolEvent $event)
-    {
-        $content = $this->templating->render(
-            'ClarolineCoreBundle:Tool\workspace\home:configuration.html.twig',
-            array('workspace' => $event->getWorkspace(), 'tool' => $event->getTool())
-        );
-        $event->setContent($content);
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("configure_desktop_tool_home")
-     */
-    public function onDesktopConfigure(ConfigureDesktopToolEvent $event)
-    {
-        $content = $this->templating->render(
-            'ClarolineCoreBundle:Tool\desktop\home:configuration.html.twig',
-            array('tool' => $event->getTool())
-        );
-        $event->setContent($content);
-        $event->stopPropagation();
-    }
-
-    /**
      * @DI\Observe("tool_home_from_template")
      *
      * @param ImportToolEvent $event
