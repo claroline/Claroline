@@ -8,12 +8,55 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/30 05:54:13
+ * Generation date: 2013/10/03 02:24:29
  */
-class Version20130930175413 extends AbstractMigration
+class Version20131003142428 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            CREATE TABLE claro_log_widget_config (
+                id NUMBER(10) NOT NULL, 
+                amount NUMBER(10) NOT NULL, 
+                restrictions CLOB DEFAULT NULL, 
+                widgetInstance_id NUMBER(10) DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_LOG_WIDGET_CONFIG' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_LOG_WIDGET_CONFIG ADD CONSTRAINT CLARO_LOG_WIDGET_CONFIG_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_LOG_WIDGET_CONFIG_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_LOG_WIDGET_CONFIG_AI_PK BEFORE INSERT ON CLARO_LOG_WIDGET_CONFIG FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_LOG_WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_LOG_WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_LOG_WIDGET_CONFIG_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_LOG_WIDGET_CONFIG_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_C16334B2AB7B5A55 ON claro_log_widget_config (widgetInstance_id)
+        ");
+        $this->addSql("
+            COMMENT ON COLUMN claro_log_widget_config.restrictions IS '(DC2Type:simple_array)'
+        ");
         $this->addSql("
             CREATE TABLE claro_widget_instance (
                 id NUMBER(10) NOT NULL, 
@@ -103,6 +146,12 @@ class Version20130930175413 extends AbstractMigration
             CREATE INDEX IDX_C389EBCCAB7B5A55 ON claro_simple_text_widget_config (widgetInstance_id)
         ");
         $this->addSql("
+            ALTER TABLE claro_log_widget_config 
+            ADD CONSTRAINT FK_C16334B2AB7B5A55 FOREIGN KEY (widgetInstance_id) 
+            REFERENCES claro_widget_instance (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
             ALTER TABLE claro_widget_instance 
             ADD CONSTRAINT FK_5F89A38582D40A1F FOREIGN KEY (workspace_id) 
             REFERENCES claro_workspace (id) 
@@ -164,12 +213,19 @@ class Version20130930175413 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
+            ALTER TABLE claro_log_widget_config 
+            DROP CONSTRAINT FK_C16334B2AB7B5A55
+        ");
+        $this->addSql("
             ALTER TABLE claro_widget_home_tab_config 
             DROP CONSTRAINT FK_D48CC23E44BF891
         ");
         $this->addSql("
             ALTER TABLE claro_simple_text_widget_config 
             DROP CONSTRAINT FK_C389EBCCAB7B5A55
+        ");
+        $this->addSql("
+            DROP TABLE claro_log_widget_config
         ");
         $this->addSql("
             DROP TABLE claro_widget_instance

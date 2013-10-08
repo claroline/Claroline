@@ -321,7 +321,7 @@ class AdministrationController extends Controller
     {
         $pager = $search === '' ?
             $this->userManager->getGroupOutsiders($group, $page) :
-            $this->userManager->getGroupOutsidersByName($group, $search, $page);
+            $this->userManager->getGroupOutsidersByName($group, $page, $search);
 
         return array('pager' => $pager, 'search' => $search, 'group' => $group);
     }
@@ -956,7 +956,7 @@ class AdministrationController extends Controller
                 "unique"=>"false"
             )
         );
-        
+
         $criteriaForm->handleRequest($this->request);
         $unique = false;
         if ($criteriaForm->isValid()) {
@@ -965,7 +965,7 @@ class AdministrationController extends Controller
         }
         $actionsForRange = $this->analyticsManager
             ->getDailyActionNumberForDateRange($range, 'user_login', $unique);
-        
+
         $connections = $actionsForRange;
         $activeUsers = $this->analyticsManager->getActiveUsers();
 

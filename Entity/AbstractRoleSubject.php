@@ -43,9 +43,7 @@ abstract class AbstractRoleSubject
 
     /**
      * Returns the subject's roles as an ArrayCollection of Role objects.
-     *
-     * @param boolean $includeAncestorRoles
-     *
+
      * @return ArrayCollection[Role]
      */
     public function getEntityRoles()

@@ -35,10 +35,6 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class ResourceManager
 {
-    //This is the default crunchbang page code. It should be the same for every debian.
-    //I don't know if this line works for windows.
-    const ENCODING = "ISO-8859-1";
-
     /** @var RightsManager */
     private $rightsManager;
     /** @var ResourceTypeRepository */
@@ -823,12 +819,12 @@ class ResourceManager
                 $obj = $event->getItem();
 
                 if ($obj !== null) {
-                    $archive->addFile($obj, iconv(mb_detect_encoding($filename), self::ENCODING, $filename));
+                    $archive->addFile($obj, iconv(mb_detect_encoding($filename), $this->getEncoding(), $filename));
                 } else {
-                     $archive->addFromString(iconv(mb_detect_encoding($filename), self::ENCODING, $filename), '');
+                     $archive->addFromString(iconv(mb_detect_encoding($filename), $this->getEncoding(), $filename), '');
                 }
             } else {
-                $archive->addEmptyDir(iconv(mb_detect_encoding($filename), self::ENCODING, $filename));
+                $archive->addEmptyDir(iconv(mb_detect_encoding($filename), $this->getEncoding(), $filename));
             }
 
             $this->dispatcher->dispatch('log', 'Log\LogResourceExport', array($node));
@@ -1096,5 +1092,10 @@ class ResourceManager
         }
 
         $this->om->flush();
+    }
+    
+    private function getEncoding()
+    {
+        return $this->ut->getDefaultEncoding();
     }
 }

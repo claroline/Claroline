@@ -8,6 +8,7 @@ activity_form_instructions: Instructions
 activity_form_name: Nom
 add: Ajouter
 add_group: 'Ajouter un groupe'
+add_groups: 'Ajouter des groupes'
 add_group_s_confirm_message: 'groupe(s) ajouté(s)'
 add_resource: 'Ajouter une ressource'
 add_role: 'Ajouter un role'
@@ -16,6 +17,7 @@ add_tag_to_workspace: 'Ajouter un Tag à l''espace d''activités'
 add_user: 'Ajouter un utilisateur'
 add_users: 'Ajouter des utilisateurs'
 add_user_s_confirm_message: 'utilisateur(s) ajouté(s)'
+add_roles_confirm_message: 'Voulez vous ajouter le(s) role(s) suivant(s) aux %count% élément(s) sélectionné(s): '
 add_widget_to_home_tab: 'Ajouter un widget à l''onglet'
 admin: Administrateur
 admin_analytics: 'Statistiques plateforme'
@@ -283,6 +285,7 @@ ok: Ok
 or: Ou
 only_for_workspace_creation: 'Seulement pour la création d''un espace d''activités'
 open: Ouvrir
+operation_done: Opération effectuée.
 options: Options
 order: Ordre
 organize_admin_tags: 'Organiser les Tags administrateur'
@@ -372,6 +375,8 @@ restore : Restaurer
 restore_messages_confirm_message: 'message(s) restaurés'
 results: Résultats
 results_for_search_on: 'Resultat(s) de la recherche sur'
+reset_password: 'Réinitialiser mot de passe'
+reset_password_message: 'Etes vous sur de vouloir réinitialiser le mot de passe ?'
 rights: Droits
 rights_management: 'Gestion des droits'
 role: Rôle

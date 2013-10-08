@@ -8,12 +8,24 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/30 05:54:13
+ * Generation date: 2013/10/03 02:24:29
  */
-class Version20130930175413 extends AbstractMigration
+class Version20131003142428 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            CREATE TABLE claro_log_widget_config (
+                id INTEGER NOT NULL, 
+                amount INTEGER NOT NULL, 
+                restrictions CLOB DEFAULT NULL, 
+                widgetInstance_id INTEGER DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_C16334B2AB7B5A55 ON claro_log_widget_config (widgetInstance_id)
+        ");
         $this->addSql("
             CREATE TABLE claro_widget_instance (
                 id INTEGER NOT NULL, 
@@ -141,6 +153,9 @@ class Version20130930175413 extends AbstractMigration
 
     public function down(Schema $schema)
     {
+        $this->addSql("
+            DROP TABLE claro_log_widget_config
+        ");
         $this->addSql("
             DROP TABLE claro_widget_instance
         ");

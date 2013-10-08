@@ -11,6 +11,16 @@ use Claroline\InstallationBundle\Bundle\BundleVersion;
 
 class AdditionalInstaller extends BaseInstaller
 {
+    private $logger;
+
+    public function __construct()
+    {
+        $self = $this;
+        $this->logger = function ($message) use ($self) {
+            $self->log($message);
+        };
+    }
+
     public function preInstall()
     {
         $this->createDatabaseIfNotExists();
@@ -19,19 +29,21 @@ class AdditionalInstaller extends BaseInstaller
 
     public function preUpdate(BundleVersion $current, BundleVersion $target)
     {
-        $updater002000005 = new Updater\Updater002000005($this->container);
-                
-        if (version_compare($current->getVersion(), '1.3', '>') && version_compare($target->getVersion(), '2.1', '<') ) {
-            $updater002000005->preUpdate();
+
+        if (version_compare($current->getVersion(), '2.0', '<') && version_compare($target->getVersion(), '2.0', '>=') ) {
+            $updater020000 = new Updater\Updater020000($this->container);
+            $updater020000->setLogger($this->logger);
+            $updater020000->preUpdate();
         }
     }
-    
+
     public function postUpdate(BundleVersion $current, BundleVersion $target)
     {
-        $updater002000005 = new Updater\Updater002000005($this->container);
-                
-        if (version_compare($current->getVersion(), '1.3', '>')  && version_compare($target->getVersion(), '2.1', '<') ) {
-            $updater002000005->postUpdate();
+
+        if (version_compare($current->getVersion(), '2.0', '<')  && version_compare($target->getVersion(), '2.0', '>=') ) {
+            $updater020000 = new Updater\Updater020000($this->container);
+            $updater020000->setLogger($this->logger);
+            $updater020000->postUpdate();
         }
     }
 

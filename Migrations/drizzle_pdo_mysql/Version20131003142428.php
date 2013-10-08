@@ -8,12 +8,22 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/30 05:54:14
+ * Generation date: 2013/10/03 02:24:29
  */
-class Version20130930175413 extends AbstractMigration
+class Version20131003142428 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            CREATE TABLE claro_log_widget_config (
+                id INT AUTO_INCREMENT NOT NULL, 
+                amount INT NOT NULL, 
+                restrictions TEXT DEFAULT NULL COMMENT '(DC2Type:simple_array)', 
+                widgetInstance_id INT DEFAULT NULL, 
+                PRIMARY KEY(id), 
+                INDEX IDX_C16334B2AB7B5A55 (widgetInstance_id)
+            )
+        ");
         $this->addSql("
             CREATE TABLE claro_widget_instance (
                 id INT AUTO_INCREMENT NOT NULL, 
@@ -37,6 +47,12 @@ class Version20130930175413 extends AbstractMigration
                 PRIMARY KEY(id), 
                 INDEX IDX_C389EBCCAB7B5A55 (widgetInstance_id)
             )
+        ");
+        $this->addSql("
+            ALTER TABLE claro_log_widget_config 
+            ADD CONSTRAINT FK_C16334B2AB7B5A55 FOREIGN KEY (widgetInstance_id) 
+            REFERENCES claro_widget_instance (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_widget_instance 
@@ -93,12 +109,19 @@ class Version20130930175413 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
+            ALTER TABLE claro_log_widget_config 
+            DROP FOREIGN KEY FK_C16334B2AB7B5A55
+        ");
+        $this->addSql("
             ALTER TABLE claro_widget_home_tab_config 
             DROP FOREIGN KEY FK_D48CC23E44BF891
         ");
         $this->addSql("
             ALTER TABLE claro_simple_text_widget_config 
             DROP FOREIGN KEY FK_C389EBCCAB7B5A55
+        ");
+        $this->addSql("
+            DROP TABLE claro_log_widget_config
         ");
         $this->addSql("
             DROP TABLE claro_widget_instance

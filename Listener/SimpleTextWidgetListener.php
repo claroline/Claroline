@@ -65,17 +65,16 @@ class SimpleTextWidgetListener
     {
         $instance = $event->getInstance();
         $txtConfig = $this->simpleTextManager->getTextConfig($instance);
-        
+
         if ($txtConfig === null) {
             $txtConfig = new SimpleTextConfig();
         }
-        
+
         $form = $this->formFactory->create(FormFactory::TYPE_SIMPLE_TEXT, array(), $txtConfig);
         $content = $this->templating->render(
             'ClarolineCoreBundle:Widget:config_simple_text_form.html.twig',
             array(
                 'form' => $form->createView(),
-                'isAdmin' => $instance->isAdmin(),
                 'config' => $instance
             )
         );

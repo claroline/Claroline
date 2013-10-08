@@ -33,7 +33,8 @@ class AdministrationWidgetController extends Controller
     /**
      * @EXT\Route(
      *     "/widgets",
-     *     name="claro_admin_widgets"
+     *     name="claro_admin_widgets",
+     *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
      *

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\sqlsrv;
+namespace Claroline\CoreBundle\Migrations\pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,43 +8,51 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/09/30 05:54:14
+ * Generation date: 2013/10/03 02:24:29
  */
-class Version20130930175413 extends AbstractMigration
+class Version20131003142428 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
+            CREATE TABLE claro_log_widget_config (
+                id INT AUTO_INCREMENT NOT NULL, 
+                amount INT NOT NULL, 
+                restrictions LONGTEXT DEFAULT NULL COMMENT '(DC2Type:simple_array)', 
+                widgetInstance_id INT DEFAULT NULL, 
+                INDEX IDX_C16334B2AB7B5A55 (widgetInstance_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ");
+        $this->addSql("
             CREATE TABLE claro_widget_instance (
-                id INT IDENTITY NOT NULL, 
-                workspace_id INT, 
-                user_id INT, 
+                id INT AUTO_INCREMENT NOT NULL, 
+                workspace_id INT DEFAULT NULL, 
+                user_id INT DEFAULT NULL, 
                 widget_id INT NOT NULL, 
-                is_admin BIT NOT NULL, 
-                is_desktop BIT NOT NULL, 
-                name NVARCHAR(255) NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_5F89A38582D40A1F ON claro_widget_instance (workspace_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_5F89A385A76ED395 ON claro_widget_instance (user_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_5F89A385FBE885E2 ON claro_widget_instance (widget_id)
+                is_admin TINYINT(1) NOT NULL, 
+                is_desktop TINYINT(1) NOT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                INDEX IDX_5F89A38582D40A1F (workspace_id), 
+                INDEX IDX_5F89A385A76ED395 (user_id), 
+                INDEX IDX_5F89A385FBE885E2 (widget_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_simple_text_widget_config (
-                id INT IDENTITY NOT NULL, 
-                content VARCHAR(MAX) NOT NULL, 
-                widgetInstance_id INT, 
-                PRIMARY KEY (id)
-            )
+                id INT AUTO_INCREMENT NOT NULL, 
+                content LONGTEXT NOT NULL, 
+                widgetInstance_id INT DEFAULT NULL, 
+                INDEX IDX_C389EBCCAB7B5A55 (widgetInstance_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
-            CREATE INDEX IDX_C389EBCCAB7B5A55 ON claro_simple_text_widget_config (widgetInstance_id)
+            ALTER TABLE claro_log_widget_config 
+            ADD CONSTRAINT FK_C16334B2AB7B5A55 FOREIGN KEY (widgetInstance_id) 
+            REFERENCES claro_widget_instance (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE claro_widget_instance 
@@ -72,33 +80,20 @@ class Version20130930175413 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_widget 
-            ADD is_displayable_in_workspace BIT NOT NULL
-        ");
-        $this->addSql("
-            ALTER TABLE claro_widget 
-            ADD is_displayable_in_desktop BIT NOT NULL
+            ADD is_displayable_in_workspace TINYINT(1) NOT NULL, 
+            ADD is_displayable_in_desktop TINYINT(1) NOT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_widget_home_tab_config 
-            ADD widget_instance_id INT
+            DROP FOREIGN KEY FK_D48CC23EFBE885E2
         ");
         $this->addSql("
-            ALTER TABLE claro_widget_home_tab_config 
-            DROP COLUMN widget_id
-        ");
-        $this->addSql("
-            ALTER TABLE claro_widget_home_tab_config 
-            DROP CONSTRAINT FK_D48CC23EFBE885E2
-        ");
-        $this->addSql("
-            IF EXISTS (
-                SELECT * 
-                FROM sysobjects 
-                WHERE name = 'IDX_D48CC23EFBE885E2'
-            ) 
-            ALTER TABLE claro_widget_home_tab_config 
-            DROP CONSTRAINT IDX_D48CC23EFBE885E2 ELSE 
             DROP INDEX IDX_D48CC23EFBE885E2 ON claro_widget_home_tab_config
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget_home_tab_config 
+            ADD widget_instance_id INT DEFAULT NULL, 
+            DROP widget_id
         ");
         $this->addSql("
             ALTER TABLE claro_widget_home_tab_config 
@@ -114,12 +109,19 @@ class Version20130930175413 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
+            ALTER TABLE claro_log_widget_config 
+            DROP FOREIGN KEY FK_C16334B2AB7B5A55
+        ");
+        $this->addSql("
             ALTER TABLE claro_widget_home_tab_config 
-            DROP CONSTRAINT FK_D48CC23E44BF891
+            DROP FOREIGN KEY FK_D48CC23E44BF891
         ");
         $this->addSql("
             ALTER TABLE claro_simple_text_widget_config 
-            DROP CONSTRAINT FK_C389EBCCAB7B5A55
+            DROP FOREIGN KEY FK_C389EBCCAB7B5A55
+        ");
+        $this->addSql("
+            DROP TABLE claro_log_widget_config
         ");
         $this->addSql("
             DROP TABLE claro_widget_instance
@@ -129,29 +131,16 @@ class Version20130930175413 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_widget 
-            DROP COLUMN is_displayable_in_workspace
+            DROP is_displayable_in_workspace, 
+            DROP is_displayable_in_desktop
         ");
         $this->addSql("
-            ALTER TABLE claro_widget 
-            DROP COLUMN is_displayable_in_desktop
-        ");
-        $this->addSql("
-            ALTER TABLE claro_widget_home_tab_config 
-            ADD widget_id INT NOT NULL
-        ");
-        $this->addSql("
-            ALTER TABLE claro_widget_home_tab_config 
-            DROP COLUMN widget_instance_id
-        ");
-        $this->addSql("
-            IF EXISTS (
-                SELECT * 
-                FROM sysobjects 
-                WHERE name = 'IDX_D48CC23E44BF891'
-            ) 
-            ALTER TABLE claro_widget_home_tab_config 
-            DROP CONSTRAINT IDX_D48CC23E44BF891 ELSE 
             DROP INDEX IDX_D48CC23E44BF891 ON claro_widget_home_tab_config
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget_home_tab_config 
+            ADD widget_id INT NOT NULL, 
+            DROP widget_instance_id
         ");
         $this->addSql("
             ALTER TABLE claro_widget_home_tab_config 
