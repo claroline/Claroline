@@ -134,7 +134,6 @@
                     <input type="hidden" name="exercise" value="{{ exoID }}"/>
                 </div>
             </div>
-        </div>
             <div class="panel-footer">
                 <button type="submit" id="button_submit" class="btn btn-primary" onclick="setOrder();">{{ 'edit' | trans }}</button>
                 <a class="btn btn-default" href="{{ path('ujm_question_index') }}">{{ "cancel" | trans({}, "platform") }}</a>
@@ -156,7 +155,7 @@
     {# add form choice #}
     <script type="text/javascript">
         $(document).ready(function() {
-            creationQCMEdit('{{ 'expected answer' | trans }}', '{{ 'response' | trans }}', '{{ 'point' | trans }}', '{{ 'comment' | trans }}', '{{ 'Choice.positionForce' | trans }}', '{{ 'addChoice' | trans }}', '{{ 'delete' | trans }}');
+            creationQCMEdit('{{ 'expected answer' | trans }}', '{{ 'response' | trans }}', '{{ 'point' | trans }}', '{{ 'comment' | trans }}', '{{ 'Choice.positionForce' | trans }}', '{{ 'addChoice' | trans }}', '{{ 'delete' | trans }}', {{ nbResponses }});
             newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
         });
     </script>

@@ -5,8 +5,8 @@ var tableChoices = $('#tableChoice'); // div which contain the choices array
 function creationQCM(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice) {
 
     var index; // number of choices
-    
-    tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice);
+
+    tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, 0);
 
     // Number of choice initially
     index = container.find(':input').length;
@@ -41,11 +41,11 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
 }
 
 // QCM Edition
-function creationQCMEdit(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice) {
+function creationQCMEdit(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, nbResponses) {
 
     var index;
-    
-    tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice);
+
+    tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, nbResponses);
 
     // Get the form field to fill rows of the choices' table
     container.children().first().children('div').each(function () {
@@ -61,9 +61,11 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
             $('#choiceError').append($(this).find('span'));
         });
 
-        // Add the delete button
-        $('#newTable').find('tr:last').append('<td class="classic"></td>');
-        addDelete($('#newTable').find('td:last'), deleteChoice);
+        if (nbResponses == 0) {
+            // Add the delete button
+            $('#newTable').find('tr:last').append('<td class="classic"></td>');
+            addDelete($('#newTable').find('td:last'), deleteChoice);
+        }
     });
 
     // Remove the useless fields form
@@ -300,21 +302,27 @@ function fillChoicesArray(row) {
     }
 }
 
-function tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice) {
-    // Add the structure od the table
-    tableChoices.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="classic">'+point+'</th><th class="classic">'+comment+'</th><th class="classic">'+positionForce+'</th><th class="classic">-----</th></tr></thead><tbody><tr></tr></tbody></table>');
+function tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, nbResponses) {
 
-    // create the button to add a choice
-    var add = $('<a href="#" id="add_choice" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;'+addchoice+'</a>');
+    if (nbResponses == 0) {
+        // Add the structure od the table
+        tableChoices.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="classic">'+point+'</th><th class="classic">'+comment+'</th><th class="classic">'+positionForce+'</th><th class="classic">-----</th></tr></thead><tbody><tr></tr></tbody></table>');
 
-    // Add the button after the table
-    tableChoices.append(add);
+        // create the button to add a choice
+        var add = $('<a href="#" id="add_choice" class="btn btn-primary"><i class="icon-plus"></i>&nbsp;'+addchoice+'</a>');
 
-    // When click, add a new choice in the table
-    add.click(function (e) {
-        $('#newTable').find('tbody').append('<tr></tr>');
-        addChoice(container, deleteChoice);
-        e.preventDefault(); // prevent add # in the url
-        return false;
-    });
+        // Add the button after the table
+        tableChoices.append(add);
+
+        // When click, add a new choice in the table
+        add.click(function (e) {
+            $('#newTable').find('tbody').append('<tr></tr>');
+            addChoice(container, deleteChoice);
+            e.preventDefault(); // prevent add # in the url
+            return false;
+        });
+    } else {
+        // Add the structure od the table
+        tableChoices.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="classic">'+point+'</th><th class="classic">'+comment+'</th><th class="classic">'+positionForce+'</th></tr></thead><tbody><tr></tr></tbody></table>');
+    }
 }
