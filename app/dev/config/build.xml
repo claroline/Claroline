@@ -1,66 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- Ant build file used for Claronext's Jenkins job. See http://jenkins-php.org/ -->
+<!-- Ant build file used for Claroline's Jenkins job. See http://jenkins-php.org/ -->
 
-<project name="Claronext" default="build" basedir="./../../../">
+<project name="Claronext" default="build" basedir="../../..">
 
     <property name="appdir" value="${basedir}/app"/>
-    <property name="srcdir" value="${basedir}/src"/>
+    <property name="srcdir" value="${basedir}/vendor/claroline"/>
     <property name="builddir" value="${appdir}/build"/>
+    <property name="configdir" value="${appdir}/dev/config"/>
 
-    <target name="build" depends="clean,rawInstall,parallelTasks,phpunit,phpcb"/>
-
-    <target name="clean"
-            description="Remove logs and plugin config files, clean up and create artifact directories">
-        <delete file="${appdir}/config/local/plugin/bundles"/>
-        <delete file="${appdir}/config/local/plugin/namespaces"/>
-        <delete file="${appdir}/config/local/plugin/routing.yml"/>
-        <delete file="${appdir}/logs/test.log"/>
-
-        <delete dir="${builddir}/api"/>
-        <delete dir="${builddir}/code-browser"/>
-        <delete dir="${builddir}/logs"/>
-        <delete dir="${builddir}/pdepend"/>
-
-        <mkdir dir="${builddir}/api"/>
-        <mkdir dir="${builddir}/code-browser"/>
-        <mkdir dir="${builddir}/logs"/>
-        <mkdir dir="${builddir}/pdepend"/>
-    </target>
-
-    <target name="rawInstall"
-            description="Install vendors, create database, tables, config files, install plugins">
-        <touch file="${appdir}/config/local/plugin/bundles"/>
-        <touch file="${appdir}/config/local/plugin/namespaces"/>
-        <touch file="${appdir}/config/local/plugin/routing.yml"/>
-        <exec executable="composer" failonerror="true">
-            <arg value="install" />
-            <arg value="--dev" />
-            <arg value="--prefer-source" />
-        </exec>
-        <exec executable="php" failonerror="true">
-            <arg path="${appdir}/console" />
-            <arg value="doctrine:database:drop" />
-            <arg value="--force" />
-            <arg value="--env=test" />
-        </exec>
-        <exec executable="php" failonerror="true">
-            <arg path="${appdir}/console" />
-            <arg value="doctrine:database:create" />
-            <arg value="--env=test" />
-        </exec>
-        <exec executable="php" failonerror="true">
-            <arg path="${appdir}/console" />
-            <arg value="claroline:install" />
-            <arg value="--env=test" />
-        </exec>
-        <exec executable="php" failonerror="true">
-            <arg path="${appdir}/console" />
-            <arg value="cache:clear" />
-            <arg value="--no-warmup" />
-            <arg value="--env=test" />
-        </exec>
-    </target>
+    <target name="build" depends="parallelTasks,phpunit,phpcb"/>
 
     <target name="phpunit"
             description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
@@ -68,12 +17,11 @@
             <arg value="-c" />
             <arg path="${appdir}/phpunit.xml" />
             <arg value="--log-junit" />
-            <arg path="${appdir}/build/logs/junit.xml" />
+            <arg path="${builddir}/logs/junit.xml" />
             <arg value="--coverage-html"/>
-            <arg path="${appdir}/build/coverage" />
+            <arg path="${builddir}/coverage" />
             <arg value="--verbose" />
-            <arg value="--testsuite" />
-            <arg value="core" />
+            <arg path="${srcdir}/core-bundle" />
         </exec>
     </target>
 
@@ -99,6 +47,7 @@
             <arg value="--jdepend-xml=${builddir}/logs/jdepend.xml" />
             <arg value="--jdepend-chart=${builddir}/pdepend/dependencies.svg" />
             <arg value="--overview-pyramid=${builddir}/pdepend/overview-pyramid.svg" />
+            <arg value="--ignore=${srcdir}/*/*/*/Migrations" />
             <arg path="${srcdir}" />
         </exec>
     </target>
@@ -108,7 +57,7 @@
         <exec executable="phpmd">
             <arg path="${srcdir}" />
             <arg value="xml" />
-            <arg value="${appdir}/build/tools/phpmd.xml" />
+            <arg value="${configdir}/phpmd.xml" />
             <arg value="--reportfile" />
             <arg value="${builddir}/logs/pmd.xml" />
             <arg value="--exclude" />
@@ -139,7 +88,7 @@
         <exec executable="phpcs" output="/dev/null">
             <arg value="--report=checkstyle" />
             <arg value="--report-file=${builddir}/logs/checkstyle.xml" />
-            <arg value="--standard=${appdir}/build/tools/phpcs.xml" />
+            <arg value="--standard=${configdir}/phpcs.xml" />
             <arg path="${srcdir}" />
         </exec>
     </target>
@@ -149,9 +98,9 @@
         <exec executable="phpdoc">
             <arg value="--quiet" />
             <arg value="--ignore" />
-            <arg path="${srcdir}/*/Claroline/*/Tests/*,${srcdir}/*/Claroline/*/Resources/*,${srcdir}/*/Claroline/*/Migrations/*" />
+            <arg path="${srcdir}/*/*/*/Tests/*,${srcdir}/*/*/*/Resources/*,${srcdir}/*/*/*/Migrations/*" />
             <arg value="--directory" />
-            <arg path="${srcdir}/core/Claroline,${srcdir}/plugin/Claroline" />
+            <arg path="${srcdir}" />
             <arg value="--target" />
             <arg path="${builddir}/api" />
         </exec>
@@ -172,9 +121,9 @@
     <target name="jshint"
          description="Generate checkstyle-jshint.xml using JSHint">
         <exec executable="jshint" output="${builddir}/logs/checkstyle-jshint.xml">
-            <arg value="--reporter=${appdir}/dev/checkstyle-errors.js" />
+            <arg value="--reporter=${configdir}/checkstyle-errors.js" />
             <arg value="--config" />
-            <arg path="${appdir}/build/tools/jshint.json" />
+            <arg path="${configdir}/jshint.json" />
             <arg path="${srcdir}" />
         </exec>
     </target>
@@ -184,7 +133,7 @@
         <exec executable="jshint" output="${builddir}/logs/jslint.xml">
             <arg value="--reporter=jslint" />
             <arg value="--config" />
-            <arg path="${appdir}/build/tools/jshint.json" />
+            <arg path="${configdir}/jshint.json" />
             <arg path="${srcdir}" />
         </exec>
     </target>

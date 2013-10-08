@@ -3,7 +3,7 @@ README
 
 This repository provides the basic application structure of the Claroline platform.
 It doesn't contain the sources nor the third-party libraries required to make the
-application fully functional. Thoses sources have to be installed following the
+application fully functional. Those sources have to be installed following the
 procedure described below.
 
 If you want to contribute or directly browse the sources of the project, here is a
@@ -34,12 +34,12 @@ Project setup
 
 ### Development installation
 
-- Clone this repository and checkout the alt-master branch
+- Clone this repository
 - Create an *app/config/parameters.yml* file based on *app/config/parameters.yml.dist*
   and fill at least the main db parameters (database doesn't have to exist, but if
   it exists, it must be empty)
 - Make the following directories (and their children) writable from the command
-  line and the webserver (for further explanation on common permissions issues and
+  line and the web server (for further explanation on common permissions issues and
   solutions with Symfony2, read [this][5]):
     - *app/cache*
     - *app/logs*
@@ -51,7 +51,7 @@ Project setup
     - *web/themes*
     - *web/thumbnails*
 - Run the following commands:
-    - `$ composer require claroline/bundle-recorder ~1.0`
+    - `$ composer require claroline/bundle-recorder "~1.1"`
     - `$ cp composer.dist.json composer.json`
     - `$ composer update --prefer-source`
     - `$ php app/console assetic:dump`

@@ -1,1 +1,2 @@
-src/plugin/Claroline/PdfPlayerBundle/Resources/public/js/pdf.js
+vendor/claroline/front-end-bundle
+vendor/claroline/pdf-player-bundle/Claroline/PdfPlayerBundle/Resources/public/js/pdf.js
