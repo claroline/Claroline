@@ -111,12 +111,12 @@
                                         <i class="icon-pencil"></i>
                                     </a>
                                 {% else %}
-                                    <a class="btn btn-default" title="{{ 'edit' | trans }}" 
+                                    <a class="btn btn-default" title="{{ 'edit' | trans }}" style="color: red;"
                                        href="{{ path('ujm_question_edit', { 'id': interaction.question.id, 'exoID': exerciseID }) }}">
                                         <i class="icon-pencil"></i>
                                     </a>
                                 {% endif %}
-                                <a class="btn btn-default" title="{{ 'delete of my exercise' | trans }}" 
+                                <a class="btn btn-default" title="{{ 'delete of my exercise' | trans }}"
                                    href="{{ path('ujm_exercise_question_delete', {
                                         'exoID': exerciseID, 'qid': interaction.question.id, 'pageNow': pagerQuestion.getCurrentPage,
                                         'maxPage': pagerQuestion.maxPerPage, 'nbItem': pagerQuestion.getNbResults,
