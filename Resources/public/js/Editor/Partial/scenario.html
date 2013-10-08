@@ -20,7 +20,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-6">
         <div class="panel panel-default preview-step">
             <div class="panel-heading">
@@ -32,41 +32,41 @@
                     </button>
                 </div>
             </div>
-            
+
             <div class="panel-body" ng-hide="previewStep != null">
                 <span>No selected step.</span>
             </div>
-            
+
             <div class="panel-body" ng-show="previewStep != null">
                 <div class="icons">
-                    <img ng-show="previewStep.who != null && previewStep.who != ''" src="{{ webDir }}images/icons/who/{{ previewStep.who }}" alt="{{ previewStep.who }}" tooltip="{{ previewStep.who }}" />
-                    <img ng-show="previewStep.where != null && previewStep.where != ''" src="{{ webDir }}images/icons/where/{{ previewStep.where }}" alt="{{ previewStep.where }}" tooltip="{{ previewStep.where }}" />
-                    
+                    <img ng-show="previewStep.who != null && previewStep.who != ''" src="{{ webDir }}images/icons/who/{{ previewStep.who }}" alt="{{ previewStep.who }}" tooltip="{{ whoList[previewStep.who] }}" />
+                    <img ng-show="previewStep.where != null && previewStep.where != ''" src="{{ webDir }}images/icons/where/{{ previewStep.where }}" alt="{{ previewStep.where }}" tooltip="{{ whereList[previewStep.where] }}" />
+
                     <img ng-show="previewStep.withComputer" src="{{ webDir }}images/icons/computer.png" alt="With computer" tooltip="With computer" />
                     <img ng-show="!previewStep.withComputer" src="{{ webDir }}images/icons/no_computer.png" alt="Without computer" tooltip="Without computer" />
-                    
+
                     <img ng-show="previewStep.withTutor" src="{{ webDir }}images/icons/tutor.png" alt="With tutor" tooltip="With tutor" />
                     <img ng-show="!previewStep.withTutor" src="{{ webDir }}images/icons/no_tutor.png" alt="Without tutor" tooltip="Without tutor" />
-                    
+
                     <span class="duration pull-right">{{ previewStep.durationHours || "0" }}h{{ previewStep.durationMinutes || "00" }}min</span>
                 </div>
-                
+
                 <div class="picture">
                     <img ng-show="previewStep.picture != null && previewStep.picture != ''" src="images/image.png" />
                 </div>
-                
+
                 <h3>Instructions</h3>
                 <p>{{ previewStep.instructions || "There is no instructions for this step" }}</p>
-                
+
                 <h3><i class="icon-briefcase"></i> Documents</h3>
-                
+
                 <div class="panel panel-default" ng-repeat="parent in inheritedResources.documents">
                     <div class="panel-heading">
                         <i class="indent" style="margin-left: {{ $index * 20 }}px" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
                         {{ parent.stepName }}
                         <span class="pull-right parent-resources-count">{{ parent.resources.length }} documents</span>
                     </div>
-                    
+
                     <table class="table table-condensed table-hover">
                         <tr ng-repeat="resource in parent.resources">
                             <td class="icon"><img src="{{ webDir }}images/icons/document/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
@@ -78,14 +78,14 @@
                         </tr>
                     </table>
                 </div>
-                
+
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <i class="indent" style="margin-left: {{ inheritedResources.documents.length * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
                         {{ previewStep.name }}
                         <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('document')"><i class="icon-plus"></i></button>
                     </div>
-                    
+
                     <table class="table table-condensed table-hover">
                         <tr ng-repeat="resource in previewStep.resources | filter: {type: 'document'}">
                             <td class="icon"><img src="{{ webDir }}images/icons/document/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
@@ -97,16 +97,16 @@
                         </tr>
                     </table>
                 </div>
-                
+
                 <h3><i class="icon-wrench"></i> Tools</h3>
-                
+
                 <div class="panel panel-default" ng-repeat="parent in inheritedResources.tools">
                     <div class="panel-heading">
                         <i class="indent" style="margin-left: {{ $index * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
                         {{ parent.stepName }}
                         <span class="pull-right parent-resources-count">{{ parent.resources.length }} tools</span>
                     </div>
-                    
+
                     <table class="table table-condensed table-hover">
                         <tr ng-repeat="resource in parent.resources">
                             <td class="icon"><img src="{{ webDir }}images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
@@ -118,14 +118,14 @@
                         </tr>
                     </table>
                 </div>
-                
+
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <i class="indent" style="margin-left: {{ inheritedResources.tools.length * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
                         {{ previewStep.name }}
                         <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('tool')"><i class="icon-plus"></i></button>
                     </div>
-                    
+
                     <table class="table table-condensed table-hover">
                         <tr ng-repeat="resource in previewStep.resources | filter: {type: 'tool'}">
                             <td class="icon"><img src="{{ webDir }}images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
