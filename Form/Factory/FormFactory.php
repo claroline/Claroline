@@ -39,6 +39,7 @@ class FormFactory
     const TYPE_SIMPLE_TEXT = 'simple_text';
     const TYPE_HOME_TAB = 'home_tab';
     const TYPE_WIDGET_CONFIG = 'widget_config';
+    const TYPE_WIDGET_INSTANCE = 'widget_instance';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -143,6 +144,10 @@ class FormFactory
         ),
         self::TYPE_WIDGET_CONFIG => array(
             'formType' => 'Claroline\CoreBundle\Form\WidgetDisplayType',
+            'entity' => 'Claroline\CoreBundle\Entity\Widget\WidgetInstance'
+        ),
+        self::TYPE_WIDGET_INSTANCE => array(
+            'formType' => 'Claroline\CoreBundle\Form\WidgetInstanceType',
             'entity' => 'Claroline\CoreBundle\Entity\Widget\WidgetInstance'
         )
     );

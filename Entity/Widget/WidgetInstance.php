@@ -50,7 +50,7 @@ class WidgetInstance
     /**
      * @ORM\Column(name="name")
      */
-    protected $name = 'Change me !';
+    protected $name;
 
     public function getId()
     {

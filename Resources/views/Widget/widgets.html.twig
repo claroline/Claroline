@@ -5,87 +5,84 @@
     hometab-type-value="{% if isDesktop %}desktop{% else %}workspace{% endif %}"
 ></div>
 
-<div class="panel-group" id="widgets-list-panel">
-    {% for widgetDatas in widgetsDatas %}
-    {% set widgetHomeTabConfig = widgetDatas.config %}
-    {% set widgetInstance = widgetHomeTabConfig.getWidgetInstance() %}
-    {% set widget = widgetInstance.getWidget() %}
-        <div class="panel panel-default
-            {% if not widgetHomeTabConfig.isVisible() %}
-                toggle-visible
-                {% if withConfig == 0 %} hidden {% endif %}
-            {% endif %}"
-         >
-            <div class="panel-heading relative">
-                <div class="panel-title">
-                    <a class="accordion-toggle widget-instance-name"
-                        data-toggle="collapse"
-                        href="#collapse{{ widgetInstance.getId() }}"
-                    >
-                        {{ widgetInstance.getName() }}
-                    </a>
-                    <span class="toggle-visible {% if withConfig == 0 %} hidden {% endif %}">
-                        <small>
-                            [{{ widget.getName()|trans({}, 'widget') }}]
-                        </small>
-                    </span>
-                    <span class="toggle-visible {% if withConfig == 0 %} hidden {% endif %}"
-                        widget-instance-id="{{ widgetInstance.getId() }}"
-                    >
+<div class="panel-group">
+    <div id="widgets-list-panel">
+        {% for widgetDatas in widgetsDatas %}
+        {% set widgetHomeTabConfig = widgetDatas.config %}
+        {% set widgetInstance = widgetHomeTabConfig.getWidgetInstance() %}
+        {% set widget = widgetInstance.getWidget() %}
+            <div class="panel panel-default
+                {% if not widgetHomeTabConfig.isVisible() %}
+                    toggle-visible
+                    {% if withConfig == 0 %} hidden {% endif %}
+                {% endif %}"
+             >
+                <div class="panel-heading relative">
+                    <div class="panel-title">
+                        <a class="accordion-toggle widget-instance-name"
+                            data-toggle="collapse"
+                            href="#collapse{{ widgetInstance.getId() }}"
+                        >
+                            {{ widgetInstance.getName() }}
+                        </a>
+                        <span class="toggle-visible {% if withConfig == 0 %} hidden {% endif %}">
+                            <small>
+                                [{{ widget.getName()|trans({}, 'widget') }}]
+                            </small>
+                        </span>
+                        <span class="toggle-visible {% if withConfig == 0 %} hidden {% endif %}"
+                            widget-instance-id="{{ widgetInstance.getId() }}"
+                        >
 
-                        {% if not widgetInstance.isAdmin() %}
-                            <i class="icon-pencil widget-instance-rename pointer-hand"></i>
+                            {% if not widgetInstance.isAdmin() %}
+                                <i class="icon-pencil widget-instance-rename pointer-hand"></i>
 
-                            {% if widgetDatas.configurable %}
-                                <i class="icon-cog widget-instance-config pointer-hand"></i>
+                                {% if widgetDatas.configurable %}
+                                    <i class="icon-cog widget-instance-config pointer-hand"></i>
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
-                    </span>
-                    <span class="toggle-visible {% if withConfig == 0 %} hidden {% endif %} pull-right"
-                        widget-hometab-config-id="{{ widgetHomeTabConfig.getId() }}"
-                    >
-                        {% if widgetHomeTabConfig.isLocked() or isLockedHomeTab %}
-                            <i class="icon-lock"></i>
-                        {% else %}
-                            <i class="pointer-hand widget-visibility-btn
-                                {% if widgetHomeTabConfig.isVisible() %}
-                                    icon-eye-open
+                        </span>
+                        <span class="toggle-visible {% if withConfig == 0 %} hidden {% endif %} pull-right"
+                            widget-hometab-config-id="{{ widgetHomeTabConfig.getId() }}"
+                        >
+                            {% if widgetHomeTabConfig.isLocked() or isLockedHomeTab %}
+                                <i class="icon-lock"></i>
+                            {% else %}
+                                <i class="pointer-hand widget-visibility-btn
+                                    {% if widgetHomeTabConfig.isVisible() %}
+                                        icon-eye-open
 
-                                {% else %}
-                                    icon-eye-close
-                                {% endif %}"
-                                visiblility-value="{% if widgetHomeTabConfig.isVisible() %}visible{% else %}invisible{% endif %}"
-                                id="visible-widget-id-{{ widgetHomeTabConfig.getId() }}"
-                            ></i>
+                                    {% else %}
+                                        icon-eye-close
+                                    {% endif %}"
+                                    visiblility-value="{% if widgetHomeTabConfig.isVisible() %}visible{% else %}invisible{% endif %}"
+                                    id="visible-widget-id-{{ widgetHomeTabConfig.getId() }}"
+                                ></i>
 
-                            {% if widgetHomeTabConfig.getType() == 'desktop' or widgetHomeTabConfig.getType() == 'workspace' %}
-                                <span class="widget-order-btn-group">
-                                    {% if widgetHomeTabConfig.getWidgetOrder() > 1 %}
-                                        <i class="icon-arrow-up widget-order-up pointer-hand"></i>
-                                    {% endif %}
-                                    {% if widgetHomeTabConfig.getWidgetOrder() < lastWidgetOrder %}
-                                        <i class="icon-arrow-down widget-order-down pointer-hand"></i>
-                                    {% endif %}
-                                </span>
-                                <i class="pointer-hand widget-delete-btn icon-trash"></i>
+                                {% if widgetHomeTabConfig.getType() == 'desktop' or widgetHomeTabConfig.getType() == 'workspace' %}
+                                    <span class="widget-order-btn-group">
+                                        {% if widgetHomeTabConfig.getWidgetOrder() > 1 %}
+                                            <i class="icon-arrow-up widget-order-up pointer-hand"></i>
+                                        {% endif %}
+                                        {% if widgetHomeTabConfig.getWidgetOrder() < lastWidgetOrder %}
+                                            <i class="icon-arrow-down widget-order-down pointer-hand"></i>
+                                        {% endif %}
+                                    </span>
+                                    <i class="pointer-hand widget-delete-btn icon-trash"></i>
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
-                    </span>
+                        </span>
+                    </div>
                 </div>
-                {#{% if widgetDatas.configurable %}
-                    <a data-url="{{ path('claro_widget_configuration', {'widgetInstance': widgetInstance.getId()}) }}" class="btn btn-primary hide">
-                        <i class="icon-edit"></i> {{ 'edit'|trans({}, 'platform') }}
-                    </a>
-                {% endif %}#}
+                <div id="collapse{{ widgetInstance.getId() }}" class="collapse-widget collapse in">
+                    <div class="panel-body widget-instance-view">
+                       {{ widgetDatas.content|raw }}
+                   </div>
+                   <div class="panel-body widget-instance-edition hide"></div>
+                </div>
             </div>
-            <div id="collapse{{ widgetInstance.getId() }}" class="collapse-widget collapse in">
-                <div class="panel-body widget-instance-view">
-                   {{ widgetDatas.content|raw }}
-               </div>
-               <div class="panel-body widget-instance-edition hide"></div>
-            </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 
     {% if isVisibleHomeTab and not isLockedHomeTab %}
         <br>
@@ -127,6 +124,21 @@
                 </h3>
             </div>
             <div id="widget-modal-body" class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="create-widget-instance-modal-box" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h3 id="create-widget-instance-modal-title">
+                    {{ 'create_widget_instance'|trans({}, 'platform') }}
+                </h3>
+            </div>
+            <div id="create-widget-instance-modal-body" class="modal-body">
             </div>
         </div>
     </div>
