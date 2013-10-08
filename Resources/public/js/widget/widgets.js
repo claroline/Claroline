@@ -4,8 +4,6 @@
     var currentElement;
     var currentWidgetHomeTabConfigId;
     var currentWidgetInstanceId;
-    var currentWidgetViewElement;
-    var currentWidgetEditionElement;
     var displayedHomeTabId = $('#hometab-id-div').attr('hometab-id');
     var homeTabType = $('#hometab-type-div').attr('hometab-type-value');
 
@@ -272,11 +270,11 @@
             ),
             type: 'GET',
             success: function (datas) {
-                currentWidgetViewElement = currentElement.find('.widget-instance-view');
-                currentWidgetEditionElement = currentElement.find('.widget-instance-edition');
-                currentWidgetViewElement.addClass('hide');
-                currentWidgetEditionElement.html(datas);
-                currentWidgetEditionElement.removeClass('hide');
+                var widgetViewElement = currentElement.find('.widget-instance-view');
+                var widgetEditionElement = currentElement.find('.widget-instance-edition');
+                widgetViewElement.addClass('hide');
+                widgetEditionElement.html(datas);
+                widgetEditionElement.removeClass('hide');
             }
         });
     });
@@ -292,6 +290,10 @@
             var form = e.currentTarget;
             var action = $(e.currentTarget).attr('action');
             var formData = new FormData(form);
+            var widgetInstanceId = $(this).parent().parent().parent().attr('widget-instance-id');
+            var widgetElement = $(this).parent().parent();
+            var widgetViewElement = widgetElement.find('.widget-instance-view');
+            var widgetEditionElement = widgetElement.find('.widget-instance-edition');
 
             $.ajax({
                 url: action,
@@ -303,14 +305,14 @@
                     $.ajax({
                         url: Routing.generate(
                             'claro_widget_content',
-                            {'widgetInstanceId': currentWidgetInstanceId}
+                            {'widgetInstanceId': widgetInstanceId}
                         ),
                         type: 'GET',
                         success: function (datas) {
-                            currentWidgetEditionElement.addClass('hide');
-                            currentWidgetEditionElement.empty();
-                            currentWidgetViewElement.html(datas);
-                            currentWidgetViewElement.removeClass('hide');
+                            widgetEditionElement.addClass('hide');
+                            widgetEditionElement.empty();
+                            widgetViewElement.html(datas);
+                            widgetViewElement.removeClass('hide');
                         }
                     });
                 }
@@ -325,9 +327,12 @@
         function (e) {
             e.stopImmediatePropagation();
             e.preventDefault();
-            currentWidgetEditionElement.addClass('hide');
-            currentWidgetEditionElement.empty();
-            currentWidgetViewElement.removeClass('hide');
+            var widgetElement = $(this).parent().parent().parent().parent().parent();
+            var widgetViewElement = widgetElement.find('.widget-instance-view');
+            var widgetEditionElement = widgetElement.find('.widget-instance-edition');
+            widgetEditionElement.addClass('hide');
+            widgetEditionElement.empty();
+            widgetViewElement.removeClass('hide');
         }
     );
 

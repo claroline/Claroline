@@ -16,6 +16,7 @@
                     toggle-visible
                     {% if withConfig == 0 %} hidden {% endif %}
                 {% endif %}"
+                widget-instance-id="{{ widgetInstance.getId() }}"
              >
                 <div class="panel-heading relative">
                     <div class="panel-title">
@@ -78,7 +79,7 @@
                     <div class="panel-body widget-instance-view">
                        {{ widgetDatas.content|raw }}
                    </div>
-                   <div class="panel-body widget-instance-edition hide"></div>
+                   <div class="panel-body widget-instance-edition toggle-visible hide"></div>
                 </div>
             </div>
         {% endfor %}
