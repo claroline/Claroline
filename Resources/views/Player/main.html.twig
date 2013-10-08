@@ -19,51 +19,70 @@
                     PathName : {{ path.resourceNode.name }}
                 </h3>
                 <div class="editor-buttons">
-                    <button class="btn btn-sm btn-primary" ng-click="fullscreen()" tooltip="Fullscreen"><span class="icon-fullscreen"></span></button>
                     <a href="{{ path('claro_workspace_open_tool', {workspaceId: workspace.id, toolName: 'innova_path'}) }}" class="btn btn-danger btn-sm" tooltip="Back to list"><span class="icon-reply"></span></a>
                 </div>
             </div>
-            <div ng-include="templateRoute + 'Editor/navbar.html'"></div>
 
             <div ng-view class="panel-body">
-                <div class="row">
-                    <table id="smallTree" class="table" >
-                        <tbody>
-                            <tr>
-                                <td>
-                                    {% if step.parent.resourceNode.id %}
-                                        <a class="btn btn-default btn-lg btn-block" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.parent.resourceNode.id }) }}">{{step.parent.resourceNode.name}}</a>
-                                    {% else %}
-                                        <a class="btn btn-success btn-lg btn-block" disabled=disabled href="#">Début</a>
-                                    {% endif %}
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h4 class="panel-title">
+                        <a class="accordion-toggle" data-toggle="collapse"  data-parent="#accordion" href="#collapseOne">
+                         Arborescence
+                        </a>
+                      </h4>
+                    </div>
+                    <div id="collapseOne" data-toggle="collapse" class="panel-collapse collapse in">
+                      <div class="panel-body">
+                        <div class="row" id="step-map">
+                                <table id="smallTree" class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                {% if step.parent.resourceNode.id %}
+                                                    <a class="btn btn-default btn-block btn-lg" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.parent.resourceNode.id }) }}">Revenir sur <strong>{{step.parent.resourceNode.name}}</strong> <span class="icon-arrow-left"></span></a> 
+                                                {% else %}
+                                                    <a class="btn btn-success btn-block btn-lg" disabled=disabled href="#">Début du parcours</a>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">
+                                                <a class="btn btn-primary btn-lg btn-block" disabled=disabled href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.resourceNode.id }) }}">Position courante : <strong>{{step.resourceNode.name}}</strong></a>
+                                            </td>
+                                            <td>
 
-                                </td>
-                                <td>
-                                    <a class="btn btn-lg btn-block btn-primary" disabled=disabled href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.resourceNode.id }) }}">{{step.resourceNode.name}}</a>
-                                </td>
-                                <td>
-                                {% if children %}
-                                    {% for child in children %}
-                                         <a class="btn btn-default btn-lg btn-block" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : child.resourceNode.id }) }}">{{child.resourceNode.name}}</a>
-                                     {% endfor %}
-                                {% else %}
-                                        <a class="btn btn-danger btn-lg btn-block" disabled=disabled href="#">Fin</a>
-                                {% endif %}
-            
-
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                            {% if children %}
+                                                <div >
+                                                    {% for child in children %}
+                                                        <div class="container">
+                                                           <a class="btn btn-default btn-block btn-lg" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : child.resourceNode.id }) }}"><span class="icon-arrow-right"></span> {{child.resourceNode.name}}</a>
+                                                        </div>
+                                                     {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                    <a class="btn btn-danger pull-right btn-lg btn-block" disabled=disabled href="#">Fin du parcours</a>
+                                            {% endif %}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                      </div>
+                    </div>
                 </div>
+             </div>
 
+
+                
                 <div class="row">
                     <div class="col-md-3">
                         <h2>{{ resources|length }} ressource(s)</h2>
                         <ul>
                         {% for resource in resources %}
                             {% if resource.id %}
-                                <li>{{ resource.resourceType.name }} : <a href="{{ path('innova_'~ resource.resourceType.name ~'_open', {workspace: workspace.id, path: path.resourceNode.id, step: step.resourceNode.id, node: resource.id}) }}">{{ resource.name }}</a></li>
+                                <li> 
+                                     <a target="_blank" href="{{ path('claro_resource_open', {'resourceType': resource.resourceType.name, 'node': resource.id })  }}?_mode=path">{{ resource.name }}</a>
+                                </li>
+
                             {% endif %}
                         {% endfor %}
                         </ul>
@@ -82,6 +101,7 @@
                         <h2>Outils</h2>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
