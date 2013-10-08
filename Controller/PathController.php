@@ -166,10 +166,11 @@ class PathController extends Controller
         // Mise à jour des resourceNodeId dans la base.
         $json = json_encode($json);
         $path->setPath($json);
+        $paths = $this->getPaths($workspace);
 
         $manager->flush();
 
-        return array('workspace' => $workspace, 'deployed' => "Parcours déployé.");
+        return array('workspace' => $workspace, 'deployed' => "Parcours déployé.", 'paths' => $paths);
     }
 
 
@@ -311,10 +312,8 @@ class PathController extends Controller
 
         $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($id);
 
-        $resourceType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('path');
+        $paths = $this->getPaths($workspace);
 
-        $paths = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findByWorkspaceAndResourceType($workspace, $resourceType);
-        
         return array('workspace' => $workspace, 'paths' => $paths);
     }
 
@@ -581,6 +580,13 @@ class PathController extends Controller
                 $em->remove($step2ResourceNode);
             }
         }
+    }
+
+    private function getPaths($workspace){
+        $manager = $this->container->get('doctrine.orm.entity_manager');
+        $resourceType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('path');
+
+        return $paths = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findByWorkspaceAndResourceType($workspace, $resourceType);
     }
 
 

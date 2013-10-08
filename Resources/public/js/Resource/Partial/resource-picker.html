@@ -4,22 +4,17 @@
 
 <div class="modal-body">
     <form novalidate name="resourceForm">
-
             <div class="form-group">
                 <label for="filter-resources">Filtre</label>
                 <input type="search" class="form-control" id="filter-resources" ng-model="q" placeholder="filter resources" />
             </div>
-            <div class="form-group" ng-repeat="resource in resources | filter: q ">
-                <label class="radio" > 
-                 <input ng-model="$parent.resourcePicked" name="resourcePicked" type="radio" value="{{ resource.id }}"/>
-                {{ resource.name }}              
-               </label>
-         
+            <div class="form-group">
+                <label class="radio" ng-repeat="resource in resources | filter: q"> 
+                    <input ng-model="$parent.resourcePicked" name="resourcePicked" type="radio" value="{{ resource.id }}"/>
+                    {{ resource.name }} -  <em>({{ resource.type }})</em>  
+                </label>
             </div>
     </form>
-
-
-
 </div>
 
 <div class="modal-footer">
