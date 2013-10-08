@@ -94,9 +94,14 @@ class RssReaderListener extends ContainerAware
     private function getRssContent($rssconfig)
     {
         // TODO : handle feed format exception...
+        $urlcontent = @file_get_contents($rssconfig->getUrl());
+
+        if ($urlcontent === false) {
+            return $this->templating->render('ClarolineRssReaderBundle::invalid.html.twig');
+        }
 
         $items = $this->rssReader
-            ->getReaderFor(file_get_contents($rssconfig->getUrl()))
+            ->getReaderFor($urlcontent)
             ->getFeedItems();
 
         foreach ($items as $item) {

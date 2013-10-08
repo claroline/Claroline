@@ -31,12 +31,30 @@ class RssReaderController extends Controller
        if ($rssConfig) {
           if ($form->isValid()) {
             $rssConfig->setUrl($form->get('url')->getData());
+          } else {
+              return $this->render(
+                  'ClarolineRssReaderBundle::formRss.html.twig',
+                  array(
+                      'form' => $form->createView(),
+                      'isAdmin' => $widget->isAdmin(),
+                      'config' => $widget
+                )
+             );
           }
        } else {
            if ($form->isValid()) {
                $rssConfig = new Config();
                $rssConfig->setWidgetInstance($widget);
                $rssConfig->setUrl($form->get('url')->getData());
+           } else {
+               return $this->render(
+                  'ClarolineRssReaderBundle::formRss.html.twig',
+                  array(
+                      'form' => $form->createView(),
+                      'isAdmin' => $widget->isAdmin(),
+                      'config' => $widget
+                  )
+               );
            }
        }
 
