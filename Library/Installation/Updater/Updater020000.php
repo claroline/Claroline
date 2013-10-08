@@ -42,6 +42,7 @@ class Updater020000
         $this->updateWidgetHomeTabConfigsDatas();
         $this->updateAdminWorkspaceHomeTabDatas();
         $this->createWorkspacesListWidget();
+        $this->updateHomeTool();
         $this->dropTables();
         $this->dropWidgetHomeTabConfigTableCopy();
     }
@@ -278,5 +279,17 @@ class Updater020000
     {
         $cn = $this->container->get('doctrine.dbal.default_connection');
         $cn->query('DROP TABLE claro_widget_home_tab_config_temp');
+    }
+
+    private function updateHomeTool()
+    {
+        $this->log('Updating tool home...');
+        $cn = $this->container->get('doctrine.dbal.default_connection');
+        $cn->query("
+            UPDATE claro_tools
+            SET is_configurable_in_workspace = false,
+            is_configurable_in_desktop = false
+            WHERE name = 'home'
+        ");
     }
 }
