@@ -6,7 +6,7 @@ $('#feebackOptionalShow').css({"display" : "inline-block"});
 $('#descriptionOptionalHide').css({"display" : "none"});
 $('#feebackOptionalHide').css({"display" : "none"});
 
-$('#ujm_exobundle_interactiongraphictype_interaction_question_model').attr("disabled", true);
+$("*[id$='_interaction_question_model']").attr("disabled", true);
 
 // Display the textarea
 function DisplayOptional(type) {
