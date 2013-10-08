@@ -3,7 +3,7 @@
 namespace Claroline\RssReaderBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\RssReaderBundle\Form\ConfigType;
 use Claroline\RssReaderBundle\Entity\Config;
@@ -44,6 +44,6 @@ class RssReaderController extends Controller
        $em->persist($rssConfig);
        $em->flush();
 
-       return new RedirectResponse($this->get('claroline.manager.widget_manager')->getRedirectRoute($widget));
+       return new Response('', 204);
     }
 }
