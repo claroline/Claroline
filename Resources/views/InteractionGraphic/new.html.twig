@@ -65,7 +65,7 @@ presently reading this means that you have had
                                         <div class="input-group">
                                             {{ form_widget(form.document) }}
                                             <span class="input-group-btn">
-                                                <a class="btn btn-primary" id="LoadImg" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}', '{{ asset('bundles') }}', {{ form.document.vars.id }});" class="btn btn-primary">
+                                                <a class="btn btn-primary" id="LoadImg" onclick="LoadPic('{{ path('ujm_interactiongraphic_DisplayPic') }}', '{{ asset('bundles') }}', '{{ form.document.vars.id }}');" class="btn btn-primary">
                                                     {{ 'select' | trans }}
                                                 </a>
                                             </span>

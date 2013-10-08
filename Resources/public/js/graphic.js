@@ -93,7 +93,7 @@ function sendData(select, path, prefx) {
 function LoadPic(path, prefx, iddoc) {
 
     // Selected document label in the list
-    var select = $("*[id$='"+iddoc.id+"'] option:selected").text();
+    var select = $("*[id$='"+iddoc+"'] option:selected").text();
 
     // Get the matching url for a given label in order to load the new image
     sendData(select, path, prefx);
