@@ -1,0 +1,51 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src='{{ asset('bundles/clarolinecore/js/administration/adminHomeTabsConfiguration.js') }}'
+        type="text/javascript">
+    </script>
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'home_tabs'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'admin_home_tabs_configuration'|trans({}, 'platform') }}
+        </h3>
+    </div>
+
+    <div class="list-group menu">
+        <a class="list-group-item" href="{{ path('claro_admin_desktop_home_tabs_configuration') }}">
+            <span>{{ 'desktop_home_tabs'|trans({}, 'platform') }}</span>
+        </a>
+        <a class="list-group-item" href="">
+            <span>
+                {{ 'workspace_home_tabs'|trans({}, 'platform') }}
+                <div>
+                    <small>
+                        {{ 'only_for_workspace_creation'|trans({}, 'platform') }}
+                    </small>
+                </div>
+            </span>
+        </a>
+    </div>
+
+{% endblock %}

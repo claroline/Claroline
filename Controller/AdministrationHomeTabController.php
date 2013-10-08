@@ -45,6 +45,71 @@ class AdministrationHomeTabController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/home_tabs/configuration/menu",
+     *     name="claro_admin_home_tabs_configuration_menu",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Administration:adminHomeTabsConfigMenu.html.twig")
+     *
+     * Displays the homeTabs configuration menu.
+     *
+     * @return Response
+     */
+    public function adminHomeTabsConfigMenuAction()
+    {
+        return array();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/desktop/home_tabs/{homeTabId}/configuration",
+     *     name="claro_admin_desktop_home_tabs_configuration",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Administration:adminDesktopHomeTabsConfig.html.twig")
+     *
+     * Displays the admin homeTabs configuration page.
+     *
+     * @return Response
+     */
+    public function adminDesktopHomeTabsConfigAction($homeTabId = 0)
+    {
+        $homeTabConfigs = $this->homeTabManager
+            ->getAdminDesktopHomeTabConfigs();
+
+        $tabId = $homeTabId;
+        $widgetHomeTabConfigs = array();
+
+        foreach ($homeTabConfigs as $homeTabConfig) {
+            $homeTab = $homeTabConfig->getHomeTab();
+
+            if ($tabId == 0) {
+                $tabId = $homeTab->getId();
+                $widgetHomeTabConfigs = $this->homeTabManager
+                    ->getAdminWidgetConfigs($homeTab);
+
+            } elseif ($tabId === $homeTab->getId()) {
+                $widgetHomeTabConfigs = $this->homeTabManager
+                    ->getAdminWidgetConfigs($homeTab);
+            }
+        }
+
+
+        return array(
+            'curentHomeTabId' => $tabId,
+            'homeTabConfigs' => $homeTabConfigs,
+            'widgetsConfigs' => $widgetHomeTabConfigs
+        );
+    }
+
+    /***********************
+     *          OLD
+     **********************/
+
+    /**
+     * @EXT\Route(
      *     "/home_tabs/configuration",
      *     name="claro_admin_home_tabs_configuration",
      *     options = {"expose"=true}

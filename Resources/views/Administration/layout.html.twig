@@ -30,6 +30,11 @@
                 {{ 'platform_plugins'|trans({}, 'platform') }}
             </a>
             <a class="list-group-item{{ '/admin/home_tab' | compareRoute(' active') }}"
+                href="{{ path('claro_admin_home_tabs_configuration_menu') }}" id="link_platform_home_tabs">
+                <i class="icon-th-large"></i>
+                {{ 'home_tabs'|trans({}, 'platform') }}
+            </a>
+            <a class="list-group-item{{ '/admin/home_tab' | compareRoute(' active') }}"
                 href="{{ path('claro_admin_home_tabs_configuration') }}" id="link_platform_home_tabs">
                 <i class="icon-th-large"></i>
                 {{ 'home_tabs'|trans({}, 'platform') }}
