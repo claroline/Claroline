@@ -262,12 +262,25 @@
     $('.widget-instance-config').on('click', function () {
         currentElement = $(this).parent().parent().parent().parent();
         currentWidgetInstanceId = $(this).parent().attr('widget-instance-id');
+        var route;
+
+        if (homeTabType === 'desktop') {
+            route = Routing.generate(
+                'claro_desktop_widget_configuration',
+                {'widgetInstance': currentWidgetInstanceId}
+            );
+        } else {
+            route = Routing.generate(
+                'claro_workspace_widget_configuration',
+                {
+                    'widgetInstance': currentWidgetInstanceId,
+                    'workspaceId': workspaceId
+                }
+            );
+        }
 
         $.ajax({
-            url: Routing.generate(
-                'claro_widget_configuration',
-                {'widgetInstance': currentWidgetInstanceId}
-            ),
+            url: route,
             type: 'GET',
             success: function (datas) {
                 var widgetViewElement = currentElement.find('.widget-instance-view');

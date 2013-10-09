@@ -436,6 +436,7 @@
         });
     });
 
+    // Click on widget visibility button
     $('.widget-visibility-btn').on('click', function () {
         var visibilityBtn = $(this);
         currentElement = visibilityBtn.parent().parent().parent();
@@ -463,6 +464,7 @@
         });
     });
 
+    // Click on widget lock button
     $('.widget-lock-btn').on('click', function () {
         var lockBtn = $(this);
         currentElement = lockBtn.parent().parent().parent();
@@ -489,4 +491,25 @@
             }
         });
     });
+
+//    // Click on widget configuration button
+//    $('.widget-instance-config').on('click', function () {
+//        currentElement = $(this).parent().parent().parent();
+//        currentWidgetInstanceId = currentElement.attr('widget-instance-id');
+//
+//        $.ajax({
+//            url: Routing.generate(
+//                'claro_widget_configuration',
+//                {'widgetInstance': currentWidgetInstanceId}
+//            ),
+//            type: 'GET',
+//            success: function (datas) {
+//                var widgetViewElement = currentElement.find('.widget-instance-view');
+//                var widgetEditionElement = currentElement.find('.widget-instance-edition');
+//                widgetViewElement.addClass('hide');
+//                widgetEditionElement.html(datas);
+//                widgetEditionElement.removeClass('hide');
+//            }
+//        });
+//    });
 })();
