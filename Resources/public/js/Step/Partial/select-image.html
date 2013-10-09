@@ -1,0 +1,17 @@
+<div class="modal-header">
+    <h4 class="modal-title"><i class="icon-picture"></i> Select Step image</h4>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div ng-repeat="image in images" class="col-sm-6 col-md-3">
+            <a href="" ng-click="select(image)" class="thumbnail">
+                <img src="{{ webDir }}images/steps/{{ image }}" />
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-warning cancel" ng-click="close()">Cancel</button>
+</div>

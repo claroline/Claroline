@@ -152,7 +152,7 @@
                 
                 <div class="panel-body">
                     <div>
-                        <img src="images/image.png" />
+                        <img ng-hide="formStep.image == null" src="{{ webDir }}images/steps/{{ formStep.image }}" />
                     </div>
                     <br/>
                     <button class="btn btn-default btn-sm" ng-click="selectImage()"><i class="icon-picture"></i> Select image</button>

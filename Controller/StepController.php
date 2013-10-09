@@ -138,6 +138,43 @@ class StepController extends Controller
     }
 
     /**
+     * Load available Step images
+     * @Route(
+     *      "/sep/images",
+     *      name="innova_step_images",
+     *      options = {"expose"=true}
+     * )
+     * @Method("GET")
+     */
+    public function getImagesAction() 
+    {
+        $images = array ();
+        
+        $authorizedExtensions = array ('png', 'jpg', 'jpeg', 'tiff', 'gif');
+        $request = $this->get('request');
+        $imagesPath = $request->server->get('DOCUMENT_ROOT') . $request->getBasePath() . '/bundles/innovapath/images/steps/';
+        
+        // Get all content of directory
+        $imagesDir = dir($imagesPath);
+        if ($imagesDir) {
+            while ($entry = $imagesDir->read()) {
+                $filename = $imagesPath . $entry;
+                if (is_file($filename)) {
+                    // Current element is a file => check extension to see if it's an authorized image
+                    $fileInfo = pathinfo($entry);
+                    if (!empty($fileInfo) && !empty($fileInfo['extension']) && in_array($fileInfo['extension'], $authorizedExtensions)) {
+                        // Authorized file => get it
+                        $images[] = $entry;
+                    }
+                }
+            }
+            $imagesDir->close();
+        }
+        
+        return new JsonResponse($images);
+    }
+    
+    /**
      * entityManager function
      *
      * @return $em

@@ -93,6 +93,7 @@ EditorApp.controller('ValidationCtrl', ValidationCtrl);
 // Steps
 EditorApp.factory('StepFactory', StepFactory);
 EditorApp.controller('StepModalCtrl', StepModalCtrl);
+EditorApp.controller('SelectImageModalCtrl', SelectImageModalCtrl);
 
 // Resources
 EditorApp.factory('ResourceFactory', ResourceFactory);

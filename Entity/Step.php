@@ -42,6 +42,13 @@ class Step extends AbstractResource
     private $instructions = null;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="image", type="string", length=255, nullable=true)
+     */
+    private $image;
+
+    /**
      * @var boolean
      *
      * @ORM\Column(name="withTutor", type="boolean")
@@ -131,6 +138,29 @@ class Step extends AbstractResource
     public function getInstructions()
     {
         return $this->instructions;
+    }
+
+    /**
+     * Set image
+     *
+     * @param  string $image
+     * @return Step
+     */
+    public function setImage($image)
+    {
+        $this->image= $image;
+    
+        return $this;
+    }
+    
+    /**
+     * Get image
+     *
+     * @return string
+     */
+    public function getImage()
+    {
+        return $this->image;
     }
 
     /**

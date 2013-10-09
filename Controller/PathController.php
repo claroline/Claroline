@@ -241,6 +241,7 @@ class PathController extends Controller
             $currentStep->setWithTutor($step->withTutor);
             $currentStep->setWithComputer($step->withComputer);
             $currentStep->setInstructions($step->instructions);
+            $currentStep->setImage($step->image);
 
             $manager->persist($currentStep);
 
