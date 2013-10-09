@@ -37,24 +37,25 @@ class BadgeController extends Controller
             $badgeClaimsWorkspace = null;
         }
 
-        $badgeClaims = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')->findByWorkspace($badgeClaimsWorkspace);
+        $badgeClaimQuery = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')->findByWorkspace($badgeClaimsWorkspace, false);
 
         $language = $platformConfigHandler->getParameter('locale_language');
 
         /** @var \Claroline\CoreBundle\Pager\PagerFactory $pagerFactory */
         $pagerFactory = $this->get('claroline.pager.pager_factory');
 
-        $pager = $pagerFactory->createPager($badgeQueryBuilder->getQuery(), $parameters['page'], 10);
+        $badgePager = $pagerFactory->createPager($badgeQueryBuilder->getQuery(), $parameters['badgePage'], 10);
+        $claimPager = $pagerFactory->createPager($badgeClaimQuery, $parameters['claimPage'], 10);
 
         $badgeRuleChecker = new BadgeRuleChecker($this->getDoctrine()->getRepository('ClarolineCoreBundle:Log\Log'));
 
         return $this->render(
             'ClarolineCoreBundle:Badge:Template/list.html.twig',
             array(
-                'pager'            => $pager,
+                'badgePager'       => $badgePager,
+                'claimPager'       => $claimPager,
                 'language'         => $language,
                 'parameters'       => $parameters,
-                'badgeClaims'      => $badgeClaims,
                 'badgeRuleChecker' => $badgeRuleChecker
             )
         );

@@ -33,17 +33,18 @@ use JMS\DiExtraBundle\Annotation as DI;
 class AdminController extends Controller
 {
     /**
-     * @Route("/{page}", name="claro_admin_badges", requirements={"page" = "\d+"}, defaults={"page" = 1})
+     * @Route("/{badgePage}/{claimPage}", name="claro_admin_badges", requirements={"badgePage" = "\d+", "claimPage" = "\d+"}, defaults={"badgePage" = 1, "claimPage" = 1})
      *
      * @Template
      */
-    public function listAction($page)
+    public function listAction($badgePage, $claimPage)
     {
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
         $parameters = array(
-            'page'             => $page,
+            'badgePage'    => $badgePage,
+            'claimPage'    => $claimPage,
             'add_link'         => 'claro_admin_badges_add',
             'edit_link'        => array(
                 'url'    => 'claro_admin_badges_edit',

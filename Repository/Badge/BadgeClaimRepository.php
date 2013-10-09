@@ -49,9 +49,11 @@ class BadgeClaimRepository extends EntityRepository
     /**
      * @param AbstractWorkspace $workspace
      *
+     * @param bool              $executedQuery
+     *
      * @return array
      */
-    public function findByWorkspace(AbstractWorkspace $workspace = null)
+    public function findByWorkspace(AbstractWorkspace $workspace = null, $executedQuery = true)
     {
         $workspaceConstraint = 'b.workspace = :workspace';
 
@@ -71,6 +73,6 @@ class BadgeClaimRepository extends EntityRepository
             $query->setParameter('workspace', $workspace);
         }
 
-        return $query->getResult();
+        return ($executedQuery) ? $query->getResult(): $query;
     }
 }

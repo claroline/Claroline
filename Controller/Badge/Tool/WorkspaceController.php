@@ -27,18 +27,19 @@ use Pagerfanta\Pagerfanta;
 class WorkspaceController extends Controller
 {
     /**
-     * @Route("/{page}", name="claro_workspace_tool_badges", requirements={"page" = "\d+"}, defaults={"page" = 1})
+     * @Route("/{badgePage}/{claimPage}", name="claro_workspace_tool_badges", requirements={"badgePage" = "\d+", "claimPage" = "\d+"}, defaults={"badgePage" = 1, "claimPage" = 1})
      * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"id" = "workspaceId"})
      *
      * @Template
      */
-    public function listAction(AbstractWorkspace $workspace, $page)
+    public function listAction(AbstractWorkspace $workspace, $badgePage, $claimPage)
     {
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
         $parameters = array(
-            'page'         => $page,
+            'badgePage'    => $badgePage,
+            'claimPage'    => $claimPage,
             'workspace'    => $workspace,
             'add_link'     => 'claro_workspace_tool_badges_add',
             'edit_link'    => array(
