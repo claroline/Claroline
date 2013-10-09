@@ -62,6 +62,7 @@ badge_rules_not_respected: "Règles non respectées"
 badge_rules_respected: "Règles respectées"
 badge_no_rules_check_manually: "Aucune règle, vérifier manuellement"
 claim: 'Réclamer'
+claiming: "Réclamation|Réclamations"
 claim_date: 'Date de la réclamation'
 claim_badge: 'Réclamer un badge'
 claim_badge_form: 'Formulaire de réclamation de badge'

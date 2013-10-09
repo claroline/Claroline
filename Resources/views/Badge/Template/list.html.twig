@@ -1,6 +1,6 @@
 <ul id="myTab" class="nav nav-tabs">
     <li class="active"><a href="#badges" data-toggle="tab">{{ 'badges'|trans({}, 'badge') }}</a></li>
-    <li><a href="#claim" data-toggle="tab">Réclamation{% if 0 < claimPager.NbResults %} <span class="badge">{{ claimPager.NbResults }}</span>{% endif %}</a></li>
+    <li><a href="#claim" data-toggle="tab">{{ 'claiming'|transchoice(claimPager.NbResults, {}, 'badge') }}{% if 0 < claimPager.NbResults %} <span class="badge">{{ claimPager.NbResults }}</span>{% endif %}</a></li>
 </ul>
 <div class="tab-content list_badges">
     <div class="tab-pane in active" id="badges">

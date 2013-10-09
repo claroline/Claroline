@@ -62,6 +62,7 @@ badge_rules_not_respected: "Rules not respected"
 badge_rules_respected: "Rules respected"
 badge_no_rules_check_manually: "No rules, check manually"
 claim: 'Claim'
+claiming: "Claim|Claims"
 claim_date: 'Claim date'
 claim_badge: 'Claim a badge'
 claim_badge_form: 'Claim badge form'
