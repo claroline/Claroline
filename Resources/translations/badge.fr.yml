@@ -45,7 +45,7 @@ badge_form_description: 'Description'
 badge_form_criteria: "Critères d'obtention"
 badge_form_version: 'Version'
 badge_form_image: 'Image'
-badge_form_automatic_award: 'Attribution automatique'
+badge_form_automatic_award: 'Attribution automatique si les règles sont respectées'
 badge_form_expired_at: "Date d'expiration"
 badge_form_choose_image: "Choisir l'image du badge"
 badge_form_change_image: "Changer l'image du badge"
@@ -57,24 +57,27 @@ badge_award_form_group: 'Groupe'
 badge_award_form_user: 'Utilisateur'
 badge_expired_on_date: 'Expire le %expirationDate%'
 badge_award_info_no_group_message: "Aucun groupe sélectionné pour l'attribution"
-badge_check_state: "Etat de la validation"
+badge_check_state: "Conditions vérifiées"
 badge_rules_not_respected: "Règles non respectées"
 badge_rules_respected: "Règles respectées"
 badge_no_rules_check_manually: "Aucune règle, vérifier manuellement"
+badge_rules_respected_state: "Page indisponible actuellement"
 claim: 'Réclamer'
-claiming: "Réclamation|Réclamations"
-claim_date: 'Date de la réclamation'
+claiming: "Demande d'attribution|Demandes d'attribution"
+claim_date: 'Date de la demande'
 claim_badge: 'Réclamer un badge'
-claim_badge_form: 'Formulaire de réclamation de badge'
+claim_badge_form: "Formulaire de demande d'attribution de badge"
 badge_not_found_with_name: "Aucun badge avec le nom '%badgeName%' n'a pu être retrouvé."
 badge_claim_form_badge : 'Nom du badge à réclamer'
-badge_claim_success_message: 'Réclamation de badge effectué avec succès.'
-badge_claim_error_message: 'Erreur lors de la réclamation de badge.'
-badge_already_claim_message: 'Vous avez déjà effectué une réclamation pour ce badge.'
-badge_already_award_message: 'Vous ne pouvez faire une réclamation pour un badge que vous possédez déjà.'
-badge_current_claimed_badges: '%claimedBadgeCount% réclamation de badge en cours|%claimedBadgeCount% réclamations de badge en cours'
+badge_claim_success_message: "Demande d'attribution de badge effectué avec succès."
+badge_claim_error_message: "Erreur lors de la demande d'attribution de badge."
+badge_already_claim_message: "Vous avez déjà effectué une demande d'attribution pour ce badge."
+badge_already_award_message: "Vous ne pouvez faire une demande d'attribution pour un badge que vous possédez déjà."
+badge_current_claimed_badges: "%claimedBadgeCount% demande d'attribution de badge en cours|%claimedBadgeCount% demandes d'attribution de badge en cours"
 badge_validate_award: "Valider l'attribution du badge"
+badge_validate_award_short: "Valider"
 badge_reject_award: "Refuser l'attribution du badge"
+badge_reject_award_short: "Refuser"
 badge_award_confirm_title: "Validation de l'attribution d'un badge"
 badge_award_confirm_message: "Etes-vous sûr de vouloir attribuer le badge <strong>%badgeName%</strong> à l'utilisateur <strong>%user%</strong> ?"
 badge_dont_award_confirm_title: "Refus d'attribution d'un badge"

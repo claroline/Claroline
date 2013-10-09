@@ -102,7 +102,6 @@
     <div class="tab-content view_badge">
         <div class="tab-pane active" id="view">
             <h3 class="sub-section-header">
-                <span class="badge badge-info accordion-toggle" data-toggle="tooltip" title="{{ 'badge_form_version'|trans }} {{ badge.version }}">{{ badge.version }}</span>
                 {{ 'badge'|trans }} "{{ badge.name }}"
                 {% if badge.expiredAt is not null %}
                 <small>{{ 'badge_expired_on_date'|trans({'%expirationDate%': badge.expiredAt|date('date_format'|trans({}, 'platform'))}) }}</small>
@@ -112,6 +111,7 @@
                 <img class="pull-left media-object badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
                 <div class="media-body">
                     <h4 class="media-heading">{{ badge.description }}</h4>
+                    <p>{{ 'badge_form_version'|trans }} {{ badge.version }}</p>
                     {{ badge.criteria|raw }}
                 </div>
             </div>

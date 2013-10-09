@@ -61,23 +61,15 @@
     <div class="tab-pane" id="claim">
         <table class="table no_margin">
             <thead>
-                <th>{{ 'actions'|trans({}, 'badge') }}</th>
                 <th>{{ 'badge'|trans({}, 'badge') }}</th>
                 <th>{{ 'user'|trans({}, 'platform') }}</th>
                 <th>{{ 'claim_date'|trans({}, 'badge') }}</th>
                 <th>{{ 'badge_check_state'|trans({}, 'badge') }}</th>
+                <th>{{ 'actions'|trans({}, 'badge') }}</th>
             </thead>
             <tbody>
             {% for badgeClaim in claimPager %}
                 <tr>
-                    <td>
-                        <a href="{{ path(parameters.claim_link, {'id': badgeClaim.id, 'validate': true}|merge(parameters.route_parameters)) }}" class="btn confirm" data-toggle="tooltip" title="{{ 'badge_validate_award'|trans({}, 'badge') }}" data-confirm-title="{{ 'badge_award_confirm_title'|trans({}, 'badge') }}" data-confirm-message="{{ 'badge_award_confirm_message'|trans({'%badgeName%': badgeClaim.badge.name(language), '%user%': badgeClaim.user.firstname ~ ' ' ~ badgeClaim.user.lastname }, 'badge') }}" data-confirm-ok="{{ 'award'|trans({}, 'badge') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="success">
-                            <i class="icon-ok-circle"></i>
-                        </a>
-                        <a href="{{ path(parameters.claim_link, {'id': badgeClaim.id, 'validate': false}|merge(parameters.route_parameters)) }}" class="btn confirm" data-toggle="tooltip" title="{{ 'badge_reject_award'|trans({}, 'badge') }}" data-confirm-title="{{ 'badge_dont_award_confirm_title'|trans({}, 'badge') }}" data-confirm-message="{{ 'badge_dont_award_confirm_message'|trans({'%badgeName%': badgeClaim.badge.name(language), '%user%': badgeClaim.user.firstname ~ ' ' ~ badgeClaim.user.lastname}, 'badge') }}" data-confirm-ok="{{ 'dont_award'|trans({}, 'badge') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">
-                            <i class="icon-remove-circle"></i>
-                        </a>
-                    </td>
                     <td><a href="{{ path('claro_view_badge', {'id': badgeClaim.badge.id}) }}" title="{{ badgeClaim.badge.name(language) }}">{{ badgeClaim.badge.name(language) }}</a></td>
                     <td><a href="{{ path('claro_profile_view', {'userId': badgeClaim.user.id}) }}" title="{{ badgeClaim.user.firstname }} {{ badgeClaim.user.lastname }}">{{ badgeClaim.user.firstname }} {{ badgeClaim.user.lastname }}</a></td>
                     <td>{{ badgeClaim.claimedAt|date('date_format'|trans({}, 'platform')) }}</td>
@@ -88,9 +80,20 @@
                             {% else %}
                             <span class="icon-ok-sign" data-toggle="tooltip" title="{{ 'badge_rules_respected'|trans({}, 'badge') }}"></span>
                             {% endif %}
+                            (<span class="text-muted" data-toggle="tooltip" title="{{ 'badge_rules_respected_state'|trans({}, 'badge') }}">détails</span>)
                         {% else %}
                         <span class="icon-warning-sign" data-toggle="tooltip" title="{{ 'badge_no_rules_check_manually'|trans({}, 'badge') }}"></span>
                         {% endif %}
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{{ path(parameters.claim_link, {'id': badgeClaim.id, 'validate': true}|merge(parameters.route_parameters)) }}" class="btn btn-xs btn-success confirm" title="{{ 'badge_validate_award'|trans({}, 'badge') }}" data-confirm-title="{{ 'badge_award_confirm_title'|trans({}, 'badge') }}" data-confirm-message="{{ 'badge_award_confirm_message'|trans({'%badgeName%': badgeClaim.badge.name(language), '%user%': badgeClaim.user.firstname ~ ' ' ~ badgeClaim.user.lastname }, 'badge') }}" data-confirm-ok="{{ 'award'|trans({}, 'badge') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="success">
+                                {{ 'badge_validate_award_short'|trans({}, 'badge') }}
+                            </a>
+                            <a href="{{ path(parameters.claim_link, {'id': badgeClaim.id, 'validate': false}|merge(parameters.route_parameters)) }}" class="btn btn-xs btn-danger confirm" title="{{ 'badge_reject_award'|trans({}, 'badge') }}" data-confirm-title="{{ 'badge_dont_award_confirm_title'|trans({}, 'badge') }}" data-confirm-message="{{ 'badge_dont_award_confirm_message'|trans({'%badgeName%': badgeClaim.badge.name(language), '%user%': badgeClaim.user.firstname ~ ' ' ~ badgeClaim.user.lastname}, 'badge') }}" data-confirm-ok="{{ 'dont_award'|trans({}, 'badge') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">
+                                {{ 'badge_reject_award_short'|trans({}, 'badge') }}
+                            </a>
+                        </div>
                     </td>
                 </tr>
             {% else %}
@@ -100,7 +103,7 @@
             {% endfor %}
             </tbody>
         </table>
-        <ul class="list-inline">
+        <ul class="list-inline pull-right">
             <li class="text-muted"><small><span class="icon-exclamation-sign"></span> {{ 'badge_rules_not_respected'|trans({}, 'badge') }}</small></li>
             <li class="text-muted"><small><span class="icon-ok-sign"></span> {{ 'badge_rules_respected'|trans({}, 'badge') }}</small></li>
             <li class="text-muted"><small><span class="icon-warning-sign"></span> {{ 'badge_no_rules_check_manually'|trans({}, 'badge') }}</small></li>
