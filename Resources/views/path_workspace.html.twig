@@ -45,6 +45,14 @@
                         <a href="{{ path('innova_path_editor', {workspaceId: workspace.id, pathId: path.id}) }}">{{ path.name }}</a>
                     </td>
                     <td align="right">
+
+                        <form action="{{ path('innova_path_play') }}" method="post" style="display: inline-block">
+                            <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
+                            <input type="hidden" value="{{ path.id }}" name="pathId" />
+                            <button class="btn btn-xs btn-primary" type="submit"><span class="icon-play"></span></button>
+                        </form>
+
+
                         <form action="{{ path('innova_path_delete_path') }}" method="post" style="display: inline-block">
                             <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
                             <input type="hidden" value="{{ path.id }}" name="id" />
@@ -56,6 +64,8 @@
                             <input type="hidden" value="{{ path.id }}" name="pathId" />
                             <button class="btn btn-xs btn-success" type="submit"><span class="icon-random"></span></button>
                         </form>
+
+
                     </td>
                 </tr>
                 {% endfor %}

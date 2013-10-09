@@ -525,6 +525,37 @@ class PathController extends Controller
         }
     }
 
+
+    /**
+     * showPathAction function
+     *
+     * @param string $path path of activity
+     *
+     * @return OK
+     *
+     * @Route(
+     *     "/path/show",
+     *     name = "innova_path_play",
+     *     options = {"expose"=true}
+     * )
+     * @Method("POST")
+     *
+     */
+    public function showPathAction()
+    {
+        $em = $this->entityManager();
+        $pathId = $this->get('request')->request->get('pathId');
+        $workspaceId = $this->get('request')->request->get('workspaceId');
+        $path = $em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
+        $stepId = $em->getRepository('InnovaPathBundle:Step')->findOneBy(array('path' => $path, 'parent' => null))->getResourceNode()->getid();
+
+        $url = $this->generateUrl('innova_step_show', array('workspaceId' => $workspaceId, 'pathId' => $pathId, 'stepId' => $stepId));
+        return $this->redirect($url);
+    }
+
+    
+
+
     /**
      * deletePathAction function
      *
