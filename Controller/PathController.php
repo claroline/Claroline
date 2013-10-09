@@ -166,6 +166,8 @@ class PathController extends Controller
         // Mise à jour des resourceNodeId dans la base.
         $json = json_encode($json);
         $path->setPath($json);
+        $path->setDeployed(true);
+        $path->setModified(false);
         $paths = $this->getPaths($workspace);
 
         $manager->flush();
@@ -475,7 +477,8 @@ class PathController extends Controller
         $new_path->setPath($content);
         $resourceNode->setName($pathName);
         $new_path->setResourceNode($resourceNode);
-
+        $new_path->setDeployed(false);
+        $new_path->setModified(false);
         $manager->persist($resourceNode);
         $manager->persist($new_path);
         $manager->flush();
@@ -512,6 +515,7 @@ class PathController extends Controller
 
             $content = $this->get('request')->request->get('path');
             $path->setPath($content);
+            $path->setModified(true);
             $manager->persist($path);
             $manager->flush();
 
@@ -616,9 +620,15 @@ class PathController extends Controller
 
     private function getPaths($workspace){
         $manager = $this->container->get('doctrine.orm.entity_manager');
-        $resourceType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('path');
 
-        return $paths = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findByWorkspaceAndResourceType($workspace, $resourceType);
+        $resourceType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('path');
+        $resourceNodes = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findByWorkspaceAndResourceType($workspace, $resourceType);
+        $paths = array();
+        foreach ($resourceNodes as $resourceNode) {
+            $paths[] = $manager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($resourceNode);
+        }
+
+        return $paths;
     }
 
 
@@ -631,7 +641,6 @@ class PathController extends Controller
     public function entityManager()
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $em = $this->getDoctrine()->getManager();
 
         return $em;
     }
