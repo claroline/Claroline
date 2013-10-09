@@ -187,6 +187,7 @@ class LogController extends Controller
             foreach ($hiddenConfigs as $hiddenConfig) {
                 $em->remove($hiddenConfig);
             }
+            $em->flush();
 
            foreach ($data as $workspaceId => $visible) {
                 if ($workspaceId != 'amount' and $visible !== true) {

@@ -5,8 +5,6 @@ namespace Claroline\CoreBundle\Listener\Resource;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Form\TextType;
 use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Entity\Resource\Revision;
@@ -18,6 +16,7 @@ use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service
@@ -48,7 +47,7 @@ class TextListener implements ContainerAwareInterface
         $formFactory = $this->container->get('claroline.form.factory');
         $form = $formFactory->create(FormFactory::TYPE_RESOURCE_TEXT, array('text_'.rand(0, 1000000000)));
         $response = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:Text:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'text'
@@ -88,10 +87,22 @@ class TextListener implements ContainerAwareInterface
             return;
         }
 
+        $errorForm = $this->container->get('claroline.form.factory')->create(FormFactory::TYPE_RESOURCE_TEXT, array('text_'.rand(0, 1000000000)));
+        $errorForm->setData($form->getData());
+        $children = $form->getIterator();
+        $errorChildren = $errorForm->getIterator();
+
+        foreach ($children as $key => $child) {
+            $errors = $child->getErrors();
+            foreach ($errors as $error) {
+                $errorChildren[$key]->addError($error);
+            }
+        }
+
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:Text:createForm.html.twig',
             array(
-                'form' => $form->createView(),
+                'form' => $errorForm->createView(),
                 'resourceType' => 'text'
             )
         );

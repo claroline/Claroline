@@ -41,10 +41,25 @@ class SimpleTextController extends Controller
                $simpleTextConfig->setContent($form->get('content')->getData());
            }
        } else {
+            $simpleTextConfig = new SimpleTextConfig();
+            $simpleTextConfig->setWidgetInstance($widget);
+            $errorForm = $this->container->get('claroline.form.factory')
+                ->create(FormFactory::TYPE_SIMPLE_TEXT, array('widget_text_'.rand(0, 1000000000), $simpleTextConfig));
+            $errorForm->setData($form->getData());
+            $children = $form->getIterator();
+            $errorChildren = $errorForm->getIterator();
+
+            foreach ($children as $key => $child) {
+                $errors = $child->getErrors();
+                foreach ($errors as $error) {
+                    $errorChildren[$key]->addError($error);
+                }
+            }
+
            return $$this->render(
                'ClarolineCoreBundle:Widget:config_simple_text_form.html.twig',
                array(
-                   'form' => $form->createView(),
+                   'form' => $errorForm->createView(),
                    'config' => $widget
                )
            );

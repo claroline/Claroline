@@ -713,11 +713,13 @@
                     $('.modal-body', this.el).html(form);
                     $('#modal-form', this.el).modal('show');
                 }
+            },
+            afterRender: function (form) {
                 var textArea = $('textarea', form)[0];
 
                 if (textArea) {
                     var textId = textArea.getAttribute('id');
-//                    Claroline.Utilities.tinyMceAddInstance(textId);
+                    Claroline.Utilities.tinyMceAddInstance(textId);
                 }
             }
         })
@@ -977,11 +979,13 @@
                     url: this.parameters.appPath + urlMap[type],
                     success: function (form) {
                         this.views.form.render(form, node.id, type);
-
+                        
                         if (!this.views.form.isAppended) {
                             this.parameters.parentElement.append(this.views.form.el);
                             this.views.form.isAppended = true;
                         }
+
+                        this.views.form.afterRender(form);
                     }
                 });
             }
@@ -1000,6 +1004,8 @@
                     } else {
                         this.views.form.render(data, parentDirectoryId, 'create');
                     }
+
+                    this.views.form.afterRender(data);
                 }
             });
         },
