@@ -88,7 +88,8 @@ class BadgeListener
         $workspace = $this->entityManager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
         $parameters = array(
-            'page'         => 1,
+            'badgePage'    => 1,
+            'claimPage'    => 1,
             'workspace'    => $workspace,
             'add_link'     => 'claro_workspace_tool_badges_add',
             'edit_link'    => array(
