@@ -1,4 +1,4 @@
-$( document ).ready(function() {
+$( document ).ready(function() {	
 	$("#step-map-body").hide();
 			 
 	$( "#step-map-open").click(function() {
@@ -17,7 +17,5 @@ $( document ).ready(function() {
 			$("#step-map-open a").removeClass("icon-chevron-up");
 			$("#step-map-open a").addClass("icon-chevron-down");
 		}
-
 	});
-
 });

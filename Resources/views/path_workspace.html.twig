@@ -49,22 +49,29 @@
                         <form action="{{ path('innova_path_play') }}" method="post" style="display: inline-block">
                             <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
                             <input type="hidden" value="{{ path.resourceNode.id }}" name="pathId" />
-                            <button class="btn btn-xs btn-primary" type="submit"><span class="icon-play"></span></button>
+                            <button rel="tooltip" data-original-title="Play" class="btn btn-xs btn-primary" type="submit"><span class="icon-play"></span></button>
                         </form>
                     {% endif %}
-                        <form action="{{ path('innova_path_delete_path') }}" method="post" style="display: inline-block">
+
+                        <form action="{{ path('innova_path_editor', {workspaceId: workspace.id, pathId: path.resourceNode.id}) }}" method="post" style="display: inline-block">
                             <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
                             <input type="hidden" value="{{ path.resourceNode.id }}" name="id" />
-                            <button class="btn btn-xs btn-danger" type="submit"><span class="icon-trash"></span></button>
+                            <button rel="tooltip" data-original-title="Edit" class="btn btn-xs btn-default" type="submit"><span class="icon-pencil"></span></button>
                         </form>
+
                     {% if path.modified or not path.deployed %}
                         <form action="{{ path('innova_path_deploy') }}" method="post" style="display: inline-block">
                             <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
                             <input type="hidden" value="{{ path.resourceNode.id }}" name="pathId" />
-                            <button class="btn btn-xs btn-success" type="submit"><span class="icon-random"></span></button>
+                            <button rel="tooltip" data-original-title="Deploy" class="btn btn-xs btn-success" type="submit"><span class="icon-random"></span></button>
                         </form>
                    {% endif %}
 
+                        <form action="{{ path('innova_path_delete_path') }}" method="post" style="display: inline-block">
+                            <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
+                            <input type="hidden" value="{{ path.resourceNode.id }}" name="id" />
+                            <button rel="tooltip" data-original-title="Delete" class="btn btn-xs btn-danger" type="submit"><span class="icon-trash"></span></button>
+                        </form>
                     </td>
                 </tr>
                 {% endfor %}
@@ -84,11 +91,10 @@
                             <span>{{ path.resourceNode.name }}</span> 
                         </td>
                         <td align="right">
-                        
                             <form action="{{ path('innova_path_play') }}" method="post" style="display: inline-block">
                                 <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
                                 <input type="hidden" value="{{ path.resourceNode.id }}" name="pathId" />
-                                <button class="btn btn-xs btn-primary" type="submit"><span class="icon-play"></span></button>
+                                <button rel="tooltip" data-original-title="Play" class="btn btn-xs btn-primary" type="submit"><span class="icon-play"></span></button>
                             </form>
 
                         </td>
@@ -100,4 +106,9 @@
 
 
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Workspace/fromWorkspace.js') }}"></script>
 {% endblock %}
