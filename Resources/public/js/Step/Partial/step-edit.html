@@ -16,14 +16,14 @@
             
             <div class="form-group col-md-2">
                 <label for="step-who">Who ?</label>
-                <select class="form-control" name="step-who" id="step-who" ng-model="formStep.who" ng-options="el.id as el.name for el in stepWho">
+                <select class="form-control" name="step-who" id="step-who" ng-model="formStep.who" ng-options="k as v for (k,v) in stepWho">
                     <option value=""></option>
                 </select>
             </div>
             
             <div class="form-group col-md-2">
                 <label for="step-where">Where ?</label>
-                <select class="form-control" name="step-where" id="step-where" ng-model="formStep.where" ng-options="el.id as el.name for el in stepWhere">
+                <select class="form-control" name="step-where" id="step-where" ng-model="formStep.where" ng-options="k as v for (k,v) in stepWhere">
                     <option value=""></option>
                 </select>
             </div>

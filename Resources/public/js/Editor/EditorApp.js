@@ -27,7 +27,7 @@ EditorApp.config(['$routeProvider', function($routeProvider) {
     
     $routeProvider.when('/skills', {
         templateUrl: EditorApp.webDir + 'js/Editor/Partial/skills.html', 
-        controller: TreeCtrl,
+        controller: SkillsCtrl,
         activeTab: 'Skills',
         resolve: {
             path: ['PathFactory', function(PathFactory) { return PathFactory.loadPath(EditorApp.pathId); }]
@@ -39,13 +39,15 @@ EditorApp.config(['$routeProvider', function($routeProvider) {
         controller: TreeCtrl,
         activeTab: 'Scenario',
         resolve: {
-            path: ['PathFactory', function(PathFactory) { return PathFactory.loadPath(EditorApp.pathId); }]
+            path: ['PathFactory', function(PathFactory) { return PathFactory.loadPath(EditorApp.pathId); }],
+            whoList: ['StepFactory', function(StepFactory) { return StepFactory.getWhoList(); }],
+            whereList: ['StepFactory', function(StepFactory) { return StepFactory.getWhereList(); }]
         }
     });
     
     $routeProvider.when('/planner', {
         templateUrl: EditorApp.webDir + 'js/Editor/Partial/planner.html', 
-        controller: TreeCtrl,
+        controller: PlannerCtrl,
         activeTab: 'Planner',
         resolve: {
             path: ['PathFactory', function(PathFactory) { return PathFactory.loadPath(EditorApp.pathId); }]
@@ -54,7 +56,7 @@ EditorApp.config(['$routeProvider', function($routeProvider) {
     
     $routeProvider.when('/validation', {
         templateUrl: EditorApp.webDir + 'js/Editor/Partial/validation.html', 
-        controller: TreeCtrl,
+        controller: ValidationCtrl,
         activeTab: 'Validation',
         resolve: {
             path: ['PathFactory', function(PathFactory) { return PathFactory.loadPath(EditorApp.pathId); }]
@@ -83,7 +85,10 @@ EditorApp.controller('HelpModalCtrl', HelpModalCtrl);
 // Path
 EditorApp.factory('PathFactory', PathFactory);
 EditorApp.controller('GlobalCtrl', GlobalCtrl);
+EditorApp.controller('SkillsCtrl', SkillsCtrl);
 EditorApp.controller('TreeCtrl', TreeCtrl);
+EditorApp.controller('PlannerCtrl', PlannerCtrl);
+EditorApp.controller('ValidationCtrl', ValidationCtrl);
 
 // Steps
 EditorApp.factory('StepFactory', StepFactory);

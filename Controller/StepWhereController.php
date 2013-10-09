@@ -27,13 +27,8 @@ class StepWhereController extends Controller
         $results = $this->get('doctrine.orm.entity_manager')->getRepository('InnovaPathBundle:StepWhere')->findAll();
 
         $stepWheres = array();
-
         foreach ($results as $result) {
-            $stepWhere = new \stdClass();
-            $stepWhere->id = $result->getId();
-            $stepWhere->name = $result->getName();
-
-            $stepWheres[] = $stepWhere;
+            $stepWheres[$result->getId()] = $result->getName();
         }
 
         return new JsonResponse($stepWheres);

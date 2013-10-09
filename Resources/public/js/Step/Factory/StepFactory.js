@@ -3,7 +3,7 @@
 /**
  * Step Factory
  */
-function StepFactory($http, PathFactory) {
+function StepFactory($http, $q, PathFactory) {
     // Stored step
     var step = null;
     
@@ -32,23 +32,27 @@ function StepFactory($http, PathFactory) {
     
     return {
         /**
-         * 
+         * Load available values for Step field "who"
          * @returns array
          */
         getWhoList: function() {
-            // TODO : replace by AJAX call
-//                if (whoList.length === 0) {
-//                    // Load list from AJAX
-//                    $http.get(Routing.generate('innova_path_get_stepwho')).success(function(data) { whoList = data; return whoList; });
-//                }
-//                else {
-//                    return whoList;
-//                }
-            return [
-                {id: 1, name: 'student'},
-                {id: 2, name: 'group'},
-                {id: 3, name: 'class'}
-            ];
+            if (whoList.length === 0) {
+                // Load list from AJAX
+                var deferred = $q.defer();
+                $http.get(Routing.generate('innova_path_get_stepwho')).success(function(data) { 
+                    whoList = data; 
+                    return deferred.resolve(whoList);
+                })
+                .error(function(data, status) {
+                    return deferred.reject('error loading who list');
+                });
+                
+                return deferred.promise;
+            }
+            else {
+                // List already loaded => simply return it
+                return whoList;
+            }
         },
         
         /**
@@ -56,20 +60,23 @@ function StepFactory($http, PathFactory) {
          * @returns array
          */
         getWhereList: function() {
-            // TODO : replace by AJAX call
-//                if (whereList.length === 0) {
-//                    // Load list from AJAX
-//                    $http.get(Routing.generate('innova_path_get_stepwhere')).success(function(data) { whereList = data; return whereList; });
-//                }
-//                else {
-//                    return whereList;
-//                }
-            return [
-                {id: 1, name: 'home'},
-                {id: 2, name: 'classroom'},
-                {id: 3, name: 'library'},
-                {id: 4, name: 'anywhere'}
-            ];
+            if (whereList.length === 0) {
+                // Load list from AJAX
+                var deferred = $q.defer();
+                $http.get(Routing.generate('innova_path_get_stepwhere')).success(function(data) { 
+                    whereList = data; 
+                    return deferred.resolve(whereList); 
+                })
+                .error(function(data, status) {
+                    return deferred.reject('error loading where list');
+                });
+                
+                return deferred.promise;
+            }
+            else {
+                // List already loaded => simply return it
+                return whereList;
+            }
         },
         
         /**
