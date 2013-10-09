@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Manager\WidgetManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -276,6 +277,11 @@ class AdministrationHomeTabController extends Controller
      */
     public function adminHomeTabEditFormAction(HomeTab $homeTab)
     {
+        if (!is_null($homeTab->getUser()) ||
+            !is_null($homeTab->getWorkspace())) {
+
+            throw new AccessDeniedException();
+        }
         $form = $this->formFactory->create(
             FormFactory::TYPE_HOME_TAB,
             array(),
@@ -305,6 +311,11 @@ class AdministrationHomeTabController extends Controller
      */
     public function adminHomeTabEditAction(HomeTab $homeTab)
     {
+        if (!is_null($homeTab->getUser()) ||
+            !is_null($homeTab->getWorkspace())) {
+
+            throw new AccessDeniedException();
+        }
         $form = $this->formFactory->create(
             FormFactory::TYPE_HOME_TAB,
             array(),
@@ -340,13 +351,15 @@ class AdministrationHomeTabController extends Controller
      */
     public function adminHomeTabConfigDeleteAction(HomeTabConfig $homeTabConfig)
     {
-        $homeTab = $homeTabConfig->getHomeTab();
+        if (!is_null($homeTabConfig->getUser()) ||
+            !is_null($homeTabConfig->getWorkspace())) {
 
-        if (is_null($homeTab->getUser()) && is_null($homeTab->getWorkspace())) {
-            $type = $homeTab->getType();
-            $tabOrder = $homeTabConfig->getTabOrder();
-            $this->homeTabManager->deleteHomeTab($homeTab, $type, $tabOrder);
+            throw new AccessDeniedException();
         }
+        $homeTab = $homeTabConfig->getHomeTab();
+        $type = $homeTab->getType();
+        $tabOrder = $homeTabConfig->getTabOrder();
+        $this->homeTabManager->deleteHomeTab($homeTab, $type, $tabOrder);
 
         return new Response('success', 204);
     }
@@ -373,6 +386,11 @@ class AdministrationHomeTabController extends Controller
         $visible
     )
     {
+        if (!is_null($homeTabConfig->getUser()) ||
+            !is_null($homeTabConfig->getWorkspace())) {
+
+            throw new AccessDeniedException();
+        }
         $isVisible = ($visible === 'visible') ? true : false;
         $this->homeTabManager->updateVisibility($homeTabConfig, $isVisible);
 
@@ -401,6 +419,11 @@ class AdministrationHomeTabController extends Controller
         $locked
     )
     {
+        if (!is_null($homeTabConfig->getUser()) ||
+            !is_null($homeTabConfig->getWorkspace())) {
+
+            throw new AccessDeniedException();
+        }
         $isLocked = ($locked === 'locked') ? true : false;
         $this->homeTabManager->updateLock($homeTabConfig, $isLocked);
 
@@ -441,15 +464,16 @@ class AdministrationHomeTabController extends Controller
         WidgetHomeTabConfig $widgetHomeTabConfig
     )
     {
-        if (is_null($widgetHomeTabConfig->getUser()) &&
-            is_null($widgetHomeTabConfig->getWorkspace())) {
+        if (!is_null($widgetHomeTabConfig->getUser()) ||
+            !is_null($widgetHomeTabConfig->getWorkspace())) {
 
-            $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
-            $this->homeTabManager->deleteWidgetHomeTabConfig(
-                $widgetHomeTabConfig
-            );
-            $this->widgetManager->removeInstance($widgetInstance);
+            throw new AccessDeniedException();
         }
+        $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
+        $this->homeTabManager->deleteWidgetHomeTabConfig(
+            $widgetHomeTabConfig
+        );
+        $this->widgetManager->removeInstance($widgetInstance);
 
         return new Response('success', 204);
     }
@@ -550,6 +574,14 @@ class AdministrationHomeTabController extends Controller
         WidgetInstance $widgetInstance
     )
     {
+        if (!is_null($homeTab->getUser()) ||
+            !is_null($homeTab->getWorkspace()) ||
+            !is_null($widgetInstance->getUser()) ||
+            !is_null($widgetInstance->getWorkspace())) {
+
+            throw new AccessDeniedException();
+        }
+
         $widgetHomeTabConfig = new WidgetHomeTabConfig();
         $widgetHomeTabConfig->setHomeTab($homeTab);
         $widgetHomeTabConfig->setWidgetInstance($widgetInstance);
@@ -570,6 +602,85 @@ class AdministrationHomeTabController extends Controller
         $this->homeTabManager->insertWidgetHomeTabConfig($widgetHomeTabConfig);
 
         return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/widget/{widgetInstanceId}/name/edit/form",
+     *     name = "claro_admin_widget_instance_name_edit_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "widgetInstance",
+     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
+     *     options={"id" = "widgetInstanceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Administration\new:adminWidgetInstanceNameEditForm.html.twig")
+     *
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $widgetInstance
+     *
+     * @return array
+     */
+    public function adminWidgetInstanceNameFormAction(WidgetInstance $widgetInstance)
+    {
+        if (!is_null($widgetInstance->getUser()) ||
+            !is_null($widgetInstance->getWorkspace())) {
+
+            throw new AccessDeniedException();
+        }
+
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_WIDGET_CONFIG,
+            array(),
+            $widgetInstance
+        );
+
+        return array(
+            'form' => $form->createView(),
+            'widgetInstance' => $widgetInstance
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/widget/{widgetInstanceId}/name/edit",
+     *     name = "claro_admin_widget_instance_name_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "widgetInstance",
+     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
+     *     options={"id" = "widgetInstanceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Administration\new:adminWidgetInstanceNameEditForm.html.twig")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * @return array
+     */
+    public function adminWidgetInstanceNameAction(WidgetInstance $widgetInstance)
+    {
+        if (!is_null($widgetInstance->getUser()) ||
+            !is_null($widgetInstance->getWorkspace())) {
+
+            throw new AccessDeniedException();
+        }
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_WIDGET_CONFIG,
+            array(),
+            $widgetInstance
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->widgetManager->insertWidgetInstance($widgetInstance);
+
+            return new Response('success', 204);
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'widgetInstance' => $widgetInstance
+        );
     }
 
     /***********************

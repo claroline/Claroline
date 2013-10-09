@@ -110,7 +110,9 @@
                         widget-instance-id="{{ widgetInstance.getId() }}"
                     >
                         <div class="panel-body">
-                            {{ widgetInstance.getName() }}
+                            <span class="widget-instance-name">
+                                {{ widgetInstance.getName() }}
+                            </span>
                             <small>
                                 [{{ widget.getName()|trans({}, 'widget') }}]
                             </small>
