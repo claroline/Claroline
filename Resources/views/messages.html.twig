@@ -52,8 +52,7 @@
                         <p>{{ message.getContent()|raw }}</p>
                         <p class="text-muted">{{ message.getCreationDate()| timeAgo }}</p>
                         <hr>
-                        {% if isModerator %}
-                        jeuh souis ouné moudératour
+                        {% if isModerator or app.security.token.user == message.getCreator() %}
                             <a class="btn btn-default pull-right" href="{{ path('claro_forum_edit_message_form', {'message': message.getId()}) }}"> <i class="icon-pencil"></i> {{ 'edit'|trans({}, 'platform') }} </a>
                         {% endif %}
                      </td>

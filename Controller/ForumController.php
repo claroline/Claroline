@@ -13,6 +13,7 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -276,10 +277,16 @@ class ForumController extends Controller
      */
     public function editMessageFormAction(Message $message)
     {
-        $form = $this->get('form.factory')->create(new MessageType(), $message);
+        $sc = $this->get('security.context');
         $subject = $message->getSubject();
         $forum = $subject->getForum();
-        $this->checkAccess($forum);
+        $isModerator = $sc->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
+
+        if (!$isModerator && $sc->getToken()->getUser() !== $message->getCreator()) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $form = $this->get('form.factory')->create(new MessageType(), $message);
 
         return array(
             'subject' => $subject,
@@ -299,11 +306,18 @@ class ForumController extends Controller
      */
     public function editMessageAction(Message $message)
     {
+        $sc = $this->get('security.context');
+        $subject = $message->getSubject();
+        $forum = $subject->getForum();
+        $isModerator = $sc->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
+
+        if (!$isModerator && $sc->getToken()->getUser() !== $message->getCreator()) {
+            throw new AccessDeniedHttpException();
+        }
+
         $form = $this->container->get('form.factory')->create(new MessageType, new Message());
         $form->handleRequest($this->get('request'));
         $em = $this->getDoctrine()->getManager();
-        $subject = $message->getSubject();
-        $forum = $subject->getForum();
 
         if ($form->isValid()) {
             $message->setContent($form->get('content')->getData());
@@ -328,7 +342,7 @@ class ForumController extends Controller
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
         if (!$this->get('security.context')->isGranted('OPEN', $collection)) {
-            throw new AccessDeniedException($collection->getErrorsForDisplay());
+            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
         }
     }
 }
