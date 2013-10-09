@@ -59,6 +59,14 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Claroline\CoreBundle\Library\Security\Utilities;
+use Claroline\CoreBundle\Library\Security\TokenUpdater;
+
+use JMS\DiExtraBundle\Annotation as DI;
+
 /**
  * Class PathController
  *
@@ -73,6 +81,20 @@ use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 */
 class PathController extends Controller
 {
+    private $security;
+     /**
+     * @DI\InjectParams({
+     *     "security"           = @DI\Inject("security.context")
+     * })
+     */
+    public function __construct(
+        SecurityContextInterface $security
+    )
+    {
+        $this->security = $security;
+    }
+
+
     /**
      * fromDesktopAction function
      *
@@ -280,10 +302,10 @@ class PathController extends Controller
 
             /*
             // TO DO : GESTION DES DROITS
-            $right1 = new ResourceRights();
-            $right1->setRole($manager->getRepository('ClarolineCoreBundle:Role')->findOneById(3));
-            $right1->setResourceNode($resourceNode);
-            $manager->persist($right1);
+            $right = new ResourceRights();
+            $right->setRole($manager->getRepository('ClarolineCoreBundle:Role')->findOneById(3));
+            $right->setResourceNode($resourceNode);
+            $manager->persist($right);
             */
             $manager->flush();
 
@@ -577,6 +599,7 @@ class PathController extends Controller
      */
     public function deletePathAction()
     {
+        $this->assertIsGranted('ROLE_WS_CREATOR');
         $id = $this->get('request')->request->get('id');
         $workspaceId = $this->get('request')->request->get('workspaceId');
         
@@ -629,6 +652,13 @@ class PathController extends Controller
         }
 
         return $paths;
+    }
+
+    private function assertIsGranted($attributes, $object = null)
+    {
+        if (false === $this->security->isGranted($attributes, $object)) {
+            throw new AccessDeniedException();
+        }
     }
 
 
