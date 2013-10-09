@@ -3,8 +3,10 @@
 namespace Claroline\WebInstaller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Claroline\CoreBundle\Library\Installation\Settings\SettingChecker;
 use Claroline\CoreBundle\Library\Installation\Settings\DatabaseChecker;
+use Claroline\CoreBundle\Library\Installation\Settings\MailingChecker;
 
 class Controller
 {
@@ -22,6 +24,7 @@ class Controller
     {
         return $this->renderStep(
             'language.html.php',
+            'welcome',
             array('install_language' => $this->parameters->getInstallationLanguage())
         );
     }
@@ -33,7 +36,7 @@ class Controller
         $this->parameters->setInstallationLanguage($languageCode);
         $this->container->getTranslator()->setLanguage($languageCode);
 
-        return $this->languageStep();
+        return $this->redirect('/');
     }
 
     public function requirementStep()
@@ -42,6 +45,7 @@ class Controller
 
         return $this->renderStep(
             'requirements.html.php',
+            'requirements_check',
             array(
                 'setting_categories' => $settingChecker->getSettingCategories(),
                 'has_failed_recommendation' => $settingChecker->hasFailedRecommendation(),
@@ -54,6 +58,7 @@ class Controller
     {
         return $this->renderStep(
             'database.html.php',
+            'database_parameters',
             array(
                 'settings' => $this->parameters->getDatabaseSettings(),
                 'global_error' => $this->parameters->getDatabaseGlobalError(),
@@ -71,7 +76,7 @@ class Controller
         $this->parameters->setDatabaseValidationErrors($errors);
 
         if (count($errors) > 0) {
-            return $this->databaseStep();
+            return $this->redirect('/database');
         }
 
         $checker = new DatabaseChecker($databaseSettings);
@@ -79,12 +84,12 @@ class Controller
         if (true !== $status = $checker->connectToDatabase()) {
             $this->parameters->setDatabaseGlobalError($status);
 
-            return $this->databaseStep();
+            return $this->redirect('/database');
         }
 
         $this->parameters->setDatabaseGlobalError(null);
 
-        return $this->platformStep();
+        return $this->redirect('/platform');
     }
 
     public function platformStep()
@@ -97,6 +102,7 @@ class Controller
 
         return $this->renderStep(
             'platform.html.php',
+            'platform_parameters',
             array(
                 'platform_settings' => $platformSettings,
                 'errors' => $this->parameters->getPlatformValidationErrors()
@@ -114,28 +120,122 @@ class Controller
         $this->parameters->setPlatformValidationErrors($errors);
 
         if (count($errors) > 0) {
-            return $this->platformStep();
+            return $this->redirect('/platform');
         }
 
-        return $this->adminUserStep();
+
+        return $this->redirect('/admin');
     }
 
-    private function adminUserStep()
+    public function adminUserStep()
     {
-        return new Response('Admin user step');
+        return $this->renderStep(
+            'admin.html.php',
+            'admin_user',
+            array(
+                'first_admin_settings' => $this->parameters->getFirstAdminSettings(),
+                'errors' => $this->parameters->getFirstAdminValidationErrors()
+            )
+        );
     }
 
-    private function renderStep($template, array $variables)
+    public function adminUserStepSubmit()
+    {
+        $postSettings = $this->request->request->all();
+        $adminSettings = $this->parameters->getFirstAdminSettings();
+        $adminSettings->bindData($postSettings);
+        $errors = $adminSettings->validate();
+        $this->parameters->setFirstAdminValidationErrors($errors);
+
+        if (count($errors) > 0) {
+            return $this->redirect('/admin');
+        }
+
+        return $this->redirect('/mailing');
+    }
+
+    public function mailingStep()
+    {
+        return $this->renderStep(
+            'mailing.html.php',
+            'mail_server',
+            array(
+                'mailing_settings' => $this->parameters->getMailingSettings(),
+                'global_error' => $this->parameters->getMailingGlobalError(),
+                'validation_errors' => $this->parameters->getMailingValidationErrors()
+            )
+        );
+    }
+
+    public function mailingStepSubmit()
+    {
+        $postSettings = $this->request->request->all();
+        $mailingSettings = $this->parameters->getMailingSettings();
+        $transportId = $this->getTransportId($postSettings['transport']);
+
+        if ($transportId !== $mailingSettings->getTransport()) {
+            $mailingSettings->setTransport($transportId);
+            $mailingSettings->setTransportOptions(array());
+            $this->parameters->setMailingGlobalError(null);
+            $this->parameters->setMailingValidationErrors(array());
+
+            return $this->redirect('/mailing');
+        }
+
+        $mailingSettings->setTransportOptions($postSettings);
+        $errors = $mailingSettings->validate();
+        $this->parameters->setMailingValidationErrors($errors);
+
+        if (count($errors) > 0) {
+            return $this->redirect('/mailing');
+        }
+
+        $checker = new MailingChecker($mailingSettings);
+
+        if (true !== $status = $checker->testTransport()) {
+            $this->parameters->setMailingGlobalError($status);
+
+            return $this->redirect('/mailing');
+        }
+
+        $this->parameters->setMailingGlobalError(null);
+
+        return $this->redirect('/install');
+    }
+
+    public function skipMailingStep()
+    {
+        $this->parameters->reinitializeMailingSettings();
+        $this->parameters->setMailingGlobalError(null);
+        $this->parameters->setMailingValidationErrors(array());
+
+        return $this->redirect('/install');
+    }
+
+    public function installStep()
+    {
+        return $this->renderStep('install.html.php', 'installation', array());
+    }
+
+    private function renderStep($template, $titleKey, array $variables)
     {
         return new Response(
             $this->container->getTemplateEngine()->render(
                 'layout.html.php',
                 array(
+                    'stepTitle' => $titleKey,
                     'stepTemplate' => $template,
                     'stepVariables' => $variables
                 )
             )
         );
+    }
+
+    private function redirect($path)
+    {
+        $path = $path === '/' ? '' : $path;
+
+        return new RedirectResponse($this->request->getBaseUrl() . $path);
     }
 
     private function getLanguageCode($language)
@@ -146,6 +246,18 @@ class Controller
             case 'English':
             default:
                 return 'en';
+        }
+    }
+
+    private function getTransportId($transport)
+    {
+        switch ($transport) {
+            case 'Sendmail / Postfix':
+                return 'sendmail';
+            case 'SMTP':
+            case 'Gmail':
+            default:
+                return strtolower($transport);
         }
     }
 }

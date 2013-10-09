@@ -2,6 +2,7 @@
 
 use Claroline\CoreBundle\Library\Installation\Settings\AbstractValidator;
 use Claroline\CoreBundle\Library\Installation\Settings\DatabaseChecker;
+use Claroline\CoreBundle\Library\Installation\Settings\MailingChecker;
 
 return array(
     'welcome' => 'Welcome',
@@ -43,6 +44,7 @@ return array(
     'The directory %directory% must be writable' => 'The directory <em>%directory%</em> must be writable.',
     'The file %file% must be writable' => 'The file <em>%file%</em> must be writable.',
     'database_parameters' => 'Database parameters',
+    'database_msg' => 'Enter here the parameters of the database that will be used by the application. If the database doesn\'t exist, it will be created. Otherwise, it must be empty.',
     'driver' => 'Driver',
     'host' => 'Host',
     'database' => 'Database',
@@ -51,7 +53,14 @@ return array(
     'port' => 'Port',
     AbstractValidator::NOT_BLANK_EXPECTED => 'This value should not be blank',
     AbstractValidator::NUMBER_EXPECTED => 'This value should be a positive number',
-    AbstractValidator::INVALID_DRIVER => 'Invalid driver',
+    AbstractValidator::INVALID_DRIVER => 'This driver is not valid',
+    AbstractValidator::INVALID_EMAIL => 'This email address is not valid',
+    AbstractValidator::INVALID_URL => 'This url is not valid',
+    AbstractValidator::OVER_MAX_LENGTH => 'This value is too long',
+    AbstractValidator::UNDER_MIN_LENGTH => 'This value is too short',
+    AbstractValidator::INVALID_TRANSPORT => 'Invalid transport',
+    AbstractValidator::INVALID_AUTH_MODE => 'Invalid authentication mode',
+    AbstractValidator::INVALID_ENCRYPTION => 'Invalid encryption',
     DatabaseChecker::DATABASE_NOT_EMPTY
         => 'The database you have selected is not empty. Please choose another one or let this installer create it for you.',
     DatabaseChecker::CANNOT_CONNECT_TO_SERVER
@@ -59,8 +68,31 @@ return array(
     DatabaseChecker::CANNOT_CONNECT_OR_CREATE
         => 'The connection with the database cannot be established and the database cannot be created. Please check that the database user you have selected has sufficient permissions.',
     'platform_parameters' => 'Platform parameters',
+    'platform_msg' => 'Enter here general information about your platform. These parameters will be editable in the administration section of the platform once the application is installed.',
     'language' => 'Language',
     'name' => 'Name',
+    'support_email' => 'Support email',
+    'organization' => 'Organization',
+    'organization_url' => 'Website',
+    'admin_user' => 'Administrator',
+    'admin_msg' => 'Enter here the account details of the first administrator of the platform (i.e. probably <em>you</em>).',
+    'first_name' => 'First name',
+    'last_name' => 'Last name',
+    'username' => 'Username',
+    'email' => 'Email',
+    'transport' => 'Transport',
+    'mail_server' => 'Mail server',
+    'mailing_msg' => 'You can enter here the parameters required for sending emails from the platform. This step is optional: you will be able to specifiy these parameters from the administration section of the platform once the application is installed.',
+    MailingChecker::UNABLE_TO_START_TRANSPORT => 'The mailing transport cannot be started. Please check that the parameters you provided are correct.',
+    MailingChecker::UNABLE_TO_START_SENDMAIL => 'Sendmail or Postfix cannot be started. Please check that one of them is installed and correctly configured.',
+    MailingChecker::UNABLE_TO_START_GMAIL => 'The connection with Gmail SMTP service cannot be established. Please check that the credentials you provided are correct.',
+    MailingChecker::UNABLE_TO_START_SMTP => 'The connection with the SMTP server cannot be established. Please check that the parameters you provided are correct.',
+    'encryption' => 'Encryption',
+    'auth_mode' => 'Authentication',
+    'installation' => 'Installation',
+    'pre_install_msg' => 'The application is ready to be installed. You can go back to previous steps to check the parameters you provided are correct or launch the installation immediately.',
+    'do_install' => 'Launch installation now',
     'previous_step' => 'Previous',
+    'skip_step' => 'Skip',
     'next_step' => 'Next'
 );

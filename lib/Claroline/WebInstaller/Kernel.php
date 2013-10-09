@@ -39,6 +39,18 @@ class Kernel implements HttpKernelInterface
             $response = $controller->platformStep();
         } elseif ($pathInfo === '/platform' && $method === 'POST') {
             $response = $controller->platformSubmitStep();
+        } elseif ($pathInfo === '/admin' && $method === 'GET') {
+            $response = $controller->adminUserStep();
+        } elseif ($pathInfo === '/admin' && $method === 'POST') {
+            $response = $controller->adminUserStepSubmit();
+        } elseif ($pathInfo === '/mailing' && $method === 'GET') {
+            $response = $controller->mailingStep();
+        } elseif ($pathInfo === '/mailing' && $method === 'POST') {
+            $response = $controller->mailingStepSubmit();
+        } elseif ($pathInfo === '/skip-mailing' && $method === 'GET') {
+            $response = $controller->skipMailingStep();
+        } elseif ($pathInfo === '/install' && $method === 'GET') {
+            $response = $controller->installStep();
         }
 
         $response = $response ?: new Response('<h1>Page not found</h1>', 404);

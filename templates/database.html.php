@@ -1,9 +1,11 @@
-<h4><?php echo $trans('database_parameters') ?></h4>
-
 <?php if ($var('global_error')): ?>
     <div class="alert alert-danger">
         <?php echo $trans($var('global_error')) ?>
     </div>
+<?php else: ?>
+    <p class="info-txt">
+        <?php echo $trans('database_msg') ?>
+    </p>
 <?php endif ?>
 
 <?php $errors = $var('validation_errors') ?>
@@ -121,7 +123,7 @@
     <a href="<?php echo $path('/requirements') ?>" class="btn btn-default">
         <?php echo $trans('previous_step') ?>
     </a>
-    <button type="submit" class="btn btn-default">
+    <button type="submit" class="btn btn-primary">
         <?php echo $trans('next_step') ?>
     </button>
 </form>

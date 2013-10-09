@@ -1,5 +1,4 @@
-<h4><?php echo $trans('welcome') ?></h4>
-<p><?php echo $trans('welcome_message') ?></p>
+<p class="info-txt"><?php echo $trans('welcome_message') ?></p>
 
 <form action="<?php echo $path('/') ?>" method="post" class="form-horizontal">
     <div class="form-group">
@@ -18,6 +17,6 @@
     <input type="submit" class="hidden"/>
 </form>
 
-<a href="<?php echo $path('/requirements') ?>" class="btn btn-default">
+<a href="<?php echo $path('/requirements') ?>" class="btn btn-primary">
     <?php echo $trans('next_step') ?>
 </a>
