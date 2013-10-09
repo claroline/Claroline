@@ -599,7 +599,7 @@ class PathController extends Controller
      */
     public function deletePathAction()
     {
-        $this->assertIsGranted('ROLE_WS_CREATOR');
+        //$this->assertIsGranted('ROLE_WS_CREATOR');
         $id = $this->get('request')->request->get('id');
         $workspaceId = $this->get('request')->request->get('workspaceId');
         

@@ -9,13 +9,14 @@ playerApp.config(['$routeProvider', function($routeProvider) {
     
     $routeProvider.when('/', {
         templateUrl: playerApp.templateRoute + 'global.html', 
-        controller: 'mainCtrl'
+        controller: MainCtrl
     });
     
     $routeProvider.otherwise({redirectTo: '/404'});
 }]);
 
-// Path
-playerApp.factory('PathFactory', PathFactoryProto);
-playerApp.controller('TreeCtrl', TreeCtrlProto);
 
+playerApp.controller('MainCtrl', MainCtrl);
+
+// Path
+playerApp.controller('ResourceSidebarCtrl', ResourceSidebarCtrl);
