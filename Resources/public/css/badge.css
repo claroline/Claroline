@@ -1,10 +1,12 @@
 .claimedBadges .icon-warning-sign {
   color: orange;
 }
-.claimedBadges .icon-exclamation-sign {
+.claimedBadges .icon-exclamation-sign,
+.claimedBadges .icon-remove-circle {
   color: red;
 }
-.claimedBadges .icon-ok-sign {
+.claimedBadges .icon-ok-sign,
+.claimedBadges .icon-ok-circle {
   color: green;
 }
 .badge_list .node-thumbnail .thumbnail {

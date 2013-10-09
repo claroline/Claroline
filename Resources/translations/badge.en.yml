@@ -58,6 +58,9 @@ badge_award_form_user: 'User'
 badge_expired_on_date: 'Expire the %expirationDate%'
 badge_award_info_no_group_message: "No selected group for attribution"
 badge_check_state: "Validation state"
+badge_rules_not_respected: "Rules not respected"
+badge_rules_respected: "Rules respected"
+badge_no_rules_check_manually: "No rules, check manually"
 claim: 'Claim'
 claim_date: 'Claim date'
 claim_badge: 'Claim a badge'
