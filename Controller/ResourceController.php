@@ -213,6 +213,41 @@ class ResourceController extends Controller
         );
     }
 
+    /**
+     *
+     * @Route(
+     *     "workspace/{workspace}/path/{path}/step/{step}/forum/{node}",
+     *     name = "innova_claroline_forum_open",
+     *     options = {"expose"=true}
+     * )
+     * @Template("InnovaPathBundle::Player/activity.html.twig")
+     *
+     */
+    public function openForumAction(AbstractWorkspace $workspace, $path, $step, $node)
+    {
+        $em = $this->entityManager();
+
+        $activity = $em->getRepository('ClarolineCoreBundle:Resource\Activity')->findOneByResourceNode($node);
+        $step = $em->getRepository('InnovaPathBundle:Step')->findOneByResourceNode($step);
+        $path = $em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($path);
+        $resources = $this->stepManager->getStepResourceNodes($step);
+        $children = $em->getRepository('InnovaPathBundle:Step')->findByParent($step);
+
+        $resourceActivities = $em->getRepository('ClarolineCoreBundle:Resource\ResourceActivity')
+            ->findResourceActivities($activity);
+        $resource = isset($resourceActivities[0]) ? $resourceActivities[0]->getResourceNode(): null;
+
+        return array(
+            'workspace' => $workspace,
+            'resources' => $resources,
+            'children' => $children,
+            'step' => $step,
+            'path' => $path,
+            'resource' => $resource,
+            'activity' => $activity
+        );
+    }
+
 
 
 

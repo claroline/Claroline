@@ -36,6 +36,9 @@
  */
 namespace Innova\PathBundle\Controller;
 
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -105,6 +108,34 @@ class StepController extends Controller
         );
     }
 
+    /**
+     * 
+     * @Route("/plop/", name="innova_user_resources", options = {"expose"=true})
+     * @Method("GET")
+     */
+    public function getUserResourcesAction()
+    {
+        $em = $this->entityManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+        $resourceNodes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findByCreator($user);
+        
+        $resourceTypeToShow = array("1", "3", "5", "7", "10");
+        $resources = array();
+
+        foreach ($resourceNodes as $resourceNode) {
+            if(in_array( $resourceNode->getResourceType()->getId(), $resourceTypeToShow)){
+                $resource = new \stdClass();
+                $resource->id = $resourceNode->getId();
+                $resource->workspace = $resourceNode->getWorkspace()->getName();
+                $resource->name = $resourceNode->getName();
+                $resource->type = $resourceNode->getResourceType()->getName();
+                $resource->icon = $resourceNode->getIcon()->getIconLocation();
+
+                $resources[] = $resource;
+            }
+        }
+        return new JsonResponse($resources);
+    }
 
     /**
      * entityManager function
