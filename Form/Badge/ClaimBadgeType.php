@@ -2,12 +2,30 @@
 
 namespace Claroline\CoreBundle\Form\Badge;
 
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.form.claimBadge")
+ */
 class ClaimBadgeType extends AbstractType
 {
+    /** @var PlatformConfigurationHandler */
+    private $platformConfigHandler;
+
+    /**
+     * @DI\InjectParams({
+     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler")
+     * })
+     */
+    public function __construct(PlatformConfigurationHandler $platformConfigHandler)
+    {
+        $this->platformConfigHandler = $platformConfigHandler;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -15,7 +33,8 @@ class ClaimBadgeType extends AbstractType
                 'entity_reference' => 'badge',
                 'required'         => false,
                 'format'           => 'jsonp',
-                'mapped'           => false
+                'mapped'           => false,
+                'extraDatas'       => array('locale' => $this->platformConfigHandler->getParameter('locale_language'))
             ));
     }
 

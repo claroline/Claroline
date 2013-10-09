@@ -33,7 +33,7 @@ class ProfileController extends Controller
     {
         $badgeClaim = new BadgeClaim();
         $badgeClaim->setUser($user);
-        $form = $this->createForm(new ClaimBadgeType(), $badgeClaim);
+        $form = $this->createForm($this->get('claroline.form.claimBadge'), $badgeClaim);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);

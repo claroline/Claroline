@@ -97,11 +97,12 @@ class BadgeRepository extends EntityRepository
 
     /**
      * @param string $name
+     * @param string $locale
      * @param bool   $executeQuery
      *
      * @return Query|array
      */
-    public function findByName($name, $executeQuery = true)
+    public function findByNameAndLocale($name, $locale, $executeQuery = true)
     {
         $name  = strtoupper($name);
         $query = $this->getEntityManager()
@@ -110,9 +111,11 @@ class BadgeRepository extends EntityRepository
                 FROM ClarolineCoreBundle:Badge\Badge b
                 JOIN b.translations t
                 WHERE UPPER(t.name) LIKE :name
+                AND t.locale = :locale
                 ORDER BY t.name ASC'
             )
-            ->setParameter('name', "%{$name}%");
+            ->setParameter('name', "%{$name}%")
+            ->setParameter('locale', $locale);
 
         return $executeQuery ? $query->getResult(): $query;
     }
@@ -145,7 +148,7 @@ class BadgeRepository extends EntityRepository
         $search = $params['search'];
         if ($search !== null) {
 
-            $query = $this->findByName($search, false);
+            $query = $this->findByNameAndLocale($search, $params['extra']['locale'], false);
 
             return $query
                 ->setFirstResult(0)
