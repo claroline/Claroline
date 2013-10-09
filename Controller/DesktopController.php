@@ -85,8 +85,13 @@ class DesktopController extends Controller
 
             if ($homeTab->getType() === 'admin_desktop') {
                 $adminConfigs = $this->homeTabManager->getAdminWidgetConfigs($homeTab);
-                $userWidgetsConfigs = $this->homeTabManager
-                    ->getWidgetConfigsByUser($homeTab, $user);
+
+                if (!$isLockedHomeTab) {
+                    $userWidgetsConfigs = $this->homeTabManager
+                        ->getWidgetConfigsByUser($homeTab, $user);
+                } else {
+                    $userWidgetsConfigs = array();
+                }
 
                 if (count($userWidgetsConfigs) > 0) {
                     $lastWidgetOrder = count($userWidgetsConfigs);
