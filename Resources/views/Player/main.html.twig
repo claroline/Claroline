@@ -81,9 +81,11 @@
                         <p>Consigne du step: {{ step.instructions }}</p>
                         <p>Cliquer sur la ressource ou l'outil de votre choix dans l'une des zones latérales</p>
                         
-                        {% block section_content %}
-                        {% endblock %}
+                        <div>
+                           <img src="{{ asset('bundles/innovapath/images/steps/' ~  step.image) }}"/>
 
+                          
+                        </div>
                     </div>
                     <div class="col-md-3">
                         <h3><i class="icon-wrench"></i> Outils</h3>
