@@ -101,9 +101,9 @@
             </tbody>
         </table>
         <ul class="list-inline">
-            <li class="text-muted"><small><span class="icon-exclamation-sign"></span> Règles non respectées</small></li>
-            <li class="text-muted"><small><span class="icon-ok-sign"></span> Règles respectées</small></li>
-            <li class="text-muted"><small><span class="icon-warning-sign"></span> Aucune règle, vérifier manuellement</small></li>
+            <li class="text-muted"><small><span class="icon-exclamation-sign"></span> {{ 'badge_rules_not_respected'|trans({}, 'badge') }}</small></li>
+            <li class="text-muted"><small><span class="icon-ok-sign"></span> {{ 'badge_rules_respected'|trans({}, 'badge') }}</small></li>
+            <li class="text-muted"><small><span class="icon-warning-sign"></span> {{ 'badge_no_rules_check_manually'|trans({}, 'badge') }}</small></li>
         </ul>
         {% if claimPager.haveToPaginate %}
         <div>
