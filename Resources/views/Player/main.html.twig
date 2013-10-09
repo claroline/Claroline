@@ -40,7 +40,7 @@
                                         {% if step.parent.resourceNode.id %}
                                             <a class="btn btn-default btn-block btn-lg" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.parent.resourceNode.id }) }}">Revenir sur <strong>{{step.parent.resourceNode.name}}</strong> <span class="icon-arrow-left"></span></a> 
                                         {% else %}
-                                            <a class="btn btn-success btn-block btn-lg" disabled=disabled href="#">Début du parcours</a>
+                                            {# <a class="btn btn-success btn-block btn-lg" disabled=disabled href="#">Début du parcours</a> #}
                                         {% endif %}
                                     </td>
                                     <td class="text-center">
@@ -57,7 +57,7 @@
                                              {% endfor %}
                                         </div>
                                     {% else %}
-                                            <a class="btn btn-danger pull-right btn-lg btn-block" disabled=disabled href="#">Fin du parcours</a>
+                                            {# <a class="btn btn-danger pull-right btn-lg btn-block" disabled=disabled href="#">Fin du parcours</a>  #}
                                     {% endif %}
                                     </td>
                                 </tr>
@@ -87,15 +87,13 @@
                     </div>
                     <div class="col-md-6">
                         <h1 class="text-center">{{ step.resourceNode.name }}</h1>
-                        <p>Durée :  {{ step.duration|date('H:i:s') }} </p>
-                        <p>Consigne du step: {{ step.instructions }}</p>
-                        <p>Cliquer sur la ressource ou l'outil de votre choix dans l'une des zones latérales</p>
-                        
-                        <div>
+                        <div class="text-center">
                            <img src="{{ asset('bundles/innovapath/images/steps/' ~  step.image) }}"/>
-
-                          
                         </div>
+                        <p>Durée :  {{ step.duration|date('H:i:s') }} </p>
+                        <p>Consignes : {{ step.instructions }}</p>
+                        
+                        
                     </div>
                     <div class="col-md-3">
                         <h3><i class="icon-wrench"></i> Outils</h3>
