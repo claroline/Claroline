@@ -63,9 +63,11 @@ function sendData(select, path, prefx) {
                 realw = $(answerImg).prop('naturalWidth');
                 realh = $(answerImg).prop('naturalHeight');
 
+                maxSize = $('#Answer').parent('div').width();
+
                 // If its bigger than width of the page, resize the image
-                if (realw > 660) {
-                    scalex = 660;
+                if (realw > maxSize) {
+                    scalex = maxSize;
 
                     // To keep the ratio
                     var ratio = realh / realw;
@@ -82,7 +84,7 @@ function sendData(select, path, prefx) {
                 $(answerImg).resizable({
                     aspectRatio: true,
                     minWidth: 70,
-                    maxWidth: 660
+                    maxWidth: maxSize
                 });
             });
         }

@@ -184,7 +184,7 @@ class QuestionController extends Controller
      * Finds and displays a Question entity.
      *
      */
-    public function showAction($id)
+    public function showAction($id, $exoID)
     {
         $question = $this->controlUserQuestion($id);
         $sharedQuestion = $this->controlUserSharedQuestion($id);
@@ -217,7 +217,8 @@ class QuestionController extends Controller
                     return $this->render(
                         'UJMExoBundle:InteractionQCM:paper.html.twig', array(
                         'interactionQCM' => $interactionQCM[0],
-                        'form'   => $form->createView()
+                        'form'   => $form->createView(),
+                        'exoID' => $exoID
                         )
                     );
 
@@ -254,7 +255,8 @@ class QuestionController extends Controller
                     return $this->render(
                         'UJMExoBundle:InteractionHole:paper.html.twig', array(
                         'interactionHole' => $interactionHole[0],
-                        'form'   => $form->createView()
+                        'form'   => $form->createView(),
+                        'exoID' => $exoID
                         )
                     );
 
@@ -270,7 +272,8 @@ class QuestionController extends Controller
                     return $this->render(
                         'UJMExoBundle:InteractionOpen:paper.html.twig', array(
                         'interactionOpen' => $interactionOpen[0],
-                        'form'   => $form->createView()
+                        'form'   => $form->createView(),
+                        'exoID' => $exoID
                         )
                     );
 

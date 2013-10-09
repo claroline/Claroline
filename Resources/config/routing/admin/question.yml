@@ -29,8 +29,8 @@ ujm_question_share_search_user:
   defaults: { _controller: "UJMExoBundle:Question:search" }
 
 ujm_question_show:
-    pattern:  /show/{id}
-    defaults: { _controller: "UJMExoBundle:Question:show" }
+    pattern:  /show/{id}/{exoID}
+    defaults: { _controller: UJMExoBundle:Question:show, exoID: -1 }
 
 ujm_question_manage_doc:
     pattern:  /manageDoc
