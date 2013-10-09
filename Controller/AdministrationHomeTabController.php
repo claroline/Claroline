@@ -784,4 +784,37 @@ class AdministrationHomeTabController extends Controller
 
         return new Response('success', 204);
     }
+
+    /**
+     * @EXT\Route(
+     *     "/widget/{widgetInstance}/form",
+     *     name="claro_admin_widget_configuration",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * Asks a widget to render its configuration page.
+     *
+     * @param WidgetInstance $widgetInstance
+     *
+     * @return Response
+     */
+    public function getAdminWidgetFormConfigurationAction(
+        WidgetInstance $widgetInstance
+    )
+    {
+        if (!is_null($widgetInstance->getUser()) ||
+            !is_null($widgetInstance->getWorkspace())) {
+
+            throw new AccessDeniedException();
+        }
+
+        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+            "widget_{$widgetInstance->getWidget()->getName()}_configuration",
+            'ConfigureWidget',
+            array($widgetInstance)
+        );
+
+        return new Response($event->getContent());
+    }
 }

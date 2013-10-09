@@ -260,6 +260,7 @@
     });
 
     $('.widget-instance-config').on('click', function () {
+        var configButton = $(this);
         currentElement = $(this).parent().parent().parent().parent();
         currentWidgetInstanceId = $(this).parent().attr('widget-instance-id');
         var route;
@@ -283,6 +284,7 @@
             url: route,
             type: 'GET',
             success: function (datas) {
+                configButton.addClass('hide');
                 var widgetViewElement = currentElement.find('.widget-instance-view');
                 var widgetEditionElement = currentElement.find('.widget-instance-edition');
                 widgetViewElement.addClass('hide');
@@ -305,6 +307,7 @@
             var formData = new FormData(form);
             var widgetInstanceId = $(this).parent().parent().parent().attr('widget-instance-id');
             var widgetElement = $(this).parent().parent();
+            var configButton = widgetElement.parent().find('.widget-instance-config');
             var widgetViewElement = widgetElement.find('.widget-instance-view');
             var widgetEditionElement = widgetElement.find('.widget-instance-edition');
 
@@ -326,6 +329,7 @@
                             widgetEditionElement.empty();
                             widgetViewElement.html(datas);
                             widgetViewElement.removeClass('hide');
+                            configButton.removeClass('hide');
                         }
                     });
                 }
@@ -341,11 +345,13 @@
             e.stopImmediatePropagation();
             e.preventDefault();
             var widgetElement = $(this).parent().parent().parent().parent().parent();
+            var configButton = widgetElement.parent().find('.widget-instance-config');
             var widgetViewElement = widgetElement.find('.widget-instance-view');
             var widgetEditionElement = widgetElement.find('.widget-instance-edition');
             widgetEditionElement.addClass('hide');
             widgetEditionElement.empty();
             widgetViewElement.removeClass('hide');
+            configButton.removeClass('hide');
         }
     );
 

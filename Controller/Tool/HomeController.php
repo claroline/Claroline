@@ -82,7 +82,7 @@ class HomeController extends Controller
      * )
      * @EXT\Method("GET")
      *
-     * Asks a widget to render its configuration page for a workspace.
+     * Asks a widget to render its configuration page for desktop.
      *
      * @param WidgetInstance $widgetInstance
      *

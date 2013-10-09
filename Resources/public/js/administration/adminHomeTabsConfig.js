@@ -492,24 +492,41 @@
         });
     });
 
-//    // Click on widget configuration button
-//    $('.widget-instance-config').on('click', function () {
-//        currentElement = $(this).parent().parent().parent();
-//        currentWidgetInstanceId = currentElement.attr('widget-instance-id');
-//
-//        $.ajax({
-//            url: Routing.generate(
-//                'claro_widget_configuration',
-//                {'widgetInstance': currentWidgetInstanceId}
-//            ),
-//            type: 'GET',
-//            success: function (datas) {
-//                var widgetViewElement = currentElement.find('.widget-instance-view');
-//                var widgetEditionElement = currentElement.find('.widget-instance-edition');
-//                widgetViewElement.addClass('hide');
-//                widgetEditionElement.html(datas);
-//                widgetEditionElement.removeClass('hide');
-//            }
-//        });
-//    });
+    // Click on widget configuration button
+    $('.widget-instance-config').on('click', function () {
+        var configButton = $(this);
+        currentElement = $(this).parent().parent().parent();
+        currentWidgetInstanceId = currentElement.attr('widget-instance-id');
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_admin_widget_configuration',
+                {'widgetInstance': currentWidgetInstanceId}
+            ),
+            type: 'GET',
+            success: function (datas) {
+                configButton.addClass('hide');
+                var widgetEditionElement = currentElement.find('.widget-instance-edition-element');
+                widgetEditionElement.html(datas);
+                widgetEditionElement.removeClass('hide');
+            }
+        });
+    });
+
+    // Click on CANCEL button of the configuration Widget form
+    $('.widget-instance-edition-element').on(
+        'click',
+        '.claro-widget-form-cancel',
+        function (e) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            var widgetElement = $(this).parent().parent().parent().parent().parent();
+            console.log(widgetElement.attr('class'));
+            var widgetEditionElement = widgetElement.find('.widget-instance-edition-element');
+            widgetEditionElement.addClass('hide');
+            widgetEditionElement.empty();
+            var configButton = widgetElement.find('.widget-instance-config');
+            configButton.removeClass('hide');
+        }
+    );
 })();

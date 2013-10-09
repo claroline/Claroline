@@ -109,7 +109,7 @@
                         widget-hometab-config-id="{{ widgetHomeTabConfig.getId() }}"
                         widget-instance-id="{{ widgetInstance.getId() }}"
                     >
-                        <div class="panel-body">
+                        <div class="panel-body widget-instance-view-element">
                             <span class="widget-instance-name">
                                 {{ widgetInstance.getName() }}
                             </span>
@@ -157,6 +157,8 @@
                                 ></i>
                                 <i class="widget-delete-btn icon-trash pointer-hand"></i>
                             </span>
+                        </div>
+                        <div class="panel-body widget-instance-edition-element hide">
                         </div>
                     </div>
                 {% endfor %}
