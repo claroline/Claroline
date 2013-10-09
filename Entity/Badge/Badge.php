@@ -464,6 +464,14 @@ class Badge
     }
 
     /**
+     * @return bool
+     */
+    public function hasRules()
+    {
+        return (0 < count($this->getBadgeRules()));
+    }
+
+    /**
      * @param AbstractWorkspace $workspace
      *
      * @return Badge

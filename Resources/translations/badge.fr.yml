@@ -57,6 +57,7 @@ badge_award_form_group: 'Groupe'
 badge_award_form_user: 'Utilisateur'
 badge_expired_on_date: 'Expire le %expirationDate%'
 badge_award_info_no_group_message: "Aucun groupe sélectionné pour l'attribution"
+badge_check_state: "Etat de la validation"
 claim: 'Réclamer'
 claim_date: 'Date de la réclamation'
 claim_badge: 'Réclamer un badge'

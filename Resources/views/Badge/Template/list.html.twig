@@ -5,7 +5,7 @@
             {{ 'badge_current_claimed_badges'|transchoice(badgeClaims|length, {'%claimedBadgeCount%': badgeClaims|length}, 'badge') }}
         </a>
     </div>
-    <div id="claimedBadges" class="panel-collapse collapse">
+    <div id="claimedBadges" class="panel-collapse collapse claimedBadges">
         <div class="panel-body">
             <table class="table no_margin">
                 <thead>
@@ -13,6 +13,7 @@
                     <th>{{ 'badge'|trans({}, 'badge') }}</th>
                     <th>{{ 'user'|trans({}, 'platform') }}</th>
                     <th>{{ 'claim_date'|trans({}, 'badge') }}</th>
+                    <th>{{ 'badge_check_state'|trans({}, 'badge') }}</th>
                 </thead>
                 <tbody>
                 {% for badgeClaim in badgeClaims %}
@@ -28,6 +29,17 @@
                         <td><a href="{{ path('claro_view_badge', {'id': badgeClaim.badge.id}) }}" title="{{ badgeClaim.badge.name(language) }}">{{ badgeClaim.badge.name(language) }}</a></td>
                         <td><a href="{{ path('claro_profile_view', {'userId': badgeClaim.user.id}) }}" title="{{ badgeClaim.user.firstname }} {{ badgeClaim.user.lastname }}">{{ badgeClaim.user.firstname }} {{ badgeClaim.user.lastname }}</a></td>
                         <td>{{ badgeClaim.claimedAt|date('date_format'|trans({}, 'platform')) }}</td>
+                        <td>
+                            {% if (badgeClaim.badge.hasRules) %}
+                                {% if false == badgeRuleChecker.checkBadge(badgeClaim.badge, badgeClaim.user) %}
+                                <span class="icon-exclamation-sign"></span>
+                                {% else %}
+                                <span class="icon-ok-sign"></span>
+                                {% endif %}
+                            {% else %}
+                            <span class="icon-warning-sign"></span>
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
