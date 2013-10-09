@@ -1,8 +1,8 @@
 
 function callback_tinymce_init() {
     $('.mce-toolbar').each(function (index, element) {
-        if (index > 0) 
-            element.setAttribute('style', 'display: none'); 
+        if (index > 0)
+            element.setAttribute('style', 'display: none');
     });
 
     $('div [aria-label="toggle"] button').html("<i class='icon-resize-full' style='font-family: FontAwesome'></i>");
@@ -16,11 +16,12 @@ function callback_tinymce_init() {
         }
     });
 }
+
 function tinymce_button_ressourceLinker (ed) {
     ed.focus();
     Claroline.ResourceManager.picker('open');
-
 }
+
 function tinymce_button_fullscreenToggle (ed) {
     ed.focus();
     tinyMCE.execCommand('mceFullScreen');

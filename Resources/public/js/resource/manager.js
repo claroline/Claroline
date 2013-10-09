@@ -713,7 +713,12 @@
                     $('.modal-body', this.el).html(form);
                     $('#modal-form', this.el).modal('show');
                 }
+                var textArea = $('textarea', form)[0];
 
+                if (textArea) {
+                    var textId = textArea.getAttribute('id');
+//                    Claroline.Utilities.tinyMceAddInstance(textId);
+                }
             }
         })
     };
@@ -1009,7 +1014,7 @@
             });
         },
         remove: function (nodeIds) {
-            var trans = (nodeIds.length) > 1 ? 'resources_delete' : 'resource_delete'; 
+            var trans = (nodeIds.length) > 1 ? 'resources_delete' : 'resource_delete';
             var modal = Twig.render(ModalWindow, {
                 'body': Translator.get('platform' + ':' + trans),
                 'confirmFooter': true,

@@ -85,4 +85,17 @@
         }
         return '';
     };
+
+    utilities.tinyMceInit = function() {
+        tinyMCE.init({selector:'.tinymce', });
+    };
+
+    utilities.tinyMceAddInstance = function(elementId) {
+        console.debug(elementId);
+        tinyMCE.execCommand('mceAddEditor', false, elementId);
+    };
+
+    utilities.tinyMceRemoveInstance = function(elementId) {
+        tinyMCE.remove(elementId);
+    };
 })();

@@ -9,15 +9,22 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class TextType extends AbstractType
 {
+    private $formName;
+
+    public function __construct($formName = null)
+    {
+        $this->formName = $formName;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', array('constraints' => new NotBlank()));
-        $builder->add('text', 'textarea');
+        $builder->add('text', 'textarea', array('attr' => array ('class' => 'tinymce', 'data-theme' => 'medium')));
     }
 
     public function getName()
     {
-        return 'text_form';
+        return $this->formName;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

@@ -68,9 +68,11 @@ class SimpleTextWidgetListener
 
         if ($txtConfig === null) {
             $txtConfig = new SimpleTextConfig();
+            $txtConfig->setWidgetInstance($instance);
         }
 
-        $form = $this->formFactory->create(FormFactory::TYPE_SIMPLE_TEXT, array(), $txtConfig);
+        $form = $this->formFactory->create(FormFactory::TYPE_SIMPLE_TEXT, array('widget_text_'.rand(0, 1000000000)), $txtConfig);
+
         $content = $this->templating->render(
             'ClarolineCoreBundle:Widget:config_simple_text_form.html.twig',
             array(

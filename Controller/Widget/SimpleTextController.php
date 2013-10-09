@@ -7,9 +7,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\SimpleTextConfig;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 class SimpleTextController extends Controller
 {
@@ -20,14 +20,16 @@ class SimpleTextController extends Controller
      * )
      * @EXT\Method("POST")
      */
-    public function updateSimpleTextWidgetConfig(WidgetInstance $widget)
+    public function updateSimpleTextWidgetConfig(WidgetInstance $widget, Request $request)
     {
         if (!$this->get('security.context')->isGranted('edit', $widget)) {
             throw new AccessDeniedException();
         }
 
        $simpleTextConfig = $this->get('claroline.manager.simple_text_manager')->getTextConfig($widget);
-       $form = $this->get('claroline.form.factory')->create(FormFactory::TYPE_SIMPLE_TEXT);
+       //wtf !
+       $id = array_pop(array_keys($request->request->all()));
+       $form = $this->get('claroline.form.factory')->create(FormFactory::TYPE_SIMPLE_TEXT, array($id));
        $form->bind($this->getRequest());
 
        if ($form->isValid()) {
