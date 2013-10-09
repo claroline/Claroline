@@ -10,7 +10,7 @@ services:
             - { name: kernel.event_listener, event: delete_icap_blog,      method: onDelete }
             - { name: kernel.event_listener, event: copy_icap_blog,        method: onCopy }
 
-    icap.listener.log_listener:
+    icap.listener.blog.log_listener:
         class: Icap\BlogBundle\Listener\LogListener
         calls:
             - [setContainer, ["@service_container"]]
