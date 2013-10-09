@@ -85,9 +85,7 @@ presently reading this means that you have had
                                 </div>
                             </div>
                             <div class="panel-footer">
-                                <a class="btn btn-primary" href="{{ path('ujm_interactiongraphic_SavePic') }}" onclick="window.open(this.href, 'NewPic',
-                                    'height=167, width=287, top=300, left=570, toolbar=no, menubar=no, location=no, resizable=yes, scrollbars=no, status=no'
-                                    ); return false;">
+                                <a class="btn btn-primary" onClick="addPicture('{{ path('ujm_interactiongraphic_SavePic') }}');">
                                     <i class="icon-picture"></i> {{ "add a new picture" | trans }}
                                 </a>
                                 <a class="btn btn-default" onclick="DisplayInstruction();" id="Order">
@@ -152,7 +150,7 @@ presently reading this means that you have had
                         </div>
                     </div>
                 </div>
-            
+
 
                 <input class="form-control" type="hidden" id="imgwidth" name="imgwidth" value="0"/>
                 <input class="form-control" type="hidden" id="imgheight" name="imgheight" value="0"/>
@@ -166,7 +164,7 @@ presently reading this means that you have had
                 <div style="display: none;">{{ form_rest(form) }}</div>
                 {{ form_errors(form) }}
             </div>
-            
+
             <div class="panel-footer">
                 <button type="submit" class="btn btn-primary">{{ 'create' | trans }}</button>
             </form>
@@ -180,6 +178,7 @@ presently reading this means that you have had
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphic.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/malsup.js') }}"></script>
 
 {# ---------------------------------------------- Javascript ------------------------------------------------------- #}
 

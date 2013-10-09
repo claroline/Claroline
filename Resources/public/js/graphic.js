@@ -64,8 +64,8 @@ function sendData(select, path, prefx) {
                 realh = $(answerImg).prop('naturalHeight');
 
                 // If its bigger than width of the page, resize the image
-                if (realw > 660) {
-                    scalex = 660;
+                if (realw > 750) {
+                    scalex = 750;
 
                     // To keep the ratio
                     var ratio = realh / realw;
@@ -82,7 +82,7 @@ function sendData(select, path, prefx) {
                 $(answerImg).resizable({
                     aspectRatio: true,
                     minWidth: 70,
-                    maxWidth: 660
+                    maxWidth: 750
                 });
             });
         }
@@ -364,3 +364,24 @@ document.addEventListener('click', function (e) {
         pressS = false;
     }
 }, false);
+
+function addPicture(url) {
+    $.ajax({
+            type: "POST",
+            url: url,
+            cache: false,
+            success: function (data) {
+                picturePop(data);
+            }
+        });
+}
+
+function picturePop(data) {
+    
+    $('body').append(data);
+    
+}
+
+$(document.body).on('hidden.bs.modal', function () { 
+    $('#modaladdpicture').remove();
+});

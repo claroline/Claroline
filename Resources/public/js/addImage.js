@@ -7,43 +7,6 @@ var inputselected = false; // If the input is selected, the pop up cannot be clo
 list.css({"display" : "none"});
 button.css({"display" : "inline-block"});
 
-
-// Resize the pop up to show all the component
-window.onload = function () {
-    window.resizeTo(
-        $('#picture').offset().left + $('#picture').width() + 50,
-        $('#uploadSubmit').offset().top + button.height() + 100
-    );
-};
-
-// Put the new image into the drop-down list
-function ChangeList(idDoc, label, type, NotImageMesssage) {
-
-    list.css({"display" : "none"});
-    button.css({"display" : "inline-block"});
-
-    if (type == '.png' || type == '.jpeg' || type == '.jpg' || type == '.gif' || type == '.bmp') {
-
-        //this_select = window.opener.InterGraphForm.ujm_exobundle_interactiongraphictype_document;
-        //this_select.options[this_select.length] = new Option(label, idDoc, true, true);
-
-       var this_select = $(window.opener.document).find('#ujm_exobundle_interactiongraphictype_document');
-
-       this_select.append($('<option selected="selected" value="'+idDoc+'"></option>')
-                            .text(label));
-
-        for (var i = 0; i < this_select.options.length; i++) {
-            if (this_select.options[i].value == idDoc) {
-                this_select.options[i].selected = true;
-            }
-        }
-
-        window.close();
-    } else {
-        alert(NotImageMesssage);
-    }
-}
-
 // Display the loading message
 function DisplayMessage() {
     list.css({"display" : "inline-block"});

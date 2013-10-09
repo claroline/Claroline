@@ -79,7 +79,6 @@ class WSRestController extends Controller
                     mkdir($userDir.'/'.$dir);
                 }
             }
-
             if ((isset($_FILES['picture'])) && ($_FILES['picture'] != '')) {
                 $file = basename($_FILES['picture']['name']);
                 move_uploaded_file($_FILES['picture']['tmp_name'], $userDir.'/images/'. $file);
@@ -108,14 +107,8 @@ class WSRestController extends Controller
 
             // Add document on create/edit graphic question
             if ($redirection == 0) {
-                return $this->render(
-                    'UJMExoBundle:InteractionGraphic:page.html.twig',
-                    array(
-                        'idDoc' => $document->getId(),
-                        'label' => $document->getLabel(),
-                        'type'  => $document->getType()
-                    )
-                );
+
+                return new Response($document->getId().';'.$document->getLabel().';'.$document->getType());
             // Add document on manage documents
             } else if ($redirection == 1) {
 

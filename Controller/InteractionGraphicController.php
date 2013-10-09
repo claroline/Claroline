@@ -297,7 +297,7 @@ class InteractionGraphicController extends Controller
      */
     public function savePicAction()
     {
-        return $this->render('UJMExoBundle:InteractionGraphic:page.html.twig');
+        return $this->render('UJMExoBundle:InteractionGraphic:add_picture.html.twig');
     }
 
     /**
