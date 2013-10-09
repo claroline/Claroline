@@ -355,9 +355,23 @@ class PathController extends Controller
     public function editorAction($workspaceId, $pathId = null)
     {
         $manager = $this->container->get('doctrine.orm.entity_manager');
+
+        $currentUser = $this->get('security.context')->getToken()->getUser();
+        $pathCreator = "";
+
+        if($pathId != null){
+            $pathCreator = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($pathId)->getCreator();
+        }
+        
         $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
 
-        return array('workspace' => $workspace, 'pathId' => $pathId);
+        if($currentUser == $pathCreator || $pathId == null){
+            return array('workspace' => $workspace, 'pathId' => $pathId);
+        }
+        else{
+            echo "non non non";
+            die();
+        }
     }
 
 
@@ -599,19 +613,24 @@ class PathController extends Controller
      */
     public function deletePathAction()
     {
-        //$this->assertIsGranted('ROLE_WS_CREATOR');
+
+
         $id = $this->get('request')->request->get('id');
         $workspaceId = $this->get('request')->request->get('workspaceId');
         
         if (!empty($id)) {
             $em = $this->entityManager();
+
             $path = $em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($id);
-            
-            if ($pathRoot = $em->getRepository('InnovaPathBundle:Step')->findOneBy(array('path' => $path, 'parent' => null))) {
+            $currentUser = $this->get('security.context')->getToken()->getUser();
+            $pathCreator = $path->getResourceNode()->getCreator();
+
+            if($currentUser == $pathCreator){
+                $pathRoot = $em->getRepository('InnovaPathBundle:Step')->findOneBy(array('path' => $path, 'parent' => null));
                 $this->deleteStep($pathRoot);
+                $em->remove($path->getResourceNode());
+                $em->flush();
             }
-            $em->remove($path->getResourceNode());
-            $em->flush();
         }
         
         $url = $this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspaceId, 'toolName' => 'innova_path'));
@@ -647,8 +666,20 @@ class PathController extends Controller
         $resourceType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('path');
         $resourceNodes = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findByWorkspaceAndResourceType($workspace, $resourceType);
         $paths = array();
+        $paths["me"] = array();
+        $paths["others"] = array();
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
         foreach ($resourceNodes as $resourceNode) {
-            $paths[] = $manager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($resourceNode);
+            if ($resourceNode->getCreator() == $user){
+                $creator = "me";
+            }
+            else{
+                $creator = "others";
+            }
+
+            $paths[$creator][] = $manager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($resourceNode);
         }
 
         return $paths;
