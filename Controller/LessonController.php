@@ -4,6 +4,12 @@ namespace Icap\LessonBundle\Controller;
 
 use Icap\LessonBundle\Form\ChapterType;
 use Icap\LessonBundle\Form\MoveChapterType;
+use Icap\LessonBundle\Event\Log\LogLessonUpdateEvent;
+use Icap\LessonBundle\Event\Log\LogChapterUpdateEvent;
+use Icap\LessonBundle\Event\Log\LogChapterCreateEvent;
+use Icap\LessonBundle\Event\Log\LogChapterDeleteEvent;
+use Icap\LessonBundle\Event\Log\LogChapterMoveEvent;
+use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +19,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Icap\LessonBundle\Entity\Lesson;
 use Icap\LessonBundle\Entity\Chapter;
@@ -20,6 +27,25 @@ use Icap\LessonBundle\Form\DeleteChapterType;
 
 class LessonController extends Controller
 {
+
+    /**
+     * @param string $permission
+     *
+     * @param Blog $blog
+     *
+     * @throws AccessDeniedException
+     */
+    protected function checkAccess($permission, Lesson $lesson)
+    {
+        $collection = new ResourceCollection(array($lesson->getResourceNode()));
+        if (!$this->get('security.context')->isGranted($permission, $collection)) {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        }
+
+        $logEvent = new LogResourceReadEvent($lesson->getResourceNode());
+        $this->get('event_dispatcher')->dispatch('log', $logEvent);
+    }
+
     /**
      * @param $resourceId, $chapterId
      * @return $lesson, $chapters, $chapter
@@ -35,11 +61,13 @@ class LessonController extends Controller
      *      name="icap_lesson_chapter",
      *      requirements={"resourceId" = "\d+", "chapterId" = "\d+"}
      * )
+     * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
      * @Template()
      */
-    public function viewChapterAction($resourceId, $chapterId)
+    public function viewChapterAction($lesson, $chapterId)
     {
-        $lesson = $this->findLesson($resourceId);
+        $this->checkAccess("OPEN", $lesson);
+
         $em = $this->getDoctrine()->getManager();
         $chapterRepository = $em->getRepository('IcapLessonBundle:Chapter');
         $chapter = null;
@@ -93,11 +121,13 @@ class LessonController extends Controller
      *      name="icap_lesson_edit_chapter",
      *      requirements={"resourceId" = "\d+", "chapterId" = "\d+"}
      * )
+     * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
      * @Template()
      */
-    public function editChapterAction($resourceId, $chapterId)
+    public function editChapterAction($lesson, $chapterId)
     {
-        $lesson = $this->findLesson($resourceId);
+        $this->checkAccess("EDIT", $lesson);
+
         $chapter = $this->findChapter($lesson, $chapterId);
         $form = $this->createForm(new ChapterType(), $chapter);
         //for ajaxification
@@ -131,29 +161,38 @@ class LessonController extends Controller
      *      name="icap_lesson_update_chapter",
      *      requirements={"resourceId" = "\d+", "chapterId" = "\d+"}
      * )
+     * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
      * @Template("IcapLessonBundle:Lesson:editChapter.html.twig")
      */
-    public function updateChapterAction($resourceId, $chapterId)
+    public function updateChapterAction($lesson, $chapterId)
     {
+        $this->checkAccess("EDIT", $lesson);
         $translator = $this->get('translator');
 
-        $lesson = $this->findLesson($resourceId);
         $chapter = $this->findChapter($lesson, $chapterId);
 
         $form = $this->createForm(new ChapterType(), $chapter);
         $form->handleRequest($this->getRequest());
         if ($form->isValid()) {
-            $chapterForm = $form->getData();
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($chapterForm);
-            $em->flush();
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $unitOfWork = $em->getUnitOfWork();
+                $unitOfWork->computeChangeSets();
+                $changeSet = $unitOfWork->getEntityChangeSet($chapter);
 
+                $em->persist($chapter);
+                $em->flush();
+
+                $this->dispatchChapterUpdateEvent($lesson, $chapter, $changeSet);
+            } catch (\Exception $exception) {
+                $this->get('session')->getFlashBag()->add('error',$translator->trans('Your chapter has not been modified',array(), 'icap_lesson'));
+            }
             $this->get('session')->getFlashBag()->add('success',$translator->trans('Your chapter has been modified', array(), 'icap_lesson'));
         } else {
             $this->get('session')->getFlashBag()->add('error',$translator->trans('Your chapter has not been modified',array(), 'icap_lesson'));
         }
         return($this->redirect($this->generateUrl('icap_lesson_chapter', array(
-            'resourceId' => $resourceId,
+            'resourceId' => $lesson->getId(),
             'chapterId' => $chapterId
         ))));
     }
@@ -168,11 +207,12 @@ class LessonController extends Controller
      *      name="icap_lesson_confirm_delete_chapter",
      *      requirements={"resourceId" = "\d+", "chapterId" = "\d+"}
      * )
+     * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
      * @Template()
      */
-    public function confirmDeleteChapterAction($resourceId, $chapterId)
+    public function confirmDeleteChapterAction($lesson, $chapterId)
     {
-        $lesson = $this->findLesson($resourceId);
+        $this->checkAccess("EDIT", $lesson);
         $chapter = $this->findChapter($lesson, $chapterId);
 
         $chapterRepository = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter');
@@ -213,36 +253,28 @@ class LessonController extends Controller
      *      name="icap_lesson_delete_chapter",
      *      requirements={"resourceId" = "\d+", "chapterId" = "\d+"}
      * )
+     * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
      * @Template("IcapLessonBundle:Lesson:confirmDeleteChapter.html.twig")
      */
-    public function deleteChapterAction($resourceId, $chapterId)
+    public function deleteChapterAction($lesson, $chapterId)
     {
-
-/*        if ($this->getRequest()->isXMLHttpRequest()) {
-            var_dump("ajax");
-            die();
-        }else{
-            var_dump("form");
-            die();
-        }*/
-
+        $this->checkAccess("EDIT", $lesson);
         $translator = $this->get('translator');
 
-        $lesson = $this->findLesson($resourceId);
         $chapter = $this->findChapter($lesson, $chapterId);
 
         $form = $this->createForm(new DeleteChapterType(), $chapter);
         $form->handleRequest($this->getRequest());
 
         if($form->isValid()){
-/*            var_dump("valide");
-            die();*/
             if ($form->get('children')->getData() == false) {
                 $em = $this->getDoctrine()->getManager();
                 $repo = $em->getRepository('IcapLessonBundle:Chapter');
                 $repo->removeFromTree($chapter);
                 $em->clear();
                 $em->flush();
+
+                $this->dispatchChapterDeleteEvent($lesson, $chapter);
 
                 $this->get('session')->getFlashBag()->add('success',$translator->trans('Your chapter has been deleted but no subchapter',array(), 'icap_lesson'));
 
@@ -252,15 +284,13 @@ class LessonController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 $em->remove($chapter);
                 $em->flush();
-
+                $this->dispatchChapterDeleteEvent($lesson, $chapter);
                 $this->get('session')->getFlashBag()->add('success',$translator->trans('Your chapter has been deleted',array(), 'icap_lesson'));
 
                 return $this->redirect($this->generateUrl('icap_lesson', array('resourceId' => $lesson->getId())));
 
                 }
         } else {
-/*            var_dump("invalide");
-            die();*/
             $this->get('session')->getFlashBag()->add('error',$translator->trans('Your chapter has not been deleted',array(), 'icap_lesson'));
         }
         return array(
@@ -288,11 +318,12 @@ class LessonController extends Controller
      *      name="icap_lesson_new_chapter",
      *      requirements={"resourceId" = "\d+", "parentChapterId" = "\d+"}
      * )
+     * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
      * @Template()
      */
-    public function newChapterAction($resourceId, $parentChapterId)
+    public function newChapterAction($lesson, $parentChapterId)
     {
-        $lesson = $this->findLesson($resourceId);
+        $this->checkAccess("EDIT", $lesson);
         $form = $this->createForm(new ChapterType(), null);
 
         if($parentChapterId == 0){
@@ -334,12 +365,13 @@ class LessonController extends Controller
      *      requirements={"resourceId" = "\d+", "parentChapterId" = "\d+"}
      * )
      * @Template("IcapLessonBundle:Lesson:newChapter.html.twig")
+     * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
      */
-    public function addChapterAction($resourceId, $parentChapterId)
+    public function addChapterAction($lesson, $parentChapterId)
     {
+        $this->checkAccess("EDIT", $lesson);
         $translator = $this->get('translator');
 
-        $lesson = $this->findLesson($resourceId);
         $chapterParent = $this->findChapter($lesson, $parentChapterId);
 
         $form = $this->createForm(new ChapterType(), null);
@@ -354,6 +386,8 @@ class LessonController extends Controller
             $chapterRepository->persistAsLastChildOf($chapter, $chapterParent);
             $em->flush();
 
+            $this->dispatchChapterCreateEvent($lesson, $chapter);
+
             $this->get('session')->getFlashBag()->add('success',$translator->trans('Your chapter has been added',array(), 'icap_lesson'));
             return $this->redirect($this->generateUrl('icap_lesson_chapter', array('resourceId' => $lesson->getId(), 'chapterId' => $chapter->getId())));
         } else {
@@ -363,7 +397,6 @@ class LessonController extends Controller
         return array(
             'lesson' => $lesson,
             'form' => $form->createView(),
-
             'workspace' => $lesson->getWorkspace(),
             'pathArray' => $lesson->getPathArray()
         );
@@ -377,10 +410,11 @@ class LessonController extends Controller
      *      requirements={"resourceId" = "\d+", "chapterId" = "\d+"}
      * )
      * @Template()
+     * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
      */
-    public function choiceMoveChapterAction($resourceId, $chapterId)
+    public function choiceMoveChapterAction($lesson, $chapterId)
     {
-        $lesson = $this->findLesson($resourceId);
+        $this->checkAccess("EDIT", $lesson);
         $chapter = $this->findChapter($lesson, $chapterId);
 
         $em = $this->getDoctrine()->getManager();
@@ -420,13 +454,15 @@ class LessonController extends Controller
      * )
      * @Method("POST")
      * @Template("IcapLessonBundle:Lesson:choiceMoveChapter.html.twig")
+     * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
      */
-    public function moveChapterAction($resourceId, $chapterId)
+    public function moveChapterAction($lesson, $chapterId)
     {
+        $this->checkAccess("EDIT", $lesson);
         $translator = $this->get('translator');
 
-        $lesson = $this->findLesson($resourceId);
         $chapter = $this->findChapter($lesson, $chapterId);
+        $oldparent = $chapter->getParent();
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('IcapLessonBundle:Chapter');
         $chapters = array_merge(array($lesson->getRoot()), $repo->children($lesson->getRoot()));
@@ -464,10 +500,12 @@ class LessonController extends Controller
             $repo->persistAsFirstChildOf($chapter, $newParent);
         }
         $em->flush();
+
+        $this->dispatchChapterMoveEvent($lesson, $chapter, $oldparent, $newParent);
         //return $this->redirect($this->generateUrl('icap_lesson', array('resourceId' => $lesson->getId())));
 
         return($this->redirect($this->generateUrl('icap_lesson_chapter', array(
-            'resourceId' => $resourceId,
+            'resourceId' => $lesson->getId(),
             'chapterId' => $chapterId
         ))));
     }
@@ -498,6 +536,51 @@ class LessonController extends Controller
         }
 
         return $chapter;
+    }
+
+    /**
+     * @param Lesson  $lesson
+     * @param Chapter  $chapter
+     * @param $changeSet
+     * @return Controller
+     */
+    protected function dispatchChapterUpdateEvent(Lesson $lesson, Chapter $chapter, $changeSet)
+    {
+        $event = new LogChapterUpdateEvent($lesson, $chapter, $changeSet);
+        return  $this->get('event_dispatcher')->dispatch('log', $event);
+    }
+
+    /**
+     * @param Lesson  $lesson
+     * @param Chapter  $chapter
+     * @return Controller
+     */
+    protected function dispatchChapterCreateEvent(Lesson $lesson, Chapter $chapter)
+    {
+        $event = new LogChapterCreateEvent($lesson, $chapter);
+        return  $this->get('event_dispatcher')->dispatch('log', $event);
+    }
+
+    /**
+     * @param Lesson  $lesson
+     * @param Chapter  $chapter
+     * @return Controller
+     */
+    protected function dispatchChapterDeleteEvent(Lesson $lesson, Chapter $chapter)
+    {
+        $event = new LogChapterDeleteEvent($lesson, $chapter);
+        return  $this->get('event_dispatcher')->dispatch('log', $event);
+    }
+
+    /**
+     * @param Lesson  $lesson
+     * @param Chapter  $chapter
+     * @return Controller
+     */
+    protected function dispatchChapterMoveEvent(Lesson $lesson, Chapter $chapter, Chapter $oldchapter, Chapter $newchapter)
+    {
+        $event = new LogChapterMoveEvent($lesson, $chapter, $oldchapter, $newchapter);
+        return  $this->get('event_dispatcher')->dispatch('log', $event);
     }
 
 }
