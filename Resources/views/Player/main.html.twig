@@ -12,11 +12,8 @@
     <div ng-cloak class="col-md-12 section-content" ng-app="playerApp">
         <div class="panel panel-default panel-path-editor" ng-controller="mainCtrl">
             <div class="panel-heading">
-                <h3 class="panel-title">
-                    <button class="btn btn-default btn-xs" ng-click="openHelp()" tooltip="Help">
-                        <span class="icon-question-sign"></span>
-                    </button>
-                    PathName : {{ path.resourceNode.name }}
+                <h3 class="panel-title" id="player-header">
+                    Parcours : {{ path.resourceNode.name }}
                 </h3>
                 <div class="editor-buttons">
                     <a href="{{ path('claro_workspace_open_tool', {workspaceId: workspace.id, toolName: 'innova_path'}) }}" class="btn btn-danger btn-sm" tooltip="Back to list"><span class="icon-reply"></span></a>
@@ -24,58 +21,49 @@
             </div>
 
             <div ng-view class="panel-body">
-                  <div class="panel panel-default">
-                    <div class="panel-heading">
-                      <h4 class="panel-title">
-                        <a class="accordion-toggle" data-toggle="collapse"  data-parent="#accordion" href="#collapseOne">
-                         Arborescence
-                        </a>
-                      </h4>
-                    </div>
-                    <div id="collapseOne" data-toggle="collapse" class="panel-collapse collapse in">
-                      <div class="panel-body">
-                        <div class="row" id="step-map">
-                                <table id="smallTree" class="table">
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                {% if step.parent.resourceNode.id %}
-                                                    <a class="btn btn-default btn-block btn-lg" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.parent.resourceNode.id }) }}">Revenir sur <strong>{{step.parent.resourceNode.name}}</strong> <span class="icon-arrow-left"></span></a> 
-                                                {% else %}
-                                                    <a class="btn btn-success btn-block btn-lg" disabled=disabled href="#">Début du parcours</a>
-                                                {% endif %}
-                                            </td>
-                                            <td class="text-center">
-                                                <a class="btn btn-primary btn-lg btn-block" disabled=disabled href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.resourceNode.id }) }}">Position courante : <strong>{{step.resourceNode.name}}</strong></a>
-                                            </td>
-                                            <td>
+                <div class="row" id="step-map">
+                    <div id="step-map-body" data-status="closed">
+                        <table id="smallTree" class="table">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        {% if step.parent.resourceNode.id %}
+                                            <a class="btn btn-default btn-block btn-lg" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.parent.resourceNode.id }) }}">Revenir sur <strong>{{step.parent.resourceNode.name}}</strong> <span class="icon-arrow-left"></span></a> 
+                                        {% else %}
+                                            <a class="btn btn-success btn-block btn-lg" disabled=disabled href="#">Début du parcours</a>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <a class="btn btn-primary btn-lg btn-block" disabled=disabled href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.resourceNode.id }) }}">Position courante : <strong>{{step.resourceNode.name}}</strong></a>
+                                    </td>
+                                    <td>
 
-                                            {% if children %}
-                                                <div >
-                                                    {% for child in children %}
-                                                        <div class="container">
-                                                           <a class="btn btn-default btn-block btn-lg" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : child.resourceNode.id }) }}"><span class="icon-arrow-right"></span> {{child.resourceNode.name}}</a>
-                                                        </div>
-                                                     {% endfor %}
+                                    {% if children %}
+                                        <div >
+                                            {% for child in children %}
+                                                <div class="container">
+                                                   <a class="btn btn-default btn-block btn-lg" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : child.resourceNode.id }) }}"><span class="icon-arrow-right"></span> {{child.resourceNode.name}}</a>
                                                 </div>
-                                            {% else %}
-                                                    <a class="btn btn-danger pull-right btn-lg btn-block" disabled=disabled href="#">Fin du parcours</a>
-                                            {% endif %}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                      </div>
+                                             {% endfor %}
+                                        </div>
+                                    {% else %}
+                                            <a class="btn btn-danger pull-right btn-lg btn-block" disabled=disabled href="#">Fin du parcours</a>
+                                    {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="step-map-buttons">
+                        <span id="step-map-open">
+                            <a class="btn btn-default icon-chevron-down step-map-button"></a>
+                        </span>
                     </div>
                 </div>
-             </div>
-
-
-                
+                        
                 <div class="row">
                     <div class="col-md-3">
-                        <h2>{{ resources|length }} ressource(s)</h2>
+                        <h3><i class="icon-briefcase"></i> Ressources ({{ resources|length }})</h3>
                         <ul>
                         {% for resource in resources %}
                             {% if resource.id %}
@@ -88,8 +76,8 @@
                         </ul>
                     </div>
                     <div class="col-md-6">
-                        <h1>{{ step.resourceNode.name }}</h1>
-                         <p>Durée :  {{ step.duration|date('H:i:s') }} </p>
+                        <h1 class="text-center">{{ step.resourceNode.name }}</h1>
+                        <p>Durée :  {{ step.duration|date('H:i:s') }} </p>
                         <p>Consigne du step: {{ step.instructions }}</p>
                         <p>Cliquer sur la ressource ou l'outil de votre choix dans l'une des zones latérales</p>
                         
@@ -98,7 +86,7 @@
 
                     </div>
                     <div class="col-md-3">
-                        <h2>Outils</h2>
+                        <h3><i class="icon-wrench"></i> Outils</h3>
                     </div>
                 </div>
 
@@ -141,6 +129,8 @@
     
     {# Global APP #}
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Player/PlayerApp.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Player/player.js') }}"></script>
+
     <script type="text/javascript">
         // TODO : find more beautiful
         playerApp.pathId = "{{ path.id }}";
