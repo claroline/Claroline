@@ -9,8 +9,18 @@
 {% endblock %}
 
 {% block content %}
+    <a class="btn btn-default btn-templates" pageslide="left" ps-speed="0.5" href="#resources-sidebar">
+        <span class="icon-heart"></span> Ressources
+    </a>
+
+    <div id="resources-sidebar" style="display:none" ng-controller="ResourceSidebarCtrl">
+        <a id="resources-sidebar-close" href="#" class="btn btn-default btn-xs pull-right"><i class="icon-remove"></i></a>
+        <div ng-include="webDir + 'js/Resources/Partial/resource-sidebar.html'"></div>
+    </div>
+
+
     <div ng-cloak class="col-md-12 section-content" ng-app="playerApp">
-        <div class="panel panel-default panel-path-editor" ng-controller="mainCtrl">
+        <div class="panel panel-default panel-path-editor" ng-controller="MainCtrl">
             <div class="panel-heading">
                 <h3 class="panel-title" id="player-header">
                     Parcours : {{ path.resourceNode.name }}
@@ -20,7 +30,7 @@
                 </div>
             </div>
 
-            <div ng-view class="panel-body">
+            <div class="panel-body">
                 <div class="row" id="step-map">
                     <div id="step-map-body" data-status="closed">
                         <table id="smallTree" class="table">
@@ -123,6 +133,7 @@
     {# Resources #}
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Resource/Factory/ResourceFactory.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Resource/Controller/ResourceModalCtrl.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Resource/Controller/ResourceSidebarCtrl.js') }}"></script>
     
     {# Templates #}
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Template/Factory/TemplateFactory.js') }}"></script>
