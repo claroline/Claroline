@@ -101,7 +101,7 @@
                         {% set x = i + 3 * (pagerQuestion.getCurrentPage - 1) %}
                         <tr>
                             <td class="classic">{{ interaction.question.category.value }}</td>
-                            <td class="classic"><a href="{{ path('ujm_question_show', { 'id': interaction.question.id }) }}">{{ interaction.question.title }}</a></td>
+                            <td class="classic"><a href="{{ path('ujm_question_show', { 'id': interaction.question.id, 'exoID': exerciseID }) }}">{{ interaction.question.title }}</a></td>
                             <td class="classic">{{ interaction.type }}</td>
                             <td class="classic">{{ interaction.invite|raw }}</td>
                             <td class="classic">
