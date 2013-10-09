@@ -64,8 +64,10 @@
         </div>
     </div>
     <div class="panel-footer">
-        <a class="btn btn-primary" href="{{ _path('claro_forum_form_subject_creation', {'forumId': _resource.getId()}) }}">
-            <i class="icon-plus"></i> {{ 'new_subject'|trans({}, 'forum') }}
-        </a>
+        {% if canCreateSubject %}
+            <a class="btn btn-primary" href="{{ _path('claro_forum_form_subject_creation', {'forumId': _resource.getId()}) }}">
+                <i class="icon-plus"></i> {{ 'new_subject'|trans({}, 'forum') }}
+            </a>
+        {% endif %}
     </div>
 {% endblock %}

@@ -65,9 +65,11 @@
         </div>
     </div>
     <div class="panel-footer">
-        <a class="btn btn-primary" href='{{ _path('claro_forum_message_form', {'subjectId': subject.getId()}) }}'>
-            <i class="icon-reply"></i> {{ 'new_message'|trans({}, 'forum') }}
-        </a>
+        {% if canAnswer %}
+            <a class="btn btn-primary" href='{{ _path('claro_forum_message_form', {'subjectId': subject.getId()}) }}'>
+                <i class="icon-reply"></i> {{ 'new_message'|trans({}, 'forum') }}
+            </a>
+        {% endif %}
         <a class="btn btn-default" href='{{ path('claro_forum_subjects', { 'forumId': _resource.getId() }) }}'>
            {{ 'back'|trans({}, 'platform') }}
         </a>

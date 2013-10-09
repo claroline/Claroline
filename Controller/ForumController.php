@@ -50,9 +50,13 @@ class ForumController extends Controller
         $pager->setMaxPerPage($limit);
         $pager->setCurrentPage($page);
 
+        $collection = new ResourceCollection(array($forum->getResourceNode()));
+        $canCreateSubject = $this->get('security.context')->isGranted('post', $collection);
+
         return array(
             'pager' => $pager,
-            '_resource' => $forum
+            '_resource' => $forum,
+            'canCreateSubject' => $canCreateSubject
         );
     }
 
@@ -72,7 +76,12 @@ class ForumController extends Controller
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $forum = $em->getRepository('ClarolineForumBundle:Forum')->find($forumId);
-        $this->checkAccess($forum);
+        $collection = new ResourceCollection(array($forum->getResourceNode()));
+
+        if (!$this->get('security.context')->isGranted('post', $collection)) {
+            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+        }
+
         $formSubject = $this->get('form.factory')->create(new SubjectType());
 
         return array(
@@ -98,11 +107,16 @@ class ForumController extends Controller
      */
     public function createSubjectAction($forumId)
     {
-        $form = $this->get('form.factory')->create(new SubjectType(), new Subject);
-        $form->handleRequest($this->get('request'));
         $em = $this->getDoctrine()->getManager();
         $forum = $em->getRepository('ClarolineForumBundle:Forum')->find($forumId);
-        $this->checkAccess($forum);
+        $collection = new ResourceCollection(array($forum->getResourceNode()));
+
+        if (!$this->get('security.context')->isGranted('post', $collection)) {
+            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+        }
+
+        $form = $this->get('form.factory')->create(new SubjectType(), new Subject);
+        $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
             $user = $this->get('security.context')->getToken()->getUser();
@@ -162,12 +176,15 @@ class ForumController extends Controller
         $pager->setMaxPerPage($limit);
         $pager->setCurrentPage($page);
         $isModerator = $this->get('security.context')->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
+        $collection = new ResourceCollection(array($forum->getResourceNode()));
+        $canAnswer = $this->get('security.context')->isGranted('post', $collection);
 
         return array(
             'subject' => $subject,
             'pager' => $pager,
             '_resource' => $forum,
-            'isModerator' => $isModerator
+            'isModerator' => $isModerator,
+            'canAnswer' => $canAnswer
         );
     }
 
@@ -185,11 +202,16 @@ class ForumController extends Controller
      */
     public function messageCreationFormAction($subjectId)
     {
-        $form = $this->get('form.factory')->create(new MessageType());
         $em = $this->getDoctrine()->getManager();
         $subject = $em->getRepository('ClarolineForumBundle:Subject')->find($subjectId);
         $forum = $subject->getForum();
-        $this->checkAccess($forum);
+        $collection = new ResourceCollection(array($forum->getResourceNode()));
+
+        if (!$this->get('security.context')->isGranted('post', $collection)) {
+            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+        }
+
+        $form = $this->get('form.factory')->create(new MessageType());
 
         return array(
             'subject' => $subject,
@@ -217,7 +239,11 @@ class ForumController extends Controller
         $em = $this->getDoctrine()->getManager();
         $subject = $em->getRepository('ClarolineForumBundle:Subject')->find($subjectId);
         $forum = $subject->getForum();
-        $this->checkAccess($forum);
+        $collection = new ResourceCollection(array($forum->getResourceNode()));
+
+        if (!$this->get('security.context')->isGranted('post', $collection)) {
+            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+        }
 
         if ($form->isValid()) {
             $message = $form->getData();
