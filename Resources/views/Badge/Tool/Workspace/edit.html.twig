@@ -251,7 +251,7 @@
                 {{ form_rest(form) }}
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
-                    <a href="{{ path('claro_admin_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger">{{ 'cancel'|trans({}, 'platform') }}</a>
+                    <a href="{{ path('claro_workspace_tool_badges', {'workspaceId': workspace.id}) }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger">{{ 'cancel'|trans({}, 'platform') }}</a>
                 </div>
             </form>
         </div>
