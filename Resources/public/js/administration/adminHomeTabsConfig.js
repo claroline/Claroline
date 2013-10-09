@@ -377,4 +377,116 @@
             }
         });
     });
+
+    // Click on widget order-up button
+    $('#widgets-list-panel').on('click', '.widget-order-up', function () {
+        currentElement = $(this).parent().parent().parent().parent();
+        currentWidgetHomeTabConfigId = currentElement.attr('widget-hometab-config-id');
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_admin_widget_home_tab_config_change_order',
+                {
+                    'widgetHomeTabConfigId': currentWidgetHomeTabConfigId,
+                    'direction': -1
+                }
+            ),
+            type: 'POST',
+            success: function (data) {
+                if (data === '-1') {
+                    var previousSibling = currentElement.prev();
+                    previousSibling.before(currentElement);
+                    var currentOrderBtns = currentElement.find('.widget-order-btn-group');
+                    var previousOrderBtns = previousSibling.find('.widget-order-btn-group');
+                    var currentHtml = currentOrderBtns.html();
+                    var previousHtml = previousOrderBtns.html();
+                    currentOrderBtns.html(previousHtml);
+                    previousOrderBtns.html(currentHtml);
+                }
+            }
+        });
+    });
+
+    // Click on widget order-down button
+    $('#widgets-list-panel').on('click', '.widget-order-down', function () {
+        currentElement = $(this).parent().parent().parent().parent();
+        currentWidgetHomeTabConfigId = currentElement.attr('widget-hometab-config-id');
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_admin_widget_home_tab_config_change_order',
+                {
+                    'widgetHomeTabConfigId': currentWidgetHomeTabConfigId,
+                    'direction': 1
+                }
+            ),
+            type: 'POST',
+            success: function (data) {
+                if (data === '1') {
+                    var nextSibling = currentElement.next();
+                    nextSibling.after(currentElement);
+                    var currentOrderBtns = currentElement.find('.widget-order-btn-group');
+                    var nextOrderBtns = nextSibling.find('.widget-order-btn-group');
+                    var currentHtml = currentOrderBtns.html();
+                    var nextHtml = nextOrderBtns.html();
+                    currentOrderBtns.html(nextHtml);
+                    nextOrderBtns.html(currentHtml);
+                }
+            }
+        });
+    });
+
+    $('.widget-visibility-btn').on('click', function () {
+        var visibilityBtn = $(this);
+        currentElement = visibilityBtn.parent().parent().parent();
+        currentWidgetHomeTabConfigId = currentElement.attr('widget-hometab-config-id');
+        var visible = (visibilityBtn.attr('visiblility-value')).trim();
+        var newVisible = (visible === 'visible') ? 'invisible' : 'visible';
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_admin_widget_home_tab_config_change_visibility',
+                {'widgetHomeTabConfigId': currentWidgetHomeTabConfigId}
+            ),
+            type: 'POST',
+            success: function () {
+                if (newVisible === 'visible') {
+                    visibilityBtn.attr('visiblility-value', 'visible')
+                    visibilityBtn.removeClass('icon-eye-close');
+                    visibilityBtn.addClass('icon-eye-open');
+                } else {
+                    visibilityBtn.attr('visiblility-value', 'invisible')
+                    visibilityBtn.removeClass('icon-eye-open');
+                    visibilityBtn.addClass('icon-eye-close');
+                }
+            }
+        });
+    });
+
+    $('.widget-lock-btn').on('click', function () {
+        var lockBtn = $(this);
+        currentElement = lockBtn.parent().parent().parent();
+        currentWidgetHomeTabConfigId = currentElement.attr('widget-hometab-config-id');
+        var locked = (lockBtn.attr('lock-value')).trim();
+        var newLocked = (locked === 'locked') ? 'unlocked' : 'locked';
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_admin_widget_home_tab_config_change_lock',
+                {'widgetHomeTabConfigId': currentWidgetHomeTabConfigId}
+            ),
+            type: 'POST',
+            success: function () {
+                if (newLocked === 'locked') {
+                    lockBtn.attr('lock-value', 'locked')
+                    lockBtn.removeClass('icon-unlock');
+                    lockBtn.addClass('icon-lock');
+                } else {
+                    lockBtn.attr('lock-value', 'unlocked')
+                    lockBtn.removeClass('icon-lock');
+                    lockBtn.addClass('icon-unlock');
+                }
+            }
+        });
+    });
 })();
