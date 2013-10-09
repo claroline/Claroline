@@ -27,8 +27,9 @@ function StepFactory($http, $q, PathFactory) {
         excludedResources : []
     };
     
-    var whoList = [];
-    var whereList = [];
+    var whoList = null;
+    var whereList = null;
+    var images = null;
     
     return {
         /**
@@ -36,7 +37,7 @@ function StepFactory($http, $q, PathFactory) {
          * @returns array
          */
         getWhoList: function() {
-            if (whoList.length === 0) {
+            if (null == whoList || whoList.length === 0) {
                 // Load list from AJAX
                 var deferred = $q.defer();
                 $http.get(Routing.generate('innova_path_get_stepwho')).success(function(data) { 
@@ -60,7 +61,7 @@ function StepFactory($http, $q, PathFactory) {
          * @returns array
          */
         getWhereList: function() {
-            if (whereList.length === 0) {
+            if (null == whereList || whereList.length === 0) {
                 // Load list from AJAX
                 var deferred = $q.defer();
                 $http.get(Routing.generate('innova_path_get_stepwhere')).success(function(data) { 
@@ -76,6 +77,29 @@ function StepFactory($http, $q, PathFactory) {
             else {
                 // List already loaded => simply return it
                 return whereList;
+            }
+        },
+        
+        /**
+         * 
+         */
+        getImages: function() {
+            if (null == images || images.length === 0) {
+                // Load images library from AJAX
+                var deferred = $q.defer();
+                $http.get(Routing.generate('innova_step_images')).success(function(data) { 
+                    images = data;
+                    return deferred.resolve(images);
+                })
+                .error(function(data, status) {
+                    return deferred.reject('error loading images list');
+                });
+                
+                return deferred.promise;
+            }
+            else {
+                // Images already loaded => symply return it
+                return images;
             }
         },
         
