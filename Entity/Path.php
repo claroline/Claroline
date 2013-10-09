@@ -31,6 +31,21 @@ class Path extends AbstractResource
     protected $users;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="deployed", type="boolean")
+     */
+    private $deployed;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="modified", type="boolean")
+     */
+    private $modified;
+
+
+    /**
      * Set path
      *
      * @param  string $path
@@ -52,6 +67,54 @@ class Path extends AbstractResource
     {
         return $this->path;
     }
+
+    /**
+     * Set deployed
+     *
+     * @param  boolean $deployed
+     * @return Path
+     */
+    public function setDeployed($deployed)
+    {
+        $this->deployed = $deployed;
+
+        return $this;
+    }
+
+    /**
+     * Get deployed
+     *
+     * @return boolean
+     */
+    public function getDeployed()
+    {
+        return $this->deployed;
+    }
+
+    /**
+     * Set modified
+     *
+     * @param  boolean $modified
+     * @return Path
+     */
+    public function setModified($modified)
+    {
+        $this->modified = $modified;
+
+        return $this;
+    }
+
+    /**
+     * Get modified
+     *
+     * @return boolean
+     */
+    public function getModified()
+    {
+        return $this->modified;
+    }
+
+
 
     /**
      * Constructor

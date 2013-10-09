@@ -42,29 +42,28 @@
                 {% for path in paths %}
                 <tr>
                     <td>
-                        <a href="{{ path('innova_path_editor', {workspaceId: workspace.id, pathId: path.id}) }}">{{ path.name }}</a>
+                        <a href="{{ path('innova_path_editor', {workspaceId: workspace.id, pathId: path.resourceNode.id}) }}">{{ path.resourceNode.name }}</a> 
                     </td>
                     <td align="right">
-
+                    {% if path.deployed %}
                         <form action="{{ path('innova_path_play') }}" method="post" style="display: inline-block">
                             <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
-                            <input type="hidden" value="{{ path.id }}" name="pathId" />
+                            <input type="hidden" value="{{ path.resourceNode.id }}" name="pathId" />
                             <button class="btn btn-xs btn-primary" type="submit"><span class="icon-play"></span></button>
                         </form>
-
-
+                    {% endif %}
                         <form action="{{ path('innova_path_delete_path') }}" method="post" style="display: inline-block">
                             <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
-                            <input type="hidden" value="{{ path.id }}" name="id" />
+                            <input type="hidden" value="{{ path.resourceNode.id }}" name="id" />
                             <button class="btn btn-xs btn-danger" type="submit"><span class="icon-trash"></span></button>
                         </form>
-                        
+                    {% if path.modified %}
                         <form action="{{ path('innova_path_deploy') }}" method="post" style="display: inline-block">
                             <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
-                            <input type="hidden" value="{{ path.id }}" name="pathId" />
+                            <input type="hidden" value="{{ path.resourceNode.id }}" name="pathId" />
                             <button class="btn btn-xs btn-success" type="submit"><span class="icon-random"></span></button>
                         </form>
-
+                   {% endif %}
 
                     </td>
                 </tr>
