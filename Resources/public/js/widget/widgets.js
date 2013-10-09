@@ -279,7 +279,7 @@
         });
     });
 
-    // Click on OK button of the configuration Widget form modal
+    // Click on OK button of the configuration Widget form
     $('body').on(
         'submit',
         '#widgets-list-panel > .panel > .collapse-widget > .widget-instance-edition > form',
@@ -320,7 +320,7 @@
         }
     );
 
-    // Click on CANCEL button of the configuration Widget form modal
+    // Click on CANCEL button of the configuration Widget form
     $('body').on(
         'click',
         '#widgets-list-panel > .panel > .collapse-widget > .widget-instance-edition > form > .panel-footer > a > button',

@@ -50,7 +50,7 @@ class AdministrationHomeTabController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
-     * @EXT\Template("ClarolineCoreBundle:Administration:adminHomeTabsConfigMenu.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\new:adminHomeTabsConfigMenu.html.twig")
      *
      * Displays the homeTabs configuration menu.
      *
@@ -68,40 +68,508 @@ class AdministrationHomeTabController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
-     * @EXT\Template("ClarolineCoreBundle:Administration:adminDesktopHomeTabsConfig.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\new:adminDesktopHomeTabsConfig.html.twig")
      *
      * Displays the admin homeTabs configuration page.
      *
      * @return Response
      */
-    public function adminDesktopHomeTabsConfigAction($homeTabId = 0)
+    public function adminDesktopHomeTabsConfigAction($homeTabId = -1)
     {
         $homeTabConfigs = $this->homeTabManager
             ->getAdminDesktopHomeTabConfigs();
 
-        $tabId = $homeTabId;
+        $tabId = intval($homeTabId);
         $widgetHomeTabConfigs = array();
+        $lastWidgetOrder = 1;
 
-        foreach ($homeTabConfigs as $homeTabConfig) {
-            $homeTab = $homeTabConfig->getHomeTab();
+        if ($tabId === 0) {
+            $homeTabConfig = end($homeTabConfigs);
 
-            if ($tabId == 0) {
+            if ($homeTabConfig !== false) {
+                $homeTab = $homeTabConfig->getHomeTab();
                 $tabId = $homeTab->getId();
                 $widgetHomeTabConfigs = $this->homeTabManager
                     ->getAdminWidgetConfigs($homeTab);
 
-            } elseif ($tabId === $homeTab->getId()) {
-                $widgetHomeTabConfigs = $this->homeTabManager
-                    ->getAdminWidgetConfigs($homeTab);
+                $lastWidgetOrder = $this->getOrderOfLastWidgetInHomeTab($homeTab);
+            }
+        } else {
+            foreach ($homeTabConfigs as $homeTabConfig) {
+                $homeTab = $homeTabConfig->getHomeTab();
+
+                if ($tabId === -1) {
+                    $tabId = $homeTab->getId();
+                    $widgetHomeTabConfigs = $this->homeTabManager
+                        ->getAdminWidgetConfigs($homeTab);
+                    $lastWidgetOrder = $this->getOrderOfLastWidgetInHomeTab($homeTab);
+                } elseif ($tabId === $homeTab->getId()) {
+                    $widgetHomeTabConfigs = $this->homeTabManager
+                        ->getAdminWidgetConfigs($homeTab);
+                    $lastWidgetOrder = $this->getOrderOfLastWidgetInHomeTab($homeTab);
+                }
             }
         }
-
 
         return array(
             'curentHomeTabId' => $tabId,
             'homeTabConfigs' => $homeTabConfigs,
-            'widgetsConfigs' => $widgetHomeTabConfigs
+            'widgetHomeTabConfigs' => $widgetHomeTabConfigs,
+            'lastWidgetOrder' => $lastWidgetOrder
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/home_tabs/{homeTabId}/configuration",
+     *     name="claro_admin_workspace_home_tabs_configuration",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Administration\new:adminWorkspaceHomeTabsConfig.html.twig")
+     *
+     * Displays the admin homeTabs configuration page.
+     *
+     * @return Response
+     */
+    public function adminWorkspaceHomeTabsConfigAction($homeTabId = -1)
+    {
+        $homeTabConfigs = $this->homeTabManager
+            ->getAdminWorkspaceHomeTabConfigs();
+
+        $tabId = intval($homeTabId);
+        $widgetHomeTabConfigs = array();
+        $lastWidgetOrder = 1;
+
+        if ($tabId === 0) {
+            $homeTabConfig = end($homeTabConfigs);
+
+            if ($homeTabConfig !== false) {
+                $homeTab = $homeTabConfig->getHomeTab();
+                $tabId = $homeTab->getId();
+                $widgetHomeTabConfigs = $this->homeTabManager
+                    ->getAdminWidgetConfigs($homeTab);
+                $lastWidgetOrder = $this->getOrderOfLastWidgetInHomeTab($homeTab);
+            }
+        } else {
+            foreach ($homeTabConfigs as $homeTabConfig) {
+                $homeTab = $homeTabConfig->getHomeTab();
+
+                if ($tabId === -1) {
+                    $tabId = $homeTab->getId();
+                    $widgetHomeTabConfigs = $this->homeTabManager
+                        ->getAdminWidgetConfigs($homeTab);
+                    $lastWidgetOrder = $this->getOrderOfLastWidgetInHomeTab($homeTab);
+
+                } elseif ($tabId === $homeTab->getId()) {
+                    $widgetHomeTabConfigs = $this->homeTabManager
+                        ->getAdminWidgetConfigs($homeTab);
+                    $lastWidgetOrder = $this->getOrderOfLastWidgetInHomeTab($homeTab);
+                }
+            }
+        }
+
+        return array(
+            'curentHomeTabId' => $tabId,
+            'homeTabConfigs' => $homeTabConfigs,
+            'widgetHomeTabConfigs' => $widgetHomeTabConfigs,
+            'lastWidgetOrder' => $lastWidgetOrder
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/home_tab/create/form",
+     *     name="claro_admin_home_tab_create_form",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Administration\new:adminHomeTabCreateForm.html.twig")
+     *
+     * Displays the admin homeTab form.
+     *
+     * @return Response
+     */
+    public function adminHomeTabCreateFormAction()
+    {
+        $homeTab = new HomeTab();
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_HOME_TAB,
+            array(),
+            $homeTab
+        );
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/home_tab/{homeTabType}/create",
+     *     name="claro_admin_home_tab_create",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Administration\new:adminHomeTabCreateForm.html.twig")
+     *
+     * Create a new admin homeTab.
+     *
+     * @return Response
+     */
+    public function adminHomeTabCreateAction($homeTabType)
+    {
+        $isDesktop = ($homeTabType === 'desktop');
+        $type = $isDesktop ? 'admin_desktop' : 'admin_workspace';
+
+        $homeTab = new HomeTab();
+
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_HOME_TAB,
+            array(),
+            $homeTab
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $homeTab->setType($type);
+            $this->homeTabManager->insertHomeTab($homeTab);
+
+            $homeTabConfig = new HomeTabConfig();
+            $homeTabConfig->setHomeTab($homeTab);
+            $homeTabConfig->setType($type);
+            $homeTabConfig->setLocked(false);
+            $homeTabConfig->setVisible(true);
+            $lastOrder = $isDesktop ?
+                $this->homeTabManager->getOrderOfLastAdminDesktopHomeTabConfig() :
+                $this->homeTabManager->getOrderOfLastAdminWorkspaceHomeTabConfig();
+
+            if (is_null($lastOrder['order_max'])) {
+                $homeTabConfig->setTabOrder(1);
+            }
+            else {
+                $homeTabConfig->setTabOrder($lastOrder['order_max'] + 1);
+            }
+            $this->homeTabManager->insertHomeTabConfig($homeTabConfig);
+
+            return new Response('success', 201);
+        }
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/home_tab/{homeTabId}/edit/form",
+     *     name="claro_admin_home_tab_edit_form",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "homeTab",
+     *     class="ClarolineCoreBundle:Home\HomeTab",
+     *     options={"id" = "homeTabId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Administration\new:adminHomeTabEditForm.html.twig")
+     *
+     * Displays the admin homeTab name edition form.
+     *
+     * @return Response
+     */
+    public function adminHomeTabEditFormAction(HomeTab $homeTab)
+    {
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_HOME_TAB,
+            array(),
+            $homeTab
+        );
+
+        return array('form' => $form->createView(), 'homeTab' => $homeTab);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/home_tab/{homeTabId}/edit",
+     *     name="claro_admin_home_tab_edit",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "homeTab",
+     *     class="ClarolineCoreBundle:Home\HomeTab",
+     *     options={"id" = "homeTabId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Administration\new:adminHomeTabEditForm.html.twig")
+     *
+     * Edit the admin homeTab name.
+     *
+     * @return Response
+     */
+    public function adminHomeTabEditAction(HomeTab $homeTab)
+    {
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_HOME_TAB,
+            array(),
+            $homeTab
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->homeTabManager->insertHomeTab($homeTab);
+
+            return new Response('success', 204);
+        }
+
+        return array('form' => $form->createView(), 'homeTab' => $homeTab);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/home_tab_config/{homeTabConfigId}/delete",
+     *     name="claro_admin_home_tab_config_delete",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("DELETE")
+     * @EXT\ParamConverter(
+     *     "homeTabConfig",
+     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
+     *     options={"id" = "homeTabConfigId", "strictId" = true}
+     * )
+     *
+     * Delete the given homeTabConfig and corresponding homeTab.
+     *
+     * @return Response
+     */
+    public function adminHomeTabConfigDeleteAction(HomeTabConfig $homeTabConfig)
+    {
+        $homeTab = $homeTabConfig->getHomeTab();
+
+        if (is_null($homeTab->getUser()) && is_null($homeTab->getWorkspace())) {
+            $type = $homeTab->getType();
+            $tabOrder = $homeTabConfig->getTabOrder();
+            $this->homeTabManager->deleteHomeTab($homeTab, $type, $tabOrder);
+        }
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/home_tab/{homeTabConfigId}/visibility/{visible}/update",
+     *     name="claro_admin_home_tab_update_visibility",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "homeTabConfig",
+     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
+     *     options={"id" = "homeTabConfigId", "strictId" = true}
+     * )
+     *
+     * Configure visibility of an Home tab
+     *
+     * @return Response
+     */
+    public function adminHomeTabUpdateVisibilityAction(
+        HomeTabConfig $homeTabConfig,
+        $visible
+    )
+    {
+        $isVisible = ($visible === 'visible') ? true : false;
+        $this->homeTabManager->updateVisibility($homeTabConfig, $isVisible);
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/home_tab/{homeTabConfigId}/lock/{locked}/update",
+     *     name="claro_admin_home_tab_update_lock",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "homeTabConfig",
+     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
+     *     options={"id" = "homeTabConfigId", "strictId" = true}
+     * )
+     *
+     * Configure lock of an Home tab
+     *
+     * @return Response
+     */
+    public function adminHomeTabUpdateLockAction(
+        HomeTabConfig $homeTabConfig,
+        $locked
+    )
+    {
+        $isLocked = ($locked === 'locked') ? true : false;
+        $this->homeTabManager->updateLock($homeTabConfig, $isLocked);
+
+        return new Response('success', 204);
+    }
+
+    private function getOrderOfLastWidgetInHomeTab(HomeTab $homeTab)
+    {
+        $lastOrder = 1;
+        $lastWidgetOrder = $this->homeTabManager
+            ->getOrderOfLastWidgetInAdminHomeTab($homeTab);
+
+        if (!is_null($lastWidgetOrder)) {
+            $lastOrder = $lastWidgetOrder['order_max'];
+        }
+
+        return $lastOrder;
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/widget_home_tab_config/{widgetHomeTabConfigId}/delete",
+     *     name="claro_admin_widget_home_tab_config_delete",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("DELETE")
+     * @EXT\ParamConverter(
+     *     "widgetHomeTabConfig",
+     *     class="ClarolineCoreBundle:Widget\WidgetHomeTabConfig",
+     *     options={"id" = "widgetHomeTabConfigId", "strictId" = true}
+     * )
+     *
+     * Delete the given widgetHomeTabConfig.
+     *
+     * @return Response
+     */
+    public function adminWidgetHomeTabConfigDeleteAction(
+        WidgetHomeTabConfig $widgetHomeTabConfig
+    )
+    {
+        if (is_null($widgetHomeTabConfig->getUser()) &&
+            is_null($widgetHomeTabConfig->getWorkspace())) {
+
+            $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
+            $this->homeTabManager->deleteWidgetHomeTabConfig(
+                $widgetHomeTabConfig
+            );
+            $this->widgetManager->removeInstance($widgetInstance);
+        }
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "widget/instance/{homeTabType}/create/form",
+     *     name="claro_admin_widget_instance_create_form",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Administration\new:adminWidgetInstanceCreateForm.html.twig")
+     *
+     * Displays the widget instance form.
+     *
+     * @return Response
+     */
+    public function adminWidgetInstanceCreateFormAction($homeTabType)
+    {
+        $widgetInstance = new WidgetInstance();
+        $isDesktop = ($homeTabType === 'desktop');
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_WIDGET_INSTANCE,
+            array('desktop_widget' => $isDesktop),
+            $widgetInstance
+        );
+
+        return array(
+            'form' => $form->createView(),
+            'homeTabType' => $homeTabType
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "widget/instance/{homeTabType}/create",
+     *     name="claro_admin_widget_instance_create",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Administration\new:adminWidgetInstanceCreateForm.html.twig")
+     *
+     * Creates a widget instance.
+     *
+     * @return Response
+     */
+    public function adminWidgetInstanceCreateAction($homeTabType)
+    {
+        $widgetInstance = new WidgetInstance();
+        $isDesktop = ($homeTabType === 'desktop');
+
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_WIDGET_INSTANCE,
+            array('desktop_widget' => $isDesktop),
+            $widgetInstance
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $widgetInstance->setIsAdmin(true);
+            $widgetInstance->setIsDesktop($isDesktop);
+
+            $this->widgetManager->insertWidgetInstance($widgetInstance);
+
+            return new Response($widgetInstance->getId(), 201);
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'homeTabType' => $homeTabType
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/home_tab/{homeTabId}/associate/widget/{widgetInstanceId}",
+     *     name="claro_admin_associate_widget_to_home_tab",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "homeTab",
+     *     class="ClarolineCoreBundle:Home\HomeTab",
+     *     options={"id" = "homeTabId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *     "widgetInstance",
+     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
+     *     options={"id" = "widgetInstanceId", "strictId" = true}
+     * )
+     *
+     * Associate given WidgetInstance to given Home tab.
+     *
+     * @return Response
+     */
+    public function associateWidgetToHomeTabAction(
+        HomeTab $homeTab,
+        WidgetInstance $widgetInstance
+    )
+    {
+        $widgetHomeTabConfig = new WidgetHomeTabConfig();
+        $widgetHomeTabConfig->setHomeTab($homeTab);
+        $widgetHomeTabConfig->setWidgetInstance($widgetInstance);
+        $widgetHomeTabConfig->setVisible(true);
+        $widgetHomeTabConfig->setLocked(false);
+        $widgetHomeTabConfig->setType('admin');
+
+        $lastOrder = $this->homeTabManager
+            ->getOrderOfLastWidgetInAdminHomeTab($homeTab);
+
+        if (is_null($lastOrder['order_max'])) {
+            $widgetHomeTabConfig->setWidgetOrder(1);
+        }
+        else {
+            $widgetHomeTabConfig->setWidgetOrder($lastOrder['order_max'] + 1);
+        }
+
+        $this->homeTabManager->insertWidgetHomeTabConfig($widgetHomeTabConfig);
+
+        return new Response('success', 204);
     }
 
     /***********************
@@ -492,62 +960,6 @@ class AdministrationHomeTabController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/home_tab/{homeTabConfigId}/visibility/{visible}/update",
-     *     name="claro_admin_home_tab_update_visibility",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter(
-     *     "homeTabConfig",
-     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
-     *     options={"id" = "homeTabConfigId", "strictId" = true}
-     * )
-     *
-     * Configure visibility of an Home tab
-     *
-     * @return Response
-     */
-    public function adminHomeTabUpdateVisibilityAction(
-        HomeTabConfig $homeTabConfig,
-        $visible
-    )
-    {
-        $isVisible = ($visible === 'visible') ? true : false;
-        $this->homeTabManager->updateVisibility($homeTabConfig, $isVisible);
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/home_tab/{homeTabConfigId}/lock/{locked}/update",
-     *     name="claro_admin_home_tab_update_lock",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter(
-     *     "homeTabConfig",
-     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
-     *     options={"id" = "homeTabConfigId", "strictId" = true}
-     * )
-     *
-     * Configure lock of an Home tab
-     *
-     * @return Response
-     */
-    public function adminHomeTabUpdateLockAction(
-        HomeTabConfig $homeTabConfig,
-        $locked
-    )
-    {
-        $isLocked = ($locked === 'locked') ? true : false;
-        $this->homeTabManager->updateLock($homeTabConfig, $isLocked);
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
      *     "/home_tab/{homeTabId}/widgets/configuration",
      *     name="claro_admin_home_tab_widgets_configuration",
      *     options = {"expose"=true}
@@ -618,87 +1030,6 @@ class AdministrationHomeTabController extends Controller
             'homeTab' => $homeTab,
             'widgetInstances' => $widgetInstances
         );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/home_tab/{homeTabId}/associate/widget/{widgetInstanceId}",
-     *     name="claro_admin_associate_widget_to_home_tab",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter(
-     *     "homeTab",
-     *     class="ClarolineCoreBundle:Home\HomeTab",
-     *     options={"id" = "homeTabId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *     "widgetInstance",
-     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
-     *     options={"id" = "widgetInstanceId", "strictId" = true}
-     * )
-     *
-     * Associate given WidgetInstance to given Home tab.
-     *
-     * @return Response
-     */
-    public function associateWidgetToHomeTabAction(
-        HomeTab $homeTab,
-        WidgetInstance $widgetInstance
-    )
-    {
-        $widgetHomeTabConfig = new WidgetHomeTabConfig();
-        $widgetHomeTabConfig->setHomeTab($homeTab);
-        $widgetHomeTabConfig->setWidgetInstance($widgetInstance);
-        $widgetHomeTabConfig->setVisible(true);
-        $widgetHomeTabConfig->setLocked(false);
-        $widgetHomeTabConfig->setType('admin');
-
-        $lastOrder = $this->homeTabManager
-            ->getOrderOfLastWidgetInAdminHomeTab($homeTab);
-
-        if (is_null($lastOrder['order_max'])) {
-            $widgetHomeTabConfig->setWidgetOrder(1);
-        }
-        else {
-            $widgetHomeTabConfig->setWidgetOrder($lastOrder['order_max'] + 1);
-        }
-
-        $this->homeTabManager->insertWidgetHomeTabConfig($widgetHomeTabConfig);
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/widget_home_tab_config/{widgetHomeTabConfigId}/delete",
-     *     name="claro_admin_widget_home_tab_config_delete",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Method("DELETE")
-     * @EXT\ParamConverter(
-     *     "widgetHomeTabConfig",
-     *     class="ClarolineCoreBundle:Widget\WidgetHomeTabConfig",
-     *     options={"id" = "widgetHomeTabConfigId", "strictId" = true}
-     * )
-     *
-     * Delete the given widgetHomeTabConfig.
-     *
-     * @return Response
-     */
-    public function adminWidgetHomeTabConfigDeleteAction(
-        WidgetHomeTabConfig $widgetHomeTabConfig
-    )
-    {
-        if (is_null($widgetHomeTabConfig->getUser()) &&
-            is_null($widgetHomeTabConfig->getWorkspace())) {
-
-            $this->homeTabManager->deleteWidgetHomeTabConfig(
-                $widgetHomeTabConfig
-            );
-        }
-
-        return new Response('success', 204);
     }
 
     /**
