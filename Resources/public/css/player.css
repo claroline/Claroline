@@ -4,7 +4,16 @@
 }
 
 
-
 #step-map{
+	position:relative;
+	margin-left:10px;
+	margin-right:10px;
 }
 
+#step-map-buttons{
+	text-align:center;
+}
+
+.step-map-buttons > span{
+	padding:5px;
+}
