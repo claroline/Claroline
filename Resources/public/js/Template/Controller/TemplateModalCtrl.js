@@ -4,6 +4,9 @@
  * Template Modal Controller
  */
 function TemplateModalCtrl($scope, $http, $modalInstance, StepFactory, TemplateFactory) {
+    // Store symfony base partials route
+    $scope.webDir = EditorApp.webDir;
+    
     var editTemplate = false;
     
     var currentTemplate = TemplateFactory.getCurrentTemplate();
@@ -23,8 +26,6 @@ function TemplateModalCtrl($scope, $http, $modalInstance, StepFactory, TemplateF
         TemplateFactory.setCurrentTemplate(null);
         $scope.formTemplate = jQuery.extend(true, {}, currentTemplate); // Create a copy to not affect original data before user save
     }
-    
-    console.log($scope.formTemplate);
     
     /**
      * Close template edit
