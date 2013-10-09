@@ -239,7 +239,8 @@ class QuestionController extends Controller
                         'UJMExoBundle:InteractionGraphic:paper.html.twig',
                         array(
                             'interactionGraphic' => $interactionGraph[0],
-                            'listeCoords' => $listeCoords)
+                            'listeCoords' => $listeCoords,
+                            'exoID' => $exoID)
                     );
 
                 case "InteractionHole":
