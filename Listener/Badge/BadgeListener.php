@@ -98,8 +98,10 @@ class BadgeListener
             'delete_link'  => 'claro_workspace_tool_badges_delete',
             'view_link'    => 'claro_workspace_tool_badges_edit',
             'current_link' => 'claro_workspace_tool_badges',
+            'claim_link'   => 'claro_workspace_tool_manage_claim',
+            'claim_link'   => 'claro_workspace_tool_manage_claim',
             'route_parameters' => array(
-                'workspaceId' => $workspaceId
+                'workspaceId' => $workspace->getId()
             ),
         );
 
