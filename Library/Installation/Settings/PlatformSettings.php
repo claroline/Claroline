@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Library\Installation\Settings;
 class PlatformSettings extends AbstractValidator
 {
     private $language;
-    private $name;
+    private $name = 'Claroline';
     private $organization;
     private $organizationUrl;
     private $supportEmail;
@@ -30,6 +30,48 @@ class PlatformSettings extends AbstractValidator
         return $this->name;
     }
 
+    public function setSupportEmail($email)
+    {
+        $this->supportEmail = $email;
+    }
+
+    public function getSupportEmail()
+    {
+        return $this->supportEmail;
+    }
+
+    /**
+     * @param mixed $organizationUrl
+     */
+    public function setOrganizationUrl($organizationUrl)
+    {
+        $this->organizationUrl = $organizationUrl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrganizationUrl()
+    {
+        return $this->organizationUrl;
+    }
+
+    /**
+     * @param mixed $organization
+     */
+    public function setOrganization($organization)
+    {
+        $this->organization = $organization;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrganization()
+    {
+        return $this->organization;
+    }
+
     /**
      * @param array $settings
      */
@@ -46,5 +88,13 @@ class PlatformSettings extends AbstractValidator
     {
         $this->checkIsNotBlank('language', $this->language);
         $this->checkIsNotBlank('name', $this->name);
+
+        if ($this->checkIsNotBlank('supportEmail', $this->supportEmail)) {
+            $this->checkIsValidEmail('supportEmail', $this->supportEmail);
+        }
+
+        if (!empty($this->organizationUrl)) {
+            $this->checkIsValidUrl('organizationUrl', $this->organizationUrl);
+        }
     }
 }
