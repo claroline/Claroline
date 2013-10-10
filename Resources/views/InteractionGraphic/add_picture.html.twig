@@ -8,13 +8,15 @@
             <div class="modal-body">
                 <h1>{{'add a new picture'|trans}}</h1>
                 <label for="label">{{ 'picture name' | trans }} : </label>
-                <form class="well label_bold" id="uploadForm" enctype="multipart/form-data"
-                      method="post" action="{{ path('ujm_interactiongraphic_AddImg', { 'redirection': 0 }) }}">
+                <form id="uploadForm" enctype="multipart/form-data" method="post"
+                      action="{{ path('ujm_interactiongraphic_AddImg', { 'redirection': 0 }) }}">
                     <input class="form-control" type="text" required="required" id='label' name="label" />
                     <input id="picture" name="picture" type="file" required="true" accept="image/*"/>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
-                        <button type="submit" class="btn btn-primary" id="submit_picture">{{ 'ok'|trans({}, 'platform') }}</button>
+                        <button type="submit" class="btn btn-primary" id="submit_picture"
+                                onclick="ValidName('{{ 'wrongName' | trans }}','label', '{{ path('ujm_Document_name_alreadyExist') }}',
+                                    '{{ 'alreadyExist' | trans }}', 'uploadForm');return false;">{{ 'ok'|trans({}, 'platform') }}</button>
                     </div>
                 </form>
            </div>
@@ -22,16 +24,17 @@
     </div>
 </div>
 
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/addImage.js') }}"></script>
 <script type="text/javascript">
-    
-    var doc;    
-    
+
+    var doc;
+
     $(document).ready(function () {
 
         var options = {
             success: function (data) {
                 doc = data.split(";");
-                ChangeList(doc[0],doc[1],doc[2]);
+                ChangeList(doc[0], doc[1], doc[2]);
             },
             error: function () {
                 alert('ko');
@@ -41,16 +44,16 @@
          $("#uploadForm").ajaxForm(options);
 
     });
-    
+
     // Put the new image into the drop-down list
     function ChangeList(idDoc, label, type) {
 
         if (type == '.png' || type == '.jpeg' || type == '.jpg' || type == '.gif' || type == '.bmp') {
 
             $("#ujm_exobundle_interactiongraphictype_document")
-                .append($('<option selected="selected" value="'+idDoc+'"></option>')
+                .append($('<option selected="selected" value="' + idDoc + '"></option>')
                 .text(label));
-        
+
             $('#modaladdpicture').modal('hide');
 
         } else {

@@ -55,7 +55,10 @@
                     <div id="qOpenScoreMaxLongResp">
                         <div class="form-group row">
                             {{ form_label(form.scoreMaxLongResp) }}
-                            <div class="col-md-9">{{ form_widget(form.scoreMaxLongResp) }}</div>
+                            <div class="col-md-9">
+                                {{ form_widget(form.scoreMaxLongResp) }}
+                                {{ form_errors(form.scoreMaxLongResp) }}
+                            </div>
                         </div>
                     </div>
 

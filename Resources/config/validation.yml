@@ -5,13 +5,18 @@ UJM\ExoBundle\Entity\InteractionQCM:
 
         scoreFalseResponse:
             - UJM\ExoBundle\Validator\Constraints\isValidQCMGlobalMark: ~
-            
+
 UJM\ExoBundle\Entity\Hint:
     properties:
         penalty:
             - UJM\ExoBundle\Validator\Constraints\isValidMark: ~
-            
+
 UJM\ExoBundle\Entity\Choice:
     properties:
         weight:
-            - UJM\ExoBundle\Validator\Constraints\isValidQCMMark: ~            
+            - UJM\ExoBundle\Validator\Constraints\isValidQCMMark: ~
+
+UJM\ExoBundle\Entity\InteractionOpen:
+    properties:
+        scoreMaxLongResp:
+            - UJM\ExoBundle\Validator\Constraints\isValidMark: ~
