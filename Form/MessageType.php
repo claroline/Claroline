@@ -16,7 +16,7 @@ class MessageType extends AbstractType
             array(
                 'attr' => array(
                     'class' => 'tinymce',
-                    'data-theme' => 'medium'
+                    'data-theme' => 'advanced'
                 )
             )
         );
