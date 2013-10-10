@@ -3,7 +3,7 @@
 {% trans_default_domain "badge" %}
 
 {% block content %}
-<div class="margin border">
+<div class="margin border well">
     <h3 class="sub-section-header">{{ 'claim_badge_form'|trans }}</h3>
 
     <form action="{{ path('claro_claim_badge') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">

@@ -1,0 +1,19 @@
+{% extends 'ClarolineCoreBundle:Badge/Tool:Workspace/layout.html.twig' %}
+
+{% trans_default_domain "badge" %}
+
+{% block section_body %}
+    {{ render(controller('ClarolineCoreBundle:Badge/Badge:list', {'parameters': parameters, 'badgeClaims': badgeClaims})) }}
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+<script type="text/javascript">
+    $(function(){
+        $("[data-toggle=tooltip]").tooltip();
+
+        $(".confirm").confirmModal();
+    });
+</script>
+{% endblock %}
