@@ -31,41 +31,29 @@ class AnnouncementWidgetListener
     }
 
     /**
-     * @DI\Observe("widget_claroline_announcement_widget_workspace")
+     * @DI\Observe("widget_claroline_announcement_widget")
      *
      * @param DisplayWidgetEvent $event
      */
-    public function onWorkspaceDisplay(DisplayWidgetEvent $event)
+    public function onDisplay(DisplayWidgetEvent $event)
     {
+        $widgetInstance = $event->getInstance();
+        $workspace = $widgetInstance->getWorkspace();
+        $params = array();
+        $params['page'] = 1;
+
+        if (is_null($workspace)) {
+            $params['_controller'] = 'ClarolineAnnouncementBundle:Announcement:announcementsDesktopWidgetPager';
+        }
+        else {
+            $params['_controller'] = 'ClarolineAnnouncementBundle:Announcement:announcementsWorkspaceWidgetPager';
+            $params['workspaceId'] = $workspace->getId();
+        }
+
         $subRequest = $this->request->duplicate(
             array(),
             null,
-            array(
-                '_controller' => 'ClarolineAnnouncementBundle:Announcement:announcementsWorkspaceWidgetPager',
-                'workspaceId' => $event->getWorkspace()->getId(),
-                'page' => 1
-            )
-        );
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-
-        $event->setContent($response->getContent());
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("widget_claroline_announcement_widget_desktop")
-     *
-     * @param DisplayWidgetEvent $eve
-     */
-    public function onDesktopDisplay(DisplayWidgetEvent $event)
-    {
-        $subRequest = $this->request->duplicate(
-            array(),
-            null,
-            array(
-                '_controller' => 'ClarolineAnnouncementBundle:Announcement:announcementsDesktopWidgetPager',
-                'page' => 1
-            )
+            $params
         );
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 
