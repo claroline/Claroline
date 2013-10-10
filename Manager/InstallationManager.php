@@ -127,7 +127,15 @@ class InstallationManager
 
         if ($additionalInstaller) {
             $this->log('Launching post-update actions...');
+            $this->kernel->switchToTmpEnvironment();
+
+            if ($additionalInstaller instanceof ContainerAwareInterface) {
+                $additionalInstaller->setContainer($this->kernel->getContainer());
+            }
+
             $additionalInstaller->postUpdate($current, $target);
+
+            $this->kernel->switchBack();
         }
     }
 
