@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Validator\Constraints\Image;
 
 class ProfileType extends AbstractType
 {
@@ -75,6 +76,31 @@ class ProfileType extends AbstractType
                 )
             );
         }
+        $builder->add(
+            'pictureFile',
+            'file',
+            array(
+                'required' => false,
+                'constraints' => new Image(
+                    array(
+                        'minWidth' => 50,
+                        'maxWidth' => 800,
+                        'minHeight' => 50,
+                        'maxHeight' => 800,
+                    )
+                )
+            )
+        )
+        ->add(
+            'description',
+            'textarea',
+            array(
+                'attr' => array(
+                    'class' => 'tinymce',
+                    'data-theme' => 'medium'
+                )
+            )
+        );
     }
 
     public function getName()
