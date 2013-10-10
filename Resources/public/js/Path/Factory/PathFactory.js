@@ -298,6 +298,38 @@ function PathFactory($http, $q) {
             }
             
             return this;
+        },
+        
+        /**
+         * Remove references to specified resource in all path
+         * 
+         * @param resourceId  resource's id to remove
+         * @returns PathFactory
+         */
+        removeResource: function(resourceId) {
+            function removeRefToResource(step) {
+                if (step.excludedResources.length !== 0) {
+                    // Loop through excluded resource to remove reference to needle
+                    for (var i = 0; i < step.excludedResources.length; i++) {
+                        if (resourceId == step.excludedResources[i]) {
+                            step.excludedResources.splice(i, 1);
+                        }
+                    }
+                }
+                
+                // Check children
+                for (var j = 0; j < step.children.length; j++) {
+                    removeRefToResource(step.children[j]);
+                }
+            }
+            
+            if (path !== null) {
+                for (var i = 0; i < path.steps.length; i++) {
+                    removeRefToResource(path.steps[i]);
+                }
+            }
+            
+            return this;
         }
     };
 }
