@@ -33,7 +33,7 @@
                     </div>
                     <div class="panel-body">
                         <ul class="tree">
-                            <li ng-repeat="step in formTemplate.step" ng-include="webDir + 'js/Template/Partial/tree-item.html'"></li>
+                            <li ng-include="webDir + 'js/Template/Partial/tree-item.html'" onload="step = formTemplate.step"></li>
                         </ul>
                     </div>
                 </div>

@@ -1,6 +1,5 @@
 <a href=""><span class="icon-chevron-right"></span></a>
 <span class="step-name">{{ step.name }}</span>
-<span>coucou</span>
-<!-- <ul ng-model="step.children"> -->
-<!--     <li ng-repeat="step in step.children" ng-include="webDir + 'js/Template/Partial/tree-item.html'"></li> -->
-<!-- </ul> -->
+<ul ng-model="step.children">
+    <li ng-repeat="step in step.children" ng-include="webDir + 'js/Template/Partial/tree-item.html'"></li>
+</ul>
