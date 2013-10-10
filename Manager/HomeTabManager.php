@@ -243,8 +243,7 @@ class HomeTabManager
 
     public function checkHomeTabVisibilityByWorkspace(
         HomeTab $homeTab,
-        AbstractWorkspace $workspace,
-        $withConfig
+        AbstractWorkspace $workspace
     )
     {
         $homeTabConfig = $this->homeTabConfigRepo->findOneBy(
@@ -259,7 +258,7 @@ class HomeTabManager
             return false;
         }
 
-        return $homeTabConfig->isVisible() || ($withConfig == 1);
+        return $homeTabConfig->isVisible();
     }
 
     public function insertWidgetHomeTabConfig(

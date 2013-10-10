@@ -498,6 +498,148 @@ class WorkspaceController extends Controller
     }
 
     /**
+     * Routing is not needed.
+     *
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Widget:widgetsWithoutConfig.html.twig")
+     *
+     * Display visible registered widgets.
+     *
+     * @param integer $workspaceId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @todo Reduce the number of sql queries for this action (-> dql)
+     */
+    public function widgetsWithoutConfigAction(
+        AbstractWorkspace $workspace,
+        $homeTabId
+    )
+    {
+        $widgets = array();
+        $lastWidgetOrder = 1;
+
+        $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
+
+        if (is_null($homeTab)) {
+            $isVisibleHomeTab = false;
+        } else {
+            $isVisibleHomeTab = $this->homeTabManager
+                ->checkHomeTabVisibilityByWorkspace($homeTab, $workspace);
+        }
+
+        if ($isVisibleHomeTab) {
+
+            $widgetHomeTabConfigs = $this->homeTabManager
+                ->getVisibleWidgetConfigsByWorkspace($homeTab, $workspace);
+
+            if (count($widgetHomeTabConfigs) > 0) {
+                $lastWidgetOrder = count($widgetHomeTabConfigs);
+            }
+
+            foreach ($widgetHomeTabConfigs as $widgetHomeTabConfig) {
+                $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
+
+                $event = $this->eventDispatcher->dispatch(
+                    "widget_{$widgetInstance->getWidget()->getName()}",
+                    'DisplayWidget',
+                    array($widgetInstance)
+                );
+
+                $widget['config'] = $widgetHomeTabConfig;
+                $widget['content'] = $event->getContent();
+                $widgets[] = $widget;
+            }
+        }
+
+        return array(
+            'widgetsDatas' => $widgets,
+            'isDesktop' => false,
+            'workspaceId' => $workspace->getId(),
+            'isVisibleHomeTab' => $isVisibleHomeTab,
+            'isLockedHomeTab' => false,
+            'lastWidgetOrder' => $lastWidgetOrder
+        );
+    }
+
+    /**
+     * Routing is not needed.
+     *
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Widget:widgetsWithConfig.html.twig")
+     *
+     * Display registered widgets.
+     *
+     * @param integer $workspaceId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @todo Reduce the number of sql queries for this action (-> dql)
+     */
+    public function widgetsWithConfigAction(AbstractWorkspace $workspace, $homeTabId)
+    {
+        $this->checkWorkspaceManagerAccess($workspace);
+
+        if ($this->security->getToken()->getUser() !== 'anon.') {
+            $rightToConfigure = $this->security->isGranted('parameters', $workspace);
+        } else {
+            $rightToConfigure = false;
+        }
+
+        $widgets = array();
+        $lastWidgetOrder = 1;
+
+        $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
+
+        $isVisibleHomeTab = is_null($homeTab) ? false: true;
+
+        if ($isVisibleHomeTab) {
+
+            $widgetHomeTabConfigs = $this->homeTabManager
+                ->getWidgetConfigsByWorkspace($homeTab, $workspace);
+
+            if (count($widgetHomeTabConfigs) > 0) {
+                $lastWidgetOrder = count($widgetHomeTabConfigs);
+            }
+
+            foreach ($widgetHomeTabConfigs as $widgetHomeTabConfig) {
+                $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
+
+                $event = $this->eventDispatcher->dispatch(
+                    "widget_{$widgetInstance->getWidget()->getName()}",
+                    'DisplayWidget',
+                    array($widgetInstance)
+                );
+
+                $widget['config'] = $widgetHomeTabConfig;
+                $widget['content'] = $event->getContent();
+                $widget['configurable'] = $rightToConfigure
+                    && $widgetInstance->getWidget()->isConfigurable();
+                $widgets[] = $widget;
+            }
+        }
+
+        return array(
+            'widgetsDatas' => $widgets,
+            'isDesktop' => false,
+            'workspaceId' => $workspace->getId(),
+            'isVisibleHomeTab' => $isVisibleHomeTab,
+            'isLockedHomeTab' => false,
+            'lastWidgetOrder' => $lastWidgetOrder
+        );
+    }
+
+    /**
      * @EXT\Route(
      *     "/{workspaceId}/open",
      *     name="claro_workspace_open"
@@ -878,8 +1020,8 @@ class WorkspaceController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspaceId}/open/tool/home/tab/{tabId}/{withConfig}",
-     *     name="claro_display_workspace_home_tabs",
+     *     "/{workspaceId}/open/tool/no_config/home/tab/{tabId}",
+     *     name="claro_display_workspace_home_tabs_without_config",
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter(
@@ -888,47 +1030,84 @@ class WorkspaceController extends Controller
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceHomeTabs.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceHomeTabsWithoutConfig.html.twig")
      *
-     * Displays the workspace home tab.
+     * Displays the workspace home tab without config.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function displayWorkspaceHomeTabsAction(
+    public function displayWorkspaceHomeTabsActionWithoutConfig(
         AbstractWorkspace $workspace,
-        $tabId,
-        $withConfig = 0
+        $tabId
     )
     {
-        if ($withConfig == 1) {
-            $this->checkWorkspaceManagerAccess($workspace);
-        }
-
         $workspaceHomeTabConfigs = $this->homeTabManager
-            ->getWorkspaceHomeTabConfigsByWorkspace($workspace);
+            ->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
         $homeTabId = $tabId;
 
         if ($homeTabId == -1) {
-            foreach ($workspaceHomeTabConfigs as $workspaceHomeTabConfig) {
-                if ($workspaceHomeTabConfig->isVisible() || ($withConfig === 1)) {
-                    $homeTabId = $workspaceHomeTabConfig->getHomeTab()->getId();
-                    break;
-                }
-            }
-        }
-        if (($withConfig == 1) && ($homeTabId == 0)) {
-            $workspaceHomeTabConfig = end($workspaceHomeTabConfigs);
+            $firstHomeTabConfig = reset($workspaceHomeTabConfigs);
 
-            if ($workspaceHomeTabConfig !== false) {
-                $homeTabId = $workspaceHomeTabConfig->getHomeTab()->getId();
+            if ($firstHomeTabConfig) {
+                $homeTabId = $firstHomeTabConfig->getHomeTab()->getId();
             }
         }
 
         return array(
             'workspace' => $workspace,
             'workspaceHomeTabConfigs' => $workspaceHomeTabConfigs,
-            'tabId' => $homeTabId,
-            'withConfig' => $withConfig
+            'tabId' => $homeTabId
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspaceId}/open/tool/config/home/tab/{tabId}",
+     *     name="claro_display_workspace_home_tabs_with_config",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceHomeTabsWithConfig.html.twig")
+     *
+     * Displays the workspace home tab.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function displayWorkspaceHomeTabsActionWithConfig(
+        AbstractWorkspace $workspace,
+        $tabId
+    )
+    {
+        $this->checkWorkspaceManagerAccess($workspace);
+
+        $workspaceHomeTabConfigs = $this->homeTabManager
+            ->getWorkspaceHomeTabConfigsByWorkspace($workspace);
+        $homeTabId = $tabId;
+
+        if ($homeTabId == -1) {
+            $firstHomeTabConfig = reset($workspaceHomeTabConfigs);
+
+            if ($firstHomeTabConfig) {
+                $homeTabId = $firstHomeTabConfig->getHomeTab()->getId();
+            }
+        }
+        elseif ($homeTabId == 0) {
+            $lastHomeTabConfig = end($workspaceHomeTabConfigs);
+
+            if ($lastHomeTabConfig) {
+                $homeTabId = $lastHomeTabConfig->getHomeTab()->getId();
+            }
+        }
+
+        return array(
+            'workspace' => $workspace,
+            'workspaceHomeTabConfigs' => $workspaceHomeTabConfigs,
+            'tabId' => $homeTabId
         );
     }
 

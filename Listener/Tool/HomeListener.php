@@ -103,23 +103,21 @@ class HomeListener
     {
         $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
         $workspaceHomeTabConfigs = $this->homeTabManager
-            ->getWorkspaceHomeTabConfigsByWorkspace($workspace);
+            ->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
         $tabId = 0;
 
-        foreach ($workspaceHomeTabConfigs as $workspaceHomeTabConfig) {
-            if ($workspaceHomeTabConfig->isVisible()) {
-                $tabId = $workspaceHomeTabConfig->getHomeTab()->getId();
-                break;
-            }
+        $firstHomeTab = reset($workspaceHomeTabConfigs);
+
+        if ($firstHomeTab) {
+            $tabId = $firstHomeTab->getHomeTab()->getId();
         }
 
         return $this->templating->render(
-            'ClarolineCoreBundle:Tool\workspace\home:workspaceHomeTabs.html.twig',
+            'ClarolineCoreBundle:Tool\workspace\home:workspaceHomeTabsWithoutConfig.html.twig',
             array(
                 'workspace' => $workspace,
                 'workspaceHomeTabConfigs' => $workspaceHomeTabConfigs,
-                'tabId' => $tabId,
-                'withConfig' => 0
+                'tabId' => $tabId
             )
         );
     }
