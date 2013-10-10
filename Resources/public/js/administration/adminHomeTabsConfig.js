@@ -513,6 +513,11 @@
                 var widgetEditionElement = currentElement.find('.widget-instance-edition-element');
                 widgetEditionElement.html(datas);
                 widgetEditionElement.removeClass('hide');
+                var textArea = $('textarea', datas)[0];
+
+                if (textArea) {
+                    initTinyMCE(stfalcon_tinymce_config);
+                }
             }
         });
     });
