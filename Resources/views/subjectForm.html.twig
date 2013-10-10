@@ -18,7 +18,11 @@
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
     <form novalidate="novalidate" action="{{ _path('claro_forum_create_subject', {'forumId':_resource.getId()}) }}" method="post" {{ form_enctype(form) }} id="subject_form">
         <div class="panel-body">
-           {{ form_widget(form) }}
+           {{ form_errors(form.title) }}
+           {{ form_row(form.title) }}
+           {{ form_errors(form.message.content) }}
+           {{ form_row(form.message.content) }}
+           {{ form_rest(form) }}
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
