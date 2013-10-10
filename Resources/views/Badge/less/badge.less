@@ -79,16 +79,31 @@
 #translationFormTabs {
     margin-bottom: 0;
     border-bottom: 0;
-    &> .active > a {
+    &> li > a {
+        &.has-error {
+            background-color: #FDDCDC;
+            &:hover {
+                border-color: #b94a48 #b94a48 transparent;
+                background-color: #FACACA;
+            }
+        }
+    }
+    &> li.active > a {
         background-color: #f5f5f5;
+        &:hover {
+            background-color: #f5f5f5;
+        }
+        &.has-error {
+            border-color: #b94a48 #b94a48 transparent;
+            background-color: #FDDCDC;
+        }
     }
 }
 
 .badge_translations {
-    border-top: 0;
-    padding-right: 32px;
-    .border-radius(0 0);
-    .box-shadow(0);
+    border-top:             0;
+    padding-right:          32px;
+    border-top-left-radius: 0;
 }
 
 #award_user_modal {

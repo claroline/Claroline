@@ -66,12 +66,27 @@
   margin-bottom: 0;
   border-bottom: 0;
 }
-#translationFormTabs> .active > a {
+#translationFormTabs> li > a.has-error {
+  background-color: #FDDCDC;
+}
+#translationFormTabs> li > a.has-error:hover {
+  border-color: #b94a48 #b94a48 transparent;
+  background-color: #FACACA;
+}
+#translationFormTabs> li.active > a {
   background-color: #f5f5f5;
+}
+#translationFormTabs> li.active > a:hover {
+  background-color: #f5f5f5;
+}
+#translationFormTabs> li.active > a.has-error {
+  border-color: #b94a48 #b94a48 transparent;
+  background-color: #FDDCDC;
 }
 .badge_translations {
   border-top: 0;
   padding-right: 32px;
+  border-top-left-radius: 0;
 }
 #award_user_modal {
   min-width: 650px;

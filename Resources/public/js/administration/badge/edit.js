@@ -4,6 +4,8 @@ $(function(){
         $("a[href='#" + locationhash.substr(2) + "']").tab("show");
     }
 
+    $(".nav-tabs a.has-error:first").tab("show");
+
     $('[data-toggle=tooltip]').tooltip();
 
     $('.delete').confirmModal();

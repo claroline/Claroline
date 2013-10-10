@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @DI\Service("claroline.form.badge")
@@ -32,13 +33,15 @@ class BadgeType extends AbstractType
             ->add('frTranslation', new BadgeTranslationType())
             ->add('enTranslation', new BadgeTranslationType())
             ->add('version', 'integer', array(
-                'data'  => 1
+                'data'  => 1,
+                'constraints' => new Assert\NotBlank(),
             ))
             ->add('automatic_award', 'checkbox', array(
                 'required' => false
             ))
             ->add('file', 'file', array(
-                'label'    => 'badge_form_image'
+                'label'    => 'badge_form_image',
+                'constraints' => new Assert\NotBlank(),
             ))
             ->add('expired_at', 'datepicker', array(
                 'read_only' => true,

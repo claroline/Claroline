@@ -2,6 +2,8 @@ $(function(){
     var badgeFormFile = $("#badge_form_file");
     badgeFormFile.hide();
 
+    $(".nav-tabs a.has-error:first").tab("show");
+
     var uploadImagePlaceholder = $(".upload_image_placeholder");
     uploadImagePlaceholder.click(function(event) {
         badgeFormFile.click();
