@@ -19,7 +19,7 @@
                 Mes parcours
             </div>
             <table class="table table-hover" style="margin-top: -1px;">
-                {% for path in paths["me"] %}
+                {% for id, path in paths["me"] %}
                 <tr>
                     <td>
                         <a href="{{ path('innova_path_editor', {workspaceId: workspace.id, pathId: path.resourceNode.id}) }}">{{ path.resourceNode.name }}</a>
@@ -50,7 +50,7 @@
                         <form action="{{ path('innova_path_delete_path') }}" method="post" style="display: inline-block">
                             <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
                             <input type="hidden" value="{{ path.resourceNode.id }}" name="id" />
-                            <a href="#" rel="tooltip" data-original-title="Delete" class="btn btn-xs btn-danger" id="path-delete"><span class="icon-trash"></span></a>
+                            <a href="#" rel="tooltip" data-original-title="Delete" class="btn btn-xs btn-danger path-delete" id="path-delete-{{ id }}"><span class="icon-trash"></span></a>
                         </form>
                     </td>
                 </tr>

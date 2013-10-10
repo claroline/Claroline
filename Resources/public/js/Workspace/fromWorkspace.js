@@ -1,7 +1,7 @@
 $( document ).ready(function() {
 	$('button, a').tooltip({placement:'top'});
 
-	$('#path-delete').confirmModal({
+	$('.path-delete').confirmModal({
 	    confirmTitle : 'Confirmation',
 	    confirmMessage : 'Pouvez-vous confirmer l\'action de suppression ?',
 	    confirmOk : 'OK',
