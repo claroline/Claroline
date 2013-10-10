@@ -70,7 +70,7 @@
                         <form action="{{ path('innova_path_delete_path') }}" method="post" style="display: inline-block">
                             <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
                             <input type="hidden" value="{{ path.resourceNode.id }}" name="id" />
-                            <button rel="tooltip" data-original-title="Delete" class="btn btn-xs btn-danger" type="submit"><span class="icon-trash"></span></button>
+                            <button rel="tooltip" data-original-title="Delete" class="btn btn-xs btn-danger" type="submit" data-toggle="modal" data-target="#table-modal"><span class="icon-trash"></span></button>
                         </form>
                     </td>
                 </tr>
@@ -111,4 +111,23 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Workspace/fromWorkspace.js') }}"></script>
+	{% javascripts
+        vars=["locale"]
+        "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeUserConfirm.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
+        filter="twig_js"
+    %}
+    <script language="javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script src='{{ asset('bundles/clarolinecore/js/table.js') }}' type="text/javascript"></script>
+    <script>
+        parameters = {};
+        parameters.route = {};
+        parameters.route.action = {};
+        parameters.route.normal = {"route": "claro_admin_user_list", "parameters": {}};
+        parameters.route.search = {"route": "claro_admin_user_list_search", "parameters": {}};
+        parameters.route.action.remove = {"route": "innova_path_delete_path", "confirmTemplate": removeUserConfirm};
+        Claroline.Table.initialize(parameters);
+	 </script>
 {% endblock %}
