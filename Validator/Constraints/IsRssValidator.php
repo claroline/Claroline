@@ -9,14 +9,10 @@ class IsRssValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        try {
-            file_get_contents($value);
+        $content = @file_get_contents($value);
 
-            return true;
-        } catch (\Exception $e) {
+        if (!$content) {
             $this->context->addViolation($constraint->message, array('{{ username }}' => $value));
-
-            return false;
         }
     }
 }

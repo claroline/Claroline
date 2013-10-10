@@ -14,7 +14,7 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "claroline/core-bundle": "~1.0",
+        "claroline/core-bundle": "~2.0",
         "claroline/plugin-installer": "~1.0"
     },
     "autoload": {
@@ -22,6 +22,6 @@
     },
     "target-dir": "Claroline/RssReaderBundle",
     "extra": {
-        "dbVersion": "20130805110005"
+        "dbVersion": "20130925173308"
     }
 }
