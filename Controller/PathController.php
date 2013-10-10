@@ -139,6 +139,7 @@ class PathController extends Controller
         $stepsToNotDelete = array();
         $excludedResourcesToResourceNodes = array();
 
+        //todo - lister les liens resources2step pour supprimer ceux inutilisés.
 
         // JSON string to Object - Récupération des childrens de la racine
         $json = json_decode($path->getPath());
@@ -275,6 +276,7 @@ class PathController extends Controller
                                                 ->findOneBy(array('step' => $currentStep, 'resourceNode' => $resource->resourceId))){
                     $step2ressourceNode = new Step2ResourceNode();
                 }
+
                 $step2ressourceNode->setResourceNode($manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId));
                 $step2ressourceNode->setStep($currentStep);
                 $step2ressourceNode->setExcluded(false);
