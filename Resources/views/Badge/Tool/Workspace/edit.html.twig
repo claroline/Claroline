@@ -185,39 +185,47 @@
                     </div>
                     <div class="col-md-9">
                         <ul class="nav nav-tabs" id="translationFormTabs">
-                            <li class="active"><a href="#fr" data-toggle="tab">{{ 'badge_form_frTranslation'|trans }}<img src="{{ asset('bundles/clarolinecore/images/lang/fr.png') }}" alt="fr" class="flag" /></a></li>
-                            <li><a href="#en" data-toggle="tab">{{ 'badge_form_enTranslation'|trans }}<img src="{{ asset('bundles/clarolinecore/images/lang/en.png') }}" alt="en" class="flag" /></a></li>
+                            {% set frErrorClass = (0 < form.frTranslation.name.vars.errors|length or 0 < form.frTranslation.description.vars.errors|length or 0 < form.frTranslation.criteria.vars.errors|length) ? 'has-error' : '' %}
+                            {% set enErrorClass = (0 < form.enTranslation.name.vars.errors|length or 0 < form.enTranslation.description.vars.errors|length or 0 < form.enTranslation.criteria.vars.errors|length) ? 'has-error' : '' %}
+                            <li class="active"><a href="#fr" {% if '' != frErrorClass %} class="{{ frErrorClass }}"{% endif %} data-toggle="tab">{{ 'badge_form_frTranslation'|trans }}<img src="{{ asset('bundles/clarolinecore/images/lang/fr.png') }}" alt="fr" class="flag" /></a></li>
+                            <li><a href="#en" {% if '' != enErrorClass %} class="{{ enErrorClass }}"{% endif %} data-toggle="tab">{{ 'badge_form_enTranslation'|trans }}<img src="{{ asset('bundles/clarolinecore/images/lang/en.png') }}" alt="en" class="flag" /></a></li>
                         </ul>
 
                         <div class="tab-content well well-sm badge_translations">
-                            <div class="tab-pane active" id="fr">
+                            <div class="tab-pane active{% if '' != frErrorClass %} {{ frErrorClass }}{% endif %}" id="fr">
                                 {{ form_errors(form.frTranslation) }}
                                 <div class="form-group">
                                     <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_name'|trans }} :</label>
+                                    {{ form_errors(form.frTranslation.name) }}
                                     {{ form_widget(form.frTranslation.name) }}
                                 </div>
                                 <div class="form-group">
                                     <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_description'|trans }} :</label>
+                                    {{ form_errors(form.frTranslation.description) }}
                                     {{ form_widget(form.frTranslation.description) }}
                                 </div>
                                 <div class="form-group">
                                     <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_criteria'|trans }} :</label>
+                                    {{ form_errors(form.frTranslation.criteria) }}
                                     {{ form_widget(form.frTranslation.criteria) }}
                                 </div>
                                 {{ form_widget(form.frTranslation) }}
                             </div>
-                            <div class="tab-pane" id="en">
+                            <div class="tab-pane{% if '' != enErrorClass %} {{ enErrorClass }}{% endif %}" id="en">
                                 {{ form_errors(form.enTranslation) }}
                                 <div class="form-group">
                                     <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_name'|trans }} :</label>
+                                    {{ form_errors(form.enTranslation.name) }}
                                     {{ form_widget(form.enTranslation.name) }}
                                 </div>
                                 <div class="form-group">
                                     <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_description'|trans }} :</label>
+                                    {{ form_errors(form.enTranslation.description) }}
                                     {{ form_widget(form.enTranslation.description) }}
                                 </div>
                                 <div class="form-group">
                                     <label class="required" for="badge_form_frTranslation_description">{{ 'badge_form_criteria'|trans }} :</label>
+                                    {{ form_errors(form.enTranslation.criteria) }}
                                     {{ form_widget(form.enTranslation.criteria) }}
                                 </div>
                                 {{ form_widget(form.enTranslation) }}
@@ -262,6 +270,6 @@
 {{ parent() }}
 {{ tinymce_init() }}
 <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
-<script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/administration/badge/edit.js') }}'></script>
-<script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/administration/badge/rules.js') }}'></script>
+<script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/edit.js') }}'></script>
+<script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/rules.js') }}'></script>
 {% endblock %}
