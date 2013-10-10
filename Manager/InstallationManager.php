@@ -93,6 +93,7 @@ class InstallationManager
 
     public function update(InstallableInterface $bundle, BundleVersion $current, BundleVersion $target)
     {
+        $this->kernel->switchToTmpEnvironment();
         $bundleStatus = $this->migrationManager->getBundleStatus($bundle);
         $currentDbVersion = $bundleStatus[Migrator::STATUS_CURRENT];
         $currentPackageDbVersion = $current->getDbVersion();
@@ -108,7 +109,6 @@ class InstallationManager
             }
         }
 
-        $this->kernel->switchToTmpEnvironment();
         $additionalInstaller = $this->getAdditionalInstaller($bundle, $this->kernel->getContainer());
 
         if ($additionalInstaller) {
