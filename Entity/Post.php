@@ -92,9 +92,9 @@ class Post extends Statusable
     protected $blog;
 
     /**
-     * @var PostTag[]|ArrayCollection
+     * @var Tag[]|ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Icap\BlogBundle\Entity\Tag", inversedBy="posts", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Icap\BlogBundle\Entity\Tag", inversedBy="posts", cascade={"all"})
      * @ORM\JoinTable(name="icap__blog_post_tag")
      */
     protected $tags;
@@ -355,19 +355,19 @@ class Post extends Statusable
     }
 
     /**
-     * @param \Icap\BlogBundle\Entity\PostTag[]|\Doctrine\Common\Collections\ArrayCollection $postTags
+     * @param \Icap\BlogBundle\Entity\Tag[]|\Doctrine\Common\Collections\ArrayCollection $tags
      *
      * @return Post
      */
-    public function setTags($postTags)
+    public function setTags($tags)
     {
-        $this->tags = $postTags;
+        $this->tags = $tags;
 
         return $this;
     }
 
     /**
-     * @return \Icap\BlogBundle\Entity\PostTag[]|\Doctrine\Common\Collections\ArrayCollection
+     * @return \Icap\BlogBundle\Entity\Tag[]|\Doctrine\Common\Collections\ArrayCollection
      */
     public function getTags()
     {

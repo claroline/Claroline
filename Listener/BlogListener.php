@@ -89,18 +89,12 @@ class BlogListener extends ContainerAware
     public function onCopy(CopyResourceEvent $event)
     {
         $entityManager = $this->container->get('doctrine.orm.entity_manager');
-        /** @var \ICAPLyon1\Bundle\SimpleTagBundle\Service\Manager $tagManager */
-        $tagManager = $this->container->get("icaplyon1_simpletag.manager");
         /** @var \Icap\BlogBundle\Entity\Blog $blog */
         $blog = $event->getResource();
 
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         $newBlog = new Blog();
-        $newBlog->setName($blog->getName());
-        $newBlog->setResourceType($blog->getResourceType());
-        $newBlog->setCreator($user);
-        $newBlog->setWorkspace($blog->getWorkspace());
 
         $entityManager->persist($newBlog);
         $entityManager->flush($newBlog);
@@ -112,15 +106,17 @@ class BlogListener extends ContainerAware
                 ->setTitle($post->getTitle())
                 ->setContent($post->getContent())
                 ->setAuthor($post->getAuthor())
+                ->setStatus($post->getStatus())
                 ->setBlog($newBlog)
             ;
 
-            $postTags = $tagManager->getTags($post);
+            $newTags = $post->getTags();
+            foreach ($newTags as $tag) {
+                $newPost->addTag($tag);
+            }
 
             $entityManager->persist($newPost);
             $entityManager->flush($newPost);
-
-            $tagManager->addTags($postTags, $newPost);
 
             foreach ($post->getComments() as $comment) {
                 /** @var \Icap\BlogBundle\Entity\Comment $newComment */
