@@ -55,7 +55,7 @@
     $('.hometab-link').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
-        var homeTabId = $(this).attr('hometab-id');
+        var homeTabId = $(this).parents('.hometab-element').attr('hometab-id');
 
         window.location = Routing.generate(
             'claro_display_workspace_home_tabs',
@@ -67,17 +67,13 @@
         );
     });
 
-    $('.admin-hometab-visibility-btn').click(function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-    });
-
     $('.hometab-visibility-btn').on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
 
         var visibilityBtn = $(this);
-        var homeTabConfigId = visibilityBtn.attr('hometab-config-id');
+        currentElement = visibilityBtn.parents('.hometab-element');
+        var homeTabConfigId = currentElement.attr('hometab-config-id');
         var visible = (visibilityBtn.attr('visiblility-value')).trim();
         var newVisible = (visible === 'visible') ? 'invisible' : 'visible';
 
@@ -92,12 +88,12 @@
                     visibilityBtn.attr('visiblility-value', 'visible')
                     visibilityBtn.removeClass('icon-eye-close');
                     visibilityBtn.addClass('icon-eye-open');
-                    visibilityBtn.parent().parent().removeClass('toggle-visible');
+                    currentElement.removeClass('toggle-visible');
                 } else {
                     visibilityBtn.attr('visiblility-value', 'invisible')
                     visibilityBtn.removeClass('icon-eye-open');
                     visibilityBtn.addClass('icon-eye-close');
-                    visibilityBtn.parent().parent().addClass('toggle-visible');
+                    currentElement.addClass('toggle-visible');
                 }
             }
         });
@@ -107,9 +103,9 @@
         e.preventDefault();
         e.stopPropagation();
 
-        currentElement = $(this).parent().parent();
-        currentHomeTabId = $(this).parent().attr('hometab-id');
-        currentHomeTabOrder = $(this).parent().attr('hometab-order');
+        currentElement = $(this).parents('.hometab-element');
+        currentHomeTabId = currentElement.attr('hometab-id');
+        currentHomeTabOrder = currentElement.attr('hometab-order');
         $('#delete-hometab-validation-box').modal('show');
     });
 
@@ -117,7 +113,8 @@
         e.preventDefault();
         e.stopPropagation();
 
-        currentHomeTabId = $(this).parent().attr('hometab-id');
+        currentElement = $(this).parents('.hometab-element');
+        currentHomeTabId = currentElement.attr('hometab-id');
 
         $.ajax({
             url: Routing.generate(

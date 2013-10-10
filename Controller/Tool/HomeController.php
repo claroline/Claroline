@@ -76,13 +76,47 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/widget/form/{widgetInstance}",
-     *     name="claro_widget_configuration",
+     *     "/desktop/widget/form/{widgetInstance}",
+     *     name="claro_desktop_widget_configuration",
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
+     *
+     * Asks a widget to render its configuration page for desktop.
+     *
+     * @param WidgetInstance $widgetInstance
+     *
+     * @return Response
+     */
+    public function getDesktopWidgetFormConfigurationAction(
+        WidgetInstance $widgetInstance
+    )
+    {
+        $this->checkUserAccess();
+        $user = $this->securityContext->getToken()->getUser();
+        $this->checkUserAccessForWidgetInstance($widgetInstance, $user);
 
-     * @EXT\Template("ClarolineCoreBundle:Widget:config_simple_text_form.html.twig")
+        $event = $this->get('claroline.event.event_dispatcher')->dispatch(
+            "widget_{$widgetInstance->getWidget()->getName()}_configuration",
+            'ConfigureWidget',
+            array($widgetInstance)
+        );
+
+        return new Response($event->getContent());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/{workspaceId}/widget/form/{widgetInstance}",
+     *     name="claro_workspace_widget_configuration",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
      *
      * Asks a widget to render its configuration page for a workspace.
      *
@@ -90,8 +124,14 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function getWidgetFormConfigurationAction(WidgetInstance $widgetInstance)
+    public function getWorkspaceWidgetFormConfigurationAction(
+        WidgetInstance $widgetInstance,
+        AbstractWorkspace $workspace
+    )
     {
+        $this->checkWorkspaceAccess($workspace);
+        $this->checkWorkspaceAccessForWidgetInstance($widgetInstance, $workspace);
+
         $event = $this->get('claroline.event.event_dispatcher')->dispatch(
             "widget_{$widgetInstance->getWidget()->getName()}_configuration",
             'ConfigureWidget',

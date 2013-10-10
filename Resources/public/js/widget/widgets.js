@@ -36,8 +36,8 @@
     }
 
     $('.widget-delete-btn').click(function () {
-        currentElement = $(this).parent().parent().parent().parent();
-        currentWidgetHomeTabConfigId = $(this).parent().attr('widget-hometab-config-id');
+        currentElement = $(this).parents('.widget-instance-panel');
+        currentWidgetHomeTabConfigId = currentElement.attr('widget-hometab-config-id');
         $('#delete-widget-hometab-validation-box').modal('show');
     });
 
@@ -72,8 +72,8 @@
 
     $('.widget-visibility-btn').on('click', function () {
         var visibilityBtn = $(this);
-        currentElement = visibilityBtn.parent().parent().parent().parent();
-        currentWidgetHomeTabConfigId = visibilityBtn.parent().attr('widget-hometab-config-id');
+        currentElement = visibilityBtn.parents('.widget-instance-panel');
+        currentWidgetHomeTabConfigId = currentElement.attr('widget-hometab-config-id');
         var visible = visibilityBtn.attr('visiblility-value');
         var newVisible = (visible === 'visible') ? 'invisible' : 'visible';
         var route;
@@ -101,20 +101,20 @@
                     visibilityBtn.attr('visiblility-value', 'visible')
                     visibilityBtn.removeClass('icon-eye-close');
                     visibilityBtn.addClass('icon-eye-open');
-                    visibilityBtn.parent().parent().parent().parent().removeClass('toggle-visible');
+                    currentElement.removeClass('toggle-visible');
                 } else {
                     visibilityBtn.attr('visiblility-value', 'invisible')
                     visibilityBtn.removeClass('icon-eye-open');
                     visibilityBtn.addClass('icon-eye-close');
-                    visibilityBtn.parent().parent().parent().parent().addClass('toggle-visible');
+                    currentElement.addClass('toggle-visible');
                 }
             }
         });
     });
 
     $('#widgets-list-panel').on('click', '.widget-order-up', function () {
-        currentElement = $(this).parent().parent().parent().parent().parent();
-        currentWidgetHomeTabConfigId = $(this).parent().parent().attr('widget-hometab-config-id');
+        currentElement = $(this).parents('.widget-instance-panel');
+        currentWidgetHomeTabConfigId = currentElement.attr('widget-hometab-config-id');
         var route;
 
         if (homeTabType === 'desktop') {
@@ -155,8 +155,8 @@
     });
 
     $('#widgets-list-panel').on('click', '.widget-order-down', function () {
-        currentElement = $(this).parent().parent().parent().parent().parent();
-        currentWidgetHomeTabConfigId = $(this).parent().parent().attr('widget-hometab-config-id');
+        currentElement = $(this).parents('.widget-instance-panel');
+        currentWidgetHomeTabConfigId = currentElement.attr('widget-hometab-config-id');
         var route;
 
         if (homeTabType === 'desktop') {
@@ -197,8 +197,8 @@
     });
 
     $('.widget-instance-rename').on('click', function () {
-        currentElement = $(this).parent().parent().parent().parent();
-        currentWidgetInstanceId = $(this).parent().attr('widget-instance-id');
+        currentElement = $(this).parents('.widget-instance-panel');
+        currentWidgetInstanceId = currentElement.attr('widget-instance-id');
         var route;
 
         if (homeTabType === 'desktop') {
@@ -260,16 +260,31 @@
     });
 
     $('.widget-instance-config').on('click', function () {
-        currentElement = $(this).parent().parent().parent().parent();
-        currentWidgetInstanceId = $(this).parent().attr('widget-instance-id');
+        var configButton = $(this);
+        currentElement = configButton.parents('.widget-instance-panel');
+        currentWidgetInstanceId = currentElement.attr('widget-instance-id');
+        var route;
+
+        if (homeTabType === 'desktop') {
+            route = Routing.generate(
+                'claro_desktop_widget_configuration',
+                {'widgetInstance': currentWidgetInstanceId}
+            );
+        } else {
+            route = Routing.generate(
+                'claro_workspace_widget_configuration',
+                {
+                    'widgetInstance': currentWidgetInstanceId,
+                    'workspaceId': workspaceId
+                }
+            );
+        }
 
         $.ajax({
-            url: Routing.generate(
-                'claro_widget_configuration',
-                {'widgetInstance': currentWidgetInstanceId}
-            ),
+            url: route,
             type: 'GET',
             success: function (datas) {
+                configButton.addClass('hide');
                 var widgetViewElement = currentElement.find('.widget-instance-view');
                 var widgetEditionElement = currentElement.find('.widget-instance-edition');
                 widgetViewElement.addClass('hide');
@@ -284,10 +299,10 @@
         });
     });
 
-    // Click on OK button of the configuration Widget form modal
-    $('body').on(
+    // Click on OK button of the configuration Widget form
+    $('#widgets-list-panel').on(
         'submit',
-        '#widgets-list-panel > .panel > .collapse-widget > .widget-instance-edition > form',
+        '.widget-instance-edition > form',
         function(e) {
             e.stopImmediatePropagation();
             e.preventDefault();
@@ -295,8 +310,9 @@
             var form = e.currentTarget;
             var action = $(e.currentTarget).attr('action');
             var formData = new FormData(form);
-            var widgetInstanceId = $(this).parent().parent().parent().attr('widget-instance-id');
-            var widgetElement = $(this).parent().parent();
+            var widgetElement = $(this).parents('.widget-instance-panel');
+            var widgetInstanceId = widgetElement.attr('widget-instance-id');
+            var configButton = widgetElement.find('.widget-instance-config');
             var widgetViewElement = widgetElement.find('.widget-instance-view');
             var widgetEditionElement = widgetElement.find('.widget-instance-edition');
 
@@ -320,6 +336,7 @@
                                     widgetEditionElement.empty();
                                     widgetViewElement.html(datas);
                                     widgetViewElement.removeClass('hide');
+                                    configButton.removeClass('hide');
                                 }
                             });
                             break;
@@ -331,19 +348,21 @@
         }
     );
 
-    // Click on CANCEL button of the configuration Widget form modal
-    $('body').on(
+    // Click on CANCEL button of the configuration Widget form
+    $('#widgets-list-panel').on(
         'click',
-        '#widgets-list-panel > .panel > .collapse-widget > .widget-instance-edition > form > .panel-footer > a > button',
+        '.claro-widget-form-cancel',
         function (e) {
             e.stopImmediatePropagation();
             e.preventDefault();
-            var widgetElement = $(this).parent().parent().parent().parent().parent();
+            var widgetElement = $(this).parents('.widget-instance-panel');
+            var configButton = widgetElement.find('.widget-instance-config');
             var widgetViewElement = widgetElement.find('.widget-instance-view');
             var widgetEditionElement = widgetElement.find('.widget-instance-edition');
             widgetEditionElement.addClass('hide');
             widgetEditionElement.empty();
             widgetViewElement.removeClass('hide');
+            configButton.removeClass('hide');
         }
     );
 
