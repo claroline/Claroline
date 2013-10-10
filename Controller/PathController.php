@@ -520,7 +520,8 @@ class PathController extends Controller
         $manager->flush();
 
         return new Response(
-            $new_path->getId()
+            $resourceNode->getId()
+
         );
     }
 
@@ -556,7 +557,7 @@ class PathController extends Controller
             $manager->flush();
 
             return new Response(
-                $path->getId()
+                $resourceNode->getId()
             );
         }
         else {

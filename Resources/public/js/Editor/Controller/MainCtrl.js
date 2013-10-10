@@ -15,6 +15,11 @@ function MainCtrl($scope, $http, $q, $route, $location, $modal, HistoryFactory, 
 
     $scope.alerts = AlertFactory.getAlerts();
     $scope.path = null;
+
+    // Init placeholderX
+    $scope.placeholderName = PathFactory.getPlaceholderName();
+    $scope.placeholderDescription = PathFactory.getPlaceholderDescription();
+
     $scope.initPath = function(path) {
         $scope.path = path;
 
@@ -144,4 +149,5 @@ function MainCtrl($scope, $http, $q, $route, $location, $modal, HistoryFactory, 
         }
 
     };
+
 }
