@@ -104,8 +104,9 @@ class Updater020000
            $isAdmin = $row['parent_id'] == NULL ? 'true': 'false';
            $wsId = $row['workspace_id'] ? $row['workspace_id']: 'null';
            $userId = $row['user_id'] ? $row['user_id']: 'null';
+           $name = $cn->quote($this->container->get('translator')->trans($row['widget_name'], array(), 'widget'));
            $query = "INSERT INTO claro_widget_instance (workspace_id, user_id, widget_id, is_admin, is_desktop, name)
-               VALUES ({$wsId}, {$userId}, {$row['widget_id']}, {$isAdmin}, {$row['is_desktop']}, '{$row['widget_name']}' )";
+               VALUES ({$wsId}, {$userId}, {$row['widget_id']}, {$isAdmin}, {$row['is_desktop']}, \"{$name}\" )";
            $cn->query($query);
         }
     }
