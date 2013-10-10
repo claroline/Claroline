@@ -70,6 +70,7 @@ class DesktopController extends Controller
         $widgets = array();
         $configs = array();
         $lastWidgetOrder = 1;
+        $isLockedHomeTab = false;
 
         $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
 
