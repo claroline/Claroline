@@ -1,0 +1,20 @@
+{% for heritedResourceName,heritedResource  in heritedResources %}
+	<div class="panel panel-default">
+		<div class="panel-heading">Héritées de <strong>{{ heritedResourceName }}</strong></div>
+		<div class="panel-body">
+		{% for heritedResourc  in heritedResource %}
+		    {% if heritedResourc.id %}
+		        <li> 
+		             <a target="_blank" href="{{ path('claro_resource_open', {'resourceType': heritedResourc.resourceType.name, 'node': heritedResourc.id })  }}?_mode=path">{{ heritedResourc.name }}</a>
+		        </li>
+		    {% endif %}
+		{% endfor %}
+		</div>
+	</div>
+{% endfor %}
+	 
+
+
+  
+ 
+ 

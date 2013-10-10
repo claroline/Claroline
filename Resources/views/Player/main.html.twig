@@ -9,6 +9,7 @@
 {% endblock %}
 
 {% block content %}
+    <!--
     <a class="btn btn-default btn-templates" pageslide="left" ps-speed="0.5" href="#resources-sidebar">
         <span class="icon-heart"></span> Ressources
     </a>
@@ -17,8 +18,8 @@
         <a id="resources-sidebar-close" href="#" class="btn btn-default btn-xs pull-right"><i class="icon-remove"></i></a>
         <div ng-include="webDir + 'js/Resources/Partial/resource-sidebar.html'"></div>
     </div>
-
-
+    -->
+    
     <div ng-cloak class="col-md-12 section-content" ng-app="playerApp">
         <div class="panel panel-default panel-path-editor" ng-controller="MainCtrl">
             <div class="panel-heading">
@@ -34,34 +35,33 @@
                 <div class="row" id="step-map">
                     <div id="step-map-body" data-status="closed">
                         <table id="smallTree" class="table">
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        {% if step.parent.resourceNode.id %}
-                                            <a class="btn btn-default btn-block btn-lg" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.parent.resourceNode.id }) }}">Revenir sur <strong>{{step.parent.resourceNode.name}}</strong> <span class="icon-arrow-left"></span></a> 
-                                        {% else %}
-                                            {# <a class="btn btn-success btn-block btn-lg" disabled=disabled href="#">Début du parcours</a> #}
-                                        {% endif %}
-                                    </td>
-                                    <td class="text-center">
-                                        <a class="btn btn-primary btn-lg btn-block" disabled=disabled href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.resourceNode.id }) }}">Position courante : <strong>{{step.resourceNode.name}}</strong></a>
-                                    </td>
-                                    <td>
-
-                                    {% if children %}
-                                        <div >
-                                            {% for child in children %}
-                                                <div class="container">
-                                                   <a class="btn btn-default btn-block btn-lg" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : child.resourceNode.id }) }}"><span class="icon-arrow-right"></span> {{child.resourceNode.name}}</a>
-                                                </div>
-                                             {% endfor %}
+                        <tbody>
+                        <tr>
+                            <td>
+                                {% if step.parent.resourceNode.id %}
+                                    <a class="btn btn-default btn-block btn-lg" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.parent.resourceNode.id }) }}">Revenir sur <strong>{{step.parent.resourceNode.name}}</strong> <span class="icon-arrow-left"></span></a> 
+                                {% else %}
+                                    {# <a class="btn btn-success btn-block btn-lg" disabled=disabled href="#">Début du parcours</a> #}
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <a class="btn btn-primary btn-lg btn-block" disabled=disabled href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.resourceNode.id }) }}">Position courante : <strong>{{step.resourceNode.name}}</strong></a>
+                            </td>
+                            <td>
+                            {% if children %}
+                                <div >
+                                    {% for child in children %}
+                                        <div class="container">
+                                           <a class="btn btn-default btn-block btn-lg" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : child.resourceNode.id }) }}"><span class="icon-arrow-right"></span> {{child.resourceNode.name}}</a>
                                         </div>
-                                    {% else %}
-                                            {# <a class="btn btn-danger pull-right btn-lg btn-block" disabled=disabled href="#">Fin du parcours</a>  #}
-                                    {% endif %}
-                                    </td>
-                                </tr>
-                            </tbody>
+                                     {% endfor %}
+                                </div>
+                            {% else %}
+                                    {# <a class="btn btn-danger pull-right btn-lg btn-block" disabled=disabled href="#">Fin du parcours</a>  #}
+                            {% endif %}
+                            </td>
+                        </tr>
+                        </tbody>
                         </table>
                     </div>
                     <div id="step-map-buttons">
@@ -73,22 +73,33 @@
                         
                 <div class="row">
                     <div class="col-md-3">
-                        <h3><i class="icon-briefcase"></i> Ressources ({{ resources|length }})</h3>
-                        <ul>
-                        {% for resource in resources %}
-                            {% if resource.id %}
-                                <li> 
-                                     <a target="_blank" href="{{ path('claro_resource_open', {'resourceType': resource.resourceType.name, 'node': resource.id })  }}?_mode=path">{{ resource.name }}</a>
-                                </li>
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><i class="icon-briefcase"></i> Ressources</div>
+                            <div class="panel-body">
+                                <input type="hidden" id="step-id" value="{{ path('innova_herited_resources', {stepId: step.id}) }}"/>
+                                <div id="herited-resources"></div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">Locales</div>
+                                    <div class="panel-body">
+                                        {% for resource in resources %}
+                                            {% if resource.id %}
+                                                <li> 
+                                                     <a target="_blank" href="{{ path('claro_resource_open', {'resourceType': resource.resourceType.name, 'node': resource.id })  }}?_mode=path">{{ resource.name }}</a>
+                                                </li>
 
-                            {% endif %}
-                        {% endfor %}
-                        </ul>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-6">
-                        <h1 class="text-center">{{ step.resourceNode.name }}</h1>
                         <div class="text-center">
-                           <img src="{{ asset('bundles/innovapath/images/steps/' ~  step.image) }}"/>
+                            <h1>{{ step.resourceNode.name }}</h1>
+                            {% if step.image %}
+                                <img src="{{ asset('bundles/innovapath/images/steps/' ~  step.image) }}"/>
+                            {% endif %}
                         </div>
                         <p>Durée :  {{ step.duration|date('H:i:s') }} </p>
                         <p>Consignes : {{ step.instructions }}</p>

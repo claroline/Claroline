@@ -7,6 +7,9 @@ function StepModalCtrl($scope, $modal, $modalInstance, PathFactory, StepFactory,
     // Store symfony base partials route
     $scope.webDir = EditorApp.webDir;
     
+    // Store removed resources to remove their references from path when step will be saved
+    var removedResources = [];
+    
     var localStep = jQuery.extend(true, {}, StepFactory.getStep()); // Create a copy to not affect original data before user save
 
     $scope.stepWho = StepFactory.getWhoList();
@@ -35,7 +38,7 @@ function StepModalCtrl($scope, $modal, $modalInstance, PathFactory, StepFactory,
      * @returns void
      */
     $scope.save = function(formStep) {
-        $modalInstance.close(formStep);
+        $modalInstance.close(formStep, removedResources);
     };
 
     /**
@@ -114,12 +117,10 @@ function StepModalCtrl($scope, $modal, $modalInstance, PathFactory, StepFactory,
      */
     $scope.removeResource = function(resource) {
         // Search resource to remove
-        for (var i = 0; i < $scope.formStep.resources.length; i++) {
-            if (resource.id === $scope.formStep.resources[i].id) {
-                $scope.formStep.resources.splice(i, 1);
-                break;
-            }
-        }
+        StepFactory.removeResource($scope.formStep, resource.id);
+        
+        // Store removed resource
+        removedResources.push(resource.id);
     };
 
     /**

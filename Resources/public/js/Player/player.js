@@ -1,4 +1,5 @@
-$( document ).ready(function() {	
+$( document ).ready(function() {
+	/* Gestion de la visualisation de la progression */	
 	$("#step-map-body").hide();
 			 
 	$( "#step-map-open").click(function() {
@@ -18,4 +19,15 @@ $( document ).ready(function() {
 			$("#step-map-open a").addClass("icon-chevron-down");
 		}
 	});
+
+	/* AJAX - Gestion des ressources héritées */
+	var url = $("#step-id").val();
+	$.ajax({
+	    type: "GET",
+	    url: url,
+        success: function(heritedResources){
+        	$("#herited-resources").html(heritedResources);
+        }
+	});
+
 });

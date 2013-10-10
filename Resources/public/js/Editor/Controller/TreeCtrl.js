@@ -124,7 +124,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
     };
 
     /**
-     *
+     * Add a new sibling to specified step
      * @returns void
      */
     $scope.addSibling = function(step) {
@@ -180,11 +180,18 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
         });
 
         // Process modal results
-        modalInstance.result.then(function(step) {
+        modalInstance.result.then(function(step, removedResources) {
             if (step) {
                 // Inject edited step in path
                 PathFactory.replaceStep(step);
 
+                if (removedResources.length !== 0) {
+                    // There are resources to remove from path
+                    for (var i = 0; i < removedResources.length; i++) {
+                        PathFactory.removeResource(removedResource[i]);
+                    }
+                }
+                
                 // Update history
                 HistoryFactory.update($scope.path);
                 $scope.updatePreviewStep();
@@ -193,7 +200,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
     };
 
     /**
-     *
+     * Open modal to modify specified resource properties
      * @returns void
      */
     $scope.editResource = function(resourceType, resource) {
@@ -242,23 +249,17 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
     };
 
     /**
-     *
+     * Delete selected resource from path
      * @returns void
      */
     $scope.removeResource = function(resource) {
-        // Search resource to remove
-        for (var i = 0; i < $scope.previewStep.resources.length; i++) {
-            if (resource.id === $scope.previewStep.resources[i].id) {
-                $scope.previewStep.resources.splice(i, 1);
+        StepFactory.removeResource($scope.previewStep, resource.id);
+        
+        // Loop through path to remove reference to resource
+        PathFactory.removeResource(resource.id);
 
-                // Loop through
-
-
-                // Update history
-                HistoryFactory.update($scope.path);
-                break;
-            }
-        }
+        // Update history
+        HistoryFactory.update($scope.path);
     };
 
     /**
