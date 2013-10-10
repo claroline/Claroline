@@ -69,7 +69,8 @@ article .highlight {
 .comment_list li .panel-body p {
   margin-bottom: 0;
 }
-#icap_blog_post_form label[for=icap_blog_post_form_content] {
+#icap_blog_post_form label[for=icap_blog_post_form_content],
+#icap_blog_post_form label[for=icap_blog_post_form_title] {
   float: none;
 }
 #icap_blog_post_form .form-actions {

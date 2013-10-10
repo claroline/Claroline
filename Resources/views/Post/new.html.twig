@@ -1,9 +1,27 @@
 {% extends 'IcapBlogBundle::layout.html.twig' %}
 
+{% form_theme form _self %}
+
+{% block form_row %}
+    {% spaceless %}
+        <div class="form-group{% if errors|length > 0 %} has-error{% endif %}">
+            {{ form_label(form, label|default(null)) }}
+            {% set ctrl_width = theme_options.control_width is defined ? theme_options.control_width : 'col-md-10' %}
+            <div class="{{ ctrl_width }}">
+                {{ form_errors(form) }}
+                {% if help is defined and help %}
+                    <div class="help-block">{{ help }}</div>
+                {% endif %}
+                {{ form_widget(form) }}
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock form_row %}
+
 {% block title %}{{ _resource.resourceNode.getName() }} - {{ "add_new_post"|trans({}, 'icap_blog') }}{% endblock %}
 
 {% block blog_content %}
-    <form action="{{ _path('icap_blog_post_new', {'blogId':_resource.getId()}) }}" method="post" {{ form_enctype(form) }} class="well" id="new_post_form">
+    <form action="{{ _path('icap_blog_post_new', {'blogId':_resource.getId()}) }}" method="post" {{ form_enctype(form) }} class="well" id="new_post_form" novalidate>
         <legend>{{ "add_new_post"|trans({}, 'icap_blog') }}</legend>
         {{ form_widget(form) }}
         <div class="form-actions">

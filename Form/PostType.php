@@ -5,6 +5,7 @@ namespace Icap\BlogBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class PostType extends AbstractType
 {
@@ -12,7 +13,10 @@ class PostType extends AbstractType
     {
         $builder
             ->add('title', 'text', array(
-                    'theme_options' => array('control_width' => 'col-md-12')
+                    'theme_options' => array('control_width' => 'col-md-12'),
+                    'constraints' => new Assert\NotBlank(array(
+                        'message' => 'blog_post_need_title'
+                    ))
                 )
             )
             ->add('content', 'textarea', array(
@@ -21,7 +25,10 @@ class PostType extends AbstractType
                         'data-theme' => 'medium',
                         'style'      => 'height: 300px;'
                     ),
-                    'theme_options' => array('control_width' => 'col-md-12')
+                    'theme_options' => array('control_width' => 'col-md-12'),
+                    'constraints' => new Assert\NotBlank(array(
+                        'message' => 'blog_post_need_content'
+                    ))
                 )
             )
             ->add('tags', 'tags')
