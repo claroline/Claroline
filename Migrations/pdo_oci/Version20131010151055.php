@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\oci8;
+namespace Claroline\CoreBundle\Migrations\pdo_oci;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/10/10 02:57:34
+ * Generation date: 2013/10/10 03:10:55
  */
-class Version20131010145733 extends AbstractMigration
+class Version20131010151055 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -222,6 +222,13 @@ class Version20131010145733 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE claro_user 
+            ADD (
+                picture VARCHAR2(255) DEFAULT NULL, 
+                description CLOB DEFAULT NULL
+            )
+        ");
+        $this->addSql("
             ALTER TABLE claro_badge 
             ADD (
                 workspace_id NUMBER(10) DEFAULT NULL, 
@@ -307,6 +314,10 @@ class Version20131010145733 extends AbstractMigration
         ");
         $this->addSql("
             DROP INDEX IDX_74F39F0F82D40A1F
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            DROP (picture, description)
         ");
         $this->addSql("
             ALTER TABLE claro_widget 

@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/10/10 02:57:34
+ * Generation date: 2013/10/10 03:10:56
  */
-class Version20131010145733 extends AbstractMigration
+class Version20131010151055 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -105,6 +105,14 @@ class Version20131010145733 extends AbstractMigration
             ADD CONSTRAINT FK_C389EBCCAB7B5A55 FOREIGN KEY (widgetInstance_id) 
             REFERENCES claro_widget_instance (id) 
             ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            ADD picture NVARCHAR(255)
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            ADD description VARCHAR(MAX)
         ");
         $this->addSql("
             ALTER TABLE claro_badge 
@@ -210,6 +218,14 @@ class Version20131010145733 extends AbstractMigration
             ALTER TABLE claro_badge 
             DROP CONSTRAINT IDX_74F39F0F82D40A1F ELSE 
             DROP INDEX IDX_74F39F0F82D40A1F ON claro_badge
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            DROP COLUMN picture
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            DROP COLUMN description
         ");
         $this->addSql("
             ALTER TABLE claro_widget 

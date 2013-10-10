@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\mysqli;
+namespace Claroline\CoreBundle\Migrations\drizzle_pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/10/10 02:57:34
+ * Generation date: 2013/10/10 03:10:56
  */
-class Version20131010145733 extends AbstractMigration
+class Version20131010151055 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -18,21 +18,21 @@ class Version20131010145733 extends AbstractMigration
             CREATE TABLE claro_log_widget_config (
                 id INT AUTO_INCREMENT NOT NULL, 
                 amount INT NOT NULL, 
-                restrictions LONGTEXT DEFAULT NULL COMMENT '(DC2Type:simple_array)', 
+                restrictions TEXT DEFAULT NULL COMMENT '(DC2Type:simple_array)', 
                 widgetInstance_id INT DEFAULT NULL, 
-                INDEX IDX_C16334B2AB7B5A55 (widgetInstance_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                PRIMARY KEY(id), 
+                INDEX IDX_C16334B2AB7B5A55 (widgetInstance_id)
+            )
         ");
         $this->addSql("
             CREATE TABLE claro_badge_rule (
                 id INT AUTO_INCREMENT NOT NULL, 
                 badge_id INT NOT NULL, 
-                occurrence SMALLINT NOT NULL, 
+                occurrence INT NOT NULL, 
                 action VARCHAR(255) NOT NULL, 
-                INDEX IDX_805FCB8FF7A2C2FC (badge_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                PRIMARY KEY(id), 
+                INDEX IDX_805FCB8FF7A2C2FC (badge_id)
+            )
         ");
         $this->addSql("
             CREATE TABLE claro_widget_instance (
@@ -40,23 +40,23 @@ class Version20131010145733 extends AbstractMigration
                 workspace_id INT DEFAULT NULL, 
                 user_id INT DEFAULT NULL, 
                 widget_id INT NOT NULL, 
-                is_admin TINYINT(1) NOT NULL, 
-                is_desktop TINYINT(1) NOT NULL, 
+                is_admin BOOLEAN NOT NULL, 
+                is_desktop BOOLEAN NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
+                PRIMARY KEY(id), 
                 INDEX IDX_5F89A38582D40A1F (workspace_id), 
                 INDEX IDX_5F89A385A76ED395 (user_id), 
-                INDEX IDX_5F89A385FBE885E2 (widget_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                INDEX IDX_5F89A385FBE885E2 (widget_id)
+            )
         ");
         $this->addSql("
             CREATE TABLE claro_simple_text_widget_config (
                 id INT AUTO_INCREMENT NOT NULL, 
-                content LONGTEXT NOT NULL, 
+                content TEXT NOT NULL, 
                 widgetInstance_id INT DEFAULT NULL, 
-                INDEX IDX_C389EBCCAB7B5A55 (widgetInstance_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                PRIMARY KEY(id), 
+                INDEX IDX_C389EBCCAB7B5A55 (widgetInstance_id)
+            )
         ");
         $this->addSql("
             ALTER TABLE claro_log_widget_config 
@@ -95,9 +95,14 @@ class Version20131010145733 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE claro_user 
+            ADD picture VARCHAR(255) DEFAULT NULL, 
+            ADD description TEXT DEFAULT NULL
+        ");
+        $this->addSql("
             ALTER TABLE claro_badge 
             ADD workspace_id INT DEFAULT NULL, 
-            ADD automatic_award TINYINT(1) DEFAULT NULL
+            ADD automatic_award BOOLEAN DEFAULT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_badge 
@@ -109,8 +114,8 @@ class Version20131010145733 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_widget 
-            ADD is_displayable_in_workspace TINYINT(1) NOT NULL, 
-            ADD is_displayable_in_desktop TINYINT(1) NOT NULL
+            ADD is_displayable_in_workspace BOOLEAN NOT NULL, 
+            ADD is_displayable_in_desktop BOOLEAN NOT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_widget_home_tab_config 
@@ -172,6 +177,11 @@ class Version20131010145733 extends AbstractMigration
             ALTER TABLE claro_badge 
             DROP workspace_id, 
             DROP automatic_award
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            DROP picture, 
+            DROP description
         ");
         $this->addSql("
             ALTER TABLE claro_widget 

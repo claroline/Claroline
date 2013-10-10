@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/10/10 02:57:33
+ * Generation date: 2013/10/10 03:10:55
  */
-class Version20131010145733 extends AbstractMigration
+class Version20131010151055 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -71,6 +71,14 @@ class Version20131010145733 extends AbstractMigration
             CREATE INDEX IDX_C389EBCCAB7B5A55 ON claro_simple_text_widget_config (widgetInstance_id)
         ");
         $this->addSql("
+            ALTER TABLE claro_user 
+            ADD COLUMN picture VARCHAR(255) DEFAULT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            ADD COLUMN description CLOB DEFAULT NULL
+        ");
+        $this->addSql("
             CREATE TEMPORARY TABLE __temp__claro_badge AS 
             SELECT id, 
             version, 
@@ -117,9 +125,6 @@ class Version20131010145733 extends AbstractMigration
             ADD COLUMN is_displayable_in_desktop BOOLEAN NOT NULL
         ");
         $this->addSql("
-            DROP INDEX IDX_D48CC23EFBE885E2
-        ");
-        $this->addSql("
             DROP INDEX IDX_D48CC23E7D08FA9E
         ");
         $this->addSql("
@@ -129,10 +134,13 @@ class Version20131010145733 extends AbstractMigration
             DROP INDEX IDX_D48CC23E82D40A1F
         ");
         $this->addSql("
+            DROP INDEX IDX_D48CC23EFBE885E2
+        ");
+        $this->addSql("
             CREATE TEMPORARY TABLE __temp__claro_widget_home_tab_config AS 
             SELECT id, 
-            workspace_id, 
             home_tab_id, 
+            workspace_id, 
             user_id, 
             widget_order, 
             type, 
@@ -146,8 +154,8 @@ class Version20131010145733 extends AbstractMigration
         $this->addSql("
             CREATE TABLE claro_widget_home_tab_config (
                 id INTEGER NOT NULL, 
-                workspace_id INTEGER DEFAULT NULL, 
                 home_tab_id INTEGER NOT NULL, 
+                workspace_id INTEGER DEFAULT NULL, 
                 user_id INTEGER DEFAULT NULL, 
                 widget_instance_id INTEGER DEFAULT NULL, 
                 widget_order VARCHAR(255) NOT NULL, 
@@ -155,11 +163,11 @@ class Version20131010145733 extends AbstractMigration
                 is_visible BOOLEAN NOT NULL, 
                 is_locked BOOLEAN NOT NULL, 
                 PRIMARY KEY(id), 
-                CONSTRAINT FK_D48CC23E82D40A1F FOREIGN KEY (workspace_id) 
-                REFERENCES claro_workspace (id) 
-                ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE, 
                 CONSTRAINT FK_D48CC23E7D08FA9E FOREIGN KEY (home_tab_id) 
                 REFERENCES claro_home_tab (id) 
+                ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE, 
+                CONSTRAINT FK_D48CC23E82D40A1F FOREIGN KEY (workspace_id) 
+                REFERENCES claro_workspace (id) 
                 ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE, 
                 CONSTRAINT FK_D48CC23EA76ED395 FOREIGN KEY (user_id) 
                 REFERENCES claro_user (id) 
@@ -171,12 +179,12 @@ class Version20131010145733 extends AbstractMigration
         ");
         $this->addSql("
             INSERT INTO claro_widget_home_tab_config (
-                id, workspace_id, home_tab_id, user_id, 
+                id, home_tab_id, workspace_id, user_id, 
                 widget_order, type, is_visible, is_locked
             ) 
             SELECT id, 
-            workspace_id, 
             home_tab_id, 
+            workspace_id, 
             user_id, 
             widget_order, 
             type, 
@@ -248,6 +256,90 @@ class Version20131010145733 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE __temp__claro_badge
+        ");
+        $this->addSql("
+            DROP INDEX UNIQ_EB8D2852F85E0677
+        ");
+        $this->addSql("
+            DROP INDEX UNIQ_EB8D28525126AC48
+        ");
+        $this->addSql("
+            DROP INDEX UNIQ_EB8D285282D40A1F
+        ");
+        $this->addSql("
+            CREATE TEMPORARY TABLE __temp__claro_user AS 
+            SELECT id, 
+            workspace_id, 
+            first_name, 
+            last_name, 
+            username, 
+            password, 
+            salt, 
+            phone, 
+            mail, 
+            administrative_code, 
+            creation_date, 
+            reset_password, 
+            hash_time 
+            FROM claro_user
+        ");
+        $this->addSql("
+            DROP TABLE claro_user
+        ");
+        $this->addSql("
+            CREATE TABLE claro_user (
+                id INTEGER NOT NULL, 
+                workspace_id INTEGER DEFAULT NULL, 
+                first_name VARCHAR(50) NOT NULL, 
+                last_name VARCHAR(50) NOT NULL, 
+                username VARCHAR(255) NOT NULL, 
+                password VARCHAR(255) NOT NULL, 
+                salt VARCHAR(255) NOT NULL, 
+                phone VARCHAR(255) DEFAULT NULL, 
+                mail VARCHAR(255) NOT NULL, 
+                administrative_code VARCHAR(255) DEFAULT NULL, 
+                creation_date DATETIME NOT NULL, 
+                reset_password VARCHAR(255) DEFAULT NULL, 
+                hash_time INTEGER DEFAULT NULL, 
+                PRIMARY KEY(id), 
+                CONSTRAINT FK_EB8D285282D40A1F FOREIGN KEY (workspace_id) 
+                REFERENCES claro_workspace (id) 
+                ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE
+            )
+        ");
+        $this->addSql("
+            INSERT INTO claro_user (
+                id, workspace_id, first_name, last_name, 
+                username, password, salt, phone, mail, 
+                administrative_code, creation_date, 
+                reset_password, hash_time
+            ) 
+            SELECT id, 
+            workspace_id, 
+            first_name, 
+            last_name, 
+            username, 
+            password, 
+            salt, 
+            phone, 
+            mail, 
+            administrative_code, 
+            creation_date, 
+            reset_password, 
+            hash_time 
+            FROM __temp__claro_user
+        ");
+        $this->addSql("
+            DROP TABLE __temp__claro_user
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_EB8D2852F85E0677 ON claro_user (username)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_EB8D28525126AC48 ON claro_user (mail)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_EB8D285282D40A1F ON claro_user (workspace_id)
         ");
         $this->addSql("
             DROP INDEX UNIQ_76CA6C4F5E237E06

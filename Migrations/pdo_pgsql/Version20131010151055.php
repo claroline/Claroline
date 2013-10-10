@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/10/10 02:57:33
+ * Generation date: 2013/10/10 03:10:55
  */
-class Version20131010145733 extends AbstractMigration
+class Version20131010151055 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -110,6 +110,14 @@ class Version20131010145733 extends AbstractMigration
             ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
+            ALTER TABLE claro_user 
+            ADD picture VARCHAR(255) DEFAULT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            ADD description TEXT DEFAULT NULL
+        ");
+        $this->addSql("
             ALTER TABLE claro_badge 
             ADD workspace_id INT DEFAULT NULL
         ");
@@ -199,6 +207,14 @@ class Version20131010145733 extends AbstractMigration
         ");
         $this->addSql("
             DROP INDEX IDX_74F39F0F82D40A1F
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            DROP picture
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            DROP description
         ");
         $this->addSql("
             ALTER TABLE claro_widget 
