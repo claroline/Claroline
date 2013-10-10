@@ -15,7 +15,7 @@
         <ul class="nav nav-tabs tabs">
             {% for adminHomeTabConfig in adminHomeTabConfigs %}
             {% set adminHomeTab = adminHomeTabConfig.getHomeTab() %}
-            <li class="
+            <li class="hometab-element
                 {% if adminHomeTab.getId() == tabId %}
                     active
                 {% endif %}
@@ -25,8 +25,10 @@
                         hidden
                     {% endif %}
                 {% endif %}"
+                hometab-config-id="{{ adminHomeTabConfig.getId() }}"
+                hometab-id="{{ adminHomeTab.getId() }}"
             >
-                <a href="" class="hometab-link" hometab-id="{{ adminHomeTab.getId() }}">
+                <a href="" class="hometab-link">
                     {{ adminHomeTab.getName() }}
 
                     {% if adminHomeTabConfig.isLocked() %}
@@ -38,7 +40,6 @@
                             {% if withConfig == 0 %} hidden {% endif %}
                             {% if adminHomeTabConfig.isVisible() %} icon-eye-open {% else %} icon-eye-close {% endif %}"
                             visiblility-value="{% if adminHomeTabConfig.isVisible() %} visible {% else %} invisible {% endif %}"
-                            hometab-config-id="{{ adminHomeTabConfig.getId() }}"
                             id="visible-hometab-id-{{ adminHomeTab.getId() }}"
                         ></i>
                     {% endif %}
@@ -47,18 +48,17 @@
             {% endfor %}
             {% for userHomeTabConfig in userHomeTabConfigs %}
             {% set userHomeTab = userHomeTabConfig.getHomeTab() %}
-            <li class="
+            <li class="hometab-element
                 {% if userHomeTab.getId() == tabId %} active {% endif %}
                 {% if not userHomeTabConfig.isVisible() %} toggle-visible {% endif %}
                 {% if (withConfig == 0 and not userHomeTabConfig.isVisible()) %}
                     hidden
                 {% endif %}"
+                hometab-config-id="{{ userHomeTabConfig.getId() }}"
+                hometab-id="{{ userHomeTab.getId() }}"
+                hometab-order="{{ userHomeTabConfig.getTabOrder() }}"
             >
-                <a href=""
-                    class="hometab-link"
-                    hometab-id="{{ userHomeTab.getId() }}"
-                    hometab-order="{{ userHomeTabConfig.getTabOrder() }}"
-                >
+                <a href="" class="hometab-link">
                     {{ userHomeTab.getName() }}
                     <i class="toggle-visible pointer-hand hometab-rename-btn icon-edit
                         {% if withConfig == 0 %} hidden {% endif %}"
@@ -67,7 +67,6 @@
                         {% if withConfig == 0 %} hidden {% endif %}
                         {% if userHomeTabConfig.isVisible() %} icon-eye-open {% else %} icon-eye-close {% endif %}"
                         visiblility-value="{% if userHomeTabConfig.isVisible() %} visible {% else %} invisible {% endif %}"
-                        hometab-config-id="{{ userHomeTabConfig.getId() }}"
                         id="visible-hometab-id-{{ userHomeTab.getId() }}"
                     ></i>
                     <i class="toggle-visible pointer-hand hometab-delete-btn icon-trash

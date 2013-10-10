@@ -18,18 +18,17 @@
         <ul class="nav nav-tabs tabs">
             {% for workspaceHomeTabConfig in workspaceHomeTabConfigs %}
             {% set workspaceHomeTab = workspaceHomeTabConfig.getHomeTab() %}
-            <li class="
+            <li class="hometab-element
                 {% if workspaceHomeTab.getId() == tabId %} active {% endif %}
                 {% if not workspaceHomeTabConfig.isVisible() %} toggle-visible {% endif %}
                 {% if (withConfig == 0 and not workspaceHomeTabConfig.isVisible()) %}
                     hidden
                 {% endif %}"
+                hometab-config-id="{{ workspaceHomeTabConfig.getId() }}"
+                hometab-id="{{ workspaceHomeTab.getId() }}"
+                hometab-order="{{ workspaceHomeTabConfig.getTabOrder() }}"
             >
-                <a href=""
-                    class="hometab-link"
-                    hometab-id="{{ workspaceHomeTab.getId() }}"
-                    hometab-order="{{ workspaceHomeTabConfig.getTabOrder() }}"
-                >
+                <a href="" class="hometab-link">
                     {{ workspaceHomeTab.getName() }}
                     <i class="toggle-visible pointer-hand hometab-rename-btn icon-edit
                         {% if withConfig == 0 %} hidden {% endif %}"
@@ -38,7 +37,6 @@
                         {% if withConfig == 0 %} hidden {% endif %}
                         {% if workspaceHomeTabConfig.isVisible() %} icon-eye-open {% else %} icon-eye-close {% endif %}"
                         visiblility-value="{% if workspaceHomeTabConfig.isVisible() %} visible {% else %} invisible {% endif %}"
-                        hometab-config-id="{{ workspaceHomeTabConfig.getId() }}"
                         id="visible-hometab-id-{{ workspaceHomeTab.getId() }}"
                     ></i>
                     <i class="toggle-visible pointer-hand hometab-delete-btn icon-trash
