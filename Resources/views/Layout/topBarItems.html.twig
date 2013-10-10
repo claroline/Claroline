@@ -1,5 +1,5 @@
 {% macro item(name, href, icon, route, title, dropdown, badge) %}
-    <li class="{% if dropdown is not empty %}dropdown{% endif %}{{ route | default('') | compareRoute(' active') | raw }}">
+    <li class="{% if dropdown is not empty %}dropdown{% endif %}{{ route | default(' ') | compareRoute(' active') | raw }}">
         <a
             {% if dropdown is not empty %}class="pointer-hand dropdown-toggle" data-toggle="dropdown"{% endif %}
             {% if href is not empty %}href="{{ href }}"{% endif %}
@@ -103,7 +103,7 @@
         {% endif %}
         {{ topbar.item('my_agenda', path('claro_desktop_open_tool', {'toolName': 'agenda' }), 'calendar') }}
         {{ topbar.item('my_resources', path('claro_desktop_open_tool', {'toolName': 'resource_manager'}) ~ '#resources/0', 'folder-close') }}
-        {{ topbar.item('my_badges', path('claro_profile_view_badges'), 'certificate') }}
+        {{ topbar.item('my_badges', path('claro_profile_view_badges'), 'trophy') }}
         <li class="divider"></li>
         {% if isImpersonated %}
             {% set logoutPath = path('claro_desktop_open', {'_switch': '_exit'}) %}
@@ -115,4 +115,10 @@
     {% endblock dropdownLogged %}
 
 {% endblock topBar %}
+
+{% block impersonation %}
+    {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') or isImpersonated %}
+        {% render controller('ClarolineCoreBundle:Layout:renderWarningImpersonation') %}
+    {% endif %}
+{% endblock %}
 

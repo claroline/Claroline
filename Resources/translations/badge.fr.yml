@@ -1,11 +1,20 @@
 actions: 'Actions'
 badges: 'Badges'
 badge: 'Badge'
+workspace_badges: "Badge de l'espace de travail"
+day: 'jour'
+week: 'semaine'
+month: 'mois'
+year: 'année'
 back_to_badges_list: 'Retour à la liste des badges'
 back_to_users_badge: 'Retour à la liste des utilisateurs'
 back_to_my_badges: 'Retour à mes badges'
 badge_awarded_to: 'Badge attribué à'
 bagde_awarded_to_none_user: 'Badge attribué à aucun utilisateur'
+badge_awarded_on_by: 'Badge attribué le %awardingDate% par %awardingIssuer%'
+badge_awarded_automatically_on: 'Badge attribué automatiquement le %awardingDate%'
+badge_awarding_rules_not_respected: "Règle d'attribution du badge non respectées"
+actions_lead_to_badge_awarding: "Actions qui ont mené à l'attribution de ce badge"
 award_badge: 'Attribuer le badge'
 unaward: 'Désattribuer'
 badge_unaward_confirm_title: "Désattribution d'un badge"
@@ -19,6 +28,8 @@ badge_form_frTranslation: 'Traduction française'
 badge_form_enTranslation: 'Traduction anglaise'
 badge_delete_confirm_title: "Suppression d'un badge"
 badge_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer le badge <strong>%badgeName%</strong> ?'
+badge_rule_delete_confirm_title: "Suppression d'une règle"
+badge_rule_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cette règle ?'
 badge_add_success_message: 'Badge ajouté avec succès.'
 badge_add_error_message: "Erreur lors de l'ajout du badge."
 badge_delete_success_message: 'Badge supprimé avec succès.'
@@ -34,25 +45,39 @@ badge_form_description: 'Description'
 badge_form_criteria: "Critères d'obtention"
 badge_form_version: 'Version'
 badge_form_image: 'Image'
+badge_form_automatic_award: 'Attribution automatique si les règles sont respectées'
 badge_form_expired_at: "Date d'expiration"
-badge_form_change_image: "Changer l'image"
+badge_form_choose_image: "Choisir l'image du badge"
+badge_form_change_image: "Changer l'image du badge"
+badge_form_badgeRules: "Règles d'attribution"
+badge_form_execute: "Exécuter"
+badge_form_times: "fois"
+badge_form_action: "l'action"
 badge_award_form_group: 'Groupe'
 badge_award_form_user: 'Utilisateur'
 badge_expired_on_date: 'Expire le %expirationDate%'
 badge_award_info_no_group_message: "Aucun groupe sélectionné pour l'attribution"
+badge_check_state: "Conditions vérifiées"
+badge_rules_not_respected: "Règles non respectées"
+badge_rules_respected: "Règles respectées"
+badge_no_rules_check_manually: "Aucune règle, vérifier manuellement"
+badge_rules_respected_state: "Page indisponible actuellement"
 claim: 'Réclamer'
-claim_date: 'Date de la réclamation'
+claiming: "Demande d'attribution|Demandes d'attribution"
+claim_date: 'Date de la demande'
 claim_badge: 'Réclamer un badge'
-claim_badge_form: 'Formulaire de réclamation de badge'
+claim_badge_form: "Formulaire de demande d'attribution de badge"
 badge_not_found_with_name: "Aucun badge avec le nom '%badgeName%' n'a pu être retrouvé."
 badge_claim_form_badge : 'Nom du badge à réclamer'
-badge_claim_success_message: 'Réclamation de badge effectué avec succès.'
-badge_claim_error_message: 'Erreur lors de la réclamation de badge.'
-badge_already_claim_message: 'Vous avez déjà effectué une réclamation pour ce badge.'
-badge_already_award_message: 'Vous ne pouvez faire une réclamation pour un badge que vous possédez déjà.'
-badge_current_claimed_badges: '%claimedBadgeCount% réclamation de badge en cours|%claimedBadgeCount% réclamations de badge en cours'
+badge_claim_success_message: "Demande d'attribution de badge effectué avec succès."
+badge_claim_error_message: "Erreur lors de la demande d'attribution de badge."
+badge_already_claim_message: "Vous avez déjà effectué une demande d'attribution pour ce badge."
+badge_already_award_message: "Vous ne pouvez faire une demande d'attribution pour un badge que vous possédez déjà."
+badge_current_claimed_badges: "%claimedBadgeCount% demande d'attribution de badge en cours|%claimedBadgeCount% demandes d'attribution de badge en cours"
 badge_validate_award: "Valider l'attribution du badge"
+badge_validate_award_short: "Valider"
 badge_reject_award: "Refuser l'attribution du badge"
+badge_reject_award_short: "Refuser"
 badge_award_confirm_title: "Validation de l'attribution d'un badge"
 badge_award_confirm_message: "Etes-vous sûr de vouloir attribuer le badge <strong>%badgeName%</strong> à l'utilisateur <strong>%user%</strong> ?"
 badge_dont_award_confirm_title: "Refus d'attribution d'un badge"
@@ -61,3 +86,6 @@ badge_validate_award_success_message: "Validation de l'attribution du badge effe
 badge_validate_award_error_message: "Erreur lors de la validation l'attribution du badge."
 badge_reject_award_success_message: "Refus de l'attribution du badge effectuée avec succès."
 badge_reject_award_error_message: "Erreur lors du refus d'attribution du badge."
+rule: 'Règle'
+add_rule: 'Ajouter une règle'
+no_rule: 'Aucune règle'

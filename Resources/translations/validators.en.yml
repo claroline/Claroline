@@ -3,3 +3,8 @@ The name {{ name }} is already in use.: The name {{ name }} is already in use.
 'The code {{ code }} is already assigned to another workspace.': 'The code {{ code }} is already assigned to another workspace.'
 'special_char_not_allowed': 'Special characters are not allowed.'
 'Each row requires at least 5 parameters.': 'Each row requires at least 5 parameters.'
+badge_automatic_awarding_need_rules: "Awarding rules should have been defined to allow automatic awarding of the badge"
+badge_need_image: "An image must be define on the badge"
+badge_translation_need_name: "A name for this translation must be define"
+badge_translation_need_description: "A description for this translation must be define"
+badge_translation_need_criteria: "A criteria for this translation must be define"

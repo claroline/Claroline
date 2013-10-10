@@ -96,6 +96,7 @@ create_new_admin_tag: 'Create new admin tag'
 create_new_home_tab: 'Create new tab'
 create_new_tag: 'Create new tag'
 create_user: 'Create user'
+create_widget_instance: 'Create a widget'
 create_workspace: 'Create workspace'
 creation: Creation
 creation_date: 'Creation date'
@@ -283,6 +284,7 @@ new_message_alert: 'You have %count% new message(s)'
 no: 'no'
 no_email: "This email doesn't match a registered user"
 no_email: 'No email found, check the spelling'
+no_home_tab: "There is no Home tab"
 no_group: 'No group'
 no_search_results: 'Your search hasn''t returned any result.'
 no_tag: 'There is no tag'
@@ -293,6 +295,7 @@ not_allowed_message: You are not allowed to perform this action.
 note: Note
 object: Object
 ok: Ok
+only_for_workspace_creation: 'Only for workspace creation'
 open: Open
 operation_done: Operation done.
 options: Options
@@ -326,12 +329,14 @@ please_wait: 'Please wait...'
 position: Position
 private: Private
 profile_form_administrativeCode: 'Administrative code'
+profile_form_description : 'Description'
 profile_form_firstName: 'First name'
 profile_form_lastName: 'Last name'
 profile_form_mail: Mail
 profile_form_note: 'Personnal note'
 profile_form_ownedRoles: Role(s)
 profile_form_phone: Phone
+profile_form_pictureFile : 'Picture profile'
 profile_form_plainPassword_first: Password
 profile_form_plainPassword_second: Verification
 profile_form_platformRoles: Roles
@@ -356,6 +361,7 @@ remove_user_confirm_message: Are you sure you want to delete this user ?
 remove_user_s_confirm_message: Are you sure you want to delete these %count% users ?
 rename: Rename
 rename_tool: 'Rename tool'
+rename_widget_instance: 'Rename widget'
 reset: Reset
 reset_password: Reset password
 reset_password_message: 'Do you really want to reset these passwords ?'
@@ -506,6 +512,7 @@ visitor: Visitor
 warning_user_impersonation: 'You are connected as %user%.'
 warning_workspace_impersonation: 'You are connected as %role% from the workspace %workspace.'
 widget: Widget
+widget_display_form_name: Name
 widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab ?'
 widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
 widget_settings: 'Widget settings'

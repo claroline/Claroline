@@ -145,11 +145,6 @@ claro_admin_home_tab:
     prefix: admin
     type: annotation
 
-claro_admin_widget:
-    resource: "@ClarolineCoreBundle/Controller/AdministrationWidgetController.php"
-    prefix: admin
-    type: annotation
-
 claro_admin_tool:
     resource: "@ClarolineCoreBundle/Controller/Tool/AdministrationToolController.php"
     prefix: admin
@@ -235,4 +230,8 @@ claro_badge_front:
 
 claro_badge_profil:
     resource: "@ClarolineCoreBundle/Controller/Badge/ProfileController.php"
+    type:     annotation
+
+claro_badge_workspace_tool:
+    resource: "@ClarolineCoreBundle/Controller/Badge/Tool/WorkspaceController.php"
     type:     annotation
