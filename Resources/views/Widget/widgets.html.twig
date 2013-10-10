@@ -11,12 +11,13 @@
         {% set widgetHomeTabConfig = widgetDatas.config %}
         {% set widgetInstance = widgetHomeTabConfig.getWidgetInstance() %}
         {% set widget = widgetInstance.getWidget() %}
-            <div class="panel panel-default
+            <div class="panel panel-default widget-instance-panel
                 {% if not widgetHomeTabConfig.isVisible() %}
                     toggle-visible
                     {% if withConfig == 0 %} hidden {% endif %}
                 {% endif %}"
                 widget-instance-id="{{ widgetInstance.getId() }}"
+                widget-hometab-config-id="{{ widgetHomeTabConfig.getId() }}"
              >
                 <div class="panel-heading relative">
                     <div class="panel-title">
@@ -31,9 +32,7 @@
                                 [{{ widget.getName()|trans({}, 'widget') }}]
                             </small>
                         </span>
-                        <span class="toggle-visible {% if withConfig == 0 %} hidden {% endif %}"
-                            widget-instance-id="{{ widgetInstance.getId() }}"
-                        >
+                        <span class="toggle-visible {% if withConfig == 0 %} hidden {% endif %}">
 
                             {% if not widgetInstance.isAdmin() %}
                                 <i class="icon-pencil widget-instance-rename pointer-hand"></i>
@@ -43,9 +42,7 @@
                                 {% endif %}
                             {% endif %}
                         </span>
-                        <span class="toggle-visible {% if withConfig == 0 %} hidden {% endif %} pull-right"
-                            widget-hometab-config-id="{{ widgetHomeTabConfig.getId() }}"
-                        >
+                        <span class="toggle-visible {% if withConfig == 0 %} hidden {% endif %} pull-right">
                             {% if widgetHomeTabConfig.isLocked() or isLockedHomeTab %}
                                 <i class="icon-lock"></i>
                             {% else %}

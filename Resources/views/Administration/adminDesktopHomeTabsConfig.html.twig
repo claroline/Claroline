@@ -45,7 +45,10 @@
                 {% for homeTabConfig in homeTabConfigs %}
                 {% set homeTab = homeTabConfig.getHomeTab() %}
                 {% set homeTabId = homeTab.getId() %}
-                    <li class="{% if homeTabId == curentHomeTabId %}active{% endif %}">
+                    <li class="{% if homeTabId == curentHomeTabId %}active{% endif %} hometab-element"
+                        hometab-id="{{ homeTabId }}"
+                        hometab-config-id="{{ homeTabConfig.getId() }}"
+                    >
                         <a href="{{
                             path(
                                 'claro_admin_desktop_home_tabs_configuration',
@@ -53,11 +56,7 @@
                             )
                         }}">
                             {{ homeTab.getName() }}
-                            <span class="hometab-buttons"
-                                id="hometab-buttons-{{ homeTabId }}"
-                                hometab-id="{{ homeTabId }}"
-                                hometab-config-id="{{ homeTabConfig.getId() }}"
-                            >
+                            <span class="hometab-buttons">
                                 <i class="hometab-rename-btn pointer-hand icon-edit"></i>
                                 <i class="hometab-visibility-btn pointer-hand
                                     {% if homeTabConfig.isVisible() %}

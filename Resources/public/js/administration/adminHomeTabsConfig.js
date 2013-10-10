@@ -45,7 +45,8 @@
         e.preventDefault();
         e.stopPropagation();
 
-        currentHomeTabId = $(this).parent().attr('hometab-id');
+        currentElement = $(this).parents('.hometab-element');
+        currentHomeTabId = currentElement.attr('hometab-id');
 
         $.ajax({
             url: Routing.generate(
@@ -159,7 +160,8 @@
         e.stopPropagation();
 
         var visibilityBtn = $(this);
-        var homeTabConfigId = visibilityBtn.parent().attr('hometab-config-id');
+        currentElement = visibilityBtn.parents('.hometab-element');
+        var homeTabConfigId = currentElement.attr('hometab-config-id');
         var visible = (visibilityBtn.attr('visiblility-value')).trim();
         var newVisible = (visible === 'visible') ? 'invisible' : 'visible';
 
@@ -189,7 +191,8 @@
         e.stopPropagation();
 
         var lockBtn = $(this);
-        var homeTabConfigId = lockBtn.parent().attr('hometab-config-id');
+        currentElement = lockBtn.parents('.hometab-element');
+        var homeTabConfigId = currentElement.attr('hometab-config-id');
         var locked = (lockBtn.attr('lock-value')).trim();
         var newLocked = (locked === 'locked') ? 'unlocked' : 'locked';
 
@@ -218,9 +221,9 @@
         e.preventDefault();
         e.stopPropagation();
 
-        currentElement = $(this).parent().parent().parent();
-        currentHomeTabId = $(this).parent().attr('hometab-id');
-        currentHomeTabConfigId = $(this).parent().attr('hometab-config-id');
+        currentElement = $(this).parents('.hometab-element');
+        currentHomeTabId = currentElement.attr('hometab-id');
+        currentHomeTabConfigId = currentElement.attr('hometab-config-id');
         $('#delete-hometab-validation-box').modal('show');
     });
 
@@ -311,7 +314,8 @@
 
     // Click on delete button of a widget
     $('.widget-delete-btn').click(function () {
-        currentWidgetHomeTabConfigId = $(this).parents('.widget-instance-panel').attr('widget-hometab-config-id');
+        currentElement = $(this).parents('.widget-instance-panel');
+        currentWidgetHomeTabConfigId = currentElement.attr('widget-hometab-config-id');
         $('#delete-widget-hometab-validation-box').modal('show');
     });
 
@@ -551,10 +555,16 @@
                 type: 'POST',
                 processData: false,
                 contentType: false,
-                success: function() {
-                    widgetEditionElement.addClass('hide');
-                    widgetEditionElement.empty();
-                    configButton.removeClass('hide');
+                complete: function(jqXHR) {
+                    switch (jqXHR.status) {
+                        case 204:
+                            widgetEditionElement.addClass('hide');
+                            widgetEditionElement.empty();
+                            configButton.removeClass('hide');
+                            break;
+                        default:
+                            widgetEditionElement.html(jqXHR.responseText);
+                    }
                 }
             });
         }

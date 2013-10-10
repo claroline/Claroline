@@ -48,7 +48,10 @@
                 {% for homeTabConfig in homeTabConfigs %}
                 {% set homeTab = homeTabConfig.getHomeTab() %}
                 {% set homeTabId = homeTab.getId() %}
-                    <li class="{% if homeTabId == curentHomeTabId %}active{% endif %}">
+                    <li class="{% if homeTabId == curentHomeTabId %}active{% endif %} hometab-element"
+                        hometab-id="{{ homeTabId }}"
+                        hometab-config-id="{{ homeTabConfig.getId() }}"
+                    >
                         <a href="{{
                             path(
                                 'claro_admin_workspace_home_tabs_configuration',
@@ -56,11 +59,7 @@
                             )
                         }}">
                             {{ homeTab.getName() }}
-                            <span class="hometab-buttons"
-                                id="hometab-buttons-{{ homeTabId }}"
-                                hometab-id="{{ homeTabId }}"
-                                hometab-config-id="{{ homeTabConfig.getId() }}"
-                            >
+                            <span class="hometab-buttons" id="hometab-buttons-{{ homeTabId }}">
                                 <i class="hometab-rename-btn pointer-hand icon-edit"></i>
                                 <i class="hometab-visibility-btn pointer-hand
                                     {% if homeTabConfig.isVisible() %}
@@ -95,11 +94,11 @@
                 {% set widgetInstance = widgetHomeTabConfig.getWidgetInstance() %}
                 {% set widget = widgetInstance.getWidget() %}
                     <div id="widget-panel-{{ widgetHomeTabConfig.getId() }}"
-                        class="panel panel-default"
+                        class="panel panel-default widget-instance-panel"
                         widget-hometab-config-id="{{ widgetHomeTabConfig.getId() }}"
                         widget-instance-id="{{ widgetInstance.getId() }}"
                     >
-                        <div class="panel-body">
+                        <div class="panel-body widget-instance-view-element">
                             <span class="widget-instance-name">
                                 {{ widgetInstance.getName() }}
                             </span>
@@ -134,6 +133,8 @@
                                 ></i>
                                 <i class="widget-delete-btn icon-trash pointer-hand"></i>
                             </span>
+                        </div>
+                        <div class="panel-body widget-instance-edition-element hide">
                         </div>
                     </div>
                 {% endfor %}
