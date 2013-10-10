@@ -174,6 +174,25 @@ function StepFactory($http, $q, PathFactory) {
             }
             
             return this;
+        },
+        
+        /**
+         * Remove selected resource from step
+         * 
+         * @param step          current step
+         * @param resourceId    resource to remove
+         * @returns StepFactory
+         */
+        removeResource: function(step, resourceId) {
+            // Search resource to remove
+            for (var i = 0; i < step.resources.length; i++) {
+                if (resourceId === step.resources[i].id) {
+                    step.resources.splice(i, 1);
+                    break;
+                }
+            }
+            
+            return this;
         }
     };
 }
