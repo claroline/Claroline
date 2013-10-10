@@ -21,7 +21,7 @@ class BadgeTranslationType extends AbstractType
                 'label' => 'badge_form_criteria',
                 'attr' => array(
                     'class' => 'tinymce',
-                    'data-theme' => 'medium'
+                    'data-theme' => 'advanced'
                 )
             ))
             ->add('locale', 'hidden');

@@ -97,6 +97,7 @@ create_new_admin_tag: 'Créer un nouveau Tag administrateur'
 create_new_home_tab: 'Créer un nouvel onglet'
 create_new_tag: 'Créer un nouveau Tag'
 create_user: 'Créer un utilisateur'
+create_widget_instance: 'Créer un nouveau Widget'
 create_workspace: 'Créer un espace d''activités'
 creation: Création
 creation_date: 'Date de création'
@@ -281,6 +282,7 @@ new_message: 'Nouveau message'
 new_message_alert: 'Vous avez %count% nouveaux message(s)'
 no: 'non'
 no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
+no_home_tab: 'Il n''y a aucun onglet'
 no_group: 'Aucun groupe'
 no_search_results: 'Votre recherche n''a retourné aucun résultat.'
 no_tag: 'Il n''y a aucun Tag'
@@ -291,6 +293,7 @@ not_allowed_message: Vous n'êtes pas autorisé(e) à effectuer cette action.
 note: Note
 object: Objet
 ok: Ok
+only_for_workspace_creation: 'Seulement pour la création d''un espace d''activités'
 open: Ouvrir
 operation_done: Opération effectuée.
 options: Options
@@ -354,6 +357,7 @@ remove_user_confirm_message: Êtes-vous sûr de vouloir supprimer cet utilisateu
 remove_user_s_confirm_message: Êtes-vous sûr de vouloir supprimer ces %count% utilisateurs?
 rename: Renommer
 rename_tool: 'Renommage d''un outil'
+rename_widget_instance: 'Renommage du Widget'
 reset: Réinitialiser
 reset_password: 'Réinitialiser mot de passe'
 reset_password_message: 'Etes vous sur de vouloir réinitialiser le mot de passe ?'
@@ -505,6 +509,7 @@ widget_home_tab_delete_confirm_message: 'Voulez-vous vraiment retirer ce widget 
 widget_home_tab_delete_confirm_title: 'Suppression du widget de l''onglet'
 widget_settings: 'Paramètres des widgets'
 widgets: Widgets
+widget_display_form_name: Nom
 widgets_configuration: 'Configuration des widgets'
 workspace.create: 'Créer un nouvel espace d''activités'
 workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'

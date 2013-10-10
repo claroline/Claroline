@@ -1430,7 +1430,7 @@ class HomeTabManagerTest extends MockeryTestCase
         );
     }
 
-    public function testGetVisibleDesktopWidgetConfigWithoutExcludedWidgets()
+    public function testGetAdminDesktopWidgetInstanceWithoutExcludedWidgets()
     {
         $excludedWidgets = array();
         $widgetDisplayConfigs = array('widget_dc_a', 'widget_dc_b');
@@ -1449,16 +1449,16 @@ class HomeTabManagerTest extends MockeryTestCase
         $this->assertEquals(
             $widgetDisplayConfigs,
             $this->getManager()
-                ->getVisibleDesktopWidgetConfig($excludedWidgets)
+                ->getAdminDesktopWidgetInstance($excludedWidgets)
         );
     }
 
-    public function testGetVisibleDesktopWidgetConfigWithExcludedWidgets()
+    public function testGetAdminDesktopWidgetInstanceWithExcludedWidgets()
     {
         $excludedWidgets = array('excluded_widget_a', 'excluded_widget_b');
         $widgetDisplayConfigs = array('widget_dc_a', 'widget_dc_b');
         $this->widgetDisplayConfigRepo
-            ->shouldReceive('findVisibleAdminDesktopWidgetDisplayConfig')
+            ->shouldReceive('findAdminDesktopWidgetInstance')
             ->with($excludedWidgets)
             ->once()
             ->andReturn($widgetDisplayConfigs);
@@ -1466,11 +1466,11 @@ class HomeTabManagerTest extends MockeryTestCase
         $this->assertEquals(
             $widgetDisplayConfigs,
             $this->getManager()
-                ->getVisibleDesktopWidgetConfig($excludedWidgets)
+                ->getAdminDesktopWidgetInstance($excludedWidgets)
         );
     }
 
-    public function testGetVisibleWorkspaceWidgetConfigWithoutExcludedWidgets()
+    public function testGetAdminWorkspaceWidgetInstanceWithoutExcludedWidgets()
     {
         $excludedWidgets = array();
         $widgetDisplayConfigs = array('widget_dc_a', 'widget_dc_b');
@@ -1489,16 +1489,16 @@ class HomeTabManagerTest extends MockeryTestCase
         $this->assertEquals(
             $widgetDisplayConfigs,
             $this->getManager()
-                ->getVisibleWorkspaceWidgetConfig($excludedWidgets)
+                ->getAdminWorkspaceWidgetInstance($excludedWidgets)
         );
     }
 
-    public function testGetVisibleWorkspaceWidgetConfigWithExcludedWidgets()
+    public function testGetAdminWorkspaceWidgetInstanceWithExcludedWidgets()
     {
         $excludedWidgets = array('excluded_widget_a', 'excluded_widget_b');
         $widgetDisplayConfigs = array('widget_dc_a', 'widget_dc_b');
         $this->widgetDisplayConfigRepo
-            ->shouldReceive('findVisibleAdminWorkspaceWidgetDisplayConfig')
+            ->shouldReceive('findAdminWorkspaceWidgetInstance')
             ->with($excludedWidgets)
             ->once()
             ->andReturn($widgetDisplayConfigs);
@@ -1506,7 +1506,7 @@ class HomeTabManagerTest extends MockeryTestCase
         $this->assertEquals(
             $widgetDisplayConfigs,
             $this->getManager()
-                ->getVisibleWorkspaceWidgetConfig($excludedWidgets)
+                ->getAdminWorkspaceWidgetInstance($excludedWidgets)
         );
     }
 
@@ -1525,7 +1525,7 @@ class HomeTabManagerTest extends MockeryTestCase
             ->once()
             ->andReturn($this->widgetHomeTabConfigRepo);
         $this->om->shouldReceive('getRepository')
-            ->with('ClarolineCoreBundle:Widget\DisplayConfig')
+            ->with('ClarolineCoreBundle:Widget\WidgetInstance')
             ->once()
             ->andReturn($this->widgetDisplayConfigRepo);
 

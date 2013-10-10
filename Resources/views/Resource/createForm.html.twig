@@ -2,6 +2,7 @@
       action="{{ path('claro_resource_create', {'resourceType':resourceType, 'parentId':'_nodeId'}) }}"
       method="post" {{ form_enctype(form) }}
       id="generic-form"
+      novalidate
       class="form-horizontal">
    {{ form_widget(form) }}
    {{ form_rest(form) }}

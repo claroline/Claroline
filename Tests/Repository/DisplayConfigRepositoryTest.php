@@ -11,7 +11,7 @@ class DisplayConfigRepositoryTest extends RepositoryTestCase
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        self::$repo = self::getRepository('ClarolineCoreBundle:Widget\DisplayConfig');
+        self::$repo = self::getRepository('ClarolineCoreBundle:Widget\WidgetInstance');
         self::createUser('user_a');
         self::createWorkspace('wsa');
         self::createWidget('widget_a', false, false, 'icon');
@@ -88,11 +88,11 @@ class DisplayConfigRepositoryTest extends RepositoryTestCase
         );
     }
 
-    public function testFindVisibleAdminDesktopWidgetDisplayConfig()
+    public function testFindAdminDesktopWidgetInstance()
     {
         $excludedWidgets = array(self::get('widget_c'));
         $widgetDisplayConfigs =
-            self::$repo->findVisibleAdminDesktopWidgetDisplayConfig($excludedWidgets);
+            self::$repo->findAdminDesktopWidgetInstance($excludedWidgets);
         $this->assertEquals(2, count($widgetDisplayConfigs));
         $this->assertEquals(true, $widgetDisplayConfigs[0]->isVisible());
         $this->assertEquals(true, $widgetDisplayConfigs[0]->isDesktop());
@@ -106,11 +106,11 @@ class DisplayConfigRepositoryTest extends RepositoryTestCase
         $this->assertEquals(null, $widgetDisplayConfigs[1]->getWorkspace());
     }
 
-    public function testFindVisibleAdminWorkspaceWidgetDisplayConfig()
+    public function testFindAdminWorkspaceWidgetInstance()
     {
         $excludedWidgets = array(self::get('widget_c'));
         $widgetDisplayConfigs =
-            self::$repo->findVisibleAdminWorkspaceWidgetDisplayConfig($excludedWidgets);
+            self::$repo->findAdminWorkspaceWidgetInstance($excludedWidgets);
         $this->assertEquals(2, count($widgetDisplayConfigs));
         $this->assertEquals(true, $widgetDisplayConfigs[0]->isVisible());
         $this->assertEquals(false, $widgetDisplayConfigs[0]->isDesktop());

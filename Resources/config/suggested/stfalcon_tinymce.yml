@@ -35,9 +35,9 @@ stfalcon_tinymce:
                 - 'insertdatetime media nonbreaking save table contextmenu directionality'
                 - 'emoticons template paste textcolor'
             menubar: false
-            toolbar1: ' undo redo | styleselect | bold italic | ressourceLinker fullscreenToggle | advlist autolink lists link image charmap print preview hr anchor pagebreak '
-            toolbar2: "print preview media | forecolor backcolor emoticons | stfalcon | insertdatetime media nonbreaking save table contextmenu directionality"
-            toolbar3: 'searchreplace wordcount visualblocks visualchars code'
+            toolbar1: 'alignleft aligncenter alignright alignjustify | bold italic | link ressourceLinker | preview fullscreenToggle '
+            toolbar2: "styleselect | forecolor backcolor emoticons | stfalcon | media image charmap | table contextmenu directionality "
+            toolbar3: "undo redo | hr anchor pagebreak nonbreaking | searchreplace wordcount visualblocks visualchars code | print"
             image_advtab: true
             templates:
                 - {title: 'Test template 1', content: 'Test 1'}

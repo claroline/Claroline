@@ -5,7 +5,7 @@ namespace Claroline\CoreBundle\Entity\Widget;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WidgetRepository")
  * @ORM\Table(name="claro_widget")
  */
 class Widget
@@ -45,6 +45,16 @@ class Widget
      * @ORM\Column(name="is_exportable", type="boolean")
      */
     protected $isExportable;
+
+    /**
+     * @ORM\Column(name="is_displayable_in_workspace", type="boolean")
+     */
+    protected $isDisplayableInWorkspace = true;
+
+    /**
+     * @ORM\Column(name="is_displayable_in_desktop", type="boolean")
+     */
+    protected $isDisplayableInDesktop = true;
 
     public function getId()
     {
@@ -99,5 +109,30 @@ class Widget
     public function isExportable()
     {
         return $this->isExportable;
+    }
+
+    public function  isDisplayableInWorkspace()
+    {
+        return $this->isDisplayableInWorkspace;
+    }
+
+    public function setDisplayableInWorkspace($bool)
+    {
+        $this->isDisplayableInWorkspace = $bool;
+    }
+
+    public function  isDisplayableInDesktop()
+    {
+        return $this->isDisplayableInDesktop;
+    }
+
+    public function setDisplayableInDesktop($bool)
+    {
+        $this->isDisplayableInDesktop = $bool;
+    }
+
+    public function __toString()
+    {
+        return $this->name;
     }
 }

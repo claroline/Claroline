@@ -5,147 +5,73 @@ namespace Claroline\CoreBundle\Controller\Widget;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
-use Claroline\CoreBundle\Entity\Widget\SimpleTextWorkspaceConfig;
-use Claroline\CoreBundle\Entity\Widget\SimpleTextDesktopConfig;
-use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\CoreBundle\Entity\Widget\SimpleTextConfig;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 class SimpleTextController extends Controller
 {
     /**
      * @EXT\Route(
-     *     "/simple_text_update/config/{isDefault}/workspace/{workspaceId}/{redirectToHome}",
-     *     name="claro_simple_text_update_workspace_widget_config",
-     *     defaults={"isDefault" = 0, "workspaceId" = 0, "redirectToHome" = 0}
+     *     "/simple_text_update/config/{widget}",
+     *     name="claro_simple_text_update_config"
      * )
      * @EXT\Method("POST")
      */
-    public function updateLogWorkspaceWidgetConfig($isDefault, $workspaceId, $redirectToHome)
+    public function updateSimpleTextWidgetConfig(WidgetInstance $widget, Request $request)
     {
-        $isDefault = (boolean) $isDefault;
-
-        if ($isDefault && !$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if (!$this->get('security.context')->isGranted('edit', $widget)) {
             throw new AccessDeniedException();
         }
 
-        $redirectToHome = (boolean) $redirectToHome;
-        $em = $this->getDoctrine()->getManager();
+       $simpleTextConfig = $this->get('claroline.manager.simple_text_manager')->getTextConfig($widget);
+       //wtf !
+       $id = array_pop(array_keys($request->request->all()));
+       $form = $this->get('claroline.form.factory')->create(FormFactory::TYPE_SIMPLE_TEXT, array($id));
+       $form->bind($this->getRequest());
 
-        if ($isDefault) {
-            $workspace = null;
-            $config = $this->get('claroline.manager.simple_text_manager')->getDefaultWorkspaceWidgetConfig();
-        } else {
-            $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+       if ($form->isValid()) {
+           $formDatas = $form->get('content')->getData();
+           $content = is_null($formDatas) ? '' : $formDatas;
 
-            if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
-                throw new AccessDeniedException();
+           if ($simpleTextConfig) {
+               $simpleTextConfig->setContent($content);
+           } else {
+               $simpleTextConfig = new SimpleTextConfig();
+               $simpleTextConfig->setWidgetInstance($widget);
+               $simpleTextConfig->setContent($content);
+           }
+       } else {
+            $simpleTextConfig = new SimpleTextConfig();
+            $simpleTextConfig->setWidgetInstance($widget);
+            $errorForm = $this->container->get('claroline.form.factory')
+                ->create(FormFactory::TYPE_SIMPLE_TEXT, array('widget_text_'.rand(0, 1000000000), $simpleTextConfig));
+            $errorForm->setData($form->getData());
+            $children = $form->getIterator();
+            $errorChildren = $errorForm->getIterator();
+
+            foreach ($children as $key => $child) {
+                $errors = $child->getErrors();
+                foreach ($errors as $error) {
+                    $errorChildren[$key]->addError($error);
+                }
             }
-            
-            $config = $this->get('claroline.manager.simple_text_manager')->getWorkspaceWidgetConfig($workspace);
-        }
 
-        if ($config === null) {
-            $config = new SimpleTextWorkspaceConfig();
-            $config->setIsDefault($isDefault);
-            $config->setWorkspace($workspace);
-        }
+           return $$this->render(
+               'ClarolineCoreBundle:Widget:config_simple_text_form.html.twig',
+               array(
+                   'form' => $errorForm->createView(),
+                   'config' => $widget
+               )
+           );
+       }
 
-        $form = $this->get('claroline.form.factory')->create(FormFactory::TYPE_SIMPLE_TEXT);
+       $em = $this->get('doctrine.orm.entity_manager');
+       $em->persist($simpleTextConfig);
+       $em->flush();
 
-        $form->bind($this->getRequest());
-        $translator = $this->get('translator');
-        if ($form->isValid()) {
-            $config->setContent($form->get('content')->getData());
-            $em->persist($config);
-            $em->flush();
-
-            $this
-                ->get('session')
-                ->getFlashBag()
-                ->add('success', $translator->trans('Your changes have been saved', array(), 'platform'));
-        } else {
-            $this
-                ->get('session')
-                ->getFlashBag()
-                ->add('error', $translator->trans('The form is not valid', array(), 'platform'));
-        }
-
-        if ($isDefault === true) {
-            return $this->redirect($this->generateUrl('claro_admin_widgets'));
-        } elseif ($redirectToHome === false) {
-            return $this->redirect(
-                $this->generateUrl('claro_workspace_widget_properties', array('workspace' => $workspaceId))
-            );
-        } else {
-            return $this->redirect(
-                $this->generateUrl(
-                    'claro_workspace_open_tool', array('workspaceId' => $workspaceId, 'toolName' => 'home')
-                )
-            );
-        }
-    }
-
-
-    /**
-     * @EXT\Route(
-     *     "/simple_text_update/config/{isDefault}/{redirectToHome}",
-     *     name="claro_simple_text_update_desktop_widget_config",
-     *     defaults={"isDefault" = 0, "redirectToHome" = 0}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     */
-    public function updateDesktopWidgetConfig($isDefault, $redirectToHome, User $user)
-    {
-        $isDefault = (boolean) $isDefault;
-
-        if ($isDefault && !$this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            throw new AccessDeniedException();
-        }
-
-        $redirectToHome = (boolean) $redirectToHome;
-
-        if ($isDefault === true) {
-            $config = $this->get('claroline.manager.simple_text_manager')->getDefaultDesktopWidgetConfig();
-        } else {
-            $config = $this->get('claroline.manager.simple_text_manager')->getDesktopWidgetConfig($user);
-        }
-
-        if ($config === null) {
-            $config = new SimpleTextDesktopConfig();
-            $config->setIsDefault($isDefault);
-            if (!$isDefault) {
-                $config->setUser($user);
-            }
-        }
-
-        $form = $this->get('claroline.form.factory')->create(FormFactory::TYPE_SIMPLE_TEXT);
-        $form->bind($this->getRequest());
-        $em = $this->getDoctrine()->getManager();
-        $translator = $this->get('translator');
-
-        if ($form->isValid()) {
-            $config->setContent($form->get('content')->getData());
-            $em->persist($config);
-            $em->flush();
-
-            $this->get('session')->getFlashBag()->add(
-                'success',
-                $translator->trans('Your changes have been saved', array(), 'platform')
-            );
-        } else {
-            $this->get('session')->getFlashBag()->add(
-                'error',
-                $translator->trans('The form is not valid', array(), 'platform')
-            );
-        }
-
-         if ($isDefault === true) {
-            return $this->redirect($this->generateUrl('claro_admin_widgets'));
-        } elseif ($redirectToHome == false) {
-            return $this->redirect($this->generateUrl('claro_desktop_widget_properties'));
-        } else {
-            return $this->redirect($this->generateUrl('claro_desktop_open', array()));
-        }
+       return new Response('success', 204);
     }
 }

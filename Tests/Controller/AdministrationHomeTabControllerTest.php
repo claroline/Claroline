@@ -576,7 +576,7 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
         $widget->shouldReceive('getId')->once()->andReturn(1);
         $homeTab->shouldReceive('getType')->once()->andReturn('admin_desktop');
         $this->homeTabManager
-            ->shouldReceive('getVisibleDesktopWidgetConfig')
+            ->shouldReceive('getAdminDesktopWidgetInstance')
             ->with(array(1))
             ->once()
             ->andReturn($widgetDisplayConfigs);
@@ -607,7 +607,7 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
         $widget->shouldReceive('getId')->once()->andReturn(1);
         $homeTab->shouldReceive('getType')->once()->andReturn('admin_workspace');
         $this->homeTabManager
-            ->shouldReceive('getVisibleWorkspaceWidgetConfig')
+            ->shouldReceive('getAdminWorkspaceWidgetInstance')
             ->with(array(1))
             ->once()
             ->andReturn($widgetDisplayConfigs);
