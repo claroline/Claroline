@@ -7,7 +7,7 @@ function PathFactory($http, $q) {
     var path = null;
     var maxStepId = 0;
     var maxResourceId = 0;
-    
+
     return {
         /**
          * Load path on page load
@@ -38,12 +38,12 @@ function PathFactory($http, $q) {
                     return deferred.resolve(path);
                 }
             }
-            
+
             return deferred.promise;
         },
-        
+
         /**
-         * 
+         *
          * @returns PathFactory
          */
         clear: function() {
@@ -51,17 +51,22 @@ function PathFactory($http, $q) {
             pathInstanciated = [];
             maxStepId = 0;
             maxResourceId = 0;
-            
+
             return this;
         },
-        
+
         /**
-         * 
+         *
          */
         generateNewPath: function() {
+            // issue #62 : init name and description to NULL, add placeholderX var.
+            // Cf PathFactory.js
+            // Cf MainCtrl.js -->
             var path = {
-                name: 'My Path Name',
-                description: 'This is the path description',
+                name: '',
+                placeholderName: 'My Path Name',
+                description: '',
+                placeholderDescription: 'This is the path description',
                 steps: [],
                 progression: {
                     global     : 'todo',
@@ -71,39 +76,39 @@ function PathFactory($http, $q) {
                     planner    : 'todo'
                 }
             };
-            
+
             return path;
         },
-        
+
         /**
-         * 
+         *
          * @returns object
          */
         getPath: function() {
             return path;
         },
-        
+
         /**
-         * 
+         *
          * @param data
          * @returns PathFactory
          */
         setPath: function(data) {
             // Store current path
             path = data;
-            
+
             // Retrieve max step id
             this.getMaxStepId();
-            
+
             // Retrieve max resource id
             this.getMaxResourceId();
-            
+
             return this;
         },
-        
+
         /**
          * Retrieve step in path using its ID
-         * 
+         *
          * @param stepId
          * @returns object
          */
@@ -122,10 +127,10 @@ function PathFactory($http, $q) {
                         }
                     }
                 }
-                
+
                 return step;
             }
-            
+
             var step = null;
             if (null !== path && path.length !== 0) {
                 for (var i = 0; i < path.steps.length; i++) {
@@ -135,12 +140,12 @@ function PathFactory($http, $q) {
                     }
                 }
             }
-            
+
             return step;
         },
-        
+
         /**
-         * 
+         *
          * @returns Integer
          */
         getMaxStepId: function() {
@@ -151,12 +156,12 @@ function PathFactory($http, $q) {
                     this.retrieveMaxStepId(path.steps[i]);
                 }
             }
-            
+
            return maxStepId;
         },
-        
+
         /**
-         * 
+         *
          * @param step
          * @returns PathFactory
          */
@@ -165,19 +170,19 @@ function PathFactory($http, $q) {
             if (step.id > maxStepId) {
                 maxStepId = step.id;
             }
-            
+
             // Check step children
             if (step.children.length !== 0) {
                 for (var i = 0; i < step.children.length; i++) {
                     this.retrieveMaxStepId(step.children[i]);
                 }
             }
-            
+
             return this;
         },
-        
+
         /**
-         * 
+         *
          * @returns Integer
          */
         getNextStepId: function() {
@@ -188,9 +193,9 @@ function PathFactory($http, $q) {
             maxStepId++;
             return maxStepId;
         },
-        
+
         /**
-         * 
+         *
          * @returns Integer
          */
         getMaxResourceId: function() {
@@ -201,12 +206,12 @@ function PathFactory($http, $q) {
                     this.retrieveMaxResourceId(path.steps[i]);
                 }
             }
-            
+
            return maxResourceId;
         },
-        
+
         /**
-         * 
+         *
          * @param step
          * @returns PathFactory
          */
@@ -219,19 +224,19 @@ function PathFactory($http, $q) {
                     }
                 }
             }
-            
+
             // Check step children
             if (step.children.length !== 0) {
                 for (var i = 0; i < step.children.length; i++) {
                     this.retrieveMaxResourceId(step.children[i]);
                 }
             }
-            
+
             return this;
         },
-        
+
         /**
-         * 
+         *
          * @returns Integer
          */
         getNextResourceId: function() {
@@ -242,9 +247,9 @@ function PathFactory($http, $q) {
             maxResourceId++;
             return maxResourceId;
         },
-        
+
         /**
-         * 
+         *
          * @param newStep
          * @returns PathFactory
          */
@@ -258,12 +263,12 @@ function PathFactory($http, $q) {
                     }
                 }
             }
-            
+
             return this;
         },
-        
+
         /**
-         * 
+         *
          * @param currentStep
          * @param newStep
          * @returns boolean
@@ -282,12 +287,12 @@ function PathFactory($http, $q) {
                     }
                 }
             }
-            
+
             return stepFound;
         },
-        
+
         /**
-         * 
+         *
          * @param oldStep
          * @param newStep
          * @returns PathFactory
@@ -296,7 +301,7 @@ function PathFactory($http, $q) {
             for (var prop in newStep) {
                 oldStep[prop] = newStep[prop];
             }
-            
+
             return this;
         }
     };
