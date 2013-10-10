@@ -225,7 +225,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     protected $pictureFile;
 
     /**
-     * @ORM\Column(nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $description;
 
