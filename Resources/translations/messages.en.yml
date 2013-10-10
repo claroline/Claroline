@@ -109,7 +109,7 @@ edit a category: Edit a category
 edit a question: Edit a question
 end date: End date
 entry: Entry
-erase: To erase an answer zone, press 's' key and click on the erasable answer zone.
+erase: To erase an answer zone, maintain press 's' key and click on the cross which allows to move it
 exercise: Exercise
 exercise definition: Exercise definition
 exercise creation: Exercise creation
@@ -243,7 +243,7 @@ point: Point
 points: Points
 point_answer: You must assign a point to the correct answer
 point_answers: You must assign a point to each answer
-pointInstruction: Points must be assigned before positioning each answer zone.
+pointInstruction: Points must be assigned before positioning each answer zone
 pointRightResponse: Right answer points
 position: => Place pointers below (red cross) on the picture. The pointer's center defines your answer.
 preview: Preview
@@ -263,7 +263,7 @@ random order of questions: Random order of questions
 raz: => To reset all pointers' position, press "c".
 rectangle: Rectangle
 reset: Reset
-resizeZone: To re-size the picture, place your mouse on its bottom right corner, keep left mouse button down, and mouve your mouse.
+resizeZone: To re-size the picture, place your mouse on its bottom right corner, keep left mouse button down, and mouve your mouse
 response: Response
 response number: Response number
 result: Results
@@ -279,7 +279,7 @@ seeSharedWith: Question shared with users
 select: Select
 selected Image: Selected image
 selection: => To answer, use drag and drop.
-selectZone: To define and move an answer zone, use drag and drop.
+selectZone: To define and move an answer zone, use drag and drop
 self: You can't shared this question with yourself
 shape: Shape
 share: Share

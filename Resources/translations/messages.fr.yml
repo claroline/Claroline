@@ -109,7 +109,7 @@ edit a category: Editer une catégorie
 edit a question: Editer une question
 end date: Date de fin
 entry: Entrer
-erase: Pour effacer une zone de réponse, maintenez la touche 's' enfoncée et cliquez sur la zone de réponse à effacer.
+erase: Pour effacer une zone de réponse, maintenez la touche 's' enfoncée et cliquez sur la croix permettant de la déplacer
 exercise: Exercice
 exercise creation: Création d'un exercice
 exercise definition: Définition de l'exercice
@@ -243,7 +243,7 @@ point: Point
 points: Points
 point_answer: Vous devez assigner un point à la réponse attendue
 point_answers: Vous devez assigner un point à chaque réponse
-pointInstruction: Les points doivent être attribués avant le placement de chaque zone de réponse.
+pointInstruction: Les points doivent être attribués avant le placement de chaque zone de réponse
 pointRightResponse: Points bonne réponse
 position: => Positionner le(s) pointeur(s) ci-dessous (croix rouge) sur l'image. La position du centre du pointeur défini votre réponse.
 preview: Aperçu
@@ -263,7 +263,7 @@ random order of questions: Ordre des questions aléatoire
 raz: => Pour remettre à leurs position initiale tous les pointeurs, appuyez sur "c".
 rectangle: Rectangle
 reset: Réinitialiser
-resizeZone: Pour redimmensionner une image, placez votre souris sur son coin inférieur droit et, tout en maintenant le clic gauche, faites la glisser.
+resizeZone: Pour redimmensionner une image, placez votre souris sur son coin inférieur droit et, tout en maintenant le clic gauche, faites la glisser
 response: Réponse
 response number: Numéro de la réponse
 result: Résultats
@@ -279,7 +279,7 @@ seeSharedWith: Question partagée avec des utilisateurs
 select: Sélectionner
 selected Image: Image sélectionnée
 selection: => Pour répondre, utiliser la technique du glisser/déposer.
-selectZone: Pour définir et déplacer une zone de réponse, utilisez le glisser/déposer.
+selectZone: Pour définir et déplacer une zone de réponse, utilisez le glisser/déposer
 self: Vous ne pouvez pas partager une question avec vous-même
 shape: Forme
 share: Partager
