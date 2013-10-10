@@ -131,7 +131,7 @@ class BadgeTranslation
     /**
      * @param string $criteria
      *
-     * @return Badge
+     * @return BadgeTranslation
      */
     public function setCriteria($criteria)
     {
@@ -151,7 +151,7 @@ class BadgeTranslation
     /**
      * @param string $description
      *
-     * @return Badge
+     * @return BadgeTranslation
      */
     public function setDescription($description)
     {
@@ -171,7 +171,7 @@ class BadgeTranslation
     /**
      * @param string $name
      *
-     * @return Badge
+     * @return BadgeTranslation
      */
     public function setName($name)
     {
@@ -191,7 +191,7 @@ class BadgeTranslation
     /**
      * @param string $slug
      *
-     * @return Badge
+     * @return BadgeTranslation
      */
     public function setSlug($slug)
     {
