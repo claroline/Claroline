@@ -7,7 +7,7 @@ class SettingCategory
     private $name;
     private $settings = array();
     private $hasFailedRequirement = false;
-    private $hasIncorrectSetting = false;
+    private $hasFailedRecommendation = false;
 
     public function __construct($name)
     {
@@ -36,12 +36,17 @@ class SettingCategory
 
     public function hasIncorrectSetting()
     {
-        return $this->hasIncorrectSetting;
+        return $this->hasFailedRequirement || $this->hasFailedRecommendation;
     }
 
     public function hasFailedRequirement()
     {
         return $this->hasFailedRequirement;
+    }
+
+    public function hasFailedRecommendation()
+    {
+        return $this->hasFailedRecommendation;
     }
 
     public function getIncorrectSettings()
@@ -60,10 +65,10 @@ class SettingCategory
     private function doAddSetting($description, array $descriptionParameters, $isCorrect, $isRequired)
     {
         if (!$isCorrect) {
-            $this->hasIncorrectSetting = true;
-
             if ($isRequired) {
                 $this->hasFailedRequirement = true;
+            } else {
+                $this->hasFailedRecommendation = true;
             }
         }
 
