@@ -34,6 +34,7 @@ class BadgeController extends Controller
             $badgeClaimsWorkspace = $parameters['workspace'];
         }
         else {
+            $badgeQueryBuilder->andWhere('badge.workspace IS NULL');
             $badgeClaimsWorkspace = null;
         }
 
