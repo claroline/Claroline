@@ -73,27 +73,26 @@
                         
                 <div class="row">
                     <div class="col-md-3">
-                        <h3><i class="icon-briefcase"></i> Ressources ({{ resources|length }})</h3>
-                        <input type="hidden" id="step-id" value="{{ path('innova_herited_resources', {stepId: step.id}) }}"/>
-                        
-                        <div id="herited-resources">
-                        </div>
-
                         <div class="panel panel-default">
-                            <div class="panel-heading">Local</div>
+                            <div class="panel-heading"><i class="icon-briefcase"></i> Ressources</div>
                             <div class="panel-body">
-                                {% for resource in resources %}
-                                    {% if resource.id %}
-                                        <li> 
-                                             <a target="_blank" href="{{ path('claro_resource_open', {'resourceType': resource.resourceType.name, 'node': resource.id })  }}?_mode=path">{{ resource.name }}</a>
-                                        </li>
+                                <input type="hidden" id="step-id" value="{{ path('innova_herited_resources', {stepId: step.id}) }}"/>
+                                <div id="herited-resources"></div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">Locales</div>
+                                    <div class="panel-body">
+                                        {% for resource in resources %}
+                                            {% if resource.id %}
+                                                <li> 
+                                                     <a target="_blank" href="{{ path('claro_resource_open', {'resourceType': resource.resourceType.name, 'node': resource.id })  }}?_mode=path">{{ resource.name }}</a>
+                                                </li>
 
-                                    {% endif %}
-                                {% endfor %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        
-                        
                     </div>
                     <div class="col-md-6">
                         <div class="text-center">
