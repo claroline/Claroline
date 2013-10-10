@@ -718,8 +718,7 @@
                 var textArea = $('textarea', form)[0];
 
                 if (textArea) {
-                    var textId = textArea.getAttribute('id');
-                    Claroline.Utilities.tinyMceAddInstance(textId);
+                    initTinyMCE(stfalcon_tinymce_config);
                 }
             }
         })
@@ -979,7 +978,7 @@
                     url: this.parameters.appPath + urlMap[type],
                     success: function (form) {
                         this.views.form.render(form, node.id, type);
-                        
+
                         if (!this.views.form.isAppended) {
                             this.parameters.parentElement.append(this.views.form.el);
                             this.views.form.isAppended = true;

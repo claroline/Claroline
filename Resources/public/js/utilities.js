@@ -85,12 +85,4 @@
         }
         return '';
     };
-
-    utilities.tinyMceAddInstance = function() {
-        initTinyMCE(stfalcon_tinymce_config);
-    };
-
-    utilities.tinyMceRemoveInstance = function(elementId) {
-        tinyMCE.remove(elementId);
-    };
 })();

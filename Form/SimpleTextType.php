@@ -20,7 +20,7 @@ class SimpleTextType extends AbstractType
         $builder->add(
             'content',
             'textarea',
-            array('attr' => array ('class' => 'tinymce', 'data-theme' => 'medium'))
+            array('attr' => array ('class' => 'tinymce', 'data-theme' => 'advanced'))
         );
     }
 

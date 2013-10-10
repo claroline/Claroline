@@ -276,9 +276,9 @@
                 widgetEditionElement.html(datas);
                 widgetEditionElement.removeClass('hide');
                 var textArea = $('textarea', datas)[0];
+                
                 if (textArea) {
-                    var textId = textArea.getAttribute('id');
-                    Claroline.Utilities.tinyMceAddInstance(textId);
+                    initTinyMCE(stfalcon_tinymce_config);
                 }
             }
         });

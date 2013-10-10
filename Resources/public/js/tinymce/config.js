@@ -3,9 +3,13 @@ function callback_tinymce_init() {
 
     $('.tinymce').each(function(index, element) {
         var parent = $(element).parent().get(0);
-        $('.mce-toolbar', parent).each(function (itopbar, topbar) {
+        $('.mce-toolbar', parent).each(function (itopbar) {
             if (itopbar > 0)
-                topbar.setAttribute('style', 'display: none');
+                $(this).attr('style', 'display: none');
+        });
+
+        $('.mce-statusbar', parent).each(function() {
+            $(this).attr('style', 'display: none');
         });
     });
 
@@ -53,5 +57,7 @@ function tinymce_button_fullscreenToggle (ed) {
         if (index > 0 )
             $(this).attr('style', lastElementStyle);
         });
+
+    /* @todo try to add the statusbar */
 }
 
