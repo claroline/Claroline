@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\Form\Badge;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class BadgeTranslationType extends AbstractType
 {
