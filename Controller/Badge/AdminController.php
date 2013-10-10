@@ -99,10 +99,6 @@ class AdminController extends Controller
 
                     $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_add_success_message', array(), 'badge'));
                 } catch (\Exception $exception) {
-                    echo "<pre>";
-                    var_dump($exception->getMessage());
-                    echo "</pre>" . PHP_EOL;
-                    die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
                     $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_add_error_message', array(), 'badge'));
                 }
 

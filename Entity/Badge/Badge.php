@@ -69,6 +69,11 @@ class Badge
     protected $file;
 
     /**
+     * @var string
+     */
+    protected $olfFileName = null;
+
+    /**
      * @var ArrayCollection|UserBadge[]
      *
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\UserBadge", mappedBy="badge", cascade={"all"})
@@ -326,6 +331,7 @@ class Badge
      */
     public function setImagePath($imagePath)
     {
+        die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
         $this->imagePath = $imagePath;
 
         return $this;
