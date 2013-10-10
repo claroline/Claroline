@@ -145,12 +145,24 @@ class StepController extends Controller
     public function getHeritedResources($stepId)
     {
         $em = $this->entityManager();
+        $step = $em->getRepository('InnovaPathBundle:Step')->findOneById($stepId);
+
         $heritedResources = array();
 
-        if($parent = $em->getRepository('InnovaPathBundle:Step')->findOneById($stepId)->getParent()){
-            $this->getPropagatedResources($parent, $heritedResources);
-            
+        // création d'un tableau de ressources exclus à partir de la collection doctrine.
+        $excludedStep2ResourceNodes = $em->getRepository('InnovaPathBundle:Step2ResourceNode')->findBy(array('step' => $step, 'excluded' => true));
+        $excludedResources = array();
+        foreach($excludedStep2ResourceNodes as $excludedStep2ResourceNode){
+            $excludedResources[] = $excludedStep2ResourceNode->getResourceNode()->getId();
         }
+
+        // si le step a des parents on check les ressources partagées du parent
+        if($parent = $em->getRepository('InnovaPathBundle:Step')->findOneById($stepId)->getParent()){
+            $this->getPropagatedResources($parent, $heritedResources, $excludedResources);
+        }
+
+        // on reverse le tableau pour avoir les ressources de lus haut niveau en haut dans la vue.
+        $heritedResources = array_reverse($heritedResources);
 
         return $this->render('InnovaPathBundle:Player:partial/herited-resources.html.twig', array(
             'heritedResources' => $heritedResources
@@ -158,16 +170,15 @@ class StepController extends Controller
     }
 
 
-
-    private function getPropagatedResources($step, &$heritedResources){
+    private function getPropagatedResources($step, &$heritedResources, $excludedResources){
         $resources = $this->manager->getStepPropagatedResourceNodes($step);
-        $i = 0;
         foreach ($resources as $resource) {
-            $heritedResources[$step->getResourceNode()->getName()][] =  $resource;
-            $i++;
+            if(!in_array($resource->getId(), $excludedResources)){
+                $heritedResources[$step->getResourceNode()->getName()][] =  $resource;
+            }
         }
         if ($step->getParent()){
-            $this->getPropagatedResources($step->getParent(), $heritedResources);
+            $this->getPropagatedResources($step->getParent(), $heritedResources, $excludedResources);
         }
         
         return $heritedResources;
@@ -220,8 +231,6 @@ class StepController extends Controller
     public function entityManager()
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $em = $this->getDoctrine()->getManager();
-
         return $em;
     }
 

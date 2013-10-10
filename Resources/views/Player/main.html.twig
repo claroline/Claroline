@@ -78,8 +78,9 @@
                             <div class="panel-body">
                                 <input type="hidden" id="step-id" value="{{ path('innova_herited_resources', {stepId: step.id}) }}"/>
                                 <div id="herited-resources"></div>
+                                {% if resources %}
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">Locales</div>
+                                    <div class="panel-heading"><strong>Locales</strong></div>
                                     <div class="panel-body">
                                         {% for resource in resources %}
                                             {% if resource.id %}
@@ -91,6 +92,7 @@
                                         {% endfor %}
                                     </div>
                                 </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

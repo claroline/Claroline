@@ -2,10 +2,10 @@
 	<div class="panel panel-default">
 		<div class="panel-heading">Héritées de <strong>{{ heritedResourceName }}</strong></div>
 		<div class="panel-body">
-		{% for heritedResourc  in heritedResource %}
-		    {% if heritedResourc.id %}
+		{% for resource  in heritedResource %}
+		    {% if resource.id %}
 		        <li> 
-		             <a target="_blank" href="{{ path('claro_resource_open', {'resourceType': heritedResourc.resourceType.name, 'node': heritedResourc.id })  }}?_mode=path">{{ heritedResourc.name }}</a>
+		             <a target="_blank" href="{{ path('claro_resource_open', {'resourceType': resource.resourceType.name, 'node': resource.id })  }}?_mode=path">{{ resource.name }}</a>
 		        </li>
 		    {% endif %}
 		{% endfor %}

@@ -137,8 +137,8 @@ class PathController extends Controller
         $steps = $manager->getRepository('InnovaPathBundle:Step')->findByPath($path->getId());
         // initialisation array() de steps à ne pas supprimer. Sera rempli dans la function JSONParser
         $stepsToNotDelete = array();
+        $excludedResourcesToResourceNodes = array();
 
-        //todo - lister les liens resources2step pour supprimer ceux inutilisés.
 
         // JSON string to Object - Récupération des childrens de la racine
         $json = json_decode($path->getPath());
@@ -169,18 +169,15 @@ class PathController extends Controller
         }
 
         // lancement récursion
-        $this->JSONParser($json_root_steps, $user, $workspace, $pathsDirectory, null, 0, $path, $stepsToNotDelete);
+        $this->JSONParser($json_root_steps, $user, $workspace, $pathsDirectory, null, 0, $path, $stepsToNotDelete, $excludedResourcesToResourceNodes);
 
-        // On nettoie la base.
+        // On nettoie la base des steps qui n'ont pas été réutilisé et les step2resourceNode associés
         foreach ($steps as $step) {
            if (!in_array($step->getResourceNode()->getId(),$stepsToNotDelete)) {
-
-                /*
-                $step2ressources = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')->findByStep($step->getId());
-                foreach ($step2ressources as $step2ressource) {
-                    $manager->remove($step2ressource);
+                $step2ressourceNodes = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')->findByStep($step->getId());
+                foreach ($step2ressourceNodes as $step2ressourceNode) {
+                    $manager->remove($step2ressourceNode);
                 }
-                */
                 $manager->remove($step->getResourceNode());
             }
         }
@@ -212,7 +209,7 @@ class PathController extends Controller
      * @return array
      *
      */
-    private function JSONParser($steps, $user, $workspace, $pathsDirectory, $parent, $order, $path, &$stepsToNotDelete)
+    private function JSONParser($steps, $user, $workspace, $pathsDirectory, $parent, $order, $path, &$stepsToNotDelete, &$excludedResourcesToResourceNodes)
     {
         $manager = $this->entityManager();
         $rm = $this->resourceManager();
@@ -273,11 +270,11 @@ class PathController extends Controller
             $resourceOrder = 0;
             foreach ($step->resources as $resource) {
                 $resourceOrder++;
+                $excludedResourcesToResourceNodes[$resource->id] = $resource->resourceId;
                 if(!$step2ressourceNode = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')
                                                 ->findOneBy(array('step' => $currentStep, 'resourceNode' => $resource->resourceId))){
                     $step2ressourceNode = new Step2ResourceNode();
                 }
-
                 $step2ressourceNode->setResourceNode($manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId));
                 $step2ressourceNode->setStep($currentStep);
                 $step2ressourceNode->setExcluded(false);
@@ -288,11 +285,17 @@ class PathController extends Controller
 
             // STEP'S EXCLUDED RESOURCES MANAGEMENT
             foreach ($step->excludedResources as $excludedResource) {
+
+                // boucler sur les ressourcesnodes exclues en base et les comparer à ce qu'il y a dans le JSON
                if(!$step2ressourceNode = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')
-                                                ->findOneBy(array('step' => $currentStep, 'resourceNode' => $excludedResource))){
+                                                ->findOneBy(array('step' => $currentStep, 
+                                                                'resourceNode' => $excludedResourcesToResourceNodes[$excludedResource]
+                                                                )
+                                                            )
+                ){
                     $step2ressourceNode = new Step2ResourceNode();
                 }
-                $step2ressourceNode->setResourceNode($manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($excludedResource));
+                $step2ressourceNode->setResourceNode($manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($excludedResourcesToResourceNodes[$excludedResource]));
                 $step2ressourceNode->setStep($currentStep);
                 $step2ressourceNode->setExcluded(true);
                 $step2ressourceNode->setPropagated(false);
@@ -310,7 +313,7 @@ class PathController extends Controller
             $manager->flush();
 
             // récursivité sur les enfants possibles.
-            $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $currentStep->getId(), 0, $path, $stepsToNotDelete);
+            $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $currentStep->getId(), 0, $path, $stepsToNotDelete, $excludedResourcesToResourceNodes);
         }
 
         $manager->flush();

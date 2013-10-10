@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-	$('button').tooltip({placement:'top'});
+	$('button, a').tooltip({placement:'top'});
 
 	$('#path-delete').confirmModal({
 	    confirmTitle : 'Confirmation',

@@ -50,7 +50,7 @@
                         <form action="{{ path('innova_path_delete_path') }}" method="post" style="display: inline-block">
                             <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
                             <input type="hidden" value="{{ path.resourceNode.id }}" name="id" />
-                            <a href="#" class="btn btn-xs btn-danger" id="path-delete"><span class="icon-trash"></span></a>
+                            <a href="#" rel="tooltip" data-original-title="Delete" class="btn btn-xs btn-danger" id="path-delete"><span class="icon-trash"></span></a>
                         </form>
                     </td>
                 </tr>
