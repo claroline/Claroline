@@ -31,12 +31,15 @@ class SimpleTextController extends Controller
        $form->bind($this->getRequest());
 
        if ($form->isValid()) {
+           $formDatas = $form->get('content')->getData();
+           $content = is_null($formDatas) ? '' : $formDatas;
+
            if ($simpleTextConfig) {
-               $simpleTextConfig->setContent($form->get('content')->getData());
+               $simpleTextConfig->setContent($content);
            } else {
                $simpleTextConfig = new SimpleTextConfig();
                $simpleTextConfig->setWidgetInstance($widget);
-               $simpleTextConfig->setContent($form->get('content')->getData());
+               $simpleTextConfig->setContent($content);
            }
        } else {
            return $$this->render(
