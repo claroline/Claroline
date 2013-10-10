@@ -105,7 +105,7 @@
                 {% set widgetInstance = widgetHomeTabConfig.getWidgetInstance() %}
                 {% set widget = widgetInstance.getWidget() %}
                     <div id="widget-panel-{{ widgetHomeTabConfig.getId() }}"
-                        class="panel panel-default"
+                        class="panel panel-default widget-instance-panel"
                         widget-hometab-config-id="{{ widgetHomeTabConfig.getId() }}"
                         widget-instance-id="{{ widgetInstance.getId() }}"
                     >
@@ -118,7 +118,10 @@
                             </small>
                             <span class="widget-instance-btns">
                                 <i class="icon-pencil widget-instance-rename pointer-hand"></i>
-                                <i class="icon-cog widget-instance-config pointer-hand"></i>
+
+                                {% if widget.isConfigurable() %}
+                                    <i class="icon-cog widget-instance-config pointer-hand"></i>
+                                {% endif %}
                             </span>
                             <span class="widget-hometab-config-btns pull-right">
                                 <span class="widget-order-btn-group">

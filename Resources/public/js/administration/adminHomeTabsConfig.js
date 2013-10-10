@@ -311,7 +311,7 @@
 
     // Click on delete button of a widget
     $('.widget-delete-btn').click(function () {
-        currentWidgetHomeTabConfigId = $(this).parent().parent().parent().attr('widget-hometab-config-id');
+        currentWidgetHomeTabConfigId = $(this).parents('.widget-instance-panel').attr('widget-hometab-config-id');
         $('#delete-widget-hometab-validation-box').modal('show');
     });
 
@@ -331,7 +331,7 @@
 
     // Click on the widget rename button
     $('.widget-instance-rename').on('click', function () {
-        currentElement = $(this).parent().parent().parent();
+        currentElement = $(this).parents('.widget-instance-panel');
         currentWidgetInstanceId = currentElement.attr('widget-instance-id');
 
         $.ajax({
@@ -380,7 +380,7 @@
 
     // Click on widget order-up button
     $('#widgets-list-panel').on('click', '.widget-order-up', function () {
-        currentElement = $(this).parent().parent().parent().parent();
+        currentElement = $(this).parents('.widget-instance-panel');
         currentWidgetHomeTabConfigId = currentElement.attr('widget-hometab-config-id');
 
         $.ajax({
@@ -409,7 +409,7 @@
 
     // Click on widget order-down button
     $('#widgets-list-panel').on('click', '.widget-order-down', function () {
-        currentElement = $(this).parent().parent().parent().parent();
+        currentElement = $(this).parents('.widget-instance-panel');
         currentWidgetHomeTabConfigId = currentElement.attr('widget-hometab-config-id');
 
         $.ajax({
@@ -439,7 +439,7 @@
     // Click on widget visibility button
     $('.widget-visibility-btn').on('click', function () {
         var visibilityBtn = $(this);
-        currentElement = visibilityBtn.parent().parent().parent();
+        currentElement = visibilityBtn.parents('.widget-instance-panel');
         currentWidgetHomeTabConfigId = currentElement.attr('widget-hometab-config-id');
         var visible = (visibilityBtn.attr('visiblility-value')).trim();
         var newVisible = (visible === 'visible') ? 'invisible' : 'visible';
@@ -467,7 +467,7 @@
     // Click on widget lock button
     $('.widget-lock-btn').on('click', function () {
         var lockBtn = $(this);
-        currentElement = lockBtn.parent().parent().parent();
+        currentElement = lockBtn.parents('.widget-instance-panel');
         currentWidgetHomeTabConfigId = currentElement.attr('widget-hometab-config-id');
         var locked = (lockBtn.attr('lock-value')).trim();
         var newLocked = (locked === 'locked') ? 'unlocked' : 'locked';
@@ -495,7 +495,7 @@
     // Click on widget configuration button
     $('.widget-instance-config').on('click', function () {
         var configButton = $(this);
-        currentElement = $(this).parent().parent().parent();
+        currentElement = configButton.parents('.widget-instance-panel');
         currentWidgetInstanceId = currentElement.attr('widget-instance-id');
 
         $.ajax({
@@ -520,13 +520,43 @@
         function (e) {
             e.stopImmediatePropagation();
             e.preventDefault();
-            var widgetElement = $(this).parent().parent().parent().parent().parent();
-            console.log(widgetElement.attr('class'));
+            var widgetElement = $(this).parents('.widget-instance-panel');
             var widgetEditionElement = widgetElement.find('.widget-instance-edition-element');
             widgetEditionElement.addClass('hide');
             widgetEditionElement.empty();
             var configButton = widgetElement.find('.widget-instance-config');
             configButton.removeClass('hide');
+        }
+    );
+
+    // Click on OK button of the configuration Widget form
+    $('#widgets-list-panel').on(
+        'submit',
+        '.widget-instance-edition-element > form',
+        function(e) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+
+            var form = e.currentTarget;
+            var action = $(e.currentTarget).attr('action');
+            var formData = new FormData(form);
+
+            var widgetElement = $(this).parents('.widget-instance-panel');
+            var configButton = widgetElement.find('.widget-instance-config');
+            var widgetEditionElement = widgetElement.find('.widget-instance-edition-element');
+
+            $.ajax({
+                url: action,
+                data: formData,
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                success: function() {
+                    widgetEditionElement.addClass('hide');
+                    widgetEditionElement.empty();
+                    configButton.removeClass('hide');
+                }
+            });
         }
     );
 })();
