@@ -54,7 +54,7 @@ class InstallationManager
         $this->fixtureLoader = $tmpContainer->get('claroline.installation.fixture_loader');
 
         try {
-            $additionalInstaller = $this->getAdditionalInstaller($bundle);
+            $additionalInstaller = $this->getAdditionalInstaller($bundle, $tmpContainer);
 
             if ($additionalInstaller) {
                 $this->log('Launching pre-installation actions...');
@@ -108,7 +108,8 @@ class InstallationManager
             }
         }
 
-        $additionalInstaller = $this->getAdditionalInstaller($bundle);
+        $this->kernel->switchToTmpEnvironment();
+        $additionalInstaller = $this->getAdditionalInstaller($bundle, $this->kernel->getContainer());
 
         if ($additionalInstaller) {
             $this->log('Launching pre-update actions...');
@@ -127,21 +128,15 @@ class InstallationManager
 
         if ($additionalInstaller) {
             $this->log('Launching post-update actions...');
-            $this->kernel->switchToTmpEnvironment();
-
-            if ($additionalInstaller instanceof ContainerAwareInterface) {
-                $additionalInstaller->setContainer($this->kernel->getContainer());
-            }
-
             $additionalInstaller->postUpdate($current, $target);
-
-            $this->kernel->switchBack();
         }
+
+        $this->kernel->switchBack();
     }
 
     public function uninstall(InstallableInterface $bundle)
     {
-        $additionalInstaller = $this->getAdditionalInstaller($bundle);
+        $additionalInstaller = $this->getAdditionalInstaller($bundle, $this->kernel->getContainer());
 
         if ($additionalInstaller) {
             $this->log('Launching pre-uninstallation actions...');
@@ -161,7 +156,7 @@ class InstallationManager
         $this->recorder->removeBundles(array(get_class($bundle)));
     }
 
-    private function getAdditionalInstaller(InstallableInterface $bundle)
+    private function getAdditionalInstaller(InstallableInterface $bundle, ContainerInterface $container)
     {
         $installer = $bundle->getAdditionalInstaller();
 
@@ -170,7 +165,7 @@ class InstallationManager
             $installer->setLogger($this->logger ?: function () {});
 
             if ($installer instanceof ContainerAwareInterface) {
-                $installer->setContainer($this->container);
+                $installer->setContainer($container);
             }
 
             return $installer;
