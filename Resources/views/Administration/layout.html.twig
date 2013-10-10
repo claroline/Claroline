@@ -28,14 +28,10 @@
             {{ 'platform_plugins'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item{{ '/admin/home_tab' | compareRoute(' active') }}"
-            href="{{ path('claro_admin_home_tabs_configuration') }}" id="link_platform_home_tabs">
+            href="{{ path('claro_admin_home_tabs_configuration_menu') }}" id="link_platform_home_tabs">
             <i class="icon-th-large"></i>
             {{ 'home_tabs'|trans({}, 'platform') }}
         </a>
-        <a class="list-group-item{{ '/admin/widge' | compareRoute(' active') }}"
-            href="{{ path('claro_admin_widgets') }}" id="link_platform_widgets">
-            <i class="icon-dashboard"></i>
-            {{ 'platform_widgets'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item {% if path('claro_admin_tool_show') == app.request.requesturi %} active{% endif %}"
             href="{{ path('claro_admin_tool_show') }}" id="link_platform_widgets">
