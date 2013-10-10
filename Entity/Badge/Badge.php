@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Form\Badge\Constraints as BadgeAssert;
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Badge\BadgeRepository")
  * @ORM\HasLifecycleCallbacks
  * @BadgeAssert\AutomaticWithRules
+ * @BadgeAssert\HasImage
  */
 class Badge
 {
@@ -331,7 +332,6 @@ class Badge
      */
     public function setImagePath($imagePath)
     {
-        die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
         $this->imagePath = $imagePath;
 
         return $this;

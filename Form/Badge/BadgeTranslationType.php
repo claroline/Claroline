@@ -14,11 +14,15 @@ class BadgeTranslationType extends AbstractType
         $builder
             ->add('name', 'text', array(
                 'label' => 'badge_form_name',
-                'constraints' => new Assert\NotBlank()
+                'constraints' => new Assert\NotBlank(array(
+                    'message' => 'badge_translation_need_name'
+                ))
             ))
             ->add('description', 'text', array(
                 'label' => 'badge_form_description',
-                'constraints' => new Assert\NotBlank()
+                'constraints' => new Assert\NotBlank(array(
+                    'message' => 'badge_translation_need_description'
+                ))
             ))
             ->add('criteria', 'textarea', array(
                 'label' => 'badge_form_criteria',
@@ -26,7 +30,9 @@ class BadgeTranslationType extends AbstractType
                     'class' => 'tinymce',
                     'data-theme' => 'medium'
                 ),
-                'constraints' => new Assert\NotBlank()
+                'constraints' => new Assert\NotBlank(array(
+                    'message' => 'badge_translation_need_criteria'
+                ))
             ))
             ->add('locale', 'hidden');
     }

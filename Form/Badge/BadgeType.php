@@ -34,14 +34,15 @@ class BadgeType extends AbstractType
             ->add('enTranslation', new BadgeTranslationType())
             ->add('version', 'integer', array(
                 'data'  => 1,
-                'constraints' => new Assert\NotBlank(),
+                'constraints' => new Assert\NotBlank(array(
+                    'message' => 'badge_need_version'
+                )),
             ))
             ->add('automatic_award', 'checkbox', array(
                 'required' => false
             ))
             ->add('file', 'file', array(
-                'label'    => 'badge_form_image',
-                'constraints' => new Assert\NotBlank(),
+                'label' => 'badge_form_image'
             ))
             ->add('expired_at', 'datepicker', array(
                 'read_only' => true,
