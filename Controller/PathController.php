@@ -627,8 +627,9 @@ class PathController extends Controller
             $pathCreator = $path->getResourceNode()->getCreator();
 
             if($currentUser == $pathCreator){
-                $pathRoot = $em->getRepository('InnovaPathBundle:Step')->findOneBy(array('path' => $path, 'parent' => null));
-                $this->deleteStep($pathRoot);
+                if($pathRoot = $em->getRepository('InnovaPathBundle:Step')->findOneBy(array('path' => $path, 'parent' => null))){
+                    $this->deleteStep($pathRoot);
+                }
                 $em->remove($path->getResourceNode());
                 $em->flush();
             }
