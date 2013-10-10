@@ -138,6 +138,43 @@ class StepController extends Controller
     }
 
     /**
+     * 
+     * @Route("/step/herited_resources/{stepId}", name="innova_herited_resources", options = {"expose"=true})
+     * @Method("GET")
+     */
+    public function getHeritedResources($stepId)
+    {
+        $em = $this->entityManager();
+        $heritedResources = array();
+
+        if($parent = $em->getRepository('InnovaPathBundle:Step')->findOneById($stepId)->getParent()){
+            $this->getPropagatedResources($parent, $heritedResources);
+            
+        }
+
+        return $this->render('InnovaPathBundle:Player:partial/herited-resources.html.twig', array(
+            'heritedResources' => $heritedResources
+        ));
+    }
+
+
+
+    private function getPropagatedResources($step, &$heritedResources){
+        $resources = $this->manager->getStepPropagatedResourceNodes($step);
+        $i = 0;
+        foreach ($resources as $resource) {
+            $heritedResources[$step->getResourceNode()->getName()][] =  $resource;
+            $i++;
+        }
+        if ($step->getParent()){
+            $this->getPropagatedResources($step->getParent(), $heritedResources);
+        }
+        
+        return $heritedResources;
+    }
+
+
+    /**
      * Load available Step images
      * @Route(
      *      "/sep/images",
