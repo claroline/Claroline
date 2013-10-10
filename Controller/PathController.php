@@ -362,7 +362,7 @@ class PathController extends Controller
         if($pathId != null){
             $pathCreator = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($pathId)->getCreator();
         }
-        
+
         $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
 
         if($currentUser == $pathCreator || $pathId == null){
@@ -466,7 +466,7 @@ class PathController extends Controller
      *     name = "innova_path_add_path",
      *     options = {"expose"=true}
      * )
-     * 
+     *
      * @Method("POST")
      *
      */
@@ -593,7 +593,7 @@ class PathController extends Controller
         return $this->redirect($url);
     }
 
-    
+
 
 
     /**
@@ -613,14 +613,11 @@ class PathController extends Controller
      */
     public function deletePathAction()
     {
-
-
         $id = $this->get('request')->request->get('id');
         $workspaceId = $this->get('request')->request->get('workspaceId');
-        
+
         if (!empty($id)) {
             $em = $this->entityManager();
-
             $path = $em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($id);
             $currentUser = $this->get('security.context')->getToken()->getUser();
             $pathCreator = $path->getResourceNode()->getCreator();
@@ -631,8 +628,10 @@ class PathController extends Controller
                 $em->remove($path->getResourceNode());
                 $em->flush();
             }
+            $em->remove($path->getResourceNode());
+            $em->flush();
         }
-        
+
         $url = $this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspaceId, 'toolName' => 'innova_path'));
         return $this->redirect($url);
     }
@@ -662,7 +661,6 @@ class PathController extends Controller
 
     private function getPaths($workspace){
         $manager = $this->container->get('doctrine.orm.entity_manager');
-
         $resourceType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('path');
         $resourceNodes = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findByWorkspaceAndResourceType($workspace, $resourceType);
         $paths = array();
@@ -702,6 +700,7 @@ class PathController extends Controller
     public function entityManager()
     {
         $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getDoctrine()->getManager();
 
         return $em;
     }
