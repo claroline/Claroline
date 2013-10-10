@@ -10,7 +10,6 @@ function ResourceFactory(PathFactory) {
     var baseResource = {
         id                  : null,
         resourceId          : null,
-        isInstanciated      : false,
         name                : null,
         type                : null,
         subType             : null,
