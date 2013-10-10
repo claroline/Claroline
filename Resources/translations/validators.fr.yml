@@ -5,6 +5,4 @@ The name {{ name }} is already in use.: Le nom {{ name }} est déjà utilisé.
 'Each row requires at least 5 parameters.': 'Chaque ligne nécessite au moins 5 paramètres'
 badge_automatic_awarding_need_rules: "Des règles d'attribution doivent être définies pour pouvoir attribuer le badge automatiquement"
 badge_need_image: "Une image doit être définie sur le badge"
-badge_translation_need_name: "Un nom pour cette traduction doit être définie"
-badge_translation_need_description: "Une description pour cette traduction doit être définie"
-badge_translation_need_criteria: "Un critère pour cette traduction doit être définie"
+badge_need_at_least_one_translation: "Au moins une traduction complète doit être fournie pour le badge"

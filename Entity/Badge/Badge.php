@@ -5,6 +5,9 @@ namespace Claroline\CoreBundle\Entity\Badge;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -18,6 +21,7 @@ use Claroline\CoreBundle\Form\Badge\Constraints as BadgeAssert;
  * @ORM\HasLifecycleCallbacks
  * @BadgeAssert\AutomaticWithRules
  * @BadgeAssert\HasImage
+ * @BadgeAssert\AtLeastOneTranslation
  */
 class Badge
 {
@@ -233,6 +237,11 @@ class Badge
     public function getEnTranslation()
     {
         return $this->getTranslationForLocale('en');
+    }
+
+    public function setFrTranslation(BadgeTranslation $badgeTranslation)
+    {
+
     }
 
     /**
@@ -556,11 +565,51 @@ class Badge
         return sprintf("uploads%sbadges", DIRECTORY_SEPARATOR);
     }
 
+    protected function dealWithAtLeastOneTranslation(ObjectManager $objectManager)
+    {
+        $frTranslation = $this->getFrTranslation();
+        $enTranslation = $this->getEnTranslation();
+
+        $frName        = $frTranslation->getName();
+        $frDescription = $frTranslation->getDescription();
+        $frCriteria    = $frTranslation->getCriteria();
+
+        $enName        = $enTranslation->getName();
+        $enDescription = $enTranslation->getDescription();
+        $enCriteria    = $enTranslation->getCriteria();
+
+        //Have to put all method call in variable because of empty doesn't support result of method as parameter (prior to PHP 5.5)
+        $hasFrTranslation = (!empty($frName) && !empty($frDescription) && !empty($frCriteria)) ? true : false;
+        $hasEnTranslation = (!empty($enName) && !empty($enDescription) && !empty($enCriteria)) ? true : false;
+
+        if (!$hasFrTranslation && !$hasEnTranslation) {
+            throw new \Exception('At least one translation must be defined on the badge');
+        }
+
+        if (!$hasFrTranslation || !$hasEnTranslation) {
+            if ($hasFrTranslation) {
+                $enTranslation
+                    ->setLocale('en')
+                    ->setName($frName)
+                    ->setDescription($frDescription)
+                    ->setCriteria($frCriteria);
+            }
+            elseif ($hasEnTranslation) {
+                $frTranslation
+                    ->setLocale('fr')
+                    ->setName($enName)
+                    ->setDescription($enDescription)
+                    ->setCriteria($enCriteria);
+            }
+        }
+    }
+
     /**
      * @ORM\PrePersist()
      */
-    public function prePersist()
+    public function prePersist(LifecycleEventArgs $event)
     {
+        $this->dealWithAtLeastOneTranslation($event->getObjectManager());
         if (null !== $this->file) {
             $this->imagePath = $this->file->getClientOriginalName();
         }
@@ -569,8 +618,9 @@ class Badge
     /**
      * @ORM\PreUpdate()
      */
-    public function preUpdate()
+    public function preUpdate(PreUpdateEventArgs $event)
     {
+        $this->dealWithAtLeastOneTranslation($event->getObjectManager());
         if (null !== $this->file) {
             $this->imagePath = $this->file->getClientOriginalName();
         }
