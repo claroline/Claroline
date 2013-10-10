@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/10/03 02:24:29
+ * Generation date: 2013/10/10 02:57:34
  */
-class Version20131003142428 extends AbstractMigration
+class Version20131010145733 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -22,6 +22,16 @@ class Version20131003142428 extends AbstractMigration
                 widgetInstance_id INT DEFAULT NULL, 
                 PRIMARY KEY(id), 
                 INDEX IDX_C16334B2AB7B5A55 (widgetInstance_id)
+            )
+        ");
+        $this->addSql("
+            CREATE TABLE claro_badge_rule (
+                id INT AUTO_INCREMENT NOT NULL, 
+                badge_id INT NOT NULL, 
+                occurrence INT NOT NULL, 
+                action VARCHAR(255) NOT NULL, 
+                PRIMARY KEY(id), 
+                INDEX IDX_805FCB8FF7A2C2FC (badge_id)
             )
         ");
         $this->addSql("
@@ -55,6 +65,12 @@ class Version20131003142428 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE claro_badge_rule 
+            ADD CONSTRAINT FK_805FCB8FF7A2C2FC FOREIGN KEY (badge_id) 
+            REFERENCES claro_badge (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
             ALTER TABLE claro_widget_instance 
             ADD CONSTRAINT FK_5F89A38582D40A1F FOREIGN KEY (workspace_id) 
             REFERENCES claro_workspace (id) 
@@ -77,6 +93,19 @@ class Version20131003142428 extends AbstractMigration
             ADD CONSTRAINT FK_C389EBCCAB7B5A55 FOREIGN KEY (widgetInstance_id) 
             REFERENCES claro_widget_instance (id) 
             ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge 
+            ADD workspace_id INT DEFAULT NULL, 
+            ADD automatic_award BOOLEAN DEFAULT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge 
+            ADD CONSTRAINT FK_74F39F0F82D40A1F FOREIGN KEY (workspace_id) 
+            REFERENCES claro_workspace (id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_74F39F0F82D40A1F ON claro_badge (workspace_id)
         ");
         $this->addSql("
             ALTER TABLE claro_widget 
@@ -124,10 +153,25 @@ class Version20131003142428 extends AbstractMigration
             DROP TABLE claro_log_widget_config
         ");
         $this->addSql("
+            DROP TABLE claro_badge_rule
+        ");
+        $this->addSql("
             DROP TABLE claro_widget_instance
         ");
         $this->addSql("
             DROP TABLE claro_simple_text_widget_config
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge 
+            DROP FOREIGN KEY FK_74F39F0F82D40A1F
+        ");
+        $this->addSql("
+            DROP INDEX IDX_74F39F0F82D40A1F ON claro_badge
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge 
+            DROP workspace_id, 
+            DROP automatic_award
         ");
         $this->addSql("
             ALTER TABLE claro_widget 

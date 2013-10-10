@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/10/03 02:24:29
+ * Generation date: 2013/10/10 02:57:33
  */
-class Version20131003142428 extends AbstractMigration
+class Version20131010145733 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -25,6 +25,18 @@ class Version20131003142428 extends AbstractMigration
         ");
         $this->addSql("
             CREATE INDEX IDX_C16334B2AB7B5A55 ON claro_log_widget_config (widgetInstance_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_badge_rule (
+                id INTEGER NOT NULL, 
+                badge_id INTEGER NOT NULL, 
+                occurrence INTEGER NOT NULL, 
+                \"action\" VARCHAR(255) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_805FCB8FF7A2C2FC ON claro_badge_rule (badge_id)
         ");
         $this->addSql("
             CREATE TABLE claro_widget_instance (
@@ -57,6 +69,44 @@ class Version20131003142428 extends AbstractMigration
         ");
         $this->addSql("
             CREATE INDEX IDX_C389EBCCAB7B5A55 ON claro_simple_text_widget_config (widgetInstance_id)
+        ");
+        $this->addSql("
+            CREATE TEMPORARY TABLE __temp__claro_badge AS 
+            SELECT id, 
+            version, 
+            image, 
+            expired_at 
+            FROM claro_badge
+        ");
+        $this->addSql("
+            DROP TABLE claro_badge
+        ");
+        $this->addSql("
+            CREATE TABLE claro_badge (
+                id INTEGER NOT NULL, 
+                workspace_id INTEGER DEFAULT NULL, 
+                version INTEGER NOT NULL, 
+                image VARCHAR(255) NOT NULL, 
+                expired_at DATETIME DEFAULT NULL, 
+                automatic_award BOOLEAN DEFAULT NULL, 
+                PRIMARY KEY(id), 
+                CONSTRAINT FK_74F39F0F82D40A1F FOREIGN KEY (workspace_id) 
+                REFERENCES claro_workspace (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+            )
+        ");
+        $this->addSql("
+            INSERT INTO claro_badge (id, version, image, expired_at) 
+            SELECT id, 
+            version, 
+            image, 
+            expired_at 
+            FROM __temp__claro_badge
+        ");
+        $this->addSql("
+            DROP TABLE __temp__claro_badge
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_74F39F0F82D40A1F ON claro_badge (workspace_id)
         ");
         $this->addSql("
             ALTER TABLE claro_widget 
@@ -157,10 +207,47 @@ class Version20131003142428 extends AbstractMigration
             DROP TABLE claro_log_widget_config
         ");
         $this->addSql("
+            DROP TABLE claro_badge_rule
+        ");
+        $this->addSql("
             DROP TABLE claro_widget_instance
         ");
         $this->addSql("
             DROP TABLE claro_simple_text_widget_config
+        ");
+        $this->addSql("
+            DROP INDEX IDX_74F39F0F82D40A1F
+        ");
+        $this->addSql("
+            CREATE TEMPORARY TABLE __temp__claro_badge AS 
+            SELECT id, 
+            version, 
+            image, 
+            expired_at 
+            FROM claro_badge
+        ");
+        $this->addSql("
+            DROP TABLE claro_badge
+        ");
+        $this->addSql("
+            CREATE TABLE claro_badge (
+                id INTEGER NOT NULL, 
+                version INTEGER NOT NULL, 
+                image VARCHAR(255) NOT NULL, 
+                expired_at DATETIME DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            INSERT INTO claro_badge (id, version, image, expired_at) 
+            SELECT id, 
+            version, 
+            image, 
+            expired_at 
+            FROM __temp__claro_badge
+        ");
+        $this->addSql("
+            DROP TABLE __temp__claro_badge
         ");
         $this->addSql("
             DROP INDEX UNIQ_76CA6C4F5E237E06
