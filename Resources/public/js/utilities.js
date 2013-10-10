@@ -1,4 +1,75 @@
 (function () {
+
+    var config = {
+       "include_jquery":false,
+       "tinymce_jquery":true,
+       "use_callback_tinymce_init":true,
+       "selector":".tinymce",
+       "theme":{
+          "simple":{
+             "theme":"modern",
+             "menubar":false,
+             "toolbar1":"bold italic underline | ressourceLinker | alignleft aligncenter alignright alignjustify | fullscreenToggle",
+             "language":"fr_FR"
+          },
+          "medium":{
+             "theme":"modern",
+             "plugins":[
+                " -ressourceLinker fullscreen, emoticons code autolink lists link image charmap print preview hr anchor pagebreak",
+                "searchreplace wordcount visualblocks visualchars  fullscreen",
+                "insertdatetime media nonbreaking save table contextmenu directionality"
+             ],
+             "menubar":false,
+             "statusbar": false,
+             "toolbar1":"bold,italic,underline,undo,redo,removeformat cleanup code | ressourceLinker | fullscreenToggle ",
+             "toolbar2":"alignleft aligncenter alignright alignjustify | emoticons lists link image charmap print preview hr anchor pagebreak ",
+             "relative_urls":false,
+             "language":"fr_FR"
+          },
+          "advanced":{
+             "plugins":[
+                "-ressourceLinker -fullscreenToggle advlist autolink lists link image charmap print preview hr anchor pagebreak",
+                "searchreplace wordcount visualblocks visualchars code fullscreen",
+                "insertdatetime media nonbreaking save table contextmenu directionality",
+                "emoticons template paste textcolor"
+             ],
+             "menubar":false,
+             "toolbar1":" undo redo | styleselect | bold italic | ressourceLinker fullscreenToggle | advlist autolink lists link image charmap print preview hr anchor pagebreak ",
+             "toolbar2":"print preview media | forecolor backcolor emoticons | stfalcon | insertdatetime media nonbreaking save table contextmenu directionality",
+             "toolbar3":"searchreplace wordcount visualblocks visualchars code",
+             "image_advtab":true,
+             "templates":[
+                {
+                   "title":"Test template 1",
+                   "content":"Test 1"
+                },
+                {
+                   "title":"Test template 2",
+                   "content":"Test 2"
+                }
+             ],
+             "language":"fr_FR"
+          }
+       },
+       "tinymce_buttons":{
+          "ressourceLinker":{
+             "title":"Resource Linker",
+             "image":"\/vostro\/Claroline\/web\/"
+          },
+          "fullscreenToggle":{
+             "title":"toggle",
+             "image":"\/vostro\/Claroline\/web\/"
+          }
+       },
+       "external_plugins":{
+          "imagemanager":{
+             "url":"\/vostro\/Claroline\/web\/bundles\/clarolinecore\/js\/tinymce\/config.js"
+          }
+       },
+       "language":"fr_FR",
+       "jquery_script_url":"\/vostro\/Claroline\/web\/bundles\/stfalcontinymce\/vendor\/tinymce\/tinymce.jquery.min.js"
+    };
+
     'use strict';
 
     window.Claroline = window.Claroline || {};
@@ -91,8 +162,9 @@
     };
 
     utilities.tinyMceAddInstance = function(elementId) {
-        console.debug(elementId);
-        tinyMCE.execCommand('mceAddEditor', false, elementId);
+        var newConfig = _.clone(config);
+        newConfig.selector = '#'+elementId;
+        initTinyMCE(newConfig);
     };
 
     utilities.tinyMceRemoveInstance = function(elementId) {

@@ -306,21 +306,6 @@
                 type: 'POST',
                 processData: false,
                 contentType: false,
-//                success: function() {
-//                    $.ajax({
-//                        url: Routing.generate(
-//                            'claro_widget_content',
-//                            {'widgetInstanceId': widgetInstanceId}
-//                        ),
-//                        type: 'GET',
-//                        success: function (datas) {
-//                            widgetEditionElement.addClass('hide');
-//                            widgetEditionElement.empty();
-//                            widgetViewElement.html(datas);
-//                            widgetViewElement.removeClass('hide');
-//                        }
-//                    });
-//                },
                 complete: function(jqXHR) {
                     switch (jqXHR.status) {
                         case 204:

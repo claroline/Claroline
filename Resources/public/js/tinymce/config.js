@@ -1,21 +1,44 @@
 
 function callback_tinymce_init() {
-    $('.mce-toolbar').each(function (index, element) {
-        if (index > 0)
-            element.setAttribute('style', 'display: none');
+
+    $('.tinymce').each(function(index, element) {
+        var parent = $(element).parent().get(0);
+        $('.mce-toolbar', parent).each(function (itopbar, topbar) {
+            if (itopbar > 0)
+                topbar.setAttribute('style', 'display: none');
+        });
     });
 
     $('div [aria-label="toggle"] button').html("<i class='icon-resize-full' style='font-family: FontAwesome'></i>");
     $('div [aria-label="Resource Linker"] button').html("<i class='icon-file' style='font-family: FontAwesome'></i>");
 
+
     $('body').on('click', 'div [aria-label="toggle"] button', function(){
-        if ($(this).parents('.mce-fullscreen').get(0) === undefined) {
-            $('i', this).attr('class', 'icon-resize-full');
-        } else {
-            $('i', this).attr('class', 'icon-resize-small');
-        }
-    });
-}
+            /** Fullscreen with modal   **/
+            if ($(this).parents('.mce-fullscreen').get(0) === undefined) {
+                $('i', this).attr('class', 'icon-resize-full');
+                // check fake class exists
+                ModalMCE = $(this).parents('.nomodal').get(0);
+
+                if (ModalMCE) {
+                    // put back modal
+                    $(ModalMCE).removeClass('nomodal');
+                    $(ModalMCE).addClass('modal');
+                }
+            } else {
+                // check if modal exist => not null
+                ModalMCE = $(this).parents('.modal').get(0);
+
+                $('i', this).attr('class', 'icon-resize-small');
+
+                if (ModalMCE) {
+                    // if yes take off and add fake class
+                    $(ModalMCE).removeClass('modal');
+                    $(ModalMCE).addClass('nomodal');
+                }
+            }
+        });
+    }
 
 function tinymce_button_ressourceLinker (ed) {
     ed.focus();

@@ -128,8 +128,6 @@
         src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'platform' }) }}"
         type="text/javascript">
     </script>
-    <script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>
-    <script>
-        Claroline.Utilities.tinyMceInit();
-    </script>
+    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+    {{ tinymce_init() }}
 {% endblock %}

@@ -48,7 +48,6 @@
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager.js') }}"></script>
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'resource' }) }}"></script>
     {#<script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>#}
-    <textarea class="tinymce"></textarea>
     {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
     {{ tinymce_init() }}
     <script type="text/javascript">
