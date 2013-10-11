@@ -1,8 +1,8 @@
 {% macro recursiveChapter(root, chapter, lesson, isRoot) %}
     {% if isRoot %}
-        <ul class='jquery-sortable-list list-group menu' id = '{{ root.id }}'>
+        <ul class='jquery-sortable-list overflow' id = '{{ root.id }}'>
     {% else %}
-        <ul class='' id = '{{ root.id }}'>
+        <ul class='' id = 'list_{{ root.id }}' data-list = '{{ root.id }}'>
     {% endif %}
     {% if root.__children|length %}
         {% for child in root.__children %}
@@ -12,7 +12,9 @@
             {% else %}
                 <div class='menu-item'>
             {% endif %}
-                <i class="icon-move"></i><a href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': child.id }) }}">{{ child.title }}</a>
+                <i class='icon-collapse collapsor' id='collapsor_icon_{{ child.id }}' data-collapsor = '{{ child.id }}'></i>
+                <i data-handle = '{{ child.id }}' class="icon-file-text-alt handle_sortable lesson_tooltip" data-original-title='{{ 'dragndrop_button'|trans({}, 'icap_lesson') }}'></i>
+                <a href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': child.id }) }}">{{ child.title }}</a>
             </div>
             {{ _self.recursiveChapter(child, chapter, lesson, false) }}
             </li>
@@ -22,7 +24,11 @@
 {% endmacro %}
 
 {% if tree is defined and tree != null and tree.__children is defined and tree.__children|length %}
-    <div>
+    <div class='list-group menu menu_lesson '>
+        <div class='menu_lesson_icons'>
+            <i class="icon-indent-right lesson_tooltip" id='collapse_all' data-original-title='{{ 'collapse_all'|trans({}, 'icap_lesson') }}'></i>
+            <i class="icon-sort-by-attributes-alt lesson_tooltip" id='expand_all' data-original-title='{{ 'expand_all'|trans({}, 'icap_lesson') }}'></i>
+        </div>
         {{ _self.recursiveChapter(tree, chapter, _resource, true) }}
         <form id='moveform' action ='' method='post' style='display:none;'>
             {{ form_rest(form) }}

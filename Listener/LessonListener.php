@@ -37,7 +37,6 @@ class LessonListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    /*Méthode permettant de créer la table en base*/
     public function onCreate(CreateResourceEvent $event)
     {
         $request = $this->container->get('request');
@@ -72,6 +71,40 @@ class LessonListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    public function onCopy(CopyResourceEvent $event){
+        $entityManager = $this->container->get('doctrine.orm.entity_manager');
+        $lesson = $event->getResource();
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        $newlesson = new Lesson();
+        $newlesson->setName($lesson->getResourceNode()->getName());
+        $entityManager->persist($newlesson);
+        $entityManager->flush($newlesson);
+
+        $chapterRepository = $entityManager->getRepository('IcapLessonBundle:Chapter');
+        $this->copyChapters($lesson->getRoot(), $newlesson->getRoot(), $newlesson, $entityManager);
+
+        $event->setCopy($newlesson);
+        $event->stopPropagation();
+    }
+
+    private function copyChapters($root_original, $root_copy, $newlesson, $entityManager){
+        $chapterRepository = $entityManager->getRepository('IcapLessonBundle:Chapter');
+        $chapters = $chapterRepository->children($root_original, true);
+        if($chapters != null and count($chapters) > 0){
+            foreach ($chapters as $chapter) {
+                $newchapter = new Chapter();
+                $newchapter->setTitle($chapter->getTitle());
+                $newchapter->setText($chapter->getText());
+                $newchapter->setLesson($newlesson);
+                $chapterRepository->persistAsLastChildOf($newchapter, $root_copy);
+                $entityManager->flush();
+                $this->copyChapters($chapter, $newchapter, $newlesson, $entityManager);
+                //$entityManager->flush();
+            }
+        }
+    }
+
     public function onDelete(DeleteResourceEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
@@ -79,4 +112,6 @@ class LessonListener extends ContainerAware
         $em->flush();
         $event->stopPropagation();
     }
+
+
 }

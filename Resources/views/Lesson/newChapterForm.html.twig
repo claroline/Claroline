@@ -1,4 +1,4 @@
-<form method="POST" action="{{ path('icap_lesson_add_chapter', { 'resourceId': _resource.id , 'parentChapterId': chapterParent.id }) }}" class="form-horizontal">
+<form method="POST" id='createchapterform' action="{{ path('icap_lesson_add_chapter', { 'resourceId': _resource.id , 'parentChapterId': chapterParent.id }) }}" class="form-horizontal">
     <fieldset>
         <legend>{{ 'Chapter Creation'|trans({}, 'icap_lesson') }}</legend>
         <div class="control-group">

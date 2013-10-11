@@ -1,4 +1,4 @@
-<form method="POST" action="{{ path('icap_lesson_move_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id }) }}" class="form-horizontal">
+<form id='move_form_nojs' method="POST" action="{{ path('icap_lesson_move_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id }) }}" class="form-horizontal">
     <fieldset>
         <legend>{{ 'Chapter Move'|trans({}, 'icap_lesson') }}</legend>
         <div class="control-group">
@@ -22,3 +22,7 @@
         <a href="{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id }) }}"><button type="button" class="btn">{{ 'Cancel'|trans({}, 'icap_lesson') }}</button></a>
     </div>
 </form>
+
+{% block javascripts %}
+
+{% endblock %}

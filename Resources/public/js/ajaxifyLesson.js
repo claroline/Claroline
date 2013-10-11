@@ -13,6 +13,21 @@ function injectForm(obj, hashname){
     });
 }
 
+function injectFormForMove(obj, hashname){
+    var newLink = $(obj);
+    newLink.attr("data-path", newLink.attr('href'));
+    newLink.attr('href', hashname+'-'+newLink.attr('data-chapter'));
+    newLink.on('click', function (event){
+        event.preventDefault();
+        $.get(newLink.attr("data-path"))
+            .done(function (data) {
+                $('#chapter_content').html(data);
+            })
+        ;
+        checkMoveValue();
+    });
+}
+
 function popupForm(obj, hashname){
     var newLink = $(obj);
     newLink.attr("data-path", newLink.attr('href'));
@@ -48,7 +63,7 @@ $(document).ready(function() {
     });
     //form ajax insertion for chapter move
     $('a.movechapter').each(function(){
-        injectForm($(this), '#moveChapter');
+        injectFormForMove($(this), '#moveChapter');
     });
     //ajax popup for chapter delete form
     $('a.deletechapter').each(function(){

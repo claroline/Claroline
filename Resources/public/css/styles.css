@@ -66,6 +66,10 @@ li.custom_field div div {
     clear: both;
 }
 
+.lesson_title{
+    margin-top:0px;
+}
+
 .portrate {
     text-align: center;
 }
@@ -109,6 +113,29 @@ li.custom_field div div {
     margin-bottom:40px;
 }
 
+#editchapterform textarea, #createchapterform textarea{
+    height:300px;
+    width: 100%;
+}
+
+.lesson_tooltip{
+    cursor:pointer;
+}
+
+.overflow{
+    overflow:auto;
+}
+
+.menu_lesson{
+    background-color: #f5f5f5;
+}
+
+.menu_lesson_icons{
+    text-align:right;
+}
+.menu_lesson_icons i{
+    padding:5px;
+}
 
 /*sortable styles*/
 
@@ -124,13 +151,17 @@ body.dragging, body.dragging * {
 
 ul.jquery-sortable-list {
     padding-left:10px;
-    background-color: #f5f5f5;
     margin-bottom:5px;
 
 }
 
 ul.jquery-sortable-list li {
     display: block;
+}
+
+ul.jquery-sortable-list li i{
+  padding-right:5px;
+    cursor: pointer;
 }
 
 ul.jquery-sortable-list li .menu-item{
@@ -147,7 +178,8 @@ ul.jquery-sortable-list li .menu-item:hover{
 }
 
 ul.jquery-sortable-list li .active a{
-    color: #999999;
+    color: #000000;
+    font-weight: bold;
 }
 
 ul.jquery-sortable-list li.placeholder {

@@ -16,12 +16,12 @@ class LogChapterDeleteEvent extends AbstractLogResourceEvent{
      * @param Chapter $chapter
      * @param array $changeSet
      */
-    public function __construct(Lesson $lesson, Chapter $chapter)
+    public function __construct(Lesson $lesson, $chaptername)
     {
         $details = array(
             'chapter' => array(
                 'lesson'    => $lesson->getId(),
-                'title'     => $chapter->getTitle()
+                'title'     => $chaptername
             )
         );
         parent::__construct($lesson->getResourceNode(), $details);

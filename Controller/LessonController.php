@@ -4,7 +4,7 @@ namespace Icap\LessonBundle\Controller;
 
 use Icap\LessonBundle\Form\ChapterType;
 use Icap\LessonBundle\Form\MoveChapterType;
-use Icap\LessonBundle\Event\Log\LogLessonUpdateEvent;
+use Icap\LessonBundle\Event\Log\LogChapterReadEvent;
 use Icap\LessonBundle\Event\Log\LogChapterUpdateEvent;
 use Icap\LessonBundle\Event\Log\LogChapterCreateEvent;
 use Icap\LessonBundle\Event\Log\LogChapterDeleteEvent;
@@ -99,6 +99,11 @@ class LessonController extends Controller
         //form used to move chapters, used by dragndrop methods
         $chapters = array_merge(array($lesson->getRoot()), $chapterRepository->children($lesson->getRoot()));
         $form = $this->createForm(new MoveChapterType(), $chapter, array('chapters' => $chapters));
+
+        //the first time you enter the lesson there's no chapter
+        if($chapter != null){
+            $this->dispatchChapterReadEvent($lesson, $chapter);
+        }
 
         return array(
             '_resource' => $lesson,
@@ -267,6 +272,7 @@ class LessonController extends Controller
         $form->handleRequest($this->getRequest());
 
         if($form->isValid()){
+            $chaptername = $chapter->getTitle();
             if ($form->get('children')->getData() == false) {
                 $em = $this->getDoctrine()->getManager();
                 $repo = $em->getRepository('IcapLessonBundle:Chapter');
@@ -274,7 +280,7 @@ class LessonController extends Controller
                 $em->clear();
                 $em->flush();
 
-                $this->dispatchChapterDeleteEvent($lesson, $chapter);
+                $this->dispatchChapterDeleteEvent($lesson, $chaptername);
 
                 $this->get('session')->getFlashBag()->add('success',$translator->trans('Your chapter has been deleted but no subchapter',array(), 'icap_lesson'));
 
@@ -284,7 +290,7 @@ class LessonController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 $em->remove($chapter);
                 $em->flush();
-                $this->dispatchChapterDeleteEvent($lesson, $chapter);
+                $this->dispatchChapterDeleteEvent($lesson, $chaptername);
                 $this->get('session')->getFlashBag()->add('success',$translator->trans('Your chapter has been deleted',array(), 'icap_lesson'));
 
                 return $this->redirect($this->generateUrl('icap_lesson', array('resourceId' => $lesson->getId())));
@@ -488,13 +494,9 @@ class LessonController extends Controller
                 throw new \InvalidArgumentException();
             }
         }
-/*        var_dump("vardump:");
-        var_dump($newParentId);
-        var_dump($brother);
-        var_dump("fin vardump");
-        die();*/
 
-        if ($brother == true){
+        //a node cant be sibling with root
+        if ($brother == true and $newParentId != $lesson->getRoot()->getId()){
             $repo->persistAsNextSiblingOf($chapter, $newParent);
         } else {
             $repo->persistAsFirstChildOf($chapter, $newParent);
@@ -541,6 +543,17 @@ class LessonController extends Controller
     /**
      * @param Lesson  $lesson
      * @param Chapter  $chapter
+     * @return Controller
+     */
+    protected function dispatchChapterReadEvent(Lesson $lesson, Chapter $chapter)
+    {
+        $event = new LogChapterReadEvent($lesson, $chapter);
+        return  $this->get('event_dispatcher')->dispatch('log', $event);
+    }
+
+    /**
+     * @param Lesson  $lesson
+     * @param Chapter  $chapter
      * @param $changeSet
      * @return Controller
      */
@@ -566,9 +579,9 @@ class LessonController extends Controller
      * @param Chapter  $chapter
      * @return Controller
      */
-    protected function dispatchChapterDeleteEvent(Lesson $lesson, Chapter $chapter)
+    protected function dispatchChapterDeleteEvent(Lesson $lesson, $chaptername)
     {
-        $event = new LogChapterDeleteEvent($lesson, $chapter);
+        $event = new LogChapterDeleteEvent($lesson, $chaptername);
         return  $this->get('event_dispatcher')->dispatch('log', $event);
     }
 
