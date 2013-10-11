@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Validator\Constraints\Image;
 
 class ProfileType extends AbstractType
 {
@@ -22,12 +23,12 @@ class ProfileType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
-        
+
         if ($this->isFormCreation) {
-            $builder->add('firstName', 'text', array('disabled' => true))
-                ->add('lastName', 'text', array('disabled' => true))
-                ->add('username', 'text', array('disabled' => true))
-                ->add('administrativeCode', 'text', array('required' => false, 'disabled' => true))
+            $builder->add('firstName', 'text', array('read_only' => true))
+                ->add('lastName', 'text', array('read_only' => true))
+                ->add('username', 'text', array('read_only' => true))
+                ->add('administrativeCode', 'text', array('required' => false, 'read_only' => true))
                 ->add('plainPassword', 'repeated', array('type' => 'password'))
                 ->add('mail', 'email', array('required' => false))
                 ->add('phone', 'text', array('required' => false));
@@ -75,6 +76,31 @@ class ProfileType extends AbstractType
                 )
             );
         }
+        $builder->add(
+            'pictureFile',
+            'file',
+            array(
+                'required' => false,
+                'constraints' => new Image(
+                    array(
+                        'minWidth' => 50,
+                        'maxWidth' => 800,
+                        'minHeight' => 50,
+                        'maxHeight' => 800,
+                    )
+                )
+            )
+        )
+        ->add(
+            'description',
+            'textarea',
+            array(
+                'attr' => array(
+                    'class' => 'tinymce',
+                    'data-theme' => 'advanced'
+                )
+            )
+        );
     }
 
     public function getName()

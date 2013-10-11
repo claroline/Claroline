@@ -146,6 +146,19 @@ class HomeTabConfigRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findWorkspaceHomeTabConfigsByAdmin()
+    {
+        $dql = "
+            SELECT htc
+            FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            WHERE htc.type = 'admin_workspace'
+            AND htc.workspace IS NOT NULL
+        ";
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
     public function findOrderOfLastDesktopHomeTabByUser(User $user)
     {
         $dql = "

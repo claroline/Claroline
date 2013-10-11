@@ -1,11 +1,20 @@
 actions: 'Actions'
 badges: 'Badges'
 badge: 'Badge'
+workspace_badges: "Workspace badges"
+day: 'day'
+week: 'week'
+month: 'month'
+year: 'year'
 back_to_badges_list: 'Back to badges list'
 back_to_users_badge: 'Back to users list'
 back_to_my_badges: 'Back to my badges'
 badge_awarded_to: 'Badge awarded to'
 bagde_awarded_to_none_user: 'Badge awarded to no users'
+badge_awarded_on_by: 'Badge awarded on %awardingDate% by %awardingIssuer%'
+badge_awarded_automatically_on: 'Badge automatically awarded on %awardingDate%'
+badge_awarding_rules_not_respected: "Badge awarding rules not respected"
+actions_lead_to_badge_awarding: "Actions that lead to badge awarding"
 award_badge: 'Award the badge'
 unaward: 'Remove award'
 badge_unaward_confirm_title: "Removing of a badge"
@@ -19,6 +28,8 @@ badge_form_frTranslation: 'French translation'
 badge_form_enTranslation: 'English translation'
 badge_delete_confirm_title: "Deletion of a badge"
 badge_delete_confirm_message: 'Are you sure you want to delete the badge <strong>%badgeName%</strong> ?'
+badge_rule_delete_confirm_title: "Deletion of a rule"
+badge_rule_delete_confirm_message: 'Are you sure you want to delete the rule ?'
 badge_add_success_message: 'Badge added with success.'
 badge_add_error_message: 'An error occured while adding new badge.'
 badge_delete_success_message: 'Badge deleted with success.'
@@ -34,13 +45,25 @@ badge_form_description: 'Description'
 badge_form_criteria: "Earning criteria"
 badge_form_version: 'Version'
 badge_form_image: 'Image'
+badge_form_automatic_award: 'Automatic awarding if rules are respected'
 badge_form_expired_at: 'Expiration date'
-badge_form_change_image: "Change the image"
+badge_form_choose_image: "Choose badge image"
+badge_form_change_image: "Change badge image"
+badge_form_badgeRules: "Awarding rules"
+badge_form_execute: "Execute"
+badge_form_times: "times"
+badge_form_action: 'the action'
 badge_award_form_group: 'Group'
 badge_award_form_user: 'User'
 badge_expired_on_date: 'Expire the %expirationDate%'
 badge_award_info_no_group_message: "No selected group for attribution"
+badge_check_state: "Validation state"
+badge_rules_not_respected: "Rules not respected"
+badge_rules_respected: "Rules respected"
+badge_no_rules_check_manually: "No rules, check manually"
+badge_rules_respected_state: "Page currently unavailable"
 claim: 'Claim'
+claiming: "Claim|Claimings"
 claim_date: 'Claim date'
 claim_badge: 'Claim a badge'
 claim_badge_form: 'Claim badge form'
@@ -61,3 +84,6 @@ badge_validate_award_success_message: "Validation of badge awarding made with su
 badge_validate_award_error_message: "An error occured while validating badge awarding."
 badge_reject_award_success_message: "Reject of badge awarding made with success."
 badge_reject_award_error_message: "An error occured while rejecting badge awarding."
+rule: 'Rule'
+add_rule: 'Add a rule'
+no_rule: 'No rule'

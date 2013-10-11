@@ -13,10 +13,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserRepository")
  * @ORM\Table(name="claro_user")
+ * @ORM\HasLifecycleCallbacks
  * @DoctrineAssert\UniqueEntity("username")
  * @DoctrineAssert\UniqueEntity("mail")
  *
@@ -211,6 +213,21 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
      * @ORM\JoinColumn(name="badge_claim_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     protected $badgeClaims;
+
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    protected $picture;
+
+    /**
+     * @Assert\File(maxSize="6000000")
+     */
+    protected $pictureFile;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $description;
 
     public function __construct()
     {
@@ -654,7 +671,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\BadgeClaim[]|\Doctrine\Common\Collections\ArrayCollection
+     * @return \Claroline\CoreBundle\Entity\Badge\BadgeClaim[]|\Doctrine\Common\Collections\ArrayCollection
      */
     public function getBadgeClaims()
     {
@@ -669,11 +686,38 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     public function hasClaimedFor(Badge $badge)
     {
         foreach ($this->getBadgeClaims() as $claimedBadge) {
-            if ($badge->getId() === $claimedBadge->getId()) {
+            if ($badge->getId() === $claimedBadge->getBadge()->getId()) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    public function getPictureFile()
+    {
+        return $this->pictureFile;
+    }
+
+    public function setPictureFile(UploadedFile $pictureFile)
+    {
+        $this->pictureFile = $pictureFile;
+    }
+    
+    public function setPicture($picture) {
+        $this->picture = $picture;
+    }
+
+        public function getPicture()
+    {
+        return $this->picture;
+    }
+    
+    public function getDescription() {
+        return $this->description;
+    }
+
+    public function setDescription($description) {
+        $this->description = $description;
     }
 }

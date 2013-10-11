@@ -7,7 +7,6 @@ use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
@@ -18,6 +17,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\DiExtraBundle\Annotation as DI;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @DI\Service("claroline.manager.user_manager")
@@ -35,7 +35,6 @@ class UserManager
     private $ch;
     private $pagerFactory;
     private $om;
-    private $mailer;
 
     /**
      * Constructor.
@@ -251,6 +250,11 @@ class UserManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
+    public function getUsersByGroupWithoutPager(Group $group)
+    {
+        return $this->userRepo->findByGroup($group);
+    }
+
     public function getUsersByNameAndGroup($search, Group $group, $page)
     {
         $query = $this->userRepo->findByNameAndGroup($search, $group, false);
@@ -261,6 +265,13 @@ class UserManager
     public function getUsersByWorkspace(AbstractWorkspace $workspace, $page)
     {
         $query = $this->userRepo->findByWorkspace($workspace, false);
+
+        return $this->pagerFactory->createPager($query, $page);
+    }
+
+    public function getUsersByWorkspaces(array $workspaces, $page)
+    {
+        $query = $this->userRepo->findUsersByWorkspaces($workspaces, false);
 
         return $this->pagerFactory->createPager($query, $page);
     }
@@ -321,6 +332,20 @@ class UserManager
         return $this->userRepo->find($userId);
     }
 
+    public function getByRolesIncludingGroups(array $roles, $page = 1)
+    {
+        $res = $this->userRepo->findByRolesIncludingGroups($roles, true);
+
+        return $this->pagerFactory->createPager($res, $page);
+    }
+    
+    public function getByRolesAndNameIncludingGroups(array $roles, $search, $page = 1)
+    {
+        $res = $this->userRepo->findByRolesAndNameIncludingGroups($roles, $search, true);
+
+        return $this->pagerFactory->createPager($res, $page);
+    }
+    
     public function getUsersByRoles(array $roles, $page = 1)
     {
         $res = $this->userRepo->findByRoles($roles, true);
@@ -357,5 +382,14 @@ class UserManager
     public function getResetPasswordHash($resetPassword)
     {
         return $this->userRepo->findOneByResetPasswordHash($resetPassword);
+    }
+
+
+    public function uploadAvatar(User $user)
+    {
+        if (null !== $user->getPictureFile()) {
+            $user->setPicture(sha1($user->getPictureFile()->getClientOriginalName()).'.'.$user->getPictureFile()->guessExtension());
+            $user->getPictureFile()->move(__DIR__.'/../../../../../../web/uploads/pictures', $user->getPicture());
+        }
     }
 }

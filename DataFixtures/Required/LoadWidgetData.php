@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\DataFixtures\Required;
 
 use Claroline\CoreBundle\Entity\Widget\Widget;
-use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -20,11 +20,11 @@ class LoadWidgetData extends AbstractFixture implements OrderedFixtureInterface
      */
     public function load(ObjectManager $manager)
     {
-        //name, isConfigurable, icon
+        //name, isConfigurable, isDisplayableInDesktop, isDisplayableInWorkspace
         $items = array(
-            array('core_resource_logger', true),
-            array('simple_text', true),
-            array('my_workspaces', false),
+            array('core_resource_logger', true, true, true),
+            array('simple_text', true, true, true),
+            array('my_workspaces', false, true, false),
         );
 
         foreach ($items as $item) {
@@ -34,26 +34,9 @@ class LoadWidgetData extends AbstractFixture implements OrderedFixtureInterface
             $widget->setIcon('fake/icon/path');
             $widget->setPlugin(null);
             $widget->setExportable(false);
+            $widget->setDisplayableInDesktop($item[2]);
+            $widget->setDisplayableInWorkspace($item[3]);
             $manager->persist($widget);
-
-            if ($item[0] !== 'my_workspaces') {
-                $wWidgetConfig = new DisplayConfig();
-                $wWidgetConfig->setWidget($widget);
-                $wWidgetConfig->setLock(false);
-                $wWidgetConfig->setVisible(true);
-                $wWidgetConfig->setParent(null);
-                $wWidgetConfig->setDesktop(false);
-                $manager->persist($wWidgetConfig);
-            }
-
-            $dWidgetConfig = new DisplayConfig();
-            $dWidgetConfig->setWidget($widget);
-            $dWidgetConfig->setLock(false);
-            $dWidgetConfig->setVisible(true);
-            $wWidgetConfig->setParent(null);
-            $dWidgetConfig->setDesktop(true);
-
-            $manager->persist($dWidgetConfig);
         }
 
         $manager->flush();

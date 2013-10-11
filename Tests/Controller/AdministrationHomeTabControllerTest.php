@@ -181,7 +181,7 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
                     function (HomeTabConfig $newHomeTabConfig) {
 
                         return $newHomeTabConfig->getType() === 'admin_desktop'
-                            && !$newHomeTabConfig->isVisible()
+                            && $newHomeTabConfig->isVisible()
                             && !$newHomeTabConfig->isLocked()
                             && $newHomeTabConfig->getTabOrder() === 4;
                     }
@@ -268,7 +268,7 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
                     function (HomeTabConfig $newHomeTabConfig) {
 
                         return $newHomeTabConfig->getType() === 'admin_workspace'
-                            && !$newHomeTabConfig->isVisible()
+                            && $newHomeTabConfig->isVisible()
                             && !$newHomeTabConfig->isLocked()
                             && $newHomeTabConfig->getTabOrder() === 4;
                     }
@@ -576,7 +576,7 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
         $widget->shouldReceive('getId')->once()->andReturn(1);
         $homeTab->shouldReceive('getType')->once()->andReturn('admin_desktop');
         $this->homeTabManager
-            ->shouldReceive('getVisibleDesktopWidgetConfig')
+            ->shouldReceive('getAdminDesktopWidgetInstance')
             ->with(array(1))
             ->once()
             ->andReturn($widgetDisplayConfigs);
@@ -607,7 +607,7 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
         $widget->shouldReceive('getId')->once()->andReturn(1);
         $homeTab->shouldReceive('getType')->once()->andReturn('admin_workspace');
         $this->homeTabManager
-            ->shouldReceive('getVisibleWorkspaceWidgetConfig')
+            ->shouldReceive('getAdminWorkspaceWidgetInstance')
             ->with(array(1))
             ->once()
             ->andReturn($widgetDisplayConfigs);
@@ -638,7 +638,7 @@ class AdministrationHomeTabControllerTest extends MockeryTestCase
                     function (WidgetHomeTabConfig $widgetHomeTabConfig) {
 
                         return $widgetHomeTabConfig->getType() === 'admin'
-                            && !$widgetHomeTabConfig->isVisible()
+                            && $widgetHomeTabConfig->isVisible()
                             && !$widgetHomeTabConfig->isLocked()
                             && $widgetHomeTabConfig->getWidgetOrder() === 4;
                     }

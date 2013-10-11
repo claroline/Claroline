@@ -713,7 +713,13 @@
                     $('.modal-body', this.el).html(form);
                     $('#modal-form', this.el).modal('show');
                 }
+            },
+            afterRender: function (form) {
+                var textArea = $('textarea', form)[0];
 
+                if (textArea) {
+                    initTinyMCE(stfalcon_tinymce_config);
+                }
             }
         })
     };
@@ -977,6 +983,8 @@
                             this.parameters.parentElement.append(this.views.form.el);
                             this.views.form.isAppended = true;
                         }
+
+                        this.views.form.afterRender(form);
                     }
                 });
             }
@@ -995,6 +1003,8 @@
                     } else {
                         this.views.form.render(data, parentDirectoryId, 'create');
                     }
+
+                    this.views.form.afterRender(data);
                 }
             });
         },
@@ -1009,7 +1019,7 @@
             });
         },
         remove: function (nodeIds) {
-            var trans = (nodeIds.length) > 1 ? 'resources_delete' : 'resource_delete'; 
+            var trans = (nodeIds.length) > 1 ? 'resources_delete' : 'resource_delete';
             var modal = Twig.render(ModalWindow, {
                 'body': Translator.get('platform' + ':' + trans),
                 'confirmFooter': true,

@@ -26,23 +26,26 @@
     </div>
 {% endblock %}
 
-{% block content %}
-
-    <div class="col-md-3">
-        <div class="list-group menu">
-            <div class="list-group-item disabled">
-               {{ 'desktop'|trans({}, 'platform') }}
-            </div>
-
-            {% render controller("ClarolineCoreBundle:Desktop:renderToolList") %}
+{% block leftbar %}
+    <div class="list-group menu">
+        <div class="list-group-item disabled">
+           {{ 'desktop'|trans({}, 'platform') }}
         </div>
-    </div>
 
-    <div class="col-md-9 section-content">
+        {% render controller("ClarolineCoreBundle:Desktop:renderToolList") %}
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="visible-xs visible-sm">
+        {{ block("leftbar") }}
+    </div>
+    <div class="section-content">
         <div class="panel panel-default">
             {% block section_content %}{% endblock %}
         </div>
     </div>
+    {% block section_after_content %}{% endblock %}
 
 {% endblock %}
 

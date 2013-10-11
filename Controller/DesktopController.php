@@ -35,7 +35,7 @@ class DesktopController extends Controller
      *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "router"             = @DI\Inject("router"),
-     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager")
+     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
      * })
      */
     public function __construct(
@@ -55,7 +55,7 @@ class DesktopController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/home_tab/{homeTabId}/widgets",
+     *     "/home_tab/{homeTabId}/widgets/{withConfig}",
      *     name="claro_desktop_widgets"
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
@@ -65,37 +65,57 @@ class DesktopController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function widgetsAction($homeTabId, User $user)
+    public function widgetsAction($homeTabId, $withConfig, User $user)
     {
         $widgets = array();
         $configs = array();
+        $lastWidgetOrder = 1;
+        $isLockedHomeTab = false;
 
         $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
 
-        if (!is_null($homeTab) &&
-            $this->homeTabManager->checkHomeTabVisibilityByUser($homeTab, $user)) {
+        if (is_null($homeTab)) {
+            $isVisibleHomeTab = false;
+        } else {
+            $isVisibleHomeTab = $this->homeTabManager
+                ->checkHomeTabVisibilityByUser($homeTab, $user, $withConfig);
+            $isLockedHomeTab = $this->homeTabManager->checkHomeTabLock($homeTab);
+        }
+
+        if ($isVisibleHomeTab) {
 
             if ($homeTab->getType() === 'admin_desktop') {
                 $adminConfigs = $this->homeTabManager->getAdminWidgetConfigs($homeTab);
-                $userWidgetsConfigs = $this->homeTabManager
-                    ->getWidgetConfigsByUser($homeTab, $user);
+
+                if (!$isLockedHomeTab) {
+                    $userWidgetsConfigs = $this->homeTabManager
+                        ->getWidgetConfigsByUser($homeTab, $user);
+                } else {
+                    $userWidgetsConfigs = array();
+                }
+
+                if (count($userWidgetsConfigs) > 0) {
+                    $lastWidgetOrder = count($userWidgetsConfigs);
+                }
 
                 foreach ($adminConfigs as $adminConfig) {
 
                     if ($adminConfig->isLocked()) {
-                        $configs[] = $adminConfig;
+                        if ($adminConfig->isVisible()) {
+                            $configs[] = $adminConfig;
+                        }
                     }
                     else {
                         $existingWidgetConfig = $this->homeTabManager
                             ->getUserAdminWidgetHomeTabConfig(
                                 $homeTab,
-                                $adminConfig->getWidget(),
+                                $adminConfig->getWidgetInstance(),
                                 $user
                             );
                         if (count($existingWidgetConfig) === 0) {
                             $newWHTC = new WidgetHomeTabConfig();
                             $newWHTC->setHomeTab($homeTab);
-                            $newWHTC->setWidget($adminConfig->getWidget());
+                            $newWHTC->setWidgetInstance($adminConfig->getWidgetInstance());
                             $newWHTC->setUser($user);
                             $newWHTC->setWidgetOrder($adminConfig->getWidgetOrder());
                             $newWHTC->setVisible($adminConfig->isVisible());
@@ -113,37 +133,35 @@ class DesktopController extends Controller
                 foreach ($userWidgetsConfigs as $userWidgetsConfig) {
                     $configs[] = $userWidgetsConfig;
                 }
-            }
-            else {
+            } else {
                 $configs = $this->homeTabManager->getWidgetConfigsByUser($homeTab, $user);
+
+                if (count($configs) > 0) {
+                    $lastWidgetOrder = count($configs);
+                }
             }
 
             foreach ($configs as $config) {
-                if ($config->isVisible()) {
-                    $event = $this->eventDispatcher->dispatch(
-                        "widget_{$config->getWidget()->getName()}_desktop",
-                        'DisplayWidget'
-                    );
+                $event = $this->eventDispatcher->dispatch(
+                    "widget_{$config->getWidgetInstance()->getWidget()->getName()}",
+                    'DisplayWidget',
+                    array($config->getWidgetInstance())
+                );
 
-                    if ($event->hasContent()) {
-                        $widget['id'] = $config->getWidget()->getId();
-                        if ($event->hasTitle()) {
-                            $widget['title'] = $event->getTitle();
-                        } else {
-                            $widget['title'] = strtolower($config->getWidget()->getName());
-                        }
-                        $widget['content'] = $event->getContent();
-                        $widget['configurable'] = ($config->isLocked() !== true and $config->getWidget()->isConfigurable());
-
-                        $widgets[] = $widget;
-                    }
-                }
+                $widget['config']= $config;
+                $widget['content'] = $event->getContent();
+                $widget['configurable'] = ($config->isLocked() !== true && $config->getWidgetInstance()->getWidget()->isConfigurable());
+                $widgets[] = $widget;
             }
         }
 
         return array(
-            'widgets' => $widgets,
-            'isDesktop' => true
+            'widgetsDatas' => $widgets,
+            'isDesktop' => true,
+            'withConfig' => $withConfig,
+            'isVisibleHomeTab' => $isVisibleHomeTab,
+            'isLockedHomeTab' => $isLockedHomeTab,
+            'lastWidgetOrder' => $lastWidgetOrder
         );
     }
 

@@ -1,5 +1,16 @@
 <div id="footer">
     <div class="container">
-        <p>Powered by Claroline</p>
+        <div class="row">
+            {% if config.getParameter('footer') != '' %}
+                <p>
+                    {{ config.getParameter('footer') }}
+                    <span class="pull-right">Powered by <a href="http://www.claroline.net">Claroline</a></span>
+                </p>
+            {% else %}
+                <p class="text-center">
+                    Powered by <a href="http://www.claroline.net">Claroline</a>
+                </p>
+            {% endif %}
+        </div>
     </div>
 </div>

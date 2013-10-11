@@ -57,7 +57,7 @@
         parameters.route.action = {};
         parameters.route.normal = {"route": "claro_message_list_received", "parameters": {}};
         parameters.route.search = {"route": "claro_message_list_received_search", "parameters": {}};
-        parameters.route.action.remove = {"route": "claro_message_soft_delete", "parameters": {}, "confirmTemplate": removeMessageConfirm};
+        parameters.route.action.remove = {"route": "claro_message_soft_delete", "parameters": {}, "confirmTemplate": removeMessageConfirm, "delete": true};
         Claroline.Table.initialize(parameters);
         $('.mark-as-read').live('click', function (e) {
             e.preventDefault();

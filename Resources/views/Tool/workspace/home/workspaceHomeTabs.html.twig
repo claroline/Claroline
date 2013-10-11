@@ -8,7 +8,7 @@
     <div class="welcome-home">
         {% render controller(
             "ClarolineCoreBundle:Workspace:widgets",
-            {'workspaceId': workspace.getId(), 'homeTabId': tabId})
-        %}
+            {'workspaceId': workspace.getId(), 'homeTabId': tabId, 'withConfig': withConfig}
+        ) %}
     </div>
 {% endblock %}

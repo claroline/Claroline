@@ -1,0 +1,29 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% trans_default_domain "badge" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets debug=false filter='lessphp'  output='bundles/clarolinecore/css/badge.css'
+      "@ClarolineCoreBundle/Resources/views/Badge/less/badge.less"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            <ol class="breadcrumb">
+                {% block section_title_first %}<li><a href="{{ path('claro_workspace_tool_badges', {'workspaceId': workspace.id}) }}" title="{{ 'workspace_badges'|trans }}">{{ 'workspace_badges'|trans }}</a>{% endblock %}
+                {% block section_title %}{% endblock %}
+            </ol>
+        </h3>
+    </div>
+
+    {{ macros.flashBox() }}
+
+    <div class="panel-body">
+        {% block section_body %}{% endblock %}
+    </div>
+{% endblock %}

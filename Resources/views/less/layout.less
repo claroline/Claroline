@@ -24,8 +24,88 @@ body {
     height: 100%;
 }
 
+/*************/
+/*  Left Bar */
+/*************/
+
+#left-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 40px;
+    overflow: hidden;
+    height: 100%;
+    z-index: (@zindex-navbar-fixed - 1);
+    padding-top: (@navbar-height + 5);
+
+    &, & .list-group,
+    & .list-group .list-group-item,
+    & .list-group .list-group-item.disabled,
+    & .list-group .list-group-item.disabled:hover {
+        background: @navbar-default-bg;
+        color: @navbar-default-link-color;
+        font-size: 16px;
+    }
+
+    .list-group {
+        .box-shadow(none);
+        width: 400px;
+        .list-group-item {
+            border: none;
+            padding-left: 12px;
+
+            i {
+                padding-right: 12px;
+                display: inline-block;
+                width: 28px;
+            }
+
+            &:hover {
+                background: @component-active-bg;
+                color: @navbar-inverse-link-active-color;
+            }
+
+            &.active {
+                background: @navbar-default-link-active-bg;
+                color: @navbar-default-link-active-color;
+            }
+
+            &.disabled{
+                //height: (@navbar-height + 4);
+                border-bottom: 4px solid @gray-light !important;
+                //padding: 15px 0 0  40px !important;
+                font-weight: bold;
+                color: darken(@navbar-default-link-color, 10%);
+            }
+
+            &:first-child, &:last-child {
+                .border-top-radius(0);
+                .border-bottom-radius(0);
+            }
+        }
+    }
+}
+
+@media (min-width: 994px) {
+    body.left-bar-push {
+        margin-left: 40px;
+    }
+    #top_bar.left-bar-push {
+        padding-left: 40px;
+    }
+}
+
+@media (max-width: 993px) {
+    body.left-bar-push {
+        margin-left: 0;
+    }
+    #top_bar.left-bar-push {
+        padding-left: 0;
+    }
+}
+
 /************/
-/*  top_bar */
+/*  Top Bar */
 /************/
 
 #top_bar {
@@ -34,27 +114,49 @@ body {
             display: none;
          }
     }
-}
 
+    &.navbar.navbar-inverse.navbar-fixed-top {
+        .navbar-brand {
+            font-size:22px;
+            color: #fff;
+        }
+
+        .badge {
+            background:@brand-danger;
+        }
+    }
+
+    .navbar-brand.logo {
+        padding-top: 7px;
+        padding-bottom: 0;
+    }
+
+    .navbar-collapse {
+        margin-left: -15px;
+    }
+}
 
 /************/
 /*  Footer  */
 /************/
 
 #footer {
-
     width: 100%;
     position: relative;
     margin-top: @navbar-height + 10px;
     min-height: @navbar-height;
     background-color: @gray-lighter;
-    color: lighten(@gray, 20%);
+    color: lighten(@gray, 30%);
 
     .container {
         p, h1, h2, h3, h4, h5, h6 {
             margin: 15px;
-            text-align: center;
             max-height: 100%;
+
+            a {
+                color: lighten(@gray, 30%);
+                font-weight: bold;
+            }
         }
     }
 }
@@ -430,8 +532,7 @@ div.pagination
     margin: 0 0 10px 0;
 }
 
-.panel
-{
+.panel {
     > table tr td,
     > table tr th,
     .workspace-list-pager > table tr td,
@@ -440,18 +541,28 @@ div.pagination
         padding-right: 14px !important;
         padding-left: 14px !important;
     }
+
+    form > .list-group {
+        margin-bottom: 0;
+        > .list-group-item {
+            border-left: none;
+            border-right: none;
+            border-bottom: none;
+            .border-top-radius(0);
+            .border-bottom-radius(0);
+        }
+    }
 }
 
 .impersonalitation {
-    .spacer {
+    &.spaced .spacer {
         height: @navbar-height;
     }
 
     .navbar-fixed-top {
-        z-index: (@zindex-navbar - 1);
-        margin-top: @navbar-height;
+        z-index: (@zindex-navbar-fixed - 1);
         background-color: darken(@brand-warning, 5%);
-
+        border: none;
         .navbar-nav li a
         {
             color: #fff;
@@ -462,6 +573,13 @@ div.pagination
             font-size: 20px;
         }
     }
+
+    &.spaced .navbar-fixed-top {
+        margin-top: @navbar-height;
+        padding-left: 40px;
+        z-index: (@zindex-navbar-fixed - 3);
+    }
+
 }
 
 /**********************/
@@ -647,4 +765,8 @@ div.pagination
     border-bottom: 1px solid @gray-lighter;
     margin: 0 0 20px 0;
     padding: 0 0 20px 0;
+}
+
+.mce-fullscreen {
+    z-index: (@zindex-navbar-fixed + 1) !important;
 }
