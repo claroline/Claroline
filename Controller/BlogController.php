@@ -91,13 +91,14 @@ class BlogController extends Controller
         }
 
         return array(
-            '_resource' => $blog,
-            'user'      => $user,
-            'pager'     => $pager,
-            'archives'  => $this->getArchiveDatas($blog),
-            'tag'       => $tag,
-            'author'    => $author,
-            'date'      => $date
+            '_resource'     => $blog,
+            '_resourceNode' => array($blog->getResourceNode()),
+            'user'          => $user,
+            'pager'         => $pager,
+            'archives'      => $this->getArchiveDatas($blog),
+            'tag'           => $tag,
+            'author'        => $author,
+            'date'          => $date
         );
     }
 
