@@ -8,7 +8,8 @@
         context = context || 'desktop';
         var clickedDate = null,
             id = null,
-            url = null;
+            url = null,
+            task = null;
 
         $('.filter').click(function () {
             var numberOfChecked = $('.filter:checkbox:checked').length;
@@ -148,17 +149,21 @@
         });
 
         $('#updateBtn').click(function () {
-            var event2 = new Object();
-            event2.id = id;
-            event2.title = $('#agenda_form_title').val();
-            event2.start = $('#agenda_form_start').val();
-            event2.end = $('#agenda_form_end').val();
-            event2.allDay = $('#agenda_form_allDay').attr('checked') === 'checked' ? 1 : 0;
-            event2.color = $('#agenda_form_priority').val();
-            event2.description = $('#agenda_form_description').val();
-            var event1 = $('#calendar').fullCalendar('clientEvents', id);
-            console.debug(compareEvents(event1[0], event2));
-            if(compareEvents(event1[0], event2) > 0 ) {
+           if(task === 'no') {
+                var event2 = new Object();
+                event2.id = id;
+                event2.title = $('#agenda_form_title').val();
+                event2.start = $('#agenda_form_start').val();
+                event2.end = $('#agenda_form_end').val();
+                event2.allDay = $('#agenda_form_allDay').attr('checked') === 'checked' ? 1 : 0;
+                event2.color = $('#agenda_form_priority').val();
+                event2.description = $('#agenda_form_description').val();
+                var event1 = $('#calendar').fullCalendar('clientEvents', id);
+                var compare = compareEvents(event1[0], event2 );
+           } else {
+                compare = 1;
+           } 
+            if( compare > 0 ) {
                 $('#updateBtn').attr('disabled', 'disabled');
                 var data = new FormData($('#myForm')[0]);
                 data.append('id', id);
@@ -193,8 +198,9 @@
                         }
                     }
                 });
+            } else {
+                $('#myModal').modal('hide');
             }
-            $('#myModal').modal('hide');
         });
 
         var deleteClick = function (id) {
@@ -224,9 +230,9 @@
             var id = $(e.currentTarget).attr('data-event-id');
             deleteClick(id);
         });
-
-        $('.update-task').on('click', function (e) {
+        $('#tasks').on('click','.update-task',function(e) {
             $('#save').hide();
+            task = 'task';
             var list = e.target.parentElement.children;
             $('#myModal').modal('show');
             id = $(list[5])[0].innerHTML;
@@ -241,7 +247,7 @@
             {
                 $('#agenda_form_allDay').attr('checked', true);
             }
-             $('#agenda_form_priority option[value=' + $(list[3])[0].innerHTML + ']').attr('selected', 'selected');
+            $('#agenda_form_priority option[value=' + $(list[3])[0].innerHTML + ']').attr('selected', 'selected');
         });
         function dropEvent(event, dayDelta, minuteDelta) {
             $.ajax({
@@ -276,6 +282,7 @@
         function modifiedEvent(calEvent, context)
         {
             id = calEvent.id;
+            task = 'no';
             $('#deleteBtn').show();
             $('#updateBtn').show();
             $('#save').hide();
@@ -320,13 +327,14 @@
         function compareEvents(event1 , event2)
         {
             event1.start = $.fullCalendar.formatDate(new Date(event1.start),'dd/MM/yyyy HH:mm');
-            event1.end = $.fullCalendar.formatDate(new Date(event1.end),'dd/MM/yyyy HH:mm');
+            // if the start & end date are the same end date is null for the fullcalendar
+            event1.end = (event1.end != null) ? $.fullCalendar.formatDate(new Date(event1.end),'dd/MM/yyyy HH:mm'): null;
             event1.allDay = (event1.allDay == false ) ? 0 : 1;
             if (event1.title == event2.title)
             {
                 if(event1.start == event2.start)
                 {
-                    if(event1.end == event2.end)
+                    if((event1.end == event2.end) || (!event1.end)) 
                     {
                         if ((!event1.description) && (!event2.description ) || (event1.description == event2.description))
                         {
@@ -344,7 +352,7 @@
                     }
                     else
                     {
-                        console.debug(event1.end+''+event2.end)
+                        console.debug(event1.end+' ev 2 '+event2.end);
                         return 4;
                     } 
                         
@@ -398,6 +406,7 @@
             dayClick: dayClickFunction,
             eventClick:  function (event) {
                 id = event.id;
+                console.debug(event.end);
                 modifiedEvent(event ,context);
                 //$('#calendar').fullCalendar( 'updateEvent', event );
             },
