@@ -8,6 +8,7 @@ class OperationHandler extends BaseHandler
 {
     private $document;
     private $rootElement;
+    private $isPreviousFileChecked = false;
 
     public function __construct($operationFile, \Closure $logger = null)
     {
@@ -61,12 +62,13 @@ class OperationHandler extends BaseHandler
 
     private function writeOperations()
     {
-        if ('' !== file_get_contents($this->targetFile)) {
+        if (!$this->isPreviousFileChecked && '' !== file_get_contents($this->targetFile)) {
             throw new \Exception(
                 'A non empty operation file is already present (assumed not executed)'
             );
         }
 
+        $this->isPreviousFileChecked = true;
         $this->document->save($this->targetFile);
     }
 }
