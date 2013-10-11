@@ -110,7 +110,11 @@ class StepController extends Controller
 
     /**
      * 
-     * @Route("/plop/", name="innova_user_resources", options = {"expose"=true})
+     * @Route(
+     *      "/step/resources", 
+     *      name="innova_user_resources", 
+     *      options = {"expose"=true}
+     * )
      * @Method("GET")
      */
     public function getUserResourcesAction()
@@ -123,7 +127,7 @@ class StepController extends Controller
         $resources = array();
 
         foreach ($resourceNodes as $resourceNode) {
-            if(in_array( $resourceNode->getResourceType()->getId(), $resourceTypeToShow)){
+            if (in_array( $resourceNode->getResourceType()->getId(), $resourceTypeToShow)) {
                 $resource = new \stdClass();
                 $resource->id = $resourceNode->getId();
                 $resource->workspace = $resourceNode->getWorkspace()->getName();
