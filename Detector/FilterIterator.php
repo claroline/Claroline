@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\BundleRecorder;
+namespace Claroline\BundleRecorder\Detector;
 
 class FilterIterator extends \RecursiveFilterIterator
 {

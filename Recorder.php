@@ -2,21 +2,29 @@
 
 namespace Claroline\BundleRecorder;
 
-use Composer\Composer;
 use Composer\Package\PackageInterface;
+use Claroline\BundleRecorder\Detector\Detector;
+use Claroline\BundleRecorder\Handler\BundleHandler;
+use Claroline\BundleRecorder\Handler\OperationHandler;
+use Claroline\BundleRecorder\Handler\VersionHandler;
+use Claroline\BundleRecorder\Operation;
 
 class Recorder
 {
-    private $bundleFile;
+    private $detector;
+    private $bundleHandler;
+    private $operationHandler;
     private $logger;
 
-    public function __construct($bundleFile)
+    public function __construct(
+        Detector $detector,
+        BundleHandler $bundleHandler,
+        OperationHandler $operationHandler
+    )
     {
-        $this->bundleFile = $bundleFile;
-
-        if (!file_exists($this->bundleFile)) {
-            touch($this->bundleFile);
-        }
+        $this->detector = $detector;
+        $this->bundleHandler = $bundleHandler;
+        $this->operationHandler = $operationHandler;
     }
 
     public function setLogger(\Closure $logger)
@@ -24,52 +32,40 @@ class Recorder
         $this->logger = $logger;
     }
 
-    public function addBundles(array $bundlesFqcns)
+    public function record($operationType, PackageInterface $target, PackageInterface $initial = null)
     {
-        $this->updateBundleFile($bundlesFqcns, 'add');
-    }
-
-    public function removeBundles(array $bundlesFqcns)
-    {
-        $this->updateBundleFile($bundlesFqcns, 'remove');
-    }
-
-    private function updateBundleFile(array $bundlesFqcns, $action)
-    {
-        $recordedBundles = parse_ini_file($this->bundleFile);
-        $hasChanges = false;
-
-        foreach ($bundlesFqcns as $bundleFqcn) {
-            $fqcnParts = explode('\\', $bundleFqcn);
-            $bundleName = array_pop($fqcnParts);
-
-            if ($action === 'add' && !isset($recordedBundles[$bundleFqcn])) {
-                $this->log("Adding {$bundleName} to the bundle file..." );
-                $recordedBundles[$bundleFqcn] = true;
-                $hasChanges = true;
-            } elseif ($action === 'remove' && isset($recordedBundles[$bundleFqcn])) {
-                $this->log("Removing {$bundleName} from the bundle file..." );
-                unset($recordedBundles[$bundleFqcn]);
-                $hasChanges = true;
-            }
+        if (!in_array($operationType, array(Operation::INSTALL, Operation::UPDATE, Operation::UNINSTALL))) {
+            throw new \InvalidArgumentException(
+                'Operation type must be a Operation::* class constant'
+            );
         }
 
-        if ($hasChanges) {
-            $content = '';
+        if ($operationType === Operation::UPDATE && !$initial) {
+            throw new \LogicException(
+                'Update operation requires the initial package as third parameter'
+            );
+        }
 
-            foreach ($recordedBundles as $bundle => $isEnabled) {
-                $isEnabled = $isEnabled ? 'true' : 'false';
-                $content .= "{$bundle} = {$isEnabled}" . PHP_EOL;
+        if ($target->getType() === 'claroline-core' || $target->getType() === 'claroline-plugin') {
+            $bundle = $this->detector->detectBundle($target->getPrettyName());
+            $type = $target->getType() === 'claroline-core' ?
+                Operation::BUNDLE_CORE :
+                Operation::BUNDLE_PLUGIN;
+            $operation = new Operation($operationType, $bundle, $type);
+
+            if ($operationType === Operation::UPDATE) {
+                $operation->setFromVersion($initial->getVersion());
+                $operation->setToVersion($target->getVersion());
+            } else {
+                $method = $operationType === Operation::INSTALL ? 'addBundles' : 'removeBundles';
+                $this->bundleHandler->{$method}(array($bundle));
             }
 
-            file_put_contents($this->bundleFile, $content);
-        }
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log($message);
+            $this->operationHandler->addOperation($operation);
+        } else {
+            $bundles = $this->detector->detectBundles($target->getPrettyName());
+            $method = $operationType === Operation::INSTALL ? 'addBundles' : 'removeBundles';
+            $this->bundleHandler->{$method}($bundles);
         }
     }
 }

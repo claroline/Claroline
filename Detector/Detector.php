@@ -1,11 +1,19 @@
 <?php
 
-namespace Claroline\BundleRecorder;
+namespace Claroline\BundleRecorder\Detector;
 
 class Detector
 {
+    private $baseDir;
+
+    public function __construct($baseDir = null)
+    {
+        $this->baseDir = $baseDir;
+    }
+
     public function detectBundles($path)
     {
+        $path = $this->baseDir ? "{$this->baseDir}/{$path}" : $path;
         $iterator = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS);
         $filter = new FilterIterator($iterator);
         $items = new \RecursiveIteratorIterator($filter, \RecursiveIteratorIterator::SELF_FIRST);
@@ -50,4 +58,3 @@ class Detector
         return $bundles[0];
     }
 }
-
