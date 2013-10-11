@@ -22,13 +22,14 @@ class InstallationManager
     public function __construct(
         ContainerInterface $container,
         Manager $migrationManager,
-        FixtureLoader $fixtureLoader
+        FixtureLoader $fixtureLoader,
+        $environment
     )
     {
         $this->container = $container;
-        $this->environment = $kernel->getEnvironment();
         $this->migrationManager = $migrationManager;
         $this->fixtureLoader = $fixtureLoader;
+        $this->environment = $environment;
     }
 
     public function setLogger(\Closure $logger)

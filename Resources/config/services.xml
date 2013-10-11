@@ -17,10 +17,7 @@
             <argument type="service" id="service_container" />
             <argument type="service" id="claroline.migration.manager" />
             <argument type="service" strict="false" id="claroline.installation.fixture_loader" />
-        </service>
-
-        <service id="claroline.bundle_recorder" class="%claroline.bundle_recorder.class%">
-            <argument>%claroline.installation.bundle_file%</argument>
+            <argument>%kernel.environment%</argument>
         </service>
 
         <service id="claroline.installation.fixture_loader" class="%claroline.installation_fixture_loader.class%" scope="prototype">
