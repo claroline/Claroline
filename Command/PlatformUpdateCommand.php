@@ -35,7 +35,8 @@ class PlatformUpdateCommand extends ContainerAwareCommand
         $pluginInstaller = $this->getContainer()->get('claroline.plugin.installer');
         $baseInstaller->setLogger($logger);
         $pluginInstaller->setLogger($logger);
-        $opHandler = new OperationHandler($kernel->getRootDir() . '/config/operations.xml', $logger);
+        $operationFile = $kernel->getRootDir() . '/config/operations.xml';
+        $opHandler = new OperationHandler($operationFile, $logger);
         $bundles = $this->getBundlesByFqcn();
 
         foreach ($opHandler->getOperations() as $operation) {
@@ -52,9 +53,11 @@ class PlatformUpdateCommand extends ContainerAwareCommand
                     $pluginInstaller->install($bundles[$operation->getBundleFqcn()]);
                 }
             } else {
-                // remove...
+                // remove or disable package
             }
         }
+
+        rename($operationFile, $operationFile . '.bup');
     }
 
     private function getBundlesByFqcn()
