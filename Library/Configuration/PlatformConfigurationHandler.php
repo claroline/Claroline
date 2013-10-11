@@ -7,19 +7,26 @@ use Symfony\Component\Yaml\Yaml;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
 
 /**
- * Service for accesssing/modifying the platform configuration parameters in prod/dev
- * environments. The service annotation cannot be used as the class is not the same
- * in test environment (see Library\Testing\PlatformTestConfigurationHandler).
+ * Service used for accessing or modifying the platform configuration parameters in prod/dev
+ * environments. The service annotation cannot be used as the class is not the same in test
+ * environment (see Library\Testing\PlatformTestConfigurationHandler).
  */
 class PlatformConfigurationHandler
 {
     private $configFile;
-    private $options;
+    private $options = array(
+        'name' => null,
+        'footer' => null,
+        'logo' => 'clarolineconnect.png',
+        'allow_self_registration' => true,
+        'locale_language' => 'fr',
+        'theme' => 'claroline'
+    );
 
     public function __construct(array $configFiles)
     {
         $this->configFile = $configFiles['prod'];
-        $this->options = Yaml::parse($this->configFile);
+        $this->options = array_merge($this->options, Yaml::parse($this->configFile));
     }
 
     public function hasParameter($parameter)
@@ -40,16 +47,28 @@ class PlatformConfigurationHandler
 
     public function setParameter($parameter, $value)
     {
-        $fileInfo = new \SplFileInfo($this->configFile);
-        if (!$fileInfo->isWritable()) {
+        if (!is_writable($this->configFile)) {
             $exception = new UnwritableException();
             $exception->setPath($this->configFile);
+
             throw $exception;
         }
+
         $this->checkParameter($parameter);
         $this->options[$parameter] = $value;
         file_put_contents($this->configFile, Yaml::dump($this->options));
+    }
 
+    public function getPlatformConfig()
+    {
+        $config = new PlatformConfiguration();
+        $config->setName($this->options['name']);
+        $config->setFooter($this->options['footer']);
+        $config->setSelfRegistration($this->options['allow_self_registration']);
+        $config->setLocalLanguage($this->options['locale_language']);
+        $config->setTheme($this->options['theme']);
+
+        return $config;
     }
 
     protected function checkParameter($parameter)
@@ -59,18 +78,5 @@ class PlatformConfigurationHandler
                 "'{$parameter}' is not a parameter of the current platform configuration."
             );
         }
-    }
-
-    public function getPlatformConfig()
-    {
-        $platformConfig = new PlatformConfiguration(
-            $this->getParameter('name'),
-            $this->getParameter('footer'),
-            $this->getParameter('allow_self_registration'),
-            $this->getParameter('locale_language'),
-            $this->getParameter('theme')
-        );
-
-        return $platformConfig;
     }
 }
