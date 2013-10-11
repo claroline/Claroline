@@ -92,14 +92,13 @@ function position(shape, color, i, prefix, value, size, points) {
     var x = value.substr(0, value.indexOf(','));
     var y = value.substr(value.indexOf(',') + 1);
 
-    $('#img' + i).css({
+    $('#dragContainer' + grade).css({
         "position" : "absolute",
         "left" : x + 'px',
         "top"  : y + 'px'
     });
 
     // Set the id of the right answer zone already placed
-    grade++;
     var name = 'img' + i;
 
     // Set the points of the right answer zone already placed
@@ -117,15 +116,18 @@ function position(shape, color, i, prefix, value, size, points) {
         aspectRatio: true,
         minWidth: 10,
         maxWidth: 500
-    })
-    .parent()
-    .draggable({
+    });
+
+    $('#dragContainer' + grade).draggable({
         containment : '#AnswerImage',
         cursor : 'move',
+        handle : 'i',
 
         stop: function(event, ui) {
             $('#img' + i).css("left", $(this).css("left"));
             $('#img' + i).css("top", $(this).css("top"));
         }
     });
+
+    grade++;
 }

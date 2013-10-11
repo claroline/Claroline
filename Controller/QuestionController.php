@@ -959,6 +959,18 @@ class QuestionController extends Controller
         $end = count($entity);
 
         for ($i = 0; $i < $end; $i++) {
+
+            $coords = $em->getRepository('UJMExoBundle:Coords')->findBy(array('interactionGraphic' => $entity[$i]->getId()));
+
+            if (!$coords) {
+                throw $this->createNotFoundException('Unable to find Coords link to interactiongraphic.');
+            }
+
+            $stop = count($coords);
+            for ($x = 0; $x < $stop; $x++) {
+                $em->remove($coords[$x]);
+            }
+
             $em->remove($entity[$i]);
         }
 

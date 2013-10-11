@@ -145,8 +145,10 @@
 
                                 {% set i = 0 %}{% set allInfo = '' %}
                                 {% for p in position %}
-                                    <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" alt="AnswerZone{{ i }}" id="img{{ i }}"
-                                        />
+                                    <div id="dragContainer{{ i }}">
+                                        <i class="icon-move" style="cursor: move; position: absolute; left: -10px; top: -15px;"></i>
+                                        <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" alt="AnswerZone{{ i }}" id="img{{ i }}"/>
+                                    </div>
 
                                     {% set allInfo = p.shape~';'~p.color~';'~asset('bundles/ujmexo/images/graphic/')~';'~p.value~';'~p.size~';'~p.scoreCoords~'^'~allInfo %}
 
