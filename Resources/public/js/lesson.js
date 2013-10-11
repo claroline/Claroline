@@ -1,7 +1,6 @@
 
 function init(){
     $( document ).ready(function() {
-        initSortable();
         initTooltip();
         initCollapsor();
     });
@@ -65,7 +64,6 @@ function toggleCollapsor(obj){
     $('#list_'+chapter_id).toggle(300);
     $('#collapsor_icon_'+chapter_id).toggleClass('icon-collapse');
     $('#collapsor_icon_'+chapter_id).toggleClass('icon-expand');
-
 }
 
 function collapse(obj){

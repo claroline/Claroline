@@ -7,21 +7,25 @@
         {% if chapter is defined and chapter != null %}
             <div class="col-md-3">
                 {% include 'IcapLessonBundle:Lesson:viewChild.html.twig' %}
-                <div class="btn-group">
-                    <a data-chapter = '{{ chapter.id }}' class="createchapter btn" href="{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': tree.id })}}" >
-                        <i class="icon-plus"></i> {{ 'new_chapter'|trans({}, 'icap_lesson') }}
-                    </a>
-                </div>
+                {% if is_granted('EDIT', node) %}
+                    <div class="btn-group">
+                        <a data-chapter = '{{ chapter.id }}' class="createchapter btn" href="{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': tree.id })}}" >
+                            <i class="icon-plus"></i> {{ 'new_chapter'|trans({}, 'icap_lesson') }}
+                        </a>
+                    </div>
+                {%  endif  %}
             </div>
             <div class="col-md-9">
                <div class='chapter_content' id='chapter_content'>
                    <h4 class='chapter_title'>{{ chapter.title }}</h4>
-                   <div class="btn-group">
-                       <a rel="tooltip" data-original-title='{{ 'create_subchapter_button'|trans({}, 'icap_lesson') }}' data-chapter = '{{ chapter.id }}' class="createchapter btn lesson_tooltip" href="{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': parent.id })}}" ><i class="icon-plus"></i></a>
-                       <a rel="tooltip" data-original-title='{{ 'edit_chapter_button'|trans({}, 'icap_lesson') }}' data-chapter = '{{ chapter.id }}' class="editchapter btn lesson_tooltip" href="{{ path('icap_lesson_edit_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id })}}" ><i class="icon-edit"></i></a>
-                       <a rel="tooltip" data-original-title='{{ 'move_chapter_button'|trans({}, 'icap_lesson') }}' data-chapter = '{{ chapter.id }}' class="movechapter btn lesson_tooltip" href="{{ path('icap_lesson_choice_move_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id })}}" ><i class="icon-move"></i></a>
-                       <a rel="tooltip" data-original-title='{{ 'delete_chapter_button'|trans({}, 'icap_lesson') }}' data-chapter = '{{ chapter.id }}' class="deletechapter btn lesson_tooltip" href="{{ path('icap_lesson_confirm_delete_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id })}}" ><i class="icon-trash"></i></a>
-                    </div>
+                   {% if is_granted('EDIT', node) %}
+                       <div class="btn-group">
+                           <a rel="tooltip" data-original-title='{{ 'create_subchapter_button'|trans({}, 'icap_lesson') }}' data-chapter = '{{ chapter.id }}' class="createchapter btn lesson_tooltip" href="{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': parent.id })}}" ><i class="icon-plus"></i></a>
+                           <a rel="tooltip" data-original-title='{{ 'edit_chapter_button'|trans({}, 'icap_lesson') }}' data-chapter = '{{ chapter.id }}' class="editchapter btn lesson_tooltip" href="{{ path('icap_lesson_edit_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id })}}" ><i class="icon-edit"></i></a>
+                           <a rel="tooltip" data-original-title='{{ 'move_chapter_button'|trans({}, 'icap_lesson') }}' data-chapter = '{{ chapter.id }}' class="movechapter btn lesson_tooltip" href="{{ path('icap_lesson_choice_move_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id })}}" ><i class="icon-move"></i></a>
+                           <a rel="tooltip" data-original-title='{{ 'delete_chapter_button'|trans({}, 'icap_lesson') }}' data-chapter = '{{ chapter.id }}' class="deletechapter btn lesson_tooltip" href="{{ path('icap_lesson_confirm_delete_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id })}}" ><i class="icon-trash"></i></a>
+                       </div>
+                   {%  endif  %}
                    <div class='chapter_content_text'>
                        {{ chapter.text | raw }}
                    </div>
@@ -56,4 +60,9 @@
     <script type="text/javascript">
         init();
     </script>
+    {% if is_granted('EDIT', node) %}
+        <script type="text/javascript">
+            initSortable();
+        </script>
+    {% endif %}
 {% endblock %}

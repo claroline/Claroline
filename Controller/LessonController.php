@@ -105,13 +105,14 @@ class LessonController extends Controller
             $this->dispatchChapterReadEvent($lesson, $chapter);
         }
 
+
         return array(
-            '_resource' => $lesson,
-            'tree' => $tree[0],
-            'parent' => $parent,
-            'chapter' => $chapter,
-            'form' => $form->createView(),
-            'path' => $path,
+            'node'      => new ResourceCollection(array($lesson->getResourceNode())),
+            'tree'      => $tree[0],
+            'parent'    => $parent,
+            'chapter'   => $chapter,
+            'form'      => $form->createView(),
+            'path'      => $path,
             'workspace' => $lesson->getResourceNode()->getWorkspace()
         );
     }
@@ -425,7 +426,18 @@ class LessonController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('IcapLessonBundle:Chapter');
-        $chapters = array_merge(array($lesson->getRoot()), $repo->children($lesson->getRoot()));
+
+        //retrieve current chapter and its children, current chapter cant be dropped in those
+        $nonLegitTargets = $repo->children($chapter, false, null, 'ASC', true);
+
+        $chapters = $repo->children($lesson->getRoot(), false, null, 'ASC', true);
+        foreach ($chapters as $key => $chap) {
+            foreach ($nonLegitTargets as $key2 => $chap2) {
+                if($chap->getId() == $chap2->getId()){
+                    unset($chapters[$key]);
+                }
+            }
+        }
 
         $form = $this->createForm(new MoveChapterType(), $chapter,  array('chapters' => $chapters));
         $form->handleRequest($this->getRequest());
@@ -475,7 +487,7 @@ class LessonController extends Controller
 
         $form = $this->createForm(new MoveChapterType(), $chapter,  array('chapters' => $chapters));
         $form->handleRequest($this->getRequest());
-        if ($form->isValid()) {
+        if ($form->isValid() && $form->get('choiceChapter')->getData() != $chapter->getid()) {
             $newParentId = $form->get('choiceChapter')->getData();
             $brother = $form->get('brother')->getData();
         }else{
