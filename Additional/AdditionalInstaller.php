@@ -28,11 +28,11 @@ abstract class AdditionalInstaller extends ContainerAware implements AdditionalI
     {
     }
 
-    public function preUpdate(BundleVersion $current, BundleVersion $target)
+    public function preUpdate($currentVersion, $targetVersion)
     {
     }
 
-    public function postUpdate(BundleVersion $current, BundleVersion $target)
+    public function postUpdate($currentVersion, $targetVersion)
     {
     }
 

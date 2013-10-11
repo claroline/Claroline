@@ -10,8 +10,8 @@ interface AdditionalInstallerInterface
     public function setLogger(\Closure $logger);
     public function preInstall();
     public function postInstall();
-    public function preUpdate(BundleVersion $current, BundleVersion $target);
-    public function postUpdate(BundleVersion $current, BundleVersion $target);
+    public function preUpdate($currentVersion, $targetVersion);
+    public function postUpdate($currentVersion, $targetVersion);
     public function preUninstall();
     public function postUninstall();
 }
