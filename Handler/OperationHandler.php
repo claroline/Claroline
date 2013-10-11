@@ -12,13 +12,6 @@ class OperationHandler extends BaseHandler
     public function __construct($operationFile, \Closure $logger = null)
     {
         parent::__construct($operationFile, $logger);
-
-        if ('' !== file_get_contents($this->targetFile)) {
-            throw new \Exception(
-                'A non empty operation file is already present (assumed not executed)'
-            );
-        }
-
         $this->document = new \DOMDocument('1.0', 'UTF-8');
         $this->document->formatOutput = true;
         $this->rootElement = $this->document->createElement('operations');
@@ -38,6 +31,42 @@ class OperationHandler extends BaseHandler
         }
 
         $this->rootElement->appendChild($opNode);
+        $this->writeOperations();
+    }
+
+    public function getOperations()
+    {
+        $document = new \DOMDocument();
+        $document->load($this->targetFile);
+        $operations = array();
+
+        foreach ($document->documentElement->childNodes as $node) {
+            if ($node->nodeType === XML_ELEMENT_NODE) {
+                $operationType = $node->nodeName;
+                $bundleFqcn = $node->nodeValue;
+                $bundleType = $node->getAttribute('type');
+                $operation = new Operation($operationType, $bundleFqcn, $bundleType);
+
+                if ($operationType === Operation::UPDATE) {
+                    $operation->setFromVersion($node->getAttribute('from'));
+                    $operation->setToVersion($node->getAttribute('to'));
+                }
+
+                $operations[] = $operation;
+            }
+        }
+
+        return $operations;
+    }
+
+    private function writeOperations()
+    {
+        if ('' !== file_get_contents($this->targetFile)) {
+            throw new \Exception(
+                'A non empty operation file is already present (assumed not executed)'
+            );
+        }
+
         $this->document->save($this->targetFile);
     }
 }
