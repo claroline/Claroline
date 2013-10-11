@@ -7,6 +7,15 @@ function ResourcePickerModalCtrl($scope, $modal, $http, $q, $modalInstance, Path
     $scope.resources = resources;
     $scope.resourcePicked = null; 
 
+    // Translate resource types
+    if ($scope.resources.length !== 0) {
+        for (var i = 0; i < $scope.resources.length; i++) {
+            if (Translator.has('Resource:' + $scope.resources[i].type)) {
+                $scope.resources[i].type = Translator.get('Resource:' + $scope.resources[i].type);
+            }
+        }
+    }
+    
     /**
      * Close resource edit
      * @returns void
@@ -22,7 +31,4 @@ function ResourcePickerModalCtrl($scope, $modal, $http, $q, $modalInstance, Path
     $scope.save = function(resourcePicked) {
         $modalInstance.close(resourcePicked);
     };
-
-
-
 }

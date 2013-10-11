@@ -39,8 +39,8 @@
             
             <div class="panel-body" ng-show="previewStep != null">
                 <div class="icons">
-                    <img ng-show="previewStep.who != null && previewStep.who != ''" src="{{ webDir }}images/icons/who/{{ previewStep.who }}" alt="{{ previewStep.who }}" tooltip="{{ whoList[previewStep.who] }}" />
-                    <img ng-show="previewStep.where != null && previewStep.where != ''" src="{{ webDir }}images/icons/where/{{ previewStep.where }}" alt="{{ previewStep.where }}" tooltip="{{ whereList[previewStep.where] }}" />
+                    <img ng-show="previewStep.who != null && previewStep.who != ''" src="{{ webDir }}images/icons/who/{{ previewStep.who }}" alt="{{ whoList[previewStep.who] }}" tooltip="{{ whoList[previewStep.who] }}" />
+                    <img ng-show="previewStep.where != null && previewStep.where != ''" src="{{ webDir }}images/icons/where/{{ previewStep.where }}" alt="{{ whereList[previewStep.where] }}" tooltip="{{ whereList[previewStep.where] }}" />
 
                     <img ng-show="previewStep.withComputer" src="{{ webDir }}images/icons/computer.png" alt="With computer" tooltip="With computer" />
                     <img ng-show="!previewStep.withComputer" src="{{ webDir }}images/icons/no_computer.png" alt="Without computer" tooltip="Without computer" />

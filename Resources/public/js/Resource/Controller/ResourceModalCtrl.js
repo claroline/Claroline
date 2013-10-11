@@ -49,20 +49,17 @@ function ResourceModalCtrl($scope, $modal, $q, $http, $modalInstance, PathFactor
             templateUrl: EditorApp.webDir + 'js/Resource/Partial/resource-picker.html',
             controller: 'ResourcePickerModalCtrl',
             resolve: {
-
                 // Send resource type to form
                 resources: function() {
                     var deferred = $q.defer();
                     $http.get(Routing.generate("innova_user_resources"))
                          .success(function (data) {
-                            var resources = data;
+                             var resources = data;
                              return deferred.resolve(resources);
-                         });
-                         /*
+                         })
                          .error(function(data, status) {
-                             return deferred.reject('error loading path');
+                             return deferred.reject('error loading resources');
                          });
-                        */
 
                     return deferred.promise;
                 }

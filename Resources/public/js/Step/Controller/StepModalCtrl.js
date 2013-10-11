@@ -10,7 +10,8 @@ function StepModalCtrl($scope, $modal, $modalInstance, PathFactory, StepFactory,
     // Store removed resources to remove their references from path when step will be saved
     var removedResources = [];
     
-    var localStep = jQuery.extend(true, {}, StepFactory.getStep()); // Create a copy to not affect original data before user save
+    // Create a copy to not affect original data before user save
+    var localStep = jQuery.extend(true, {}, StepFactory.getStep());
 
     $scope.stepWho = StepFactory.getWhoList();
     $scope.stepWhere = StepFactory.getWhereList();

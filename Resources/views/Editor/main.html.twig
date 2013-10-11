@@ -47,6 +47,9 @@
     {# Load Claroline JS #}
     {{ parent() }}
     
+    {# Load translations #}
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js') }}"></script>
+    
     {# Load Angular Libraries #}
     <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-cookies.min.js') }}"></script>

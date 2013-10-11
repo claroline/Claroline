@@ -59,7 +59,7 @@ function ClipboardFactory($rootScope, PathFactory) {
                 
                 // Replace IDs before inject steps in path
                 this.replaceStepsId(stepCopy);
-                this.replaceResourcesId(stepCopy)
+                this.replaceResourcesId(stepCopy);
                 
                 if (!clipboardFromTemplates) {
                     stepCopy.name = stepCopy.name + '_copy';
