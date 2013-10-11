@@ -20,7 +20,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-md-6">
         <div class="panel panel-default preview-step">
             <div class="panel-heading">
@@ -32,11 +32,11 @@
                     </button>
                 </div>
             </div>
-            
+
             <div class="panel-body" ng-hide="previewStep != null">
                 <span>No selected step.</span>
             </div>
-            
+
             <div class="panel-body" ng-show="previewStep != null">
                 <div class="icons">
                     <img ng-show="previewStep.who != null && previewStep.who != ''" src="{{ webDir }}images/icons/who/{{ previewStep.who }}" alt="{{ previewStep.who }}" tooltip="{{ whoList[previewStep.who] }}" />
@@ -44,22 +44,22 @@
 
                     <img ng-show="previewStep.withComputer" src="{{ webDir }}images/icons/computer.png" alt="With computer" tooltip="With computer" />
                     <img ng-show="!previewStep.withComputer" src="{{ webDir }}images/icons/no_computer.png" alt="Without computer" tooltip="Without computer" />
-                    
+
                     <img ng-show="previewStep.withTutor" src="{{ webDir }}images/icons/tutor.png" alt="With tutor" tooltip="With tutor" />
                     <img ng-show="!previewStep.withTutor" src="{{ webDir }}images/icons/no_tutor.png" alt="Without tutor" tooltip="Without tutor" />
-                    
+
                     <span class="duration pull-right">{{ previewStep.durationHours || "0" }}h{{ previewStep.durationMinutes || "00" }}min</span>
                 </div>
-                
+
                 <div class="picture">
                     <img ng-show="previewStep.image != null && previewStep.image != ''" src="{{ webDir }}images/steps/{{ previewStep.image }}" />
                 </div>
-                
+
                 <h3>Instructions</h3>
                 <p>{{ previewStep.instructions || "There is no instructions for this step" }}</p>
-                
+
                 <h3><i class="icon-briefcase"></i> Documents</h3>
-                
+
                 <div class="panel-group" id="panel-documents">
                     <div class="panel panel-default" ng-repeat="parent in inheritedResources.documents">
                         <div class="panel-heading">
@@ -69,7 +69,7 @@
                             </a>
                             <span class="pull-right parent-resources-count">{{ parent.resources.length }} documents</span>
                         </div>
-                        
+
                         <div id="{{ $index }}documents" class="panel-collapse collapse">
                             <table class="table table-condensed table-hover">
                                 <tr ng-repeat="resource in parent.resources">
@@ -83,7 +83,7 @@
                             </table>
                         </div>
                     </div>
-                    
+
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <a class="accordion-toggle" data-toggle="collapse" data-parent="#panel-documents" href="#{{ previewStep.id }}documents">
@@ -92,7 +92,7 @@
                             </a>
                             <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('document')"><i class="icon-plus"></i></button>
                         </div>
-                        
+
                         <div id="{{ previewStep.id }}documents" class="panel-collapse collapse in">
                             <table class="table table-condensed table-hover">
                                 <tr ng-repeat="resource in previewStep.resources | filter: {type: 'document'}">
@@ -107,9 +107,9 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <h3><i class="icon-wrench"></i> Tools</h3>
-                
+
                 <div class="panel-group" id="panel-tools">
                     <div class="panel panel-default" ng-repeat="parent in inheritedResources.tools">
                         <div class="panel-heading">
@@ -119,7 +119,7 @@
                             </a>
                             <span class="pull-right parent-resources-count">{{ parent.resources.length }} tools</span>
                         </div>
-                        
+
                         <div id="{{ $index }}tools" class="panel-collapse collapse">
                             <table class="table table-condensed table-hover">
                                 <tr ng-repeat="resource in parent.resources">
@@ -133,7 +133,7 @@
                             </table>
                         </div>
                     </div>
-                    
+
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <a class="accordion-toggle" data-toggle="collapse" data-parent="#panel-tools" href="#{{ previewStep.id }}tools">
@@ -142,7 +142,7 @@
                             </a>
                             <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('tool')"><i class="icon-plus"></i></button>
                         </div>
-                        
+
                         <div id="{{ previewStep.id }}tools" class="panel-collapse collapse in">
                             <table class="table table-condensed table-hover">
                                 <tr ng-repeat="resource in previewStep.resources | filter: {type: 'tool'}">
