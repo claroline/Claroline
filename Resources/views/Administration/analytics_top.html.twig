@@ -32,19 +32,21 @@
         </div>
         <div class="margin clearfix">
             <div class="results_list">
-                
+
             </div>
         </div>
     </div>
-    <table id="top_analytics_table" class="table table-condensed">
-        {% for row in list_data %}
-            <tr>
-                {% for key, col in row %}
-                    {% if key != 'id' %}
-                        <td>{{ col }}</td>
-                    {% endif %}
-                {% endfor %}
-            </tr>
-        {% endfor %}
-    </table>
+    <div class="table-responsive">
+        <table id="top_analytics_table" class="table table-condensed">
+            {% for row in list_data %}
+                <tr>
+                    {% for key, col in row %}
+                        {% if key != 'id' %}
+                            <td>{{ col }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 {% endblock %}
