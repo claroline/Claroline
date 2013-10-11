@@ -6,7 +6,6 @@ use Composer\Package\PackageInterface;
 use Claroline\BundleRecorder\Detector\Detector;
 use Claroline\BundleRecorder\Handler\BundleHandler;
 use Claroline\BundleRecorder\Handler\OperationHandler;
-use Claroline\BundleRecorder\Handler\VersionHandler;
 use Claroline\BundleRecorder\Operation;
 
 class Recorder
@@ -14,17 +13,21 @@ class Recorder
     private $detector;
     private $bundleHandler;
     private $operationHandler;
+    private $vendorDir;
+    private $removableBundles = array();
     private $logger;
 
     public function __construct(
         Detector $detector,
         BundleHandler $bundleHandler,
-        OperationHandler $operationHandler
+        OperationHandler $operationHandler,
+        $vendorDir
     )
     {
         $this->detector = $detector;
         $this->bundleHandler = $bundleHandler;
         $this->operationHandler = $operationHandler;
+        $this->vendorDir = $vendorDir;
     }
 
     public function setLogger(\Closure $logger)
@@ -32,40 +35,67 @@ class Recorder
         $this->logger = $logger;
     }
 
-    public function record($operationType, PackageInterface $target, PackageInterface $initial = null)
+    public function install(PackageInterface $package)
     {
-        if (!in_array($operationType, array(Operation::INSTALL, Operation::UPDATE, Operation::UNINSTALL))) {
-            throw new \InvalidArgumentException(
-                'Operation type must be a Operation::* class constant'
-            );
+        $installableBundles = array();
+
+        if ($package->getType() === 'claroline-core' || $package->getType() === 'claroline-plugin') {
+            $bundle = $this->detector->detectBundle($package->getPrettyName());
+            $type = $package->getType() === 'claroline-core' ?
+                Operation::BUNDLE_CORE :
+                Operation::BUNDLE_PLUGIN;
+            $operation = new Operation(Operation::INSTALL, $bundle, $type);
+            $this->operationHandler->addOperation($operation);
+            $installableBundles[] = $bundle;
+        } else {
+            $installableBundles = $this->detector->detectBundles($package->getPrettyName());
         }
 
-        if ($operationType === Operation::UPDATE && !$initial) {
-            throw new \LogicException(
-                'Update operation requires the initial package as third parameter'
-            );
-        }
+        $this->bundleHandler->addBundles($installableBundles);
+    }
 
+    public function update(PackageInterface $target, PackageInterface $initial)
+    {
         if ($target->getType() === 'claroline-core' || $target->getType() === 'claroline-plugin') {
             $bundle = $this->detector->detectBundle($target->getPrettyName());
             $type = $target->getType() === 'claroline-core' ?
                 Operation::BUNDLE_CORE :
                 Operation::BUNDLE_PLUGIN;
-            $operation = new Operation($operationType, $bundle, $type);
+            $operation = new Operation(Operation::UPDATE, $bundle, $type);
+            $operation->setFromVersion($initial->getVersion());
+            $operation->setToVersion($target->getVersion());
+            $this->operationHandler->addOperation($operation);
+        }
+    }
 
-            if ($operationType === Operation::UPDATE) {
-                $operation->setFromVersion($initial->getVersion());
-                $operation->setToVersion($target->getVersion());
-            } else {
-                $method = $operationType === Operation::INSTALL ? 'addBundles' : 'removeBundles';
-                $this->bundleHandler->{$method}(array($bundle));
+    public function addRemovablePackage(PackageInterface $package)
+    {
+        $bundles = $this->detector->detectBundles($package->getPrettyName());
+
+        foreach ($bundles as $bundleFqcn) {
+            $this->removableBundles[$package->getPrettyName()][] = $bundleFqcn;
+        }
+    }
+
+    public function uninstall(PackageInterface $package)
+    {
+        if (isset($this->removableBundles[$package->getPrettyName()])) {
+            if (is_dir($this->vendorDir . '/' . $package->getPrettyName())) {
+                return;
             }
 
-            $this->operationHandler->addOperation($operation);
-        } else {
-            $bundles = $this->detector->detectBundles($target->getPrettyName());
-            $method = $operationType === Operation::INSTALL ? 'addBundles' : 'removeBundles';
-            $this->bundleHandler->{$method}($bundles);
+            if ($package->getType() === 'claroline-core' || $package->getType() === 'claroline-plugin') {
+                foreach ($this->removableBundles[$package->getPrettyName()] as $bundleFqcn) {
+                    $type = $package->getType() === 'claroline-core' ?
+                        Operation::BUNDLE_CORE :
+                        Operation::BUNDLE_PLUGIN;
+                    $operation = new Operation(Operation::UNINSTALL, $bundleFqcn, $type);
+                    $this->operationHandler->addOperation($operation);
+                }
+            }
+
+            $this->bundleHandler->removeBundles($this->removableBundles[$package->getPrettyName()]);
+            unset($this->removableBundles[$package->getPrettyName()]);
         }
     }
 }
