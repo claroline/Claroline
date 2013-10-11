@@ -288,7 +288,7 @@ class PathController extends Controller
 
                 // boucler sur les ressourcesnodes exclues en base et les comparer à ce qu'il y a dans le JSON
                if(!$step2ressourceNode = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')
-                                                ->findOneBy(array('step' => $currentStep, 
+                                                ->findOneBy(array('step' => $currentStep,
                                                                 'resourceNode' => $excludedResourcesToResourceNodes[$excludedResource]
                                                                 )
                                                             )
@@ -617,8 +617,6 @@ class PathController extends Controller
      */
     public function deletePathAction()
     {
-        echo "ici";
-        die();
         $id = $this->get('request')->request->get('id');
         $workspaceId = $this->get('request')->request->get('workspaceId');
 
