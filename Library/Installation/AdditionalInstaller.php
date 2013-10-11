@@ -11,7 +11,6 @@ use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
-use Claroline\InstallationBundle\Bundle\BundleVersion;
 
 class AdditionalInstaller extends BaseInstaller
 {
@@ -21,7 +20,7 @@ class AdditionalInstaller extends BaseInstaller
         $this->buildDefaultTemplate();
     }
 
-    public function postUpdate(BundleVersion $current, BundleVersion $target)
+    public function postUpdate($currentVersion, $targetVersion)
     {
         $this->createWorkspacesListWidget();
     }
