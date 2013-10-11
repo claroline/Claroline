@@ -614,6 +614,8 @@ class PathController extends Controller
      */
     public function deletePathAction()
     {
+        echo "ici";
+        die();
         $id = $this->get('request')->request->get('id');
         $workspaceId = $this->get('request')->request->get('workspaceId');
 
