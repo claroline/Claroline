@@ -126,7 +126,8 @@
                         event.preventDefault();
                         window.Claroline.ResourceManager.Controller.dispatcher.trigger('breadcrumb-click', {
                             nodeId: $(this).data('node-id'),
-                            isPickerMode: false
+                            isPickerMode: false,
+                            el: $(this)
                         });
                     });
 
@@ -782,7 +783,10 @@
                 if (event.isPickerMode) {
                     this.displayResources(event.nodeId, 'picker');
                 } else {
-                    this.router.navigate('resources/' + event.nodeId, {trigger: true});
+                    if (event.nodeId) {
+                        this.router.navigate('resources/' + event.nodeId, {trigger: true});
+                    }
+                    document.location.href = event.el.attr('href');
                 }
             },
             'node-click': function (event) {
