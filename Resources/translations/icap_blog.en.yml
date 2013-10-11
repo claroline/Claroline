@@ -32,6 +32,7 @@ icap_blog_comment_publish_success: 'Comment published with success'
 icap_blog_comment_publish_error: 'An error occured while publishing comment'
 icap_blog_comment_unpublish_success: 'Comment unpublished with success'
 icap_blog_comment_unpublish_error: 'An error occured while unpublishing comment'
+icap_blog_post_need_validation_before_publishing: "Your post will need to be validated by an administrator before being publish."
 no_tags: 'No tags'
 no_authors: 'No authors'
 no_archives: 'No archive'
