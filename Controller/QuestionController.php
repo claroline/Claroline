@@ -77,8 +77,15 @@ class QuestionController extends Controller
      * Lists the User's Question entities.
      *
      */
-    public function indexAction($pageNow = 0, $pageNowShared = 0, $categoryToFind = '', $titleToFind = '')
+    public function indexAction($pageNow = 0, $pageNowShared = 0, $categoryToFind = '', $titleToFind = '', $resourceId = -1)
     {
+        $em = $this->getDoctrine()->getManager();
+        
+        if ($resourceId != -1) {
+            $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($resourceId);
+            $vars['_resource'] = $exercise;
+        }
+        
         // To paginate the result :
         $request = $this->get('request'); // Get the request which contains the following parameters :
         $page = $request->query->get('page', 1); // Get the choosen page (default 1)
@@ -106,7 +113,6 @@ class QuestionController extends Controller
 
         $questionWithResponse = array();
         $alreadyShared = array();
-        $em = $this->getDoctrine()->getManager();
 
         foreach ($interactions as $interaction) {
             $response = $em->getRepository('UJMExoBundle:Response')
@@ -168,16 +174,14 @@ class QuestionController extends Controller
         $sharedWithMePager = $doublePagination[2];
         $pagerfantaShared = $doublePagination[3];
 
-        return $this->render(
-            'UJMExoBundle:Question:index.html.twig', array(
-            'interactions'         => $interactionsPager,
-            'questionWithResponse' => $questionWithResponse,
-            'alreadyShared'       => $alreadyShared,
-            'sharedWithMe'       => $sharedWithMePager,
-            'pagerMy' => $pagerfantaMy,
-            'pagerShared' => $pagerfantaShared
-            )
-        );
+        $vars['interactions']         = $interactionsPager;
+        $vars['questionWithResponse'] = $questionWithResponse;
+        $vars['alreadyShared']        = $alreadyShared;
+        $vars['sharedWithMe']         = $sharedWithMePager;
+        $vars['pagerMy']              = $pagerfantaMy;
+        $vars['pagerShared']          = $pagerfantaShared;
+        
+        return $this->render('UJMExoBundle:Question:index.html.twig', $vars);
     }
 
     /**

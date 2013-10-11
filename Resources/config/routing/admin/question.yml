@@ -1,6 +1,6 @@
 ujm_question_index:
-    pattern: /index/{pageNow}/{pageNowShared}/{categoryToFind}/{titleToFind}
-    defaults: { _controller: UJMExoBundle:Question:index, pageNow: 0, pageNowShared: 0, categoryToFind: z, titleToFind: z }
+    pattern: /index/{pageNow}/{pageNowShared}/{categoryToFind}/{titleToFind}/{resourceId}
+    defaults: { _controller: UJMExoBundle:Question:index, pageNow: 0, pageNowShared: 0, categoryToFind: z, titleToFind: z, resourceId: -1 }
 
 ujm_question_new:
     pattern:  /new/{exoID}/{pageToGo}/{maxPage}/{nbItem}
