@@ -1,32 +1,41 @@
 <form class="tree-item form-inline" ng-click="setPreviewStep(step)" ng-mouseenter="showButtons = true" ng-mouseleave="showButtons = false" >
     <a href=""><span class="icon-chevron-right"></span></a>
-    <span class="step-name">{{ step.name | limitTo:10 }}</span>
-    
+    <span ng-show="!boolStepName" class="step-name">{{ step.name | limitTo:10 }}</span>
+    <!-- #58 : ajout d'une zone input afin de modifier le nom du fils -->
+    <!-- Voir méthode editStepName dans TreeCtrl.js pour boolStepName -->
+    <input ng-show="boolStepName" value="{{ step.name }}" ng-model="step.name" class="form-control" />
+
     <span ng-show="showButtons" class="pull-right">
+        <!-- Ajout du bouton pour l'édition. -->
+        <!-- Voir TreeCtrl.js pour editStepName -->
+        <button class="btn btn-default btn-xs" ng-click="editStepName(step)" tooltip="Edit scenario" ng-hide="isRootNode" >
+            <i class="icon-pencil"></i>
+        </button>
+
         <button class="btn btn-default btn-xs" ng-click="addChild(step)" tooltip="Add a child">
             <i class="icon-plus"></i>
         </button>
-        
+
         <button ng-hide="isRootNode" class="btn btn-default btn-xs" ng-click="addSibling(step)" tooltip="Add a sibling">
             <i class="icon-plus-sign"></i>
         </button>
-        
+
         <button class="btn btn-default btn-xs" ng-click="copy(step)" tooltip="Copy">
             <i class="icon-copy"></i>
         </button>
-        
+
         <button class="btn btn-default btn-xs" ng-click="paste(step)" ng-disabled="pasteDisabled" tooltip="Paste">
             <i class="icon-paste"></i>
         </button>
-        
+
         <button class="btn btn-info btn-xs" ng-click="editTemplate(step)" tooltip="Add to favorites">
             <i class="icon-heart"></i>
         </button>
-        
+
         <button ng-hide="isRootNode" class="btn btn-danger btn-xs" ng-click="remove(step)" tooltip="Delete">
             <i class="icon-trash"></i>
         </button>
-        
+
         <button class="btn btn-danger btn-xs" ng-click="removeChildren(step)" ng-show="step.children.length > 0" tooltip="Delete children">
             <i class="icon-list"></i>
         </button>
