@@ -64,7 +64,7 @@
                 <i class="icon-arrow-left"></i> {{ 'back' | trans }}
             </a>
         {% endif %}
-        <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
+        <a class="btn btn-primary" href="{{ path('ujm_question_index', {'resourceId': entity.id}) }}">
             <i class="icon-question"></i> {{ 'access my question bank' | trans }}
         </a>
     </div>

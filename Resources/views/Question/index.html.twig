@@ -52,8 +52,13 @@
             ])
         }}
     {% endblock %}
+{% else %}
+    {% block resourceBreadcrumb %}
+        <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+        <li class="active">{{ 'bank of questions' | trans }}</li>
+    {% endblock %}
 {% endif %}
-
+            
 {% extends layout %}
 
 {% block stylesheets %}
