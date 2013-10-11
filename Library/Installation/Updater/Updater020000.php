@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Doctrine\Common\Persistence\Mapping\MappingException;
+use Symfony\Component\Filesystem\Filesystem;
 
 class Updater020000
 {
@@ -38,6 +39,7 @@ class Updater020000
 
     public function preUpdate()
     {
+        $this->addLogosAndIcons();
         $this->copyWidgetHomeTabConfigTable();
     }
 
@@ -311,5 +313,15 @@ class Updater020000
             is_configurable_in_desktop = false
             WHERE name = 'home'
         ");
+    }
+
+    private function addLogosAndIcons()
+    {
+        $filesystem = new Filesystem();
+        $imgDir = __DIR__ . '/../../../Resources/public/images';
+        $webDir = __DIR__ . '/../../../../../../../../web';
+        $filesystem->mirror("{$imgDir}/logos", "{$webDir}/uploads/logos");
+        $filesystem->copy("{$imgDir}/ico/favicon.ico", "{$webDir}/favicon.ico", true);
+        $filesystem->copy("{$imgDir}/ico/apple-touch-icon.png", "{$webDir}/apple-touch-icon.png", true);
     }
 }
