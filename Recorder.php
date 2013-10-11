@@ -47,7 +47,7 @@ class Recorder
         }
 
         if ($target->getType() === 'claroline-core' || $target->getType() === 'claroline-plugin') {
-            $bundle = $this->detector->detectBundle($target->getName());
+            $bundle = $this->detector->detectBundle($target->getPrettyName());
             $type = $target->getType() === 'claroline-core' ?
                 Operation::BUNDLE_CORE :
                 Operation::BUNDLE_PLUGIN;
@@ -63,7 +63,7 @@ class Recorder
 
             $this->operationHandler->addOperation($operation);
         } else {
-            $bundles = $this->detector->detectBundles($target->getName());
+            $bundles = $this->detector->detectBundles($target->getPrettyName());
             $method = $operationType === Operation::INSTALL ? 'addBundles' : 'removeBundles';
             $this->bundleHandler->{$method}($bundles);
         }
