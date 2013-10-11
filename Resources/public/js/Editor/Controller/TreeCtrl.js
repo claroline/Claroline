@@ -7,7 +7,9 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
     $scope.initPath(PathFactory.getPath());
     $scope.whoList = StepFactory.getWhoList();
     $scope.whereList = StepFactory.getWhereList();
-
+    
+    $scope.currentEditingStep = null;
+    
     $scope.previewStep = null;
 
     $scope.sortableOptions = {
@@ -124,14 +126,20 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
     };
 
     /**
-     * Edit a name
+     * Display input in tree for selected step in order to edit its name
      * @returns void
      */
-    $scope.boolStepName = false;
     $scope.editStepName = function(step) {
-        $scope.boolStepName = true;
+        $scope.currentEditingStep = step.id;
     };
 
+    /**
+     * Hide input displayed in tree
+     */
+    $scope.closeEditStepName = function() {
+        $scope.currentEditingStep = null;
+    };
+    
     /**
      * Add a new sibling to specified step
      * @returns void
