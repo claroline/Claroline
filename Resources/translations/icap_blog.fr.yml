@@ -33,6 +33,7 @@ icap_blog_comment_publish_error: 'Erreur lors de la publication du commentaire'
 icap_blog_comment_unpublish_success: 'Commentaire dépublié avec succès'
 icap_blog_comment_unpublish_error: 'Erreur lors de la dépublication dU COMMENTAIRE'
 icap_blog_post_need_validation_before_publishing: "Votre article ne sera publié qu'après validation d'un administrateur."
+icap_blog_post_comment_need_validation_before_publishing: "Votre commentaire ne sera publié qu'après validation d'un administrateur."
 no_tags: 'Aucun tag'
 no_authors: 'Aucun rédacteurs'
 no_archives: 'Aucune archive'

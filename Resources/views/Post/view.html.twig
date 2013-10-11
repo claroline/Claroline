@@ -59,6 +59,11 @@
             {% set countComments = is_granted('EDIT', blog) ? post.countComments(true) : post.countComments %}
             {% if countComments > 0 %}{{ 'add_comment'|trans }}{% else %}{{ 'be_the_first_to_comment'|trans }}{% endif %} :
             <form action="{{ path('icap_blog_post_view', {'blogId': _resource.id, 'postSlug': post.slug}) }}" class="well" method="post" {{ form_enctype(form) }}>
+                {% if false ==_resource.isAutoPublishComment %}
+                <p class="alert alert-warning">
+                    {{ 'icap_blog_post_comment_need_validation_before_publishing'|trans({}, 'icap_blog') }}
+                </p>
+                {% endif %}
                 {{ form_errors(form) }}
                 {{ form_widget(form.message) }}
                 {{ form_rest(form) }}
