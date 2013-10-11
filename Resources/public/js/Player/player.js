@@ -20,6 +20,9 @@ $( document ).ready(function() {
 		}
 	});
 
+
+	$('img').tooltip({placement:'top'});
+
 	/* AJAX - Gestion des ressources héritées */
 	var url = $("#step-id").val();
 	$.ajax({
