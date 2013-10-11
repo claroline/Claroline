@@ -11,6 +11,7 @@ use Claroline\BundleRecorder\Handler\OperationHandler;
 class ScriptHandler
 {
     private static $recorder;
+    private static $removablePackages = array();
 
     public static function postPackageInstall(PackageEvent $event)
     {
@@ -20,7 +21,7 @@ class ScriptHandler
         );
     }
 
-    public static function prePackageUpdate(PackageEvent $event)
+    public static function postPackageUpdate(PackageEvent $event)
     {
         static::getRecorder($event)->record(
             Operation::UPDATE,
@@ -31,10 +32,12 @@ class ScriptHandler
 
     public static function prePackageUninstall(PackageEvent $event)
     {
-        static::getRecorder($event)->record(
-            Operation::UNINSTALL,
-            $event->getOperation()->getPackage()
-        );
+        static::doPackageUninstall($event, 'preUninstall');
+    }
+
+    public static function postPackageUninstall(PackageEvent $event)
+    {
+        static::doPackageUninstall($event, 'postUninstall');
     }
 
     private static function getRecorder(PackageEvent $event)
@@ -54,5 +57,21 @@ class ScriptHandler
         }
 
         return static::$recorder;
+    }
+
+    private static function doPackageUninstall(PackageEvent $event, $action)
+    {
+        $package = $event->getOperation()->getPackage()->getPrettyName();
+        $vendorDir = $event->getComposer()->getConfig()->get('vendor-dir');
+        $packagePath = realpath(rtrim($vendorDir), '/') . '/' . $package;
+
+        if ($action === 'preUninstall') {
+            static::$removablePackages[] = $package;
+        } elseif (in_array($package, static::$removablePackages) && !is_dir($packagePath)) {
+            static::getRecorder($event)->record(
+                Operation::UNINSTALL,
+                $event->getOperation()->getPackage()
+            );
+        }
     }
 }
