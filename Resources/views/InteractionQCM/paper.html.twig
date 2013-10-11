@@ -37,6 +37,30 @@
 
 {% if isDesktop() %}
     {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+    {% block breadcrumb %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'icon-briefcase',
+                    'name': 'desktop'|trans({}, 'platform'),
+                    'href': path('claro_desktop_open')
+                },
+                {
+                    'name': 'bank of questions' | trans,
+                    'href': path('ujm_question_index')
+                },
+                {
+                    'name': 'paper' | trans,
+                    'href': ''
+                }
+            ])
+        }}
+    {% endblock %}
+{% else %}
+    {% block resourceBreadcrumb %}
+        <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+        <li class="active">{{ 'bank of questions' | trans }}</li>
+    {% endblock %}
 {% endif %}
 
 {% extends layout %}
@@ -140,6 +164,7 @@
                 <div class="panel-footer">
                     <input type="hidden" name="testQCM" value="testQCM" />
                     <input type="hidden" name="interactionQCMToValidated" value="{{ interactionQCM.id }}" />
+                    <input type="hidden" name="exoID" value="{{ exoID }}" />
                     <button type="submit" id="submit_response" class="btn btn-primary">{{ 'validate' | trans }}</button>
                 </div>
             </form>

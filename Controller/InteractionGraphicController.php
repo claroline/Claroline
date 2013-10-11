@@ -336,23 +336,29 @@ class InteractionGraphicController extends Controller
      */
     public function responseGraphicAction()
     {
+        $vars = array();
         $request = $this->container->get('request');
+        $postVal = $req = $request->request->all();
+        
+        if ($postVal['exoID'] != -1) {
+            $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($postVal['exoID']);
+            $vars['_resource'] = $exercise;
+        }
+        
         $exerciseSer = $this->container->get('ujm.exercise_services');
         $res = $exerciseSer->responseGraphic($request);
 
-        return $this->render(
-            'UJMExoBundle:InteractionGraphic:graphicOverview.html.twig',
-            array(
-                'point' => $res['point'], // Score of the student without penalty
-                'penalty' => $res['penalty'], // Penalty (hints)
-                'interG' => $res['interG'], // The entity interaction graphic (for the id ...)
-                'coords' => $res['coords'], // The coordonates of the right answer zones
-                'doc' => $res['doc'], // The answer picture (label, src ...)
-                'total' => $res['total'], // Score max if all answers right and no penalty
-                'rep' => $res['rep'], // Coordonates of the answer zones of the student's answer
-                'score' => $res['score'] // Score of the student (right answer - penalty)
-            )
-        );
+        $vars['point']   = $res['point']; // Score of the student without penalty
+        $vars['penalty'] = $res['penalty']; // Penalty (hints)
+        $vars['interG']  = $res['interG']; // The entity interaction graphic (for the id ...)
+        $vars['coords']  = $res['coords']; // The coordonates of the right answer zones
+        $vars['doc']     = $res['doc']; // The answer picture (label, src ...)
+        $vars['total']   = $res['total']; // Score max if all answers right and no penalty
+        $vars['rep']     = $res['rep']; // Coordonates of the answer zones of the student's answer
+        $vars['score']   = $res['score']; // Score of the student (right answer - penalty)
+        $vars['exoID']   = $postVal['exoID'];
+        
+        return $this->render('UJMExoBundle:InteractionGraphic:graphicOverview.html.twig', $vars);
     }
 
     private function createDeleteForm($id)

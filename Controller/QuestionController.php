@@ -79,6 +79,7 @@ class QuestionController extends Controller
      */
     public function indexAction($pageNow = 0, $pageNowShared = 0, $categoryToFind = '', $titleToFind = '', $resourceId = -1)
     {
+        $vars = array();
         $em = $this->getDoctrine()->getManager();
         
         if ($resourceId != -1) {
@@ -190,6 +191,12 @@ class QuestionController extends Controller
      */
     public function showAction($id, $exoID)
     {
+        $vars = array();
+        if ($exoID != -1) {
+            $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
+            $vars['_resource'] = $exercise;
+        }
+        
         $question = $this->controlUserQuestion($id);
         $sharedQuestion = $this->controlUserSharedQuestion($id);
 
@@ -217,14 +224,12 @@ class QuestionController extends Controller
                     }
 
                     $form   = $this->createForm(new ResponseType(), $response);
-
-                    return $this->render(
-                        'UJMExoBundle:InteractionQCM:paper.html.twig', array(
-                        'interactionQCM' => $interactionQCM[0],
-                        'form'   => $form->createView(),
-                        'exoID' => $exoID
-                        )
-                    );
+                    
+                    $vars['interactionQCM'] = $interactionQCM[0];
+                    $vars['form']           = $form->createView();
+                    $vars['exoID']          = $exoID;
+                    
+                    return $this->render('UJMExoBundle:InteractionQCM:paper.html.twig', $vars);
 
                 case "InteractionGraphic":
 
@@ -239,13 +244,11 @@ class QuestionController extends Controller
 
                     $listeCoords = $repository->findBy(array('interactionGraphic' => $interactionGraph[0]));
 
-                    return $this->render(
-                        'UJMExoBundle:InteractionGraphic:paper.html.twig',
-                        array(
-                            'interactionGraphic' => $interactionGraph[0],
-                            'listeCoords' => $listeCoords,
-                            'exoID' => $exoID)
-                    );
+                    $vars['interactionGraphic'] = $interactionGraph[0];
+                    $vars['listeCoords']        = $listeCoords;
+                    $vars['exoID']              = $exoID;
+                    
+                    return $this->render('UJMExoBundle:InteractionGraphic:paper.html.twig', $vars);
 
                 case "InteractionHole":
 
@@ -257,13 +260,11 @@ class QuestionController extends Controller
 
                     $form   = $this->createForm(new ResponseType(), $response);
 
-                    return $this->render(
-                        'UJMExoBundle:InteractionHole:paper.html.twig', array(
-                        'interactionHole' => $interactionHole[0],
-                        'form'   => $form->createView(),
-                        'exoID' => $exoID
-                        )
-                    );
+                    $vars['interactionHole'] = $interactionHole[0];
+                    $vars['form']            = $form->createView();
+                    $vars['exoID']           = $exoID;
+                    
+                    return $this->render('UJMExoBundle:InteractionHole:paper.html.twig', $vars);
 
                 case "InteractionOpen":
                     $response = new Response();
@@ -274,13 +275,11 @@ class QuestionController extends Controller
 
                     $form   = $this->createForm(new ResponseType(), $response);
 
-                    return $this->render(
-                        'UJMExoBundle:InteractionOpen:paper.html.twig', array(
-                        'interactionOpen' => $interactionOpen[0],
-                        'form'   => $form->createView(),
-                        'exoID' => $exoID
-                        )
-                    );
+                    $vars['interactionOpen'] = $interactionOpen[0];
+                    $vars['form']            = $form->createView();
+                    $vars['exoID']           = $exoID;
+                    
+                    return $this->render('UJMExoBundle:InteractionOpen:paper.html.twig', $vars);
 
             }
         } else {

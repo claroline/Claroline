@@ -281,18 +281,25 @@ class InteractionQCMController extends Controller
      */
     public function responseQcmAction()
     {
+        $vars = array();
         $request = $this->get('request');
+        $postVal = $req = $request->request->all();
+        
+        if ($postVal['exoID'] != -1) {
+            $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($postVal['exoID']);
+            $vars['_resource'] = $exercise;
+        }
+        
         $exerciseSer = $this->container->get('ujm.exercise_services');
         $res = $exerciseSer->responseQCM($request);
 
-        return $this->render(
-            'UJMExoBundle:InteractionQCM:qcmOverview.html.twig', array(
-            'score'      => $res['score'],
-            'penalty'    => $res['penalty'],
-            'interQCM'   => $res['interQCM'],
-            'response'   => $res['response']
-            )
-        );
+        $vars['score']    = $res['score'];
+        $vars['penalty']  = $res['penalty'];
+        $vars['interQCM'] = $res['interQCM'];
+        $vars['response'] = $res['response'];
+        $vars['exoID']    = $postVal['exoID'];
+        
+        return $this->render('UJMExoBundle:InteractionQCM:qcmOverview.html.twig', $vars);
     }
 
     private function createDeleteForm($id)

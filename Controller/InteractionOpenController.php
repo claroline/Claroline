@@ -222,19 +222,25 @@ class InteractionOpenController extends Controller
      */
     public function responseOpenAction()
     {
+        $vars = array();
         $request = $this->get('request');
+        $postVal = $req = $request->request->all();
 
+        if ($postVal['exoID'] != -1) {
+            $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($postVal['exoID']);
+            $vars['_resource'] = $exercise;
+        }
+        
         $exerciseSer = $this->container->get('ujm.exercise_services');
         $res = $exerciseSer->responseOpen($request);
 
-        return $this->render(
-            'UJMExoBundle:InteractionOpen:openOverview.html.twig', array(
-            'interOpen'   => $res['interOpen'],
-            'penalty'     => $res['penalty'],
-            'response'    => $res['response'],
-            'score'       => $res['score'],
-            'tempMark'    => $res['tempMark']
-            )
-        );
+        $vars['interOpen'] = $res['interOpen'];
+        $vars['penalty']   = $res['penalty'];
+        $vars['response']  = $res['response'];
+        $vars['score']     = $res['score'];
+        $vars['tempMark']  = $res['tempMark'];
+        $vars['exoID']     =  $postVal['exoID'];
+        
+        return $this->render('UJMExoBundle:InteractionOpen:openOverview.html.twig', $vars);
     }
 }
