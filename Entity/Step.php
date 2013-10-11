@@ -381,4 +381,67 @@ class Step extends AbstractResource
         return $this->parent;
     }
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->step2ResourceNodes = new \Doctrine\Common\Collections\ArrayCollection();
+    }  
+
+    /**
+     * Add step2ResourceNodes
+     *
+     * @param \Innova\PathBundle\Entity\Step2ResourceNode $step2ResourceNodes
+     * @return Step
+     */
+    public function addStep2ResourceNode(\Innova\PathBundle\Entity\Step2ResourceNode $step2ResourceNodes)
+    {
+        $this->step2ResourceNodes[] = $step2ResourceNodes;
+
+        return $this;
+    }
+
+    /**
+     * Remove step2ResourceNodes
+     *
+     * @param \Innova\PathBundle\Entity\Step2ResourceNode $step2ResourceNodes
+     */
+    public function removeStep2ResourceNode(\Innova\PathBundle\Entity\Step2ResourceNode $step2ResourceNodes)
+    {
+        $this->step2ResourceNodes->removeElement($step2ResourceNodes);
+    }
+
+    /**
+     * Get step2ResourceNodes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getStep2ResourceNodes()
+    {
+        return $this->step2ResourceNodes;
+    }
+
+    /**
+     * Set resourceNode
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
+     * @return Step
+     */
+    public function setResourceNode(\Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode = null)
+    {
+        $this->resourceNode = $resourceNode;
+
+        return $this;
+    }
+
+    /**
+     * Get resourceNode
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode 
+     */
+    public function getResourceNode()
+    {
+        return $this->resourceNode;
+    }
 }
