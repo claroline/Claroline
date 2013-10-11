@@ -1,0 +1,7 @@
+{% extends 'ClarolineCoreBundle:Tool\\desktop\\home:desktopHomeLayoutWithoutConfig.html.twig' %}
+{% block homeTab %}
+    {% render controller(
+        'ClarolineCoreBundle:Desktop:widgetsWithoutConfig',
+        {'homeTabId': tabId}
+    ) %}
+{% endblock %}

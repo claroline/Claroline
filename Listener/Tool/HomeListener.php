@@ -132,34 +132,30 @@ class HomeListener
         $user = $this->securityContext->getToken()->getUser();
         $adminHomeTabConfigs = $this->homeTabManager
             ->generateAdminHomeTabConfigsByUser($user);
+        $visibleAdminHomeTabConfigs = $this->homeTabManager
+            ->filterVisibleHomeTabConfigs($adminHomeTabConfigs);
         $userHomeTabConfigs = $this->homeTabManager
-            ->getDesktopHomeTabConfigsByUser($user);
+            ->getVisibleDesktopHomeTabConfigsByUser($user);
         $tabId = 0;
 
-        if ($tabId === 0) {
-            foreach ($adminHomeTabConfigs as $adminHomeTabConfig) {
-                if ($adminHomeTabConfig->isVisible()) {
-                    $tabId = $adminHomeTabConfig->getHomeTab()->getId();
-                    break;
-                }
-            }
-        }
-        if ($tabId === 0) {
-            foreach ($userHomeTabConfigs as $userHomeTabConfig) {
-                if ($userHomeTabConfig->isVisible()) {
-                    $tabId = $userHomeTabConfig->getHomeTab()->getId();
-                    break;
-                }
+        $firstAdminHomeTab = reset($visibleAdminHomeTabConfigs);
+
+        if ($firstAdminHomeTab) {
+            $tabId = $firstAdminHomeTab->getHomeTab()->getId();
+        } else {
+            $firstHomeTab = reset($userHomeTabConfigs);
+
+            if ($firstHomeTab) {
+                $tabId = $firstHomeTab->getHomeTab()->getId();
             }
         }
 
         return $this->templating->render(
-            'ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabs.html.twig',
+            'ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabsWithoutConfig.html.twig',
             array(
-                'adminHomeTabConfigs' => $adminHomeTabConfigs,
+                'adminHomeTabConfigs' => $visibleAdminHomeTabConfigs,
                 'userHomeTabConfigs' => $userHomeTabConfigs,
-                'tabId' => $tabId,
-                'withConfig' => 0
+                'tabId' => $tabId
             )
         );
     }

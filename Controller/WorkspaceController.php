@@ -416,96 +416,6 @@ class WorkspaceController extends Controller
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Widget:widgets.html.twig")
-     *
-     * Display registered widgets.
-     *
-     * @param integer $workspaceId
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @todo Reduce the number of sql queries for this action (-> dql)
-     */
-    public function widgetsAction(
-        AbstractWorkspace $workspace,
-        $homeTabId,
-        $withConfig
-    )
-    {
-        if ($withConfig === 1) {
-            $this->checkWorkspaceManagerAccess($workspace);
-        }
-
-        if ($this->security->getToken()->getUser() !== 'anon.') {
-            $rightToConfigure = $this->security->isGranted('parameters', $workspace);
-        } else {
-            $rightToConfigure = false;
-        }
-
-        $widgets = array();
-        $lastWidgetOrder = 1;
-
-        $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
-
-        if (is_null($homeTab)) {
-            $isVisibleHomeTab = false;
-        } else {
-            $isVisibleHomeTab = $this->homeTabManager
-                ->checkHomeTabVisibilityByWorkspace($homeTab, $workspace, $withConfig);
-        }
-
-        if ($isVisibleHomeTab) {
-
-            $widgetHomeTabConfigs = $this->homeTabManager
-                ->getWidgetConfigsByWorkspace($homeTab, $workspace);
-
-            if (count($widgetHomeTabConfigs) > 0) {
-                $lastWidgetOrder = count($widgetHomeTabConfigs);
-            }
-
-            if ($this->security->getToken()->getUser() !== 'anon.') {
-                $rightToConfigure = $this->security->isGranted('parameters', $workspace);
-            } else {
-                $rightToConfigure = false;
-            }
-
-            foreach ($widgetHomeTabConfigs as $widgetHomeTabConfig) {
-                $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
-
-                $event = $this->eventDispatcher->dispatch(
-                    "widget_{$widgetInstance->getWidget()->getName()}",
-                    'DisplayWidget',
-                    array($widgetInstance)
-                );
-
-                $widget['config'] = $widgetHomeTabConfig;
-                $widget['content'] = $event->getContent();
-                $widget['configurable'] = $rightToConfigure
-                    && $widgetInstance->getWidget()->isConfigurable();
-                $widgets[] = $widget;
-            }
-        }
-
-        return array(
-            'widgetsDatas' => $widgets,
-            'isDesktop' => false,
-            'workspaceId' => $workspace->getId(),
-            'withConfig' => $withConfig,
-            'isVisibleHomeTab' => $isVisibleHomeTab,
-            'isLockedHomeTab' => false,
-            'lastWidgetOrder' => $lastWidgetOrder
-        );
-    }
-
-    /**
-     * Routing is not needed.
-     *
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     *
      * @EXT\Template("ClarolineCoreBundle:Widget:widgetsWithoutConfig.html.twig")
      *
      * Display visible registered widgets.
@@ -522,7 +432,6 @@ class WorkspaceController extends Controller
     )
     {
         $widgets = array();
-        $lastWidgetOrder = 1;
 
         $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
 
@@ -537,10 +446,6 @@ class WorkspaceController extends Controller
 
             $widgetHomeTabConfigs = $this->homeTabManager
                 ->getVisibleWidgetConfigsByWorkspace($homeTab, $workspace);
-
-            if (count($widgetHomeTabConfigs) > 0) {
-                $lastWidgetOrder = count($widgetHomeTabConfigs);
-            }
 
             foreach ($widgetHomeTabConfigs as $widgetHomeTabConfig) {
                 $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
@@ -557,14 +462,7 @@ class WorkspaceController extends Controller
             }
         }
 
-        return array(
-            'widgetsDatas' => $widgets,
-            'isDesktop' => false,
-            'workspaceId' => $workspace->getId(),
-            'isVisibleHomeTab' => $isVisibleHomeTab,
-            'isLockedHomeTab' => false,
-            'lastWidgetOrder' => $lastWidgetOrder
-        );
+        return array('widgetsDatas' => $widgets);
     }
 
     /**
@@ -598,9 +496,8 @@ class WorkspaceController extends Controller
 
         $widgets = array();
         $lastWidgetOrder = 1;
-
-        $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
-
+        $homeTab = $this->homeTabManager
+            ->getHomeTabByIdAndWorkspace($homeTabId, $workspace);
         $isVisibleHomeTab = is_null($homeTab) ? false: true;
 
         if ($isVisibleHomeTab) {
@@ -1043,9 +940,19 @@ class WorkspaceController extends Controller
     {
         $workspaceHomeTabConfigs = $this->homeTabManager
             ->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
-        $homeTabId = $tabId;
+        $homeTabId = intval($tabId);
+        $firstElement = true;
 
-        if ($homeTabId == -1) {
+        if ($homeTabId !== -1) {
+            foreach ($workspaceHomeTabConfigs as $workspaceHomeTabConfig) {
+                if ($homeTabId === $workspaceHomeTabConfig->getHomeTab()->getId()) {
+                    $firstElement = false;
+                    break;
+                }
+            }
+        }
+
+        if ($firstElement) {
             $firstHomeTabConfig = reset($workspaceHomeTabConfigs);
 
             if ($firstHomeTabConfig) {
@@ -1087,20 +994,29 @@ class WorkspaceController extends Controller
 
         $workspaceHomeTabConfigs = $this->homeTabManager
             ->getWorkspaceHomeTabConfigsByWorkspace($workspace);
-        $homeTabId = $tabId;
+        $homeTabId = intval($tabId);
+        $firstElement = true;
 
-        if ($homeTabId == -1) {
-            $firstHomeTabConfig = reset($workspaceHomeTabConfigs);
-
-            if ($firstHomeTabConfig) {
-                $homeTabId = $firstHomeTabConfig->getHomeTab()->getId();
-            }
-        }
-        elseif ($homeTabId == 0) {
+        if ($homeTabId === 0) {
+            $firstElement = false;
             $lastHomeTabConfig = end($workspaceHomeTabConfigs);
 
             if ($lastHomeTabConfig) {
                 $homeTabId = $lastHomeTabConfig->getHomeTab()->getId();
+            }
+        } elseif ($homeTabId !== -1) {
+            foreach ($workspaceHomeTabConfigs as $workspaceHomeTabConfig) {
+                if ($homeTabId === $workspaceHomeTabConfig->getHomeTab()->getId()) {
+                    $firstElement = false;
+                    break;
+                }
+            }
+        }
+        if ($firstElement) {
+            $firstHomeTabConfig = reset($workspaceHomeTabConfigs);
+
+            if ($firstHomeTabConfig) {
+                $homeTabId = $firstHomeTabConfig->getHomeTab()->getId();
             }
         }
 

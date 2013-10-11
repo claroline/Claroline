@@ -199,10 +199,9 @@ class HomeTabManager
         return false;
     }
 
-    public function checkHomeTabVisibilityByUser(
+    public function checkHomeTabVisibilityForConfigByUser(
         HomeTab $homeTab,
-        User $user,
-        $withConfig
+        User $user
     )
     {
         $adminHomeTabConfig = $this->homeTabConfigRepo->findOneBy(
@@ -226,16 +225,57 @@ class HomeTabManager
         }
         elseif (is_null($userHomeTabConfig)) {
 
-            return $adminHomeTabConfig->isVisible() || $withConfig == 1;
+            return $adminHomeTabConfig->isVisible();
         }
         elseif (is_null($adminHomeTabConfig)) {
 
-            return $userHomeTabConfig->isVisible() || $withConfig == 1;
+            return true;
         }
         else {
             $visible = $adminHomeTabConfig->isLocked() ?
                 $adminHomeTabConfig->isVisible() :
-                ($userHomeTabConfig->isVisible() || ($withConfig == 1));
+                true;
+
+            return $visible;
+        }
+    }
+
+    public function checkHomeTabVisibilityByUser(
+        HomeTab $homeTab,
+        User $user
+    )
+    {
+        $adminHomeTabConfig = $this->homeTabConfigRepo->findOneBy(
+            array(
+                'homeTab' => $homeTab,
+                'type' => 'admin_desktop',
+                'user' => null,
+                'workspace' => null
+            )
+        );
+        $userHomeTabConfig = $this->homeTabConfigRepo->findOneBy(
+            array(
+                'homeTab' => $homeTab,
+                'user' => $user
+            )
+        );
+
+        if (is_null($adminHomeTabConfig) && is_null($userHomeTabConfig)) {
+
+            return false;
+        }
+        elseif (is_null($userHomeTabConfig)) {
+
+            return $adminHomeTabConfig->isVisible();
+        }
+        elseif (is_null($adminHomeTabConfig)) {
+
+            return $userHomeTabConfig->isVisible();
+        }
+        else {
+            $visible = $adminHomeTabConfig->isLocked() ?
+                $adminHomeTabConfig->isVisible() :
+                $userHomeTabConfig->isVisible();
 
             return $visible;
         }
@@ -454,6 +494,16 @@ class HomeTabManager
     public function getHomeTabById($homeTabId)
     {
         return $this->homeTabRepo->findOneById($homeTabId);
+    }
+
+    public function getHomeTabByIdAndWorkspace(
+        $homeTabId,
+        AbstractWorkspace $workspace
+    )
+    {
+        return $this->homeTabRepo->findOneBy(
+            array('id' => $homeTabId, 'workspace' => $workspace)
+        );
     }
 
     /**
