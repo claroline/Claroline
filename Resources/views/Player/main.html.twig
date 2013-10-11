@@ -73,6 +73,17 @@
                         
                 <div class="row">
                     <div class="col-md-3">
+                         <div class="panel panel-default">
+                            <div class="panel-heading"><i class="icon-pushpin"></i> Informations </div>
+                            <div class="panel-body">
+                                <p><strong>Durée :</strong>  {{ step.duration|date('H:i') }} </p>
+                                <p><strong>Qui :</strong>  {{ step.stepWho.name }} </p>
+                                <p><strong>Où :</strong>  {{ step.stepWhere.name }} </p>
+                                <p><strong>Sur ordinateur :</strong>  {{ step.withComputer }} </p>
+                                <p><strong>Avec un tuteur:</strong>  {{ step.withTutor }} </p>
+                            </div>
+                        </div>
+
                         <div class="panel panel-default">
                             <div class="panel-heading"><i class="icon-briefcase"></i> Ressources</div>
                             <div class="panel-body">
@@ -96,21 +107,22 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-9">
                         <div class="text-center">
                             <h1>{{ step.resourceNode.name }}</h1>
                             {% if step.image %}
                                 <img src="{{ asset('bundles/innovapath/images/steps/' ~  step.image) }}"/>
                             {% endif %}
                         </div>
-                        <p>Durée :  {{ step.duration|date('H:i:s') }} </p>
-                        <p>Consignes : {{ step.instructions }}</p>
-                        
-                        
+                        <div class="justified">
+                            <strong>Consignes :</strong>   {{ step.instructions }}
+                        </div>
                     </div>
+                    <!--
                     <div class="col-md-3">
-                        <h3><i class="icon-wrench"></i> Outils</h3>
+                        <h3><i class="icon-wrench"></i> Informations</h3>
                     </div>
+                    -->
                 </div>
 
             </div>
