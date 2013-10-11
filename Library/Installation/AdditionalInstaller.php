@@ -7,7 +7,6 @@ use Symfony\Component\Console\Output\NullOutput;
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
-use Claroline\InstallationBundle\Bundle\BundleVersion;
 
 class AdditionalInstaller extends BaseInstaller
 {
@@ -27,20 +26,18 @@ class AdditionalInstaller extends BaseInstaller
         $this->buildDefaultTemplate();
     }
 
-    public function preUpdate(BundleVersion $current, BundleVersion $target)
+    public function preUpdate($currentVersion, $targetVersion)
     {
-
-        if (version_compare($current->getVersion(), '2.0', '<') && version_compare($target->getVersion(), '2.0', '>=') ) {
+        if (version_compare($currentVersion, '2.0', '<') && version_compare($targetVersion, '2.0', '>=') ) {
             $updater020000 = new Updater\Updater020000($this->container);
             $updater020000->setLogger($this->logger);
             $updater020000->preUpdate();
         }
     }
 
-    public function postUpdate(BundleVersion $current, BundleVersion $target)
+    public function postUpdate($currentVersion, $targetVersion)
     {
-
-        if (version_compare($current->getVersion(), '2.0', '<')  && version_compare($target->getVersion(), '2.0', '>=') ) {
+        if (version_compare($currentVersion, '2.0', '<')  && version_compare($targetVersion, '2.0', '>=') ) {
             $updater020000 = new Updater\Updater020000($this->container);
             $updater020000->setLogger($this->logger);
             $updater020000->postUpdate();
