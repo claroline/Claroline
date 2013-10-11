@@ -632,8 +632,8 @@ class PathController extends Controller
                 $em->flush();
             }
         }
-
         $url = $this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspaceId, 'toolName' => 'innova_path'));
+        
         return $this->redirect($url);
     }
 
