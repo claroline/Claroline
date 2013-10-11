@@ -605,10 +605,6 @@ class PathController extends Controller
     /**
      * deletePathAction function
      *
-     * @param string $path path of activity
-     *
-     * @return OK
-     *
      * @Route(
      *     "/path/delete",
      *     name = "innova_path_delete_path",
@@ -635,8 +631,6 @@ class PathController extends Controller
                 $em->remove($path->getResourceNode());
                 $em->flush();
             }
-            $em->remove($path->getResourceNode());
-            $em->flush();
         }
 
         $url = $this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspaceId, 'toolName' => 'innova_path'));
