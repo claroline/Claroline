@@ -3,7 +3,7 @@
 /**
  * Template Modal Controller
  */
-function TemplateModalCtrl($scope, $http, $modalInstance, StepFactory, TemplateFactory) {
+function TemplateModalCtrl($scope, $http, $modalInstance, StepFactory, TemplateFactory, AlertFactory) {
     // Store symfony base partials route
     $scope.webDir = EditorApp.webDir;
     
