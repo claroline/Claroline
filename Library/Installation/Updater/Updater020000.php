@@ -5,15 +5,23 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Doctrine\Common\Persistence\Mapping\MappingException;
+use Symfony\Component\Filesystem\Filesystem;
 
 class Updater020000
 {
     private $container;
+    private $conn;
+    private $translator;
     private $logger;
 
     public function __construct($container)
     {
         $this->container = $container;
+        $this->conn = $container->get('doctrine.dbal.default_connection');
+        $this->translator = $container->get('translator');
+        $locale = $container->get('claroline.config.platform_config_handler')
+            ->getParameter('locale_language');
+        $this->translator->setLocale($locale);
     }
 
     public function setLogger($logger)
@@ -31,6 +39,7 @@ class Updater020000
 
     public function preUpdate()
     {
+        $this->addLogosAndIcons();
         $this->copyWidgetHomeTabConfigTable();
     }
 
@@ -50,90 +59,105 @@ class Updater020000
     private function initWidgets()
     {
         $this->log('Updating claro_widget table ...');
-        $cn = $this->container->get('doctrine.dbal.default_connection');
-        $cn->query("UPDATE claro_widget set is_displayable_in_workspace = true,
-            is_displayable_in_desktop = true
+        $this->conn->query("
+            UPDATE claro_widget
+            SET is_displayable_in_workspace = true,
+                is_displayable_in_desktop = true
             WHERE name = 'core_resource_logger'
             OR name = 'simple_text'
             OR name = 'claroline_announcement_widget'
-            OR name = 'claroline_rssreader'");
-
-        $cn->query("UPDATE claro_widget set is_displayable_in_workspace = false, is_displayable_in_desktop = true
-            WHERE name = 'my_workspaces'");
+            OR name = 'claroline_rssreader'
+        ");
+        $this->conn->query("
+            UPDATE claro_widget
+            SET is_displayable_in_workspace = false,
+                is_displayable_in_desktop = true
+            WHERE name = 'my_workspaces'
+        ");
     }
 
     private function updateTextWidgets()
     {
         $this->log('Migrating simple text widget data ...');
-        $cn = $this->container->get('doctrine.dbal.default_connection');
-        //create new table
 
         //text_widget_id
-        $result = $cn->query("SELECT id FROM claro_widget WHERE name = 'simple_text'");
+        $result = $this->conn->query(
+            "SELECT id FROM claro_widget WHERE name = 'simple_text'
+        ");
         $widget = $result->fetch();
         $widgetId = $widget['id'];
-        $wconfigs = $cn->query("SELECT * FROM simple_text_workspace_widget_config");
+        $wconfigs = $this->conn->query(
+            "SELECT * FROM simple_text_workspace_widget_config"
+        );
 
         foreach ($wconfigs as $config) {
             if (!$config['is_default']) {
-               $query = "INSERT INTO claro_widget_instance (workspace_id, user_id, widget_id, is_admin, is_desktop, name)
-                   VALUES ({$config['workspace_id']}, null, {$widgetId}, false, false, 'simple_text' )";
-               $cn->query($query);
+                $name = $this->conn->quote($this->translator->trans('simple_text', array(), 'widget'));
+                $query = "
+                    INSERT INTO claro_widget_instance (workspace_id, user_id, widget_id, is_admin, is_desktop, name)
+                    VALUES ({$config['workspace_id']}, null, {$widgetId}, false, false, {$name})
+                ";
+                $this->conn->query($query);
             }
 
-            $query = "SELECT * FROM claro_widget_instance WHERE workspace_id = {$config['workspace_id']} and widget_id = {$widgetId}";
-            $instance = $cn->query($query)->fetch();
-
-            $cn->query("INSERT into claro_simple_text_widget_config (content, widgetInstance_id)
-                VALUES (". $cn->quote($config['content']) . ", {$instance['id']})");
+            $query = "
+                SELECT * FROM claro_widget_instance
+                WHERE workspace_id = {$config['workspace_id']}
+                AND widget_id = {$widgetId}
+            ";
+            $instance = $this->conn->query($query)->fetch();
+            $this->conn->query("
+                INSERT INTO claro_simple_text_widget_config (content, widgetInstance_id)
+                VALUES (". $this->conn->quote($config['content']) . ", {$instance['id']})
+            ");
         }
     }
 
     private function updateWidgetsDatas()
     {
         $this->log('Migrating widgets display tables...');
-        $cn = $this->container->get('doctrine.dbal.default_connection');
-        $select = "SELECT instance. * , widget.name as widget_name
+        $select = "
+            SELECT instance. * , widget.name AS widget_name
             FROM claro_widget_display instance
             RIGHT JOIN claro_widget widget ON instance.widget_id = widget.id
-            WHERE parent_id IS NOT NULL ";
+            WHERE parent_id IS NOT NULL
+        ";
+        $rows =  $this->conn->query($select);
 
-        $datas =  $cn->query($select);
-
-        foreach ($datas as $row) {
-           $isAdmin = $row['parent_id'] == NULL ? 'true': 'false';
-           $wsId = $row['workspace_id'] ? $row['workspace_id']: 'null';
-           $userId = $row['user_id'] ? $row['user_id']: 'null';
-           $name = $cn->quote($this->container->get('translator')->trans($row['widget_name'], array(), 'widget'));
-           $query = "INSERT INTO claro_widget_instance (workspace_id, user_id, widget_id, is_admin, is_desktop, name)
-               VALUES ({$wsId}, {$userId}, {$row['widget_id']}, {$isAdmin}, {$row['is_desktop']}, \"{$name}\" )";
-           $cn->query($query);
+        foreach ($rows as $row) {
+            $isAdmin = $row['parent_id'] == NULL ? 'true': 'false';
+            $wsId = $row['workspace_id'] ? $row['workspace_id']: 'null';
+            $userId = $row['user_id'] ? $row['user_id']: 'null';
+            $name = $this->conn->quote($this->translator->trans($row['widget_name'], array(), 'widget'));
+            $query = "
+                INSERT INTO claro_widget_instance (workspace_id, user_id, widget_id, is_admin, is_desktop, name)
+                VALUES ({$wsId}, {$userId}, {$row['widget_id']}, {$isAdmin}, {$row['is_desktop']}, {$name})
+            ";
+            $this->conn->query($query);
         }
     }
 
     private function dropTables()
     {
         $this->log('Drop useless tables...');
-        $cn = $this->container->get('doctrine.dbal.default_connection');
-        $cn->query('DROP table claro_widget_display');
-        $cn->query('DROP TABLE simple_text_dekstop_widget_config');
-        $cn->query('DROP TABLE simple_text_workspace_widget_config');
-        $cn->query('DROP TABLE claro_log_workspace_widget_config');
-        $cn->query('DROP TABLE claro_log_desktop_widget_config');
+        $this->conn->query('DROP table claro_widget_display');
+        $this->conn->query('DROP TABLE simple_text_dekstop_widget_config');
+        $this->conn->query('DROP TABLE simple_text_workspace_widget_config');
+        $this->conn->query('DROP TABLE claro_log_workspace_widget_config');
+        $this->conn->query('DROP TABLE claro_log_desktop_widget_config');
     }
 
     private function updateWidgetHomeTabConfigsDatas()
     {
         $this->log('Updating home tabs...');
-        $cn = $this->container->get('doctrine.dbal.default_connection');
         $widgetHomeTabConfigsReq = "
             SELECT *
             FROM claro_widget_home_tab_config_temp
             ORDER BY id
         ";
-        $datas =  $cn->query($widgetHomeTabConfigsReq);
+        $rows =  $this->conn->query($widgetHomeTabConfigsReq);
 
-        foreach ($datas as $row) {
+        foreach ($rows as $row) {
             $widgetHomeTabConfigId = $row['id'];
             $homeTabId = $row['home_tab_id'];
             $widgetId = $row['widget_id'];
@@ -143,7 +167,7 @@ class Updater020000
                 FROM claro_home_tab
                 WHERE id = {$homeTabId}
             ";
-            $homeTab = $cn->query($homeTabsReq)->fetch();
+            $homeTab = $this->conn->query($homeTabsReq)->fetch();
             $homeTabType = $homeTab['type'];
 
             $widgetInstanceReq = "
@@ -171,7 +195,7 @@ class Updater020000
                 $widgetInstanceReq .= " AND workspace_id = {$row['workspace_id']}";
             }
 
-            $widgetInstances = $cn->query($widgetInstanceReq);
+            $widgetInstances = $this->conn->query($widgetInstanceReq);
             $widgetInstance = $widgetInstances->fetch();
 
             if ($widgetInstance) {
@@ -181,13 +205,13 @@ class Updater020000
                     SET widget_instance_id = {$widgetInstanceId}
                     WHERE id = {$widgetHomeTabConfigId}
                 ";
-                $cn->query($updateReq);
+                $this->conn->query($updateReq);
             } else {
                 $deleteReq = "
                     DELETE FROM claro_widget_home_tab_config
                     WHERE id = {$widgetHomeTabConfigId}
                 ";
-                $cn->query($deleteReq);
+                $this->conn->query($deleteReq);
             }
         }
     }
@@ -269,8 +293,7 @@ class Updater020000
 
     private function copyWidgetHomeTabConfigTable()
     {
-        $cn = $this->container->get('doctrine.dbal.default_connection');
-        $cn->query('
+        $this->conn->query('
             CREATE TABLE claro_widget_home_tab_config_temp
             AS (SELECT * FROM claro_widget_home_tab_config)
         ');
@@ -278,19 +301,27 @@ class Updater020000
 
     private function dropWidgetHomeTabConfigTableCopy()
     {
-        $cn = $this->container->get('doctrine.dbal.default_connection');
-        $cn->query('DROP TABLE claro_widget_home_tab_config_temp');
+        $this->conn->query('DROP TABLE claro_widget_home_tab_config_temp');
     }
 
     private function updateHomeTool()
     {
         $this->log('Updating tool home...');
-        $cn = $this->container->get('doctrine.dbal.default_connection');
-        $cn->query("
+        $this->conn->query("
             UPDATE claro_tools
             SET is_configurable_in_workspace = false,
             is_configurable_in_desktop = false
             WHERE name = 'home'
         ");
+    }
+
+    private function addLogosAndIcons()
+    {
+        $filesystem = new Filesystem();
+        $imgDir = __DIR__ . '/../../../Resources/public/images';
+        $webDir = __DIR__ . '/../../../../../../../../web';
+        $filesystem->mirror("{$imgDir}/logos", "{$webDir}/uploads/logos");
+        $filesystem->copy("{$imgDir}/ico/favicon.ico", "{$webDir}/favicon.ico", true);
+        $filesystem->copy("{$imgDir}/ico/apple-touch-icon.png", "{$webDir}/apple-touch-icon.png", true);
     }
 }
