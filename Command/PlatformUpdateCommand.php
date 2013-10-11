@@ -40,18 +40,18 @@ class PlatformUpdateCommand extends ContainerAwareCommand
         $bundles = $this->getBundlesByFqcn();
 
         foreach ($opHandler->getOperations() as $operation) {
+            $installer = $operation->getBundleType() === Operation::BUNDLE_CORE ?
+                $baseInstaller :
+                $pluginInstaller;
+
             if ($operation->getType() === Operation::INSTALL) {
-                if ($operation->getBundleType() === Operation::BUNDLE_CORE) {
-                    $baseInstaller->install($bundles[$operation->getBundleFqcn()]);
-                } else {
-                    $pluginInstaller->install($bundles[$operation->getBundleFqcn()]);
-                }
+                $installer->install($bundles[$operation->getBundleFqcn()]);
             } elseif ($operation->getType() === Operation::UPDATE) {
-                if ($operation->getBundleType() === Operation::BUNDLE_CORE) {
-                    $baseInstaller->install($bundles[$operation->getBundleFqcn()]);
-                } else {
-                    $pluginInstaller->install($bundles[$operation->getBundleFqcn()]);
-                }
+                $installer->update(
+                    $bundles[$operation->getBundleFqcn()],
+                    $operation->getFromVersion(),
+                    $operation->getToVersion()
+                );
             } else {
                 // remove or disable package
             }
