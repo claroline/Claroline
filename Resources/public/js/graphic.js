@@ -252,14 +252,21 @@ function Check(noTitle, noQuestion, noImg, noAnswerZone, questiontitle, invite) 
 
                         var imgN = 'img' + j;
                         var selectedZone = $('#' + imgN); // An answer zone
+                        var container = $('#dragContainer' + j);
 
                         if (selectedZone.length) { // If at least one answer zone is defined
 
+                            var position = selectedZone;
+
+                            if (selectedZone.css("left") == 'auto') {
+                                position = container;
+                            }
+
                             // Position x answer zone
-                            imgx = parseInt(selectedZone.css("left").substring(0, selectedZone.css("left").indexOf('p')));
+                            imgx = parseInt(position.css("left").substring(0, position.css("left").indexOf('p')));
 
                             // Position y answer zone
-                            imgy = parseInt(selectedZone.css("top").substring(0, selectedZone.css("top").indexOf('p')));
+                            imgy = parseInt(position.css("top").substring(0, position.css("top").indexOf('p')));
 
                             // Concatenate informations of the answer zones
                             var val = selectedZone.attr("src") + ';' + imgx + '_' + imgy + '-' + point[imgN] + '~' + selectedZone.prop("width");
