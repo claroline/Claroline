@@ -14,16 +14,12 @@ class ScriptHandler
 
     public static function postPackageInstall(PackageEvent $event)
     {
-        static::getRecorder($event)->record(
-            Operation::INSTALL,
-            $event->getOperation()->getPackage()
-        );
+        static::getRecorder($event)->install($event->getOperation()->getPackage());
     }
 
     public static function postPackageUpdate(PackageEvent $event)
     {
-        static::getRecorder($event)->record(
-            Operation::UPDATE,
+        static::getRecorder($event)->update(
             $event->getOperation()->getTargetPackage(),
             $event->getOperation()->getInitialPackage()
         );
@@ -31,17 +27,12 @@ class ScriptHandler
 
     public static function prePackageUninstall(PackageEvent $event)
     {
-        static::getRecorder($event)->addRemovablePackage(
-            $event->getOperation()->getPackage()
-        );
+        static::getRecorder($event)->addRemovablePackage($event->getOperation()->getPackage());
     }
 
     public static function postPackageUninstall(PackageEvent $event)
     {
-        static::getRecorder($event)->record(
-            Operation::UNINSTALL,
-            $event->getOperation()->getPackage()
-        );
+        static::getRecorder($event)->uninstall($event->getOperation()->getPackage());
     }
 
     private static function getRecorder(PackageEvent $event)
