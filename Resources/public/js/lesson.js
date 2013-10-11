@@ -62,7 +62,7 @@ function initCollapsor(){
 
 function toggleCollapsor(obj){
     var chapter_id = $(obj).data('collapsor');
-    $('#list_'+chapter_id).toggle();
+    $('#list_'+chapter_id).toggle(300);
     $('#collapsor_icon_'+chapter_id).toggleClass('icon-collapse');
     $('#collapsor_icon_'+chapter_id).toggleClass('icon-expand');
 
@@ -70,14 +70,14 @@ function toggleCollapsor(obj){
 
 function collapse(obj){
     var chapter_id = $(obj).data('collapsor');
-    $('#list_'+chapter_id).hide();
+    $('#list_'+chapter_id).hide(300);
     $('#collapsor_icon_'+chapter_id).removeClass('icon-collapse');
     $('#collapsor_icon_'+chapter_id).addClass('icon-expand');
 }
 
 function expand(obj){
     var chapter_id = $(obj).data('collapsor');
-    $('#list_'+chapter_id).show();
+    $('#list_'+chapter_id).show(300);
     $('#collapsor_icon_'+chapter_id).addClass('icon-collapse');
     $('#collapsor_icon_'+chapter_id).removeClass('icon-expand');
 }
