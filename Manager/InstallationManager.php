@@ -73,7 +73,7 @@ class InstallationManager
 
         if ($additionalInstaller) {
             $this->log('Launching pre-update actions...');
-            $additionalInstaller->preUpdate($current, $target);
+            $additionalInstaller->preUpdate($currentVersion, $targetVersion);
         }
 
         if ($bundle->hasMigrations()) {
@@ -82,7 +82,7 @@ class InstallationManager
 
         if ($additionalInstaller) {
             $this->log('Launching post-update actions...');
-            $additionalInstaller->postUpdate($current, $target);
+            $additionalInstaller->postUpdate($currentVersion, $targetVersion);
         }
     }
 
