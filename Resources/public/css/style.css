@@ -4,6 +4,9 @@
 .search_form {
   padding-bottom: 0;
 }
+a.white {
+  color: white;
+}
 article {
   margin-bottom: 20px;
   background-color: #fff;
