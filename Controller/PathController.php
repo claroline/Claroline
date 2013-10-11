@@ -137,6 +137,7 @@ class PathController extends Controller
         $steps = $manager->getRepository('InnovaPathBundle:Step')->findByPath($path->getId());
         // initialisation array() de steps à ne pas supprimer. Sera rempli dans la function JSONParser
         $stepsToNotDelete = array();
+        $excludedResourcesToResourceNodes = array();
 
         //todo - lister les liens resources2step pour supprimer ceux inutilisés.
 
@@ -169,18 +170,15 @@ class PathController extends Controller
         }
 
         // lancement récursion
-        $this->JSONParser($json_root_steps, $user, $workspace, $pathsDirectory, null, 0, $path, $stepsToNotDelete);
+        $this->JSONParser($json_root_steps, $user, $workspace, $pathsDirectory, null, 0, $path, $stepsToNotDelete, $excludedResourcesToResourceNodes);
 
-        // On nettoie la base.
+        // On nettoie la base des steps qui n'ont pas été réutilisé et les step2resourceNode associés
         foreach ($steps as $step) {
            if (!in_array($step->getResourceNode()->getId(),$stepsToNotDelete)) {
-
-                /*
-                $step2ressources = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')->findByStep($step->getId());
-                foreach ($step2ressources as $step2ressource) {
-                    $manager->remove($step2ressource);
+                $step2ressourceNodes = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')->findByStep($step->getId());
+                foreach ($step2ressourceNodes as $step2ressourceNode) {
+                    $manager->remove($step2ressourceNode);
                 }
-                */
                 $manager->remove($step->getResourceNode());
             }
         }
@@ -212,7 +210,7 @@ class PathController extends Controller
      * @return array
      *
      */
-    private function JSONParser($steps, $user, $workspace, $pathsDirectory, $parent, $order, $path, &$stepsToNotDelete)
+    private function JSONParser($steps, $user, $workspace, $pathsDirectory, $parent, $order, $path, &$stepsToNotDelete, &$excludedResourcesToResourceNodes)
     {
         $manager = $this->entityManager();
         $rm = $this->resourceManager();
@@ -270,14 +268,23 @@ class PathController extends Controller
             $manager->persist($currentStep);
 
             // STEP'S RESOURCES MANAGEMENT
+            $currentStep2resourceNodes = $currentStep->getStep2ResourceNodes();
+            $step2resourceNodesToNotDelete = array();
+
             $resourceOrder = 0;
             foreach ($step->resources as $resource) {
                 $resourceOrder++;
+                $excludedResourcesToResourceNodes[$resource->id] = $resource->resourceId;
                 if(!$step2ressourceNode = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')
-                                                ->findOneBy(array('step' => $currentStep, 'resourceNode' => $resource->resourceId))){
+                                                ->findOneBy(array('step' => $currentStep, 
+                                                                'resourceNode' => $resource->resourceId,
+                                                                'excluded' => false
+                                                                )
+                                                             )
+                        ){
                     $step2ressourceNode = new Step2ResourceNode();
                 }
-
+                $step2resourceNodesToNotDelete[] = $step2ressourceNode->getId();
                 $step2ressourceNode->setResourceNode($manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId));
                 $step2ressourceNode->setStep($currentStep);
                 $step2ressourceNode->setExcluded(false);
@@ -288,17 +295,31 @@ class PathController extends Controller
 
             // STEP'S EXCLUDED RESOURCES MANAGEMENT
             foreach ($step->excludedResources as $excludedResource) {
-               if(!$step2ressourceNode = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')
-                                                ->findOneBy(array('step' => $currentStep, 'resourceNode' => $excludedResource))){
+                // boucler sur les ressourcesnodes exclues en base et les comparer à ce qu'il y a dans le JSON
+                if(!$step2ressourceNode = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')
+                                                ->findOneBy(array('step' => $currentStep,
+                                                                'resourceNode' => $excludedResourcesToResourceNodes[$excludedResource],
+                                                                'excluded' => true
+                                                                )
+                                                            )
+                ){
                     $step2ressourceNode = new Step2ResourceNode();
                 }
-                $step2ressourceNode->setResourceNode($manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($excludedResource));
+                $step2resourceNodesToNotDelete[] = $step2ressourceNode->getId();
+                $step2ressourceNode->setResourceNode($manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($excludedResourcesToResourceNodes[$excludedResource]));
                 $step2ressourceNode->setStep($currentStep);
                 $step2ressourceNode->setExcluded(true);
                 $step2ressourceNode->setPropagated(false);
                 $step2ressourceNode->setResourceOrder(null);
                 $manager->persist($step2ressourceNode);
             }
+
+            foreach ($currentStep2resourceNodes as $currentStep2resourceNode) {
+                if (!in_array($currentStep2resourceNode->getId(),$step2resourceNodesToNotDelete)) {
+                    $manager->remove($currentStep2resourceNode);
+                }
+            }
+
 
             /*
             // TO DO : GESTION DES DROITS
@@ -310,7 +331,7 @@ class PathController extends Controller
             $manager->flush();
 
             // récursivité sur les enfants possibles.
-            $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $currentStep->getId(), 0, $path, $stepsToNotDelete);
+            $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $currentStep->getId(), 0, $path, $stepsToNotDelete, $excludedResourcesToResourceNodes);
         }
 
         $manager->flush();
@@ -362,7 +383,7 @@ class PathController extends Controller
         if($pathId != null){
             $pathCreator = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($pathId)->getCreator();
         }
-        
+
         $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
 
         if($currentUser == $pathCreator || $pathId == null){
@@ -466,7 +487,7 @@ class PathController extends Controller
      *     name = "innova_path_add_path",
      *     options = {"expose"=true}
      * )
-     * 
+     *
      * @Method("POST")
      *
      */
@@ -520,7 +541,8 @@ class PathController extends Controller
         $manager->flush();
 
         return new Response(
-            $new_path->getId()
+            $resourceNode->getId()
+
         );
     }
 
@@ -556,7 +578,7 @@ class PathController extends Controller
             $manager->flush();
 
             return new Response(
-                $path->getId()
+                $resourceNode->getId()
             );
         }
         else {
@@ -593,15 +615,11 @@ class PathController extends Controller
         return $this->redirect($url);
     }
 
-    
+
 
 
     /**
      * deletePathAction function
-     *
-     * @param string $path path of activity
-     *
-     * @return OK
      *
      * @Route(
      *     "/path/delete",
@@ -613,27 +631,25 @@ class PathController extends Controller
      */
     public function deletePathAction()
     {
-
-
         $id = $this->get('request')->request->get('id');
         $workspaceId = $this->get('request')->request->get('workspaceId');
-        
+
         if (!empty($id)) {
             $em = $this->entityManager();
-
             $path = $em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($id);
             $currentUser = $this->get('security.context')->getToken()->getUser();
             $pathCreator = $path->getResourceNode()->getCreator();
 
             if($currentUser == $pathCreator){
-                $pathRoot = $em->getRepository('InnovaPathBundle:Step')->findOneBy(array('path' => $path, 'parent' => null));
-                $this->deleteStep($pathRoot);
+                if($pathRoot = $em->getRepository('InnovaPathBundle:Step')->findOneBy(array('path' => $path, 'parent' => null))){
+                    $this->deleteStep($pathRoot);
+                }
                 $em->remove($path->getResourceNode());
                 $em->flush();
             }
         }
-        
         $url = $this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspaceId, 'toolName' => 'innova_path'));
+
         return $this->redirect($url);
     }
 
@@ -662,7 +678,6 @@ class PathController extends Controller
 
     private function getPaths($workspace){
         $manager = $this->container->get('doctrine.orm.entity_manager');
-
         $resourceType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('path');
         $resourceNodes = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findByWorkspaceAndResourceType($workspace, $resourceType);
         $paths = array();
@@ -702,6 +717,7 @@ class PathController extends Controller
     public function entityManager()
     {
         $em = $this->get('doctrine.orm.entity_manager');
+        $em = $this->getDoctrine()->getManager();
 
         return $em;
     }

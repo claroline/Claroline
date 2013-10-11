@@ -1,37 +1,17 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
-{% block breadcrumb %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-book',
-                'name': 'workspaces'|trans({}, 'platform'),
-                'href': path('claro_workspace_list')
-            },
-            {
-                'name': workspace.getName() ~ ' - ' ~  workspace.getCode(),
-                'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
-            },
-            {
-                'name': 'paths'|trans({}, 'tools'),
-                'href': ''
-            }
-        ])
-    }}
-{% endblock %}
-
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">Parcours</h3>
     </div>
-    
+
     <div class="panel-body">
         {% if deployed is defined %}
             <div class="alert alert-success">{{ deployed }}</div>
         {% endif %}
-        
+
         <a href="{{ path('innova_path_editor', {workspaceId: workspace.id}) }}" class="btn btn-default"><span class="icon-pencil"></span> Créer un parcours</a>
-    
+
         <hr />
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -39,10 +19,10 @@
                 Mes parcours
             </div>
             <table class="table table-hover" style="margin-top: -1px;">
-                {% for path in paths["me"] %}
+                {% for count, path in paths["me"] %}
                 <tr>
                     <td>
-                        <a href="{{ path('innova_path_editor', {workspaceId: workspace.id, pathId: path.resourceNode.id}) }}">{{ path.resourceNode.name }}</a> 
+                        <a href="{{ path('innova_path_editor', {workspaceId: workspace.id, pathId: path.resourceNode.id}) }}">{{ path.resourceNode.name }}</a>
                     </td>
                     <td align="right">
                     {% if path.deployed %}
@@ -70,7 +50,7 @@
                         <form action="{{ path('innova_path_delete_path') }}" method="post" style="display: inline-block">
                             <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
                             <input type="hidden" value="{{ path.resourceNode.id }}" name="id" />
-                            <button rel="tooltip" data-original-title="Delete" class="btn btn-xs btn-danger" type="submit"><span class="icon-trash"></span></button>
+                            <a href="#" rel="tooltip" data-original-title="Delete" class="btn btn-xs btn-danger path-delete" id="path-delete-{{ count }}"><span class="icon-trash"></span></a>
                         </form>
                     </td>
                 </tr>
@@ -88,7 +68,7 @@
                     {% if path.deployed %}
                     <tr>
                         <td>
-                            <span>{{ path.resourceNode.name }}</span> 
+                            <span>{{ path.resourceNode.name }}</span>
                         </td>
                         <td align="right">
                             <form action="{{ path('innova_path_play') }}" method="post" style="display: inline-block">
@@ -110,5 +90,6 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Workspace/fromWorkspace.js') }}"></script>
 {% endblock %}

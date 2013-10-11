@@ -26,7 +26,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
         if (undefined !== $scope.path && null !== $scope.path && undefined !== $scope.path.steps[0]) {
             rootStep = $scope.path.steps[0];
         }
-        
+
         if (step) {
             $scope.previewStep = step;
             if (step.id === rootStep.id) {
@@ -37,7 +37,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
             $scope.previewStep = rootStep;
             isRootStep = true;
         }
-        
+
         $scope.stepIsRootNode = isRootStep;
         $scope.inheritedResources = ResourceFactory.getInheritedResources($scope.previewStep);
     };
@@ -124,6 +124,15 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
     };
 
     /**
+     * Edit a name
+     * @returns void
+     */
+    $scope.boolStepName = false;
+    $scope.editStepName = function(step) {
+        $scope.boolStepName = true;
+    };
+
+    /**
      * Add a new sibling to specified step
      * @returns void
      */
@@ -191,7 +200,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
                         PathFactory.removeResource(removedResource[i]);
                     }
                 }
-                
+
                 // Update history
                 HistoryFactory.update($scope.path);
                 $scope.updatePreviewStep();
@@ -254,7 +263,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
      */
     $scope.removeResource = function(resource) {
         StepFactory.removeResource($scope.previewStep, resource.id);
-        
+
         // Loop through path to remove reference to resource
         PathFactory.removeResource(resource.id);
 

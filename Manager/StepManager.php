@@ -36,7 +36,20 @@ class StepManager
     public function getStepResourceNodes(Step $step)
     {
         $resourceNodes = array();
-        $step2ResourceNodes = $this->manager->getRepository('InnovaPathBundle:Step2ResourceNode')->findByStep($step);
+        $step2ResourceNodes = $this->manager->getRepository('InnovaPathBundle:Step2ResourceNode')->findBy(array('step' => $step, 'excluded' => false));
+
+        foreach ($step2ResourceNodes as $step2ResourceNode) {
+           $resourceNodes[] = $step2ResourceNode->getResourceNode();
+        }
+
+        return $resourceNodes;
+    }
+
+    public function getStepPropagatedResourceNodes(Step $step)
+    {
+        $resourceNodes = array();
+
+        $step2ResourceNodes = $this->manager->getRepository('InnovaPathBundle:Step2ResourceNode')->findBy(array('step' => $step, 'propagated' => true));
 
         foreach ($step2ResourceNodes as $step2ResourceNode) {
            $resourceNodes[] = $step2ResourceNode->getResourceNode();
