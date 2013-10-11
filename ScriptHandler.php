@@ -63,7 +63,7 @@ class ScriptHandler
     {
         $package = $event->getOperation()->getPackage()->getPrettyName();
         $vendorDir = $event->getComposer()->getConfig()->get('vendor-dir');
-        $packagePath = realpath(rtrim($vendorDir), '/') . '/' . $package;
+        $packagePath = realpath(rtrim($vendorDir, '/')) . '/' . $package;
 
         if ($action === 'preUninstall') {
             static::$removablePackages[] = $package;
