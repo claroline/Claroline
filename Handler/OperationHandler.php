@@ -13,7 +13,7 @@ class OperationHandler extends BaseHandler
     {
         parent::__construct($operationFile, $logger);
 
-        if (!empty(file_get_contents($this->targetFile))) {
+        if ('' !== file_get_contents($this->targetFile)) {
             throw new \Exception(
                 'A non empty operation file is already present (assumed not executed)'
             );
@@ -27,8 +27,10 @@ class OperationHandler extends BaseHandler
 
     public function addOperation(Operation $operation)
     {
+        $this->log("Logging {$operation->getType()} action in the operation file...");
         $opNode = $this->document->createElement($operation->getType());
         $opNode->nodeValue = $operation->getBundleFqcn();
+        $opNode->setAttribute('type', $operation->getBundleType());
 
         if ($operation->getType() === Operation::UPDATE) {
             $opNode->setAttribute('from', $operation->getFromVersion());

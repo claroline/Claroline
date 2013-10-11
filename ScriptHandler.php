@@ -20,7 +20,7 @@ class ScriptHandler
         );
     }
 
-    public static function postPackageUpdate(PackageEvent $event)
+    public static function prePackageUpdate(PackageEvent $event)
     {
         static::getRecorder($event)->record(
             Operation::UPDATE,
@@ -29,7 +29,7 @@ class ScriptHandler
         );
     }
 
-    public static function postPackageUninstall(PackageEvent $event)
+    public static function prePackageUninstall(PackageEvent $event)
     {
         static::getRecorder($event)->record(
             Operation::UNINSTALL,

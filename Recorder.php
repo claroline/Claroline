@@ -48,11 +48,14 @@ class Recorder
 
         if ($target->getType() === 'claroline-core' || $target->getType() === 'claroline-plugin') {
             $bundle = $this->detector->detectBundle($target->getName());
-            $operation = new Operation($operationType, $bundle);
+            $type = $target->getType() === 'claroline-core' ?
+                Operation::BUNDLE_CORE :
+                Operation::BUNDLE_PLUGIN;
+            $operation = new Operation($operationType, $bundle, $type);
 
-            if ($operation === Operation::UPDATE) {
+            if ($operationType === Operation::UPDATE) {
                 $operation->setFromVersion($initial->getVersion());
-                $operation->setToVersion($target->toVersion());
+                $operation->setToVersion($target->getVersion());
             } else {
                 $method = $operationType === Operation::INSTALL ? 'addBundles' : 'removeBundles';
                 $this->bundleHandler->{$method}(array($bundle));

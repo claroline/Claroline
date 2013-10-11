@@ -49,7 +49,7 @@ class BundleHandler extends BaseHandler
                 $content .= "{$bundle} = {$isEnabled}" . PHP_EOL;
             }
 
-            file_put_contents($this->bundleFile, $content);
+            file_put_contents($this->targetFile, $content);
         }
     }
 }
