@@ -14,7 +14,8 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
 class PlatformConfigurationHandler
 {
     private $configFile;
-    private $options = array(
+    private $options;
+    private $defaultOptions = array(
         'name' => null,
         'footer' => null,
         'logo' => 'clarolineconnect.png',
@@ -26,7 +27,7 @@ class PlatformConfigurationHandler
     public function __construct(array $configFiles)
     {
         $this->configFile = $configFiles['prod'];
-        $this->options = array_merge($this->options, Yaml::parse($this->configFile));
+        $this->options = $this->mergeOptions();
     }
 
     public function hasParameter($parameter)
@@ -69,6 +70,26 @@ class PlatformConfigurationHandler
         $config->setTheme($this->options['theme']);
 
         return $config;
+    }
+
+    protected function mergeOptions()
+    {
+        if (!file_exists($this->configFile) && false === @touch($this->configFile)) {
+            throw new \Exception(
+                "Configuration file '{$this->configFile}' does not exits and cannot be created"
+            );
+        }
+
+        $configOptions = Yaml::parse(file_get_contents($this->configFile));
+        $options = $this->defaultOptions;
+
+        foreach ($configOptions as $option => $value) {
+            if (array_key_exists($option, $options)) {
+                $options[$option] = $value;
+            }
+        }
+
+        return $options;
     }
 
     protected function checkParameter($parameter)
