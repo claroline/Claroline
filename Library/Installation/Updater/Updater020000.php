@@ -29,36 +29,49 @@ class Updater020000
         $this->logger = $logger;
     }
 
-    public function log($message)
-    {
-        if ($this->logger) {
-            $log = $this->logger;
-            $log($message);
-        }
-    }
-
     public function preUpdate()
     {
         $this->addLogosAndIcons();
-        $this->copyWidgetHomeTabConfigTable();
+        $this->copyTabConfigTable();
     }
 
     public function postUpdate()
     {
-        $this->initWidgets();
-        $this->updateWidgetsDatas();
-        $this->updateTextWidgets();
-        $this->updateWidgetHomeTabConfigsDatas();
-        $this->updateAdminWorkspaceHomeTabDatas();
-        $this->createWorkspacesListWidget();
+        $this->updateWidgetData();
+        $this->migrateWidgetData();
+        $this->migrateTextWidgetData();
+        $this->updateTabConfigData();
+        $this->updateAdminTabConfigData();
         $this->updateHomeTool();
         $this->dropTables();
-        $this->dropWidgetHomeTabConfigTableCopy();
+
+        // this one isn't specific to 2.0 update
+        $this->createWorkspaceListWidget();
     }
 
-    private function initWidgets()
+    private function addLogosAndIcons()
     {
-        $this->log('Updating claro_widget table ...');
+        $this->log('Dumping logos and icons...');
+        $filesystem = new Filesystem();
+        $imgDir = __DIR__ . '/../../../Resources/public/images';
+        $webDir = __DIR__ . '/../../../../../../../../web';
+        $filesystem->mirror("{$imgDir}/logos", "{$webDir}/uploads/logos");
+        $filesystem->copy("{$imgDir}/ico/favicon.ico", "{$webDir}/favicon.ico", true);
+        $filesystem->copy("{$imgDir}/ico/apple-touch-icon.png", "{$webDir}/apple-touch-icon.png", true);
+    }
+
+    private function copyTabConfigTable()
+    {
+        $this->log('Copying tab config table...');
+        $this->conn->query('
+            CREATE TABLE claro_widget_home_tab_config_temp
+            AS (SELECT * FROM claro_widget_home_tab_config)
+        ');
+    }
+
+    private function updateWidgetData()
+    {
+        $this->log('Updating widget table data...');
         $this->conn->query("
             UPDATE claro_widget
             SET is_displayable_in_workspace = true,
@@ -76,9 +89,33 @@ class Updater020000
         ");
     }
 
-    private function updateTextWidgets()
+    private function migrateWidgetData()
     {
-        $this->log('Migrating simple text widget data ...');
+        $this->log('Migrating widget table data...');
+        $select = "
+            SELECT instance. * , widget.name AS widget_name
+            FROM claro_widget_display instance
+            RIGHT JOIN claro_widget widget ON instance.widget_id = widget.id
+            WHERE parent_id IS NOT NULL
+        ";
+        $rows =  $this->conn->query($select);
+
+        foreach ($rows as $row) {
+            $isAdmin = $row['parent_id'] == NULL ? 'true': 'false';
+            $wsId = $row['workspace_id'] ? $row['workspace_id']: 'null';
+            $userId = $row['user_id'] ? $row['user_id']: 'null';
+            $name = $this->conn->quote($this->translator->trans($row['widget_name'], array(), 'widget'));
+            $query = "
+                INSERT INTO claro_widget_instance (workspace_id, user_id, widget_id, is_admin, is_desktop, name)
+                VALUES ({$wsId}, {$userId}, {$row['widget_id']}, {$isAdmin}, {$row['is_desktop']}, {$name})
+            ";
+            $this->conn->query($query);
+        }
+    }
+
+    private function migrateTextWidgetData()
+    {
+        $this->log('Migrating text widget table data...');
 
         //text_widget_id
         $result = $this->conn->query(
@@ -113,43 +150,9 @@ class Updater020000
         }
     }
 
-    private function updateWidgetsDatas()
+    private function updateTabConfigData()
     {
-        $this->log('Migrating widgets display tables...');
-        $select = "
-            SELECT instance. * , widget.name AS widget_name
-            FROM claro_widget_display instance
-            RIGHT JOIN claro_widget widget ON instance.widget_id = widget.id
-            WHERE parent_id IS NOT NULL
-        ";
-        $rows =  $this->conn->query($select);
-
-        foreach ($rows as $row) {
-            $isAdmin = $row['parent_id'] == NULL ? 'true': 'false';
-            $wsId = $row['workspace_id'] ? $row['workspace_id']: 'null';
-            $userId = $row['user_id'] ? $row['user_id']: 'null';
-            $name = $this->conn->quote($this->translator->trans($row['widget_name'], array(), 'widget'));
-            $query = "
-                INSERT INTO claro_widget_instance (workspace_id, user_id, widget_id, is_admin, is_desktop, name)
-                VALUES ({$wsId}, {$userId}, {$row['widget_id']}, {$isAdmin}, {$row['is_desktop']}, {$name})
-            ";
-            $this->conn->query($query);
-        }
-    }
-
-    private function dropTables()
-    {
-        $this->log('Drop useless tables...');
-        $this->conn->query('DROP table claro_widget_display');
-        $this->conn->query('DROP TABLE simple_text_dekstop_widget_config');
-        $this->conn->query('DROP TABLE simple_text_workspace_widget_config');
-        $this->conn->query('DROP TABLE claro_log_workspace_widget_config');
-        $this->conn->query('DROP TABLE claro_log_desktop_widget_config');
-    }
-
-    private function updateWidgetHomeTabConfigsDatas()
-    {
-        $this->log('Updating home tabs...');
+        $this->log('Updating tab config table data...');
         $widgetHomeTabConfigsReq = "
             SELECT *
             FROM claro_widget_home_tab_config_temp
@@ -216,35 +219,7 @@ class Updater020000
         }
     }
 
-    private function createWorkspacesListWidget()
-    {
-        $this->log('Writing temporary tables...');
-        $em = $this->container->get('doctrine.orm.entity_manager');
-
-        try {
-            $workspaceWidget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
-                ->findOneByName('my_workspaces');
-
-            if (is_null($workspaceWidget)) {
-                $this->logger();
-                $widget = new Widget();
-                $widget->setName('my_workspaces');
-                $widget->setConfigurable(false);
-                $widget->setIcon('fake/icon/path');
-                $widget->setPlugin(null);
-                $widget->setExportable(false);
-                $widget->setDisplayableInDesktop(true);
-                $widget->setDisplayableInWorkspace(false);
-                $em->persist($widget);
-                $em->flush();
-            }
-        }
-        catch (MappingException $e) {
-            $this->log('A MappingException has been thrown while trying to get Widget repository');
-        }
-    }
-
-    private function updateAdminWorkspaceHomeTabDatas()
+    private function updateAdminTabConfigData()
     {
         $this->log('Updating admin tabs...');
         $em = $this->container->get('doctrine.orm.entity_manager');
@@ -291,22 +266,9 @@ class Updater020000
         }
     }
 
-    private function copyWidgetHomeTabConfigTable()
-    {
-        $this->conn->query('
-            CREATE TABLE claro_widget_home_tab_config_temp
-            AS (SELECT * FROM claro_widget_home_tab_config)
-        ');
-    }
-
-    private function dropWidgetHomeTabConfigTableCopy()
-    {
-        $this->conn->query('DROP TABLE claro_widget_home_tab_config_temp');
-    }
-
     private function updateHomeTool()
     {
-        $this->log('Updating tool home...');
+        $this->log('Updating home tool...');
         $this->conn->query("
             UPDATE claro_tools
             SET is_configurable_in_workspace = false,
@@ -315,13 +277,47 @@ class Updater020000
         ");
     }
 
-    private function addLogosAndIcons()
+    private function dropTables()
     {
-        $filesystem = new Filesystem();
-        $imgDir = __DIR__ . '/../../../Resources/public/images';
-        $webDir = __DIR__ . '/../../../../../../../../web';
-        $filesystem->mirror("{$imgDir}/logos", "{$webDir}/uploads/logos");
-        $filesystem->copy("{$imgDir}/ico/favicon.ico", "{$webDir}/favicon.ico", true);
-        $filesystem->copy("{$imgDir}/ico/apple-touch-icon.png", "{$webDir}/apple-touch-icon.png", true);
+        $this->log('Dropping outdated and temporary tables...');
+        $this->conn->query('DROP table claro_widget_display');
+        $this->conn->query('DROP TABLE simple_text_dekstop_widget_config');
+        $this->conn->query('DROP TABLE simple_text_workspace_widget_config');
+        $this->conn->query('DROP TABLE claro_log_workspace_widget_config');
+        $this->conn->query('DROP TABLE claro_log_desktop_widget_config');
+        $this->conn->query('DROP TABLE claro_widget_home_tab_config_temp');
+    }
+
+    private function createWorkspaceListWidget()
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+
+        try {
+            $workspaceWidget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')
+                ->findOneByName('my_workspaces');
+
+            if (is_null($workspaceWidget)) {
+                $this->log('Creating workspace list widget...');
+                $widget = new Widget();
+                $widget->setName('my_workspaces');
+                $widget->setConfigurable(false);
+                $widget->setIcon('fake/icon/path');
+                $widget->setPlugin(null);
+                $widget->setExportable(false);
+                $widget->setDisplayableInDesktop(true);
+                $widget->setDisplayableInWorkspace(false);
+                $em->persist($widget);
+                $em->flush();
+            }
+        } catch (MappingException $e) {
+            $this->log('A MappingException has been thrown while trying to get Widget repository');
+        }
+    }
+
+    private function log($message)
+    {
+        if ($log = $this->logger) {
+            $log($message);
+        }
     }
 }
