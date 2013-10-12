@@ -105,8 +105,6 @@ class InstallationManager
             $this->log('Launching post-uninstallation actions...');
             $additionalInstaller->postUninstall();
         }
-
-        $this->recorder->removeBundles(array(get_class($bundle)));
     }
 
     private function getAdditionalInstaller(InstallableInterface $bundle)
