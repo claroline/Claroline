@@ -77,6 +77,7 @@ class InstallationManager
         }
 
         if ($bundle->hasMigrations()) {
+            $this->log('Executing migrations...');
             $this->migrationManager->upgradeBundle($bundle, Migrator::VERSION_FARTHEST);
         }
 
