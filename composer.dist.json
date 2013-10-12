@@ -7,15 +7,17 @@
     "require": {
         "php": ">=5.3.3",
         "sensio/distribution-bundle": "~2.3.4",
-        "claroline/bundle-recorder": "~1.1",
-        "claroline/core-bundle": "~2.0",
-        "claroline/activity-tool-bundle": "~1.0",
-        "claroline/announcement-bundle": "~2.0",
-        "claroline/forum-bundle": "~2.0",
-        "claroline/image-player-bundle": "~1.0",
-        "claroline/pdf-player-bundle": "~1.0",
-        "claroline/rss-reader-bundle": "~2.0",
-        "claroline/video-player-bundle": "~1.0"
+        "claroline/bundle-recorder": "2.0.2",
+        "claroline/core-installer": "2.0.0",
+        "claroline/plugin-installer": "2.0.0",
+        "claroline/core-bundle": ">=2.0.4,<3.0",
+        "claroline/activity-tool-bundle": ">=1.0.1,<2.0",
+        "claroline/announcement-bundle": ">=2.0.1,<3.0",
+        "claroline/forum-bundle": ">=2.0.1,<3.0",
+        "claroline/image-player-bundle": ">=1.0.1,<2.0",
+        "claroline/pdf-player-bundle": ">=1.0.1,<2.0",
+        "claroline/rss-reader-bundle": ">=2.0.1,<3.0",
+        "claroline/video-player-bundle": ">=1.0.1,<2.0"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
@@ -23,14 +25,6 @@
         "mikey179/vfsStream": "dev-master"
     },
     "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/stefk/StofDoctrineExtensionsBundle.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/stefk/JMSDiExtraBundle.git"
-        },
         {
             "type": "package",
             "package": {
@@ -65,14 +59,11 @@
         }
     ],
     "scripts": {
-        "pre-package-install": [
-            "Claroline\\BundleRecorder\\ScriptHandler::prePackageInstall"
-        ],
         "post-package-install": [
             "Claroline\\BundleRecorder\\ScriptHandler::postPackageInstall"
         ],
-        "pre-package-update": [
-            "Claroline\\BundleRecorder\\ScriptHandler::prePackageUpdate"
+        "post-package-update": [
+            "Claroline\\BundleRecorder\\ScriptHandler::postPackageUpdate"
         ],
         "pre-package-uninstall": [
             "Claroline\\BundleRecorder\\ScriptHandler::prePackageUninstall"

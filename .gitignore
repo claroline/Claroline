@@ -8,6 +8,7 @@ app/bootstrap*
 app/cache/*
 app/config/bundles.ini
 app/config/parameters.yml
+app/config/platform_options.yml
 app/logs/*
 app/SymfonyRequirements.php
 bin/*
