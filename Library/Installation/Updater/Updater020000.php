@@ -248,7 +248,7 @@ class Updater020000
 
                 if (is_null($lastOrder['order_max'])) {
                     $homeTabConfig->setTabOrder(1);
-                }else {
+                } else {
                     $homeTabConfig->setTabOrder($lastOrder['order_max'] + 1);
                 }
 
