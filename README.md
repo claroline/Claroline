@@ -51,9 +51,10 @@ Project setup
     - *web/themes*
     - *web/thumbnails*
 - Run the following commands:
-    - `$ composer require claroline/bundle-recorder "~1.1"`
+    - `$ composer require claroline/bundle-recorder "~2.0"`
     - `$ cp composer.dist.json composer.json`
     - `$ composer update --prefer-source`
+    - `$ php app/console claroline:update`
     - `$ php app/console assetic:dump`
 
 You can then create a first admin user with:
