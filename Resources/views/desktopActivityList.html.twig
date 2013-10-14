@@ -19,27 +19,29 @@
         </a>
     </div>
     <div id="collapse-{{ workspaceInfo.code }}" class="accordion-body collapse {% if nbWorkspaces == 1 %}in{% endif %}">
-        <div class="accordion-inner">
-            <table id="desktop-activity-table" class="table table-striped table-bordered table-condensed">
-                <tr>
-                    <th nowrap>{{ 'activity'|trans({}, 'tools') }}</th>
-                    <th nowrap>{{ 'instructions'|trans({}, 'tools') }}</th>
-                    <th nowrap>{{ 'start_date'|trans({}, 'tools') }}</th>
-                    <th nowrap>{{ 'end_date'|trans({}, 'tools') }}</th>
-                </tr>
-                {% for nodeId in workspaceInfo.nodes %}
-                <tr>
-                    <td>
-                        <a href="{{ path('claro_resource_open', {'node': nodeId , 'resourceType': 'activity'}) }}">
-                        {{ resourceInfos[nodeId].name }}
-                        </a>
-                    </td>
-                    <td>{{ activityInfos[nodeId].instructions }}</td>
-                    <td>{{ activityInfos[nodeId].startDate }}</td>
-                    <td>{{ activityInfos[nodeId].endDate }}</td>
-                </tr>
-                {% endfor %}
-            </table>
+        <div class="accordion-inner">.
+            <div class="table-responsive">
+                <table id="desktop-activity-table" class="table table-striped table-bordered table-condensed table-responsive">
+                    <tr>
+                        <th nowrap>{{ 'activity'|trans({}, 'tools') }}</th>
+                        <th nowrap>{{ 'instructions'|trans({}, 'tools') }}</th>
+                        <th nowrap>{{ 'start_date'|trans({}, 'tools') }}</th>
+                        <th nowrap>{{ 'end_date'|trans({}, 'tools') }}</th>
+                    </tr>
+                    {% for nodeId in workspaceInfo.nodes %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('claro_resource_open', {'node': nodeId , 'resourceType': 'activity'}) }}">
+                            {{ resourceInfos[nodeId].name }}
+                            </a>
+                        </td>
+                        <td>{{ activityInfos[nodeId].instructions }}</td>
+                        <td>{{ activityInfos[nodeId].startDate }}</td>
+                        <td>{{ activityInfos[nodeId].endDate }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
         </div>
     </div>
 </div>

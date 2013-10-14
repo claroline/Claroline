@@ -6,26 +6,28 @@
 
 {% if resourceInfos|length > 0 %}
 <div class="accordion-inner">
-    <table id="desktop-activity-table" class="table table-striped table-bordered table-condensed">
-        <tr>
-            <th nowrap>{{ 'activity'|trans({}, 'tools') }}</th>
-            <th nowrap>{{ 'instructions'|trans({}, 'tools') }}</th>
-            <th nowrap>{{ 'start_date'|trans({}, 'tools') }}</th>
-            <th nowrap>{{ 'end_date'|trans({}, 'tools') }}</th>
-        </tr>
-        {% for resInfo in resourceInfos %}
-        <tr>
-            <td>
-                <a href="{{ path('claro_resource_open', {'node': resInfo.id, 'resourceType': 'activity'}) }}">
-                {{ resInfo.name }}
-                </a>
-            </td>
-            <td>{{ activityInfos[resInfo.id].instructions }}</td>
-            <td>{{ activityInfos[resInfo.id].startDate }}</td>
-            <td>{{ activityInfos[resInfo.id].endDate }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div class="table-responsive">
+        <table id="desktop-activity-table" class="table table-striped table-bordered table-condensed table-responsive">
+            <tr>
+                <th nowrap>{{ 'activity'|trans({}, 'tools') }}</th>
+                <th nowrap>{{ 'instructions'|trans({}, 'tools') }}</th>
+                <th nowrap>{{ 'start_date'|trans({}, 'tools') }}</th>
+                <th nowrap>{{ 'end_date'|trans({}, 'tools') }}</th>
+            </tr>
+            {% for resInfo in resourceInfos %}
+            <tr>
+                <td>
+                    <a href="{{ path('claro_resource_open', {'node': resInfo.id, 'resourceType': 'activity'}) }}">
+                    {{ resInfo.name }}
+                    </a>
+                </td>
+                <td>{{ activityInfos[resInfo.id].instructions }}</td>
+                <td>{{ activityInfos[resInfo.id].startDate }}</td>
+                <td>{{ activityInfos[resInfo.id].endDate }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 </div>
 {% endif %}
 
