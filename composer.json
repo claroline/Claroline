@@ -22,7 +22,8 @@
 		"symfony/framework-bundle" : "2.*",
 		"innova/angular-ui" : "dev-master",
 		"innova/angular-uisortable" : "dev-master",
-		"innova/angular-pageslide" : "dev-master"
+		"innova/angular-pageslide" : "dev-master",
+		"claroline/core-bundle": ">=1.0,<3.0"
 	},
 	"autoload" : {
 		"psr-0" : {
