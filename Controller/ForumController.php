@@ -367,13 +367,15 @@ class ForumController extends Controller
 
     /**
      * @Route(
-     *     "/{forum}/search/{search}",
-     *     name="claro_forum_search"
+     *     "/{forum}/search/{search}/page/{page}",
+     *     name="claro_forum_search",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
      * )
      *
      * @Template("ClarolineForumBundle::searchResults.html.twig")
      */
-    public function searchAction(Forum $forum, $search)
+    public function searchAction(Forum $forum, $search, $page)
     {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('ClarolineForumBundle:Forum');
@@ -381,9 +383,9 @@ class ForumController extends Controller
         $adapter = new DoctrineORMAdapter($query);
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage(20);
-        $pager->setCurrentPage(1);
+        $pager->setCurrentPage($page);
 
-        return array('pager' => $pager, '_resource' => $forum, 'search' => $search);
+        return array('pager' => $pager, '_resource' => $forum, 'search' => $search, 'page' => $page);
     }
 
     private function checkAccess(Forum $forum)
