@@ -1,6 +1,6 @@
 {% for heritedResourceName,heritedResource  in heritedResources %}
 	<div class="panel panel-default">
-		<div class="panel-heading">Héritées de <strong>{{ heritedResourceName }}</strong></div>
+		<div class="panel-heading">{{ 'heritated_from' | trans({}, 'tools') }} <strong>{{ heritedResourceName }}</strong></div>
 		<div class="panel-body">
 		{% for resource  in heritedResource %}
 		    {% if resource.id %}

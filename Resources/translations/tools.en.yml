@@ -1,4 +1,25 @@
 innova_path: Path editor
 paths: Paths
+path: Path
 abstract_resources: Resource Type
 submit: Submit
+resources: Resources
+heritated_from: Heritated from
+local: Local
+instructions: Instructions
+informations: Informations
+back_to_paths_list: Back to paths list
+current_position: Current position
+back_to: Back to
+home: At home
+classroom: In a classroom
+library: In a library
+anywhere: Anywhere
+student: Individually
+group: In group
+class: The class
+with_computer: With a computer
+without_computer: Without a computer
+with_tutor: With a tutor
+without_tutor: Without a tutor
+duration: Duration
