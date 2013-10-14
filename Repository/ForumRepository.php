@@ -4,6 +4,7 @@ namespace Claroline\ForumBundle\Repository;
 
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Subject;
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
 class ForumRepository extends EntityRepository
@@ -55,5 +56,20 @@ class ForumRepository extends EntityRepository
         $query->setParameter('forumId', $forum->getId());
 
         return $query->getSingleScalarResult();
+    }
+
+    public function search(Forum $forum, $content, $getQuery = true)
+    {
+        $dql = "SELECT m FROM Claroline\ForumBundle\Entity\Message m
+            JOIN m.subject s
+            JOIN s.forum f
+            WHERE m.content LIKE :content
+            and f.id = {$forum->getId()}
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('content', '%'.$content.'%');
+
+        return ($getQuery) ? $query: $query->getResult();
     }
 }
