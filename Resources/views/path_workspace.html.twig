@@ -2,7 +2,7 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">Parcours</h3>
+        <h3 class="panel-title">{{ 'paths' | trans({}, 'tools') }}</h3>
     </div>
 
     <div class="panel-body">
@@ -10,7 +10,7 @@
             <div class="alert alert-success">{{ deployed }}</div>
         {% endif %}
 
-        <a href="{{ path('innova_path_editor', {workspaceId: workspace.id}) }}" class="btn btn-default"><span class="icon-pencil"></span> Créer un parcours</a>
+        <a href="{{ path('innova_path_editor', {workspaceId: workspace.id}) }}" class="btn btn-default"><span class="icon-pencil"></span> {{ 'create_path' | trans({}, 'tools') }}</a>
 
         <hr />
         <div class="panel panel-default">
@@ -22,35 +22,35 @@
                 {% for count, path in paths["me"] %}
                 <tr>
                     <td>
-                        <a href="{{ path('innova_path_editor', {workspaceId: workspace.id, pathId: path.resourceNode.id}) }}">{{ path.resourceNode.name }}</a>
+                        <a rel="tooltip" data-original-title="{{ 'edit' | trans({}, 'tools') }}" href="{{ path('innova_path_editor', {workspaceId: workspace.id, pathId: path.resourceNode.id}) }}">{{ path.resourceNode.name }}</a>
                     </td>
                     <td align="right">
                     {% if path.deployed %}
                         <form action="{{ path('innova_path_play') }}" method="post" style="display: inline-block">
                             <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
                             <input type="hidden" value="{{ path.resourceNode.id }}" name="pathId" />
-                            <button rel="tooltip" data-original-title="Play" class="btn btn-xs btn-primary" type="submit"><span class="icon-play"></span></button>
+                            <button rel="tooltip" data-original-title="{{ 'play' | trans({}, 'tools') }}" class="btn btn-xs btn-primary" type="submit"><span class="icon-play"></span></button>
                         </form>
                     {% endif %}
 
                         <form action="{{ path('innova_path_editor', {workspaceId: workspace.id, pathId: path.resourceNode.id}) }}" method="post" style="display: inline-block">
                             <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
                             <input type="hidden" value="{{ path.resourceNode.id }}" name="id" />
-                            <button rel="tooltip" data-original-title="Edit" class="btn btn-xs btn-default" type="submit"><span class="icon-pencil"></span></button>
+                            <button rel="tooltip" data-original-title="{{ 'edit' | trans({}, 'tools') }}" class="btn btn-xs btn-default" type="submit"><span class="icon-pencil"></span></button>
                         </form>
 
                     {% if path.modified or not path.deployed %}
                         <form action="{{ path('innova_path_deploy') }}" method="post" style="display: inline-block">
                             <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
                             <input type="hidden" value="{{ path.resourceNode.id }}" name="pathId" />
-                            <button rel="tooltip" data-original-title="Deploy" class="btn btn-xs btn-success" type="submit"><span class="icon-random"></span></button>
+                            <button rel="tooltip" data-original-title="{{ 'deploy' | trans({}, 'tools') }}" class="btn btn-xs btn-success" type="submit"><span class="icon-random"></span></button>
                         </form>
                    {% endif %}
 
                         <form action="{{ path('innova_path_delete_path') }}" method="post" style="display: inline-block">
                             <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
                             <input type="hidden" value="{{ path.resourceNode.id }}" name="id" />
-                            <a href="#" rel="tooltip" data-original-title="Delete" class="btn btn-xs btn-danger path-delete" id="path-delete-{{ count }}"><span class="icon-trash"></span></a>
+                            <a href="#" rel="tooltip" data-original-title="{{ 'delete' | trans({}, 'tools') }}" class="btn btn-xs btn-danger path-delete" id="path-delete-{{ count }}"><span class="icon-trash"></span></a>
                         </form>
                     </td>
                 </tr>
@@ -74,7 +74,7 @@
                             <form action="{{ path('innova_path_play') }}" method="post" style="display: inline-block">
                                 <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
                                 <input type="hidden" value="{{ path.resourceNode.id }}" name="pathId" />
-                                <button rel="tooltip" data-original-title="Play" class="btn btn-xs btn-primary" type="submit"><span class="icon-play"></span></button>
+                                <button rel="tooltip" data-original-title="{{ 'play' | trans({}, 'tools') }}" class="btn btn-xs btn-primary" type="submit"><span class="icon-play"></span></button>
                             </form>
 
                         </td>

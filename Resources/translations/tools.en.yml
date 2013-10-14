@@ -24,3 +24,10 @@ with_tutor: With a tutor
 without_tutor: Without a tutor
 duration: Duration
 progression: Progression
+my_paths : My paths
+others_paths : Others'
+play: Play
+edit: Edit
+delete: Delete
+deploy: Deploy
+create_path: Create a path

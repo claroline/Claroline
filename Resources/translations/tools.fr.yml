@@ -24,3 +24,10 @@ with_tutor: Avec un tuteur
 without_tutor: Sans tuteur
 duration: Durée
 progression: Avancement
+my_paths : Mes parcours
+others_paths : Ceux des autres
+play: Lire
+edit: Editer
+delete: Supprimer
+deploy: Déployer
+create_path: Créer un parcours
