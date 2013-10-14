@@ -223,27 +223,20 @@
 
         currentElement = $(this).parents('.hometab-element');
         var homeTabConfigId = currentElement.attr('hometab-config-id');
-//        var locked = (lockBtn.attr('lock-value')).trim();
-//        var newLocked = (locked === 'locked') ? 'unlocked' : 'locked';
-//
-//        $.ajax({
-//            url: Routing.generate(
-//                'claro_admin_home_tab_update_lock',
-//                {'homeTabConfigId': homeTabConfigId, 'locked': newLocked}
-//            ),
-//            type: 'POST',
-//            success: function () {
-//                if (newLocked === 'locked') {
-//                    lockBtn.attr('lock-value', 'locked')
-//                    lockBtn.removeClass('icon-unlock');
-//                    lockBtn.addClass('icon-lock');
-//                } else {
-//                    lockBtn.attr('lock-value', 'unlocked')
-//                    lockBtn.removeClass('icon-lock');
-//                    lockBtn.addClass('icon-unlock');
-//                }
-//            }
-//        });
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_admin_home_tab_config_change_order',
+                {'homeTabConfigId': homeTabConfigId, 'direction': -1}
+            ),
+            type: 'POST',
+            success: function (data) {
+                if (data === '-1') {
+                    var previousSibling = currentElement.prev();
+                    previousSibling.before(currentElement);
+                }
+            }
+        });
     });
 
     // Click on right reorder button of a hometab
@@ -253,6 +246,20 @@
 
         currentElement = $(this).parents('.hometab-element');
         var homeTabConfigId = currentElement.attr('hometab-config-id');
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_admin_home_tab_config_change_order',
+                {'homeTabConfigId': homeTabConfigId, 'direction': 1}
+            ),
+            type: 'POST',
+            success: function (data) {
+                if (data === '1') {
+                    var nextSibling = currentElement.next();
+                    nextSibling.after(currentElement);
+                }
+            }
+        });
     });
 
     // Click on delete button of a hometab

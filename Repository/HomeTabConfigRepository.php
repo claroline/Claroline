@@ -213,6 +213,28 @@ class HomeTabConfigRepository extends EntityRepository
         return $query->getSingleResult();
     }
 
+    public function updateAdminHomeTabOrder(
+        $type,
+        $homeTabOrder,
+        $newHomeTabOrder
+    )
+    {
+        $dql = "
+            UPDATE Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            SET htc.tabOrder = :newHomeTabOrder
+            WHERE htc.type = :type
+            AND htc.user IS NULL
+            AND htc.workspace IS NULL
+            AND htc.tabOrder = :homeTabOrder
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', $type);
+        $query->setParameter('homeTabOrder', $homeTabOrder);
+        $query->setParameter('newHomeTabOrder', $newHomeTabOrder);
+
+        return $query->execute();
+    }
+
     public function updateAdminDesktopOrder($tabOrder)
     {
         $dql = "

@@ -99,6 +99,7 @@ class HomeTabManager
     )
     {
         $homeTabOrder = $homeTabConfig->getTabOrder();
+        $type = $homeTabConfig->getType();
         $user = $homeTabConfig->getUser();
         $workspace = $homeTabConfig->getWorkspace();
         $newHomeTabOrder = ($direction < 0) ? ($homeTabOrder - 1) : ($homeTabOrder + 1);
@@ -116,12 +117,12 @@ class HomeTabManager
                 1;
 
             if ($newHomeTabOrder > 0 && $newHomeTabOrder <= $lastOrder) {
-                $this->widgetHomeTabConfigRepo->updateAdminWidgetOrder(
-                    $homeTab,
+                $this->homeTabConfigRepo->updateAdminHomeTabOrder(
+                    $type,
                     $newHomeTabOrder,
                     $homeTabOrder
                 );
-                $homeTabConfig->setWidgetOrder($newHomeTabOrder);
+                $homeTabConfig->setTabOrder($newHomeTabOrder);
                 $this->om->flush();
 
                 return $direction;
