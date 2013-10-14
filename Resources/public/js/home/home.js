@@ -1,44 +1,44 @@
 (function () {
-    "use strict";
+    'use strict';
 
     window.Claroline.Home = {};
     var home = window.Claroline.Home;
 
-    home.path = $("#homePath").html(); //global
+    home.path = $('#homePath').html(); //global
 
     if (!home.path) {
-        home.path = "./";
+        home.path = './';
     }
 
     home.modal = function (url, id, element)
     {
-        $(".modal").modal("hide");
+        $('.modal').modal('hide');
 
-        id = typeof(id) !== "undefined" ? id : null;
-        element = typeof(element) !== "undefined" ? element : null;
+        id = typeof(id) !== 'undefined' ? id : null;
+        element = typeof(element) !== 'undefined' ? element : null;
 
         $.ajax(home.path + url)
             .done(
                 function (data)
                 {
-                    var modal = document.createElement("div");
-                    modal.className = "modal fade";
+                    var modal = document.createElement('div');
+                    modal.className = 'modal fade';
 
                     if (id) {
-                        modal.setAttribute("id", id);
+                        modal.setAttribute('id', id);
                     }
 
                     if (element) {
-                        $(modal).data("element", element);
+                        $(modal).data('element', element);
                     }
 
                     modal.innerHTML = data;
 
-                    $(modal).appendTo("body");
+                    $(modal).appendTo('body');
 
-                    $(modal).modal("show");
+                    $(modal).modal('show');
 
-                    $(modal).on("hidden.bs.modal", function () {
+                    $(modal).on('hidden.bs.modal', function () {
                         $(this).remove();
                     });
 
@@ -47,7 +47,7 @@
             .error(
                     function ()
                     {
-                        alert("An error occurred!\n\nPlease try again later or check your internet connection");
+                        alert('An error occurred!\n\nPlease try again later or check your internet connection');
                     }
                   )
             ;
@@ -61,18 +61,18 @@
      */
     home.resize = function (obj)
     {
-        var lineheight = $(obj).css("line-height").substr(0, $(obj).css("line-height").indexOf("px"));
-        var lines = $(obj).val().split("\n").length;
+        var lineheight = $(obj).css('line-height').substr(0, $(obj).css('line-height').indexOf('px'));
+        var lines = $(obj).val().split('\n').length;
 
         lineheight = parseInt(lineheight, 10) + 4;
 
-        $(obj).css("height", ((lines + 1) * lineheight) + "px");
+        $(obj).css('height', ((lines + 1) * lineheight) + 'px');
     };
 
 
     home.findUrls = function (text)
     {
-        var source = (text || "").toString();
+        var source = (text || '').toString();
         var urlArray = [];
         var matchArray;
 
@@ -99,54 +99,54 @@
      */
     home.creator = function (element, id)
     {
-        id = typeof(id) !== "undefined" ? id : null;
+        id = typeof(id) !== 'undefined' ? id : null;
 
-        var creatorElement = $(element).parents(".creator").get(0);
-        var title = $(".content-title", creatorElement).get(0);
-        var text = $(".content-text", creatorElement).get(0);
-        var type = $(creatorElement).data("type");
-        var father = $(creatorElement).data("father");
-        var generatedContent = "";
-        var path = "";
-        var contentPath = "";
+        var creatorElement = $(element).parents('.creator').get(0);
+        var title = $('.content-title', creatorElement).get(0);
+        var text = $('.content-text', creatorElement).get(0);
+        var type = $(creatorElement).data('type');
+        var father = $(creatorElement).data('father');
+        var generatedContent = '';
+        var path = '';
+        var contentPath = '';
 
         if (id) {
-            path = "content/update/" + id;
+            path = 'content/update/' + id;
         } else {
-            path = "content/create";
+            path = 'content/create';
         }
 
-        if ($(creatorElement).find(".generated-content").html()) {
-            generatedContent = $(creatorElement).find(".generated-content").html();
+        if ($(creatorElement).find('.generated-content').html()) {
+            generatedContent = $(creatorElement).find('.generated-content').html();
         }
 
-        if (text.value !== "" || title.value !== "") {
+        if (text.value !== '' || title.value !== '') {
             $.post(home.path + path,
                 {
-                    "title": title.value,
-                    "text": text.value,
-                    "generated": generatedContent,
-                    "type": type,
-                    "father": father
+                    'title': title.value,
+                    'text': text.value,
+                    'generated': generatedContent,
+                    'type': type,
+                    'father': father
                 }
             )
                 .done(
                     function (data)
                     {
-                        if (!isNaN(data) && data !== "") {
-                            contentPath = "content/" + data + "/" + type;
+                        if (!isNaN(data) && data !== '') {
+                            contentPath = 'content/' + data + '/' + type;
 
                             var insertElement = function (content) {
-                                $(creatorElement).next().prepend(content).hide().fadeIn("slow");
+                                $(creatorElement).next().prepend(content).hide().fadeIn('slow');
                             };
 
                             if (father) {
-                                contentPath = "content/" + data + "/" + type + "/" + father;
+                                contentPath = 'content/' + data + '/' + type + '/' + father;
 
                                 insertElement = function (content)
                                 {
-                                    $(".creator" + father).after(content);
-                                    $(".creator" + father).find(".collapse" + father).collapse("hide");
+                                    $('.creator' + father).after(content);
+                                    $('.creator' + father).find('.collapse' + father).collapse('hide');
                                 };
                             }
 
@@ -160,18 +160,18 @@
                                 )
                             ;
 
-                            title.value = "";
-                            text.value = "";
+                            title.value = '';
+                            text.value = '';
                             home.resize(text);
-                            $(creatorElement).find(".generated").html("");
+                            $(creatorElement).find('.generated').html('');
 
-                        } else if (data === "true") {
+                        } else if (data === 'true') {
 
-                            contentPath = "content/" + id + "/" + type;
+                            contentPath = 'content/' + id + '/' + type;
 
                             if (father) {
-                                creatorElement = $(creatorElement).parents(".creator" + father).get(0);
-                                contentPath = "content/" + id + "/" + type + "/" + father;
+                                creatorElement = $(creatorElement).parents('.creator' + father).get(0);
+                                contentPath = 'content/' + id + '/' + type + '/' + father;
                             }
 
                             $.ajax(home.path + contentPath)
@@ -185,14 +185,14 @@
                             ;
 
                         } else {
-                            home.modal("content/error");
+                            home.modal('content/error');
                         }
                     }
                 )
                 .error(
                     function ()
                     {
-                        home.modal("content/error");
+                        home.modal('content/error');
                     }
                   )
             ;
@@ -207,19 +207,19 @@
      */
     home.generatedContent = function (creator, url)
     {
-        $.post(home.path + "content/graph", { "generated_content_url": url })
+        $.post(home.path + 'content/graph', { 'generated_content_url': url })
             .done(
                 function (data)
                 {
-                    if (data !== "false") {
-                        $(creator).find(".generated").html(data);
+                    if (data !== 'false') {
+                        $(creator).find('.generated').html(data);
                     }
                 }
              )
             .error(
                 function ()
                 {
-                    home.modal("content/error");
+                    home.modal('content/error');
                 }
             )
         ;

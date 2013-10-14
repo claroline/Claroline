@@ -28,7 +28,7 @@ class LoadContentData extends AbstractFixture
         $texts = array(
             'http://fr.slideshare.net/batier/claroline-connect',
             file_get_contents("{$textDir}/text1.txt", 'r'),
-            "http://www.youtube.com/watch?v=4mlWeQed0_I",
+            'http://www.youtube.com/watch?v=4mlWeQed0_I',
             file_get_contents("{$textDir}/text4.txt", 'r'),
             'http://youtu.be/4mlWeQed0_I',
             'http://vimeo.com/63773788',
@@ -47,20 +47,20 @@ class LoadContentData extends AbstractFixture
             file_get_contents("{$textDir}/text7.txt", 'r')
         );
 
-        $types = array("home", "home", "home", "home", "opengraph", "opengraph", "opengraph", "opengraph");
+        $types = array('home', 'home', 'home', 'home', 'opengraph', 'opengraph', 'opengraph', 'opengraph');
         $sizes = array(
-            "content-5", "content-7", "content-7", "content-5", "content-12", "content-12", "content-12", "content-12"
+            'content-5', 'content-7', 'content-7', 'content-5', 'content-12', 'content-12', 'content-12', 'content-12'
         );
 
         foreach ($titles as $i => $title) {
-            $type = $manager->getRepository("ClarolineCoreBundle:Home\Type")->findOneBy(array('name' => $types[$i]));
+            $type = $manager->getRepository('ClarolineCoreBundle:Home\Type')->findOneBy(array('name' => $types[$i]));
 
             $content[$i] = new Content();
             $content[$i]->setTitle($title);
             $content[$i]->setContent($texts[$i]);
             $content[$i]->setGeneratedContent($generated[$i]);
 
-            $first = $manager->getRepository("ClarolineCoreBundle:Home\Content2Type")->findOneBy(
+            $first = $manager->getRepository('ClarolineCoreBundle:Home\Content2Type')->findOneBy(
                 array('back' => null, 'type' => $type)
             );
 
