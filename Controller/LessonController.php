@@ -107,6 +107,7 @@ class LessonController extends Controller
 
 
         return array(
+            '_resource' => $lesson,
             'node'      => new ResourceCollection(array($lesson->getResourceNode())),
             'tree'      => $tree[0],
             'parent'    => $parent,

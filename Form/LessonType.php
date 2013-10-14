@@ -23,7 +23,10 @@ class LessonType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Icap\LessonBundle\Entity\Lesson'
+            'data_class' => 'Icap\LessonBundle\Entity\Lesson',
+            'translation_domain' => 'icap_lesson',
+            'csrf_protection' => true,
+            'intention'       => 'create_lesson'
         ));
     }
 

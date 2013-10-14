@@ -1,3 +1,12 @@
+
+.menu_lesson .collapsor {
+    color:#000000;
+}
+
+.menu_lesson .empty{
+    color:#C2CBE0;
+}
+
 .section-content > .container-reference {
     margin-top: 20px;
     margin-bottom: 20px;
