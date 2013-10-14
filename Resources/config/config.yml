@@ -5,7 +5,6 @@ plugin:
   tools:
     - name: innova_path
       class: icon-road
-      icon: icon-road
       is_displayable_in_workspace: true
       is_displayable_in_desktop: false
       
