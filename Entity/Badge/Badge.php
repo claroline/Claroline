@@ -499,6 +499,14 @@ class Badge
     }
 
     /**
+     * @return AbstractWorkspace
+     */
+    public function getWorkspace()
+    {
+        return $this->workspace;
+    }
+
+    /**
      * @param UploadedFile $file
      *
      * @return Badge
