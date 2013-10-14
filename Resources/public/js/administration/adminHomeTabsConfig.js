@@ -216,6 +216,45 @@
         });
     });
 
+    // Click on left reorder button of a hometab
+    $('.hometab-reorder-left-btn').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        currentElement = $(this).parents('.hometab-element');
+        var homeTabConfigId = currentElement.attr('hometab-config-id');
+//        var locked = (lockBtn.attr('lock-value')).trim();
+//        var newLocked = (locked === 'locked') ? 'unlocked' : 'locked';
+//
+//        $.ajax({
+//            url: Routing.generate(
+//                'claro_admin_home_tab_update_lock',
+//                {'homeTabConfigId': homeTabConfigId, 'locked': newLocked}
+//            ),
+//            type: 'POST',
+//            success: function () {
+//                if (newLocked === 'locked') {
+//                    lockBtn.attr('lock-value', 'locked')
+//                    lockBtn.removeClass('icon-unlock');
+//                    lockBtn.addClass('icon-lock');
+//                } else {
+//                    lockBtn.attr('lock-value', 'unlocked')
+//                    lockBtn.removeClass('icon-lock');
+//                    lockBtn.addClass('icon-unlock');
+//                }
+//            }
+//        });
+    });
+
+    // Click on right reorder button of a hometab
+    $('.hometab-reorder-right-btn').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        currentElement = $(this).parents('.hometab-element');
+        var homeTabConfigId = currentElement.attr('hometab-config-id');
+    });
+
     // Click on delete button of a hometab
     $('.hometab-delete-btn').on('click', function (e) {
         e.preventDefault();

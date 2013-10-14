@@ -93,6 +93,84 @@ class HomeTabManager
         $this->om->flush();
     }
 
+    public function changeOrderHomeTabConfig(
+        HomeTabConfig $homeTabConfig,
+        $direction
+    )
+    {
+        $homeTabOrder = $homeTabConfig->getTabOrder();
+        $user = $homeTabConfig->getUser();
+        $workspace = $homeTabConfig->getWorkspace();
+        $newHomeTabOrder = ($direction < 0) ? ($homeTabOrder - 1) : ($homeTabOrder + 1);
+
+        if (is_null($user) && is_null($workspace)) {
+            if ($homeTabConfig->getType() === 'admin_desktop') {
+                $lastHomeTabOrder = $this->homeTabConfigRepo
+                    ->findOrderOfLastAdminDesktopHomeTab();
+            } else {
+                $lastHomeTabOrder = $this->homeTabConfigRepo
+                    ->findOrderOfLastAdminWorkspaceHomeTab();
+            }
+            $lastOrder = (count($lastHomeTabOrder) > 0) ?
+                $lastHomeTabOrder['order_max'] :
+                1;
+
+            if ($newHomeTabOrder > 0 && $newHomeTabOrder <= $lastOrder) {
+                $this->widgetHomeTabConfigRepo->updateAdminWidgetOrder(
+                    $homeTab,
+                    $newHomeTabOrder,
+                    $homeTabOrder
+                );
+                $homeTabConfig->setWidgetOrder($newHomeTabOrder);
+                $this->om->flush();
+
+                return $direction;
+            }
+        }
+//        elseif (is_null($workspace)) {
+//            $lastWidgetOrder = $this->widgetHomeTabConfigRepo
+//                ->findOrderOfLastWidgetInHomeTabByUser($homeTab, $user);
+//            $lastOrder = (count($lastWidgetOrder) > 0) ?
+//                $lastWidgetOrder['order_max'] :
+//                1;
+//
+//            if ($newWidgetOrder > 0 && $newWidgetOrder <= $lastOrder) {
+//                $this->widgetHomeTabConfigRepo->updateWidgetOrderByUser(
+//                    $homeTab,
+//                    $newWidgetOrder,
+//                    $widgetOrder,
+//                    $user
+//                );
+//                $widgetHomeTabConfig->setWidgetOrder($newWidgetOrder);
+//                $this->om->flush();
+//
+//                return $direction;
+//            }
+//        }
+//        else {
+//            $lastWidgetOrder = $this->widgetHomeTabConfigRepo
+//                ->findOrderOfLastWidgetInHomeTabByWorkspace($homeTab, $workspace);
+//            $lastOrder = (count($lastWidgetOrder) > 0) ?
+//                $lastWidgetOrder['order_max'] :
+//                1;
+//
+//            if ($newWidgetOrder > 0 && $newWidgetOrder <= $lastOrder) {
+//                $this->widgetHomeTabConfigRepo->updateWidgetOrderByWorkspace(
+//                    $homeTab,
+//                    $newWidgetOrder,
+//                    $widgetOrder,
+//                    $workspace
+//                );
+//                $widgetHomeTabConfig->setWidgetOrder($newWidgetOrder);
+//                $this->om->flush();
+//
+//                return $direction;
+//            }
+//        }
+
+        return 0;
+    }
+
     public function createWorkspaceVersion(
         HomeTabConfig $homeTabConfig,
         AbstractWorkspace $workspace
