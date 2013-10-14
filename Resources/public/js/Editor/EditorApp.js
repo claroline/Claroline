@@ -6,36 +6,36 @@ var EditorApp = angular.module('EditorApp', ['ui.bootstrap', 'pageslide-directiv
 // Declare routes
 EditorApp.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/404', {templateUrl: 'Editor/Partial/404.html'});
-    
+
     $routeProvider.when('/', {
-        templateUrl: EditorApp.webDir + 'js/Editor/Partial/global.html', 
+        templateUrl: EditorApp.webDir + 'js/Editor/Partial/global.html',
         controller: GlobalCtrl,
         activeTab: 'Global',
         resolve: {
             path: ['PathFactory', function(PathFactory) { return PathFactory.loadPath(EditorApp.pathId); }]
         }
     });
-    
+
     $routeProvider.when('/global', {
-        templateUrl: EditorApp.webDir + 'js/Editor/Partial/global.html', 
+        templateUrl: EditorApp.webDir + 'js/Editor/Partial/global.html',
         controller: GlobalCtrl,
         activeTab: 'Global',
         resolve: {
             path: ['PathFactory', function(PathFactory) { return PathFactory.loadPath(EditorApp.pathId); }]
         }
     });
-    
+
     $routeProvider.when('/skills', {
-        templateUrl: EditorApp.webDir + 'js/Editor/Partial/skills.html', 
+        templateUrl: EditorApp.webDir + 'js/Editor/Partial/skills.html',
         controller: SkillsCtrl,
         activeTab: 'Skills',
         resolve: {
             path: ['PathFactory', function(PathFactory) { return PathFactory.loadPath(EditorApp.pathId); }]
         }
     });
-    
+
     $routeProvider.when('/scenario', {
-        templateUrl: EditorApp.webDir + 'js/Editor/Partial/scenario.html', 
+        templateUrl: EditorApp.webDir + 'js/Editor/Partial/scenario.html',
         controller: TreeCtrl,
         activeTab: 'Scenario',
         resolve: {
@@ -44,25 +44,25 @@ EditorApp.config(['$routeProvider', function($routeProvider) {
             whereList: ['StepFactory', function(StepFactory) { return StepFactory.getWhereList(); }]
         }
     });
-    
+
     $routeProvider.when('/planner', {
-        templateUrl: EditorApp.webDir + 'js/Editor/Partial/planner.html', 
+        templateUrl: EditorApp.webDir + 'js/Editor/Partial/planner.html',
         controller: PlannerCtrl,
         activeTab: 'Planner',
         resolve: {
             path: ['PathFactory', function(PathFactory) { return PathFactory.loadPath(EditorApp.pathId); }]
         }
     });
-    
+
     $routeProvider.when('/validation', {
-        templateUrl: EditorApp.webDir + 'js/Editor/Partial/validation.html', 
+        templateUrl: EditorApp.webDir + 'js/Editor/Partial/validation.html',
         controller: ValidationCtrl,
         activeTab: 'Validation',
         resolve: {
             path: ['PathFactory', function(PathFactory) { return PathFactory.loadPath(EditorApp.pathId); }]
         }
     });
-    
+
     $routeProvider.otherwise({redirectTo: '/404'});
 }]);
 
@@ -104,3 +104,4 @@ EditorApp.controller('ResourceModalCtrl', ResourceModalCtrl);
 EditorApp.factory('TemplateFactory', TemplateFactory);
 EditorApp.controller('TemplateCtrl', TemplateCtrl);
 EditorApp.controller('TemplateModalCtrl', TemplateModalCtrl);
+EditorApp.filter('truncate', TruncateTextFilter);

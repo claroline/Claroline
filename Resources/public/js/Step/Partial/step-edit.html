@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h4 class="modal-title"><i class="icon-pencil"></i> Editing step : <strong>&lt;{{ formStep.name }}&gt;</strong></h4>
+    <h4 class="modal-title"><i class="icon-pencil"></i> Editing step : <strong>&lt;{{ formStep.name | truncate }}&gt;</strong></h4>
 </div>
 
 <div class="modal-body">
@@ -7,27 +7,27 @@
         <fieldset class="row">
             <div ng-hide="isRootNode" class="form-group col-md-12">
                 <label>Name</label>
-                <input class="form-control" type="text" id="step-name" ng-model="formStep.name" value="{{ formStep.name }}" required />
+                <input class="form-control" type="text" id="step-name" ng-model="formStep.name" value="{{ formStep.name | truncate }}" required />
             </div>
-            
+
             <div class="form-group col-md-12">
                 <textarea class="form-control" id="step-instructions" name="step-instructions" ng-model="formStep.instructions" placeholder="Tip step instructions here"></textarea>
             </div>
-            
+
             <div class="form-group col-md-2">
                 <label for="step-who">Who ?</label>
                 <select class="form-control" name="step-who" id="step-who" ng-model="formStep.who" ng-options="k as v for (k,v) in stepWho">
                     <option value=""></option>
                 </select>
             </div>
-            
+
             <div class="form-group col-md-2">
                 <label for="step-where">Where ?</label>
                 <select class="form-control" name="step-where" id="step-where" ng-model="formStep.where" ng-options="k as v for (k,v) in stepWhere">
                     <option value=""></option>
                 </select>
             </div>
-            
+
             <div class="step-duration form-group col-md-3">
                 <label for="step-duration-hours">Student duration (in hours)</label>
                 <div class="row">
@@ -66,14 +66,14 @@
                     <span class="col-md-1">min</span>
                 </div>
             </div>
-            
+
             <div class="form-group col-md-2">
                 <label>
                      <input type="checkbox" name="with-tutor" id="with-tutor" ng-model="formStep.withTutor" />
                      With tutor ?
                 </label>
             </div>
-            
+
             <div class="form-group col-md-2">
                 <label>
                     <input type="checkbox" name="with-computer" id="with-computer" ng-model="formStep.withComputer" />
@@ -82,16 +82,16 @@
             </div>
         </fieldset>
     </form>
-    
+
     <hr/>
-    
+
     <div class="row">
         <div class="col-md-4">
             <div class="panel-documents panel panel-default">
                 <div class="panel-heading">
                     <span class="icon-briefcase"></span> Documents
                 </div>
-                
+
                 <div class="panel-body">
                     <div class="panel-group" id="form-panel-documents">
                         <div class="panel panel-default" ng-repeat="parent in inheritedResources.documents">
@@ -102,7 +102,7 @@
                                 </a>
                                 <span class="pull-right parent-resources-count">{{ parent.resources.length }} documents</span>
                             </div>
-                            
+
                             <div id="form-{{ $index }}documents" class="panel-collapse collapse">
                                 <table class="table table-condensed table-hover">
                                     <tr ng-repeat="resource in parent.resources">
@@ -116,16 +116,16 @@
                                 </table>
                             </div>
                         </div>
-                    
+
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#form-panel-documents" href="#form-{{ formStep.id }}documents">
                                    <i class="indent" style="margin-left: {{ inheritedResources.documents.length * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
-                                   {{ formStep.name }}
+                                   {{ formStep.name | truncate }}
                                 </a>
                                 <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('document')"><i class="icon-plus"></i></button>
                             </div>
-                            
+
                             <div id="form-{{ formStep.id }}documents" class="panel-collapse collapse in">
                                 <table class="table table-condensed table-hover">
                                     <tr ng-repeat="resource in formStep.resources | filter: {type: 'document'}">
@@ -143,13 +143,13 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="col-md-4">
             <div class="panel-image panel panel-default">
                 <div class="panel-heading">
                     <span class="icon-picture"></span> Image
                 </div>
-                
+
                 <div class="panel-body">
                     <div>
                         <img ng-hide="formStep.image == null" src="{{ webDir }}images/steps/{{ formStep.image }}" />
@@ -159,13 +159,13 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="col-md-4">
             <div class="panel-documents panel panel-default">
                 <div class="panel-heading">
                     <span class="icon-wrench"></span> Tools
                 </div>
-                
+
                 <div class="panel-body">
                     <div class="panel-group" id="form-panel-tools">
                         <div class="panel panel-default" ng-repeat="parent in inheritedResources.tools">
@@ -176,7 +176,7 @@
                                 </a>
                                 <span class="pull-right parent-resources-count">{{ parent.resources.length }} tools</span>
                             </div>
-                            
+
                             <div id="form-{{ $index }}tools" class="panel-collapse collapse">
                                 <table class="table table-condensed table-hover">
                                     <tr ng-repeat="resource in parent.resources">
@@ -190,16 +190,16 @@
                                 </table>
                             </div>
                         </div>
-                        
+
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#form-panel-tools" href="#form-{{ formStep.id }}tools">
                                    <i class="indent" style="margin-left: {{ inheritedResources.tools.length * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
-                                   {{ formStep.name }}
+                                   {{ formStep.name | truncate }}
                                 </a>
                                 <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('tool')"><i class="icon-plus"></i></button>
                             </div>
-                            
+
                             <div id="form-{{ formStep.id }}tools" class="panel-collapse collapse in">
                                 <table class="table table-condensed table-hover">
                                     <tr ng-repeat="resource in formStep.resources | filter: {type: 'tool'}">
@@ -219,7 +219,7 @@
         </div>
     </div>
 </div>
-    
+
 <div class="modal-footer">
     <button class="btn btn-warning cancel" ng-click="close()">Cancel</button>
     <button class="btn btn-primary" ng-click="save(formStep)" ng-disabled="!stepForm.$valid">Save step</button>
