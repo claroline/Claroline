@@ -24,7 +24,7 @@
     <div class="col-md-6">
         <div class="panel panel-default preview-step">
             <div class="panel-heading">
-                <h2 class="panel-title"><span class="icon-leaf"></span> Selected step : <a href="" ng-click="editStep(previewStep)"><strong>&lt;{{ previewStep.name | limitTo:10 }}&gt;</strong></a></h2>
+                <h2 class="panel-title"><span class="icon-leaf"></span> Selected step : <a href="" ng-click="editStep(previewStep)"><strong>&lt;{{ previewStep.name | truncate }}&gt;</strong></a></h2>
                 <div class="step-buttons" ng-show="previewStep != null">
                     <button ng-click="editStep(previewStep)" class="btn btn-default btn-sm" tooltip="Edit step"><i class="icon-pencil"></i></button>
                     <button ng-hide="stepIsRootNode" class="btn btn-danger btn-sm" ng-click="remove(previewStep)" tooltip="Delete step">
@@ -88,7 +88,7 @@
                         <div class="panel-heading">
                             <a class="accordion-toggle" data-toggle="collapse" data-parent="#panel-documents" href="#{{ previewStep.id }}documents">
                                <i class="indent" style="margin-left: {{ inheritedResources.documents.length * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
-                               {{ previewStep.name }}
+                               {{ previewStep.name | truncate }}
                             </a>
                             <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('document')"><i class="icon-plus"></i></button>
                         </div>
@@ -138,7 +138,7 @@
                         <div class="panel-heading">
                             <a class="accordion-toggle" data-toggle="collapse" data-parent="#panel-tools" href="#{{ previewStep.id }}tools">
                                 <i class="indent" style="margin-left: {{ inheritedResources.tools.length * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
-                                {{ previewStep.name }}
+                                {{ previewStep.name  | truncate }}
                             </a>
                             <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('tool')"><i class="icon-plus"></i></button>
                         </div>
@@ -147,7 +147,7 @@
                             <table class="table table-condensed table-hover">
                                 <tr ng-repeat="resource in previewStep.resources | filter: {type: 'tool'}">
                                     <td class="icon"><img src="{{ webDir }}images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
-                                    <td>{{ resource.name }}</td>
+                                    <td>X{{ resource.name }}</td>
                                     <td class="actions">
                                         <button class="btn btn-xs btn-default" ng-click="editResource('tool', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
                                         <button class="btn btn-xs btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>

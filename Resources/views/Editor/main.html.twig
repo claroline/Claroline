@@ -16,9 +16,9 @@
                 <button class="btn btn-default btn-xs" ng-click="openHelp()" tooltip="Help">
                     <span class="icon-question-sign"></span>
                 </button>
-                Editing Path : <strong>&lt;{% verbatim %}{{ path.name }}{% endverbatim %}&gt;</strong> in Workspace <strong>&lt;{{ workspace.name }}&gt;</strong>
+                Editing Path : <strong>&lt;{% verbatim %}{{ path.name | truncate }}{% endverbatim %}&gt;</strong> in Workspace <strong>&lt;{{ workspace.name }}&gt;</strong>
             </h3>
-                
+
             <div class="editor-buttons">
                 <div class="btn-group">
                     <button class="btn btn-default btn-sm" ng-click="undo()" ng-disabled="undoDisabled"><span class="icon-reply"></span></button>
@@ -46,44 +46,44 @@
 {% block javascripts %}
     {# Load Claroline JS #}
     {{ parent() }}
-    
+
     {# Load translations #}
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js') }}"></script>
-    
+
     {# Load Angular Libraries #}
     <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-cookies.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-loader.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-resource.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-sanitize.min.js') }}"></script>
-    
+
     {# Angular UI #}
     <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/ui-bootstrap-dev.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/ui-bootstrap-tpls-dev.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovaangularpageslide/js/angular-pageslide-directive.js') }}"></script>
-    
+
     {# jQuery UI #}
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
-    
+
     {# ng-uisortable #}
     <script type="text/javascript" src="{{ asset('bundles/innovaangularuisortable/js/sortable.js') }}"></script>
-    
+
     {# Alert #}
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Alert/Factory/AlertFactory.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Alert/Controller/AlertCtrl.js') }}"></script>
-    
+
     {# History #}
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/History/Factory/HistoryFactory.js') }}"></script>
-    
+
     {# Clipboard #}
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Clipboard/Factory/ClipboardFactory.js') }}"></script>
-    
+
     {# Main #}
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Editor/Controller/MainCtrl.js') }}"></script>
-    
+
     {# Help  #}
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Help/Controller/HelpModalCtrl.js') }}"></script>
-    
+
     {# Path #}
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Path/Factory/PathFactory.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Editor/Controller/GlobalCtrl.js') }}"></script>
@@ -91,22 +91,24 @@
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Editor/Controller/TreeCtrl.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Editor/Controller/PlannerCtrl.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Editor/Controller/ValidationCtrl.js') }}"></script>
-    
+
     {# Steps #}
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Step/Factory/StepFactory.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Step/Controller/StepModalCtrl.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Step/Controller/SelectImageModalCtrl.js') }}"></script>
-    
+
     {# Resources #}
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Resource/Factory/ResourceFactory.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Resource/Controller/ResourceModalCtrl.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Resource/Controller/ResourcePickerModalCtrl.js') }}"></script>
-    
+
     {# Templates #}
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Template/Factory/TemplateFactory.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Template/Controller/TemplateCtrl.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Template/Controller/TemplateModalCtrl.js') }}"></script>
-    
+
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/TruncateText/Filter/TruncateTextFilter.js') }}"></script>
+
     {# Global APP #}
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Editor/EditorApp.js') }}"></script>
     <script type="text/javascript">
