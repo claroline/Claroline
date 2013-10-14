@@ -19,7 +19,7 @@ class LoadStepWhereData extends AbstractFixture
     {
 
         $stepWhere1 = new stepWhere();
-        $stepWhere1->setName("home");
+        $stepWhere1->setName("at_home");
         $manager->persist($stepWhere1);
 
         $stepWhere2 = new stepWhere();

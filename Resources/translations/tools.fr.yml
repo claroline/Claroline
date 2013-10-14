@@ -1,4 +1,4 @@
-innova_path: Editeur de parcours
+innova_path: Parcours
 paths: Parcours
 path: Parcours
 abstract_resources: Ressource Type
@@ -11,7 +11,7 @@ informations: Informations
 back_to_paths_list: Retour à la liste des parcours
 current_position: Position courante
 back_to: Revenir sur
-home: A la maison
+at_home: A la maison
 classroom: En classe
 library: A la bibliothèque
 anywhere: N'importe où
