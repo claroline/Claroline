@@ -12,14 +12,14 @@ plugin:
     - class: Innova\PathBundle\Entity\Path
       name: path
       is_exportable: false
-      icon: ~
+      icon: res_file.png
 
     - class: Innova\PathBundle\Entity\Step
       name: step
       is_exportable: false
-      icon: ~
+      icon: res_file.png
 
     - class: Innova\PathBundle\Entity\NonDigitalResource
       name: non_digital_resource
       is_exportable: false
-      icon: ~
+      icon: res_file.png
