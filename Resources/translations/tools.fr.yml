@@ -1,4 +1,26 @@
 innova_path: Editeur de parcours
 paths: Parcours
+path: Parcours
 abstract_resources: Ressource Type
 submit: Sauvegarder
+resources: Ressources
+heritated_from: Héritées de
+local: Locales
+instructions: Consignes
+informations: Informations
+back_to_paths_list: Retour à la liste des parcours
+current_position: Position courante
+back_to: Revenir sur
+home: A la maison
+classroom: En classe
+library: A la bibliothèque
+anywhere: N'importe où
+student: Individuellement
+group: En groupe
+class: Toute la classe
+with_computer: Avec un ordinateur
+without_computer: Sans ordinateur
+with_tutor: Avec un tuteur
+without_tutor: Sans tuteur
+duration: Durée
+progression: Avancement

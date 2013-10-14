@@ -2,7 +2,7 @@
     <span ng-show="currentEditingStep != step.id" class="icon-chevron-right"></span>
     <span ng-show="currentEditingStep != step.id" class="step-name">{{ step.name | truncate }}</span>
 
-    <div ng-show="currentEditingStep == step.id"  class="input-group">
+    <div ng-show="currentEditingStep == step.id"  class="input-group input-group-sm">
         <input type="text"  value="{{ step.name }}" ng-model="step.name" class="form-control"  />
         <span class="input-group-btn">
             <button class="btn btn-default" type="button" ng-click="closeEditStepName()"><span class="icon-remove"></span></button>

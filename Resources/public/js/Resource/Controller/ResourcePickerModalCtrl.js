@@ -3,9 +3,9 @@
 /**
  * Resource Modal Controller
  */
-function ResourcePickerModalCtrl($scope, $modal, $http, $q, $modalInstance, PathFactory, ResourceFactory, resources) {
+function ResourcePickerModalCtrl($scope, $modal, $http, $q, $modalInstance, PathFactory, ResourceFactory, resources, currentResourceId) {
     $scope.resources = resources;
-    $scope.resourcePicked = null; 
+    $scope.currentResourceId = currentResourceId;
 
     // Translate resource types
     if ($scope.resources.length !== 0) {

@@ -55,8 +55,12 @@
                     <img ng-show="previewStep.image != null && previewStep.image != ''" src="{{ webDir }}images/steps/{{ previewStep.image }}" />
                 </div>
 
-                <h3>Instructions</h3>
+                <br/>
+
+                <h3><span class="icon-info-sign"></span> Instructions</h3>
                 <p>{{ previewStep.instructions || "There is no instructions for this step" }}</p>
+
+                <br/>
 
                 <h3><i class="icon-briefcase"></i> Documents</h3>
 
@@ -107,6 +111,8 @@
                         </div>
                     </div>
                 </div>
+
+                <br/>
 
                 <h3><i class="icon-wrench"></i> Tools</h3>
 

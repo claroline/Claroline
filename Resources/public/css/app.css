@@ -104,6 +104,10 @@ table td.icon {
     margin: 0 6px;
 }
 
+.preview-step p {
+	margin: 0;
+}
+
 .preview-step .icons .duration {
     line-height: 24px;
     font-size: 16px;
