@@ -81,6 +81,7 @@ canOpen: 'Right to open'
 cancel: Cancel
 cannot_delete_unique_manager: 'Cannot remove the unique manager.'
 cannot_unsubscribe_from_workspace: 'Cannot unsubscribe from workspace'
+change_view : Change view
 choose_resource_form_type: 'Resource type'
 close: Close
 collaborator: Collaborator

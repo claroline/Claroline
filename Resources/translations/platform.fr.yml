@@ -82,6 +82,7 @@ canOpen: 'Droit d''ouvrir'
 cancel: Annuler
 cannot_delete_unique_manager: 'Impossible de supprimer le seul gestionnaire.'
 cannot_unsubscribe_from_workspace: 'Impossible de vous désincrire de l''espace d''activités'
+change_view : Changer l'affichage
 choose_resource_form_type: 'Type de ressource'
 close: Fermer
 collaborator: Collaborateur
