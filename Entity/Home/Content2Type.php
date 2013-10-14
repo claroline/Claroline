@@ -61,7 +61,7 @@ class Content2Type
     {
         // the size may vary between 1 and 12 and corresponds to
         // bootstrap container col classes
-        $this->size = 'content-8';
+        $this->size = 'content-12';
 
         if ($first) {
             $first->setBack($this);

@@ -155,6 +155,7 @@
                                         function (data)
                                         {
                                             insertElement(data);
+                                            $('.contents').trigger('ContentModified');
                                         }
                                 )
                             ;
@@ -178,6 +179,7 @@
                                     function (data)
                                     {
                                         $(creatorElement).replaceWith(data);
+                                        $('.contents').trigger('ContentModified');
                                     }
                                 )
                             ;

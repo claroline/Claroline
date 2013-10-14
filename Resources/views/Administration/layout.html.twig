@@ -56,12 +56,10 @@
 {% endblock %}
 
 {% block content %}
-        <div class="visible-xs visible-sm">
-            {{ block("leftbar") }}
-        </div>
-
-        <div class="panel panel-default">
-            {% block section_content %}{% endblock %}
-        </div>
-
+    <div class="visible-xs">
+        {{ block("leftbar") }}
+    </div>
+    <div class="panel panel-default">
+        {% block section_content %}{% endblock %}
+    </div>
 {% endblock %}

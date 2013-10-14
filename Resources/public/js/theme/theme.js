@@ -133,4 +133,11 @@
         $("input", this.parentNode.parentNode).val(event.color.toHex());
     });
 
+    $(".theme-value .btn").on("click", function (event) {
+        var color = $("input", this.parentNode.parentNode).val()
+        if (/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color)) {
+            $(this).colorpicker('setValue', color);
+        }
+    });
+
 }());

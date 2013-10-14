@@ -4,15 +4,27 @@
     var home = window.Claroline.Home;
 
     $("body").on("mouseenter", ".content-element", function () {
-        $(".content-menu").first().addClass("hide"); // prevent some errors with the drop dawn
+
+        if ($(".content-menu", this).get(0) !== undefined) {
+            $(".content-menu").each(function () {
+                if (!$(this).hasClass("hide")) {
+                    $(this).addClass("hide");
+                }
+                if ($(this).hasClass("open")) {
+                    $(this).removeClass("open");
+                }
+            });
+        }
+
         $(this).find(".content-menu").first().removeClass("hide");
 
     });
 
     $("body").on("mouseleave", ".content-element", function () {
         if (!$(this).find(".content-menu").first().hasClass("open")) {
-            $(this).find(".content-menu").first().addClass("hide");
+            $(this).find(".content-menu").first().removeClass("open");
         }
+        $(this).find(".content-menu").first().addClass("hide");
     });
 
     $("body").on("click", ".content-size", function (event) {
@@ -43,6 +55,7 @@
                     $(element).addClass(size);
                     $(element).trigger("DOMSubtreeModified"); //height resize event
                     $("#sizes").modal("hide");
+                    $('.contents').trigger('ContentModified');
 
                 } else {
                     home.modal("content/error");
@@ -107,6 +120,7 @@
                     if (data === "true") {
                         $(element).hide("slow", function () {
                             $(this).remove();
+                            $('.contents').trigger('ContentModified');
                         });
                     } else {
                         home.modal("content/error");
@@ -170,7 +184,7 @@
                             function (data)
                             {
                                 if (data !== "false" && data !== "") {
-                                    $(typeCreator).next().prepend(data);
+                                    $(".panel .panel-body", typeCreator).append(data);
                                     name.val("");
                                 } else {
                                     home.modal("content/error");
@@ -213,6 +227,7 @@
                         $(".creator textarea").each(function () {
                             home.resize(this);
                         });
+                        $('.contents').trigger('ContentModified');
                     }
                 )
                 .error(
@@ -257,6 +272,7 @@
                     function (data)
                     {
                         $(element).replaceWith(data);
+                        $('.contents').trigger('ContentModified');
                     }
                 )
                 .error(
@@ -338,7 +354,11 @@
 
             if (a && type) {
                 $.ajax(home.path + "content/reorder/" + type + "/" + a + "/" + b)
-                .error(
+                .done(
+                    function() {
+                        $('.contents').trigger('ContentModified');
+                    }
+                ).error(
                         function ()
                         {
                             home.modal("content/error");
