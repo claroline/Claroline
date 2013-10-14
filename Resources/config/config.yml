@@ -7,3 +7,19 @@ plugin:
       class: icon-road
       is_displayable_in_workspace: true
       is_displayable_in_desktop: false
+      
+  resources:
+    - class: Innova\PathBundle\Entity\Path
+      name: path
+      is_exportable: false
+      icon: res_forum.png
+
+    - class: Innova\PathBundle\Entity\Step
+      name: step
+      is_exportable: false
+      icon: res_forum.png
+
+    - class: Innova\PathBundle\Entity\NonDigitalResource
+      name: non_digital_resource
+      is_exportable: false
+      icon: res_forum.png
