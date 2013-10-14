@@ -28,15 +28,15 @@
             
             <!-- No selected resource -->
             <div ng-show="formResource.isDigital && (formResource.resourceId == null || formResource.resourceId.length == 0)">
-	            <div class="form-group col-md-12">
-	                <label for="resource-url">Tip document URL</label>
-	                <input type="text" name="resource-url" id="resource-url" ng-model="formResource.url" value="" class="form-control" />
-	            </div>
-	            
-	            <div class="form-group col-md-12">
-	                <label>OR select a resource in database</label>
-	                <button class="btn btn-default" ng-click="pickResource()"><i class="icon-search"></i> Browse resources</button>
-	            </div>
+<!--                 <div class="form-group col-md-12"> -->
+<!--                     <label for="resource-url">Tip document URL</label> -->
+<!--                     <input type="text" name="resource-url" id="resource-url" ng-model="formResource.url" value="" class="form-control" /> -->
+<!--                 </div> -->
+                
+                <div class="form-group col-md-12">
+<!--                     <label>OR select a resource in database</label> -->
+                    <button class="btn btn-default" ng-click="pickResource()"><i class="icon-search"></i> Browse resources</button>
+                </div>
             </div>
             
             <!-- Selected resource -->
