@@ -24,12 +24,24 @@
 {% endmacro %}
 
 {% if tree is defined and tree != null and tree.__children is defined and tree.__children|length %}
-    <div class='list-group menu menu_lesson '>
-        <div class='menu_lesson_icons'>
-            <i class="icon-indent-right lesson_tooltip" id='collapse_all' data-original-title='{{ 'collapse_all'|trans({}, 'icap_lesson') }}'></i>
-            <i class="icon-sort-by-attributes-alt lesson_tooltip" id='expand_all' data-original-title='{{ 'expand_all'|trans({}, 'icap_lesson') }}'></i>
+    <div class='panel panel-default '>
+        <div class="navbar navbar-default navbar-static-top">
+            <ul class='nav navbar-nav pull-right'>
+                <li><a href='#'><i class="icon-indent-right lesson_tooltip" id='collapse_all' data-original-title='{{ 'collapse_all'|trans({}, 'icap_lesson') }}'></i></a></li>
+                <li><a href='#'><i class="icon-sort-by-attributes-alt lesson_tooltip" id='expand_all' data-original-title='{{ 'expand_all'|trans({}, 'icap_lesson') }}'></i></a></li>
+            </ul>
         </div>
+
+
         {{ _self.recursiveChapter(tree, chapter, _resource, true) }}
+        {% if is_granted('EDIT', node) %}
+            <div >
+                <hr />
+                <a data-chapter = '{{ chapter.id }}' class="createchapter btn" href="{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': tree.id })}}" >
+                    <i class="icon-plus"></i> {{ 'new_chapter'|trans({}, 'icap_lesson') }}
+                </a>
+            </div>
+        {%  endif  %}
         <form id='moveform' action ='' method='post' style='display:none;'>
             {{ form_rest(form) }}
            {# {{ form_row(form._token) }}#}
