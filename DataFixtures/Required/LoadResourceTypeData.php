@@ -17,7 +17,7 @@ class LoadResourceTypeData extends AbstractFixture
      */
     public function load(ObjectManager $manager)
     {
-
+        /*
         $resourceType1 = new ResourceType();
         $resourceType1->setName("path");
         $resourceType1->setExportable(true);
@@ -34,5 +34,6 @@ class LoadResourceTypeData extends AbstractFixture
         $manager->persist($resourceType3);
 
         $manager->flush();
+        */
     }
 }
