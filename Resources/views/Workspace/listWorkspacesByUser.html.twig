@@ -1,4 +1,4 @@
-{% macro showTag(tagsList, tagWorkspaces, hierarchy, index, displayable) %}
+{% macro showTag(tagsList, tagWorkspaces, hierarchy, index, displayable, favourites) %}
 {% for tag in tagsList %}
     {% if displayable[tag.getId()] %}
     {% set currentIndex = index ~ "-" ~ tag.getId() %}
@@ -15,21 +15,31 @@
         </div>
         <div id="collapse-{{ currentIndex }}" class="panel-body collapse">
             {% if hierarchy[tag.getId()]|length > 0 %}
-            {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable) }}
+            {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable, favourites) }}
             {% endif %}
                 {% for relWorkspaceTag in tagWorkspaces[tag.id] %}
                 {% set workspace = relWorkspaceTag.getWorkspace() %}
-                <a class="list-group-item row-workspace row-workspace-id-{{ workspace.getId() }}"
+                {% set workspaceId = workspace.getId() %}
+                <a class="list-group-item row-workspace row-workspace-id-{{ workspaceId }}"
                     {% set granted = is_granted('home', workspace) %}
                     {% if granted == true %}
                         href="{{ path('claro_workspace_open',
-                        {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
-                        id="link-home-{{ workspace.getId() }}"
+                        {'workspaceId': workspaceId, 'toolName': 'home'}) }}"
+                        id="link-home-{{ workspaceId }}"
                     {% endif %}
                 >
                     <i class="icon-book"></i>
                     {{ workspace.getName() }}
                     <span><small>({{ workspace.getCode() }})</small></span>
+                    <span class="favourite-workspace-btn pull-right" workspace-id="{{ workspaceId }}">
+                        <i class="favourite-workspace-icon-{{ workspaceId }}
+                            {% if favourites[workspaceId] is defined %}
+                                icon-star
+                            {% else %}
+                                icon-star-empty
+                            {% endif %}"
+                       ></i>
+                    </span>
                 </a>
                 {% endfor %}
         </div>
@@ -92,24 +102,42 @@
                 </div>
                 <div id="collapse-all" class="list-group collapse {% if tags|length == 0 %}in{% endif %}">
                     {% for workspace in workspaces %}
-                    <a  class="list-group-item" class="row-workspace row-workspace-id-{{ workspace.getId() }}"
-                        {% set granted = is_granted('home', workspace) %}
-                        {% if granted == true %}
-                            href="{{ path('claro_workspace_open',
-                            {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
-                            id="link-home-{{ workspace.getId() }}"
-                        {% endif %}
-                    >
-                        <i class="icon-book"></i>
-                        {{ workspace.getName() }}
-                        <span><small>({{ workspace.getCode() }})</small></span>
-                    </a>
+                    {% set workspaceId = workspace.getId() %}
+                        <a  class="list-group-item" class="row-workspace row-workspace-id-{{ workspaceId }}"
+                            {% set granted = is_granted('home', workspace) %}
+                            {% if granted == true %}
+                                href="{{ path('claro_workspace_open',
+                                {'workspaceId': workspaceId, 'toolName': 'home'}) }}"
+                                id="link-home-{{ workspaceId }}"
+                            {% endif %}
+                        >
+                            <i class="icon-book"></i>
+                            {{ workspace.getName() }}
+                            <span><small>({{ workspace.getCode() }})</small></span>
+                            <span class="favourite-workspace-btn pull-right" workspace-id="{{ workspaceId }}">
+                                <i class="favourite-workspace-icon-{{ workspaceId }}
+                                    {% if favourites[workspaceId] is defined %}
+                                        icon-star
+                                    {% else %}
+                                        icon-star-empty
+                                    {% endif %}"
+                               ></i>
+                            </span>
+                        </a>
                     {% endfor %}
                 </div>
             </div>
         {% endif %}
 
-        {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
+        {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable, favourites) }}
     </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src='{{ asset('bundles/clarolinecore/js/workspace/listWorkspaceByUser.js') }}'
+        type="text/javascript">
+    </script>
 {% endblock %}

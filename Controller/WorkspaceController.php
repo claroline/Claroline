@@ -154,6 +154,15 @@ class WorkspaceController extends Controller
         $roles = $this->utils->getRoles($token);
 
         $datas = $this->tagManager->getDatasForWorkspaceListByUser($user, $roles);
+        $favouriteWorkspaces = $this->workspaceManager
+            ->getFavouriteWorkspacesByUser($user);
+        $favourites = array();
+
+        foreach ($datas['workspaces'] as $workspace) {
+            if (isset($favouriteWorkspaces[$workspace->getId()])) {
+                $favourites[$workspace->getId()] = $workspace;
+            }
+        }
 
         return array(
             'user' => $user,
@@ -162,7 +171,8 @@ class WorkspaceController extends Controller
             'tagWorkspaces' => $datas['tagWorkspaces'],
             'hierarchy' => $datas['hierarchy'],
             'rootTags' => $datas['rootTags'],
-            'displayable' => $datas['displayable']
+            'displayable' => $datas['displayable'],
+            'favourites' => $favourites
         );
     }
 
@@ -930,6 +940,52 @@ class WorkspaceController extends Controller
             'tabId' => $homeTabId,
             'withConfig' => $withConfig
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspaceId}/update/favourite",
+     *     name="claro_workspace_update_favourite",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     *
+     * Adds a workspace to the favourite list.
+     *
+     * @param type $workspaceId
+     *
+     * @return Response
+     */
+    public function updateWorkspaceFavourite(AbstractWorkspace $workspace)
+    {
+        $this->assertIsGranted('ROLE_USER');
+        $token = $this->security->getToken();
+        $user = $token->getUser();
+        $roles = $this->utils->getRoles($token);
+        $resultWorkspace = $this->workspaceManager
+            ->getWorkspaceByWorkspaceAndRoles($workspace, $roles);
+
+        if (!is_null($resultWorkspace)) {
+            $favourite = $this->workspaceManager
+                ->getFavouriteByWorkspaceAndUser($workspace, $user);
+
+            if (is_null($favourite)) {
+                $this->workspaceManager->addFavourite($workspace, $user);
+
+                return new Response('added', 200);
+            } else {
+                $this->workspaceManager->removeFavourite($favourite);
+
+                return new Response('removed', 200);
+            }
+        }
+
+        return new Response('error', 400);
     }
 
     private function assertIsGranted($attributes, $object = null)
