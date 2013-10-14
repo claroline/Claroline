@@ -1,0 +1,73 @@
+{% macro renderPager(forum, search, user, pager) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_forum_search',
+                'routeParams': {'forum': forum.getId(), 'search': search, 'user':creator }
+            }
+        )
+    }}
+{% endmacro %}
+
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block section_content %}
+
+<div>
+    <div class="pull-right">
+       {{ 'search'|trans({}, 'platform') }} <input type="text" value=" {{search}} "></input><button class="btn"><i class="icon-search"></i></button>
+    </div>
+    {{ renderPager(_resource, search, user, pager) }}
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th>{{ 'user'|trans({}, 'platform') }}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for message in pager.currentPageResults %}
+                    <tr>
+                        <td>
+                            <div>
+                                {% if message.getCreator().getPicture() != "" %}
+                                 <img src="{{ asset('uploads/pictures/') ~ message.getCreator().getPicture() }}" class="col-md-2">
+                            {% else %}
+                                    <h1><i class="icon-user"></i><h1>
+                            {% endif %}
+                            </div>
+                            <div>
+                               {{ message.getCreator().getFirstName() }} {{ message.getCreator().getLastName() }}
+                            </div>
+                            <div>
+                                {{ message.getCreationDate()|date('m/d/Y H:i:s') }}
+                            </div>
+                            <p>{{ message.getCreator().getFirstName() }} {{ message.getCreator().getLastName() }}</p>
+                        </td>
+                        <td>
+                            <div>
+                                <hr>
+                                <p> {{ message.getContent() }} </p>
+                                <p class="text-muted">{{ message.getCreationDate()| timeAgo }} </p>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {{ renderPager(_resource, search, user, pager) }}
+</div>
+
+{% endblock %}
