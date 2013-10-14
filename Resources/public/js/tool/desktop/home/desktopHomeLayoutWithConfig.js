@@ -54,6 +54,52 @@
         });
     });
 
+    // Click on left reorder button of a hometab
+    $('.hometab-reorder-left-btn').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        currentElement = $(this).parents('.hometab-element');
+        var homeTabConfigId = currentElement.attr('hometab-config-id');
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_home_tab_config_change_order',
+                {'homeTabConfigId': homeTabConfigId, 'direction': -1}
+            ),
+            type: 'POST',
+            success: function (data) {
+                if (data === '-1') {
+                    var previousSibling = currentElement.prev();
+                    previousSibling.before(currentElement);
+                }
+            }
+        });
+    });
+
+    // Click on right reorder button of a hometab
+    $('.hometab-reorder-right-btn').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        currentElement = $(this).parents('.hometab-element');
+        var homeTabConfigId = currentElement.attr('hometab-config-id');
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_home_tab_config_change_order',
+                {'homeTabConfigId': homeTabConfigId, 'direction': 1}
+            ),
+            type: 'POST',
+            success: function (data) {
+                if (data === '1') {
+                    var nextSibling = currentElement.next();
+                    nextSibling.after(currentElement);
+                }
+            }
+        });
+    });
+
     $('.hometab-delete-btn').click(function (e) {
         e.preventDefault();
         e.stopPropagation();

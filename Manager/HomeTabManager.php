@@ -127,47 +127,43 @@ class HomeTabManager
 
                 return $direction;
             }
+        } elseif (is_null($workspace)) {
+            $lastHomeTabOrder = $this->homeTabConfigRepo
+                ->findOrderOfLastDesktopHomeTabByUser($user);
+            $lastOrder = (count($lastHomeTabOrder) > 0) ?
+                $lastHomeTabOrder['order_max'] :
+                1;
+
+            if ($newHomeTabOrder > 0 && $newHomeTabOrder <= $lastOrder) {
+                $this->homeTabConfigRepo->updateHomeTabOrderByUser(
+                    $user,
+                    $newHomeTabOrder,
+                    $homeTabOrder
+                );
+                $homeTabConfig->setTabOrder($newHomeTabOrder);
+                $this->om->flush();
+
+                return $direction;
+            }
+        } else {
+            $lastHomeTabOrder = $this->homeTabConfigRepo
+                ->findOrderOfLastWorkspaceHomeTabByWorkspace($workspace);
+            $lastOrder = (count($lastHomeTabOrder) > 0) ?
+                $lastHomeTabOrder['order_max'] :
+                1;
+
+            if ($newHomeTabOrder > 0 && $newHomeTabOrder <= $lastOrder) {
+                $this->homeTabConfigRepo->updateHomeTabOrderByWorkspace(
+                    $workspace,
+                    $newHomeTabOrder,
+                    $homeTabOrder
+                );
+                $homeTabConfig->setTabOrder($newHomeTabOrder);
+                $this->om->flush();
+
+                return $direction;
+            }
         }
-//        elseif (is_null($workspace)) {
-//            $lastWidgetOrder = $this->widgetHomeTabConfigRepo
-//                ->findOrderOfLastWidgetInHomeTabByUser($homeTab, $user);
-//            $lastOrder = (count($lastWidgetOrder) > 0) ?
-//                $lastWidgetOrder['order_max'] :
-//                1;
-//
-//            if ($newWidgetOrder > 0 && $newWidgetOrder <= $lastOrder) {
-//                $this->widgetHomeTabConfigRepo->updateWidgetOrderByUser(
-//                    $homeTab,
-//                    $newWidgetOrder,
-//                    $widgetOrder,
-//                    $user
-//                );
-//                $widgetHomeTabConfig->setWidgetOrder($newWidgetOrder);
-//                $this->om->flush();
-//
-//                return $direction;
-//            }
-//        }
-//        else {
-//            $lastWidgetOrder = $this->widgetHomeTabConfigRepo
-//                ->findOrderOfLastWidgetInHomeTabByWorkspace($homeTab, $workspace);
-//            $lastOrder = (count($lastWidgetOrder) > 0) ?
-//                $lastWidgetOrder['order_max'] :
-//                1;
-//
-//            if ($newWidgetOrder > 0 && $newWidgetOrder <= $lastOrder) {
-//                $this->widgetHomeTabConfigRepo->updateWidgetOrderByWorkspace(
-//                    $homeTab,
-//                    $newWidgetOrder,
-//                    $widgetOrder,
-//                    $workspace
-//                );
-//                $widgetHomeTabConfig->setWidgetOrder($newWidgetOrder);
-//                $this->om->flush();
-//
-//                return $direction;
-//            }
-//        }
 
         return 0;
     }
