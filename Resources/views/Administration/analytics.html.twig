@@ -54,13 +54,15 @@
                     <i class="icon-book"></i>
                     {{'ws_most_viewed'|trans({}, 'platform')}}
                 </div>
-                <table class="table table-condensed table-hovered">
-                    <tr><th>#</th><th>{{'name'|trans({}, 'platform')}}</th><th>{{'connections'|trans({}, 'platform')}}</th></tr>
-                    {% for ws in mostViewedWS %}
-                        <tr><td>{{loop.index}}</td><td>{{ws.name}} ({{ws.code}})</td><td>{{ws.actions}}</td></tr>
-                    {% endfor %}
-                    <tr><td colspan="3" class="text-right"><a href="{{ path('claro_admin_analytics_top', { 'top_type': 'top_workspaces_connections' }) }}">{{'see_more'|trans({}, 'platform')}}...</a></td></tr>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hovered">
+                        <tr><th>#</th><th>{{'name'|trans({}, 'platform')}}</th><th>{{'connections'|trans({}, 'platform')}}</th></tr>
+                        {% for ws in mostViewedWS %}
+                            <tr><td>{{loop.index}}</td><td>{{ws.name}} ({{ws.code}})</td><td>{{ws.actions}}</td></tr>
+                        {% endfor %}
+                        <tr><td colspan="3" class="text-right"><a href="{{ path('claro_admin_analytics_top', { 'top_type': 'top_workspaces_connections' }) }}">{{'see_more'|trans({}, 'platform')}}...</a></td></tr>
+                    </table>
+                </div>
             </div>
 
             <div class="panel panel-default">
@@ -68,13 +70,15 @@
                     <i class="icon-file"></i>
                     {{'media_most_viewed'|trans({}, 'platform')}}
                 </div>
-                <table class="table table-condensed table-hovered">
-                    <tr><th>#</th><th>{{'name'|trans({}, 'platform')}}</th><th>{{'views'|trans({}, 'platform')}}</th></tr>
-                    {% for media in mostViewedMedia %}
-                        <tr><td>{{loop.index}}</td><td>{{media.name}}</td><td>{{media.actions}}</td></tr>
-                    {% endfor %}
-                    <tr><td colspan="3" class="text-right"><a href="{{ path('claro_admin_analytics_top', { 'top_type': 'top_media_views' }) }}">{{'see_more'|trans({}, 'platform')}}...</a></td></tr>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hovered">
+                        <tr><th>#</th><th>{{'name'|trans({}, 'platform')}}</th><th>{{'views'|trans({}, 'platform')}}</th></tr>
+                        {% for media in mostViewedMedia %}
+                            <tr><td>{{loop.index}}</td><td>{{media.name}}</td><td>{{media.actions}}</td></tr>
+                        {% endfor %}
+                        <tr><td colspan="3" class="text-right"><a href="{{ path('claro_admin_analytics_top', { 'top_type': 'top_media_views' }) }}">{{'see_more'|trans({}, 'platform')}}...</a></td></tr>
+                    </table>
+                </div>
             </div>
 
             <div class="panel panel-default">
@@ -82,13 +86,15 @@
                     <i class="icon-download"></i>
                     {{'resources_most_downloaded'|trans({}, 'platform')}}
                 </div>
-                <table class="table table-condensed table-hovered">
-                    <tr><th>#</th><th>{{'name'|trans({}, 'platform')}}</th><th>{{'downloads'|trans({}, 'platform')}}</th></tr>
-                    {% for resource in mostDownloadedResources %}
-                        <tr><td>{{loop.index}}</td><td>{{resource.name}}</td><td>{{resource.actions}}</td></tr>
-                    {% endfor %}
-                    <tr><td colspan="3" class="text-right"><a href="{{ path('claro_admin_analytics_top', { 'top_type': 'top_resources_downloads' }) }}">{{'see_more'|trans({}, 'platform')}}...</a></td></tr>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hovered">
+                        <tr><th>#</th><th>{{'name'|trans({}, 'platform')}}</th><th>{{'downloads'|trans({}, 'platform')}}</th></tr>
+                        {% for resource in mostDownloadedResources %}
+                            <tr><td>{{loop.index}}</td><td>{{resource.name}}</td><td>{{resource.actions}}</td></tr>
+                        {% endfor %}
+                        <tr><td colspan="3" class="text-right"><a href="{{ path('claro_admin_analytics_top', { 'top_type': 'top_resources_downloads' }) }}">{{'see_more'|trans({}, 'platform')}}...</a></td></tr>
+                    </table>
+                </div>
             </div>
 
         </div>

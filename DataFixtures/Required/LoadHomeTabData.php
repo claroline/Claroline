@@ -53,56 +53,6 @@ class LoadHomeTabData extends AbstractFixture implements OrderedFixtureInterface
         $workspaceHomeTabConfig->setLocked(false);
         $workspaceHomeTabConfig->setTabOrder(1);
         $manager->persist($workspaceHomeTabConfig);
-
-//        $desktopDisplayConfigs = $manager
-//            ->getRepository('Claroline\CoreBundle\Entity\Widget\WidgetInstance')
-//            ->findBy(
-//                array(
-//                    'parent' => null,
-//                    'isVisible' => true,
-//                    'isDesktop' => true
-//                )
-//            );
-//        $workspaceDisplayConfigs = $manager
-//            ->getRepository('Claroline\CoreBundle\Entity\Widget\WidgetInstance')
-//            ->findBy(
-//                array(
-//                    'parent' => null,
-//                    'isVisible' => true,
-//                    'isDesktop' => false
-//                )
-//            );
-
-        $i = 1;
-
-        foreach ($desktopDisplayConfigs as $desktopDisplayConfig) {
-            $widget = $desktopDisplayConfig->getWidget();
-            $widgetHTC = new WidgetHomeTabConfig();
-            $widgetHTC->setWidget($widget);
-            $widgetHTC->setHomeTab($desktopHomeTab);
-            $widgetHTC->setType('admin');
-            $widgetHTC->setVisible(true);
-            $widgetHTC->setLocked(false);
-            $widgetHTC->setWidgetOrder($i);
-            $i++;
-            $manager->persist($widgetHTC);
-        }
-        $j = 1;
-
-        foreach ($workspaceDisplayConfigs as $workspaceDisplayConfig) {
-            $widget = $workspaceDisplayConfig->getWidget();
-            $widgetHTC = new WidgetHomeTabConfig();
-            $widgetHTC->setWidget($widget);
-            $widgetHTC->setHomeTab($workspaceHomeTab);
-            $widgetHTC->setType('admin');
-            $widgetHTC->setVisible(true);
-            $widgetHTC->setLocked(false);
-            $widgetHTC->setWidgetOrder($j);
-            $j++;
-            $manager->persist($widgetHTC);
-        }
-
-        $manager->flush();
     }
 
     /**

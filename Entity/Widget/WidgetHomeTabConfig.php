@@ -53,24 +53,24 @@ class WidgetHomeTabConfig
     protected $workspace;
 
     /**
-     * @ORM\Column(name="widget_order", nullable=false)
+     * @ORM\Column(name="widget_order")
      */
     protected $widgetOrder;
 
     /**
-     * @ORM\Column(nullable=false)
+     * @ORM\Column()
      */
     protected $type;
 
     /**
-     * @ORM\Column(type="boolean", name="is_visible", nullable=false)
+     * @ORM\Column(type="boolean", name="is_visible")
      */
-    protected $visible;
+    protected $visible = true;
 
     /**
-     * @ORM\Column(type="boolean", name="is_locked", nullable=false)
+     * @ORM\Column(type="boolean", name="is_locked")
      */
-    protected $locked;
+    protected $locked = false;
 
     public function getId()
     {

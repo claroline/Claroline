@@ -327,12 +327,14 @@ please_wait: 'Veuillez patienter...'
 position: Position
 private: Privée
 profile_form_administrativeCode: 'Code administratif'
+profile_form_description : 'Description'
 profile_form_firstName: Prénom
 profile_form_lastName: Nom
 profile_form_mail: Mail
 profile_form_note: 'Note personnelle'
 profile_form_ownedRoles: Role(s)
 profile_form_phone: Téléphone
+profile_form_pictureFile : 'Photo de profil'
 profile_form_plainPassword_first: 'Mot de passe'
 profile_form_plainPassword_second: Vérification
 profile_form_platformRoles: Rôles
@@ -414,6 +416,8 @@ select_workspaces_for_registration: 'Choisissez les espaces d''activités pour l
 selected_workspaces_for_registration: 'Espaces d''activités sélectionnés pour l''inscription'
 send_mail: 'Envoyer un mail'
 send_message: 'Envoyer un message'
+send_mail_form_object: 'Objet'
+send_mail_form_content: 'Contenu'
 session_id: 'Identifiant de session'
 settings: Paramètres
 sharable: 'Partageable'

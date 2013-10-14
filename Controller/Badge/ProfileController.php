@@ -2,7 +2,9 @@
 
 namespace Claroline\CoreBundle\Controller\Badge;
 
+use Claroline\CoreBundle\Badge\BadgeRuleChecker;
 use Claroline\CoreBundle\Entity\Badge\Badge;
+use Claroline\CoreBundle\Entity\Badge\UserBadge;
 use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
 use Claroline\CoreBundle\Form\Badge\ClaimBadgeType;
 use Claroline\CoreBundle\Entity\User;
@@ -24,17 +26,14 @@ class ProfileController extends Controller
 {
     /**
      * @Route("/claim", name="claro_claim_badge")
-     *
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function claimAction(Request $request)
+    public function claimAction(Request $request, User $user)
     {
-        /** @var \Claroline\CoreBundle\Entity\User $user */
-        $user = $this->get('security.context')->getToken()->getUser();
-
         $badgeClaim = new BadgeClaim();
         $badgeClaim->setUser($user);
-        $form = $this->createForm(new ClaimBadgeType(), $badgeClaim);
+        $form = $this->createForm($this->get('claroline.form.claimBadge'), $badgeClaim);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -50,9 +49,9 @@ class ProfileController extends Controller
                     $badge = $entityManager->getRepository('ClarolineCoreBundle:Badge\Badge')->findOneByName($badgeName);
 
                     if ($user->hasBadge($badge)) {
-                        $this->get('session')->getFlashBag()->add('alert', $translator->trans('badge_already_award_message', array(), 'badge'));
+                        $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_already_award_message', array(), 'badge'));
                     } elseif ($user->hasClaimedFor($badge)) {
-                        $this->get('session')->getFlashBag()->add('alert', $translator->trans('badge_already_claim_message', array(), 'badge'));
+                        $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_already_claim_message', array(), 'badge'));
                     } else {
                         $badgeClaim->setBadge($badge);
 
@@ -62,9 +61,9 @@ class ProfileController extends Controller
                         $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_claim_success_message', array(), 'badge'));
                     }
                 } catch (NoResultException $exception) {
-                    $this->get('session')->getFlashBag()->add('danger', $translator->trans('badge_not_found_with_name', array('%badgeName%' => $badgeName), 'badge'));
+                    $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_not_found_with_name', array('%badgeName%' => $badgeName), 'badge'));
                 } catch (\Exception $exception) {
-                    $this->get('session')->getFlashBag()->add('danger', $translator->trans('badge_claim_error_message', array(), 'badge'));
+                    $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_claim_error_message', array(), 'badge'));
                 }
 
                 return $this->redirect($this->generateUrl('claro_profile_view_badges'));
@@ -78,22 +77,25 @@ class ProfileController extends Controller
 
     /**
      * @Route("/view/{id}", name="claro_profile_view_badge")
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function badgeAction(Badge $badge)
+    public function badgeAction(Badge $badge, User $user)
     {
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        $userBadge = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findOneByBadgeAndUser($badge, $user);
-
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
         $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
 
+        $badgeRuleChecker = new BadgeRuleChecker($this->getDoctrine()->getRepository('ClarolineCoreBundle:Log\Log'));
+        $checkedLogs = $badgeRuleChecker->checkBadge($badge, $user);
+
+        $userBadge = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findOneBy(array('badge' => $badge, 'user' => $user));
+
         return array(
-            'userBadge' => $userBadge,
-            'badge'     => $badge
+            'userBadge'   => $userBadge,
+            'badge'       => $badge,
+            'checkedLogs' => $checkedLogs
         );
     }
 
@@ -104,7 +106,7 @@ class ProfileController extends Controller
      */
     public function badgesAction($page, User $user)
     {
-        $query = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findByUser($user, false);
+        $query   = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findByUser($user, false);
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new Pagerfanta($adapter);
 

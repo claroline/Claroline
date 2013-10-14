@@ -12,15 +12,17 @@ open_tool_workspace|desktop_*claroline_mytool*
 
 Your plugin must define its properties and the list of its tools in the *Resources/config/config.yml file*.
 
-    plugin:
-        # Tools declared by your plugin.
-        tools:
-          - name: claroline_mytool
-            **Currently using classes (prototype). Implementation of css classes not done yet**
-            #class: res_text.png
-            is_displayable_in_workspace: true
-            is_displayable_in_desktop: true
-            has_options: false (default = false: does the tool need a configuration page)
+```yaml
+plugin:
+    # Tools declared by your plugin.
+    tools:
+    - name: claroline_mytool
+        **Currently using classes (prototype). Implementation of css classes not done yet**
+        #class: res_text.png
+        is_displayable_in_workspace: true
+        is_displayable_in_desktop: true
+        has_options: false (default = false: does the tool need a configuration page)
+```
 
 In order to catch the event, your plugin must define a listener in your config.
 
@@ -32,15 +34,17 @@ This example will show you the main files of a basic HTML5 video player.
 
 *Claroline\VideoPlayer\Resources\config\services\listener.yml*
 
-  claroline.listener.example_tool:
+```yaml
+claroline.listener.example_tool:
     class: Claroline\ExampleBundle\Listener\ToolListener
     calls:
-      - [setContainer, ["@service_container"]]
+    - [setContainer, ["@service_container"]]
     tags:
-      - { name: kernel.event_listener, event: open_tool_workspace_claroline_mytool, method: onWorkspaceOpen }
-      - { name: kernel.event_listener, event: open_tool_desktop_claroline_mytool, method: onDesktopOpen }
-      - { name: kernel.event_listener, event: configure_workspace_tool_claroline_mytool, method: onWorkspaceConfigure }
-      - { name: kernel.event_listener, event: configure_desktop_tool_claroline_mytool, method: onDesktopConfigure }
+    - { name: kernel.event_listener, event: open_tool_workspace_claroline_mytool, method: onWorkspaceOpen }
+    - { name: kernel.event_listener, event: open_tool_desktop_claroline_mytool, method: onDesktopOpen }
+    - { name: kernel.event_listener, event: configure_workspace_tool_claroline_mytool, method: onWorkspaceConfigure }
+    - { name: kernel.event_listener, event: configure_desktop_tool_claroline_mytool, method: onDesktopConfigure }
+```
 
 ### Listener implementation
 
