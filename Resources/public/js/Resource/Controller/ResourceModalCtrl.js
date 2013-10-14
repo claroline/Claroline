@@ -39,16 +39,19 @@ function ResourceModalCtrl($scope, $modal, $q, $http, $modalInstance, PathFactor
         $modalInstance.close(formResource);
     };
 
-
-     /**
+    /**
      * Edit or add resource
      * @returns void
      */
-    $scope.pickResource = function() {
+    $scope.pickResource = function(currentResourceId) {
         var modalInstance = $modal.open({
             templateUrl: EditorApp.webDir + 'js/Resource/Partial/resource-picker.html',
             controller: 'ResourcePickerModalCtrl',
             resolve: {
+                currentResourceId: function() {
+                    return undefined != typeof(currentResourceId) && null != currentResourceId && 0 != currentResourceId.length ? currentResourceId : null;
+                },
+                
                 // Send resource type to form
                 resources: function() {
                     var deferred = $q.defer();
@@ -68,7 +71,8 @@ function ResourceModalCtrl($scope, $modal, $q, $http, $modalInstance, PathFactor
         
         // Process modal results
         modalInstance.result.then(function(resourcePicked) {
-            $scope.formResource.resourceId = resourcePicked;
+            $scope.formResource.resourceId = resourcePicked.id;
+            $scope.formResource.name = resourcePicked.name;
         });
     };
 }
