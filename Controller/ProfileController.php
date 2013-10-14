@@ -278,7 +278,7 @@ class ProfileController extends Controller
                 $changeSet['roles'] = $rolesChangeSet;
             }
 
-            $this->userManager->upload($user);
+            $this->userManager->uploadAvatar($user);
             $this->eventDispatcher->dispatch(
                 'log',
                 'Log\LogUserUpdate',
