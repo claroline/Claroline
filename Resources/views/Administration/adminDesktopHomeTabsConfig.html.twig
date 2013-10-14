@@ -2,12 +2,12 @@
 
 {% block javascripts %}
     {{ parent() }}
+    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+    {{ tinymce_init() }}
     <script
         src='{{ asset('bundles/clarolinecore/js/administration/adminHomeTabsConfig.js') }}'
         type="text/javascript">
     </script>
-    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
-    {{ tinymce_init() }}
 {% endblock %}
 
 {% block breadcrumb %}
@@ -168,13 +168,15 @@
                 {% endfor %}
             </div>
             <br>
-            <div class="panel panel-default add-widget-instance">
-                <div class="panel-heading pointer-hand text-center">
-                    <i class="icon-plus-sign">
-                        {{ 'add_widget_to_home_tab'|trans({}, 'platform') }}
-                    </i>
+            {% if homeTabConfigs|length > 0 %}
+                <div class="panel panel-default add-widget-instance">
+                    <div class="panel-heading pointer-hand text-center">
+                        <i class="icon-plus-sign">
+                            {{ 'add_widget_to_home_tab'|trans({}, 'platform') }}
+                        </i>
+                    </div>
                 </div>
-            </div>
+            {% endif %}
         </div>
     </div>
 
