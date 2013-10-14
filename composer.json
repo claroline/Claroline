@@ -2,8 +2,8 @@
     "name": "icap/lesson-bundle",
     "type": "claroline-plugin",
     "require": {
-        "claroline/core-bundle": "~1.0",
-        "claroline/plugin-installer": "~1.0"
+        "php": ">=5.3.3",
+        "claroline/core-bundle": "~1.0"
     },
     "autoload": {
         "psr-0": { "Icap\\LessonBundle": "" }
