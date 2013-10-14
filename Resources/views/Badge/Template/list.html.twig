@@ -1,0 +1,130 @@
+<ul id="myTab" class="nav nav-tabs">
+    <li class="active"><a href="#badges" data-toggle="tab">{{ 'badges'|trans({}, 'badge') }}</a></li>
+    <li><a href="#claim" data-toggle="tab">{{ 'claiming'|transchoice(claimPager.NbResults, {}, 'badge') }}{% if 0 < claimPager.NbResults %} <span class="badge">{{ claimPager.NbResults }}</span>{% endif %}</a></li>
+</ul>
+<div class="tab-content list_badges">
+    <div class="tab-pane in active" id="badges">
+        <ul class="nodes badge_list">
+            {% for badge in badgePager %}
+            <li class="node-thumbnail node">
+                <a href="{{ path(parameters.edit_link.url, {'id': badge.id}|merge(parameters.route_parameters)) }}" title="{{ badge.name(language) }}" class="thumbnail">
+                    <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name(language) }}" />
+                </a>
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle name dropdown-thumbnail" role="button" data-toggle="dropdown" >
+                        <div class="node-name">{{ badge.name(language) }} <i class="icon-caret-down"></i></div>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="{{ path(parameters.view_link, {'id': badge.id}|merge(parameters.route_parameters)) }}" class="node-menu-action">
+                                {{ 'view'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path(parameters.edit_link.url, {'id': badge.id}|merge(parameters.route_parameters)) }}{{ parameters.edit_link.suffix }}" class="node-menu-action">
+                                {{ 'edit'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path(parameters.delete_link, {'id': badge.id}|merge(parameters.route_parameters)) }}" class="node-menu-action confirm" data-confirm-title="{{ 'badge_delete_confirm_title'|trans({}, 'badge') }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name(language)}, 'badge') }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">
+                                {{ 'delete'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            {% endfor %}
+            <li class="node-thumbnail node">
+                <a href="{{ path(parameters.add_link, parameters.route_parameters) }}" title="{{ 'add_badge'|trans({}, 'badge') }}" class="add_button btn btn-lg col-md-12">
+                    <img class="badge_image" src="{{ asset('bundles/clarolinecore/images/add-badge.png') }}" alt="{{ 'add_badge'|trans({}, 'badge') }}" />
+                </a>
+            </li>
+        </ul>
+
+        {% if badgePager.haveToPaginate %}
+        <div>
+            {{
+                pagerfanta(
+                    badgePager,
+                    'twitter_bootstrap_translated',
+                    {
+                        'proximity' :    1,
+                        'routeName':     parameters.current_link,
+                        'routeParams':   parameters.route_parameters,
+                        'pageParameter': '[badgePage]'
+                    }
+                )
+            }}
+        </div>
+        {% endif %}
+    </div>
+    <div class="tab-pane" id="claim">
+        <div class="table-responsive">
+            <table class="table no_margin">
+                <thead>
+                    <th>{{ 'badge'|trans({}, 'badge') }}</th>
+                    <th>{{ 'user'|trans({}, 'platform') }}</th>
+                    <th>{{ 'claim_date'|trans({}, 'badge') }}</th>
+                    <th>{{ 'badge_check_state'|trans({}, 'badge') }}</th>
+                    <th>{{ 'actions'|trans({}, 'badge') }}</th>
+                </thead>
+                <tbody>
+                {% for badgeClaim in claimPager %}
+                    <tr>
+                        <td><a href="{{ path('claro_view_badge', {'id': badgeClaim.badge.id}) }}" title="{{ badgeClaim.badge.name(language) }}">{{ badgeClaim.badge.name(language) }}</a></td>
+                        <td><a href="{{ path('claro_profile_view', {'userId': badgeClaim.user.id}) }}" title="{{ badgeClaim.user.firstname }} {{ badgeClaim.user.lastname }}">{{ badgeClaim.user.firstname }} {{ badgeClaim.user.lastname }}</a></td>
+                        <td>{{ badgeClaim.claimedAt|date('date_format'|trans({}, 'platform')) }}</td>
+                        <td>
+                            {% if (badgeClaim.badge.hasRules) %}
+                                {% if false == badgeRuleChecker.checkBadge(badgeClaim.badge, badgeClaim.user) %}
+                                <span class="icon-exclamation-sign" data-toggle="tooltip" title="{{ 'badge_rules_not_respected'|trans({}, 'badge') }}"></span>
+                                {% else %}
+                                <span class="icon-ok-sign" data-toggle="tooltip" title="{{ 'badge_rules_respected'|trans({}, 'badge') }}"></span>
+                                {% endif %}
+                                (<span class="text-muted" data-toggle="tooltip" title="{{ 'badge_rules_respected_state'|trans({}, 'badge') }}">détails</span>)
+                            {% else %}
+                            <span class="icon-warning-sign" data-toggle="tooltip" title="{{ 'badge_no_rules_check_manually'|trans({}, 'badge') }}"></span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{{ path(parameters.claim_link, {'id': badgeClaim.id, 'validate': true}|merge(parameters.route_parameters)) }}" class="btn btn-xs btn-success confirm" title="{{ 'badge_validate_award'|trans({}, 'badge') }}" data-confirm-title="{{ 'badge_award_confirm_title'|trans({}, 'badge') }}" data-confirm-message="{{ 'badge_award_confirm_message'|trans({'%badgeName%': badgeClaim.badge.name(language), '%user%': badgeClaim.user.firstname ~ ' ' ~ badgeClaim.user.lastname }, 'badge') }}" data-confirm-ok="{{ 'award'|trans({}, 'badge') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="success">
+                                    {{ 'badge_validate_award_short'|trans({}, 'badge') }}
+                                </a>
+                                <a href="{{ path(parameters.claim_link, {'id': badgeClaim.id, 'validate': false}|merge(parameters.route_parameters)) }}" class="btn btn-xs btn-danger confirm" title="{{ 'badge_reject_award'|trans({}, 'badge') }}" data-confirm-title="{{ 'badge_dont_award_confirm_title'|trans({}, 'badge') }}" data-confirm-message="{{ 'badge_dont_award_confirm_message'|trans({'%badgeName%': badgeClaim.badge.name(language), '%user%': badgeClaim.user.firstname ~ ' ' ~ badgeClaim.user.lastname}, 'badge') }}" data-confirm-ok="{{ 'dont_award'|trans({}, 'badge') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">
+                                    {{ 'badge_reject_award_short'|trans({}, 'badge') }}
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">{{ 'no_badge_claim'|trans({}, 'badge') }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <ul class="list-inline pull-right">
+            <li class="text-muted"><small><span class="icon-exclamation-sign"></span> {{ 'badge_rules_not_respected'|trans({}, 'badge') }}</small></li>
+            <li class="text-muted"><small><span class="icon-ok-sign"></span> {{ 'badge_rules_respected'|trans({}, 'badge') }}</small></li>
+            <li class="text-muted"><small><span class="icon-warning-sign"></span> {{ 'badge_no_rules_check_manually'|trans({}, 'badge') }}</small></li>
+        </ul>
+        {% if claimPager.haveToPaginate %}
+        <div>
+            {{
+                pagerfanta(
+                    claimPager,
+                    'twitter_bootstrap_translated',
+                    {
+                        'proximity' :    1,
+                        'routeName':     parameters.current_link,
+                        'routeParams':   parameters.route_parameters,
+                        'pageParameter': '[claimPage]'
+                    }
+                )
+            }}
+        </div>
+        {% endif %}
+    </div>
+</div>

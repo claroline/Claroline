@@ -1,3 +1,5 @@
 core_resource_logger: 'Overview of recent activities'
 my_workspaces: 'My workspaces'
 simple_text: 'Text'
+widget_instance_form_name: Name
+widget_instance_form_widget: Type

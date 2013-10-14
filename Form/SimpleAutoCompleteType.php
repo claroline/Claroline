@@ -29,6 +29,7 @@ class SimpleAutoCompleteType extends AbstractType
         $view->vars['entity_reference'] = $options['entity_reference'];
         $view->vars['with_vendors']     = $options['with_vendors'];
         $view->vars['format']           = $options['format'];
+        $view->vars['extraDatas']       = $options['extraDatas'];
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -38,6 +39,7 @@ class SimpleAutoCompleteType extends AbstractType
                 'entity_reference'   => null,
                 'with_vendors'       => true,
                 'format'             => 'json',
+                'extraDatas'         => array()
             )
         );
     }

@@ -21,7 +21,7 @@
 <form
     id="form_log_update_workspace_widget"
     method="POST"
-    action="{{ path('claro_log_update_workspace_widget_config', {'isDefault': isDefault, 'workspaceId': workspace.id, 'redirectToHome': app.request.isXMLHttpRequest ? 1 : 0}) }}"
+    action="{{ path('claro_log_update_workspace_widget_config', {'widgetInstance': instance.getId()}) }}"
     class="form-horizontal"
     {{ form_enctype(form) }}>
 
@@ -36,17 +36,8 @@
 
     <div class="panel-footer">
         <button type="submit" class="btn btn-primary">{{ 'configure'|trans({}, 'platform') }}</button>
-        {% if app.request.isXMLHttpRequest %}
-            {% set cancelUrl = path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId()}) %}
-        {% else %}
-            {% if isDefault %}
-                {% set cancelUrl = path('claro_admin_widgets') %}
-            {% else %}
-                {% set cancelUrl = path('claro_workspace_widget_properties', {'workspace': workspace.getId()}) %}
-            {% endif %}
-        {% endif %}
 
-        <a href="{{ cancelUrl }}">
+        <a href="#">
             <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
         </a>
     </div>

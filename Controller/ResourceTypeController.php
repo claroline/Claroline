@@ -9,12 +9,12 @@ class ResourceTypeController extends Controller{
     /**
      * @Template("ClarolineCoreBundle:Resource:configResourcesManager.html.twig")
      */
-    public function initPickerAction()
+    public function initPickerAction($includeDependencies = true)
     {
         $em = $this->get('doctrine.orm.entity_manager');
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findAll();
 
-        return array('resourceTypes' => $resourceTypes);
+        return array('resourceTypes' => $resourceTypes, 'includeDependencies' => $includeDependencies);
     }
 }

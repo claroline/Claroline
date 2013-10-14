@@ -3,10 +3,15 @@
 namespace Claroline\CoreBundle\Entity\Badge;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
+use Claroline\CoreBundle\Form\Badge\Constraints as BadgeAssert;
 
 /**
  * Class Badge
@@ -14,6 +19,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="claro_badge")
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Badge\BadgeRepository")
  * @ORM\HasLifecycleCallbacks
+ * @BadgeAssert\AutomaticWithRules
+ * @BadgeAssert\HasImage
+ * @BadgeAssert\AtLeastOneTranslation
  */
 class Badge
 {
@@ -34,6 +42,13 @@ class Badge
     protected $version;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="automatic_award", type="boolean", nullable=true)
+     */
+    protected $automaticAward;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="image", type="string", nullable=false)
@@ -50,28 +65,47 @@ class Badge
     /**
      * @var UploadedFile
      *
-     * @Assert\File
+     * @Assert\Image(
+     *     maxSize = "256k",
+     *     minWidth = 64,
+     *     minHeight = 64
+     * )
      */
     protected $file;
 
     /**
      * @var string
      */
-    protected $olfFileName;
+    protected $olfFileName = null;
 
     /**
      * @var ArrayCollection|UserBadge[]
      *
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\UserBadge", mappedBy="badge", cascade={"all"})
      */
-    private $userBadges;
+    protected $userBadges;
 
     /**
      * @var ArrayCollection|BadgeClaim[]
      *
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\BadgeClaim", mappedBy="badge", cascade={"all"})
      */
-    private $badgeClaims;
+    protected $badgeClaims;
+
+    /**
+     * @var ArrayCollection|BadgeRule[]
+     *
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\BadgeRule", mappedBy="badge", cascade={"persist"})
+     */
+    protected $badgeRules;
+
+    /**
+     * @var AbstractWorkspace
+     *
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
+     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
+     */
+    protected $workspace;
 
     /**
      * @var ArrayCollection|BadgeTranslation[]
@@ -93,6 +127,7 @@ class Badge
     {
         $this->translations = new ArrayCollection();
         $this->userBadges   = new ArrayCollection();
+        $this->badgeRules   = new ArrayCollection();
     }
 
     /**
@@ -202,6 +237,11 @@ class Badge
     public function getEnTranslation()
     {
         return $this->getTranslationForLocale('en');
+    }
+
+    public function setFrTranslation(BadgeTranslation $badgeTranslation)
+    {
+
     }
 
     /**
@@ -395,6 +435,70 @@ class Badge
     }
 
     /**
+     * @param boolean $automaticAward
+     *
+     * @return Badge
+     */
+    public function setAutomaticAward($automaticAward)
+    {
+        $this->automaticAward = $automaticAward;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getAutomaticAward()
+    {
+        return $this->automaticAward;
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Badge\BadgeRule[]|\Doctrine\Common\Collections\ArrayCollection $badgeRules
+     *
+     * @return Badge
+     */
+    public function setBadgeRules($badgeRules)
+    {
+        foreach ($badgeRules as $rule) {
+            $rule->setBadge($this);
+        }
+
+        $this->badgeRules = $badgeRules;
+
+        return $this;
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\Badge\BadgeRule[]|\Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getBadgeRules()
+    {
+        return $this->badgeRules;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasRules()
+    {
+        return (0 < count($this->getBadgeRules()));
+    }
+
+    /**
+     * @param AbstractWorkspace $workspace
+     *
+     * @return Badge
+     */
+    public function setWorkspace(AbstractWorkspace $workspace)
+    {
+        $this->workspace = $workspace;
+
+        return $this;
+    }
+
+    /**
      * @param UploadedFile $file
      *
      * @return Badge
@@ -436,13 +540,21 @@ class Badge
     }
 
     /**
+     * @throws \Exception
      * @return string
      */
     protected function getUploadRootDir()
     {
         $ds = DIRECTORY_SEPARATOR;
 
-        return realpath(sprintf('%s%s..%s..%s..%s..%s..%s..%sweb%s%s', __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir()));
+        $uploadRootDir         = sprintf('%s%s..%s..%s..%s..%s..%s..%s..%sweb%s%s', __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir());
+        $realpathUploadRootDir = realpath($uploadRootDir);
+
+        if (false === $realpathUploadRootDir) {
+            throw new \Exception(sprintf("Invalid upload root dir '%s'for uploading badge images.", $uploadRootDir));
+        }
+
+        return $realpathUploadRootDir;
     }
 
     /**
@@ -453,11 +565,51 @@ class Badge
         return sprintf("uploads%sbadges", DIRECTORY_SEPARATOR);
     }
 
+    protected function dealWithAtLeastOneTranslation(ObjectManager $objectManager)
+    {
+        $frTranslation = $this->getFrTranslation();
+        $enTranslation = $this->getEnTranslation();
+
+        $frName        = $frTranslation->getName();
+        $frDescription = $frTranslation->getDescription();
+        $frCriteria    = $frTranslation->getCriteria();
+
+        $enName        = $enTranslation->getName();
+        $enDescription = $enTranslation->getDescription();
+        $enCriteria    = $enTranslation->getCriteria();
+
+        //Have to put all method call in variable because of empty doesn't support result of method as parameter (prior to PHP 5.5)
+        $hasFrTranslation = (!empty($frName) && !empty($frDescription) && !empty($frCriteria)) ? true : false;
+        $hasEnTranslation = (!empty($enName) && !empty($enDescription) && !empty($enCriteria)) ? true : false;
+
+        if (!$hasFrTranslation && !$hasEnTranslation) {
+            throw new \Exception('At least one translation must be defined on the badge');
+        }
+
+        if (!$hasFrTranslation || !$hasEnTranslation) {
+            if ($hasFrTranslation) {
+                $enTranslation
+                    ->setLocale('en')
+                    ->setName($frName)
+                    ->setDescription($frDescription)
+                    ->setCriteria($frCriteria);
+            }
+            elseif ($hasEnTranslation) {
+                $frTranslation
+                    ->setLocale('fr')
+                    ->setName($enName)
+                    ->setDescription($enDescription)
+                    ->setCriteria($enCriteria);
+            }
+        }
+    }
+
     /**
      * @ORM\PrePersist()
      */
-    public function prePersist()
+    public function prePersist(LifecycleEventArgs $event)
     {
+        $this->dealWithAtLeastOneTranslation($event->getObjectManager());
         if (null !== $this->file) {
             $this->imagePath = $this->file->getClientOriginalName();
         }
@@ -466,8 +618,9 @@ class Badge
     /**
      * @ORM\PreUpdate()
      */
-    public function preUpdate()
+    public function preUpdate(PreUpdateEventArgs $event)
     {
+        $this->dealWithAtLeastOneTranslation($event->getObjectManager());
         if (null !== $this->file) {
             $this->imagePath = $this->file->getClientOriginalName();
         }

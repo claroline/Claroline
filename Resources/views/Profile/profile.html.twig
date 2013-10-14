@@ -15,12 +15,12 @@
         </div>
         <div class="panel-body">
             <div class="row">
-                <div class="col-md-2">
-                    {% if user.getPhoto() != "" %}
-                        <img src="{{ user.getPhoto() }}">
+                <div>
+                    {% if user.getPicture() != "" %}
+                        <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="col-md-2">
                     {% else %}
-                        <div class="jumbotron">
-                            <h1><i class="icon-user"></i><h1>
+                        <div class="col-md-2">
+                            <h1 ><i class="icon-user"></i><h1>
                         </div>
                     {% endif %}
                 </div>
@@ -39,11 +39,25 @@
                     <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}"><i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
                 </p>
             </div>
+            <p>
+                {% if user.getMail() != "" %}
+                    <i class="icon-envelope"></i> {{ user.getMail() }}
+                    &nbsp;
+                {% endif %}
+                {% if user.getPhone() != "" %}
+                    <i class="icon-phone"></i> {{ user.getPhone() }}
+                {% endif %}
+            </p>
+            <p class="muted">{{ 'user'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}</p>
+            <p>
+                <a class="btn btn-default" href="{{path('claro_mail_form', {'userId':user.getId()})}}"><i class="icon-envelope"></i> {{ 'send_mail'|trans({}, 'platform') }}</a>
+                <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}"><i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
+            </p>
         </div>
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">{{ 'badges'|trans({}, 'platform') }}</h3>
+            <h3 class="panel-title">{{ 'badges'|trans({}, 'badge') }}</h3>
         </div>
         <div class="panel panel-body">
             {% include 'ClarolineCoreBundle:Badge/Badge:display.html.twig' with {'badgeUrl': 'claro_view_badge', 'paginationurl': 'claro_profile_view', 'routeParams': {'userId': user.id}} %}
@@ -70,3 +84,14 @@
         </script>
     {% endif %}
 {% endblock %}
+
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets debug=false filter='lessphp'  output='bundles/clarolinecore/css/badge.css'
+      "@ClarolineCoreBundle/Resources/views/Badge/less/badge.less"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+{% endblock %}
+

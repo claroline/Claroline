@@ -17,33 +17,132 @@
 {% endblock %}
 
 {% block section_content %}
+    <div id="config-value-div" config-value="{{ withConfig }}"></div>
+    <div id="hometab-id-div" hometab-id="{{ tabId }}"></div>
+
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'home'|trans({}, 'tools') }}</h3>
+        <h3 class="panel-title">
+            {{ 'home'|trans({}, 'tools') }}
+            <i id="switch-config-mode" class="icon-cog pull-right pointer-hand"></i>
+        </h3>
     </div>
+
     <div class="panel-body">
         <ul class="nav nav-tabs tabs">
             {% for adminHomeTabConfig in adminHomeTabConfigs %}
             {% set adminHomeTab = adminHomeTabConfig.getHomeTab() %}
-            <li {% if adminHomeTab.getId() == tabId %}class="active"{% endif %}>
-                <a href="{{ path('claro_display_desktop_home_tabs', {'tabId': adminHomeTab.getId()}) }}"
-                    id="{{ adminHomeTab.getName() }}_link"
-                >
+            <li class="hometab-element
+                {% if adminHomeTab.getId() == tabId %}
+                    active
+                {% endif %}
+                {% if not adminHomeTabConfig.isVisible() %}
+                    toggle-visible
+                    {% if (withConfig == 0) %}
+                        hidden
+                    {% endif %}
+                {% endif %}"
+                hometab-config-id="{{ adminHomeTabConfig.getId() }}"
+                hometab-id="{{ adminHomeTab.getId() }}"
+            >
+                <a href="" class="hometab-link">
                     {{ adminHomeTab.getName() }}
+
+                    {% if adminHomeTabConfig.isLocked() %}
+                        <i class="toggle-visible icon-lock
+                            {% if withConfig == 0 %} hidden {% endif %}"
+                        ></i>
+                    {% else %}
+                        <i class="toggle-visible hometab-visibility-btn pointer-hand
+                            {% if withConfig == 0 %} hidden {% endif %}
+                            {% if adminHomeTabConfig.isVisible() %} icon-eye-open {% else %} icon-eye-close {% endif %}"
+                            visiblility-value="{% if adminHomeTabConfig.isVisible() %} visible {% else %} invisible {% endif %}"
+                            id="visible-hometab-id-{{ adminHomeTab.getId() }}"
+                        ></i>
+                    {% endif %}
                 </a>
             </li>
             {% endfor %}
             {% for userHomeTabConfig in userHomeTabConfigs %}
             {% set userHomeTab = userHomeTabConfig.getHomeTab() %}
-            <li {% if userHomeTab.getId() == tabId %}class="active"{% endif %}>
-                <a href="{{ path('claro_display_desktop_home_tabs', {'tabId': userHomeTab.getId()}) }}"
-                    id="{{ userHomeTab.getName() }}_link"
-                >
+            <li class="hometab-element
+                {% if userHomeTab.getId() == tabId %} active {% endif %}
+                {% if not userHomeTabConfig.isVisible() %} toggle-visible {% endif %}
+                {% if (withConfig == 0 and not userHomeTabConfig.isVisible()) %}
+                    hidden
+                {% endif %}"
+                hometab-config-id="{{ userHomeTabConfig.getId() }}"
+                hometab-id="{{ userHomeTab.getId() }}"
+                hometab-order="{{ userHomeTabConfig.getTabOrder() }}"
+            >
+                <a href="" class="hometab-link">
                     {{ userHomeTab.getName() }}
+                    <i class="toggle-visible pointer-hand hometab-rename-btn icon-edit
+                        {% if withConfig == 0 %} hidden {% endif %}"
+                    ></i>
+                    <i class="toggle-visible pointer-hand hometab-visibility-btn
+                        {% if withConfig == 0 %} hidden {% endif %}
+                        {% if userHomeTabConfig.isVisible() %} icon-eye-open {% else %} icon-eye-close {% endif %}"
+                        visiblility-value="{% if userHomeTabConfig.isVisible() %} visible {% else %} invisible {% endif %}"
+                        id="visible-hometab-id-{{ userHomeTab.getId() }}"
+                    ></i>
+                    <i class="toggle-visible pointer-hand hometab-delete-btn icon-trash
+                        {% if withConfig == 0 %} hidden {% endif %}"
+                    ></i>
                 </a>
             </li>
             {% endfor %}
+            <li id="add-hometab-btn" class="toggle-visible {% if withConfig == 0 %} hidden {% endif %}">
+                <a href="">
+                    <i id="add-hometab-button" class="icon-plus"></i>
+                </a>
+            </li>
         </ul>
 
         {% block homeTab %}{% endblock %}
     </div>
+
+    <div id="delete-hometab-validation-box" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h3>{{ 'home_tab_delete_confirm_title'|trans({}, 'platform') }}</h3>
+                </div>
+                <div class="modal-body">
+                    <p>{{ 'home_tab_delete_confirm_message'|trans({}, 'platform') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="delete-hometab-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="hometab-modal-box" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h3 id="hometab-modal-title"></h3>
+                </div>
+                <div id="hometab-modal-body" class="modal-body">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src='{{ asset('bundles/clarolinecore/js/tool/desktop/home/desktopHomeLayout.js') }}'
+        type="text/javascript">
+    </script>
+    <script
+        src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'platform' }) }}"
+        type="text/javascript">
+    </script>
+    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+    {{ tinymce_init() }}
 {% endblock %}
