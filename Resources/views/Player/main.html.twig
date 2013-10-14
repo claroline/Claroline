@@ -103,9 +103,7 @@
                             {% if children %}
                                 <div >
                                     {% for child in children %}
-                                        <div class="container">
                                            <a class="btn btn-default" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : child.resourceNode.id }) }}"><span class="icon-arrow-right"></span> {{child.resourceNode.name}}</a>
-                                        </div>
                                      {% endfor %}
                                 </div>
                             {% else %}
@@ -118,7 +116,7 @@
                     </div>
                     <div id="step-map-buttons">
                         <span id="step-map-open">
-                            <a class="btn btn-default icon-chevron-down step-map-button"></a>
+                            <a class="btn btn-default icon-chevron-down step-map-button"> {{ 'progression' | trans({}, 'tools') }}</a>
                         </span>
                     </div>
                 </div>
