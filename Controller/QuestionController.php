@@ -859,11 +859,13 @@ class QuestionController extends Controller
 
             $listDoc = $repository->findBy(array('user' => $userId));
 
-            // If delete last item of page, display the previous one
-            $rest = $nbItem % $maxPage;
+            if ($nbItem != 1) {
+                // If delete last item of page, display the previous one
+                $rest = $nbItem % $maxPage;
 
-            if ($rest == 1 && $pageNow == $lastPage) {
-                $pageNow -= 1;
+                if ($rest == 1 && $pageNow == $lastPage) {
+                    $pageNow -= 1;
+                }
             }
 
             $pagination = $this->pagination($listDoc, $maxPage, $pageNow);
