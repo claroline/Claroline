@@ -114,7 +114,7 @@ function StepFactory($http, $q, PathFactory) {
             var newStep = jQuery.extend(true, {}, baseStep);
             
             if (undefined != step) {
-                newStep.name = step.name + '-' + stepId;
+                newStep.name = 'Step' + '-' + stepId;
             }
             
             newStep.id = stepId;
