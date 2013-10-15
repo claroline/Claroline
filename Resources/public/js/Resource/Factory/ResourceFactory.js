@@ -11,6 +11,7 @@ function ResourceFactory(PathFactory) {
         id                  : null,
         resourceId          : null,
         name                : null,
+        description         : null,
         type                : null,
         subType             : null,
         url                 : null,
