@@ -130,7 +130,10 @@ class PostController extends Controller
 
     protected function persistPost(Request $request, Blog $blog, Post $post, User $user, $action, array $messages)
     {
-        $form = $this->createForm(new PostType(), $post);
+        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
+        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+
+        $form = $this->createForm(new PostType(), $post, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform')));
 
         if ("POST" === $request->getMethod()) {
             $form->handleRequest($request);

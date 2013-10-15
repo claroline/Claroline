@@ -3,6 +3,7 @@
 namespace Icap\BlogBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -17,6 +18,15 @@ class PostType extends AbstractType
                     'constraints' => new Assert\NotBlank(array(
                         'message' => 'blog_post_need_title'
                     ))
+                )
+            )
+            ->add('publicationDate', 'datepicker', array(
+                    'required'      => false,
+                    'read_only'     => true,
+                    'component'     => true,
+                    'autoclose'     => true,
+                    'language'      => $options['language'],
+                    'format'        => $options['date_format']
                 )
             )
             ->add('content', 'textarea', array(
@@ -46,7 +56,9 @@ class PostType extends AbstractType
             'translation_domain' => 'icap_blog',
             'data_class'      => 'Icap\BlogBundle\Entity\Post',
             'csrf_protection' => true,
-            'intention'       => 'create_post'
+            'intention'       => 'create_post',
+            'language'        => 'en',
+            'date_format'     => DateType::HTML5_FORMAT
         ));
     }
 }

@@ -3,6 +3,7 @@ icap_blog_post_form_title: 'Title'
 icap_blog_post_form_content: 'Content'
 icap_blog_post_form_tags: 'Tags'
 icap_blog_infos_form_infos: 'Information'
+icap_blog_post_form_publicationDate: "Publishing date"
 new_post: 'New post'
 no_post: 'No post.'
 add_new_post: 'Add new post'

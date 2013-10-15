@@ -21,14 +21,33 @@
 {% block title %}{{ _resource.resourceNode.getName() }} - {{ "add_new_post"|trans({}, 'icap_blog') }}{% endblock %}
 
 {% block blog_content %}
-    <form action="{{ _path('icap_blog_post_new', {'blogId':_resource.getId()}) }}" method="post" {{ form_enctype(form) }} class="well" id="new_post_form" novalidate>
+    <form action="{{ _path('icap_blog_post_new', {'blogId':_resource.getId()}) }}" method="post" {{ form_enctype(form) }} class="well" id="icap_blog_post_form" novalidate>
         <legend>{{ "add_new_post"|trans({}, 'icap_blog') }}</legend>
         {% if false ==_resource.isAutoPublishPost %}
         <p class="alert alert-warning">
             {{ 'icap_blog_post_need_validation_before_publishing'|trans({}, 'icap_blog') }}
         </p>
         {% endif %}
-        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+
+        <div class="row">
+            {{ form_row(form.title) }}
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <label class="control-label col-md-3" for="icap_blog_post_form_publicationDate">{{ 'icap_blog_post_form_publicationDate'|trans({}, 'icap_blog') }}</label>
+                {{ form_errors(form.publicationDate) }}
+                <div class="col-md-3">
+                    {{ form_widget(form.publicationDate) }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {{ form_row(form.content) }}
+        </div>
+        {{ form_row(form.tags) }}
+
+        {{ form_rest(form) }}
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">{{ 'add'|trans({}, 'platform') }}</button>
             <a href="{{ path("icap_blog_view", {"blogId": _resource.id}) }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger">{{ 'cancel'|trans({}, 'platform') }}</a>
@@ -46,8 +65,15 @@
 {{ parent() }}
 {% render controller('ClarolineCoreBundle:Tool\\WorkspaceResourceParameters:initPicker') %}
 {{ tinymce_init() }}
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/tag-it/js/tag-it.min.js') }}"></script>
+{% javascripts output='@IcapBlogBundle/Resources/public/js/blog.js'
+    'bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.core.min.js'
+    'bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.widget.min.js'
+    'bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.position.min.js'
+    'bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.menu.min.js'
+    'bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.autocomplete.min.js'
+    'bundles/frontend/jquery/plugin/tag-it/js/tag-it.min.js'
+    %}<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
 <script type="text/javascript">
     $(function() {
         $(".tags").tagit({
