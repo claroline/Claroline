@@ -419,4 +419,20 @@ class Post extends Statusable
 
         return $countComments;
     }
+
+    /**
+     * @return bool
+     */
+    public function isPublished()
+    {
+        $isStatusPublished = parent::isPublished();
+
+        $currentTimestamp = time();
+
+        if ($isStatusPublished && (null !== $this->publicationDate && $currentTimestamp >= $this->publicationDate->getTimestamp())) {
+            return true;
+        }
+
+        return false;
+    }
 }

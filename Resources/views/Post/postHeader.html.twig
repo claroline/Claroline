@@ -7,7 +7,7 @@
         <h1>{{ post.title }}</h1>
     {% endif %}
 
-    {% if is_granted('EDIT', blog) %}
+    {% if is_granted('EDIT', _resourceNode) %}
     <div class="btn-group pull-right options">
         {% if isPublished %}
         <a href="{{ path('icap_blog_post_unpublish', {'blogId': _resource.id, 'postSlug': post.slug}) }}" class="btn btn-default btn-red btn-xs">
@@ -30,7 +30,7 @@
     {% set author = post.author %}
     <ul class="list-inline post_infos">
         <li><span class="icon-user"></span> <small><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': author.username}) }}" rel="author" title="{{ author.firstname ~ ' ' ~ author.lastname }}">{{ author.firstname ~ ' ' ~ author.lastname }}</a></small></li>
-        {% if isPublished %}
+        {% if null != post.publicationDate %}
         <li><span class="icon-calendar"></span> <small><time>{{ post.publicationDate|date('date_format'|trans({}, 'platform')) }}</time></small></li>
         {% endif %}
     </ul>

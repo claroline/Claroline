@@ -3,6 +3,7 @@
 namespace Icap\BlogBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\BlogOptions;
 use Icap\BlogBundle\Entity\Post;
@@ -92,7 +93,7 @@ class BlogController extends Controller
 
         return array(
             '_resource'     => $blog,
-            '_resourceNode' => array($blog->getResourceNode()),
+            '_resourceNode' => new ResourceCollection(array($blog->getResourceNode())),
             'user'          => $user,
             'pager'         => $pager,
             'archives'      => $this->getArchiveDatas($blog),

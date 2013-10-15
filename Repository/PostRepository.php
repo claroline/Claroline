@@ -95,8 +95,14 @@ class PostRepository extends EntityRepository
         $startDateTime = new \DateTime();
         $startDateTime->setTimestamp($startDate);
 
+        $currentTimestamp = time();
+
         $endDateTime = new \DateTime();
         $endDateTime->setTimestamp($endDate);
+
+        if ($currentTimestamp < $endDate) {
+            $endDateTime->setTimestamp($currentTimestamp);
+        }
 
         $query = $this->createQueryBuilder('post')
             ->select(array('post.publicationDate', 'SUBSTRING(post.publicationDate, 1, 10) as groupDate', 'COUNT(post.id) as nbPost'))
@@ -128,10 +134,12 @@ class PostRepository extends EntityRepository
                 SELECT SUBSTRING(p.publicationDate, 1, 4) as year, SUBSTRING(p.publicationDate, 6, 2) as month, COUNT(p) as number
                 FROM IcapBlogBundle:Post p
                 WHERE p.blog = :blogId
+                AND p.publicationDate <= :currentDate
                 GROUP BY year, month
                 ORDER BY year DESC
             ')
             ->setParameter('blogId', $blog->getId())
+            ->setParameter('currentDate', new \DateTime())
         ;
 
         return $executeQuery ? $query->getResult(): $query;
@@ -147,7 +155,9 @@ class PostRepository extends EntityRepository
         return $query
             ->andWhere('post.publicationDate IS NOT NULL')
             ->andWhere('post.status = :publishedStatus')
-            ->setParameter('publishedStatus', Statusable::STATUS_PUBLISHED);
+            ->andWhere('post.publicationDate <= :currentDate')
+            ->setParameter('publishedStatus', Statusable::STATUS_PUBLISHED)
+            ->setParameter('currentDate', new \DateTime());
     }
 
     /**
