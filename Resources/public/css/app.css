@@ -224,5 +224,13 @@ input.form-control.ng-valid:focus {
 
 #panel-documents .panel-collapse .table,
 #panel-tools .panel-collapse .table {
-	margin-bottom: 0;
+    margin-bottom: 0;
+}
+
+.active-step,
+.active-step:hover,
+.active-step:focus,
+.active-step:active {
+    background-color: rgb(66, 139, 202);
+    color: white;
 }

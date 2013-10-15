@@ -1,4 +1,4 @@
-<form class="tree-item form-inline" ng-click="setPreviewStep(step)" ng-mouseenter="showButtons = step.id" ng-mouseleave="showButtons = null" >
+<form class="tree-item form-inline" ng-class="{'active-step': previewStep.id == step.id}" ng-click="setPreviewStep(step)" ng-mouseenter="showButtons = step.id" ng-mouseleave="showButtons = null">
     <span ng-show="currentEditingStep != step.id" class="icon-chevron-right"></span>
     <span ng-show="currentEditingStep != step.id" class="step-name">{{ step.name | truncate }}</span>
 
