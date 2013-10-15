@@ -65,13 +65,13 @@
 {{ parent() }}
 {% render controller('ClarolineCoreBundle:Tool\\WorkspaceResourceParameters:initPicker') %}
 {{ tinymce_init() }}
-{% javascripts output='@IcapBlogBundle/Resources/public/js/blog.js'
-    'bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.core.min.js'
-    'bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.widget.min.js'
-    'bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.position.min.js'
-    'bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.menu.min.js'
-    'bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.autocomplete.min.js'
-    'bundles/frontend/jquery/plugin/tag-it/js/tag-it.min.js'
+{% javascripts output='js/blog.js'
+    '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.core.min.js'
+    '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.widget.min.js'
+    '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.position.min.js'
+    '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.menu.min.js'
+    '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.autocomplete.min.js'
+    '@FrontEndBundle/Resources/public/jquery/plugin/tag-it/js/tag-it.min.js'
     %}<script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 <script type="text/javascript">
