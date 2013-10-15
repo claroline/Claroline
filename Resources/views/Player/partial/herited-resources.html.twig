@@ -5,16 +5,12 @@
 		{% for resource  in heritedResource %}
 		    {% if resource.id %}
 		        <li> 
-		             <a target="_blank" href="{{ path('claro_resource_open', {'resourceType': resource.resourceType.name, 'node': resource.id })  }}?_mode=path">{{ resource.name }}</a>
+		         <a target="_blank" href="{{ path('claro_resource_open', {'resourceType': resource.resourceType.name, 'node': resource.id })  }}?_mode=path">
+		         	<img rel="tooltip" data-original-title="{{ resource.name }}" width="32px" src="{{asset(resource.icon.relativeUrl) }}"/>
+		       	</a>
 		        </li>
 		    {% endif %}
 		{% endfor %}
 		</div>
 	</div>
 {% endfor %}
-	 
-
-
-  
- 
- 
