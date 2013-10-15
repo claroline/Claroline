@@ -93,6 +93,81 @@ class HomeTabManager
         $this->om->flush();
     }
 
+    public function changeOrderHomeTabConfig(
+        HomeTabConfig $homeTabConfig,
+        $direction
+    )
+    {
+        $homeTabOrder = $homeTabConfig->getTabOrder();
+        $type = $homeTabConfig->getType();
+        $user = $homeTabConfig->getUser();
+        $workspace = $homeTabConfig->getWorkspace();
+        $newHomeTabOrder = ($direction < 0) ? ($homeTabOrder - 1) : ($homeTabOrder + 1);
+
+        if (is_null($user) && is_null($workspace)) {
+            if ($homeTabConfig->getType() === 'admin_desktop') {
+                $lastHomeTabOrder = $this->homeTabConfigRepo
+                    ->findOrderOfLastAdminDesktopHomeTab();
+            } else {
+                $lastHomeTabOrder = $this->homeTabConfigRepo
+                    ->findOrderOfLastAdminWorkspaceHomeTab();
+            }
+            $lastOrder = (count($lastHomeTabOrder) > 0) ?
+                $lastHomeTabOrder['order_max'] :
+                1;
+
+            if ($newHomeTabOrder > 0 && $newHomeTabOrder <= $lastOrder) {
+                $this->homeTabConfigRepo->updateAdminHomeTabOrder(
+                    $type,
+                    $newHomeTabOrder,
+                    $homeTabOrder
+                );
+                $homeTabConfig->setTabOrder($newHomeTabOrder);
+                $this->om->flush();
+
+                return $direction;
+            }
+        } elseif (is_null($workspace)) {
+            $lastHomeTabOrder = $this->homeTabConfigRepo
+                ->findOrderOfLastDesktopHomeTabByUser($user);
+            $lastOrder = (count($lastHomeTabOrder) > 0) ?
+                $lastHomeTabOrder['order_max'] :
+                1;
+
+            if ($newHomeTabOrder > 0 && $newHomeTabOrder <= $lastOrder) {
+                $this->homeTabConfigRepo->updateHomeTabOrderByUser(
+                    $user,
+                    $newHomeTabOrder,
+                    $homeTabOrder
+                );
+                $homeTabConfig->setTabOrder($newHomeTabOrder);
+                $this->om->flush();
+
+                return $direction;
+            }
+        } else {
+            $lastHomeTabOrder = $this->homeTabConfigRepo
+                ->findOrderOfLastWorkspaceHomeTabByWorkspace($workspace);
+            $lastOrder = (count($lastHomeTabOrder) > 0) ?
+                $lastHomeTabOrder['order_max'] :
+                1;
+
+            if ($newHomeTabOrder > 0 && $newHomeTabOrder <= $lastOrder) {
+                $this->homeTabConfigRepo->updateHomeTabOrderByWorkspace(
+                    $workspace,
+                    $newHomeTabOrder,
+                    $homeTabOrder
+                );
+                $homeTabConfig->setTabOrder($newHomeTabOrder);
+                $this->om->flush();
+
+                return $direction;
+            }
+        }
+
+        return 0;
+    }
+
     public function createWorkspaceVersion(
         HomeTabConfig $homeTabConfig,
         AbstractWorkspace $workspace

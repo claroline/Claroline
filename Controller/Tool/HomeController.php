@@ -868,7 +868,7 @@ class HomeController extends Controller
 
         if (!is_null($workspace)) {
             $this->checkWorkspaceAccess($workspace);
-            $this->checkWorkspaceAccessForAdminHomeTab($homeTab, $workspace);
+            $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
         }
         else {
             $user = $this->securityContext->getToken()->getUser();
@@ -880,6 +880,49 @@ class HomeController extends Controller
         $this->homeTabManager->updateVisibility($homeTabConfig, $isVisible);
 
         return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/home_tab_config/{homeTabConfigId}/change/order/{direction}",
+     *     name="claro_home_tab_config_change_order",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "homeTabConfig",
+     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
+     *     options={"id" = "homeTabConfigId", "strictId" = true}
+     * )
+     *
+     * Change order of the given homeTabConfig in the given direction.
+     *
+     * @return Response
+     */
+    public function homeTabConfigChangeOrderAction(
+        HomeTabConfig $homeTabConfig,
+        $direction
+    )
+    {
+        $workspace = $homeTabConfig->getWorkspace();
+        $homeTab = $homeTabConfig->getHomeTab();
+
+        if (!is_null($workspace)) {
+            $this->checkWorkspaceAccess($workspace);
+            $this->checkWorkspaceAccessForAdminHomeTab($homeTab, $workspace);
+        }
+        else {
+            $this->checkUserAccess();
+            $user = $this->securityContext->getToken()->getUser();
+            $this->checkUserAccessForHomeTab($homeTab, $user);
+        }
+
+        $status = $this->homeTabManager->changeOrderHomeTabConfig(
+            $homeTabConfig,
+            $direction
+        );
+
+        return new Response($status, 200);
     }
 
     /**
