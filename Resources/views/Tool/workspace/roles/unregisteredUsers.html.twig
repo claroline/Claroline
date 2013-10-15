@@ -60,7 +60,7 @@
         <ul class="nav nav-tabs">
             <li class="active"> <a  href="#"> {{'users'|trans({}, 'platform') }} </a> </li>
             <li> <a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId() })~'?'~queryString }}"> {{'groups'|trans({}, 'platform') }} </a> </li>
-            <li> <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'users'}) }}">{{ 'roles'|trans({}, 'platform') }}</a> </li>
+            <li> <a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()} ) }}">{{ 'roles'|trans({}, 'platform') }}</a> </li>
         </ul>
 
         {{ macros.flashBox() }}
