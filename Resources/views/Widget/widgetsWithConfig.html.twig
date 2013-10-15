@@ -11,11 +11,7 @@
         {% set widgetHomeTabConfig = widgetDatas.config %}
         {% set widgetInstance = widgetHomeTabConfig.getWidgetInstance() %}
         {% set widget = widgetInstance.getWidget() %}
-            <div class="panel panel-default widget-instance-panel
-                {% if not widgetHomeTabConfig.isVisible() %}
-                    toggle-visible
-                    {% if withConfig == 0 %} hidden {% endif %}
-                {% endif %}"
+            <div class="panel panel-default widget-instance-panel"
                 widget-instance-id="{{ widgetInstance.getId() }}"
                 widget-hometab-config-id="{{ widgetHomeTabConfig.getId() }}"
              >
@@ -32,8 +28,7 @@
                                 [{{ widget.getName()|trans({}, 'widget') }}]
                             </small>
                         </span>
-                        <span class="toggle-visible {% if withConfig == 0 %} hidden {% endif %}">
-
+                        <span>
                             {% if not widgetInstance.isAdmin() %}
                                 <i class="icon-pencil widget-instance-rename pointer-hand"></i>
 
@@ -42,7 +37,7 @@
                                 {% endif %}
                             {% endif %}
                         </span>
-                        <span class="toggle-visible {% if withConfig == 0 %} hidden {% endif %} pull-right">
+                        <span class="pull-right">
                             {% if widgetHomeTabConfig.isLocked() or isLockedHomeTab %}
                                 <i class="icon-lock"></i>
                             {% else %}
@@ -76,7 +71,7 @@
                     <div class="panel-body widget-instance-view">
                        {{ widgetDatas.content|raw }}
                    </div>
-                   <div class="panel-body widget-instance-edition toggle-visible hide"></div>
+                   <div class="panel-body widget-instance-edition hide"></div>
                 </div>
             </div>
         {% endfor %}
@@ -84,7 +79,7 @@
 
     {% if isVisibleHomeTab and not isLockedHomeTab %}
         <br>
-        <div class="panel panel-default add-widget-instance toggle-visible {% if withConfig == 0 %} hidden {% endif %}">
+        <div class="panel panel-default add-widget-instance">
             <div class="panel-heading pointer-hand text-center">
                 <i class="icon-plus-sign">
                     {{ 'add_widget_to_home_tab'|trans({}, 'platform') }}
@@ -144,7 +139,7 @@
 
 {% block javascripts %}
     <script
-        src='{{ asset('bundles/clarolinecore/js/widget/widgets.js') }}'
+        src='{{ asset('bundles/clarolinecore/js/widget/widgetsWithConfig.js') }}'
         type="text/javascript">
     </script>
 {% endblock %}

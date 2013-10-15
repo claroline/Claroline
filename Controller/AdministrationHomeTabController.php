@@ -430,6 +430,42 @@ class AdministrationHomeTabController extends Controller
         return new Response('success', 204);
     }
 
+    /**
+     * @EXT\Route(
+     *     "/home_tab_config/{homeTabConfigId}/change/order/{direction}",
+     *     name="claro_admin_home_tab_config_change_order",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "homeTabConfig",
+     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
+     *     options={"id" = "homeTabConfigId", "strictId" = true}
+     * )
+     *
+     * Change order of the given homeTabConfig in the given direction.
+     *
+     * @return Response
+     */
+    public function adminHomeTabConfigChangeOrderAction(
+        HomeTabConfig $homeTabConfig,
+        $direction
+    )
+    {
+        if (!is_null($homeTabConfig->getUser()) ||
+            !is_null($homeTabConfig->getWorkspace())) {
+
+            throw new AccessDeniedException();
+        }
+
+        $status = $this->homeTabManager->changeOrderHomeTabConfig(
+            $homeTabConfig,
+            $direction
+        );
+
+        return new Response($status, 200);
+    }
+
     private function getOrderOfLastWidgetInHomeTab(HomeTab $homeTab)
     {
         $lastOrder = 1;
