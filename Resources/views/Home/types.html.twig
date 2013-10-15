@@ -1,21 +1,27 @@
 <div class="creator">
-    <div class="row">
-        <div class="col-md-10">
+    <div class="content-12">
+        <div class="input-group">
             <input
-            type="text"
-            maxlength="200"
-            placeholder="{{ "New content page" | trans({}, 'home') }}..."
-            class="content-title form-control"
-            {% if content is defined %}value="{{ content.title }}"{% endif %}
-            >
+                type="text"
+                maxlength="200"
+                placeholder="{{ 'New content page' | trans({}, 'home') }}..."
+                class="content-title form-control"
+                {% if content is defined %}value="{{ content.title }}"{% endif %}
+                >
+            <span class="input-group-btn">
+              <a class="btn btn-primary create-type">{{ "Create" | trans({}, 'home') }}</a>
+            </span>
         </div>
-
-        <a class="btn btn-primary col-md-2 create-type">{{ "Create" | trans({}, 'home') }}</a>
+        <br>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ 'Content pages' | trans({}, 'home') }}</h3>
+            </div>
+            <div class="panel-body">
+                {% for type in types %}
+                    {% include 'ClarolineCoreBundle:Home:type.html.twig' with {'type' : type } %}
+                {% endfor %}
+            </div>
+        </div>
     </div>
-    <hr>
-</div>
-<div class="row">
-{% for type in types %}
-    {% include 'ClarolineCoreBundle:Home:type.html.twig' with {'type' : type } %}
-{% endfor %}
 </div>

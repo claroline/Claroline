@@ -93,6 +93,81 @@ class HomeTabManager
         $this->om->flush();
     }
 
+    public function changeOrderHomeTabConfig(
+        HomeTabConfig $homeTabConfig,
+        $direction
+    )
+    {
+        $homeTabOrder = $homeTabConfig->getTabOrder();
+        $type = $homeTabConfig->getType();
+        $user = $homeTabConfig->getUser();
+        $workspace = $homeTabConfig->getWorkspace();
+        $newHomeTabOrder = ($direction < 0) ? ($homeTabOrder - 1) : ($homeTabOrder + 1);
+
+        if (is_null($user) && is_null($workspace)) {
+            if ($homeTabConfig->getType() === 'admin_desktop') {
+                $lastHomeTabOrder = $this->homeTabConfigRepo
+                    ->findOrderOfLastAdminDesktopHomeTab();
+            } else {
+                $lastHomeTabOrder = $this->homeTabConfigRepo
+                    ->findOrderOfLastAdminWorkspaceHomeTab();
+            }
+            $lastOrder = (count($lastHomeTabOrder) > 0) ?
+                $lastHomeTabOrder['order_max'] :
+                1;
+
+            if ($newHomeTabOrder > 0 && $newHomeTabOrder <= $lastOrder) {
+                $this->homeTabConfigRepo->updateAdminHomeTabOrder(
+                    $type,
+                    $newHomeTabOrder,
+                    $homeTabOrder
+                );
+                $homeTabConfig->setTabOrder($newHomeTabOrder);
+                $this->om->flush();
+
+                return $direction;
+            }
+        } elseif (is_null($workspace)) {
+            $lastHomeTabOrder = $this->homeTabConfigRepo
+                ->findOrderOfLastDesktopHomeTabByUser($user);
+            $lastOrder = (count($lastHomeTabOrder) > 0) ?
+                $lastHomeTabOrder['order_max'] :
+                1;
+
+            if ($newHomeTabOrder > 0 && $newHomeTabOrder <= $lastOrder) {
+                $this->homeTabConfigRepo->updateHomeTabOrderByUser(
+                    $user,
+                    $newHomeTabOrder,
+                    $homeTabOrder
+                );
+                $homeTabConfig->setTabOrder($newHomeTabOrder);
+                $this->om->flush();
+
+                return $direction;
+            }
+        } else {
+            $lastHomeTabOrder = $this->homeTabConfigRepo
+                ->findOrderOfLastWorkspaceHomeTabByWorkspace($workspace);
+            $lastOrder = (count($lastHomeTabOrder) > 0) ?
+                $lastHomeTabOrder['order_max'] :
+                1;
+
+            if ($newHomeTabOrder > 0 && $newHomeTabOrder <= $lastOrder) {
+                $this->homeTabConfigRepo->updateHomeTabOrderByWorkspace(
+                    $workspace,
+                    $newHomeTabOrder,
+                    $homeTabOrder
+                );
+                $homeTabConfig->setTabOrder($newHomeTabOrder);
+                $this->om->flush();
+
+                return $direction;
+            }
+        }
+
+        return 0;
+    }
+
     public function createWorkspaceVersion(
         HomeTabConfig $homeTabConfig,
         AbstractWorkspace $workspace
@@ -199,10 +274,9 @@ class HomeTabManager
         return false;
     }
 
-    public function checkHomeTabVisibilityByUser(
+    public function checkHomeTabVisibilityForConfigByUser(
         HomeTab $homeTab,
-        User $user,
-        $withConfig
+        User $user
     )
     {
         $adminHomeTabConfig = $this->homeTabConfigRepo->findOneBy(
@@ -226,16 +300,57 @@ class HomeTabManager
         }
         elseif (is_null($userHomeTabConfig)) {
 
-            return $adminHomeTabConfig->isVisible() || $withConfig == 1;
+            return $adminHomeTabConfig->isVisible();
         }
         elseif (is_null($adminHomeTabConfig)) {
 
-            return $userHomeTabConfig->isVisible() || $withConfig == 1;
+            return true;
         }
         else {
             $visible = $adminHomeTabConfig->isLocked() ?
                 $adminHomeTabConfig->isVisible() :
-                ($userHomeTabConfig->isVisible() || ($withConfig == 1));
+                true;
+
+            return $visible;
+        }
+    }
+
+    public function checkHomeTabVisibilityByUser(
+        HomeTab $homeTab,
+        User $user
+    )
+    {
+        $adminHomeTabConfig = $this->homeTabConfigRepo->findOneBy(
+            array(
+                'homeTab' => $homeTab,
+                'type' => 'admin_desktop',
+                'user' => null,
+                'workspace' => null
+            )
+        );
+        $userHomeTabConfig = $this->homeTabConfigRepo->findOneBy(
+            array(
+                'homeTab' => $homeTab,
+                'user' => $user
+            )
+        );
+
+        if (is_null($adminHomeTabConfig) && is_null($userHomeTabConfig)) {
+
+            return false;
+        }
+        elseif (is_null($userHomeTabConfig)) {
+
+            return $adminHomeTabConfig->isVisible();
+        }
+        elseif (is_null($adminHomeTabConfig)) {
+
+            return $userHomeTabConfig->isVisible();
+        }
+        else {
+            $visible = $adminHomeTabConfig->isLocked() ?
+                $adminHomeTabConfig->isVisible() :
+                $userHomeTabConfig->isVisible();
 
             return $visible;
         }
@@ -243,8 +358,7 @@ class HomeTabManager
 
     public function checkHomeTabVisibilityByWorkspace(
         HomeTab $homeTab,
-        AbstractWorkspace $workspace,
-        $withConfig
+        AbstractWorkspace $workspace
     )
     {
         $homeTabConfig = $this->homeTabConfigRepo->findOneBy(
@@ -259,7 +373,7 @@ class HomeTabManager
             return false;
         }
 
-        return $homeTabConfig->isVisible() || ($withConfig == 1);
+        return $homeTabConfig->isVisible();
     }
 
     public function insertWidgetHomeTabConfig(
@@ -455,6 +569,16 @@ class HomeTabManager
     public function getHomeTabById($homeTabId)
     {
         return $this->homeTabRepo->findOneById($homeTabId);
+    }
+
+    public function getHomeTabByIdAndWorkspace(
+        $homeTabId,
+        AbstractWorkspace $workspace
+    )
+    {
+        return $this->homeTabRepo->findOneBy(
+            array('id' => $homeTabId, 'workspace' => $workspace)
+        );
     }
 
     /**

@@ -1,0 +1,29 @@
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+{{ macros.flashBox() }}
+
+<div class="panel-group">
+    <div id="widgets-list-panel">
+        {% for widgetDatas in widgetsDatas %}
+        {% set widgetHomeTabConfig = widgetDatas.config %}
+        {% set widgetInstance = widgetHomeTabConfig.getWidgetInstance() %}
+        {% set widget = widgetInstance.getWidget() %}
+            <div class="panel panel-default widget-instance-panel">
+                <div class="panel-heading relative">
+                    <div class="panel-title">
+                        <a class="accordion-toggle widget-instance-name"
+                            data-toggle="collapse"
+                            href="#collapse{{ widgetInstance.getId() }}"
+                        >
+                            {{ widgetInstance.getName() }}
+                        </a>
+                    </div>
+                </div>
+                <div id="collapse{{ widgetInstance.getId() }}" class="collapse-widget collapse in">
+                    <div class="panel-body widget-instance-view">
+                       {{ widgetDatas.content|raw }}
+                   </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>

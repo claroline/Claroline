@@ -19,6 +19,7 @@
         <label>{{ 'from'|trans({}, 'platform') }} :</label>
         <input type="text"
         class="datepicker date-from form-control"
+        data-date-clear-btn=true
         data-date="0000-00-00"
         data-date-format="yyyy-mm-dd"/>
     </div>
@@ -27,6 +28,7 @@
         <label>{{ 'to'|trans({}, 'platform') }} :</label>
         <input type="text"
         class="datepicker date-to form-control"
+        data-date-clear-btn=true
         data-date="0000-00-00"
         data-date-format="yyyy-mm-dd"/>
     </div>

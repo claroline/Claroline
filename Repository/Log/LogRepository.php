@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Repository\Log;
 
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -469,26 +470,29 @@ class LogRepository extends EntityRepository
     }
 
     /**
-     * @param BadgeRule $badgeRule
-     * @param User      $user
-     * @param bool      $executeQuery
+     * @param AbstractWorkspace|null $workspace
+     * @param BadgeRule              $badgeRule
+     * @param User                   $user
+     * @param bool                   $executeQuery
      *
      * @return array|Query
      */
-    public function findByBadgeRuleAndUser(BadgeRule $badgeRule, User $user, $executeQuery = true)
+    public function findByWorkspaceBadgeRuleAndUser($workspace, BadgeRule $badgeRule, User $user, $executeQuery = true)
     {
-        $query = $this->getEntityManager()
-            ->createQuery(
-                'SELECT l
-                FROM ClarolineCoreBundle:Log\Log l
-                WHERE l.action = :action
-                AND l.doer = :doer
-                ORDER BY l.dateLog'
-            )
+        $queryBuilder = $this->createQueryBuilder('l')
+            ->where('l.action = :action')
+            ->andWhere('l.doer = :doer')
+            ->orderBy('l.dateLog')
             ->setMaxResults($badgeRule->getOccurrence())
             ->setParameter('action', $badgeRule->getAction())
             ->setParameter('doer', $user);
 
-        return $executeQuery ? $query->getResult(): $query;
+        if (null !== $workspace) {
+            $queryBuilder
+                ->andWhere('l.workspace = :workspace')
+                ->setParameter('workspace', $workspace);
+        }
+
+        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
     }
 }

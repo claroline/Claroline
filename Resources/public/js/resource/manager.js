@@ -153,6 +153,8 @@
                         return;
                     }
 
+                    event.preventDefault();
+
                     this.filter();
                 },
                 'click button.filter': 'filter',

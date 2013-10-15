@@ -2,6 +2,8 @@
 
 {% block javascripts %}
     {{ parent() }}
+    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+    {{ tinymce_init() }}
     <script
         src='{{ asset('bundles/clarolinecore/js/administration/adminHomeTabsConfig.js') }}'
         type="text/javascript">
@@ -58,6 +60,7 @@
                                 {'homeTabId': homeTabId}
                             )
                         }}">
+                            <i class="hometab-reorder-left-btn pointer-hand icon-arrow-left"></i>
                             {{ homeTab.getName() }}
                             <span class="hometab-buttons" id="hometab-buttons-{{ homeTabId }}">
                                 <i class="hometab-rename-btn pointer-hand icon-edit"></i>
@@ -76,6 +79,7 @@
                                 ></i>
                                 <i class="hometab-delete-btn icon-trash pointer-hand"></i>
                             </span>
+                            <i class="hometab-reorder-right-btn pointer-hand icon-arrow-right"></i>
                         </a>
                     </li>
                 {% endfor %}
@@ -140,6 +144,7 @@
                 {% endfor %}
             </div>
             <br>
+            {% if homeTabConfigs|length > 0 %}
             <div class="panel panel-default add-widget-instance">
                 <div class="panel-heading pointer-hand text-center">
                     <i class="icon-plus-sign">
@@ -147,6 +152,7 @@
                     </i>
                 </div>
             </div>
+            {% endif %}
         </div>
     </div>
 
