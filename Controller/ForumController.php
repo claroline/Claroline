@@ -372,13 +372,6 @@ class ForumController extends Controller
      *     defaults={"page"=1, "search"= ""},
      *     options={"expose"=true}
      * )
-     * @Route(
-     *     "/{forum}/search",
-     *     name="claro_forum_search_page",
-     *     defaults={"page"=1, "search"= "", "page"=1},
-     *     options={"expose"=true}
-     * )
-     *
      * @Template("ClarolineForumBundle::searchResults.html.twig")
      */
     public function searchAction(Forum $forum, $page, $search)

@@ -1,29 +1,15 @@
 {% macro renderPager(forum, search, pager) %}
-    {% if search != '' %}
-        {{
-            pagerfanta(
-                pager,
-                'twitter_bootstrap_translated',
-                {
-                    'proximity' : 1,
-                    'routeName': 'claro_forum_search',
-                    'routeParams': {'forum': forum.getId(), 'search': search, 'page': page }
-                }
-            )
-        }}
-    {% else %}
-        {{
-            pagerfanta(
-                pager,
-                'twitter_bootstrap_translated',
-                {
-                    'proximity' : 1,
-                    'routeName': 'claro_forum_search_page',
-                    'routeParams': {'forum': forum.getId() }
-                }
-            )
-        }}
-    {% endif %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_forum_search',
+                'routeParams': {'forum': forum.getId(), 'search': search, 'page': page }
+            }
+        )
+    }}
 {% endmacro %}
 
 {% from _self import renderPager %}
@@ -36,11 +22,16 @@
 
 {% extends layout %}
 
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('claro_forum_subjects', { 'forumId': _resource.getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+    <li class="active">{{ 'search'|trans({}, 'platform')}}</li>
+{% endblock %}
+
 {% block section_content %}
 
 <div>
      <div class="input-group">
-        <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value={{search}}>
+        <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
         <span class="input-group-btn">
             <button class="filter btn btn-default" type="button" id="search-button">
                 <i class="icon-search"></i>
@@ -50,17 +41,17 @@
     {{ renderPager(_resource, search, pager, page) }}
 
     <div class="table-responsive">
-        <table class="table table-striped table-bordered table-condensed">
+        <table id="message-table" class="table table-striped table-bordered table-condensed">
             <thead>
                 <tr>
-                    <th>{{ 'user'|trans({}, 'platform') }}</th>
+                    <th>{{ 'author'|trans({}, 'forum') }}</th>
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id='table-message-body'>
                 {% for message in pager.currentPageResults %}
-                    <tr>
-                        <td>
+                    <tr class="row-message">
+                        <td width="125px">
                             <div>
                                 {% if message.getCreator().getPicture() != "" %}
                                  <img src="{{ asset('uploads/pictures/') ~ message.getCreator().getPicture() }}" class="col-md-2">
@@ -78,8 +69,7 @@
                         </td>
                         <td>
                             <div>
-                                <hr>
-                                <p> {{ message.getContent() }} </p>
+                                <p class="message-content"> {{ message.getContent() }} </p>
                                 <p class="text-muted">{{ message.getCreationDate()| timeAgo }} </p>
                             </div>
                         </td>
@@ -97,8 +87,6 @@
     {{ parent() }}
     {% javascripts
         vars=["locale"]
-        "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeUserConfirm.html.twigjs"
-        "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/resetPasswordConfirm.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
         filter="twig_js"
@@ -110,8 +98,15 @@
         parameters = {};
         parameters.route = {};
         parameters.route.action = {};
-        parameters.route.normal = {"route": "claro_forum_search", "parameters": {'forum': {{ _resource.getId() }} }};
         parameters.route.search = {"route": "claro_forum_search", "parameters": {'forum': {{ _resource.getId() }} }};
         Claroline.Table.initialize(parameters);
+
+        function hightlight(element, text) {
+            element.innerHTML = element.innerHTML.replace(new RegExp("( " +text + ")", "ig"), "<span class='text-danger'>$1</span>");
+        }
+
+        $('.message-content').each(function(){
+            hightlight($(this).get(0), "{{ search }}");
+        });
     </script>
 {% endblock %}

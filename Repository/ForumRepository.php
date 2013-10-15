@@ -4,7 +4,6 @@ namespace Claroline\ForumBundle\Repository;
 
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Subject;
-use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
 class ForumRepository extends EntityRepository
