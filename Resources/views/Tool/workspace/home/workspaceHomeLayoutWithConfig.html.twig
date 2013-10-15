@@ -1,5 +1,25 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': workspace.getName() ~ ' - ' ~  workspace.getCode(),
+                'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
+            },
+            {
+                'name': 'home'|trans({}, 'tools'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
 {% block section_content %}
     <div id="config-value-div" config-value="{{ withConfig }}"></div>
     <div id="hometab-id-div" hometab-id="{{ tabId }}"></div>
