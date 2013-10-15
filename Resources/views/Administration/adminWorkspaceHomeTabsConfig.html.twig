@@ -2,6 +2,8 @@
 
 {% block javascripts %}
     {{ parent() }}
+    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+    {{ tinymce_init() }}
     <script
         src='{{ asset('bundles/clarolinecore/js/administration/adminHomeTabsConfig.js') }}'
         type="text/javascript">
@@ -142,6 +144,7 @@
                 {% endfor %}
             </div>
             <br>
+            {% if homeTabConfigs|length > 0 %}
             <div class="panel panel-default add-widget-instance">
                 <div class="panel-heading pointer-hand text-center">
                     <i class="icon-plus-sign">
@@ -149,6 +152,7 @@
                     </i>
                 </div>
             </div>
+            {% endif %}
         </div>
     </div>
 
