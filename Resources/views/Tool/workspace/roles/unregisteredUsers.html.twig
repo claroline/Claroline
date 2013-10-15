@@ -123,30 +123,32 @@
         <br>
 
         {{ renderPager(search, workspace.getId(), withUnregistered, queryString, pager) }}
-        <table class="table table-striped table-bordered table-condensed">
-            <thead>
-                <tr>
-                    <td></td>
-                    <td>{{ 'name'|trans({}, 'platform') }}</td>
-                </tr>
-            </thead>
-            <tbody id="user-table-body">
-                {% for user in pager.currentPageResults %}
-                    <tr id="row-{{ user.id }}" class="row-user" data-user-id="{{ user.getId() }}">
-                        <td> <input class="chk-user" type="checkbox" value="{{ user.getId() }}"> </input></td>
-                        <td class="popover-block"
-                            data-trigger="hover"
-                            data-content="{% render controller('ClarolineCoreBundle:User:renderPopover', {'user': user}) %}"
-                            data-container="td"
-                            data-placement="top"
-                            data-html="true"
-                            >
-                            {{ user.lastname }} {{ user.firstname }}
-                        </td>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>{{ 'name'|trans({}, 'platform') }}</td>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody id="user-table-body">
+                    {% for user in pager.currentPageResults %}
+                        <tr id="row-{{ user.id }}" class="row-user" data-user-id="{{ user.getId() }}">
+                            <td> <input class="chk-user" type="checkbox" value="{{ user.getId() }}"> </input></td>
+                            <td class="popover-block"
+                                data-trigger="hover"
+                                data-content="{% render controller('ClarolineCoreBundle:User:renderPopover', {'user': user}) %}"
+                                data-container="td"
+                                data-placement="top"
+                                data-html="true"
+                                >
+                                {{ user.lastname }} {{ user.firstname }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {{ renderPager(search, workspace.getId(), withUnregistered, queryString, pager) }}
         {{ displayControls(workspace.getId()) }}
     </div>

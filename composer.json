@@ -42,8 +42,9 @@
         "composer/composer": "dev-master",
         "willdurand/expose-translation-bundle": "~0.3.0",
 
+        "claroline/bundle-recorder": ">=2.0.2,<3.0",
         "claroline/kernel-bundle": "~1.0",
-        "claroline/installation-bundle": "~3.0",
+        "claroline/installation-bundle": ">=3.0.4,<4.0",
         "claroline/front-end-bundle": "~1.0",
         "claroline/migration-bundle": "~1.0"
     },

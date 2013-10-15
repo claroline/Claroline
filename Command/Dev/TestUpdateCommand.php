@@ -2,41 +2,33 @@
 
 namespace Claroline\CoreBundle\Command\Dev;
 
+use Claroline\CoreBundle\Library\PluginBundle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Claroline\InstallationBundle\Bundle\BundleVersion;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\ArrayInput;
 
-/**
- * Installs the platform, optionaly with plugins and data fixtures.
- */
-class PlatformUpdateCommand extends ContainerAwareCommand
+class TestUpdateCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
         parent::configure();
-        $this->setName('claroline:update')
-            ->setDescription('Update the platform.');
+        $this->setName('claroline:test_update')
+            ->setDescription('Tests the local update of a bundle.');
         $this->setDefinition(
             array(
                 new InputArgument('from_version', InputArgument::REQUIRED, 'from version'),
-                new InputArgument('from_migration', InputArgument::REQUIRED, 'from migration'),
                 new InputArgument('to_version', InputArgument::REQUIRED, 'to version'),
-                new InputArgument('to_migration', InputArgument::REQUIRED, 'to migration'),
                 new InputArgument('bundle', InputArgument::REQUIRED, 'bundle')
             )
         );
     }
-    
+
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $params = array(
             'from_version' => 'from version: ',
-            'from_migration' => 'from migration: ',
             'to_version' => 'to version: ',
-            'to_migration' => 'to migration: ',
             'bundle' => 'bundle: '
         );
 
@@ -48,7 +40,7 @@ class PlatformUpdateCommand extends ContainerAwareCommand
             }
         }
     }
-    
+
     protected function askArgument(OutputInterface $output, $argumentName)
     {
         $argument = $this->getHelper('dialog')->askAndValidate(
@@ -68,29 +60,17 @@ class PlatformUpdateCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $installer = $this->getContainer()->get('claroline.installation.manager');
-        $installer->setLogger(function ($message) use ($output) {
-           $output->writeln($message);
-        });
-        
         $bundleName = $input->getArgument('bundle');
         $bundle = $this->getContainer()->get('kernel')->getBundle($bundleName);
-        
-        $createDbCommand = $this->getApplication()->find('doctrine:database:create');
-        $createDbInput = new ArrayInput(
-            array(
-                'command' => 'doctrine:database:create'
-            )
-        );
-        $createDbCommand->run($createDbInput, $output);
-
-        $vto = $input->getArgument('to_version');
-        $mto = $input->getArgument('to_migration');
-        $vfrom = $input->getArgument('from_version');
-        $mfrom = $input->getArgument('from_migration');
-        
-        $from = new BundleVersion($vfrom . '.0', $vfrom, $mfrom);
-        $to = new BundleVersion($vto . '.0', $vto, $mto);
+        $installerType = $bundle instanceof PluginBundle ?
+            'claroline.plugin.installer' :
+            'claroline.installation.manager';
+        $installer = $this->getContainer()->get($installerType);
+        $installer->setLogger(function ($message) use ($output) {
+            $output->writeln($message);
+        });
+        $from = $input->getArgument('from_version');
+        $to = $input->getArgument('to_version');
         $installer->update($bundle, $from, $to);
     }
 }

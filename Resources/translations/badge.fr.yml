@@ -64,6 +64,7 @@ badge_no_rules_check_manually: "Aucune règle, vérifier manuellement"
 badge_rules_respected_state: "Page indisponible actuellement"
 claim: 'Réclamer'
 claiming: "Demande d'attribution|Demandes d'attribution"
+no_badge_claim: "Aucune demande d'attribution."
 claim_date: 'Date de la demande'
 claim_badge: 'Réclamer un badge'
 claim_badge_form: "Formulaire de demande d'attribution de badge"

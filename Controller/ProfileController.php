@@ -233,7 +233,7 @@ class ProfileController extends Controller
      *     name="claro_profile_admin_update"
      * )
      * @EXT\Template("ClarolineCoreBundle:Profile:profileForm.html.twig")
-     * 
+     *
      * Updates the user's profile and redirects to the profile form.
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse

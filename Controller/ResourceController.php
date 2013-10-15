@@ -319,8 +319,10 @@ class ResourceController
         $data = $this->resourceManager->download($nodes);
         $file = $data['file'];
         $fileName = $data['name'];
+        $mimeType = $data['mimeType'];
         $response = new StreamedResponse();
 
+        $file = $data['file'] ? : tempnam('tmp', 'tmp') ;
         $response->setCallBack(
             function () use ($file) {
                 readfile($file);
@@ -330,7 +332,7 @@ class ResourceController
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
         $response->headers->set('Content-Disposition', 'attachment; filename=' . $fileName);
-        $response->headers->set('Content-Type', 'application/zip');
+        $response->headers->set('Content-Type', $mimeType);
         $response->headers->set('Connection', 'close');
 
         return $response;

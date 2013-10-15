@@ -87,65 +87,62 @@
         </div>
 
         {{ renderPager(search, pager) }}
-        <div>
-        </div>
-    
-        <table id="user-table"  class="table table-striped table-bordered table-condensed">
-            <thead>
-                <tr>
-                    <th>{{ 'id'|trans({}, 'platform') }}</th>
-                    <th>{{ 'username'|trans({}, 'platform') }}</th>
-                    <th>{{ 'last_name'|trans({}, 'platform') }}</th>
-                    <th>{{ 'first_name'|trans({}, 'platform') }}</th>
-                    <th>{{ 'mail'|trans({}, 'platform') }}</th>
-                    <th>{{ 'edit'|trans({}, 'platform') }}</th>
-                    <th>{{ 'role'|trans({}, 'platform') }}</th>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <th>{{ 'show_as'|trans({}, 'platform') }}</th>
-                        <th><input type="checkbox" name="all" id="check-all-items"></input></th>
-                    {% endif %}
-                </tr>
-            </thead>
-            <tbody id="user-table-body">
-                {% for user in pager.currentPageResults %}
-                    <tr id="{{ user.getId() }}" class="row-user">
-                        <td>{{ user.getId() }}</td>
-                        <td>
-                            <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}">
-                                {{ user.getUsername() }}
-                            </a>
-                        </td>
-                        <td>{{ user.getLastName() }}</td>
-                        <td>{{ user.getFirstName() }}</td>
-                        <td>{{ user.getMail() }}</td>
-                        <td> <a href="{{ path('claro_profile_form_admin', {'user': user.getId()}) }}">
-                                {{ user.getUsername() }}
-                            </a>
-                        </td>
-                        <td>
-                            <div>
-                                {% for role in user.getEntityRoles() %}
-                                    {{ role.getTranslationKey()|trans({}, 'platform')  }}
-                                    {% if not loop.last %}, {% endif %}
-                                {% endfor %}
-                            </div>
-                        </td>
+            <p> <a href=""> {{ 'change_view'|trans({}, 'platform') }} </a> </p>
+        <div class="table-responsive">
+            <table id="user-table"  class="table table-striped table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th>{{ 'id'|trans({}, 'platform') }}</th>
+                        <th>{{ 'username'|trans({}, 'platform') }}</th>
+                        <th>{{ 'last_name'|trans({}, 'platform') }}</th>
+                        <th>{{ 'first_name'|trans({}, 'platform') }}</th>
+                        <th>{{ 'mail'|trans({}, 'platform') }}</th>
+                        <th> {{ 'edit'|trans({}, 'platform') }}</th>
+                        <th>{{ 'role'|trans({}, 'platform') }}</th>
                         {% if is_granted('ROLE_ADMIN') %}
-                        <td>
-                            {% if user.getId() != app.user.id %}
-                                <a href="{{ path('claro_desktop_open', {'_switch': user.getUsername()}) }}">
-                                    {{ 'show'|trans({}, 'platform') }}
-                                </a>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <input type="checkbox" value="{{ user.id }}" class="chk-item" align="center"></input>
-                        </td>
+                            <th>{{ 'show_as'|trans({}, 'platform') }}</th>
+                            <th><input type="checkbox" name="all" id="check-all-items"></input></th>
                         {% endif %}
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody id="user-table-body">
+                    {% for user in pager.currentPageResults %}
+                        <tr id="{{ user.getId() }}" class="row-user">
+                            <td>{{ user.getId() }}</td>
+                            <td>
+                                <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}"> {{user.getUsername()}}</a>
+                            </td>
+                            <td>{{ user.getLastName() }}</td>
+                            <td>{{ user.getFirstName() }}</td>
+                            <td>{{ user.getMail() }}</td>
+                            <td> 
+                                <a href="{{ path('claro_profile_form_admin', {'user': user.getId()}) }}"> {{ 'edit'|trans({}, 'platform') }} </a>
+                            </td>
+                            <td>
+                                <div>
+                                    {% for role in user.getEntityRoles() %}
+                                        {{ role.getTranslationKey()|trans({}, 'platform')  }}
+                                        {% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </td>
+                            {% if is_granted('ROLE_ADMIN') %}
+                            <td>
+                                {% if user.getId() != app.user.id %}
+                                    <a href="{{ path('claro_desktop_open', {'_switch': user.getUsername()}) }}">
+                                        {{ 'show'|trans({}, 'platform') }}
+                                    </a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <input type="checkbox" value="{{ user.id }}" class="chk-item" align="center"></input>
+                            </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {{ renderPager(search, pager) }}
         <div>
             {{ displayControls(workspace.getId()) }}
