@@ -369,13 +369,19 @@ class ForumController extends Controller
      * @Route(
      *     "/{forum}/search/{search}/page/{page}",
      *     name="claro_forum_search",
-     *     defaults={"page"=1},
+     *     defaults={"page"=1, "search"= ""},
+     *     options={"expose"=true}
+     * )
+     * @Route(
+     *     "/{forum}/search",
+     *     name="claro_forum_search_page",
+     *     defaults={"page"=1, "search"= "", "page"=1},
      *     options={"expose"=true}
      * )
      *
      * @Template("ClarolineForumBundle::searchResults.html.twig")
      */
-    public function searchAction(Forum $forum, $search, $page)
+    public function searchAction(Forum $forum, $page, $search)
     {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('ClarolineForumBundle:Forum');

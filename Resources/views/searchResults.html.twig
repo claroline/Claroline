@@ -1,15 +1,29 @@
 {% macro renderPager(forum, search, pager) %}
-    {{
-        pagerfanta(
-            pager,
-            'twitter_bootstrap_translated',
-            {
-                'proximity' : 1,
-                'routeName': 'claro_forum_search',
-                'routeParams': {'forum': forum.getId(), 'search': search, 'page': page }
-            }
-        )
-    }}
+    {% if search != '' %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_forum_search',
+                    'routeParams': {'forum': forum.getId(), 'search': search, 'page': page }
+                }
+            )
+        }}
+    {% else %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_forum_search_page',
+                    'routeParams': {'forum': forum.getId() }
+                }
+            )
+        }}
+    {% endif %}
 {% endmacro %}
 
 {% from _self import renderPager %}

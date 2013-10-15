@@ -29,6 +29,7 @@
     <div class="panel-body">
         <div>
             {{ renderPager(_resource.getId(), pager) }}
+            <a class="pull-right btn btn-primary" href="{{ path('claro_forum_search_page', {'forum': _resource.getId() }) }}"> {{ 'search'|trans({}, 'platform') }}</a>
         </div>
         <div class="table-responsive">
             <table id="subjects_table" class="table table-striped table-bordered table-condensed">
