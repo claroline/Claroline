@@ -89,58 +89,31 @@
         <div class="col-md-4">
             <div class="panel-documents panel panel-default">
                 <div class="panel-heading">
+                    <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('document')"><i class="icon-plus"></i></button>
                     <span class="icon-briefcase"></span> Documents
                 </div>
 
-                <div class="panel-body">
-                    <div class="panel-group" id="form-panel-documents">
-                        <div class="panel panel-default" ng-repeat="parent in inheritedResources.documents">
-                            <div class="panel-heading">
-                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#form-panel-documents" href="#form-{{ $index }}documents">
-                                   <i class="indent" style="margin-left: {{ $index * 20 }}px" ng-class="{'icon-chevron-down': isOpen, 'icon-chevron-right': !isOpen}"></i>
-                                   {{ parent.stepName }}
-                                </a>
-                                <span class="pull-right parent-resources-count">{{ parent.resources.length }} documents</span>
-                            </div>
-
-                            <div id="form-{{ $index }}documents" class="panel-collapse collapse">
-                                <table class="table table-condensed table-hover">
-                                    <tr ng-repeat="resource in parent.resources">
-                                        <td class="icon"><img src="{{ webDir }}images/icons/document/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
-                                        <td ng-class="{'excluded-resource' : resource.isExcluded}">{{ resource.name }}</td>
-                                        <td class="actions">
-                                            <button ng-disabled="!resource.isExcluded" class="btn btn-xs btn-success" ng-click="includeParentResource(resource)"><i class="icon-eye-open"></i></button>
-                                            <button ng-disabled="resource.isExcluded" class="btn btn-xs btn-danger" ng-click="excludeParentResource(resource)"><i class="icon-eye-close"></i></button>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#form-panel-documents" href="#form-{{ formStep.id }}documents">
-                                   <i class="indent" style="margin-left: {{ inheritedResources.documents.length * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
-                                   {{ formStep.name | truncate }}
-                                </a>
-                                <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('document')"><i class="icon-plus"></i></button>
-                            </div>
-
-                            <div id="form-{{ formStep.id }}documents" class="panel-collapse collapse in">
-                                <table class="table table-condensed table-hover">
-                                    <tr ng-repeat="resource in formStep.resources | filter: {type: 'document'}">
-                                        <td class="icon"><img src="{{ webDir }}images/icons/document/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
-                                        <td>{{ resource.name }}</td>
-                                        <td class="actions">
-                                            <button class="btn btn-xs btn-default" ng-click="editResource('document', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
-                                            <button class="btn btn-xs btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <table class="table table-condensed table-hover">
+                    <!-- Inherited documents from parents -->
+                    <tr ng-repeat="resource in inheritedResources | filter: {type: 'document'}">
+                        <td class="icon"><img src="{{ webDir }}images/icons/document/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
+                        <td ng-class="{'excluded-resource': resource.isExcluded}">{{ resource.name | truncate }} <small>(from &lt;{{ resource.parentStep | truncate }}&gt;)</small></td>
+                        <td class="actions">
+                            <button ng-disabled="!resource.isExcluded" class="btn btn-xs btn-success" ng-click="includeParentResource(resource)"><i class="icon-eye-open"></i></button>
+                            <button ng-disabled="resource.isExcluded" class="btn btn-xs btn-danger" ng-click="excludeParentResource(resource)"><i class="icon-eye-close"></i></button>
+                        </td>
+                    </tr>
+                    
+                    <!-- Specific documents -->
+                    <tr ng-repeat="resource in formStep.resources | filter: {type: 'document'}">
+                        <td class="icon"><img src="{{ webDir }}images/icons/document/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
+                        <td>{{ resource.name | truncate }}</td>
+                        <td class="actions">
+                            <button class="btn btn-xs btn-default" ng-click="editResource('document', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
+                            <button class="btn btn-xs btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
 
@@ -163,58 +136,31 @@
         <div class="col-md-4">
             <div class="panel-documents panel panel-default">
                 <div class="panel-heading">
+                    <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('tool')"><i class="icon-plus"></i></button>
                     <span class="icon-wrench"></span> Tools
                 </div>
 
-                <div class="panel-body">
-                    <div class="panel-group" id="form-panel-tools">
-                        <div class="panel panel-default" ng-repeat="parent in inheritedResources.tools">
-                            <div class="panel-heading">
-                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#form-panel-tools" href="#form-{{ $index }}tools">
-                                   <i class="indent" style="margin-left: {{ $index * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
-                                   {{ parent.stepName }}
-                                </a>
-                                <span class="pull-right parent-resources-count">{{ parent.resources.length }} tools</span>
-                            </div>
-
-                            <div id="form-{{ $index }}tools" class="panel-collapse collapse">
-                                <table class="table table-condensed table-hover">
-                                    <tr ng-repeat="resource in parent.resources">
-                                        <td class="icon"><img src="{{ webDir }}images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
-                                        <td ng-class="{'excluded-resource' : resource.isExcluded}">{{ resource.name }}</td>
-                                        <td class="actions">
-                                            <button ng-disabled="!resource.isExcluded" class="btn btn-xs btn-success" ng-click="includeParentResource(resource)"><i class="icon-eye-open"></i></button>
-                                            <button ng-disabled="resource.isExcluded" class="btn btn-xs btn-danger" ng-click="excludeParentResource(resource)"><i class="icon-eye-close"></i></button>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#form-panel-tools" href="#form-{{ formStep.id }}tools">
-                                   <i class="indent" style="margin-left: {{ inheritedResources.tools.length * 20 }}px" ng-class="{'icon-chevron-right': !isOpen, 'icon-chevron-down': isOpen}"></i>
-                                   {{ formStep.name | truncate }}
-                                </a>
-                                <button class="btn btn-xs btn-primary pull-right" ng-click="editResource('tool')"><i class="icon-plus"></i></button>
-                            </div>
-
-                            <div id="form-{{ formStep.id }}tools" class="panel-collapse collapse in">
-                                <table class="table table-condensed table-hover">
-                                    <tr ng-repeat="resource in formStep.resources | filter: {type: 'tool'}">
-                                        <td class="icon"><img src="{{ webDir }}images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
-                                        <td>{{ resource.name }}</td>
-                                        <td class="actions">
-                                            <button class="btn btn-xs btn-default" ng-click="editResource('tool', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
-                                            <button class="btn btn-xs btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <table class="table table-condensed table-hover">
+                    <!-- Inherited tools from parents -->
+                    <tr ng-repeat="resource in inheritedResources | filter: {type: 'tool'}">
+                        <td class="icon"><img src="{{ webDir }}images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
+                        <td ng-class="{'excluded-resource': resource.isExcluded}">{{ resource.name | truncate }} <small>(from &lt;{{ resource.parentStep | truncate }}&gt;)</small></td>
+                        <td class="actions">
+                            <button ng-disabled="!resource.isExcluded" class="btn btn-xs btn-success" ng-click="includeParentResource(resource)"><i class="icon-eye-open"></i></button>
+                            <button ng-disabled="resource.isExcluded" class="btn btn-xs btn-danger" ng-click="excludeParentResource(resource)"><i class="icon-eye-close"></i></button>
+                        </td>
+                    </tr>
+                    
+                    <!-- Specific tools -->
+                    <tr ng-repeat="resource in formStep.resources | filter: {type: 'tool'}">
+                        <td class="icon"><img src="{{ webDir }}images/icons/tool/16x16/{{ resource.subType }}.png" alt="{{ resource.subType }}" /></td>
+                        <td>{{ resource.name | truncate }}</td>
+                        <td class="actions">
+                            <button class="btn btn-xs btn-default" ng-click="editResource('tool', resource)" tooltip="Edit"><i class="icon-edit"></i></button>
+                            <button class="btn btn-xs btn-danger" ng-click="removeResource(resource)" tooltip="Delete"><i class="icon-trash"></i></button>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
