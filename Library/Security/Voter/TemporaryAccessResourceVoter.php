@@ -2,6 +2,7 @@
 
 namespace Icap\DropzoneBundle\Library\Security\Voter;
 
+use Claroline\CoreBundle\Entity\User;
 use Icap\DropzoneBundle\Manager\TemporaryAccessResourceManager;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,13 +40,18 @@ class TemporaryAccessResourceVoter implements VoterInterface
         if ($object instanceof ResourceCollection) {
             $granted = true;
 
-            if ($this->manager->hasTemporaryAccessOnSomeResources($token->getUser()) === false) {
+            $user = null;
+            if ($token->getUser() instanceof User) {
+                $user= $token->getUser();
+            }
+
+            if ($this->manager->hasTemporaryAccessOnSomeResources($user) === false) {
                 $granted = false;
             } else {
                 foreach($attributes as $attribute) {
                     if ($this->supportsAttribute($attribute) && $this->supportsClass($object)) {
                         foreach ($object->getResources() as $resource) {
-                            if ($this->manager->hasTemporaryAccess($resource, $token->getUser()) === false) {
+                            if ($this->manager->hasTemporaryAccess($resource, $user) === false) {
                                 $granted = false;
                                 break;
                             }
