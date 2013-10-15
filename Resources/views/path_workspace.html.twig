@@ -21,9 +21,7 @@
             <table class="table table-hover" style="margin-top: -1px;">
                 {% for count, path in paths["me"] %}
                 <tr>
-                    <td>
-                        <a rel="tooltip" data-original-title="{{ 'edit' | trans({}, 'tools') }}" href="{{ path('innova_path_editor', {workspaceId: workspace.id, pathId: path.resourceNode.id}) }}">{{ path.resourceNode.name }}</a>
-                    </td>
+                    <td>{{ path.resourceNode.name }}</td>
                     <td align="right">
                     {% if path.deployed %}
                         <form action="{{ path('innova_path_play') }}" method="post" style="display: inline-block">
