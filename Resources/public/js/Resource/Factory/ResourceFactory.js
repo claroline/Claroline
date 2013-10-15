@@ -84,10 +84,7 @@ function ResourceFactory(PathFactory) {
          */
         getInheritedResources: function(stepToFind) {
             var stepFound = false;
-            var inheritedResources = {
-                documents: [],
-                tools: []
-            };
+            var inheritedResources = [];
 
             var path = PathFactory.getPath();
             if (path) {
@@ -104,7 +101,6 @@ function ResourceFactory(PathFactory) {
         },
         
         /**
-         * 
          * @param stepToFind
          * @param currentStep
          * @param inheritedResources
@@ -116,41 +112,18 @@ function ResourceFactory(PathFactory) {
             if (stepToFind.id !== currentStep.id) {
                 // Not the step we search for => search in children
                 for (var i = 0; i < currentStep.children.length; i++) {
-                    stepFound =  this.retrieveInheritedResources(stepToFind, currentStep.children[i], inheritedResources);
+                    stepFound = this.retrieveInheritedResources(stepToFind, currentStep.children[i], inheritedResources);
                     if (stepFound) {
                         // Get all resources which must be sent to children
-                        var stepDocuments = {
-                            stepName: currentStep.name,
-                            resources: []
-                        };
-                        
-                        var stepTools = {
-                            stepName: currentStep.name,
-                            resources: []
-                        };
-                        
                         for (var j = currentStep.resources.length - 1; j >= 0; j--) {
                             if (currentStep.resources[j].propagateToChildren) {
                                 // Current resource must be available for children
                                 var resource = currentStep.resources[j];
                                 resource.parentStep = currentStep.name;
                                 resource.isExcluded = stepToFind.excludedResources.indexOf(resource.id) != -1;
-                                
-                                if ('document' === resource.type) {
-                                    stepDocuments.resources.unshift(resource);
-                                }
-                                else if ('tool' === resource.type) {
-                                    stepTools.resources.unshift(resource);
-                                }
+                                inheritedResources.unshift(resource);
                             }
                         }
-                        
-                        if (stepDocuments.resources.length !== 0)
-                            inheritedResources.documents.unshift(stepDocuments);
-                        
-                        if (stepTools.resources.length !== 0)
-                            inheritedResources.tools.unshift(stepTools);
-                        
                         break;
                     }
                 }
