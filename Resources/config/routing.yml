@@ -235,3 +235,8 @@ claro_badge_profil:
 claro_badge_workspace_tool:
     resource: "@ClarolineCoreBundle/Controller/Badge/Tool/WorkspaceController.php"
     type:     annotation
+
+claro_workspaces_widget:
+    resource: "@ClarolineCoreBundle/Controller/Widget/MyWorkspacesWidgetController.php"
+    prefix: widget
+    type: annotation
