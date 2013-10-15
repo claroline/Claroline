@@ -110,6 +110,7 @@ li.custom_field div div {
 .chapter_content_text{
   padding: 20px;
   text-align: justify;
+  padding-bottom: 40px;
 }
 
 .chapter_content{
