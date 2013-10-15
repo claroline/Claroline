@@ -1,0 +1,55 @@
+{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'home'|trans({}, 'tools') }}
+            <a href="{{
+                path(
+                    'claro_display_desktop_home_tabs_with_config',
+                    {'tabId': tabId}
+                )
+                }}"
+            >
+                <i id="switch-config-mode" class="icon-cog pull-right pointer-hand"></i>
+           </a>
+        </h3>
+    </div>
+
+    <div class="panel-body">
+        <ul class="nav nav-tabs tabs">
+            {% for adminHomeTabConfig in adminHomeTabConfigs %}
+            {% set adminHomeTab = adminHomeTabConfig.getHomeTab() %}
+            <li class="hometab-element {% if adminHomeTab.getId() == tabId %} active {% endif %}">
+                <a href="{{
+                    path(
+                        'claro_display_desktop_home_tabs_without_config',
+                        {'tabId': adminHomeTab.getId()}
+                    )
+                    }}"
+                    class="hometab-link"
+                >
+                    {{ adminHomeTab.getName() }}
+                </a>
+            </li>
+            {% endfor %}
+            {% for userHomeTabConfig in userHomeTabConfigs %}
+            {% set userHomeTab = userHomeTabConfig.getHomeTab() %}
+            <li class="hometab-element {% if userHomeTab.getId() == tabId %} active {% endif %}">
+                <a href="{{
+                    path(
+                        'claro_display_desktop_home_tabs_without_config',
+                        {'tabId': userHomeTab.getId()}
+                    )
+                    }}"
+                    class="hometab-link"
+                >
+                    {{ userHomeTab.getName() }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+
+        {% block homeTab %}{% endblock %}
+    </div>
+{% endblock %}
