@@ -6,3 +6,4 @@ The name {{ name }} is already in use.: Le nom {{ name }} est déjà utilisé.
 badge_automatic_awarding_need_rules: "Des règles d'attribution doivent être définies pour pouvoir attribuer le badge automatiquement"
 badge_need_image: "Une image doit être définie sur le badge"
 badge_need_at_least_one_translation: "Au moins une traduction complète doit être fournie pour le badge"
+password_missmatch: 'Les mots de passes ne correspondent pas'
