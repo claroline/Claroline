@@ -1,4 +1,4 @@
-<form class="tree-item form-inline" ng-click="setPreviewStep(step)" ng-mouseenter="showButtons = true" ng-mouseleave="showButtons = false" >
+<form class="tree-item form-inline" ng-click="setPreviewStep(step)" ng-mouseenter="showButtons = step.id" ng-mouseleave="showButtons = null" >
     <span ng-show="currentEditingStep != step.id" class="icon-chevron-right"></span>
     <span ng-show="currentEditingStep != step.id" class="step-name">{{ step.name | truncate }}</span>
 
@@ -9,7 +9,7 @@
         </span>
     </div>
 
-    <span ng-show="showButtons && currentEditingStep != step.id" class="pull-right">
+    <span ng-show="showButtons == step.id && currentEditingStep != step.id" class="pull-right">
         <!-- Ajout du bouton pour l'édition. -->
         <!-- Voir TreeCtrl.js pour editStepName -->
         <button class="btn btn-default btn-xs" ng-click="editStepName(step)" tooltip="Edit step name" ng-hide="isRootNode" >
