@@ -2,14 +2,12 @@
 <form id='editchapterform' method="POST" action="{{ path('icap_lesson_update_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id }) }}" class="form-horizontal">
     <fieldset>
         <div class='chapter_content'>
-            <div class="panel-heading chapter_title">
-                {#<label class="control-label" for="icap_lesson_chaptertype_title">{{ 'Title'|trans({}, 'icap_lesson') }}</label>#}
+                <label class="control-label" for="icap_lesson_chaptertype_title">{{ 'Title'|trans({}, 'icap_lesson') }}</label>
                 <div class="controls">
                     {{ form_widget(form.title) }}
                 </div>
-            </div>
             <div class="control-group">
-                {#<label class="control-label" for="icap_lesson_chaptertype_text">{{ 'Text'|trans({}, 'icap_lesson') }}</label>#}
+                <label class="control-label" for="icap_lesson_chaptertype_text">{{ 'Text'|trans({}, 'icap_lesson') }}</label>
                 <div class="controls">
                     {{ form_widget(form.text) }}
                 </div>

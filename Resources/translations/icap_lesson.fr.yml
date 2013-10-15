@@ -1,6 +1,7 @@
 Cancel: 'Annuler'
 confirm: 'Confirmer'
 Chapter Move: 'Déplacement de chapitre'
+enabled_move: 'Activer le glisser/déposer des chapitres'
 expand_all : 'Tout déplier'
 collapse_all : 'Tout replier'
 delete_chapter_button: 'Supprimer le chapitre'

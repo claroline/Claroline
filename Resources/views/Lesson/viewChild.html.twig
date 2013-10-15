@@ -1,6 +1,6 @@
 {% macro recursiveChapter(root, chapter, lesson, isRoot) %}
     {% if isRoot %}
-        <ul class='jquery-sortable-list overflow' id = '{{ root.id }}'>
+        <ul class='jquery-sortable-list overflow' data-list = '{{ root.id }}' >
     {% else %}
         <ul class='' id = 'list_{{ root.id }}' data-list = '{{ root.id }}'>
     {% endif %}
@@ -8,13 +8,13 @@
         {% for child in root.__children %}
             <li id = '{{ child.id }}' data-path = '{{ path('icap_lesson_move_chapter', { 'resourceId': lesson.id, 'chapterId': child.id })}}' >
             {% if child.id == chapter.id %}
-                <div class='menu-item active'>
+                <div class='menu-item active_chapter'>
             {% else %}
                 <div class='menu-item'>
             {% endif %}
-                <i class='icon-collapse collapsor {% if child.__children|length == 0%}empty{% endif %}' id='collapsor_icon_{{ child.id }}' data-collapsor = '{{ child.id }}'></i>
-                <i data-handle = '{{ child.id }}' class="icon-file-text-alt handle_sortable lesson_tooltip" data-original-title='{{ 'dragndrop_button'|trans({}, 'icap_lesson') }}'></i>
-                <a href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': child.id }) }}">{{ child.title }}</a>
+            <i class='icon-collapse collapsor {% if child.__children|length == 0%}empty{% endif %}' id='collapsor_icon_{{ child.id }}' data-collapsor = '{{ child.id }}'></i>
+            {#<i data-handle = '{{ child.id }}' class="icon-file-text-alt handle_sortable lesson_tooltip" data-original-title='{{ 'dragndrop_button'|trans({}, 'icap_lesson') }}'></i>#}
+            <a href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': child.id }) }}">{{ child.title }}</a>
             </div>
             {{ _self.recursiveChapter(child, chapter, lesson, false) }}
             </li>
@@ -24,14 +24,14 @@
 {% endmacro %}
 
 {% if tree is defined and tree != null and tree.__children is defined and tree.__children|length %}
-    <div class='panel panel-default '>
+    <div class='panel panel-default menu_lesson'>
         <div class="navbar navbar-default navbar-static-top">
             <ul class='nav navbar-nav pull-right'>
-                <li><a href='#'><i class="icon-indent-right lesson_tooltip" id='collapse_all' data-original-title='{{ 'collapse_all'|trans({}, 'icap_lesson') }}'></i></a></li>
-                <li><a href='#'><i class="icon-sort-by-attributes-alt lesson_tooltip" id='expand_all' data-original-title='{{ 'expand_all'|trans({}, 'icap_lesson') }}'></i></a></li>
+                <li><a href='#' id='enable_move' data-status = 'enable' class='icon_link'><i class="icon-move lesson_tooltip"  data-original-title='{{ 'enabled_move'|trans({}, 'icap_lesson') }}'></i></a></li>
+                <li><a href='#' id='collapse_all' class='icon_link'><i class="icon-indent-right lesson_tooltip" data-original-title='{{ 'collapse_all'|trans({}, 'icap_lesson') }}'></i></a></li>
+                <li><a href='#' id='expand_all' class='icon_link'><i class="icon-sort-by-attributes-alt lesson_tooltip" data-original-title='{{ 'expand_all'|trans({}, 'icap_lesson') }}'></i></a></li>
             </ul>
         </div>
-
 
         {{ _self.recursiveChapter(tree, chapter, _resource, true) }}
         {% if is_granted('EDIT', node) %}

@@ -1,10 +1,10 @@
 
 .menu_lesson .collapsor {
-    color:#000000;
+    color:#2a6496;
 }
 
 .menu_lesson .empty{
-    color:#C2CBE0;
+    color:#2a6496;
 }
 
 .section-content > .container-reference {
@@ -151,6 +151,15 @@ li.custom_field div div {
     padding:5px;
 }
 
+.cursor_move{
+    cursor: move;
+}
+
+.navbar .navbar-nav .icon_link{
+    padding-top:13px;
+    padding-bottom:13px;
+}
+
 /*sortable styles*/
 
 body.dragging, body.dragging * {
@@ -166,6 +175,7 @@ body.dragging, body.dragging * {
 ul.jquery-sortable-list {
     padding-left:10px;
     margin-bottom:5px;
+    padding-top:5px;
 
 }
 
@@ -191,10 +201,15 @@ ul.jquery-sortable-list li .menu-item:hover{
     background-color: #eeeeee;
 }
 
-ul.jquery-sortable-list li .active a{
+ul.jquery-sortable-list li .active_chapter a{
     color: #000000;
     font-weight: bold;
 }
+
+ul.jquery-sortable-list .active{
+   border: 1px dotted #aaaaaa;
+}
+
 
 ul.jquery-sortable-list li.placeholder {
     position: relative;

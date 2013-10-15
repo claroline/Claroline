@@ -1,5 +1,6 @@
 Cancel: 'Cancel'
 confirm: 'Confirm'
+enabled_move: 'Enable drag and drop'
 expand_all : 'Expand all'
 collapse_all : 'Collpase all'
 Chapter Move: 'Move chapter'

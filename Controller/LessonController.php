@@ -499,7 +499,11 @@ class LessonController extends Controller
                 'workspace' => $lesson->getResourceNode()->getWorkspace()
             );
         }
-
+/*        var_dump("chapter");
+        var_dump($chapterId);
+        var_dump("parent");
+        var_dump($newParentId);
+        die();*/
         $newParent = $this->findChapter($lesson, $newParentId);
         $path = $repo->getPath($newParent);
         foreach ($path as $currentParent) {

@@ -11,11 +11,20 @@ function initTooltip(){
 }
 
 function initSortable(){
+    var oldContainer;
     $('.jquery-sortable-list').sortable({
-        handle: 'i.handle_sortable',
+        afterMove: function (placeholder, container) {
+            if(oldContainer != container){
+                if(oldContainer)
+                    oldContainer.el.removeClass("active")
+                container.el.addClass("active")
+
+                oldContainer = container
+            }
+        },
         onDrop: function($item, container, _super) {
             var path = $item.data('path');
-            var parentId = $item.parent().attr('id');
+            var parentId = $item.parent().data('list');
             var $previous_element = $item.prev();
             var brother = false;
             if($previous_element != null && $previous_element != undefined && $previous_element.attr('id') != undefined){
@@ -35,8 +44,21 @@ function initSortable(){
                 .always(function() {
                     // alert( "complete" );
                 });
+            container.el.removeClass("active");
         }
     });
+    //disabled by default
+    $('.jquery-sortable-list').sortable("disable");
+    //init switch button enable/disable drag'n'drop
+    $("#enable_move").on("click", function  (e) {
+        //alert($(this).data("status"));
+        $('.jquery-sortable-list').sortable($(this).data("status"));
+        $(this).toggleClass("btn btn-default active");
+        $(this).data("status", $(this).data("status") == "disable" ? "enable" : "disable");
+        $('.menu-item').each(function() {
+            $(this).toggleClass("cursor_move");
+        });
+    })
 }
 
 function initCollapsor(){
@@ -95,4 +117,8 @@ function checkMoveValue(){
             $('#icap_lesson_movechaptertype_brother').prop("disabled", true);
         }
     });*/
+}
+
+function callback_tinymce_init(){
+    // script called on tinymce initialization ...
 }
