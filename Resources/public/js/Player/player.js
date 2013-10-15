@@ -30,6 +30,7 @@ $( document ).ready(function() {
 	    url: url,
         success: function(heritedResources){
         	$("#herited-resources").html(heritedResources);
+        	$('img').tooltip({placement:'top'});
         }
 	});
 
