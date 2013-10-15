@@ -64,11 +64,14 @@ class WSRestController extends Controller
         // check also login matches to the connected user
 
         if ($this->get('security.context')->isGranted('ROLE_WS_CREATOR')) {
-            $userDir = './bundles/ujmexo/users_documents/'.$this->container->get('security.context')
+            $userDir = './uploads/ujmexo/users_documents/'.$this->container->get('security.context')
                 ->getToken()->getUser()->getUsername();
 
-            if (!is_dir('./bundles/ujmexo/users_documents/')) {
-                mkdir('./bundles/ujmexo/users_documents/');
+            if (!is_dir('./uploads/ujmexo/')) {
+                mkdir('./uploads/ujmexo/');
+            }
+            if (!is_dir('./uploads/ujmexo/users_documents/')) {
+                mkdir('./uploads/ujmexo/users_documents/');
             }
 
             if (!is_dir($userDir)) {
