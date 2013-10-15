@@ -63,7 +63,7 @@
 
 {% block javascripts %}
 {{ parent() }}
-{% render controller('ClarolineCoreBundle:Tool\\WorkspaceResourceParameters:initPicker') %}
+{% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
 {{ tinymce_init() }}
 {% javascripts output='js/blog.js'
     '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.core.min.js'
