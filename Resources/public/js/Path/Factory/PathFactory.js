@@ -61,11 +61,8 @@ function PathFactory($http, $q) {
          *
          */
         generateNewPath: function() {
-            // issue #62 : init name and description to NULL, add placeholderX var.
-            // Cf PathFactory.js
-            // Cf MainCtrl.js -->
             var path = {
-                name: '',
+                name: 'My path',
                 description: '',
                 steps: [],
                 progression: {
