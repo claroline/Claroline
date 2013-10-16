@@ -21,6 +21,7 @@
 
                 if (parameters.isPickerMode) {
                     this.el.className = 'picker resource-manager';
+                    this.el.id = 'picker-' + $('.picker').length;
 
                     $(this.el).html(Twig.render(ModalWindow, {
                         'modalId': 'modal-picker',
@@ -1173,7 +1174,8 @@
                 this.views.picker.subViews.actions.callback = callback;
             }
 
-            $("#modal-picker").modal(action === 'open' ? 'show' : 'hide');
+            var parentElementId = this.views.picker.$el[0].id;
+            $("#" + parentElementId+ " .modal").modal(action === 'open' ? 'show' : 'hide');
         }
     };
 
