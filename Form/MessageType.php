@@ -10,16 +10,7 @@ class MessageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add(
-            'content',
-            'textarea',
-            array(
-                'attr' => array(
-                    'class' => 'tinymce',
-                    'data-theme' => 'advanced'
-                )
-            )
-        );
+        $builder->add('content', 'tinymce');
     }
 
     public function getName()
@@ -29,10 +20,6 @@ class MessageType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(
-            array(
-                'translation_domain' => 'forum'
-            )
-        );
+        $resolver->setDefaults(array('translation_domain' => 'forum'));
     }
 }
