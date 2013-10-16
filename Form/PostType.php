@@ -32,7 +32,7 @@ class PostType extends AbstractType
             ->add('content', 'textarea', array(
                     'attr' => array(
                         'class'      => 'form-control tinymce',
-                        'data-theme' => 'medium',
+                        'data-theme' => 'advanced',
                         'style'      => 'height: 300px;'
                     ),
                     'theme_options' => array('control_width' => 'col-md-12'),
