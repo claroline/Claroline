@@ -3,12 +3,12 @@
 <form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_report_drop', {'resourceId': dropzone.id, 'dropId': drop.id, 'correctionId':correction.id}) }}">
     {{ form_errors(form) }}
 
-    <p>{{ 'You are about to report a copy. This action is not without consequence.'|trans }}</p>
-    <p>{{ 'This ends your correction and assigns zero to the copy. Are you sure you want to do this?'|trans }}</p>
+    <p>{{ 'You are about to report a copy. This action is not without consequence.'|trans({}, 'icap_dropzone') }}</p>
+    <p>{{ 'This ends your correction and assigns zero to the copy. Are you sure you want to do this?'|trans({}, 'icap_dropzone') }}</p>
 
     <div class="row">
         <strong class="col-md-12">
-            {{ 'Report comment'|trans }}
+            {{ 'Report comment'|trans({}, 'icap_dropzone') }}
         </strong>
     </div>
     <div class="row">
@@ -19,10 +19,10 @@
     <div class="container form-group form-buttons">
         <div class="btn-group pull-right">
             <a href="{{ path('icap_dropzone_correct', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" class="btn btn-default">
-                {{ 'Cancel'|trans }}
+                {{ 'Cancel'|trans({}, 'icap_dropzone') }}
             </a>
             <button type="submit" class="btn btn-danger">
-                {{ 'Report copy and close correction'|trans }}
+                {{ 'Report copy and close correction'|trans({}, 'icap_dropzone') }}
             </button>
         </div>
     </div>

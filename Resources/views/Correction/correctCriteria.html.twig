@@ -4,11 +4,11 @@
 
 {% block dropzone_correct_content %}
     <h3>
-        {{ 'Evaluation criteria'|trans }}
+        {{ 'Evaluation criteria'|trans({}, 'icap_dropzone') }}
     </h3>
 
     <p>
-        {{ 'Note that you will assign depends on the following criteria'|trans }}
+        {{ 'Note that you will assign depends on the following criteria'|trans({}, 'icap_dropzone') }}
     </p>
 
     <div class="container">
@@ -53,38 +53,38 @@
                     <div class="btn-group pull-right">
                         {% if admin == true %}
                             {% if pager.currentPage == 1 %}
-                                <a href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': correction.drop.id}) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
+                                <a href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': correction.drop.id}) }}" class="btn btn-default">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</a>
                             {% else %}
                                 {% set previousPage = pager.currentPage-1 %}
-                                <a href="{{ path('icap_dropzone_drops_detail_correction_paginated', {'resourceId': dropzone.id, 'state' : edit ? 'edit' : 'show', 'correctionId': correction.id, 'page': previousPage}) }}" class="btn btn-default back-button">{{ 'Previous'|trans }}</a>
+                                <a href="{{ path('icap_dropzone_drops_detail_correction_paginated', {'resourceId': dropzone.id, 'state' : edit ? 'edit' : 'show', 'correctionId': correction.id, 'page': previousPage}) }}" class="btn btn-default back-button">{{ 'Previous'|trans({}, 'icap_dropzone') }}</a>
                             {% endif %}
                         {% else %}
                             {% if pager.currentPage == 1 %}
-                                <a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
+                                <a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}" class="btn btn-default">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</a>
                             {% else %}
                                 {% set previousPage = pager.currentPage-1 %}
-                                <a href="{{ path('icap_dropzone_correct_paginated', {'resourceId': dropzone.id, 'page': previousPage}) }}" class="btn btn-default back-button">{{ 'Previous'|trans }}</a>
+                                <a href="{{ path('icap_dropzone_correct_paginated', {'resourceId': dropzone.id, 'page': previousPage}) }}" class="btn btn-default back-button">{{ 'Previous'|trans({}, 'icap_dropzone') }}</a>
                             {% endif %}
                         {% endif %}
 
-                        <button type="submit" class="btn btn-primary">{{ 'Save and continue'|trans }}</button>
+                        <button type="submit" class="btn btn-primary">{{ 'Save and continue'|trans({}, 'icap_dropzone') }}</button>
                     </div>
                 {% else %}
                     <div class="btn-group pull-right">
                         {% if pager.currentPage == 1 %}
-                            <a href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': correction.drop.id}) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
+                            <a href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': correction.drop.id}) }}" class="btn btn-default">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</a>
                         {% else %}
                             {% set previousPage = pager.currentPage-1 %}
-                            <a href="{{ path('icap_dropzone_drops_detail_correction_paginated', {'resourceId': dropzone.id, 'state' : edit ? 'edit' : 'show', 'correctionId': correction.id, 'page': previousPage}) }}" class="btn btn-default">{{ 'Previous'|trans }}</a>
+                            <a href="{{ path('icap_dropzone_drops_detail_correction_paginated', {'resourceId': dropzone.id, 'state' : edit ? 'edit' : 'show', 'correctionId': correction.id, 'page': previousPage}) }}" class="btn btn-default">{{ 'Previous'|trans({}, 'icap_dropzone') }}</a>
                         {% endif %}
 
                         {% set nextPage = pager.currentPage+1 %}
                         {% if pager.currentPage == pager.nbPages and not dropzone.allowCommentInCorrection %}
                             {# nothing #}
                         {% elseif pager.currentPage == pager.nbPages and dropzone.allowCommentInCorrection %}
-                            <a href="{{ path('icap_dropzone_drops_detail_correction_comment', {'resourceId': dropzone.id, 'state' : edit ? 'edit' : 'show', 'correctionId': correction.id}) }}" class="btn btn-default">{{ 'Next'|trans }}</a>
+                            <a href="{{ path('icap_dropzone_drops_detail_correction_comment', {'resourceId': dropzone.id, 'state' : edit ? 'edit' : 'show', 'correctionId': correction.id}) }}" class="btn btn-default">{{ 'Next'|trans({}, 'icap_dropzone') }}</a>
                         {% else %}
-                            <a href="{{ path('icap_dropzone_drops_detail_correction_paginated', {'resourceId': dropzone.id, 'state' : edit ? 'edit' : 'show', 'correctionId': correction.id, 'page': nextPage}) }}" class="btn btn-default">{{ 'Next'|trans }}</a>
+                            <a href="{{ path('icap_dropzone_drops_detail_correction_paginated', {'resourceId': dropzone.id, 'state' : edit ? 'edit' : 'show', 'correctionId': correction.id, 'page': nextPage}) }}" class="btn btn-default">{{ 'Next'|trans({}, 'icap_dropzone') }}</a>
                         {% endif %}
                     </div>
                 {% endif %}

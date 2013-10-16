@@ -45,6 +45,7 @@ class DocumentType extends AbstractType
     {
         $resolver->setDefaults(array(
             'documentType' => 'url',
+            'translation_domain' => 'icap_dropzone',
         ));
     }
 }

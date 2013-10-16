@@ -6,7 +6,7 @@
 {% block dropzone_content %}
     <div class="container">
         <h3>
-            {{ 'Warning'|trans }}
+            {{ 'Warning'|trans({}, 'icap_dropzone') }}
         </h3>
         {% include "IcapDropzoneBundle:Drop:reportDropForm.html.twig" %}
     </div>

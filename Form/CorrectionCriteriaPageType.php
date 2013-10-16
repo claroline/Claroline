@@ -49,6 +49,7 @@ class CorrectionCriteriaPageType extends AbstractType
             'totalChoice' => 5,
             'criteria' => array(),
             'edit' => true,
+            'translation_domain' => 'icap_dropzone'
         ));
     }
 }

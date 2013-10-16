@@ -46,7 +46,7 @@ class DropController extends DropzoneBaseController
         if ($dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user, 'finished' => true)) !== null) {
             $this->getRequest()->getSession()->getFlashBag()->add(
                 'error',
-                $this->get('translator')->trans('You ve already made ​​your copy for this review')
+                $this->get('translator')->trans('You ve already made ​​your copy for this review', array(), 'icap_dropzone')
             );
 
             return $this->redirect(
@@ -93,7 +93,7 @@ class DropController extends DropzoneBaseController
 
                 $this->getRequest()->getSession()->getFlashBag()->add(
                     'success',
-                    $this->get('translator')->trans('Your copy has been saved')
+                    $this->get('translator')->trans('Your copy has been saved', array(), 'icap_dropzone')
                 );
 
                 return $this->redirect(
@@ -425,7 +425,7 @@ class DropController extends DropzoneBaseController
                     ->getRequest()
                     ->getSession()
                     ->getFlashBag()
-                    ->add('success', $this->get('translator')->trans('Your report has been saved'));
+                    ->add('success', $this->get('translator')->trans('Your report has been saved', array(), 'icap_dropzone'));
 
                 return $this->redirect(
                     $this->generateUrl(

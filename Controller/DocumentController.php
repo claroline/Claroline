@@ -35,7 +35,8 @@ class DocumentController extends DropzoneBaseController
             $hiddenDirectory = new Directory();
             $name = $this->get('translator')->trans(
                 'Hidden folder for "%dropzoneName%"',
-                array('%dropzoneName%' => $dropzone->getResourceNode()->getName())
+                array('%dropzoneName%' => $dropzone->getResourceNode()->getName()),
+                'icap_dropzone'
             );
             $hiddenDirectory->setName($name);
 
@@ -72,7 +73,7 @@ class DocumentController extends DropzoneBaseController
 
         if ($hiddenDropDirectory == null) {
             $hiddenDropDirectory = new Directory();
-            $name = $this->get('translator')->trans('Copy n°%number%', array('%number%' => $drop->getNumber()));
+            $name = $this->get('translator')->trans('Copy n°%number%', array('%number%' => $drop->getNumber()), 'icap_dropzone');
             $hiddenDropDirectory->setName($name);
 
             $parent = $this->getDropZoneHiddenDirectory($dropzone);
@@ -142,7 +143,7 @@ class DocumentController extends DropzoneBaseController
         $revision->setContent($richText);
         $revision->setUser($drop->getUser());
         $text = new Text();
-        $text->setName($this->get('translator')->trans('Free text'));
+        $text->setName($this->get('translator')->trans('Free text', array(), 'icap_dropzone'));
         $revision->setText($text);
         $em->persist($text);
         $em->persist($revision);
@@ -257,7 +258,7 @@ class DocumentController extends DropzoneBaseController
 
         $view = 'IcapDropzoneBundle:Document:document.html.twig';
         if ($this->getRequest()->isXMLHttpRequest()) {
-            $view = 'IcapDropzoneBundle:Dropzone:documentInline.html.twig';
+            $view = 'IcapDropzoneBundle:Document:documentInline.html.twig';
         }
 
         return $this->render(

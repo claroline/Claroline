@@ -6,8 +6,8 @@
 {% block dropzone_content %}
     <div class="container container-dropzone">
         <h2>
-            {{ 'List of copies'|trans }}
-            <a class=" btn btn-default pull-right" href="{{ path('icap_dropzone_edit', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-edit"></span> {{ 'Edit evaluation'|trans }}</a>
+            {{ 'List of copies'|trans({}, 'icap_dropzone') }}
+            <a class=" btn btn-default pull-right" href="{{ path('icap_dropzone_edit', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-edit"></span> {{ 'Edit evaluation'|trans({}, 'icap_dropzone') }}</a>
         </h2>
         {{ macros.flashBox() }}
 
