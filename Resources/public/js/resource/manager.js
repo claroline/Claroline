@@ -254,9 +254,6 @@
                     }
 
                     this.dispatcher.trigger('picker', {action: 'close'});
-                },
-                'click a.filter-result': function (event) {
-                    this.dispatcher.trigger('filter-result', {action: $(event.currentTarget).attr('data-type')});
                 }
             },
             filter: function () {
@@ -829,10 +826,6 @@
             },
             'edit-rights-creation': function (event) {
                 this.editCreationRights(event.action, event.data);
-            },
-            'filter-result': function (event) {
-                this.setFilterState(event.action);
-                this.parameters.filterState = event.action;
             }
         },
         initialize: function (parameters) {
@@ -862,16 +855,6 @@
                 if (!hasMatchedRoute) {
                     this.displayResources(parameters.directoryId, 'main');
                 }
-            }
-        },
-        setFilterState: function (type) {
-            $('.node-thumbnail').show();
-            if (type !== 'none') {
-                $.each($('.node-element'), function (key, element) {
-                    if ($(element).attr('data-type') !== type && $(element).attr('data-type') !== 'directory') {
-                        $(element.parentElement).hide();
-                    }
-                });
             }
         },
         displayResources: function (directoryId, view, searchParameters) {
@@ -949,8 +932,6 @@
                     } else {
                         $('#sortable').sortable('enable');
                     }
-
-                    this.setFilterState(this.parameters.filterState);
                 }
             });
         },
