@@ -3,8 +3,13 @@
 <form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_edit_create_criterion', {'resourceId': dropzone.id, 'page':page, 'criterionId':criterion.id}) }}">
     {{ form_errors(form) }}
 
-    <div class="form-group">
-        {{ form_row(form.instruction) }}
+    <div class="row">
+        <div class="col-md-12">
+            <label for="icap_dropzone_criterion_form_instruction">{{ 'icap_dropzone_criterion_form_instruction'|trans({}, 'icap_dropzone') }}</label>
+        </div>
+    </div>
+    <div class="row">
+        {{ form_row(form.instruction, {'label_col_size': ' ', 'input_col_size': 'col-md-12', 'label_attr': {'style': 'display: none;'}}) }}
     </div>
 
     <div class="column-input">
@@ -17,12 +22,12 @@
 
     <div class="form-group">
         <div class="col-lg-offset-2 col-lg-10 btn-group form-buttons">
-            <a href="{{ path('icap_dropzone_edit_criteria_paginated', {'resourceId': dropzone.id, 'page':page}) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
+            <a href="{{ path('icap_dropzone_edit_criteria_paginated', {'resourceId': dropzone.id, 'page':page}) }}" class="btn btn-default">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</a>
             <button type="submit" class="btn btn-primary">
                 {% if criterion.id == 0 %}
-                    {{ 'Create'|trans }}
+                    {{ 'Create'|trans({}, 'icap_dropzone') }}
                 {% else %}
-                    {{ 'dropzone_edit'|trans }}
+                    {{ 'dropzone_edit'|trans({}, 'icap_dropzone') }}
                 {% endif %}
             </button>
         </div>

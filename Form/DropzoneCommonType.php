@@ -79,7 +79,8 @@ class DropzoneCommonType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'language' => 'en'
+                'language' => 'en',
+                'translation_domain' => 'icap_dropzone',
             )
         );
     }

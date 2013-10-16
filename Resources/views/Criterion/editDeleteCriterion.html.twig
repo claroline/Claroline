@@ -2,7 +2,7 @@
 
 {% block drop_zone_content_edit %}
     <h3>
-        {{ 'Delete a criterion'|trans }}
+        {{ 'Delete a criterion'|trans({}, 'icap_dropzone') }}
     </h3>
     {% include "IcapDropzoneBundle:Dropzone:editDeleteCriterionForm.html.twig" %}
 {% endblock %}

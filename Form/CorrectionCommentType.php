@@ -36,6 +36,7 @@ class CorrectionCommentType extends AbstractType
         $resolver->setDefaults(array(
             'edit' => true,
             'allowCommentInCorrection' => false,
+            'translation_domain' => 'icap_dropzone'
         ));
     }
 }

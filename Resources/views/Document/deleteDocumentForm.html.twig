@@ -4,10 +4,10 @@
     <div class="container form-group form-buttons">
         <div class="btn-group pull-right">
             <a href="{{ path('icap_dropzone_drop', {'resourceId': dropzone.id}) }}" class="btn btn-default">
-                {{ 'Cancel'|trans }}
+                {{ 'Cancel'|trans({}, 'icap_dropzone') }}
             </a>
             <button type="submit" class="btn btn-danger">
-                {{ 'Confirm delete'|trans }}
+                {{ 'Confirm delete'|trans({}, 'icap_dropzone') }}
             </button>
         </div>
     </div>

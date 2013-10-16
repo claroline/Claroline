@@ -6,18 +6,18 @@
             <ul class="nav navbar-nav">
                 <li>
                     <a href="{{ path('icap_dropzone_drops_by_user', {'resourceId': dropzone.id}) }}">
-                        {{ 'Copies evaluation finished'|trans }} <span class="badge">{{ nbDropCorrected }}</span>
+                        {{ 'Copies evaluation finished'|trans({}, 'icap_dropzone') }} <span class="badge">{{ nbDropCorrected }}</span>
                     </a>
                 </li>
                 <li class="active">
                     <a href="{{ path('icap_dropzone_drops_awaiting', {'resourceId': dropzone.id}) }}">
-                        {{ 'Copies being evaluated'|trans }} <span class="badge">{{ nbDrop - nbDropCorrected }}</span>
+                        {{ 'Copies being evaluated'|trans({}, 'icap_dropzone') }} <span class="badge">{{ nbDrop - nbDropCorrected }}</span>
                     </a>
                 </li>
             </ul>
         </div>
     </div>
-    <h3>{{ 'Awaiting'|trans }}</h3>
+    <h3>{{ 'Awaiting'|trans({}, 'icap_dropzone') }}</h3>
 
     <div class="container row">
         {% if pager.haveToPaginate %}
@@ -40,28 +40,28 @@
             <div class="panel-heading">
                 <div class="row">
                     <h3 class="panel-title col-md-6">
-                        {% if drop.reported %}<span class="glyphicon icon-warning-sign" data-toggle="tooltip" title="" data-original-title="{{ 'This copy has been reported'|trans }}"></span>{% endif %}
-                        {{ 'Copy of %firstName% %lastName%'|trans({'%firstName%': drop.user.firstName|capitalize, '%lastName%': drop.user.lastName|upper}) }}
+                        {% if drop.reported %}<span class="glyphicon icon-warning-sign" data-toggle="tooltip" title="" data-original-title="{{ 'This copy has been reported'|trans({}, 'icap_dropzone') }}"></span>{% endif %}
+                        {{ 'Copy of %firstName% %lastName%'|trans({'%firstName%': drop.user.firstName|capitalize, '%lastName%': drop.user.lastName|upper}, 'icap_dropzone') }}
                     </h3>
                     <div class="col-md-6">
                         <div class="btn-group pull-right">
-                            <a href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" type="button" class="btn btn-default btn-xs">{{ 'See corrections'|trans }}</a>
-                            <a href="{{ path('icap_dropzone_drops_detail_add_correction', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" type="button" class="btn btn-primary btn-xs">{{ 'Add a correction'|trans }}</a>
-                            <a href="{{ path('icap_dropzone_drops_delete', {'resourceId': dropzone.id, 'dropId': drop.id, 'tab': 2, 'page': pager.currentPage}) }}" class="btn btn-danger btn-xs launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete copy'|trans }}</a>
+                            <a href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" type="button" class="btn btn-default btn-xs">{{ 'See corrections'|trans({}, 'icap_dropzone') }}</a>
+                            <a href="{{ path('icap_dropzone_drops_detail_add_correction', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" type="button" class="btn btn-primary btn-xs">{{ 'Add a correction'|trans({}, 'icap_dropzone') }}</a>
+                            <a href="{{ path('icap_dropzone_drops_delete', {'resourceId': dropzone.id, 'dropId': drop.id, 'tab': 2, 'page': pager.currentPage}) }}" class="btn btn-danger btn-xs launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete copy'|trans({}, 'icap_dropzone') }}</a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="panel-body">
                 <div class="row text-muted">
-                    <div class="col-md-3">{{ 'Established on'|trans }}</div>
-                    <div class="col-md-3">{{ 'Last correction'|trans }}</div>
-                    <div class="col-md-4">{{ 'Documents'|trans }}</div>
-                    <div class="col-md-2">{{ 'Corr.'|trans }}</div>
+                    <div class="col-md-3">{{ 'Established on'|trans({}, 'icap_dropzone') }}</div>
+                    <div class="col-md-3">{{ 'Last correction'|trans({}, 'icap_dropzone') }}</div>
+                    <div class="col-md-4">{{ 'Documents'|trans({}, 'icap_dropzone') }}</div>
+                    <div class="col-md-2">{{ 'Corr.'|trans({}, 'icap_dropzone') }}</div>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-3">{{ drop.dropDate|date('formatDatetime'|trans) }}</div>
+                    <div class="col-md-3">{{ drop.dropDate|date('formatDatetime'|trans({}, 'icap_dropzone')) }}</div>
                     <div class="col-md-3">{% include 'IcapDropzoneBundle:Drop:dropsLastCorrectionDate.html.twig' %}</div>
                     <div class="col-md-4">
                         <ul>
@@ -79,7 +79,7 @@
     {% if pager.nbResults == 0 %}
         <div class="row">
             <div class="col-md-12">
-                {{ 'No copy was made'|trans }}
+                {{ 'No copy was made'|trans({}, 'icap_dropzone') }}
             </div>
         </div>
     {% endif %}

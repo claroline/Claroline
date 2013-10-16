@@ -6,13 +6,13 @@
     <li>
         <a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-file"></span> {{ dropzone.resourceNode.name }}</a>
     </li>
-    <li class="active"> {{ 'Make my copy'|trans }}</li>
+    <li class="active"> {{ 'Make my copy'|trans({}, 'icap_dropzone') }}</li>
 {% endblock %}
 
 {% block dropzone_content %}
     <div class="container">
         <h3>
-            {{ 'Make my copy'|trans }}
+            {{ 'Make my copy'|trans({}, 'icap_dropzone') }}
         </h3>
 
         {{ macros.flashBox() }}
@@ -23,15 +23,15 @@
         {% endif %}
 
         {% if allowedTypes|length <= 0 %}
-            <span class="text-danger">{{ 'No document type allowed'|trans }}</span>
+            <span class="text-danger">{{ 'No document type allowed'|trans({}, 'icap_dropzone') }}</span>
         {% elseif allowedTypes|length == 1 %}
-            <a class="btn btn-primary launch-inline disabled-during-add {% if allowedTypes.0 == 'resource' %}launch-resource-picker{% endif %}" href="{{ path('icap_dropzone_document', {'resourceId': dropzone.id, 'documentType': allowedTypes.0, 'dropId': drop.id}) }}">{{ 'Add a %type% document'|trans({'%type%': ((allowedTypes.0)|trans|lower)}) }}</a>
+            <a class="btn btn-primary launch-inline disabled-during-add {% if allowedTypes.0 == 'resource' %}launch-resource-picker{% endif %}" href="{{ path('icap_dropzone_document', {'resourceId': dropzone.id, 'documentType': allowedTypes.0, 'dropId': drop.id}) }}">{{ 'Add a %type% document'|trans({'%type%': ((allowedTypes.0)|trans({}, 'icap_dropzone')|lower)}, 'icap_dropzone') }}</a>
         {% else %}
             <div class="dropdown">
-                <a data-toggle="dropdown" class="btn btn-primary disabled-during-add" href="#">{{ 'Add a document'|trans }}</a>
+                <a data-toggle="dropdown" class="btn btn-primary disabled-during-add" href="#">{{ 'Add a document'|trans({}, 'icap_dropzone') }}</a>
                 <ul id="menu1" class="dropdown-menu" role="menu" aria-labelledby="drop4">
                     {% for allowedType in allowedTypes %}
-                        <li role="presentation"><a role="menuitem" tabindex="-1" class="launch-inline disabled-during-add {% if allowedType == 'resource' %}launch-resource-picker{% endif %}" href="{{ path('icap_dropzone_document', {'resourceId': dropzone.id, 'documentType': allowedType, 'dropId': drop.id}) }}">{{ allowedType|trans }}</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" class="launch-inline disabled-during-add {% if allowedType == 'resource' %}launch-resource-picker{% endif %}" href="{{ path('icap_dropzone_document', {'resourceId': dropzone.id, 'documentType': allowedType, 'dropId': drop.id}) }}">{{ allowedType|trans({}, 'icap_dropzone') }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
@@ -46,7 +46,7 @@
                 </div>
 
                 <div class="col-md-3">
-                    <a href="{{ path('icap_dropzone_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" class="btn btn-danger btn-sm pull-right launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete'|trans }}</a>
+                    <a href="{{ path('icap_dropzone_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" class="btn btn-danger btn-sm pull-right launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete'|trans({}, 'icap_dropzone') }}</a>
                 </div>
             </div>
         {% endfor %}
@@ -66,7 +66,7 @@
                 <div class="col-md-12">
 
                     <!-- Button trigger modal -->
-                    <a data-toggle="modal" href="#saveModal" class="btn btn-primary pull-right disabled-during-add">{{ 'Save and finished'|trans }}</a>
+                    <a data-toggle="modal" href="#saveModal" class="btn btn-primary pull-right disabled-during-add">{{ 'Save and finished'|trans({}, 'icap_dropzone') }}</a>
 
                     <!-- Modal -->
                     <div class="modal fade" id="saveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -74,16 +74,16 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    <h4 class="modal-title">{{ 'Warning'|trans }}</h4>
+                                    <h4 class="modal-title">{{ 'Warning'|trans({}, 'icap_dropzone') }}</h4>
                                 </div>
                                 <div class="modal-body">
-                                    {{ 'You are about to make your copy. This action is final. Are you sure you have done'|trans }}
+                                    {{ 'You are about to make your copy. This action is final. Are you sure you have done'|trans({}, 'icap_dropzone') }}
                                 </div>
                                 <div class="modal-footer">
-                                    <a href="#" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans }}</a>
+                                    <a href="#" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</a>
 
                                     <button type="submit" class="btn btn-primary pull-right">
-                                        {{ 'Confirm and finished'|trans }}
+                                        {{ 'Confirm and finished'|trans({}, 'icap_dropzone') }}
                                     </button>
                                 </div>
                             </div><!-- /.modal-content -->

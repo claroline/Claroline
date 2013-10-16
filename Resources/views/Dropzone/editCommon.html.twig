@@ -8,32 +8,32 @@
             {#<ul class="nav navbar-nav">#}
                 {#<li class="active">#}
                     {#<a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.id}) }}">#}
-                        {#{{ 'Common'|trans }}#}
+                        {#{{ 'Common'|trans({}, 'icap_dropzone') }}#}
                     {#</a>#}
                 {#</li>#}
                 {#<li class="{% if dropzone.editionState < 1 %}disabled{% endif %}">#}
                     {#<a href="{% if dropzone.editionState < 1 %}#{% else %}{{ path('icap_dropzone_edit_criteria', {'resourceId': dropzone.id}) }}{% endif %}">#}
-                        {#{{ 'Peer review criteria'|trans }}#}
+                        {#{{ 'Peer review criteria'|trans({}, 'icap_dropzone') }}#}
                     {#</a>#}
                 {#</li>#}
             {#</ul>#}
         {#</div>#}
     {#</div>#}
-    {#<h3>{{ 'Common information'|trans }}</h3>#}
+    {#<h3>{{ 'Common information'|trans({}, 'icap_dropzone') }}</h3>#}
 
     <form class="form-horizontal" role="form" method="POST" action="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.id}) }}" {{ form_enctype(form) }}>
 
         {{ form_errors(form) }}
 
-        <p>{{ 'common_explication'|trans|raw }}</p>
+        <p>{{ 'common_explication'|trans({}, 'icap_dropzone')|raw }}</p>
 
-        <h4>{{ 'Instruction'|trans }}</h4>
+        <h4>{{ 'Instruction'|trans({}, 'icap_dropzone') }}</h4>
         <div class="form-group">
             {{ form_row(form.instruction, {'input_col_size': 'col-md-12', 'label_col_size': '', 'label_attr': {'style': 'display: none;'}}) }}
         </div>
 
-        <h4>{{ 'Document type allowed'|trans }}</h4>
-        <p>{{ 'Select the types of documents that learners can make'|trans }}</p>
+        <h4>{{ 'Document type allowed'|trans({}, 'icap_dropzone') }}</h4>
+        <p>{{ 'Select the types of documents that learners can make'|trans({}, 'icap_dropzone') }}</p>
 
         <div class="form-group">
             {{ form_row(form.allowUpload, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
@@ -42,20 +42,20 @@
             {{ form_row(form.allowUrl, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
         </div>
 
-        <h4>{{ 'Type of evaluation'|trans }}</h4>
-        <p>{{ 'Select how copies will be corrected'|trans }}</p>
+        <h4>{{ 'Type of evaluation'|trans({}, 'icap_dropzone') }}</h4>
+        <p>{{ 'Select how copies will be corrected'|trans({}, 'icap_dropzone') }}</p>
         <div class="form-group">
 
             {{ form_row(form.peerReview, {'label_attr': {'style': 'display: none;'}}) }}
 
             <div class="col-lg-offset-3 col-lg-9 peer-review-options">
-                <div id="expected-total-correction-explication" class="col-lg-8 control-label" style="text-align: left;" data-toggle="popover" data-placement="bottom" data-content="{{ 'expected_total_correction'|trans|raw }}">
-                    <span class="glyphicon icon-question-sign"></span> {{ 'Expected total correction'|trans }}
+                <div id="expected-total-correction-explication" class="col-lg-8 control-label" style="text-align: left;" data-toggle="popover" data-placement="bottom" data-content="{{ 'expected_total_correction'|trans({}, 'icap_dropzone')|raw }}">
+                    <span class="glyphicon icon-question-sign"></span> {{ 'Expected total correction'|trans({}, 'icap_dropzone') }}
                 </div>
                 {{ form_row(form.expectedTotalCorrection, {'input_col_size': 'col-lg-4', 'label_col_size': '', 'attr': {'style': 'width: 60px;'}, 'label_attr': {'style': 'display: none;'}}) }}
             </div>
         </div>
-        <h4>{{ 'Rating'|trans }}</h4>
+        <h4>{{ 'Rating'|trans({}, 'icap_dropzone') }}</h4>
 
         <div class="form-group">
             {{ form_row(form.displayNotationToLearners, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
@@ -66,27 +66,27 @@
         </div>
 
 
-        <h4>{{ 'Planning'|trans }}</h4>
+        <h4>{{ 'Planning'|trans({}, 'icap_dropzone') }}</h4>
 
-        <p>{{ 'Planification instruction'|trans }}</p>
+        <p>{{ 'Planification instruction'|trans({}, 'icap_dropzone') }}</p>
 
-        <p class="peer-review-options">{{ 'Planification peer review instruction'|trans }}</p>
+        <p class="peer-review-options">{{ 'Planification peer review instruction'|trans({}, 'icap_dropzone') }}</p>
 
         {{ form_errors(form.manualPlanning) }}
         <div class="radio">
             <label>
                 {{ form_widget(form.manualPlanning.0) }}
-                <strong>{{ 'manualPlanning'|trans }}</strong>
+                <strong>{{ 'manualPlanning'|trans({}, 'icap_dropzone') }}</strong>
             </label>
         </div>
         <div id="planning_manual" class="form-group">
-            <div class="col-md-offset-2">{{ 'Choose current phase'|trans }}</div>
+            <div class="col-md-offset-2">{{ 'Choose current phase'|trans({}, 'icap_dropzone') }}</div>
             {{ form_row(form.manualState, {'label_attr': {'style': 'display: none;'}}) }}
         </div>
 
         <label class="radio">
             {{ form_widget(form.manualPlanning.1) }}
-            <strong>{{ 'scheduleByDatePlanning'|trans }}</strong>
+            <strong>{{ 'scheduleByDatePlanning'|trans({}, 'icap_dropzone') }}</strong>
         </label>
 
         <div id="planning_dates">
@@ -113,11 +113,11 @@
         </div>
 
         <div class="btn-group pull-right">
-            <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}" class="btn btn-default">{{ 'Cancel'|trans }}</a>
+            <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}" class="btn btn-default">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</a>
 
-            <a href="#" class="btn btn-primary peer-review-options save-button" {% if dropzone.peerReview %}style="display: none;"{% endif %}>{{ 'Save'|trans }}</a>
+            <a href="#" class="btn btn-primary peer-review-options save-button" {% if dropzone.peerReview %}style="display: none;"{% endif %}>{{ 'Save'|trans({}, 'icap_dropzone') }}</a>
 
-            <button type= "submit" class="btn btn-primary submit_button">{% if dropzone.peerReview %}{{ 'Save and continue'|trans }}{% else %}{{ 'Save and finished'|trans }}{% endif %}</button>
+            <button type= "submit" class="btn btn-primary submit_button">{% if dropzone.peerReview %}{{ 'Save and continue'|trans({}, 'icap_dropzone') }}{% else %}{{ 'Save and finished'|trans({}, 'icap_dropzone') }}{% endif %}</button>
         </div>
         {{ form_rest(form) }}
     </form>
@@ -161,7 +161,7 @@
                     $('#icap_dropzone_common_form_manualState_2').parent().show();
                     $('#icap_dropzone_common_form_manualState_3').parent().show();
 
-                    $('.submit_button').html('{{ 'Save and continue'|trans }}');
+                    $('.submit_button').html('{{ 'Save and continue'|trans({}, 'icap_dropzone') }}');
                 } else {
                     $('.peer-review-options').hide();
                     $('#icap_dropzone_common_form_manualState_2').parent().hide();
@@ -176,7 +176,7 @@
                     $('#icap_dropzone_common_form_startReview_date').val(null);
                     $('#icap_dropzone_common_form_startReview_time').val(null);
 
-                    $('.submit_button').html('{{ 'Save and finished'|trans }}');
+                    $('.submit_button').html('{{ 'Save and finished'|trans({}, 'icap_dropzone') }}');
                 }
             }
 

@@ -8,7 +8,7 @@
 {% block dropzone_content %}
     <div class="container container-dropzone">
         <h3>
-            {{ 'Invalidate a drop'|trans }}
+            {{ 'Invalidate a drop'|trans({}, 'icap_dropzone') }}
         </h3>
         {% include "IcapDropzoneBundle:Dropzone:dropsDeleteForm.html.twig" %}
     </div>

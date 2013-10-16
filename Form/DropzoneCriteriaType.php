@@ -25,6 +25,8 @@ class DropzoneCriteriaType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array());
+        $resolver->setDefaults(array(
+            'translation_domain' => 'icap_dropzone',
+        ));
     }
 }

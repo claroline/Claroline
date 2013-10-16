@@ -2,7 +2,7 @@
 
 {% block document_body %}
     <div class="row">
-        {{ form_row(form.document, {'label_col_size': ' ', 'input_col_size': 'col-md-12', 'attr': {'placeholder': (documentType~'_placeholder')|trans}, 'label_attr': {'class': 'sr-only'} }) }}
+        {{ form_row(form.document, {'label_col_size': ' ', 'input_col_size': 'col-md-12', 'attr': {'placeholder': (documentType~'_placeholder')|trans({}, 'icap_dropzone')}, 'label_attr': {'class': 'sr-only'} }) }}
     </div>
 
     <br/>
@@ -10,9 +10,9 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group pull-right">
-                <a href="{{ path('icap_dropzone_drop', {'resourceId': dropzone.id}) }}" class="btn btn-default cancel-inline">{{ 'Cancel'|trans }}</a>
+                <a href="{{ path('icap_dropzone_drop', {'resourceId': dropzone.id}) }}" class="btn btn-default cancel-inline">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</a>
                 <button type="submit" class="btn btn-primary">
-                    {{ 'Add'|trans }}
+                    {{ 'Add'|trans({}, 'icap_dropzone') }}
                 </button>
             </div>
         </div>

@@ -3,11 +3,11 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-md-3 text-muted">{{ 'Drop by'|trans }}</div>
+            <div class="col-md-3 text-muted">{{ 'Drop by'|trans({}, 'icap_dropzone') }}</div>
             <div class="col-md-9">{{ drop.user.firstName }} {{ drop.user.lastName }}</div>
         </div>
         <div class="row">
-            <div class="col-md-3 text-muted">{{ 'Documents'|trans }}</div>
+            <div class="col-md-3 text-muted">{{ 'Documents'|trans({}, 'icap_dropzone') }}</div>
             <div class="col-md-9">
                 <ul>
                     {% for document in drop.documents %}
@@ -21,10 +21,10 @@
     <div class="container form-group form-buttons">
         <div class="btn-group pull-right">
             <a href="{{ path(previousPath, {'resourceId': dropzone.id, 'page': page}) }}" class="btn btn-default">
-                {{ 'Cancel'|trans }}
+                {{ 'Cancel'|trans({}, 'icap_dropzone') }}
             </a>
             <button type="submit" class="btn btn-danger">
-                {{ 'Confirm delete'|trans }}
+                {{ 'Confirm delete'|trans({}, 'icap_dropzone') }}
             </button>
         </div>
     </div>

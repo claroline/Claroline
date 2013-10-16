@@ -5,4 +5,4 @@
     {% endif %}
 {%  endfor %}
 
-{{ date|date('formatDatetime'|trans) }}
+{{ date|date('formatDatetime'|trans({}, 'icap_dropzone')) }}

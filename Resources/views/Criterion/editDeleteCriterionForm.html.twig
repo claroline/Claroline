@@ -2,16 +2,16 @@
     {{ form_errors(form) }}
 
     <div class="container">
-        {{ 'Are you sure you want to delete the %number%'|trans({'%number%': number}) }}
+        {{ 'Are you sure you want to delete the %number%'|trans({'%number%': number}, 'icap_dropzone') }}
     </div>
 
     <div class="container form-group form-buttons">
         <div class="btn-group pull-right">
             <a href="{{ path('icap_dropzone_edit_criteria_paginated', {'resourceId': dropzone.id, 'page': page}) }}" class="btn btn-default">
-                {{ 'Cancel'|trans }}
+                {{ 'Cancel'|trans({}, 'icap_dropzone') }}
             </a>
             <button type="submit" class="btn btn-danger">
-                {{ 'Confirm delete'|trans }}
+                {{ 'Confirm delete'|trans({}, 'icap_dropzone') }}
             </button>
         </div>
     </div>

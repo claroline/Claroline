@@ -8,27 +8,27 @@
             {#<ul class="nav navbar-nav">#}
                 {#<li>#}
                     {#<a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.id}) }}">#}
-                        {#{{ 'Common'|trans }}#}
+                        {#{{ 'Common'|trans({}, 'icap_dropzone') }}#}
                     {#</a>#}
                 {#</li>#}
                 {#<li class="active {% if dropzone.editionState < 1 %}disabled{% endif %}">#}
                     {#<a href="{% if dropzone.editionState < 1 %}#{% else %}{{ path('icap_dropzone_edit_criteria', {'resourceId': dropzone.id}) }}{% endif %}">#}
-                        {#{{ 'Peer review criteria'|trans }}#}
+                        {#{{ 'Peer review criteria'|trans({}, 'icap_dropzone') }}#}
                     {#</a>#}
                 {#</li>#}
             {#</ul>#}
         {#</div>#}
     {#</div>#}
 
-    <p>{{ 'criteria_explication'|trans|raw }}</p>
+    <p>{{ 'criteria_explication'|trans({}, 'icap_dropzone')|raw }}</p>
 
-    <h3>{{ 'Evaluation Criteria'|trans }}</h3>
+    <h3>{{ 'Evaluation Criteria'|trans({}, 'icap_dropzone') }}</h3>
 
     <div class="container">
         <form class="form-horizontal" method="POST" action="{{ path('icap_dropzone_edit_criteria', {'resourceId': dropzone.id}) }}">
             <div class="row">
                 <div class="col-md-9">
-                    <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage}) }}" class="btn btn-primary add-criterion-button disabled-during-edition"><span class="glyphicon icon-plus"> {{ 'Add a criterion'|trans }}</span></a>
+                    <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage}) }}" class="btn btn-primary add-criterion-button disabled-during-edition"><span class="glyphicon icon-plus"> {{ 'Add a criterion'|trans({}, 'icap_dropzone') }}</span></a>
                 </div>
 
                 <div class="col-md-3 add-remove-column" {% if pager.nbResults == 0 %}style="display: none;"{% endif %}>
@@ -38,7 +38,7 @@
 
                     <div class="row column-input-js" style="display: none;">
                         <label class="col-md-12 control-label pull-right" style="text-align: center;">
-                            <div>{{ 'Change scale'|trans }}</div>
+                            <div>{{ 'Change scale'|trans({}, 'icap_dropzone') }}</div>
                             <span>
                                 <a href="#" class="remove-column"><span class="glyphicon icon-minus-sign-alt"></span> </a>
                                 <a href="#" class="add-column"><span class="glyphicon icon-plus-sign-alt"></span> </a>
@@ -68,7 +68,7 @@
             {% if pager %}
                 {% for criterion in pager.currentPageResults %}
                     <hr/>
-                    <div id="criterion-{{ criterion.id }}">
+                    <div id="criterion-{{ criterion.id }}" class="criterion-row">
                         {% set criterionNumber = (((pager.currentPage-1) * pager.maxPerPage) + loop.index) %}
                         <h4>#{{ criterionNumber }}</h4>
                         <div class="criterion-show">
@@ -80,8 +80,8 @@
                                 <div class="col-md-3">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <span>{{ 'Not at all'|trans }}</span>
-                                            <span class="pull-right">{{ 'Entirely'|trans }}</span>
+                                            <span>{{ 'Not at all'|trans({}, 'icap_dropzone') }}</span>
+                                            <span class="pull-right">{{ 'Entirely'|trans({}, 'icap_dropzone') }}</span>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -98,13 +98,13 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="btn-group pull-right">
-                                        <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id}) }}" class="btn btn-default btn-sm edit-criterion-button disabled-during-edition" data-criterion="criterion-{{ criterion.id }}"><span class="glyphicon icon-edit"></span> {{ 'dropzone_edit'|trans }}</a>
-                                        <a href="{{ path('icap_dropzone_edit_delete_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id, 'number': criterionNumber}) }}" class="btn btn-danger btn-sm launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete'|trans }}</a>
+                                        <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id}) }}" class="btn btn-default btn-sm edit-criterion-button disabled-during-edition" data-criterion="criterion-{{ criterion.id }}"><span class="glyphicon icon-edit"></span> {{ 'dropzone_edit'|trans({}, 'icap_dropzone') }}</a>
+                                        <a href="{{ path('icap_dropzone_edit_delete_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id, 'number': criterionNumber}) }}" class="btn btn-danger btn-sm launch-modal"><span class="glyphicon icon-trash"></span> {{ 'Delete'|trans({}, 'icap_dropzone') }}</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="criterion-edit" style="display: none;"></div>
+                        <div class="criterion-edit well" style="display: none;"></div>
                     </div>
                 {% endfor %}
             {% endif %}
@@ -129,15 +129,14 @@
             <div class="row add-criteria-zone">
                 <div class="col-md-12">
                     {% if pager.nbResults == 0 %}
-                        {{ 'There are no evaluation criterion'|trans }}
+                        {{ 'There are no evaluation criterion'|trans({}, 'icap_dropzone') }}
                         <hr/>
                     {% endif %}
                 </div>
             </div>
 
-            <div class="new-criteria" style="display: none;">
+            <div id="new-criteria" class="new-criteria well" style="display: none;">
                 <div class="new-criteria-zone"></div>
-                <hr/>
             </div>
 
             <div class="template" style="display: none;">
@@ -150,8 +149,8 @@
                         <div class="col-md-3">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <span>{{ 'Not at all'|trans }}</span>
-                                    <span class="pull-right">{{ 'Entirely'|trans }}</span>
+                                    <span>{{ 'Not at all'|trans({}, 'icap_dropzone') }}</span>
+                                    <span class="pull-right">{{ 'Entirely'|trans({}, 'icap_dropzone') }}</span>
                                 </div>
                             </div>
                             <div class="row">
@@ -168,8 +167,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="btn-group pull-right">
-                                <a href="#" class="btn btn-default btn-sm form-cancel" data-criterion="new">{{ 'Cancel'|trans }}</a>
-                                <a href="#" class="btn btn-primary btn-sm form-submit">{{ 'Save criterion'|trans }}</a>
+                                <a href="#" class="btn btn-default btn-sm form-cancel" data-criterion="new">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</a>
+                                <a href="#" class="btn btn-primary btn-sm form-submit">{{ 'Save criterion'|trans({}, 'icap_dropzone') }}</a>
                             </div>
                         </div>
                     </div>
@@ -177,7 +176,7 @@
                         $('.form-submit').on('click', function (event) {
                             event.preventDefault();
                             //I do the "click" on submit button for keep html5 warning
-                            $('.modal-body button[type="submit"]').trigger('click');
+                            $('.inline-body button[type="submit"]').trigger('click');
                         });
 
                         $('.form-cancel').on('click', function (event) {
@@ -212,8 +211,8 @@
             {{ form_rest(form) }}
             <div class="row">
                 <div class="btn-group pull-right">
-                    <a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.getId()}) }}" class="btn btn-default criteria-form-button back-button">{{ 'Return'|trans }}</a>
-                    <button type= "submit" class="btn btn-primary criteria-form-button save-submit">{{ 'Save and finished'|trans }}</button>
+                    <a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.getId()}) }}" class="btn btn-default criteria-form-button back-button">{{ 'Return'|trans({}, 'icap_dropzone') }}</a>
+                    <button type= "submit" class="btn btn-primary criteria-form-button save-submit">{{ 'Save and finished'|trans({}, 'icap_dropzone') }}</button>
                 </div>
             </div>
         </form>
@@ -299,8 +298,13 @@
                 }
             });
 
+            function resetTiny(){
+                $('.tinymce').each(function(){
+                    $(this).tinymce().remove();
+                });
+            }
 
-            var form_count = 0;
+            //var form_count = 0;
             $('.add-criterion-button').on('click', function (event) {
                 event.preventDefault();
 
@@ -308,16 +312,13 @@
                 $('.criteria-form-button').attr('disabled', 'disabled');
 
                 $.get($(this).attr('href'))
-                    .always(function () {
-                        $('.new-criteria-zone').empty();
-                    })
                     .done(function (data) {
+                        resetTiny();
+                        $('.new-criteria-zone').empty();
+                        $('.criterion-row > .criterion-edit').empty();
+
                         $('.template > .template-criteria-zone').clone().appendTo('.new-criteria-zone');
-
-                        var form_id = 'icap_dropzone_criterion_form_instruction_'+(form_count++);
-                        var changedData = data.replace(/icap_dropzone_criterion_form_instruction/g, form_id);
-
-                        $('.new-criteria-zone .new-criteria-form').append(changedData);
+                        $('.new-criteria-zone .new-criteria-form').append(data);
 
                         $('.column-input input').val(totalColumn);
                         $('.comment-input input').val(comment);
@@ -329,8 +330,11 @@
                         $('.new-criteria-zone > .template-criteria-zone .form-buttons').hide();
 
                         $('.add-remove-column').show();
-
                         initTinyMCE(stfalcon_tinymce_config);
+
+                        var top = $('#new-criteria').offset().top;
+                        top = top - 50;
+                        $('body,html').scrollTop(top);
                     })
                 ;
             });
@@ -343,16 +347,14 @@
                 var criterionId = $(this).data('criterion');
 
                 $.get($(this).attr('href'))
-                    .always(function () {
-                        $('#'+criterionId+' > .criterion-edit').empty();
-                    })
                     .done(function (data) {
+                        resetTiny();
+                        $('.new-criteria-zone').empty();
+                        $('.criterion-row > .criterion-edit').empty();
+
                         $('.template > .template-criteria-zone').clone().appendTo('#'+criterionId+' > .criterion-edit');
+                        $('#'+criterionId+' > .criterion-edit .new-criteria-form').append(data);
 
-                        var form_id = 'icap_dropzone_criterion_form_instruction_'+(form_count++);
-                        var changedData = data.replace(/icap_dropzone_criterion_form_instruction/g, form_id);
-
-                        $('#'+criterionId+' > .criterion-edit .new-criteria-form').append(changedData);
                         $('#'+criterionId+' > .criterion-edit .form-cancel').data('criterion', criterionId);
                         $('.column-input input').val(totalColumn);
                         $('.comment-input input').val(comment);

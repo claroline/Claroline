@@ -35,7 +35,7 @@ class CorrectionController extends DropzoneBaseController
         if ($dropzone->isPeerReview() == false) {
             $this->getRequest()->getSession()->getFlashBag()->add(
                 'error',
-                $this->get('translator')->trans('The peer review is not enabled')
+                $this->get('translator')->trans('The peer review is not enabled', array(), 'icap_dropzone')
             );
 
             return $this->redirect(
@@ -57,7 +57,7 @@ class CorrectionController extends DropzoneBaseController
         if ($userDrop == null) {
             $this->getRequest()->getSession()->getFlashBag()->add(
                 'error',
-                $this->get('translator')->trans('You must have made ​​your copy before correcting')
+                $this->get('translator')->trans('You must have made ​​your copy before correcting', array(), 'icap_dropzone')
             );
 
             return $this->redirect(
@@ -75,7 +75,7 @@ class CorrectionController extends DropzoneBaseController
         if ($nbCorrection >= $dropzone->getExpectedTotalCorrection()) {
             $this->getRequest()->getSession()->getFlashBag()->add(
                 'error',
-                $this->get('translator')->trans('You no longer have any copies to correct')
+                $this->get('translator')->trans('You no longer have any copies to correct', array(), 'icap_dropzone')
             );
 
             return $this->redirect(
@@ -179,7 +179,7 @@ class CorrectionController extends DropzoneBaseController
 
         $this->getRequest()->getSession()->getFlashBag()->add(
             'success',
-            $this->get('translator')->trans('Your correction has been saved')
+            $this->get('translator')->trans('Your correction has been saved', array(), 'icap_dropzone')
         );
 
         if ($admin === true) {
@@ -259,7 +259,7 @@ class CorrectionController extends DropzoneBaseController
                 'error',
                 $this
                     ->get('translator')
-                    ->trans('Unfortunately there is no copy to correct for the moment. Please try again later')
+                    ->trans('Unfortunately there is no copy to correct for the moment. Please try again later', array(), 'icap_dropzone')
             );
 
             return $this->redirect(
@@ -389,7 +389,7 @@ class CorrectionController extends DropzoneBaseController
                     'error',
                     $this
                         ->get('translator')
-                        ->trans('Unfortunately there is no copy to correct for the moment. Please try again later')
+                        ->trans('Unfortunately there is no copy to correct for the moment. Please try again later', array(), 'icap_dropzone')
                 );
 
             return $this->redirect(
@@ -492,7 +492,7 @@ class CorrectionController extends DropzoneBaseController
 
                 $this->getRequest()->getSession()->getFlashBag()->add(
                     'success',
-                    $this->get('translator')->trans('Your correction has been saved')
+                    $this->get('translator')->trans('Your correction has been saved', array(), 'icap_dropzone')
                 );
 
                 return $this->redirect(

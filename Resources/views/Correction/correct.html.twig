@@ -3,12 +3,12 @@
     {% if admin == true %}
         <li><a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-list"></span> {{ dropzone.resourceNode.name }}</a></li>
         <li><a href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': correction.drop.id}) }}">
-            {{ 'Retail copy of %firstName% %lastName%'|trans({'%firstName%': correction.drop.user.firstName, '%lastName%': correction.drop.user.lastName}) }}
+            {{ 'Retail copy of %firstName% %lastName%'|trans({'%firstName%': correction.drop.user.firstName, '%lastName%': correction.drop.user.lastName}, 'icap_dropzone') }}
         </a></li>
-        <li class="active">{{ 'Correction by %firstName% %lastName%'|trans({'%firstName%': correction.user.firstName, '%lastName%': correction.user.lastName}) }}</li>
+        <li class="active">{{ 'Correction by %firstName% %lastName%'|trans({'%firstName%': correction.user.firstName, '%lastName%': correction.user.lastName}, 'icap_dropzone') }}</li>
     {% else %}
         <li><a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span class="glyphicon icon-file"></span> {{ dropzone.resourceNode.name }}</a></li>
-        <li class="active">{{ 'Correction'|trans }}</li>
+        <li class="active">{{ 'Correction'|trans({}, 'icap_dropzone') }}</li>
     {% endif %}
 {% endblock %}
 
@@ -16,12 +16,12 @@
     <div class="container container-dropzone">
         {% if admin %}
             <h2 class="{% if correction.reporter %}text-danger{% endif %}">
-                {{ 'Correction by %firstName% %lastName%'|trans({'%firstName%': correction.user.firstName, '%lastName%': correction.user.lastName}) }}
+                {{ 'Correction by %firstName% %lastName%'|trans({'%firstName%': correction.user.firstName, '%lastName%': correction.user.lastName}, 'icap_dropzone') }}
             </h2>
 
             <div class="row">
                 <div class="col-md-12">
-                    <a class="btn btn-default btn-sm" href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': correction.drop.id}) }}"><span class="glyphicon icon-angle-left"></span> {{ 'Return to corrections'|trans }}</a>
+                    <a class="btn btn-default btn-sm" href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id, 'dropId': correction.drop.id}) }}"><span class="glyphicon icon-angle-left"></span> {{ 'Return to corrections'|trans({}, 'icap_dropzone') }}</a>
                 </div>
             </div>
             <br/>
@@ -33,23 +33,23 @@
 
             {% if correction.reporter %}
                 <div class="col-md-12">
-                    <span class="text-danger"><span class="glyphicon icon-warning-sign"></span>{{ 'This correction has reported abuse'|trans }}</span>
-                    <a href="#reportModal" data-toggle="modal" class="btn btn-danger btn-sm pull-right">{{ 'Remove report'|trans }}</a>
+                    <span class="text-danger"><span class="glyphicon icon-warning-sign"></span>{{ 'This correction has reported abuse'|trans({}, 'icap_dropzone') }}</span>
+                    <a href="#reportModal" data-toggle="modal" class="btn btn-danger btn-sm pull-right">{{ 'Remove report'|trans({}, 'icap_dropzone') }}</a>
 
                     <div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    <h4 class="modal-title">{{ 'Warning'|trans }}</h4>
+                                    <h4 class="modal-title">{{ 'Warning'|trans({}, 'icap_dropzone') }}</h4>
                                 </div>
                                 <div class="modal-body">
-                                    {{ 'You are about to remove a report. What do you do'|trans }}
+                                    {{ 'You are about to remove a report. What do you do'|trans({}, 'icap_dropzone') }}
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans }}</button>
-                                    <a href="{{ path('icap_dropzone_remove_report', {'resourceId': dropzone.id, 'dropId': correction.drop.id, 'correctionId': correction.id, 'invalidate': 0}) }}" class="btn btn-danger pull-right">{{ 'Keep this correction scored zero'|trans }}</a>
-                                    <a href="{{ path('icap_dropzone_remove_report', {'resourceId': dropzone.id, 'dropId': correction.drop.id, 'correctionId': correction.id, 'invalidate': 1}) }}" class="btn btn-danger pull-right">{{ 'Invalidate this correction'|trans }}</a>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</button>
+                                    <a href="{{ path('icap_dropzone_remove_report', {'resourceId': dropzone.id, 'dropId': correction.drop.id, 'correctionId': correction.id, 'invalidate': 0}) }}" class="btn btn-danger pull-right">{{ 'Keep this correction scored zero'|trans({}, 'icap_dropzone') }}</a>
+                                    <a href="{{ path('icap_dropzone_remove_report', {'resourceId': dropzone.id, 'dropId': correction.drop.id, 'correctionId': correction.id, 'invalidate': 1}) }}" class="btn btn-danger pull-right">{{ 'Invalidate this correction'|trans({}, 'icap_dropzone') }}</a>
                                 </div>
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
@@ -69,25 +69,25 @@
             </div>
 
             <div class="row">
-                <div class="text-muted col-md-4">{{ 'Learner'|trans }}</div>
+                <div class="text-muted col-md-4">{{ 'Learner'|trans({}, 'icap_dropzone') }}</div>
                 <div class="col-md-8">{{ correction.drop.user.firstName }} {{ correction.drop.user.lastName }}</div>
             </div>
 
             <br/>
 
             <div class="row">
-                <div class="text-muted col-md-4">{{ 'Corrector'|trans }}</div>
+                <div class="text-muted col-md-4">{{ 'Corrector'|trans({}, 'icap_dropzone') }}</div>
                 <div class="col-md-8">{{ correction.user.firstName }} {{ correction.user.lastName }}</div>
             </div>
 
             <div class="row">
-                <div class="text-muted col-md-4">{{ 'Grade attribuated'|trans }}</div>
+                <div class="text-muted col-md-4">{{ 'Grade attribuated'|trans({}, 'icap_dropzone') }}</div>
                 <div class="col-md-8">{% if correction.totalGrade != null %}{{ correction.totalGrade|number_format(2) }}{% else %}--{% endif %}/20</div>
             </div>
         {% else %}
             <div class="row">
                 <div class="col-md-12">
-                    <h2>{{ 'Correcting a copy'|trans }}</h2>
+                    <h2>{{ 'Correcting a copy'|trans({}, 'icap_dropzone') }}</h2>
                 </div>
             </div>
 
@@ -99,19 +99,19 @@
                     <h3>
                         <div class="row">
                             <div class="col-md-6">
-                                {{ 'Relevant documents'|trans }}
+                                {{ 'Relevant documents'|trans({}, 'icap_dropzone') }}
                             </div>
                             <div class="col-md-6">
                                 {% if correction.reporter == false %}
-                                    <a href="{{ path('icap_dropzone_report_drop', {'resourceId': dropzone.id, 'dropId': correction.drop.id, 'correctionId': correction.id}) }}" class="btn btn-danger pull-right launch-modal">{{ 'Report'|trans }}</a>
+                                    <a href="{{ path('icap_dropzone_report_drop', {'resourceId': dropzone.id, 'dropId': correction.drop.id, 'correctionId': correction.id}) }}" class="btn btn-danger pull-right launch-modal">{{ 'Report'|trans({}, 'icap_dropzone') }}</a>
                                 {% else %}
-                                    <span class="label label-danger pull-right">{{ 'Already reported'|trans }}</span>
+                                    <span class="label label-danger pull-right">{{ 'Already reported'|trans({}, 'icap_dropzone') }}</span>
                                 {% endif %}
                             </div>
                         </div>
                     </h3>
                 <p>
-                    {{ 'Here is the list of documents which you must correct'|trans }}
+                    {{ 'Here is the list of documents which you must correct'|trans({}, 'icap_dropzone') }}
                 </p>
                 {% if correction.drop.documents|length > 0 %}
                     <ul>
@@ -120,13 +120,13 @@
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p class="text-danger">{{ 'No document associated'|trans }}</p>
+                    <p class="text-danger">{{ 'No document associated'|trans({}, 'icap_dropzone') }}</p>
                 {% endif %}
             {% endif %}
         {% endif %}
 
         {% if correction.reporter %}
-           <h3>{{ 'Reason of reporting'|trans }}</h3>
+           <h3>{{ 'Reason of reporting'|trans({}, 'icap_dropzone') }}</h3>
             <div class="well">
                 {{ correction.reportComment|raw }}
             </div>

@@ -49,7 +49,7 @@ class DropzoneBaseController extends Controller
         if ($dropzone->isPeerReview() == false) {
             $this->getRequest()->getSession()->getFlashBag()->add(
                 'error',
-                $this->get('translator')->trans('The peer review is not enabled')
+                $this->get('translator')->trans('The peer review is not enabled', array(), 'icap_dropzone')
             );
 
             return $this->redirect(
@@ -71,7 +71,7 @@ class DropzoneBaseController extends Controller
         if ($userDrop == null) {
             $this->getRequest()->getSession()->getFlashBag()->add(
                 'error',
-                $this->get('translator')->trans('You must have made ​​your copy before correcting')
+                $this->get('translator')->trans('You must have made ​​your copy before correcting', array(), 'icap_dropzone')
             );
 
             return $this->redirect(
@@ -89,7 +89,7 @@ class DropzoneBaseController extends Controller
         if ($nbCorrection >= $dropzone->getExpectedTotalCorrection()) {
             $this->getRequest()->getSession()->getFlashBag()->add(
                 'error',
-                $this->get('translator')->trans('You no longer have any copies to correct')
+                $this->get('translator')->trans('You no longer have any copies to correct', array(), 'icap_dropzone')
             );
 
             return $this->redirect(
