@@ -35,46 +35,46 @@
         <div>
             {{ renderPager(subject.getId(), pager) }}
         </div>
-        <div class="table-responsive">
-            <table id="messages_table" class="table table-striped table-bordered table-condensed">
-                <thead>
-                    <tr>
-                        <th>{{ 'author'|trans({}, 'forum') }}</th>
-                        <th>{{ 'responses'|trans({}, 'forum') }}</th>
-                    </tr>
-                </thead>
-                <tbody id='table-message-body'>
-                {% for message in pager.currentPageResults %}
-                    <tr class="row-message">
-                        <td width="125px">
-                            <div>
-                                {% if message.getCreator().getPicture() != "" %}
-                                 <img src="{{ asset('uploads/pictures/') ~ message.getCreator().getPicture() }}" class="col-md-2">
-                            {% else %}
-                                    <h1><i class="icon-user"></i><h1>
-                            {% endif %}
-                            </div>
-                            <div>
-                               {{ message.getCreator().getFirstName() }} {{ message.getCreator().getLastName() }}
-                            </div>
-                            <div>
-                                {{ message.getCreationDate()|date('m/d/Y H:i:s') }}
-                            </div>
-                            <p>{{ message.getCreator().getFirstName() }} {{ message.getCreator().getLastName() }}</p>
-                        </td>
-                        <td>
-                            <p>{{ message.getContent()|raw }}</p>
-                            <p class="text-muted">{{ message.getCreationDate()| timeAgo }}</p>
-                            <hr>
-                            {% if isModerator or app.security.token.user == message.getCreator() %}
-                                <a class="btn btn-default pull-right" href="{{ path('claro_forum_edit_message_form', {'message': message.getId()}) }}"> <i class="icon-pencil"></i> {{ 'edit'|trans({}, 'platform') }} </a>
-                            {% endif %}
-                         </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        <table id="messages_table" class="table table-striped table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th>{{ 'author'|trans({}, 'forum') }}</th>
+                    <th>{{ 'responses'|trans({}, 'forum') }}</th>
+                </tr>
+            </thead>
+            <tbody id='table-message-body'>
+            {% for message in pager.currentPageResults %}
+                <tr class="row-message">
+                    <td width="125px">
+                        <div>
+                            {% if message.getCreator().getPicture() != "" %}
+                             <img src="{{ asset('uploads/pictures/') ~ message.getCreator().getPicture() }}" class="col-md-12">
+                        {% else %}
+                                <h1><i class="icon-user col-md-12"></i><h1>
+                        {% endif %}
+                        </div>
+                        <div>
+                        <a href="{{path('claro_profile_view', {'userId':message.getCreator().getId()})}}">
+                           {{ message.getCreator().getFirstName() }} {{ message.getCreator().getLastName() }}
+                        </a>
+                        </div>
+                        <div>
+                            {{ message.getCreationDate()|date('m/d/Y H:i:s') }}
+                        </div>
+                        <p>{{ message.getCreator().getFirstName() }} {{ message.getCreator().getLastName() }}</p>
+                    </td>
+                    <td>
+                        <p>{{ message.getContent()|raw }}</p>
+                        <p class="text-muted">{{ message.getCreationDate()| timeAgo }}</p>
+                        <hr>
+                        {% if isModerator or app.security.token.user == message.getCreator() %}
+                            <a class="btn btn-default pull-right" href="{{ path('claro_forum_edit_message_form', {'message': message.getId()}) }}"> <i class="icon-pencil"></i> {{ 'edit'|trans({}, 'platform') }} </a>
+                        {% endif %}
+                     </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
         <div>
             {{ renderPager(subject.getId(), pager) }}
         </div>
