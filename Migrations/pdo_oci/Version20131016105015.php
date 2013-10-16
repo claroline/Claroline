@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/10/15 05:00:30
+ * Generation date: 2013/10/16 10:50:16
  */
-class Version20131015170029 extends AbstractMigration
+class Version20131016105015 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -393,7 +393,8 @@ class Version20131015170029 extends AbstractMigration
         $this->addSql("
             ALTER TABLE innova_step2resourceNode 
             ADD CONSTRAINT FK_21EA11F73B21E9C FOREIGN KEY (step_id) 
-            REFERENCES innova_step (id)
+            REFERENCES innova_step (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE innova_step2resourceNode 
@@ -425,12 +426,14 @@ class Version20131015170029 extends AbstractMigration
         $this->addSql("
             ALTER TABLE innova_step 
             ADD CONSTRAINT FK_86F48567727ACA70 FOREIGN KEY (parent_id) 
-            REFERENCES innova_step (id)
+            REFERENCES innova_step (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE innova_step 
             ADD CONSTRAINT FK_86F48567D96C566B FOREIGN KEY (path_id) 
-            REFERENCES innova_path (id)
+            REFERENCES innova_path (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE innova_step 

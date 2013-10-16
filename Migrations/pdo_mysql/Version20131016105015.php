@@ -1,6 +1,6 @@
 <?php
 
-namespace Innova\PathBundle\Migrations\pdo_sqlsrv;
+namespace Innova\PathBundle\Migrations\pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,143 +8,117 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/10/15 05:00:30
+ * Generation date: 2013/10/16 10:50:16
  */
-class Version20131015170029 extends AbstractMigration
+class Version20131016105015 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE innova_stepType (
-                id INT IDENTITY NOT NULL, 
-                name NVARCHAR(255) NOT NULL, 
-                PRIMARY KEY (id)
-            )
+                id INT AUTO_INCREMENT NOT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE innova_step2resourceNode (
-                id INT IDENTITY NOT NULL, 
-                step_id INT, 
-                propagated BIT NOT NULL, 
-                excluded BIT NOT NULL, 
-                resourceOrder INT, 
-                resourceNode_id INT, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_21EA11F73B21E9C ON innova_step2resourceNode (step_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_21EA11FB87FAB32 ON innova_step2resourceNode (resourceNode_id)
+                id INT AUTO_INCREMENT NOT NULL, 
+                step_id INT DEFAULT NULL, 
+                propagated TINYINT(1) NOT NULL, 
+                excluded TINYINT(1) NOT NULL, 
+                resourceOrder INT DEFAULT NULL, 
+                resourceNode_id INT DEFAULT NULL, 
+                INDEX IDX_21EA11F73B21E9C (step_id), 
+                INDEX IDX_21EA11FB87FAB32 (resourceNode_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE innova_user2path (
-                id INT IDENTITY NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT NOT NULL, 
                 path_id INT NOT NULL, 
                 status INT NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_2D4590E5A76ED395 ON innova_user2path (user_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_2D4590E5D96C566B ON innova_user2path (path_id)
+                INDEX IDX_2D4590E5A76ED395 (user_id), 
+                INDEX IDX_2D4590E5D96C566B (path_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE innova_pathtemplate (
-                id INT IDENTITY NOT NULL, 
-                name NVARCHAR(255) NOT NULL, 
-                description VARCHAR(MAX), 
-                step VARCHAR(MAX) NOT NULL, 
-                PRIMARY KEY (id)
-            )
+                id INT AUTO_INCREMENT NOT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                description LONGTEXT DEFAULT NULL, 
+                step LONGTEXT NOT NULL, 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE innova_stepWhere (
-                id INT IDENTITY NOT NULL, 
-                name NVARCHAR(255) NOT NULL, 
-                PRIMARY KEY (id)
-            )
+                id INT AUTO_INCREMENT NOT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE innova_path (
-                id INT IDENTITY NOT NULL, 
-                path VARCHAR(MAX) NOT NULL, 
-                deployed BIT NOT NULL, 
-                modified BIT NOT NULL, 
-                resourceNode_id INT, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_CE19F054B87FAB32 ON innova_path (resourceNode_id) 
-            WHERE resourceNode_id IS NOT NULL
+                id INT AUTO_INCREMENT NOT NULL, 
+                path LONGTEXT NOT NULL, 
+                deployed TINYINT(1) NOT NULL, 
+                modified TINYINT(1) NOT NULL, 
+                resourceNode_id INT DEFAULT NULL, 
+                UNIQUE INDEX UNIQ_CE19F054B87FAB32 (resourceNode_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE innova_stepWho (
-                id INT IDENTITY NOT NULL, 
-                name NVARCHAR(255) NOT NULL, 
-                PRIMARY KEY (id)
-            )
+                id INT AUTO_INCREMENT NOT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE innova_nonDigitalResource (
-                id INT IDENTITY NOT NULL, 
-                description VARCHAR(MAX) NOT NULL, 
-                type NVARCHAR(255) NOT NULL, 
-                resourceNode_id INT, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_305E9E56B87FAB32 ON innova_nonDigitalResource (resourceNode_id) 
-            WHERE resourceNode_id IS NOT NULL
+                id INT AUTO_INCREMENT NOT NULL, 
+                description LONGTEXT NOT NULL, 
+                type VARCHAR(255) NOT NULL, 
+                resourceNode_id INT DEFAULT NULL, 
+                UNIQUE INDEX UNIQ_305E9E56B87FAB32 (resourceNode_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE innova_step (
-                id INT IDENTITY NOT NULL, 
-                parent_id INT, 
-                path_id INT, 
+                id INT AUTO_INCREMENT NOT NULL, 
+                parent_id INT DEFAULT NULL, 
+                path_id INT DEFAULT NULL, 
                 stepOrder INT NOT NULL, 
-                expanded BIT NOT NULL, 
-                instructions VARCHAR(MAX), 
-                image NVARCHAR(255), 
-                withTutor BIT NOT NULL, 
-                withComputer BIT NOT NULL, 
-                duration DATETIME2(6) NOT NULL, 
-                stepType_id INT, 
-                stepWho_id INT, 
-                stepWhere_id INT, 
-                resourceNode_id INT, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_86F48567727ACA70 ON innova_step (parent_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_86F48567D96C566B ON innova_step (path_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_86F48567DEDC9FF6 ON innova_step (stepType_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_86F4856765544574 ON innova_step (stepWho_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_86F485678FE76F3 ON innova_step (stepWhere_id)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_86F48567B87FAB32 ON innova_step (resourceNode_id) 
-            WHERE resourceNode_id IS NOT NULL
+                expanded TINYINT(1) NOT NULL, 
+                instructions LONGTEXT DEFAULT NULL, 
+                image VARCHAR(255) DEFAULT NULL, 
+                withTutor TINYINT(1) NOT NULL, 
+                withComputer TINYINT(1) NOT NULL, 
+                duration DATETIME NOT NULL, 
+                stepType_id INT DEFAULT NULL, 
+                stepWho_id INT DEFAULT NULL, 
+                stepWhere_id INT DEFAULT NULL, 
+                resourceNode_id INT DEFAULT NULL, 
+                INDEX IDX_86F48567727ACA70 (parent_id), 
+                INDEX IDX_86F48567D96C566B (path_id), 
+                INDEX IDX_86F48567DEDC9FF6 (stepType_id), 
+                INDEX IDX_86F4856765544574 (stepWho_id), 
+                INDEX IDX_86F485678FE76F3 (stepWhere_id), 
+                UNIQUE INDEX UNIQ_86F48567B87FAB32 (resourceNode_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             ALTER TABLE innova_step2resourceNode 
             ADD CONSTRAINT FK_21EA11F73B21E9C FOREIGN KEY (step_id) 
-            REFERENCES innova_step (id)
+            REFERENCES innova_step (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE innova_step2resourceNode 
@@ -176,12 +150,14 @@ class Version20131015170029 extends AbstractMigration
         $this->addSql("
             ALTER TABLE innova_step 
             ADD CONSTRAINT FK_86F48567727ACA70 FOREIGN KEY (parent_id) 
-            REFERENCES innova_step (id)
+            REFERENCES innova_step (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE innova_step 
             ADD CONSTRAINT FK_86F48567D96C566B FOREIGN KEY (path_id) 
-            REFERENCES innova_path (id)
+            REFERENCES innova_path (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE innova_step 
@@ -210,31 +186,31 @@ class Version20131015170029 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE innova_step 
-            DROP CONSTRAINT FK_86F48567DEDC9FF6
+            DROP FOREIGN KEY FK_86F48567DEDC9FF6
         ");
         $this->addSql("
             ALTER TABLE innova_step 
-            DROP CONSTRAINT FK_86F485678FE76F3
+            DROP FOREIGN KEY FK_86F485678FE76F3
         ");
         $this->addSql("
             ALTER TABLE innova_user2path 
-            DROP CONSTRAINT FK_2D4590E5D96C566B
+            DROP FOREIGN KEY FK_2D4590E5D96C566B
         ");
         $this->addSql("
             ALTER TABLE innova_step 
-            DROP CONSTRAINT FK_86F48567D96C566B
+            DROP FOREIGN KEY FK_86F48567D96C566B
         ");
         $this->addSql("
             ALTER TABLE innova_step 
-            DROP CONSTRAINT FK_86F4856765544574
+            DROP FOREIGN KEY FK_86F4856765544574
         ");
         $this->addSql("
             ALTER TABLE innova_step2resourceNode 
-            DROP CONSTRAINT FK_21EA11F73B21E9C
+            DROP FOREIGN KEY FK_21EA11F73B21E9C
         ");
         $this->addSql("
             ALTER TABLE innova_step 
-            DROP CONSTRAINT FK_86F48567727ACA70
+            DROP FOREIGN KEY FK_86F48567727ACA70
         ");
         $this->addSql("
             DROP TABLE innova_stepType
