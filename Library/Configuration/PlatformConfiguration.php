@@ -10,15 +10,6 @@ class PlatformConfiguration
     private $theme;
     private $footer;
 
-    public function __construct($name, $footer, $selfRegistration, $localLanguage, $theme)
-    {
-        $this->name = $name;
-        $this->footer = $footer;
-        $this->selfRegistration = $selfRegistration;
-        $this->localLanguage = $localLanguage;
-        $this->theme = $theme;
-    }
-
     public function getSelfRegistration()
     {
         return $this->selfRegistration;

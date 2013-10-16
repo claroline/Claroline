@@ -39,13 +39,14 @@
                         <i class="icon-list"></i>
                         {{'resources_usage_list'|trans({}, 'platform')}}
                     </div>
-                    
-                    <table class="table table-condensed">
-                        <tr><th>{{'resource'|trans({}, 'platform')}}</th><th>#</th></tr>
-                        {% for resource in resourceCount %}
-                            <tr><td>{{resource.name|trans({}, 'resource')}}</td><td>{{resource.total}}</td></tr>
-                        {% endfor %}
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-condensed">
+                            <tr><th>{{'resource'|trans({}, 'platform')}}</th><th>#</th></tr>
+                            {% for resource in resourceCount %}
+                                <tr><td>{{resource.name|trans({}, 'resource')}}</td><td>{{resource.total}}</td></tr>
+                            {% endfor %}
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

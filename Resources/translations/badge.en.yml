@@ -64,6 +64,7 @@ badge_no_rules_check_manually: "No rules, check manually"
 badge_rules_respected_state: "Page currently unavailable"
 claim: 'Claim'
 claiming: "Claim|Claimings"
+no_badge_claim: "No claim for badge."
 claim_date: 'Claim date'
 claim_badge: 'Claim a badge'
 claim_badge_form: 'Claim badge form'

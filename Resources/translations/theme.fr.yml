@@ -9,6 +9,7 @@
 'More options': 'plus d''options'
 'New theme': 'Nouveau thème'
 'Ok': 'Ok'
+'Our themes were designed using Bootstrap': 'Nos thèmes ont été conçus à l''aide Bootstrap'
 'Preview': 'Aperçu'
 'Save': 'sauvegarder'
 'Theme Generator': 'Générateur  des thèmes'
@@ -16,3 +17,5 @@
 'Theme parameters': 'Paramètres du thème'
 'This action is irreversible': 'Cette action est irréversible'
 'You might not have permission to write in theme folder': 'Vous pourriez ne pas être autorisé à écrire dans le dossier des thèmes'
+'if you have a doubt about the name of an element of the GUI': 'si vous avez un doute sur le nom d''un élément de l''interface graphique'
+'please read the documentation of Bootstrap 3': 'veuillez lire la documentation de Bootstrap 3'

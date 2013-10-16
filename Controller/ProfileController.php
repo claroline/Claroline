@@ -184,7 +184,7 @@ class ProfileController extends Controller
      */
     public function viewAction(User $user, $page = 1)
     {
-        $query = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($user, false);
+        $query = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findByUser($user, false);
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new Pagerfanta($adapter);
 
@@ -233,7 +233,7 @@ class ProfileController extends Controller
      *     name="claro_profile_admin_update"
      * )
      * @EXT\Template("ClarolineCoreBundle:Profile:profileForm.html.twig")
-     * 
+     *
      * Updates the user's profile and redirects to the profile form.
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -278,7 +278,7 @@ class ProfileController extends Controller
                 $changeSet['roles'] = $rolesChangeSet;
             }
 
-            $this->userManager->upload($user);
+            $this->userManager->uploadAvatar($user);
             $this->eventDispatcher->dispatch(
                 'log',
                 'Log\LogUserUpdate',

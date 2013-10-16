@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Log\Log;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
 
 class BadgeRuleChecker
@@ -21,14 +22,16 @@ class BadgeRuleChecker
     }
 
     /**
-     * @param BadgeRule $badgeRule
-     * @param User      $user
+     * @param AbstractWorkspace|null $workspace
+     * @param BadgeRule              $badgeRule
+     * @param User                   $user
      *
      * @return bool|Log[]
      */
-    public function checkRule(BadgeRule $badgeRule, User $user)
+    public function checkRule($workspace, BadgeRule $badgeRule, User $user)
     {
-        $associatedLogs = $this->logRepository->findByBadgeRuleAndUser($badgeRule, $user);
+        /** @var \Claroline\CoreBundle\Entity\Log\Log[] $associatedLogs */
+        $associatedLogs = $this->logRepository->findByWorkspaceBadgeRuleAndUser($workspace, $badgeRule, $user);
 
         $checkRule = false;
 
@@ -55,7 +58,7 @@ class BadgeRuleChecker
         if (0 < count($badgeRules)) {
             foreach ($badgeRules as $badgeRule) {
 
-                $checkedLogs = $this->checkRule($badgeRule, $user);
+                $checkedLogs = $this->checkRule($badge->getWorkspace(), $badgeRule, $user);
 
                 if (false === $checkedLogs) {
                     $isChecked = false;
