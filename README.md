@@ -2,9 +2,9 @@ PathBundle
 ==========
 
 ### Install
-add "innova/path-bundle" to composer.json >> require
+add "innova/path-bundle": "1.0" to the Claroline composer.json
 
-### Fixtures
-```sh
-php app/console doctrine:fixtures:load --append --fixtures=vendor/innova/path-bundle/Innova/PathBundle/DataFixtures/Dev
-```
+composer update --prefer-dist -o  
+
+php app/console claroline:update
+
