@@ -98,7 +98,8 @@ class ProfileType extends AbstractType
                 'attr' => array(
                     'class' => 'tinymce',
                     'data-theme' => 'advanced'
-                )
+                ),
+                'required' => false,
             )
         );
     }
