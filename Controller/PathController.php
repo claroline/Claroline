@@ -174,12 +174,14 @@ class PathController extends Controller
 
         // On nettoie la base des steps qui n'ont pas été réutilisé et les step2resourceNode associés
         foreach ($steps as $step) {
-           if (!in_array($step->getResourceNode()->getId(),$stepsToNotDelete)) {
+           if (!in_array($step->getId(),$stepsToNotDelete)) {
+                /*
                 $step2ressourceNodes = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')->findByStep($step->getId());
                 foreach ($step2ressourceNodes as $step2ressourceNode) {
                     $manager->remove($step2ressourceNode);
                 }
-                $manager->remove($step->getResourceNode());
+                */
+                $manager->remove($step);
             }
         }
 
@@ -220,35 +222,22 @@ class PathController extends Controller
 
             // CLARO_STEP MANAGEMENT
             if ($step->resourceId == null) {
-                $resourceNode = new ResourceNode();
-                $resourceNode->setClass("Innova\PathBundle\Entity\Step");
-                $resourceNode->setCreator($user);
-                $resourceNode->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("step"));
-                $resourceNode->setWorkspace($workspace);
-                $resourceNode->setParent($pathsDirectory);
-                $resourceNode->setMimeType("");
-                $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(1));
-
                 $currentStep = new Step();
-                $currentStep->setResourceNode($resourceNode);
-                $currentStep->setPath($path);
+                
             } else {
-                $resourceNode = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($step->resourceId);
-                $currentStep = $manager->getRepository('InnovaPathBundle:Step')->findOneByResourceNode($step->resourceId);
+                $currentStep = $manager->getRepository('InnovaPathBundle:Step')->findOneById($step->resourceId);
             }
-
-            // CLARO_STEP UPDATE
-            $resourceNode->setName($step->name);
-            $manager->persist($resourceNode);
-            $manager->flush($resourceNode);
+           
 
             // JSON_STEP UPDATE
-            $step->resourceId = $resourceNode->getId();
+            $step->resourceId = $currentStep->getId();
 
             // STEPSTONODELETE ARRAY UPDATE
-            $stepsToNotDelete[] = $resourceNode->getId();
+            $stepsToNotDelete[] = $currentStep->getId();
 
             // CLARO STEP ATTRIBUTES UPDATE
+            $currentStep->setPath($path);
+            $currentStep->setName($step->name);
             $currentStep->setStepOrder($order);
             $stepType = $manager->getRepository('InnovaPathBundle:StepType')->findOneById($step->type);
             $currentStep->setStepType($stepType);
@@ -609,7 +598,7 @@ class PathController extends Controller
         $pathId = $this->get('request')->request->get('pathId');
         $workspaceId = $this->get('request')->request->get('workspaceId');
         $path = $em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
-        $stepId = $em->getRepository('InnovaPathBundle:Step')->findOneBy(array('path' => $path, 'parent' => null))->getResourceNode()->getid();
+        $stepId = $em->getRepository('InnovaPathBundle:Step')->findOneBy(array('path' => $path, 'parent' => null))->getId();
 
         $url = $this->generateUrl('innova_step_show', array('workspaceId' => $workspaceId, 'pathId' => $pathId, 'stepId' => $stepId));
         return $this->redirect($url);
@@ -641,9 +630,11 @@ class PathController extends Controller
             $pathCreator = $path->getResourceNode()->getCreator();
 
             if($currentUser == $pathCreator){
+                /*
                 if($pathRoot = $em->getRepository('InnovaPathBundle:Step')->findOneBy(array('path' => $path, 'parent' => null))){
                     $this->deleteStep($pathRoot);
                 }
+                */
                 $em->remove($path->getResourceNode());
                 $em->flush();
             }
@@ -653,7 +644,7 @@ class PathController extends Controller
         return $this->redirect($url);
     }
 
-
+    /*
     private function deleteStep($step){
         $em = $this->entityManager();
         // if the step get children, chidlren are deleted first (recursively)
@@ -664,7 +655,7 @@ class PathController extends Controller
         }
         // then step is deleted.
         $this->deleteStep2ResourceNode($step);
-        $em->remove($step->getResourceNode());
+        $em->remove($step);
     }
 
     private function deleteStep2ResourceNode($step){
@@ -675,6 +666,7 @@ class PathController extends Controller
             }
         }
     }
+    */
 
     private function getPaths($workspace){
         $manager = $this->container->get('doctrine.orm.entity_manager');

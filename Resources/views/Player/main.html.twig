@@ -74,20 +74,20 @@
                         <tbody>
                         <tr>
                             <td>
-                                {% if step.parent.resourceNode.id %}
-                                    <a class="btn btn-default " href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.parent.resourceNode.id }) }}">{{ 'back_to' | trans({}, 'innova_tools') }} <strong>{{step.parent.resourceNode.name}}</strong> <span class="icon-arrow-left"></span></a> 
+                                {% if step.parent.id %}
+                                    <a class="btn btn-default " href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.parent.id }) }}">{{ 'back_to' | trans({}, 'innova_tools') }} <strong>{{step.parent.name}}</strong> <span class="icon-arrow-left"></span></a> 
                                 {% else %}
                                     {# <a class="btn btn-success" disabled=disabled href="#">Début du parcours</a> #}
                                 {% endif %}
                             </td>
                             <td class="text-center">
-                                <a class="btn btn-primary" disabled=disabled href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.resourceNode.id }) }}">{{ 'current_position' | trans({}, 'innova_tools') }} : <strong>{{step.resourceNode.name}}</strong></a>
+                                <a class="btn btn-primary" disabled=disabled href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.id }) }}">{{ 'current_position' | trans({}, 'innova_tools') }} : <strong>{{step.name}}</strong></a>
                             </td>
                             <td>
                             {% if children %}
                                 <div >
                                     {% for child in children %}
-                                           <a class="btn btn-default" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : child.resourceNode.id }) }}"><span class="icon-arrow-right"></span> {{child.resourceNode.name}}</a>
+                                           <a class="btn btn-default" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : child.id }) }}"><span class="icon-arrow-right"></span> {{child.name}}</a>
                                      {% endfor %}
                                 </div>
                             {% else %}
@@ -105,7 +105,7 @@
                     </div>
                 </div>
                         <div class="text-center">
-                            <h1>{{ step.resourceNode.name }}</h1>
+                            <h1>{{ step.name }}</h1>
                             {% if step.image %}
                                 <img src="{{ asset('bundles/innovapath/images/steps/' ~  step.image) }}"/>
                             {% endif %}

@@ -92,7 +92,7 @@ class StepController extends Controller
     {
         $em = $this->entityManager();
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $step = $em->getRepository('InnovaPathBundle:Step')->findOneByResourceNode($stepId);
+        $step = $em->getRepository('InnovaPathBundle:Step')->findOneById($stepId);
         $path = $em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
 
         $children = $em->getRepository('InnovaPathBundle:Step')->findByParent($step);
@@ -178,7 +178,7 @@ class StepController extends Controller
         $resources = $this->manager->getStepPropagatedResourceNodes($step);
         foreach ($resources as $resource) {
             if(!in_array($resource->getId(), $excludedResources)){
-                $heritedResources[$step->getResourceNode()->getName()][] =  $resource;
+                $heritedResources[$step->getName()][] =  $resource;
             }
         }
         if ($step->getParent()){
