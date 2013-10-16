@@ -81,6 +81,11 @@ macros.breadcrumbs([
     <div>
     </div>
     <div class="row">
+        {% if search == ''%}
+            <p> <a href="{{ path('claro_admin_user_list')}}"> {{'change_view'|trans({}, 'platform') }}</a> </p>
+        {% else %}
+            <p> <a href="{{ path('claro_admin_user_list',{'search':search})}}"> {{'change_view'|trans({}, 'platform') }}</a> </p>
+        {% endif %}
     {% for user in pager.currentPageResults %}
             <div class="col-sm-6 col-md-3">
                 <div class="thumbnail">
