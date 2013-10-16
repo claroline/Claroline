@@ -793,6 +793,9 @@ class ResourceManager
 
             $data['name'] = $nodes[0]->getName();
             $data['file'] = $event->getItem();
+            $data['mimeType'] = $nodes[0]->getResourceType()->getName() === 'file' ?
+                $nodes[0]->getMimeType():
+                'text/plain';
 
             return $data;
         }
@@ -833,6 +836,7 @@ class ResourceManager
         $archive->close();
         $data['name'] = 'archive.zip';
         $data['file'] = $pathArch;
+        $data['mimeType'] = 'application/zip';
 
         return $data;
     }
@@ -1093,7 +1097,7 @@ class ResourceManager
 
         $this->om->flush();
     }
-    
+
     private function getEncoding()
     {
         return $this->ut->getDefaultEncoding();

@@ -57,22 +57,22 @@ class HomeTabConfig
     protected $workspace;
 
     /**
-     * @ORM\Column(nullable=false)
+     * @ORM\Column()
      */
     protected $type;
 
     /**
-     * @ORM\Column(type="boolean", name="is_visible", nullable=false)
+     * @ORM\Column(type="boolean", name="is_visible")
      */
-    protected $visible;
+    protected $visible = true;
 
     /**
-     * @ORM\Column(type="boolean", name="is_locked", nullable=false)
+     * @ORM\Column(type="boolean", name="is_locked")
      */
-    protected $locked;
+    protected $locked = false;
 
     /**
-     * @ORM\Column(type="integer", name="tab_order", nullable=false)
+     * @ORM\Column(type="integer", name="tab_order")
      */
     protected $tabOrder;
 

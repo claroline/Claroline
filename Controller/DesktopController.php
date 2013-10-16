@@ -35,7 +35,7 @@ class DesktopController extends Controller
      *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "router"             = @DI\Inject("router"),
-     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager")
+     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
      * })
      */
     public function __construct(
@@ -55,56 +55,71 @@ class DesktopController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/home_tab/{homeTabId}/widgets",
-     *     name="claro_desktop_widgets"
+     *     "/home_tab/{homeTabId}/no_config/widgets",
+     *     name="claro_desktop_widgets_without_config"
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCoreBundle:Widget:widgets.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Widget:widgetsWithoutConfig.html.twig")
      *
      * Displays registered widgets.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function widgetsAction($homeTabId, User $user)
+    public function widgetsWithoutConfigAction($homeTabId, User $user)
     {
         $widgets = array();
         $configs = array();
 
         $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
 
-        if (!is_null($homeTab) &&
-            $this->homeTabManager->checkHomeTabVisibilityByUser($homeTab, $user)) {
+        if (is_null($homeTab)) {
+            $isVisibleHomeTab = false;
+        } else {
+            $isVisibleHomeTab = $this->homeTabManager
+                ->checkHomeTabVisibilityByUser($homeTab, $user);
+            $isLockedHomeTab = $this->homeTabManager->checkHomeTabLock($homeTab);
+        }
+
+        if ($isVisibleHomeTab) {
 
             if ($homeTab->getType() === 'admin_desktop') {
                 $adminConfigs = $this->homeTabManager->getAdminWidgetConfigs($homeTab);
-                $userWidgetsConfigs = $this->homeTabManager
-                    ->getWidgetConfigsByUser($homeTab, $user);
+
+                if (!$isLockedHomeTab) {
+                    $userWidgetsConfigs = $this->homeTabManager
+                        ->getVisibleWidgetConfigsByUser($homeTab, $user);
+                } else {
+                    $userWidgetsConfigs = array();
+                }
 
                 foreach ($adminConfigs as $adminConfig) {
 
                     if ($adminConfig->isLocked()) {
-                        $configs[] = $adminConfig;
-                    }
-                    else {
+                        if ($adminConfig->isVisible()) {
+                            $configs[] = $adminConfig;
+                        }
+                    } else {
                         $existingWidgetConfig = $this->homeTabManager
                             ->getUserAdminWidgetHomeTabConfig(
                                 $homeTab,
-                                $adminConfig->getWidget(),
+                                $adminConfig->getWidgetInstance(),
                                 $user
                             );
                         if (count($existingWidgetConfig) === 0) {
                             $newWHTC = new WidgetHomeTabConfig();
                             $newWHTC->setHomeTab($homeTab);
-                            $newWHTC->setWidget($adminConfig->getWidget());
+                            $newWHTC->setWidgetInstance($adminConfig->getWidgetInstance());
                             $newWHTC->setUser($user);
                             $newWHTC->setWidgetOrder($adminConfig->getWidgetOrder());
                             $newWHTC->setVisible($adminConfig->isVisible());
                             $newWHTC->setLocked(false);
                             $newWHTC->setType('admin_desktop');
                             $this->homeTabManager->insertWidgetHomeTabConfig($newWHTC);
-                            $configs[] = $newWHTC;
-                        }
-                        else {
+
+                            if ($adminConfig->isVisible()) {
+                                $configs[] = $newWHTC;
+                            }
+                        } elseif ($existingWidgetConfig[0]->isVisible()) {
                             $configs[] = $existingWidgetConfig[0];
                         }
                     }
@@ -113,37 +128,131 @@ class DesktopController extends Controller
                 foreach ($userWidgetsConfigs as $userWidgetsConfig) {
                     $configs[] = $userWidgetsConfig;
                 }
-            }
-            else {
-                $configs = $this->homeTabManager->getWidgetConfigsByUser($homeTab, $user);
+            } else {
+                $configs = $this->homeTabManager->getVisibleWidgetConfigsByUser($homeTab, $user);
             }
 
             foreach ($configs as $config) {
-                if ($config->isVisible()) {
-                    $event = $this->eventDispatcher->dispatch(
-                        "widget_{$config->getWidget()->getName()}_desktop",
-                        'DisplayWidget'
-                    );
+                $event = $this->eventDispatcher->dispatch(
+                    "widget_{$config->getWidgetInstance()->getWidget()->getName()}",
+                    'DisplayWidget',
+                    array($config->getWidgetInstance())
+                );
 
-                    if ($event->hasContent()) {
-                        $widget['id'] = $config->getWidget()->getId();
-                        if ($event->hasTitle()) {
-                            $widget['title'] = $event->getTitle();
-                        } else {
-                            $widget['title'] = strtolower($config->getWidget()->getName());
+                $widget['config']= $config;
+                $widget['content'] = $event->getContent();
+                $widgets[] = $widget;
+            }
+        }
+
+        return array('widgetsDatas' => $widgets);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/home_tab/{homeTabId}/config/widgets",
+     *     name="claro_desktop_widgets_with_config"
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCoreBundle:Widget:widgetsWithConfig.html.twig")
+     *
+     * Displays registered widgets.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function widgetsWithConfigAction($homeTabId, User $user)
+    {
+        $widgets = array();
+        $configs = array();
+        $lastWidgetOrder = 1;
+        $isLockedHomeTab = false;
+        $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
+
+        if (is_null($homeTab)) {
+            $isVisibleHomeTab = false;
+        } else {
+            $isVisibleHomeTab = $this->homeTabManager
+                ->checkHomeTabVisibilityForConfigByUser($homeTab, $user);
+            $isLockedHomeTab = $this->homeTabManager->checkHomeTabLock($homeTab);
+        }
+
+        if ($isVisibleHomeTab) {
+
+            if ($homeTab->getType() === 'admin_desktop') {
+                $adminConfigs = $this->homeTabManager->getAdminWidgetConfigs($homeTab);
+
+                if (!$isLockedHomeTab) {
+                    $userWidgetsConfigs = $this->homeTabManager
+                        ->getWidgetConfigsByUser($homeTab, $user);
+                } else {
+                    $userWidgetsConfigs = array();
+                }
+
+                if (count($userWidgetsConfigs) > 0) {
+                    $lastWidgetOrder = count($userWidgetsConfigs);
+                }
+
+                foreach ($adminConfigs as $adminConfig) {
+
+                    if ($adminConfig->isLocked()) {
+                        if ($adminConfig->isVisible()) {
+                            $configs[] = $adminConfig;
                         }
-                        $widget['content'] = $event->getContent();
-                        $widget['configurable'] = ($config->isLocked() !== true and $config->getWidget()->isConfigurable());
-
-                        $widgets[] = $widget;
+                    } else {
+                        $existingWidgetConfig = $this->homeTabManager
+                            ->getUserAdminWidgetHomeTabConfig(
+                                $homeTab,
+                                $adminConfig->getWidgetInstance(),
+                                $user
+                            );
+                        if (count($existingWidgetConfig) === 0) {
+                            $newWHTC = new WidgetHomeTabConfig();
+                            $newWHTC->setHomeTab($homeTab);
+                            $newWHTC->setWidgetInstance($adminConfig->getWidgetInstance());
+                            $newWHTC->setUser($user);
+                            $newWHTC->setWidgetOrder($adminConfig->getWidgetOrder());
+                            $newWHTC->setVisible($adminConfig->isVisible());
+                            $newWHTC->setLocked(false);
+                            $newWHTC->setType('admin_desktop');
+                            $this->homeTabManager->insertWidgetHomeTabConfig($newWHTC);
+                            $configs[] = $newWHTC;
+                        } else {
+                            $configs[] = $existingWidgetConfig[0];
+                        }
                     }
                 }
+
+                foreach ($userWidgetsConfigs as $userWidgetsConfig) {
+                    $configs[] = $userWidgetsConfig;
+                }
+            } else {
+                $configs = $this->homeTabManager->getWidgetConfigsByUser($homeTab, $user);
+
+                if (count($configs) > 0) {
+                    $lastWidgetOrder = count($configs);
+                }
+            }
+
+            foreach ($configs as $config) {
+                $event = $this->eventDispatcher->dispatch(
+                    "widget_{$config->getWidgetInstance()->getWidget()->getName()}",
+                    'DisplayWidget',
+                    array($config->getWidgetInstance())
+                );
+
+                $widget['config']= $config;
+                $widget['content'] = $event->getContent();
+                $widget['configurable'] = ($config->isLocked() !== true && $config->getWidgetInstance()->getWidget()->isConfigurable());
+                $widgets[] = $widget;
             }
         }
 
         return array(
-            'widgets' => $widgets,
-            'isDesktop' => true
+            'widgetsDatas' => $widgets,
+            'isDesktop' => true,
+            'isVisibleHomeTab' => $isVisibleHomeTab,
+            'isLockedHomeTab' => $isLockedHomeTab,
+            'lastWidgetOrder' => $lastWidgetOrder
         );
     }
 

@@ -1,7 +1,6 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block section_content %}
-    {{ macros.flashBox() }}
 
     <div class="panel-heading">
         <h3 class="panel-title">
@@ -11,6 +10,7 @@
             </ol>
         </h3>
     </div>
+    {{ macros.flashBox() }}
 
     <div class="panel-body">
         {% block section_body %}{% endblock %}

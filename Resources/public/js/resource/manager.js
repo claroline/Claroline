@@ -126,7 +126,8 @@
                         event.preventDefault();
                         window.Claroline.ResourceManager.Controller.dispatcher.trigger('breadcrumb-click', {
                             nodeId: $(this).data('node-id'),
-                            isPickerMode: false
+                            isPickerMode: false,
+                            el: $(this)
                         });
                     });
 
@@ -151,6 +152,8 @@
                     if (event.keyCode !== 13) {
                         return;
                     }
+
+                    event.preventDefault();
 
                     this.filter();
                 },
@@ -713,7 +716,13 @@
                     $('.modal-body', this.el).html(form);
                     $('#modal-form', this.el).modal('show');
                 }
+            },
+            afterRender: function (form) {
+                var textArea = $('textarea', form)[0];
 
+                if (textArea) {
+                    initTinyMCE(stfalcon_tinymce_config);
+                }
             }
         })
     };
@@ -776,7 +785,10 @@
                 if (event.isPickerMode) {
                     this.displayResources(event.nodeId, 'picker');
                 } else {
-                    this.router.navigate('resources/' + event.nodeId, {trigger: true});
+                    if (event.nodeId) {
+                        this.router.navigate('resources/' + event.nodeId, {trigger: true});
+                    }
+                    document.location.href = event.el.attr('href');
                 }
             },
             'node-click': function (event) {
@@ -932,7 +944,7 @@
                         }
                     });
 
-                    if (!data.canChangePosition) {
+                    if (!data.canChangePosition || this.parameters.isPickerOnly) {
                         $('#sortable').sortable('disable');
                     } else {
                         $('#sortable').sortable('enable');
@@ -977,6 +989,8 @@
                             this.parameters.parentElement.append(this.views.form.el);
                             this.views.form.isAppended = true;
                         }
+
+                        this.views.form.afterRender(form);
                     }
                 });
             }
@@ -995,6 +1009,8 @@
                     } else {
                         this.views.form.render(data, parentDirectoryId, 'create');
                     }
+
+                    this.views.form.afterRender(data);
                 }
             });
         },
@@ -1009,7 +1025,7 @@
             });
         },
         remove: function (nodeIds) {
-            var trans = (nodeIds.length) > 1 ? 'resources_delete' : 'resource_delete'; 
+            var trans = (nodeIds.length) > 1 ? 'resources_delete' : 'resource_delete';
             var modal = Twig.render(ModalWindow, {
                 'body': Translator.get('platform' + ':' + trans),
                 'confirmFooter': true,
@@ -1203,6 +1219,7 @@
      */
     manager.initialize = function (parameters) {
         parameters = parameters || {};
+        parameters.language = parameters.language || 'en';
         parameters.directoryId = parameters.directoryId || '0';
         parameters.directoryHistory = parameters.directoryHistory || [];
         parameters.parentElement = parameters.parentElement || $('body');

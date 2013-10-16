@@ -4,16 +4,11 @@ namespace Claroline\CoreBundle\Library\Configuration;
 
 class PlatformConfiguration
 {
+    private $name;
     private $selfRegistration;
     private $localLanguage;
     private $theme;
-
-    public function __construct($selfRegistration, $localLanguage, $theme)
-    {
-        $this->selfRegistration = $selfRegistration;
-        $this->localLanguage = $localLanguage;
-        $this->theme = $theme;
-    }
+    private $footer;
 
     public function getSelfRegistration()
     {
@@ -43,5 +38,25 @@ class PlatformConfiguration
     public function setTheme($theme)
     {
         $this->theme = $theme;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getFooter()
+    {
+        return $this->footer;
+    }
+
+    public function setFooter($footer)
+    {
+        $this->footer = $footer;
     }
 }

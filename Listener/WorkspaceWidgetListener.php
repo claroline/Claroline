@@ -46,11 +46,11 @@ class WorkspaceWidgetListener
     }
 
     /**
-     * @DI\Observe("widget_my_workspaces_desktop")
+     * @DI\Observe("widget_my_workspaces")
      *
      * @param DisplayWidgetEvent $event
      */
-    public function onDesktopDisplay(DisplayWidgetEvent $event)
+    public function onDisplay(DisplayWidgetEvent $event)
     {
         if (!$this->securityContext->isGranted('ROLE_USER')) {
             throw new AccessDeniedException();

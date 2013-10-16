@@ -1,0 +1,145 @@
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+{{ macros.flashBox() }}
+
+<div id="hometab-type-div"
+    hometab-type-value="{% if isDesktop %}desktop{% else %}workspace{% endif %}"
+></div>
+
+<div class="panel-group">
+    <div id="widgets-list-panel">
+        {% for widgetDatas in widgetsDatas %}
+        {% set widgetHomeTabConfig = widgetDatas.config %}
+        {% set widgetInstance = widgetHomeTabConfig.getWidgetInstance() %}
+        {% set widget = widgetInstance.getWidget() %}
+            <div class="panel panel-default widget-instance-panel"
+                widget-instance-id="{{ widgetInstance.getId() }}"
+                widget-hometab-config-id="{{ widgetHomeTabConfig.getId() }}"
+             >
+                <div class="panel-heading relative">
+                    <div class="panel-title">
+                        <a class="accordion-toggle widget-instance-name"
+                            data-toggle="collapse"
+                            href="#collapse{{ widgetInstance.getId() }}"
+                        >
+                            {{ widgetInstance.getName() }}
+                        </a>
+                        <span class="toggle-visible {% if withConfig == 0 %} hidden {% endif %}">
+                            <small>
+                                [{{ widget.getName()|trans({}, 'widget') }}]
+                            </small>
+                        </span>
+                        <span>
+                            {% if not widgetInstance.isAdmin() %}
+                                <i class="icon-pencil widget-instance-rename pointer-hand"></i>
+
+                                {% if widgetDatas.configurable %}
+                                    <i class="icon-cog widget-instance-config pointer-hand"></i>
+                                {% endif %}
+                            {% endif %}
+                        </span>
+                        <span class="pull-right">
+                            {% if widgetHomeTabConfig.isLocked() or isLockedHomeTab %}
+                                <i class="icon-lock"></i>
+                            {% else %}
+                                <i class="pointer-hand widget-visibility-btn
+                                    {% if widgetHomeTabConfig.isVisible() %}
+                                        icon-eye-open
+
+                                    {% else %}
+                                        icon-eye-close
+                                    {% endif %}"
+                                    visiblility-value="{% if widgetHomeTabConfig.isVisible() %}visible{% else %}invisible{% endif %}"
+                                    id="visible-widget-id-{{ widgetHomeTabConfig.getId() }}"
+                                ></i>
+
+                                {% if widgetHomeTabConfig.getType() == 'desktop' or widgetHomeTabConfig.getType() == 'workspace' %}
+                                    <span class="widget-order-btn-group">
+                                        {% if widgetHomeTabConfig.getWidgetOrder() > 1 %}
+                                            <i class="icon-arrow-up widget-order-up pointer-hand"></i>
+                                        {% endif %}
+                                        {% if widgetHomeTabConfig.getWidgetOrder() < lastWidgetOrder %}
+                                            <i class="icon-arrow-down widget-order-down pointer-hand"></i>
+                                        {% endif %}
+                                    </span>
+                                    <i class="pointer-hand widget-delete-btn icon-trash"></i>
+                                {% endif %}
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+                <div id="collapse{{ widgetInstance.getId() }}" class="collapse-widget collapse in">
+                    <div class="panel-body widget-instance-view">
+                       {{ widgetDatas.content|raw }}
+                   </div>
+                   <div class="panel-body widget-instance-edition hide"></div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if isVisibleHomeTab and not isLockedHomeTab %}
+        <br>
+        <div class="panel panel-default add-widget-instance">
+            <div class="panel-heading pointer-hand text-center">
+                <i class="icon-plus-sign">
+                    {{ 'add_widget_to_home_tab'|trans({}, 'platform') }}
+                </i>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<div id="delete-widget-hometab-validation-box" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h3>{{ 'widget_home_tab_delete_confirm_title'|trans({}, 'platform') }}</h3>
+            </div>
+            <div class="modal-body">
+                <p>{{ 'widget_home_tab_delete_confirm_message'|trans({}, 'platform') }}</p>
+            </div>
+            <div class="modal-footer">
+                <input type="button" id="delete-widget-hometab-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
+                <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="widget-modal-box" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h3 id="widget-modal-title">
+                    {{ 'rename_widget_instance'|trans({}, 'platform') }}
+                </h3>
+            </div>
+            <div id="widget-modal-body" class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="create-widget-instance-modal-box" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h3 id="create-widget-instance-modal-title">
+                    {{ 'create_widget_instance'|trans({}, 'platform') }}
+                </h3>
+            </div>
+            <div id="create-widget-instance-modal-body" class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block javascripts %}
+    <script
+        src='{{ asset('bundles/clarolinecore/js/widget/widgetsWithConfig.js') }}'
+        type="text/javascript">
+    </script>
+{% endblock %}

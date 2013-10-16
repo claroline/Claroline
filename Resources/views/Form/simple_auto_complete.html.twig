@@ -31,7 +31,8 @@
                             {% endif %}
                             contentType: "application/json; charset=utf-8",
                             data: {
-                                search: request.term
+                                search: request.term,
+                                extra: {{ extraDatas|json_encode()|raw }}
                             },
                             complete: function( data ) {
                                 if (data.status == 200) {

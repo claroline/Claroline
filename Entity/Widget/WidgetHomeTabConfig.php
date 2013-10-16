@@ -22,11 +22,11 @@ class WidgetHomeTabConfig
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Widget\Widget"
+     *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance"
      * )
-     * @ORM\JoinColumn(name="widget_id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="widget_instance_id", onDelete="CASCADE", nullable=true)
      */
-    protected $widget;
+    protected $widgetInstance;
 
     /**
      * @ORM\ManyToOne(
@@ -53,24 +53,24 @@ class WidgetHomeTabConfig
     protected $workspace;
 
     /**
-     * @ORM\Column(name="widget_order", nullable=false)
+     * @ORM\Column(name="widget_order")
      */
     protected $widgetOrder;
 
     /**
-     * @ORM\Column(nullable=false)
+     * @ORM\Column()
      */
     protected $type;
 
     /**
-     * @ORM\Column(type="boolean", name="is_visible", nullable=false)
+     * @ORM\Column(type="boolean", name="is_visible")
      */
-    protected $visible;
+    protected $visible = true;
 
     /**
-     * @ORM\Column(type="boolean", name="is_locked", nullable=false)
+     * @ORM\Column(type="boolean", name="is_locked")
      */
-    protected $locked;
+    protected $locked = false;
 
     public function getId()
     {
@@ -82,14 +82,14 @@ class WidgetHomeTabConfig
         $this->id = $id;
     }
 
-    public function getWidget()
+    public function getWidgetInstance()
     {
-        return $this->widget;
+        return $this->widgetInstance;
     }
 
-    public function setWidget(Widget $widget)
+    public function setWidgetInstance(WidgetInstance $widgetInstance)
     {
-        $this->widget = $widget;
+        $this->widgetInstance = $widgetInstance;
     }
 
     public function getHomeTab()

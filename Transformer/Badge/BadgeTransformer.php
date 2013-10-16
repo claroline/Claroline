@@ -40,7 +40,7 @@ class BadgeTransformer extends TwigTransformer
      */
     public function transform($entity, $format)
     {
-        $templatePath = $this->getTemplatePath($entity, $format);
+        $templatePath = __DIR__ . '/../../Resources/exporter/Badge';
         $this->container->get('twig.loader')->addPath($templatePath);
 
         $templateNameFormat = $this->getTemplateNameFormat($entity, $format);
