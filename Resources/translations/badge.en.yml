@@ -45,7 +45,7 @@ badge_form_description: 'Description'
 badge_form_criteria: "Earning criteria"
 badge_form_version: 'Version'
 badge_form_image: 'Image'
-badge_form_automatic_award: 'Automatic awarding if rules are respected'
+badge_form_automatic_award: 'Automatic awarding, if rules are respected'
 badge_form_expired_at: 'Expiration date'
 badge_form_choose_image: "Choose badge image"
 badge_form_change_image: "Change badge image"

@@ -91,8 +91,31 @@
         </div>
     {% endspaceless %}
 {% endmacro %}
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': workspace.name ~ ' - ' ~  workspace.code,
+                'href': path('claro_workspace_open', {'workspaceId': workspace.id, 'toolName': 'home'})
+            },
+            {
+                'name': 'workspace_badges'|trans({}, 'badge'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.id, 'toolName': 'badges'})
+            },
+            {
+                'name': 'edit_badge'|trans({'%badge_name%': badge.name}, 'badge'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
 
-{% block section_title %}<li class="active">{{ badge.name }}</li>{% endblock %}
+{% block section_title %}{{ 'edit_badge'|trans({'%badge_name%': badge.name}, 'badge') }}{% endblock %}
 
 {% block section_body %}
     <ul class="nav nav-tabs">
