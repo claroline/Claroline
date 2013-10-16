@@ -113,5 +113,10 @@ class LessonListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    public function onDownload(DownloadResourceEvent $event){
+        /*$event->setResponseContent("allo");
+        $event->stopPropagation();*/
+    }
+
 
 }

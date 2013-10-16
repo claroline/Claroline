@@ -4,7 +4,7 @@
     {{ macros.flashBox() }}
     <div class="row">
         {% if chapter is defined and chapter != null %}
-            <div class="col-md-3">
+            <div class="col-md-3" id='lesson_left_column'>
                 {% include 'IcapLessonBundle:Lesson:viewChild.html.twig' %}
             </div>
             <div class="col-md-9">
