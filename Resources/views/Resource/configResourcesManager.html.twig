@@ -1,4 +1,6 @@
 {% if includeDependencies %}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css')}}'>
+    
     {% javascripts
         vars=["locale"]
         "@ClarolineCoreBundle/Resources/views/Resource/breadcrumbs.html.twigjs"
@@ -18,6 +20,7 @@
     <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.widget.min.js') }}' ></script>
     <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.mouse.min.js') }}' ></script>
     <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.sortable.min.js') }}' ></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager.js') }}"></script>
 {% endif %}
 <div id="picker-wrapper"></div>
