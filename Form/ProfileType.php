@@ -91,7 +91,12 @@ class ProfileType extends AbstractType
                 )
             )
         )
-        ->add('description', 'tinymce');
+
+        ->add(
+            'description',
+            'tinymce',
+            array('required' => false)
+            );
     }
 
     public function getName()
