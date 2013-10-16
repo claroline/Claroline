@@ -1,6 +1,6 @@
 {% if includeDependencies %}
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css')}}'>
-
+    
     {% javascripts
         vars=["locale"]
         "@ClarolineCoreBundle/Resources/views/Resource/breadcrumbs.html.twigjs"
@@ -56,7 +56,7 @@
                 }
             }
         };
-
+        
         Claroline.ResourceManager.initialize({
             "parentElement": $('#picker-wrapper'),
             "isPickerMultiSelectAllowed": false,
