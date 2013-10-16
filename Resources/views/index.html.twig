@@ -27,14 +27,23 @@
         <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}</h3>
     </div>
     <div class="panel-body">
-        <div class="pull-right">
-             <div class="input-group">
-                <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
+        <div class="navbar">
+            {% if canCreateSubject %}
+            <div class="col-md-6">
+                <a class="btn btn-primary" href="{{ _path('claro_forum_form_subject_creation', {'forumId': _resource.getId()}) }}">
+                    <i class="icon-plus"></i> {{ 'new_subject'|trans({}, 'forum') }}
+                </a>
+            </div>
+            {% endif %}
+            <div class="col-md-6">
+                 <div class="input-group">
+                   <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
                     <span class="input-group-btn">
                         <button class="filter btn btn-default" type="button" id="search-button">
                             <i class="icon-search"></i>
                         </button>
                     </span>
+                </div>
             </div>
         </div>
         <div class="table-responsive">
@@ -71,13 +80,6 @@
         <div>
             {{ renderPager(_resource.getId(), pager) }}
         </div>
-    </div>
-    <div class="panel-footer">
-        {% if canCreateSubject %}
-            <a class="btn btn-primary" href="{{ _path('claro_forum_form_subject_creation', {'forumId': _resource.getId()}) }}">
-                <i class="icon-plus"></i> {{ 'new_subject'|trans({}, 'forum') }}
-            </a>
-        {% endif %}
     </div>
 {% endblock %}
 

@@ -30,15 +30,22 @@
 {% block section_content %}
 
 <div>
-     <div class="input-group">
-        <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
-        <span class="input-group-btn">
-            <button class="filter btn btn-default" type="button" id="search-button">
-                <i class="icon-search"></i>
-            </button>
-        </span>
+    <div class="navbar">
+        <div class="col-md-6">
+            {{ renderPager(_resource, search, pager, page) }}
+        </div>
+        <div class="col-md-6">
+            <br>
+            <div class="input-group">
+                <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
+                <span class="input-group-btn">
+                    <button class="filter btn btn-default" type="button" id="search-button">
+                        <i class="icon-search"></i>
+                    </button>
+                </span>
+            </div>
+        </div>
     </div>
-    {{ renderPager(_resource, search, pager, page) }}
 
     <div class="table-responsive">
         <table id="message-table" class="table table-striped table-bordered table-condensed">
@@ -102,7 +109,7 @@
         Claroline.Table.initialize(parameters);
 
         function hightlight(element, text) {
-            element.innerHTML = element.innerHTML.replace(new RegExp("( " +text + ")", "ig"), "<span class='text-danger'>$1</span>");
+            element.innerHTML = element.innerHTML.replace(new RegExp("(" +text+ ")", "ig"), '<span style="background-color: #FFFF00">$1</span>');
         }
 
         $('.message-content').each(function(){
