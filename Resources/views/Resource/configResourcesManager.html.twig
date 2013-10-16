@@ -16,6 +16,9 @@
     <script type="text/javascript" src="{{ asset('bundles/frontend/backbone/backbone-0.9.2.min.js') }}"></script>
     <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}' ></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager.js') }}"></script>
+    {% if 'en' != app.request.locale %}
+        <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.js') }}"></script>
+    {% endif %}
 {% endif %}
 <div id="picker-wrapper"></div>
     <script type="text/javascript">
@@ -29,6 +32,7 @@
             "pickerCallback": function(nodes){callBack(nodes);},
             "appPath": "{{ app.request.getBaseUrl }}",
             "webPath": "{{ asset('') }}",
+            "language": "{{ app.request.locale }}",
             "resourceTypes": {
                 {% for resourceType in resourceTypes %}
                     "{{ resourceType.getName() }}": {

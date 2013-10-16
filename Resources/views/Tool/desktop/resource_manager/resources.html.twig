@@ -47,7 +47,9 @@
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}" type="text/javascript"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager.js') }}"></script>
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'resource' }) }}"></script>
-    {#<script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>#}
+    {% if 'en' != app.request.locale %}
+        <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.js') }}"></script>
+    {% endif %}
     {% render controller('ClarolineCoreBundle:ResourceType:initPicker', {'includeDependencies': false}) %}
     {{ tinymce_init() }}
     <script type="text/javascript">
@@ -58,6 +60,7 @@
                 "isWorkspace": false,
                 "appPath": "{{ app.request.getBaseUrl }}",
                 "webPath": "{{ asset('') }}",
+                "language": "{{ app.request.locale }}",
                 "resourceTypes": {
                     {% for resourceType in resourceTypes %}
                         "{{ resourceType.getName() }}": {
