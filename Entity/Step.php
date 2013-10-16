@@ -24,6 +24,7 @@ class Step extends AbstractResource
 
     /**
     * @ORM\ManyToOne(targetEntity="Step")
+    * @ORM\JoinColumn(onDelete="CASCADE")
     */
     protected $parent;
 
@@ -71,6 +72,7 @@ class Step extends AbstractResource
 
     /**
     * @ORM\ManyToOne(targetEntity="Path", inversedBy="steps")
+    * @ORM\JoinColumn(onDelete="CASCADE")
     */
     protected $path;
 
@@ -90,7 +92,7 @@ class Step extends AbstractResource
     protected $stepWhere;
 
     /**
-    * @ORM\OneToMany(targetEntity="Step2ResourceNode", mappedBy="step", cascade={"remove"})
+    * @ORM\OneToMany(targetEntity="Step2ResourceNode", mappedBy="step")
     */
     protected $step2ResourceNodes;
 

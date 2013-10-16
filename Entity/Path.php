@@ -21,7 +21,7 @@ class Path extends AbstractResource
     private $path;
 
     /**
-    * @ORM\OneToMany(targetEntity="Step", mappedBy="path", cascade={"remove"})
+    * @ORM\OneToMany(targetEntity="Step", mappedBy="path")
     */
     protected $steps;
 

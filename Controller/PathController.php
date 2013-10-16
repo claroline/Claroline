@@ -94,7 +94,6 @@ class PathController extends Controller
         $this->security = $security;
     }
 
-
     /**
      * fromDesktopAction function
      *
@@ -110,6 +109,7 @@ class PathController extends Controller
      */
     public function fromDesktopAction()
     {
+
         return array();
     }
 

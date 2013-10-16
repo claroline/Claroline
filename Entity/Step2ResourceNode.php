@@ -23,6 +23,7 @@ class Step2ResourceNode
 
     /**
     * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Step", inversedBy="step2ResourceNodes")
+    * @ORM\JoinColumn(onDelete="CASCADE")
     */
     private $step;
 
