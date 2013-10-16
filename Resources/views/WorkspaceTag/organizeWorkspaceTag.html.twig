@@ -57,40 +57,42 @@
         <h3 class="panel-title">{{ 'tags_organization'|trans({}, 'platform') }}</h3>
     </div>
     <div class="panel-body">
-        <table class="table table-striped table-bordered table-condensed">
-            <tr>
-                <th>{{ 'tags_hierarchy'|trans({}, 'platform') }}</th>
-                <th>{{ 'tags_list'|trans({}, 'platform') }}</th>
-            </tr>
-            <tr>
-                {% if tags is empty %}
-                    <td colspan="2" align="center">
-                        {{ 'no_tag'|trans({}, 'platform') }}
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-condensed">
+                <tr>
+                    <th>{{ 'tags_hierarchy'|trans({}, 'platform') }}</th>
+                    <th>{{ 'tags_list'|trans({}, 'platform') }}</th>
+                </tr>
+                <tr>
+                    {% if tags is empty %}
+                        <td colspan="2" align="center">
+                            {{ 'no_tag'|trans({}, 'platform') }}
+                        </td>
+                    {% else %}
+                        <td>
+                            {{ showTagHierarchy(rootTags, hierarchy) }}
+                        </td>
+                        <td>
+                            <ul>
+                            {% for tag in tags %}
+                                <li>
+                                    <a href="{{ path('claro_workspace_tag_check_children', {'tagId':tag.getId()}) }}">
+                                    {{ tag.getName() }}
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        </td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td colspan="2" align="center" id="add-tag-button">
+                        <a href="">
+                            {{ 'add_tag'|trans({}, 'platform') }}
+                        </a>
                     </td>
-                {% else %}
-                    <td>
-                        {{ showTagHierarchy(rootTags, hierarchy) }}
-                    </td>
-                    <td>
-                        <ul>
-                        {% for tag in tags %}
-                            <li>
-                                <a href="{{ path('claro_workspace_tag_check_children', {'tagId':tag.getId()}) }}">
-                                {{ tag.getName() }}
-                            </li>
-                        {% endfor %}
-                        </ul>
-                    </td>
-                {% endif %}
-            </tr>
-            <tr>
-                <td colspan="2" align="center" id="add-tag-button">
-                    <a href="">
-                        {{ 'add_tag'|trans({}, 'platform') }}
-                    </a>
-                </td>
-            </tr>
-        </table>
+                </tr>
+            </table>
+        </div>
     </div>
 
     <div id="add-tag-validation-box" class="modal fade">

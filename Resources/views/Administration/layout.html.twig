@@ -15,7 +15,7 @@
             {{ 'users_management'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item{{ '/admin/badges' | compareRoute(' active') }}" href="{{ path('claro_admin_badges') }}" id="link_badges">
-            <i class="icon-certificate"></i>
+            <i class="icon-trophy"></i>
             {{ 'badges_management'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item{{ '/admin/registration' | compareRoute(' active') }}" href="{{ path('claro_admin_registration_management') }}">
@@ -52,12 +52,10 @@
 {% endblock %}
 
 {% block content %}
-        <div class="visible-xs visible-sm">
-            {{ block("leftbar") }}
-        </div>
-
-        <div class="panel panel-default">
-            {% block section_content %}{% endblock %}
-        </div>
-
+    <div class="visible-xs">
+        {{ block("leftbar") }}
+    </div>
+    <div class="panel panel-default">
+        {% block section_content %}{% endblock %}
+    </div>
 {% endblock %}

@@ -7,6 +7,8 @@ use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 
@@ -24,18 +26,21 @@ class MailController extends Controller
      * @DI\InjectParams({
      *     "formFactory" = @DI\Inject("claroline.form.factory"),
      *     "request"     = @DI\Inject("request"),
-     *     "mailer"      = @DI\Inject("mailer")
+     *     "mailer"      = @DI\Inject("mailer"),
+     *     "router"      = @DI\Inject("router")
      * })
      */
     public function __construct(
         FormFactory $formFactory,
         Request $request,
-        \Swift_Mailer $mailer
+        \Swift_Mailer $mailer,
+        RouterInterface $router
     )
     {
         $this->formFactory = $formFactory;
         $this->request = $request;
         $this->mailer = $mailer;
+        $this->router = $router;
     }
 
     /**
@@ -59,7 +64,7 @@ class MailController extends Controller
     public function formAction(User $user)
     {
         return array(
-            'form' => $this->formFactory->create(FormFactory::TYPE_MAIL)->createView(),
+            'form' => $this->formFactory->create(FormFactory::TYPE_EMAIL)->createView(),
             'userId' => $user->getId()
         );
     }
@@ -84,7 +89,7 @@ class MailController extends Controller
      */
     public function sendAction(User $user)
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_MAIL);
+        $form = $this->formFactory->create(FormFactory::TYPE_EMAIL);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -97,10 +102,6 @@ class MailController extends Controller
             $this->mailer->send($message);
         }
 
-        // add success/error message...
-        return array(
-            'form' => $form->createView(),
-            'userId' => $user->getId()
-        );
+        return new RedirectResponse($this->router->generate('claro_profile_view', array('userId' => $user->getId())));
     }
 }

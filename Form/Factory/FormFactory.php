@@ -21,6 +21,7 @@ class FormFactory
     const TYPE_ADMIN_ANALYTICS_CONNECTIONS = 'admin_analytics_connections';
     const TYPE_ADMIN_ANALYTICS_TOP = 'admin_analytics_top';
     const TYPE_MAIL = 'mail';
+    const TYPE_EMAIL = 'email';
     const TYPE_WORKSPACE = 'workspace';
     const TYPE_WORKSPACE_EDIT = 'workspace_edit';
     const TYPE_WORKSPACE_TEMPLATE = 'workspace_template';
@@ -154,6 +155,9 @@ class FormFactory
         self::TYPE_RESOURCE_TEXT => array(
             'formType' => 'Claroline\CoreBundle\Form\TextType',
             'entity' => 'Claroline\CoreBundle\Entity\Resource\Text'
+        ),
+        self::TYPE_EMAIL => array(
+            'formType' => 'Claroline\CoreBundle\Form\SendMailType',
         )
     );
 

@@ -421,6 +421,8 @@ select_users_for_registration_to_workspace: 'Select users to register'
 select_workspaces_for_registration: 'Select workspaces for registration'
 selected_workspaces_for_registration: 'Selected workspaces for registration'
 send_mail: 'Send a mail'
+send_mail_form_object: 'Object'
+send_mail_form_content: 'Content'
 send_message: 'Send a message'
 session_id: 'Session id'
 settings: Settings

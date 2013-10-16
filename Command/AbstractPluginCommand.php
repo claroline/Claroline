@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
-use Claroline\BundleRecorder\Detector;
+use Claroline\BundleRecorder\Detector\Detector;
 use Claroline\CoreBundle\Library\PluginBundle;
 
 /**
@@ -104,7 +104,7 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
 
     /**
      * @todo Remove ?
-     * 
+     *
      * Refreshes the asset folder (mandatory after plugin installation/uninstallation)
      *
      * @param OutputInterface $output

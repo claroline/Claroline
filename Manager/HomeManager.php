@@ -54,7 +54,7 @@ class HomeManager
      */
     public function getContent($content, $type, $father = null)
     {
-        $array = array('type' => $type->getName(), 'size' => 'content-8');
+        $array = array('type' => $type->getName(), 'size' => 'content-12');
 
         if ($father) {
             $array['father'] = $father->getId();

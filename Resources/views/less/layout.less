@@ -86,7 +86,7 @@ body {
     }
 }
 
-@media (min-width: 994px) {
+@media (min-width: @screen-sm) {
     body.left-bar-push {
         margin-left: 40px;
     }
@@ -95,7 +95,7 @@ body {
     }
 }
 
-@media (max-width: 993px) {
+@media (max-width: (@screen-sm - 1)) {
     body.left-bar-push {
         margin-left: 0;
     }
@@ -109,20 +109,44 @@ body {
 /************/
 
 #top_bar {
-    @media (max-width: 993px) {
-        .navbar-nav .divider{
-            display: none;
-         }
+    @media (max-width: (@screen-md - 1)) {
+        .dropdown-header {
+            color: lighten(@navbar-inverse-bg, 20%);
+            padding-left: 20px;
+        }
+
+        .dropdown-menu {
+            position: relative;
+            width: 100%;
+            border: none;
+            .box-shadow(none);
+            background: @navbar-inverse-bg;
+            li a {
+                padding-left: 15px;
+                margin: 5px;
+                color: @navbar-inverse-link-color;
+                &:hover {
+                    color: @navbar-inverse-link-hover-color;
+                }
+            }
+            .divider{
+                display: none;
+            }
+        }
+    }
+
+    @media (min-width: @screen-md) {
+         .dropdown-menu {
+            position: absolute;
+            left: auto;
+            right:0;
+        }
     }
 
     &.navbar.navbar-inverse.navbar-fixed-top {
         .navbar-brand {
             font-size:22px;
             color: #fff;
-        }
-
-        .badge {
-            background:@brand-danger;
         }
     }
 
@@ -183,8 +207,8 @@ body {
     > .nav.nav-pills{
         margin-bottom: 5px;
         border: 1px solid transparent;
-        &.admin: hover{
-            border: 1px dashed @link-color;
+        &.admin:hover{
+            border: 1px dashed lighten(@link-color, 20%);
         }
     }
 
@@ -204,7 +228,7 @@ body {
                 padding: 10px 15px;
                 color: @gray;
 
-                &: hover {
+                &:hover {
                     text-decoration: none;
                     background: @panel-default-heading-bg;
                 }
@@ -212,7 +236,7 @@ body {
 
             //link inside a div case
             &.active > a,
-            &.active > a: hover {
+            &.active > a:hover {
                 color: #fff;
                 background: @link-color;
             }
@@ -265,7 +289,7 @@ body {
         margin: 0;
 
         a.disabled {
-            &, &: hover {
+            &, &:hover {
                 color: lighten(@gray-light, 20%);
             }
 
@@ -588,15 +612,15 @@ div.pagination
 
 /* special grid sistem for content in home page*/
 
-@content-iteration: 8;
-@content-margin: 2;
+@content-iteration: 12;
+@content-margin: 1.5;
 
 @media (min-width: 767px)
 {
     .content-size (@index) when (@index >= 1) {
 
         .content-@{index} {
-            width: unit(((@index * 100 / @content-iteration) - @content-margin), "%");
+            width: unit(((@index * 100 / @content-iteration) - @content-margin - 0.1), "%");
             /*margin-left: unit(@content-margin, "%");*/
 		    margin-right: unit(@content-margin, "%");
             float: left;
@@ -650,7 +674,12 @@ div.pagination
     }
 
     p {
-        padding: 10px 0 10px  is defined0;
+        word-break: break-all;
+        padding: 0 0 10px 0;
+    }
+
+    img {
+        padding: 0 0 10px 0;
     }
 
     .content-menu button {
@@ -680,7 +709,12 @@ div.pagination
 
         .clearfix {
             margin: 0;
-            padding: 10px 0 0 0;
+            padding: 0;
+            word-break: break-all;
+        }
+
+        iframe {
+            padding: 0 0 10px 0;
         }
 
         img {
@@ -712,6 +746,7 @@ div.pagination
     }
 
     .navbar.navbar-static-top {
+        z-index: (@zindex-dropdown - 10);
         border-top: 1px solid @input-border;
         .border-bottom-radius(@border-radius-base);
         margin: 0;
@@ -731,6 +766,7 @@ div.pagination
 }
 
 .creator-collapse {
+    background: @list-group-bg;
     border: 1px solid @list-group-border;
     padding: 10px 10px 0 10px;
 }
@@ -747,14 +783,22 @@ div.pagination
     padding: 20px 5px 20px 5px;
 }
 
-#sizes .panel: hover, #sizes .panel.active,
-#regions .panel: hover, #regions .panel.active {
+#sizes .panel:hover, #sizes .panel.active,
+#regions .panel:hover, #regions .panel.active {
     background: @link-color;
     color: #fff;
 }
 
 .align-right {
     text-align: right;
+}
+
+.region-header {
+    padding-bottom: 10px;
+}
+
+.nav.nav-pills li {
+    margin-right: 5px;
 }
 
 /**********************/
