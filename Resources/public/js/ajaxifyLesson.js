@@ -1,4 +1,10 @@
 
+function resetTiny(){
+    $('.tinymce').each(function(){
+        $(this).tinymce().remove()
+    });
+}
+
 function injectForm(obj, hashname){
     var newLink = $(obj);
     newLink.attr("data-path", newLink.attr('href'));
@@ -7,6 +13,7 @@ function injectForm(obj, hashname){
         event.preventDefault();
         $.get(newLink.attr("data-path"))
             .done(function (data) {
+                resetTiny();
                 $('#chapter_content').html(data);
             })
         ;
@@ -21,6 +28,7 @@ function injectFormForMove(obj, hashname){
         event.preventDefault();
         $.get(newLink.attr("data-path"))
             .done(function (data) {
+                resetTiny();
                 $('#chapter_content').html(data);
             })
         ;

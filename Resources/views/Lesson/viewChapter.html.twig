@@ -1,5 +1,4 @@
 {% extends 'IcapLessonBundle:Lesson:layout.html.twig' %}
-
 {% block lesson_content %}
     <h3 class="lesson_title">{{ _resource.getResourceNode().getName() }}</h3>
     {{ macros.flashBox() }}
@@ -24,17 +23,18 @@
                    <div class='chapter_content_text'>
                        {{ chapter.text | raw }}
                    </div>
-
                </div>
             </div>
         {% else %}
             <div class="col-md-12">
-                <div class='chapter_content' id='chapter_content'>
-                    <div class='welcome'>
-                        <div>{{ 'lesson_welcome'|trans({}, 'icap_lesson') }}</div>
-                        {% if is_granted('EDIT', node) %}
-                            <div><a data-chapter = '{{ chapter.id }}' class="createchapter" href='{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': parent.id })}}'>{{ 'lesson_welcome_create'|trans({}, 'icap_lesson') }}</a></div>
-                        {% endif %}
+                <div class='panel panel-default' id='chapter_content'>
+                    <div class='chapter_content_text'>
+                        <div class='welcome'>
+                            <div>{{ 'lesson_welcome'|trans({}, 'icap_lesson') }}</div>
+                            {% if is_granted('EDIT', node) %}
+                                <div><a data-chapter = '{{ chapter.id }}' class="createchapter" href='{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': parent.id })}}'>{{ 'lesson_welcome_create'|trans({}, 'icap_lesson') }}</a></div>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>

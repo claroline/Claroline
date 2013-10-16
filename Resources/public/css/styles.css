@@ -1,4 +1,17 @@
 
+.form-actions{
+    padding : 20px;
+    text-align: center;
+}
+
+.form-actions input{
+    margin : 5px;
+}
+
+.form-actions a{
+    margin : 5px;
+}
+
 .menu_lesson .collapsor {
     color:#2a6496;
 }

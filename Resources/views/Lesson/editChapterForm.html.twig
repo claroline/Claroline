@@ -1,7 +1,7 @@
 <div class='panel-heading chapter_title'><h4>{{ 'Chapter Edition'|trans({}, 'icap_lesson') }}</h4></div>
 <form id='editchapterform' method="POST" action="{{ path('icap_lesson_update_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id }) }}" class="form-horizontal">
-    <fieldset>
-        <div class='chapter_content'>
+    <div class='chapter_content'>
+        <fieldset>
                 <label class="control-label" for="icap_lesson_chaptertype_title">{{ 'Title'|trans({}, 'icap_lesson') }}</label>
                 <div class="controls">
                     {{ form_widget(form.title) }}
@@ -13,13 +13,14 @@
                 </div>
             </div>
             {{ form_rest(form) }}
+        </fieldset>
+        {{ macros.flashBox() }}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{{ 'Save'|trans({}, 'icap_lesson') }}</button>
+            <a href="{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id }) }}"><button type="button" class="btn">{{ 'Cancel'|trans({}, 'icap_lesson') }}</button></a>
         </div>
-    </fieldset>
-    {{ macros.flashBox() }}
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary">{{ 'Ok'|trans({}, 'icap_lesson') }}</button>
-        <a href="{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id }) }}"><button type="button" class="btn">{{ 'Cancel'|trans({}, 'icap_lesson') }}</button></a>
     </div>
+
 </form>
 {% block javascripts %}
     {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
