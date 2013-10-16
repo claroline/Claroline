@@ -944,7 +944,7 @@
                         }
                     });
 
-                    if (!data.canChangePosition) {
+                    if (!data.canChangePosition || this.parameters.isPickerOnly) {
                         $('#sortable').sortable('disable');
                     } else {
                         $('#sortable').sortable('enable');
