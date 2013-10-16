@@ -1219,6 +1219,7 @@
      */
     manager.initialize = function (parameters) {
         parameters = parameters || {};
+        parameters.language = parameters.language || 'en';
         parameters.directoryId = parameters.directoryId || '0';
         parameters.directoryHistory = parameters.directoryHistory || [];
         parameters.parentElement = parameters.parentElement || $('body');
