@@ -85,3 +85,7 @@ ujm_delete_shared_question:
 ujm_see_shared:
     pattern:  /seeShared/{id}
     defaults: { _controller: "UJMExoBundle:Question:seeSharedWith" }
+
+ujm_document_change_name:
+    pattern: /change/document/name
+    defaults: {_controller: "UJMExoBundle:Question:changeDocumentName" }

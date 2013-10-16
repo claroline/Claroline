@@ -9,19 +9,6 @@ function AddDocument() {
     }
 }
 
-// Display pop up to change name of a document
-function ChangeName(oldname) {
-    if ($('#UpdateName').css("display") == "none") {
-        $('#UpdateName').css({"display" : "inline-block"});
-        $('#oldName').val(oldname);
-    } else {
-        $('#UpdateName').css({"display" : "none"});
-        $('#newlabel').val('');
-        $('#updateSubmit').prop('disabled', false);
-        $('#oldName').val('');
-    }
-}
-
 // Display inline-block to sort documents
 function sortDoc() {
     if ($('#sortDocuments').css("display") == "none") {
@@ -59,7 +46,7 @@ function sortDocument(type, path, page) {
         data: {
             doctype : type,
             searchLabel: searchLabel,
-            page: page
+            page : page
         },
         cache: false,
         success: function (data) {
@@ -78,7 +65,7 @@ function searchDoc(path, page) {
         url: path,
         data: {
             labelToFind : labelToFind,
-            page: page
+            page : page
         },
         cache: false,
         success: function (data) {
@@ -86,3 +73,30 @@ function searchDoc(path, page) {
         }
     });
 }
+
+// Display modal to change name of a document
+function ChangeName(url, i) {
+    var oldDocLabel = $('#docLabel' + i).html().trim();
+
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+            oldDocLabel : oldDocLabel,
+            i : i
+        },
+        cache: false,
+        success: function (data) {
+            changeDocumentName(data);
+        }
+    });
+}
+
+// change document name
+function changeDocumentName(data) {
+    $('body').append(data);
+}
+
+$(document.body).on('hidden.bs.modal', function () {
+    $('#modaldocument').remove();
+});

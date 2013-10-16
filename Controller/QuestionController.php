@@ -81,12 +81,12 @@ class QuestionController extends Controller
     {
         $vars = array();
         $em = $this->getDoctrine()->getManager();
-        
+
         if ($resourceId != -1) {
             $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($resourceId);
             $vars['_resource'] = $exercise;
         }
-        
+
         // To paginate the result :
         $request = $this->get('request'); // Get the request which contains the following parameters :
         $page = $request->query->get('page', 1); // Get the choosen page (default 1)
@@ -181,7 +181,7 @@ class QuestionController extends Controller
         $vars['sharedWithMe']         = $sharedWithMePager;
         $vars['pagerMy']              = $pagerfantaMy;
         $vars['pagerShared']          = $pagerfantaShared;
-        
+
         return $this->render('UJMExoBundle:Question:index.html.twig', $vars);
     }
 
@@ -196,7 +196,7 @@ class QuestionController extends Controller
             $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
             $vars['_resource'] = $exercise;
         }
-        
+
         $question = $this->controlUserQuestion($id);
         $sharedQuestion = $this->controlUserSharedQuestion($id);
 
@@ -224,11 +224,11 @@ class QuestionController extends Controller
                     }
 
                     $form   = $this->createForm(new ResponseType(), $response);
-                    
+
                     $vars['interactionQCM'] = $interactionQCM[0];
                     $vars['form']           = $form->createView();
                     $vars['exoID']          = $exoID;
-                    
+
                     return $this->render('UJMExoBundle:InteractionQCM:paper.html.twig', $vars);
 
                 case "InteractionGraphic":
@@ -247,7 +247,7 @@ class QuestionController extends Controller
                     $vars['interactionGraphic'] = $interactionGraph[0];
                     $vars['listeCoords']        = $listeCoords;
                     $vars['exoID']              = $exoID;
-                    
+
                     return $this->render('UJMExoBundle:InteractionGraphic:paper.html.twig', $vars);
 
                 case "InteractionHole":
@@ -263,7 +263,7 @@ class QuestionController extends Controller
                     $vars['interactionHole'] = $interactionHole[0];
                     $vars['form']            = $form->createView();
                     $vars['exoID']           = $exoID;
-                    
+
                     return $this->render('UJMExoBundle:InteractionHole:paper.html.twig', $vars);
 
                 case "InteractionOpen":
@@ -278,7 +278,7 @@ class QuestionController extends Controller
                     $vars['interactionOpen'] = $interactionOpen[0];
                     $vars['form']            = $form->createView();
                     $vars['exoID']           = $exoID;
-                    
+
                     return $this->render('UJMExoBundle:InteractionOpen:paper.html.twig', $vars);
 
             }
@@ -820,7 +820,7 @@ class QuestionController extends Controller
         $pagerDoc= $pagination[1];
 
         return $this->render(
-            'UJMExoBundle:Question:manageImg.html.twig',
+            'UJMExoBundle:Document:manageImg.html.twig',
             array(
                 'listDoc' => $listDocPager,
                 'pagerDoc' => $pagerDoc
@@ -872,7 +872,7 @@ class QuestionController extends Controller
             $pagerDoc = $pagination[1];
 
             return $this->render(
-                'UJMExoBundle:Question:manageImg.html.twig',
+                'UJMExoBundle:Document:manageImg.html.twig',
                 array(
                     'listDoc' => $listDocPager,
                     'pagerDoc' => $pagerDoc,
@@ -920,7 +920,7 @@ class QuestionController extends Controller
             $pagerDelDoc = $pagination[1];
 
             return $this->render(
-                'UJMExoBundle:Question:safeDelete.html.twig',
+                'UJMExoBundle:Document:safeDelete.html.twig',
                 array(
                     'listGraph' => $entities,
                     'label' => $label,
@@ -980,13 +980,26 @@ class QuestionController extends Controller
     }
 
     /**
+     * To display the modal which allow to change the label of a document
+     *
+     */
+    public function changeDocumentNameAction()
+    {
+        $request = $this->get('request'); // Get the request which contains the following parameters :
+        $oldDocLabel = $request->request->get('oldDocLabel');
+        $i = $request->request->get('i');
+
+        return $this->render('UJMExoBundle:Document:changeName.html.twig', array('oldDocLabel' => $oldDocLabel, 'i' => $i));
+    }
+
+    /**
      * To change the label of a document
      *
      */
     public function updateNameAction()
     {
-        $newlabel = $this->container->get('request')->request->get('newlabel');
-        $oldlabel = $this->get('request')->get('oldName');
+        $newlabel = $_POST['newlabel'];
+        $oldlabel = $_POST['oldName'];
 
         $em = $this->getDoctrine()->getManager();
 
@@ -997,7 +1010,7 @@ class QuestionController extends Controller
         $em->persist($alterDoc);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('ujm_question_manage_doc'));
+        return new \Symfony\Component\HttpFoundation\Response($newlabel);
     }
 
     /**
@@ -1029,7 +1042,7 @@ class QuestionController extends Controller
 
             // Put the result in a twig
             $divResultSearch = $this->render(
-                'UJMExoBundle:Question:sortDoc.html.twig', array(
+                'UJMExoBundle:Document:sortDoc.html.twig', array(
                 'listFindDoc' => $listDocSortPager,
                 'pagerFindDoc' => $pagerSortDoc,
                 'labelToFind' => $searchLabel,
@@ -1047,14 +1060,14 @@ class QuestionController extends Controller
 
                 // Send the form to search and the result
                 return $this->render(
-                    'UJMExoBundle:Question:manageImg.html.twig', array(
+                    'UJMExoBundle:Document:manageImg.html.twig', array(
                     'divResultSearch' => $divResultSearch
                     )
                 );
             }
         } else {
             return $this->render(
-                'UJMExoBundle:Question:sortDoc.html.twig', array(
+                'UJMExoBundle:Document:sortDoc.html.twig', array(
                 'listFindDoc' => '',
                 'whichAction' => 'sort'
                 )
@@ -1087,7 +1100,7 @@ class QuestionController extends Controller
 
             // Put the result in a twig
             $divResultSearch = $this->render(
-                'UJMExoBundle:Question:sortDoc.html.twig', array(
+                'UJMExoBundle:Document:sortDoc.html.twig', array(
                 'listFindDoc' => $listFindDocPager,
                 'pagerFindDoc' => $pagerFindDoc,
                 'labelToFind' => $labelToFind,
@@ -1104,14 +1117,14 @@ class QuestionController extends Controller
 
                 // Send the form to search and the result
                 return $this->render(
-                    'UJMExoBundle:Question:manageImg.html.twig', array(
+                    'UJMExoBundle:Document:manageImg.html.twig', array(
                     'divResultSearch' => $divResultSearch
                     )
                 );
             }
         } else {
             return $this->render(
-                'UJMExoBundle:Question:sortDoc.html.twig', array(
+                'UJMExoBundle:Document:sortDoc.html.twig', array(
                 'listFindDoc' => '',
                 'whichAction' => 'search'
                 )

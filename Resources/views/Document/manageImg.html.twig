@@ -82,9 +82,9 @@
                             <form id="uploadForm" enctype="multipart/form-data" onsubmit="DisplayMessage();" method="post"
                                 action="{{ path('ujm_interactiongraphic_AddImg', { 'redirection': 1, 'pageToGo': pagerDoc.getNbPages,
                                     'maxPage': pagerDoc.maxPerPage, 'nbItem': pagerDoc.getNbResults }) }}">
-                                <label for="label">{{ 'docName' | trans }} ?</label>
-                                <input class="form-control" type="text" id='label' name='label' required="true"/>
-                                <input id="picture" name="picture" type="file" required="true"/>
+                                <p><label for="label">{{ 'docName' | trans }} ?</label>
+                                <input class="form-control" type="text" id='label' name='label' required="true"/></p>
+                                <p><input id="picture" name="picture" type="file" required="true"/></p>
 
                                 <input id="uploadSubmit" type="submit" value="{{ 'upload' | trans }} !"
                                     onclick="ValidName('{{ 'wrongName' | trans }}','label', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'alreadyExist' | trans }}', 'uploadForm');
@@ -163,25 +163,6 @@
                     <button type="button" class="btn btn-primary">{{ 'reset' | trans }}</button>
                 </a>
 
-
-                <div id="UpdateName" style="position: fixed; left: 40%; top: 20%; background-color: #ccf; border: #000 thin solid;
-                     width: 400px; height: 200px; display: none; opacity: 0.95; text-align: center;">
-
-                         <a href="#" onclick="ChangeName();event.preventDefault();"><i class="icon-remove"></i> {{ 'close' | trans }}&nbsp;</a>
-
-                    <h3>{{ 'changeName' | trans }}</h3>
-
-                    <form id="updateName" enctype="multipart/form-data" method="post" action="{{ path('ujm_question_name_update') }}">
-
-                        <p>{{ 'newName' | trans }} ?</p>
-                        <input class="form-control" type="text" id='newlabel' name='newlabel' required="true"/>
-                        <input id="updateSubmit" type="submit" value="{{ 'change' | trans }} !"
-                            onclick="ValidName('{{ 'wrongName' | trans }}','newlabel', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'alreadyExist' | trans }}', 'updateName');
-                                return false;" class="btn btn-primary"/>
-
-                        <input type="hidden" id="oldName" name="oldName" value=""/>
-                    </form>
-                </div>
             </div>
         </div>
     </div>
@@ -220,6 +201,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {% set i = 0 %}
                                 {% for myDoc in listDoc %}
                                     <tr>
                                         <td class="classic">
@@ -261,13 +243,13 @@
                                             {% endif %}
                                         </td>
 
-                                        <td class="classic">
+                                        <td class="classic" id="docLabel{{ i }}">
                                             {{ myDoc.label }}
                                         </td>
 
                                         <td class="classic">
                                             <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
-                                                href="#" onclick="ChangeName('{{ myDoc.label }}');event.preventDefault();">
+                                                onclick="ChangeName('{{ path('ujm_document_change_name') }}', '{{ i }}');">
                                                 <i class="icon-pencil"></i>
                                             </a>
 
@@ -280,6 +262,7 @@
                                             </a>
                                         </td>
                                     </tr>
+                                    {% set i = i + 1 %}
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -306,4 +289,5 @@
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/addImage.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/manageDoc.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/sortAndSearch.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/malsup.js') }}"></script>
 {% endblock %}

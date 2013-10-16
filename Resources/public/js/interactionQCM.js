@@ -29,7 +29,7 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
     $(':radio').live('click', function () {
        if ($(this).is(':checked')) {
            $('#newTable').find(('tr:not(:first)')).each(function () {
-              $(this).find('input:first').removeAttr('checked');
+              $(this).find('input').eq(1).removeAttr('checked');
            });
 
            $(this).attr('checked', 'checked');

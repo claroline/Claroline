@@ -144,7 +144,7 @@ class WSRestController extends Controller
                 }
 
                 return $this->render(
-                    'UJMExoBundle:Question:manageImg.html.twig',
+                    'UJMExoBundle:Document:manageImg.html.twig',
                     array(
                         'listDoc' => $listDocPager,
                         'pagerDoc' => $pagerDoc
