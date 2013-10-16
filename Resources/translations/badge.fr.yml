@@ -21,7 +21,7 @@ badge_unaward_confirm_title: "Désattribution d'un badge"
 badge_unaward_confirm_message: 'Etes-vous sûr de vouloir désattribuer le badge <strong>%badgeName%</strong> à <strong>%user%</strong>?'
 no_badges: 'Aucun badge.'
 add_badge: 'Ajouter un badge'
-edit_badge: 'Editer le badge %badge_name%'
+edit_badge: "Modification du badge '%badge_name%'"
 award: 'Attribuer'
 dont_award: 'Ne pas attribuer'
 badge_form_frTranslation: 'Traduction française'
@@ -34,8 +34,8 @@ badge_add_success_message: 'Badge ajouté avec succès.'
 badge_add_error_message: "Erreur lors de l'ajout du badge."
 badge_delete_success_message: 'Badge supprimé avec succès.'
 badge_delete_error_message: "Erreur lors de la suppression du badge."
-badge_edit_success_message: 'Badge édité avec succès.'
-badge_edit_error_message: "Erreur lors de l'édition du badge."
+badge_edit_success_message: 'Badge modifié avec succès.'
+badge_edit_error_message: "Erreur lors de la modification du badge."
 badge_awarded_count_message: '%awaredBadge% attribution de badge effectuée.|%awaredBadge% attributions de badge effectuées.'
 badge_award_error_message: "Erreur lors de l'attribution du badge."
 badge_unaward_success_message: 'Désattribution du badge effectuée avec succès.'

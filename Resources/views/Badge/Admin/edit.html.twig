@@ -92,7 +92,27 @@
     {% endspaceless %}
 {% endmacro %}
 
-{% block section_title %}<li class="active">{{ badge.name }}</li>{% endblock %}
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'badges_management'|trans({}, 'platform'),
+                'href': path('claro_admin_badges')
+            },
+            {
+                'name': 'edit_badge'|trans({'%badge_name%': badge.name}, 'badge'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_title %}{{ 'edit_badge'|trans({'%badge_name%': badge.name}, 'badge') }}{% endblock %}
 
 {% block section_body %}
     <ul class="nav nav-tabs">

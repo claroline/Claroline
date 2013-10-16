@@ -1,13 +1,9 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block section_content %}
-
     <div class="panel-heading">
         <h3 class="panel-title">
-            <ol class="breadcrumb">
-                {% block section_title_first %}<li><a href="{{ path('claro_admin_badges') }}" title="{{ 'back_to_badges_list'|trans }}">{{ 'Badges'|trans }}</a>{% endblock %}
-                {% block section_title %}{% endblock %}
-            </ol>
+            <h1 class="panel-title">{% block section_title %}{% endblock %}</h1>
         </h3>
     </div>
     {{ macros.flashBox() }}
