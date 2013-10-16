@@ -127,11 +127,13 @@ class WSRestController extends Controller
                 $adapterDoc = new ArrayAdapter($listDoc);
                 $pagerDoc = new Pagerfanta($adapterDoc);
 
-                // If new item > max per page, display next page
-                $rest = $nbItem % $maxPage;
+                if ($nbItem != 0) {
+                    // If new item > max per page, display next page
+                    $rest = $nbItem % $maxPage;
 
-                if ($rest == 0) {
-                    $pageToGo += 1;
+                    if ($rest == 0) {
+                        $pageToGo += 1;
+                    }
                 }
 
                 try {
