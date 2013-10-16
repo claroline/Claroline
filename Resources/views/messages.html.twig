@@ -48,13 +48,15 @@
                     <td width="125px">
                         <div>
                             {% if message.getCreator().getPicture() != "" %}
-                             <img src="{{ asset('uploads/pictures/') ~ message.getCreator().getPicture() }}" class="col-md-2">
+                             <img src="{{ asset('uploads/pictures/') ~ message.getCreator().getPicture() }}" class="col-md-12">
                         {% else %}
-                                <h1><i class="icon-user"></i><h1>
+                                <h1><i class="icon-user col-md-12"></i><h1>
                         {% endif %}
                         </div>
                         <div>
+                        <a href="{{path('claro_profile_view', {'userId':message.getCreator().getId()})}}"> 
                            {{ message.getCreator().getFirstName() }} {{ message.getCreator().getLastName() }}
+                        </a>
                         </div>
                         <div>
                             {{ message.getCreationDate()|date('m/d/Y H:i:s') }}
