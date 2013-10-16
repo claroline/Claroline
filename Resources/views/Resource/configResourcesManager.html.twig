@@ -25,6 +25,32 @@
     $(function() {
         "use strict";
 
+        var callBack = function(nodes){
+            alert('Callback is called back');
+            console.debug(nodes[_.keys(nodes)][1]);
+            var id = _.keys(nodes)[0];
+            var resourceTypes = nodes[_.keys(nodes)][1];
+            var nodeId = _.keys(nodes)[0];
+            var mimeArray = new Array('image/jpeg','image/gif','image/png');
+            var mimeType = nodes[_.keys(nodes)][2];
+
+            if (resourceTypes === 'directory')
+            {
+                //the breadcrumbs could be appended to the query string aswell
+               var route = Routing.generate('claro_desktop_open_tool', {'toolName': 'resource_manager'}) + '#resources/' + id;
+               tinyMCE.execCommand('mceInsertRawHTML', false, '<a href="' + route + '" />'+nodes[_.keys(nodes)][0] +'</a>');
+            } else {
+                if (mimeArray.indexOf(mimeType) > -1)
+                {
+                    tinyMCE.execCommand('mceInsertRawHTML', false, '<img src="' + Routing.generate('claro_file_get_image', {'node': id}) + '" alt ="'+nodeId+' width="200" height="100"/>');
+                }
+                else
+                {
+                    tinyMCE.execCommand('mceInsertRawHTML', false, '<a href="' + Routing.generate('claro_resource_open', {'resourceType': resourceTypes, 'node':nodeId}) + '" />'+nodes[_.keys(nodes)][0] +'</a>');
+                }
+            }
+        };
+        
         Claroline.ResourceManager.initialize({
             "parentElement": $('#picker-wrapper'),
             "isPickerMultiSelectAllowed": false,
@@ -54,30 +80,9 @@
         });
 
         $("body").on('click', '#resource-picker', function(){Claroline.ResourceManager.picker('open')});
+        //for now it's an arbitrary value.
+        var zIndex = 1000
+        $('#resource-picker').zIndex(zIndex)
 
-        var callBack = function(nodes){
-            console.debug(nodes[_.keys(nodes)][1]);
-            var id = _.keys(nodes)[0];
-            var resourceTypes = nodes[_.keys(nodes)][1];
-            var nodeId = _.keys(nodes)[0];
-            var mimeArray = new Array('image/jpeg','image/gif','image/png');
-            var mimeType = nodes[_.keys(nodes)][2];
-
-            if (resourceTypes === 'directory')
-            {
-                //the breadcrumbs could be appended to the query string aswell
-               var route = Routing.generate('claro_desktop_open_tool', {'toolName': 'resource_manager'}) + '#resources/' + id;
-               tinyMCE.execCommand('mceInsertRawHTML', false, '<a href="' + route + '" />'+nodes[_.keys(nodes)][0] +'</a>');
-            } else {
-                if (mimeArray.indexOf(mimeType) > -1)
-                {
-                    tinyMCE.execCommand('mceInsertRawHTML', false, '<img src="' + Routing.generate('claro_file_get_image', {'node': id}) + '" alt ="'+nodeId+' width="200" height="100"/>');
-                }
-                else
-                {
-                    tinyMCE.execCommand('mceInsertRawHTML', false, '<a href="' + Routing.generate('claro_resource_open', {'resourceType': resourceTypes, 'node':nodeId}) + '" />'+nodes[_.keys(nodes)][0] +'</a>');
-                }
-            }
-        };
     });
 </script>
