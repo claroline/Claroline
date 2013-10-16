@@ -7,6 +7,7 @@ use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Form\MessageType;
 use Claroline\ForumBundle\Form\SubjectType;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\ForumBundle\Form\ForumOptionsType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -17,6 +18,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Response;
 
 
 /**
@@ -361,6 +363,28 @@ class ForumController extends Controller
             'message' => $message,
             '_resource' => $forum
         );
+    }
+
+    /**
+     * @Route(
+     *     "/{forum}/search/{search}/page/{page}",
+     *     name="claro_forum_search",
+     *     defaults={"page"=1, "search"= ""},
+     *     options={"expose"=true}
+     * )
+     * @Template("ClarolineForumBundle::searchResults.html.twig")
+     */
+    public function searchAction(Forum $forum, $page, $search)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('ClarolineForumBundle:Forum');
+        $query = $repo->search($forum, $search);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(20);
+        $pager->setCurrentPage($page);
+
+        return array('pager' => $pager, '_resource' => $forum, 'search' => $search, 'page' => $page);
     }
 
     private function checkAccess(Forum $forum)

@@ -56,4 +56,19 @@ class ForumRepository extends EntityRepository
 
         return $query->getSingleScalarResult();
     }
+
+    public function search(Forum $forum, $content, $getQuery = true)
+    {
+        $dql = "SELECT m FROM Claroline\ForumBundle\Entity\Message m
+            JOIN m.subject s
+            JOIN s.forum f
+            WHERE m.content LIKE :content
+            and f.id = {$forum->getId()}
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('content', '%'.$content.'%');
+
+        return ($getQuery) ? $query: $query->getResult();
+    }
 }
