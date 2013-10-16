@@ -12,17 +12,7 @@ class AnnouncementType extends AbstractType
     {
         $builder->add('title', 'text', array('required' => false));
         $builder->add('announcer', 'text', array('required' => false));
-        $builder->add(
-            'content',
-            'textarea',
-            array(
-                'required' => true,
-                'attr' => array(
-                    'class' => 'tinymce',
-                    'data-theme' => 'medium'
-                )
-            )
-        );
+        $builder->add('content', 'tinymce', array('required' => true));
         $builder->add(
             'visible',
             'checkbox',
