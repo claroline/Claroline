@@ -94,5 +94,6 @@ return array(
     'do_install' => 'Démarrer l\'installation',
     'previous_step' => 'Précédent',
     'skip_step' => 'Passer cette étape',
-    'next_step' => 'Suivant'
+    'next_step' => 'Suivant',
+    'test_again' => 'Réessayer'
 );

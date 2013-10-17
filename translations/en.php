@@ -94,5 +94,6 @@ return array(
     'do_install' => 'Launch installation now',
     'previous_step' => 'Previous',
     'skip_step' => 'Skip',
-    'next_step' => 'Next'
+    'next_step' => 'Next',
+    'test_again' => 'Test again'
 );
