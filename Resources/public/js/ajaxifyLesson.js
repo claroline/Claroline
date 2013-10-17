@@ -77,4 +77,8 @@ $(document).ready(function() {
     $('a.deletechapter').each(function(){
         popupForm($(this), '#deleteChapter');
     });
+    //ajax popup for chapter delete form
+    $('a.duplicatechapter').each(function(){
+        injectForm($(this), '#duplicateChapter');
+    });
 });

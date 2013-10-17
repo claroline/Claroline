@@ -18,7 +18,7 @@
         </fieldset>
         {{ macros.flashBox() }}
         <div class="form-actions">
-            <input type="submit" class="btn btn-primary" value="{{ 'Save'|trans({}, 'icap_lesson') }}"/>
+            <input type="submit" class="btn btn-primary" value="{{ 'Save'|trans({}, 'icap_lesson') }}" />
             <a href="{{ path('icap_lesson', { 'resourceId': _resource.id }) }}" ><button type="button" class="btn">{{ 'Cancel'|trans({}, 'icap_lesson') }}</button></a>
         </div>
     </div>

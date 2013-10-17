@@ -4,6 +4,7 @@ namespace Icap\LessonBundle\Controller;
 
 use Icap\LessonBundle\Form\ChapterType;
 use Icap\LessonBundle\Form\MoveChapterType;
+use Icap\LessonBundle\Form\DuplicateChapterType;
 use Icap\LessonBundle\Event\Log\LogChapterReadEvent;
 use Icap\LessonBundle\Event\Log\LogChapterUpdateEvent;
 use Icap\LessonBundle\Event\Log\LogChapterCreateEvent;
@@ -488,7 +489,7 @@ class LessonController extends Controller
 
         $form = $this->createForm(new MoveChapterType(), $chapter,  array('chapters' => $chapters));
         $form->handleRequest($this->getRequest());
-        if ($form->isValid() && $form->get('choiceChapter')->getData() != $chapter->getid()) {
+        if ($form->isValid() and $form->get('choiceChapter')->getData() != $chapter->getid()) {
             $newParentId = $form->get('choiceChapter')->getData();
             $brother = $form->get('brother')->getData();
         }else{
@@ -499,11 +500,7 @@ class LessonController extends Controller
                 'workspace' => $lesson->getResourceNode()->getWorkspace()
             );
         }
-/*        var_dump("chapter");
-        var_dump($chapterId);
-        var_dump("parent");
-        var_dump($newParentId);
-        die();*/
+
         $newParent = $this->findChapter($lesson, $newParentId);
         $path = $repo->getPath($newParent);
         foreach ($path as $currentParent) {
@@ -528,6 +525,144 @@ class LessonController extends Controller
             'chapterId' => $chapterId
         ))));
     }
+
+    /**
+     *
+     * @Route(
+     *      "duplicate_form/{resourceId}/{chapterId}",
+     *      name="icap_lesson_duplicate_form_chapter",
+     *      requirements={"resourceId" = "\d+", "chapterId" = "\d+"}
+     * )
+     * @Template("IcapLessonBundle:Lesson:duplicateChapter.html.twig")
+     * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
+     */
+    public function duplicateFormChapterAction($lesson, $chapterId)
+    {
+        $this->checkAccess("EDIT", $lesson);
+        $chapter = $this->findChapter($lesson, $chapterId);
+
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('IcapLessonBundle:Chapter');
+
+        $chapters = $repo->children($lesson->getRoot(), false, null, 'ASC', true);
+
+        $form = $this->createForm(new DuplicateChapterType(), $chapter,  array('chapters' => $chapters));
+        $form->handleRequest($this->getRequest());
+
+        //for ajaxification
+        if ($this->getRequest()->isXMLHttpRequest()) {
+            return $this->render(
+                'IcapLessonBundle:Lesson:duplicateChapterAjaxified.html.twig',
+                array(
+                    '_resource' => $lesson,
+                    'chapter' => $chapter,
+                    'form' => $form->createView(),
+                    'workspace' => $lesson->getResourceNode()->getWorkspace()
+                )
+            );
+        }
+
+        return array(
+            '_resource' => $lesson,
+            'chapter' => $chapter,
+            'form' => $form->createView(),
+            'workspace' => $lesson->getResourceNode()->getWorkspace()
+        );
+    }
+
+    /**
+     *
+     * @Route(
+     *      "duplicate/{resourceId}/{chapterId}",
+     *      name="icap_lesson_duplicate_chapter",
+     *      requirements={"resourceId" = "\d+", "chapterId" = "\d+"}
+     * )
+     * @Template()
+     * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
+     * @ParamConverter("chapter", class="IcapLessonBundle:Chapter", options={"id" = "chapterId"})
+     */
+    public function duplicateChapterAction($lesson, $chapter)
+    {
+ /*       var_dump("passe");
+        die();*/
+        $this->checkAccess("EDIT", $lesson);
+
+        $chapter_manager = $this->container->get("icap.lesson.manager.chapter");
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('IcapLessonBundle:Chapter');
+
+        //$chapter = $this->findChapter($lesson, $chapterId);
+        $chapters = $repo->children($lesson->getRoot(), false, null, 'ASC', true);
+
+        $form = $this->createForm(new DuplicateChapterType(), $chapter, array('chapters' => $chapters));
+        $form->handleRequest($this->getRequest());
+        $parent = null;
+        $copy_children = false;
+        if ($form->isValid()) {
+            $parent = $this->findChapter($lesson, $form->get('parent')->getData());
+            $copy_children = $form->get('duplicate_children')->getData();
+        }else{
+            return (
+                $this->redirect(
+                    $this->generateUrl(
+                        'icap_lesson_duplicate_form_chapter',
+                        array(
+                            'resourceId' => $lesson->getId(),
+                            'chapterId' => $chapter->getId()
+                        )
+                    )
+                ));
+/*            return array(
+                'lesson' => $lesson,
+                'chapter' => $chapter,
+                'form' => $form->createView(),
+                'workspace' => $lesson->getResourceNode()->getWorkspace()
+            );*/
+        }
+
+        $chapter_copy = $chapter_manager->copyChapter($chapter, $parent, $copy_children);
+
+        $em->flush();
+
+        //$this->dispatchChapterMoveEvent($lesson, $chapter, $oldparent, $newParent);
+
+        return($this->redirect($this->generateUrl('icap_lesson_chapter', array(
+            'resourceId' => $lesson->getId(),
+            'chapterId' => $chapter_copy->getId()
+        ))));
+
+/*        $this->checkAccess("EDIT", $lesson);
+        $chapter = $this->findChapter($lesson, $chapterId);
+
+        $em = $this->getDoctrine()->getManager();
+        $repo = $em->getRepository('IcapLessonBundle:Chapter');
+
+        $chapters = $repo->children($lesson->getRoot(), false, null, 'ASC', true);
+
+        $form = $this->createForm(new DuplicateChapterType(), $chapter,  array('chapters' => $chapters));
+        $form->handleRequest($this->getRequest());
+
+        //for ajaxification
+        if ($this->getRequest()->isXMLHttpRequest()) {
+            return $this->render(
+                'IcapLessonBundle:Lesson:duplicateChapterAjaxified.html.twig',
+                array(
+                    '_resource' => $lesson,
+                    'chapter' => $chapter,
+                    'form' => $form->createView(),
+                    'workspace' => $lesson->getResourceNode()->getWorkspace()
+                )
+            );
+        }
+
+        return array(
+            '_resource' => $lesson,
+            'chapter' => $chapter,
+            'form' => $form->createView(),
+            'workspace' => $lesson->getResourceNode()->getWorkspace()
+        );*/
+    }
+
 
     /*
      * fonction recherchant un cours dans la base

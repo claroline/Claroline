@@ -21,6 +21,8 @@ use Icap\LessonBundle\Controller\LessonController;
 
 class LessonListener extends ContainerAware
 {
+
+
     /*Méthode permettant de créer le formulaire de creation*/
     public function onCreateForm(CreateFormResourceEvent $event)
     {
@@ -81,13 +83,15 @@ class LessonListener extends ContainerAware
         $entityManager->persist($newlesson);
         $entityManager->flush($newlesson);
 
-        $chapterRepository = $entityManager->getRepository('IcapLessonBundle:Chapter');
-        $this->copyChapters($lesson->getRoot(), $newlesson->getRoot(), $newlesson, $entityManager);
+        //$chapterRepository = $entityManager->getRepository('IcapLessonBundle:Chapter');
+        $chapter_manager = $this->container->get("icap.lesson.manager.chapter");
+        $chapter_manager->copyRoot();
+        $this->copyRoot($lesson->getRoot(), $newlesson->getRoot());
 
         $event->setCopy($newlesson);
         $event->stopPropagation();
     }
-
+/*
     private function copyChapters($root_original, $root_copy, $newlesson, $entityManager){
         $chapterRepository = $entityManager->getRepository('IcapLessonBundle:Chapter');
         $chapters = $chapterRepository->children($root_original, true);
@@ -103,7 +107,7 @@ class LessonListener extends ContainerAware
                 //$entityManager->flush();
             }
         }
-    }
+    }*/
 
     public function onDelete(DeleteResourceEvent $event)
     {

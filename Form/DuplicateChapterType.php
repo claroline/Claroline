@@ -1,42 +1,46 @@
 <?php
 /**
  * Created by JetBrains PhpStorm.
- * User: gaetan
- * Date: 28/06/13
- * Time: 15:31
+ * User: Nicolas
+ * Date: 17/10/13
+ * Time: 09:57
  * To change this template use File | Settings | File Templates.
  */
+
 namespace Icap\LessonBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class MoveChapterType extends AbstractType
+class DuplicateChapterType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $choices = array();
+    public function buildForm(\Symfony\Component\Form\FormBuilderInterface $builder, array $options){
+
+        $chapters = array();
         $root = true;
         foreach ($options['chapters'] as $child) {
             if($root){
-                $choices[$child->getId()] = 'Racine';
+                $chapters[$child->getId()] = 'Racine';
                 $root = false;
             }else{
-                $choices[$child->getId()] = $child->getTitle();
+                $chapters[$child->getId()] = $child->getTitle();
             }
         }
 
         $builder
-            ->add('title', 'text', array('disabled' => true))
-            ->add('choiceChapter', 'choice', array(
-                'mapped' => false,
-                'choices' => $choices
-            ))
-            ->add('brother', 'checkbox', array(
-            'required' => false,
-            'mapped' => false
-        ));
+            ->add('parent', 'choice',
+                array(
+                    'mapped' => false,
+                    'choices' => $chapters
+                )
+            )
+            ->add('duplicate_children', 'checkbox',
+                array(
+                    'mapped' => false,
+                    'required' => false
+                )
+            );
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -49,6 +53,6 @@ class MoveChapterType extends AbstractType
 
     public function getName()
     {
-        return 'icap_lesson_movechaptertype';
+        return 'icap_lesson_duplicatechaptertype';
     }
 }
