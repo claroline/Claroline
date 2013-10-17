@@ -60,7 +60,7 @@ return array(
     AbstractValidator::UNDER_MIN_LENGTH => 'Cette valeur est trop courte',
     AbstractValidator::INVALID_TRANSPORT => 'Transport non valide',
     AbstractValidator::INVALID_AUTH_MODE => 'Mode d\'authentification non valide',
-    AbstractValidator::INVALID_ENCRYPTION => 'Encryption non valide',
+    AbstractValidator::INVALID_ENCRYPTION => 'Cryptage non valide',
     DatabaseChecker::DATABASE_NOT_EMPTY
         => 'La base de données que vous avez sélectionnée n\'est pas vide. Veuillez en choisir une autre ou laisser cet installateur la créer pour vous.',
     DatabaseChecker::CANNOT_CONNECT_TO_SERVER
