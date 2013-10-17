@@ -53,6 +53,7 @@ use Innova\PathBundle\Entity\StepType;
 use Innova\PathBundle\Entity\StepWho;
 use Innova\PathBundle\Entity\StepWhere;
 use Innova\PathBundle\Entity\Step2ResourceNode;
+use Innova\PathBundle\Entity\NonDigitalResource;
 
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -263,26 +264,42 @@ class PathController extends Controller
             $resourceOrder = 0;
             foreach ($step->resources as $resource) {
                 $resourceOrder++;
-                if($resource->id == null && !$resource->isDigital){
-                    $resourceNode = new ResourceNode();
-                    $resourceNode->setClass("Innova\PathBundle\Entity\NonDigitalResource");
-                    $resourceNode->setCreator($user);
-                    $resourceNode->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("non_digital_resource"));
-                    $resourceNode->setWorkspace($workspace);
-                    $resourceNode->setParent($pathsDirectory);
-                    $resourceNode->setMimeType("");
-                    $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(1));
+                if(!$resource->isDigital){
+                    if ($resource->resourceId == null){
+                        $resourceNode = new ResourceNode();
+                        $resourceNode->setClass("Innova\PathBundle\Entity\NonDigitalResource");
+                        $resourceNode->setCreator($user);
+                        $resourceNode->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("non_digital_resource"));
+                        $resourceNode->setWorkspace($workspace);
+                        $resourceNode->setParent($pathsDirectory);
+                        $resourceNode->setMimeType("");
+                        $resourceNode->setName("");
+                        $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(2));
+                        $manager->persist($resourceNode);
+                        $manager->flush();
+
+                        $nonDigitalResource = new NonDigitalResource();
+                        $nonDigitalResource->setResourceNode($resourceNode);
+                        $manager->persist($nonDigitalResource);
+                        $manager->flush();
+
+                        $resource->resourceId = $resourceNode->getId();
+
+                        print "###############################".$resourceNode->getId();
+                    }
+                    else{
+                        $resourceNode->$manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId);
+                        $nonDigitalResource->$manager->getRepository('InnovaPathBundle:NonDigitalResource')->findOneByResourceNode($resourceNode);
+                    }
+
+                    
+                    $nonDigitalResource->setDescription($resource->description);
                     $resourceNode->setName($resource->name);
                     $manager->persist($resourceNode);
-    
-                    $nonDigitalresource = new NonDigitalResource();
-                    $nonDigitalresource->setResourceNode($resourceNode);
-                    $nonDigitalresource->setDescription($resourceNode);
-   
-                    $manager->persist($nonDigitalresource);
+                    $manager->persist($nonDigitalResource);
                     $manager->flush();
 
-                    $resource->resourceId = $nonDigitalresource->getId();
+
                 }
                 $excludedResourcesToResourceNodes[$resource->id] = $resource->resourceId;
                 if(!$step2ressourceNode = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')
