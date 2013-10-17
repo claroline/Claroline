@@ -17,55 +17,55 @@ class BadgeRuleCheckerTest extends MockeryTestCase
     private $logRepository;
     private $entityManager;
 
-    public function testOneRuleMatchNoLog()
+    public function testCheckRuleOneRuleMatchNoLog()
     {
         $user                   = new User();
-        $rule                   = new BadgeRule();
-        $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($rule, $user) {
+        $badgeRule              = new BadgeRule();
+        $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($badgeRule, $user) {
             $mock
                 ->shouldReceive('findByWorkspaceBadgeRuleAndUser')
-                ->with(null, $rule, $user)
+                ->with(null, $badgeRule, $user)
                 ->andReturn(array());
         });
         $this->badgeRuleChecker = new BadgeRuleChecker($this->logRepository);
 
-        $this->assertFalse($this->badgeRuleChecker->checkRule(null, $rule, $user));
+        $this->assertFalse($this->badgeRuleChecker->checkRule(null, $badgeRule, $user));
     }
 
-    public function testOneRuleMatchOneLog()
+    public function testCheckRuleOneRuleMatchOneLog()
     {
         $log                    = new Log();
         $user                   = new User();
-        $rule                   = new BadgeRule();
-        $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $rule, $user) {
+        $badgeRule              = new BadgeRule();
+        $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
             $mock
                 ->shouldReceive('findByWorkspaceBadgeRuleAndUser')
-                ->with(null, $rule, $user)
+                ->with(null, $badgeRule, $user)
                 ->andReturn(array($log));
         });
         $this->badgeRuleChecker = new BadgeRuleChecker($this->logRepository);
 
-        $this->assertEquals(array($log), $this->badgeRuleChecker->checkRule(null, $rule, $user));
+        $this->assertEquals(array($log), $this->badgeRuleChecker->checkRule(null, $badgeRule, $user));
     }
 
-    public function testOneRuleMatchTwoLog()
+    public function testCheckRuleOneRuleMatchTwoLog()
     {
         $log                    = new Log();
         $log2                   = new Log();
         $user                   = new User();
-        $rule                   = new BadgeRule();
-        $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($rule, $user, $log, $log2) {
+        $badgeRule              = new BadgeRule();
+        $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($badgeRule, $user, $log, $log2) {
             $mock
                 ->shouldReceive('findByWorkspaceBadgeRuleAndUser')
-                ->with(null, $rule, $user)
+                ->with(null, $badgeRule, $user)
                 ->andReturn(array($log, $log2));
         });
         $this->badgeRuleChecker = new BadgeRuleChecker($this->logRepository);
 
-        $this->assertEquals(array($log, $log2), $this->badgeRuleChecker->checkRule(null, $rule, $user));
+        $this->assertEquals(array($log, $log2), $this->badgeRuleChecker->checkRule(null, $badgeRule, $user));
     }
 
-    public function testTwoRuleMatchNoLog()
+    public function testCheckBadgeTwoRuleMatchNoLog()
     {
         $user                   = new User();
         $badgeRule              = new BadgeRule();
@@ -92,7 +92,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $this->assertFalse($this->badgeRuleChecker->checkBadge($badge, $user));
     }
 
-    public function testTwoRuleMatchOneLog()
+    public function testCheckBadgeTwoRuleMatchOneLog()
     {
         $user                   = new User();
         $badgeRule              = new BadgeRule();
@@ -118,7 +118,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $this->assertFalse($this->badgeRuleChecker->checkBadge($badge, $user));
     }
 
-    public function testTwoRuleMatchTwoLog()
+    public function testCheckBadgeTwoRuleMatchTwoLog()
     {
         $user                   = new User();
         $badgeRule              = new BadgeRule();
@@ -146,7 +146,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $this->assertEquals(array($log, $log2), $this->badgeRuleChecker->checkBadge($badge, $user));
     }
 
-    public function testNoRule()
+    public function testCheckBadgeNoRule()
     {
         $user                   = new User();
         $log                    = new Log();
@@ -164,7 +164,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $this->assertEquals(false, $this->badgeRuleChecker->checkBadge($badge, $user));
     }
 
-    public function testOneRuleMatchNoLogOnWorkspace()
+    public function testCheckBadgeOneRuleMatchNoLogOnWorkspace()
     {
         $workspace              = new SimpleWorkspace();
         $user                   = new User();
@@ -180,7 +180,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $this->assertFalse($this->badgeRuleChecker->checkRule($workspace, $badgeRule, $user));
     }
 
-    public function testOneRuleMatchOneLogOnWorkspace()
+    public function testCheckBadgeOneRuleMatchOneLogOnWorkspace()
     {
         $workspace              = new SimpleWorkspace();
         $log                    = new Log();
@@ -197,13 +197,13 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $this->assertEquals(array($log), $this->badgeRuleChecker->checkRule($workspace, $badgeRule, $user));
     }
 
-    public function testOneRuleMatchTwoLogOnWorkspace()
+    public function testCheckBadgeOneRuleMatchTwoLogOnWorkspace()
     {
         $workspace              = new SimpleWorkspace();
         $log                    = new Log();
         $log2                   = new Log();
         $user                   = new User();
-        $badgeRule                   = new BadgeRule();
+        $badgeRule              = new BadgeRule();
         $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($workspace, $badgeRule, $user, $log, $log2) {
             $mock
                 ->shouldReceive('findByWorkspaceBadgeRuleAndUser')
@@ -215,7 +215,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $this->assertEquals(array($log, $log2), $this->badgeRuleChecker->checkRule($workspace, $badgeRule, $user));
     }
 
-    public function testTwoRuleMatchNoLogOnWorkspace()
+    public function testCheckBadgeTwoRuleMatchNoLogOnWorkspace()
     {
         $workspace              = new SimpleWorkspace();
         $user                   = new User();
@@ -244,7 +244,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $this->assertFalse($this->badgeRuleChecker->checkBadge($badge, $user));
     }
 
-    public function testTwoRuleMatchOneLogOnWorkspace()
+    public function testCheckBadgeTwoRuleMatchOneLogOnWorkspace()
     {
         $workspace              = new SimpleWorkspace();
         $user                   = new User();
@@ -273,7 +273,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $this->assertFalse($this->badgeRuleChecker->checkBadge($badge, $user));
     }
 
-    public function testTwoRuleMatchTwoLogOnWorkspace()
+    public function testCheckBadgeTwoRuleMatchTwoLogOnWorkspace()
     {
         $workspace              = new SimpleWorkspace();
         $user                   = new User();
@@ -302,5 +302,291 @@ class BadgeRuleCheckerTest extends MockeryTestCase
             ->setWorkspace($workspace);
 
         $this->assertEquals(array($log, $log2), $this->badgeRuleChecker->checkBadge($badge, $user));
+    }
+
+    public function testCheckRuleOneRuleWithResultComparisonEqualMatchNoLog()
+    {
+        $log                    = new Log();
+        $log->setDetails(array('result' => 11));
+
+        $user                   = new User();
+        $badgeRule              = new BadgeRule();
+        $badgeRule
+            ->setResult('12')
+            ->setResultComparison(BadgeRule::RESULT_EQUAL);
+
+        $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+            $mock
+                ->shouldReceive('findByWorkspaceBadgeRuleAndUser')
+                ->with(null, $badgeRule, $user)
+                ->andReturn(array($log));
+        });
+        $this->badgeRuleChecker = new BadgeRuleChecker($this->logRepository);
+
+        $this->assertEquals(false, $this->badgeRuleChecker->checkRule(null, $badgeRule, $user));
+    }
+
+    public function testCheckRuleOneRuleWithResultComparisonEqualMatchOneLog()
+    {
+        $log                    = new Log();
+        $log->setDetails(array('result' => 12));
+
+        $user                   = new User();
+        $badgeRule              = new BadgeRule();
+        $badgeRule
+            ->setResult('12')
+            ->setResultComparison(BadgeRule::RESULT_EQUAL);
+
+        $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+            $mock
+                ->shouldReceive('findByWorkspaceBadgeRuleAndUser')
+                ->with(null, $badgeRule, $user)
+                ->andReturn(array($log));
+        });
+        $this->badgeRuleChecker = new BadgeRuleChecker($this->logRepository);
+
+        $this->assertEquals(array($log), $this->badgeRuleChecker->checkRule(null, $badgeRule, $user));
+    }
+
+    public function testCheckRuleOneRuleWithResultComparisonSuperiorMatchNoLog()
+    {
+        $log                    = new Log();
+        $log->setDetails(array('result' => 11));
+
+        $user                   = new User();
+        $badgeRule              = new BadgeRule();
+        $badgeRule
+            ->setResult('12')
+            ->setResultComparison(BadgeRule::RESULT_SUPERIOR);
+
+        $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+            $mock
+                ->shouldReceive('findByWorkspaceBadgeRuleAndUser')
+                ->with(null, $badgeRule, $user)
+                ->andReturn(array($log));
+        });
+        $this->badgeRuleChecker = new BadgeRuleChecker($this->logRepository);
+
+        $this->assertEquals(false, $this->badgeRuleChecker->checkRule(null, $badgeRule, $user));
+    }
+
+    public function testCheckRuleOneRuleWithResultComparisonSuperiorMatchOneLog()
+    {
+        $log                    = new Log();
+        $log->setDetails(array('result' => 13));
+
+        $user                   = new User();
+        $badgeRule              = new BadgeRule();
+        $badgeRule
+            ->setResult('12')
+            ->setResultComparison(BadgeRule::RESULT_SUPERIOR);
+
+        $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+            $mock
+                ->shouldReceive('findByWorkspaceBadgeRuleAndUser')
+                ->with(null, $badgeRule, $user)
+                ->andReturn(array($log));
+        });
+        $this->badgeRuleChecker = new BadgeRuleChecker($this->logRepository);
+
+        $this->assertEquals(array($log), $this->badgeRuleChecker->checkRule(null, $badgeRule, $user));
+    }
+
+    public function testCheckRuleOneRuleWithResultComparisonSuperiorEqualMatchNoLog()
+    {
+        $log                    = new Log();
+        $log->setDetails(array('result' => 11));
+
+        $user                   = new User();
+        $badgeRule              = new BadgeRule();
+        $badgeRule
+            ->setResult('12')
+            ->setResultComparison(BadgeRule::RESULT_SUPERIOR_EQUAL);
+
+        $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+            $mock
+                ->shouldReceive('findByWorkspaceBadgeRuleAndUser')
+                ->with(null, $badgeRule, $user)
+                ->andReturn(array($log));
+        });
+        $this->badgeRuleChecker = new BadgeRuleChecker($this->logRepository);
+
+        $this->assertEquals(false, $this->badgeRuleChecker->checkRule(null, $badgeRule, $user));
+    }
+
+    public function testCheckRuleOneRuleWithResultComparisonSuperiorEqualMatchOneLog()
+    {
+        $log                    = new Log();
+        $log->setDetails(array('result' => 12));
+
+        $user                   = new User();
+        $badgeRule              = new BadgeRule();
+        $badgeRule
+            ->setResult('12')
+            ->setResultComparison(BadgeRule::RESULT_SUPERIOR_EQUAL);
+
+        $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+            $mock
+                ->shouldReceive('findByWorkspaceBadgeRuleAndUser')
+                ->with(null, $badgeRule, $user)
+                ->andReturn(array($log));
+        });
+        $this->badgeRuleChecker = new BadgeRuleChecker($this->logRepository);
+
+        $this->assertEquals(array($log), $this->badgeRuleChecker->checkRule(null, $badgeRule, $user));
+    }
+
+    public function testCheckRuleOneRuleWithResultComparisonSuperiorEqualMatchOneLog2()
+    {
+        $log                    = new Log();
+        $log->setDetails(array('result' => 13));
+
+        $user                   = new User();
+        $badgeRule              = new BadgeRule();
+        $badgeRule
+            ->setResult('12')
+            ->setResultComparison(BadgeRule::RESULT_SUPERIOR_EQUAL);
+
+        $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+            $mock
+                ->shouldReceive('findByWorkspaceBadgeRuleAndUser')
+                ->with(null, $badgeRule, $user)
+                ->andReturn(array($log));
+        });
+        $this->badgeRuleChecker = new BadgeRuleChecker($this->logRepository);
+
+        $this->assertEquals(array($log), $this->badgeRuleChecker->checkRule(null, $badgeRule, $user));
+    }
+
+    public function testCheckRuleOneRuleWithResultComparisonInferiorMatchNoLog()
+    {
+        $log                    = new Log();
+        $log->setDetails(array('result' => 12));
+
+        $user                   = new User();
+        $badgeRule              = new BadgeRule();
+        $badgeRule
+            ->setResult('12')
+            ->setResultComparison(BadgeRule::RESULT_INFERIOR);
+
+        $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+            $mock
+                ->shouldReceive('findByWorkspaceBadgeRuleAndUser')
+                ->with(null, $badgeRule, $user)
+                ->andReturn(array($log));
+        });
+        $this->badgeRuleChecker = new BadgeRuleChecker($this->logRepository);
+
+        $this->assertEquals(false, $this->badgeRuleChecker->checkRule(null, $badgeRule, $user));
+    }
+
+    public function testCheckRuleOneRuleWithResultComparisonInferiorMatchNoLog2()
+    {
+        $log                    = new Log();
+        $log->setDetails(array('result' => 13));
+
+        $user                   = new User();
+        $badgeRule              = new BadgeRule();
+        $badgeRule
+            ->setResult('12')
+            ->setResultComparison(BadgeRule::RESULT_INFERIOR);
+
+        $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+            $mock
+                ->shouldReceive('findByWorkspaceBadgeRuleAndUser')
+                ->with(null, $badgeRule, $user)
+                ->andReturn(array($log));
+        });
+        $this->badgeRuleChecker = new BadgeRuleChecker($this->logRepository);
+
+        $this->assertEquals(false, $this->badgeRuleChecker->checkRule(null, $badgeRule, $user));
+    }
+
+    public function testCheckRuleOneRuleWithResultComparisonInferiorMatchOneLog()
+    {
+        $log                    = new Log();
+        $log->setDetails(array('result' => 11));
+
+        $user                   = new User();
+        $badgeRule              = new BadgeRule();
+        $badgeRule
+            ->setResult('12')
+            ->setResultComparison(BadgeRule::RESULT_INFERIOR);
+
+        $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+            $mock
+                ->shouldReceive('findByWorkspaceBadgeRuleAndUser')
+                ->with(null, $badgeRule, $user)
+                ->andReturn(array($log));
+        });
+        $this->badgeRuleChecker = new BadgeRuleChecker($this->logRepository);
+
+        $this->assertEquals(array($log), $this->badgeRuleChecker->checkRule(null, $badgeRule, $user));
+    }
+
+    public function testCheckRuleOneRuleWithResultComparisonInferiorEqualMatchNoLog()
+    {
+        $log                    = new Log();
+        $log->setDetails(array('result' => 13));
+
+        $user                   = new User();
+        $badgeRule              = new BadgeRule();
+        $badgeRule
+            ->setResult('12')
+            ->setResultComparison(BadgeRule::RESULT_INFERIOR_EQUAL);
+
+        $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+            $mock
+                ->shouldReceive('findByWorkspaceBadgeRuleAndUser')
+                ->with(null, $badgeRule, $user)
+                ->andReturn(array($log));
+        });
+        $this->badgeRuleChecker = new BadgeRuleChecker($this->logRepository);
+
+        $this->assertEquals(false, $this->badgeRuleChecker->checkRule(null, $badgeRule, $user));
+    }
+
+    public function testCheckRuleOneRuleWithResultComparisonInferiorEqualMatchOneLog()
+    {
+        $log                    = new Log();
+        $log->setDetails(array('result' => 12));
+
+        $user                   = new User();
+        $badgeRule              = new BadgeRule();
+        $badgeRule
+            ->setResult('12')
+            ->setResultComparison(BadgeRule::RESULT_INFERIOR_EQUAL);
+
+        $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+            $mock
+                ->shouldReceive('findByWorkspaceBadgeRuleAndUser')
+                ->with(null, $badgeRule, $user)
+                ->andReturn(array($log));
+        });
+        $this->badgeRuleChecker = new BadgeRuleChecker($this->logRepository);
+
+        $this->assertEquals(array($log), $this->badgeRuleChecker->checkRule(null, $badgeRule, $user));
+    }
+
+    public function testCheckRuleOneRuleWithResultComparisonInferiorEqualMatchOneLog2()
+    {
+        $log                    = new Log();
+        $log->setDetails(array('result' => 11));
+
+        $user                   = new User();
+        $badgeRule              = new BadgeRule();
+        $badgeRule
+            ->setResult('12')
+            ->setResultComparison(BadgeRule::RESULT_INFERIOR_EQUAL);
+
+        $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+            $mock
+                ->shouldReceive('findByWorkspaceBadgeRuleAndUser')
+                ->with(null, $badgeRule, $user)
+                ->andReturn(array($log));
+        });
+        $this->badgeRuleChecker = new BadgeRuleChecker($this->logRepository);
+
+        $this->assertEquals(array($log), $this->badgeRuleChecker->checkRule(null, $badgeRule, $user));
     }
 }
