@@ -29,11 +29,9 @@ class PostType extends AbstractType
                     'format'        => $options['date_format']
                 )
             )
-            ->add('content', 'textarea', array(
+            ->add('content', 'tinymce', array(
                     'attr' => array(
-                        'class'      => 'form-control tinymce',
-                        'data-theme' => 'advanced',
-                        'style'      => 'height: 300px;'
+                        'style' => 'height: 300px;'
                     ),
                     'theme_options' => array('control_width' => 'col-md-12'),
                     'constraints' => new Assert\NotBlank(array(
