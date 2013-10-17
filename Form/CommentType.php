@@ -11,14 +11,7 @@ class CommentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('message', 'textarea', array(
-                'attr' => array(
-                    'class'      => 'tinymce',
-                    'data-theme' => 'medium'
-                    )
-                )
-            )
-        ;
+            ->add('message', 'tinymce');
     }
 
     public function getName()

@@ -77,6 +77,6 @@
 
 {% block javascripts %}
 {{ parent() }}
-{% render controller('ClarolineCoreBundle:Tool\\WorkspaceResourceParameters:initPicker') %}
+{% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
 {{ tinymce_init() }}
 {% endblock %}

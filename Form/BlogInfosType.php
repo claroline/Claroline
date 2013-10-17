@@ -11,14 +11,7 @@ class BlogInfosType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('infos', 'textarea', array(
-                'attr' => array(
-                    'class'      => 'tinymce',
-                    'data-theme' => 'medium'
-                    )
-                )
-            )
-        ;
+            ->add('infos', 'tinymce');
     }
 
     public function getName()
