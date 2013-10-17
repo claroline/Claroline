@@ -21,34 +21,9 @@ class NonDigitalResource extends AbstractResource
     private $description;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="type", type="string", length=255)
-     */
-    private $type;
-
-    /**
-     * Set name
-     *
-     * @param  string             $name
-     * @return NonDigitalResource
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
+    * @ORM\ManyToOne(targetEntity="NonDigitalResourceType", inversedBy="nonDigitalResources")
+    */
+    protected $NonDigitalResourceType;
 
     /**
      * Set description
@@ -73,49 +48,5 @@ class NonDigitalResource extends AbstractResource
         return $this->description;
     }
 
-    /**
-     * Set type
-     *
-     * @param  string             $type
-     * @return NonDigitalResource
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
 
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Set resourceNode
-     *
-     * @param  \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
-     * @return NonDigitalResource
-     */
-    public function setResourceNode(\Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode = null)
-    {
-        $this->resourceNode = $resourceNode;
-
-        return $this;
-    }
-
-    /**
-     * Get resourceNode
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
-     */
-    public function getResourceNode()
-    {
-        return $this->resourceNode;
-    }
 }

@@ -263,6 +263,27 @@ class PathController extends Controller
             $resourceOrder = 0;
             foreach ($step->resources as $resource) {
                 $resourceOrder++;
+                if($resource->id == null && $resource->isDigital == false){
+                    $resourceNode = new ResourceNode();
+                    $resourceNode->setClass("Innova\PathBundle\Entity\NonDigitalResource");
+                    $resourceNode->setCreator($user);
+                    $resourceNode->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("non_digital_resource"));
+                    $resourceNode->setWorkspace($workspace);
+                    $resourceNode->setParent($pathsDirectory);
+                    $resourceNode->setMimeType("");
+                    $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(1));
+                    $resourceNode->setName($resource->name);
+                    $manager->persist($resourceNode);
+    
+                    $nonDigitalresource = new NonDigitalResource();
+                    $nonDigitalresource->setResourceNode($resourceNode);
+                    $nonDigitalresource->setDescription($resourceNode);
+   
+                    $manager->persist($nonDigitalresource);
+                    $manager->flush();
+
+                    $resource->resourceId = $nonDigitalresource->getId();
+                }
                 $excludedResourcesToResourceNodes[$resource->id] = $resource->resourceId;
                 if(!$step2ressourceNode = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')
                                                 ->findOneBy(array('step' => $currentStep, 
@@ -270,7 +291,7 @@ class PathController extends Controller
                                                                 'excluded' => false
                                                                 )
                                                              )
-                        ){
+                    ){
                     $step2ressourceNode = new Step2ResourceNode();
                 }
                 $step2resourceNodesToNotDelete[] = $step2ressourceNode->getId();

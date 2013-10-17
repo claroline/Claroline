@@ -2,9 +2,10 @@ PathBundle
 ==========
 
 ### Install
-add "innova/path-bundle": "1.0" to the Claroline composer.json
+add "innova/path-bundle": "dev-master" to the Claroline composer.json
 
 composer update --prefer-dist -o  
 
 php app/console claroline:update
 
+php app/console assets:install --symlink
