@@ -235,6 +235,34 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
+     *     "users/page/{page}/pic",
+     *     name="claro_admin_user_list_pics",
+     *     defaults={"page"=1, "search"=""},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "users/page/{page}/pic/search/{search}",
+     *     name="claro_admin_user_list_search",
+     *     defaults={"page"=1},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template()
+     *
+     * Displays the platform user list.
+     */
+    public function userListPicsAction($page, $search)
+    {
+        $pager = $search === '' ?
+            $this->userManager->getAllUsers($page) :
+            $this->userManager->getUsersByName($search, $page);
+
+        return array('pager' => $pager, 'search' => $search);
+    }
+
+    /**
+     * @EXT\Route(
      *     "/groups/page/{page}",
      *     name="claro_admin_group_list",
      *     options={"expose"=true},

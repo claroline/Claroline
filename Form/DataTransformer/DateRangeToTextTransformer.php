@@ -1,4 +1,5 @@
 <?php
+
 namespace Claroline\CoreBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
