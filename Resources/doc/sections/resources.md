@@ -11,7 +11,7 @@ Resources are items wich can be manipulated by the resource manager. They includ
 
 Resources are defined by a 3 different entities:
 
-*You see these relations in claronext-uml.dia*
+*You can see these relations in claronext-uml.dia*
 
 ### AbstractResource
 

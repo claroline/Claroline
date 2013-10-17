@@ -105,7 +105,6 @@ implementing a `load` method, to which an instance of the entity manager is
 passed by Doctrine when the fixture is executed. In that method, you can
 therefore use the manager to persist any needed data. Example :
 
-```php
 <?php
 
 namespace Foo\BarBundle\DataFixtures;
@@ -124,7 +123,6 @@ class FooFixture extends AbstractFixture
         $manager->flush();
     }
 }
-```
 
 The data fixtures loading is also part of the installation of every bundle in
 Claroline. To benefit from this feature, simply put your fixture classes in
