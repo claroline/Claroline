@@ -263,7 +263,7 @@ class PathController extends Controller
             $resourceOrder = 0;
             foreach ($step->resources as $resource) {
                 $resourceOrder++;
-                if($resource->id == null && $resource->isDigital == false){
+                if($resource->id == null && !$resource->isDigital){
                     $resourceNode = new ResourceNode();
                     $resourceNode->setClass("Innova\PathBundle\Entity\NonDigitalResource");
                     $resourceNode->setCreator($user);

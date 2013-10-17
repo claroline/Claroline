@@ -23,7 +23,7 @@ class NonDigitalResource extends AbstractResource
     /**
     * @ORM\ManyToOne(targetEntity="NonDigitalResourceType", inversedBy="nonDigitalResources")
     */
-    protected $NonDigitalResourceType;
+    protected $nonDigitalResourceType;
 
     /**
      * Set description
