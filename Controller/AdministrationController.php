@@ -632,29 +632,16 @@ class AdministrationController extends Controller
 
         if ($form->isValid()) {
             try {
-                $this->configHandler->setParameter(
-                    'allow_self_registration',
-                    $form['selfRegistration'] ->getData()
-                );
-                $this->configHandler->setParameter(
-                    'locale_language',
-                    $form['localLanguage']->getData()
-                );
-                $this->configHandler->setParameter(
-                    'theme',
-                    $form['theme']->getData()
-                );
-                $this->configHandler->setParameter(
-                    'name',
-                    $form['name']->getData()
-                );
-                $this->configHandler->setParameter(
-                    'footer',
-                    $form['footer']->getData()
-                );
-                $this->configHandler->setParameter(
-                    'logo',
-                    $this->request->get('selectlogo')
+                $this->configHandler->setParameters(
+                    array(
+                        'allow_self_registration' => $form['selfRegistration']->getData(),
+                        'locale_language' => $form['localLanguage']->getData(),
+                        'theme' => $form['theme']->getData(),
+                        'name' => $form['name']->getData(),
+                        'support_email' => $form['support_email']->getData(),
+                        'footer' => $form['footer']->getData(),
+                        'logo' => $this->request->get('selectlogo')
+                    )
                 );
 
                 $logo = $this->request->files->get('logo');
@@ -662,7 +649,6 @@ class AdministrationController extends Controller
                 if ($logo) {
                     $this->get('claroline.common.logo_service')->createLogo($logo);
                 }
-
             } catch (UnwritableException $e) {
                 $form->addError(
                     new FormError(

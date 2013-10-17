@@ -436,6 +436,7 @@ subscribe_groups: 'Subscribe groups'
 subscribe_selected_groups: 'Subscribe selected groups'
 subscribe_selected_users: 'Subscribe selected users'
 subscribe_users: 'Subscribe users'
+support_email: Support email
 switch: Switch
 tag: Tag
 tag_children_list: 'Tag children list'
