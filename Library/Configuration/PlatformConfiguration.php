@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Library\Configuration;
 class PlatformConfiguration
 {
     private $name;
+    private $supportEmail;
     private $selfRegistration;
     private $localLanguage;
     private $theme;
@@ -48,6 +49,16 @@ class PlatformConfiguration
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    public function getSupportEmail()
+    {
+        return $this->supportEmail;
+    }
+
+    public function setSupportEmail($email)
+    {
+        $this->supportEmail = $email;
     }
 
     public function getFooter()
