@@ -3,10 +3,10 @@
 /**
  * Main Controller
  */
-function MainCtrl($scope, $http, $q, $route, $location, $modal, HistoryFactory, ClipboardFactory, PathFactory, StepFactory, AlertFactory) {
+function MainCtrl($scope, $http, $window, $location, $modal, HistoryFactory, ClipboardFactory, PathFactory, StepFactory, AlertFactory) {
     // Store symfony base partials route
     $scope.webDir = EditorApp.webDir;
-
+    
     // Set active tab
     $scope.activeTab = 'Global';
     $scope.$on('$routeChangeSuccess', function(event, current, previous) {
@@ -91,10 +91,6 @@ function MainCtrl($scope, $http, $q, $route, $location, $modal, HistoryFactory, 
         var method = null;
         var route = null;
 
-        // issue #62 :
-        // Quand on veut ajouter un parcours, deux zones sont affichées : "Name" et "Description" et ces zones sont valorisées.
-        // Quand on clique dessus, les valeurs par défaut ne s'effacent pas.
-
         // Init var
         var name = path.name;
 
@@ -127,11 +123,24 @@ function MainCtrl($scope, $http, $q, $route, $location, $modal, HistoryFactory, 
                     AlertFactory.addAlert('success', 'Path updated.');
                 }
                 else {
+                    EditorApp.pathId = data;
+                    
                     // Create success
                     AlertFactory.addAlert('success', 'Path created.');
+                    
+                    var newRoute = $location.protocol() + '://' + $location.host();
+                    
+                    // Get symfony route
+                    newRoute += Routing.generate('innova_path_editor', {workspaceId: EditorApp.workspaceId, pathId: EditorApp.pathId});
+                    
+                    // Add angular part
+                    newRoute += '#' + $location.path();
+                    
+                    console.log(newRoute);
+                    
+                    $window.location = newRoute;
+//                    $location.url($location.hash(newRoute));
                 }
-
-                EditorApp.pathId = data;
             })
             .error(function(data, status) {
                 AlertFactory.addAlert('danger', 'Error while saving Path.');
@@ -144,10 +153,6 @@ function MainCtrl($scope, $http, $q, $route, $location, $modal, HistoryFactory, 
         else
         {
             AlertFactory.addAlert('danger', 'Path Name is empty or undefined.');
-            method = 'POST';
-            route = Routing.generate('innova_path_add_path');
         }
-
     };
-
 }
