@@ -8,7 +8,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
 
-abstract class LogGenericEvent extends Event
+abstract class LogGenericEvent extends Event implements RestrictionnableInterface
 {
     const DISPLAYED_ADMIN     = 'admin';
     const DISPLAYED_WORKSPACE = 'workspace';
@@ -129,11 +129,6 @@ abstract class LogGenericEvent extends Event
     {
         return $this->toolName;
     }
-
-    /**
-     * @return array
-     */
-    public abstract static function getRestriction();
 
     /**
      * @return LogGenericEvent
