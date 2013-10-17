@@ -15,6 +15,7 @@
         "php": ">=5.3.3",
         "symfony/http-foundation": "*",
         "symfony/http-kernel": "*",
+        "symfony/yaml": "*",
         "claroline/core-bundle": "*"
     },
     "autoload": {

@@ -217,6 +217,12 @@ class Controller
         return $this->renderStep('install.html.php', 'installation', array());
     }
 
+    public function installSubmitStep()
+    {
+        $this->container->getWriter()->writeParameters($this->container->getParameterBag());
+
+        return new Response('OK');
+    }
     private function renderStep($template, $titleKey, array $variables)
     {
         return new Response(

@@ -7,14 +7,15 @@ use Symfony\Component\HttpFoundation\Request;
 class Container
 {
     private $request;
-    private $rootDirectory;
+    private $appDirectory;
+    private $installerDirectory;
     private $cachedServices = array();
 
-    public function __construct(Request $request, $rootDirectory)
+    public function __construct(Request $request, $appDirectory)
     {
-        $this->rootDirectory = $rootDirectory;
         $this->request = $request;
-        $this->cachedServices = array();
+        $this->appDirectory = $appDirectory;
+        $this->installerDirectory = __DIR__ . '/../../..';
     }
 
     /**
@@ -46,7 +47,7 @@ class Container
     {
         if (!isset($this->cachedServices['translator'])) {
             $this->cachedServices['translator'] = new Translator(
-                $this->rootDirectory . '/translations', 'en', 'en'
+                $this->installerDirectory . '/translations', 'en', 'en'
             );
         }
 
@@ -63,7 +64,7 @@ class Container
     public function getTemplateEngine()
     {
         if (!isset($this->cachedServices['templating'])) {
-            $templating = new TemplateEngine($this->rootDirectory . '/templates');
+            $templating = new TemplateEngine($this->installerDirectory . '/templates');
             $baseUrl = $this->request->getBaseUrl();
             $templating->addHelpers(
                 array(
@@ -82,5 +83,14 @@ class Container
         }
 
         return $this->cachedServices['templating'];
+    }
+
+    public function getWriter()
+    {
+        return new Writer(
+            $this->appDirectory . '/config/parameters.yml.dist',
+            $this->appDirectory . '/config/parameters.yml',
+            $this->appDirectory . '/config/platform_options.yml'
+        );
     }
 }
