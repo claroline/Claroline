@@ -3,7 +3,7 @@
     <span ng-show="currentEditingStep != step.id" class="step-name">{{ step.name | truncate }}</span>
 
     <div ng-show="currentEditingStep == step.id"  class="input-group input-group-sm">
-        <input type="text"  value="{{ step.name }}" ng-model="step.name" class="form-control" ng-blur="closeEditStepName()" />
+        <input type="text"  value="{{ step.name }}" ng-model="step.name" class="form-control" ng-clickout="closeEditStepName()" />
         <span class="input-group-btn">
             <button class="btn btn-default" type="button" ng-click="closeEditStepName()"><span class="icon-remove"></span></button>
         </span>
