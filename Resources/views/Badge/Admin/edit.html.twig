@@ -13,7 +13,7 @@
             <p class="row">{{ form_label(form) }}</p>
             {{ form_errors(form) }}
             {% set tabPrototype = '<li id="tabrule__name__"><a href="#rule__name__" data-toggle="tab">' ~ "rule"|trans ~ ' __name__ <span class="btn btn-sm btn-danger icon-trash delete_rule delete_rule_no_confirm pull-right" data-id-tab="rule__name__" style="display: none;"></span></a></li>' %}
-            <ul class="nav nav-tabs nav-stacked col-md-3" id="ruleTabs" data-tab-prototype="{{ tabPrototype|e }}">
+            <ul class="nav nav-tabs nav-stacked col-md-2" id="ruleTabs" data-tab-prototype="{{ tabPrototype|e }}">
                 {% for rows in form %}
                     <li id="tabrule{{ loop.index }}">
                         <a href="#rule{{ loop.index }}" data-toggle="tab">{{ 'rule'|trans }} {{ loop.index }}
@@ -27,7 +27,7 @@
                 <li id="add_rule"><a href="#"><span class="icon-plus"></span>{{ 'add_rule'|trans }}</a></li>
                 {% endif %}
             </ul>
-            <div class="tab-content rules col-md-9">
+            <div class="tab-content rules col-md-10">
                 {% for rows in form %}
                     <div class="tab-pane" id="rule{{ loop.index }}">
                         <h4>{{ 'rule'|trans }} {{ loop.index }}</h4>
@@ -49,6 +49,23 @@
                             </div>
                             <div class="col-md-10">
                                 {{ form_widget(rows.children.action) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" class="badge_result_awarding" data-tab-id="rule{{ loop.index }}" {% if '' != rows.children.result.vars.value %}checked="checked" {% endif %}/> {{ 'badge_form_awarding_on_result_action'|trans }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row rule_result{% if '' == rows.children.result.vars.value %} hidden{% endif %}">
+                            <div class="col-md-2 col-md-offset-1">
+                                {{ form_widget(rows.children.resultComparison) }}
+                            </div>
+                            <div class="col-md-2">
+                                {{ form_widget(rows.children.result) }}
                             </div>
                         </div>
                     </div>
@@ -86,6 +103,23 @@
                 </div>
                 <div class="col-md-10">
                     {{ form_widget(rows.children.action) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" class="badge_result_awarding" data-tab-id="rule__name__"> {{ 'badge_form_awarding_on_result_action'|trans }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row rule_result hidden">
+                <div class="col-md-2 col-md-offset-1">
+                    {{ form_widget(rows.children.resultComparison) }}
+                </div>
+                <div class="col-md-2">
+                    {{ form_widget(rows.children.result) }}
                 </div>
             </div>
         </div>
@@ -195,7 +229,7 @@
             <form action="{{ path('claro_admin_badges_edit', {'id': badge.id}) }}#!edit" method="post" class="form-horizontal" {{ form_enctype(form) }} novalidate>
                 {{ form_errors(form) }}
                 <div class="row badges_infos">
-                    <div class="col-md-3{% if form.file.vars.errors|length > 0 %} has-error{% endif %}">
+                    <div class="col-md-2{% if form.file.vars.errors|length > 0 %} has-error{% endif %}">
                         <button type="button" id="change_image" class="btn btn-xs btn-default"><span class="icon-edit">{{ 'badge_form_change_image'|trans }}</span></button>
                         <a href="#" class="thumbnail" id="upload_image_placeholder">
                             <img src="{{ asset(badge.webPath) }}" id="current_image" class="badge_image" />
@@ -203,7 +237,7 @@
                         {{ form_errors(form.file) }}
                         {{ form_widget(form.file) }}
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-md-10">
                         <ul class="nav nav-tabs" id="translationFormTabs">
                             {% set frErrorClass = (0 < form.frTranslation.name.vars.errors|length or 0 < form.frTranslation.description.vars.errors|length or 0 < form.frTranslation.criteria.vars.errors|length) ? 'has-error' : '' %}
                             {% set enErrorClass = (0 < form.enTranslation.name.vars.errors|length or 0 < form.enTranslation.description.vars.errors|length or 0 < form.enTranslation.criteria.vars.errors|length) ? 'has-error' : '' %}

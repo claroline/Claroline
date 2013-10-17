@@ -137,6 +137,10 @@ ul.user_badges > li .close {
 table.no_margin {
   margin: 0;
 }
+form .row {
+  margin-left: 0;
+  margin-right: 0;
+}
 .badges_rules .rules {
   border: 1px solid #ddd;
   padding-top: 15px;
