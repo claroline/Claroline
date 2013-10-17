@@ -24,55 +24,99 @@ In order to catch the event, your plugin must define a listener in your config.
 
 This example will show you the main files of a basic HTML5 video player.
 
-**The listener config file**
-
-*Claroline\VideoPlayer\Resources\config\services\listener.yml*
-
-    services:
-        claroline.listener.video_player_listener:
-            class: Claroline\VideoPlayerBundle\Listener\VideoPlayerListener
-            calls:
-                - [setContainer, ["@service_container"]]
-            tags:
-                - { name: kernel.event_listener, event: play_file_video, method: onOpenVideo }
-
-**The listener class**
+###The listener class
 
 *Claroline\VideoPlayerBundle\Listener\VideoPlayerListener.php*
+
+    <?php
 
     namespace Claroline\VideoPlayerBundle\Listener;
 
     use Claroline\CoreBundle\Event\PlayFileEvent;
     use Symfony\Component\DependencyInjection\ContainerAware;
     use Symfony\Component\HttpFoundation\Response;
+    use JMS\DiExtraBundle\Annotation as DI;
 
+    /**
+     * @DI\Service("claroline.listener.video_player_listener")
+     */
     class VideoPlayerListener extends ContainerAware
     {
+        private $fileDir;
+        private $templating;
+
+        /**
+         * @DI\InjectParams({
+         *     "fileDir" = @DI\Inject("%claroline.param.files_directory%"),
+         *     "templating" = @DI\Inject("templating")
+         * })
+         */
+        public function __construct($fileDir, $templating)
+        {
+            $this->fileDir = $fileDir;
+            $this->templating = $templating;
+        }
+
+        /**
+         * @DI\Observe("play_file_video")
+         */
         public function onOpenVideo(PlayFileEvent $event)
         {
-            $path = $this->container->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR.$event->getInstance()->getResource()->getHashName();
-            $content = $this->container->get('templating')
-                ->render('ClarolineVideoPlayerBundle::video.html.twig',
-                    array('workspace' => $event->getInstance()->getWorkspace(), 'path' => $path, 'video' => $event->getInstance()->getResource()));
+            $path = $this->fileDir . DIRECTORY_SEPARATOR . $event->getResource()->getHashName();
+            $content = $this->templating->render(
+                'ClarolineVideoPlayerBundle::video.html.twig',
+                array(
+                    'workspace' => $event->getResource()->getResourceNode()->getWorkspace(),
+                    'path' => $path,
+                    'video' => $event->getResource(),
+                    '_resource' => $event->getResource()
+                )
+            );
             $response = new Response($content);
             $event->setResponse($response);
             $event->stopPropagation();
         }
     }
 
-**The template twig file**
+
+**Important:** The '_resource' parameter is required by the core to render the resource breadcrumbs.
+
+###The template twig file
 
 *Claroline\VideoPlayerBundle\Resources\view\video.html.twig*
 
-    {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+    {% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+    {% if isDesktop() %}
+        {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+    {% endif %}
+
+    {% extends layout %}
 
     {% block section_content %}
-    <video controls preload=none
-        <source src="{{ path ('claro_stream_video', {'videoId': video.getId()})}}"/>
-    </video>
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ video.getResourceNode().getName() }}</h3>
+        </div>
+        <div class="panel-body">
+            <video width="100%" controls>
+                <source src="{{ path ('claro_stream_video', {'node': video.getResourceNode().getId()}) }}" type="{{ video.getMimeType() }}">
+                <!-- In case of the browser does not support the video tag: -->
+                <object width="100%" height="400">
+                <param name="movie" value="{{ path ('claro_stream_video', {'node': video.getResourceNode().getId()})}}">
+                    <embed src="{{ path ('claro_stream_video', {'node': video.getResourceNode().getId()})}}"></embed>
+                </object>
+            </video>
+        </div>
+        <div class="panel-footer">
+            <a class="btn btn-primary" href="{{ path('claro_resource_download') }}?ids[]={{video.getResourceNode().getResourceNode().getId()}}">
+                <i class="icon-download"></i> {{ 'download'|trans({}, 'platform') }}
+            </a>
+        </div>
     {% endblock %}
 
-**The controller**
+**Important:** Notice the {% extends layout %} and the above code. It will set the correct layout of your page.
+
+###The controller
 
 *Claroline\VideoPlayerBundle\Controller\VideoPlayerController.php*
 
@@ -80,25 +124,37 @@ This example will show you the main files of a basic HTML5 video player.
 
     use Symfony\Bundle\FrameworkBundle\Controller\Controller;
     use Symfony\Component\HttpFoundation\StreamedResponse;
+    use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+    use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
+    //todo use sf2.2 BinaryFileResponse
     class VideoPlayerController extends Controller
     {
-        public function streamAction($videoId)
+        /**
+         * @Route(
+         *     "/stream/video/{node}",
+         *     name="claro_stream_video"
+         * )
+         */
+        public function streamAction(ResourceNode $node)
         {
-            $video = $this->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Resource\File')->find($videoId);
-
+            $video = $this->get('claroline.manager.resource_manager')->getResourceFromNode($node);
             $response = new StreamedResponse();
-            $path = $this->container->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR.$video->getHashName();
-            $response->setCallBack(function() use($path){
-                readfile($path);
-            });
-            $response->headers->set('Content-Type', $video->getMimeType());
+            $path = $this->container->getParameter('claroline.param.files_directory')
+                . DIRECTORY_SEPARATOR
+                . $video->getHashName();
+            $response->setCallBack(
+                function () use ($path) {
+                    readfile($path);
+                }
+            );
+            $response->headers->set('Content-Type', $node->getMimeType());
 
             return $response;
         }
     }
 
-**The routing file**
+###The routing file
 
 *Claroline\VideoPlayerBundle\Resources\config\routing.yml*
 

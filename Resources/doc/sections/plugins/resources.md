@@ -30,6 +30,7 @@ This file will be parsed by the plugin installator to install your plugin and cr
             # to create a new one if the Claroline core couldn't find your action name.
             # The menu_name is optional. This will append a menu for your resource name with the menu_name you picked.
             # You can translate them in with a translation file from the resource domain.
+            # You will be able to use these actions as a parameter for the isGranted() method.
             actions:
                 - name: actionname
                 - menu_name: new_menu (this line is optional)
@@ -44,9 +45,9 @@ If your entity is a resource that must be recognized by the platform and managea
 
     /**
     * @ORM\Entity
-    * @ORM\Table(name="claro_example_text")
+    * @ORM\Table(name="claro_text")
     */
-    class Example extends AbstractResource
+    class Text extends AbstractResource
     {
         /**
         * @ORM\Column(type="string")
@@ -64,11 +65,6 @@ If your entity is a resource that must be recognized by the platform and managea
         }
     }
 
-The AbstractResource entity has a mandatory relation to ResourceNode.
-A ResourceNode job is to keep some informations related to a resource wich are
-necessary for the claroline core to work (ie: parent, children, resourceType, workspace...)
-In other words, nodes symbolise the resource tree with their context.
-
 ## Listener
 
 The resource manager will trigger some events (Open, Delete...) on your resources. Your plugin must implements a listener to catch events that concern its resources and must apply appropriate action.
@@ -76,176 +72,247 @@ The resource manager will trigger some events (Open, Delete...) on your resource
 ### Listener definition file
 
 The definition of your listener must be placed in the *Resources/config/services/listeners.yml* file.
-
-You declare in this file every events that you want to catch.
-
-    services:
-      claroline.listener.example_listener:
-        # Class that implements the listener
-        class: Claroline\ExampleBundle\Listener\ExampleListener
-        # The Symfony Container will be given to the class
-        calls:
-          - [setContainer, ["@service_container"]]
-        tags:
-          - { name: kernel.event_listener, event: create_form_claroline_example, method: onCreateForm }
-          - { name: kernel.event_listener, event: create_claroline_example, method: onCreate }
-          - { name: kernel.event_listener, event: delete_claroline_example, method: onDelete }
-          - { name: kernel.event_listener, event: download_claroline_example, method: onDownload }
-          - { name: kernel.event_listener, event: copy_claroline_example, method: onCopy }
-          - { name: kernel.event_listener, event: open_claroline_example, method: onOpen }
-          - { name: kernel.event_listener, event: plugin_options_clarolineexample, method: onAdministrate }
-
 Here is the list of events fired by the resource manager (lower case is forced here):
 
-* create_form_*resourcetypename*
-* create_*resourcetypename*
-* delete_*resourcetypename*
-* download_*resourcetypename*
-* copy_*resourcetypename*
-* open_*resourcetypename*
-* *customaction*_*resourcetypename*
+* create_form_*resourcetypename* => CreateFormResourceEvent
+* create_*resourcetypename* => CreateResourceEvent
+* delete_*resourcetypename* => DeleteResourceEvent
+* download_*resourcetypename* => DownloadResourceEvent
+* copy_*resourcetypename* => CopyResourceEvent
+* open_*resourcetypename* => OpenResourceEvent
+* *customaction*_*resourcetypename* => CustomActionResourceEvent
 
-Where *resourcetypename* is the name of your resource (e.g. "example") and *customaction* is a custom action you defined earlier in the plugin configuration (e.g. "open").
+Where *resourcetypename* is the name of your resource (e.g. "text") and *customaction* is a custom action you defined earlier in the plugin configuration (e.g. "open").
 
-This event is fired by the plugin managemement page:
-
-* *plugin*_*options*_*myvendormyshortbundlename*
-
-Where the shortbundle name is your bundle name without 'Bundle'.
-
-#### note concerning the download
-
-If your plugin don't catch the download event, a placeholder will be set in the archive.
+**Note**: If your plugin don't catch the download event, a placeholder will be set in the archive.
 
 ### Listener implementation class
 
-Define your listener class in the *Listener* folder.
+Define your listener class in the *Listener* folder. The following code comes from the FileListener. We are going to analyze it.
 
-    class ExampleListener extends ContainerAware
-    {
-      ...
-      // Fired when a resource is removed.
-      public function onDelete(DeleteResourceEvent $event)
-      {
-          $em = $this->container->get('doctrine.orm.entity_manager');
-          foreach ($event->getResources() as $example) {
-              $em->remove($example);
-          }
-          // Stop execution of further listeners
-          $event->stopPropagation();
-      }
-      ...
-    }
+**Form creation**
 
-#### Forms
-
-Please find the Symfony documentation here: http://symfony.com/doc/2.0/book/forms.html
-
-##### Resources creation
-
-Resources forms are a little be more complicated.
-
-You can use the 'ClarolineCoreBundle:Resource:createForm.html.twig' as default form for your resource.
-
-        ...
-        //the form you defined with the symfony2 form component
-        $form = $this->container
-            ->get('form.factory')
-            ->create(new ExampleType, new Example());
-        $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:resource_form.html.twig', array(
-            'form' => $form->createView(),
-            /*you must add the attribute resourceType to the twig File.
-            The Resource Manager need
-            to know wich kind of resource is going to be added.*/
-            'resourceType' => 'claroline_example'
-            )
-        );
-        ...
-
-**Warning**: don't forget the 'resourceType' attribute. Its value must be the 'name' field you defined in your config.yml file
-
-If you want to write your own twig file, your form action must be:
-
-    action="{{ path('claro_resource_create', {'resourceType': resourceType, 'parentId' '_nodeId'}) }}"
-
-where resourceType is the 'name' field you defined in your config.yml file and _nodeId is a placeholder used
-by the javascript manager.
-
-###### Using existing forms & validations
-
-This may be usefull if the *class* field you defined in your config file is an existing resource.
-Let's assume you're using the Claroline\CoreBundle\Resource\File class.
-Your listener should extends the Claroline FileListener.
-
-    namespace MyVender\MyBundle\Listener;
-
-    use Claroline\CoreBundle\Listener\Resource\FileListener;
-
-    class MyListener extends FileListener {
-     ...
-    }
-
-Then you must override the creationForm method. If you don't know wich method
-to override, you can check wich method is called on the create_form_xxx event
-in the config files.
-
-    use Claroline\CoreBundle\Form\FileType;
-    use Claroline\CoreBundle\Entity\Resource\File;
-    use Claroline\CoreBundle\Event\CreateFormResourceEvent;
-    use Claroline\CoreBundle\Listener\Resource\FileListener;
-    ...
-
+    /**
+     * @DI\Observe("create_form_file")
+     *
+     * @param CreateFormResourceEvent $event
+     */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
         $form = $this->container->get('form.factory')->create(new FileType, new File());
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:resource_form.html.twig',
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'myresourcetype'
+                'resourceType' => 'file'
             )
         );
         $event->setResponseContent($content);
         $event->stopPropagation();
     }
 
-This function will create a File whose ResourceType is MyResource.
-Because you extended the FileListener, you don't have to implement
-the create_xxx event.
+Please find the Symfony documentation here: http://symfony.com/doc/2.0/book/forms.html
 
-## Translations
+You can use the 'ClarolineCoreBundle:Resource:createForm.html.twig' as default form for your resource wich is what's happening here.
 
-* resource.xx.yml
+**Note**: don't forget the 'resourceType' attribute. Its value must be the 'name' field you defined in your config.yml file
 
-We use lower case for every translation keys.
-You must translate your resource type name in this file.
+If you want to write your own twig file, your form action must be:
 
-    example: example
+    action="{{ path('claro_resource_create', {'resourceType':resourceType, 'parentId':'_nodeId'}) }}"
 
-Where example is the name you defined in your config file.
-It's located in Resources/config/translations
+where resourceType is the 'name' field you defined in your config.yml file and _nodeId is a placeholder used
+by the javascript manager.
 
-## Resources
+**Form submission**
 
-You can consider every class extending AbstractResource as a way to stock
-your resources datas.
-This AbstractResource class some very important relations.
+    /**
+     * @DI\Observe("create_file")
+     *
+     * @param CreateResourceEvent $event
+     */
+    public function onCreate(CreateResourceEvent $event)
+    {
+        $request = $this->container->get('request');
+        $form = $this->container->get('form.factory')->create(new FileType, new File());
+        $form->handleRequest($request);
 
-### ResourceType
+        if ($form->isValid()) {
+            $file = $form->getData();
+            $tmpFile = $form->get('file')->getData();
+            $fileName = $tmpFile->getClientOriginalName();
+            $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+            $size = filesize($tmpFile);
+            $mimeType = $tmpFile->getClientMimeType();
+            $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() . "." . $extension;
+            $tmpFile->move($this->container->getParameter('claroline.param.files_directory'), $hashName);
+            $file->setSize($size);
+            $file->setName($fileName);
+            $file->setHashName($hashName);
+            $file->setMimeType($mimeType);
+            $event->setResources(array($file));
+            $event->stopPropagation();
 
-This entity job is to stock important attributes wich will differ depending on
-the ResourceType.
+            return;
+        }
 
-[Update needed]
+        $content = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            array(
+                'form' => $form->createView(),
+                'resourceType' => $event->getResourceType()
+            )
+        );
+        $event->setErrorFormContent($content);
+        $event->stopPropagation();
+    }
+
+As you can see, we first valid the form.
+
+If the form is valid, we create new File entity (wich extends AbstractResource) and set all its properties. We also move the data submitted by the user in the /files directory.
+We finally use the appropriate setter on the event to send back the created file.
+
+    $event->setResources(array($file));
+
+This file will be persisted by the claroline core. Rights, creator, creation date, ... will be set and everything will be flushed.
+
+If the form validation fails, we render the form with its validation errors, and set it in the event with the appropriate setter.
+
+    $event->setErrorFormContent($content);
+
+**Delete**
+
+    /**
+     * @DI\Observe("delete_file")
+     *
+     * @param DeleteResourceEvent $event
+     */
+    public function onDelete(DeleteResourceEvent $event)
+    {
+        $pathName = $this->container->getParameter('claroline.param.files_directory')
+            . DIRECTORY_SEPARATOR
+            . $event->getResource()->getHashName();
+        if (file_exists($pathName)) {
+            unlink($pathName);
+        }
+        $event->stopPropagation();
+    }
+
+As you can observe, we can get the removed file from the event and perform some operations. In this case we need to remove a file in the /file folder.
+In most case you won't have to do anything.
+
+**Copy**
+
+    /**
+     * @DI\Observe("copy_file")
+     *
+     * @param CopyResourceEvent $event
+     */
+    public function onCopy(CopyResourceEvent $event)
+    {
+        $newFile = $this->copy($event->getResource());
+        $event->setCopy($newFile);
+        $event->stopPropagation();
+    }
+
+In this case, we copy the file from the copied File entity in the /file folder.
+
+**Download**
+
+    /**
+     * @DI\Observe("download_file")
+     *
+     * @param DownloadResourceEvent $event
+     */
+    public function onDownload(DownloadResourceEvent $event)
+    {
+        $file = $event->getResource();
+        $hash = $file->getHashName();
+        $event->setItem(
+            $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $hash
+        );
+        $event->stopPropagation();
+    }
+
+The DownloadResourceEvent accepts a file path in its setItem() method.
+This will be the file downloaded by the user.
+
+**Open**
+
+The following code comes from the TextListener class:
+
+    /**
+     * @DI\Observe("open_text")
+     *
+     * @param OpenResourceEvent $event
+     */
+    public function onOpen(OpenResourceEvent $event)
+    {
+        $text = $event->getResource();
+        $collection = new ResourceCollection(array($text->getResourceNode()));
+        $isGranted = $this->container->get('security.context')->isGranted('WRITE', $collection);
+        $revisionRepo = $this->container->get('doctrine.orm.entity_manager')
+            ->getRepository('ClarolineCoreBundle:Resource\Revision');
+        $content = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Text:index.html.twig',
+            array(
+                'text' => $revisionRepo->getLastRevision($text)->getContent(),
+                '_resource' => $text,
+                'isEditGranted' => $isGranted
+            )
+        );
+        $response = new Response($content);
+        $event->setResponse($response);
+        $event->stopPropagation();
+    }
+
+As you can see, the OpenResourceEvent requires a response.
+
+**Custom actions**
+
+The following code comes from the ActivityListener class:
+
+    /**
+     * @DI\Observe("compose_activity")
+     */
+    public function onCompose(CustomActionResourceEvent $event)
+    {
+        $activity = $event->getResource();
+        ...
+
+        $content = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Activity:index.html.twig',
+            array(
+                'resourceTypes' => $resourceTypes,
+                'resourceActivities' => $resourceActivities,
+                '_resource' => $activity
+            )
+        );
+
+        $response = new Response($content);
+        $event->setResponse($response);
+        $event->stopPropagation();
+    }
+
+The event expects to receive a response back. You can notice the event name.
+
+- "compose" is an additional action name (see the config example).
+- "activity" is the resource type name.
 
 ### Keeping the context
 
-Your response must extends the workspace layout.
+What we call the context is the place were the resource is opened. This place will define wich layout should be used.
+You can find wich template to use with this code (it's not automatic yet in subject to changes)
 
-    {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+    {% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
-AbstractResource has a mandatory relation to the ResourceNode table. The ResourceNode
+    {% if isDesktop() %}
+        {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+    {% endif %}
+
+    {% extends layout %}
+
+As you already know, AbstractResource has a mandatory relation to the ResourceNode table. The ResourceNode
 table has a mandatory relation to the AbstractWorkspace table.
 The Workspace indicate the context in wich your resource was placed.
 A resource is usually opened through the resource manager. The resource manager will append
@@ -254,89 +321,36 @@ chosed to open the resource. If a breadcrumbs is present, the Claroline core wil
 find in wich workspace the resource was open (it's the root of the breadcrumbs).
 
 A fallback is needed if there is no breadcrumbs. That's why a _resource parameter
-is required for the template to work in these cases.
+is required for the template to work in these cases wich you also can see in the previous snippet.
 
     render('xxx', array('_resource' => $resource)
+
+## Translations
+
+* resource.xx.yml
+
+We use lower case for every translation keys.
+You must translate your resource type name in this file.
+
+    translation_key: "clef de traduction"
+    text: "Texte"
 
 ### Redirection
 
 If you want to navigate inside a resource and keep the context (the breadcrumbs) and allow the navigation
-inside an activity. You must use the twig method _path. This method is a copy of the twig path method wich
+inside an activity. You must use the twig method _path for your url generation. This method is a copy of the twig path method wich
 copy the breadcrumbs.
 
-### Removing a Resource Plugin
-
-Plugins can be managed with theses commands:
-
-    claroline:plugin:install VendorName BundleName
-    claroline:plugin:uninstall VendorName BundleName
-
-If you're removing a plugin whose resource class is defined by the claroline platform,
-Resources having the type managed by the plugin will stay under their 'super type'.
-Otherwise, they'll be removed.
 
 ### Editing a resource
 
 There is no predefined event for this action.
 If you want to implement it, you must create some custom actions (see plugin configuration file).
 
-## Right management
-
-Rights are stored in a separate entity called ResourceRights. It will define to permissions of
-a resource for a role. The permissions are stored in the mask field.
-The 5 last bits of the mask are reserved for default permissions and plugins can reserve
-the previous one for the resource type they define each time they add an item to the 'action' list in
-the config file. The mask can be decoded with the MaskDecoder entity. Each resource type will have
-a few mask decoders wich will be required to encode (or decode) the mask from a resource.
-The claroline.manager.mask_manager service will help you to translate a mask in
-an array of permission
-
-    array('delete' => true, 'open' => true, 'custom' => false)
-
-You can then use your new permission by using the isGranted function.
-This function requires an array of resource stored in the ResourceCollection class and the permission name
-you're checking.
-Note: The class name ResourceCollection should be changed for NodeCollection sooner or later.
-
-    $collection = new ResourceCollection(array($node))
-    $this->securityContext->isGranted($collection, 'custom')
-
-### Database
-
-ResourceRights are stored in the entity Resource\ResourceRights.
-This table has a relation to a role, a resource and a workspace.
-It has several booleans defining the current permissions:
-canCopy, canDeleten canEdit, canOpen, canExport.
-
-It also has a N-N relation with the ResourceType table. This relation indicate with
-ResourceType can be created has children in the current Resource (if it's a directory).
-
-### Voter
-
-The ResourceVoter will grant permissions to a user to execute an action.
-He's called when the method "$this->get('security.context')->isGranted($action, $object);" is fired.
-Possible $actions are 'MOVE', 'COPY', 'DELETE', 'EXPORT', 'CREATE', 'EDIT', 'OPEN'.
-The $object parameters is a Library\Resource\ResourceCollection class
-This object can take an array of parameters (setParameters) where keys are 'parent' and 'type'.
-
-'parent' is the parent entity in wich the action is done.
-'type' the the resource type of the soon to be created resource.
-
-Theses parameters may be required in some case ('CREATE', 'MOVE', 'COPY').
-
-CREATE => type is required
-MOVE => parent is required
-COPY => parent is required
-
 ### Creation
 
 Rights are defined for the first time at the workspace root at the workspace creation.
 When a resource is created, the parent rights are copied to the children rights (same when a resource is moved
 or copied).
-
-## Resource export.
-
-### @see forum bundle. No doc yet (import/export_template events). These events need to be caught
-if the resource is exportable.
 
 [index_path]: ../../index.md
