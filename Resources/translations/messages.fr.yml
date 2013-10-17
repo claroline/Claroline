@@ -213,6 +213,7 @@ noQuestionFound: Pas de question trouvée
 noRightAnswer: Aucune bonne réponse
 notImageMesssage: Le document doit être une image
 noTitle: La question n\'a pas de titre
+notEnoughtPapers: Pour afficher la docimologie, il doit y avoir au moins 12 copies
 not yet mark: Pas encore noté
 noUserFound: Pas d'utilisateur trouvé
 nQuestion: Question n°
@@ -261,7 +262,7 @@ questionSharedWith: Cette question est partagée avec les utilisateurs suivants
 # R
 random order of questions: Ordre des questions aléatoire
 raz: => Pour remettre à leurs position initiale tous les pointeurs, appuyez sur "c".
-rectangle: Rectangle
+square: Carré
 reset: Réinitialiser
 resizeZone: Pour redimmensionner une image, placez votre souris sur son coin inférieur droit et, tout en maintenant le clic gauche, faites la glisser
 response: Réponse
@@ -270,6 +271,7 @@ result: Résultats
 role: Rôle
 
 # S
+save: Enregistrer
 saveNewOrder: Enregistrer le nouvel ordre
 sawHint: de pénalité pour indices vus
 search: Rechercher un document
@@ -392,6 +394,8 @@ Inter_Hole.size: Taille
 
 LockAttempte.date: Date
 
+Multiple response: Réponse multiples
+
 Never: jamais
 
 Planning.end_time: Date de fin
@@ -413,13 +417,15 @@ TypeOpenQuestion.value: Type de la question
 
 TypeQCM.value: Type du QCM
 
+Unique response: Réponse unique
+
+Unit.value: Unité
+
 User.firstName: Prénom
 User.mail: Adresse mail
 User.name: Nom
 User.password: Mot de passe
 User.username: Login utilisateur
-
-Unit.value: Unité
 
 ujm_exobundle_interactiongraphictype_document: Documents
 ujm_exobundle_interactiongraphictype_interaction_hints: Indices

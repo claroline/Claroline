@@ -52,38 +52,38 @@ function whichImg(shape, color, i, x, y, rx, ry, prefix, size, id) {
             break;
         }
 
-    } else if (shape == 'rectangle') {
+    } else if (shape == 'square') {
         switch (color) {
         case 'white' :
-            $('#' + id + 'ra' + i).attr('src', prefix + 'rectanglew.jpg');
+            $('#' + id + 'ra' + i).attr('src', prefix + 'squarew.jpg');
             break;
 
         case 'red' :
-            $('#' + id + 'ra' + i).attr('src', prefix + 'rectangler.jpg');
+            $('#' + id + 'ra' + i).attr('src', prefix + 'squarer.jpg');
             break;
 
         case 'blue' :
-            $('#' + id + 'ra' + i).attr('src', prefix + 'rectangleb.jpg');
+            $('#' + id + 'ra' + i).attr('src', prefix + 'squareb.jpg');
             break;
 
         case 'purple' :
-            $('#' + id + 'ra' + i).attr('src', prefix + 'rectanglep.jpg');
+            $('#' + id + 'ra' + i).attr('src', prefix + 'squarep.jpg');
             break;
 
         case 'green' :
-            $('#' + id + 'ra' + i).attr('src', prefix + 'rectangleg.jpg');
+            $('#' + id + 'ra' + i).attr('src', prefix + 'squareg.jpg');
             break;
 
         case 'orange' :
-            $('#' + id + 'ra' + i).attr('src', prefix + 'rectangleo.jpg');
+            $('#' + id + 'ra' + i).attr('src', prefix + 'squareo.jpg');
             break;
 
         case 'yellow' :
-            $('#' + id + 'ra' + i).attr('src', prefix + 'rectangley.jpg');
+            $('#' + id + 'ra' + i).attr('src', prefix + 'squarey.jpg');
             break;
 
         default :
-            $('#' + id + 'ra' + i).attr('src', prefix + 'rectanglew.jpg');
+            $('#' + id + 'ra' + i).attr('src', prefix + 'squarew.jpg');
         }
     }
 

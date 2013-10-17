@@ -62,76 +62,82 @@
             <i class="icon-arrow-left"></i> {{ "back" | trans }}
         </a><br/><br/>
 
-        {#--------------------------------------------------- Legend -----------------------------------------------------------------------------------#}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">{{ 'legend' | trans }}</h3>
+        {% if nbPapers >= 12 %}
+            {#--------------------------------------------------- Legend -----------------------------------------------------------------------------------#}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ 'legend' | trans }}</h3>
+                </div>
+                <div class="panel-body" id="questionList">
+                    <h4>{{ "number of papers" | trans }} : {{ nbPapers }}</h4>
+                    <h3>{{ "list of question" | trans }}</h3>
+                    <ol>
+                        {% for questionTitle in questionsList %}
+                            <li>{{ questionTitle }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
             </div>
-            <div class="panel-body" id="questionList">
-                <h4>{{ "number of papers" | trans }} : {{ nbPapers }}</h4>
-                <h3>{{ "list of question" | trans }}</h3>
-                <ol>
-                    {% for questionTitle in questionsList %}
-                        <li>{{ questionTitle }}</li>
-                    {% endfor %}
-                </ol>
+            {#--------------------------------------------------- Histogramm of marks ---------------------------------------------------------------------#}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ "histoMarks" | trans }}</h3>
+                </div>
+                <div class="panel-body" id="histoMarks"></div>
             </div>
-        </div>
-        {#--------------------------------------------------- Histogramm of marks ---------------------------------------------------------------------#}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">{{ "histoMarks" | trans }}</h3>
+            {#--------------------------------------------------- Histogramm of success -------------------------------------------------------------------#}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ "histoSuccess" | trans }}</h3>
+                </div>
+                <div class="panel-body" id="histoSuccess"  style="margin-bottom: 100px;"></div>
             </div>
-            <div class="panel-body" id="histoMarks"></div>
-        </div>
-        {#--------------------------------------------------- Histogramm of success -------------------------------------------------------------------#}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">{{ "histoSuccess" | trans }}</h3>
-            </div>
-            <div class="panel-body" id="histoSuccess"  style="margin-bottom: 100px;"></div>
-        </div>
-        {#--------------------------------------------------- Histogramm of discrimination -----------------------------------------------------------#}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">{{ "histoDiscrimination" | trans }}</h3>
-            </div>
-            <div class="panel-body" id="histoDiscrimination"></div>
-            <div class="list-group">
-                <div class="list-group-item">
-                    {% if coeffQ == 'none' %}
-                        {{ 'explainCoeffDis0' | trans }}
+            {#--------------------------------------------------- Histogramm of discrimination -----------------------------------------------------------#}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ "histoDiscrimination" | trans }}</h3>
+                </div>
+                <div class="panel-body" id="histoDiscrimination"></div>
+                <div class="list-group">
+                    <div class="list-group-item">
+                        {% if coeffQ == 'none' %}
+                            {{ 'explainCoeffDis0' | trans }}
 
-                    {% endif %}
-                    <p>
-                        {{ 'explainCoeffDis1' | trans }}
-                        {{ 'explainCoeffDis2' | trans }}
-                        {{ 'explainCoeffDis3' | trans }}
-                    </p>
+                        {% endif %}
+                        <p>
+                            {{ 'explainCoeffDis1' | trans }}
+                            {{ 'explainCoeffDis2' | trans }}
+                            {{ 'explainCoeffDis3' | trans }}
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
-        {#--------------------------------------------------- Histogramm of measure of diffculty -----------------------------------------------------#}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">{{ "histoMeasureOfDifficulty" | trans }}</h3>
-            </div>
-            <div class="panel-body" id="histoMeasureOfDifficulty"></div>
-            <div class="list-group">
-                <div class="list-group-item">
-                    <p>
-                    {{ 'explainMeasureDifficulty' | trans }}.
-                    {{ 'calculationMeasureDifficulty' | trans }}.
-                    {{ 'meaningMeasureDifficulty' | trans }}.
-                    {{ 'infoMeasureDifficulty' | trans }}.
-                    </p>
+            {#--------------------------------------------------- Histogramm of measure of diffculty -----------------------------------------------------#}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ "histoMeasureOfDifficulty" | trans }}</h3>
+                </div>
+                <div class="panel-body" id="histoMeasureOfDifficulty"></div>
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <p>
+                        {{ 'explainMeasureDifficulty' | trans }}.
+                        {{ 'calculationMeasureDifficulty' | trans }}.
+                        {{ 'meaningMeasureDifficulty' | trans }}.
+                        {{ 'infoMeasureDifficulty' | trans }}.
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
+        {% else %}
+            <div class="alert alert-info">{{ 'notEnoughtPapers'|trans }}.</div>
+        {% endif %}
     <div>
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
+
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/jquery.jqplot.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.barRenderer.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pointLabels.min.js') }}"></script>
@@ -139,139 +145,15 @@
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasTextRenderer.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js') }}"></script>
 
-    <script type="text/javascript">
-        $(document).ready(function(){
-            /*********************************histo mark******************************************************/
-            var s1 = [{{ frequencyMarks }}];
-            var marks = [{{ scoreList }}];
+    {% if nbPapers >= 12 %}
+        <script type="text/javascript">
+            $(document).ready(function(){
+                /*********************************histo mark******************************************************/
+                var s1 = [{{ frequencyMarks }}];
+                var marks = [{{ scoreList }}];
 
-            $.jqplot('histoMarks', [s1], {
+                $.jqplot('histoMarks', [s1], {
 
-                series:[{renderer:$.jqplot.BarRenderer}],
-
-                seriesDefaults:{
-                    color: '#06A1E3',
-                    rendererOptions: {fillToZero: true},
-                    pointLabels: {
-                        show: true,
-                        hideZeros: true
-                    }
-                },
-
-                axes: {
-                    xaxis: {
-                        label: '{{ 'mark'|trans }}',
-                        labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-                        labelOptions:{
-                            fontFamily:'Helvetica',
-                            fontSize: '14pt'
-                        },
-                        renderer: $.jqplot.CategoryAxisRenderer,
-                        ticks: marks,
-                        tickOptions: {showGridline: false,formatString: '%.1f'}
-                    },
-
-                    yaxis: {
-                        label: '{{ 'frequency'|trans }}',
-                        labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-                        labelOptions:{
-                            fontFamily:'Helvetica',
-                            fontSize: '14pt'
-                        },
-                        pad: 1,
-                        min: 0,
-                        max: {{ maxY }},
-                        tickOptions: {formatString: '%d'}
-                    }
-                }
-            });
-
-            /*********************************histoSuccess******************************************************/
-
-            {% set series = '' %}
-            {% set i = 1 %}
-            {% for serie in seriesResponsesTab %}
-                {% set sname = 's' ~ i %}
-                    var {{ sname }} = [{{ serie }}];
-                {% if series == '' %}
-                    {% set series = 's' ~ i %}
-                {% else %}
-                    {% set series = series ~ ',' ~ 's' ~ i %}
-                {% endif %}
-                {% set i = i + 1 %}
-            {% endfor %}
-
-            plot3 = $.jqplot('histoSuccess', [{{ series }}], {
-
-                stackSeries: true,
-                captureRightClick: true,
-
-                seriesDefaults:{
-                    renderer:$.jqplot.BarRenderer,
-
-                    rendererOptions: {
-                        barMargin: 30,
-                        highlightMouseDown: true,
-                        fillToZero: true
-                    },
-
-                    pointLabels: {
-                        show: true,
-                        hideZeros: true
-                    }
-
-                },
-                axes: {
-
-                    xaxis: {
-                        label: '{{ 'question'|trans }}',
-                        renderer: $.jqplot.CategoryAxisRenderer,
-
-                        labelOptions:{
-                            fontFamily:'Helvetica',
-                            fontSize: '14pt'
-                        },
-
-                        tickOptions: {showGridline: false}
-                    },
-
-                    yaxis: {
-                        label: '{{ 'frequency'|trans }}',
-                        labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-
-                        labelOptions:{
-                            fontFamily:'Helvetica',
-                            fontSize: '14pt'
-                        },
-
-                        pad: 1,
-                        min: 0,
-                        max: {{ maxY2 }},
-
-                        tickOptions: {formatString: '%d'}
-                    }
-                },
-                legend: {
-                    show: true,
-                    location: 's',
-                    placement: 'outside'
-                },
-
-                series:[
-                    {label:'{{ 'correct'|trans }}', color: 'green'},
-                    {label:'{{ 'partially'|trans }}', color: 'blue'},
-                    {label:'{{ 'wrong'|trans }}', color: 'red'},
-                    {label:'{{ 'no answer'|trans }}', color: 'yellow'}
-                ]
-            });
-
-            /*********************************histoDiscrimination******************************************************/
-            var s1 = [{{ coeffQ }}];
-
-            if (s1 != 'none') {
-                $.jqplot('histoDiscrimination', [s1], {
-
-                    stackSeries: true,
                     series:[{renderer:$.jqplot.BarRenderer}],
 
                     seriesDefaults:{
@@ -279,8 +161,177 @@
                         rendererOptions: {fillToZero: true},
                         pointLabels: {
                             show: true,
-                            hideZeros: false,
-                            formatString: '%.3f'
+                            hideZeros: true
+                        }
+                    },
+
+                    axes: {
+                        xaxis: {
+                            label: '{{ 'mark'|trans }}',
+                            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                            labelOptions:{
+                                fontFamily:'Helvetica',
+                                fontSize: '14pt'
+                            },
+                            renderer: $.jqplot.CategoryAxisRenderer,
+                            ticks: marks,
+                            tickOptions: {showGridline: false,formatString: '%.1f'}
+                        },
+
+                        yaxis: {
+                            label: '{{ 'frequency'|trans }}',
+                            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                            labelOptions:{
+                                fontFamily:'Helvetica',
+                                fontSize: '14pt'
+                            },
+                            pad: 1,
+                            min: 0,
+                            max: {{ maxY }},
+                            tickOptions: {formatString: '%d'}
+                        }
+                    }
+                });
+
+                /*********************************histoSuccess******************************************************/
+
+                {% set series = '' %}
+                {% set i = 1 %}
+                {% for serie in seriesResponsesTab %}
+                    {% set sname = 's' ~ i %}
+                        var {{ sname }} = [{{ serie }}];
+                    {% if series == '' %}
+                        {% set series = 's' ~ i %}
+                    {% else %}
+                        {% set series = series ~ ',' ~ 's' ~ i %}
+                    {% endif %}
+                    {% set i = i + 1 %}
+                {% endfor %}
+
+                plot3 = $.jqplot('histoSuccess', [{{ series }}], {
+
+                    stackSeries: true,
+                    captureRightClick: true,
+
+                    seriesDefaults:{
+                        renderer:$.jqplot.BarRenderer,
+
+                        rendererOptions: {
+                            barMargin: 30,
+                            highlightMouseDown: true,
+                            fillToZero: true
+                        },
+
+                        pointLabels: {
+                            show: true,
+                            hideZeros: true
+                        }
+
+                    },
+                    axes: {
+
+                        xaxis: {
+                            label: '{{ 'question'|trans }}',
+                            renderer: $.jqplot.CategoryAxisRenderer,
+
+                            labelOptions:{
+                                fontFamily:'Helvetica',
+                                fontSize: '14pt'
+                            },
+
+                            tickOptions: {showGridline: false}
+                        },
+
+                        yaxis: {
+                            label: '{{ 'frequency'|trans }}',
+                            labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+
+                            labelOptions:{
+                                fontFamily:'Helvetica',
+                                fontSize: '14pt'
+                            },
+
+                            pad: 1,
+                            min: 0,
+                            max: {{ maxY2 }},
+
+                            tickOptions: {formatString: '%d'}
+                        }
+                    },
+                    legend: {
+                        show: true,
+                        location: 's',
+                        placement: 'outside'
+                    },
+
+                    series:[
+                        {label:'{{ 'correct'|trans }}', color: 'green'},
+                        {label:'{{ 'partially'|trans }}', color: 'blue'},
+                        {label:'{{ 'wrong'|trans }}', color: 'red'},
+                        {label:'{{ 'no answer'|trans }}', color: 'yellow'}
+                    ]
+                });
+
+                /*********************************histoDiscrimination******************************************************/
+                var s1 = [{{ coeffQ }}];
+
+                if (s1 != 'none') {
+                    $.jqplot('histoDiscrimination', [s1], {
+
+                        stackSeries: true,
+                        series:[{renderer:$.jqplot.BarRenderer}],
+
+                        seriesDefaults:{
+                            color: '#06A1E3',
+                            rendererOptions: {fillToZero: true},
+                            pointLabels: {
+                                show: true,
+                                hideZeros: false,
+                                formatString: '%.3f'
+                            }
+                        },
+
+                        axes: {
+                            xaxis: {
+                                label: '{{ 'question'|trans }}',
+                                labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                                labelOptions:{
+                                    fontFamily:'Helvetica',
+                                    fontSize: '14pt'
+                                },
+                                renderer: $.jqplot.CategoryAxisRenderer,
+                                tickOptions: {showGridline: false}
+                            },
+
+                            yaxis: {
+                                label: '{{ 'Coefficient'|trans }}',
+                                labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                                labelOptions:{
+                                    fontFamily:'Helvetica',
+                                    fontSize: '14pt'
+                                },
+                                pad: 0.5,
+                                min: -1,
+                                max: 1,
+                                tickOptions: {formatString: '%.1f'}
+                            }
+                        }
+                    });
+                }
+
+                /*********************************histoMeasureOfDifficulty******************************************************/
+                var percent = [{{MeasureDifficulty}}];
+
+                $.jqplot('histoMeasureOfDifficulty', [percent], {
+
+                    series:[{renderer:$.jqplot.BarRenderer}],
+
+                    seriesDefaults:{
+                        color: '#06A1E3',
+                        rendererOptions: {fillToZero: true},
+                        pointLabels: {
+                            show: true,
+                            formatString: '%.1f %'
                         }
                     },
 
@@ -297,63 +348,20 @@
                         },
 
                         yaxis: {
-                            label: '{{ 'Coefficient'|trans }}',
+                            label: '{{ 'percentage'|trans }}',
                             labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
                             labelOptions:{
                                 fontFamily:'Helvetica',
                                 fontSize: '14pt'
                             },
-                            pad: 0.5,
-                            min: -1,
-                            max: 1,
-                            tickOptions: {formatString: '%.1f'}
+                            pad: 10,
+                            min: 0,
+                            max: 100,
+                            tickOptions: {formatString: '%d%'}
                         }
                     }
                 });
-            }
-
-            /*********************************histoMeasureOfDifficulty******************************************************/
-            var percent = [{{MeasureDifficulty}}];
-
-            $.jqplot('histoMeasureOfDifficulty', [percent], {
-
-                series:[{renderer:$.jqplot.BarRenderer}],
-
-                seriesDefaults:{
-                    color: '#06A1E3',
-                    rendererOptions: {fillToZero: true},
-                    pointLabels: {
-                        show: true,
-                        formatString: '%.1f %'
-                    }
-                },
-
-                axes: {
-                    xaxis: {
-                        label: '{{ 'question'|trans }}',
-                        labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-                        labelOptions:{
-                            fontFamily:'Helvetica',
-                            fontSize: '14pt'
-                        },
-                        renderer: $.jqplot.CategoryAxisRenderer,
-                        tickOptions: {showGridline: false}
-                    },
-
-                    yaxis: {
-                        label: '{{ 'percentage'|trans }}',
-                        labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-                        labelOptions:{
-                            fontFamily:'Helvetica',
-                            fontSize: '14pt'
-                        },
-                        pad: 10,
-                        min: 0,
-                        max: 100,
-                        tickOptions: {formatString: '%d%'}
-                    }
-                }
             });
-        });
-    </script>
+        </script>
+    {% endif %}
 {% endblock %}

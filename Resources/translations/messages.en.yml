@@ -213,6 +213,7 @@ noQuestionFound: No question found
 noRightAnswer: No right answer
 notImageMesssage: The document should be an image
 noTitle: The question has no title
+notEnoughtPapers: To display docimology, it must have at least 12 papers
 not yet mark: Not yet mark
 noUserFound: No user found
 nQuestion: Question n°
@@ -261,7 +262,7 @@ questionSharedWith: This question is shared with users below
 # R
 random order of questions: Random order of questions
 raz: => To reset all pointers' position, press "c".
-rectangle: Rectangle
+square: square
 reset: Reset
 resizeZone: To re-size the picture, place your mouse on its bottom right corner, keep left mouse button down, and mouve your mouse
 response: Response
@@ -270,6 +271,7 @@ result: Results
 role: Role
 
 # S
+save: Save
 saveNewOrder: Save the new order
 sawHint: of penalty for seen hints
 search: Search
@@ -392,6 +394,8 @@ Inter_Hole.size: Size
 
 LockAttempte.date: Date
 
+Multiple response: Multiple response
+
 Never: Never
 
 Planning.end_time: End Date
@@ -413,13 +417,15 @@ TypeOpenQuestion.value: Question type
 
 TypeQCM.value: QCM type
 
+Unique response: Unique response
+
+Unit.value: Unity
+
 User.firstName: First name
 User.mail: E-mail
 User.name: Name
 User.password: Password
 User.username: User name
-
-Unit.value: Unity
 
 ujm_exobundle_interactiongraphictype_document: Documents
 ujm_exobundle_interactiongraphictype_interaction_hints: Hints

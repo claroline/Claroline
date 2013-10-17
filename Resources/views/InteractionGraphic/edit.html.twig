@@ -179,7 +179,7 @@
                                     <td class="classic">
                                         <select class="form-control" id="shape" name="shape" size="1" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
                                             <option value="circle"  selected>{{ 'cercle' | trans }}</option>
-                                            <option value="rect" >{{ 'rectangle' | trans }}</option>
+                                            <option value="square" >{{ 'square' | trans }}</option>
                                         </select>
                                     </td>
 
@@ -225,7 +225,7 @@
             </div>
         </div>
         <div class="panel-footer">
-            <button type="submit" id="button_submit" class="btn btn-primary">{{ 'edit' | trans }}</button>
+            <button type="submit" id="button_submit" class="btn btn-primary">{{ 'save' | trans }}</button>
             <a class="btn btn-default" href="{{ path('ujm_question_index') }}">{{ "cancel" | trans({}, "platform") }}</a>
         </div>
     </form>

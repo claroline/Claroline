@@ -168,7 +168,7 @@
             </div>
         </div>
         <div class="panel-footer">
-            <button type="submit" class="btn btn-primary">{{ "edit" | trans }}</button>
+            <button type="submit" class="btn btn-primary">{{ "save" | trans }}</button>
             <a class="btn btn-default" href="{{ path('claro_resource_open', { 'resourceType': entity.resourceNode.resourceType.name(), 'node': entity.resourceNode.id }) }}">
                 {{ 'cancel' | trans({}, 'platform') }}
             </a>
@@ -181,12 +181,13 @@
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="{{ asset('bundles/ujmexo/js/dateTimePicker.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
+
     <script type="text/javascript">
+
         //To disable the feature not yet implemented
         $(document).ready(function() {
             $('#ujm_exobundle_exercisetype_doprint').attr("disabled", true);
             $('#ujm_exobundle_exercisetype_duration').attr("disabled", true);
-
 
             if($("#ujm_exobundle_exercisetype_useDateEnd").attr("checked")) {
                 $('#dateEnd').css({"display" : "block"});

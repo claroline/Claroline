@@ -288,69 +288,85 @@ function changezone(prefix) {
         switch ($('#color').val()) {
         case 'white' :
             el.attr("src", prefix + 'circlew.png');
+            $('#color').css({ 'background-color' : '#FFFFFF' });
             break;
 
         case 'red' :
             el.attr("src", prefix + 'circler.png');
+            $('#color').css({ 'background-color' : '#FF0000' });
             break;
 
         case 'blue' :
             el.attr("src", prefix + 'circleb.png');
+            $('#color').css({ 'background-color' : '#002FFF' });
             break;
 
         case 'purple' :
             el.attr("src", prefix + 'circlep.png');
+            $('#color').css({ 'background-color' : '#8B008B' });
             break;
 
         case 'green' :
             el.attr("src", prefix + 'circleg.png');
+            $('#color').css({ 'background-color' : '#008600' });
             break;
 
         case 'orange' :
             el.attr("src", prefix + 'circleo.png');
+            $('#color').css({ 'background-color' : '#FF7A00' });
             break;
 
         case 'yellow' :
             el.attr("src", prefix + 'circley.png');
+            $('#color').css({ 'background-color' : '#FFFF09' });
             break;
 
         default :
             el.attr("src", prefix + 'circlew.png');
+            $('#color').css({ 'background-color' : '#FFFFFF' });
             break;
         }
 
-    } else if ($('#shape').val() == 'rect') {
+    } else if ($('#shape').val() == 'square') {
         switch ($('#color').val()) {
         case 'white' :
-            el.attr("src", prefix + 'rectanglew.jpg');
+            el.attr("src", prefix + 'squarew.jpg');
+            $('#color').css({ 'background-color' : '#FFFFFF' });
             break;
 
         case 'red' :
-            el.attr("src", prefix + 'rectangler.jpg');
+            el.attr("src", prefix + 'squarer.jpg');
+            $('#color').css({ 'background-color' : '#FF0000' });
             break;
 
         case 'blue' :
-            el.attr("src", prefix + 'rectangleb.jpg');
+            el.attr("src", prefix + 'squareb.jpg');
+            $('#color').css({ 'background-color' : '#002FFF' });
             break;
 
         case 'purple' :
-            el.attr("src", prefix + 'rectanglep.jpg');
+            el.attr("src", prefix + 'squarep.jpg');
+            $('#color').css({ 'background-color' : '#8B008B' });
             break;
 
         case 'green' :
-            el.attr("src", prefix + 'rectangleg.jpg');
+            el.attr("src", prefix + 'squareg.jpg');
+            $('#color').css({ 'background-color' : '#008600' });
             break;
 
         case 'orange' :
-            el.attr("src", prefix + 'rectangleo.jpg');
+            el.attr("src", prefix + 'squareo.jpg');
+            $('#color').css({ 'background-color' : '#FF7A00' });
             break;
 
         case 'yellow' :
-            el.attr("src", prefix + 'rectangley.jpg');
+            el.attr("src", prefix + 'squarey.jpg');
+            $('#color').css({ 'background-color' : '#FFFF09' });
             break;
 
         default :
-            el.attr("src", prefix + 'rectanglew.jpg');
+            el.attr("src", prefix + 'squarew.jpg');
+            $('#color').css({ 'background-color' : '#FFFFFF' });
         }
     }
 }

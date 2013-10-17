@@ -241,8 +241,8 @@ class InteractionGraphicHandler
         $temp = strrpos($url, 'graphic/') + 8;
         $chain = substr($url, $temp, 1);
 
-        if ($chain == "r") {
-            return "rectangle";
+        if ($chain == "s") {
+            return "square";
         } else if ($chain == "c") {
             return "circle";
         }

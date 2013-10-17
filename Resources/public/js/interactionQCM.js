@@ -78,6 +78,16 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
     whichChecked();
     whichChange();
 
+    $(':radio').live('click', function () {
+       if ($(this).is(':checked')) {
+           $('#newTable').find(('tr:not(:first)')).each(function () {
+              $(this).find('input').eq(1).removeAttr('checked');
+           });
+
+           $(this).attr('checked', 'checked');
+       }
+    });
+
     // Make the choices' table sortable with jquery ui plugin
     $('tbody').sortable();
 }
