@@ -13,51 +13,48 @@
         <div class="panel panel-default panel-path-editor" ng-controller="MainCtrl">
             <div class="panel-heading">
                 <h3 class="panel-title" id="player-header">
-                    {{ 'path' | trans({}, 'tools') }} : <strong>{{ path.resourceNode.name }}</strong>
+                    {{ 'path' | trans({}, 'innova_tools') }} : <strong>{{ path.resourceNode.name }}</strong>
                 </h3>
                 <div class="editor-buttons">
-                    <a href="{{ path('claro_workspace_open_tool', {workspaceId: workspace.id, toolName: 'innova_path'}) }}" class="btn btn-danger btn-sm" tooltip="{{ 'back_to_paths_list' | trans({}, 'tools') }}"><span class="icon-reply"></span></a>
+                    <a href="{{ path('claro_workspace_open_tool', {workspaceId: workspace.id, toolName: 'innova_path'}) }}" class="btn btn-danger btn-sm" tooltip="{{ 'back_to_paths_list' | trans({}, 'innova_tools') }}"><span class="icon-reply"></span></a>
                 </div>
             </div>
-
             <div class="panel-body">
-                
-                        
                 <div class="row">
                     <div class="col-md-3">
                          <div class="panel panel-default">
-                            <div class="panel-heading"><i class="icon-pushpin"></i> {{ 'informations' | trans({}, 'tools') }}</div>
+                            <div class="panel-heading"><i class="icon-pushpin"></i> {{ 'informations' | trans({}, 'innova_tools') }}</div>
                             <div class="panel-body">
                                 {% if step.duration|date('H:i') !=  "00:00" %} 
-                                    <img rel="tooltip" data-original-title="{{ 'duration' | trans({}, 'tools') }}" src="{{ asset('bundles/innovapath/images/icons/time.png') }}"/>  {{ step.duration|date('H:i') }} 
+                                    <img rel="tooltip" data-original-title="{{ 'duration' | trans({}, 'innova_tools') }}" src="{{ asset('bundles/innovapath/images/icons/time.png') }}"/>  {{ step.duration|date('H:i') }} 
                                 {% endif %}
                                 {% if step.stepWho %} 
-                                    <img rel="tooltip" data-original-title="{{ step.stepWho.name | trans({}, 'tools') }}" src="{{ asset('bundles/innovapath/images/icons/who/'~ step.stepWho.id  ~'.png') }}"/>
+                                    <img rel="tooltip" data-original-title="{{ step.stepWho.name | trans({}, 'innova_tools') }}" src="{{ asset('bundles/innovapath/images/icons/who/'~ step.stepWho.id  ~'.png') }}"/>
                                 {% endif %}
                                 {% if step.stepWhere %} 
-                                    <img rel="tooltip" data-original-title="{{ step.stepWhere.name | trans({}, 'tools') }}" src="{{ asset('bundles/innovapath/images/icons/where/'~ step.stepWhere.id  ~'.png') }}"/> 
+                                    <img rel="tooltip" data-original-title="{{ step.stepWhere.name | trans({}, 'innova_tools') }}" src="{{ asset('bundles/innovapath/images/icons/where/'~ step.stepWhere.id  ~'.png') }}"/> 
                                 {% endif %}
                                 {% if step.withComputer %}
-                                    <img rel="tooltip" data-original-title="{{ 'with_computer' | trans({}, 'tools') }}" src="{{ asset('bundles/innovapath/images/icons/computer.png') }}"/>
+                                    <img rel="tooltip" data-original-title="{{ 'with_computer' | trans({}, 'innova_tools') }}" src="{{ asset('bundles/innovapath/images/icons/computer.png') }}"/>
                                 {% else %}  
-                                    <img rel="tooltip" data-original-title="{{ 'without_computer' | trans({}, 'tools') }}" src="{{ asset('bundles/innovapath/images/icons/no_computer.png') }}"/>
+                                    <img rel="tooltip" data-original-title="{{ 'without_computer' | trans({}, 'innova_tools') }}" src="{{ asset('bundles/innovapath/images/icons/no_computer.png') }}"/>
                                 {% endif %}
                                 {% if step.withTutor %}
-                                    <img rel="tooltip" data-original-title="{{ 'with_tutor' | trans({}, 'tools') }}" src="{{ asset('bundles/innovapath/images/icons/tutor.png') }}"/>
+                                    <img rel="tooltip" data-original-title="{{ 'with_tutor' | trans({}, 'innova_tools') }}" src="{{ asset('bundles/innovapath/images/icons/tutor.png') }}"/>
                                 {% else %}  
-                                    <img rel="tooltip" data-original-title="{{ 'without_tutor' | trans({}, 'tools') }}" src="{{ asset('bundles/innovapath/images/icons/no_tutor.png') }}"/>
+                                    <img rel="tooltip" data-original-title="{{ 'without_tutor' | trans({}, 'innova_tools') }}" src="{{ asset('bundles/innovapath/images/icons/no_tutor.png') }}"/>
                                 {% endif %}
                             </div>
                         </div>
-
+                        
                         <div class="panel panel-default">
-                            <div class="panel-heading"><i class="icon-briefcase"></i>  {{ 'resources' | trans({}, 'tools') }}</div>
+                            <div class="panel-heading"><i class="icon-briefcase"></i>  {{ 'resources' | trans({}, 'innova_tools') }}</div>
                             <div class="panel-body">
                                 <input type="hidden" id="step-id" value="{{ path('innova_herited_resources', {stepId: step.id}) }}"/>
                                 <div id="herited-resources"></div>
                                 {% if resources %}
                                 <div class="panel panel-default">
-                                    <div class="panel-heading"><strong>{{ 'local' | trans({}, 'tools') }}</strong></div>
+                                    <div class="panel-heading"><strong>{{ 'local' | trans({}, 'innova_tools') }}</strong></div>
                                     <div class="panel-body">
                                         {% for resource in resources %}
                                             {% if resource.id %}
@@ -77,20 +74,20 @@
                         <tbody>
                         <tr>
                             <td>
-                                {% if step.parent.resourceNode.id %}
-                                    <a class="btn btn-default " href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.parent.resourceNode.id }) }}">{{ 'back_to' | trans({}, 'tools') }} <strong>{{step.parent.resourceNode.name}}</strong> <span class="icon-arrow-left"></span></a> 
+                                {% if step.parent.id %}
+                                    <a class="btn btn-default " href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.parent.id }) }}">{{ 'back_to' | trans({}, 'innova_tools') }} <strong>{{step.parent.name}}</strong> <span class="icon-arrow-left"></span></a> 
                                 {% else %}
                                     {# <a class="btn btn-success" disabled=disabled href="#">Début du parcours</a> #}
                                 {% endif %}
                             </td>
                             <td class="text-center">
-                                <a class="btn btn-primary" disabled=disabled href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.resourceNode.id }) }}">{{ 'current_position' | trans({}, 'tools') }} : <strong>{{step.resourceNode.name}}</strong></a>
+                                <a class="btn btn-primary" disabled=disabled href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.id }) }}">{{ 'current_position' | trans({}, 'innova_tools') }} : <strong>{{step.name}}</strong></a>
                             </td>
                             <td>
                             {% if children %}
                                 <div >
                                     {% for child in children %}
-                                           <a class="btn btn-default" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : child.resourceNode.id }) }}"><span class="icon-arrow-right"></span> {{child.resourceNode.name}}</a>
+                                           <a class="btn btn-default" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : child.id }) }}"><span class="icon-arrow-right"></span> {{child.name}}</a>
                                      {% endfor %}
                                 </div>
                             {% else %}
@@ -103,19 +100,19 @@
                     </div>
                     <div id="step-map-buttons">
                         <span id="step-map-open">
-                            <a class="btn btn-default icon-chevron-down step-map-button"> {{ 'progression' | trans({}, 'tools') }}</a>
+                            <a class="btn btn-default icon-chevron-down step-map-button"> {{ 'progression' | trans({}, 'innova_tools') }}</a>
                         </span>
                     </div>
                 </div>
                         <div class="text-center">
-                            <h1>{{ step.resourceNode.name }}</h1>
+                            <h1>{{ step.name }}</h1>
                             {% if step.image %}
                                 <img src="{{ asset('bundles/innovapath/images/steps/' ~  step.image) }}"/>
                             {% endif %}
                         </div>
                         {% if step.instructions %}
                         <div class="justified">
-                            <strong>{{ 'instructions' | trans({}, 'tools') }} :</strong>   {{ step.instructions }}
+                            <strong>{{ 'instructions' | trans({}, 'innova_tools') }} :</strong>   {{ step.instructions }}
                         </div>
                         {% endif %}
                     </div>

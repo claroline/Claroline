@@ -2,7 +2,6 @@
 
 namespace Innova\PathBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Innova\PathBundle\Entity\Step2ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -12,8 +11,25 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table("innova_step")
  * @ORM\Entity
  */
-class Step extends AbstractResource
+class Step
 {
+
+     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $name;
+
 
     /**
      * @var integer
@@ -24,6 +40,7 @@ class Step extends AbstractResource
 
     /**
     * @ORM\ManyToOne(targetEntity="Step")
+    * @ORM\JoinColumn(onDelete="CASCADE")
     */
     protected $parent;
 
@@ -71,6 +88,7 @@ class Step extends AbstractResource
 
     /**
     * @ORM\ManyToOne(targetEntity="Path", inversedBy="steps")
+    * @ORM\JoinColumn(onDelete="CASCADE")
     */
     protected $path;
 
@@ -90,7 +108,7 @@ class Step extends AbstractResource
     protected $stepWhere;
 
     /**
-    * @ORM\OneToMany(targetEntity="Step2ResourceNode", mappedBy="step", cascade={"remove"})
+    * @ORM\OneToMany(targetEntity="Step2ResourceNode", mappedBy="step")
     */
     protected $step2ResourceNodes;
 
@@ -422,26 +440,37 @@ class Step extends AbstractResource
         return $this->step2ResourceNodes;
     }
 
+
     /**
-     * Set resourceNode
+     * Get id
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
      * @return Step
      */
-    public function setResourceNode(\Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode = null)
+    public function setName($name)
     {
-        $this->resourceNode = $resourceNode;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get resourceNode
+     * Get name
      *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode 
+     * @return string 
      */
-    public function getResourceNode()
+    public function getName()
     {
-        return $this->resourceNode;
+        return $this->name;
     }
 }
