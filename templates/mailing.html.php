@@ -187,13 +187,15 @@
         </div>
     <?php endif ?>
 
-    <a href="<?php echo $path('/admin') ?>" class="btn btn-default">
-        <?php echo $trans('previous_step') ?>
-    </a>
-    <a href="<?php echo $path('/skip-mailing') ?>" class="btn btn-info">
-        <?php echo $trans('skip_step') ?>
-    </a>
-    <button type="submit" class="btn btn-primary">
-        <?php echo $trans('next_step') ?>
-    </button>
+    <div class="btn-group step-controls">
+        <a href="<?php echo $path('/admin') ?>" class="btn btn-default">
+            <?php echo $trans('previous_step') ?>
+        </a>
+        <a href="<?php echo $path('/skip-mailing') ?>" class="btn btn-info">
+            <?php echo $trans('skip_step') ?>
+        </a>
+        <button type="submit" class="btn btn-primary">
+            <?php echo $trans('next_step') ?>
+        </button>
+    </div>
 </form>

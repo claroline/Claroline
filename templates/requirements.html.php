@@ -47,11 +47,12 @@
 
 </table>
 
-<a href="<?php echo $path('/') ?>" class="btn btn-default">
-    <?php echo $trans('previous_step') ?>
-</a>
-
-<a href="<?php echo $path('/database') ?>"
-   class="btn btn-primary <?php if ($var('has_failed_requirement')) echo 'disabled' ?>">
-    <?php echo $trans('next_step') ?>
-</a>
+<div class="btn-group step-controls">
+    <a href="<?php echo $path('/') ?>" class="btn btn-default">
+        <?php echo $trans('previous_step') ?>
+    </a>
+    <a href="<?php echo $path('/database') ?>"
+       class="btn btn-primary <?php if ($var('has_failed_requirement')) echo 'disabled' ?>">
+        <?php echo $trans('next_step') ?>
+    </a>
+</div>

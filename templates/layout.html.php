@@ -9,17 +9,27 @@
     <script src="//code.jquery.com/jquery-git1.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
     <style>
-        .navbar, .navbar img { height: 50px; background: #111; }
-        .navbar img { height: 40px; margin: 4px; }
+        body { background: #E2E2E2; }
+        .navbar {
+            height: 53px;
+            background: #428BCA;
+            border-bottom: 3px solid #f89406;
+            -webkit-box-shadow: 0 2px 3px rgba(0 ,0, 0 , 0.25);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25);
+        }
+        .navbar img { height: 35px; margin: 7px auto; }
         .required { color: #777; font-weight: normal; }
-        .info-txt { margin: auto auto 20px; }
+        .info-txt { margin: auto auto 24px; }
         .panel-body { max-width: 94%; margin: 24px; }
+        .step-controls { margin: 14px 14% auto; }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-static-top navbar-inverse" role="navigation">
-        <div class="navbar-header">
-            <img src="<?php echo $path('/../uploads/logos/clarolineconnect.png') ?>"/>
+        <div class="container">
+            <div class="navbar-header">
+                <img src="<?php echo $path('/../uploads/logos/clarolineconnect.png') ?>"/>
+            </div>
         </div>
     </nav>
     <div class="container">
