@@ -358,4 +358,54 @@ class WorkspaceRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    /**
+     * Returns the workspaces which are visible and are not in the given list.
+     *
+     * @return array[AbstractWorkspace]
+     */
+    public function findDisplayableWorkspacesWithout(array $excludedWorkspaces)
+    {
+        $dql = '
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            WHERE w.displayable = true
+            AND w NOT IN (:excludedWorkspaces)
+            ORDER BY w.name
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('excludedWorkspaces', $excludedWorkspaces);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns the workspaces which are visible, are not in the given list
+     * and whose name or code contains $search param.
+     *
+     * @return array[AbstractWorkspace]
+     */
+    public function findDisplayableWorkspacesWithoutBySearch(
+        array $excludedWorkspaces,
+        $search
+    )
+    {
+        $dql = '
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            WHERE w.displayable = true
+            AND (
+                UPPER(w.name) LIKE :search
+                OR UPPER(w.code) LIKE :search
+            )
+            AND w NOT IN (:excludedWorkspaces)
+            ORDER BY w.name
+        ';
+        $upperSearch = strtoupper($search);
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('search', "%{$upperSearch}%");
+        $query->setParameter('excludedWorkspaces', $excludedWorkspaces);
+
+        return $query->getResult();
+    }
 }

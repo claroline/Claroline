@@ -23,17 +23,20 @@ active_widgets: 'Widgets actifs'
 activity_form_instructions: Instructions
 activity_form_name: Nom
 add: Ajouter
+add_category: 'Ajouter une catégorie'
 add_group: 'Ajouter un groupe'
 add_group_s_confirm_message: 'groupe(s) ajouté(s)'
 add_groups: 'Ajouter des groupes'
 add_resource: 'Ajouter une ressource'
 add_role: 'Ajouter un role'
 add_roles_confirm_message: 'Voulez vous ajouter le(s) role(s) suivant(s) aux %count% élément(s) sélectionné(s): '
+add_subcategory: 'Ajouter une sous-catégorie'
 add_tag: 'Ajouter un Tag'
 add_tag_to_workspace: 'Ajouter un Tag à l''espace d''activités'
 add_user: 'Ajouter un utilisateur'
 add_user_s_confirm_message: 'utilisateur(s) ajouté(s)'
 add_users: 'Ajouter des utilisateurs'
+add_workspace: 'Ajouter un espace d''activités'
 add_widget_to_home_tab: 'Ajouter un widget à l''onglet'
 admin: Administrateur
 admin_analytics: 'Statistiques plateforme'
@@ -45,13 +48,6 @@ admin_form_plainPassword_second : 'Répétez votre mot de passe'
 admin_form_username : 'Nom d''utilisateur'
 admin_home_tabs_configuration: 'Configuration des onglets pour les pages d''accueil'
 admin_logs: 'Suivi plateforme'
-admin_tag_children_list: 'Liste des enfants'
-admin_tag_potential_children_list: 'Liste des enfants potentiels'
-admin_tags_add_remove_children_to: 'Ajouter/Retirer des enfants au Tag'
-admin_tags_hierarchy: 'Hiérarchie des Tags administrateur'
-admin_tags_list: 'Liste des Tags administrateur'
-admin_tags_management: 'Gestion des Tags administrateur'
-admin_tags_organization: 'Organisation des Tags administrateur'
 admin_workspace_tag_form_name: Nom
 administration: Administration
 administrative_code: 'Code administratif'
@@ -82,6 +78,9 @@ canOpen: 'Droit d''ouvrir'
 cancel: Annuler
 cannot_delete_unique_manager: 'Impossible de supprimer le seul gestionnaire.'
 cannot_unsubscribe_from_workspace: 'Impossible de vous désincrire de l''espace d''activités'
+categories: Catégories
+category_root: 'Catégories de base'
+category_structure: 'Structure des catégories'
 choose_resource_form_type: 'Type de ressource'
 close: Fermer
 collaborator: Collaborateur
@@ -92,10 +91,12 @@ connections: Nb Cnx.
 copiable: 'Copiable'
 copy: Copier
 create: Créer
+create_category: 'Créer une catégorie'
 create_group: 'Créer un groupe'
 create_new_admin_tag: 'Créer un nouveau Tag administrateur'
 create_new_home_tab: 'Créer un nouvel onglet'
 create_new_tag: 'Créer un nouveau Tag'
+create_subcategory: 'Créer une sous-catégorie'
 create_user: 'Créer un utilisateur'
 create_widget_instance: 'Créer un nouveau Widget'
 create_workspace: 'Créer un espace d''activités'
@@ -106,6 +107,7 @@ csv_users_import_infos_format: 'Format'
 csv_users_import_infos_format_a: 'Les données d''un utilisateur doivent être définies sur une ligne et séparées par une virgule'
 csv_users_import_infos_optional: 'Optionel'
 csv_users_import_infos_required: 'Requis'
+current_category: 'Catégorie courante'
 cut: Couper
 dashboard: 'Tableau de bord'
 date: Date
@@ -281,6 +283,7 @@ new: Nouveau
 new_message: 'Nouveau message'
 new_message_alert: 'Vous avez %count% nouveaux message(s)'
 no: 'non'
+no_category: 'Il n''y a aucune catégorie'
 no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
 no_home_tab: 'Il n''y a aucun onglet'
 no_group: 'Aucun groupe'
@@ -300,6 +303,7 @@ options: Options
 or: Ou
 order: Ordre
 organize_admin_tags: 'Organiser les Tags administrateur'
+organize_categories: 'Organiser les catégories'
 organize_private_tags: 'Organiser les Tags personnels'
 owner: Propriétaire
 owner_s: Propriétaire(s)
@@ -358,6 +362,7 @@ remove_message_s_confirm_message: Êtes-vous sûr de vouloir supprimer ces %coun
 remove_user_confirm_message: Êtes-vous sûr de vouloir supprimer cet utilisateur ?
 remove_user_s_confirm_message: Êtes-vous sûr de vouloir supprimer ces %count% utilisateurs?
 rename: Renommer
+rename_category: 'Renommage de la catégorie'
 rename_tool: 'Renommage d''un outil'
 rename_widget_instance: 'Renommage du Widget'
 reset: Réinitialiser
@@ -427,6 +432,7 @@ show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
 show_profile: 'Voir le profile'
 steal_session: 'Voler la session'
+subcategories: Sous-catégories
 subscribe_groups: 'Inscrire des groupes'
 subscribe_selected_groups: 'Inscrire les groupes sélectionnés'
 subscribe_selected_users: 'Inscrire les utilisateurs sélectionnés'
@@ -503,6 +509,7 @@ users_registration_in_workspace: 'Inscription des utilisateurs dans l''espace d'
 users_visits: 'Visites des utilisateurs'
 validate: Valider
 view: Voir
+view_category_hierarchy: 'Visualiser la structure des catégories'
 views: 'Nb vues'
 visible: Visible
 visitor: Visiteur
@@ -538,16 +545,22 @@ workspace_home_tab_creation: 'Création d''un onglet pour les espaces d''activit
 workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités'
 workspace_home_tabs: 'Onglets pour les espaces d''activités'
 workspace_order_tool_edit_form_name: Nom
+workspace_organization: 'Organisation des espaces d''activités'
 workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
+workspace_remove_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
+workspace_remove_from_category_confirm_message: 'Voulez-vous vraiment retirer l''espace d''activités de cette catégorie ?'
 workspace_resource: Ressources
 workspace_role_type_form_requireDir: 'Créer un répertoire'
 workspace_role_type_form_translationKey: Nom
 workspace_tag_form_name: Nom
+workspace_tag_remove_confirm_title: 'Retrait d''une catégorie'
+workspace_tag_remove_confirm_message: 'Voulez-vous vraiment retirer cette catégorie ?'
 workspace_template_form_name: Nom
 workspace_tools: Outils
 workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet espace d''activités ?'
 workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'
+workspaces_included_in_category: 'Espaces d''activités enregistrés dans cette catégorie'
 ws_creator: 'Créateur d''espaces'
 ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: 'oui'

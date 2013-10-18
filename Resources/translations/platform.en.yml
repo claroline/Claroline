@@ -22,17 +22,20 @@ active_widgets: 'Active widgets'
 activity_form_instructions: Instructions
 activity_form_name: Name
 add: Add
+add_category: 'Add category'
 add_group: 'Add group'
 add_group_s_confirm_message: 'group(s) added'
 add_groups: 'Add groups'
 add_resource: 'Add resource'
 add_role: 'Add role'
 add_roles_confirm_message: 'Do you want to add the following roles to the %count% selected elements'
+add_subcategory: 'Add a subcategory'
 add_tag: 'Add tag'
 add_tag_to_workspace: 'Add tag to workspace'
 add_user: 'Add user'
 add_user_s_confirm_message: 'users(s) added'
 add_users: 'Add users'
+add_workspace: 'Add workspace'
 add_widget_to_home_tab: 'Add widget to Home tab'
 admin: Administrator
 admin_analytics: 'Platform analytics'
@@ -44,13 +47,6 @@ admin_form_plainPassword_second : 'Repeat your password'
 admin_form_username : 'Username'
 admin_home_tabs_configuration: 'Home tabs configuration'
 admin_logs: 'Platform logs'
-admin_tag_children_list: 'Admin tag children list'
-admin_tag_potential_children_list: 'Admin tag potential children list'
-admin_tags_add_remove_children_to: 'Add/Remove children to'
-admin_tags_hierarchy: 'Admin tags hierarchy'
-admin_tags_list: 'Admin tags list'
-admin_tags_management: 'Admin tags management'
-admin_tags_organization: 'Admin tags organization'
 admin_workspace_tag_form_name: Name
 administration: Administration
 administrative_code: 'Administrative code'
@@ -81,6 +77,9 @@ canOpen: 'Right to open'
 cancel: Cancel
 cannot_delete_unique_manager: 'Cannot remove the unique manager.'
 cannot_unsubscribe_from_workspace: 'Cannot unsubscribe from workspace'
+categories: Categories
+category_root: 'Root categories'
+category_structure: 'Category structure'
 choose_resource_form_type: 'Resource type'
 close: Close
 collaborator: Collaborator
@@ -91,10 +90,12 @@ connections: Connections
 copiable: 'Copiable'
 copy: Copy
 create: Create
+create_category: 'Create a category'
 create_group: 'Create group'
 create_new_admin_tag: 'Create new admin tag'
 create_new_home_tab: 'Create new tab'
 create_new_tag: 'Create new tag'
+create_subcategory: 'Create a subcategory'
 create_user: 'Create user'
 create_widget_instance: 'Create a widget'
 create_workspace: 'Create workspace'
@@ -105,6 +106,7 @@ csv_users_import_infos_format: 'Format'
 csv_users_import_infos_format_a: 'User informations must be defined in one line and separated by comma'
 csv_users_import_infos_optional: 'Optional'
 csv_users_import_infos_required: 'Required'
+current_category: 'Current category'
 cut: Cut
 dashboard: Dashboard
 date: Date
@@ -282,6 +284,7 @@ new: New
 new_message: 'New message'
 new_message_alert: 'You have %count% new message(s)'
 no: 'no'
+no_category: 'There is no category'
 no_email: "This email doesn't match a registered user"
 no_email: 'No email found, check the spelling'
 no_home_tab: "There is no Home tab"
@@ -302,6 +305,7 @@ options: Options
 or: Or
 order: Order
 organize_admin_tags: 'Organize admin tags'
+organize_categories: 'Organize categories'
 organize_private_tags: 'Organize private tags'
 owner: Owner
 owner_s: Owner(s)
@@ -360,6 +364,7 @@ remove_message_s_confirm_message: Are you sure you want to delete these %count% 
 remove_user_confirm_message: Are you sure you want to delete this user ?
 remove_user_s_confirm_message: Are you sure you want to delete these %count% users ?
 rename: Rename
+rename_category: 'Rename category'
 rename_tool: 'Rename tool'
 rename_widget_instance: 'Rename widget'
 reset: Reset
@@ -431,6 +436,7 @@ show_as: 'Show as'
 show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
 show_profile: 'Show profile'
+subcategories: Subcategories
 subscribe_groups: 'Subscribe groups'
 subscribe_selected_groups: 'Subscribe selected groups'
 subscribe_selected_users: 'Subscribe selected users'
@@ -508,6 +514,7 @@ users_registration_in_workspace: 'Users registration in workspace'
 users_visits: 'Users'' connections'
 validate: Validate
 view: View
+view_category_hierarchy: 'View category hierarchy'
 views: Views
 visible: Visible
 visitor: Visitor
@@ -543,16 +550,22 @@ workspace_home_tab_creation: 'Workspace Home tab creation'
 workspace_home_tab_edition: 'Workspace Home tab edition'
 workspace_home_tabs: 'Workspace Home tabs'
 workspace_order_tool_edit_form_name: Name
+workspace_organization: 'Workspace organization'
 workspace_registration_confirm_title: 'Do you really want to register to this workspace ?'
+workspace_remove_from_category_confirm_title: 'Remove workspace from category'
+workspace_remove_from_category_confirm_message: 'Do you really want to remove this workspace from this category ?'
 workspace_resource: Resources
 workspace_role_type_form_requireDir: 'Create a directory'
 workspace_role_type_form_translationKey: Name
 workspace_tag_form_name: Name
+workspace_tag_remove_confirm_title: 'Remove category'
+workspace_tag_remove_confirm_message: 'Do you really want to remove this category ?'
 workspace_template_form_name: Name
 workspace_tools: Tools
 workspace_unregistration_confirm_title: 'Do you really want to unregister from this workspace ?'
 workspace_welcome: Welcome
 workspaces: Workspaces
+workspaces_included_in_category: 'Workspaces included in this category'
 ws_creator: 'Workspace creator'
 ws_most_viewed: 'Most viewed workspaces'
 yes: 'yes'

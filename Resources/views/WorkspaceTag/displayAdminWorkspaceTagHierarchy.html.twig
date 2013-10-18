@@ -1,0 +1,25 @@
+{% macro showTagHierarchy(tagsList, tagsHierarchy) %}
+    <div>
+        <ul>
+        {% for tag in tagsList %}
+        {% set tagId = tag.getId() %}
+        {% set tagName = tag.getName() %}
+            <li class="hierarchy-tag-parent">
+                <span class="tag-hierarchy-element pointer-hand"
+                    tag-id="{{ tagId }}"
+                    tag-name="{{ tagName }}"
+                >
+                    {{ tagName }}
+                </span>
+                {% if tagsHierarchy[tagId]|length > 0 %}
+                    {{ _self.showTagHierarchy(tagsHierarchy[tagId], tagsHierarchy) }}
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endmacro %}
+
+{% from _self import showTagHierarchy %}
+
+{{ showTagHierarchy(rootTags, hierarchy) }}

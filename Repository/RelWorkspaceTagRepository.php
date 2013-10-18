@@ -43,6 +43,19 @@ class RelWorkspaceTagRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findAdminByTag(WorkspaceTag $tag)
+    {
+        $dql = '
+            SELECT rwt
+            FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
+            WHERE rwt.tag = :tag
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('tag', $tag);
+
+        return $query->getResult();
+    }
+
     public function findOneByWorkspaceAndTagAndUser(AbstractWorkspace $workspace, WorkspaceTag $tag, User $user)
     {
         $dql = '
@@ -128,7 +141,7 @@ class RelWorkspaceTagRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findAdminRelationsByTags(WorkspaceTag $workspaceTag)
+    public function findAdminRelationsByTag(WorkspaceTag $workspaceTag)
     {
         $dql = '
             SELECT rwt

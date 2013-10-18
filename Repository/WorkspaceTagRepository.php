@@ -93,6 +93,32 @@ class WorkspaceTagRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findPossibleAdminChildrenByName(WorkspaceTag $tag, $search)
+    {
+        $dql = '
+            SELECT DISTINCT t
+            FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
+            WHERE t.user IS NULL
+            AND NOT EXISTS (
+                SELECT h
+                FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy h
+                WHERE h.user IS NULL
+                AND (
+                    (h.tag = :tag AND h.parent = t)
+                    OR (h.tag = t AND h.parent = :tag AND h.level = 1)
+                )
+            )
+            AND UPPER(t.name) LIKE :search
+            ORDER BY t.name ASC
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('tag', $tag);
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $query->getResult();
+    }
+
     public function findPossibleChildren(User $user, WorkspaceTag $tag)
     {
         $dql = '
@@ -205,6 +231,31 @@ class WorkspaceTagRepository extends EntityRepository
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('user', $user);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Find all admin tags that are children of given tag
+     * Given admin tag is included
+     */
+    public function findAdminChildrenFromTag(WorkspaceTag $workspaceTag)
+    {
+        $dql = "
+            SELECT DISTINCT t
+            FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t
+            WHERE t.user IS NULL
+            AND EXISTS (
+                SELECT h
+                FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy h
+                WHERE h.user IS NULL
+                AND h.tag = t
+                AND h.parent = :workspaceTag
+            )
+            ORDER BY t.name
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaceTag', $workspaceTag);
 
         return $query->getResult();
     }

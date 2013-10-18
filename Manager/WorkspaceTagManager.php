@@ -163,6 +163,24 @@ class WorkspaceTagManager
         return $this->tagRepo->findPossibleAdminChildren($tag);
     }
 
+    public function getPossibleAdminChildrenPager(WorkspaceTag $tag, $page)
+    {
+        $datas = $this->tagRepo->findPossibleAdminChildren($tag);
+
+        return $this->pagerFactory->createPagerFromArray($datas, $page, 20);
+    }
+
+    public function getPossibleAdminChildrenPagerBySearch(
+        WorkspaceTag $tag,
+        $page,
+        $search
+    )
+    {
+        $datas = $this->tagRepo->findPossibleAdminChildrenByName($tag, $search);
+
+        return $this->pagerFactory->createPagerFromArray($datas, $page, 20);
+    }
+
     public function getPossibleChildren(User $user, WorkspaceTag $tag)
     {
         return $this->tagRepo->findPossibleChildren($user, $tag);
@@ -186,6 +204,11 @@ class WorkspaceTagManager
     public function getRootTags(User $user)
     {
         return $this->tagRepo->findRootTags($user);
+    }
+
+    public function getAdminChildrenFromTag(WorkspaceTag $workspaceTag)
+    {
+        return $this->tagRepo->findAdminChildrenFromTag($workspaceTag);
     }
 
     public function getAdminChildrenFromTags(array $tags)
@@ -228,6 +251,11 @@ class WorkspaceTagManager
         );
     }
 
+    public function getAdminTagById($tagId)
+    {
+        return $this->tagRepo->findOneBy(array('id' => $tagId, 'user' => null));
+    }
+
     public function getTagRelationsByWorkspaceAndUser(AbstractWorkspace $workspace, User $user)
     {
         return $this->relTagRepo->findByWorkspaceAndUser($workspace, $user);
@@ -236,6 +264,11 @@ class WorkspaceTagManager
     public function getAdminTagRelationsByWorkspace(AbstractWorkspace $workspace)
     {
         return $this->relTagRepo->findAdminByWorkspace($workspace);
+    }
+
+    public function getAdminTagRelationsByTag(WorkspaceTag $tag)
+    {
+        return $this->relTagRepo->findAdminByTag($tag);
     }
 
     public function getTagRelationByWorkspaceAndTagAndUser(
@@ -270,6 +303,11 @@ class WorkspaceTagManager
     public function getTagRelationsByAdminAndWorkspaces(array $workspaces)
     {
         return $this->relTagRepo->findByAdminAndWorkspaces($workspaces);
+    }
+
+    public function getAdminHierarchiesByParent(WorkspaceTag $workspaceTag)
+    {
+        return $this->tagHierarchyRepo->findAdminHierarchiesByParent($workspaceTag);
     }
 
     public function getAdminHierarchiesByParents(array $parents)
@@ -557,9 +595,41 @@ class WorkspaceTagManager
         return $displayable;
     }
 
+    public function getAddableWorkspacesPagerBySearch(
+        WorkspaceTag $workspaceTag,
+        $page = 1,
+        $search = ''
+    )
+    {
+        $relations = $this->relTagRepo->findAdminRelationsByTag($workspaceTag);
+        $excludedWorkspaces = array();
+
+        foreach ($relations as $relation) {
+            $excludedWorkspaces[] = $relation->getWorkspace();
+        }
+        if (count($excludedWorkspaces) > 0) {
+            if ($search === '') {
+                $workspaces = $this->workspaceRepo
+                    ->findDisplayableWorkspacesWithout($excludedWorkspaces);
+            } else {
+                $workspaces = $this->workspaceRepo
+                    ->findDisplayableWorkspacesWithoutBySearch($excludedWorkspaces, $search);
+            }
+        } else {
+            if ($search === '') {
+                $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
+            } else {
+                $workspaces = $this->workspaceRepo
+                    ->findDisplayableWorkspacesBySearch($search);
+            }
+        }
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page, 20);
+    }
+
     public function getPagerRelationByTag(WorkspaceTag $workspaceTag, $page = 1)
     {
-        $relations = $this->relTagRepo->findAdminRelationsByTags($workspaceTag);
+        $relations = $this->relTagRepo->findAdminRelationsByTag($workspaceTag);
 
         return $this->pagerFactory->createPagerFromArray($relations, $page);
     }

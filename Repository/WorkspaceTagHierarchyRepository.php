@@ -3,10 +3,28 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Doctrine\ORM\EntityRepository;
 
 class WorkspaceTagHierarchyRepository extends EntityRepository
 {
+    /**
+     * Returns all relations where given workspaceTag is parent
+     */
+    public function findAdminHierarchiesByParent(WorkspaceTag $workspaceTag)
+    {
+        $dql = "
+            SELECT h
+            FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy h
+            WHERE h.user IS NULL
+            AND h.parent = :workspaceTag
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaceTag', $workspaceTag);
+
+        return $query->getResult();
+    }
+
     /**
      * Returns all relations where parentId is in the param array
      */
