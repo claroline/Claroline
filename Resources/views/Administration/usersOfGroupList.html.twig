@@ -90,30 +90,32 @@
 
         {{ renderPager(search, group.getId(), pager) }}
 
-        <table class="table table-striped table-bordered table-condensed">
-            <thead>
-                <tr>
-                    <th>{{ 'id'|trans({}, 'platform') }}</th>
-                    <th>{{ 'username'|trans({}, 'platform') }}</th>
-                    <th>{{ 'last_name'|trans({}, 'platform') }}</th>
-                    <th>{{ 'first_name'|trans({}, 'platform') }}</th>
-                    <th> <input type="checkbox" name="all" id="check-all-items"></input> </th>
-                </tr>
-            </thead>
-            <tbody id="user-table-body">
-                {% for user in pager.currentPageResults %}
-                    <tr id="row-user-{{ user.getId() }}" class="row-user">
-                        <td>{{ user.getId() }}</td>
-                        <td>{{ user.getUsername() }}</td>
-                        <td>{{ user.getLastName() }}</td>
-                        <td>{{ user.getFirstName() }}</td>
-                        <td>
-                            <input type="checkbox" value="{{ user.id }}" class="chk-item" align="center"></input>
-                        </td>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th>{{ 'id'|trans({}, 'platform') }}</th>
+                        <th>{{ 'username'|trans({}, 'platform') }}</th>
+                        <th>{{ 'last_name'|trans({}, 'platform') }}</th>
+                        <th>{{ 'first_name'|trans({}, 'platform') }}</th>
+                        <th> <input type="checkbox" name="all" id="check-all-items"></input> </th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody id="user-table-body">
+                    {% for user in pager.currentPageResults %}
+                        <tr id="row-user-{{ user.getId() }}" class="row-user">
+                            <td>{{ user.getId() }}</td>
+                            <td>{{ user.getUsername() }}</td>
+                            <td>{{ user.getLastName() }}</td>
+                            <td>{{ user.getFirstName() }}</td>
+                            <td>
+                                <input type="checkbox" value="{{ user.id }}" class="chk-item" align="center"></input>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {{ renderPager(search, group.getId(), pager) }}
         <div>
             {{ displayControls(group) }}
@@ -138,7 +140,7 @@
         parameters.route.action = {};
         parameters.route.normal = {"route": "claro_admin_user_of_group_list", "parameters": {'groupId': {{ group.getId() }} }};
         parameters.route.search = {"route": "claro_admin_user_of_group_list_search", "parameters": {'groupId': {{ group.getId() }}}};
-        parameters.route.action.remove = {"route": "claro_admin_multidelete_user_from_group", "parameters": {'groupId': {{ group.getId() }}}, "type": "DELETE", "confirmTemplate": removeUserConfirm };
+        parameters.route.action.remove = {"route": "claro_admin_multidelete_user_from_group", "parameters": {'groupId': {{ group.getId() }}}, "type": "DELETE", "confirmTemplate": removeUserConfirm, "delete": true};
         Claroline.Table.initialize(parameters);
     </script>
 {% endblock %}

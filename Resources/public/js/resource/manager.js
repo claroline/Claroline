@@ -21,6 +21,7 @@
 
                 if (parameters.isPickerMode) {
                     this.el.className = 'picker resource-manager';
+                    this.el.id = 'picker-' + $('.picker').length;
 
                     $(this.el).html(Twig.render(ModalWindow, {
                         'modalId': 'modal-picker',
@@ -126,7 +127,8 @@
                         event.preventDefault();
                         window.Claroline.ResourceManager.Controller.dispatcher.trigger('breadcrumb-click', {
                             nodeId: $(this).data('node-id'),
-                            isPickerMode: false
+                            isPickerMode: false,
+                            el: $(this)
                         });
                     });
 
@@ -151,6 +153,8 @@
                     if (event.keyCode !== 13) {
                         return;
                     }
+
+                    event.preventDefault();
 
                     this.filter();
                 },
@@ -251,9 +255,6 @@
                     }
 
                     this.dispatcher.trigger('picker', {action: 'close'});
-                },
-                'click a.filter-result': function (event) {
-                    this.dispatcher.trigger('filter-result', {action: $(event.currentTarget).attr('data-type')});
                 }
             },
             filter: function () {
@@ -505,8 +506,8 @@
                 }
             },
             changeThumbnailIcon: function (nodeId, newIconPath, successHandler) {
-                this.$('#' + nodeId + ' img').attr('src', this.parameters.webPath + newIconPath);
-
+                this.$('#node-element-' + nodeId).attr('style', "background-image:url('" + this.parameters.webPath + newIconPath + "');");
+                console.debug(this.parameters.webPath + newIconPath);
                 if (successHandler) {
                     successHandler();
                 }
@@ -713,7 +714,13 @@
                     $('.modal-body', this.el).html(form);
                     $('#modal-form', this.el).modal('show');
                 }
+            },
+            afterRender: function (form) {
+                var textArea = $('textarea', form)[0];
 
+                if (textArea) {
+                    initTinyMCE(stfalcon_tinymce_config);
+                }
             }
         })
     };
@@ -776,7 +783,10 @@
                 if (event.isPickerMode) {
                     this.displayResources(event.nodeId, 'picker');
                 } else {
-                    this.router.navigate('resources/' + event.nodeId, {trigger: true});
+                    if (event.nodeId) {
+                        this.router.navigate('resources/' + event.nodeId, {trigger: true});
+                    }
+                    document.location.href = event.el.attr('href');
                 }
             },
             'node-click': function (event) {
@@ -817,10 +827,6 @@
             },
             'edit-rights-creation': function (event) {
                 this.editCreationRights(event.action, event.data);
-            },
-            'filter-result': function (event) {
-                this.setFilterState(event.action);
-                this.parameters.filterState = event.action;
             }
         },
         initialize: function (parameters) {
@@ -850,16 +856,6 @@
                 if (!hasMatchedRoute) {
                     this.displayResources(parameters.directoryId, 'main');
                 }
-            }
-        },
-        setFilterState: function (type) {
-            $('.node-thumbnail').show();
-            if (type !== 'none') {
-                $.each($('.node-element'), function (key, element) {
-                    if ($(element).attr('data-type') !== type && $(element).attr('data-type') !== 'directory') {
-                        $(element.parentElement).hide();
-                    }
-                });
             }
         },
         displayResources: function (directoryId, view, searchParameters) {
@@ -932,13 +928,11 @@
                         }
                     });
 
-                    if (!data.canChangePosition) {
+                    if (!data.canChangePosition || this.parameters.isPickerOnly) {
                         $('#sortable').sortable('disable');
                     } else {
                         $('#sortable').sortable('enable');
                     }
-
-                    this.setFilterState(this.parameters.filterState);
                 }
             });
         },
@@ -977,6 +971,8 @@
                             this.parameters.parentElement.append(this.views.form.el);
                             this.views.form.isAppended = true;
                         }
+
+                        this.views.form.afterRender(form);
                     }
                 });
             }
@@ -995,6 +991,8 @@
                     } else {
                         this.views.form.render(data, parentDirectoryId, 'create');
                     }
+
+                    this.views.form.afterRender(data);
                 }
             });
         },
@@ -1009,14 +1007,26 @@
             });
         },
         remove: function (nodeIds) {
-            $.ajax({
-                context: this,
-                url: this.parameters.appPath + '/resource/delete',
-                data: {ids: nodeIds},
-                success: function () {
-                    this.views.main.subViews.nodes.removeResources(nodeIds);
-                    this.views.main.subViews.actions.setInitialState();
-                }
+            var trans = (nodeIds.length) > 1 ? 'resources_delete' : 'resource_delete';
+            var modal = Twig.render(ModalWindow, {
+                'body': Translator.get('platform' + ':' + trans),
+                'confirmFooter': true,
+                'modalId': 'confirm-modal'
+            });
+            $('body').append(modal);
+            $('#confirm-modal').modal('show');
+            var that = this;
+            $('#confirm-ok').click(function () {
+                $.ajax({
+                    context: that,
+                    url: that.parameters.appPath + '/resource/delete',
+                    data: {ids: nodeIds},
+                    success: function () {
+                        this.views.main.subViews.nodes.removeResources(nodeIds);
+                        this.views.main.subViews.actions.setInitialState();
+                        $('#confirm-modal').modal('hide');
+                    }
+                });
             });
         },
         copy: function (nodeIds, directoryId) {
@@ -1080,18 +1090,18 @@
                 contentType: false,
                 success: function (data, textStatus, jqXHR) {
                     if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
-                        if (data.name) {
+                        if (data[0].name) {
                             this.views.main.subViews.nodes.renameThumbnail(
                                 nodeId,
-                                data.name,
+                                data[0].name,
                                 this.views.form.close()
                             );
                         }
 
-                        if (data.icon) {
+                        if (data[0].large_icon) {
                             this.views.main.subViews.nodes.changeThumbnailIcon(
                                 nodeId,
-                                data.icon,
+                                data[0].large_icon,
                                 this.views.form.close()
                             );
                         }
@@ -1164,7 +1174,8 @@
                 this.views.picker.subViews.actions.callback = callback;
             }
 
-            $("#modal-picker").modal(action === 'open' ? 'show' : 'hide');
+            var parentElementId = this.views.picker.$el[0].id;
+            $("#" + parentElementId+ " .modal").modal(action === 'open' ? 'show' : 'hide');
         }
     };
 
@@ -1191,6 +1202,7 @@
      */
     manager.initialize = function (parameters) {
         parameters = parameters || {};
+        parameters.language = parameters.language || 'en';
         parameters.directoryId = parameters.directoryId || '0';
         parameters.directoryHistory = parameters.directoryHistory || [];
         parameters.parentElement = parameters.parentElement || $('body');

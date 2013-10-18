@@ -20,9 +20,9 @@
 @navbar-default-toggle-icon-bar-bg: #ccc;
 @navbar-default-toggle-border-color: #ddd;
 @navbar-inverse-color: @gray-light;
-@navbar-inverse-bg: #222;
+@navbar-inverse-bg: @claroline-topbar-background;
 @navbar-inverse-border: darken(@navbar-inverse-bg, 10%);
-@navbar-inverse-link-color: @gray-light;
+@navbar-inverse-link-color: lighten(@navbar-inverse-bg, 60%)
 @navbar-inverse-link-hover-color: #fff;
 @navbar-inverse-link-hover-bg: transparent;
 @navbar-inverse-link-active-color: @navbar-inverse-link-hover-color;
@@ -36,6 +36,6 @@
 @navbar-inverse-search-bg-focus: #fff;
 @navbar-inverse-search-border: @navbar-inverse-bg;
 @navbar-inverse-search-placeholder-color: #ccc;
-@navbar-inverse-toggle-hover-bg: #333;
+@navbar-inverse-toggle-hover-bg: darken (@navbar-inverse-bg, 20%);
 @navbar-inverse-toggle-icon-bar-bg: #fff;
-@navbar-inverse-toggle-border-color: #333;
+@navbar-inverse-toggle-border-color: darken (@navbar-inverse-bg, 18%);

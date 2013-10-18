@@ -10,8 +10,8 @@
 {% block datepicker_widget %}
     {% spaceless %}
         {% if component %}
-        <div class="input-group date" id="{{ id }}">
-            <input type="text" class="form-control" {{ block('custom_widget_attributes') }}{% if value is not empty %}value="{{ value }}" {% endif %}readonly>
+        <div class="input-group">
+            <input type="text" class="input-sm form-control" id="{{ id }}" {{ block('custom_widget_attributes') }}{% if value is not empty %}value="{{ value }}" {% endif %}>
             <span class="input-group-addon"><span class="icon-calendar"></span></span>
         </div>
         {% else %}

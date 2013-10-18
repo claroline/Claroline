@@ -35,13 +35,7 @@ class AgendaType extends AbstractType
             )
             ->add(
                 'description',
-                'textarea',
-                array(
-                    'attr' => array(
-                        'class' => 'tinymce',
-                        'data-theme' => 'simple'
-                    )
-                )
+                'tinymce'
             )
             ->add(
                 'priority',

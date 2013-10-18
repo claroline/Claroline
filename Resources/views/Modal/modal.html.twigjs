@@ -11,10 +11,23 @@
                     </br>
                 {% endif %}
             </div>
-            <div class="modal-body">{{ body|raw }}</div>
+            {% if body is defined %}
+                <div class="modal-body">{{ body|raw }}</div>
+            {% endif %}
             {% if footer is defined %}
                 <div class="modal-footer">
                     {{ footer|raw }}
+                </div>
+            {% elseif confirmFooter is defined and confirmFooter == true %}
+                <div class="modal-footer">
+                    <input type="button" 
+                           id="confirm-ok" 
+                           class="btn btn-primary" 
+                           value="{{ 'ok'|trans({}, 'platform') }}"/>
+                    <input type="button" 
+                           class="btn btn-default" 
+                           data-dismiss="modal" 
+                           value="{{ 'cancel'|trans({}, 'platform') }}"/>
                 </div>
             {% endif %}
         </div>

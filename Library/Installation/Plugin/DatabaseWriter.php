@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Widget\Widget;
-use Claroline\CoreBundle\Entity\Widget\DisplayConfig;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Symfony\Component\Filesystem\Filesystem;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -299,24 +299,6 @@ class DatabaseWriter
 
         $this->em->persist($widgetEntity);
 
-        $wWidgetConfig = new DisplayConfig();
-        $wWidgetConfig->setWidget($widgetEntity);
-        $wWidgetConfig->setLock(false);
-        $wWidgetConfig->setVisible(true);
-        $wWidgetConfig->setParent(null);
-        $wWidgetConfig->setDesktop(false);
-
-        $dWidgetConfig = new DisplayConfig();
-        $dWidgetConfig->setWidget($widgetEntity);
-        $dWidgetConfig->setLock(false);
-        $dWidgetConfig->setVisible(true);
-        $dWidgetConfig->setParent(null);
-        $dWidgetConfig->setDesktop(true);
-
-        $this->em->persist($wWidgetConfig);
-        $this->em->persist($dWidgetConfig);
-        $this->em->flush();
-
         if ($this->modifyTemplate) {
             $this->templateBuilder->addWidget($widget['name']);
         }
@@ -337,7 +319,7 @@ class DatabaseWriter
 
         if (isset($tool['class'])) {
             $toolEntity->setClass(
-                "{$tool['icon']}"
+                "{$tool['class']}"
             );
         } else {
             $toolEntity->setClass(

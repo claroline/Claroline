@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Event;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -89,9 +90,7 @@ class Event
             $date = date('d-m-Y H:i', $this->start);
 
             return (new \Datetime($date));
-
         }
-
     }
 
     public function setStart($start)
@@ -116,7 +115,6 @@ class Event
 
             return (new \Datetime($date));
         }
-
     }
 
     public function setEnd($end)
@@ -180,5 +178,4 @@ class Event
     {
         $this->priority = $priority;
     }
-
 }

@@ -327,6 +327,33 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
+     * Returns the users who are members of one of the given workspaces. Users's groups are not
+     * taken into account.
+     *
+     * @param array     $workspaces
+     * @param boolean   $executeQuery
+     *
+     * @return array[User]|Query
+     */
+    public function findUsersByWorkspaces(array $workspaces,$executeQuery = true)
+    {
+        $dql = '
+            SELECT DISTINCT u from Claroline\CoreBundle\Entity\User u
+            JOIN u.roles wr WITH wr IN (
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::WS_ROLE . '
+            )
+            LEFT JOIN wr.workspace w
+            LEFT JOIN u.personalWorkspace ws
+            WHERE w IN (:workspaces)
+            ORDER BY u.id
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaces', $workspaces);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    /**
      * Returns the users of a workspace whose first name, last name or username
      * match a given search string.
      *
@@ -548,6 +575,34 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return ($getQuery) ? $query: $query->getResult();
     }
+    
+    public function findByRolesIncludingGroups(array $roles, $getQuery = false)
+    {
+        //reduce the number of requests needed by doctrine... it's a little bit hacky but it works
+        //This function is used by the Role tool.
+        $dql = "SELECT u, g, r, ws From Claroline\CoreBundle\Entity\User u 
+            JOIN u.groups g
+            JOIN u.personalWorkspace ws
+            JOIN g.roles r";
+        
+        $this->_em->createQuery($dql)->getResult();
+        
+        $dql = "
+            SELECT u, r1, ws From Claroline\CoreBundle\Entity\User u
+            JOIN u.roles r1 
+            JOIN u.personalWorkspace ws
+            LEFT JOIN u.groups g
+            JOIN g.roles r2
+            WHERE r1 in (:roles)
+            OR r2 in (:roles)
+            ORDER BY u.lastName
+       ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roles', $roles);
+
+        return ($getQuery) ? $query: $query->getResult();
+    }
 
     public function findByRolesAndName(array $roles, $name, $getQuery = false)
     {
@@ -557,6 +612,38 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             JOIN u.roles r WHERE r IN (:roles)
             AND (UPPER(u.username) LIKE :search
             OR UPPER(u.lastName) LIKE :search
+            OR UPPER(u.firstName) LIKE :search)
+            ORDER BY u.lastName
+            ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roles', $roles);
+        $query->setParameter('search', "%{$search}%");
+
+        return ($getQuery) ? $query: $query->getResult();
+    }
+    
+    public function findByRolesAndNameIncludingGroups(array $roles, $name, $getQuery = false)
+    {
+        //reduce the number of requests needed by doctrine... it's a little bit hacky but it works
+        //This function is used by the Role tool.
+        $dql = "SELECT u, g, r, ws From Claroline\CoreBundle\Entity\User u 
+            JOIN u.groups g
+            JOIN u.personalWorkspace ws
+            JOIN g.roles r";
+        
+        $this->_em->createQuery($dql)->getResult();
+        $search = strtoupper($name);
+        
+        $dql = "
+            SELECT u FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.roles r1
+            LEFT JOIN u.groups g
+            JOIN g.roles r2
+            WHERE (r1 IN (:roles)
+            OR r2 IN (:roles))
+            AND (
+             UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search)
             ORDER BY u.lastName
             ";

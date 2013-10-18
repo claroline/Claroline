@@ -5,9 +5,8 @@ namespace Claroline\CoreBundle\Listener\Resource;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Form\TextType;
 use Claroline\CoreBundle\Entity\Resource\Text;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
@@ -16,6 +15,8 @@ use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service
@@ -43,9 +44,10 @@ class TextListener implements ContainerAwareInterface
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $form = $this->container->get('form.factory')->create(new TextType, new Text());
+        $formFactory = $this->container->get('claroline.form.factory');
+        $form = $formFactory->create(FormFactory::TYPE_RESOURCE_TEXT, array('text_'.rand(0, 1000000000)));
         $response = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:Text:createForm.html.twig',
             array(
                 'form' => $form->createView(),
                 'resourceType' => 'text'
@@ -65,9 +67,9 @@ class TextListener implements ContainerAwareInterface
         $request = $this->container->get('request');
         $em = $this->container->get('doctrine.orm.entity_manager');
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $form = $this->container
-            ->get('form.factory')
-            ->create(new TextType(), new Text());
+       //wtf !
+        $id = array_pop(array_keys($request->request->all()));
+        $form = $this->container->get('claroline.form.factory')->create(FormFactory::TYPE_RESOURCE_TEXT, array($id));
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -85,10 +87,22 @@ class TextListener implements ContainerAwareInterface
             return;
         }
 
+        $errorForm = $this->container->get('claroline.form.factory')->create(FormFactory::TYPE_RESOURCE_TEXT, array('text_'.rand(0, 1000000000)));
+        $errorForm->setData($form->getData());
+        $children = $form->getIterator();
+        $errorChildren = $errorForm->getIterator();
+
+        foreach ($children as $key => $child) {
+            $errors = $child->getErrors();
+            foreach ($errors as $error) {
+                $errorChildren[$key]->addError($error);
+            }
+        }
+
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            'ClarolineCoreBundle:Text:createForm.html.twig',
             array(
-                'form' => $form->createView(),
+                'form' => $errorForm->createView(),
                 'resourceType' => 'text'
             )
         );
@@ -128,13 +142,16 @@ class TextListener implements ContainerAwareInterface
     public function onOpen(OpenResourceEvent $event)
     {
         $text = $event->getResource();
+        $collection = new ResourceCollection(array($text->getResourceNode()));
+        $isGranted = $this->container->get('security.context')->isGranted('WRITE', $collection);
         $revisionRepo = $this->container->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\Revision');
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Text:index.html.twig',
             array(
                 'text' => $revisionRepo->getLastRevision($text)->getContent(),
-                '_resource' => $text
+                '_resource' => $text,
+                'isEditGranted' => $isGranted
             )
         );
         $response = new Response($content);

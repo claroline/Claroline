@@ -100,6 +100,32 @@ class GroupRepository extends EntityRepository
     }
 
     /**
+     * Returns the groups which are member of a workspace.
+     *
+     * @param array     $workspace
+     * @param boolean   $executeQuery
+     *
+     * @return array[Group]|Query
+     */
+    public function findGroupsByWorkspaces(array $workspaces, $executeQuery = true)
+    {
+        $dql = '
+            SELECT g
+            FROM Claroline\CoreBundle\Entity\Group g
+            LEFT JOIN g.roles wr WITH wr IN (
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::WS_ROLE . '
+            )
+            LEFT JOIN wr.workspace w
+            WHERE w IN (:workspaces)
+            ORDER BY g.name
+       ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaces', $workspaces);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    /**
      * Returns the groups which are member of a workspace, filtered by a search on
      * their name.
      *
@@ -294,5 +320,34 @@ class GroupRepository extends EntityRepository
         $query->setParameter('search', "%{$search}%");
 
         return $getQuery ? $query : $query->getResult();
+    }
+
+    /**
+     * Returns groups by their names.
+     *
+     * @param array $names
+     *
+     * @return array[Group]
+     *
+     * @throws MissingObjectException if one or more groups cannot be found
+     */
+    public function findGroupsByNames(array $names)
+    {
+        $nameCount = count($names);
+        $dql = '
+            SELECT g FROM Claroline\CoreBundle\Entity\Group g
+            WHERE g.name IN (:names)
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('names', $names);
+
+        $result = $query->getResult();
+
+        if (($groupCount = count($result)) !== $nameCount) {
+            throw new MissingObjectException("{$groupCount} out of {$nameCount} groups were found");
+        }
+
+        return $result;
     }
 }

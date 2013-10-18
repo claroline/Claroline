@@ -146,6 +146,19 @@ class HomeTabConfigRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findWorkspaceHomeTabConfigsByAdmin()
+    {
+        $dql = "
+            SELECT htc
+            FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            WHERE htc.type = 'admin_workspace'
+            AND htc.workspace IS NOT NULL
+        ";
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
     public function findOrderOfLastDesktopHomeTabByUser(User $user)
     {
         $dql = "
@@ -198,6 +211,70 @@ class HomeTabConfigRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
 
         return $query->getSingleResult();
+    }
+
+    public function updateAdminHomeTabOrder(
+        $type,
+        $homeTabOrder,
+        $newHomeTabOrder
+    )
+    {
+        $dql = "
+            UPDATE Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            SET htc.tabOrder = :newHomeTabOrder
+            WHERE htc.type = :type
+            AND htc.user IS NULL
+            AND htc.workspace IS NULL
+            AND htc.tabOrder = :homeTabOrder
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', $type);
+        $query->setParameter('homeTabOrder', $homeTabOrder);
+        $query->setParameter('newHomeTabOrder', $newHomeTabOrder);
+
+        return $query->execute();
+    }
+
+    public function updateHomeTabOrderByUser(
+        User $user,
+        $homeTabOrder,
+        $newHomeTabOrder
+    )
+    {
+        $dql = "
+            UPDATE Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            SET htc.tabOrder = :newHomeTabOrder
+            WHERE htc.type = 'desktop'
+            AND htc.user = :user
+            AND htc.tabOrder = :homeTabOrder
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('homeTabOrder', $homeTabOrder);
+        $query->setParameter('newHomeTabOrder', $newHomeTabOrder);
+
+        return $query->execute();
+    }
+
+    public function updateHomeTabOrderByWorkspace(
+        AbstractWorkspace $workspace,
+        $homeTabOrder,
+        $newHomeTabOrder
+    )
+    {
+        $dql = "
+            UPDATE Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            SET htc.tabOrder = :newHomeTabOrder
+            WHERE htc.type = 'workspace'
+            AND htc.workspace = :workspace
+            AND htc.tabOrder = :homeTabOrder
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('homeTabOrder', $homeTabOrder);
+        $query->setParameter('newHomeTabOrder', $newHomeTabOrder);
+
+        return $query->execute();
     }
 
     public function updateAdminDesktopOrder($tabOrder)

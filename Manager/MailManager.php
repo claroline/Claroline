@@ -43,13 +43,12 @@ class MailManager
             $this->mailer->getTransport()->start();
 
             return true;
-            
         } catch (\Swift_TransportException $e) {
             return false;
         }
     }
 
-    public function sendForgotPassword($from,$sender, $hash)
+    public function sendForgotPassword($from, $sender, $hash)
     {
         $msg = $this->translator->trans('mail_click', array(), 'platform');
         $link = $this->request->server->get('HTTP_ORIGIN') . $this->router->generate(
@@ -63,10 +62,26 @@ class MailManager
             ->setFrom($from)
             ->setTo($sender)
             ->setBody($body);
-        if ($this->mailer->send($message)) {        
+
+        if ($this->mailer->send($message)) {
             return true;
         }
-        
+
+        return false;
+    }
+
+    public function sendPlainPassword($from,$sender,$body)
+    {
+        $message = \Swift_Message::newInstance()
+            ->setSubject($this->translator->trans('reset_pwd', array(), 'platform'))
+            ->setFrom($from)
+            ->setTo($sender)
+            ->setBody($body);
+
+        if ($this->mailer->send($message)) {
+            return true;
+        }
+
         return false;
     }
 }

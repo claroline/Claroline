@@ -38,13 +38,7 @@ class CalendarType extends AbstractType
             )
             ->add(
                 'description',
-                'textarea',
-                array(
-                    'attr' => array(
-                        'class' => 'tinymce',
-                        'data-theme' => 'medium'
-                        )
-                    )
+                'tinymce'
             )
             ->add(
                 'priority',
@@ -67,43 +61,41 @@ class CalendarType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver
-
-        ->setDefaults(
-            array(
-                'title' => 'hello',
-                'priority' => '#FF0000',
-                'workspace' => new SimpleWorkspace() ,
-                'user' => new \Claroline\CoreBundle\Entity\User(),
-                'class' => 'Claroline\CoreBundle\Entity\Event',
-                'translation_domain' => 'calendar'
+            ->setDefaults(
+                array(
+                    'title' => 'hello',
+                    'priority' => '#FF0000',
+                    'workspace' => new SimpleWorkspace() ,
+                    'user' => new \Claroline\CoreBundle\Entity\User(),
+                    'class' => 'Claroline\CoreBundle\Entity\Event',
+                    'translation_domain' => 'calendar'
                 )
-        )
-        ->setRequired(
-            array(
-                'title',
-                'priority',
-                'workspace',
-                'user'
             )
-        )
-
-         ->setOptional(
-             array(
-                'start',
-                'end'
+            ->setRequired(
+                array(
+                    'title',
+                    'priority',
+                    'workspace',
+                    'user'
+                )
             )
-         )
-        ->setAllowedtypes(
-            array(
-                'title' => 'string',
-                'workspace' => 'Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace',
-                'user' => 'Claroline\CoreBundle\Entity\User'
+            ->setOptional(
+                array(
+                    'start',
+                    'end'
+                )
             )
-        )
-        ->setAllowedValues(
-            array(
-                'priority' => array('#FF0000', '#01A9DB', '#848484')
+            ->setAllowedtypes(
+                array(
+                    'title' => 'string',
+                    'workspace' => 'Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace',
+                    'user' => 'Claroline\CoreBundle\Entity\User'
+                )
             )
-        );
+            ->setAllowedValues(
+                array(
+                    'priority' => array('#FF0000', '#01A9DB', '#848484')
+                )
+            );
     }
 }

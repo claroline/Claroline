@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
+use Claroline\CoreBundle\Manager\MailManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -45,6 +46,7 @@ class AdministrationController extends Controller
     private $analyticsManager;
     private $translator;
     private $request;
+    private $mailManager;
 
     /**
      * @DI\InjectParams({
@@ -59,7 +61,8 @@ class AdministrationController extends Controller
      *     "formFactory"         = @DI\Inject("claroline.form.factory"),
      *     "analyticsManager"    = @DI\Inject("claroline.manager.analytics_manager"),
      *     "translator"          = @DI\Inject("translator"),
-     *     "request"             = @DI\Inject("request")
+     *     "request"             = @DI\Inject("request"),
+     *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager")
      * })
      */
     public function __construct(
@@ -74,7 +77,8 @@ class AdministrationController extends Controller
         FormFactory $formFactory,
         AnalyticsManager $analyticsManager,
         Translator $translator,
-        Request $request
+        Request $request,
+        MailManager $mailManager
     )
     {
         $this->userManager = $userManager;
@@ -89,6 +93,7 @@ class AdministrationController extends Controller
         $this->analyticsManager = $analyticsManager;
         $this->translator = $translator;
         $this->request = $request;
+        $this->mailManager = $mailManager;
     }
 
     /**
@@ -120,8 +125,14 @@ class AdministrationController extends Controller
     {
         $roles = $this->roleManager->getPlatformRoles($currentUser);
         $form = $this->formFactory->create(FormFactory::TYPE_USER, array($roles));
+        if ($this->mailManager->isMailerAvailable()) {
+            return array('form_complete_user' => $form->createView());
+        }
 
-        return array('form_complete_user' => $form->createView());
+        return array(
+            'form_complete_user' => $form->createView(),
+            'error' => 'Mail not available'
+        );
     }
 
     /**
@@ -147,6 +158,19 @@ class AdministrationController extends Controller
             $user = $form->getData();
             $newRoles = $form->get('platformRoles')->getData();
             $this->userManager->insertUserWithRoles($user, $newRoles);
+
+            if ($this->mailManager->isMailerAvailable()) {
+                $body = $this->translator->trans('admin_form_username', array(), 'platform').
+                    ': '.$user->getUsername().
+                    $this->translator->trans('admin_form_plainPassword_first', array(), 'platform').
+                    ': '.$user->getPlainPassword();
+
+                if ($this->mailManager->sendPlainPassword('noreply@claroline.net', $user->getMail(), $body)) {
+                    return $this->redirect($this->generateUrl('claro_admin_user_list'));
+                }
+
+                return $this->redirect($this->generateUrl('claro_admin_user_list'));
+            }
 
             return $this->redirect($this->generateUrl('claro_admin_user_list'));
         }
@@ -201,6 +225,34 @@ class AdministrationController extends Controller
      * Displays the platform user list.
      */
     public function userListAction($page, $search)
+    {
+        $pager = $search === '' ?
+            $this->userManager->getAllUsers($page) :
+            $this->userManager->getUsersByName($search, $page);
+
+        return array('pager' => $pager, 'search' => $search);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "users/page/{page}/pic",
+     *     name="claro_admin_user_list_pics",
+     *     defaults={"page"=1, "search"=""},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "users/page/{page}/pic/search/{search}",
+     *     name="claro_admin_user_list_search",
+     *     defaults={"page"=1},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template()
+     *
+     * Displays the platform user list.
+     */
+    public function userListPicsAction($page, $search)
     {
         $pager = $search === '' ?
             $this->userManager->getAllUsers($page) :
@@ -300,7 +352,7 @@ class AdministrationController extends Controller
     {
         $pager = $search === '' ?
             $this->userManager->getGroupOutsiders($group, $page) :
-            $this->userManager->getGroupOutsidersByName($group, $search, $page);
+            $this->userManager->getGroupOutsidersByName($group, $page, $search);
 
         return array('pager' => $pager, 'search' => $search, 'group' => $group);
     }
@@ -550,7 +602,10 @@ class AdministrationController extends Controller
             $platformConfig
         );
 
-        return array('form_settings' => $form->createView());
+        return array(
+            'form_settings' => $form->createView(),
+            'logos' => $this->get('claroline.common.logo_service')->listLogos()
+        );
     }
 
     /**
@@ -577,18 +632,23 @@ class AdministrationController extends Controller
 
         if ($form->isValid()) {
             try {
-                $this->configHandler->setParameter(
-                    'allow_self_registration',
-                    $form['selfRegistration'] ->getData()
+                $this->configHandler->setParameters(
+                    array(
+                        'allow_self_registration' => $form['selfRegistration']->getData(),
+                        'locale_language' => $form['localLanguage']->getData(),
+                        'theme' => $form['theme']->getData(),
+                        'name' => $form['name']->getData(),
+                        'support_email' => $form['support_email']->getData(),
+                        'footer' => $form['footer']->getData(),
+                        'logo' => $this->request->get('selectlogo')
+                    )
                 );
-                $this->configHandler->setParameter(
-                    'locale_language',
-                    $form['localLanguage']->getData()
-                );
-                $this->configHandler->setParameter(
-                    'theme',
-                    $form['theme']->getData()
-                );
+
+                $logo = $this->request->files->get('logo');
+
+                if ($logo) {
+                    $this->get('claroline.common.logo_service')->createLogo($logo);
+                }
             } catch (UnwritableException $e) {
                 $form->addError(
                     new FormError(
@@ -605,6 +665,22 @@ class AdministrationController extends Controller
         }
 
         return $this->redirect($this->generateUrl('claro_admin_platform_settings_form'));
+    }
+
+    /**
+     * @EXT\Route("delete/logo/{file}", name="claro_admin_delete_logo")
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function deleteLogoAction($file)
+    {
+        try {
+            $this->get('claroline.common.logo_service')->deleteLogo($file);
+
+            return new Response('true');
+        } catch (\Exeption $e) {
+            return new Response('false'); //useful in ajax
+        }
     }
 
     /**
@@ -728,8 +804,10 @@ class AdministrationController extends Controller
                         'error',
                         $this->translator->trans('users_minimum_requirement_msg', array(), 'platform')
                     );
+
                     return array('form' => $form->createView());
                 }
+
                 return $this->redirect($this->generateUrl('claro_admin_user_list'));
             }
         }
@@ -931,11 +1009,11 @@ class AdministrationController extends Controller
             FormFactory::TYPE_ADMIN_ANALYTICS_CONNECTIONS,
             array(),
             array(
-                "range"=>$this->analyticsManager->getDefaultRange(),
-                "unique"=>"false"
+                "range" => $this->analyticsManager->getDefaultRange(),
+                "unique" => "false"
             )
         );
-        
+
         $criteriaForm->handleRequest($this->request);
         $unique = false;
         if ($criteriaForm->isValid()) {
@@ -944,7 +1022,7 @@ class AdministrationController extends Controller
         }
         $actionsForRange = $this->analyticsManager
             ->getDailyActionNumberForDateRange($range, 'user_login', $unique);
-        
+
         $connections = $actionsForRange;
         $activeUsers = $this->analyticsManager->getActiveUsers();
 
@@ -1003,20 +1081,20 @@ class AdministrationController extends Controller
      *
      * @throws \Exception
      */
-    public function analyticsTopAction($top_type)
+    public function analyticsTopAction($topType)
     {
         $criteriaForm = $this->formFactory->create(
             FormFactory::TYPE_ADMIN_ANALYTICS_TOP,
             array(),
             array(
-                "top_type"=>$top_type,
-                "top_number"=>30,
-                "range"=>$this->analyticsManager->getDefaultRange()
+                "top_type" => $topType,
+                "top_number" => 30,
+                "range" => $this->analyticsManager->getDefaultRange()
             )
         );
-        
+
         $criteriaForm->handleRequest($this->request);
-               
+
         $range = $criteriaForm->get('range')->getData();
         $topType = $criteriaForm->get('top_type')->getData();
         $max = $criteriaForm->get('top_number')->getData();

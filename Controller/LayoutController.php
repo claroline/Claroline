@@ -168,25 +168,41 @@ class LayoutController extends Controller
         $token = $this->security->getToken();
         $roles = $this->utils->getRoles($token);
         $impersonatedRole = null;
-
+        $isRoleImpersonated = false;
+        $isUserImpersonated = false;
+        $workspaceName = '';
+        $roleName = '';
+        
         foreach ($roles as $role) {
-            if (strstr($role, 'ROLE_WS')) {
-                $impersonatedRole = $role;
+            if (strstr($role, 'ROLE_USURPATE_WORKSPACE_ROLE')) {
+                $isRoleImpersonated = true;
+            }
+            
+            if (strstr($role, 'ROLE_PREVIOUS_ADMIN')) {
+                $isUserImpersonated = true;
             }
         }
 
-        if ($impersonatedRole === null) {
-            $roleName = 'ROLE_ANONYMOUS';
-        } else {
-            $guid = substr($impersonatedRole, strripos($impersonatedRole, '_') + 1);
-            $workspace = $this->workspaceManager->getOneByGuid($guid);
-            $roleEntity = $this->roleManager->getRoleByName($impersonatedRole);
-            $roleName = $roleEntity->getTranslationKey();
+        if ($isRoleImpersonated) {
+            foreach ($roles as $role) {
+                if (strstr($role, 'ROLE_WS')) {
+                    $impersonatedRole = $role;
+                }
+            }
+            if ($impersonatedRole === null) {
+                $roleName = 'ROLE_ANONYMOUS';
+            } else {
+                $guid = substr($impersonatedRole, strripos($impersonatedRole, '_') + 1);
+                $workspace = $this->workspaceManager->getOneByGuid($guid);
+                $roleEntity = $this->roleManager->getRoleByName($impersonatedRole);
+                $roleName = $roleEntity->getTranslationKey();
+                $workspaceName = $workspace->getName();
+            }
         }
 
         return array(
             "isImpersonated" => $this->isImpersonated(),
-            'workspace' => $workspace->getName(),
+            'workspace' => $workspaceName,
             'role' => $roleName
         );
     }

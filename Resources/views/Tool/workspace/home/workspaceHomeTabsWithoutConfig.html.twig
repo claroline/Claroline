@@ -1,0 +1,14 @@
+{% extends 'ClarolineCoreBundle:Tool\\workspace\\home:workspaceHomeLayoutWithoutConfig.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+{% block homeTab %}
+    <div class="welcome-home">
+        {% render controller(
+            "ClarolineCoreBundle:Workspace:widgetsWithoutConfig",
+            {'workspaceId': workspace.getId(), 'homeTabId': tabId}
+        ) %}
+    </div>
+{% endblock %}
