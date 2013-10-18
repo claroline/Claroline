@@ -10,6 +10,12 @@
         home.path = './';
     }
 
+    home.locale = $('#homeLocale').html(); //global
+
+    if (!home.locale) {
+        home.locale = 'en';
+    }
+
     home.modal = function (url, id, element)
     {
         $('.modal').modal('hide');

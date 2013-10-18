@@ -68,5 +68,7 @@
         {% if is_granted('ROLE_ADMIN') %}
             <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/home.js') }}"></script>
             <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/content.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
         {% endif %}
 {% endblock %}
