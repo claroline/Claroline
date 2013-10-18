@@ -224,6 +224,10 @@ ul.jquery-sortable-list li .menu-item:hover{
     background-color: #eeeeee;
 }
 
+ul.jquery-sortable-list li .active_chapter{
+    background-color: #f5f5f5;
+}
+
 ul.jquery-sortable-list li .active_chapter a{
     color: #000000;
     font-weight: bold;
