@@ -74,9 +74,10 @@ class BadgeRuleChecker
             $badgeRuleResult = $badgeRule->getResult();
             if (null !== $badgeRuleResult) {
                 $badgeRuleResultComparison = $badgeRule->getResultComparison();
+                $resultCOmparisonTypes     = BadgeRule::getResultComparisonTypes();
                 foreach ($associatedLogs as $associatedLog) {
                     $associatedLogDetails = $associatedLog->getDetails();
-                    if (isset($associatedLogDetails['result']) && $this->compareResult($associatedLogDetails['result'], $badgeRuleResult, $badgeRuleResultComparison)) {
+                    if (isset($associatedLogDetails['result']) && $this->compareResult($associatedLogDetails['result'], $badgeRuleResult, $resultCOmparisonTypes[$badgeRuleResultComparison])) {
                         $checkRule = $associatedLogs;
                     }
                 }

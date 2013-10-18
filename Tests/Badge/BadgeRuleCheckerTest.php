@@ -313,7 +313,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $badgeRule              = new BadgeRule();
         $badgeRule
             ->setResult('12')
-            ->setResultComparison(BadgeRule::RESULT_EQUAL);
+            ->setResultComparison(0);
 
         $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
             $mock
@@ -335,7 +335,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $badgeRule              = new BadgeRule();
         $badgeRule
             ->setResult('12')
-            ->setResultComparison(BadgeRule::RESULT_EQUAL);
+            ->setResultComparison(0);
 
         $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
             $mock
@@ -357,7 +357,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $badgeRule              = new BadgeRule();
         $badgeRule
             ->setResult('12')
-            ->setResultComparison(BadgeRule::RESULT_SUPERIOR);
+            ->setResultComparison(3);
 
         $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
             $mock
@@ -379,7 +379,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $badgeRule              = new BadgeRule();
         $badgeRule
             ->setResult('12')
-            ->setResultComparison(BadgeRule::RESULT_SUPERIOR);
+            ->setResultComparison(3);
 
         $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
             $mock
@@ -401,7 +401,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $badgeRule              = new BadgeRule();
         $badgeRule
             ->setResult('12')
-            ->setResultComparison(BadgeRule::RESULT_SUPERIOR_EQUAL);
+            ->setResultComparison(4);
 
         $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
             $mock
@@ -423,7 +423,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $badgeRule              = new BadgeRule();
         $badgeRule
             ->setResult('12')
-            ->setResultComparison(BadgeRule::RESULT_SUPERIOR_EQUAL);
+            ->setResultComparison(4);
 
         $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
             $mock
@@ -445,7 +445,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $badgeRule              = new BadgeRule();
         $badgeRule
             ->setResult('12')
-            ->setResultComparison(BadgeRule::RESULT_SUPERIOR_EQUAL);
+            ->setResultComparison(4);
 
         $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
             $mock
@@ -467,7 +467,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $badgeRule              = new BadgeRule();
         $badgeRule
             ->setResult('12')
-            ->setResultComparison(BadgeRule::RESULT_INFERIOR);
+            ->setResultComparison(1);
 
         $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
             $mock
@@ -489,7 +489,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $badgeRule              = new BadgeRule();
         $badgeRule
             ->setResult('12')
-            ->setResultComparison(BadgeRule::RESULT_INFERIOR);
+            ->setResultComparison(1);
 
         $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
             $mock
@@ -511,7 +511,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $badgeRule              = new BadgeRule();
         $badgeRule
             ->setResult('12')
-            ->setResultComparison(BadgeRule::RESULT_INFERIOR);
+            ->setResultComparison(1);
 
         $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
             $mock
@@ -533,7 +533,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $badgeRule              = new BadgeRule();
         $badgeRule
             ->setResult('12')
-            ->setResultComparison(BadgeRule::RESULT_INFERIOR_EQUAL);
+            ->setResultComparison(2);
 
         $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
             $mock
@@ -555,7 +555,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $badgeRule              = new BadgeRule();
         $badgeRule
             ->setResult('12')
-            ->setResultComparison(BadgeRule::RESULT_INFERIOR_EQUAL);
+            ->setResultComparison(2);
 
         $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
             $mock
@@ -577,7 +577,7 @@ class BadgeRuleCheckerTest extends MockeryTestCase
         $badgeRule              = new BadgeRule();
         $badgeRule
             ->setResult('12')
-            ->setResultComparison(BadgeRule::RESULT_INFERIOR_EQUAL);
+            ->setResultComparison(2);
 
         $this->logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
             $mock
