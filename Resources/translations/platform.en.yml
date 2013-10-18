@@ -81,6 +81,7 @@ canOpen: 'Right to open'
 cancel: Cancel
 cannot_delete_unique_manager: 'Cannot remove the unique manager.'
 cannot_unsubscribe_from_workspace: 'Cannot unsubscribe from workspace'
+change_view : Change view
 choose_resource_form_type: 'Resource type'
 close: Close
 collaborator: Collaborator
@@ -435,6 +436,7 @@ subscribe_groups: 'Subscribe groups'
 subscribe_selected_groups: 'Subscribe selected groups'
 subscribe_selected_users: 'Subscribe selected users'
 subscribe_users: 'Subscribe users'
+support_email: Support email
 switch: Switch
 tag: Tag
 tag_children_list: 'Tag children list'
