@@ -80,7 +80,7 @@ class PlatformConfigurationHandler
             );
         }
 
-        $configOptions = Yaml::parse(file_get_contents($this->configFile));
+        $configOptions = Yaml::parse(file_get_contents($this->configFile)) || array();
         $options = $this->defaultOptions;
 
         foreach ($configOptions as $option => $value) {
