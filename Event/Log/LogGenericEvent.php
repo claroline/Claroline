@@ -24,6 +24,8 @@ abstract class LogGenericEvent extends Event
     protected $owner;
     protected $toolName;
 
+    protected $doer;
+
     /** @var bool */
     protected $isDisplayedInAdmin = false;
 
@@ -213,5 +215,23 @@ abstract class LogGenericEvent extends Event
         }
 
         return $isDisplayedByRestriction;
+    }
+
+    /**
+     * Used when the doer isn't the logged user
+     *
+     * @param User $doer
+     */
+    public function setDoer(User $doer)
+    {
+        $this->doer = $doer;
+    }
+
+    /**
+     * @return User
+     */
+    public function getDoer()
+    {
+        return $this->doer;
     }
 }

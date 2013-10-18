@@ -50,26 +50,31 @@ class LogListener
         //why is the flush required ?
         //$om->flush();
         //Add doer details
-        $token = $this->securityContext->getToken();
         $doer = null;
         $sessionId = null;
         $doerIp = null;
         $doerType = null;
 
-        if ($token === null) {
-            $doer = null;
-            $doerType = Log::doerTypePlatform;
-        } else {
-            if ($token->getUser() === 'anon.') {
+        if ($event->getDoer() === null) {
+            $token = $this->securityContext->getToken();
+            if ($token === null) {
                 $doer = null;
-                $doerType = Log::doerTypeAnonymous;
+                $doerType = Log::doerTypePlatform;
             } else {
-                $doer = $token->getUser();
-                $doerType = Log::doerTypeUser;
+                if ($token->getUser() === 'anon.') {
+                    $doer = null;
+                    $doerType = Log::doerTypeAnonymous;
+                } else {
+                    $doer = $token->getUser();
+                    $doerType = Log::doerTypeUser;
+                }
+                $request = $this->container->get('request');
+                $sessionId = $request->getSession()->getId();
+                $doerIp = $request->getClientIp();
             }
-            $request = $this->container->get('request');
-            $sessionId = $request->getSession()->getId();
-            $doerIp = $request->getClientIp();
+        } else {
+            $doer = $event->getDoer();
+            $doerType = Log::doerTypeUser;
         }
 
         $log = new Log();
