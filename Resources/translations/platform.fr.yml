@@ -213,7 +213,7 @@ import_user_file_file: 'Importer depuis fichier csv'
 import_users: 'Importer des utilisateurs'
 informations: Informations
 instructions: Consignes
-internal_error : 'Erreure interne du serveur. Ne paniquez pas, nous essayons de résoudre le problème le plus rapidement possible.'
+internal_error : 'Erreure interne du serveur. Veuillez contatcez votre administrateur'
 invalid_csv_file: 'Le fichier CSV n''est pas valide'
 jqplot_date_output_format: '%d-%m-%Y'
 lastName: Nom
