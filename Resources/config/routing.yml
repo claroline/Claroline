@@ -120,11 +120,6 @@ claro_workspace_tool_tools_properties:
     prefix: workspaces/tool/properties
     type: annotation
 
-claro_workspace_tool_resources_properties:
-    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceResourceParametersController.php"
-    prefix: workspaces/tool/properties
-    type: annotation
-
 claro_workspace_tool_agenda:
     resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceAgendaController.php"
     prefix: workspaces/tool/agenda

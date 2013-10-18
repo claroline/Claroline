@@ -235,6 +235,34 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
+     *     "users/page/{page}/pic",
+     *     name="claro_admin_user_list_pics",
+     *     defaults={"page"=1, "search"=""},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "users/page/{page}/pic/search/{search}",
+     *     name="claro_admin_user_list_search",
+     *     defaults={"page"=1},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template()
+     *
+     * Displays the platform user list.
+     */
+    public function userListPicsAction($page, $search)
+    {
+        $pager = $search === '' ?
+            $this->userManager->getAllUsers($page) :
+            $this->userManager->getUsersByName($search, $page);
+
+        return array('pager' => $pager, 'search' => $search);
+    }
+
+    /**
+     * @EXT\Route(
      *     "/groups/page/{page}",
      *     name="claro_admin_group_list",
      *     options={"expose"=true},
@@ -604,29 +632,16 @@ class AdministrationController extends Controller
 
         if ($form->isValid()) {
             try {
-                $this->configHandler->setParameter(
-                    'allow_self_registration',
-                    $form['selfRegistration'] ->getData()
-                );
-                $this->configHandler->setParameter(
-                    'locale_language',
-                    $form['localLanguage']->getData()
-                );
-                $this->configHandler->setParameter(
-                    'theme',
-                    $form['theme']->getData()
-                );
-                $this->configHandler->setParameter(
-                    'name',
-                    $form['name']->getData()
-                );
-                $this->configHandler->setParameter(
-                    'footer',
-                    $form['footer']->getData()
-                );
-                $this->configHandler->setParameter(
-                    'logo',
-                    $this->request->get('selectlogo')
+                $this->configHandler->setParameters(
+                    array(
+                        'allow_self_registration' => $form['selfRegistration']->getData(),
+                        'locale_language' => $form['localLanguage']->getData(),
+                        'theme' => $form['theme']->getData(),
+                        'name' => $form['name']->getData(),
+                        'support_email' => $form['support_email']->getData(),
+                        'footer' => $form['footer']->getData(),
+                        'logo' => $this->request->get('selectlogo')
+                    )
                 );
 
                 $logo = $this->request->files->get('logo');
@@ -634,7 +649,6 @@ class AdministrationController extends Controller
                 if ($logo) {
                     $this->get('claroline.common.logo_service')->createLogo($logo);
                 }
-
             } catch (UnwritableException $e) {
                 $form->addError(
                     new FormError(

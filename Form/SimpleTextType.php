@@ -17,11 +17,7 @@ class SimpleTextType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add(
-            'content',
-            'textarea',
-            array('attr' => array ('class' => 'tinymce', 'data-theme' => 'advanced'))
-        );
+        $builder->add('content', 'tinymce');
     }
 
     public function getName()

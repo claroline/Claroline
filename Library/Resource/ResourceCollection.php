@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Library\Resource;
 
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 /**
  * This is the class used by the ResourceVoter to take access decisions.
@@ -20,7 +20,7 @@ class ResourceCollection
         $this->errors = array();
     }
 
-    public function addResource(AbstractResource $resource)
+    public function addResource(ResourceNode $resource)
     {
         $this->resources[] = $resource;
     }
