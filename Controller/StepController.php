@@ -176,9 +176,14 @@ class StepController extends Controller
 
     private function getPropagatedResources($step, &$heritedResources, $excludedResources){
         $resources = $this->manager->getStepPropagatedResourceNodes($step);
-        foreach ($resources as $resource) {
+        foreach ($resources["digital"] as $resource) {
             if(!in_array($resource->getId(), $excludedResources)){
-                $heritedResources[$step->getName()][] =  $resource;
+                $heritedResources[$step->getName()]["digital"][] =  $resource;
+            }
+        }
+        foreach ($resources["nonDigital"] as $resource) {
+            if(!in_array($resource->getResourceNode()->getId(), $excludedResources)){
+                $heritedResources[$step->getName()]["nonDigital"][] =  $resource;
             }
         }
         if ($step->getParent()){
