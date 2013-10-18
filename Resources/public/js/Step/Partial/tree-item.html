@@ -3,9 +3,9 @@
     <span ng-show="currentEditingStep != step.id" class="step-name">{{ step.name | truncate }}</span>
 
     <div ng-show="currentEditingStep == step.id"  class="input-group input-group-sm">
-        <input type="text"  value="{{ step.name }}" ng-model="step.name" class="form-control" ng-clickout="closeEditStepName()" />
+        <input type="text" value="{{ step.name }}" ng-model="step.name" class="form-control" />
         <span class="input-group-btn">
-            <button class="btn btn-default" type="button" ng-click="closeEditStepName()"><span class="icon-remove"></span></button>
+            <button class="btn btn-default" type="button" ng-click="closeEditStepName()"><span class="icon-ok"></span></button>
         </span>
     </div>
 
