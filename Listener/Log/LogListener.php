@@ -48,14 +48,13 @@ class LogListener
 
     private function createLog(LogGenericEvent $event)
     {
-        //why is the flush required ?
-        //$om->flush();
         //Add doer details
         $doer = null;
         $sessionId = null;
         $doerIp = null;
         $doerType = null;
 
+        //Event can override the doer
         if ($event->getDoer() === null) {
             $token = $this->securityContext->getToken();
             if ($token === null) {
