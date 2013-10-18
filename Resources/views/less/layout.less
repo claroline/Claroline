@@ -851,7 +851,6 @@ div.pagination
     border: 1px solid @input-border;
 }
 
-
 .mce-container.mce-panel.mce-stack-layout-item {
     overflow: auto;
     clear:both;
@@ -866,6 +865,13 @@ div.pagination
 .mce-edit-area.mce-container.mce-panel.mce-stack-layout-item {
     .border-top-radius(0);
     .border-bottom-radius(@input-border-radius);
+}
+
+.creator {
+    .mce-tinymce.mce-container.mce-panel, .mce-edit-area.mce-container.mce-panel.mce-stack-layout-item {
+        .border-bottom-radius(0);
+        border-bottom: none;
+    }
 }
 
 .mce-container.mce-menubar.mce-toolbar.mce-first.mce-stack-layout-item,
