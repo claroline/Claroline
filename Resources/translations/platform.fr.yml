@@ -432,6 +432,7 @@ subscribe_groups: 'Inscrire des groupes'
 subscribe_selected_groups: 'Inscrire les groupes sélectionnés'
 subscribe_selected_users: 'Inscrire les utilisateurs sélectionnés'
 subscribe_users: 'Inscrire des utilisateurs'
+support_email: Email du support
 switch: Echanger
 tag: Tag
 tag_children_list: 'Liste des enfants'
