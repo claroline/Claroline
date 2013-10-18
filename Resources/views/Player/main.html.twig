@@ -57,9 +57,12 @@
                                     <div class="panel-heading"><strong>{{ 'local' | trans({}, 'innova_tools') }}</strong></div>
                                     <div class="panel-body">
                                         {% for resource in resources %}
-                                            {% if resource.id %}
+                                            {% if resource.resourceType.name != "non_digital_resource" %}
                                                 <a target="_blank" href="{{ path('claro_resource_open', {'resourceType': resource.resourceType.name, 'node': resource.id })  }}?_mode=path"><img rel="tooltip" data-original-title="{{ resource.name }}" width="32px" src="{{asset(resource.icon.relativeUrl) }}"/></a>
+                                            {% else %}
+                                                <img rel="tooltip" data-original-title="{{ resource.name }}" width="32px" src="{{asset(resource.icon.relativeUrl) }}"/>
                                             {% endif %}
+
                                         {% endfor %}
                                     </div>
                                 </div>

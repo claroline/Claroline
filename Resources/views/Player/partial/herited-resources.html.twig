@@ -3,12 +3,12 @@
 		<div class="panel-heading">{{ 'heritated_from' | trans({}, 'innova_tools') }} <strong>{{ heritedResourceName }}</strong></div>
 		<div class="panel-body">
 		{% for resource  in heritedResource %}
-		    {% if resource.id %}
-		        <li> 
+		    {% if resource.resourceType.name != "non_digital_resource" %}
 		         <a target="_blank" href="{{ path('claro_resource_open', {'resourceType': resource.resourceType.name, 'node': resource.id })  }}?_mode=path">
 		         	<img rel="tooltip" data-original-title="{{ resource.name }}" width="32px" src="{{asset(resource.icon.relativeUrl) }}"/>
 		       	</a>
-		        </li>
+			{% else %}
+                <img rel="tooltip" data-original-title="{{ resource.name }}" width="32px" src="{{asset(resource.icon.relativeUrl) }}"/>
 		    {% endif %}
 		{% endfor %}
 		</div>
