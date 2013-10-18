@@ -15,26 +15,26 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class DropzoneLogManager
 {
-    private $em;
-    private $ed;
+    private $entityManager;
+    private $eventDispatcher;
 
     /**
      * @DI\InjectParams({
-     *     "em" = @DI\Inject("doctrine.orm.default_entity_manager"),
-     *     "ed" = @DI\Inject("event_dispatcher")
+     *     "entityManager" = @DI\Inject("doctrine.orm.default_entity_manager"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher")
      * })
      */
-    public function __construct(EntityManager $em, EventDispatcher $ed)
+    public function __construct(EntityManager $entityManager, EventDispatcher $eventDispatcher)
     {
-        $this->em = $em;
-        $this->ed = $ed;
+        $this->entityManager = $entityManager;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function logNewCorrection(Correction $correction)
     {
         $this->sendFinishedLog($correction->getDrop());
         if ($correction->getDrop()->getUser()->getId() != $correction->getUser()->getId()) {
-            $drop = $this->em->getRepository('IcapDropzoneBundle:Drop')->findOneBy(array('user' => $correction->getUser()));
+            $drop = $this->entityManager->getRepository('IcapDropzoneBundle:Drop')->findOneBy(array('user' => $correction->getUser()));
             $this->sendFinishedLog($drop);
         }
     }
@@ -45,7 +45,7 @@ class DropzoneLogManager
             if ($drop->countFinishedCorrections() >= $drop->getDropzone()->getExpectedTotalCorrection()) {
                 $finished = false;
                 if ($drop->getDropzone()->getPeerReview() == true) {
-                    $nbCorrections = $this->em
+                    $nbCorrections = $this->entityManager
                         ->getRepository('IcapDropzoneBundle:Correction')
                         ->countFinished($drop->getDropzone(), $drop->getUser());
 
@@ -60,7 +60,7 @@ class DropzoneLogManager
                     $grade = $drop->getCalculatedGrade();
                     $event = new LogDropEvaluateEvent($drop->getDropzone(), $drop, $grade);
                     $event->setDoer($drop->getUser());
-                    $this->ed->dispatch('log', $event);
+                    $this->eventDispatcher->dispatch('log', $event);
                 }
             }
         }
