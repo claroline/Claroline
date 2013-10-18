@@ -1,49 +1,77 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: gaetan
- * Date: 28/06/13
- * Time: 15:31
- * To change this template use File | Settings | File Templates.
- */
 namespace Icap\LessonBundle\Form;
 
+use Doctrine\ORM\EntityManager;
+use Icap\LessonBundle\Entity\Chapter;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
+/**
+ * @DI\Service("icap.lesson.movechaptertype")
+ */
 class MoveChapterType extends AbstractType
 {
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    protected $entityManager;
+    protected $translator;
+
+    /**
+     * Constructor.
+     *
+     * @DI\InjectParams({
+     *     "entityManager" = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "translator" = @DI\Inject("translator")
+     * })
+     */
+    public function __construct(EntityManager $entityManager, $translator)
+    {
+        $this->entityManager = $entityManager;
+        $this->translator = $translator;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $choices = array();
-        $root = true;
-        foreach ($options['chapters'] as $child) {
-            if($root){
-                $choices[$child->getId()] = 'Racine';
-                $root = false;
-            }else{
-                $choices[$child->getId()] = $child->getTitle();
-            }
-        }
+        $builder->addEventListener(FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) use ($builder)
+            {
+                $form = $event->getForm();
+                $data = $event->getData();
 
-        $builder
-            ->add('title', 'text', array('disabled' => true))
-            ->add('choiceChapter', 'choice', array(
-                'mapped' => false,
-                'choices' => $choices
-            ))
-            ->add('brother', 'checkbox', array(
-            'required' => false,
-            'mapped' => false
-        ));
+                $chapters = $this->entityManager->getRepository('IcapLessonBundle:Chapter')->getChapterAndChapterChildren($data->getLesson()->getRoot());
+                $chapters_list = array();
+                $root = true;
+
+                foreach ($chapters as $child) {
+                    if($root){
+                        $chapters_list[$child->getId()] = $this->translator->trans('Root', array(), 'icap_lesson');
+                        $root = false;
+                    }else{
+                        $chapters_list[$child->getId()] = $child->getTitle();
+                    }
+                }
+
+                $form
+                    ->add('choiceChapter', 'choice', array(
+                        'mapped' => false,
+                        'choices' => $chapters_list
+                    ))
+                    ->add('brother', 'checkbox', array(
+                        'required' => false,
+                        'mapped' => false
+                    ));
+            });
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Icap\LessonBundle\Entity\Chapter',
-            'chapters' => array()
+            'data_class' => 'Icap\LessonBundle\Entity\Chapter'
         ));
     }
 

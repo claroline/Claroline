@@ -24,7 +24,8 @@
 {% endmacro %}
 
 {% if tree is defined and tree != null and tree.__children is defined and tree.__children|length %}
-    <div class='panel panel-default menu_lesson ' data-spy="affix" data-offset-top="90" data-clampedwidth = '#lesson_left_column'>
+           {# data-spy="affix"#}
+            <div class='panel panel-default menu_lesson ' data-offset-top="90" data-clampedwidth = '#lesson_left_column'>
         <div class="navbar navbar-default navbar-static-top">
             <ul class='nav navbar-nav pull-right'>
                 <li><a href='#' id='enable_move' data-status = 'enable' class='icon_link'><i class="icon-move lesson_tooltip"  data-original-title='{{ 'enabled_move'|trans({}, 'icap_lesson') }}'></i></a></li>

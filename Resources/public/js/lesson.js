@@ -3,7 +3,7 @@ function init(){
     $( document ).ready(function() {
         initTooltip();
         initCollapsor();
-        fixLeftMenuAffixedSize();
+        //fixLeftMenuAffixedSize();
     });
 }
 

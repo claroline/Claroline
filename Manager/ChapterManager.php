@@ -21,12 +21,14 @@ class ChapterManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "entityManager" = @DI\Inject("doctrine.orm.entity_manager")
+     *     "entityManager" = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "translator" = @DI\Inject("translator")
      * })
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, $translator)
     {
         $this->entityManager = $entityManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -45,9 +47,16 @@ class ChapterManager
      * @param Chapter $root_copy
      * @param Lesson $newlesson
      */
-    public function copyChapter(Chapter $chapter_org, Chapter $parent, $copy_children){
+    public function copyChapter(Chapter $chapter_org, Chapter $parent, $copy_children, $renamefirst = false){
         $chapter_copy = new Chapter();
-        $chapter_copy->setTitle($chapter_org->getTitle());
+        if($renamefirst)
+        {
+            $chapter_copy->setTitle($this->translator->trans('copy_prefix', array(), 'icap_lesson').$chapter_org->getTitle());
+        }else
+        {
+            $chapter_copy->setTitle($chapter_org->getTitle());
+        }
+
         $chapter_copy->setText($chapter_org->getText());
         $chapter_copy->setLesson($parent->getLesson());
         $this->insertChapter($chapter_copy, $parent);
@@ -62,11 +71,10 @@ class ChapterManager
         $chapters = $chapterRepository->children($chapter_org, true);
         if($chapters != null and count($chapters) > 0){
             foreach ($chapters as $child) {
-                $this->copyChapter($child, $chapter_copy, $copy_children);
+                $this->copyChapter($child, $chapter_copy, $copy_children, false);
             }
         }
     }
-
 
     public function insertChapter(Chapter $chapter, Chapter $parent){
         $this->entityManager->getRepository('IcapLessonBundle:Chapter')->persistAsLastChildOf($chapter, $parent);

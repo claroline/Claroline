@@ -85,29 +85,11 @@ class LessonListener extends ContainerAware
 
         //$chapterRepository = $entityManager->getRepository('IcapLessonBundle:Chapter');
         $chapter_manager = $this->container->get("icap.lesson.manager.chapter");
-        $chapter_manager->copyRoot();
-        $this->copyRoot($lesson->getRoot(), $newlesson->getRoot());
+        $chapter_manager->copyRoot($lesson->getRoot(), $newlesson->getRoot());
 
         $event->setCopy($newlesson);
         $event->stopPropagation();
     }
-/*
-    private function copyChapters($root_original, $root_copy, $newlesson, $entityManager){
-        $chapterRepository = $entityManager->getRepository('IcapLessonBundle:Chapter');
-        $chapters = $chapterRepository->children($root_original, true);
-        if($chapters != null and count($chapters) > 0){
-            foreach ($chapters as $chapter) {
-                $newchapter = new Chapter();
-                $newchapter->setTitle($chapter->getTitle());
-                $newchapter->setText($chapter->getText());
-                $newchapter->setLesson($newlesson);
-                $chapterRepository->persistAsLastChildOf($newchapter, $root_copy);
-                $entityManager->flush();
-                $this->copyChapters($chapter, $newchapter, $newlesson, $entityManager);
-                //$entityManager->flush();
-            }
-        }
-    }*/
 
     public function onDelete(DeleteResourceEvent $event)
     {

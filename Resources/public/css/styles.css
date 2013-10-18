@@ -127,6 +127,7 @@ li.custom_field div div {
   padding: 20px;
   text-align: justify;
   padding-bottom: 40px;
+  min-height: 535px;
 }
 
 .chapter_content{
@@ -143,9 +144,10 @@ li.custom_field div div {
 }
 
 .delete_chapter_warning{
-   text-align: center;
+    text-align: center;
     margin-top:40px;
     margin-bottom:40px;
+    font-weight: bold;
 }
 
 #editchapterform textarea, #createchapterform textarea{
@@ -194,6 +196,10 @@ ul.jquery-sortable-list {
     margin-bottom:5px;
     padding-top:5px;
 
+}
+
+.jquery-sortable-list ul{
+    padding-left: 20px;
 }
 
 ul.jquery-sortable-list li {

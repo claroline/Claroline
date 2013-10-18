@@ -1,11 +1,5 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: gaetan
- * Date: 26/06/13
- * Time: 15:52
- * To change this template use File | Settings | File Templates.
- */
+
 namespace Icap\LessonBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -15,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="icap__lesson_chapter")
- * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
+ * @ORM\Entity(repositoryClass="Icap\LessonBundle\Repository\ChapterRepository")
  */
 class Chapter
 {

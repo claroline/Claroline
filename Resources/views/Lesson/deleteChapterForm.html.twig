@@ -5,9 +5,10 @@
                 {{ chapter.title }}
             </div>
             <div class="control-group">
-                {{ form_widget(form.children) }}
-                {% if haschild %}
-                    <label class="control-label" for="icap_lesson_deletechaptertype_children">{{ 'delete_also_children'|trans({}, 'icap_lesson') }}</label> <br/>
+                {% if form.deletechildren is defined %}
+                    {{ form_widget(form.deletechildren) }}
+                    <label class="control-label" for="icap_lesson_deletechaptertype_children">{{ 'delete_also_children'|trans({}, 'icap_lesson') }}</label>
+                    <br/>
                     {{ 'delete_also_children_more'|trans({}, 'icap_lesson') }}
                 {% endif %}
             </div>

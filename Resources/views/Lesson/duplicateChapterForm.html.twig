@@ -9,10 +9,15 @@
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="icap_lesson_duplicatechaptertype_chapters">{{ 'duplicate_destination'|trans({}, 'icap_lesson') }}</label>
-                {{ form_widget(form.parent) }}
-                <label class="control-label" for="icap_lesson_duplicatechaptertype_brother">{{ 'duplicate_children'|trans({}, 'icap_lesson') }}</label>
-                {{ form_widget(form.duplicate_children) }}
+                <div>
+                    <label class="control-label" for="icap_lesson_duplicatechaptertype_chapters">{{ 'duplicate_destination'|trans({}, 'icap_lesson') }}</label>
+                    {{ form_widget(form.parent) }}
+                </div>
+                {#<label class="control-label" for="icap_lesson_duplicatechaptertype_duplicate_children">{{ 'duplicate_children'|trans({}, 'icap_lesson') }}</label>#}
+                {% if form.duplicate_children is defined %}
+                    {{ form_widget(form.duplicate_children) }}
+                    <label class="control-label" for="icap_lesson_duplicatechaptertype_duplicate_children">{{ 'duplicate_children'|trans({}, 'icap_lesson') }}</label>
+                {%  endif %}
             </div>
             {{ form_rest(form) }}
         </div>

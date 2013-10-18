@@ -69,8 +69,7 @@ class LessonController extends Controller
     {
         $this->checkAccess("OPEN", $lesson);
 
-        $em = $this->getDoctrine()->getManager();
-        $chapterRepository = $em->getRepository('IcapLessonBundle:Chapter');
+        $chapterRepository = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter');
         $chapter = null;
         $parent = null;
         $path = null;
@@ -81,31 +80,21 @@ class LessonController extends Controller
             //path first element is the lesson root, we don't show it in the breadcrumb
             unset($path[0]);
         } else {
-            $chapter = $chapterRepository->findOneBy(array('lesson' => $lesson, 'root' => $lesson->getRoot()->getId(), 'left' => 2));
+            $chapter = $chapterRepository->getFirstChapter($lesson);
             $parent = $lesson->getRoot();
         }
-
-        $query = $this->getDoctrine()->getManager()
-            ->createQueryBuilder()
-            ->select('node')
-            ->from('Icap\\LessonBundle\\Entity\\Chapter', 'node')
-            ->orderBy('node.root, node.left', 'ASC')
-            ->where('node.root = :rootId')
-            ->setParameter('rootId', $lesson->getRoot()->getId())
-            ->getQuery()
-        ;
-        $options = array('decorate' => false);
-        $tree = $chapterRepository->buildTree($query->getArrayResult(), $options);
+        //get complete chapter tree for this lesson
+        $tree = $chapterRepository->getChapterTree($lesson->getRoot());
 
         //form used to move chapters, used by dragndrop methods
-        $chapters = array_merge(array($lesson->getRoot()), $chapterRepository->children($lesson->getRoot()));
-        $form = $this->createForm(new MoveChapterType(), $chapter, array('chapters' => $chapters));
+        $chapters = $chapterRepository->getChapterAndChapterChildren($lesson->getRoot());
+        //$form = $this->createForm(new MoveChapterType(), $chapter, array('chapters' => $chapters));
+        $form = $this->createForm($this->get("icap.lesson.movechaptertype"), $chapter);
 
         //the first time you enter the lesson there's no chapter
         if($chapter != null){
             $this->dispatchChapterReadEvent($lesson, $chapter);
         }
-
 
         return array(
             '_resource' => $lesson,
@@ -276,29 +265,27 @@ class LessonController extends Controller
 
         if($form->isValid()){
             $chaptername = $chapter->getTitle();
-            if ($form->get('children')->getData() == false) {
-                $em = $this->getDoctrine()->getManager();
-                $repo = $em->getRepository('IcapLessonBundle:Chapter');
-                $repo->removeFromTree($chapter);
-                $em->clear();
-                $em->flush();
+            $deleteChildren = false;
+            if($form->has('deletechildren')){
+                $deleteChildren = $form->get('deletechildren')->getData();
+            }
 
-                $this->dispatchChapterDeleteEvent($lesson, $chaptername);
-
-                $this->get('session')->getFlashBag()->add('success',$translator->trans('Your chapter has been deleted but no subchapter',array(), 'icap_lesson'));
-
-                return $this->redirect($this->generateUrl('icap_lesson', array('resourceId' => $lesson->getId())));
-
-            } else {
-                $em = $this->getDoctrine()->getManager();
+            $em = $this->getDoctrine()->getManager();
+            if ($deleteChildren) {
                 $em->remove($chapter);
                 $em->flush();
-                $this->dispatchChapterDeleteEvent($lesson, $chaptername);
                 $this->get('session')->getFlashBag()->add('success',$translator->trans('Your chapter has been deleted',array(), 'icap_lesson'));
-
-                return $this->redirect($this->generateUrl('icap_lesson', array('resourceId' => $lesson->getId())));
-
-                }
+            }
+            else
+            {
+                $repo = $em->getRepository('IcapLessonBundle:Chapter');
+                $repo->removeFromTree($chapter);
+                //$em->clear();
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('success',$translator->trans('Your chapter has been deleted but no subchapter',array(), 'icap_lesson'));
+            }
+            $this->dispatchChapterDeleteEvent($lesson, $chaptername);
+            return $this->redirect($this->generateUrl('icap_lesson', array('resourceId' => $lesson->getId())));
         } else {
             $this->get('session')->getFlashBag()->add('error',$translator->trans('Your chapter has not been deleted',array(), 'icap_lesson'));
         }
@@ -430,9 +417,9 @@ class LessonController extends Controller
         $repo = $em->getRepository('IcapLessonBundle:Chapter');
 
         //retrieve current chapter and its children, current chapter cant be dropped in those
-        $nonLegitTargets = $repo->children($chapter, false, null, 'ASC', true);
-
-        $chapters = $repo->children($lesson->getRoot(), false, null, 'ASC', true);
+        $nonLegitTargets =  $repo->getChapterAndChapterChildren($chapter);
+        $chapters = $repo->getChapterAndChapterChildren($lesson->getRoot());
+        //remove $nonLegitTargets from $chapters
         foreach ($chapters as $key => $chap) {
             foreach ($nonLegitTargets as $key2 => $chap2) {
                 if($chap->getId() == $chap2->getId()){
@@ -441,7 +428,8 @@ class LessonController extends Controller
             }
         }
 
-        $form = $this->createForm(new MoveChapterType(), $chapter,  array('chapters' => $chapters));
+        //$form = $this->createForm(new MoveChapterType(), $chapter,  array('chapters' => $chapters));
+        $form = $this->createForm($this->get("icap.lesson.movechaptertype"), $chapter);
         $form->handleRequest($this->getRequest());
 
         //for ajaxification
@@ -485,9 +473,11 @@ class LessonController extends Controller
         $oldparent = $chapter->getParent();
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('IcapLessonBundle:Chapter');
-        $chapters = array_merge(array($lesson->getRoot()), $repo->children($lesson->getRoot()));
 
-        $form = $this->createForm(new MoveChapterType(), $chapter,  array('chapters' => $chapters));
+        $chapters =  $repo->getChapterAndChapterChildren($lesson->getRoot());
+
+        //$form = $this->createForm(new MoveChapterType(), $chapter,  array('chapters' => $chapters));
+        $form = $this->createForm($this->get("icap.lesson.movechaptertype"), $chapter);
         $form->handleRequest($this->getRequest());
         if ($form->isValid() and $form->get('choiceChapter')->getData() != $chapter->getid()) {
             $newParentId = $form->get('choiceChapter')->getData();
@@ -518,7 +508,6 @@ class LessonController extends Controller
         $em->flush();
 
         $this->dispatchChapterMoveEvent($lesson, $chapter, $oldparent, $newParent);
-        //return $this->redirect($this->generateUrl('icap_lesson', array('resourceId' => $lesson->getId())));
 
         return($this->redirect($this->generateUrl('icap_lesson_chapter', array(
             'resourceId' => $lesson->getId(),
@@ -544,9 +533,7 @@ class LessonController extends Controller
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('IcapLessonBundle:Chapter');
 
-        $chapters = $repo->children($lesson->getRoot(), false, null, 'ASC', true);
-
-        $form = $this->createForm(new DuplicateChapterType(), $chapter,  array('chapters' => $chapters));
+        $form = $this->createForm($this->get("icap.lesson.duplicatechaptertype"), $chapter);
         $form->handleRequest($this->getRequest());
 
         //for ajaxification
@@ -583,24 +570,21 @@ class LessonController extends Controller
      */
     public function duplicateChapterAction($lesson, $chapter)
     {
- /*       var_dump("passe");
-        die();*/
         $this->checkAccess("EDIT", $lesson);
 
         $chapter_manager = $this->container->get("icap.lesson.manager.chapter");
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('IcapLessonBundle:Chapter');
 
-        //$chapter = $this->findChapter($lesson, $chapterId);
-        $chapters = $repo->children($lesson->getRoot(), false, null, 'ASC', true);
-
-        $form = $this->createForm(new DuplicateChapterType(), $chapter, array('chapters' => $chapters));
+        $form = $this->createForm($this->get("icap.lesson.duplicatechaptertype"), $chapter);
         $form->handleRequest($this->getRequest());
         $parent = null;
         $copy_children = false;
         if ($form->isValid()) {
             $parent = $this->findChapter($lesson, $form->get('parent')->getData());
-            $copy_children = $form->get('duplicate_children')->getData();
+            if($form->has('duplicate_children')){
+                $copy_children = $form->get('duplicate_children')->getData();
+            }
         }else{
             return (
                 $this->redirect(
@@ -612,57 +596,18 @@ class LessonController extends Controller
                         )
                     )
                 ));
-/*            return array(
-                'lesson' => $lesson,
-                'chapter' => $chapter,
-                'form' => $form->createView(),
-                'workspace' => $lesson->getResourceNode()->getWorkspace()
-            );*/
         }
 
-        $chapter_copy = $chapter_manager->copyChapter($chapter, $parent, $copy_children);
-
+        $chapter_copy = $chapter_manager->copyChapter($chapter, $parent, $copy_children, true);
         $em->flush();
 
-        //$this->dispatchChapterMoveEvent($lesson, $chapter, $oldparent, $newParent);
+        $this->dispatchChapterCreateEvent($lesson, $chapter_copy);
 
         return($this->redirect($this->generateUrl('icap_lesson_chapter', array(
             'resourceId' => $lesson->getId(),
             'chapterId' => $chapter_copy->getId()
         ))));
-
-/*        $this->checkAccess("EDIT", $lesson);
-        $chapter = $this->findChapter($lesson, $chapterId);
-
-        $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository('IcapLessonBundle:Chapter');
-
-        $chapters = $repo->children($lesson->getRoot(), false, null, 'ASC', true);
-
-        $form = $this->createForm(new DuplicateChapterType(), $chapter,  array('chapters' => $chapters));
-        $form->handleRequest($this->getRequest());
-
-        //for ajaxification
-        if ($this->getRequest()->isXMLHttpRequest()) {
-            return $this->render(
-                'IcapLessonBundle:Lesson:duplicateChapterAjaxified.html.twig',
-                array(
-                    '_resource' => $lesson,
-                    'chapter' => $chapter,
-                    'form' => $form->createView(),
-                    'workspace' => $lesson->getResourceNode()->getWorkspace()
-                )
-            );
-        }
-
-        return array(
-            '_resource' => $lesson,
-            'chapter' => $chapter,
-            'form' => $form->createView(),
-            'workspace' => $lesson->getResourceNode()->getWorkspace()
-        );*/
     }
-
 
     /*
      * fonction recherchant un cours dans la base
