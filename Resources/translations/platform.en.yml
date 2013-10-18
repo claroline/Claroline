@@ -474,6 +474,7 @@ top_workspaces_resources: 'Top workspaces having the most resources'
 trash : Trash
 type: Type
 type_s: Type(s)
+unauthorized : 'You are not authorized to see the content'
 unique connections: 'Nb unique Cnx.'
 unregister: Unregister
 unregister_from_a_workspace: 'Unregister from a workspace'

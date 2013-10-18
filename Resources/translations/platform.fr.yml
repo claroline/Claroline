@@ -470,6 +470,7 @@ top_workspaces_resources: 'Top des espaces d''activités avec le plus des resour
 trash : Corbeille
 type: Type
 type_s: Type(s)
+unauthorized : 'Vous n''êtes pas autorisez à voir le contenu'
 unique connections: 'Nb Cnx. uniques'
 unregister: Désinscription
 unregister_from_a_workspace: 'Désinscription d''un espace d''activités'

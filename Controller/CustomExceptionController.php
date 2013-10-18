@@ -13,25 +13,22 @@ class CustomExceptionController extends ExceptionController
      */
     protected function findTemplate(Request $request, $format, $code, $debug)
     {
-        $name = $debug ? 'exception' : 'error';
-        if ($debug && 'html' == $format) {
-            $name = 'exception_full';
-        }
+        $name = 'error';
         // when not in debug, try to find a template for the specific HTTP status code and format
-        // if (!$debug) {
+        if (!$debug) {
             switch ($code) {
                 case 404: $template = new TemplateReference('ClarolineCoreBundle', 'Exception', $name.$code, $format, 'twig');
                     break;
-                case 500 : $template = new TemplateReference('ClarolineCoreBundle', 'Exception', $name.$code, $format, 'twig');
+                case 403 : $template = new TemplateReference('ClarolineCoreBundle', 'Exception', $name.$code, $format, 'twig');
                     break;
-                default: $template = new TemplateReference('ClarolineCoreBundle', 'Exception', $name.$code, $format, 'twig');
+                default: $template = new TemplateReference('ClarolineCoreBundle', 'Exception', $name.'500', $format, 'twig');
                     break;
             }
             
             if ($this->templateExists($template)) {
                 return $template;
             }
-        // }
-        return(parent::findTemplate($request, $format, $code, $debug));
+        }
+        return parent::findTemplate($request, $format, $code, $debug);
     }
 }
