@@ -4,7 +4,7 @@ function TruncateTextFilter() {
         if (undefined !== text && null !== text && 0 !== text.length) {
             // Default length for truncate : 20 caracters.
             if (isNaN(length))
-                length = 20;
+                length = 50;
 
             if (end === undefined)
                 end = "...";
