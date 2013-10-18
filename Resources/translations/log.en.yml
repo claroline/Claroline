@@ -1,0 +1,3 @@
+log_resource-icap_dropzone-drop_evaluate_filter: 'Copy evaluated'
+log_resource-icap_dropzone-drop_evaluate_shortname: 'Evaluation'
+log_resource-icap_dropzone-drop_evaluate_sentence: 'a été évalué dans %resource%'

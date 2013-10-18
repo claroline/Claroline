@@ -165,7 +165,7 @@ class CorrectionController extends DropzoneBaseController
         return $grade;
     }
 
-    private function endCorrection($dropzone, $correction, $admin)
+    private function endCorrection(Dropzone $dropzone, Correction $correction, $admin)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -176,6 +176,9 @@ class CorrectionController extends DropzoneBaseController
 
         $em->persist($correction);
         $em->flush();
+
+        $logManager = $this->container->get('icap.dropzone_log.manager');
+        $logManager->logNewCorrection($correction);
 
         $this->getRequest()->getSession()->getFlashBag()->add(
             'success',
@@ -486,6 +489,9 @@ class CorrectionController extends DropzoneBaseController
 
                 $em->persist($correction);
                 $em->flush();
+
+                $logManager = $this->container->get('icap.dropzone_log.manager');
+                $logManager->logNewCorrection($correction);
 
 //                var_dump($correction->getTotalGrade());
 //                die();
