@@ -319,7 +319,7 @@ class DatabaseWriter
 
         if (isset($tool['class'])) {
             $toolEntity->setClass(
-                "{$tool['icon']}"
+                "{$tool['class']}"
             );
         } else {
             $toolEntity->setClass(

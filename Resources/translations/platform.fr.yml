@@ -81,6 +81,7 @@ cannot_unsubscribe_from_workspace: 'Impossible de vous désincrire de l''espace 
 categories: Catégories
 category_root: 'Catégories de base'
 category_structure: 'Structure des catégories'
+change_view : Changer l'affichage
 choose_resource_form_type: 'Type de ressource'
 close: Fermer
 collaborator: Collaborateur
@@ -437,6 +438,7 @@ subscribe_groups: 'Inscrire des groupes'
 subscribe_selected_groups: 'Inscrire les groupes sélectionnés'
 subscribe_selected_users: 'Inscrire les utilisateurs sélectionnés'
 subscribe_users: 'Inscrire des utilisateurs'
+support_email: Email du support
 switch: Echanger
 tag: Tag
 tag_children_list: 'Liste des enfants'

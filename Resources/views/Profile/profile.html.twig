@@ -14,7 +14,7 @@
             {% endif %}
         </div>
         <div class="panel-body">
-            <div class="row">
+            <div>
                 <div>
                     {% if user.getPicture() != "" %}
                         <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="col-md-2">
@@ -39,20 +39,6 @@
                     <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}"><i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
                 </p>
             </div>
-            <p>
-                {% if user.getMail() != "" %}
-                    <i class="icon-envelope"></i> {{ user.getMail() }}
-                    &nbsp;
-                {% endif %}
-                {% if user.getPhone() != "" %}
-                    <i class="icon-phone"></i> {{ user.getPhone() }}
-                {% endif %}
-            </p>
-            <p class="muted">{{ 'user'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}</p>
-            <p>
-                <a class="btn btn-default" href="{{path('claro_mail_form', {'userId':user.getId()})}}"><i class="icon-envelope"></i> {{ 'send_mail'|trans({}, 'platform') }}</a>
-                <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}"><i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
-            </p>
         </div>
     </div>
     <div class="panel panel-default">

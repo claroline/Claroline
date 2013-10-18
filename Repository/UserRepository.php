@@ -575,24 +575,24 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return ($getQuery) ? $query: $query->getResult();
     }
-    
+
     public function findByRolesIncludingGroups(array $roles, $getQuery = false)
     {
         //reduce the number of requests needed by doctrine... it's a little bit hacky but it works
         //This function is used by the Role tool.
-        $dql = "SELECT u, g, r, ws From Claroline\CoreBundle\Entity\User u 
+        $dql = "SELECT u, g, r, ws From Claroline\CoreBundle\Entity\User u
             JOIN u.groups g
             JOIN u.personalWorkspace ws
             JOIN g.roles r";
-        
+
         $this->_em->createQuery($dql)->getResult();
-        
+
         $dql = "
             SELECT u, r1, ws From Claroline\CoreBundle\Entity\User u
-            JOIN u.roles r1 
-            JOIN u.personalWorkspace ws
+            LEFT JOIN u.roles r1
+            LEFT JOIN u.personalWorkspace ws
             LEFT JOIN u.groups g
-            JOIN g.roles r2
+            LEFT JOIN g.roles r2
             WHERE r1 in (:roles)
             OR r2 in (:roles)
             ORDER BY u.lastName
@@ -622,19 +622,19 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return ($getQuery) ? $query: $query->getResult();
     }
-    
+
     public function findByRolesAndNameIncludingGroups(array $roles, $name, $getQuery = false)
     {
         //reduce the number of requests needed by doctrine... it's a little bit hacky but it works
         //This function is used by the Role tool.
-        $dql = "SELECT u, g, r, ws From Claroline\CoreBundle\Entity\User u 
+        $dql = "SELECT u, g, r, ws From Claroline\CoreBundle\Entity\User u
             JOIN u.groups g
             JOIN u.personalWorkspace ws
             JOIN g.roles r";
-        
+
         $this->_em->createQuery($dql)->getResult();
         $search = strtoupper($name);
-        
+
         $dql = "
             SELECT u FROM Claroline\CoreBundle\Entity\User u
             JOIN u.roles r1
