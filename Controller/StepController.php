@@ -165,7 +165,7 @@ class StepController extends Controller
             $this->getPropagatedResources($parent, $heritedResources, $excludedResources);
         }
 
-        // on reverse le tableau pour avoir les ressources de lus haut niveau en haut dans la vue.
+        // on reverse le tableau pour avoir les ressources de plus haut niveau en haut dans la vue.
         $heritedResources = array_reverse($heritedResources);
 
         return $this->render('InnovaPathBundle:Player:partial/herited-resources.html.twig', array(

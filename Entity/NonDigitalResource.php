@@ -49,4 +49,26 @@ class NonDigitalResource extends AbstractResource
     }
 
 
+    /**
+     * Set nonDigitalResourceType
+     *
+     * @param \Innova\PathBundle\Entity\NonDigitalResourceType $nonDigitalResourceType
+     * @return NonDigitalResource
+     */
+    public function setNonDigitalResourceType(\Innova\PathBundle\Entity\NonDigitalResourceType $nonDigitalResourceType = null)
+    {
+        $this->nonDigitalResourceType = $nonDigitalResourceType;
+
+        return $this;
+    }
+
+    /**
+     * Get nonDigitalResourceType
+     *
+     * @return \Innova\PathBundle\Entity\NonDigitalResourceType 
+     */
+    public function getNonDigitalResourceType()
+    {
+        return $this->nonDigitalResourceType;
+    }
 }

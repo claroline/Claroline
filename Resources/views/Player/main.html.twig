@@ -113,7 +113,7 @@
                                 <img src="{{ asset('bundles/innovapath/images/steps/' ~  step.image) }}"/>
                             {% endif %}
                         </div>
-                        {% if step.instructions %}
+                        {% if step.instructions|raw %}
                         <div class="justified">
                             <strong>{{ 'instructions' | trans({}, 'innova_tools') }} :</strong>   {{ step.instructions }}
                         </div>

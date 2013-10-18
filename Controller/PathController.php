@@ -286,7 +286,7 @@ class PathController extends Controller
                     $resourceNode->setName($resource->name);
                     $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(3));
                     $manager->persist($resourceNode);
-                    
+                    $nonDigitalResource->setNonDigitalResourceType($manager->getRepository('InnovaPathBundle:NonDigitalResourceType')->findOneByName($resource->subType));
                     $nonDigitalResource->setResourceNode($resourceNode);
                     $nonDigitalResource->setDescription($resource->description);
                     $manager->persist($nonDigitalResource);
@@ -306,6 +306,7 @@ class PathController extends Controller
                     ){
                     $step2ressourceNode = new Step2ResourceNode();
                 }
+
                 $step2resourceNodesToNotDelete[] = $step2ressourceNode->getId();
                 $step2ressourceNode->setResourceNode($manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId));
                 $step2ressourceNode->setStep($currentStep);
