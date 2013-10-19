@@ -95,5 +95,6 @@ return array(
     'previous_step' => 'Previous',
     'skip_step' => 'Skip',
     'next_step' => 'Next',
-    'test_again' => 'Test again'
+    'test_again' => 'Test again',
+    'please_wait' => 'Please wait'
 );

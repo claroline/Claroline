@@ -51,6 +51,19 @@
         $('.auto-submit').on('change', function () {
             this.form.submit();
         });
+        $('#do-install').on('click', function (event) {
+            $(this).addClass('disabled');
+            $('#pre-install').addClass('disabled');
+            var msg = '<?php echo $trans('please_wait') ?>',
+                points = ['&nbsp;&nbsp;&nbsp;', '.&nbsp;&nbsp;', '..&nbsp;', '...'],
+                index = 1,
+                that = this;
+            that.innerHTML = msg + points[0];
+            setInterval(function () {
+                that.innerHTML = msg + points[index];
+                index = ++index > 3 ? 0 : index;
+            }, 500);
+        });
     </script>
 </body>
 </html>

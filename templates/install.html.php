@@ -2,13 +2,11 @@
 
 <form action="<?php echo $path('/install') ?>" method="post" class="form-horizontal">
     <div class="btn-group step-controls">
-        <a href="<?php echo $path('/mailing') ?>" class="btn btn-default">
+        <a id="pre-install" href="<?php echo $path('/mailing') ?>" class="btn btn-default">
             <?php echo $trans('previous_step') ?>
         </a>
-        <button type="submit" class="btn btn-primary">
+        <button id="do-install" type="submit" class="btn btn-primary">
             <?php echo $trans('do_install') ?>
         </button>
     </div>
 </form>
-
-
