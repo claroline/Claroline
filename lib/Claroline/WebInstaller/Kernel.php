@@ -55,7 +55,6 @@ class Kernel implements HttpKernelInterface
             $response = $controller->installSubmitStep();
         }
 
-        $response = $response ?: new Response('<h1>Page not found</h1>', 404);
-        $response->send();
+        return $response ?: new Response('<h1>Page not found</h1>', 404);
     }
 }
