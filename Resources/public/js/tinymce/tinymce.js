@@ -10,7 +10,7 @@
         browser_spellcheck : true,
         autoresize_min_height: 100,
         autoresize_max_height: 500,
-        content_css: 'bundles/clarolinecore/css/tinymce/tinymce.css',
+        content_css: home.asset + '/bundles/clarolinecore/css/tinymce/tinymce.css',
         plugins: [
             'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
             'searchreplace wordcount visualblocks visualchars code fullscreen',

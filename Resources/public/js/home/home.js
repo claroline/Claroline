@@ -16,6 +16,12 @@
         home.locale = 'en';
     }
 
+    home.asset = $('#homeAsset').html(); //global
+
+    if (!home.asset) {
+        home.asset = './';
+    }
+
     home.modal = function (url, id, element)
     {
         $('.modal').modal('hide');
