@@ -9,12 +9,19 @@ use Claroline\CoreBundle\Library\Security\PlatformRoles;
 class Installer
 {
     private $adminSettings;
+    private $writer;
     private $kernelFile;
     private $kernelClass;
 
-    public function __construct(FirstAdminSettings $adminSettings, $kernelFile, $kernelClass)
+    public function __construct(
+        FirstAdminSettings $adminSettings,
+        Writer $writer,
+        $kernelFile,
+        $kernelClass
+    )
     {
         $this->adminSettings = $adminSettings;
+        $this->writer = $writer;
         $this->kernelFile = $kernelFile;
         $this->kernelClass = $kernelClass;
     }
@@ -25,7 +32,7 @@ class Installer
 
         $kernel = new $this->kernelClass('prod', false);
         $kernel->boot();
-
+/*
         $executor = $kernel->getContainer()->get('claroline.installation.operation_executor');
         $executor->setLogger(function ($message) {
             echo $message . '</br>';
@@ -43,5 +50,7 @@ class Installer
 
         $refresher = $kernel->getContainer()->get('claroline.installation.refresher');
         $refresher->refresh('prod');
+*/
+        $this->writer->writeInstallFlag();
     }
 }

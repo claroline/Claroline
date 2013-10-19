@@ -90,7 +90,8 @@ class Container
         return new Writer(
             $this->appDirectory . '/config/parameters.yml.dist',
             $this->appDirectory . '/config/parameters.yml',
-            $this->appDirectory . '/config/platform_options.yml'
+            $this->appDirectory . '/config/platform_options.yml',
+            $this->appDirectory . '/config/is_installed.php'
         );
     }
 
@@ -98,6 +99,7 @@ class Container
     {
         return new Installer(
             $this->getParameterBag()->getFirstAdminSettings(),
+            $this->getWriter(),
             $this->appDirectory . '/AppKernel.php',
             'AppKernel'
         );

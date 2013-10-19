@@ -222,9 +222,11 @@ class Controller
         $this->container->getWriter()->writeParameters($this->container->getParameterBag());
         $installer = $this->container->getInstaller();
         session_write_close(); // needed because symfony will init a new session
+        ini_set('max_execution_time', 180);
         $installer->install();
+        $this->request->getSession()->invalidate();
 
-        return new Response('OK');
+        return $this->redirect('/../app.php');
     }
     private function renderStep($template, $titleKey, array $variables)
     {

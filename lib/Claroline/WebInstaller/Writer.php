@@ -12,12 +12,19 @@ class Writer
     private $templateFile;
     private $mainFile;
     private $platformFile;
+    private $installFlagFile;
 
-    public function __construct($mainTemplateFile, $mainParameterFile, $platformParameterFile)
+    public function __construct(
+        $mainTemplateFile,
+        $mainParameterFile,
+        $platformParameterFile,
+        $installFlagFile
+    )
     {
         $this->templateFile = $mainTemplateFile;
         $this->mainFile = $mainParameterFile;
         $this->platformFile = $platformParameterFile;
+        $this->installFlagFile = $installFlagFile;
     }
 
     public function writeParameters(ParameterBag $parameters)
@@ -28,6 +35,11 @@ class Writer
             $parameters->getMailingSettings()
         );
         $this->writePlatformParameters($parameters->getPlatformSettings());
+    }
+
+    public function writeInstallFlag()
+    {
+        file_put_contents($this->installFlagFile, "<?php\n\nreturn true;\n");
     }
 
     private function writeMainParameters(
