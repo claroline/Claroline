@@ -93,4 +93,13 @@ class Container
             $this->appDirectory . '/config/platform_options.yml'
         );
     }
+
+    public function getInstaller()
+    {
+        return new Installer(
+            $this->getParameterBag()->getFirstAdminSettings(),
+            $this->appDirectory . '/AppKernel.php',
+            'AppKernel'
+        );
+    }
 }

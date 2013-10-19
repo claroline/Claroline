@@ -220,6 +220,9 @@ class Controller
     public function installSubmitStep()
     {
         $this->container->getWriter()->writeParameters($this->container->getParameterBag());
+        $installer = $this->container->getInstaller();
+        session_write_close(); // needed because symfony will init a new session
+        $installer->install();
 
         return new Response('OK');
     }
