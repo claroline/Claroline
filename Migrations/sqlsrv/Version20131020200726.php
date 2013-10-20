@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\pdo_sqlsrv;
+namespace Claroline\CoreBundle\Migrations\sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/10/14 02:09:00
+ * Generation date: 2013/10/20 08:07:28
  */
-class Version20131014140900 extends AbstractMigration
+class Version20131020200726 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -45,12 +45,28 @@ class Version20131014140900 extends AbstractMigration
             REFERENCES claro_user (id) 
             ON DELETE CASCADE
         ");
+        $this->addSql("
+            ALTER TABLE claro_badge_rule 
+            ADD result NVARCHAR(255)
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_rule 
+            ADD resultComparison SMALLINT
+        ");
     }
 
     public function down(Schema $schema)
     {
         $this->addSql("
             DROP TABLE claro_workspace_favourite
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_rule 
+            DROP COLUMN result
+        ");
+        $this->addSql("
+            ALTER TABLE claro_badge_rule 
+            DROP COLUMN resultComparison
         ");
     }
 }
