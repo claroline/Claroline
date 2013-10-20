@@ -55,9 +55,6 @@ class ResourceControllerTest extends MockeryTestCase
         $controller->shouldReceive('checkAccess')
             ->with('decoderaction', anInstanceOf('Claroline\CoreBundle\Library\Resource\ResourceCollection'));
         $this->dispatcher->shouldReceive('dispatch')->once()
-            ->with('log', 'Log\LogResourceCustom', array($node, $action))
-            ->andReturn($customActionEvent);
-        $this->dispatcher->shouldReceive('dispatch')->once()
             ->with('action_type', 'CustomActionResource', array($res))
             ->andReturn($customActionEvent);
         $response = new \Symfony\Component\HttpFoundation\Response;

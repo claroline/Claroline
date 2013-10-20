@@ -92,7 +92,7 @@ class PlatformConfigurationHandler
             );
         }
 
-        $configParameters = Yaml::parse(file_get_contents($this->configFile));
+        $configParameters = Yaml::parse(file_get_contents($this->configFile)) ?: array();
         $parameters = $this->defaultParameters;
 
         foreach ($configParameters as $parameter => $value) {

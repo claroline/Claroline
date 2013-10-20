@@ -241,9 +241,8 @@ class RolesController extends Controller
 
         return new Response('success');
     }
-    
+
     /**
-     * @todo security is missing
      * @EXT\Route(
      *     "/{workspace}/users/unregistered/page/{page}",
      *     name="claro_workspace_unregistered_user_list",
@@ -262,12 +261,13 @@ class RolesController extends Controller
      */
     public function unregisteredUserListAction($page, $search, AbstractWorkspace $workspace)
     {
+        $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
-        
+
         $pager = ($search === '') ?
             $this->userManager->getAllUsers($page):
             $this->userManager->getUsersByName($search, $page);
-        
+
         return array(
             'workspace' => $workspace,
             'pager' => $pager,
@@ -275,9 +275,8 @@ class RolesController extends Controller
             'wsRoles' => $wsRoles
         );
     }
-    
+
     /**
-     * @todo security is missing
      * @EXT\Route(
      *     "/{workspace}/groups/unregistered/page/{page}",
      *     name="claro_workspace_unregistered_group_list",
@@ -296,12 +295,13 @@ class RolesController extends Controller
      */
     public function unregisteredGroupListAction($page, $search, AbstractWorkspace $workspace)
     {
+        $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
-        
+
         $pager = ($search === '') ?
             $this->groupManager->getAllGroups($page):
             $this->groupManager->getGroupsByName($search, $page);
-        
+
         return array(
             'workspace' => $workspace,
             'pager' => $pager,
@@ -382,7 +382,6 @@ class RolesController extends Controller
     }
 
     /**
-     * @todo security is missing
      * @EXT\Route(
      *     "/{workspace}/users/registered/page/{page}",
      *     name="claro_workspace_registered_user_list",
@@ -410,12 +409,13 @@ class RolesController extends Controller
         $search
     )
     {
+        $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
         $pager = ($search === '') ?
             $this->userManager->getByRolesIncludingGroups($wsRoles, $page):
             $this->userManager->getByRolesAndNameIncludingGroups($wsRoles, $search, $page);
-        
+
         //groups
 
         return array(
@@ -427,7 +427,6 @@ class RolesController extends Controller
     }
 
     /**
-     * @todo security is missing
      * @EXT\Route(
      *     "/{workspace}/groups/registered/page/{page}",
      *     name="claro_workspace_registered_group_list",
@@ -455,6 +454,7 @@ class RolesController extends Controller
         $search
     )
     {
+        $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
         $pager = ($search === '') ?
@@ -519,7 +519,7 @@ class RolesController extends Controller
 
     private function checkAccess(AbstractWorkspace $workspace)
     {
-        if (!$this->security->isGranted('parameters', $workspace)) {
+        if (!$this->security->isGranted('users', $workspace)) {
             throw new AccessDeniedException();
         }
     }
