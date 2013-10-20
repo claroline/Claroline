@@ -51,7 +51,7 @@
     <a href="<?php echo $path('/') ?>" class="btn btn-default">
         <?php echo $trans('previous_step') ?>
     </a>
-    <?php if ($var('has_failed_requirement')): ?>
+    <?php if ($var('has_failed_requirement') || $var('has_failed_recommendation')): ?>
         <a href="" class="btn btn-warning">
             <?php echo $trans('test_again') ?>
         </a>
