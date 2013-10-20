@@ -1155,11 +1155,7 @@
             });
         },
         custom: function (action, nodeId, redirect) {
-            if (redirect) {
-                window.location = this.parameters.appPath + '/resource/custom/' + action + '/' + nodeId;
-            } else {
-                alert("ajax call: no implementation yet");
-            }
+            window.location = this.parameters.appPath + '/resource/custom/' + action + '/' + nodeId;
         },
         picker: function (action, callback) {
             if (action === 'open' && !this.views.picker.isAppended) {
