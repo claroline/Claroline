@@ -2,6 +2,30 @@
 
 {% trans_default_domain "badge" %}
 
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': workspace.name ~ ' - ' ~  workspace.code,
+                'href': path('claro_workspace_open', {'workspaceId': workspace.id, 'toolName': 'home'})
+            },
+            {
+                'name': 'badges'|trans({}, 'badge'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_title %}
+    {{ 'workspace_badges'|trans }}
+{% endblock %}
+
 {% block section_body %}
     {{ render(controller('ClarolineCoreBundle:Badge/Badge:list', {'parameters': parameters, 'badgeClaims': badgeClaims})) }}
 {% endblock %}

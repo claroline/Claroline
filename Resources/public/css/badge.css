@@ -131,15 +131,15 @@ ul.user_badges > li .close {
   text-align: center;
   padding: 19px 20px 20px;
 }
-.panel-title .breadcrumb {
-  margin-bottom: 0;
-  padding: 0;
-}
 .panel-body {
   padding-left: 10px;
 }
 table.no_margin {
   margin: 0;
+}
+form .row {
+  margin-left: 0;
+  margin-right: 0;
 }
 .badges_rules .rules {
   border: 1px solid #ddd;
