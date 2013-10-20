@@ -32,11 +32,8 @@ class Installer
 
         $kernel = new $this->kernelClass('prod', false);
         $kernel->boot();
-/*
+
         $executor = $kernel->getContainer()->get('claroline.installation.operation_executor');
-        $executor->setLogger(function ($message) {
-            echo $message . '</br>';
-        });
         $executor->execute();
 
         $userManager = $kernel->getContainer()->get('claroline.manager.user_manager');
@@ -50,7 +47,7 @@ class Installer
 
         $refresher = $kernel->getContainer()->get('claroline.installation.refresher');
         $refresher->refresh('prod');
-*/
+
         $this->writer->writeInstallFlag();
     }
 }
