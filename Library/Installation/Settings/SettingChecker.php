@@ -156,7 +156,8 @@ class SettingChecker
             'mbstring' => function_exists('mb_strlen'),
             'XML' => function_exists('utf8_decode'),
             'gd' => extension_loaded('gd'),
-            'ffmpeg' => extension_loaded('ffmpeg')
+            'ffmpeg' => extension_loaded('ffmpeg'),
+            'intl' => defined('INTL_ICU_VERSION')
         );
 
         foreach ($recommendedExtensions as $extension => $isEnabled) {
