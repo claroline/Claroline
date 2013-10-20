@@ -44,6 +44,12 @@ $(function(){
 
     $(ruleDeleteConfirmSelector, ruleTabs).confirmModal({'confirmCallback': confirmDeleteRule});
 
+    $(".rules").on('change', '.badge_result_awarding', function(event){
+        var tab = $("#" + $(this).attr('data-tab-id'));
+        $(".rule_result", tab).toggleClass('hidden');
+        event.preventDefault();
+    })
+
     function confirmDeleteRule(element)
     {
         deleteRule(element.attr('data-id-tab'));

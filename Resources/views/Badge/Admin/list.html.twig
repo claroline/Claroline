@@ -18,7 +18,7 @@
     }}
 {% endblock %}
 
-{% block section_title_first %}<li><a href="{{ path('claro_admin_badges') }}" title="{{ 'back_to_badges_list'|trans }}">{{ 'Badges'|trans }}</a></li>{% endblock %}
+{% block section_title %}{{ 'badges_management'|trans({}, 'platform') }}{% endblock %}
 
 {% block section_body %}
     {{ render(controller('ClarolineCoreBundle:Badge/Badge:list', {'parameters': parameters, 'badgeClaims': badgeClaims})) }}
