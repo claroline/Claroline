@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Twig;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * @DI\Service
@@ -12,14 +13,16 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 class HomeExtension extends \Twig_Extension
 {
     protected $container;
+    protected $kernel;
 
     /**
      * @DI\InjectParams({
      *     "container" = @DI\Inject("service_container")
      * })
      */
-    public function __construct($container)
+    public function __construct(KernelInterface $kernel, $container)
     {
+        $this->kernel = $kernel;
         $this->container = $container;
     }
 
@@ -42,7 +45,8 @@ class HomeExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'isDesktop' => new \Twig_Function_Method($this, 'isDesktop')
+            'isDesktop' => new \Twig_Function_Method($this, 'isDesktop'),
+            'asset_exists' => new \Twig_Function_Method($this, 'asset_exists')
         );
     }
 
@@ -187,5 +191,19 @@ class HomeExtension extends \Twig_Extension
     public function getName()
     {
         return 'home_extension';
+    }
+
+    public function asset_exists($path)
+    {
+        $webRoot = realpath($this->kernel->getRootDir() . '/../web/');
+        $toCheck = realpath($webRoot . '/' . $path);
+
+        // check if the file exists
+        if (!is_file($toCheck))
+        {
+            return false;
+        }
+
+        return true;
     }
 }

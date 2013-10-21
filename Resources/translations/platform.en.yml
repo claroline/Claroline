@@ -1,3 +1,4 @@
+404: 'Page Not found'
 'Add a logo': 'Add a logo'
 'Choose a logo': 'Choose a logo'
 'None': 'None'
@@ -214,6 +215,7 @@ import_user_file_file: Import from a csv file
 import_users: 'Import users'
 informations: Informations
 instructions: Instructions
+internal_error : Internal server error. Please contact the administrator.
 invalid_csv_file: 'Invalid CSV file'
 jqplot_date_output_format: '%m/%d/%Y'
 lastName: 'Last name'
@@ -275,6 +277,7 @@ my_account: 'My account'
 my_agenda: 'My agenda'
 my_badges: 'My badges'
 my_contacts: 'My contacts'
+my_favourite_workspaces: 'My favourite worksapces'
 my_notes: 'My notes'
 my_portfolio: 'My portfolio'
 my_resources: 'My resources'
@@ -479,6 +482,7 @@ top_workspaces_resources: 'Top workspaces having the most resources'
 trash : Trash
 type: Type
 type_s: Type(s)
+unauthorized : 'You are not authorized to see this page.'
 unique connections: 'Nb unique Cnx.'
 unregister: Unregister
 unregister_from_a_workspace: 'Unregister from a workspace'

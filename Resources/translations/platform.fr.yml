@@ -1,3 +1,4 @@
+404 : 'La page que vous cherchez n''existe pas.'
 'Add a logo': 'Ajouter un logo'
 'Choose a logo': 'Choisir un logo'
 'None': 'Aucun'
@@ -214,6 +215,7 @@ import_user_file_file: 'Importer depuis fichier csv'
 import_users: 'Importer des utilisateurs'
 informations: Informations
 instructions: Consignes
+internal_error : 'Erreur interne du serveur. Veuillez contactez l''administrateur de la plateforme.'
 invalid_csv_file: 'Le fichier CSV n''est pas valide'
 jqplot_date_output_format: '%d-%m-%Y'
 lastName: Nom
@@ -274,6 +276,7 @@ my_account: 'Mon compte'
 my_agenda: 'Mon agenda'
 my_badges: 'Mes badges'
 my_contacts: 'Mes contacts'
+my_favourite_workspaces: 'Mes espaces d''activités favoris'
 my_notes: 'Mes notes'
 my_portfolio: 'Mon portfolio'
 my_resources: 'Mes resources'
@@ -475,6 +478,7 @@ top_workspaces_resources: 'Top des espaces d''activités avec le plus des resour
 trash : Corbeille
 type: Type
 type_s: Type(s)
+unauthorized : 'Vous n''êtes pas autorisé à consulter cette page.'
 unique connections: 'Nb Cnx. uniques'
 unregister: Désinscription
 unregister_from_a_workspace: 'Désinscription d''un espace d''activités'

@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -60,6 +61,7 @@ class WorkspaceManager
     private $templateDir;
     /** @var PagerFactory */
     private $pagerFactory;
+    private $workspaceFavouriteRepo;
 
     /**
      * Constructor.
@@ -107,6 +109,7 @@ class WorkspaceManager
         $this->resourceRightsRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
+        $this->workspaceFavouriteRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceFavourite');
         $this->pagerFactory = $pagerFactory;
     }
 
@@ -192,7 +195,7 @@ class WorkspaceManager
     public function deleteWorkspace(AbstractWorkspace $workspace)
     {
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
-        
+
         foreach ($root->getChildren() as $node) {
             $this->resourceManager->delete($node);
         }
@@ -340,6 +343,22 @@ class WorkspaceManager
         return $preparedRightsArray;
     }
 
+    public function addFavourite(AbstractWorkspace $workspace, User $user)
+    {
+        $favourite = new WorkspaceFavourite();
+        $favourite->setWorkspace($workspace);
+        $favourite->setUser($user);
+
+        $this->om->persist($favourite);
+        $this->om->flush();
+    }
+
+    public function removeFavourite(WorkspaceFavourite $favourite)
+    {
+        $this->om->remove($favourite);
+        $this->om->flush();
+    }
+
     /**
      * Repository functions
      */
@@ -436,5 +455,39 @@ class WorkspaceManager
             ->findWorkspacesWithSelfUnregistrationByRoles($roles);
 
         return $this->pagerFactory->createPagerFromArray($workspaces, $page);
+    }
+
+    public function getWorkspaceByWorkspaceAndRoles(
+        AbstractWorkspace $workspace,
+        array $roles
+    )
+    {
+        return $this->workspaceRepo->findWorkspaceByWorkspaceAndRoles(
+            $workspace,
+            $roles
+        );
+    }
+
+    public function getFavouriteWorkspacesByUser(User $user)
+    {
+        $workspaces = array();
+        $favourites = $this->workspaceFavouriteRepo
+            ->findFavouriteWorkspacesByUser($user);
+
+        foreach ($favourites as $favourite) {
+            $workspace = $favourite->getWorkspace();
+            $workspaces[$workspace->getId()] = $workspace;
+        }
+
+        return $workspaces;
+    }
+
+    public function getFavouriteByWorkspaceAndUser(
+        AbstractWorkspace $workspace,
+        User $user
+    )
+    {
+        return $this->workspaceFavouriteRepo
+            ->findOneBy(array('workspace' => $workspace, 'user' => $user));
     }
 }

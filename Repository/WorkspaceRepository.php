@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Doctrine\ORM\EntityRepository;
 
 class WorkspaceRepository extends EntityRepository
@@ -407,5 +408,30 @@ class WorkspaceRepository extends EntityRepository
         $query->setParameter('excludedWorkspaces', $excludedWorkspaces);
 
         return $query->getResult();
+    }
+
+    public function findWorkspaceByWorkspaceAndRoles(
+        AbstractWorkspace $workspace,
+        array $roles
+    )
+    {
+        if (count($roles > 0)) {
+            $dql = "
+                SELECT DISTINCT w
+                FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+                JOIN w.orderedTools ot
+                JOIN ot.roles r
+                WHERE w = :workspace
+                AND r.name IN (:roles)
+            ";
+
+            $query = $this->_em->createQuery($dql);
+            $query->setParameter('workspace', $workspace);
+            $query->setParameter('roles', $roles);
+
+            return $query->getOneOrNullResult();
+        }
+
+        return null;
     }
 }

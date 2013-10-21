@@ -39,9 +39,7 @@
         {% for element in elements %}
             <li{% if element['href'] == "" %} class="active"{% endif %}>
                 {% if element['href'] != "" %}
-                    <a href="{{ element['href'] }}">
-                        {% if element['icon'] is defined %}<i class="{{ element['icon'] }}"></i> {% endif %}{{ element['name'] }}
-                    </a>
+                    <a href="{{ element['href'] }}">{% if element['icon'] is defined %}<i class="{{ element['icon'] }}"></i> {% endif %}{{ element['name'] }}</a>
                 {% else %}
                     {{ element['name'] }}
                 {% endif %}
