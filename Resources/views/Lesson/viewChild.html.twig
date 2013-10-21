@@ -28,21 +28,18 @@
             <div class='panel panel-default menu_lesson ' data-offset-top="90" data-clampedwidth = '#lesson_left_column'>
         <div class="navbar navbar-default navbar-static-top">
             <ul class='nav navbar-nav pull-right'>
-                <li class='lesson_tooltip' data-original-title='{{ 'enabled_move'|trans({}, 'icap_lesson') }}'><a href='#' id='enable_move' data-status = 'enable' class='icon_link'><i class="icon-move"  ></i></a></li>
+                {% if is_granted('EDIT', node) %}
+                   {#  <i class="icon-plus"></i> {{ 'new_chapter'|trans({}, 'icap_lesson') }}#}
+                    {#<a data-chapter = '{{ chapter.id }}' class="createchapter btn" href="{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': tree.id })}}" >test</a>#}
+                    <li class='lesson_tooltip' data-original-title='{{ 'create_root'|trans({}, 'icap_lesson') }}'><a data-chapter = '{{ chapter.id }}' href="{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': tree.id })}}" class='icon_link createchapter'><i class="icon-plus"  ></i></a></li>
+                    <li class='lesson_tooltip' data-original-title='{{ 'enabled_move'|trans({}, 'icap_lesson') }}'><a href='#' id='enable_move' data-status = 'enable' class='icon_link'><i class="icon-move"  ></i></a></li>
+                {%  endif  %}
                 <li class='lesson_tooltip' data-original-title='{{ 'collapse_all'|trans({}, 'icap_lesson') }}'><a href='#' id='collapse_all' class='icon_link'><i class="icon-indent-right" ></i></a></li>
                 <li class='lesson_tooltip' data-original-title='{{ 'expand_all'|trans({}, 'icap_lesson') }}'><a href='#' id='expand_all' class='icon_link'><i class="icon-sort-by-attributes-alt" ></i></a></li>
             </ul>
         </div>
 
         {{ _self.recursiveChapter(tree, chapter, _resource, true) }}
-        {% if is_granted('EDIT', node) %}
-            <div >
-                <hr />
-                <a data-chapter = '{{ chapter.id }}' class="createchapter btn" href="{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': tree.id })}}" >
-                    <i class="icon-plus"></i> {{ 'new_chapter'|trans({}, 'icap_lesson') }}
-                </a>
-            </div>
-        {%  endif  %}
         <form id='moveform' action ='' method='post' style='display:none;'>
             {{ form_rest(form) }}
            {# {{ form_row(form._token) }}#}

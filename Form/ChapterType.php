@@ -18,11 +18,10 @@ class ChapterType extends AbstractType
     {
         $builder
             ->add('title','text')
-            ->add('text', 'textarea', array(
+            ->add('text', 'tinymce', array(
                     'attr' => array(
-                        'class'      => 'tinymce',
                         'data-theme' => 'advanced',
-                        'height' => '500'
+                        'height' => '600'
                     )
                 )
             )

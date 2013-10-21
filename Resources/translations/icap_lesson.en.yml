@@ -1,5 +1,6 @@
 Cancel: 'Cancel'
 confirm: 'Confirm'
+create_root: 'Create chapter into lesson root'
 enabled_move: 'Enable drag and drop'
 expand_all : 'Expand all'
 collapse_all : 'Collpase all'

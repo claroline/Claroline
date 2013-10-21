@@ -66,7 +66,7 @@ $(document).ready(function() {
         injectForm($(this), '#editChapter');
     });
     //form ajax insertion for chapter creation
-    $('a.createchapter').each(function(){
+    $('.createchapter').each(function(){
         injectForm($(this), '#createChapter');
     });
     //form ajax insertion for chapter move
