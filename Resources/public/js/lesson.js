@@ -103,22 +103,22 @@ function initCollapsor(){
 function toggleCollapsor(obj){
     var chapter_id = $(obj).data('collapsor');
     $('#list_'+chapter_id).toggle(300);
-    $('#collapsor_icon_'+chapter_id).toggleClass('icon-collapse');
-    $('#collapsor_icon_'+chapter_id).toggleClass('icon-expand');
+    $('#collapsor_icon_'+chapter_id).toggleClass('icon-caret-down');
+    $('#collapsor_icon_'+chapter_id).toggleClass('icon-caret-right');
 }
 
 function collapse(obj){
     var chapter_id = $(obj).data('collapsor');
     $('#list_'+chapter_id).hide(300);
-    $('#collapsor_icon_'+chapter_id).removeClass('icon-collapse');
-    $('#collapsor_icon_'+chapter_id).addClass('icon-expand');
+    $('#collapsor_icon_'+chapter_id).removeClass('icon-caret-down');
+    $('#collapsor_icon_'+chapter_id).addClass('icon-caret-right');
 }
 
 function expand(obj){
     var chapter_id = $(obj).data('collapsor');
     $('#list_'+chapter_id).show(300);
-    $('#collapsor_icon_'+chapter_id).addClass('icon-collapse');
-    $('#collapsor_icon_'+chapter_id).removeClass('icon-expand');
+    $('#collapsor_icon_'+chapter_id).addClass('icon-caret-down');
+    $('#collapsor_icon_'+chapter_id).removeClass('icon-caret-right');
 }
 
 function checkMoveValue(){

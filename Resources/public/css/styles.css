@@ -177,6 +177,36 @@ li.custom_field div div {
 .navbar .navbar-nav .icon_link{
     padding-top:13px;
     padding-bottom:13px;
+    padding-left: 6px;
+    padding-right: 6px;
+
+
+}
+
+.navbar .navbar-nav .menu_lesson_button{
+
+}
+
+.menu_collapsor_icons{
+    font-size: 0.9em;
+}
+
+.chapter_list_header{
+    text-align: center;
+    font-weight: bold;
+    color: #777;
+    font-size: 1.2em;
+}
+
+.chapter_menu_labels{
+    font-size: 0.7em;
+    margin-left:2px;
+}
+
+.back_top_page{
+    text-align: center;
+    color: #666;
+
 }
 
 /*sortable styles*/
@@ -213,6 +243,7 @@ ul.jquery-sortable-list li i{
 
 ul.jquery-sortable-list li .menu-item{
     padding:5px;
+    font-size: 0.9em;
 }
 
 ul.jquery-sortable-list li .menu-item .icon-move{

@@ -12,7 +12,7 @@
             {% else %}
                 <div class='menu-item'>
             {% endif %}
-            <i class='icon-collapse collapsor {% if child.__children|length == 0%}empty{% endif %}' id='collapsor_icon_{{ child.id }}' data-collapsor = '{{ child.id }}'></i>
+            <i class='icon-caret-down collapsor {% if child.__children|length == 0%}empty{% endif %}' id='collapsor_icon_{{ child.id }}' data-collapsor = '{{ child.id }}'></i>
             {#<i data-handle = '{{ child.id }}' class="icon-file-text-alt handle_sortable lesson_tooltip" data-original-title='{{ 'dragndrop_button'|trans({}, 'icap_lesson') }}'></i>#}
             <a href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': child.id }) }}">{{ child.title }}</a>
             </div>
@@ -25,21 +25,20 @@
 
 {% if tree is defined and tree != null and tree.__children is defined and tree.__children|length %}
            {# data-spy="affix"#}
-            <div class='panel panel-default menu_lesson ' data-offset-top="90" data-clampedwidth = '#lesson_left_column'>
+    <div class='panel panel-default menu_lesson ' data-offset-top="90" data-clampedwidth = '#lesson_left_column'>
         <div class="navbar navbar-default navbar-static-top">
-            <ul class='nav navbar-nav pull-right'>
+            <ul class='nav navbar-nav'>
                 {% if is_granted('EDIT', node) %}
-                   {#  <i class="icon-plus"></i> {{ 'new_chapter'|trans({}, 'icap_lesson') }}#}
-                    {#<a data-chapter = '{{ chapter.id }}' class="createchapter btn" href="{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': tree.id })}}" >test</a>#}
-                    <li class='lesson_tooltip' data-original-title='{{ 'create_root'|trans({}, 'icap_lesson') }}'><a data-chapter = '{{ chapter.id }}' href="{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': tree.id })}}" class='icon_link createchapter'><i class="icon-plus"  ></i></a></li>
-                    <li class='lesson_tooltip' data-original-title='{{ 'enabled_move'|trans({}, 'icap_lesson') }}'><a href='#' id='enable_move' data-status = 'enable' class='icon_link'><i class="icon-move"  ></i></a></li>
+                     <li class='lesson_tooltip menu_lesson_button' data-original-title='{{ 'create_root'|trans({}, 'icap_lesson') }}'><a data-chapter = '{{ chapter.id }}' href="{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': tree.id })}}" class='icon_link createchapter btn'><i class="icon-plus"  ></i><span class='chapter_menu_labels'>{{ 'new_chapter'|trans({}, 'icap_lesson') }}</span></a></li>
+                    <li class='lesson_tooltip menu_lesson_button' data-original-title='{{ 'enabled_move'|trans({}, 'icap_lesson') }}'><a href='#' id='enable_move' data-status = 'enable' class='icon_link'><i class="icon-move"  ></i><span class='chapter_menu_labels'>{{ 'reorganize'|trans({}, 'icap_lesson') }}</span></a></li>
                 {%  endif  %}
-                <li class='lesson_tooltip' data-original-title='{{ 'collapse_all'|trans({}, 'icap_lesson') }}'><a href='#' id='collapse_all' class='icon_link'><i class="icon-indent-right" ></i></a></li>
-                <li class='lesson_tooltip' data-original-title='{{ 'expand_all'|trans({}, 'icap_lesson') }}'><a href='#' id='expand_all' class='icon_link'><i class="icon-sort-by-attributes-alt" ></i></a></li>
+                <li class='lesson_tooltip menu_lesson_button' data-original-title='{{ 'collapse_all'|trans({}, 'icap_lesson') }}'><a href='#' id='collapse_all' class='icon_link btn'> <span class='menu_collapsor_icons'><i class="icon-long-arrow-up" ></i><i class="icon-minus"></i></span></a></li>
+                <li class='lesson_tooltip menu_lesson_button' data-original-title='{{ 'expand_all'|trans({}, 'icap_lesson') }}'><a href='#' id='expand_all' class='icon_link btn'><span class='menu_collapsor_icons'><i class="icon-long-arrow-down"></i><i class="icon-reorder"></i></span></a></li>
             </ul>
         </div>
-
+        <div class='chapter_list_header'>{{ 'chapter_list_header'|trans({}, 'icap_lesson') }}</div>
         {{ _self.recursiveChapter(tree, chapter, _resource, true) }}
+        <br />
         <form id='moveform' action ='' method='post' style='display:none;'>
             {{ form_rest(form) }}
            {# {{ form_row(form._token) }}#}
