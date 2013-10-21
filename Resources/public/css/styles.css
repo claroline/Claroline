@@ -179,28 +179,30 @@ li.custom_field div div {
     padding-bottom:13px;
     padding-left: 6px;
     padding-right: 6px;
-
-
+    vertical-align: middle;
+    font-size:12px;
 }
 
-.navbar .navbar-nav .menu_lesson_button{
 
+.chapter_menu_labels{
+    font-size:11px;
+    margin-left:2px;
 }
 
-.menu_collapsor_icons{
-    font-size: 0.9em;
+.navbar .navbar-nav .icon_link span{
+    vertical-align: middle;
 }
+
+.navbar .navbar-nav .icon_link span span{
+    vertical-align: middle;
+}
+
 
 .chapter_list_header{
     text-align: center;
     font-weight: bold;
     color: #777;
     font-size: 1.2em;
-}
-
-.chapter_menu_labels{
-    font-size: 0.7em;
-    margin-left:2px;
 }
 
 .back_top_page{
