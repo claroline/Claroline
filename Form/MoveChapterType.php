@@ -37,33 +37,46 @@ class MoveChapterType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        //$builder->addValidator(new CallbackValidator(array($this, 'isNotRoot')));
+
         $builder->addEventListener(FormEvents::PRE_SET_DATA,
             function (FormEvent $event) use ($builder)
             {
                 $form = $event->getForm();
                 $data = $event->getData();
 
-                $chapters = $this->entityManager->getRepository('IcapLessonBundle:Chapter')->getChapterAndChapterChildren($data->getLesson()->getRoot());
-                $chapters_list = array();
-                $root = true;
-
-                foreach ($chapters as $child) {
-                    if($root){
-                        $chapters_list[$child->getId()] = $this->translator->trans('Root', array(), 'icap_lesson');
-                        $root = false;
-                    }else{
-                        $chapters_list[$child->getId()] = $child->getTitle();
+                if($data != null){
+                    $chapters = $this->entityManager->getRepository('IcapLessonBundle:Chapter')->getChapterAndChapterChildren($data->getLesson()->getRoot());
+                    $chapters_list = array();
+                    $root = true;
+                    foreach ($chapters as $child) {
+                        if($root){
+                            $chapters_list[$child->getId()] = $this->translator->trans('Root', array(), 'icap_lesson');
+                            $root = false;
+                        }else{
+                            //remove current chapter from legit destination list
+                            if($data->getId() != $child->getId()){
+                                $chapters_list[$child->getId()] = $child->getTitle();
+                            }
+                        }
                     }
+
+                    $form
+                        ->add('choiceChapter', 'choice', array(
+                            'mapped' => false,
+                            'choices' => $chapters_list
+                        ));
                 }
 
                 $form
-                    ->add('choiceChapter', 'choice', array(
-                        'mapped' => false,
-                        'choices' => $chapters_list
-                    ))
                     ->add('brother', 'checkbox', array(
                         'required' => false,
                         'mapped' => false
+                    ))
+                    ->add('firstposition', 'hidden', array(
+                        'required' => false,
+                        'mapped' => false,
+                        'data' => 'false'
                     ));
             });
     }
@@ -79,4 +92,9 @@ class MoveChapterType extends AbstractType
     {
         return 'icap_lesson_movechaptertype';
     }
+
+/*    public function isNotRoot(FormInterface $form)
+    {
+
+    }*/
 }

@@ -482,6 +482,7 @@ class LessonController extends Controller
         if ($form->isValid() and $form->get('choiceChapter')->getData() != $chapter->getid()) {
             $newParentId = $form->get('choiceChapter')->getData();
             $brother = $form->get('brother')->getData();
+            $firstposition = $form->get('firstposition')->getData();
         }else{
             return array(
                 'lesson' => $lesson,
@@ -500,10 +501,16 @@ class LessonController extends Controller
         }
 
         //a node cant be sibling with root
+/*        var_dump($firstposition);
+        die();*/
         if ($brother == true and $newParentId != $lesson->getRoot()->getId()){
             $repo->persistAsNextSiblingOf($chapter, $newParent);
         } else {
-            $repo->persistAsFirstChildOf($chapter, $newParent);
+            if($firstposition == "true"){
+                $repo->persistAsFirstChildOf($chapter, $newParent);
+            }else{
+                $repo->persistAsLastChildOf($chapter, $newParent);
+            }
         }
         $em->flush();
 

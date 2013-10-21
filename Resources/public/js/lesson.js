@@ -42,12 +42,16 @@ function initSortable(){
             var parentId = $item.parent().data('list');
             var $previous_element = $item.prev();
             var brother = false;
+            var firstposition = true;
             if($previous_element != null && $previous_element != undefined && $previous_element.attr('id') != undefined){
                 parentId = $previous_element.attr('id');
                 brother = true;
+                firstposition = false;
             }
             $('#icap_lesson_movechaptertype_choiceChapter').val(parentId);
             $('#icap_lesson_movechaptertype_brother').prop('checked', brother);
+            $('#icap_lesson_movechaptertype_firstposition').val(firstposition);
+
             var request = $.post( path, $('#moveform').serialize())
                 .done(function() {
                     // alert( "success" );
