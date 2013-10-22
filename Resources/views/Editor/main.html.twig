@@ -21,8 +21,8 @@
 
             <div class="editor-buttons">
                 <div class="btn-group">
-                    <button class="btn btn-default btn-sm" ng-click="undo()" ng-disabled="undoDisabled"><span class="icon-reply"></span></button>
-                    <button class="btn btn-default btn-sm" ng-click="redo()" ng-disabled="redoDisabled"><span class="icon-share-alt"></span></button>
+                    <button class="btn btn-default btn-sm" ng-click="undo()" ng-disabled="undoDisabled" tooltip="Undo"><span class="icon-reply"></span></button>
+                    <button class="btn btn-default btn-sm" ng-click="redo()" ng-disabled="redoDisabled" tooltip="Redo"><span class="icon-share-alt"></span></button>
                 </div>
                 <button class="btn btn-sm btn-primary" ng-click="save(path)" tooltip="Save"><span class="icon-save"></span></button>
                 <a href="{{ path('claro_workspace_open_tool', {workspaceId: workspace.id, toolName: 'innova_path'}) }}" class="btn btn-danger btn-sm" tooltip="Back to list"><span class="icon-remove"></span></a>
