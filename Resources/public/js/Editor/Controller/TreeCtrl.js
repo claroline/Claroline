@@ -11,7 +11,10 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
     $scope.currentEditingStep = null;
     
     $scope.previewStep = null;
-
+    
+    // Display templates list
+    $scope.templateSidebar.show = true;
+    
     $scope.sortableOptions = {
         update: function(e, ui) { $scope.applyTreeChanges(); },
         placeholder: 'placeholder',

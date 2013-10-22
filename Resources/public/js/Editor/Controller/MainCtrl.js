@@ -13,6 +13,10 @@ function MainCtrl($scope, $http, $window, $location, $modal, HistoryFactory, Cli
         $scope.activeTab = current.activeTab;
     });
 
+    // Hide templates by default (it's only used in scenario with the tree view)
+    $scope.templateSidebar = {};
+    $scope.templateSidebar.show = true;
+    
     $scope.alerts = AlertFactory.getAlerts();
     $scope.path = null;
 
