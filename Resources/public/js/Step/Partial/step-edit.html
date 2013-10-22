@@ -126,6 +126,7 @@
                 <div class="panel-body">
                     <div>
                         <img ng-hide="formStep.image == null" src="{{ webDir }}images/steps/{{ formStep.image }}" />
+                        <em ng-hide="formStep.image != null">This step has no image.</em>
                     </div>
                     <br/>
                     <button class="btn btn-default btn-sm" ng-click="selectImage()"><i class="icon-picture"></i> Select image</button>

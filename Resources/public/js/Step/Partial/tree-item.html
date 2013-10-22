@@ -1,5 +1,6 @@
 <form class="tree-item form-inline" ng-class="{'active-step': previewStep.id == step.id}" ng-click="setPreviewStep(step)" ng-mouseenter="showButtons = step.id" ng-mouseleave="showButtons = null">
-    <span ng-show="currentEditingStep != step.id" class="icon-chevron-right"></span>
+    <span ng-show="currentEditingStep != step.id && step.image == null" class="icon-chevron-right"></span>
+    <img ng-show="currentEditingStep != step.id && step.image != null" height="28" src="{{ webDir }}images/steps/{{ step.image }}" />
     <span ng-show="currentEditingStep != step.id" class="step-name">{{ step.name | truncate }}</span>
 
     <div ng-show="currentEditingStep == step.id"  class="input-group input-group-sm">
