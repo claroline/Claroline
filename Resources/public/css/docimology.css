@@ -37,7 +37,7 @@ td.jqplot-table-legend.jqplot-table-legend-label {
 }
 
 tr.jqplot-table-legend {
-    display: inline;
+    display: inline-block;
 } 
 
 .jqplot-target {

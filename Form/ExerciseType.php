@@ -109,7 +109,6 @@ class ExerciseType extends AbstractType
                     'format' => 'dd/MM/yyyy hh:mm:ss',
                     'attr' => array('data-format' => 'dd/MM/yyyy hh:mm:ss'),
                     'label' => 'correction date',
-                    'read_only' => true
                 )
             )
             ->add(
@@ -128,7 +127,6 @@ class ExerciseType extends AbstractType
                 'format' => 'dd/MM/yyyy hh:mm:ss',
                 'attr' => array('data-format' => 'dd/MM/yyyy hh:mm:ss'),
                 'label' => 'start date',
-                'read_only' => true
                 )
             )
             ->add(
@@ -143,7 +141,6 @@ class ExerciseType extends AbstractType
                     'format' => 'dd/MM/yyyy hh:mm:ss',
                     'attr' => array('data-format' => 'dd/MM/yyyy hh:mm:ss'),
                     'label' => 'Exercise.end_date',
-                    'read_only' => true
                 )
             )
             ->add(

@@ -178,9 +178,14 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
+    <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
     <script src="{{ asset('bundles/ujmexo/js/dateTimePicker.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datetimepicker/src/js/locales/bootstrap-datetimepicker.fr.js') }}"></script>
 
     <script type="text/javascript">
 

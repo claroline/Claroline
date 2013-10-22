@@ -175,7 +175,7 @@
                             },
                             renderer: $.jqplot.CategoryAxisRenderer,
                             ticks: marks,
-                            tickOptions: {showGridline: false,formatString: '%.1f'}
+                            tickOptions: {showGridline: false, formatString: '%.1f'}
                         },
 
                         yaxis: {
@@ -273,9 +273,10 @@
                 });
 
                 /*********************************histoDiscrimination******************************************************/
-                var s1 = [{{ coeffQ }}];
-
-                if (s1 != 'none') {
+                if ({{ coeffQ }} != 'none') {
+                    
+                    var s1 = [{{ coeffQ }}];
+                    
                     $.jqplot('histoDiscrimination', [s1], {
 
                         stackSeries: true,
