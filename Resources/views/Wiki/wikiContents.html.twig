@@ -4,7 +4,7 @@
             {% set visibleClass = section.visible is sameas (true)?"":"invisible-wiki-content" %}
             <li id="li-{{ section.id }}" data-section="{{ section.id }}" class="{{ visibleClass }}">
                 <a href="#section-{{section.id}}">
-                    {{prefix ~ loop.index}}&nbsp;{{ section.title }}
+                    {{prefix ~ loop.index}}&nbsp;{{ section.activeContribution.title }}
                     {% if section.visible is sameas (false) %}
                         <span class="invisible-section-text">({{"invisible"|trans({},'icap_wiki')}})</span>
                     {% endif %}
@@ -19,6 +19,6 @@
     {% endfor %}
 {% endmacro %}
 
-<ul id="wiki-contents-list" data-section="0" class="jquery-sortable-list sortable-list">
+<ul id="wiki-contents-list" data-section="{{ rootId }}" class="jquery-sortable-list sortable-list">
     {{ _self.wiki_contents(sections, isAdmin, delimeter, "") }}
 </ul>

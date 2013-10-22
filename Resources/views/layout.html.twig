@@ -30,13 +30,11 @@
         <div class="panel panel-wiki">
             <div class="panel-body"> 
                 {% block wiki_panel %}           
-                    {% for item in pathArray|slice(length-2, 1) %}
-                        <a href="{{ path('claro_desktop_open_tool', {"toolName": "resource_manager"}) ~ "#resources/" ~ item.id }}">
-                            <span class="icon-angle-left"></span>
-                            {{ 'back'|trans({}, 'icap_wiki') }}
-                        </a>
-                    {% endfor %}
-
+                    <a href="{{ path('claro_desktop_open_tool', {"toolName": "resource_manager"}) ~ "#resources/" ~ workspace.id }}">
+                        <span class="icon-angle-left"></span>
+                        {{ 'back'|trans({}, 'icap_wiki') }}
+                    </a>
+                    
                     {% block wiki_content %}
                     {% endblock %}
                 {% endblock%}

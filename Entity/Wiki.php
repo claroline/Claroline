@@ -56,13 +56,11 @@ class Wiki extends AbstractResource
      * @ORM\PostPersist
      */
     public function createRoot(LifecycleEventArgs $event){
-        if($this->getRoot() == null){
+        if ($this->getRoot() == null) {
             $em = $event->getEntityManager();
             $rootSection = $this->getRoot();
-            if($rootSection == null){
-
+            if ($rootSection == null) {
                 $rootSection = new Section();
-                $rootSection->setTitle("");
                 $rootSection->setWiki($this);
                 $rootSection->setAuthor($this->getResourceNode()->getCreator());
                 $this->setRoot($rootSection);

@@ -5,72 +5,61 @@ namespace Icap\WikiBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Icap\WikiBundle\Manager\SectionManager;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("icap.wiki.section_edit_type")
+ */
 class EditSectionType extends AbstractType
 {
+    /** @var \Icap\WikiBundle\Manager\SectionManager */
+    protected $sectionManager;
+
+    /**
+     * @DI\InjectParams({
+     *     "sectionManager" = @DI\Inject("icap.wiki.section_manager")
+     * })
+     */
+    public function __construct(SectionManager $sectionManager)
+    {
+        $this->sectionManager = $sectionManager;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $choices = array();
-        $isRootSection = $options['isRootSection'];
-        $sectionId = $builder->getData()->getId();
+        $builder->add('activeContribution', new ContributionType(), array(
+            'label' => false
+            )
+        );
+        
+        $sectionManager = $this->sectionManager;
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function(FormEvent $event) use ($sectionManager){
+                $form = $event->getForm();               
+                $data = $event->getData();
 
-        if (!$isRootSection) {
-            $forbidenIds = array($sectionId);
-            $prefixesArray = array();
-            $childrens = array();
-            foreach ($options['sections'] as $index=>$section){
-                if ($childrens[$section->getParent()->getId()] !== null) {
-                    $childrens[$section->getParent()->getId()] += 1;
+                $isRoot = $data->isRoot();
+                if ($isRoot === false) {
+                    $form
+                        ->add('visible', 'checkbox', array(
+                            'required' => false    
+                            )
+                        )
+                        ->add('position', 'choice', array(
+                            'choices' => $sectionManager->getArchivedSectionsForPosition($data)
+                            )
+                        )
+                        ->add('brother', 'checkbox', array(
+                            'required' => false
+                            )
+                        );   
                 }
-                else {
-                    $childrens[$section->getParent()->getId()] = 1;
-                }
-                $prefixe = $prefixesArray[$section->getParent()->getId()].$childrens[$section->getParent()->getId()];
-                if (!in_array($section->getParent()->getId(), $forbidenIds)) {
-                    $choices[$section->getId()] = $prefixe." ".$section->getTitle();
-                }
-                else {
-                    array_push($forbidenIds, $section->getId());
-                }
-
-                $prefixesArray[$section->getId()] = $prefixe.".";
             }
-
-            $builder
-            ->add('title', 'text')
-            ->add('text', 'textarea', array(
-                'attr' => array(
-                    'class' => 'tinymce',
-                    'data-theme' => 'advanced'
-                    )
-                )
-            )
-            ->add('visible', 'checkbox', array(
-                'required' => false    
-                )
-            )
-            ->add('position', 'choice', array(
-                'mapped' => false,
-                'choices' => $choices,
-                'data' => $sectionId
-                )
-            )
-            ->add('brother', 'checkbox', array(
-                'mapped' => false,
-                'required' => false
-                )
-            );   
-        }
-        else {
-           $builder
-            ->add('text', 'textarea', array(
-                'attr' => array(
-                    'class' => 'tinymce',
-                    'data-theme' => 'advanced'
-                    )
-                )
-            ); 
-        }        
+        );         
     }
 
     public function getName()

@@ -21,8 +21,8 @@ class LogSectionDeleteEvent extends AbstractLogResourceEvent
             'section' => array(
                 'wiki' => $wiki->getId(),
                 'id' => $section->getId(),
-                'title' => $section->getTitle(),
-                'text' => $section->getText(),
+                'title' => $section->getActiveContribution()->getTitle(),
+                'text' => $section->getActiveContribution()->getText(),
                 'author' => $section->getAuthor()->getFirstName() . ' ' . $section->getAuthor()->getLastName()
             )
         );

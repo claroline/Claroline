@@ -1,0 +1,28 @@
+{% extends 'IcapWikiBundle::layout.html.twig' %}
+
+{% trans_default_domain "icap_wiki" %}
+
+{% block title %}{{ wiki.resourceNode.name }}{% endblock %}
+
+{% block wiki_panel %}
+    <p>           
+        <a href="{{ path('icap_wiki_section_history', {"wikiId": wiki.id, "sectionId": section.id}) }}">
+            <span class="icon-angle-left"></span>
+            {{ 'back_to_history'|trans({}, 'icap_wiki') }}
+        </a>
+    </p>
+    {% block wiki_content %}
+        <div class="wiki-page-header page-header">
+            <h2 class="wiki-title-header">
+                {% if section.isRoot() %}
+                    {{wiki.resourceNode.name}}
+                {% else %}
+                    {{contribution.title}}
+                {% endif %}
+            </h2>     
+        </div>
+        <div class="contribution-text">
+            {{contribution.text|raw}}
+        </div>
+    {% endblock %}
+{% endblock%}

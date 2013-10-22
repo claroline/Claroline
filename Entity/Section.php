@@ -2,15 +2,15 @@
 
 namespace Icap\WikiBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="icap__wiki_section")
- * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
+ * @ORM\Entity(repositoryClass="Icap\WikiBundle\Repository\SectionRepository")
  */
 class Section
 {
@@ -22,19 +22,9 @@ class Section
     protected $id;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $title;
-
-    /**
      * @ORM\Column(type="boolean", nullable=false)
      */
     protected $visible=true;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    protected $text;
 
     /**
      * @ORM\Column(type="datetime", name="creation_date")
@@ -43,20 +33,18 @@ class Section
     protected $creationDate;
 
     /**
-     * @var \Datetime $modificationDate
-     *
-     * @ORM\Column(type="datetime", name="modification_date")
-     * @Gedmo\Timestampable(on="update")
-     */
-    protected $modificationDate;
-
-    /**
      * @var User $author
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $author;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Icap\WikiBundle\Entity\Contribution", cascade={"all"})
+     * @ORM\JoinColumn(name="active_contribution_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    protected $activeContribution;
 
     /**
      * @ORM\ManyToOne(targetEntity="Icap\WikiBundle\Entity\Wiki")
@@ -81,6 +69,16 @@ class Section
      * @ORM\Column(name="rgt", type="integer")
      */
     private $right;
+
+    /*
+     * Variable used in section edit form to define move section properties
+     */     
+    private $position;
+
+    /*
+     * Variable used in section edit form to define move section properties
+     */
+    private $brother;
     
     /**
      * @Gedmo\TreeRoot
@@ -108,22 +106,6 @@ class Section
     /**
      * @return mixed
      */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * @param mixed $title
-     */
-    public function setTitle($title)
-    {
-        return $this->title = $title;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getVisible()
     {
         return $this->visible;
@@ -135,22 +117,6 @@ class Section
     public function setVisible($visible)
     {
         return $this->visible = $visible;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getText()
-    {
-        return $this->text;
-    }
-
-    /**
-     * @param mixed $text
-     */
-    public function setText($text)
-    {
-        return $this->text = $text;
     }
 
     /**
@@ -194,6 +160,52 @@ class Section
     public function getAuthor()
     {
         return $this->author;
+    }
+
+    /**
+     * Set last editor
+     *
+     * @param User $lastEditor
+     * @return Post
+     */
+    public function setLastEditor(User $lastEditor = null)
+    {
+        $this->lastEditor = $lastEditor;
+
+        return $this;
+    }
+
+    /**
+     * Get last editor
+     *
+     * @return User
+     */
+    public function getLastEditor()
+    {
+        return $this->lastEditor;
+    }
+
+    /**
+     * Set contribution
+     *
+     * @param \Icap\WikiBundle\Entity\Contribution $contribution
+     * @return section
+     */
+    public function setActiveContribution(\Icap\WikiBundle\Entity\Contribution $contribution)
+    {
+        $this->activeContribution = $contribution;
+
+        return $this;
+    }
+
+    /**
+     * Get contribution
+     *
+     * @return \Icap\WikiBundle\Entity\Contribution
+     */
+    public function getActiveContribution()
+    {
+        return $this->activeContribution;
     }
 
     /**
@@ -284,6 +296,38 @@ class Section
     }
 
     /**
+     * @param integer $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = intval($position);
+    }
+
+    /**
+     * @return integer
+     */
+    public function getPosition()
+    {
+        return intval($this->position);
+    }
+
+    /**
+     * @param boolean $brother
+     */
+    public function setBrother($brother)
+    {
+        $this->brother = (bool)$brother;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getBrother()
+    {
+        return (bool)$this->brother;
+    }
+
+    /**
      * Set parent
      *
      * @param \Icap\WikiBundle\Entity\Section $section
@@ -303,5 +347,88 @@ class Section
     public function getParent()
     {
         return $this->parent;
-    }    
+    }
+
+    /**
+     * Test if section is rootsection
+     *
+     * @return boolean
+     */
+    public function isRoot()
+    {
+        return $this->getLevel() === 0;
+    }
+
+    /**
+     * Test if section has children
+     *
+     * @return boolean
+     */
+    public function hasChildren()
+    {
+        $difference = $this->getRight() - $this->getLeft();
+        return $difference > 1;
+    }
+
+    /**
+     * Test if section has to be moved
+     *
+     * @return boolean
+     */
+    public function checkMoveSection()
+    {
+        return !$this->isRoot() && $this->getPosition() != $this->getId();
+    }
+
+    /**
+     * Creates a new non persisted contribution and sets it as section's active contribution
+     * @param Claroline\CoreBundle\Entity\User $user
+     */
+    public function setNewActiveContributionToSection(User $user=null) {
+        $oldActiveContribution = $this->getActiveContribution();
+        $newActiveContribution = new Contribution();
+        $newActiveContribution->setSection($this);        
+        if ($oldActiveContribution === null) {
+            if ($user === null) {
+                $user = $this->getAuthor();
+            }
+        }
+        else {
+            if ($user === null) {
+                $user = $oldActiveContribution->getContributor();
+            }
+            if ($user === null) {
+                $user = $this->getAuthor();
+            }
+            $newActiveContribution->setTitle($oldActiveContribution->getTitle());
+            $newActiveContribution->setText($oldActiveContribution->getText());
+            $newActiveContribution->setContributor($user);            
+        }
+        $this->setActiveContribution($newActiveContribution);        
+    }
+
+    /**
+     * Returns the changeSet data when a section has been moved
+      * @param Section $oldParent
+     * @param integer $oldPosition
+     * @param Section $newParent
+     *
+     * @return array $changeSet
+     */
+    public function getMoveEventChangeSet (Section $oldParent, $oldLeft, Section $newParent)
+    {
+        /** Create change set for move log event
+         * If section's parent has changed, return old and new parent
+         * Otherwise return old and new left to mark move up or down in the same parent
+         */
+        $newLeft = $this->getLeft();
+        $changeSet = array(
+            'parentId' => array($oldParent->getId(), $newParent->getId()),
+            'parentName' => array($oldParent->getActiveContribution()->getTitle(), $newParent->getActiveContribution()->getTitle()),
+            'isParentRoot' => array($oldParent->isRoot(), $newParent->isRoot()),
+            'left' => array($oldLeft, $newLeft)
+        );
+        
+        return $changeSet;
+    }
 }

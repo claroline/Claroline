@@ -1,8 +1,8 @@
-<form id="newSection-form-{{ parentSectionId }}" name="icap_wiki_new_section" method="POST" class="form-vertical" action="{{ path("icap_wiki_add_section", {'wikiId': wiki.id, 'parentSectionId' : parentSectionId }) }}">
+<form id="newSection-form-{{ parentSectionId }}" name="icap_wiki_new_section" method="POST" class="form-vertical" action="{{ path("icap_wiki_new_section", {'wikiId': wiki.id, 'parentSectionId' : parentSectionId }) }}">
     <div class="control-group">
         <div class="controls">
-            {{ form_errors(form.title) }}
-            {{ form_widget(form) }}
+            {{ form_row(form.activeContribution.title) }}
+            {{ form_row(form.activeContribution.text) }}
         </div>
     </div>
     {{ form_rest(form) }}

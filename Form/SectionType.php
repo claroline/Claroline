@@ -11,14 +11,7 @@ class SectionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', 'text')
-            ->add('text', 'textarea', array(
-                    'attr' => array(
-                        'class' => 'tinymce',
-                        'data-theme' => 'advanced'
-                    )
-                )
-            );
+            ->add('activeContribution', new ContributionType(), array('label' => false));
     }
 
     public function getName()

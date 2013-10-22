@@ -10,21 +10,25 @@
             {{ wiki.resourceNode.name }} 
             <small class="wiki-actions"> 
                 [ 
-                <a href="{{ path('icap_wiki_new_section', { 'wikiId': wiki.id, 'parentSectionId' : 0 }) }}" class="new-section" data-section="0" >
+                <a href="{{ path('icap_wiki_new_section', { 'wikiId': wiki.id, 'parentSectionId' : tree[0].id }) }}" class="new-section" data-section="{{tree[0].id}}" >
                     {{ 'create_new_section'|trans({}, 'icap_wiki') }}
                 </a>
                 |
-                <a href="{{ path('icap_wiki_edit_section', { 'wikiId': wiki.id, 'sectionId' : 0 }) }}" class="edit-section" data-section="{{section.id}}" >
+                <a href="{{ path('icap_wiki_edit_section', { 'wikiId': wiki.id, 'sectionId' : tree[0].id }) }}" class="edit-section" data-section="{{tree[0].id}}" >
                     {{ 'edit'|trans({}, 'icap_wiki') }}
-                </a>  
+                </a>
+                |
+                <a href="{{ path('icap_wiki_section_history', { 'wikiId': wiki.id, 'sectionId' : tree[0].id }) }}" class="history-section" data-section="{{tree[0].id}}" >
+                    {{ 'history'|trans({}, 'icap_wiki') }}
+                </a>   
                 ]
             </small>
         </h1>        
     </div>
 
-    {% if tree is not empty and tree[0] is not empty and tree[0].text is not empty%}
+    {% if tree is not empty and tree[0] is not empty and tree[0].activeContribution.text is not empty%}
         <div class="wiki-description">
-            {{ tree[0].text|raw }}
+            {{ tree[0].activeContribution.text|raw }}
         </div>
     {% endif %}
 
@@ -37,12 +41,12 @@
                         <i class="icon-resize-vertical"></i> <i class="icon-reorder"></i>
                     </a>
                 </div>
-                {% include "IcapWikiBundle:Wiki:wikiContents.html.twig" with {'sections' : tree[0].__children, 'isAdmin' : is_granted('EDIT', wiki), 'delimeter' : '.' } %}
+                {% include "IcapWikiBundle:Wiki:wikiContents.html.twig" with {'sections' : tree[0].__children, 'isAdmin' : isAdmin, 'delimeter' : '.', 'rootId' : tree[0].id } %}
             </div>
             <div class="clearfix"></div>
         </div>
         <div class="wiki-sections">
-            {% include "IcapWikiBundle:Wiki:wikiSections.html.twig" with {'sections' : tree[0].__children, 'wikiId' : wiki.id, 'isAdmin' : is_granted('EDIT', wiki) } %}
+            {% include "IcapWikiBundle:Wiki:wikiSections.html.twig" with {'sections' : tree[0].__children, 'wikiId' : wiki.id, 'isAdmin' : isAdmin } %}
         </div>
     {% endif %}
 {% endblock %}

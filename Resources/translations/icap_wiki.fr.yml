@@ -1,8 +1,8 @@
 icap_wiki_type_name: 'Nom'
-icap_wiki_section_type_title: 'Titre'
-icap_wiki_edit_section_type_title: 'Titre'
-icap_wiki_section_type_text: 'Texte'
-icap_wiki_edit_section_type_text: 'Texte'
+icap_wiki_section_type_activeContribution_title: 'Titre'
+icap_wiki_edit_section_type_activeContribution_title: 'Titre'
+icap_wiki_section_type_activeContribution_text: 'Texte'
+icap_wiki_edit_section_type_activeContribution_text: 'Texte'
 icap_wiki_edit_section_type_position: 'Positionnement'
 icap_wiki_edit_section_type_visible: 'Visible'
 icap_wiki_edit_section_type_brother: 'Voulez-vous que cette section soit au même niveau que celle selectionnée ?'
@@ -13,6 +13,7 @@ add_new_subsection: 'Ajouter une nouvelle sous-section'
 move_section: 'Déplacer la section'
 back: 'Retour'
 back_to_wiki: 'Retour au wiki'
+back_to_history: "Retour à l'historique"
 edit: 'Modifier'
 delete: 'Supprimer'
 Delete: 'Supprimer'
@@ -22,6 +23,13 @@ Cancel: 'Annuler'
 Save: 'Sauvegarder'
 New section: 'Nouvelle section'
 wiki_contents: 'Sommaire'
+history: 'Historique'
+active_contribution: 'Version actuelle'
+revision_history: 'Historique des versions'
+revision_comparison: 'Comparaison des versions'
+items_per_page: 'Affichage par :'
+set_active_contribution: 'Publier cette version'
+compare_versions: 'Comparer les versions sélectionnées'
 delete_confirmation: 'Êtes-vous sûr de vouloir supprimer la section "%sectionTitle%" ?'
 icap_wiki_section_add_success: "La section a été créée avec succès"
 icap_wiki_section_add_error: "Erreur durant la création de la section"
@@ -31,3 +39,4 @@ icap_wiki_section_move_success: "La section a été déplacée avec succès"
 icap_wiki_section_move_error: "Erreur durant le déplacement de la section"
 icap_wiki_section_delete_success: "La section a été supprimée avec succès"
 icap_wiki_section_delete_error: "Erreur durant la suppression de la section"
+date_format: "d/m/Y \\à H:i"

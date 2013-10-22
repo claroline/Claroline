@@ -11,7 +11,7 @@
             <li id="section-{{section.id}}" class="{{ visibleClass }}">
                 <div class="{{level>2?"subsection-header":"page-header"}}" >
                     <h{{level}} {{ fontsize!=0?"style=font-size:" ~ fontsize ~ "px;":"" }}>
-                        {{section.title}}
+                        {{section.activeContribution.title}}
                         {% if isAdmin %}
                             <small class="wiki-actions">
                                 {% if section.visible is sameas (false) %}
@@ -29,12 +29,16 @@
                                     <a href="{{ path('icap_wiki_delete_section', { 'wikiId': wikiId, 'sectionId' : section.id }) }}" class="delete-section" data-section="{{section.id}}" >
                                         {{ 'delete'|trans({}, 'icap_wiki') }}
                                     </a> 
+                                    | 
+                                    <a href="{{ path('icap_wiki_section_history', { 'wikiId': wikiId, 'sectionId' : section.id }) }}" class="history-section" data-section="{{section.id}}" >
+                                        {{ 'history'|trans({}, 'icap_wiki') }}
+                                    </a> 
                                 ]
                             </small>
                         {% endif%}
                     </h{{level}}>
                 </div>
-                <div class="wiki-section-text">{{section.text|raw}}</div>
+                <div class="wiki-section-text">{{section.activeContribution.text|raw}}</div>
                 {% if section.__children is not empty %}
                     <ul>
                         {{ _self.wiki_sections(section.__children, isAdmin, wikiId) }}

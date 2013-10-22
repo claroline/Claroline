@@ -7,10 +7,12 @@ use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Entity\Section;
+use Icap\WikiBundle\Entity\Contribution;
 use Icap\WikiBundle\Event\Log\LogSectionCreateEvent;
 use Icap\WikiBundle\Event\Log\LogSectionDeleteEvent;
 use Icap\WikiBundle\Event\Log\LogSectionMoveEvent;
 use Icap\WikiBundle\Event\Log\LogSectionUpdateEvent;
+use Icap\WikiBundle\Event\Log\LogContributionCreateEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -44,10 +46,13 @@ class Controller extends BaseController
      *
      * @return bool
      */
-    protected function isUserGranted($permission, Wiki $wiki)
+    protected function isUserGranted($permission, Wiki $wiki, $collection = null)
     {
+        if ($collection === null) {
+            $collection = new ResourceCollection(array($wiki->getResourceNode()));
+        }
         $checkPermission = false;
-        if ($this->get('security.context')->isGranted($permission, new ResourceCollection(array($wiki->getResourceNode())))) {
+        if ($this->get('security.context')->isGranted($permission, $collection)) {
             $checkPermission = true;
         }
 
@@ -153,6 +158,57 @@ class Controller extends BaseController
         $event = new LogSectionDeleteEvent($wiki, $section);
 
         return $this->dispatch($event);
+    }
+
+    /**
+     * @param Wiki $wiki
+     * @param Section $section
+     * @param Contribution $contribution
+     * @return Controller
+     */
+    protected function dispatchContributionCreateEvent(Wiki $wiki, Section $section, Contribution $contribution)
+    {
+        $event = new LogContributionCreateEvent($wiki, $section, $contribution);
+
+        return $this->dispatch($event);
+    }
+
+    /**
+     * Retrieve a section from database
+     * @param Wiki $wiki
+     * @param integer $sectionId
+     *
+     * @return Section $section
+     */
+    protected function getSection($wiki, $sectionId)
+    {
+        $section = $this
+            ->get('icap.wiki.section_repository')
+            ->findOneBy(array('id' => $sectionId, 'wiki' => $wiki ));
+        if ($section === null) {
+            throw new NotFoundHttpException();
+        }
+
+        return $section;
+    }
+
+    /**
+     * Retrieve a section from database
+     * @param Section $section
+     * @param integer $contributionId
+     *
+     * @return Section $contri
+     */
+    protected function getContribution($section, $contributionId)
+    {
+        $contribution = $this
+            ->get('icap.wiki.contribution_repository')
+            ->findOneBy(array('id' => $contributionId, 'section' => $section));
+        if ($section === null) {
+            throw new NotFoundHttpException();
+        }
+
+        return $contribution;
     }
 
 }

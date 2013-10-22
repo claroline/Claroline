@@ -1,0 +1,47 @@
+{% extends 'IcapWikiBundle::layout.html.twig' %}
+
+{% trans_default_domain "icap_wiki" %}
+
+{% block title %}{{ wiki.resourceNode.name }}{% endblock %}
+
+{% block wiki_panel %}
+    <p>           
+        <a href="{{ path('icap_wiki_section_history', {"wikiId": wiki.id, "sectionId": section.id}) }}">
+            <span class="icon-angle-left"></span>
+            {{ 'back_to_history'|trans({}, 'icap_wiki') }}
+        </a>
+    </p>
+    {% block wiki_content %}
+        <div class="page-header">
+            <h2 class="wiki-title-header">
+                {% if section.isRoot() %}
+                    {{wiki.resourceNode.name}}
+                {% else %}
+                    {{section.activeContribution.title}}
+                {% endif %}
+                : {{'revision_comparison'|trans({},'icap_wiki')}}
+            </h2>     
+        </div>
+        <div class="row">
+            {% for contribution in contributions %}
+                <div class="col-md-6">
+                    {% if not section.isRoot() %}
+                        <h3 class="wiki-revision-comparison-header">{{contribution.title}}</h3>
+                    {% endif %}
+                    <div class="wiki-revision-comparison-info">
+                        [
+                            {{contribution.contributor.username}} ({{ contribution.contributor.firstName ~ " " ~ contribution.contributor.lastName}}) - 
+                            {{contribution.creationDate|date("date_format"|trans({},'icap_wiki'))}}
+                        ]
+                    </div>
+                    <div class="">{{contribution.text|raw}}</div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endblock %}
+{% endblock%}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/icapwiki/css/contribution.css') }}'/>
+{% endblock %}

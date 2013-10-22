@@ -11,18 +11,18 @@ class LogSectionCreateEvent extends AbstractLogResourceEvent
 {
     const ACTION = 'resource-icap_wiki-section_create';
 
-    /**
-* @param Wiki $wiki
-* @param Section $section
-*/
+/**
+ * @param Wiki $wiki
+ * @param Section $section
+ */
     public function __construct(Wiki $wiki, Section $section)
     {
         $details = array(
             'section' => array(
                 'wiki' => $wiki->getId(),
                 'id' => $section->getId(),
-                'title' => $section->getTitle(),
-                'text' => $section->getText(),
+                'title' => $section->getActiveContribution()->getTitle(),
+                'text' => $section->getActiveContribution()->getText(),
                 'visible' => $section->getVisible()
             )
         );
@@ -30,9 +30,9 @@ class LogSectionCreateEvent extends AbstractLogResourceEvent
         parent::__construct($wiki->getResourceNode(), $details);
     }
 
-    /**
-* @return array
-*/
+/**
+ * @return array
+ */
     public static function getRestriction()
     {
         return array(self::DISPLAYED_WORKSPACE);

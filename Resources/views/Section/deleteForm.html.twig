@@ -2,7 +2,7 @@
 <div class='icap-wiki-delete-section-message'>
     {{ 'delete_confirmation'|trans({'%sectionTitle%': section.title}, 'icap_wiki') }}
 </div>
-<form id="deleteSection-form-{{section.id}}" name="icap_wiki_delete_section" method="POST" class="form-vertical" action="{{ path("icap_wiki_remove_section", {'wikiId': wiki.id, 'sectionId' : section.id }) }}">
+<form id="deleteSection-form-{{section.id}}" name="icap_wiki_delete_section" method="POST" class="form-vertical" action="{{ path("icap_wiki_delete_section", {'wikiId': wiki.id, 'sectionId' : section.id }) }}">
     <div class="control-group">
         <div class="controls">
             {{ form_widget(form) }}
