@@ -19,6 +19,7 @@ class WidgetInstanceType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $isDesktop = $this->isDesktop;
         $builder->add('name', 'text', array('constraints' => new NotBlank()));
         $builder->add(
             'widget',
@@ -27,8 +28,8 @@ class WidgetInstanceType extends AbstractType
                 'class' => 'Claroline\CoreBundle\Entity\Widget\Widget',
                 'expanded' => false,
                 'multiple' => false,
-                'query_builder' => function (WidgetRepository $widgetRepo) {
-                    if ($this->isDesktop) {
+                'query_builder' => function (WidgetRepository $widgetRepo) use ($isDesktop) {
+                    if ($isDesktop) {
                         return $widgetRepo->createQueryBuilder('w')
                             ->where('w.isDisplayableInDesktop = true');
                     } else {
