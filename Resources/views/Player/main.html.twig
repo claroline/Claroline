@@ -9,8 +9,8 @@
 {% endblock %}
 
 {% block content %}
-    <div ng-cloak class="col-md-12 section-content" ng-app="playerApp">
-        <div class="panel panel-default panel-path-editor" ng-controller="MainCtrl">
+    <div class="col-md-12 section-content">
+        <div class="panel panel-default panel-path-editor">
             <div class="panel-heading">
                 <h3 class="panel-title" id="player-header">
                     {# {{ 'path' | trans({}, 'innova_tools') }} : #} <strong>{{ path.resourceNode.name }}</strong>
@@ -146,44 +146,5 @@
 {% block javascripts %}
     {# Load Claroline JS #}
     {{ parent() }}
-    
-    {# Load Angular Libraries #}
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-cookies.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-loader.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-resource.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-sanitize.min.js') }}"></script>
-    
-    {# Angular UI #}
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/ui-bootstrap-0.6.0.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/ui-bootstrap-tpls-0.6.0.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularpageslide/js/angular-pageslide-directive.js') }}"></script>
-    
-   
-    {# Main #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Player/Controller/MainCtrl.js') }}"></script>
-    
-    {# Help  #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Help/Controller/HelpModalCtrl.js') }}"></script>
-    
-    {# Resources #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Resource/Factory/ResourceFactory.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Resource/Controller/ResourceModalCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Resource/Controller/ResourceSidebarCtrl.js') }}"></script>
-    
-    {# Templates #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Template/Factory/TemplateFactory.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Template/Controller/TemplateCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Template/Controller/TemplateModalCtrl.js') }}"></script>
-    
-    {# Global APP #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Player/PlayerApp.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Player/player.js') }}"></script>
-
-    <script type="text/javascript">
-        // TODO : find more beautiful
-        playerApp.pathId = "{{ path.id }}";
-        playerApp.workspaceId = "{{ workspace.id }}";
-        playerApp.templateRoute = "{{ asset('bundles/innovapath/js/Player/Partial/') }}";
-    </script>
 {% endblock %}

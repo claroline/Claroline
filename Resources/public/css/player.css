@@ -34,6 +34,10 @@
 	top:0px;
 }
 
+.lvl-1, .lvl-2, .lvl-3, .lvl-4, .lvl-5 {
+	background-color:lightgrey;
+}
+
 
 .step-container{
 	margin-top:40px;
