@@ -21,3 +21,60 @@
 .justified{
 	text-align:justify;
 }
+
+.current{
+	position:relative;
+	top:30px;
+}
+
+
+.lvl-0{
+	background-color:grey;
+	position:relative;
+	top:0px;
+}
+
+
+.step-container{
+	margin-top:40px;
+}
+
+.tree .btn{
+	width:40px;
+	height:40px;
+	border:2px solid black;
+	float:left;
+	margin:0 5px;
+	position:relative;
+} 
+
+.tree {
+	background-color:lightgrey;
+}
+
+.separator{
+	float:left;
+	display:block;
+	height:40px;
+	width:2px;
+	background-color:black;
+	margin:0 5px;
+
+}
+
+.previous-siblings, .next-siblings{
+	float:left;
+	display:block;
+	margin:10px 5px;
+	color:black;
+
+}
+
+.step-state{
+	display:block;
+	position:absolute;
+	top:0;
+	right:15px;
+	width:5px;
+	height:5px;
+}

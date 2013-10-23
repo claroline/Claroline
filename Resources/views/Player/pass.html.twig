@@ -9,16 +9,84 @@
 {% endblock %}
 
 {% block content %}
-    <div ng-cloak class="col-md-12 section-content" ng-app="playerApp">
-        <div class="panel panel-default panel-path-editor" ng-controller="MainCtrl">
+    <div class="row">
+        <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title" id="player-header">
-                    {# {{ 'path' | trans({}, 'innova_tools') }} : #} <strong>{{ path.resourceNode.name }}</strong>
-                </h3>
-                <div class="editor-buttons">
-                    <a href="{{ path('claro_workspace_open_tool', {workspaceId: workspace.id, toolName: 'innova_path'}) }}" class="btn btn-danger btn-sm" tooltip="{{ 'back_to_paths_list' | trans({}, 'innova_tools') }}"><span class="icon-reply"></span></a>
-                </div>
+            {{ path.resourceNode.name }}
             </div>
+            {% if step.lvl > 1 %}
+            <div class="panel-body">
+                {{ allParents[1].name }} 
+             </div>
+            {% elseif step.lvl == 1 %}
+               <div class="panel-body">
+                {{ step.name }} 
+             </div>
+            {% endif %}
+        </div>
+        <div class="panel panel-default tree">
+            <div class="panel-body">
+            {% if step.lvl > 0 %}
+                {% for i in 0..step.lvl - 1 %}
+                    <!--
+                   <a class="previous-siblings arrow" href="#">
+                    <span class="icon-chevron-left"></span>
+                   </a>
+                   -->
+                    {% for steps in fullPath[i] %}
+                        {% if allParents[i] == steps %}
+                            <a rel="tooltip" data-original-title="{{ steps.name}}" class="step current btn btn-lg btn-default lvl-{{ i }}" href="{{ path('innova_pass_show', { pathId: path.resourceNode.id, stepId : steps.id }) }}">
+                            <span class="step-state icon-check"></span>
+                            </a>
+                        {% else %}
+                             <a rel="tooltip" data-original-title="{{ steps.name}}" class="step btn btn-lg btn-default lvl-{{ i }}" href="{{ path('innova_pass_show', { pathId: path.resourceNode.id, stepId : steps.id }) }}">
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                    <!--
+                    <a class="previous-siblings arrow" href="#">
+                        <span class="icon-chevron-right"></span>
+                    </a>
+                    -->
+                    <span class="separator"></span>
+                </div>
+                {% endfor %}
+            {% endif %}
+                
+            {% for sibling in siblings %}
+                {% if sibling == step %}
+                    <a rel="tooltip" data-original-title="{{ sibling.name}}" class="current btn btn-lg btn-default lvl-{{ step.lvl }}" href="{{ path('innova_pass_show', { pathId: path.resourceNode.id, stepId : sibling.id }) }}">
+                    </a>
+                {% else %}
+                    <a rel="tooltip" data-original-title="{{ sibling.name}}" class="btn btn-lg btn-default lvl-{{ step.lvl }}" href="{{ path('innova_pass_show', { pathId: path.resourceNode.id, stepId : sibling.id }) }}">
+                    <span class="step-state icon-unchecked"></span>
+                       
+                    </a>
+                {% endif %}
+            {% endfor %}
+                
+            {% if children %}
+                <span class="separator"></span>
+                {% for child in children %}
+                <a class="btn btn-lg btn-default" rel="tooltip" data-original-title="{{ child.name }}" href="{{ path('innova_pass_show', { pathId: path.resourceNode.id, stepId : child.id }) }}"> &nbsp;
+                </a>
+                {% endfor %}
+            {% endif %}
+            </div>
+        </div>
+
+        <div class="panel panel-default step-container">
+            {% if step.lvl > 1 %}
+            <div class="panel-heading">
+                {{ step.name }}
+                    {% for resource in resources["digital"] %}
+                        <a class="pull-right btn btn-default btn-xs" target="_blank" href="{{ path('claro_resource_open', {'resourceType': resource.resourceType.name, 'node': resource.id })  }}?_mode=path"/>{{ resource.name }}</a>&nbsp;
+                    {% endfor %}
+                    {% for resource in resources["nonDigital"] %}
+                        <a class="pull-right btn btn-default btn-xs" href="#" rel="tooltip" data-original-title="{{ resource.description }}">{{ resource.resourceNode.name }}</a>&nbsp;
+                    {% endfor %}
+            </div>
+            {% endif %}
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-3">
@@ -69,42 +137,6 @@
                         </div>
                     </div>
                     <div class="col-md-9">
-                        <div class="row" id="step-map">
-                    <div id="step-map-body" data-status="closed">
-                        <table id="smallTree" class="table">
-                        <tbody>
-                        <tr>
-                            <td>
-                                {% if step.parent.id %}
-                                    <a class="btn btn-default " href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.parent.id }) }}">{{ 'back_to' | trans({}, 'innova_tools') }} <strong>{{step.parent.name}}</strong> <span class="icon-arrow-left"></span></a> 
-                                {% else %}
-                                    {# <a class="btn btn-success" disabled=disabled href="#">Début du parcours</a> #}
-                                {% endif %}
-                            </td>
-                            <td class="text-center">
-                                <a class="btn btn-primary" disabled=disabled href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.id }) }}">{{ 'current_position' | trans({}, 'innova_tools') }} : <strong>{{step.name}}</strong></a>
-                            </td>
-                            <td>
-                            {% if children %}
-                                <div >
-                                    {% for child in children %}
-                                           <a class="btn btn-default" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : child.id }) }}"><span class="icon-arrow-right"></span> {{child.name}}</a>
-                                     {% endfor %}
-                                </div>
-                            {% else %}
-                                    {# <a class="btn btn-danger pull-right" disabled=disabled href="#">Fin du parcours</a>  #}
-                            {% endif %}
-                            </td>
-                        </tr>
-                        </tbody>
-                        </table>
-                    </div>
-                    <div id="step-map-buttons">
-                        <span id="step-map-open">
-                            <a class="btn btn-default icon-chevron-down step-map-button"> {{ 'progression' | trans({}, 'innova_tools') }}</a>
-                        </span>
-                    </div>
-                </div>
                         <div class="text-center">
                             <h1>{{ step.name }}</h1>
                             {% if step.image %}
@@ -117,13 +149,6 @@
                         </div>
                         {% endif %}
                     </div>
-                    <!--
-                    <div class="col-md-3">
-                        <h3><i class="icon-wrench"></i> Informations</h3>
-                    </div>
-                    -->
-                </div>
-
             </div>
         </div>
     </div>
