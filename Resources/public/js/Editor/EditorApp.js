@@ -5,7 +5,7 @@ var EditorApp = angular.module('EditorApp', ['ui.bootstrap', 'pageslide-directiv
 
 // Declare routes
 EditorApp.config(['$routeProvider', function($routeProvider) {
-    $routeProvider.when('/404', {templateUrl: 'Editor/Partial/404.html'});
+    $routeProvider.when('/404', {templateUrl: EditorApp.webDir + 'js/Editor/Partial/404.html'});
 
     $routeProvider.when('/', {
         templateUrl: EditorApp.webDir + 'js/Editor/Partial/global.html',
