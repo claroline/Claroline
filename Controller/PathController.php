@@ -721,7 +721,6 @@ class PathController extends Controller
     public function entityManager()
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $em = $this->getDoctrine()->getManager();
 
         return $em;
     }
