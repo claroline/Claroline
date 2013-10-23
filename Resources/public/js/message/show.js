@@ -178,7 +178,7 @@
         displayGroups();
     });
 
-    $('body').on('click', '.pagination > li > a', function (event) {
+    $('body').on('click', '.pagination > ul > li > a', function (event) {
         event.preventDefault();
         event.stopPropagation();
         var element = event.currentTarget;
