@@ -77,14 +77,14 @@ class ResourceRightsRepository extends EntityRepository
 
         foreach ($roles as $key => $role) {
             $dql .= $index !== 0 ? ' OR ' : '';
-            $dql .= "resource.id = {$node->getId()} AND role.name = :key";
+            $dql .= "resource.id = {$node->getId()} AND role.name = :role_{$key}";
             ++$index;
         }
 
         $query = $this->_em->createQuery($dql);
 
         foreach ($roles as $key => $role) {
-            $query->setParameter($key, $role);
+            $query->setParameter('role_'.$key, $role);
         }
 
         return $query->getArrayResult();
