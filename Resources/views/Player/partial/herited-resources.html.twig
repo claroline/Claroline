@@ -6,8 +6,24 @@
 		{% for resource in heritedResource["digital"] %}
             <a target="_blank" href="{{ path('claro_resource_open', {'resourceType': resource.resourceType.name, 'node': resource.id })  }}?_mode=path"><img rel="tooltip" data-original-title="{{ resource.name }}" width="32px" src="{{asset(resource.icon.relativeUrl) }}"/></a>
         {% endfor %}
-        {% for resource in heritedResource["nonDigital"] %}
-            <img rel="tooltip" data-original-title="{{ resource.resourceNode.name }}" width="32px" src="{{ asset('bundles/innovapath/images/icons/document/32x32/'~ resource.nonDigitalResourceType.name  ~'.png') }}"/>
+        {% for i, resource in heritedResource["nonDigital"] %}
+            <img data-toggle="modal" data-target="#myModal-{{ i }}" rel="tooltip" data-original-title="{{ resource.resourceNode.name }}" width="32px" src="{{ asset('bundles/innovapath/images/icons/document/32x32/'~ resource.nonDigitalResourceType.name  ~'.png') }}"/>
+            <div class="modal fade" id="myModal-{{ i }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                      <h4 class="modal-title">{{ resource.resourceNode.name }}</h4>
+                    </div>
+                    <div class="modal-body">
+                      {{ resource.description }}
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
         {% endfor %}
 		</div>
 	</div>

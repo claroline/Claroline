@@ -94,17 +94,27 @@ class StepController extends Controller
         $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
         $step = $em->getRepository('InnovaPathBundle:Step')->findOneById($stepId);
         $path = $em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
-
+        $root = $em->getRepository('InnovaPathBundle:Step')->findOneBy(array('path' => $path, 'parent' => null));
         $children = $em->getRepository('InnovaPathBundle:Step')->findByParent($step);
-
+        $siblings = $em->getRepository('InnovaPathBundle:Step')->findBy(array('parent' => $step->getParent(), 'path' => $path));
         $resources = $this->manager->getStepResourceNodes($step);
 
-        return array(
-            'step' => $step,
-            'resources' => $resources,
-            'path' => $path,
+        $fullPath = array();
+        $this->getFullPath($step, $path, $fullPath);
+        
+        $allParents = array();
+        $this->getAllParents($step, $allParents);
+
+       return array(
             'workspace' => $workspace,
-            'children' => $children
+            'step' => $step,
+            'siblings' => $siblings,
+            'resources' => $resources,
+            'fullPath' => $fullPath,
+            'path' => $path,
+            'children' => $children,
+            'allParents' => $allParents,
+            'root' => $root
         );
     }
 
@@ -126,11 +136,7 @@ class StepController extends Controller
         $siblings = $em->getRepository('InnovaPathBundle:Step')->findBy(array('parent' => $step->getParent(), 'path' => $path));
         $resources = $this->manager->getStepResourceNodes($step);
 
-        $fullPath = array();
-        $this->getFullPath($step, $path, $fullPath);
         
-        $allParents = array();
-        $this->getAllParents($step, $allParents);
 
         return array(
             'step' => $step,
