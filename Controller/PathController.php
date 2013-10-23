@@ -171,7 +171,7 @@ class PathController extends Controller
         }
 
         // lancement récursion
-        $this->JSONParser($json_root_steps, $user, $workspace, $pathsDirectory, null, 0, $path, $stepsToNotDelete, $excludedResourcesToResourceNodes);
+        $this->JSONParser($json_root_steps, $user, $workspace, $pathsDirectory, 0, null, 0, $path, $stepsToNotDelete, $excludedResourcesToResourceNodes);
 
         // On nettoie la base des steps qui n'ont pas été réutilisé et les step2resourceNode associés
         foreach ($steps as $step) {
@@ -213,7 +213,7 @@ class PathController extends Controller
      * @return array
      *
      */
-    private function JSONParser($steps, $user, $workspace, $pathsDirectory, $parent, $order, $path, &$stepsToNotDelete, &$excludedResourcesToResourceNodes)
+    private function JSONParser($steps, $user, $workspace, $pathsDirectory, $lvl, $parent, $order, $path, &$stepsToNotDelete, &$excludedResourcesToResourceNodes)
     {
         $manager = $this->entityManager();
         $rm = $this->resourceManager();
@@ -247,6 +247,7 @@ class PathController extends Controller
             $stepWhere = $manager->getRepository('InnovaPathBundle:StepWhere')->findOneById($step->where);
             $parent = $manager->getRepository('InnovaPathBundle:Step')->findOneById($parent);
             $currentStep->setParent($parent);
+            $currentStep->setLvl($lvl);
             $currentStep->setStepWhere($stepWhere);
             $currentStep->setDuration(new \DateTime("00-00-00 ".intval($step->durationHours).":".intval($step->durationMinutes).":00"));
             $currentStep->setExpanded($step->expanded);
@@ -286,7 +287,7 @@ class PathController extends Controller
                     $resourceNode->setName($resource->name);
                     $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(3));
                     $manager->persist($resourceNode);
-                    
+                    $nonDigitalResource->setNonDigitalResourceType($manager->getRepository('InnovaPathBundle:NonDigitalResourceType')->findOneByName($resource->subType));
                     $nonDigitalResource->setResourceNode($resourceNode);
                     $nonDigitalResource->setDescription($resource->description);
                     $manager->persist($nonDigitalResource);
@@ -306,6 +307,7 @@ class PathController extends Controller
                     ){
                     $step2ressourceNode = new Step2ResourceNode();
                 }
+
                 $step2resourceNodesToNotDelete[] = $step2ressourceNode->getId();
                 $step2ressourceNode->setResourceNode($manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId));
                 $step2ressourceNode->setStep($currentStep);
@@ -353,7 +355,7 @@ class PathController extends Controller
             $manager->flush();
 
             // récursivité sur les enfants possibles.
-            $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $currentStep->getId(), 0, $path, $stepsToNotDelete, $excludedResourcesToResourceNodes);
+            $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $lvl+1, $currentStep->getId(), 0, $path, $stepsToNotDelete, $excludedResourcesToResourceNodes);
         }
 
         $manager->flush();
@@ -677,29 +679,6 @@ class PathController extends Controller
         return $this->redirect($url);
     }
 
-    /*
-    private function deleteStep($step){
-        $em = $this->entityManager();
-        // if the step get children, chidlren are deleted first (recursively)
-        if($children = $em->getRepository('InnovaPathBundle:Step')->findByParent($step)){
-            foreach ($children as $child){
-                $this->deleteStep($child);
-            }
-        }
-        // then step is deleted.
-        $this->deleteStep2ResourceNode($step);
-        $em->remove($step);
-    }
-
-    private function deleteStep2ResourceNode($step){
-        $em = $this->entityManager();
-        if($step2ResourceNodes = $em->getRepository('InnovaPathBundle:Step2ResourceNode')->findByStep($step)){
-            foreach ($step2ResourceNodes as $step2ResourceNode){
-                $em->remove($step2ResourceNode);
-            }
-        }
-    }
-    */
 
     private function getPaths($workspace){
         $manager = $this->container->get('doctrine.orm.entity_manager');
@@ -742,7 +721,6 @@ class PathController extends Controller
     public function entityManager()
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $em = $this->getDoctrine()->getManager();
 
         return $em;
     }

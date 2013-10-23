@@ -65,4 +65,44 @@ class NonDigitalResourceType
     {
         return $this->name;
     }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->nonDigitalResources = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add nonDigitalResources
+     *
+     * @param \Innova\PathBundle\Entity\NonDigitalResource $nonDigitalResources
+     * @return NonDigitalResourceType
+     */
+    public function addNonDigitalResource(\Innova\PathBundle\Entity\NonDigitalResource $nonDigitalResources)
+    {
+        $this->nonDigitalResources[] = $nonDigitalResources;
+
+        return $this;
+    }
+
+    /**
+     * Remove nonDigitalResources
+     *
+     * @param \Innova\PathBundle\Entity\NonDigitalResource $nonDigitalResources
+     */
+    public function removeNonDigitalResource(\Innova\PathBundle\Entity\NonDigitalResource $nonDigitalResources)
+    {
+        $this->nonDigitalResources->removeElement($nonDigitalResources);
+    }
+
+    /**
+     * Get nonDigitalResources
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getNonDigitalResources()
+    {
+        return $this->nonDigitalResources;
+    }
 }

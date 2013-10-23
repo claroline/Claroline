@@ -20,8 +20,7 @@ $( document ).ready(function() {
 		}
 	});
 
-
-	$('img').tooltip({placement:'top'});
+	$('img, button, a').tooltip({placement:'top'});
 
 	/* AJAX - Gestion des ressources héritées */
 	var url = $("#step-id").val();
@@ -33,5 +32,17 @@ $( document ).ready(function() {
         	$('img').tooltip({placement:'top'});
         }
 	});
+
+
+
+	/* CAROUSEL */
+	$( ".carousel" ).each(function() {
+		length = $(this).find('.step').length;
+		if (length < 4){
+			$(this).find(".arrow").hide();
+		} 
+	});
+
+	
 
 });
