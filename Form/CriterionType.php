@@ -11,12 +11,7 @@ class CriterionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('instruction', 'textarea', array(
-                'attr' => array(
-                    'class' => 'tinymce',
-                    'data-theme' => 'advanced'
-                )
-            ))
+            ->add('instruction', 'tinymce', array())
             ->add('totalCriteriaColumn', 'hidden', array())
             ->add('allowCommentInCorrection', 'hidden', array());
     }

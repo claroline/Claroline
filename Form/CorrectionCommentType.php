@@ -10,16 +10,8 @@ class CorrectionCommentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($options['allowCommentInCorrection'] == true) {
-            if ($options['edit'] === true) {
-                $params = array('required' => true);
-                $params['attr'] = array(
-                    'class' => 'tinymce',
-                    'data-theme' => 'advanced'
-                );
-                $builder
-                    ->add('comment', 'textarea', $params);
-            }
+        if ($options['allowCommentInCorrection'] == true && $options['edit'] === true) {
+            $builder->add('comment', 'tinymce', array('required' => true));
         }
 
         $builder

@@ -14,11 +14,7 @@ class DropzoneCommonType extends AbstractType
             ->add('stayHere', 'hidden', array(
                 'mapped' => false
             ))
-            ->add('instruction', 'textarea', array(
-                'attr' => array(
-                    'class' => 'tinymce',
-                    'data-theme' => 'advanced'
-                ),
+            ->add('instruction', 'tinymce', array(
                 'required' => false
             ))
 
