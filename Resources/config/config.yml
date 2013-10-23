@@ -1,5 +1,6 @@
 plugin:
     has_options: false
+    icon: icap_eval_icon.png
 
     resources:
         - name: icap_dropzone
