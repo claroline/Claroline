@@ -25,7 +25,7 @@
         {% if allowedTypes|length <= 0 %}
             <span class="text-danger">{{ 'No document type allowed'|trans({}, 'icap_dropzone') }}</span>
         {% elseif allowedTypes|length == 1 %}
-            <a class="btn btn-primary launch-inline disabled-during-add {% if allowedTypes.0 == 'resource' %}launch-resource-picker{% endif %}" href="{{ path('icap_dropzone_document', {'resourceId': dropzone.id, 'documentType': allowedTypes.0, 'dropId': drop.id}) }}">{{ 'Add a %type% document'|trans({'%type%': ((allowedTypes.0)|trans({}, 'icap_dropzone')|lower)}, 'icap_dropzone') }}</a>
+            <a class="btn btn-primary launch-inline disabled-during-add {% if allowedTypes.0 == 'resource' %}launch-resource-picker{% endif %}" href="{{ path('icap_dropzone_document', {'resourceId': dropzone.id, 'documentType': allowedTypes.0, 'dropId': drop.id}) }}">{{ 'Add a document'|trans({}, 'icap_dropzone') }}</a>
         {% else %}
             <div class="dropdown">
                 <a data-toggle="dropdown" class="btn btn-primary disabled-during-add" href="#">{{ 'Add a document'|trans({}, 'icap_dropzone') }}</a>
@@ -129,23 +129,26 @@
     <script src="{{ asset('bundles/icapdropzone/js/popup.js') }}"></script>
     <script>
         $(document).ready(function () {
-            'use strict';
-
-            $('a.launch-inline').on('click', function (event) {
-                event.preventDefault();
-                $('.disabled-during-add').attr('disabled', 'disabled');
-
-                $.get($(this).attr('href'))
-                    .always(function () {
-                    })
-                    .done(function (data) {
-                        $('.container-inline').append(data);
-                        $('.show-during-add').show();
-                    })
-                ;
-            });
-
             var resourceNodeId = null;
+
+            var callBack = function(nodes){
+                console.log('callback custom pour document');
+                var id = _.keys(nodes)[0];
+                var name = nodes[_.keys(nodes)][0];
+                var resourceTypes = nodes[_.keys(nodes)][1];
+                var nodeId = _.keys(nodes)[0];
+                var mimeType = nodes[_.keys(nodes)][2];
+
+                resourceNodeId = nodeId;
+
+                $('.selected-resource').html(name);
+                $('#icap_dropzone_document_file_form_document').val(resourceNodeId);
+
+                $('#add-document-sumbit').removeAttr('disabled');
+                $('#add-document-sumbit').trigger('click');
+
+                $('.add-document-pending').show();
+            };
 
             Claroline.ResourceManager.initialize({
                 "parentElement": $('#picker-wrapper'),
@@ -174,29 +177,38 @@
                 }
             });
 
-            $('#modal-picker').bind('hidden.bs.modal', function () {
-                if (resourceNodeId == null) {
-                    $('.cancel-inline').trigger('click');
-                }
-            })
+            $('a.launch-inline').on('click', function (event) {
+                event.preventDefault();
+                $('.disabled-during-add').attr('disabled', 'disabled');
 
-            var callBack = function(nodes){
-                var id = _.keys(nodes)[0];
-                var name = nodes[_.keys(nodes)][0];
-                var resourceTypes = nodes[_.keys(nodes)][1];
-                var nodeId = _.keys(nodes)[0];
-                var mimeType = nodes[_.keys(nodes)][2];
+                var launchResourcePicker = $(this).hasClass('launch-resource-picker');
+                console.log(launchResourcePicker);
 
-                resourceNodeId = nodeId;
+                $.get($(this).attr('href'))
+                    .always(function () {
+                    })
+                    .done(function (data) {
+                        $('.container-inline').append(data);
+                        $('.show-during-add').show();
 
-                $('.selected-resource').html(name);
-                $('#icap_dropzone_document_file_form_document').val(resourceNodeId);
+                        if (launchResourcePicker) {
+                            Claroline.ResourceManager.picker('open');
 
-                $('#add-document-sumbit').removeAttr('disabled');
-                $('#add-document-sumbit').trigger('click');
+                            $('#modal-picker').on('hidden.bs.modal', function () {
+                                console.log('hidden modal');
+                                if (resourceNodeId == null) {
+                                    console.log('hidden modal => cancel');
+                                    $('.cancel-inline').trigger('click');
+                                }
+                            });
+                        }
 
-                $('.add-document-pending').show();
-            };
+                        var top = $('.container-inline').offset().top;
+                        top = top - 50;
+                        $('body,html').scrollTop(top);
+                    })
+                ;
+            });
         });
     </script>
 {% endblock %}

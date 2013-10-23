@@ -10,11 +10,7 @@ class CorrectionReportType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('reportComment', 'textarea', array(
-            'attr' => array(
-                'class' => 'tinymce',
-                'data-theme' => 'advanced'
-            ),
+        $builder->add('reportComment', 'tinymce', array(
             'label_attr' => array(
                 'style' => 'display: none;'
             ),

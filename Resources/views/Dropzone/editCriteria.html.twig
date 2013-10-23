@@ -244,6 +244,7 @@
 
 {% block javascripts %}
     {{ parent() }}}
+    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
     {{ tinymce_init() }}
 
     <script src="{{ asset('bundles/icapdropzone/js/popup.js') }}"></script>

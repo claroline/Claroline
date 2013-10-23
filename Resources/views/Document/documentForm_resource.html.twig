@@ -24,14 +24,5 @@
             </div>
         </div>
     </div>
-
-    {% render controller('ClarolineCoreBundle:Tool\\WorkspaceResourceParameters:initPicker') %}
-    {{ tinymce_init() }}
-    <script>
-        $(document).ready(function () {
-            'use strict';
-            Claroline.ResourceManager.picker('open');
-        });
-    </script>
 {% endblock %}
 

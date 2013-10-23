@@ -11,11 +11,7 @@ class DocumentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if ($options['documentType'] == 'text') {
-            $builder->add('document', 'textarea',  array(
-                'attr' => array(
-                    'class' => 'tinymce',
-                    'data-theme' => 'advanced'
-                ),
+            $builder->add('document', 'tinymce',  array(
                 'required' => true,
                 'label' => 'text document'
             ));
