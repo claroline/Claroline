@@ -234,3 +234,7 @@ input.form-control.ng-valid:focus {
     background-color: rgb(66, 139, 202);
     color: white;
 }
+
+.panel-path-editor .tooltip-inner {
+	white-space: nowrap;
+}
