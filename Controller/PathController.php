@@ -67,6 +67,7 @@ use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Security\TokenUpdater;
 
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Class PathController
@@ -74,7 +75,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  * @category   Controller
  * @package    Innova
  * @subpackage PathBundle
- * @author     Innovalangues <contant@innovalangues.net>
+ * @author     Innovalangues <contact@innovalangues.net>
  * @copyright  2013 Innovalangues
  * @license    http://www.opensource.org/licenses/mit-license.php MIT License
  * @version    0.1
@@ -82,22 +83,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 */
 class PathController extends Controller
 {
-    private $security;
-     /**
-     * @DI\InjectParams({
-     *     "security"           = @DI\Inject("security.context")
-     * })
-     */
-    public function __construct(
-        SecurityContextInterface $security
-    )
-    {
-        $this->security = $security;
-    }
-
     /**
      * fromDesktopAction function
-     *
      * @return array response
      *
      * @Route(
@@ -110,13 +97,11 @@ class PathController extends Controller
      */
     public function fromDesktopAction()
     {
-
         return array();
     }
 
     /**
      * deployAction function
-     *
      * @return array workspace / OK
      *
      * @Route(
@@ -197,7 +182,6 @@ class PathController extends Controller
 
         return array('workspace' => $workspace, 'deployed' => "Parcours déployé.", 'paths' => $paths);
     }
-
 
     /**
      * private _jsonParser function
@@ -298,13 +282,13 @@ class PathController extends Controller
                 }
 
                 $excludedResourcesToResourceNodes[$resource->id] = $resource->resourceId;
-                if(!$step2ressourceNode = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')
+                if (!$step2ressourceNode = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')
                                                 ->findOneBy(array('step' => $currentStep, 
                                                                 'resourceNode' => $resource->resourceId,
                                                                 'excluded' => false
                                                                 )
                                                              )
-                    ){
+                    ) {
                     $step2ressourceNode = new Step2ResourceNode();
                 }
 
@@ -320,13 +304,13 @@ class PathController extends Controller
             // STEP'S EXCLUDED RESOURCES MANAGEMENT
             foreach ($step->excludedResources as $excludedResource) {
                 // boucler sur les ressourcesnodes exclues en base et les comparer à ce qu'il y a dans le JSON
-                if(!$step2ressourceNode = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')
+                if (!$step2ressourceNode = $manager->getRepository('InnovaPathBundle:Step2ResourceNode')
                                                 ->findOneBy(array('step' => $currentStep,
                                                                 'resourceNode' => $excludedResourcesToResourceNodes[$excludedResource],
                                                                 'excluded' => true
                                                                 )
                                                             )
-                ){
+                ) {
                     $step2ressourceNode = new Step2ResourceNode();
                 }
                 $step2resourceNodesToNotDelete[] = $step2ressourceNode->getId();
@@ -343,7 +327,6 @@ class PathController extends Controller
                     $manager->remove($currentStep2resourceNode);
                 }
             }
-
 
             /*
             // TO DO : GESTION DES DROITS
@@ -363,16 +346,13 @@ class PathController extends Controller
 
     /**
      * fromWorkspaceAction function
-     *
      * @return array workspace / paths
      *
      * @Route(
      *     "/",
      *     name = "innova_path_from_workspace"
      * )
-     *
      * @Template("InnovaPathBundle::path_workspace.html.twig")
-     *
      */
     public function fromWorkspaceAction()
     {
@@ -394,7 +374,6 @@ class PathController extends Controller
      *      defaults={"pathId"= null},
      *      options = {"expose"=true}
      * )
-     *
      * @Template("InnovaPathBundle:Editor:main.html.twig")
      */
     public function editorAction($workspaceId, $pathId = null)
@@ -404,13 +383,13 @@ class PathController extends Controller
         $currentUser = $this->get('security.context')->getToken()->getUser();
         $pathCreator = "";
 
-        if($pathId != null){
+        if ($pathId != null) {
             $pathCreator = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($pathId)->getCreator();
         }
 
         $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
 
-        if($currentUser == $pathCreator || $pathId == null){
+        if($currentUser == $pathCreator || $pathId == null) {
             return array('workspace' => $workspace, 'pathId' => $pathId);
         }
         else{
@@ -419,7 +398,6 @@ class PathController extends Controller
         }
     }
 
-
     /**
      * @Route(
      *      "workspace/{workspaceId}/path/player/{pathId}",
@@ -427,7 +405,6 @@ class PathController extends Controller
      *      defaults={"pathId"= null},
      *      options = {"expose"=true}
      * )
-     *
      * @Template("InnovaPathBundle:Player:main.html.twig")
      */
     public function PlayerAction($workspaceId, $pathId = null)
@@ -438,16 +415,13 @@ class PathController extends Controller
         return array('workspace' => $workspace);
     }
 
-
     /**
      * @Route(
      *     "/paths",
      *     name = "innova_path_get_paths",
      *     options = {"expose"=true}
      * )
-     *
      * @Method("GET")
-     *
      */
     public function getPathsAction()
     {
@@ -470,9 +444,7 @@ class PathController extends Controller
 
     /**
      * getPathAction function
-     *
      * @param string $id
-     *
      * @return JsonResponse
      *
      * @Route(
@@ -480,9 +452,7 @@ class PathController extends Controller
      *     name = "innova_path_get_path",
      *     options = {"expose"=true}
      * )
-     *
      * @Method("GET")
-     *
      */
     public function getPathAction($id)
     {
@@ -503,7 +473,6 @@ class PathController extends Controller
 
     /**
      * addPathAction function
-     *
      * @return Response($new_path->getId())
      *
      * @Route(
@@ -511,9 +480,7 @@ class PathController extends Controller
      *     name = "innova_path_add_path",
      *     options = {"expose"=true}
      * )
-     *
      * @Method("POST")
-     *
      */
     public function addPathAction()
     {
@@ -572,9 +539,7 @@ class PathController extends Controller
 
     /**
      * editPathAction function
-     *
      * @param string $path path of activity
-     *
      * @return Response($new_path->getId())
      *
      * @Route(
@@ -583,7 +548,6 @@ class PathController extends Controller
      *     options = {"expose"=true}
      * )
      * @Method("PUT")
-     *
      */
     public function editPathAction($id)
     {
@@ -611,13 +575,9 @@ class PathController extends Controller
         }
     }
 
-
     /**
      * showPathAction function
-     *
      * @param string $path path of activity
-     *
-     * @return OK
      *
      * @Route(
      *     "/path/show",
@@ -625,7 +585,6 @@ class PathController extends Controller
      *     options = {"expose"=true}
      * )
      * @Method("POST")
-     *
      */
     public function showPathAction()
     {
@@ -635,53 +594,71 @@ class PathController extends Controller
         $path = $em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
         $stepId = $em->getRepository('InnovaPathBundle:Step')->findOneBy(array('path' => $path, 'parent' => null))->getId();
 
-
         $url = $this->generateUrl('innova_step_show', array('workspaceId' => $workspaceId, 'pathId' => $pathId, 'stepId' => $stepId));
         return $this->redirect($url);
     }
 
-
-
-
     /**
-     * deletePathAction function
-     *
+     * Check if path name is unique for current user and current workspace
+     * @Route(
+     *      "/path/check_name",
+     *      name = "innova_path_check_unique_name",
+     *      options = {"expose" = true}
+     * )
+     * @Method("POST")
+     */
+    public function checkNameIsUniqueAction()
+    {
+        
+    }
+    
+    /**
+     * Delete path from database
+     * @return RedirectResponse
+     * 
      * @Route(
      *     "/path/delete",
      *     name = "innova_path_delete_path",
      *     options = {"expose"=true}
      * )
-     * @Method("POST")
-     *
+     * @Method("DELETE")
      */
     public function deletePathAction()
     {
-        $id = $this->get('request')->request->get('id');
-        $workspaceId = $this->get('request')->request->get('workspaceId');
-
-        if (!empty($id)) {
-            $em = $this->entityManager();
-            $path = $em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($id);
-            $currentUser = $this->get('security.context')->getToken()->getUser();
-            $pathCreator = $path->getResourceNode()->getCreator();
-
-            if($currentUser == $pathCreator){
-                /*
-                if($pathRoot = $em->getRepository('InnovaPathBundle:Step')->findOneBy(array('path' => $path, 'parent' => null))){
-                    $this->deleteStep($pathRoot);
-                }
-                */
-                $em->remove($path->getResourceNode());
-                $em->flush();
+        $pathManager = $this->container->get('innova.manager.path_manager');
+        try {
+            $isDeleted = $pathManager->delete();
+            if ($isDeleted) {
+                // Delete success
+                $this->container->get('session')->getFlashBag()->add(
+                    'success',
+                    'Selected path is successfully deleted'
+                );
             }
+            else {
+                // Delete error
+                $this->container->get('session')->getFlashBag()->add(
+                    'error',
+                    'Selected path can\'t be deleted due to a technical problem. Please try again.'
+                );
+            }
+        } catch (Exception $e) {
+            // User is not authorized to delete current path
+            // or Path to delete is not found
+            $this->container->get('session')->getFlashBag()->add(
+                'error',
+                $e->getMessage()
+            );
         }
-        $url = $this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspaceId, 'toolName' => 'innova_path'));
-
-        return $this->redirect($url);
+        
+        // Redirect to path list
+        $workspaceId = $this->container->get('request')->request->get('workspaceId');
+        $url = $this->container->get('router')->generate('claro_workspace_open_tool', array ('workspaceId' => $workspaceId, 'toolName' => 'innova_path'));
+        return new RedirectResponse($url, 302);
     }
 
-
-    private function getPaths($workspace){
+    private function getPaths($workspace)
+    {
         $manager = $this->container->get('doctrine.orm.entity_manager');
         $resourceType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('path');
         $resourceNodes = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findByWorkspaceAndResourceType($workspace, $resourceType);
@@ -707,22 +684,19 @@ class PathController extends Controller
 
     private function assertIsGranted($attributes, $object = null)
     {
-        if (false === $this->security->isGranted($attributes, $object)) {
+        if (false === $this->container->get('security.context')->isGranted($attributes, $object)) {
             throw new AccessDeniedException();
         }
     }
 
-
     /**
      * entityManager function
-     *
      * @return $em
      *
      */
     public function entityManager()
     {
         $em = $this->get('doctrine.orm.entity_manager');
-
         return $em;
     }
 
@@ -735,8 +709,6 @@ class PathController extends Controller
     public function resourceManager()
     {
         $rm = $this->get('claroline.manager.resource_manager');
-
         return $rm;
     }
-
 }

@@ -1,14 +1,34 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': workspace.getName() ~ ' - ' ~ workspace.getCode(),
+                'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
+            },
+            {
+                'name': 'innova_path'|trans({}, 'tools'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'paths' | trans({}, 'innova_tools') }}</h3>
     </div>
 
     <div class="panel-body">
-        {% if deployed is defined %}
-            <div class="alert alert-success">{{ deployed }}</div>
-        {% endif %}
+        <div>
+            {{ macros.flashBox() }}
+        </div>
 
         <a href="{{ path('innova_path_editor', {workspaceId: workspace.id}) }}" class="btn btn-default"><span class="icon-pencil"></span> {{ 'create_path' | trans({}, 'innova_tools') }}</a>
 
@@ -43,6 +63,7 @@
                         </form>
                    {% endif %}
                         <form action="{{ path('innova_path_delete_path') }}" method="post" style="display: inline-block">
+                            <input type="hidden" value="DELETE" name="_method" />
                             <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
                             <input type="hidden" value="{{ path.resourceNode.id }}" name="id" />
                             <a href="#" rel="tooltip" data-original-title="{{ 'delete' | trans({}, 'innova_tools') }}" class="btn btn-xs btn-danger path-delete" id="path-delete-{{ count }}"><span class="icon-trash"></span></a>

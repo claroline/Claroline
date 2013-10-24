@@ -1,0 +1,13 @@
+services:
+    innova.manager.path_manager:
+        class: Innova\PathBundle\Manager\PathManager
+        arguments:
+            entityManager:   @doctrine.orm.entity_manager
+            securityContext: @security.context
+        calls:
+            - [setRequest, [@request]]
+        scope: request
+            
+    innova.manager.step_manager: 
+        class: Innova\PathBundle\Manager\StepManager
+        arguments: ["@doctrine.orm.entity_manager"]

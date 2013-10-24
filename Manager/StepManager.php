@@ -2,18 +2,12 @@
 
 namespace Innova\PathBundle\Manager;
 
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\Service;
-
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\Step2ResourceNode;
 use Innova\PathBundle\Entity\NonDigitalResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Doctrine\ORM\EntityManager;
 
-/**
- * @Service("innova.manager.step_manager")
- */
 class StepManager
 {
     private $step;
@@ -22,12 +16,7 @@ class StepManager
     private $manager;
     private $nonDigitalResource;
 
-    /**
-     * @InjectParams({
-     *     "manager" = @Inject("doctrine"),
-     * })
-     */
-    public function __construct($manager)
+    public function __construct(EntityManager $manager)
     {
         $this->manager = $manager;
         $this->step = $manager->getRepository('InnovaPathBundle:Step');
@@ -42,10 +31,10 @@ class StepManager
         $step2ResourceNodes = $this->manager->getRepository('InnovaPathBundle:Step2ResourceNode')->findBy(array('step' => $step, 'excluded' => false));
 
         foreach ($step2ResourceNodes as $step2ResourceNode) {
-            if ($step2ResourceNode->getResourceNode()->getClass() == "Innova\PathBundle\Entity\NonDigitalResource"){
+            if ($step2ResourceNode->getResourceNode()->getClass() == "Innova\PathBundle\Entity\NonDigitalResource") {
                 $resourceNodes["nonDigital"][] =  $this->nonDigitalResource->findOneByResourceNode($step2ResourceNode->getResourceNode());
             }
-            else{
+            else {
                 $resourceNodes["digital"][] = $step2ResourceNode->getResourceNode();
             }
         }
@@ -58,10 +47,10 @@ class StepManager
         $step2ResourceNodes = $this->manager->getRepository('InnovaPathBundle:Step2ResourceNode')->findBy(array('step' => $step, 'propagated' => true));
 
         foreach ($step2ResourceNodes as $step2ResourceNode) {
-            if ($step2ResourceNode->getResourceNode()->getClass() == "Innova\PathBundle\Entity\NonDigitalResource"){
+            if ($step2ResourceNode->getResourceNode()->getClass() == "Innova\PathBundle\Entity\NonDigitalResource") {
                 $resourceNodes["nonDigital"][] = $this->nonDigitalResource->findOneByResourceNode($step2ResourceNode->getResourceNode());
             }
-            else{
+            else {
                 $resourceNodes["digital"][] = $step2ResourceNode->getResourceNode();
             }
         }

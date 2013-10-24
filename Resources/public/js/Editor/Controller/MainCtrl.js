@@ -140,10 +140,8 @@ function MainCtrl($scope, $http, $window, $location, $modal, HistoryFactory, Cli
                     // Add angular part
                     newRoute += '#' + $location.path();
                     
-                    console.log(newRoute);
-                    
+                    // TODO : find a way to not reload page
                     $window.location = newRoute;
-//                    $location.url($location.hash(newRoute));
                 }
             })
             .error(function(data, status) {
