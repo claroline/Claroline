@@ -5,6 +5,8 @@ namespace Icap\WikiBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 class DeleteSectionType extends AbstractType
 {
@@ -16,7 +18,7 @@ class DeleteSectionType extends AbstractType
                 $form = $event->getForm();               
                 $data = $event->getData();
 
-                if ($data->getSection()->hasChildren()) {
+                if ($data->hasChildren()) {
                     $form->add('children', 'checkbox', array(
                         'required' => false,
                         'mapped' => false

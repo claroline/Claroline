@@ -5,6 +5,6 @@
         <dt>{{ ('log_section_title')|trans({}, 'log') }}</dt>
         <dd>{{ log.details.section.title }}</dd>
         <dt>{{ ('log_section_text')|trans({}, 'log') }}</dt>
-        <dd>{{ log.details.section.text }}</dd>
+        <dd>{{ log.details.section.text|raw }}</dd>
     </dl>
 {% endif %}

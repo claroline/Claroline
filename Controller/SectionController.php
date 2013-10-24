@@ -109,6 +109,7 @@ class SectionController extends Controller{
         $this->checkAccess("EDIT", $wiki);
         $section = new Section();
         $section->setWiki($wiki);
+        $section->setAuthor($user);
         $section->setNewActiveContributionToSection($user);
 
         return $this->persistCreateSection($request, $wiki, $section, $user, $parentSectionId);
@@ -218,7 +219,7 @@ class SectionController extends Controller{
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function deleteSectionAction(Request $request, $wiki, $user, $sectionId)
+    public function deleteAction(Request $request, $wiki, $user, $sectionId)
     {
         $this->checkAccess("EDIT", $wiki);
         $section = $this->getSection($wiki, $sectionId);
@@ -354,7 +355,6 @@ class SectionController extends Controller{
 
     private function persistDeleteSection (Request $request, Wiki $wiki, Section $section, User $user) {
         $form = $this->createForm(new DeleteSectionType(), $section);
-        $form->handleRequest($request);
 
         if ($request->isXMLHttpRequest()) {
             return $this->render(
@@ -373,18 +373,20 @@ class SectionController extends Controller{
                 $em = $this->getDoctrine()->getManager();
                 $flashBag = $this->get('session')->getFlashBag();
                 $translator = $this->get('translator');
+                //Load activeContribution in cache
+                $section->getActiveContribution()->getTitle();
+                //Proceed to deletion
                 try{
                     if ($form->get('children')->getData() == false) {
                         $repo = $this->get('icap.wiki.section_repository');
                         $repo->removeFromTree($section);
-                        $em->clear();
                     }
                     else {
                         $em->remove($section);
                     }
-                    $em->flush();
-
                     $this->dispatchSectionDeleteEvent($wiki, $section);
+                    $em->clear();                    
+                    $em->flush();
 
                     $flashBag->add('success', $translator->trans('icap_wiki_section_delete_success', array(), 'icap_wiki'));
                 } catch (\Exception $exception) {

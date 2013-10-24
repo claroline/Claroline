@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Entity\Section;
+use Icap\WikiBundle\Entity\Contribution;
 
 class LogSectionDeleteEvent extends AbstractLogResourceEvent
 {

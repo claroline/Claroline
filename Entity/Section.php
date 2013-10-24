@@ -11,6 +11,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="icap__wiki_section")
  * @ORM\Entity(repositoryClass="Icap\WikiBundle\Repository\SectionRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Section
 {
@@ -402,8 +403,8 @@ class Section
             }
             $newActiveContribution->setTitle($oldActiveContribution->getTitle());
             $newActiveContribution->setText($oldActiveContribution->getText());
-            $newActiveContribution->setContributor($user);            
         }
+        $newActiveContribution->setContributor($user);
         $this->setActiveContribution($newActiveContribution);        
     }
 
@@ -430,5 +431,21 @@ class Section
         );
         
         return $changeSet;
+    }
+
+    /**
+     * @ORM\PostPersist
+     */
+    public function createActiveContribution(LifecycleEventArgs $event){
+        if ($this->getActiveContribution() == null) {
+            $em = $event->getEntityManager();
+            $activeContribution = new Contribution();
+            $activeContribution->setSection($this);
+            $activeContribution->setContributor($this->getAuthor());
+            $this->setActiveContribution($activeContribution);
+
+            $em->persist($activeContribution);
+            $em->flush();            
+        }
     }
 }
