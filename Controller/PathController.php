@@ -214,32 +214,7 @@ class PathController extends Controller
         return array('workspace' => $workspace);
     }
 
-    /**
-     * @Route(
-     *     "/paths",
-     *     name = "innova_path_get_paths",
-     *     options = {"expose"=true}
-     * )
-     * @Method("GET")
-     */
-    public function getPathsAction()
-    {
-        $em = $this->entityManager();
 
-        $results = $em->getRepository('InnovaPathBundle:Path')->findAll();
-
-        $paths = array();
-
-        foreach ($results as $result) {
-            $path = new \stdClass();
-            $path->id = $result->getId();
-            $path->path = json_decode($result->getPath());
-
-            $paths[] = $path;
-        }
-
-        return new JsonResponse($paths);
-    }
 
     /**
      * getPathAction function
@@ -454,14 +429,6 @@ class PathController extends Controller
         $workspaceId = $this->container->get('request')->request->get('workspaceId');
         $url = $this->container->get('router')->generate('claro_workspace_open_tool', array ('workspaceId' => $workspaceId, 'toolName' => 'innova_path'));
         return new RedirectResponse($url, 302);
-    }
-
-
-    private function assertIsGranted($attributes, $object = null)
-    {
-        if (false === $this->container->get('security.context')->isGranted($attributes, $object)) {
-            throw new AccessDeniedException();
-        }
     }
 
     /**
