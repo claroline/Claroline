@@ -124,15 +124,10 @@
                         </div>
                     </div>
                     <div class="col-md-9">
-                        <div class="text-center">
-                            <h1>{{ step.name }}</h1>
-                            {% if step.image %}
-                                <img src="{{ asset('bundles/innovapath/images/steps/' ~  step.image) }}"/>
-                            {% endif %}
-                        </div>
+                        <h1 class="text-center">{{ step.name }}</h1>
                         {% if step.instructions|raw %}
                         <div class="justified">
-                            <strong>{{ 'instructions' | trans({}, 'innova_tools') }} :</strong>   {{ step.instructions }}
+                            {{ step.instructions }}
                         </div>
                         {% endif %}
                     </div>

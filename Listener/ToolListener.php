@@ -7,6 +7,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use JMS\DiExtraBundle\Annotation as DI;
 
 use Claroline\CoreBundle\Form\TextType;
@@ -17,7 +18,11 @@ use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 
 
-class ToolListener
+
+/**
+ * @DI\Service
+ */
+class ToolListener implements ContainerAwareInterface
 {
     private $container;
 
@@ -33,6 +38,21 @@ class ToolListener
         $this->container = $container;
     }
 
+     /**
+     * @DI\Observe("open_path")
+     */
+    public function onPathOpen(OpenResourceEvent $event)
+    {   
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $pathId = $event->getResource()->getResourceNode()->getId();
+        $workspaceId = $event->getResource()->getResourceNode()->getWorkspace()->getId();
+        
+        $subRequest = $this->container->get('request')->duplicate( array(), array('pathId' => $pathId, 'workspaceId' => $workspaceId), array("_controller" => 'InnovaPathBundle:Path:showPath'));
+        $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+
+        $event->setResponse($response);
+        $event->stopPropagation();
+    }
 
     public function onWorkspaceOpen(DisplayToolEvent $event)
     {
@@ -49,29 +69,4 @@ class ToolListener
         $event->setContent($response->getContent());
     }
 
-
-    // /**
-    //  * @DI\Observe("innova_player_text")
-    //  *
-    //  * @param OpenResourceEvent $event
-    //  */
-    // public function onTextOpen(OpenResourceEvent $event)
-    // {
-    //     $text = $event->getResource();
-    //     $collection = new ResourceCollection(array($text->getResourceNode()));
-    //     $isGranted = $this->container->get('security.context')->isGranted('WRITE', $collection);
-    //     $revisionRepo = $this->container->get('doctrine.orm.entity_manager')
-    //         ->getRepository('ClarolineCoreBundle:Resource\Revision');
-    //     $content = $this->container->get('templating')->render(
-    //         'InnovaPathBundle::Player/text.html.twig',
-    //         array(
-    //             'text' => $revisionRepo->getLastRevision($text)->getContent(),
-    //             '_resource' => $text,
-    //             'isEditGranted' => $isGranted
-    //         )
-    //     );
-    //     $response = new Response($content);
-    //     $event->setResponse($response);
-    //     $event->stopPropagation();
-    // }
 }

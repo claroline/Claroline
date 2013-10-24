@@ -635,6 +635,7 @@ class PathController extends Controller
         $path = $em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
         $stepId = $em->getRepository('InnovaPathBundle:Step')->findOneBy(array('path' => $path, 'parent' => null))->getId();
 
+
         $url = $this->generateUrl('innova_step_show', array('workspaceId' => $workspaceId, 'pathId' => $pathId, 'stepId' => $stepId));
         return $this->redirect($url);
     }
