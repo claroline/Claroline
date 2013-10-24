@@ -33,8 +33,8 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
 
-class SectionController extends Controller{
-
+class SectionController extends Controller
+{
     /**
      * @Route(
      *      "/{wikiId}/history/{sectionId}/{maxPerPage}/{page}",

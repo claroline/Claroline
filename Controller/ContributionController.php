@@ -15,6 +15,7 @@ use Icap\WikiBundle\Entity\Wiki;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Entity\Contribution;
+use Icap\WikiBundle\Manager\ContributionManager;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -25,8 +26,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Exception\MissingOptionsException;
+use JMS\DiExtraBundle\Annotation as DI;
 
-class ContributionController extends Controller{
+class ContributionController extends Controller
+{
+    private $contributionManager;
+    
+    /**
+     * @DI\InjectParams({
+     *     "contributionManager"        = @DI\Inject("icap.wiki.contribution_manager")
+     * })
+     */
+    public function __construct(ContributionManager $contributionManager)
+    {
+        $this->contributionManager = $contributionManager;
+    }
+
 	/**
      * @Route(
      *      "/{wikiId}/section/{sectionId}/contribution/{contributionId}",
@@ -107,7 +122,7 @@ class ContributionController extends Controller{
 
     /**
      * @Route(
-     *      "/{wikiId}/section/{sectionId}/versions/compare",
+     *      "/{wikiId}/section/{sectionId}/compare",
      *      requirements = {
      *          "wikiId" = "\d+", 
      *          "sectionId" = "\d+"
@@ -127,8 +142,7 @@ class ContributionController extends Controller{
         	$oldid = $request->query->get('oldid');
         	$diff = $request->query->get('diff');
         	if ($oldid !== null && $diff !== null) {
-        		$repo = $this->get('icap.wiki.contribution_repository');
-        		$contributions = $repo->findyBySectionAndIds($section, array($oldid, $diff));
+        		$contributions = $this->contributionManager->compareContributions($section, array($oldid, $diff));
         		if (count($contributions) == 2) {
         			return array(
 		                'wiki' => $wiki,

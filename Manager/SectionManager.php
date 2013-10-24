@@ -26,7 +26,7 @@ class SectionManager
 
 
     /**
-     * @return \Icap\BlogBundle\Repository\TagRepository
+     * @return \Icap\WikiBundle\Repository\SectionRepository
      */
     public function getSectionRepository ()
     {
