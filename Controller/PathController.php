@@ -533,14 +533,13 @@ class PathController extends Controller
 
         return new Response(
             $resourceNode->getId()
-
         );
     }
 
     /**
      * editPathAction function
      * @param string $path path of activity
-     * @return Response($new_path->getId())
+     * @return Response
      *
      * @Route(
      *     "/path/edit/{id}",
@@ -549,30 +548,12 @@ class PathController extends Controller
      * )
      * @Method("PUT")
      */
-    public function editPathAction($id)
+    public function editAction($id)
     {
-        $manager = $this->container->get('doctrine.orm.entity_manager');
-        $path = $manager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($id);
+        $pathManager = $this->container->get('innova.manager.path_manager');
+        $pathId = $pathManager->edit();
 
-        if ($path) {
-            $resourceNode = $path->getResourceNode();
-            $resourceNode->setName($this->get('request')->request->get('pathName'));
-            $manager->persist($resourceNode);
-
-            $content = $this->get('request')->request->get('path');
-            $path->setPath($content);
-            $path->setModified(true);
-            $manager->persist($path);
-            $manager->flush();
-
-            return new Response(
-                $resourceNode->getId()
-            );
-        }
-        else {
-            // Path not found
-            throw $this->createNotFoundException('The path does not exist');
-        }
+        return new Response($pathId);
     }
 
     /**

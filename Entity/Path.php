@@ -44,7 +44,16 @@ class Path extends AbstractResource
      */
     private $modified;
 
-
+    /**
+     * Class constructor
+     */
+    public function __construct()
+    {
+        $this->steps = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->deployed = false;
+        $this->modified = false;
+    }
+    
     /**
      * Set path
      *
@@ -112,16 +121,6 @@ class Path extends AbstractResource
     public function getModified()
     {
         return $this->modified;
-    }
-
-
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->steps = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
