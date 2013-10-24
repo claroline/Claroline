@@ -211,6 +211,7 @@ class PathManager
 
     /**
      * Deploy a Path
+     * @return boolean
      */
     public function deploy()
     {
@@ -274,9 +275,7 @@ class PathManager
         $path->setModified(false);
         $this->em->flush();
 
-        $paths = $this->findAllFromWorkspace($workspace);
-
-        return array('workspace' => $workspace, 'deployed' => "Parcours déployé.", 'paths' => $paths);
+        return true;
     }
 
 

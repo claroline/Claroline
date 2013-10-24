@@ -102,14 +102,13 @@ class PathController extends Controller
 
     /**
      * deployAction function
-     * @return array workspace / OK
+     * @return RedirectResponse
      *
      * @Route(
      *     "/innova_path_deploy",
      *     name = "innova_path_deploy"
      * )
      * @Method("POST")
-     * @Template("InnovaPathBundle::path_workspace.html.twig")
      */
     public function deployAction()
     {
@@ -117,28 +116,31 @@ class PathController extends Controller
         try {
             $isDeployed = $pathManager->deploy();
             if ($isDeployed) {
-                // Delete success
+                // Deploy success
                 $this->container->get('session')->getFlashBag()->add(
                     'success',
-                    'Selected path is successfully deployed'
+                    'Selected path is successfully deployed.'
                 );
             }
             else {
-                // Delete error
+                // Deploy error
                 $this->container->get('session')->getFlashBag()->add(
                     'error',
                     'Selected path can\'t be deployed due to a technical problem. Please try again.'
                 );
             }
         } catch (Exception $e) {
-            // User is not authorized to delete current path
-            // or Path to delete is not found
+            // Exception trows during deployement
             $this->container->get('session')->getFlashBag()->add(
                 'error',
                 $e->getMessage()
             );
         }
-        return $isDeployed;
+        
+        // Redirect to path list
+        $workspaceId = $this->container->get('request')->request->get('workspaceId');
+        $url = $this->container->get('router')->generate('claro_workspace_open_tool', array ('workspaceId' => $workspaceId, 'toolName' => 'innova_path'));
+        return new RedirectResponse($url, 302);
     }
 
     
@@ -213,8 +215,6 @@ class PathController extends Controller
 
         return array('workspace' => $workspace);
     }
-
-
 
     /**
      * getPathAction function
@@ -387,7 +387,7 @@ class PathController extends Controller
                 // Delete success
                 $this->container->get('session')->getFlashBag()->add(
                     'success',
-                    'Selected path is successfully deleted'
+                    'Selected path is successfully deleted.'
                 );
             }
             else {
