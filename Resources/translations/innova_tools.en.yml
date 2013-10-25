@@ -30,3 +30,8 @@ edit: Edit
 delete: Delete
 deploy: Deploy
 create_path: Create a path
+deploy_success: Path has been deployed
+deploy_error: The path has not been deployed due to a technical problem. Please try again
+path_not_found: Path not found
+path_delete_success: Path has been deleted
+path_delete_error: Le parcours has not been deleted due to technical problem. Please try again

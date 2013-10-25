@@ -119,14 +119,14 @@ class PathController extends Controller
                 // Deploy success
                 $this->container->get('session')->getFlashBag()->add(
                     'success',
-                    'Selected path is successfully deployed.'
+                    $this->container->get('translator')->trans("deploy_success", array(), "innova_tools")
                 );
             }
             else {
                 // Deploy error
                 $this->container->get('session')->getFlashBag()->add(
                     'error',
-                    'Selected path can\'t be deployed due to a technical problem. Please try again.'
+                    $this->container->get('translator')->trans("deploy_error", array(), "innova_tools")
                 );
             }
         } catch (Exception $e) {
@@ -241,7 +241,8 @@ class PathController extends Controller
         }
         else {
             // Path not found
-            throw $this->createNotFoundException('The path does not exist');
+            throw $this->createNotFoundException($this->container->get('translator')->trans("path_not_found", array(), "innova_tools"));
+
         }
     }
 
@@ -387,14 +388,14 @@ class PathController extends Controller
                 // Delete success
                 $this->container->get('session')->getFlashBag()->add(
                     'success',
-                    'Selected path is successfully deleted.'
+                    $this->container->get('translator')->trans("path_delete_success", array(), "innova_tools")
                 );
             }
             else {
                 // Delete error
                 $this->container->get('session')->getFlashBag()->add(
                     'error',
-                    'Selected path can\'t be deleted due to a technical problem. Please try again.'
+                    $this->container->get('translator')->trans("path_delete_error", array(), "innova_tools")
                 );
             }
         } catch (Exception $e) {
