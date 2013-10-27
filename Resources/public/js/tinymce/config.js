@@ -1,6 +1,7 @@
 
 function callback_tinymce_init() {
 
+
     $('.tinymce').each(function(index, element) {
         var parent = $(element).parent().get(0);
         $('.mce-toolbar', parent).each(function (itopbar) {
@@ -42,6 +43,7 @@ function callback_tinymce_init() {
                 }
             }
         });
+    tinyMCE.execCommand('mceSetContent',false,'Bonjour ');
     }
 
 function tinymce_button_ressourceLinker (ed) {
