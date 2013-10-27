@@ -287,8 +287,6 @@ class ResourceController
             array($this->resourceManager->getResourceFromNode($node))
         );
 
-        $this->dispatcher->dispatch('log', 'Log\LogResourceCustom', array($node, $action));
-
         return $event->getResponse();
     }
 

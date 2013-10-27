@@ -90,7 +90,8 @@ class DatabaseSettings extends AbstractValidator
      */
     public function setPort($port)
     {
-        $this->port = trim($port);
+        $value = trim($port);
+        $this->port = $value === '' ? null : $value;
     }
 
     /**

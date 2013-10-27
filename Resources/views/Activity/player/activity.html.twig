@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
 {% block content %}
-    <iframe height="500px" width="25%" src="{{ path('claro_activity_left_menu', {'activity':activity.getId()}) }}" id="left-frame"></iframe>
-    <iframe height="500px" width="70%" src="{{ path('claro_activity_show_instructions', {'activity':activity.getId()}) }}" id="right-frame"></iframe>
+    <iframe style="border:none; min-width: 200px" height="500px" width="20%" src="{{ path('claro_activity_left_menu', {'activity':activity.getId()}) }}" id="left-frame"></iframe>
+    <iframe style="border:none;" height="500px" width="75%" src="{{ path('claro_activity_show_instructions', {'activity':activity.getId()}) }}" id="right-frame"></iframe>
 {% endblock %}

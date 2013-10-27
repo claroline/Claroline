@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Form\Badge;
 
+use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Manager\EventManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
@@ -35,21 +36,14 @@ class BadgeRuleType extends AbstractType
             ->add('action', 'twolevelselect', array(
                     'translation_domain' => 'log',
                     'attr'               => array('class' => 'input-sm'),
-                    'choices'            => $actionChoices,
-                    'label'              => 'badge_form_action',
-                    'theme_options'      => array(
-                        'label_width' => 'col-md-4'
-                    )
+                    'choices'            => $actionChoices
                 )
             )
-            ->add(
-                'occurrence', 'integer', array(
-                    'label' => 'badge_form_occurrence',
-                    'theme_options' => array(
-                        'label_width' => 'col-md-4'
-                    )
-                )
-            );
+            ->add('occurrence', 'integer')
+            ->add('result', 'text')
+            ->add('resultComparison', 'choice', array(
+                'choices' => BadgeRule::getResultComparisonTypes()
+            ));
     }
 
     public function getName()

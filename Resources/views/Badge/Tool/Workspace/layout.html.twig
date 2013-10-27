@@ -14,10 +14,7 @@
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">
-            <ol class="breadcrumb">
-                {% block section_title_first %}<li><a href="{{ path('claro_workspace_tool_badges', {'workspaceId': workspace.id}) }}" title="{{ 'workspace_badges'|trans }}">{{ 'workspace_badges'|trans }}</a>{% endblock %}
-                {% block section_title %}{% endblock %}
-            </ol>
+            {% block section_title %}{% endblock %}
         </h3>
     </div>
 

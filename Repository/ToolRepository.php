@@ -40,11 +40,11 @@ class ToolRepository extends EntityRepository
                 JOIN tool.orderedTools ot
                 JOIN ot.workspace ws
                 JOIN ot.roles role
-                WHERE role.name = '{$firstRole}' and ws.id = {$workspace->getId()}
+                WHERE role.name = :firstRole and ws.id = {$workspace->getId()}
             ";
 
-            foreach ($roles as $role) {
-                $dql .= " OR role.name = '{$role}' and ws.id = {$workspace->getId()}";
+            foreach ($roles as $key => $role) {
+                $dql .= " OR role.name = :role_{$key} and ws.id = {$workspace->getId()}";
             }
 
             $dql .= ' ORDER BY ot.order';
@@ -57,6 +57,11 @@ class ToolRepository extends EntityRepository
         }
 
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('firstRole', $firstRole);
+
+        foreach ($roles as $key => $role) {
+            $query->setParameter('role_'.$key, $role);
+        }
 
         return $query->getResult();
     }

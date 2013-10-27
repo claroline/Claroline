@@ -8,9 +8,9 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class PlatformParametersType extends AbstractType
 {
-    protected $themes;
+    private $themes;
 
-    public function __construct($themes)
+    public function __construct(array $themes)
     {
         $this->themes = $themes;
     }
@@ -19,8 +19,9 @@ class PlatformParametersType extends AbstractType
     {
         $builder
             ->add('name', 'text', array('required' => false))
+            ->add('support_email', 'email', array('label' => 'support_email'))
             ->add('footer', 'text', array('required' => false))
-            ->add('selfRegistration', 'checkbox', array('required' => false))
+            ->add('selfRegistration', 'checkbox')
             ->add(
                 'localLanguage',
                 'choice',
@@ -28,13 +29,7 @@ class PlatformParametersType extends AbstractType
                     'choices' => array('en' => 'en', 'fr' => 'fr')
                 )
             )
-            ->add(
-                'theme',
-                'choice',
-                array(
-                    'choices' => $this->themes
-                )
-            );
+            ->add('theme', 'choice', array('choices' => $this->themes));
    }
 
     public function getName()
@@ -44,11 +39,6 @@ class PlatformParametersType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver
-        ->setDefaults(
-            array(
-                'translation_domain' => 'platform'
-                )
-        );
+        $resolver->setDefaults(array('translation_domain' => 'platform'));
     }
 }

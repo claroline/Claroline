@@ -21,16 +21,7 @@ class MailType extends AbstractType
                 )
             )
             ->add('object', 'text')
-            ->add(
-                'content',
-                'textarea',
-                array(
-                    'attr' => array(
-                        'class' => 'tinymce',
-                        'data-theme' => 'advanced'
-                    )
-                )
-            );
+            ->add('content', 'tinymce');
     }
 
     public function getName()
