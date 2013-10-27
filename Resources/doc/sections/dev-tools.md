@@ -102,3 +102,66 @@ above, you can use :
 [10]: http://www.jshint.com/
 [11]: http://javascript.crockford.com/code.html
 [12]: http://nodejs.org/
+
+## Symfony commands
+
+Here is a list of usefull commands we use in order to speed up the development and initialize a platform. Some of them come from the symfony/doctrine package while the others were written by our team.
+
+### Installing the platform
+
+You can install the platform with fixtures using:
+
+    $ app/dev/raw_install
+
+In case you don't need fixtures, simply use:
+
+    $ php app/console claroline:install
+
+Plugins are registered with the command:
+
+    $ php app/console claroline:plugin:install
+
+You can remove plugins with
+
+    $ php app/console claroline:plugin:uninstall
+
+**Tips:** The list of registered bundle is saved in the file app/config/bundles.ini. If you need to add a bundle, you can simply add a line in this file if it already exists in your vendors. If you don't want a bundle to be instanciated, you can remove the relevant line here. Errors in the installation may remove the line concerning the bundle wich crashed (including the ClarolineCoreBundle).
+
+### Loading users
+
+You can create a new admin using the command:
+
+    $ php app/console claroline:user:create -a
+
+Removing the -a option will create a regular user.
+
+### Generating migrations
+
+A properly installed platform will include the MigrationBundle. It includes several usefull commands.
+Please read the MigrationBundle readme for me informations
+
+### Database
+
+You can drop the database using:
+
+    $ php app/console doctrine:database:drop --force
+
+You can create an empty database using:
+
+    $ php app/console doctrine:database:create
+
+### Clearing the cache
+
+You can clear the symfony cache using:
+
+    $ php app/console cache:clear
+
+**Tips:** It's often better to remove the cache manually using *$ rm -rf app/cache/**
+
+### Dumping assets
+
+You can dump assets using:
+
+    $ php app/console assetic:dump
+
+**Tips:** This command is required to compile less files and twigjs templates.

@@ -197,8 +197,6 @@ class ActivityListener implements ContainerAwareInterface
 
     /**
      * @DI\Observe("compose_activity")
-     *
-     * @param OpenResourceEvent $event
      */
     public function onCompose(CustomActionResourceEvent $event)
     {
