@@ -21,12 +21,13 @@ class PostController extends Controller
      *
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
      * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
-     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function viewAction(Request $request, Blog $blog, Post $post, User $user)
+    public function viewAction(Request $request, Blog $blog, Post $post)
     {
         $this->checkAccess("OPEN", $blog);
+
+        $user = $this->get('security.context')->getToken()->getUser();
 
         $this->dispatchPostReadEvent($blog, $post);
 
@@ -78,12 +79,13 @@ class PostController extends Controller
      * @Route("/{blogId}/post/new", name="icap_blog_post_new", requirements={"blogId" = "\d+"})
      *
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function newAction(Request $request, Blog $blog, User $user)
+    public function newAction(Request $request, Blog $blog)
     {
         $this->checkAccess("EDIT", $blog);
+
+        $user = $this->get('security.context')->getToken()->getUser();
 
         $postStatus = Comment::STATUS_UNPUBLISHED;
         if ($blog->isAutoPublishPost()) {
@@ -111,12 +113,13 @@ class PostController extends Controller
      *
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
      * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
-     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function editAction(Request $request, Blog $blog, Post $post, User $user)
+    public function editAction(Request $request, Blog $blog, Post $post)
     {
         $this->checkAccess("EDIT", $blog);
+
+        $user = $this->get('security.context')->getToken()->getUser();
 
         $translator = $this->get('translator');
 

@@ -30,12 +30,13 @@ class BlogController extends Controller
      * @Route("/{blogId}/{page}", name="icap_blog_view", requirements={"blogId" = "\d+", "page" = "\d+"}, defaults={"page" = 1})
      * @Route("/{blogId}/{filter}/{page}", name="icap_blog_view_filter", requirements={"blogId" = "\d+", "page" = "\d+"}, defaults={"page" = 1})
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function viewAction(Blog $blog, $page, User $user, $filter = null)
+    public function viewAction(Blog $blog, $page, $filter = null)
     {
         $this->checkAccess("OPEN", $blog);
+
+        $user = $this->get('security.context')->getToken()->getUser();
 
         $search = $this->getRequest()->get('search');
         if (null !== $search && '' !== $search) {
@@ -106,12 +107,13 @@ class BlogController extends Controller
     /**
      * @Route("/{blogId}/search/{search}/{page}", name="icap_blog_view_search", requirements={"blogId" = "\d+", "page" = "\d+"}, defaults={"page" = 1})
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function viewSearchAction(Blog $blog, $page, User $user, $search)
+    public function viewSearchAction(Blog $blog, $page, $search)
     {
         $this->checkAccess("OPEN", $blog);
+
+        $user = $this->get('security.context')->getToken()->getUser();
 
         /** @var \Icap\BlogBundle\Repository\PostRepository $postRepository */
         $postRepository = $this->get('icap.blog.post_repository');
