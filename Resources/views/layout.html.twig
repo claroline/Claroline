@@ -39,13 +39,29 @@
             {% endif %}
         </div>
         {% endif %}
-        <div class="jumbotron">
-            <h1><a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" title="{{ _resource.resourceNode.name }}">{{ _resource.resourceNode.name }}</a></h1>
-
-            <a href="{{ path('claro_workspace_open_tool', {"workspaceId":  _resource.resourceNode.workspace.id, "toolName": "resource_manager"}) ~ "#resources/" ~ user.personalWorkspace.id }}" data-toggle="tooltip" data-title="{{ 'back_to_workspace'|trans({}, 'icap_blog') }}">
-                <small>{{ 'back_to_workspace'|trans({}, 'icap_blog') }}</small>
-            </a>
+        <ul class="nav nav-pills">
+            <li>
+                <a href="{{ path('claro_workspace_open_tool', {"workspaceId":  _resource.resourceNode.workspace.id, "toolName": "resource_manager"}) ~ "#resources/" ~ user.personalWorkspace.id }}" data-toggle="tooltip" data-title="{{ 'back_to_workspace'|trans({}, 'icap_blog') }}">
+                    <i class="icon-reply"></i>
+                </a>
+            </li>
+            <li><a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" title="{{ _resource.resourceNode.name }}">{{ _resource.resourceNode.name }}</a></li>
+        </ul>
+        <div class="panel panel-default blog_banner_configurator">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" href="#blogBannerConfigurator">
+                        {{ 'icap_blog_edit_banner'|trans({}, 'icap_blog') }} (Fonctionnalité non disponible)
+                    </a>
+                </h4>
+            </div>
+            <div id="blogBannerConfigurator" class="panel-collapse collapse">
+                <div class="panel-body">
+                    Fonctionnalité non disponible
+                </div>
+            </div>
         </div>
+        <div class="col-md-12 well blog_banner" style=""></div>
         {{ macros.flashBox() }}
         <div class="row">
             <section class="col-lg-8">

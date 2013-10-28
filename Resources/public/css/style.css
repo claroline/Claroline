@@ -88,6 +88,18 @@ article .highlight {
   margin-top: 20px;
   margin-bottom: 20px;
 }
+.blog_banner_configurator {
+  border: 0;
+  margin-bottom: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.blog_banner_configurator .panel-heading {
+  border-bottom: 0;
+}
+.blog_banner {
+  min-height: 100px;
+}
 .tree {
   margin: 0;
   max-height: 300px;
