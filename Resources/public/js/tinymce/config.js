@@ -43,7 +43,6 @@ function callback_tinymce_init() {
                 }
             }
         });
-    tinyMCE.execCommand('mceSetContent',false,'Bonjour ');
     }
 
 function tinymce_button_ressourceLinker (ed) {
