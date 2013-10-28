@@ -5,7 +5,7 @@
 {% block title %}{{ _resource.resourceNode.name }}{% endblock %}
 
 {% block content %}
-        {% if is_granted('ROLE_ADMIN') or is_granted('EDIT', blog) %}
+        {% if is_granted('ROLE_ADMIN') or is_granted('EDIT', _resourceNode) %}
         <div class="btn-toolbar">
             {% if is_granted('ROLE_ADMIN') %}
             <div class="btn-group">
@@ -30,7 +30,7 @@
                 </ul>
             </div>
             {% endif %}
-            {% if is_granted('EDIT', blog) %}
+            {% if is_granted('EDIT', _resourceNode) %}
             <div class="btn-group">
                 <a href="{{ path('icap_blog_configure', {"blogId": _resource.id}) }}" class="btn btn-default">
                     <i class="icon-wrench"></i> {{ 'options'|trans({}, 'platform') }}
@@ -42,7 +42,7 @@
         <div class="jumbotron">
             <h1><a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" title="{{ _resource.resourceNode.name }}">{{ _resource.resourceNode.name }}</a></h1>
 
-            <a href="{{ path('claro_desktop_open_tool', {"toolName": "resource_manager"}) ~ "#resources/" ~ user.personalWorkspace.id }}">
+            <a href="{{ path('claro_workspace_open_tool', {"workspaceId":  _resource.resourceNode.workspace.id, "toolName": "resource_manager"}) ~ "#resources/" ~ user.personalWorkspace.id }}" data-toggle="tooltip" data-title="{{ 'back_to_workspace'|trans({}, 'icap_blog') }}">
                 <small>{{ 'back_to_workspace'|trans({}, 'icap_blog') }}</small>
             </a>
         </div>
@@ -71,7 +71,7 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">
                             {{ 'info_bar'|trans({}, 'icap_blog') }}
-                            {% if is_granted('ROLE_ADMIN') or is_granted('EDIT', blog) %}
+                            {% if is_granted('EDIT', _resourceNode) %}
                             <a href="{{ path('icap_blog_edit_infos', {'blogId': _resource.id}) }}" title="{{ 'edit_blog_infos'|trans({}, 'icap_blog') }}" class="btn btn-primary btn-xs pull-right white">
                                 <span class="icon-edit"></span>
                             </a>

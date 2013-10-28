@@ -21,11 +21,11 @@
         {% set postComments = post.comments %}
         {% for comment in postComments %}
             {% set isPublished = comment.isPublished %}
-            {% if is_granted('EDIT', blog) or isPublished %}
+            {% if is_granted('EDIT', _resourceNode) or isPublished %}
             <li>
                 <div class="panel {% if isPublished == false %}panel-warning{% else %}panel-default{% endif %}">
                     <div class="panel-heading">
-                        {% if is_granted('EDIT', blog) %}
+                        {% if is_granted('EDIT', _resourceNode) %}
                         <div class="btn-group pull-right">
                             <a href="{{ path('icap_blog_comment_delete', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" class="btn btn-xs btn-danger delete" data-confirm-title="{{ 'comment_deletion_confirm_title'|trans }}" data-confirm-message="{{ 'comment_deletion_confirm_message'|trans }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-toggle="tooltip" title="{{ 'delete'|trans({}, 'platform') }}" data-placement="top" data-original-title="{{ 'delete'|trans({}, 'platform') }}">
                                 <i class="icon-trash"></i>
@@ -55,8 +55,8 @@
             {% endif %}
         {% endfor %}
         </ul>
-        {% if is_granted('EDIT', blog) %}
-            {% set countComments = is_granted('EDIT', blog) ? post.countComments(true) : post.countComments %}
+        {% if is_granted('EDIT', _resourceNode) %}
+            {% set countComments = is_granted('EDIT', _resourceNode) ? post.countComments(true) : post.countComments %}
             {% if countComments > 0 %}{{ 'add_comment'|trans }}{% else %}{{ 'be_the_first_to_comment'|trans }}{% endif %} :
             <form action="{{ path('icap_blog_post_view', {'blogId': _resource.id, 'postSlug': post.slug}) }}" class="well" method="post" {{ form_enctype(form) }}>
                 {% if false ==_resource.isAutoPublishComment %}
