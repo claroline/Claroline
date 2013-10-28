@@ -1016,10 +1016,13 @@ class AdministrationController extends Controller
 
         $criteriaForm->handleRequest($this->request);
         $unique = false;
+        $range = null;
+
         if ($criteriaForm->isValid()) {
             $range = $criteriaForm->get('range')->getData();
             $unique = $criteriaForm->get('unique')->getData() === 'true';
         }
+
         $actionsForRange = $this->analyticsManager
             ->getDailyActionNumberForDateRange($range, 'user_login', $unique);
 
@@ -1065,9 +1068,9 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/analytics/top/{top_type}",
+     *     "/analytics/top/{topType}",
      *     name="claro_admin_analytics_top",
-     *     defaults={"top_type" = "top_users_connections"}
+     *     defaults={"topType" = "top_users_connections"}
      * )
      *
      * @EXT\Method({"GET", "POST"})
