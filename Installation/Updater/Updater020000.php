@@ -51,20 +51,19 @@ class Updater020000
 
     private function createActiveContributions($tempSections)
     {
-        try {
+
             $this->log('Creating active contributions for old (temporary) sections...');
             foreach ($tempSections as $tempSection) {
                 $insertQuery = "INSERT INTO icap__wiki_contribution ('title', 'text', 'creation_date', 'user_id', 'section_id')
                           VALUES ({$tempSection['title']}, {$tempSection['text']}, {$tempSection['creation_date']}, {$tempSection['user_id']}, {$tempSection['id']})";
                 $this->conn->query($insertQuery);
 
-                $activeContributionId = $this->conn->query("SELECT id FROM icap__wiki_contribution WHERE section_id = {$tempSection['id']}")[0];
+                $result = $this->conn->query("SELECT id FROM icap__wiki_contribution WHERE section_id = {$tempSection['id']}");
+                var_dump($result);
+                die();
                 $updateQuery = "UPDATE icap__wiki_section SET active_contribution_id = {$activeContributionId['id']} WHERE id = {$tempSection['id']}";
                 $this->conn->query($updateQuery);
             }
-        } catch (\Exception $e) {
-            $this->log('An Exception has been thrown during the creation of contributions');
-        }
     }
 
     private function copyWikiSectionTable()
