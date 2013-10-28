@@ -1,10 +1,14 @@
 Event Tracking
-============
+==============
 
-Event Tracking is a system that you can use to record user interaction with platform.
+Event Tracking is a system that you can use to record user interaction with
+platform.
 
-This is accomplished by attaching the appropriate event to the particular action you want to track.
-When used this way, all user activity on such actions is calculated and displayed as Events in the Tracking reporting interface.
+This is accomplished by attaching the appropriate event to the particular action
+you want to track.
+
+When used this way, all user activity on such actions is calculated and
+displayed as Events in the Tracking reporting interface.
 
 Event Tracking system can collect four major event categories:
 
@@ -14,75 +18,94 @@ Event Tracking system can collect four major event categories:
  * Roles events
 
 Advanced features
--------------
+-----------------
 
-In this section we cover what we call “advanced features” of the event tracking process.
+In this section we cover what we call **advanced features** of the event
+tracking process.
+
 These features include:
  * Not repeatable log
- * Mechanisms for displaying plugins’ logs
+ * Mechanisms for displaying plugins'logs
 
 
 ### Not repeatable log ###
 
-Some events such as resourceRead need to be filtered before storing them to the database
-in order to avoid information redundancy. By information redundancy we mean that the same
-event even if it occurs many times during a specific period of time it only has to be stored
-once.
+Some events such as resourceRead need to be filtered before storing them to the
+database in order to avoid information redundancy. By information redundancy we
+mean that the same event even if it occurs many times during a specific period
+of time it only has to be stored once.
 
-E.g.: Taking the case of a blog for example. In a blog it is quite possible that a user navigates
-though it’s different pages, posts, comments etc. Every time the user navigates a “read Blog”
-event occurs (since he is loading another page / item of the same blog).
+E.g.: Taking the case of a blog for example. In a blog it is quite possible that
+a user navigates though it's different pages, posts, comments etc. Every time
+the user navigates a **read Blog** event occurs
+(since he is loading another page/ item of the same blog).
 
 
-It is clear that storing all these occurrences is pointless since we only need one to tell us that
-a user started reading the resource. For that reason, we choose to store only the first of
-these occurrences then wait some time until we store again the same info. The “delay” time
-is configurable in the parameters.yml file.
+It is clear that storing all these occurrences is pointless since we only need
+one to tell us that a user started reading the resource. For that reason, we
+choose to store only the first of these occurrences then wait some time until
+we store again the same info. The delay time is configurable in the
+parameters.yml file.
 
-The events that are defined as “Not repeatable” are the following:
+The events that are defined as **Not repeatable** are the following:
  * ResourceRead
  * WorkspaceToolRead
 
-The mechanism behind that functionality does NOT use any database interaction. Instead,
-last event occurrence is stored in client’s http session having as value a timestamp (when the
-event first occurred).
+The mechanism behind that functionality does NOT use any database interaction.
+Instead, last event occurrence is stored in client's http session having as
+value a timestamp (when the event first occurred).
 
 
-If this behavior needs to be applied in other events as well, then the created event MUST
-implement the NotRepeatableLog interface. The NotRepeatableLog interface requires the
-definition of a method called getLogSignature() which generates a unique identifier for this
-event’s occurrences. For any resource the unique identifier would has the following form:resource_read_abstractResourceID. For example in the case of a Blog whose id is 42 the
-generated signature would be: resource_read_42.
+If this behavior needs to be applied in other events as well, then the created
+event MUST implement the NotRepeatableLog interface. The NotRepeatableLog
+interface requires the definition of a method called getLogSignature() which
+generates a unique identifier for this event's occurrences. For any resource
+the unique identifier would has the following
+form:resource_read_abstractResourceID. For example in the case of a Blog whose
+id is 42 the generated signature would be: resource_read_42.
 
-[Creating new event log](#create_new_event)
--------------
+Creating new event log
+----------------------
 
 There are two ways for creating new event log:
  * Using existing event provided by the CoreBundle
  * Create custom event
 
 Using existing one is quicker but the way it's displayed cannot be change.
-And if you use them you won't be able to award badge based on specific plugin's action, just generic one provided by the CoreBundle.
-Indeed this event is used in the badge system to know which action can be used to award badge.
+And if you use them you won't be able to award badge based on specific plugin's
+action, just generic one provided by the CoreBundle.
+Indeed this event is used in the badge system to know which action can be used
+to award badge.
 
 Knowing that creating custom event is highly recommended.
-So only creation of custom event will be covered in this doc, for using existing one please refer to the CoreBundle code.
+So only creation of custom event will be covered in this doc, for using existing
+one please refer to the CoreBundle code.
 
 For creating new event log here is the step to follow:
  * Create new class that extends the good class
-   * AbstractLogResourceEvent when action occured on a resource, or child resource
- * Define a constant in the class whose name begin with `ACTION`, other name won't be used to list available action's log
-   This constant must be well formated in two or three sections separated by a dash `-` in order to be used in the filter form.
+   * AbstractLogResourceEvent when action occured on a resource, or child
+     resource
+ * Define a constant in the class whose name begin with `ACTION`, other name
+   won't be used to list available action's log
+   This constant must be well formated in two or three sections separated by a
+   dash `-` in order to be used in the filter form.
    Each of this section can match pretty much everything you need.
    Here is an example:
-     * first section is the type of object it's associated (platform, resource, workspace, role, tools, widget, user...)
-     * second section (`optionnal`) is the type of the resource (for resource type of object by example)
-     * third section is the action executed (login, post_create, post_update, post_delete, ws_role_subscribe_user etc...)
-   You will need to add some translation text for the first section key and for the `log_%constantName_filter` (e.g. `log_workspace-update_filter` for update action on a workspace).
+     * first section is the type of object it's associated (platform, resource,
+       workspace, role, tools, widget, user...)
+     * second section (`optionnal`) is the type of the resource (for resource
+       type of object by example)
+     * third section is the action executed (login, post_create, post_update,
+       post_delete, ws_role_subscribe_user etc...)
+   You will need to add some translation text for the first section key and for
+   the `log_%constantName_filter`
+   (e.g. `log_workspace-update_filter` for update action on a workspace).
    Each section will become a choice list ine the filter form.
- * Use this new class with an event dispatcher on the `log` event name and you're done
+ * Use this new class with an event dispatcher on the `log` event name and
+   you're done
 
-For now log form filter will just have two select list but you can make three section for future enhancement.
+For now log form filter will just have two select list but you can make three
+section for future enhancement.
 
 Let's admit you want to create a log for when you create a post in a blog.
 Firs create the event class:
@@ -126,17 +149,22 @@ class LogPostCreateEvent extends AbstractLogResourceEvent
 
 By default all logs are not displayed on vizualisation interface.
 To see them you have to define their displaying restirctions.
-To do it you have to define the `getRestriction` method on your event log class and make it return an array of where you want it to be displayed.
-There is two constants at your disposal in the class, `DISPLAYED_ADMIN` and `DISPLAYED_WORKSPACE`.
+To do it you have to define the `getRestriction` method on your event log class
+and make it return an array of where you want it to be displayed.
+There is two constants at your disposal in the class, `DISPLAYED_ADMIN` and
+`DISPLAYED_WORKSPACE`.
 
-Somme classes you can extend of exist to ease the class creation, here is the list and what they are for:
+Somme classes you can extend of exist to ease the class creation, here is the
+list and what they are for:
  * `AbstractLogResourceEvent` for event log associate to a resource
  * `AbstractLogToolEvent` for event log associate to a tool
  * `AbstractLogWidgetEvent` for event log associate to a widget
 
-This solution isn't mandatory, but it fills the log with some predetermined datas that you don't have to deal with.
+This solution isn't mandatory, but it fills the log with some predetermined
+datas that you don't have to deal with.
 
-After creating this class you just have to use it in your code where you create your post:
+After creating this class you just have to use it in your code where you create
+your post:
 
 ```php
 $event = new \ICAP\BlogBundle\Event\Log\LogPostCreateEvent($blog, $post);
@@ -145,22 +173,27 @@ $this->get('event_dispatcher')->dispatch('log', $event);
 ```
 
 And you're good.
-All parameters provided to the event is specific to this case, you can of course give what you want to the class,
-just don't forget to give the superclass what she needs if you use one of them.
+All parameters provided to the event is specific to this case, you can of course
+give what you want to the class, just don't forget to give the superclass what
+she needs if you use one of them.
 
-[Displaying new event log](#displaying_event)
--------------
+Displaying new event log
+------------------------
 
-When creating new event log, listeners and functions have to be defined in order to render the new logs.
+When creating new event log, listeners and functions have to be defined in order
+to render the new logs.
 
 The listeners that need to be defined are the following:
-- create_log_list_item_%actionName% (e.g. create_log_list_item_resource-icap_blog-post_create)
-- create_log_details_%actionName% (e.g. create_log_details_resource-icap_blog-post_create)
+ * create_log_list_item_%actionName%
+   (e.g. create_log_list_item_resource-icap_blog-post_create)
+ * create_log_details_%actionName%
+   (e.g. create_log_details_resource-icap_blog-post_create)
 As well as the functions called by these listeners.
 
 
-The first listener is responsible for rendering the event in an appropriate form for the events
-list (short presentation of the event). An example of this function is given below:
+The first listener is responsible for rendering the event in an appropriate form
+for the events list (short presentation of the event). An example of this
+function is given below:
 
 ```php
 public function onCreateLogListItem(LogCreateDelegateViewEvent $event)
@@ -174,9 +207,10 @@ public function onCreateLogListItem(LogCreateDelegateViewEvent $event)
 }
 ```
 
-The example shows that along with the listener and the function a (twig) view is also
-required. In the given example this view is the ‘log_list_item.html.twig’, responsible to display
-the event in a short form. Below is given the code of this view:
+The example shows that along with the listener and the function a (twig) view is
+also required. In the given example this view is the
+**log_list_item.html.twig**, responsible to display the event in a short form.
+Below is given the code of this view:
 
 ```php
 {% set doer %}
@@ -204,12 +238,14 @@ the event in a short form. Below is given the code of this view:
 {% endif %}
 ```
 
-In addition to this listener you need to define a translation text for the key `log_%actionName%_shortname` in order to
-display the action text on the list item row of the log (e.g. for action `resource-icap_blog-post_create` define a
-`log_resource-icap_blog-post_create_shortname` key in your log translation file).
+In addition to this listener you need to define a translation text for the key
+`log_%actionName%_shortname` in order to display the action text on the list
+item row of the log (e.g. for action `resource-icap_blog-post_create` define a
+`log_resource-icap_blog-post_create_shortname` key in your log translation
+file).
 
-The second listener displays the event in details. Hence, both its function and its view are
-more complex.
+The second listener displays the event in details. Hence, both its function and
+its view are more complex.
 
 ```php
 public function onCreateLogDetails(LogCreateDelegateViewEvent $event)
@@ -228,7 +264,9 @@ public function onCreateLogDetails(LogCreateDelegateViewEvent $event)
     $event->stopPropagation();
 }
 ```
-The associated view is the ‘log_details.html.twig’ and its code is given below:
+
+The associated view is the **log_details.html.twig** and its code is given
+below:
 
 ```php
 {% extends 'ClarolineCoreBundle:Log:view_details.html.twig' %}
@@ -241,20 +279,17 @@ The associated view is the ‘log_details.html.twig’ and its code is given bel
 {% endblock %}
 ```
 
-You are of course encouraged to extends CoreBundle log base views, and just override the part you want.
-To do that you have at your disposal some block that you can customize, by override or to add datas into:
- * logDetailsTitle: the title displayed at the top of the page (display `log_%actionName%_title` trnalsation by default)
+You are of course encouraged to extends CoreBundle log base views, and just
+override the part you want.
+To do that you have at your disposal some block that you can customize, by
+override or to add datas into:
+
+ * logDetailsTitle: the title displayed at the top of the page (display
+   `log_%actionName%_title` translation by default)
  * logDetailsSubtitle: display the same information than in the event list.
  * logDetailsContext: informations about the occured action
 
-----------
 
-Return to :
+[index documentation][1]
 
-- [core documentation][1]
-- [index documentation][2]
-
-
-[1]: core.md
-[2]: ../index.md
-[3]: plugins/logs.md
+[1]: ../index.md

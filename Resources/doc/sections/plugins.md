@@ -11,7 +11,8 @@ Claroline Plugins
 Directory structure
 -------------------
 
-Sources are located in the *vendor* folder. This is were your plugin should be located.
+Sources are located in the *vendor* folder. This is were your plugin should be
+located.
 
 As plugins are Symfony2 [bundles][practices], it is strongly recommanded that
 you follow bundles naming rules. So the folder of your plugin should be like
@@ -23,11 +24,13 @@ Plugin configuration file
 Your plugin must define its properties in *Resources/config/config.yml file*.
 This file must at least include:
 
-    plugin:
-        # Set this to "true" if your plugin must have an entry in the plugin configuration page.
-        has_options: 'true'
-        # You can set an icon for your plugin. The icon must be in your public/images/icons folder.
-        icon: 'icon.png'
+```yml
+plugin:
+    # Set this to "true" if your plugin must have an entry in the plugin configuration page.
+    has_options: 'true'
+    # You can set an icon for your plugin. The icon must be in your public/images/icons folder.
+    icon: 'icon.png'
+```
 
 Translations
 ------------
@@ -52,35 +55,39 @@ bundle
 
 Here is the translation key used to translate your plugin name:
 
-    myvendorbundleshortname: 'this is a translation'
+```yml
+myvendorbundleshortname: 'this is a translation'
+```
 
 [index_path]: ../index.md
 
 Full plugin configuration file example:
 
-    plugin:
-        has_options: 'false'
-        #icon: 'icon.png'
+```yml
+plugin:
+    has_options: 'false'
+    #icon: 'icon.png'
 
-    widgets:
-       - name: 'claroline_mywidget1'
-         #is_configurable: 'false'
-         is_exportable: 'true'
-         #- name: 'claroline_mywidget2'
-         #is_configurable: 'false'
+widgets:
+   - name: 'claroline_mywidget1'
+     #is_configurable: 'false'
+     is_exportable: 'true'
+     #- name: 'claroline_mywidget2'
+     #is_configurable: 'false'
 
-    resources:
-        - class: 'Claroline\ExampleBundle\Entity\Example'
-          name: 'claroline_example'
-          is_exportable: 'false'
-          icon: 'res_text.png'
+resources:
+    - class: 'Claroline\ExampleBundle\Entity\Example'
+      name: 'claroline_example'
+      is_exportable: 'false'
+      icon: 'res_text.png'
 
-    tools:
-        - name: 'claroline_mytool'
-          #class: 'res_text.png'
-          #is_exportable: 'true'
-          is_displayable_in_workspace: 'true'
-          is_displayable_in_desktop: 'true'
+tools:
+    - name: 'claroline_mytool'
+      #class: 'res_text.png'
+      #is_exportable: 'true'
+      is_displayable_in_workspace: 'true'
+      is_displayable_in_desktop: 'true'
+```
 
 The plugin section contains the general options of the plugin.
 The has_options field is required. This field will generate a link in the
@@ -90,5 +97,3 @@ and set some general parameters of your plugin.
 [[Documentation index]][index_path]
 
 [practices]: http://symfony.com/doc/2.0/cookbook/bundles/best_practices.html
-
-

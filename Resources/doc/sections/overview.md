@@ -79,7 +79,8 @@ which some important platform parameters (like the database connection
 parameters) are stored, as well as the *plugin* directory, where the plugins
 are "recorded" for their integration to the kernel.
 
-The *vendor* directory contains sources. This is were you will find the claroline core its dependencies.
+The *vendor* directory contains sources. This is were you will find the
+claroline core its dependencies.
 
 Bundles
 -------
@@ -105,7 +106,7 @@ implementing a `load` method, to which an instance of the entity manager is
 passed by Doctrine when the fixture is executed. In that method, you can
 therefore use the manager to persist any needed data. Example :
 
-<?php
+```php
 
 namespace Foo\BarBundle\DataFixtures;
 
@@ -123,6 +124,8 @@ class FooFixture extends AbstractFixture
         $manager->flush();
     }
 }
+
+```
 
 The data fixtures loading is also part of the installation of every bundle in
 Claroline. To benefit from this feature, simply put your fixture classes in
