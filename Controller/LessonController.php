@@ -92,20 +92,18 @@ class LessonController extends Controller
         $form = $this->createForm($this->get("icap.lesson.movechaptertype"), $chapter);
 
         //the first time you enter the lesson there's no chapter
+        $previousChapterId = null;
+        $nextChapterId = null;
         if($chapter != null){
             $this->dispatchChapterReadEvent($lesson, $chapter);
-            $res = array();
-            //$this->parseNode($tree[0], $chapter, $res);
             $previous = $chapterRepository->getPreviousChapter($chapter);
+            if($previous != null){
+                $previousChapterId = $previous->getId();
+            }
             $next = $chapterRepository->getNextChapter($chapter);
-            if($previous == null){
-                $previous = $chapter;
+            if($next != null){
+                $nextChapterId = $next->getId();
             }
-            if($next == null){
-                $next = $chapter;
-            }
-            //var_dump($previous->getId());
-            //var_dump($next->getId());
         }
 
         return array(
@@ -115,39 +113,10 @@ class LessonController extends Controller
             'parent'            => $parent,
             'chapter'           => $chapter,
             'form'              => $form->createView(),
-            'previous'          => $previous->getId(),
-            'next'              => $next->getId(),
+            'previous'          => $previousChapterId,
+            'next'              => $nextChapterId,
             'workspace'         => $lesson->getResourceNode()->getWorkspace()
         );
-    }
-
-    public function parseTree($collection, $chapterTarget, &$res, $previous, $getnext){
-        foreach ($collection as $node) {
-            return $this->parseNode($node, $chapterTarget, $res, $previous, $getnext);
-        }
-    }
-
-    public function parseNode($node, $chapterTarget, &$res, $previous = null, $getnext = false){
-        var_dump($getnext);
-        var_dump($node["title"]."<br/>");
-
-        $tmp = null;
-        if($previous == null){
-            $previous = $chapterTarget->getId();
-        }
-        if($node["id"] == $chapterTarget->getId()){
-            $res["previous"] = $previous;
-            $getnext = true;
-        }else if($getnext){
-            $res["next"] = $node["id"];
-            //return true;
-        }
-        $previous = $node["id"];
-        if (isset($node["__children"])){
-            $getnext = $this->parseTree($node["__children"], $chapterTarget, $res, $previous, $getnext);
-        }
-        return $getnext;
-
     }
 
     /**
