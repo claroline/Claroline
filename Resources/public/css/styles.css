@@ -126,7 +126,6 @@ li.custom_field div div {
 .chapter_content_text{
   padding: 20px;
   text-align: justify;
-  padding-bottom: 40px;
   min-height: 535px;
 }
 
@@ -205,10 +204,14 @@ li.custom_field div div {
     font-size: 1.2em;
 }
 
-.back_top_page{
-    text-align: center;
-    color: #666;
+.lesson_footer{
+     text-align: center;
+     color: #666;
+     padding:20px;
+ }
 
+.lesson_footer_icon{
+    font-size: 22px;
 }
 
 /*sortable styles*/
