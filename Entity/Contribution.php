@@ -102,6 +102,16 @@ class Contribution
     }
 
     /**
+     * Returns the resource creation date.
+     *
+     * @return \DateTime
+     */
+    public function setCreationDate($creationDate)
+    {
+        return $this->creationDate = $creationDate;
+    }
+
+    /**
      * Set contributor
      *
      * @param User $contributor

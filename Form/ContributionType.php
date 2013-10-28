@@ -23,7 +23,8 @@ class ContributionType extends AbstractType
                 $form->add('text', 'textarea', array(
                     'attr' => array(
                         'class' => 'tinymce',
-                        'data-theme' => 'advanced'
+                        'data-theme' => 'advanced',
+                        'id' => 'icap_wiki_section_text'
                         )
                     )
                 );

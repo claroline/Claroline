@@ -76,7 +76,7 @@ class SectionController extends Controller
 
             $maxPerPageArray = array(10,25,50,100,250,500);
             return array(
-                'wiki' => $wiki,
+                '_resource' => $wiki,
                 'pager' => $pager,
                 'section' => $section,
                 'workspace' => $wiki->getResourceNode()->getWorkspace(),
@@ -136,10 +136,11 @@ class SectionController extends Controller
     {
         $this->checkAccess("EDIT", $wiki);
         $section = $this->getSection($wiki, $sectionId);
+        $oldActiveContribution = $section->getActiveContribution();
         $section->setNewActiveContributionToSection($user);
         $section->setPosition($sectionId);        
         
-        return $this->persistUpdateSection($request, $wiki, $section, $user);
+        return $this->persistUpdateSection($request, $wiki, $section, $oldActiveContribution, $user);
     }
 
     /**
@@ -233,7 +234,7 @@ class SectionController extends Controller
             return $this->render(
                 'IcapWikiBundle:Section:newModal.html.twig',
                 array(
-                    'wiki' => $wiki,
+                    '_resource' => $wiki,
                     'parentSectionId' => $parentSectionId,
                     'workspace' => $wiki->getResourceNode()->getWorkspace(),
                     'form' => $form->createView()
@@ -274,17 +275,18 @@ class SectionController extends Controller
         }
 
         return array(
-            'wiki' => $wiki,
+            '_resource' => $wiki,
             'parentSectionId' => $parentSectionId,
             'workspace' => $wiki->getResourceNode()->getWorkspace(),
             'form' => $form->createView()
         );
     }
 
-    private function persistUpdateSection (Request $request, Wiki $wiki, Section $section, User $user) {
+    private function persistUpdateSection (Request $request, Wiki $wiki, Section $section, Contribution $oldActiveContribution, User $user) {
         $form = $this->createForm($this->get('icap.wiki.section_edit_type'), $section);
         if ("POST" === $request->getMethod()) {
             $form->handleRequest($request);
+            $section->isActiveContributionChanged($oldActiveContribution);
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
                 $unitOfWork = $em->getUnitOfWork();
@@ -296,20 +298,18 @@ class SectionController extends Controller
                 $flashBag = $this->get('session')->getFlashBag();
                 $translator = $this->get('translator');
 
-                $position = $section->getId();
+                $position = $section->getId();                
                 $activeContribution = $section->getActiveContribution();
                 try {
-                    if (!$section->checkMoveSection()) {
-                        $em->persist($section);
-                        $em->flush();
-                    }
-                    else {
+                    $em->persist($section);
+                    $em->flush();
+                    if ($section->checkMoveSection()) {
                         $isBrother = $section->getBrother();
                         $position = $section->getPosition();
                         $oldParent = $section->getParent();
                         $oldLeft = $section->getLeft();
                         $referenceSection = $this->getSection($wiki, $position);
-                        if ($isBrother==true) {
+                        if ($isBrother==true) {                            
                             $repo->persistAsNextSiblingOf($section, $referenceSection);
                             $newParent = $referenceSection->getParent();
                         }
@@ -323,7 +323,9 @@ class SectionController extends Controller
                         $this->dispatchSectionMoveEvent($wiki, $section, $moveChangeSet);
                     }           
 
-                    $this->dispatchContributionCreateEvent($wiki, $section, $activeContribution);
+                    if ($section->getHasChangedActiveContribution() === true) {
+                        $this->dispatchContributionCreateEvent($wiki, $section, $activeContribution);
+                    }
                     unset($changeSet['activeContribution']);
                     if (!empty($changeSet)) {
                         $this->dispatchSectionUpdateEvent($wiki, $section, $changeSet);                        
@@ -347,7 +349,7 @@ class SectionController extends Controller
         }
 
         return array(
-            'wiki' => $wiki,
+            '_resource' => $wiki,
             'section' => $section,
             'form' => $form->createView()
         );
@@ -360,7 +362,7 @@ class SectionController extends Controller
             return $this->render(
                 'IcapWikiBundle:Section:deleteModal.html.twig',
                 array(
-                    'wiki' => $wiki,
+                    '_resource' => $wiki,
                     'section' => $section,
                     'workspace' => $wiki->getResourceNode()->getWorkspace(),
                     'form' => $form->createView()
@@ -405,7 +407,7 @@ class SectionController extends Controller
         }
 
         return array(
-            'wiki' => $wiki,
+            '_resource' => $wiki,
             'section' => $section,
             'workspace' => $wiki->getResourceNode()->getWorkspace(),
             'form' => $form->createView()

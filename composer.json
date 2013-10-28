@@ -19,5 +19,8 @@
     "autoload": {
         "psr-0": { "Icap\\WikiBundle": "" }
     },
-    "target-dir": "Icap/WikiBundle"
+    "target-dir": "Icap/WikiBundle",
+    "extra": {
+        "dbVersion": "20131028142219"
+    }
 }

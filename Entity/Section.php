@@ -80,6 +80,11 @@ class Section
      * Variable used in section edit form to define move section properties
      */
     private $brother;
+
+    /*
+     * Variable used in section edit form to define if active contribution has changed
+     */
+    private $hasChangedActiveContribution = true;
     
     /**
      * @Gedmo\TreeRoot
@@ -329,6 +334,22 @@ class Section
     }
 
     /**
+     * @param boolean $hasChangedActiveContribution
+     */
+    public function setHasChangedActiveContribution($hasChangedActiveContribution)
+    {
+        $this->hasChangedActiveContribution = (bool)$hasChangedActiveContribution;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getHasChangedActiveContribution()
+    {
+        return (bool)$this->hasChangedActiveContribution;
+    }
+
+    /**
      * Set parent
      *
      * @param \Icap\WikiBundle\Entity\Section $section
@@ -410,7 +431,7 @@ class Section
 
     /**
      * Returns the changeSet data when a section has been moved
-      * @param Section $oldParent
+     * @param Section $oldParent
      * @param integer $oldPosition
      * @param Section $newParent
      *
@@ -431,6 +452,28 @@ class Section
         );
         
         return $changeSet;
+    }
+
+    /**
+     * Returns the changeSet data when a section has been moved
+     * @param Contribution  $oldActiveContribution
+     */
+    public function isActiveContributionChanged($oldActiveContribution)
+    {
+        $activeContribution = $this->getActiveContribution();
+
+        $oldText = trim($oldActiveContribution->getText());
+        $oldTitle = trim($oldActiveContribution->getTitle());
+        
+        $newTitle = trim($activeContribution->getTitle());
+        $newText = trim($activeContribution->getText());
+
+        if ($oldText == $newText && $oldTitle == $newTitle)
+        {
+            unset($activeContribution);
+            $this->setActiveContribution($oldActiveContribution);
+            $this->setHasChangedActiveContribution(false);
+        }
     }
 
     /**

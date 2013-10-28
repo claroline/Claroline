@@ -2,15 +2,14 @@
 
 {% trans_default_domain "icap_wiki" %}
 
-{% block title %}{{ wiki.resourceNode.name }}{% endblock %}
+{% block title %}{{ _resource.resourceNode.name }}{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('icap_wiki_view', {"wikiId": _resource.id}) }}">{{_resource.resourceNode.name}}</a></li>
+    <li class="active">{{'new_section'|trans({},'icap_wiki')}}</li>
+{% endblock %}
 
 {% block wiki_panel %}
-    <p>           
-        <a href="{{ path('icap_wiki_view', {"wikiId": wiki.id}) }}">
-            <span class="icon-angle-left"></span>
-            {{ 'back_to_wiki'|trans({}, 'icap_wiki') }}
-        </a>
-    </p>
     {% block wiki_content %}
         <div>
             {% include "IcapWikiBundle:Section:newForm.html.twig"%}
@@ -20,4 +19,6 @@
 
 {% block javascripts %}
     {{ parent() }}
+    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+    {{ tinymce_init() }}
 {% endblock %}

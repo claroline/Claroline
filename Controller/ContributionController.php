@@ -67,7 +67,7 @@ class ContributionController extends Controller
         	$contribution = $this->getContribution($section, $contributionId);
 
             return array(
-                'wiki' => $wiki,
+                '_resource' => $wiki,
                 'contribution' => $contribution,
                 'section' => $section,
                 'workspace' => $wiki->getResourceNode()->getWorkspace()
@@ -145,7 +145,7 @@ class ContributionController extends Controller
         		$contributions = $this->contributionManager->compareContributions($section, array($oldid, $diff));
         		if (count($contributions) == 2) {
         			return array(
-		                'wiki' => $wiki,
+		                '_resource' => $wiki,
 		                'contributions' => $contributions,
 		                'section' => $section,
 		                'workspace' => $wiki->getResourceNode()->getWorkspace()

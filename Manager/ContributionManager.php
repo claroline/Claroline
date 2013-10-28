@@ -42,10 +42,14 @@ class ContributionManager
     public function compareContributions (Section $section, $ids)
     {
     	$contributions = $this->contributionRepository->findyBySectionAndIds($section, $ids);
-    	$titleDiff = new HtmlDiff($contributions[0]->getTitle(), $contributions[1]->getTitle(), false);
+    	$titleDiff = new HtmlDiff($contributions[0]->getTitle(), $contributions[1]->getTitle(), false); 
     	$textDiff = new HtmlDiff($contributions[0]->getText(), $contributions[1]->getText(), true);
-    	$contributions[0]->setText($textDiff->outputDiff()->toString());
-    	$contributions[1]->setText($textDiff->outputDiff()->toString());
+        $contribution = new Contribution();
+        $contribution->setText($textDiff->outputDiff()->toString());
+        $contribution->setTitle($titleDiff->outputDiff()->toString());
+        $contribution->setContributor($contributions[1]->getContributor());
+        $contribution->setCreationDate($contributions[1]->getCreationDate());
+        $contributions[1] = $contribution;
 
     	return $contributions;
     }

@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Entity\Section;
+use Icap\WikiBundle\Entity\Contribution;
 use Icap\WikiBundle\Form\WikiType;
 
 class WikiListener extends ContainerAware
@@ -90,22 +91,28 @@ class WikiListener extends ContainerAware
         $newSectionsMap = array();
 
         $newWiki = new Wiki();
-        $newWiki->setName($wiki->getName());
+        $newWiki->setWikiCreator($user);
         $em->persist($newWiki);
         $em->flush($newWiki);
         
         $newRoot = $newWiki->getRoot();
-        $newRoot->setText($oldRoot->getText());
+        $newRoot->getActiveContribution()->setText($oldRoot->getActiveContribution()->getText());
         $newSectionsMap[$oldRoot->getId()] = $newRoot;
 
         foreach ($sections as $section) {
             $newSection = new Section();
             $newSection->setWiki($newWiki);
-            $newSection->setTitle($section->getTitle());
-            $newSection->setText($section->getText());
             $newSection->setVisible($section->getVisible());
             $newSectionParent = $newSectionsMap[$section->getParent()->getId()];
             $newSection->setParent($newSectionParent);
+            $newSection->setAuthor($user);
+
+            $activeContribution = new Contribution();            
+            $activeContribution->setTitle($section->getActiveContribution()->getTitle());
+            $activeContribution->setText($section->getActiveContribution()->getText());
+            $activeContribution->setSection($newSection);
+            $activeContribution->setContributor($user);
+            $newSection->setActiveContribution($activeContribution);           
 
             $newSectionsMap[$section->getId()] = $newSection;
             $sectionRepository->persistAsLastChildOf($newSection, $newSectionParent);

@@ -39,3 +39,11 @@ div.wiki-revision-comparison-info {
 	font-size: 12px;
 	margin-bottom: 15px;
 }
+
+/*Compare revisions style*/
+.diff-html-changed, .diff-html-added, .diff-html-removed {padding: 2px; margin: 2px; display: inline-block;}
+.diff-html-changed {background-color: #FCF8E3; border: 1px solid #FBEED5;}
+.diff-html-added {background-color: #DFF0D8; border: 1px solid #D6E9C6; text-decoration: none;}
+.diff-html-removed {background-color: #F2DEDE; border: 1px solid #EED3D7;}
+.diff-html-simple {padding:0px; margin: 0px; min-width: 15px; line-height: 15px;}
+.diff-html-legend {width: auto;}

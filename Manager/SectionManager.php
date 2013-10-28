@@ -44,13 +44,18 @@ class SectionManager
         $prefixesArray = array();
         $childrens = array();
         foreach ($sections as $simpleSection){
-            if ($childrens[$simpleSection['parentId']] !== null) {
+            if (isset($childrens[$simpleSection['parentId']])) {
                 $childrens[$simpleSection['parentId']] += 1;
             }
             else {
                 $childrens[$simpleSection['parentId']] = 1;
             }
-            $prefix = $prefixesArray[$simpleSection['parentId']].$childrens[$simpleSection['parentId']];
+            if (isset($prefixesArray[$simpleSection['parentId']])) {
+                $prefix = $prefixesArray[$simpleSection['parentId']].$childrens[$simpleSection['parentId']];
+            }
+            else {
+                $prefix = $childrens[$simpleSection['parentId']];
+            }            
             $archivedSections[$simpleSection['id']] = $prefix." ".$simpleSection['title'];
             $prefixesArray[$simpleSection['id']] = $prefix.".";
         }

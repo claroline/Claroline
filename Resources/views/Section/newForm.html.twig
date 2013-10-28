@@ -1,4 +1,4 @@
-<form id="newSection-form-{{ parentSectionId }}" name="icap_wiki_new_section" method="POST" class="form-vertical" action="{{ path("icap_wiki_new_section", {'wikiId': wiki.id, 'parentSectionId' : parentSectionId }) }}">
+<form id="newSection-form-{{ parentSectionId }}" name="icap_wiki_new_section" method="POST" class="form-vertical" action="{{ path("icap_wiki_new_section", {'wikiId': _resource.id, 'parentSectionId' : parentSectionId }) }}">
     <div class="control-group">
         <div class="controls">
             {{ form_row(form.activeContribution.title) }}
@@ -6,8 +6,6 @@
         </div>
     </div>
     {{ form_rest(form) }}
-    <a class="btn btn-default cancel-btn" href="{{ path('icap_wiki_view', {"wikiId": wiki.id}) }}">{% trans %}Cancel{% endtrans %}</a>&nbsp;
+    <a class="btn btn-default cancel-btn" href="{{ path('icap_wiki_view', {"wikiId": _resource.id}) }}">{% trans %}Cancel{% endtrans %}</a>&nbsp;
     <input type="submit" value="{% trans %}Create{% endtrans %}" class="btn btn-primary"/>
 </form>
-
-{{ tinymce_init() }}

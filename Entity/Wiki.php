@@ -19,6 +19,9 @@ class Wiki extends AbstractResource
      */
     private $root;
 
+    //Temporary variable used only by onCopy method of WikiListener
+    private $wikiCreator;
+
     /**
      * @param mixed $root
      */
@@ -52,6 +55,16 @@ class Wiki extends AbstractResource
         return $pathArray;
     }
 
+    public function setWikiCreator($creator)
+    {
+        return $this->wikiCreator = $creator;
+    }
+
+    public function getWikiCreator()
+    {
+        return $this->wikiCreator;
+    }
+
     /**
      * @ORM\PostPersist
      */
@@ -62,7 +75,12 @@ class Wiki extends AbstractResource
             if ($rootSection == null) {
                 $rootSection = new Section();
                 $rootSection->setWiki($this);
-                $rootSection->setAuthor($this->getResourceNode()->getCreator());
+                if ($this->getResourceNode() !== null) {
+                    $rootSection->setAuthor($this->getResourceNode()->getCreator());
+                }
+                else  {
+                    $rootSection->setAuthor($this->getWikiCreator());
+                }
                 $this->setRoot($rootSection);
 
                 $em->getRepository('IcapWikiBundle:Section')->persistAsFirstChild($rootSection);

@@ -35,10 +35,9 @@ class WikiController extends Controller{
      *      name="icap_wiki_view"
      * )
      * @ParamConverter("wiki", class="IcapWikiBundle:Wiki", options={"id" = "wikiId"})
-     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function viewAction(Wiki $wiki, User $user)
+    public function viewAction(Wiki $wiki)
     {
         $this->checkAccess("OPEN", $wiki);
         $isAdmin = $this->isUserGranted("EDIT", $wiki);
@@ -46,7 +45,7 @@ class WikiController extends Controller{
         $tree = $sectionRepository->buildSectionTree($wiki, $isAdmin);
 
         return array(
-            'wiki' => $wiki,
+            '_resource' => $wiki,
             'tree' => $tree,
             'workspace' => $wiki->getResourceNode()->getWorkspace(),
             'isAdmin' => $isAdmin

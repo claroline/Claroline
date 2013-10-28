@@ -5,24 +5,30 @@ $(document).ready(function() {
     $('a.new-section').each(function(){
         var newLink = $(this);
         newLink.attr("data-path", newLink.attr('href'));
-        newLink.attr('href', '#newSectionModal-'+newLink.attr('data-section')).attr('data-toggle', 'modal');
-        var modalNewForm = null;
+        newLink.attr('href', '#newSectionContainer-'+newLink.attr('data-section'));
+        var containerNewForm = null;
+        console.log(newLink.attr("data-empty"));
         newLink.on('click', function (event){
-            if(modalNewForm === null){
+            if(typeof newLink.attr("data-empty") === 'undefined'){
                 event.preventDefault();
                 $.get(newLink.attr("data-path"))
                     .always(function () {
-                        if (modalNewForm !== null) {
-                            modalNewForm.remove();
+                        if (containerNewForm !== null) {
+                            containerNewForm.remove();
                         }
                     })
                     .done(function (data) {
-                        $('body').append(data);
-                        modalNewForm = $('#newSectionModal-'+newLink.attr('data-section'));
-                        console.log(modalNewForm.html());
-                        modalNewForm.modal('show');
+                        $('#wnsc-'+newLink.attr('data-section')).html(data);
+                        newLink.attr('data-empty','false');
+                        containerNewForm = $('#newSectionContainer-'+newLink.attr('data-section'));
+                        containerNewForm.find('#icap_wiki_section_type_activeContribution_text').attr('id', 'icap_wiki_section_type_'+newLink.attr('data-section'));
+                        initTinyMCE();
+                        $('#wnsc-'+newLink.attr('data-section')).show();
                     })
                 ;
+            }
+            else {
+                $('#wnsc-'+newLink.attr('data-section')).show();
             }
         });
     });
@@ -45,7 +51,6 @@ $(document).ready(function() {
                     .done(function (data) {
                         $('body').append(data);
                         modalDeleteForm = $('#deleteSectionModal-'+newLink.attr('data-section'));
-                        console.log(modalDeleteForm.html());
                         modalDeleteForm.modal('show');
                     })
                 ;

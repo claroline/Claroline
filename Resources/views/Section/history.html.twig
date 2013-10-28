@@ -2,22 +2,21 @@
 
 {% trans_default_domain "icap_wiki" %}
 
-{% block title %}{{ wiki.resourceNode.name }}{% endblock %}
+{% block title %}{{ _resource.resourceNode.name }}{% endblock %}
 
 {% set nbResults = pager.getNbResults() %}
 
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('icap_wiki_view', {"wikiId": _resource.id}) }}">{{_resource.resourceNode.name}}</a></li>
+    <li class="active">{{(section.isRoot())?_resource.resourceNode.name:section.activeContribution.title}}</li>
+{% endblock %}
+
 {% block wiki_panel %}
-    <p>           
-        <a href="{{ path('icap_wiki_view', {"wikiId": wiki.id}) }}">
-            <span class="icon-angle-left"></span>
-            {{ 'back_to_wiki'|trans({}, 'icap_wiki') }}
-        </a>
-    </p>
     {% block wiki_content %}
         <div class="page-header">
             <h2 class="wiki-title-header">
                 {% if section.isRoot() %}
-                    {{wiki.resourceNode.name}}
+                    {{_resource.resourceNode.name}}
                 {% else %}
                     {{section.activeContribution.title}}
                 {% endif %}
@@ -34,7 +33,7 @@
                         {% if maxPage == pager.getMaxPerPage() %}
                             {{maxPage}}
                         {% else %}
-                        <a href="{{ path("icap_wiki_section_history", {'wikiId': wiki.id, 'sectionId' : section.id, 'maxPerPage': maxPage }) }}">{{maxPage}}</a>
+                        <a href="{{ path("icap_wiki_section_history", {'wikiId': _resource.id, 'sectionId' : section.id, 'maxPerPage': maxPage }) }}">{{maxPage}}</a>
                         {% endif %}
                     {% endfor %}
                 )
@@ -49,13 +48,13 @@
                         {
                             'proximity' : 1,
                             'routeName': 'icap_wiki_section_history',
-                            'routeParams': {'wikiId': wiki.id, 'sectionId': section.id, 'maxPerPage': pager.getMaxPerPage()}
+                            'routeParams': {'wikiId': _resource.id, 'sectionId': section.id, 'maxPerPage': pager.getMaxPerPage()}
                         }
                     )
                 }}
             </div>
             {%  endif %}
-            <form id="revision-history-form-{{section.id}}" name="icap_wiki_section_revision" method="GET" class="form-vertical wiki-revision-history-form" action="{{ path("icap_wiki_compare_contributions", {'wikiId': wiki.id, 'sectionId' : section.id }) }}">
+            <form id="revision-history-form-{{section.id}}" name="icap_wiki_section_revision" method="GET" class="form-vertical wiki-revision-history-form" action="{{ path("icap_wiki_compare_contributions", {'wikiId': _resource.id, 'sectionId' : section.id }) }}">
                 {% if nbResults > 1 %}
                 <div>
                     <input type="submit" class="btn btn-default btn-sm" value="{{'compare_versions'|trans({},'icap_wiki')}}" class="btn btn-primary"/>
@@ -68,7 +67,7 @@
                             <input id="wc-oldid-{{contribution.id}}" {% if loop.index == 2 %} checked {% endif %} type="radio" name="oldid" value="{{contribution.id}}"/>
                             <input id="wc-diff-{{contribution.id}}" {% if loop.first %} checked {% endif %} type="radio" name="diff" value="{{contribution.id}}">
                             {% endif %}
-                            <a class="wiki-contribution-link" href="{{ path('icap_wiki_contribution_view', {"wikiId": wiki.id, "sectionId": section.id, "contributionId": contribution.id}) }}">
+                            <a class="wiki-contribution-link" href="{{ path('icap_wiki_contribution_view', {"wikiId": _resource.id, "sectionId": section.id, "contributionId": contribution.id}) }}">
                                 {{contribution.creationDate|date("date_format"|trans({},'icap_wiki'))}}
                             </a>
                             <span class="wiki-contribution-contributor"> 
@@ -77,7 +76,7 @@
                             {% if contribution.id == section.activeContribution.id %}
                                 <span class="wiki-contribution-active text-success">{{'active_contribution'|trans({}, 'icap_wiki')}}</span>
                             {% else %}
-                                <a class="wiki-contribution-set-active btn btn-default btn-xs" href="{{ path('icap_wiki_contribution_active', {"wikiId": wiki.id, "sectionId": section.id, "contributionId": contribution.id})}}">
+                                <a class="wiki-contribution-set-active btn btn-default btn-xs" href="{{ path('icap_wiki_contribution_active', {"wikiId": _resource.id, "sectionId": section.id, "contributionId": contribution.id})}}">
                                     {{'set_active_contribution'|trans({}, 'icap_wiki')}}
                                 </a>
                             {% endif %}
@@ -100,7 +99,7 @@
                     {
                         'proximity' : 1,
                         'routeName': 'icap_wiki_section_history',
-                        'routeParams': {'wikiId': wiki.id, 'sectionId': section.id, 'maxPerPage': pager.getMaxPerPage()}
+                        'routeParams': {'wikiId': _resource.id, 'sectionId': section.id, 'maxPerPage': pager.getMaxPerPage()}
                     }
                 )
             }}
@@ -115,7 +114,7 @@
                     {% if maxPage == pager.getMaxPerPage() %}
                         {{maxPage}}
                     {% else %}
-                    <a href="{{ path("icap_wiki_section_history", {'wikiId': wiki.id, 'sectionId' : section.id, 'maxPerPage': maxPage }) }}">{{maxPage}}</a>
+                    <a href="{{ path("icap_wiki_section_history", {'wikiId': _resource.id, 'sectionId' : section.id, 'maxPerPage': maxPage }) }}">{{maxPage}}</a>
                     {% endif %}
                 {% endfor %}
             )
