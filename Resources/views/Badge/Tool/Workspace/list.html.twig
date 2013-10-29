@@ -4,21 +4,15 @@
 
 {% block breadcrumb %}
     {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-book',
-                'name': 'workspaces'|trans({}, 'platform'),
-                'href': path('claro_workspace_list')
-            },
-            {
-                'name': workspace.name ~ ' - ' ~  workspace.code,
-                'href': path('claro_workspace_open', {'workspaceId': workspace.id, 'toolName': 'home'})
-            },
-            {
-                'name': 'badges'|trans({}, 'badge'),
-                'href': ''
-            }
-        ])
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'badges'|trans({}, 'badge'),
+                    'href': ''
+                }
+            ]
+        )
     }}
 {% endblock %}
 

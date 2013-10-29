@@ -48,3 +48,38 @@
     </ul>
     {% endspaceless %}
 {% endmacro %}
+
+{% macro desktopBreadcrumbs(elements) %}
+    {% import _self as self %}
+
+    {% set myDesktop = [{
+            'icon': 'icon-briefcase',
+            'name': 'desktop'|trans({}, 'platform'),
+            'href': path('claro_desktop_open')
+        }]
+    %}
+    {% set finalElements = myDesktop|merge(elements) %}
+
+    {{ self.breadcrumbs(finalElements) }}
+{% endmacro %}
+
+{% macro workspaceBreadcrumbs(workspace, elements) %}
+    {% import _self as self %}
+
+    {% set workspaceElements =
+        [
+            {
+                'icon': 'icon-book',
+                'name': 'my_workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_by_user')
+            },
+            {
+                'name': workspace.getName() ~ ' - ' ~  workspace.getCode(),
+                'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
+            }
+        ]
+    %}
+    {% set finalElements = workspaceElements|merge(elements) %}
+
+    {{ self.breadcrumbs(finalElements) }}
+{% endmacro %}
