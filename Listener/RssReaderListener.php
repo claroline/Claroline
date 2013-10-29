@@ -102,7 +102,7 @@ class RssReaderListener extends ContainerAware
 
         $items = $this->rssReader
             ->getReaderFor($urlcontent)
-            ->getFeedItems();
+            ->getFeedItems(10);
 
         foreach ($items as $item) {
             $item->setDescription(preg_replace('/<[^>]+>/i', '', $item->getDescription()));
