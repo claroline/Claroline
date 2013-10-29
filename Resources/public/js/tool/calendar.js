@@ -10,6 +10,9 @@
             id = null,
             url = null,
             task = null;
+        function t(key) {
+            return Translator.get('agenda' + ':' + key);
+        }
 
         $('.filter').click(function () {
             var numberOfChecked = $('.filter:checkbox:checked').length;
@@ -330,34 +333,24 @@
             // if the start & end date are the same end date is null for the fullcalendar
             event1.end = (event1.end != null) ? $.fullCalendar.formatDate(new Date(event1.end),'dd/MM/yyyy HH:mm'): null;
             event1.allDay = (event1.allDay == false ) ? 0 : 1;
-            if (event1.title == event2.title)
-            {
-                if(event1.start == event2.start)
-                {
-                    if((event1.end == event2.end) || (!event1.end)) 
-                    {
-                        if ((!event1.description) && (!event2.description ) || (event1.description == event2.description))
-                        {
-                            if(event1.allDay == event2.allDay)
-                            {
-                                if(event1.color == event2.color)
-                                {
+            if (event1.title == event2.title) {
+                if (event1.start == event2.start) {
+                    if((event1.end == event2.end) || (!event1.end)) {
+                        if ((!event1.description) && (!event2.description ) || (event1.description == event2.description)) {
+                            if(event1.allDay == event2.allDay) {
+                                if(event1.color == event2.color) {
                                   return 0 ;
-                                }
-                                else return 1;
-                            } 
-                            else return 2;
-                        }
-                        else return 3;
-                    }
-                    else
-                    {
-                        console.debug(event1.end+' ev 2 '+event2.end);
+                                } else 
+                                    return 1;
+                            } else 
+                                return 2;
+                        } else 
+                            return 3;
+                    } else 
                         return 4;
-                    } 
-                        
-                }
-                else return 5;
+                }     
+                else 
+                    return 5;
             }
             return 6;
         }
@@ -374,21 +367,21 @@
                 day: 'dddd d/M'
             },
             buttonText: {
-                prev: Translator.get('agenda' + ':' + 'prev'),
-                next: Translator.get('agenda' + ':' + 'next'),
-                prevYear: Translator.get('agenda' + ':' + 'prevYear'),
-                nextYear: Translator.get('agenda' + ':' + 'nextYear'),
-                today:    Translator.get('agenda' + ':' + 'today'),
-                month:    Translator.get('agenda' + ':' + 'month'),
-                week:     Translator.get('agenda' + ':' + 'week'),
-                day:      Translator.get('agenda' + ':' + 'day')
+                prev: t('prev'),
+                next: t('next'),
+                prevYear: t('prevYear'),
+                nextYear: t('nextYear'),
+                today: t('today'),
+                month: t('month'),
+                week: t('week'),
+                day: t('day')
             },
-            monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
-                'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-            monthNamesShort: ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août',
-                'sept.', 'oct.', 'nov.', 'déc.'],
-            dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
-            dayNamesShort: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
+            monthNames: [t('january'), t('february'), t('mars'), t('april'), t('mei'), t('june'), t('july'),
+                t('august'), t('september'), t('october'), t('november'), t('december')],
+            monthNamesShort: [t('jan'), t('feb'), t('mars'), t('apr'), t('mei'), t('ju'), t('jul'), t(''),
+                t('aug'), t('sept'), t('nov'), t('dec')],
+            dayNames: [t('monday'), t('tuesday'), t('wednesday'), t('thursday'), t('fryday'), t('saturday'), t('sunday')],
+            dayNamesShort: [t('mon'), t('tue'), t('wed'), t('thur'), t('fry'), t('sat'), t('sun')],
             editable: true,
             events: $('a#link').attr('href'),
             axisFormat: 'HH:mm',
