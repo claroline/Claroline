@@ -1,0 +1,20 @@
+#EntityManagerInterface   $entityManager,
+#        SessionInterface         $session,
+#        SecurityContextInterface $securityContext,
+#        RouterInterface          $router,
+#        TranslatorInterface      $translator,
+#        PathManager              $pathManager
+
+services: 
+    innova.path.controller:
+        class: %innova.controller.path.class%
+        arguments:
+            entityManager:   @doctrine.orm.entity_manager
+            session:         @session
+            securityContext: @security.context
+            router:          @router
+            translator:      @translator
+            pathManager:     @innova.manager.path_manager
+        calls:
+          - [setRequest, ["@?request="]]
+        scope: request

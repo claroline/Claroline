@@ -1,0 +1,2 @@
+parameters: 
+    innova.controller.path.class: Innova\PathBundle\Controller\PathController
