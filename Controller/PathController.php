@@ -101,7 +101,7 @@ class PathController
     
     /**
      * 
-     * @var unknown
+     * @var \Symfony\Component\Translation\TranslatorInterface
      */
     protected $translator;
     
@@ -120,7 +120,12 @@ class PathController
     /**
      * Class constructor
      * Inject needed dependencies
-     * @param ContainerAwareInterface $container
+     * @param EntityManagerInterface   $entityManager
+     * @param SessionInterface         $session
+     * @param SecurityContextInterface $securityContext
+     * @param RouterInterface          $router
+     * @param TranslatorInterface      $translator
+     * @param PathManager              $pathManager
      */
     public function __construct(
 	    EntityManagerInterface   $entityManager,
@@ -261,14 +266,14 @@ class PathController
                 // Delete success
                 $this->session->getFlashBag()->add(
                     'success',
-                    $this->container->get('translator')->trans("path_delete_success", array(), "innova_tools")
+                    $this->translator->trans("path_delete_success", array(), "innova_tools")
                 );
             }
             else {
                 // Delete error
                 $this->session->getFlashBag()->add(
                     'error',
-                    $this->container->get('translator')->trans("path_delete_error", array(), "innova_tools")
+                    $this->translator->trans("path_delete_error", array(), "innova_tools")
                 );
             }
         } catch (Exception $e) {
@@ -319,7 +324,7 @@ class PathController
         }
         else {
             // Current user not allowed to acces editor for this path
-            $url = $url = $this->container->get('router')->generate('claro_workspace_open_tool', array (
+            $url = $url = $this->router->generate('claro_workspace_open_tool', array (
                 'workspaceId' => $workspaceId, 
                 'toolName' => 'innova_path',
             ));
@@ -374,7 +379,7 @@ class PathController
         }
         else {
             // Path not found
-            throw new NotFoundHttpException($this->container->get('translator')->trans("path_not_found", array(), "innova_tools"));
+            throw new NotFoundHttpException($this->translator->trans("path_not_found", array(), "innova_tools"));
         }
     }
     
