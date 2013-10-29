@@ -93,7 +93,7 @@ class Installer
         $this->validatePlugin($plugin);
         
         $this->baseInstaller->update($plugin, $currentVersion, $targetVersion);
-        // here come the plugin update tasks (e.g. config update)
+        $this->recorder->update($plugin, $this->validator->getPluginConfiguration());
     }
 
     private function checkInstallationStatus(PluginBundle $plugin, $shouldBeInstalled = true)

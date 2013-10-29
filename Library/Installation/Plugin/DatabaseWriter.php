@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
+use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Claroline\CoreBundle\Manager\MaskManager;
@@ -70,6 +71,7 @@ class DatabaseWriter
      * Persists a plugin in the database.
      *
      * @param PluginBundle $plugin
+     * @param array        $pluginConfiguration
      */
     public function insert(PluginBundle $plugin, array $pluginConfiguration)
     {
@@ -94,6 +96,45 @@ class DatabaseWriter
 
         $this->em->persist($pluginEntity);
         $this->persistConfiguration($pluginConfiguration, $pluginEntity, $plugin);
+        $this->em->flush();
+
+        if ($this->modifyTemplate) {
+            $this->templateBuilder->write();
+        }
+    }
+
+    public function update(PluginBundle $plugin, array $pluginConfiguration)
+    {
+        if ($this->modifyTemplate) {
+            $this->templateBuilder = TemplateBuilder::fromTemplate("{$this->templateDir}default.zip");
+        }
+
+        /** @var Plugin $pluginEntity */
+        $pluginEntity = $this->em->getRepository('ClarolineCoreBundle:Plugin')->findOneBy(
+            array(
+                 'vendorName' => $plugin->getVendorName(),
+                 'bundleName' => $plugin->getBundleName()
+            )
+        );
+
+        if (null === $pluginEntity) {
+            throw new \Exception('Unable to retrieve plugin for updating its configuration.');
+        }
+
+        $pluginEntity->setHasOptions($pluginConfiguration['has_options']);
+
+        if (isset($pluginConfiguration['icon'])) {
+            $ds = DIRECTORY_SEPARATOR;
+            $iconWebDir = "bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons";
+            $pluginEntity->setIcon("{$iconWebDir}{$ds}{$pluginConfiguration['icon']}");
+        } else {
+            $defaultIcon = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
+                ->findOneByMimeType('custom/default');
+            $pluginEntity->setIcon($defaultIcon->getRelativeUrl());
+        }
+
+        $this->em->persist($pluginEntity);
+        $this->updateConfiguration($pluginConfiguration, $pluginEntity, $plugin);
         $this->em->flush();
 
         if ($this->modifyTemplate) {
@@ -151,7 +192,7 @@ class DatabaseWriter
     /**
      * Checks if a plugin is persited in the database.
      *
-     * @param string $pluginFqcn
+     * @param \Claroline\CoreBundle\Library\PluginBundle $plugin
      *
      * @return boolean
      */
@@ -192,6 +233,42 @@ class DatabaseWriter
         }
     }
 
+    private function updateConfiguration($processedConfiguration, $pluginEntity, $plugin)
+    {
+        foreach ($processedConfiguration['resources'] as $resource) {
+            $this->updateResourceTypes($resource, $pluginEntity, $plugin);
+        }
+    }
+
+    private function updateResourceTypes($resource, $pluginEntity, $plugin)
+    {
+        $resourceType        = $this->em->getRepository('ClarolineCoreBundle:')->findOneByName($resource['name']);
+        $isExistResourceType = true;
+
+        if (null === $resourceType) {
+            $resourceType = new ResourceType();
+            $resourceType
+                ->setName($resource['name'])
+                ->setPlugin($pluginEntity)
+            ;
+
+            $isExistResourceType = false;
+        }
+
+        $resourceType->setExportable($resource['is_exportable']);
+        $this->em->persist($resourceType);
+
+        $this->updateCustomAction($resource['actions'], $resourceType);
+
+        $this->updateIcons($resource, $resourceType, $plugin);
+
+        if (!$isExistResourceType && $this->modifyTemplate) {
+            $this->templateBuilder->addResourceType($resource['name'], 'ROLE_WS_MANAGER');
+        }
+
+        return $resourceType;
+    }
+
     private function persistIcons(array $resource, ResourceType $resourceType, PluginBundle $plugin)
     {
         $resourceIcon = new ResourceIcon();
@@ -225,12 +302,57 @@ class DatabaseWriter
         $this->im->createShortcutIcon($resourceIcon);
     }
 
+    private function updateIcons(array $resource, ResourceType $resourceType, PluginBundle $plugin)
+    {
+        $resourceIcon = $this->em
+            ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
+            ->findOneBy(
+                array(
+                     'mimeType' => 'custom/' . $resourceType->getName(),
+                     'isShortcut' => false
+                )
+            );
+
+        if (null !== $resourceIcon) {
+            $resourceIcon = new ResourceIcon();
+
+            $resourceIcon->setMimeType('custom/' . $resourceType->getName());
+            $ds = DIRECTORY_SEPARATOR;
+
+            if (isset($resource['icon'])) {
+                $webBundleDir = "{$this->kernelRootDir}{$ds}..{$ds}web{$ds}bundles";
+                $webPluginDir = "{$webBundleDir}{$ds}{$plugin->getAssetsFolder()}";
+                $webPluginImgDir = "{$webPluginDir}{$ds}images";
+                $webPluginIcoDir = "{$webPluginImgDir}{$ds}icons";
+                $this->fileSystem->mkdir(array($webBundleDir, $webPluginDir, $webPluginImgDir, $webPluginIcoDir));
+                $this->fileSystem->copy(
+                    "{$plugin->getImgFolder()}{$ds}{$resource['icon']}",
+                    "{$webPluginIcoDir}{$ds}{$resource['icon']}"
+                );
+                $resourceIcon->setIconLocation("{$webPluginIcoDir}{$ds}{$resource['icon']}");
+                $resourceIcon->setRelativeUrl(
+                    "bundles/{$plugin->getAssetsFolder()}/images/icons/{$resource['icon']}"
+                );
+            } else {
+                $defaultIcon = $this->em
+                    ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
+                    ->findOneByMimeType('custom/default');
+                $resourceIcon->setIconLocation($defaultIcon->getIconLocation());
+                $resourceIcon->setRelativeUrl($defaultIcon->getRelativeUrl());
+            }
+
+            $resourceIcon->setShortcut(false);
+            $this->em->persist($resourceIcon);
+            $this->im->createShortcutIcon($resourceIcon);
+        }
+    }
+
     private function persistCustomAction($actions, $resourceType)
     {
-        $decoderRepo = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\MaskDecoder');
+        $decoderRepo      = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\MaskDecoder');
         $existingDecoders = $decoderRepo->findBy(array('resourceType' => $resourceType));
-        $exp = count($existingDecoders);
-        $newDecoders = array();
+        $exp              = count($existingDecoders);
+        $newDecoders      = array();
 
         foreach ($actions as $action) {
             $decoder = $decoderRepo->findOneBy(array('name'=> $action['name'], 'resourceType' => $resourceType));
@@ -239,7 +361,7 @@ class DatabaseWriter
                 if (array_key_exists($action['name'], $newDecoders)) {
                     $decoder = $newDecoders[$action['name']];
                 } else {
-                    $decoder = new \Claroline\CoreBundle\Entity\Resource\MaskDecoder();
+                    $decoder = new MaskDecoder();
                     $decoder->setName($action['name']);
                     $decoder->setResourceType($resourceType);
                     $decoder->setValue(pow(2, $exp));
@@ -255,6 +377,48 @@ class DatabaseWriter
                 $rtca->setResourceType($resourceType);
                 $rtca->setValue($decoder->getValue());
                 $this->em->persist($rtca);
+            }
+        }
+    }
+
+    private function updateCustomAction($actions, $resourceType)
+    {
+        $decoderRepo      = $this->em->getRepository('Claroline\CoreBundle\Entity\Resource\MaskDecoder');
+        $existingDecoders = $decoderRepo->findBy(array('resourceType' => $resourceType));
+        $exp              = count($existingDecoders);
+        $newDecoders      = array();
+
+        foreach ($actions as $action) {
+            $decoder = $decoderRepo->findOneBy(array('name'=> $action['name'], 'resourceType' => $resourceType));
+
+            if (!$decoder) {
+                if (array_key_exists($action['name'], $newDecoders)) {
+                    $decoder = $newDecoders[$action['name']];
+                } else {
+                    $decoder = new MaskDecoder();
+                    $decoder
+                        ->setName($action['name'])
+                        ->setResourceType($resourceType)
+                        ->setValue(pow(2, $exp));
+
+                    $this->em->persist($decoder);
+                    $newDecoders[$action['name']] = $decoder;
+                    $exp++;
+                }
+            }
+
+            if (isset($action['menu_name'])) {
+                $resourceTypeCustomAction = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceTypeCustomAction')->findOneByName($action['menu_name']);
+
+                if (null === $resourceTypeCustomAction) {
+                    $resourceTypeCustomAction = new MenuAction();
+                    $resourceTypeCustomAction
+                        ->setName($action['menu_name'])
+                        ->setResourceType($resourceType)
+                        ->setValue($decoder->getValue());
+
+                    $this->em->persist($resourceTypeCustomAction);
+                }
             }
         }
     }
