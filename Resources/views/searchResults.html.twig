@@ -72,7 +72,7 @@
                             </a>
                             </div>
                             <div>
-                                {{ message.getCreationDate()|date('m/d/Y H:i:s') }}
+                                {{ message.getCreationDate()|intl_date_format() }}
                             </div>
                             <p>{{ message.getCreator().getFirstName() }} {{ message.getCreator().getLastName() }}</p>
                         </td>

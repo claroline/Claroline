@@ -63,14 +63,14 @@
                     <tr class='row-subject'>
                         <td>
                             <a class="link-subject" href="{{ _path('claro_forum_messages', {'subjectId': subject.id }) }}">{{ subject.title }}</a><br>
-                            {{ 'started_by' | trans({}, 'forum') }} {{ subject.getCreator().getFirstName() }}, {{ subject.getCreationDate()|date('m/d/Y H:i:s') }}
+                            {{ 'started_by' | trans({}, 'forum') }} {{ subject.getCreator().getFirstName() }}, {{ subject.getCreationDate()|intl_date_format() }}
                         </td>
                         <td>
                             {{ nbMessages }}
                         </td>
                         <td>
                             {{ lastMessage.getCreator().getFirstName() }}<br/>
-                            {{ lastMessage.getCreationDate()|date('m/d/Y H:i:s') }}
+                            {{ lastMessage.getCreationDate()|intl_date_format() }}
                         </td>
                     </tr>
                 {% endfor %}
