@@ -42,6 +42,12 @@ class AdditionalInstaller extends BaseInstaller
             $updater020000->setLogger($this->logger);
             $updater020000->postUpdate();
         }
+
+        if (version_compare($currentVersion, '2.1.2', '<')) {
+            $updater020102 = new Updater\Updater020102($this->container);
+            $updater020102->setLogger($this->logger);
+            $updater020102->postUpdate();
+        }
     }
 
     private function createDatabaseIfNotExists()
