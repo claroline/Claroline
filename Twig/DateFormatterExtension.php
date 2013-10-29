@@ -31,16 +31,7 @@ class DateFormatterExtension extends \Twig_Extension
                  date_default_timezone_get(),
                 \IntlDateFormatter::GREGORIAN
             );
-        } else {
-            //symfony fallback
-            $this->formatter = new \Symfony\Component\Intl\DateFormatter\IntlDateFormatter(
-                $configHandler->getParameter('locale_language'),
-                \Symfony\Component\Intl\DateFormatter\IntlDateFormatter::SHORT,
-                \Symfony\Component\Intl\DateFormatter\IntlDateFormatter::SHORT,
-                 date_default_timezone_get(),
-                \Symfony\Component\Intl\DateFormatter\IntlDateFormatter::GREGORIAN
-            );
-        }
+        } 
     }
 
     /**
@@ -58,7 +49,13 @@ class DateFormatterExtension extends \Twig_Extension
      */
     public function intlDateFormat($date)
     {
-        return $this->formatter->format($date);
+        if (extension_loaded('intl')) {
+            return $this->formatter->format($date);
+        } elseif ($date instanceof \DateTime) {
+            return $date->format('d-m-Y');
+        }
+            
+        return date('d-m-Y', $date);
     }
 
     /**
