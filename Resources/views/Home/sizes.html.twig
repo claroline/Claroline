@@ -5,11 +5,11 @@
             <h4>{{ "Size of content" | trans({}, "home")}}</h4>
         </div>
         <div class="modal-body clearfix" data-id="{{ id }}" data-type="{{ type }}">
-            {% for i in 4..7 %}
+            {% for i in 6..11 %}
                 <div class="content-{{ i }}"><div class="panel panel-default{% if size == i %} active{% endif %}">{{ i }}</div></div>
-                <div class="content-{{ 8-i }}"><div class="panel panel-default{% if size == 8-i %} active{% endif %}">{{ 8-i }}</div></div>
+                <div class="content-{{ 12-i }}"><div class="panel panel-default{% if size == 12-i %} active{% endif %}">{{ 12-i }}</div></div>
             {% endfor %}
-                <div class="content-8"><div class="panel panel-default{% if size == 8 %} active{% endif %}">8</div></div>
+                <div class="content-12"><div class="panel panel-default{% if size == 12 %} active{% endif %}">12</div></div>
         </div>
     </div>
 </div>

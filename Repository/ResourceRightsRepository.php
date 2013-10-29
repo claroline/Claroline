@@ -75,13 +75,17 @@ class ResourceRightsRepository extends EntityRepository
 
         $index = 0;
 
-        foreach ($roles as $role) {
+        foreach ($roles as $key => $role) {
             $dql .= $index !== 0 ? ' OR ' : '';
-            $dql .= "resource.id = {$node->getId()} AND role.name = '{$role}'";
+            $dql .= "resource.id = {$node->getId()} AND role.name = :role_{$key}";
             ++$index;
         }
 
         $query = $this->_em->createQuery($dql);
+
+        foreach ($roles as $key => $role) {
+            $query->setParameter('role_'.$key, $role);
+        }
 
         return $query->getArrayResult();
     }
@@ -118,10 +122,13 @@ class ResourceRightsRepository extends EntityRepository
             FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rights
             JOIN rights.resourceNode resource
             JOIN rights.role role
-            WHERE resource.path LIKE '{$resource->getPath()}%'
+            WHERE resource.path LIKE :path
         ";
 
-        return $this->_em->createQuery($dql)->getResult();
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('path', $resource->getPath().'%');
+
+        return $query->getResult();
     }
 
     /**
@@ -139,9 +146,13 @@ class ResourceRightsRepository extends EntityRepository
             FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rights
             JOIN rights.resourceNode resource
             JOIN rights.role role
-            WHERE resource.path LIKE '{$resource->getPath()}%' AND role.name = '{$role->getName()}'
+            WHERE resource.path LIKE :path AND role.name = :roleName
         ";
 
-        return $this->_em->createQuery($dql)->getResult();
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('path', $resource->getPath().'%');
+        $query->setParameter('roleName', $role->getName());
+
+        return $query->getResult();
     }
 }

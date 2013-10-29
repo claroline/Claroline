@@ -84,7 +84,7 @@ class WorkspaceController extends Controller
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
-        $form = $this->createForm($this->get('claroline.form.badge'), $badge, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform')));
+        $form = $this->createForm($this->get('claroline.form.badge'), $badge);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -144,7 +144,7 @@ class WorkspaceController extends Controller
             $originalRules[] = $rule;
         }
 
-        $form = $this->createForm($this->get('claroline.form.badge'), $badge, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform')));
+        $form = $this->createForm($this->get('claroline.form.badge'), $badge);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);

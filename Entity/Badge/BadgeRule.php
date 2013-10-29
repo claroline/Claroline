@@ -13,6 +13,12 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class BadgeRule
 {
+    const RESULT_EQUAL          = '=';
+    const RESULT_INFERIOR       = '<';
+    const RESULT_INFERIOR_EQUAL = '<=';
+    const RESULT_SUPERIOR       = '>';
+    const RESULT_SUPERIOR_EQUAL = '>=';
+
     /**
      * @var integer
      *
@@ -43,6 +49,20 @@ class BadgeRule
      * @ORM\Column(type="string", nullable=false)
      */
     protected $action;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $result;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    protected $resultComparison;
 
     /**
      * @return int
@@ -110,5 +130,57 @@ class BadgeRule
     public function getOccurrence()
     {
         return $this->occurrence;
+    }
+
+    /**
+     * @param string $result
+     *
+     * @return BadgeRule
+     */
+    public function setResult($result)
+    {
+        $this->result = $result;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
+
+    /**
+     * @param string $resultComparison
+     *
+     * @return BadgeRule
+     */
+    public function setResultComparison($resultComparison)
+    {
+        $this->resultComparison = $resultComparison;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResultComparison()
+    {
+        return $this->resultComparison;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getResultComparisonTypes()
+    {
+        return array(self::RESULT_EQUAL,
+                     self::RESULT_INFERIOR,
+                     self::RESULT_INFERIOR_EQUAL,
+                     self::RESULT_SUPERIOR,
+                     self::RESULT_SUPERIOR_EQUAL);
     }
 }

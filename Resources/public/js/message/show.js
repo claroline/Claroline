@@ -81,11 +81,22 @@
     function displayUsers()
     {
         currentType = 'user';
+        var toList = $('#message_form_to').attr('value');
+        var toListArray = toList.split(';');
+        var search = toListArray[toListArray.length - 1].trim();
+        var route;
+
+        if (search === '') {
+            route = Routing.generate('claro_message_contactable_users');
+        } else {
+            route = Routing.generate(
+                'claro_message_contactable_users_search',
+                { 'search': search }
+            );
+        }
 
         $.ajax({
-            url: Routing.generate(
-                'claro_message_contactable_users'
-            ),
+            url: route,
             type: 'GET',
             success: function (datas) {
                 $('#groups-nav-tab').attr('class', '');
@@ -100,11 +111,22 @@
     function displayGroups()
     {
         currentType = 'group';
+        var toList = $('#message_form_to').attr('value');
+        var toListArray = toList.split(';');
+        var search = toListArray[toListArray.length - 1].trim();
+        var route;
+
+        if (search === '') {
+            route = Routing.generate('claro_message_contactable_groups');
+        } else {
+            route = Routing.generate(
+                'claro_message_contactable_groups_search',
+                { 'search': search }
+            );
+        }
 
         $.ajax({
-            url: Routing.generate(
-                'claro_message_contactable_groups'
-            ),
+            url: route,
             type: 'GET',
             success: function (datas) {
                 $('#groups-nav-tab').attr('class', 'active');
@@ -178,7 +200,7 @@
         displayGroups();
     });
 
-    $('body').on('click', '.pagination > li > a', function (event) {
+    $('body').on('click', '.pagination > ul > li > a', function (event) {
         event.preventDefault();
         event.stopPropagation();
         var element = event.currentTarget;

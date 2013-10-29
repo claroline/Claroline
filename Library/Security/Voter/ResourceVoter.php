@@ -98,10 +98,6 @@ class ResourceVoter implements VoterInterface
                 return VoterInterface::ACCESS_GRANTED;
             }
 
-            if ($token instanceof AnonymousToken) {
-                throw new AuthenticationException('Insufficient permissions : authentication required');
-            }
-
             $object->setErrors($errors);
 
             return VoterInterface::ACCESS_DENIED;

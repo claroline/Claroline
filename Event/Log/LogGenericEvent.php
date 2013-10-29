@@ -8,7 +8,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
 
-abstract class LogGenericEvent extends Event
+abstract class LogGenericEvent extends Event implements RestrictionnableInterface
 {
     const DISPLAYED_ADMIN     = 'admin';
     const DISPLAYED_WORKSPACE = 'workspace';
@@ -23,6 +23,8 @@ abstract class LogGenericEvent extends Event
     protected $workspace;
     protected $owner;
     protected $toolName;
+
+    protected $doer;
 
     /** @var bool */
     protected $isDisplayedInAdmin = false;
@@ -131,11 +133,6 @@ abstract class LogGenericEvent extends Event
     }
 
     /**
-     * @return array
-     */
-    public abstract static function getRestriction();
-
-    /**
      * @return LogGenericEvent
      */
     public function setVisibiltyFromRestriction()
@@ -213,5 +210,23 @@ abstract class LogGenericEvent extends Event
         }
 
         return $isDisplayedByRestriction;
+    }
+
+    /**
+     * Used when the doer isn't the logged user
+     *
+     * @param User $doer
+     */
+    public function setDoer(User $doer)
+    {
+        $this->doer = $doer;
+    }
+
+    /**
+     * @return User
+     */
+    public function getDoer()
+    {
+        return $this->doer;
     }
 }

@@ -1,3 +1,4 @@
+404 : 'La page que vous cherchez n''existe pas.'
 'Add a logo': 'Ajouter un logo'
 'Choose a logo': 'Choisir un logo'
 'None': 'Aucun'
@@ -212,6 +213,7 @@ import_user_file_file: 'Importer depuis fichier csv'
 import_users: 'Importer des utilisateurs'
 informations: Informations
 instructions: Consignes
+internal_error : 'Erreur interne du serveur. Veuillez contactez l''administrateur de la plateforme.'
 invalid_csv_file: 'Le fichier CSV n''est pas valide'
 jqplot_date_output_format: '%d-%m-%Y'
 lastName: Nom
@@ -272,9 +274,10 @@ my_account: 'Mon compte'
 my_agenda: 'Mon agenda'
 my_badges: 'Mes badges'
 my_contacts: 'Mes contacts'
+my_favourite_workspaces: 'Mes espaces d''activités favoris'
 my_notes: 'Mes notes'
 my_portfolio: 'Mon portfolio'
-my_resources: 'Mes resources'
+my_resources: 'Mes ressources'
 my_workspace: 'Espace personnel'
 my_workspaces: 'Mes espaces d''activités'
 name: Nom
@@ -331,6 +334,7 @@ profile_form_administrativeCode: 'Code administratif'
 profile_form_description : 'Description'
 profile_form_firstName: Prénom
 profile_form_lastName: Nom
+profile_form_userName: 'Nom d''utilisateur'
 profile_form_mail: Mail
 profile_form_note: 'Note personnelle'
 profile_form_ownedRoles: Role(s)
@@ -390,7 +394,7 @@ resources_usage_ratio: 'Taux d''utilisation des resources'
 restore : Restaurer
 restore_messages_confirm_message: 'message(s) restaurés'
 results: Résultats
-results_for_search_on: 'Resultat(s) de la recherche sur'
+results_for_search_on: 'Résultats de la recherche sur'
 rights: Droits
 rights_management: 'Gestion des droits'
 role: Rôle
@@ -430,6 +434,7 @@ subscribe_groups: 'Inscrire des groupes'
 subscribe_selected_groups: 'Inscrire les groupes sélectionnés'
 subscribe_selected_users: 'Inscrire les utilisateurs sélectionnés'
 subscribe_users: 'Inscrire des utilisateurs'
+support_email: Email du support
 switch: Echanger
 tag: Tag
 tag_children_list: 'Liste des enfants'
@@ -466,6 +471,7 @@ top_workspaces_resources: 'Top des espaces d''activités avec le plus des resour
 trash : Corbeille
 type: Type
 type_s: Type(s)
+unauthorized : 'Vous n''êtes pas autorisé à consulter cette page.'
 unique connections: 'Nb Cnx. uniques'
 unregister: Désinscription
 unregister_from_a_workspace: 'Désinscription d''un espace d''activités'

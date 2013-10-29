@@ -21,16 +21,15 @@
 {% endblock %}
 
 {% block content %}
-    <div class="visible-xs visible-sm" style="padding-right: 2%">
+    <div class="visible-xs spacing-right">
         {{ block("leftbar") }}
     </div>
 
     {% if region['header'] is defined %}
-        <div class="row">
+        <div class="region-header clearfix">
             {{  region['header'] | raw }}
         </div>
     {% endif %}
-
     <div class="row">
         {% if region['left'] is defined %}
             <div class="col-md-3">
@@ -57,10 +56,7 @@
         {% endif %}
     </div>
     {% if region['footer'] is defined %}
-        <hr>
-        <div class="row">
-            {{  region['footer'] | raw }}
-        </div>
+        {{  region['footer'] | raw }}
     {% endif %}
 {% endblock %}
 
@@ -72,5 +68,7 @@
         {% if is_granted('ROLE_ADMIN') %}
             <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/home.js') }}"></script>
             <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/content.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
         {% endif %}
 {% endblock %}

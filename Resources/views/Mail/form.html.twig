@@ -22,6 +22,6 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-        {{ tinymce_init() }}
-        {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+    {{ tinymce_init() }}
+    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
 {% endblock %}

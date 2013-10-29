@@ -13,7 +13,7 @@ class BaseProfileType extends AbstractType
         $builder->add('firstName', 'text')
             ->add('lastName', 'text')
             ->add('username', 'text')
-            ->add('plainPassword', 'repeated', array('type' => 'password'))
+            ->add('plainPassword', 'repeated', array('type' => 'password', 'invalid_message' => 'password_missmatch'))
             ->add('mail', 'email');
     }
 

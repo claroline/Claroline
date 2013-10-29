@@ -81,6 +81,12 @@
             <h3 class="panel-title">{{ "Theme parameters" | trans({}, "theme") }}</h3>
         </div>
         <div class="panel-body">
+            <div class="alert alert-info">
+                <a class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>
+                {{ "Our themes were designed using Bootstrap" | trans({}, "theme") }},
+                {{ "if you have a doubt about the name of an element of the GUI" | trans({}, "theme") }},
+                <a class="alert-link" href="http://getbootstrap.com/" target="_blank">{{ "please read the documentation of Bootstrap 3" | trans({}, "theme") }}.</a>
+            </div>
             {% if parameters is defined %}
                 <div class="panel-group" id="accordion">
                     {% for name,array in parameters.getParameters() %}
@@ -96,12 +102,12 @@
                                 <table class="table">
                                     {% for code,value in array %}
                                         <tr>
-                                            <td width="50%" class="theme-code"><code>{{ code }}</code></td>
+                                            <td width="40%" class="theme-code"><code>{{ code }}</code></td>
                                             <td class="theme-value input-group">
-                                                <input class="form-control" type="text" value="{{ value }}">
                                                 <span class="input-group-btn">
-                                                    <button class="btn btn-default" type="button"><i class="icon-tint"></i></button>
+                                                    <button class="btn btn-primary" type="button"><i class="icon-tint"></i></button>
                                                 </span>
+                                                <input class="form-control" type="text" value="{{ value }}">
                                             </td>
                                         </tr>
                                     {% endfor %}

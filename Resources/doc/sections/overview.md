@@ -39,17 +39,10 @@ root
 |-- app
 |-- bin
 |-- files
-|-- src
-|-- test
 |-- vendor
 +-- web
 </pre>
 
-The only differences are the *files* and *test* directories. The first one is
-there to gather the files which are created within the platform (usually non
-public files, stored with a hash name and referenced in the database). The
-second is a directory used to work with arbitrary files during the test suite
-process.
 
 The *app* directory is again close to the standard one :
 
@@ -86,32 +79,15 @@ which some important platform parameters (like the database connection
 parameters) are stored, as well as the *plugin* directory, where the plugins
 are "recorded" for their integration to the kernel.
 
-The *src* directory is, as you'd expect, the place where the bundles live.
-However, in order to facilitate the distinction between core and plugin
-bundles, this directory is divided into two sub-directories :
-
-<pre>
-src
-|-- plugin
-+-- core
-</pre>
-
+The *vendor* directory contains sources. This is were you will find the
+claroline core its dependencies.
 
 Bundles
 -------
 
 The bundles are structured in the same way than any Symfony bundle. Classicaly,
 you will find in most of the bundles the usual *Controller*, *Entity*,
-*Resources*, etc. directories. If you look at the bundles provided by default,
-you will also often see the following two directories :
-
-<pre>
-bundle
-|-- DataFixtures
-+-- Migrations
-</pre>
-
-Both are related to the database and are covered in the next section.
+*Resources*, etc. directories.
 
 Database
 --------
@@ -120,68 +96,9 @@ Claroline use the Doctrine ORM for database interactions. It allows both a
 simpler development process and a portability across the major RDBMS (see the
 DBAL documentation for a list of [supported drivers][5]).
 
-### Migrations
-
-The ORM offers a schema generation feature based on the mapping of the
-entities. However, as this method is [not recommanded][6] for database
-versionning in a production environment, Claroline uses an alternative
-approach, also designed by Doctrine, called [Migrations][7]. The idea is to use
-separate classes, ordered by timestamps, to handle each version of the
-database. Doctrine stores the current version of the schema in a dedicated
-table and can execute the right migration class when a schema upgrade or
-downgrade is requested. A typical migration class in Claroline looks like the
-following :
-
-```php
-<?php
-
-namespace Foo\BarBundle\Migrations;
-
-use Claroline\CoreBundle\Library\Installation\BundleMigration;
-use Doctrine\DBAL\Schema\Schema;
-
-class Version20130101000000 extends BundleMigration
-{
-    /**
-     * Generates/upgrades the database schema of the Foo\BarBundle to the
-     * version '20130101000000' (year/month/day/hour/minute/second).
-     */
-    public function up(Schema $schema)
-    {
-        $table = $schema->createTable('some_table');
-        $this->addId($table);
-        $table->addColumn('number', 'integer');
-        $table->addColumn('name', 'string', array('length' => 250));
-    }
-
-    /**
-     * Downgrades/removes the database schema of the Foo\BarBundle.
-     */
-    public function down(Schema $schema)
-    {
-        $schema->dropTable('some_table');
-    }
-}
-```
-
-Of course, if the created schema is intended to work with the ORM, it must
-match the mapping defined in the corresponding entities. If you follow this
-rule, having the database tables of your bundle created or updated is simple as
-creating a *Migrations* directory and defining some migration classes in it :
-
-<pre>
-bundle
-|-- DataFixtures
-+-- Migrations
-    +-- Version20130101000000.php
-</pre>
-
-The execution of these migrations is part of the installation of any bundle in
-the Claroline platform.
-
 ### Data fixtures
 
-Another useful feature is the ability to load automatically some data sets in
+A useful feature is the ability to load automatically some data sets in
 the database, whether to provide some demo samples with a bundle or to have
 data to work with in an automatic test. In Claroline, this result is acheived
 using the Doctrine [Data Fixtures][8] library. A fixture is simply a class
@@ -190,7 +107,6 @@ passed by Doctrine when the fixture is executed. In that method, you can
 therefore use the manager to persist any needed data. Example :
 
 ```php
-<?php
 
 namespace Foo\BarBundle\DataFixtures;
 
@@ -208,6 +124,7 @@ class FooFixture extends AbstractFixture
         $manager->flush();
     }
 }
+
 ```
 
 The data fixtures loading is also part of the installation of every bundle in
