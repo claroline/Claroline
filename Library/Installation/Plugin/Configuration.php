@@ -75,7 +75,7 @@ class Configuration implements ConfigurationInterface
                          ->isRequired()
                             ->validate()
                                     ->ifTrue(
-                                        function ($v) use ($plugin, $listNames) {
+                                        function ($v) use ($listNames) {
                                             return !call_user_func_array(
                                                 __CLASS__ . '::isNameAlreadyExist',
                                                 array($v, $listNames)
