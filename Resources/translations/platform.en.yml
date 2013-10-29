@@ -398,7 +398,7 @@ resources_usage_ratio: 'Resources usage ratio'
 restore : Restore
 restore_messages_confirm_message: 'restored message(s)'
 results: Results
-results_for_search_on: 'Result(s) for search on'
+results_for_search_on: 'Results for search on'
 rights: Rights
 rights_management: 'Rights Management'
 role: Role
