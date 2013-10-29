@@ -15,7 +15,7 @@ class Configuration implements ConfigurationInterface
 
     public function __construct(PluginBundle $plugin, array $resourceNames, array $listTools)
     {
-        $this->plugin = $plugin;
+        $this->plugin    = $plugin;
         $this->listNames = $resourceNames;
         $this->listTools = $listTools;
     }
@@ -72,8 +72,8 @@ class Configuration implements ConfigurationInterface
                 ->prototype('array')
                     ->children()
                        ->scalarNode('name')
-                         ->isRequired()
-                            ->validate()
+                            ->isRequired()
+                                ->validate()
                                     ->ifTrue(
                                         function ($v) use ($listNames) {
                                             return !call_user_func_array(
@@ -83,8 +83,8 @@ class Configuration implements ConfigurationInterface
                                         }
                                     )
                                     ->thenInvalid($pluginFqcn . " : the ressource type name already exists")
+                                ->end()
                             ->end()
-                         ->end()
                        ->scalarNode('class')
                             ->isRequired()
                                 ->validate()
@@ -144,10 +144,10 @@ class Configuration implements ConfigurationInterface
 
     private function addWidgetSection($pluginSection)
     {
-        $plugin = $this->plugin;
+        $plugin     = $this->plugin;
         $pluginFqcn = get_class($plugin);
-        $imgFolder = $plugin->getImgFolder();
-        $ds = DIRECTORY_SEPARATOR;
+        $imgFolder  = $plugin->getImgFolder();
+        $ds         = DIRECTORY_SEPARATOR;
 
         $pluginSection
             ->arrayNode('widgets')
@@ -178,16 +178,16 @@ class Configuration implements ConfigurationInterface
 
     private function addToolSection($pluginSection)
     {
-        $tools = $this->listTools;
-        $plugin = $this->plugin;
+        $tools      = $this->listTools;
+        $plugin     = $this->plugin;
         $pluginFqcn = get_class($plugin);
         $pluginSection
             ->arrayNode('tools')
                 ->prototype('array')
                     ->children()
                         ->scalarNode('name')
-                          ->isRequired()
-                            ->validate()
+                            ->isRequired()
+                                ->validate()
                                 ->ifTrue(
                                     function ($v) use ($tools) {
                                         return !call_user_func_array(
@@ -251,8 +251,8 @@ class Configuration implements ConfigurationInterface
 
     public static function isResourceIconValid($v, $plugin)
     {
-        $ds = DIRECTORY_SEPARATOR;
-        $imgFolder = $plugin->getImgFolder();
+        $ds                  = DIRECTORY_SEPARATOR;
+        $imgFolder           = $plugin->getImgFolder();
         $expectedImgLocation = $imgFolder . $ds . $ds . $v;
 
         return file_exists($expectedImgLocation);
@@ -260,8 +260,8 @@ class Configuration implements ConfigurationInterface
 
     public static function isSmallIconValid($v, $plugin)
     {
-        $ds = DIRECTORY_SEPARATOR;
-        $imgFolder = $plugin->getImgFolder();
+        $ds                  = DIRECTORY_SEPARATOR;
+        $imgFolder           = $plugin->getImgFolder();
         $expectedImgLocation = $imgFolder . $ds . 'small' . $ds . $v;
 
         return file_exists($expectedImgLocation);
@@ -269,8 +269,8 @@ class Configuration implements ConfigurationInterface
 
     public static function isIconValid($v, $plugin)
     {
-        $ds = DIRECTORY_SEPARATOR;
-        $imgFolder = $plugin->getImgFolder();
+        $ds                  = DIRECTORY_SEPARATOR;
+        $imgFolder           = $plugin->getImgFolder();
         $expectedImgLocation = $imgFolder.$ds.$v;
 
         return file_exists($expectedImgLocation);
