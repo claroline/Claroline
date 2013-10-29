@@ -3,6 +3,9 @@
 
     window.Claroline = window.Claroline || {};
     var calendar = window.Claroline.Calendar = {};
+    function t(key) {
+            return Translator.get('agenda' + ':' + key);
+        }
 
     calendar.initialize = function (context) {
         context = context || 'desktop';
@@ -10,9 +13,6 @@
             id = null,
             url = null,
             task = null;
-        function t(key) {
-            return Translator.get('agenda' + ':' + key);
-        }
 
         $('.filter').click(function () {
             var numberOfChecked = $('.filter:checkbox:checked').length;
@@ -380,8 +380,8 @@
                 t('august'), t('september'), t('october'), t('november'), t('december')],
             monthNamesShort: [t('jan'), t('feb'), t('mars'), t('apr'), t('mei'), t('ju'), t('jul'), t(''),
                 t('aug'), t('sept'), t('nov'), t('dec')],
-            dayNames: [t('monday'), t('tuesday'), t('wednesday'), t('thursday'), t('fryday'), t('saturday'), t('sunday')],
-            dayNamesShort: [t('mon'), t('tue'), t('wed'), t('thur'), t('fry'), t('sat'), t('sun')],
+            dayNames: [t('monday'), t('tuesday'), t('wednesday'), t('thursday'), t('friday'), t('saturday'), t('sunday')],
+            dayNamesShort: [t('mon'), t('tue'), t('wed'), t('thur'), t('fri'), t('sat'), t('sun')],
             editable: true,
             events: $('a#link').attr('href'),
             axisFormat: 'HH:mm',
@@ -390,8 +390,7 @@
             '': 'h:mm{ - h:mm}',
             minTime: 0,
             maxTime: 24,
-            allDayText: 'all-day',
-            allDaySlot: true,
+            allDaySlot: false,
             lazyFetching : false,
             eventDrop: function (event, dayDelta, minuteDelta) {
                 dropEvent(event, dayDelta, minuteDelta);
