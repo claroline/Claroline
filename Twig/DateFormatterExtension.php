@@ -50,7 +50,7 @@ class DateFormatterExtension extends \Twig_Extension
      */
     public function getFilters()
     {
-        return array('intl_format' => new \Twig_Filter_Method($this, 'intlDateFormat'));
+        return array('intl_date_format' => new \Twig_Filter_Method($this, 'intlDateFormat'));
     }
 
     /*
