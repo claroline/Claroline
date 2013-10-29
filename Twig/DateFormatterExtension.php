@@ -61,7 +61,6 @@ class DateFormatterExtension extends \Twig_Extension
         return $this->formatter->format($date);
     }
 
-    /*
     /**
      * Get the name of the twig extention.
      *
