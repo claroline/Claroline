@@ -88,8 +88,8 @@ class Updater020000
 
     private function log($message)
     {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
+        if ($this->logger !== null) {
+            $this->logger->displayLog('    ' . $message);
         }
     }
 }
