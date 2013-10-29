@@ -416,8 +416,6 @@ class RolesController extends Controller
             $this->userManager->getByRolesIncludingGroups($wsRoles, $page):
             $this->userManager->getByRolesAndNameIncludingGroups($wsRoles, $search, $page);
 
-        //groups
-
         return array(
             'workspace' => $workspace,
             'pager' => $pager,
@@ -466,6 +464,43 @@ class RolesController extends Controller
             'pager' => $pager,
             'search' => $search,
             'wsRoles' => $wsRoles
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/groups/{group}/page/{page}/search/{search}",
+     *     name="claro_workspace_users_of_group_search",
+     *     defaults={"page"=1},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Route(
+     *     "/{workspace}/groups/{group}/page/{page}",
+     *     name="claro_workspace_users_of_group",
+     *     defaults={"page"=1, "search"=""},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:usersOfGroup.html.twig")
+     */
+    public function usersOfGroupAction(
+        AbstractWorkspace $workspace,
+        Group $group,
+        $page,
+        $search
+    )
+    {
+        $this->checkAccess($workspace);
+
+        $pager = ($search === '') ?
+            $this->userManager->getUsersByGroup($group, $page) :
+            $this->userManager->getUsersByNameAndGroup($search, $group, $page);
+
+        return array(
+            'workspace' => $workspace,
+            'pager' => $pager,
+            'search' => $search,
+            'group' => $group
         );
     }
 
