@@ -90,6 +90,7 @@ class Installer
     public function update(PluginBundle $plugin, $currentVersion, $targetVersion)
     {
         $this->checkInstallationStatus($plugin, true);
+        $this->validatePlugin($plugin);
 
         $this->log('Updating plugin configuration...');
         $this->baseInstaller->update($plugin, $currentVersion, $targetVersion);
@@ -98,7 +99,7 @@ class Installer
 
     private function checkInstallationStatus(PluginBundle $plugin, $shouldBeInstalled = true)
     {
-        $this->log('Checking installation status...');
+        $this->log(sprintf('Checking installation status for plugin %s', $plugin->getName()));
 
         if ($this->recorder->isRegistered($plugin) !== $shouldBeInstalled) {
             $stateDiscr = $shouldBeInstalled ? 'not' : 'already';
