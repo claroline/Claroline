@@ -47,7 +47,7 @@
                         <form action="{{ path('innova_path_play') }}" method="post" style="display: inline-block">
                             <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
                             <input type="hidden" value="{{ path.resourceNode.id }}" name="pathId" />
-                            <button rel="tooltip" data-original-title="{{ 'play' | trans({}, 'innova_tools') }}" class="btn btn-xs btn-primary" type="submit"><span class="icon-play"></span></button>
+                            <button rel="tooltip" data-original-title="{{ 'play' | trans({}, 'innova_tools') }}" class="btn btn-xs btn-default" type="submit"><span class="icon-play"></span></button>
                         </form>
                     {% endif %}
                         <form action="{{ path('innova_path_editor', {workspaceId: workspace.id, pathId: path.resourceNode.id}) }}" method="post" style="display: inline-block">
