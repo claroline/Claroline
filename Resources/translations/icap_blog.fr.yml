@@ -11,7 +11,7 @@ edit_post: "Edition de l'article '%postTitle%'"
 back_to_workspace: "Retour à l'espace de travail"
 back_to_blog: 'Retour au blog'
 icap_blog_options_form_authorize_comment: 'Commentaires autorisés ?'
-icap_blog_options_form_authorize_anonymous_comment: 'Commentaires anonymes autorisés ?'
+icap_blog_options_form_authorize_anonymous_comment: 'Commentaires anonymes autorisé ?'
 icap_blog_options_form_post_per_page: "Articles par page"
 icap_blog_options_form_auto_publish_post: 'Publication automatique des articles ?'
 icap_blog_options_form_auto_publish_comment: 'Publication automatique des commentaires ?'
