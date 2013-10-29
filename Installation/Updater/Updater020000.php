@@ -51,19 +51,24 @@ class Updater020000
 
     private function createActiveContributions($tempSections)
     {
+        $this->log('Creating active contributions for old (temporary) sections...');
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $sectionRepository = $this->container->get('icap.wiki.section_repository');
+        foreach ($tempSections as $tempSection) {
+            $section = $sectionRepository->findOneBy(array('id' => $tempSection['id']));
+            $user = $em->getReference('ClarolineCoreBundle:User', $tempSection['user_id']);
+            $activeContribution = new Contribution();
+            $activeContribution->setTitle($tempSection['title']);
+            $activeContribution->setText($tempSection['text']);
+            $activeContribution->setCreationDate(new \DateTime($tempSection['creation_date']));
+            $activeContribution->setSection($section);
+            $activeContribution->setContributor($user);
 
-            $this->log('Creating active contributions for old (temporary) sections...');
-            foreach ($tempSections as $tempSection) {
-                $insertQuery = "INSERT INTO icap__wiki_contribution ('title', 'text', 'creation_date', 'user_id', 'section_id')
-                          VALUES ({$tempSection['title']}, {$tempSection['text']}, {$tempSection['creation_date']}, {$tempSection['user_id']}, {$tempSection['id']})";
-                $this->conn->query($insertQuery);
+            $section->setActiveContribution($activeContribution);
 
-                $result = $this->conn->query("SELECT id FROM icap__wiki_contribution WHERE section_id = {$tempSection['id']}");
-                var_dump($result);
-                die();
-                $updateQuery = "UPDATE icap__wiki_section SET active_contribution_id = {$activeContributionId['id']} WHERE id = {$tempSection['id']}";
-                $this->conn->query($updateQuery);
-            }
+            $em->persist($section);
+            $em->flush();                
+        }
     }
 
     private function copyWikiSectionTable()
