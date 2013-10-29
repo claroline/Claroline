@@ -128,25 +128,19 @@
 
 {% block breadcrumb %}
     {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-book',
-                'name': 'workspaces'|trans({}, 'platform'),
-                'href': path('claro_workspace_list')
-            },
-            {
-                'name': workspace.name ~ ' - ' ~  workspace.code,
-                'href': path('claro_workspace_open', {'workspaceId': workspace.id, 'toolName': 'home'})
-            },
-            {
-                'name': 'workspace_badges'|trans({}, 'badge'),
-                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.id, 'toolName': 'badges'})
-            },
-            {
-                'name': 'edit_badge'|trans({'%badge_name%': badge.name}, 'badge'),
-                'href': ''
-            }
-        ])
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'workspace_badges'|trans({}, 'badge'),
+                    'href': path('claro_workspace_open_tool', {'workspaceId': workspace.id, 'toolName': 'badges'})
+                },
+                {
+                    'name': 'edit_badge'|trans({'%badge_name%': badge.name}, 'badge'),
+                    'href': ''
+                }
+            ]
+        )
     }}
 {% endblock %}
 

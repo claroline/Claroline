@@ -3,43 +3,39 @@
 {% set calendarPath = 'bundles/frontend/jquery/plugin/calendar/' %}
 
 {% block stylesheets %}
-{{ parent() }}
-<link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.css') }}'/>
-<link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
-<link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
 {% endblock %}
+
 {% block breadcrumb %}
-{{
-macros.breadcrumbs([
-{
-'icon': 'icon-book',
-'name': 'workspaces'|trans({}, 'platform'),
-'href': path('claro_workspace_list')
-},
-{
-'name': workspace.getName(),
-'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
-},
-{
-'name': 'agenda'|trans({}, 'tools'),
-'href': ''
-}
-])
-}}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                'name': 'agenda'|trans({}, 'tools'),
+                'href': ''
+                }
+            ]
+        )
+    }}
 {% endblock %}
+
 {% block section_content %}
 <div class="panel-heading">
     <h3 class="panel-title">{{ 'agenda'|trans({}, 'platform') }}</h3>
 </div>
 <div class="panel-body">
     <div class="row">
-        <div id='calendar' class="col-md-9"></div>  
+        <div id='calendar' class="col-md-9"></div>
         <a href="{{ path('claro_workspace_agenda_show', {workspaceId: workspace.getId()}) }}" id="link"></a>
         <div class="col-md-3">
-         <h4> <u>{{'tasks'|trans({}, 'agenda')}} </u></h4>  
+         <h4> <u>{{'tasks'|trans({}, 'agenda')}} </u></h4>
             <div id="tasks">
                 {% include('ClarolineCoreBundle:Tool\\desktop\\agenda:tasks.html.twig') %}
-            </div> 
+            </div>
             <h4><u>{{ 'agenda_form_priority'|trans({}, 'agenda') }}</u></h4>
             <div>
                 <span style="color:#FF0000">  {{ 'high'|trans({}, 'agenda') }} </span>
