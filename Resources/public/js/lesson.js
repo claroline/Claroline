@@ -118,7 +118,7 @@ function expand(obj){
     var chapter_id = $(obj).data('collapsor');
     $('#list_'+chapter_id).show(300);
     $('#collapsor_icon_'+chapter_id).addClass('icon-caret-down');
-    $('#collapsor_icon_'+chapter_id).removeClass('icon-caret-right');
+    $('#collapsor_icon_'+chapter_id).removeClass('icon-expand');
 }
 
 function checkMoveValue(){

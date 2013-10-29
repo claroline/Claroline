@@ -1,4 +1,10 @@
 {% extends 'IcapLessonBundle:Lesson:layout.html.twig' %}
 {% block lesson_content %}
-    {% include "IcapLessonBundle:Lesson:newChapterForm.html.twig"%}
+    <div class='panel panel-default' id='chapter_content'>
+        {% include "IcapLessonBundle:Lesson:newChapterForm.html.twig"%}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
 {% endblock %}

@@ -23,9 +23,6 @@
     {% block lesson_content %}
     {% endblock %}
 {% endblock %}
-{% block javascripts %}
-    {{ parent() }}
-{% endblock %}
 
 {% macro chapterBreadcrumb(path, _resource, chapter) %}
     {% for path_part in path %}

@@ -15,6 +15,7 @@ function injectForm(obj, hashname){
             .done(function (data) {
                 resetTiny();
                 $('#chapter_content').html(data);
+                
             })
         ;
     });

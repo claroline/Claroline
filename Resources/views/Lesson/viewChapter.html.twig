@@ -61,21 +61,13 @@
             </div>
         {% endif %}
     </div>
-
-{% endblock %}
-{% block stylesheets %}
-    {{ parent() }}
-{#   <link rel="stylesheet" href="{{ asset('bundles/frontend/jquery/plugin/sortable/css/jquery.sortable.css') }}" screen="media" />#}
-
-{% endblock %}
-{% block javascripts_header %}
-    {{ parent() }}
-    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/sortable/js/jquery-sortable.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('bundles/icaplesson//js/ajaxifyLesson.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('bundles/icaplesson//js/lesson.js') }}'></script>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
+    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/sortable/js/jquery-sortable.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/icaplesson//js/ajaxifyLesson.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/icaplesson//js/lesson.js') }}'></script>
     <script type="text/javascript">
         init();
     </script>
@@ -84,4 +76,5 @@
             initSortable();
         </script>
     {% endif %}
+
 {% endblock %}
