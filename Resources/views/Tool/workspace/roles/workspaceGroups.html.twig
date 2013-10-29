@@ -98,7 +98,7 @@
                     {% for group in pager.currentPageResults %}
                         <tr id="row-{{ group.id }}" class="row-group" data-group-id="{{ group.getId() }}">
                             <td> <input class="chk-grp" type="checkbox" value="{{ group.getId() }}"> </input></td>
-                            <td>  {{ group.name }} </td>
+                            <td>  <a href="{{ path('claro_workspace_users_of_group', {'workspace': workspace.getId(), 'group': group.getId() }) }}"> {{ group.name }} </a> </td>
                             <td>
                                 {% for role in group.getEntityRoles() %}
                                     {% if role.getWorkspace() == workspace %}
