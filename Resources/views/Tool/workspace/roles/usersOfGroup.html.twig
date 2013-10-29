@@ -1,4 +1,4 @@
-{% macro renderPager(search, workspaceId, queryString, pager) %}
+{% macro renderPager(search, workspaceId, group, queryString, pager) %}
 {% if search == '' %}
     {{
     pagerfanta(
@@ -6,8 +6,8 @@
     'twitter_bootstrap_translated',
     {
     'proximity' : 1,
-    'routeName': 'claro_workspace_registered_user_list',
-    'routeParams': {'workspace': workspaceId},
+    'routeName': 'claro_workspace_users_of_group',
+    'routeParams': {'workspace': workspaceId, 'group': group.getId()},
     'queryString': queryString
     }
     )
@@ -19,8 +19,8 @@
     'twitter_bootstrap_translated',
     {
     'proximity' : 1,
-    'routeName': 'claro_workspace_registered_user_list_search',
-    'routeParams': {'search': search, 'workspace': workspaceId},
+    'routeName': 'claro_workspace_users_of_group_search',
+    'routeParams': {'search': search, 'workspace': workspaceId, 'group': group.getId()},
     'queryString': queryString
     }
     )
@@ -37,6 +37,7 @@
 {% from _self import displayControls %}
 
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([
@@ -50,18 +51,19 @@
                 'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
             },
             {
-                'name': 'users'|trans({}, 'platform'),
+                'name': 'groups'|trans({}, 'platform'),
                 'href': ''
             },
         ])
     }}
 {% endblock %}
 
+
 {% block section_content %}
     <div class="panel-body">
         <ul class="nav nav-tabs">
-            <li class="active"> <a  href="#"> {{'users'|trans({}, 'platform') }} </a> </li>
-            <li> <a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId() }) }}"> {{'groups'|trans({}, 'platform') }} </a> </li>
+            <li> <a href="{{ path('claro_workspace_registered_user_list', {'workspace': workspace.getId() }) }}"> {{'users'|trans({}, 'platform') }} </a> </li>
+            <li class="active"> <a href="#"> {{'groups'|trans({}, 'platform') }} </a> </li>
             <li> <a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()} ) }}">{{ 'roles'|trans({}, 'platform') }}</a> </li>
         </ul>
 
@@ -70,12 +72,15 @@
         {{
             macros.breadcrumbs([
                 {
-                    'name': 'users_list'|trans({}, 'platform'),
-                    'href': ''
+                    'name': 'groups_list'|trans({}, 'platform'),
+                    'href': path('claro_workspace_registered_group_list', {'workspace': workspace.getId()})
                 },
+                {
+                    'name': group.getName(),
+                    'href': ''
+                }
             ])
         }}
-
         {{ displayControls(workspace.getId()) }}
         <div class="input-append pull-right">
             <input class="input-medium" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
@@ -89,7 +94,7 @@
         </div>
         <br>
 
-        {{ renderPager(search, workspace.getId(), queryString, pager) }}
+        {{ renderPager(search, workspace.getId(), group, queryString, pager) }}
         <div class="table-responsive">
             <table class="table table-striped table-bordered table-condensed">
                 <thead>
@@ -140,7 +145,7 @@
                 </tbody>
             </table>
         </div>
-        {{ renderPager(search, workspace.getId(), queryString, pager) }}
+        {{ renderPager(search, workspace.getId(), group, queryString, pager) }}
         {{ displayControls(workspace.getId()) }}
     </div>
 {% endblock %}
@@ -170,7 +175,6 @@
 
         $('#search-button').click(function () {
             var search = document.getElementById('search-items-txt').value;
-            var withUnregistered = $('#chk-unregistered').is(':checked') ? 1: 0;
             var queryString = {};
             var i = 0;
             var array = [];
@@ -181,9 +185,9 @@
             queryString.roleIds = array;
 
             if (search !== '') {
-                var route = Routing.generate('claro_workspace_registered_user_list_search', {'workspace': {{ workspace.getId }}, 'withUnregistered': withUnregistered, 'search': search });
+                var route = Routing.generate('claro_workspace_registered_user_list_search', {'group': {{ group.getId() }}, 'workspace': {{ workspace.getId }}, 'search': search });
                 } else {
-                var route = Routing.generate('claro_workspace_registered_user_list', {'workspace': {{ workspace.getId }}, 'withUnregistered': withUnregistered });
+                var route = Routing.generate('claro_workspace_users_of_group', {'group': {{ group.getId() }}, 'workspace': {{ workspace.getId }} });
             }
 
             route += '?' + $.param(queryString);
