@@ -334,6 +334,7 @@ profile_form_administrativeCode: 'Code administratif'
 profile_form_description : 'Description'
 profile_form_firstName: Prénom
 profile_form_lastName: Nom
+profile_form_userName: 'Nom d''utilisateur'
 profile_form_mail: Mail
 profile_form_note: 'Note personnelle'
 profile_form_ownedRoles: Role(s)

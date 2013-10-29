@@ -336,6 +336,7 @@ profile_form_administrativeCode: 'Administrative code'
 profile_form_description : 'Description'
 profile_form_firstName: 'First name'
 profile_form_lastName: 'Last name'
+profile_form_userName: 'User name'
 profile_form_mail: Mail
 profile_form_note: 'Personnal note'
 profile_form_ownedRoles: Role(s)
