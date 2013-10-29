@@ -22,8 +22,8 @@ class Configuration implements ConfigurationInterface
 
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('config');
+        $treeBuilder   = new TreeBuilder();
+        $rootNode      = $treeBuilder->root('config');
         $pluginSection = $rootNode->children('plugin');
         $this->addGeneralSection($pluginSection);
         $this->addWidgetSection($pluginSection);
@@ -36,10 +36,10 @@ class Configuration implements ConfigurationInterface
 
     private function addGeneralSection($pluginSection)
     {
-        $plugin = $this->plugin;
+        $plugin     = $this->plugin;
         $pluginFqcn = get_class($plugin);
-        $imgFolder = $plugin->getImgFolder();
-        $ds = DIRECTORY_SEPARATOR;
+        $imgFolder  = $plugin->getImgFolder();
+        $ds         = DIRECTORY_SEPARATOR;
 
         $pluginSection
             ->booleanNode('has_options')->end()
@@ -61,11 +61,11 @@ class Configuration implements ConfigurationInterface
 
     private function addResourceSection($pluginSection)
     {
-        $plugin = $this->plugin;
-        $pluginFqcn = get_class($plugin);
+        $plugin       = $this->plugin;
+        $pluginFqcn   = get_class($plugin);
         $resourceFile = $plugin->getConfigFile();
-        $imgFolder = $plugin->getImgFolder();
-        $listNames = $this->listNames;
+        $imgFolder    = $plugin->getImgFolder();
+        $listNames    = $this->listNames;
 
         $pluginSection
             ->arrayNode('resources')
@@ -75,7 +75,7 @@ class Configuration implements ConfigurationInterface
                          ->isRequired()
                             ->validate()
                                     ->ifTrue(
-                                        function ($v) use ($plugin,$listNames) {
+                                        function ($v) use ($plugin, $listNames) {
                                             return !call_user_func_array(
                                                 __CLASS__ . '::isNameAlreadyExist',
                                                 array($v, $listNames)

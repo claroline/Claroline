@@ -249,8 +249,7 @@ class DatabaseWriter
             $resourceType = new ResourceType();
             $resourceType
                 ->setName($resource['name'])
-                ->setPlugin($pluginEntity)
-            ;
+                ->setPlugin($pluginEntity);
 
             $isExistResourceType = false;
         }

@@ -90,8 +90,8 @@ class Installer
     public function update(PluginBundle $plugin, $currentVersion, $targetVersion)
     {
         $this->checkInstallationStatus($plugin, true);
-        $this->validatePlugin($plugin);
-        
+
+        $this->log('Updating plugin configuration...');
         $this->baseInstaller->update($plugin, $currentVersion, $targetVersion);
         $this->recorder->update($plugin, $this->validator->getPluginConfiguration());
     }
