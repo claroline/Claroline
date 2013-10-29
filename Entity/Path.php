@@ -134,26 +134,27 @@ class Path extends AbstractResource
     }
 
     /**
-     * Add steps
+     * Add step
      *
-     * @param  \Innova\PathBundle\Entity\Step $steps
+     * @param  \Innova\PathBundle\Entity\Step $step
      * @return Path
      */
-    public function addStep(\Innova\PathBundle\Entity\Step $steps)
+    public function addStep(\Innova\PathBundle\Entity\Step $step)
     {
-        $this->steps[] = $steps;
-
+        $this->steps[] = $step;
+        $step->setPath($this);
+        
         return $this;
     }
 
     /**
-     * Remove steps
+     * Remove step
      *
-     * @param \Innova\PathBundle\Entity\Step $steps
+     * @param \Innova\PathBundle\Entity\Step $step
      */
-    public function removeStep(\Innova\PathBundle\Entity\Step $steps)
+    public function removeStep(\Innova\PathBundle\Entity\Step $step)
     {
-        $this->steps->removeElement($steps);
+        $this->steps->removeElement($step);
     }
 
     /**
