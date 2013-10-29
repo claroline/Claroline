@@ -79,6 +79,7 @@ cancel: Cancel
 cannot_delete_unique_manager: 'Cannot remove the unique manager.'
 cannot_unsubscribe_from_workspace: 'Cannot unsubscribe from workspace'
 categories: Categories
+categories_organization: 'Categories organization'
 category_root: 'Root categories'
 category_structure: 'Category structure'
 change_view : Change view
@@ -557,7 +558,6 @@ workspace_home_tab_creation: 'Workspace Home tab creation'
 workspace_home_tab_edition: 'Workspace Home tab edition'
 workspace_home_tabs: 'Workspace Home tabs'
 workspace_order_tool_edit_form_name: Name
-workspace_organization: 'Workspace organization'
 workspace_registration_confirm_title: 'Do you really want to register to this workspace ?'
 workspace_remove_from_category_confirm_title: 'Remove workspace from category'
 workspace_remove_from_category_confirm_message: 'Do you really want to remove this workspace from this category ?'

@@ -80,6 +80,7 @@ cancel: Annuler
 cannot_delete_unique_manager: 'Impossible de supprimer le seul gestionnaire.'
 cannot_unsubscribe_from_workspace: 'Impossible de vous désincrire de l''espace d''activités'
 categories: Catégories
+categories_organization: 'Organisation des catégories'
 category_root: 'Catégories de base'
 category_structure: 'Structure des catégories'
 change_view : Changer l'affichage
@@ -552,7 +553,6 @@ workspace_home_tab_creation: 'Création d''un onglet pour les espaces d''activit
 workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités'
 workspace_home_tabs: 'Onglets pour les espaces d''activités'
 workspace_order_tool_edit_form_name: Nom
-workspace_organization: 'Organisation des espaces d''activités'
 workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
 workspace_remove_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
 workspace_remove_from_category_confirm_message: 'Voulez-vous vraiment retirer l''espace d''activités de cette catégorie ?'

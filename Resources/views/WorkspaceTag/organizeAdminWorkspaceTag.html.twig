@@ -24,7 +24,7 @@
 {% block section_content %}
 
 <div class="panel-heading">
-    <h3 class="panel-title">{{ 'workspace_organization'|trans({}, 'platform') }}</h3>
+    <h3 class="panel-title">{{ 'categories_organization'|trans({}, 'platform') }}</h3>
 </div>
 <div id="workspace-organization-div" class="panel-body">
 
@@ -61,15 +61,6 @@
                     <div id="workspace-tag-list">
                         <div class="workspace-tag-group">
                             {% for tag in tags %}
-                                <div class="panel panel-default" style="float:left">
-                                    <div class="panel-heading">
-                                        test
-                                    </div>
-                                </div>
-                                &nbsp;
-                                &nbsp;
-                                &nbsp;
-
                                 <span class="label label-danger tag-element"
                                     workspace-tag-id="{{ tag.getId() }}"
                                 >
