@@ -50,17 +50,6 @@ class ResourceVoter implements VoterInterface
 
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        /*
-         * Should check if the action is valid
-        $customPerms = $this->maskManager->getPermissionMap($type);
-        $validActions = array_merge($customPerms, $this->specialAttributes);
-
-        if (!in_array($attributes[0], $validActions)) {
-            return VoterInterface::ACCESS_ABSTAIN;
-        }
-         *
-         */
-
         if ($object instanceof ResourceCollection) {
             $errors = array();
 
@@ -159,16 +148,7 @@ class ResourceVoter implements VoterInterface
             $decoder = $this->maskManager->getDecoder($type, $action);
 
             if (!$decoder) {
-                $errors[] = $this->translator
-                    ->trans(
-                        'mask_no_found',
-                        array(
-                            '%path%' => $resource->getPathForDisplay(),
-                            '%action%' => $action
-                            ),
-                        'platform'
-                    );
-                return $errors;
+                throw new \Exception('The permission ' . $action . ' does not exists for the type' . $type->getName());
             }
 
             $grant = $decoder ? $mask & $decoder->getValue(): 0;
