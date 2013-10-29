@@ -1,36 +1,34 @@
 {% macro renderPager(search, workspaceId, group, queryString, pager) %}
 {% if search == '' %}
     {{
-    pagerfanta(
-    pager,
-    'twitter_bootstrap_translated',
-    {
-    'proximity' : 1,
-    'routeName': 'claro_workspace_users_of_group',
-    'routeParams': {'workspace': workspaceId, 'group': group.getId()},
-    'queryString': queryString
-    }
-    )
+        pagerfanta(
+        pager,
+        'twitter_bootstrap_translated',
+            {
+            'proximity' : 1,
+            'routeName': 'claro_workspace_users_of_group',
+            'routeParams': {'workspace': workspaceId, 'group': group.getId()},
+            'queryString': queryString
+            }
+        )
     }}
 {% else %}
     {{
-    pagerfanta(
-    pager,
-    'twitter_bootstrap_translated',
-    {
-    'proximity' : 1,
-    'routeName': 'claro_workspace_users_of_group_search',
-    'routeParams': {'search': search, 'workspace': workspaceId, 'group': group.getId()},
-    'queryString': queryString
-    }
-    )
+        pagerfanta(
+        pager,
+        'twitter_bootstrap_translated',
+            {
+            'proximity' : 1,
+            'routeName': 'claro_workspace_users_of_group_search',
+            'routeParams': {'search': search, 'workspace': workspaceId, 'group': group.getId()},
+            'queryString': queryString
+            }
+        )
     }}
 {% endif %}
 {% endmacro %}
 
 {% macro displayControls(workspaceId) %}
-{% if app.user %}
-{% endif %}
 {% endmacro %}
 
 {% from _self import renderPager %}
