@@ -333,12 +333,12 @@
             // if the start & end date are the same end date is null for the fullcalendar
             event1.end = (event1.end != null) ? $.fullCalendar.formatDate(new Date(event1.end),'dd/MM/yyyy HH:mm'): null;
             event1.allDay = (event1.allDay == false ) ? 0 : 1;
-            if (event1.title == event2.title) {
-                if (event1.start == event2.start) {
-                    if((event1.end == event2.end) || (!event1.end)) {
-                        if ((!event1.description) && (!event2.description ) || (event1.description == event2.description)) {
-                            if(event1.allDay == event2.allDay) {
-                                if(event1.color == event2.color) {
+            if (event1.title === event2.title) {
+                if (event1.start === event2.start) {
+                    if((event1.end === event2.end) || (!event1.end)) {
+                        if ((!event1.description) && (!event2.description ) || (event1.description === event2.description)) {
+                            if(event1.allDay === event2.allDay) {
+                                if(event1.color === event2.color) {
                                   return 0 ;
                                 } else 
                                     return 1;
