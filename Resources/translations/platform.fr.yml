@@ -242,6 +242,7 @@ mail_not_exist : 'Cet email n''existe pas '
 mail_sent : 'Un email vient de vous être envoyé. Vérifiez votre dossier spam au cas où vous ne verriez pas l''email'
 manage_rights: 'Gérer les droits'
 manager: Gestionnaire
+mask_not_found: "La permission %action% n'a pas été trouvée pour la ressource %path%."
 max_size_is: 'La taille maximale est %size%'
 media_most_viewed: 'Media les plus consultés'
 message_form_content: Contenu

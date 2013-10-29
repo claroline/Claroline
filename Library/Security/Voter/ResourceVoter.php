@@ -157,6 +157,20 @@ class ResourceVoter implements VoterInterface
             $mask = $this->repository->findMaximumRights($this->ut->getRoles($token), $resource);
             $type = $resource->getResourceType();
             $decoder = $this->maskManager->getDecoder($type, $action);
+
+            if (!$decoder) {
+                $errors[] = $this->translator
+                    ->trans(
+                        'mask_no_found',
+                        array(
+                            '%path%' => $resource->getPathForDisplay(),
+                            '%action%' => $action
+                            ),
+                        'platform'
+                    );
+                return $errors;
+            }
+
             $grant = $decoder ? $mask & $decoder->getValue(): 0;
 
             if ($decoder && $grant === 0) {
