@@ -7,7 +7,6 @@ use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Form\MessageType;
 use Claroline\ForumBundle\Form\SubjectType;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\ForumBundle\Form\ForumOptionsType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -19,7 +18,6 @@ use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
-
 
 /**
  * ForumController
