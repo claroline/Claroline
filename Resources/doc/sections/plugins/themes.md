@@ -204,4 +204,3 @@ file as a simple CSS file but you can use at any place **Less CSS** or
 [examplebundle]: https://github.com/claroline/ExampleBundle
 [lesscssfunction]: http://lesscss.org/#reference
 [nodejs]: http://nodejs.org/
-

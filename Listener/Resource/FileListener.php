@@ -122,8 +122,6 @@ class FileListener implements ContainerAwareInterface
     {
         $newFile = $this->copy($event->getResource());
         $event->setCopy($newFile);
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $em->persist($newFile);
         $event->stopPropagation();
     }
 

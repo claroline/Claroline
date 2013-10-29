@@ -55,7 +55,7 @@ class Text extends AbstractResource
         $this->revisions->add($revision);
     }
 
-    public function removeUser($revision)
+    public function removeRevision($revision)
     {
         $this->revisions->removeElement($revision);
     }
