@@ -49,6 +49,7 @@ class Path extends AbstractResource
      */
     public function __construct()
     {
+        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
         $this->steps = new \Doctrine\Common\Collections\ArrayCollection();
         $this->deployed = false;
         $this->modified = false;
