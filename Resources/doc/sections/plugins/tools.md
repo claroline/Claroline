@@ -1,4 +1,4 @@
-[[Documentation index]][index_path]
+[[Documentation index]][1]
 
 # Tools
 
@@ -12,7 +12,7 @@ open_tool_workspace|desktop_*claroline_mytool*
 
 Your plugin must define its properties and the list of its tools in the *Resources/config/config.yml file*.
 
-```yaml
+```yml
 plugin:
     # Tools declared by your plugin.
     tools:
@@ -34,7 +34,7 @@ This example will show you the main files of a basic HTML5 video player.
 
 *Claroline\VideoPlayer\Resources\config\services\listener.yml*
 
-```yaml
+```yml
 claroline.listener.example_tool:
     class: Claroline\ExampleBundle\Listener\ToolListener
     calls:
@@ -48,33 +48,35 @@ claroline.listener.example_tool:
 
 ### Listener implementation
 
-    public function onWorkspaceOpen(DisplayToolEvent $event)
-    {
-        $event->setContent($this->workspace($event->getWorkspace()->getId()));
-    }
+```php
+public function onWorkspaceOpen(DisplayToolEvent $event)
+{
+    $event->setContent($this->workspace($event->getWorkspace()->getId()));
+}
 
-    public function onDesktopOpen(DisplayToolEvent $event)
-    {
-        $event->setContent($this->desktop());
-    }
+public function onDesktopOpen(DisplayToolEvent $event)
+{
+    $event->setContent($this->desktop());
+}
 
-    private function workspace($workspaceId)
-    {
-        //if you want to keep the context, you must retrieve the workspace.
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
+private function workspace($workspaceId)
+{
+    //if you want to keep the context, you must retrieve the workspace.
+    $em = $this->container->get('doctrine.orm.entity_manager');
+    $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
 
-        return $this->container->get('templating')->render(
-            'ClarolineExampleBundle::workspace_tool.html.twig', array('workspace' => $workspace)
-        );
-    }
+    return $this->container->get('templating')->render(
+        'ClarolineExampleBundle::workspace_tool.html.twig', array('workspace' => $workspace)
+    );
+}
 
-    private function desktop()
-    {
-        return $this->container->get('templating')->render(
-            'ClarolineExampleBundle::desktop_tool.html.twig'
-        );
-    }
+private function desktop()
+{
+    return $this->container->get('templating')->render(
+        'ClarolineExampleBundle::desktop_tool.html.twig'
+    );
+}
+```
 
 As you can see, if a tool is displayed in a workspace, you can know the current context
 using $event->getWorkspace();
@@ -89,11 +91,14 @@ We use lower case for every translation keys.
 Create the *tools* file in your Resources/translations folder.
 You can translate your widget names here.
 
-    claroline_mytool: mytranslation
+```yml
+claroline_mytool: mytranslation
+```
 
 Where mywidgetname is the name you defined in your config file.
 
-## Right management
+Right management
+----------------
 
 Both workspace and desktop are an aggregation of tools.
 A user can order the displayed toolbar and the "index" will always be the
@@ -103,13 +108,16 @@ There is a Voter wich will determine wich user can access wich tool in a workspa
 (Currently a user can access every tools in its desktop)
 When you must know if a user has access to a tool, you can use
 
-        if (!$this->get('security.context')->isGranted($toolName, $workspace)) {
-            throw new AccessDeniedException();
-        }
+```php
+if (!$this->get('security.context')->isGranted($toolName, $workspace)) {
+    throw new AccessDeniedException();
+}
+```
 
 *Where $toolName is your tool name and $workspace is the current workspace.*
 
-## Configuration
+Configuration
+-------------
 
 Each tool can declare a configuration page. The list of configurable tools is displayed
 in the parameter tool.
@@ -118,11 +126,22 @@ Once a user clicks on the link, an event configure_workspace|desktop_tool_*tooln
 You can the get the thrown event (Claroline\CoreBundle\Event\ConfigureWorkspaceToolEvent
 or Claroline\CoreBundle\Event\ConfigureDesktopToolEvent) and set some content
 
-        $event->setContent($this->templating->render(...));
+```php
+$event->setContent($this->templating->render(...));
+```
 
 Note: if you want to keep the layout, you must extends either
-{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %} or
+
+```htmldjango
+{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+```
+
+or
+
+```htmldjango
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+```
 
+[[Documentation index]][index_path]
 
-[index_path]: ../../index.md
+[1]: ../../index.md

@@ -11,14 +11,12 @@
     <li class="active">{{ 'edit' | trans({}, 'platform') }}</li>
 {% endblock %}
 {% block section_content %}
-
-    {{ tinymce_init() }}
     <div class="panel-heading">
         <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}</h3>
     </div>
     <form novalidate="validate" method="post" action="{{ _path('claro_text_edit', {'old':_resource.getId()}) }}" id="edit_form">
         <div class="panel-body">
-            <textarea name="content" cols="50" rows="15" class="hide tinymce">{{ text|raw }}</textarea>
+            <textarea name="content" cols="50" rows="15" data-theme="advanced" class="hide tinymce">{{ text|raw }}</textarea>
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
@@ -30,4 +28,5 @@
 {% block javascripts %}
 {{ parent() }}
     {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+    {{ tinymce_init() }}
 {% endblock %}
