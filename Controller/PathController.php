@@ -84,20 +84,27 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class PathController extends Controller
 {
     /**
-     * fromDesktopAction function
-     * @return array response
+     * fromWorkspaceAction function
+     * @return array workspace / paths
      *
      * @Route(
      *     "/",
-     *     name = "innova_path_from_desktop",
-     *     options = {"expose"=true}
+     *     name = "innova_path_from_workspace"
      * )
-     *
-     * @Template("InnovaPathBundle::path_desktop.html.twig")
+     * @Method("GET")
+     * @Template("InnovaPathBundle::path_workspace.html.twig")
      */
-    public function fromDesktopAction()
+    public function fromWorkspaceAction()
     {
-        return array();
+        $pathManager = $this->container->get('innova.manager.path_manager');
+    
+        $manager = $this->container->get('doctrine.orm.entity_manager');
+        $id = $this->get('request')->query->get('id');
+        $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($id);
+    
+        $paths = $pathManager->findAllFromWorkspace($workspace);
+    
+        return array('workspace' => $workspace, 'paths' => $paths);
     }
 
     /**
@@ -143,31 +150,6 @@ class PathController extends Controller
         return new RedirectResponse($url, 302);
     }
 
-    
-
-    /**
-     * fromWorkspaceAction function
-     * @return array workspace / paths
-     *
-     * @Route(
-     *     "/",
-     *     name = "innova_path_from_workspace"
-     * )
-     * @Template("InnovaPathBundle::path_workspace.html.twig")
-     */
-    public function fromWorkspaceAction()
-    {
-        $pathManager = $this->container->get('innova.manager.path_manager');
-
-        $manager = $this->container->get('doctrine.orm.entity_manager');
-        $id = $this->get('request')->query->get('id');
-        $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($id);
-
-        $paths = $pathManager->findAllFromWorkspace($workspace);
-
-        return array('workspace' => $workspace, 'paths' => $paths);
-    }
-
     /**
      * @Route(
      *      "workspace/{workspaceId}/path/editor/{pathId}",
@@ -208,10 +190,10 @@ class PathController extends Controller
      * )
      * @Template("InnovaPathBundle:Player:main.html.twig")
      */
-    public function PlayerAction($workspaceId, $pathId = null)
+    public function playerAction($workspaceId, $pathId = null)
     {
-        $manager = $this->container->get('doctrine.orm.entity_manager');
-        $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $workspace = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
 
         return array('workspace' => $workspace);
     }
@@ -258,53 +240,8 @@ class PathController extends Controller
      */
     public function addPathAction()
     {
-        $manager = $this->container->get('doctrine.orm.entity_manager');
-
-        // Récupération utilisateur courant.
-        $user = $this->get('security.context')->getToken()->getUser();
-        $workspaceId = $this->get('request')->request->get('workspaceId');
-        $workspace = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
-
-        // création du dossier _paths s'il existe pas.
-        if (!$pathsDirectory = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneByName("_paths")) {
-            $pathsDirectory = new ResourceNode();
-            $pathsDirectory->setName("_paths");
-            $pathsDirectory->setClass("Claroline\CoreBundle\Entity\Resource\Directory");
-            $pathsDirectory->setCreator($user);
-            $pathsDirectory->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneById(2));
-            $root = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
-            $pathsDirectory->setWorkspace($workspace);
-            $pathsDirectory->setParent($root);
-            $pathsDirectory->setMimeType("custom/directory");
-            $pathsDirectory->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(7));
-
-            $manager->persist($pathsDirectory);
-            $manager->flush();
-        }
-
-        $resourceNode = new ResourceNode();
-        $resourceNode->setClass("Innova\PathBundle\Entity\Path");
-        $resourceNode->setCreator($user);
-        $resourceNode->setResourceType($manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("path"));
-        $resourceNode->setWorkspace($workspace);
-        $resourceNode->setParent($pathsDirectory);
-        $resourceNode->setMimeType("");
-        $resourceNode->setIcon($manager->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(1));
-        $resourceNode->setName('Path');
-
-        $pathName = $this->get('request')->request->get('pathName');
-        $content = $this->get('request')->request->get('path');
-
-        $new_path = new Path;
-        $new_path->setPath($content);
-        $resourceNode->setName($pathName);
-        $new_path->setResourceNode($resourceNode);
-        $new_path->setDeployed(false);
-        $new_path->setModified(false);
-        $manager->persist($resourceNode);
-        $manager->persist($new_path);
-        $manager->flush();
-
+        $pathManager = $this->container->get('innova.manager.path_manager');
+        $resourceNode = $pathManager->create();
         return new Response(
             $resourceNode->getId()
         );
@@ -343,13 +280,14 @@ class PathController extends Controller
      */
     public function showPathAction()
     {
-        $em = $this->entityManager();
+        $em = $this->get('doctrine.orm.entity_manager');
         $pathId = $this->get('request')->request->get('pathId');
         $workspaceId = $this->get('request')->request->get('workspaceId');
         $path = $em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
         $stepId = $em->getRepository('InnovaPathBundle:Step')->findOneBy(array('path' => $path, 'parent' => null))->getId();
 
         $url = $this->generateUrl('innova_step_show', array('workspaceId' => $workspaceId, 'pathId' => $pathId, 'stepId' => $stepId));
+        
         return $this->redirect($url);
     }
 
@@ -378,7 +316,7 @@ class PathController extends Controller
      * )
      * @Method("DELETE")
      */
-    public function deletePathAction()
+    public function deleteAction()
     {
         $pathManager = $this->container->get('innova.manager.path_manager');
         try {
@@ -409,29 +347,7 @@ class PathController extends Controller
         // Redirect to path list
         $workspaceId = $this->container->get('request')->request->get('workspaceId');
         $url = $this->container->get('router')->generate('claro_workspace_open_tool', array ('workspaceId' => $workspaceId, 'toolName' => 'innova_path'));
+        
         return new RedirectResponse($url, 302);
-    }
-
-    /**
-     * entityManager function
-     * @return $em
-     *
-     */
-    public function entityManager()
-    {
-        $em = $this->get('doctrine.orm.entity_manager');
-        return $em;
-    }
-
-    /**
-     * resourceManager function
-     *
-     * @return $rm
-     *
-     */
-    public function resourceManager()
-    {
-        $rm = $this->get('claroline.manager.resource_manager');
-        return $rm;
     }
 }

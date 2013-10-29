@@ -21,11 +21,36 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 
+/**
+ * Path Manager
+ * Manages life cycle of paths
+ * @author Innovalangues <contact@innovalangues.net>
+ *
+ */
 class PathManager
 {
+    /**
+     * Current entity manage for data persist
+     * @var \Doctrine\ORM\EntityManagerEntity Manager $em
+     */
     protected $em;
+    
+    /**
+     * Current request
+     * @var \Symfony\Component\HttpFoundation\Request $request
+     */
     protected $request;
+    
+    /**
+     * Current security context
+     * @var \Symfony\Component\Security\Core\SecurityContext $security
+     */
     protected $security;
+    
+    /**
+     * Authenticated user
+     * @var \Claroline\CoreBundle\Entity\User\User $user
+     */
     protected $user;
     
     /**
@@ -56,51 +81,87 @@ class PathManager
     
     /**
      * Create a new path
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
     public function create()
     {
         // Get current workspace
-//         $workspaceId = $this->request->get('workspaceId');
-//         $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
+        $workspaceId = $this->request->get('workspaceId');
+        $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
         
-//         // création du dossier _paths s'il existe pas.
-//         if (!$pathsDirectory = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneByName("_paths")) {
-//             $pathsDirectory = new ResourceNode();
-//             $pathsDirectory->setName("_paths");
-//             $pathsDirectory->setClass("Claroline\CoreBundle\Entity\Resource\Directory");
-//             $pathsDirectory->setCreator($this->user);
-//             $pathsDirectory->setResourceType($this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneById(2));
-//             $root = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
-//             $pathsDirectory->setWorkspace($workspace);
-//             $pathsDirectory->setParent($root);
-//             $pathsDirectory->setMimeType("custom/directory");
-//             $pathsDirectory->setIcon($this->em->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(7));
+        $directory = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneByName("_paths");
+        if (!$directory) {
+            // Create path directory
+            $directory = $this->createDirectory($worspace);
+        }
         
-//             $this->em->persist($pathsDirectory);
-//             $this->em->flush();
-//         }
+        // Create resource node
+        $resourceNode = $this->createResourceNode($workspace, $directory);
         
-//         $resourceNode = new ResourceNode();
-//         $resourceNode->setClass('Innova\PathBundle\Entity\Path');
-//         $resourceNode->setCreator($this->user);
-//         $resourceNode->setResourceType($this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('path'));
-//         $resourceNode->setWorkspace($workspace);
-//         $resourceNode->setParent($pathsDirectory);
-//         $resourceNode->setMimeType('');
-//         $resourceNode->setIcon($this->em->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(1));
-//         $resourceNode->setName('Path');
+        // Create path
+        $newPath = new Path();
+        $newPath->setPath($this->request->get('path'));
         
-//         $pathName = $this->get('request')->request->get('pathName');
-//         $content = $this->get('request')->request->get('path');
+        // Link resource node to path
+        $newPath->setResourceNode($resourceNode);
         
-//         $new_path = new Path;
-//         $new_path->setPath($content);
-//         $resourceNode->setName($pathName);
-//         $new_path->setResourceNode($resourceNode);
+        // Persist data
+        $this->em->persist($resourceNode);
+        $this->em->persist($newPath);
+        $this->em->flush();
         
-//         $this->em->persist($resourceNode);
-//         $this->em->persist($new_path);
-//         $this->em->flush();
+        return $resourceNode;
+    }
+    
+    /**
+     * Create new resource node
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $directory
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
+     */
+    protected function createResourceNode($workspace, $directory)
+    {
+        $resourceNode = new ResourceNode();
+        $resourceNode->setClass('Innova\PathBundle\Entity\Path');
+        $resourceNode->setCreator($this->user);
+        $resourceNode->setResourceType($this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('path'));
+        $resourceNode->setWorkspace($workspace);
+        $resourceNode->setParent($directory);
+        $resourceNode->setMimeType('');
+        $resourceNode->setIcon($this->em->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(1));
+        $resourceNode->setName($this->request->get('pathName'));
+        
+        return $resourceNode;
+    }
+    
+    /**
+     * Create path directory in workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $worspace
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
+     */
+    protected function createDirectory($worspace)
+    {
+        $directory = new ResourceNode();
+        
+        $directory->setName("_paths");
+        $directory->setClass("Claroline\CoreBundle\Entity\Resource\Directory");
+        $directory->setCreator($this->user);
+        $directory->setWorkspace($workspace);
+        $directory->setMimeType("custom/directory");
+        
+        // TODO : remove hard code to ID
+        $directory->setResourceType($this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneById(2));
+        
+        $root = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
+        $directory->setParent($root);
+        
+        // TODO : remove hard code to ID
+        $directory->setIcon($this->em->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(7));
+        
+        $this->em->persist($directory);
+        $this->em->flush();
+        
+        return $directory;
     }
     
     /**
@@ -178,14 +239,17 @@ class PathManager
     
     /**
      * Check if wanted name is unique for current user and current Workspace
+     * @param string $name
+     * @return string
      */
-    public function checkNameIsUnique()
+    public function getUniqueName($name)
     {
         
     }
 
     /**
      * Find all paths for a workspace
+     * @return array
      */
     public function findAllFromWorkspace($workspace)
     {
