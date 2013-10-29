@@ -394,7 +394,7 @@ resources_usage_ratio: 'Taux d''utilisation des resources'
 restore : Restaurer
 restore_messages_confirm_message: 'message(s) restaurés'
 results: Résultats
-results_for_search_on: 'Resultat(s) de la recherche sur'
+results_for_search_on: 'Résultats de la recherche sur'
 rights: Droits
 rights_management: 'Gestion des droits'
 role: Rôle
