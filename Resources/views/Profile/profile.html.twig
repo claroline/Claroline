@@ -26,14 +26,21 @@
                 </div>
                 <p>
                     {% if user.getMail() != "" %}
-                        <i class="icon-envelope"></i> {{ user.getMail() }}
-                        &nbsp;
+                       <a href="{{path('claro_mail_form', {'userId':user.getId()})}}"> <i class="icon-envelope"></i> 
+                        {{ user.getMail() }}
+                         </a>
                     {% endif %}
+                <ul class="col-md-10">
+                    <li>{{'profile_form_firstName'|trans({}, 'platform') }}: {{user.getFirstName()}}</li>
+                    <li> {{'profile_form_lastName'|trans({}, 'platform') }}: {{user.getLastName()}}</li>
+                    <li> {{'profile_form_userName'|trans({}, 'platform') }}: {{user.getUsername()}}</li>
+                </ul>
                     {% if user.getPhone() != "" %}
                         <i class="icon-phone"></i> {{ user.getPhone() }}
                     {% endif %}
                 </p>
-                <p class="muted">{{ 'user'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}</p>
+                <p>{{ user.getDescription() |raw }} </p>
+                <p class="text-muted">{{ 'user'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}</p>
                 <p>
                     <a class="btn btn-default" href="{{path('claro_mail_form', {'userId':user.getId()})}}"><i class="icon-envelope"></i> {{ 'send_mail'|trans({}, 'platform') }}</a>
                     <a class="btn btn-default" href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}"><i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}</a>
