@@ -7,6 +7,7 @@ plugin:
           class: Icap\DropzoneBundle\Entity\Dropzone
           is_visible: true
           is_browsable: false
+          icon: icap_eval_icon.png
           actions:
             - name: open
               menu_name: open_dropzone
