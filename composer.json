@@ -16,7 +16,7 @@
         "symfony/http-foundation": "*",
         "symfony/http-kernel": "*",
         "symfony/yaml": "*",
-        "claroline/core-bundle": ">=2.0.7"
+        "claroline/core-bundle": ">=2.1.5"
     },
     "autoload": {
         "psr-0": { "Claroline\\WebInstaller": "lib" }

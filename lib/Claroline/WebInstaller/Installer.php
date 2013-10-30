@@ -33,6 +33,9 @@ class Installer
         $kernel = new $this->kernelClass('prod', false);
         $kernel->boot();
 
+        $refresher = $kernel->getContainer()->get('claroline.installation.refresher');
+        $refresher->installAssets();
+
         $executor = $kernel->getContainer()->get('claroline.installation.operation_executor');
         $executor->execute();
 
@@ -45,7 +48,6 @@ class Installer
         $user->setMail($this->adminSettings->getEmail());
         $userManager->createUserWithRole($user, PlatformRoles::ADMIN);
 
-        $refresher = $kernel->getContainer()->get('claroline.installation.refresher');
         $refresher->refresh('prod');
 
         $this->writer->writeInstallFlag();
