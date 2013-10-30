@@ -5,6 +5,7 @@ namespace Icap\BlogBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Icap\BlogBundle\Entity\Blog;
+use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Statusable;
 use Icap\BlogBundle\Exception\TooMuchResultException;
 
@@ -135,11 +136,13 @@ class PostRepository extends EntityRepository
                 FROM IcapBlogBundle:Post p
                 WHERE p.blog = :blogId
                 AND p.publicationDate <= :currentDate
+                AND p.status = :status
                 GROUP BY year, month
                 ORDER BY year DESC
             ')
             ->setParameter('blogId', $blog->getId())
             ->setParameter('currentDate', new \DateTime())
+            ->setParameter('status', POST::STATUS_PUBLISHED)
         ;
 
         return $executeQuery ? $query->getResult(): $query;

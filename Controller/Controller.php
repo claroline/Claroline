@@ -84,7 +84,7 @@ class Controller extends BaseController
      */
     protected function getArchiveDatas(Blog $blog)
     {
-        $postDatas          = $this->get('icap.blog.post_repository')->findArchiveDatasByBlog($blog);
+        $postDatas    = $this->get('icap.blog.post_repository')->findArchiveDatasByBlog($blog);
         $archiveDatas = array();
 
         $translator = $this->get('translator');
