@@ -66,6 +66,8 @@ class Event
      */
     private $priority;
 
+    private $recurring;
+
     public function getId()
     {
         return $this->id;
@@ -177,5 +179,12 @@ class Event
     public function setPriority( $priority)
     {
         $this->priority = $priority;
+    }
+    public function getRecurring() {
+        return $this->recurring;
+    }
+
+    public function setRecurring($recurring) {
+        $this->recurring = $recurring;
     }
 }

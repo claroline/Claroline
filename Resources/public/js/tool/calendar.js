@@ -62,10 +62,13 @@
             $('#agenda_form_start').val(pickedDate);
 
             if (pickedDate > currentDate) {
+                console.debug('pic'+pickedDate+' cur'+currentDate);
+
                 $('#agenda_form_end').val(pickedDate);
 
             } else {
                 $('#agenda_form_end').val(currentDate);
+                console.debug('pic'+pickedDate+' cur'+currentDate);
             }
             $('#myModal').modal();
         };

@@ -11,6 +11,13 @@ class AgendaType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $recurring = array();
+
+        for ($i=1; $i < 10 ; $i++) { 
+            
+            $recurring[$i] = $i; 
+        }
+        
         $builder
             ->add('title', 'text', array('required' => true))
             ->add(
@@ -47,6 +54,13 @@ class AgendaType extends AbstractType
                         '#848484' => 'low',
                     )
                 )
+            )
+            ->add(
+                'recurring',
+                'choice',
+                array(
+                    'choices' => $recurring
+                    )
             );
     }
 

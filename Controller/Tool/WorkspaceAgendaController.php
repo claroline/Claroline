@@ -288,4 +288,10 @@ class WorkspaceAgendaController extends Controller
             throw new AccessDeniedException();
         }
     }
+
+    private function calculRecurrency($timestamp)
+    {
+        // it calculs by week
+        return $timestamp + (3600 * 24 * 7);
+    }
 }
