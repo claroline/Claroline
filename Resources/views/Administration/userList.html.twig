@@ -87,11 +87,11 @@
         </div>
 
         {{ renderPager(search, pager) }}
-    
-        {% if search == ''%}
+
+        {% if search == '' %}
             <p> <a href="{{ path('claro_admin_user_list_pics')}}"> {{'change_view'|trans({}, 'platform') }}</a> </p>
         {% else %}
-            <p> <a href="{{ path('claro_admin_user_list_pics',{'search':search})}}"> {{'change_view'|trans({}, 'platform') }}</a> </p>
+            <p> <a href="{{ path('claro_admin_user_list_pics',{'search':search,'page': pager})}}"> {{'change_view'|trans({}, 'platform') }}</a> </p>
         {% endif %}
         <div class="table-responsive">
             <table id="user-table"  class="table table-striped table-bordered table-condensed">
