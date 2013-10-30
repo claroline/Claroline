@@ -127,6 +127,7 @@ class WorkspaceManager
         $workspace->setSelfUnregistration($config->getSelfUnregistration());
         $baseRoles = $this->roleManager->initWorkspaceBaseRole($config->getRoles(), $workspace);
         $baseRoles['ROLE_ANONYMOUS'] = $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
+        $baseRoles['ROLE_USER'] = $this->roleRepo->findOneBy(array('name' => 'ROLE_USER'));
         $this->roleManager->associateRole($manager, $baseRoles["ROLE_WS_MANAGER"]);
         $dir = $this->om->factory('Claroline\CoreBundle\Entity\Resource\Directory');
         $dir->setName("{$workspace->getName()} - {$workspace->getCode()}");

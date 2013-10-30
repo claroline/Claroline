@@ -1,7 +1,6 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
 {% block title %}{{ workspace.getName() }} {% endblock %}
-
 {% block breadcrumb %}
     <div id="resource-breadcrumb">
         {% if _resource is defined %}
@@ -24,16 +23,18 @@
         {% endif %}
     </div>
 {% endblock %}
-
 {% block leftbar %}
     {% if _resource is defined %}
         {% set workspace = _resource.getResourceNode().getWorkspace() %}
     {% endif %}
     {% if not is_path_mode and workspace is defined %}
-        {% render controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspaceId': workspace.getId(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}) %}
+
+        {% if is_granted({}, workspace) %}
+            {% render controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspaceId': workspace.getId(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}) %}
+        {% endif %}
+
     {% endif %}
 {% endblock %}
-
 {% block content %}
     <div class="visible-xs">
         {{ block("leftbar") }}
