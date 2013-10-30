@@ -22,21 +22,37 @@
                            </ul>
                        </div>
                    {%  endif  %}
+{#                   <div class='lesson_header row'>
+                       <div class='col-md-6 align_left'>
+                           {% if previous != null %}
+                               <a class='lesson_tooltip' rel="tooltip" data-original-title='{{ 'previous'|trans({}, 'icap_lesson') }}' href='{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': previous }) }}'><i class='icon-backward lesson_footer_icon'></i></a>
+                           {% else %}
+                               <i rel="tooltip" data-original-title='{{ 'previous'|trans({}, 'icap_lesson') }}' class='lesson_tooltip icon-backward lesson_footer_icon'></i>
+                           {% endif %}
+                       </div>
+                       <div class='col-md-6 align_right'>
+                           {% if next != null %}
+                               <a class='lesson_tooltip' rel="tooltip" data-original-title='{{ 'next'|trans({}, 'icap_lesson') }}' href='{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': next }) }}'><i class='icon-forward lesson_footer_icon'></i></a>
+                           {% else %}
+                               <i rel="tooltip" data-original-title='{{ 'next'|trans({}, 'icap_lesson') }}' class='lesson_tooltip icon-forward lesson_footer_icon'></i>
+                           {% endif %}
+                       </div>
+                   </div>#}
                    <div class='chapter_content_text'>
                        {{ chapter.text | raw }}
                    </div>
                    <div class='lesson_footer row'>
-                       <div class='back_top_page col-md-1'>
+                       <div class='col-md-1 align_left'>
                            {% if previous != null %}
                                 <a class='lesson_tooltip' rel="tooltip" data-original-title='{{ 'previous'|trans({}, 'icap_lesson') }}' href='{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': previous }) }}'><i class='icon-backward lesson_footer_icon'></i></a>
                            {% else %}
                               <i rel="tooltip" data-original-title='{{ 'previous'|trans({}, 'icap_lesson') }}' class='lesson_tooltip icon-backward lesson_footer_icon'></i>
                            {% endif %}
                        </div>
-                       <div class='back_top_page col-md-10'>
+                       <div class='col-md-10'>
                            <a href='#wrap'>{{ 'back_top'|trans({}, 'icap_lesson') }}</a>
                        </div>
-                       <div class='back_top_page col-md-1'>
+                       <div class='col-md-1 align_right'>
                            {% if next != null %}
                                <a class='lesson_tooltip' rel="tooltip" data-original-title='{{ 'next'|trans({}, 'icap_lesson') }}' href='{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': next }) }}'><i class='icon-forward lesson_footer_icon'></i></a>
                            {% else %}

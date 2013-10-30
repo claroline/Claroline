@@ -21,7 +21,7 @@ class Lesson extends AbstractResource
 {
     /**
      * @ORM\OneToOne(targetEntity="Icap\LessonBundle\Entity\Chapter", cascade={"all"})
-     * @ORM\JoinColumn(name="root_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="root_id", referencedColumnName="id")
      */
     private $root;
 

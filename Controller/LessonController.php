@@ -187,8 +187,6 @@ class LessonController extends Controller
                 $unitOfWork = $em->getUnitOfWork();
                 $unitOfWork->computeChangeSets();
                 $changeSet = $unitOfWork->getEntityChangeSet($chapter);
-
-                $em->persist($chapter);
                 $em->flush();
 
                 $this->dispatchChapterUpdateEvent($lesson, $chapter, $changeSet);

@@ -94,7 +94,10 @@ class LessonListener extends ContainerAware
     public function onDelete(DeleteResourceEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $em->remove($event->getResource());
+        $lesson = $event->getResource();
+        $lesson->setRoot(null);
+        $em->flush();
+        $em->remove($lesson);
         $em->flush();
         $event->stopPropagation();
     }

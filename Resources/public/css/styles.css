@@ -2,6 +2,15 @@
     top:70px;
 }
 
+.align_left{
+    text-align: left;
+}
+
+.align_right{
+    text-align: right;
+}
+
+
 .form-actions{
     padding : 20px;
     text-align: center;
@@ -209,6 +218,12 @@ li.custom_field div div {
      color: #666;
      padding:20px;
  }
+
+.lesson_header{
+    color: #666;
+    padding-left:20px;
+    padding-right:20px;
+}
 
 .lesson_footer_icon{
     font-size: 22px;

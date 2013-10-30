@@ -32,7 +32,7 @@ class Chapter
 
     /**
      * @ORM\ManyToOne(targetEntity="Icap\LessonBundle\Entity\Lesson")
-     * @ORM\JoinColumn(name="lesson_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="lesson_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $lesson;
 
