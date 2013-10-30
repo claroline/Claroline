@@ -29,11 +29,13 @@ class Controller extends BaseController
     /**
      * @param string $permissions
      *
-     * @param Blog $blog
+     * @param Blog   $blog
      *
-     * @throws AccessDeniedException
+     * @param string $comparison
+     *
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
-    protected function checkAccess($permissions, Blog $blog)
+    protected function checkAccess($permissions, Blog $blog, $comparison = "AND")
     {
         $collection = new ResourceCollection(array($blog->getResourceNode()));
         $isGranted = true;
@@ -43,7 +45,12 @@ class Controller extends BaseController
         }
 
         foreach ($permissions as $permission) {
-            $isGranted += $this->get('security.context')->isGranted($permission, $collection);
+            if ("OR" === $comparison) {
+                $isGranted = $isGranted || $this->get('security.context')->isGranted($permission, $collection);
+            }
+            else {
+                $isGranted += $this->get('security.context')->isGranted($permission, $collection);
+            }
         }
 
         if (false === $isGranted) {

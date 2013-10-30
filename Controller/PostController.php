@@ -83,7 +83,7 @@ class PostController extends Controller
      */
     public function newAction(Request $request, Blog $blog)
     {
-        $this->checkAccess(array("EDIT", "POST"), $blog);
+        $this->checkAccess(array("EDIT", "POST"), $blog, "OR");
 
         $user = $this->get('security.context')->getToken()->getUser();
 
@@ -117,7 +117,7 @@ class PostController extends Controller
      */
     public function editAction(Request $request, Blog $blog, Post $post)
     {
-        $this->checkAccess(array("EDIT", "POST"), $blog);
+        $this->checkAccess(array("EDIT", "POST"), $blog, "OR");
 
         $user = $this->get('security.context')->getToken()->getUser();
 
@@ -189,7 +189,7 @@ class PostController extends Controller
      */
     public function deleteAction(Blog $blog, Post $post)
     {
-        $this->checkAccess(array("EDIT", "POST"), $blog);
+        $this->checkAccess(array("EDIT", "POST"), $blog, "OR");
 
         $entityManager = $this->getDoctrine()->getManager();
         $translator    = $this->get('translator');
