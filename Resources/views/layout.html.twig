@@ -5,6 +5,7 @@
 {% block title %}{{ _resource.resourceNode.name }}{% endblock %}
 
 {% block content %}
+    {% set blogOptions = _resource.options %}
         {% if is_granted('ROLE_ADMIN') or is_granted('EDIT', _resourceNode) %}
         <div class="btn-toolbar">
             {% if is_granted('ROLE_ADMIN') %}
@@ -47,6 +48,8 @@
             </li>
             <li><a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" title="{{ _resource.resourceNode.name }}">{{ _resource.resourceNode.name }}</a></li>
         </ul>
+
+        {% if is_granted('EDIT', _resourceNode) %}
         <div class="panel panel-default blog_banner_configurator">
             <div class="panel-heading">
                 <h4 class="panel-title">
@@ -61,7 +64,10 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-12 well blog_banner" style=""></div>
+        {% endif %}
+        {% if blogOptions.isBannerActivate or (false == blogOptions.isBannerActivate and is_granted('EDIT', _resourceNode)) %}
+        <div class="col-md-12 well blog_banner{% if false == blogOptions.isBannerActivate %} hidden{% endif %}" style="height: {{ blogOptions.bannerHeight }}px; background-color: {{ blogOptions.bannerBackgroundColor }}"></div>
+        {% endif %}
         {{ macros.flashBox() }}
         <div class="row">
             <section class="col-lg-8">
@@ -112,11 +118,11 @@
                         <div class="panel-body">
                             <p>
                                 Date de création : {{ _resource.creationDate|date('date_format'|trans({}, 'platform')) }}<br />
-                                Commentaires autorisés : {% if _resource.options.authorizeComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
-                                Commentaires anonymes autorisés : {% if _resource.options.authorizeAnonymousComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
-                                Nb d'article/pages : {{ _resource.options.postPerPage }}<br />
-                                Publication automatique des billets : {% if _resource.options.autoPublishPost %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
-                                Publication automatique des commentaires : {% if _resource.options.autoPublishComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
+                                Commentaires autorisés : {% if blogOptions.authorizeComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
+                                Commentaires anonymes autorisés : {% if blogOptions.authorizeAnonymousComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
+                                Nb d'article/pages : {{ blogOptions.postPerPage }}<br />
+                                Publication automatique des billets : {% if blogOptions.autoPublishPost %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
+                                Publication automatique des commentaires : {% if blogOptions.autoPublishComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
                             </p>
                         </div>
                     </div>

@@ -97,9 +97,6 @@ article .highlight {
 .blog_banner_configurator .panel-heading {
   border-bottom: 0;
 }
-.blog_banner {
-  min-height: 100px;
-}
 .tree {
   margin: 0;
   max-height: 300px;
