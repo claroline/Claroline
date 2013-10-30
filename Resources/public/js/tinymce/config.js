@@ -1,6 +1,7 @@
 
 function callback_tinymce_init() {
 
+
     $('.tinymce').each(function(index, element) {
         var parent = $(element).parent().get(0);
         $('.mce-toolbar', parent).each(function (itopbar) {
