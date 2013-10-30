@@ -7,7 +7,8 @@
 {% block wiki_content %}
     <div class="wiki-page-header page-header">
         <h1 class="wiki-title-header">
-            {{ _resource.resourceNode.name }} 
+            {{ _resource.resourceNode.name }}
+            {% if isAdmin %} 
             <small class="wiki-actions"> 
                 [ 
                 <a href="{{ path('icap_wiki_new_section', { 'wikiId': _resource.id, 'parentSectionId' : tree[0].id }) }}" class="new-section" data-section="{{tree[0].id}}" >
@@ -23,6 +24,7 @@
                 </a>   
                 ]
             </small>
+            {% endif %}
         </h1>        
     </div>
 
