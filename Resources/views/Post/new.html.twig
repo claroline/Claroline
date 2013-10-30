@@ -27,6 +27,10 @@
         <p class="alert alert-warning">
             {{ 'icap_blog_post_need_validation_before_publishing'|trans({}, 'icap_blog') }}
         </p>
+        {% elseif is_granted('EDIT', _resourceNode) %}
+        <p class="alert alert-warning">
+            {{ 'icap_blog_post_need_publishing'|trans({}, 'icap_blog') }}
+        </p>
         {% endif %}
         {{ form_errors(form) }}
 
