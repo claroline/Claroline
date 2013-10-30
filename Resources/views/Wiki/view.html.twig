@@ -53,6 +53,8 @@
         <div class="wiki-sections">
             {% include "IcapWikiBundle:Wiki:wikiSections.html.twig" with {'sections' : tree[0].__children, 'wikiId' : _resource.id, 'isAdmin' : isAdmin } %}
         </div>
+    {% else %}
+        <div id="wnsc-{{tree[0].id}}" class="wiki-new-section-container"></div>
     {% endif %}
 {% endblock %}
 
