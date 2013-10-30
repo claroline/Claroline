@@ -28,7 +28,7 @@ class ConfigurationChecker implements CheckerInterface
     public function __construct(Yaml $yamlParser, EntityManager $em)
     {
         $this->yamlParser = $yamlParser;
-        $this->em = $em;
+        $this->em         = $em;
     }
 
     /**
@@ -38,7 +38,6 @@ class ConfigurationChecker implements CheckerInterface
      */
     public function check(PluginBundle $plugin)
     {
-        $this->plugin = $plugin;
         $config = $this->yamlParser->parse($plugin->getConfigFile());
 
         if (null == $config) {
