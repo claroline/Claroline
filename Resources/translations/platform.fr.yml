@@ -84,7 +84,7 @@ categories_organization: 'Organisation des catégories'
 categorize: Catégoriser
 category_root: 'Catégories de base'
 category_structure: 'Structure des catégories'
-change_view : Changer l'affichage
+change_view : 'Changer l''affichage'
 choose_resource_form_type: 'Type de ressource'
 classify_workspaces: 'Classer les espaces d''activités'
 close: Fermer
@@ -433,8 +433,6 @@ select_workspaces_for_registration: 'Choisissez les espaces d''activités pour l
 selected_workspaces_for_registration: 'Espaces d''activités sélectionnés pour l''inscription'
 send_mail: 'Envoyer un mail'
 send_message: 'Envoyer un message'
-send_mail_form_object: 'Objet'
-send_mail_form_content: 'Contenu'
 session_id: 'Identifiant de session'
 settings: Paramètres
 sharable: 'Partageable'

@@ -88,10 +88,10 @@
 
         {{ renderPager(search, pager) }}
 
-        {% if search == ''%}
+        {% if search == '' %}
             <p> <a href="{{ path('claro_admin_user_list_pics')}}"> {{'change_view'|trans({}, 'platform') }}</a> </p>
         {% else %}
-            <p> <a href="{{ path('claro_admin_user_list_pics',{'search':search})}}"> {{'change_view'|trans({}, 'platform') }}</a> </p>
+            <p> <a href="{{ path('claro_admin_user_list_pics',{'search':search,'page': pager})}}"> {{'change_view'|trans({}, 'platform') }}</a> </p>
         {% endif %}
         <div class="table-responsive">
             <table id="user-table"  class="table table-striped table-bordered table-condensed">
@@ -115,13 +115,12 @@
                         <tr id="{{ user.getId() }}" class="row-user">
                             <td>{{ user.getId() }}</td>
                             <td>
-                                <a href="{{ path('claro_profile_form_admin', {'user': user.getId()}) }}">
-                                    {{ user.getUsername() }}
-                                </a>
+                                <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}"> {{user.getUsername()}}</a>
                             </td>
                             <td>{{ user.getLastName() }}</td>
                             <td>{{ user.getFirstName() }}</td>
                             <td>{{ user.getMail() }}</td>
+
                             <td> <a href="{{ path('claro_profile_form_admin', {'user': user.getId()}) }}">
                                 {{ user.getUsername() }}
                             </a>
