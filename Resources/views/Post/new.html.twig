@@ -23,7 +23,7 @@
 {% block blog_content %}
     <form action="{{ _path('icap_blog_post_new', {'blogId':_resource.getId()}) }}" method="post" {{ form_enctype(form) }} class="well" id="icap_blog_post_form" novalidate>
         <legend>{{ "add_new_post"|trans({}, 'icap_blog') }}</legend>
-        {% if false ==_resource.isAutoPublishPost %}
+        {% if false == is_granted('EDIT', _resourceNode) and false == _resource.isAutoPublishPost %}
         <p class="alert alert-warning">
             {{ 'icap_blog_post_need_validation_before_publishing'|trans({}, 'icap_blog') }}
         </p>
