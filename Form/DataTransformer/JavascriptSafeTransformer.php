@@ -6,18 +6,12 @@ use Symfony\Component\Form\DataTransformerInterface;
 
 class JavascriptSafeTransformer implements  DataTransformerInterface
 {
-    private $document;
     private $blacklistedAttributes = array(
         'onload', 'onunload', 'onclick', 'ondblclick', 'onmousedown',
         'onmouseup', 'onmouseover', 'onmousemove', 'onmouseout',
         'onfocus', 'onblur', 'onkeypress', 'onkeydown', 'onkeyup',
         'onsubmit', 'onreset', 'onselect', 'onchange'
     );
-
-    public function __construct()
-    {
-        $this->document = new \DOMDocument();
-    }
 
     public function transform($value)
     {
@@ -26,27 +20,25 @@ class JavascriptSafeTransformer implements  DataTransformerInterface
 
     public function reverseTransform($value)
     {
-        if (empty($value)) {
-            return $value;
-        }
+        // regex-based replacements are used here instead of dom manipulation
+        // because this filter operates on html fragments (i.e. not complete documents),
+        // which doesn't seem feasible using the DOMDocument class (where a whole
+        // document is always built when using the loadHTML method).
 
-        $this->document->loadHTML($value);
-        $nodes = $this->document->getElementsByTagName('*');
+        $scriptPattern = '#<[\s]*script[^>]*>.*<[\s]*/[\s]*script[^>]*>#i';
+        $onEventPattern =
+            '#<[\s]*[^>]+([\s]*('
+            . implode('|', $this->blacklistedAttributes)
+            . ')[\s]*=[\s]*(["][\s]*[^>"]*["]|[\'][\s]*[^>\']*[\'])[\s]*)[^>]*>#i';
 
-        foreach ($nodes as $node) {
-            if (strtolower($node->nodeName) === 'script') {
-                $node->parentNode->removeChild($node);
+        return preg_replace_callback(
+            $onEventPattern,
+            function ($matches) {
+                return str_replace($matches[1], '', $matches[0]);
+            },
+            preg_replace($scriptPattern, '', $value)
+        );
 
-                continue;
-            }
-
-            foreach ($this->blacklistedAttributes as $attribute) {
-                if ($node->hasAttribute($attribute)) {
-                    $node->removeAttribute($attribute);
-                }
-            }
-        }
-
-        return $this->document->saveHTML();
+        return $value;
     }
 }
