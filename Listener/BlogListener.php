@@ -5,6 +5,7 @@ namespace Icap\BlogBundle\Listener;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
@@ -132,6 +133,21 @@ class BlogListener extends ContainerAware
         $entityManager->persist($newBlog);
 
         $event->setCopy($newBlog);
+        $event->stopPropagation();
+    }
+
+    /**
+     * @param CustomActionResourceEvent $event
+     */
+    public function onConfigure(CustomActionResourceEvent $event)
+    {
+        $route = $this->container
+            ->get('router')
+            ->generate(
+                'icap_blog_configure',
+                array('blogId' => $event->getResource()->getId())
+            );
+        $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }
 }

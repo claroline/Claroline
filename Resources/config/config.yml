@@ -9,3 +9,5 @@ plugin:
           icon: icap_blog_icon.png
           actions:
             - name: post
+            - name: edit
+              menu_name: configure_blog
