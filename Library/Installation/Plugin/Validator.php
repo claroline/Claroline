@@ -21,7 +21,9 @@ class Validator
     /**
      * Constructor.
      *
-     * @param array $checkers[CheckerInterface]
+     * @param CheckerInterface[] $checkers
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $checkers)
     {
