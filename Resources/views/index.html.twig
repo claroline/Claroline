@@ -58,19 +58,27 @@
                 <tbody id="table-subjects-body">
                 {% for subject in pager.currentPageResults %}
                     {% set messages = subject.getMessages() %}
-                    {% set nbMessages = messages|length %}
                     {% set lastMessage = messages[nbMessages - 1] %}
                     <tr class='row-subject'>
                         <td>
-                            <a class="link-subject" href="{{ _path('claro_forum_messages', {'subjectId': subject.id }) }}">{{ subject.title }}</a><br>
-                            {{ 'started_by' | trans({}, 'forum') }} {{ subject.getCreator().getFirstName() }}, {{ subject.getCreationDate()|intl_date_format() }}
+                            <a class="link-subject"
+                                href="{{ _path('claro_forum_messages', {'subjectId': subject['id'] }) }}"
+                            >
+                                {{ subject['title'] }}
+                            </a>
+                            <br>
+                            {{ 'started_by' | trans({}, 'forum') }}
+                            {{ subject['subject_creator_firstname'] }}
+                            {{ subject['subject_creator_lastname'] }},
+                            {{ subject['subject_created']|intl_date_format() }}
                         </td>
                         <td>
-                            {{ nbMessages }}
+                            {{ subject['count_messages'] }}
                         </td>
                         <td>
-                            {{ lastMessage.getCreator().getFirstName() }}<br/>
-                            {{ lastMessage.getCreationDate()|intl_date_format() }}
+                            {{ subject['last_message_creator_firstname'] }}
+                            {{ subject['last_message_creator_lastname'] }}<br/>
+                            {{ subject['last_message_created'] }}
                         </td>
                     </tr>
                 {% endfor %}

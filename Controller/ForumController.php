@@ -9,6 +9,7 @@ use Claroline\ForumBundle\Form\MessageType;
 use Claroline\ForumBundle\Form\SubjectType;
 use Claroline\ForumBundle\Form\ForumOptionsType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -44,8 +45,8 @@ class ForumController extends Controller
         $this->checkAccess($forum);
         $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $limit = $limits[0]->getSubjects();
-        $query = $em->getRepository('ClarolineForumBundle:Forum')->findSubjects($forum, true);
-        $adapter = new DoctrineORMAdapter($query);
+        $subjects = $em->getRepository('ClarolineForumBundle:Forum')->findSubjects($forum);
+        $adapter = new ArrayAdapter($subjects);
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage($limit);
         $pager->setCurrentPage($page);
