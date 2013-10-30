@@ -45,7 +45,7 @@ function ResourceModalCtrl($scope, $modal, $q, $http, $modalInstance, PathFactor
      */
     $scope.pickResource = function(currentResourceId) {
         var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'js/Resource/Partial/resource-picker.html',
+            templateUrl: EditorApp.webDir + 'angularjs/Resource/Partial/resource-picker.html',
             controller: 'ResourcePickerModalCtrl',
             resolve: {
                 currentResourceId: function() {

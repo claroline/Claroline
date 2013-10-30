@@ -167,7 +167,7 @@ class PathController
      *     name = "innova_path_from_workspace"
      * )
      * @Method("GET")
-     * @Template("InnovaPathBundle::path_workspace.html.twig")
+     * @Template("InnovaPathBundle::index.html.twig")
      */
     public function fromWorkspaceAction()
     {

@@ -48,7 +48,7 @@ function StepModalCtrl($scope, $modal, $modalInstance, PathFactory, StepFactory,
      */
     $scope.selectImage = function() {
         var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'js/Step/Partial/select-image.html',
+            templateUrl: EditorApp.webDir + 'angularjs/Step/Partial/select-image.html',
             controller: 'SelectImageModalCtrl',
             resolve: {
                 // Send images to form
@@ -80,7 +80,7 @@ function StepModalCtrl($scope, $modal, $modalInstance, PathFactory, StepFactory,
         }
 
         var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'js/Resource/Partial/resource-edit.html',
+            templateUrl: EditorApp.webDir + 'angularjs/Resource/Partial/resource-edit.html',
             controller: 'ResourceModalCtrl',
             resolve: {
                 // Send resource type to form

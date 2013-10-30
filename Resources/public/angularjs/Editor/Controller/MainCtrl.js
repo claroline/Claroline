@@ -49,7 +49,7 @@ function MainCtrl($scope, $http, $window, $location, $modal, HistoryFactory, Cli
      */
     $scope.openHelp = function() {
         var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'js/Help/Partial/help.html',
+            templateUrl: EditorApp.webDir + 'angularjs/Help/Partial/help.html',
             controller: 'HelpModalCtrl'
         });
     };

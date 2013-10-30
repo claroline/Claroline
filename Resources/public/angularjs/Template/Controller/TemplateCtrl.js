@@ -20,7 +20,7 @@ function TemplateCtrl($scope, $http, $modal, TemplateFactory) {
     $scope.edit = function(template) {
         TemplateFactory.setCurrentTemplate(template);
         var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'js/Template/Partial/template-edit.html',
+            templateUrl: EditorApp.webDir + 'angularjs/Template/Partial/template-edit.html',
             controller: 'TemplateModalCtrl'
         });
     };

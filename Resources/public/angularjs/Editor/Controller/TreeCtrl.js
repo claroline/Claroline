@@ -181,7 +181,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
     $scope.editTemplate = function(step) {
         StepFactory.setStep(step);
         var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'js/Template/Partial/template-edit.html',
+            templateUrl: EditorApp.webDir + 'angularjs/Template/Partial/template-edit.html',
             controller: 'TemplateModalCtrl'
         });
     };
@@ -194,7 +194,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
         StepFactory.setStep(step);
 
         var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'js/Step/Partial/step-edit.html',
+            templateUrl: EditorApp.webDir + 'angularjs/Step/Partial/step-edit.html',
             controller: 'StepModalCtrl',
             windowClass: 'step-edit'
         });
@@ -233,7 +233,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
         }
 
         var modalInstance = $modal.open({
-            templateUrl: EditorApp.webDir + 'js/Resource/Partial/resource-edit.html',
+            templateUrl: EditorApp.webDir + 'angularjs/Resource/Partial/resource-edit.html',
             controller: 'ResourceModalCtrl',
             resolve: {
                 // Send resource type to form
