@@ -305,45 +305,38 @@ class DatabaseWriter
     {
         $resourceIcon = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
-            ->findOneBy(
-                array(
-                     'mimeType' => 'custom/' . $resourceType->getName(),
-                     'isShortcut' => false
-                )
-            );
+            ->findOneByMimeType('custom/' . $resourceType->getName());
 
-        if (null !== $resourceIcon) {
+        if (null === $resourceIcon) {
             $resourceIcon = new ResourceIcon();
-
             $resourceIcon->setMimeType('custom/' . $resourceType->getName());
+        }
+
+        if (isset($resource['icon'])) {
             $ds = DIRECTORY_SEPARATOR;
 
-            if (isset($resource['icon'])) {
-                $webBundleDir = "{$this->kernelRootDir}{$ds}..{$ds}web{$ds}bundles";
-                $webPluginDir = "{$webBundleDir}{$ds}{$plugin->getAssetsFolder()}";
-                $webPluginImgDir = "{$webPluginDir}{$ds}images";
-                $webPluginIcoDir = "{$webPluginImgDir}{$ds}icons";
-                $this->fileSystem->mkdir(array($webBundleDir, $webPluginDir, $webPluginImgDir, $webPluginIcoDir));
-                $this->fileSystem->copy(
-                    "{$plugin->getImgFolder()}{$ds}{$resource['icon']}",
-                    "{$webPluginIcoDir}{$ds}{$resource['icon']}"
-                );
-                $resourceIcon->setIconLocation("{$webPluginIcoDir}{$ds}{$resource['icon']}");
-                $resourceIcon->setRelativeUrl(
-                    "bundles/{$plugin->getAssetsFolder()}/images/icons/{$resource['icon']}"
-                );
-            } else {
-                $defaultIcon = $this->em
-                    ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
-                    ->findOneByMimeType('custom/default');
-                $resourceIcon->setIconLocation($defaultIcon->getIconLocation());
-                $resourceIcon->setRelativeUrl($defaultIcon->getRelativeUrl());
-            }
-
-            $resourceIcon->setShortcut(false);
-            $this->em->persist($resourceIcon);
-            $this->im->createShortcutIcon($resourceIcon);
+            $webBundleDir = "{$this->kernelRootDir}{$ds}..{$ds}web{$ds}bundles";
+            $webPluginDir = "{$webBundleDir}{$ds}{$plugin->getAssetsFolder()}";
+            $webPluginImgDir = "{$webPluginDir}{$ds}images";
+            $webPluginIcoDir = "{$webPluginImgDir}{$ds}icons";
+            $this->fileSystem->mkdir(array($webBundleDir, $webPluginDir, $webPluginImgDir, $webPluginIcoDir));
+            $this->fileSystem->copy(
+                "{$plugin->getImgFolder()}{$ds}{$resource['icon']}",
+                "{$webPluginIcoDir}{$ds}{$resource['icon']}"
+            );
+            $resourceIcon->setIconLocation("{$webPluginIcoDir}{$ds}{$resource['icon']}");
+            $resourceIcon->setRelativeUrl("bundles/{$plugin->getAssetsFolder()}/images/icons/{$resource['icon']}");
+        } else {
+            $defaultIcon = $this->em
+                ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
+                ->findOneByMimeType('custom/default');
+            $resourceIcon->setIconLocation($defaultIcon->getIconLocation());
+            $resourceIcon->setRelativeUrl($defaultIcon->getRelativeUrl());
         }
+
+        $resourceIcon->setShortcut(false);
+        $this->em->persist($resourceIcon);
+        $this->im->createShortcutIcon($resourceIcon);
     }
 
     private function persistCustomAction($actions, $resourceType)
