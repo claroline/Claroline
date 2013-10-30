@@ -44,11 +44,24 @@ class Recorder
      * Registers a plugin.
      *
      * @param PluginBundle $plugin
+     * @param array        $pluginConfiguration
      */
     public function register(PluginBundle $plugin, array $pluginConfiguration)
     {
         $pluginFqcn = get_class($plugin);
         $this->dbWriter->insert($plugin, $pluginConfiguration);
+    }
+
+    /**
+     * Update configuration for a plugin.
+     *
+     * @param PluginBundle $plugin
+     * @param array        $pluginConfiguration
+     */
+    public function update(PluginBundle $plugin, array $pluginConfiguration)
+    {
+        $pluginFqcn = get_class($plugin);
+        $this->dbWriter->update($plugin, $pluginConfiguration);
     }
 
     /**
@@ -65,7 +78,7 @@ class Recorder
     /**
      * Checks if a plugin is registered.
      *
-     * @param string $pluginFqcn
+     * @param \Claroline\CoreBundle\Library\PluginBundle $plugin
      *
      * @return boolean
      */

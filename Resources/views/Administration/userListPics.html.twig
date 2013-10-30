@@ -1,7 +1,7 @@
 {% macro renderPager(search, pager) %}
 {% if search == '' %}
 {{ pagerfanta(pager,'twitter_bootstrap_translated',{'proximity' : 1,
-    'routeName': 'claro_admin_user_list'
+    'routeName': 'claro_admin_user_list_pics'
     }
     )
 }}
@@ -169,3 +169,4 @@ filter="twig_js"
     Claroline.Table.initialize(parameters);
 </script>
 {% endblock %}
+

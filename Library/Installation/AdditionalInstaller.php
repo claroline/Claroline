@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Library\Installation;
 
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Bundle\SecurityBundle\Command\InitAclCommand;
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
@@ -23,6 +24,7 @@ class AdditionalInstaller extends BaseInstaller
     public function preInstall()
     {
         $this->createDatabaseIfNotExists();
+        $this->createAclTablesIfNotExist();
         $this->buildDefaultTemplate();
     }
 
@@ -53,6 +55,7 @@ class AdditionalInstaller extends BaseInstaller
             $updater020105 = new Updater\Updater020105($this->container);
             $updater020105->setLogger($this->logger);
             $updater020105->postUpdate();
+            $this->createAclTablesIfNotExist();
         }
     }
 
@@ -78,6 +81,14 @@ class AdditionalInstaller extends BaseInstaller
                 );
             }
         }
+    }
+
+    private function createAclTablesIfNotExist()
+    {
+        $this->log('Initializing acl tables...');
+        $command = new InitAclCommand();
+        $command->setContainer($this->container);
+        $command->run(new ArrayInput(array()), new NullOutput());
     }
 
     private function buildDefaultTemplate()

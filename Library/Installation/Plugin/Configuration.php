@@ -12,18 +12,20 @@ class Configuration implements ConfigurationInterface
     private $plugin;
     private $listNames;
     private $listTools;
+    private $updateMode;
 
     public function __construct(PluginBundle $plugin, array $resourceNames, array $listTools)
     {
-        $this->plugin = $plugin;
-        $this->listNames = $resourceNames;
-        $this->listTools = $listTools;
+        $this->plugin     = $plugin;
+        $this->listNames  = $resourceNames;
+        $this->listTools  = $listTools;
+        $this->updateMode = false;
     }
 
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('config');
+        $treeBuilder   = new TreeBuilder();
+        $rootNode      = $treeBuilder->root('config');
         $pluginSection = $rootNode->children('plugin');
         $this->addGeneralSection($pluginSection);
         $this->addWidgetSection($pluginSection);
@@ -36,10 +38,10 @@ class Configuration implements ConfigurationInterface
 
     private function addGeneralSection($pluginSection)
     {
-        $plugin = $this->plugin;
+        $plugin     = $this->plugin;
         $pluginFqcn = get_class($plugin);
-        $imgFolder = $plugin->getImgFolder();
-        $ds = DIRECTORY_SEPARATOR;
+        $imgFolder  = $plugin->getImgFolder();
+        $ds         = DIRECTORY_SEPARATOR;
 
         $pluginSection
             ->booleanNode('has_options')->end()
@@ -61,30 +63,31 @@ class Configuration implements ConfigurationInterface
 
     private function addResourceSection($pluginSection)
     {
-        $plugin = $this->plugin;
-        $pluginFqcn = get_class($plugin);
+        $plugin       = $this->plugin;
+        $pluginFqcn   = get_class($plugin);
         $resourceFile = $plugin->getConfigFile();
-        $imgFolder = $plugin->getImgFolder();
-        $listNames = $this->listNames;
+        $imgFolder    = $plugin->getImgFolder();
+        $listNames    = $this->listNames;
+        $updateMode   = $this->isInUpdateMode();
 
         $pluginSection
             ->arrayNode('resources')
                 ->prototype('array')
                     ->children()
                        ->scalarNode('name')
-                         ->isRequired()
-                            ->validate()
+                            ->isRequired()
+                                ->validate()
                                     ->ifTrue(
-                                        function ($v) use ($plugin,$listNames) {
-                                            return !call_user_func_array(
+                                        function ($v) use ($listNames, $updateMode) {
+                                            return !$updateMode && !call_user_func_array(
                                                 __CLASS__ . '::isNameAlreadyExist',
                                                 array($v, $listNames)
                                             );
                                         }
                                     )
                                     ->thenInvalid($pluginFqcn . " : the ressource type name already exists")
+                                ->end()
                             ->end()
-                         ->end()
                        ->scalarNode('class')
                             ->isRequired()
                                 ->validate()
@@ -144,10 +147,10 @@ class Configuration implements ConfigurationInterface
 
     private function addWidgetSection($pluginSection)
     {
-        $plugin = $this->plugin;
+        $plugin     = $this->plugin;
         $pluginFqcn = get_class($plugin);
-        $imgFolder = $plugin->getImgFolder();
-        $ds = DIRECTORY_SEPARATOR;
+        $imgFolder  = $plugin->getImgFolder();
+        $ds         = DIRECTORY_SEPARATOR;
 
         $pluginSection
             ->arrayNode('widgets')
@@ -178,16 +181,16 @@ class Configuration implements ConfigurationInterface
 
     private function addToolSection($pluginSection)
     {
-        $tools = $this->listTools;
-        $plugin = $this->plugin;
+        $tools      = $this->listTools;
+        $plugin     = $this->plugin;
         $pluginFqcn = get_class($plugin);
         $pluginSection
             ->arrayNode('tools')
                 ->prototype('array')
                     ->children()
                         ->scalarNode('name')
-                          ->isRequired()
-                            ->validate()
+                            ->isRequired()
+                                ->validate()
                                 ->ifTrue(
                                     function ($v) use ($tools) {
                                         return !call_user_func_array(
@@ -251,8 +254,8 @@ class Configuration implements ConfigurationInterface
 
     public static function isResourceIconValid($v, $plugin)
     {
-        $ds = DIRECTORY_SEPARATOR;
-        $imgFolder = $plugin->getImgFolder();
+        $ds                  = DIRECTORY_SEPARATOR;
+        $imgFolder           = $plugin->getImgFolder();
         $expectedImgLocation = $imgFolder . $ds . $ds . $v;
 
         return file_exists($expectedImgLocation);
@@ -260,8 +263,8 @@ class Configuration implements ConfigurationInterface
 
     public static function isSmallIconValid($v, $plugin)
     {
-        $ds = DIRECTORY_SEPARATOR;
-        $imgFolder = $plugin->getImgFolder();
+        $ds                  = DIRECTORY_SEPARATOR;
+        $imgFolder           = $plugin->getImgFolder();
         $expectedImgLocation = $imgFolder . $ds . 'small' . $ds . $v;
 
         return file_exists($expectedImgLocation);
@@ -269,8 +272,8 @@ class Configuration implements ConfigurationInterface
 
     public static function isIconValid($v, $plugin)
     {
-        $ds = DIRECTORY_SEPARATOR;
-        $imgFolder = $plugin->getImgFolder();
+        $ds                  = DIRECTORY_SEPARATOR;
+        $imgFolder           = $plugin->getImgFolder();
         $expectedImgLocation = $imgFolder.$ds.$v;
 
         return file_exists($expectedImgLocation);
@@ -279,5 +282,25 @@ class Configuration implements ConfigurationInterface
     public static function isNameAlreadyExist($v, $listNames)
     {
         return (!in_array($v, $listNames));
+    }
+
+    /**
+     * @param $updateMode
+     *
+     * @return Configuration
+     */
+    public function setUpdateMode($updateMode)
+    {
+        $this->updateMode = $updateMode;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInUpdateMode()
+    {
+        return $this->updateMode;
     }
 }
