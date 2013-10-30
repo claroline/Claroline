@@ -38,7 +38,5 @@ class JavascriptSafeTransformer implements  DataTransformerInterface
             },
             preg_replace($scriptPattern, '', $value)
         );
-
-        return $value;
     }
 }
