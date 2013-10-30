@@ -236,6 +236,13 @@ class UserManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
+    public function getAllUsersBySearch($page, $search)
+    {
+        $users = $this->userRepo->findAllUserBySearch($search);
+
+        return $this->pagerFactory->createPagerFromArray($users, $page);
+    }
+
     public function getUsersByName($search, $page)
     {
         $query = $this->userRepo->findByName($search, false);
@@ -274,6 +281,18 @@ class UserManager
         $query = $this->userRepo->findUsersByWorkspaces($workspaces, false);
 
         return $this->pagerFactory->createPager($query, $page);
+    }
+
+    public function getUsersByWorkspacesAndSearch(
+        array $workspaces,
+        $page,
+        $search
+    )
+    {
+        $users = $this->userRepo
+            ->findUsersByWorkspacesAndSearch($workspaces, $search);
+
+        return $this->pagerFactory->createPagerFromArray($users, $page);
     }
 
     public function getUsersByWorkspaceAndName(AbstractWorkspace $workspace, $search, $page)
@@ -338,14 +357,14 @@ class UserManager
 
         return $this->pagerFactory->createPager($res, $page);
     }
-    
+
     public function getByRolesAndNameIncludingGroups(array $roles, $search, $page = 1)
     {
         $res = $this->userRepo->findByRolesAndNameIncludingGroups($roles, $search, true);
 
         return $this->pagerFactory->createPager($res, $page);
     }
-    
+
     public function getUsersByRoles(array $roles, $page = 1)
     {
         $res = $this->userRepo->findByRoles($roles, true);

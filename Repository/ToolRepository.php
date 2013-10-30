@@ -5,8 +5,6 @@ namespace Claroline\CoreBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Entity\Role;
 
 class ToolRepository extends EntityRepository
 {
@@ -48,19 +46,22 @@ class ToolRepository extends EntityRepository
             }
 
             $dql .= ' ORDER BY ot.order';
+            $query = $this->_em->createQuery($dql);
+            $query->setParameter('firstRole', $firstRole);
+            
+            foreach ($roles as $key => $role) {
+                $query->setParameter('role_'.$key, $role);
+            }
+
+
         } else {
             $dql = '
                 SELECT tool
                 FROM Claroline\CoreBundle\Entity\Tool\Tool tool
                 WHERE tool.isDisplayableInWorkspace = true
             ';
-        }
 
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('firstRole', $firstRole);
-
-        foreach ($roles as $key => $role) {
-            $query->setParameter('role_'.$key, $role);
+            $query = $this->_em->createQuery($dql);
         }
 
         return $query->getResult();

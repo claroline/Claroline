@@ -6,12 +6,7 @@
 {% endblock %}
 {% block breadcrumb %}
     {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-briefcase',
-                'name': 'desktop'|trans({}, 'platform'),
-                'href': path('claro_desktop_open')
-            },
+        macros.desktopBreadcrumbs([
             {
                 'name': 'resources'|trans({}, 'platform'),
                 'href': ''

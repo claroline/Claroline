@@ -10,12 +10,7 @@
 {% endblock %}
 {% block breadcrumb %}
     {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-briefcase',
-                'name': 'desktop'|trans({}, 'platform'),
-                'href': path('claro_desktop_open')
-            },
+        macros.desktopBreadcrumbs([
             {
                 'name': 'agenda'|trans({}, 'platform'),
                 'href': ''
@@ -68,7 +63,7 @@
             </div>
             <div class="col-md-3">
                  <div id="tasks">
-               {% include('ClarolineCoreBundle:Tool\\desktop\\agenda:tasks.html.twig') %} 
+               {% include('ClarolineCoreBundle:Tool\\desktop\\agenda:tasks.html.twig') %}
            </div>
             </div>
                 <h4><u>{{ 'agenda_form_priority'|trans({}, 'agenda') }}</u></h4>
@@ -83,7 +78,7 @@
 
 {% block javascripts %}
     {{ parent() }}
- {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %} 
+ {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
     {{ tinymce_init() }}
     <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}' ></script>
     <script type='text/javascript' src='{{ asset(calendarPath ~ 'js/fullcalendar.js') }}' ></script>

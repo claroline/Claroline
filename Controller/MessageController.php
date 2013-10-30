@@ -388,15 +388,31 @@ class MessageController
      */
     public function contactableUsersListAction(User $user, $page, $search)
     {
+        $trimmedSearch = trim($search);
+
         if ($user->hasRole('ROLE_ADMIN')) {
-            $users = $this->userManager->getAllUsers($page);
+            if ($trimmedSearch === '') {
+                $users = $this->userManager->getAllUsers($page);
+            } else {
+                $users = $this->userManager
+                    ->getAllUsersBySearch($page, $trimmedSearch);
+            }
         } else {
             $users = array();
             $workspaces = $this->workspaceManager
                 ->getWorkspacesByUserAndRoleNames($user, array('ROLE_WS_MANAGER'));
 
             if (count($workspaces) > 0) {
-                $users = $this->userManager->getUsersByWorkspaces($workspaces, $page);
+                if ($trimmedSearch === '') {
+                    $users = $this->userManager
+                        ->getUsersByWorkspaces($workspaces, $page);
+                } else {
+                    $users = $this->userManager->getUsersByWorkspacesAndSearch(
+                        $workspaces,
+                        $page,
+                        $search
+                    );
+                }
             }
         }
 
@@ -432,16 +448,31 @@ class MessageController
      */
     public function contactableGroupsListAction(User $user, $page, $search)
     {
+        $trimmedSearch = trim($search);
+
         if ($user->hasRole('ROLE_ADMIN')) {
-            $groups = $this->groupManager->getAllGroups($page);
+            if ($trimmedSearch === '') {
+                $groups = $this->groupManager->getAllGroups($page);
+            } else {
+                $groups = $this->groupManager
+                    ->getAllGroupsBySearch($page, $trimmedSearch);
+            }
         } else {
             $groups = array();
             $workspaces = $this->workspaceManager
                 ->getWorkspacesByUserAndRoleNames($user, array('ROLE_WS_MANAGER'));
 
             if (count($workspaces) > 0) {
-                $groups = $this->groupManager
-                    ->getGroupsByWorkspaces($workspaces, $page);
+                if ($trimmedSearch === '') {
+                    $groups = $this->groupManager
+                        ->getGroupsByWorkspaces($workspaces, $page);
+                } else {
+                    $groups = $this->groupManager->getGroupsByWorkspacesAndSearch(
+                        $workspaces,
+                        $page,
+                        $search
+                    );
+                }
             }
         }
 

@@ -20,6 +20,15 @@
 
 {% from _self import renderPager %}
 
+{% if search is not empty %}
+    <div>
+        <small>
+            * {{ 'results_for_search_on'|trans({}, 'platform') }}
+            "{{ search }}"
+        </small>
+    </div>
+{% endif %}
+
 {% if groups is empty %}
     {{ 'no_group'|trans({}, 'platform') }}
 {% else %}

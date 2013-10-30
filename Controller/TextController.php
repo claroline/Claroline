@@ -276,7 +276,7 @@ class TextController extends Controller
             ->getRepository('ClarolineCoreBundle:Resource\Revision');
         $collection = new ResourceCollection(array($text->getResourceNode()));
         $isGranted = $this->container->get('security.context')->isGranted('WRITE', $collection);
-        
+
         return $this->render(
             'ClarolineCoreBundle:Text:index.html.twig',
             array(

@@ -126,6 +126,38 @@ class GroupRepository extends EntityRepository
     }
 
     /**
+     * Returns the groups which are member of a workspace
+     * and whose name corresponds the search.
+     *
+     * @param array     $workspace
+     * @param string    $search
+     *
+     * @return array[Group]
+     */
+    public function findGroupsByWorkspacesAndSearch(array $workspaces, $search)
+    {
+        $upperSearch = strtoupper(trim($search));
+        $dql = '
+            SELECT g
+            FROM Claroline\CoreBundle\Entity\Group g
+            LEFT JOIN g.roles wr WITH wr IN (
+                SELECT pr
+                FROM Claroline\CoreBundle\Entity\Role pr
+                WHERE pr.type = ' . Role::WS_ROLE . '
+            )
+            LEFT JOIN wr.workspace w
+            WHERE w IN (:workspaces)
+            AND UPPER(g.name) LIKE :search
+            ORDER BY g.name
+       ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaces', $workspaces);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $query->getResult();
+    }
+
+    /**
      * Returns the groups which are member of a workspace, filtered by a search on
      * their name.
      *
@@ -174,6 +206,33 @@ class GroupRepository extends EntityRepository
                 'SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
                  LEFT JOIN g.roles r'
             );
+        }
+
+        return parent::findAll();
+    }
+
+    /**
+     * Returns all the groups by search.
+     *
+     * @param string $search
+     *
+     * @return array[Group]
+     */
+    public function findAllGroupsBySearch($search)
+    {
+        $upperSearch = strtoupper(trim($search));
+
+        if ($search !== '') {
+            $dql = '
+                SELECT g
+                FROM Claroline\CoreBundle\Entity\Group g
+                WHERE UPPER(g.name) LIKE :search
+            ';
+
+            $query = $this->_em->createQuery($dql);
+            $query->setParameter('search', "%{$upperSearch}%");
+
+            return $query->getResult();
         }
 
         return parent::findAll();
