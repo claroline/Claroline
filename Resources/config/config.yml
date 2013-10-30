@@ -1,11 +1,11 @@
 plugin:
-  has_options: false
-  icon: icap_blog_icon.png
+    has_options: false
+    icon: icap_blog_icon.png
 
-  resources:
-    - class: Icap\BlogBundle\Entity\Blog
-      name: icap_blog
-      is_exportable: false
-      icon: icap_blog_icon.png
-      actions:
-        - name: post
+    resources:
+        - class: Icap\BlogBundle\Entity\Blog
+          name: icap_blog
+          is_exportable: false
+          icon: icap_blog_icon.png
+          actions:
+            - name: post
