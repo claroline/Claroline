@@ -43,7 +43,7 @@ class Refresher
         $this->clearCache($output);
     }
 
-    private function installAssets(OutputInterface $output)
+    public function installAssets(OutputInterface $output)
     {
         $assetInstallInput = new ArrayInput(array('--symlink' => true));
         $assetInstallCmd = new AssetsInstallCommand();
@@ -51,7 +51,7 @@ class Refresher
         $assetInstallCmd->run($assetInstallInput, $output);
     }
 
-    private function dumpAssets(OutputInterface $output, $environment)
+    public function dumpAssets(OutputInterface $output, $environment)
     {
         $assetDumpCmd = new DumpCommand();
         $assetDumpCmd->setContainer($this->container);
@@ -61,7 +61,7 @@ class Refresher
         $assetDumpCmd->run(new ArrayInput(array()), $output);
     }
 
-    private function clearCache(OutputInterface $output)
+    public function clearCache(OutputInterface $output)
     {
         $output->writeln('Clearing the cache...');
         $fileSystem = new Filesystem();
