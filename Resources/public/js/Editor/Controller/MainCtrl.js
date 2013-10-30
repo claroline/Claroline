@@ -24,6 +24,9 @@ function MainCtrl($scope, $http, $window, $location, $modal, HistoryFactory, Cli
     $scope.placeholderName = PathFactory.getPlaceholderName();
     $scope.placeholderDescription = PathFactory.getPlaceholderDescription();
 
+    $scope.pathName = {};
+    $scope.pathName.isUnique = true;
+    
     $scope.initPath = function(path) {
         $scope.path = path;
 
@@ -88,6 +91,21 @@ function MainCtrl($scope, $http, $window, $location, $modal, HistoryFactory, Cli
     };
 
     /**
+     * Check if path name is unique for current user and current workspace
+     */
+    $scope.checkNameIsUnique = function() {
+        $http({
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+            url: Routing.generate('innova_path_check_unique_name'),
+            data: 'pathName=' + $scope.path.name + '&workspaceId=' + EditorApp.workspaceId
+        })
+        .success(function (data) {
+            $scope.pathName.isUnique = data == 'true' ? true : false;
+        });
+    };
+    
+    /**
      * Save Path modifications in DB
      * @returns void
      */
@@ -95,13 +113,16 @@ function MainCtrl($scope, $http, $window, $location, $modal, HistoryFactory, Cli
         var method = null;
         var route = null;
 
-        // Init var
-        var name = path.name;
-
-        // Conditions to create a test :
-        // Name is required, not null and not undefined (one character is not ok for exemple)
-        // If test is OK then I add this path ...
-        if (undefined != name && null != name && path.name.length != 0) {
+        if (undefined == path.name || null == path.name || path.name.length == 0) {
+            // Path name is empty
+            AlertFactory.addAlert('danger', 'Path can not be saved : path name is empty.');
+        }
+        else if (!$scope.pathName.isUnique) {
+            // Name is not unique
+            AlertFactory.addAlert('danger', 'Path can not be saved : path name is already used in this workspace.');
+        }
+        else {
+            // All is fine => process save
             var data = 'pathName=' + path.name + '&path=' + angular.toJson(path) + '&workspaceId=' + EditorApp.workspaceId;
 
             if (EditorApp.pathId) {
@@ -150,11 +171,6 @@ function MainCtrl($scope, $http, $window, $location, $modal, HistoryFactory, Cli
 
             // Clear history to avoid possibility to get a history state without path ID
             HistoryFactory.clear();
-        }
-        // else I put a message on the screen and I display the previous screen.
-        else
-        {
-            AlertFactory.addAlert('danger', 'Path Name is empty or undefined.');
         }
     };
 }

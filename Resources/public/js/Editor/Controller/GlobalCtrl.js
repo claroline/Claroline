@@ -10,29 +10,6 @@ function GlobalCtrl($scope, $http, HistoryFactory, PathFactory) {
     $scope.templateSidebar.show = false;
     
     /**
-     * Check if path name is unique for current user and current workspace
-     */
-    $scope.checkNameIsUnique = function() {
-//        $http({
-//            method: '',
-//            url: route,
-//            data: data
-//        })
-//        .success(function (data) {
-//            
-//        });
-        
-//        $http.get(Routing.generate('innova_path_get_path', {id: EditorApp.pathId}))
-//        .success(function (data) {
-//           path = data;
-//           return deferred.resolve(path);
-//        })
-//        .error(function(data, status) {
-//            return deferred.reject('error loading path');
-//        });
-    };
-    
-    /**
      * Update Root step when path name changes
      */
     $scope.renameRootStep = function() {

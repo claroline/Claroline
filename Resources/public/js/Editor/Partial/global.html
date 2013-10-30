@@ -2,7 +2,8 @@
     <div class="form-group row">
         <label class="control-label col-md-3" for="path-name">Name</label>
         <div class="col-md-7">
-            <input type="text" class="form-control required" placeholder="{{ placeholderName }}" ng-model="path.name" id="path-name" ng-change="renameRootStep(); updateHistory();" required />
+            <input ng-class="{'ng-invalid': !pathName.isUnique, 'ng-valid': pathName.isUnique}" type="text" class="form-control" placeholder="{{ placeholderName }}" ng-model="path.name" ng-change="checkNameIsUnique(); renameRootStep(); updateHistory();" />
+            <p class="help-block"><span ng-class="{'text-danger': !pathName.isUnique}">Name must be unique for current Workspace.</span></p>
         </div>
     </div>
 

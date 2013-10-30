@@ -47,7 +47,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-// Service dependencies
+// Controller dependencies
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -100,7 +100,7 @@ class PathController
     protected $router;
     
     /**
-     * 
+     * Translation manager
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
     protected $translator;
@@ -429,6 +429,7 @@ class PathController
     
     /**
      * Check if path name is unique for current user and current workspace
+     * @return JsonResponse
      * 
      * @Route(
      *      "/path/check_name",
@@ -439,6 +440,8 @@ class PathController
      */
     public function checkNameIsUniqueAction()
     {
-    
+        $isUnique = $this->pathManager->checkNameIsUnique($this->request->get('pathName'));
+        
+        return new JsonResponse($isUnique);
     }
 }

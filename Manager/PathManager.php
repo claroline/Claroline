@@ -242,9 +242,33 @@ class PathManager
      * @param string $name
      * @return string
      */
-    public function getUniqueName($name)
+    public function checkNameIsUnique($name)
     {
+        // Create query
+        $dql  = 'SELECT COUNT(p) ';
+        $dql .= 'FROM Innova\PathBundle\Entity\Path AS p ';
+        $dql .= 'LEFT JOIN p.resourceNode AS r '; // Join to resource to access path name and creator
+        $dql .= 'LEFT JOIN r.workspace AS w ';
+        $dql .= 'WHERE r.creator = :user '; // Current User
+        $dql .= '  AND w.id = :workspaceId '; // Current Workspace
+        $dql .= '  AND r.name = :pathName ';
+        $query = $this->em->createQuery($dql);
         
+        // Set query parameters
+        $query->setParameter('user', $this->user);
+        $query->setParameter('pathName', trim($name));
+        $query->setParameter('workspaceId', $this->request->get('workspaceId'));
+
+        // Get results
+        $count = $query->getSingleScalarResult();
+        
+        $return = true;
+        if (!empty($count) && $count > 0) {
+            // A path already have wanted name
+            $return = false;
+        }
+        
+        return $return;
     }
 
     /**
@@ -295,25 +319,15 @@ class PathManager
         $json = json_decode($path->getPath());
         $json_root_steps = $json->steps;
 
-        // Récupération Workspace courant et la resource root
+        // Récupération Workspace courant
         $workspaceId = $this->request->get('workspaceId');
         $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
 
-        // création du dossier _paths s'il existe pas.
-        if (!$pathsDirectory = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneByName("_paths")) {
-            $pathsDirectory = new ResourceNode();
-            $pathsDirectory->setName("_paths");
-            $pathsDirectory->setClass("Claroline\CoreBundle\Entity\Resource\Directory");
-            $pathsDirectory->setCreator($this->user);
-            $pathsDirectory->setResourceType($this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneById(2));
-            $root = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
-            $pathsDirectory->setWorkspace($workspace);
-            $pathsDirectory->setParent($root);
-            $pathsDirectory->setMimeType("custom/directory");
-            $pathsDirectory->setIcon($this->em->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(7));
-
-            $this->em->persist($pathsDirectory);
-            $this->em->flush();
+        // Try to retrieve path directory
+        $pathsDirectory = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneByName("_paths");
+        if (!$pathsDirectory) {
+            // Create path directory
+            $pathsDirectory = $this->createDirectory($worspace);
         }
 
         // lancement récursion
@@ -342,7 +356,6 @@ class PathManager
         return true;
     }
 
-
     /**
      * private _jsonParser function
      *
@@ -370,7 +383,6 @@ class PathManager
                 $currentStep = $this->em->getRepository('InnovaPathBundle:Step')->findOneById($step->resourceId);
             }
            
-
             // JSON_STEP UPDATE
             $step->resourceId = $currentStep->getId();
 
@@ -408,16 +420,15 @@ class PathManager
                 $resourceOrder++;
 
                 // Gestion des ressources non digitales
-                if(!$resource->isDigital){
+                if (!$resource->isDigital) {
                     if ($resource->resourceId == null){
                         $resourceNode = new ResourceNode();
                         $nonDigitalResource = new NonDigitalResource();
                     }
-                    else{
+                    else {
                         $resourceNode = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId);
                         $nonDigitalResource = $this->em->getRepository('InnovaPathBundle:NonDigitalResource')->findOneByResourceNode($resourceNode);
                     }
-
 
                     $resourceNode->setClass("Innova\PathBundle\Entity\NonDigitalResource");
                     $resourceNode->setCreator($user);
@@ -439,12 +450,12 @@ class PathManager
                 }
 
                 $excludedResourcesToResourceNodes[$resource->id] = $resource->resourceId;
-                $step2ressourceNode = $this->em->getRepository('InnovaPathBundle:Step2ResourceNode')->findOneBy(array(
-                                                                'step' => $currentStep, 
-                                                                'resourceNode' => $resource->resourceId,
-                                                                'excluded' => false
-                                                                )
-                                                             );
+                $step2ressourceNode = $this->em->getRepository('InnovaPathBundle:Step2ResourceNode')->findOneBy(array (
+                    'step' => $currentStep, 
+                    'resourceNode' => $resource->resourceId,
+                    'excluded' => false,
+                ));
+                
                 if (!$step2ressourceNode) {
                     $step2ressourceNode = new Step2ResourceNode();
                 }
@@ -463,14 +474,15 @@ class PathManager
                 // boucler sur les ressourcesnodes exclues en base et les comparer à ce qu'il y a dans le JSON
 
                 $step2ressourceNode = $this->em->getRepository('InnovaPathBundle:Step2ResourceNode')->findOneBy(array(
-                                                                'step' => $currentStep,
-                                                                'resourceNode' => $excludedResourcesToResourceNodes[$excludedResource],
-                                                                'excluded' => true
-                                                                )
-                                                            );
+                    'step' => $currentStep,
+                    'resourceNode' => $excludedResourcesToResourceNodes[$excludedResource],
+                    'excluded' => true,
+                ));
+                
                 if (!$step2ressourceNode) {
                     $step2ressourceNode = new Step2ResourceNode();
                 }
+                
                 $step2resourceNodesToNotDelete[] = $step2ressourceNode->getId();
                 $step2ressourceNode->setResourceNode($this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($excludedResourcesToResourceNodes[$excludedResource]));
                 $step2ressourceNode->setStep($currentStep);

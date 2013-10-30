@@ -5,7 +5,7 @@ services:
             entityManager:   @doctrine.orm.entity_manager
             securityContext: @security.context
         calls:
-            - [setRequest, [@request]]
+            - [setRequest, ["@?request="]]
         scope: request
             
     innova.manager.step_manager: 
