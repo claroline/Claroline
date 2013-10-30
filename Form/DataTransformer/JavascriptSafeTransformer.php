@@ -26,6 +26,10 @@ class JavascriptSafeTransformer implements  DataTransformerInterface
 
     public function reverseTransform($value)
     {
+        if (empty($value)) {
+            return $value;
+        }
+
         $this->document->loadHTML($value);
         $nodes = $this->document->getElementsByTagName('*');
 
