@@ -27,7 +27,7 @@
         <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}</h3>
     </div>
     <div class="panel-body">
-        <div class="navbar">
+        <div class="navbar row">
             {% if canCreateSubject %}
             <div class="col-md-6">
                 <a class="btn btn-primary" href="{{ _path('claro_forum_form_subject_creation', {'forumId': _resource.getId()}) }}">
