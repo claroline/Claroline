@@ -407,16 +407,16 @@ class DatabaseWriter
             }
 
             if (isset($action['menu_name'])) {
-                $resourceTypeCustomAction = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceTypeCustomAction')->findOneByName($action['menu_name']);
+                $menuAction = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')->findOneByName($action['menu_name']);
 
-                if (null === $resourceTypeCustomAction) {
-                    $resourceTypeCustomAction = new MenuAction();
-                    $resourceTypeCustomAction
+                if (null === $menuAction) {
+                    $menuAction = new MenuAction();
+                    $menuAction
                         ->setName($action['menu_name'])
                         ->setResourceType($resourceType)
                         ->setValue($decoder->getValue());
 
-                    $this->em->persist($resourceTypeCustomAction);
+                    $this->em->persist($menuAction);
                 }
             }
         }
