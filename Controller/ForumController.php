@@ -52,11 +52,14 @@ class ForumController extends Controller
 
         $collection = new ResourceCollection(array($forum->getResourceNode()));
         $canCreateSubject = $this->get('security.context')->isGranted('post', $collection);
-
+        $sc = $this->get('security.context');
+        $isModerator = $sc->isGranted('moderate', $collection);
+        
         return array(
             'pager' => $pager,
             '_resource' => $forum,
-            'canCreateSubject' => $canCreateSubject
+            'canCreateSubject' => $canCreateSubject,
+            'isModerator' => $isModerator
         );
     }
 
@@ -383,6 +386,37 @@ class ForumController extends Controller
         $pager->setCurrentPage($page);
 
         return array('pager' => $pager, '_resource' => $forum, 'search' => $search, 'page' => $page);
+    }
+
+     /**
+     * @Route(
+     *     "/edit/subject/{subjectId}",
+     *     name="claro_forum_edit_subject"
+     * )
+     *
+     * @Template("ClarolineForumBundle::editSubjectForm.html.twig")
+     *
+     * @param integer $subjectId
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function editSubjectFormAction(Subject $subject)
+    {
+        $isModerator = $sc->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
+
+        if (!$isModerator && $sc->getToken()->getUser() !== $message->getCreator()) {
+            throw new AccessDeniedHttpException();
+        }
+        $form = $this->container->get('form.factory')->create(new SubjectType);
+        $form->handleRequest($this->get('request'));
+        if ($form->isValid()) {
+            $em->persist($subject);
+            $em->flush();
+        }
+
+        return new RedirectResponse(
+                $this->generateUrl('claro_forum_subjects', array('forumId' => $subject->getForum()->getId()))
+            );
     }
 
     private function checkAccess(Forum $forum)
