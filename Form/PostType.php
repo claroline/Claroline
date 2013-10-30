@@ -6,10 +6,28 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("icap_blog.form.post")
+ */
 class PostType extends AbstractType
 {
+    /** @var \Claroline\CoreBundle\Manager\EventManager */
+    private $securityContext;
+
+    /**
+     * @DI\InjectParams({
+     *     "securityContext" = @DI\Inject("security.context")
+     * })
+     */
+    public function __construct(SecurityContext $securityContext)
+    {
+        $this->securityContext = $securityContext;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -18,15 +36,6 @@ class PostType extends AbstractType
                     'constraints' => new Assert\NotBlank(array(
                         'message' => 'blog_post_need_title'
                     ))
-                )
-            )
-            ->add('publicationDate', 'datepicker', array(
-                    'required'      => false,
-                    'read_only'     => true,
-                    'component'     => true,
-                    'autoclose'     => true,
-                    'language'      => $options['language'],
-                    'format'        => $options['date_format']
                 )
             )
             ->add('content', 'tinymce', array(
@@ -41,6 +50,18 @@ class PostType extends AbstractType
             )
             ->add('tags', 'tags')
         ;
+
+        if ($this->securityContext->isGranted('POST', $this->securityContext->getToken()->getUser())) {
+            $builder->add('publicationDate', 'datepicker', array(
+                    'required'      => false,
+                    'read_only'     => true,
+                    'component'     => true,
+                    'autoclose'     => true,
+                    'language'      => $options['language'],
+                    'format'        => $options['date_format']
+               )
+            );
+        }
     }
 
     public function getName()

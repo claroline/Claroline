@@ -33,6 +33,7 @@
         <div class="row">
             {{ form_row(form.title) }}
         </div>
+        {% if is_granted('EDIT', _resourceNode) %}
         <div class="row">
             <div class="form-group">
                 <label class="control-label col-md-3" for="icap_blog_post_form_publicationDate">{{ 'icap_blog_post_form_publicationDate'|trans({}, 'icap_blog') }}</label>
@@ -42,6 +43,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
         <div class="row">
             {{ form_row(form.content) }}
         </div>
