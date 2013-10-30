@@ -81,10 +81,12 @@ cannot_delete_unique_manager: 'Impossible de supprimer le seul gestionnaire.'
 cannot_unsubscribe_from_workspace: 'Impossible de vous désincrire de l''espace d''activités'
 categories: Catégories
 categories_organization: 'Organisation des catégories'
+categorize: Catégoriser
 category_root: 'Catégories de base'
 category_structure: 'Structure des catégories'
 change_view : Changer l'affichage
 choose_resource_form_type: 'Type de ressource'
+classify_workspaces: 'Classer les espaces d''activités'
 close: Fermer
 collaborator: Collaborateur
 communication: Communication
@@ -367,6 +369,8 @@ remove_message_confirm_message: Êtes-vous sûr de vouloir supprimer ce message 
 remove_message_s_confirm_message: Êtes-vous sûr de vouloir supprimer ces %count% messages?
 remove_user_confirm_message: Êtes-vous sûr de vouloir supprimer cet utilisateur ?
 remove_user_s_confirm_message: Êtes-vous sûr de vouloir supprimer ces %count% utilisateurs?
+remove_workspace_from_category_confirm_message: 'Êtes-vous sûr de vouloir retirer cet espace d''activités de cette catégorie ?'
+remove_workspace_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
 rename: Renommer
 rename_category: 'Renommage de la catégorie'
 rename_tool: 'Renommage d''un outil'
@@ -415,10 +419,12 @@ save_workspace_as_template: 'Sauvegarde de l''espace d''activités comme modèle
 search: Rechercher
 search_group: 'Rechercher un groupe'
 search_user: 'Rechercher un utilisateur'
+search_workspace: 'Rechercher un espace d''activités'
 see: Voir
 see_more: Voir plus
 select all: 'Tout sélectionner'
 select_all: 'Tout sélectionner'
+select_category: 'Sélectionner une catégorie'
 select_contacts_title: 'Sélectionnez les destinataires'
 select_groups_for_registration_to_workspace: 'Choississez les groupes à inscrire'
 select_roles_to_assign: 'Selectionnez les Rôles à attribuer'
@@ -534,6 +540,7 @@ workspace.create: 'Créer un nouvel espace d''activités'
 workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'
 workspace: 'Espace d''activités'
 workspace_administration: Administration
+workspace_classification: 'Classification des espaces d''activités'
 workspace_delete: 'Supprimer l''espace d''activités'
 workspace_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cet espace d''activités ?'
 workspace_delete_confirm_title: 'Confirmation de suppression'

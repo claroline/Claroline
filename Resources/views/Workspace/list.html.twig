@@ -58,8 +58,15 @@
     <div id="workspace-list-div" class="panel-body">
 
         {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('claro_manage_admin_workspace_tag') }}">
+                <button type="button" class="btn btn-default">
+                    {{ 'classify_workspaces'|trans({}, 'platform') }}
+                </button>
+            </a>
             <a href="{{ path('claro_admin_workspace_tag_organize', {'tagId': 0}) }}">
-                <button type="button" class="btn btn-default">{{ 'organize_categories'|trans({}, 'platform') }}</button>
+                <button type="button" class="btn btn-default">
+                    {{ 'organize_categories'|trans({}, 'platform') }}
+                </button>
             </a>
             <hr>
         {% endif %}

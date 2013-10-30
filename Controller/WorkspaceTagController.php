@@ -1353,4 +1353,71 @@ class WorkspaceTagController extends Controller
             'rootTags' => $rootTags
         );
     }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/workspace/tag/manage/page/{page}",
+     *     name="claro_manage_admin_workspace_tag",
+     *     defaults={"page"=1, "search"=""},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "/admin/workspace/tag/manage/page/{page}/search/{search}",
+     *     name="claro_manage_admin_workspace_tag_search",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @EXT\Template()
+     *
+     * Manage admin workspace tag
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function manageAdminWorkspaceTagAction($page, $search)
+    {
+        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException();
+        }
+        $workspaces = ($search === '') ?
+            $this->workspaceManager
+                ->getDisplayableWorkspacesPager($page) :
+            $this->workspaceManager
+                ->getDisplayableWorkspacesBySearchPager($search, $page);
+        $workspacesTags = array();
+
+        foreach ($workspaces as $workspace) {
+            $relWsTagsByWs = $this->tagManager
+                ->getAdminTagRelationsByWorkspace($workspace);
+            $workspacesTags[$workspace->getId()] = $relWsTagsByWs;
+        }
+
+        // Get datas to display tag hierarchy
+        $tagsHierarchy = $this->tagManager->getAllAdminHierarchies();
+        $rootTags = $this->tagManager->getAdminRootTags();
+        $hierarchy = array();
+
+        foreach ($tagsHierarchy as $tagHierarchy) {
+
+            if ($tagHierarchy->getLevel() === 1) {
+
+                if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
+                    !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
+
+                    $hierarchy[$tagHierarchy->getParent()->getId()] = array();
+                }
+                $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
+            }
+        }
+
+        return array(
+            'search' => $search,
+            'workspaces' => $workspaces,
+            'workspacesTags' => $workspacesTags,
+            'hierarchy' => $hierarchy,
+            'rootTags' => $rootTags
+        );
+    }
 }

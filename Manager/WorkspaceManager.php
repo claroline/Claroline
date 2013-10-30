@@ -432,6 +432,13 @@ class WorkspaceManager
         return $this->workspaceRepo->findDisplayableWorkspaces();
     }
 
+    public function getDisplayableWorkspacesPager($page)
+    {
+        $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page);
+    }
+
     public function getWorkspacesWithSelfRegistration()
     {
         return $this->workspaceRepo->findWorkspacesWithSelfRegistration();
