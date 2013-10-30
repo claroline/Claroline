@@ -8,7 +8,8 @@ class FilterIterator extends \RecursiveFilterIterator
     {
         $name = $this->current()->getFilename();
 
-        return !in_array($name, array('Component', 'Bridge', 'Resources', 'Tests', 'Test'))
-            && 0 !== strpos($name, '.');
+        return !in_array($name, array('Component', 'Bridge', 'Resources'))
+            && 0 !== strpos($name, '.')
+            && !preg_match('#Test#i', $name);
     }
 }
