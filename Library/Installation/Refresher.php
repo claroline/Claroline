@@ -39,38 +39,41 @@ class Refresher
     {
         $output = $this->output ?: new NullOutput();
         $this->installAssets($output);
-        $this->dumpAssets($output, $environment);
-        $this->clearCache($output);
+        $this->dumpAssets($environment, $output);
+        $this->clearCache($environment, $output);
     }
 
-    public function installAssets(OutputInterface $output)
+    public function installAssets(OutputInterface $output = null)
     {
         $assetInstallInput = new ArrayInput(array('--symlink' => true));
         $assetInstallCmd = new AssetsInstallCommand();
         $assetInstallCmd->setContainer($this->container);
-        $assetInstallCmd->run($assetInstallInput, $output);
+        $assetInstallCmd->run($assetInstallInput, $output ?: new NullOutput());
     }
 
-    public function dumpAssets(OutputInterface $output, $environment)
+    public function dumpAssets($environment, OutputInterface $output = null)
     {
         $assetDumpCmd = new DumpCommand();
         $assetDumpCmd->setContainer($this->container);
         $assetDumpCmd->getDefinition()->addOption(
             new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'Env', $environment)
         );
-        $assetDumpCmd->run(new ArrayInput(array()), $output);
+        $assetDumpCmd->run(new ArrayInput(array()), $output ?: new NullOutput());
     }
 
-    public function clearCache(OutputInterface $output)
+    public function clearCache($environment = null, OutputInterface $output = null)
     {
-        $output->writeln('Clearing the cache...');
+        if ($output) {
+            $output->writeln('Clearing the cache...');
+        }
+
         $fileSystem = new Filesystem();
-        $cacheIterator = new \DirectoryIterator(
-            $this->container->get('kernel')->getRootDir() . '/cache'
-        );
+        $baseCacheDir = $this->container->get('kernel')->getRootDir() . '/cache';
+        $cacheDir = $environment === null ? $baseCacheDir : "{$baseCacheDir}/{$environment}";
+        $cacheIterator = new \DirectoryIterator($cacheDir);
 
         foreach ($cacheIterator as $item) {
-            if (!$item->isDot() && $item->isDir()) {
+            if (!$item->isDot()) {
                 $fileSystem->remove($item->getPathname());
             }
         }
