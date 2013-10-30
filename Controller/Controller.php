@@ -27,16 +27,26 @@ class Controller extends BaseController
     const BLOG_COMMENT_TYPE = 'icap_blog_comment';
 
     /**
-     * @param string $permission
+     * @param string $permissions
      *
      * @param Blog $blog
      *
      * @throws AccessDeniedException
      */
-    protected function checkAccess($permission, Blog $blog)
+    protected function checkAccess($permissions, Blog $blog)
     {
         $collection = new ResourceCollection(array($blog->getResourceNode()));
-        if (!$this->get('security.context')->isGranted($permission, $collection)) {
+        $isGranted = true;
+
+        if (false === is_array($permissions)) {
+            $permissions = array($permissions);
+        }
+
+        foreach ($permissions as $permission) {
+            $isGranted += $this->get('security.context')->isGranted($permission, $collection);
+        }
+
+        if (false === $isGranted) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
