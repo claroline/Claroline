@@ -242,8 +242,8 @@ class DatabaseWriter
 
     private function updateResourceTypes($resource, $pluginEntity, $plugin)
     {
-        $resourceType        = $this->em->getRepository('ClarolineCoreBundle:')->findOneByName($resource['name']);
-        $isExistResourceType = true;
+        $resourceType           = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName($resource['name']);
+        $isExistResourceType    = true;
 
         if (null === $resourceType) {
             $resourceType = new ResourceType();
