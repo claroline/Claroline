@@ -12,12 +12,14 @@ class Configuration implements ConfigurationInterface
     private $plugin;
     private $listNames;
     private $listTools;
+    private $updateMode;
 
     public function __construct(PluginBundle $plugin, array $resourceNames, array $listTools)
     {
-        $this->plugin    = $plugin;
-        $this->listNames = $resourceNames;
-        $this->listTools = $listTools;
+        $this->plugin     = $plugin;
+        $this->listNames  = $resourceNames;
+        $this->listTools  = $listTools;
+        $this->updateMode = false;
     }
 
     public function getConfigTreeBuilder()
@@ -66,6 +68,7 @@ class Configuration implements ConfigurationInterface
         $resourceFile = $plugin->getConfigFile();
         $imgFolder    = $plugin->getImgFolder();
         $listNames    = $this->listNames;
+        $updateMode   = $this->isInUpdateMode();
 
         $pluginSection
             ->arrayNode('resources')
@@ -75,8 +78,8 @@ class Configuration implements ConfigurationInterface
                             ->isRequired()
                                 ->validate()
                                     ->ifTrue(
-                                        function ($v) use ($listNames) {
-                                            return !call_user_func_array(
+                                        function ($v) use ($listNames, $updateMode) {
+                                            return !$updateMode && !call_user_func_array(
                                                 __CLASS__ . '::isNameAlreadyExist',
                                                 array($v, $listNames)
                                             );
@@ -279,5 +282,25 @@ class Configuration implements ConfigurationInterface
     public static function isNameAlreadyExist($v, $listNames)
     {
         return (!in_array($v, $listNames));
+    }
+
+    /**
+     * @param $updateMode
+     *
+     * @return Configuration
+     */
+    public function setUpdateMode($updateMode)
+    {
+        $this->updateMode = $updateMode;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInUpdateMode()
+    {
+        return $this->updateMode;
     }
 }

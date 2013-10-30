@@ -36,43 +36,44 @@ class ConfigurationChecker implements CheckerInterface
      *
      * @param PluginBundle $plugin
      */
-    public function check(PluginBundle $plugin)
+    public function check(PluginBundle $plugin, $updateMode = false)
     {
         $config = $this->yamlParser->parse($plugin->getConfigFile());
 
         if (null == $config) {
-            $error = new ValidationError('config.yml file missing');
+            $error  = new ValidationError('config.yml file missing');
             $errors = array($error);
 
             return $errors;
         }
 
-        $names = array();
+        $names        = array();
         $listResource = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
 
         foreach ($listResource as $resource) {
             $names[] = $resource->getName();
         }
 
-        $tools = array();
+        $tools    = array();
         $listTool = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')->findAll();
 
         foreach ($listTool as $tool) {
             $tools[] = $tool->getName();
         }
 
-        $processor = new Processor();
+        $processor     = new Processor();
         $configuration = new Configuration($plugin, $names, $tools);
+        $configuration->setUpdateMode($updateMode);
 
         try {
-            $processedConfiguration = $processor->processConfiguration($configuration, $config);
-            $this->processedConfiguration = $processedConfiguration;
+            $this->processedConfiguration = $processor->processConfiguration($configuration, $config);
         } catch (\Exception $e) {
-            $error = new ValidationError($e->getMessage());
-            $errors = array($error);
+            $error  = new ValidationError($e->getMessage());
 
-            return $errors;
+            return array($error);
         }
+
+        return null;
     }
 
     public function getProcessedConfiguration()

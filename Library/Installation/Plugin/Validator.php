@@ -17,6 +17,7 @@ class Validator
 {
     private $checkers;
     private $pluginConfiguration;
+    private $updateMode;
 
     /**
      * Constructor.
@@ -35,7 +36,8 @@ class Validator
             }
         }
 
-        $this->checkers = $checkers;
+        $this->checkers   = $checkers;
+        $this->updateMode = false;
     }
 
     /**
@@ -50,7 +52,7 @@ class Validator
         $validationErrors = array();
 
         foreach ($this->checkers as $checker) {
-            if (null !== $errors = $checker->check($plugin)) {
+            if (null !== $errors = $checker->check($plugin, $this->isInUpdateMode())) {
                 $validationErrors = array_merge($validationErrors, $errors);
                 continue;
             }
@@ -63,8 +65,39 @@ class Validator
         return $validationErrors;
     }
 
+    /**
+     * @return mixed
+     */
     public function getPluginConfiguration()
     {
         return $this->pluginConfiguration;
+    }
+
+    /**
+     * @return Validator
+     */
+    public function activeUpdateMode()
+    {
+        $this->updateMode = true;
+
+        return $this;
+    }
+
+    /**
+     * @return Validator
+     */
+    public function deactivateUpdateMode()
+    {
+        $this->updateMode = false;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInUpdateMode()
+    {
+        return $this->updateMode;
     }
 }
