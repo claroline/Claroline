@@ -37,6 +37,10 @@ class OperationHandler extends BaseHandler
 
     public function getOperations()
     {
+        if ('' === trim(file_get_contents($this->targetFile))) {
+            return array();
+        }
+
         $document = new \DOMDocument();
         $document->load($this->targetFile);
         $operations = array();
