@@ -62,9 +62,16 @@ class MenuAction
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     *
+     * @return MenuAction
+     */
     public function setName($name)
     {
         $this->name = $name;
+
+        return $this;
     }
 
     public function isAsync()
@@ -72,9 +79,16 @@ class MenuAction
         return $this->isAsync;
     }
 
+    /**
+     * @param bool $async
+     *
+     * @return MenuAction
+     */
     public function setAsync($async)
     {
         $this->isAsync = $async;
+
+        return $this;
     }
 
     public function getResourceType()
@@ -82,14 +96,28 @@ class MenuAction
         return $this->resourceType;
     }
 
-    public function setResourceType($resourceType)
+    /**
+     * @param ResourceType $resourceType
+     *
+     * @return MenuAction
+     */
+    public function setResourceType(ResourceType $resourceType)
     {
         $this->resourceType = $resourceType;
+
+        return $this;
     }
 
+    /**
+     * @param $value
+     *
+     * @return MenuAction
+     */
     public function setValue($value)
     {
         $this->value = $value;
+
+        return $this;
     }
 
     public function getValue()
@@ -97,9 +125,16 @@ class MenuAction
         return $this->value;
     }
 
+    /**
+     * @param bool $bool
+     *
+     * @return MenuAction
+     */
     public function setIsCustom($bool)
     {
         $this->isCustom = $bool;
+
+        return $this;
     }
 
     public function isCustom()
@@ -107,9 +142,16 @@ class MenuAction
         return $this->isCustom;
     }
 
+    /**
+     * @param bool $bool
+     *
+     * @return MenuAction
+     */
     public function setIsForm($bool)
     {
         $this->isForm = $bool;
+
+        return $this;
     }
 
     public function isForm()
