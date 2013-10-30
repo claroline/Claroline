@@ -35,7 +35,7 @@ class Refresher
         $this->output = $output;
     }
 
-    public function refresh($environment = 'dev')
+    public function refresh($environment)
     {
         $output = $this->output ?: new NullOutput();
         $this->installAssets($output);
