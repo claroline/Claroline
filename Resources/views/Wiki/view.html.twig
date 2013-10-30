@@ -38,10 +38,12 @@
         <div class="wiki-contents">
             <div class="wiki-contents-inner well">
                 <div class="wiki-contents-title">
-                    {{ 'wiki_contents'|trans({},'icap_wiki') }}&nbsp;
+                    {{ 'wiki_contents'|trans({},'icap_wiki') }}
+                    {% if isAdmin %}
                     <a id="move-contents-trigger" class="btn btn-default btn-xs pull-right">
                         <i class="icon-resize-vertical"></i> <i class="icon-reorder"></i>
                     </a>
+                    {% endif %}
                 </div>
                 {% include "IcapWikiBundle:Wiki:wikiContents.html.twig" with {'sections' : tree[0].__children, 'isAdmin' : isAdmin, 'delimeter' : '.', 'rootId' : tree[0].id } %}
             </div>
