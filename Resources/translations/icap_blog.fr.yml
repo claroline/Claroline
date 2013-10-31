@@ -16,6 +16,12 @@ icap_blog_options_form_authorize_anonymous_comment: 'Commentaires anonymes autor
 icap_blog_options_form_post_per_page: "Articles par page"
 icap_blog_options_form_auto_publish_post: 'Publication automatique des articles ?'
 icap_blog_options_form_auto_publish_comment: 'Publication automatique des commentaires ?'
+icap_blog_options_form_banner_background_color: "Couleur de l'arrière-plan"
+icap_blog_options_form_banner_activate: "Activer la bannière ?"
+icap_blog_options_form_banner_background_image_position: "Positionnement"
+icap_blog_options_form_banner_background_image_repeat: "Répéter"
+icap_blog_options_form_banner_height: "Hauteur"
+icap_blog_options_form_banner_background_image: "Image de l'arrière-plan"
 icap_blog_post_add_success: 'Article ajouté avec succès'
 icap_blog_post_add_error: "Erreur lors de l'ajout de l'article"
 icap_blog_post_delete_success: 'Article supprimé avec succès'

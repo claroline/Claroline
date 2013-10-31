@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/10/30 03:34:37
+ * Generation date: 2013/10/31 01:49:50
  */
-class Version20131030153435 extends AbstractMigration
+class Version20131031134948 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -19,9 +19,9 @@ class Version20131030153435 extends AbstractMigration
             ADD COLUMN banner_activate SMALLINT NOT NULL 
             ADD COLUMN banner_background_color VARCHAR(255) NOT NULL 
             ADD COLUMN banner_height SMALLINT NOT NULL 
-            ADD COLUMN banner_image VARCHAR(255) DEFAULT NULL 
-            ADD COLUMN banner_image_position SMALLINT DEFAULT NULL 
-            ADD COLUMN banner_image_repeat SMALLINT DEFAULT NULL
+            ADD COLUMN banner_background_image VARCHAR(255) DEFAULT NULL 
+            ADD COLUMN banner_background_image_position SMALLINT NOT NULL 
+            ADD COLUMN banner_background_image_repeat SMALLINT NOT NULL
         ");
     }
 
@@ -32,9 +32,9 @@ class Version20131030153435 extends AbstractMigration
             DROP COLUMN banner_activate 
             DROP COLUMN banner_background_color 
             DROP COLUMN banner_height 
-            DROP COLUMN banner_image 
-            DROP COLUMN banner_image_position 
-            DROP COLUMN banner_image_repeat
+            DROP COLUMN banner_background_image 
+            DROP COLUMN banner_background_image_position 
+            DROP COLUMN banner_background_image_repeat
         ");
     }
 }

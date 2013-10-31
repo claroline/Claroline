@@ -8,20 +8,20 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/10/30 03:34:37
+ * Generation date: 2013/10/31 01:49:51
  */
-class Version20131030153435 extends AbstractMigration
+class Version20131031134948 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE icap__blog_options 
             ADD banner_activate BOOLEAN DEFAULT 'true' NOT NULL, 
-            ADD banner_background_color VARCHAR(255) DEFAULT 'white' NOT NULL, 
+            ADD banner_background_color VARCHAR(255) DEFAULT '#FFFFFF' NOT NULL, 
             ADD banner_height INT DEFAULT '100' NOT NULL, 
-            ADD banner_image VARCHAR(255) DEFAULT NULL, 
-            ADD banner_image_position INT DEFAULT NULL, 
-            ADD banner_image_repeat INT DEFAULT NULL
+            ADD banner_background_image VARCHAR(255) DEFAULT NULL, 
+            ADD banner_background_image_position INT DEFAULT '0' NOT NULL, 
+            ADD banner_background_image_repeat INT DEFAULT '0' NOT NULL
         ");
     }
 
@@ -32,9 +32,9 @@ class Version20131030153435 extends AbstractMigration
             DROP banner_activate, 
             DROP banner_background_color, 
             DROP banner_height, 
-            DROP banner_image, 
-            DROP banner_image_position, 
-            DROP banner_image_repeat
+            DROP banner_background_image, 
+            DROP banner_background_image_position, 
+            DROP banner_background_image_repeat
         ");
     }
 }

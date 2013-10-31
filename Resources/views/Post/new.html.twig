@@ -63,7 +63,6 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/common/jquery-ui-bootstrap/jquery-ui-1.9.2.custom.css') }}'/>
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/jquery/plugin/tag-it/css/jquery.tagit.css') }}"/>
 {% endblock %}
 
@@ -72,8 +71,6 @@
 {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
 {{ tinymce_init() }}
 {% javascripts output='js/blog.js'
-    '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.core.min.js'
-    '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.widget.min.js'
     '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.position.min.js'
     '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.menu.min.js'
     '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.autocomplete.min.js'

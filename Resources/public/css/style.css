@@ -97,6 +97,69 @@ article .highlight {
 .blog_banner_configurator .panel-heading {
   border-bottom: 0;
 }
+.blog_banner_configurator .panel-body {
+  background-color: #5F5F5F;
+  color: white;
+  padding-top: 0;
+}
+.blog_banner_configurator .panel-body .ui-spinner {
+  margin-right: 5px;
+  background-color: #555;
+  width: 55px;
+}
+.blog_banner_configurator .panel-body .ui-spinner #icap_blog_options_form_banner_height {
+  color: white;
+  margin: 0;
+  border: 0;
+  background-color: inherit;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.blog_banner_configurator .panel-body .ui-spinner .ui-spinner-button {
+  border-radius: 0px;
+}
+.blog_banner_configurator .panel-body #icap_blog_options_form_banner_background_image {
+  color: inherit;
+  border: 0;
+  background: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.blog_banner_configurator .panel-body .remove_banner_background_image {
+  margin-left: 30px;
+}
+.blog_banner_configurator .banner_background_color {
+  color: black;
+  float: none;
+}
+.blog_banner_configurator .banner_background_color .input-group-addon {
+  border: 0;
+}
+.blog_banner_configurator .position_table {
+  margin-left: 20px;
+}
+.blog_banner_configurator .position_table .orientation_btn {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-color: #555555;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border: 1px solid #444444;
+  border-radius: 2px;
+  cursor: pointer;
+  margin: 1px;
+}
+.blog_banner_configurator .position_table .orientation_btn:hover {
+  border-color: #21759B;
+}
+.blog_banner_configurator .position_table .orientation_btn.selected {
+  background-image: url(../images/picture_small.png);
+  border-color: #D85F27;
+}
+.blog_banner {
+  border-radius: 0;
+}
 .tree {
   margin: 0;
   max-height: 300px;

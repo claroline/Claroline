@@ -47,9 +47,7 @@
             banner.css('height', $(this).val());
         });
 
-    console.log(bannerBackgroundImageContainer);
     bannerBackgroundImageContainer.on('change', "#icap_blog_banner_form_banner_background_image", function(){
-        console.log('pouet');
         var input = this;
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -122,8 +120,6 @@
                 $(".orientation_btn", bannerBackgroundImagePositionBlock).addClass('selected');
                 break;
             case 'repeat-x':
-                console.log(selectedPosition);
-                console.log(".orientation_btn.x" + selectedPosition[1]);
                 $(".orientation_btn.x" + selectedPosition[1], bannerBackgroundImagePositionBlock).addClass('selected');
                 break;
             case 'repeat-y':

@@ -54,19 +54,88 @@
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a class="accordion-toggle" data-toggle="collapse" href="#blogBannerConfigurator">
-                        {{ 'icap_blog_edit_banner'|trans({}, 'icap_blog') }} (Fonctionnalité non disponible)
+                        {{ 'icap_blog_edit_banner'|trans({}, 'icap_blog') }}
                     </a>
                 </h4>
             </div>
-            <div id="blogBannerConfigurator" class="panel-collapse collapse">
+            <div id="blogBannerConfigurator" class="panel-collapse collapse in">
                 <div class="panel-body">
-                    Fonctionnalité non disponible
+                    <form action="" method="post" {{ form_enctype(bannerForm) }} role="form" novalidate>
+                        {{ form_errors(bannerForm) }}
+                        <div class="checkbox">
+                            <label>
+                                {{ form_widget(bannerForm.banner_activate) }} {{ 'icap_blog_options_form_banner_activate'|trans({}, 'icap_blog') }}
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-sm">Valider les modifications</button>
+                        <div class="row">
+                            <div class="col-md-4" id="icap_blog_options_form_banner_background_image_container">
+                                {{ form_label(bannerForm.banner_background_image) }}
+                                {{ form_widget(bannerForm.banner_background_image) }}
+                            </div>
+                            <div class="col-md-4">
+                                {{ form_label(bannerForm.banner_background_color) }}
+                                <div class="input-group banner_background_color col-md-5" data-color="{{ blogOptions.bannerBackgroundColor }}" data-color-format="hex">
+                                    {{ form_widget(bannerForm.banner_background_color) }}
+                                    <span class="input-group-addon" style="background-color: {{ blogOptions.bannerBackgroundColor }}"><span class="icon-tint"></span></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                {{ form_label(bannerForm.banner_height) }}
+                                {{ form_widget(bannerForm.banner_height) }}<span>px</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <button type="button" class="btn btn-danger btn-xs hidden remove_banner_background_image" id="remove_banner_background_image">Réinitialiser l'image d'arrière plan</button>
+                        </div>
+                        <div class="row  hidden" id="banner_background_image_parameters">
+                            <div class="col-md-2">
+                                {{ form_label(bannerForm.banner_background_image_position) }}
+                                <table class="position_table">
+                                    <tbody>
+                                    <tr>
+                                        <td><button type="button" class="banner orientation_btn xleft ytop selected" data-value="left top"></button></td>
+                                        <td><button type="button" class="banner orientation_btn xcenter ytop" data-value="center top"></button></td>
+                                        <td><button type="button" class="banner orientation_btn xright ytop" data-value="right top"></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><button type="button" class="banner orientation_btn xleft ycenter" data-value="left center"></button></td>
+                                        <td><button type="button" class="banner orientation_btn xcenter ycenter" data-value="center center"></button></td>
+                                        <td><button type="button" class="banner orientation_btn xright ycenter" data-value="right center"></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><button type="button" class="banner orientation_btn xleft ybottom" data-value="left bottom"></button></td>
+                                        <td><button type="button" class="banner orientation_btn xcenter ybottom" data-value="center bottom"></button></td>
+                                        <td><button type="button" class="banner orientation_btn xright ybottom" data-value="right bottom"></button></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                {{ form_widget(bannerForm.banner_background_image_position) }}
+                            </div>
+                            <div class="col-md-4">
+                                {{ form_label(bannerForm.banner_background_image_repeat) }}
+                                {{ form_widget(bannerForm.banner_background_image_repeat) }}
+                                <div id="icap_blog_options_form_banner_background_image_repeat_choices">
+                                    <label class="checkbox-inline" for="icap_blog_options_form_banner_background_image_repeat_x">
+                                        <input type="checkbox" id="icap_blog_options_form_banner_background_image_repeat_x" value="1">
+                                        x
+                                    </label>
+                                    <label class="checkbox-inline" for="icap_blog_options_form_banner_background_image_repeat_y">
+                                        <input type="checkbox" id="icap_blog_options_form_banner_background_image_repeat_y" value="2">
+                                        y
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        {{ form_rest(bannerForm) }}
+                    </form>
                 </div>
             </div>
         </div>
         {% endif %}
         {% if blogOptions.isBannerActivate or (false == blogOptions.isBannerActivate and is_granted('EDIT', _resourceNode)) %}
-        <div class="col-md-12 well blog_banner{% if false == blogOptions.isBannerActivate %} hidden{% endif %}" style="height: {{ blogOptions.bannerHeight }}px; background-color: {{ blogOptions.bannerBackgroundColor }}"></div>
+        <div id="blog_banner" class="col-md-12 well blog_banner{% if false == blogOptions.isBannerActivate %} hidden{% endif %}" style="height: {{ blogOptions.bannerHeight }}px; background-color: {{ blogOptions.bannerBackgroundColor }}; background-image: none; background-position: 0% 0%; background-repeat: no-repeat no-repeat;">
+        </div>
         {% endif %}
         {{ macros.flashBox() }}
         <div class="row">
@@ -196,6 +265,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/common/jquery-ui-bootstrap/jquery-ui-1.9.2.custom.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
     {% stylesheets debug=false filter='lessphp'  output='bundles/icapblog/css/style.css'
@@ -203,13 +273,45 @@
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}
+
+    {% if blogOptions.isBannerActivate or (false == blogOptions.isBannerActivate and is_granted('EDIT', _resourceNode)) %}
+    {% stylesheets debug=false output='vendor/bootstrap-colorpicker/css/bootstrap-colorpicker.css'
+    '../vendor/xaguilars/bootstrap-colorpicker/css/bootstrap-colorpicker.css'
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+    {% image debug=false output='vendor/bootstrap-colorpicker/img/bootstrap-colorpicker/alpha.png'
+        '../vendor/xaguilars/bootstrap-colorpicker/img/bootstrap-colorpicker/alpha.png' %}
+    {% endimage %}
+    {% image debug=false output='vendor/bootstrap-colorpicker/img/bootstrap-colorpicker/hue.png'
+        '../vendor/xaguilars/bootstrap-colorpicker/img/bootstrap-colorpicker/hue.png' %}
+    {% endimage %}
+    {% image debug=false output='vendor/bootstrap-colorpicker/img/bootstrap-colorpicker/saturation.png'
+        '../vendor/xaguilars/bootstrap-colorpicker/img/bootstrap-colorpicker/saturation.png' %}
+    {% endimage %}
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    {% javascripts output='js/jquery-ui-spinner.js'
+        '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.core.min.js'
+        '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.widget.min.js'
+        '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.button.min.js'
+        '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.spinner.min.js'
+        %}<script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
     <script type='text/javascript' src='{{ asset(calendarPath ~ 'js/fullcalendar.js') }}' ></script>
     <script type='text/javascript'src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
     <script type='text/javascript'src='{{ asset('bundles/icapblog/js/jquery-tree.js') }}'></script>
+    {% if blogOptions.isBannerActivate or (false == blogOptions.isBannerActivate and is_granted('EDIT', _resourceNode)) %}
+    {% javascripts debug=false output='vendor/bootstrap-colorpicker/js/bootstrap-colorpicker.js'
+    '../vendor/xaguilars/bootstrap-colorpicker/js/bootstrap-colorpicker.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type='text/javascript'src='{{ asset('bundles/icapblog/js/banner.js') }}'></script>
+    {% endif %}
     <script type="text/javascript">
         (function($) {
             $(function() {

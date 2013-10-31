@@ -121,6 +121,74 @@ article {
     .panel-heading {
         border-bottom: 0;
     }
+    .panel-body {
+        background-color: #5F5F5F;
+        color:            white;
+        padding-top:      0;
+
+        .ui-spinner {
+            margin-right:     5px;
+            background-color: #555;
+            width:            55px;
+
+            #icap_blog_options_form_banner_height {
+                color:              white;
+                margin:             0;
+                border:             0;
+                background-color:   inherit;
+                -webkit-box-shadow: none;
+                        box-shadow: none;
+            }
+            .ui-spinner-button {
+                border-radius: 0px;
+            }
+        }
+        #icap_blog_options_form_banner_background_image {
+            color:              inherit;
+            border:             0;
+            background:         none;
+            -webkit-box-shadow: none;
+                    box-shadow: none;
+        }
+        .remove_banner_background_image {
+            margin-left: 30px;
+        }
+    }
+
+    .banner_background_color {
+        color: black;
+        float: none;
+        .input-group-addon {
+            border: 0;
+        }
+    }
+
+    .position_table {
+        margin-left: 20px;
+        .orientation_btn {
+            display:             inline-block;
+            width:               16px;
+            height:              16px;
+            background-color:    #555555;
+            background-position: center center;
+            background-repeat:   no-repeat;
+            border: 1px solid    #444444;
+            border-radius:       2px;
+            cursor:              pointer;
+            margin:              1px;
+            &:hover {
+                border-color: #21759B;
+            }
+            &.selected {
+                background-image: url(../images/picture_small.png);
+                border-color:     #D85F27;
+            }
+        }
+    }
+}
+
+.blog_banner {
+    border-radius: 0;
 }
 
 /* collapsible tree */

@@ -9,6 +9,7 @@ use Icap\BlogBundle\Entity\BlogOptions;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Statusable;
 use Icap\BlogBundle\Exception\TooMuchResultException;
+use Icap\BlogBundle\Form\BlogBannerType;
 use Icap\BlogBundle\Form\BlogInfosType;
 use Icap\BlogBundle\Form\BlogOptionsType;
 use Icap\BlogBundle\Entity\Tag;
@@ -92,9 +93,12 @@ class BlogController extends Controller
             throw new NotFoundHttpException();
         }
 
+        $bannerForm = $this->createForm(new BlogBannerType(), $blog->getOptions());
+
         return array(
             '_resource'     => $blog,
             '_resourceNode' => new ResourceCollection(array($blog->getResourceNode())),
+            'bannerForm'    => $bannerForm->createView(),
             'user'          => $user,
             'pager'         => $pager,
             'archives'      => $this->getArchiveDatas($blog),

@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BlogBundle\Migrations\pdo_sqlsrv;
+namespace Icap\BlogBundle\Migrations\sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/10/30 03:34:37
+ * Generation date: 2013/10/31 01:49:51
  */
-class Version20131030153435 extends AbstractMigration
+class Version20131031134948 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -28,7 +28,7 @@ class Version20131030153435 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE icap__blog_options 
-            ADD CONSTRAINT DF_D1AAC984_851F5EA8 DEFAULT 'white' FOR banner_background_color
+            ADD CONSTRAINT DF_D1AAC984_851F5EA8 DEFAULT '#FFFFFF' FOR banner_background_color
         ");
         $this->addSql("
             ALTER TABLE icap__blog_options 
@@ -40,15 +40,23 @@ class Version20131030153435 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE icap__blog_options 
-            ADD banner_image NVARCHAR(255)
+            ADD banner_background_image NVARCHAR(255)
         ");
         $this->addSql("
             ALTER TABLE icap__blog_options 
-            ADD banner_image_position SMALLINT
+            ADD banner_background_image_position SMALLINT NOT NULL
         ");
         $this->addSql("
             ALTER TABLE icap__blog_options 
-            ADD banner_image_repeat SMALLINT
+            ADD CONSTRAINT DF_D1AAC984_FBA21C33 DEFAULT '0' FOR banner_background_image_position
+        ");
+        $this->addSql("
+            ALTER TABLE icap__blog_options 
+            ADD banner_background_image_repeat SMALLINT NOT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE icap__blog_options 
+            ADD CONSTRAINT DF_D1AAC984_A190A6AD DEFAULT '0' FOR banner_background_image_repeat
         ");
     }
 
@@ -68,15 +76,15 @@ class Version20131030153435 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE icap__blog_options 
-            DROP COLUMN banner_image
+            DROP COLUMN banner_background_image
         ");
         $this->addSql("
             ALTER TABLE icap__blog_options 
-            DROP COLUMN banner_image_position
+            DROP COLUMN banner_background_image_position
         ");
         $this->addSql("
             ALTER TABLE icap__blog_options 
-            DROP COLUMN banner_image_repeat
+            DROP COLUMN banner_background_image_repeat
         ");
     }
 }
