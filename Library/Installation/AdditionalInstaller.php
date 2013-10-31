@@ -50,13 +50,6 @@ class AdditionalInstaller extends BaseInstaller
             $updater020102->setLogger($this->logger);
             $updater020102->postUpdate();
         }
-
-        if (version_compare($currentVersion, '2.1.5', '<')) {
-            $updater020105 = new Updater\Updater020105($this->container);
-            $updater020105->setLogger($this->logger);
-            $updater020105->postUpdate();
-            $this->createAclTablesIfNotExist();
-        }
     }
 
     private function createDatabaseIfNotExists()

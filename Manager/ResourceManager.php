@@ -370,14 +370,6 @@ class ResourceManager
             false,
             array()
         );
-
-        $this->rightsManager->create(
-            0,
-            $this->roleRepo->findOneBy(array('name' => 'ROLE_USER')),
-            $node,
-            false,
-            array()
-        );
     }
 
     public function checkResourcePrepared(AbstractResource $resource)
