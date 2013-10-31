@@ -52,7 +52,7 @@ class AdditionalInstaller extends BaseInstaller
         }
 
         if (version_compare($currentVersion, '2.1.5', '<')) {
-            $this->createAclTablesIfNotExist();
+             $this->createAclTablesIfNotExist();
         }
     }
 
