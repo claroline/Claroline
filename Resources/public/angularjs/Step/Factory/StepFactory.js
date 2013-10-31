@@ -109,7 +109,7 @@ function StepFactory($http, $q, PathFactory) {
          * @param step
          * @returns object
          */
-        generateNewStep: function(step) {
+        generateNewStep: function(step, isNewChild) {
             var stepId = PathFactory.getNextStepId();
             var newStep = jQuery.extend(true, {}, baseStep);
             

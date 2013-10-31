@@ -1,2 +1,6 @@
 parameters: 
+    # Controllers
     innova.controller.path.class: Innova\PathBundle\Controller\PathController
+    innova.controller.step.class: Innova\PathBundle\Controller\StepController
+    
+    # Managers

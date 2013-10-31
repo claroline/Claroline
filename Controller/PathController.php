@@ -113,7 +113,7 @@ class PathController
     
     /**
      * Current path manager
-     * @var \Innopva\PathBundle\Manager\PathManager;
+     * @var \Innova\PathBundle\Manager\PathManager;
      */
     protected $pathManager;
     

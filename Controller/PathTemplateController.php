@@ -44,7 +44,7 @@ class PathTemplateController extends Controller
 
         return new JsonResponse($pathtemplates);
     }
-
+    
     /**
      * @Route(
      *     "/path_template/add",
