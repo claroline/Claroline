@@ -25,6 +25,11 @@
         var element = this;
         clearTimeout(window.ClarolineLeftBar);
         window.ClarolineLeftBar = setTimeout((function () {
+            $('.in', element).each(function () {
+                $(this).removeClass('in');
+                $(this).addClass('collapse');
+            });
+
             $(element).animate({width: '40px'}, 300);
         }), 200)
     });

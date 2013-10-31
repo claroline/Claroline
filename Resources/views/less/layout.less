@@ -109,7 +109,7 @@ body {
 /************/
 
 #top_bar {
-    @media (max-width: (@screen-md - 1)) {
+    @media(max-width: (@screen-md - 1)) {
         .dropdown-header {
             color: lighten(@navbar-inverse-bg, 20%);
             padding-left: 20px;
@@ -135,7 +135,7 @@ body {
         }
     }
 
-    @media (min-width: @screen-md) {
+    @media(min-width: @screen-md) {
          .dropdown-menu {
             position: absolute;
             left: auto;
@@ -157,6 +157,13 @@ body {
 
     .navbar-collapse {
         margin-left: -15px;
+    }
+
+    &.break {
+        .navbar-collapse {
+            display: none;
+            .clearfix()
+        }
     }
 }
 
