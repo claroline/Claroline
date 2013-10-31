@@ -3,7 +3,7 @@
 </div>
 
 <div class="modal-body">
-    <form novalidate name="templateForm" role="form">
+    <form name="templateForm" role="form">
         <fieldset class="row">
             <div class="form-group col-md-12">
                 <label for="template-name">Name</label>
@@ -15,7 +15,7 @@
                 <textarea class="form-control" name="template-description" id="template-description" cols="30" rows="4" ng-model="formTemplate.description"></textarea>
             </div>
             
-            <div class="form-group col-md-12">
+            <div ng-hide="undefined != formTemplate.id && null != formTemplate.id && formTemplate.id.length != 0" class="form-group col-md-12">
                 <label class="checkbox">
                     <input type="checkbox" ng-model="formTemplate.withResources" />
                     Save documents &amp; tools too ?

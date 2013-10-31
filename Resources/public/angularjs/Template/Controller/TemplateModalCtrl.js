@@ -14,6 +14,7 @@ function TemplateModalCtrl($scope, $http, $modalInstance, StepFactory, TemplateF
         // Create new Template
         var stepToSave = jQuery.extend(true, {}, StepFactory.getStep());
         $scope.formTemplate = {
+            id: null,
             name : 'Template ' + stepToSave.name,
             description : '',
             step: stepToSave

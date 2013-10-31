@@ -21,3 +21,11 @@ services:
         calls:
           - [setRequest, ["@?request="]]
         scope: request
+        
+    innova.path_template.controller:
+        class: %innova.controller.path_template.class%
+        arguments:
+            entityManager: @doctrine.orm.entity_manager
+        calls:
+          - [setRequest, ["@?request="]]
+        scope: request

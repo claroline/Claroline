@@ -54,7 +54,6 @@ function MainCtrl($scope, $http, $window, $location, $modal, HistoryFactory, Cli
         });
     };
 
-
     /**
      * Copy data into clipboard
      * @returns void
