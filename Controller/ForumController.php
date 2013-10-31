@@ -7,6 +7,7 @@ use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Form\MessageType;
 use Claroline\ForumBundle\Form\SubjectType;
+use Claroline\ForumBundle\Form\EditTitleType;
 use Claroline\ForumBundle\Form\ForumOptionsType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Pagerfanta\Adapter\ArrayAdapter;
@@ -56,7 +57,7 @@ class ForumController extends Controller
         $canCreateSubject = $this->get('security.context')->isGranted('post', $collection);
         $sc = $this->get('security.context');
         $isModerator = $sc->isGranted('moderate', $collection);
-        
+
         return array(
             'pager' => $pager,
             '_resource' => $forum,
@@ -87,7 +88,7 @@ class ForumController extends Controller
             throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
         }
 
-        $formSubject = $this->get('form.factory')->create(new SubjectType(true));
+        $formSubject = $this->get('form.factory')->create(new SubjectType());
 
         return array(
             '_resource' => $forum,
@@ -120,7 +121,7 @@ class ForumController extends Controller
             throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
         }
 
-        $form = $this->get('form.factory')->create(new SubjectType(true), new Subject);
+        $form = $this->get('form.factory')->create(new SubjectType(), new Subject);
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
@@ -146,6 +147,7 @@ class ForumController extends Controller
             }
         }
 
+        throw new \Exception($form->getErrorsAsString());
         $form->get('message')->addError(
             new FormError($this->get('translator')->trans('field_content_required', array(), 'forum'))
         );
@@ -416,16 +418,18 @@ class ForumController extends Controller
         if (!$isModerator && $sc->getToken()->getUser()) {
             throw new AccessDeniedHttpException();
         }
-        $form = $this->container->get('form.factory')->create(new SubjectType(false),$subject);
+
+        $form = $this->container->get('form.factory')->create(new EditTitleType(), $subject);
         $form->handleRequest($this->get('request'));
         if ($form->isValid()) {
             $em->persist($subject);
             $em->flush();
-        
+
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_subjects', array('forumId' => $subject->getForum()->getId()))
             );
         }
+        
         return array(
             'form' => $form->createView(),
             'subjectId' => $subject->getId(),

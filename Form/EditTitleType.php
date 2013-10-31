@@ -6,17 +6,16 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class SubjectType extends AbstractType
+class EditTitleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('title', 'text');
-        $builder->add('message', new MessageType());
     }
 
     public function getName()
     {
-        return 'forum_subject_form';
+        return 'forum_subject_title_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

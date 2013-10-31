@@ -13,7 +13,7 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ _resource.getResourceNode().getName() }} ({{ 'new_subj ect'|trans({}, 'forum') }})</h3>
+        <h3 class="panel-title">{{ _resource.getResourceNode().getName() }} ({{ 'new_subject'|trans({}, 'forum') }})</h3>
     </div>
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
     <form novalidate="novalidate" action="{{ _path('claro_forum_create_subject', {'forumId':_resource.getId()}) }}" method="post" {{ form_enctype(form) }} id="subject_form">
