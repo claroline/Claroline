@@ -19,6 +19,7 @@ use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * ForumController
@@ -86,7 +87,7 @@ class ForumController extends Controller
             throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
         }
 
-        $formSubject = $this->get('form.factory')->create(new SubjectType());
+        $formSubject = $this->get('form.factory')->create(new SubjectType(true));
 
         return array(
             '_resource' => $forum,
@@ -119,7 +120,7 @@ class ForumController extends Controller
             throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
         }
 
-        $form = $this->get('form.factory')->create(new SubjectType(), new Subject);
+        $form = $this->get('form.factory')->create(new SubjectType(true), new Subject);
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
@@ -394,29 +395,39 @@ class ForumController extends Controller
      *     "/edit/subject/{subjectId}",
      *     name="claro_forum_edit_subject"
      * )
-     *
+     * @ParamConverter(
+     *      "subject",
+     *      class="ClarolineForumBundle:Subject",
+     *      options={"id" = "subjectId", "strictId" = true}
+     * )
      * @Template("ClarolineForumBundle::editSubjectForm.html.twig")
      *
      * @param integer $subjectId
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function editSubjectFormAction(Subject $subject)
     {
-        $isModerator = $sc->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
+        $sc = $this->get('security.context');
+        $isModerator = $sc->isGranted('moderate', new ResourceCollection(array($subject->getForum()->getResourceNode())));
+        $em = $this->getDoctrine()->getManager();
 
-        if (!$isModerator && $sc->getToken()->getUser() !== $message->getCreator()) {
+        if (!$isModerator && $sc->getToken()->getUser()) {
             throw new AccessDeniedHttpException();
         }
-        $form = $this->container->get('form.factory')->create(new SubjectType);
+        $form = $this->container->get('form.factory')->create(new SubjectType(false),$subject);
         $form->handleRequest($this->get('request'));
         if ($form->isValid()) {
             $em->persist($subject);
             $em->flush();
-        }
-
-        return new RedirectResponse(
+        
+            return new RedirectResponse(
                 $this->generateUrl('claro_forum_subjects', array('forumId' => $subject->getForum()->getId()))
+            );
+        }
+        return array(
+            'form' => $form->createView(),
+            'subjectId' => $subject->getId(),
+            'forumId' => $subject->getForum()->getId()
             );
     }
 
