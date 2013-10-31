@@ -12,23 +12,23 @@ use Symfony\Component\Validator\Constraints\Image;
 class ProfileType extends AbstractType
 {
     private $platformRoles;
-    private $isFormCreation;
+    private $isReadOnly;
 
-    public function __construct($platformRoles, $isFormCreation = false)
+    public function __construct($platformRoles, $isReadOnly = false)
     {
         $this->platformRoles = new ArrayCollection($platformRoles);
-        $this->isFormCreation = $isFormCreation;
+        $this->isReadOnly = $isReadOnly;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
 
-        if ($this->isFormCreation) {
-            $builder->add('firstName', 'text', array('read_only' => true))
-                ->add('lastName', 'text', array('read_only' => true))
-                ->add('username', 'text', array('read_only' => true))
-                ->add('administrativeCode', 'text', array('required' => false, 'read_only' => true))
+        if ($this->isReadOnly) {
+            $builder->add('firstName', 'text', array('read_only' => true, 'disabled' => true))
+                ->add('lastName', 'text', array('read_only' => true, 'disabled' => true))
+                ->add('username', 'text', array('read_only' => true, 'disabled' => true))
+                ->add('administrativeCode', 'text', array('required' => false, 'read_only' => true, 'disabled' => true))
                 ->add('plainPassword', 'repeated', array('type' => 'password'))
                 ->add('mail', 'email', array('required' => false))
                 ->add('phone', 'text', array('required' => false));

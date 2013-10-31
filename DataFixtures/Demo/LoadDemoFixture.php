@@ -378,7 +378,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
                 new LoadForumData('Forum doc', 'JaneDoe', 5, 5, $this->getReference('directory/Premier semestre'))
             );
         }
-       
+
             //The widget API changed.
 //        if ($kernel->isClassInActiveBundle('Claroline\RssReaderBundle\Entity\Config')) {
 //            $rssConfig = new \Claroline\RssReaderBundle\Entity\Config();

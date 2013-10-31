@@ -116,7 +116,13 @@ class ProfileController extends Controller
         }
 
         $roles = $this->roleManager->getPlatformRoles($loggedUser);
-        $form = $this->get('form.factory')->create(new ProfileType($roles), $user);
+
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            $form = $this->createForm(new ProfileType($roles, false), $user);
+        } else {
+            $form = $this->createForm(new ProfileType($roles, true), $user);
+        }
+        
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

@@ -48,9 +48,16 @@ class MaskDecoder
         return $this->id;
     }
 
+    /**
+     * @param $position
+     *
+     * @return MaskDecoder
+     */
     public function setValue($position)
     {
         $this->value = $position;
+
+        return $this;
 
     }
     public function getValue()
@@ -58,9 +65,16 @@ class MaskDecoder
         return $this->value;
     }
 
+    /**
+     * @param $name
+     *
+     * @return MaskDecoder
+     */
     public function setName($name)
     {
         $this->name = $name;
+
+        return $this;
     }
 
     public function getName()
@@ -68,9 +82,16 @@ class MaskDecoder
         return $this->name;
     }
 
+    /**
+     * @param ResourceType $resourceType
+     *
+     * @return MaskDecoder
+     */
     public function setResourceType(ResourceType $resourceType)
     {
         $this->resourceType = $resourceType;
+
+        return $this;
     }
 
     public function getResourceType()

@@ -354,7 +354,7 @@ class ResourceManager
 
         $resourceTypes = $this->resourceTypeRepo->findAll();
 
-        //@todo remove this line and grant edit requests in the resourceManager.
+        /**@todo remove this line and grant edit requests in the resourceManager.*/
         $this->rightsManager->create(
             31,
             $this->roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
