@@ -79,14 +79,61 @@
             {{ renderPager(subject.getId(), pager) }}
         </div>
     </div>
-    <div class="panel-footer">
-        {% if canAnswer %}
-            <a class="btn btn-primary" href='{{ _path('claro_forum_message_form', {'subjectId': subject.getId()}) }}'>
-                <i class="icon-reply"></i> {{ 'new_message'|trans({}, 'forum') }}
+    {% if canAnswer %}
+        <textarea class="tinymce row" data-theme="advanced"></textarea>
+        {{ form_widget(form._token) }}
+    {% endif %}
+    <div class="panel-footer clearfix">
+        <div class="pull-right">
+            <a class="btn btn-default" href='{{ path('claro_forum_subjects', { 'forumId': _resource.getId() }) }}'>
+               {{ 'back'|trans({}, 'platform') }}
             </a>
-        {% endif %}
-        <a class="btn btn-default" href='{{ path('claro_forum_subjects', { 'forumId': _resource.getId() }) }}'>
-           {{ 'back'|trans({}, 'platform') }}
-        </a>
+            {% if canAnswer %}
+                <a class="btn btn-primary">
+                    <i class="icon-reply"></i> {{ 'new_message'|trans({}, 'forum') }}
+                </a>
+            {% endif %}
+        </div>
     </div>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if canAnswer %}
+        {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+        {{ tinymce_init() }}
+        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/home.js') }}"></script>
+        <script>
+            (function (){
+                'use strict';
+
+                //id="forum_message_form_content" name="forum_message_form[content]"
+                $('body').on('click', '.panel-footer .btn-primary', function() {
+                    var content = $('textarea.tinymce.row').val();
+                    var token = $('#forum_message_form__token').val();
+
+                    if (content != undefined && content != '') {
+                        var home = window.Claroline.Home;
+                        $.post(home.path + 'forum/create/message/{{ subject.getId() }}',
+                            {
+                                'forum_message_form[_token]': token,
+                                'forum_message_form[content]': content
+                            }
+                        )
+                        .done(
+                            function () {
+                                window.location.reload();
+                            }
+                        )
+                        .error(
+                            function () {
+                                home.modal('content/error');
+                            }
+                        );
+                    }
+                });
+            })();
+        </script>
+    {% endif %}
+{% endblock %}
+

@@ -179,12 +179,14 @@ class ForumController extends Controller
         $isModerator = $this->get('security.context')->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
         $collection = new ResourceCollection(array($forum->getResourceNode()));
         $canAnswer = $this->get('security.context')->isGranted('post', $collection);
+        $form = $this->get('form.factory')->create(new MessageType());
 
         return array(
             'subject' => $subject,
             'pager' => $pager,
             '_resource' => $forum,
             'isModerator' => $isModerator,
+            'form' => $form->createView(),
             'canAnswer' => $canAnswer
         );
     }
