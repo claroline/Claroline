@@ -76,7 +76,7 @@ class LogRepository extends EntityRepository
         $queryBuilder = $this
             ->createQueryBuilder('log')
             ->leftJoin('log.workspace', 'workspace')
-            ->orderBy('log.dateLog', 'ASC');
+            ->orderBy('log.dateLog', 'DESC');
 
         $queryBuilder = $this->addConfigurationFilterToQueryBuilder($queryBuilder, $configs);
 

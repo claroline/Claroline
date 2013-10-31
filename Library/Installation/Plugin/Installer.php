@@ -58,19 +58,7 @@ class Installer
     public function install(PluginBundle $plugin)
     {
         $this->checkInstallationStatus($plugin, false);
-        $this->log('Validating plugin...');
-        $errors = $this->validator->validate($plugin);
-
-        if (0 !== count($errors)) {
-            $report = "Plugin '{$plugin->getNamespace()}' cannot be installed, due to the "
-                . "following validation errors :" . PHP_EOL;
-
-            foreach ($errors as $error) {
-                $report .= $error->getMessage() . PHP_EOL;
-            }
-
-            throw new \Exception($report);
-        }
+        $this->validatePlugin($plugin);
 
         $this->baseInstaller->install($plugin);
         $this->log('Saving plugin configuration...');
@@ -85,6 +73,8 @@ class Installer
     public function uninstall(PluginBundle $plugin)
     {
         $this->checkInstallationStatus($plugin, true);
+        $this->validatePlugin($plugin);
+
         $this->log('Removing plugin configuration...');
         $this->recorder->unregister($plugin);
         $this->baseInstaller->uninstall($plugin);
@@ -94,19 +84,25 @@ class Installer
      * Upgrades/downgrades a plugin to a specific version.
      *
      * @param PluginBundle  $plugin
-     * @param string        $current
-     * @param string        $target
+     * @param string        $currentVersion
+     * @param string        $targetVersion
      */
     public function update(PluginBundle $plugin, $currentVersion, $targetVersion)
     {
         $this->checkInstallationStatus($plugin, true);
+
+        $this->validator->activeUpdateMode();
+        $this->validatePlugin($plugin);
+        $this->validator->deactivateUpdateMode();
+
+        $this->log('Updating plugin configuration...');
         $this->baseInstaller->update($plugin, $currentVersion, $targetVersion);
-        // here come the plugin update tasks (e.g. config update)
+        $this->recorder->update($plugin, $this->validator->getPluginConfiguration());
     }
 
     private function checkInstallationStatus(PluginBundle $plugin, $shouldBeInstalled = true)
     {
-        $this->log('Checking installation status...');
+        $this->log(sprintf('Checking installation status for plugin %s', $plugin->getName()));
 
         if ($this->recorder->isRegistered($plugin) !== $shouldBeInstalled) {
             $stateDiscr = $shouldBeInstalled ? 'not' : 'already';
@@ -114,6 +110,23 @@ class Installer
             throw new \LogicException(
                 "Plugin '{$plugin->getName()}' is {$stateDiscr} installed."
             );
+        }
+    }
+
+    private function validatePlugin(PluginBundle $plugin)
+    {
+        $this->log('Validating plugin...');
+        $errors = $this->validator->validate($plugin);
+
+        if (0 !== count($errors)) {
+            $report = "Plugin '{$plugin->getNamespace()}' cannot be installed, due to the "
+                . "following validation errors :" . PHP_EOL;
+
+            foreach ($errors as $error) {
+                $report .= $error->getMessage() . PHP_EOL;
+            }
+
+            throw new \Exception($report);
         }
     }
 

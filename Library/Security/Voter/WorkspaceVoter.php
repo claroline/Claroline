@@ -42,7 +42,17 @@ class WorkspaceVoter implements VoterInterface
 
     public function vote(TokenInterface $token, $object, array $attributes)
     {
+
         if ($object instanceof AbstractWorkspace) {
+
+            if (count($attributes) === 0) {
+                $roles = $this->ut->getRoles($token);
+                $ws = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')
+                    ->findWorkspaceByWorkspaceAndRoles($object, $roles);
+
+                return (count($ws) === 0) ? VoterInterface::ACCESS_DENIED: VoterInterface::ACCESS_GRANTED;
+            }
+
             return ($this->canDo($object, $token, $attributes[0])) ?
                 VoterInterface::ACCESS_GRANTED:
                 VoterInterface::ACCESS_DENIED;

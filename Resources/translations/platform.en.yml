@@ -82,7 +82,7 @@ canOpen: 'Right to open'
 cancel: Cancel
 cannot_delete_unique_manager: 'Cannot remove the unique manager.'
 cannot_unsubscribe_from_workspace: 'Cannot unsubscribe from workspace'
-change_view : Change view
+change_view : 'Change the display'
 choose_resource_form_type: 'Resource type'
 close: Close
 collaborator: Collaborator
@@ -425,8 +425,6 @@ select_users_for_registration_to_workspace: 'Select users to register'
 select_workspaces_for_registration: 'Select workspaces for registration'
 selected_workspaces_for_registration: 'Selected workspaces for registration'
 send_mail: 'Send a mail'
-send_mail_form_object: 'Object'
-send_mail_form_content: 'Content'
 send_message: 'Send a message'
 session_id: 'Session id'
 settings: Settings
