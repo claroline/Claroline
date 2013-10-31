@@ -44,13 +44,18 @@ class AuthenticatedUserConverter implements ParamConverterInterface
             throw new InvalidConfigurationException(InvalidConfigurationException::MISSING_NAME);
         }
 
-        if (($user = $this->securityContext->getToken()->getUser()) instanceof User) {
-            $request->attributes->set($parameter, $user);
+        $options = $configuration->getOptions();
+        if ($configuration->getOptions()['authenticatedUser'] === true) {
+            if (($user = $this->securityContext->getToken()->getUser()) instanceof User) {
+                $request->attributes->set($parameter, $user);
 
-            return true;
+                return true;
+            } else {
+                throw new AccessDeniedException();
+            }
+        } else {
+            $request->attributes->set($parameter, $user = $this->securityContext->getToken()->getUser());
         }
-
-        throw new AccessDeniedException();
     }
 
     /**
@@ -64,7 +69,7 @@ class AuthenticatedUserConverter implements ParamConverterInterface
 
         $options = $configuration->getOptions();
 
-        if (isset($options['authenticatedUser']) && $options['authenticatedUser'] === true) {
+        if (isset($options['authenticatedUser']) && ($options['authenticatedUser'] === true || $options['authenticatedUser'] === false )) {
             return true;
         }
 
