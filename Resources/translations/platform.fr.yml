@@ -65,6 +65,7 @@ analytics_resources: 'Contenu plateforme'
 analytics_top: 'Top des activités'
 anonymous: Anonyme
 apply: Appliquer
+at_least_one_category_has_to_be_selected: 'Au moins une catégorie doit être selectionnée'
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espaces d''activités disponibles'
 back: 'Retour'
@@ -195,6 +196,7 @@ group_parameter: 'Paramètres du groupe'
 groups: Groupes
 groups_list: 'Liste des groupes'
 groups_registration_in_workspace: 'Inscription des groupes à l''espace d''activités'
+has_been_put_in_category: 'a été placé dans la catégorie'
 has_been_suscribed_with_role: 'a été inscrit(e) avec le rôle'
 has_been_suscribed_with_role_group: 'a été inscrit avec le rôle'
 has_not_been_imported: 'n''a pas été importé(e)'
@@ -220,6 +222,7 @@ informations: Informations
 instructions: Consignes
 internal_error : 'Erreur interne du serveur. Veuillez contactez l''administrateur de la plateforme.'
 invalid_csv_file: 'Le fichier CSV n''est pas valide'
+is_already_in_category: 'est déjà dans la catégorie'
 jqplot_date_output_format: '%d-%m-%Y'
 lastName: Nom
 last_30_days_activity: 'Activités des 30 derniers jours'
@@ -431,6 +434,7 @@ select_roles_to_assign: 'Selectionnez les Rôles à attribuer'
 select_users_for_registration_to_workspace: 'Choississez les utilisateurs à inscrire'
 select_workspaces_for_registration: 'Choisissez les espaces d''activités pour l''inscription'
 selected_workspaces_for_registration: 'Espaces d''activités sélectionnés pour l''inscription'
+selected_workspaces_will_be_put_in_it: 'Les espaces d''activités sélectionnés y seront disponibles'
 send_mail: 'Envoyer un mail'
 send_message: 'Envoyer un message'
 session_id: 'Identifiant de session'
@@ -462,6 +466,7 @@ text_form_content: Contenu
 text_form_name: Nom
 text_form_shareType: Redistribution
 text_form_text: Texte
+the_workspace: 'L''espace d''activités'
 to: Jusque
 to_message: A
 today: 'Aujourd''hui'

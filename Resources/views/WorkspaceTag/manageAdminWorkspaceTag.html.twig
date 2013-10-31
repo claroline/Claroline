@@ -37,6 +37,12 @@
                     tag-name="{{ tagName }}"
                 >
                     {{ tagName }}
+                    <i class="tag-checked-icon icon-ok hide" style="color: green;"></i>
+                    <input
+                        type="checkbox"
+                        class="tag-chk hide"
+                        value="{{ tagId }}"
+                    >
                 </span>
                 {% if tagsHierarchy[tagId]|length > 0 %}
                     {{ _self.showTagHierarchy(tagsHierarchy[tagId], tagsHierarchy) }}
@@ -79,54 +85,70 @@
 </div>
 
 <div id="workspace-organization-div" class="panel-body">
+    <div>
+        {{ macros.flashBox() }}
+    </div>
 
-    {% if workspaces is empty %}
-        {{ 'no_workspace'|trans({}, 'platform') }}
-    {% else %}
-        {% set nbPages = workspaces.getNbPages() %}
+    {% set nbPages = workspaces.getNbPages() %}
 
-        <button type="button" class="btn btn-default" id="categorize-btn">
-            {{ 'categorize'|trans({}, 'platform') }}
+    <button
+        type="button"
+        class="btn btn-default"
+        id="categorize-btn"
+        disabled="disabled"
+    >
+        {{ 'categorize'|trans({}, 'platform') }}
+    </button>
+    <a href="{{ path('claro_admin_workspace_tag_organize', {'tagId': 0}) }}">
+        <button type="button" class="btn btn-default">
+            {{ 'organize_categories'|trans({}, 'platform') }}
         </button>
-        <a href="{{ path('claro_admin_workspace_tag_organize', {'tagId': 0}) }}">
-            <button type="button" class="btn btn-default">
-                {{ 'organize_categories'|trans({}, 'platform') }}
-            </button>
-        </a>
-        <div class="input-group col-md-4 pull-right">
-            <input class="form-control"
-                type="text"
-                id="search-workspace-txt"
-                placeholder="{{ 'search_workspace'|trans({}, 'platform') }}"
-                value={{ search }}
+    </a>
+    <div class="input-group col-md-4 pull-right">
+        <input class="form-control"
+            type="text"
+            id="search-workspace-txt"
+            placeholder="{{ 'search_workspace'|trans({}, 'platform') }}"
+            value={{ search }}
+        >
+        <span class="input-group-btn">
+            <button
+                class="filter btn btn-default"
+                type="button"
+                id="search-workspace-button"
             >
-            <span class="input-group-btn">
-                <button class="filter btn btn-default" type="button" id="search-workspace-button">
-                    <i class="icon-search"></i>
-                </button>
-            </span>
-        </div>
-        <br>
-        <br>
-        <br>
+                <i class="icon-search"></i>
+            </button>
+        </span>
+    </div>
+    <br>
+    <br>
+    <br>
 
-        {% if nbPages > 1 %}
-            {{ renderPager(search, workspaces) }}
-        {% endif %}
+    {% if nbPages > 1 %}
+        {{ renderPager(search, workspaces) }}
+    {% endif %}
 
-        <table class="table table-bordered table-responsive">
+    <table class="table table-bordered table-responsive">
+        <tr>
+            <th></th>
+            <th>{{ 'workspace'|trans({}, 'platform') }}</th>
+            <th>{{ 'categories'|trans({}, 'platform') }}</th>
+        </tr>
+        {% if workspaces is empty %}
             <tr>
-                <th></th>
-                <th>{{ 'workspace'|trans({}, 'platform') }}</th>
-                <th>{{ 'categories'|trans({}, 'platform') }}</th>
+                <td colspan="3" class="text-center">
+                    {{ 'no_workspace'|trans({}, 'platform') }}
+                </td>
             </tr>
+        {% else %}
             {% for workspace in workspaces %}
                 <tr class="tag-workspace-category-row">
                     <td>
                         <input
                             type="checkbox"
                             class="workspace-chk"
-                            workspace-id="{{ workspace.getId() }}"
+                            value="{{ workspace.getId() }}"
                         >
                     </td>
                     <td class="tag-workspace-col">
@@ -141,6 +163,7 @@
                             >
                                 <span class="label label-danger">
                                     {{ workspaceTag.getTag().getName() }}
+                                    &nbsp;
                                     <i class="icon-remove-sign remove-tag-button pointer-hand"></i>
                                 </span>
                                 &nbsp;
@@ -149,11 +172,11 @@
                     </td>
                 </tr>
             {% endfor %}
-        </table>
-
-        {% if nbPages > 1 %}
-            {{ renderPager(search, workspaces) }}
         {% endif %}
+    </table>
+
+    {% if nbPages > 1 %}
+        {{ renderPager(search, workspaces) }}
     {% endif %}
 </div>
 
@@ -168,8 +191,18 @@
                 <p>{{ 'remove_workspace_from_category_confirm_message'|trans({}, 'platform') }}</p>
             </div>
             <div class="modal-footer">
-                <input type="button" id="remove-workspace-tag-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-                <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                <input
+                    type="button"
+                    id="remove-workspace-tag-confirm-ok"
+                    class="btn btn-primary"
+                    value="{{ 'ok'|trans({}, 'platform') }}"
+                />
+                <input
+                    type="button"
+                    class="btn btn-default"
+                    data-dismiss="modal"
+                    value="{{ 'cancel'|trans({}, 'platform') }}"
+                />
             </div>
         </div>
     </div>
@@ -180,11 +213,17 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">×</button>
-                <h3 id="tag-hierarchy-modal-title">
+                <h3>
                     {{ 'select_category'|trans({}, 'platform') }}
                 </h3>
+                <h4>
+                    {{ 'selected_workspaces_will_be_put_in_it'|trans({}, 'platform') }}
+                </h4>
             </div>
             <div id="tag-hierarchy-modal-body" class="modal-body">
+                <div id="one-tag-alert" class="alert alert-danger hide">
+                    {{ 'at_least_one_category_has_to_be_selected'|trans({}, 'platform') }}
+                </div>
                 {{ showTagHierarchy(rootTags, hierarchy) }}
             </div>
             <div class="modal-footer">

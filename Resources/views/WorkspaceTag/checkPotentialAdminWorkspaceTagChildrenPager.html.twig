@@ -55,7 +55,7 @@
     {% endif %}
 
     <div class="table-responsive">
-        <table class="table table-striped table-condensed">
+        <table class="table table-condensed table-hover">
 
             {% if possibleChildren is empty %}
                 <tr>
@@ -66,14 +66,23 @@
             {% else %}
 
                 {% for possibleChild in possibleChildren %}
+                {% set possibleChildId = possibleChild.getId() %}
                     <tr class="possible-child-element">
-                        <td class="possible-child-tag-name">{{ possibleChild.getName() }}</td>
+                        <td class="possible-child-tag-name">
+                            <label
+                                class="pointer-hand"
+                                for="tag-input-{{ possibleChildId }}"
+                                style="font-weight: normal;"
+                            >
+                                {{ possibleChild.getName() }}
+                            </label>
+                        </td>
                         <td>
-                            <input
+                            <input id="tag-input-{{ possibleChildId }}"
                                 type="checkbox"
                                 name="tag-possible-child"
                                 class="chk-tag"
-                                value="{{ possibleChild.getId() }}"
+                                value="{{ possibleChildId }}"
                             >
                         </td>
                     </tr>

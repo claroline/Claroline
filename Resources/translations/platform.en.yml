@@ -64,6 +64,7 @@ analytics_resources: Resources
 analytics_top: Top
 anonymous: Anonymous
 apply: Apply
+at_least_one_category_has_to_be_selected: 'At least one category has to be selected'
 available_widgets: 'Available widgets'
 available_workspaces: 'Available workspaces'
 back: 'Back'
@@ -195,6 +196,7 @@ group_parameter: 'Group parameter'
 groups: Groups
 groups_list: 'Groups list'
 groups_registration_in_workspace: 'Groups registration in workspace'
+has_been_put_in_category: 'has been put in category'
 has_been_suscribed_with_role: 'has been suscribed with role'
 has_been_suscribed_with_role_group: 'has been suscribed with role'
 has_not_been_imported: 'has not been imported'
@@ -220,6 +222,7 @@ informations: Informations
 instructions: Instructions
 internal_error : Internal server error. Please contact the administrator.
 invalid_csv_file: 'Invalid CSV file'
+is_already_in_category: 'is already in category'
 jqplot_date_output_format: '%m/%d/%Y'
 lastName: 'Last name'
 lastName: Last name
@@ -436,6 +439,7 @@ select_roles_to_assign: 'Select roles to assign'
 select_users_for_registration_to_workspace: 'Select users to register'
 select_workspaces_for_registration: 'Select workspaces for registration'
 selected_workspaces_for_registration: 'Selected workspaces for registration'
+selected_workspaces_will_be_put_in_it: 'Selected workspaces will be put in it'
 send_mail: 'Send a mail'
 send_message: 'Send a message'
 session_id: 'Session id'
@@ -466,6 +470,7 @@ text_form_content: Content
 text_form_name: Name
 text_form_shareType: Sharable
 text_form_text: Text
+the_workspace: Workspace
 to: To
 to_message: To
 today: Today

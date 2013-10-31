@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Translation\Translator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -23,6 +24,7 @@ class WorkspaceTagController extends Controller
     private $securityContext;
     private $formFactory;
     private $utils;
+    private $translator;
 
     /**
      * @DI\InjectParams({
@@ -30,7 +32,8 @@ class WorkspaceTagController extends Controller
      *     "tagManager"         = @DI\Inject("claroline.manager.workspace_tag_manager"),
      *     "securityContext"    = @DI\Inject("security.context"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
-     *     "utils"              = @DI\Inject("claroline.security.utilities")
+     *     "utils"              = @DI\Inject("claroline.security.utilities"),
+     *     "translator"         = @DI\Inject("translator")
      * })
      */
     public function __construct(
@@ -38,7 +41,8 @@ class WorkspaceTagController extends Controller
         WorkspaceTagManager $tagManager,
         SecurityContextInterface $securityContext,
         FormFactory $formFactory,
-        Utilities $utils
+        Utilities $utils,
+        Translator $translator
     )
     {
         $this->workspaceManager = $workspaceManager;
@@ -46,6 +50,7 @@ class WorkspaceTagController extends Controller
         $this->securityContext = $securityContext;
         $this->formFactory = $formFactory;
         $this->utils = $utils;
+        $this->translator = $translator;
     }
 
     /**
@@ -1419,5 +1424,76 @@ class WorkspaceTagController extends Controller
             'hierarchy' => $hierarchy,
             'rootTags' => $rootTags
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "associate/admin/tags/to/workspaces",
+     *     name="claro_associate_admin_workspace_tags_to_workspaces",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "workspaces",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"multipleIds" = true, "name" = "workspaceIds"}
+     * )
+     * @EXT\ParamConverter(
+     *     "tags",
+     *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
+     *      options={"multipleIds" = true, "name" = "tagIds"}
+     * )
+     */
+    public function associateMultipleAdminTagsToMultipleWorkspacesAction(
+        array $workspaces,
+        array $tags
+    )
+    {
+        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException();
+        }
+
+        foreach ($workspaces as $workspace) {
+            foreach ($tags as $tag) {
+                $relWsTag = $this->tagManager
+                    ->getAdminTagRelationByWorkspaceAndTag($workspace, $tag);
+
+                if ($relWsTag === null) {
+                    $this->tagManager->createTagRelation($tag, $workspace);
+                    // Set success flashbag message
+                    $msg = $this->translator->trans(
+                        'the_workspace',
+                        array(),
+                        'platform'
+                    );
+                    $msg .= ' [' . $workspace->getName()
+                        . ' (' . $workspace->getCode() . ')] ';
+                    $msg .= $this->translator->trans(
+                        'has_been_put_in_category',
+                        array(),
+                        'platform'
+                    );
+                    $msg .= ' [' . $tag->getName() . ']';
+                    $this->get('session')->getFlashBag()->add('success', $msg);
+                } else {// Set success flashbag message
+                    $msg = $this->translator->trans(
+                        'the_workspace',
+                        array(),
+                        'platform'
+                    );
+                    $msg .= ' [' . $workspace->getName()
+                        . ' (' . $workspace->getCode() . ')] ';
+                    $msg .= $this->translator->trans(
+                        'is_already_in_category',
+                        array(),
+                        'platform'
+                    );
+                    $msg .= ' [' . $tag->getName() . ']';
+                    $this->get('session')->getFlashBag()->add('error', $msg);
+                }
+            }
+        }
+
+        return new Response('success', 204);
     }
 }
