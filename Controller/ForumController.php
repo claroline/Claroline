@@ -19,6 +19,7 @@ use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * ForumController
@@ -53,11 +54,14 @@ class ForumController extends Controller
 
         $collection = new ResourceCollection(array($forum->getResourceNode()));
         $canCreateSubject = $this->get('security.context')->isGranted('post', $collection);
-
+        $sc = $this->get('security.context');
+        $isModerator = $sc->isGranted('moderate', $collection);
+        
         return array(
             'pager' => $pager,
             '_resource' => $forum,
-            'canCreateSubject' => $canCreateSubject
+            'canCreateSubject' => $canCreateSubject,
+            'isModerator' => $isModerator
         );
     }
 
@@ -83,7 +87,7 @@ class ForumController extends Controller
             throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
         }
 
-        $formSubject = $this->get('form.factory')->create(new SubjectType());
+        $formSubject = $this->get('form.factory')->create(new SubjectType(true));
 
         return array(
             '_resource' => $forum,
@@ -116,7 +120,7 @@ class ForumController extends Controller
             throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
         }
 
-        $form = $this->get('form.factory')->create(new SubjectType(), new Subject);
+        $form = $this->get('form.factory')->create(new SubjectType(true), new Subject);
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
@@ -386,6 +390,47 @@ class ForumController extends Controller
         $pager->setCurrentPage($page);
 
         return array('pager' => $pager, '_resource' => $forum, 'search' => $search, 'page' => $page);
+    }
+
+     /**
+     * @Route(
+     *     "/edit/subject/{subjectId}",
+     *     name="claro_forum_edit_subject"
+     * )
+     * @ParamConverter(
+     *      "subject",
+     *      class="ClarolineForumBundle:Subject",
+     *      options={"id" = "subjectId", "strictId" = true}
+     * )
+     * @Template("ClarolineForumBundle::editSubjectForm.html.twig")
+     *
+     * @param integer $subjectId
+     *
+     */
+    public function editSubjectFormAction(Subject $subject)
+    {
+        $sc = $this->get('security.context');
+        $isModerator = $sc->isGranted('moderate', new ResourceCollection(array($subject->getForum()->getResourceNode())));
+        $em = $this->getDoctrine()->getManager();
+
+        if (!$isModerator && $sc->getToken()->getUser()) {
+            throw new AccessDeniedHttpException();
+        }
+        $form = $this->container->get('form.factory')->create(new SubjectType(false),$subject);
+        $form->handleRequest($this->get('request'));
+        if ($form->isValid()) {
+            $em->persist($subject);
+            $em->flush();
+        
+            return new RedirectResponse(
+                $this->generateUrl('claro_forum_subjects', array('forumId' => $subject->getForum()->getId()))
+            );
+        }
+        return array(
+            'form' => $form->createView(),
+            'subjectId' => $subject->getId(),
+            'forumId' => $subject->getForum()->getId()
+            );
     }
 
     private function checkAccess(Forum $forum)

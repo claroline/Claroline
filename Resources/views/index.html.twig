@@ -66,6 +66,11 @@
                             >
                                 {{ subject['title'] }}
                             </a>
+                            {% if isModerator %}
+                                <a href="{{ path('claro_forum_edit_subject', {'subjectId': subject['id'] }) }}">
+                                    <i class="icon-pencil"></i>
+                                </a> 
+                           {% endif %}
                             <br>
                             {{ 'started_by' | trans({}, 'forum') }}
                             {{ subject['subject_creator_firstname'] }}

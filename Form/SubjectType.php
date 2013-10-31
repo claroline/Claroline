@@ -8,11 +8,22 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class SubjectType extends AbstractType
 {
+    private $msgVisible;
+
+    public function __construct($msgVisible)
+    {
+        $this->msgVisible = $msgVisible;
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('title', 'text')
-            ->add('message', new MessageType());
+        $builder->add('title', 'text');
+        
+        if ($this->msgVisible === 'true') {
+            $builder->add('message', new MessageType());
+        } else {
+            $builder->add('message', new MessageType(), array('disabled' => true));
+        }
     }
 
     public function getName()
