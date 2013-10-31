@@ -185,8 +185,8 @@ li.custom_field div div {
 .navbar .navbar-nav .icon_link{
     padding-top:13px;
     padding-bottom:13px;
-    padding-left: 6px;
-    padding-right: 6px;
+    padding-left: 5px;
+    padding-right: 5px;
     vertical-align: middle;
     font-size:12px;
 }
@@ -199,12 +199,9 @@ li.custom_field div div {
 
 .navbar .navbar-nav .icon_link span{
     vertical-align: middle;
+    padding-left:1px;
+    padding-right:1px;
 }
-
-.navbar .navbar-nav .icon_link span span{
-    vertical-align: middle;
-}
-
 
 .chapter_list_header{
     text-align: center;
