@@ -37,8 +37,6 @@ class MoveChapterType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        //$builder->addValidator(new CallbackValidator(array($this, 'isNotRoot')));
-
         $builder->addEventListener(FormEvents::PRE_SET_DATA,
             function (FormEvent $event) use ($builder)
             {
@@ -56,7 +54,8 @@ class MoveChapterType extends AbstractType
                         }else{
                             //remove current chapter from legit destination list
                             if($data->getId() != $child->getId()){
-                                $chapters_list[$child->getId()] = $child->getTitle();
+                                $tmp_title = str_repeat("--", $child->getLevel()).$child->getTitle();
+                                $chapters_list[$child->getId()] = $tmp_title;
                             }
                         }
                     }
@@ -78,7 +77,7 @@ class MoveChapterType extends AbstractType
                         'mapped' => false,
                         'data' => 'false'
                     ));
-            });
+        });
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

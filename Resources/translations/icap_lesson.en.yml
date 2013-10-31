@@ -28,6 +28,7 @@ delete_also_children_more: 'Otherwise they will be placed in the nearest parent 
 edit_chapter_button: 'Edit chapter'
 lesson_welcome: 'This lesson is empty'
 lesson_welcome_create: 'Create a new chapter'
+location: 'Location'
 move_destination: 'Move chapter to :'
 move_chapter_button: 'Move chapter'
 next: 'Next chapter'

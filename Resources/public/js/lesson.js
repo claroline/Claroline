@@ -121,23 +121,8 @@ function expand(obj){
     $('#collapsor_icon_'+chapter_id).removeClass('icon-expand');
 }
 
-function checkMoveValue(){
-/*    $('#move_form_nojs').each(function() {
-        alert("passe");
-    });*/
-
-    //alert($sel.attr('id'));
-/*    $sel.change(function() {
-        alert("changed");
-        if(this.selectedIndex != 0){
-            $('#icap_lesson_movechaptertype_brother').prop("disabled", false);
-        }else{
-            $('#icap_lesson_movechaptertype_brother').prop("checked", false);
-            $('#icap_lesson_movechaptertype_brother').prop("disabled", true);
-        }
-    });*/
-}
 
 function callback_tinymce_init(){
     // script called on tinymce initialization ...
 }
+

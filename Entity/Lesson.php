@@ -42,27 +42,6 @@ class Lesson extends AbstractResource
     }
 
     /**
-     * Fonction retournant le chemin dans lequel se trouve le cours
-     * @return array $pathArray
-     */
-    public function getPathArray()
-    {
-        $path = $this->getPath();
-        $pathItems = explode("`", $path);
-        $pathArray = array();
-        foreach ($pathItems as $item) {
-            preg_match("/-([0-9]+)$/", $item, $matches);
-            if (count($matches) > 0) {
-                $id = substr($matches[0], 1);
-                $name = preg_replace("/-([0-9]+)$/", "", $item);
-                $pathArray[] = array('id' => $id, 'name' => $name);
-            }
-        }
-
-        return $pathArray;
-    }
-
-    /**
      * @ORM\PostPersist
      */
     public function createRoot(LifecycleEventArgs $event){

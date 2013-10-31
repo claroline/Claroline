@@ -87,8 +87,6 @@ class LessonController extends Controller
         $tree = $chapterRepository->getChapterTree($lesson->getRoot());
 
         //form used to move chapters, used by dragndrop methods
-        $chapters = $chapterRepository->getChapterAndChapterChildren($lesson->getRoot());
-        //$form = $this->createForm(new MoveChapterType(), $chapter, array('chapters' => $chapters));
         $form = $this->createForm($this->get("icap.lesson.movechaptertype"), $chapter);
 
         //the first time you enter the lesson there's no chapter
@@ -137,7 +135,8 @@ class LessonController extends Controller
         $this->checkAccess("EDIT", $lesson);
 
         $chapter = $this->findChapter($lesson, $chapterId);
-        $form = $this->createForm(new ChapterType(), $chapter);
+        $form = $this->createForm($this->get("icap.lesson.chaptertype"), $chapter);
+        //$form = $this->createForm(new ChapterType(), $chapter);
         //for ajaxification
         if ($this->getRequest()->isXMLHttpRequest()) {
             return $this->render(
@@ -179,7 +178,8 @@ class LessonController extends Controller
 
         $chapter = $this->findChapter($lesson, $chapterId);
 
-        $form = $this->createForm(new ChapterType(), $chapter);
+       // $form = $this->createForm(new ChapterType(), $chapter);
+        $form = $this->createForm($this->get("icap.lesson.chaptertype"), $chapter);
         $form->handleRequest($this->getRequest());
         if ($form->isValid()) {
             try {
@@ -307,7 +307,7 @@ class LessonController extends Controller
     }
 
     /**
-     * Route affichant le formulaire de création d'un nouveau chapitre
+     * Return chapter creation form
      * @param $resourceId
      * @return $lesson, $form
      *
@@ -329,14 +329,19 @@ class LessonController extends Controller
     public function newChapterAction($lesson, $parentChapterId)
     {
         $this->checkAccess("EDIT", $lesson);
-        $form = $this->createForm(new ChapterType(), null);
-
-        if($parentChapterId == 0){
+        if($parentChapterId == 0 || $parentChapterId == null)
+        {
             $chapterParent = $lesson->getRoot();
         }
-        else{
+        else
+        {
             $chapterParent = $this->findChapter($lesson, $parentChapterId);
         }
+
+        $chapterRepository = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter');
+        $chapters =  $chapterRepository->getChapterAndChapterChildren($lesson->getRoot());
+
+        $form = $this->createForm($this->get("icap.lesson.chaptertype"), null, array('chapters' => $chapters, 'parentId' => $chapterParent->getId()));
 
         //for ajaxification
         if ($this->getRequest()->isXMLHttpRequest()) {
@@ -354,40 +359,41 @@ class LessonController extends Controller
         return array(
             '_resource' => $lesson,
             'form' => $form->createView(),
-            'chapterParent' => $chapterParent,
             'workspace' => $lesson->getResourceNode()->getWorkspace()
         );
     }
 
     /**
-     * Route ajoutant le chapitre à la base
+     * Create a new chapter
      * @param $resourceId
      * @return $lesson, $form
      *
      * @Route(
-     *      "add/{resourceId}/{parentChapterId}",
+     *      "add/{resourceId}",
      *      name="icap_lesson_add_chapter",
-     *      requirements={"resourceId" = "\d+", "parentChapterId" = "\d+"}
+     *      requirements={"resourceId" = "\d+"}
      * )
      * @Template("IcapLessonBundle:Lesson:newChapter.html.twig")
      * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
      */
-    public function addChapterAction($lesson, $parentChapterId)
+    public function addChapterAction($lesson)
     {
         $this->checkAccess("EDIT", $lesson);
         $translator = $this->get('translator');
 
-        $chapterParent = $this->findChapter($lesson, $parentChapterId);
+        $chapterRepository = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter');
+        $chapters =  $chapterRepository->getChapterAndChapterChildren($lesson->getRoot());
 
-        $form = $this->createForm(new ChapterType(), null);
+        $form = $this->createForm($this->get("icap.lesson.chaptertype"), null, array('chapters' => $chapters));
         $form->handleRequest($this->getRequest());
-
+       // var_dump($form->get('parentChapter')->getData());
         if ($form->isValid()) {
+            var_dump("passe3");
+            $chapterParent = $this->findChapter($lesson, $form->get('parentChapter')->getData());
             $chapter = $form->getData();
             $chapter->setLesson($lesson);
-
             $em = $this->getDoctrine()->getManager();
-            $chapterRepository = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter');
+
             $chapterRepository->persistAsLastChildOf($chapter, $chapterParent);
             $em->flush();
 
@@ -399,12 +405,12 @@ class LessonController extends Controller
             $this->get('session')->getFlashBag()->add('error',$translator->trans('Your chapter has not been added',array(), 'icap_lesson'));
         }
 
-        return array(
+/*        return array(
             'lesson' => $lesson,
             'form' => $form->createView(),
-            'workspace' => $lesson->getWorkspace(),
-            'pathArray' => $lesson->getPathArray()
-        );
+            'workspace' => $lesson->getResourceNode()->getWorkspace()
+        );*/
+        return $this->redirect($this->generateUrl('icap_lesson_new_chapter', array('resourceId' => $lesson->getId(), 'parentChapterId' => $form->get('parentChapter')->getData())));
     }
 
     /**
@@ -437,7 +443,6 @@ class LessonController extends Controller
             }
         }
 
-        //$form = $this->createForm(new MoveChapterType(), $chapter,  array('chapters' => $chapters));
         $form = $this->createForm($this->get("icap.lesson.movechaptertype"), $chapter);
         $form->handleRequest($this->getRequest());
 
@@ -483,9 +488,6 @@ class LessonController extends Controller
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository('IcapLessonBundle:Chapter');
 
-        $chapters =  $repo->getChapterAndChapterChildren($lesson->getRoot());
-
-        //$form = $this->createForm(new MoveChapterType(), $chapter,  array('chapters' => $chapters));
         $form = $this->createForm($this->get("icap.lesson.movechaptertype"), $chapter);
         $form->handleRequest($this->getRequest());
         if ($form->isValid() and $form->get('choiceChapter')->getData() != $chapter->getid()) {

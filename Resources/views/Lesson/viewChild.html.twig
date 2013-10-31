@@ -1,6 +1,6 @@
 {% macro recursiveChapter(root, chapter, lesson, isRoot) %}
     {% if isRoot %}
-        <ul class='jquery-sortable-list overflow' data-list = '{{ root.id }}' >
+        <ul class='jquery-sortable-list overflow' data-list = '{{ root.id }}' id='lesson_menu' >
     {% else %}
         <ul class='' id = 'list_{{ root.id }}' data-list = '{{ root.id }}'>
     {% endif %}
@@ -8,9 +8,9 @@
         {% for child in root.__children %}
             <li id = '{{ child.id }}' data-path = '{{ path('icap_lesson_move_chapter', { 'resourceId': lesson.id, 'chapterId': child.id })}}' >
             {% if child.id == chapter.id %}
-                <div class='menu-item active_chapter'>
+                <div class='menu-item active_chapter' id = 'menu_item_{{ child.id }}'>
             {% else %}
-                <div class='menu-item'>
+                <div class='menu-item' id = 'menu_item_{{ child.id }}'>
             {% endif %}
             <i class='icon-caret-down collapsor {% if child.__children|length == 0%}empty{% endif %}' id='collapsor_icon_{{ child.id }}' data-collapsor = '{{ child.id }}'></i>
             {#<i data-handle = '{{ child.id }}' class="icon-file-text-alt handle_sortable lesson_tooltip" data-original-title='{{ 'dragndrop_button'|trans({}, 'icap_lesson') }}'></i>#}

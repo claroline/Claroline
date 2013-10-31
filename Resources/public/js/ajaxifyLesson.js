@@ -15,13 +15,15 @@ function injectForm(obj, hashname){
             .done(function (data) {
                 resetTiny();
                 $('#chapter_content').html(data);
-                
+                initSelectedChapterListener();
+                selectActiveChapter();
             })
         ;
     });
 }
 
-function injectFormForMove(obj, hashname){
+
+/*function injectFormForMove(obj, hashname){
     var newLink = $(obj);
     newLink.attr("data-path", newLink.attr('href'));
     newLink.attr('href', hashname+'-'+newLink.attr('data-chapter'));
@@ -33,9 +35,8 @@ function injectFormForMove(obj, hashname){
                 $('#chapter_content').html(data);
             })
         ;
-        checkMoveValue();
     });
-}
+}*/
 
 function popupForm(obj, hashname){
     var newLink = $(obj);
@@ -60,6 +61,26 @@ function popupForm(obj, hashname){
     });
 }
 
+function selectActiveChapter(){
+    var selectedId = $('#icap_lesson_chaptertype_parentChapter').val();
+    if(selectedId != null && selectedId != undefined){
+        resetActiveChapter();
+        $('#menu_item_'+selectedId).addClass('active_chapter');
+    }
+}
+
+function resetActiveChapter(){
+    $('#lesson_menu').find('.active_chapter').each(function(){
+        $(this).removeClass('active_chapter');
+    });
+}
+
+function initSelectedChapterListener(){
+    $('#icap_lesson_chaptertype_parentChapter').on('change', function (event){
+        selectActiveChapter();
+    });
+}
+
 $(document).ready(function() {
     'use strict';
     //form ajax insertion for chapter edition
@@ -72,7 +93,7 @@ $(document).ready(function() {
     });
     //form ajax insertion for chapter move
     $('a.movechapter').each(function(){
-        injectFormForMove($(this), '#moveChapter');
+        injectForm($(this), '#moveChapter');
     });
     //ajax popup for chapter delete form
     $('a.deletechapter').each(function(){
