@@ -2,19 +2,21 @@
     'use strict';
 
     var home = window.Claroline.Home;
+    var content_css = home.asset + 'bundles/clarolinecore/css/tinymce/tinymce.css';
+    var language = home.locale.trim();
 
     var configTinyMCE = {
         selector: 'textarea.claroline-tiny-mce',
         theme: 'modern',
-        language: home.locale.trim(),
+        language: language,
         browser_spellcheck : true,
         autoresize_min_height: 100,
         autoresize_max_height: 500,
-        content_css: home.asset + '/bundles/clarolinecore/css/tinymce/tinymce.css',
+        content_css: content_css,
         plugins: [
             'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
             'searchreplace wordcount visualblocks visualchars code fullscreen',
-            'insertdatetime media nonbreaking save table contextmenu directionality',
+            'insertdatetime media nonbreaking save table directionality',
             'emoticons template paste textcolor'
         ],
         toolbar1: 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | preview fullscreen',

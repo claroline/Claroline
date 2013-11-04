@@ -29,7 +29,11 @@
                 <thead>
                     <th> {{ 'tool'|trans({}, 'platform') }} </th>
                     {% for role in roles %}
-                        <th> {{ role.getTranslationKey|trans({}, 'platform') }}</th>
+                        <th>
+                        {% if role.getType == 1 %} <em> {% endif %}
+                        {{ role.getTranslationKey|trans({}, 'platform') }}
+                        {% if role.getType == 1 %} </em>{% endif %}
+                        </th>
                     {% endfor %}
                     <th> {{ 'position'|trans({}, 'platform') }} </th>
                 </thead>
@@ -51,7 +55,7 @@
                                            class="chk-tool-visible"
                                            value="1"
                                         {% if toolPermission['tool'].isDesktopRequired()
-                                            or (toolPermission['tool'].getName() == 'parameters' and loop.last) %}
+                                            or (toolPermission['tool'].getName() == 'parameters') %}
                                            disabled
                                         {% endif %}
                                         {% if isVisible %}
