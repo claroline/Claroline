@@ -29,12 +29,10 @@
 		"innova/angular-uisortable" : "dev-master",
 		"claroline/core-bundle" : ">=1.0,<3.0",
 		"doctrine/doctrine-fixtures-bundle" : "dev-master",
-		"innova/angular-blur" : "dev-master",
 		"php" : ">=5.3.0",
 		"symfony/framework-bundle" : "2.*",
 		"innova/angular-ui" : "dev-master",
-		"innova/angular-pageslide" : "dev-master",
-		"innova/angular-clickout" : "dev-master"
+		"innova/angular-pageslide" : "dev-master"
 	},
 	"autoload" : {
 		"psr-0" : {
