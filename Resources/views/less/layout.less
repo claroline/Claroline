@@ -109,33 +109,37 @@ body {
 /************/
 
 #top_bar {
-    @media (max-width: (@screen-md - 1)) {
+    .dropdown-fix {
+        position: relative;
+        width: 100%;
+        border: none;
+        .box-shadow(none);
+        background: @navbar-inverse-bg;
+        li a {
+            padding-left: 15px;
+            margin: 5px;
+            color: @navbar-inverse-link-color;
+            &:hover {
+                color: @navbar-inverse-link-hover-color;
+            }
+        }
+        .divider{
+            display: none;
+        }
+
         .dropdown-header {
             color: lighten(@navbar-inverse-bg, 20%);
             padding-left: 20px;
         }
+    }
 
+    @media(max-width: (@screen-md - 1)) {
         .dropdown-menu {
-            position: relative;
-            width: 100%;
-            border: none;
-            .box-shadow(none);
-            background: @navbar-inverse-bg;
-            li a {
-                padding-left: 15px;
-                margin: 5px;
-                color: @navbar-inverse-link-color;
-                &:hover {
-                    color: @navbar-inverse-link-hover-color;
-                }
-            }
-            .divider{
-                display: none;
-            }
+            .dropdown-fix;
         }
     }
 
-    @media (min-width: @screen-md) {
+    @media(min-width: @screen-md) {
          .dropdown-menu {
             position: absolute;
             left: auto;
@@ -157,6 +161,57 @@ body {
 
     .navbar-collapse {
         margin-left: -15px;
+    }
+
+    @media(min-width: @screen-md) {
+        max-height: (@navbar-height + 3);
+        overflow: hidden !important;
+
+        &.break {
+            max-height: 395px !important;
+            overflow: visible !important;
+
+            .navbar-header {
+                width: 100%;
+            }
+
+            .navbar-toggle {
+                display: block;
+            }
+
+            .navbar-collapse.collapse {
+                display: none !important;
+            }
+            .navbar-collapse.in {
+                display: block;
+            }
+            .navbar-collapse.collapsing {
+                overflow: hidden !important;
+            }
+            .navbar-collapse {
+                overflow: auto !important;
+                max-height: 340px  !important;
+                overflow-x: visible  !important;
+                .navbar-nav {
+                    &, li {
+                        width: 100%;
+                    }
+
+                    li a {
+                        padding-left: 10px;
+                        padding-right: 10px;
+                    }
+
+                    &.navbar-right {
+                        margin-right: 0;
+                    }
+
+                    .dropdown-menu {
+                        .dropdown-fix;
+                    }
+                }
+            }
+        }
     }
 }
 
