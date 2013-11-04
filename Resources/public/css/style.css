@@ -36,12 +36,6 @@ article header h1 {
 article header .post_infos {
   margin-bottom: 0;
 }
-article header .options .btn-red {
-  color: #d9534f;
-}
-article header .options .btn-green {
-  color: #47a447;
-}
 article .content {
   padding: 15px;
 }
@@ -59,6 +53,12 @@ article footer .tags {
 }
 article .highlight {
   background-color: #DFFF00;
+}
+.options .btn-red {
+  color: #d9534f;
+}
+.options .btn-green {
+  color: #47a447;
 }
 .comment_list li.unpublished {
   border: 1px dotted orange;

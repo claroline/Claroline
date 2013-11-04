@@ -3,6 +3,7 @@
 namespace Icap\BlogBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Blog;
@@ -27,7 +28,12 @@ class PostController extends Controller
     {
         $this->checkAccess("OPEN", $blog);
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $securityContext = $this->get('security.context');
+        $user            = $securityContext->getToken()->getUser();
+
+        if ($securityContext->isGranted('IS_AUTHENTICATED_ANONYMOUSLY')) {
+            $user = null;
+        }
 
         $this->dispatchPostReadEvent($blog, $post);
 
@@ -36,43 +42,50 @@ class PostController extends Controller
             $commentStatus = Comment::STATUS_PUBLISHED;
         }
 
-        $comment = new Comment();
-        $comment
-            ->setPost($post)
-            ->setAuthor($user)
-            ->setStatus($commentStatus)
-        ;
+        $form = null;
 
-        $form = $this->createForm(new CommentType(), $comment);
+        if ($blog->isCommentsAuthorized()) {
+            $comment = new Comment();
+            $comment
+                ->setPost($post)
+                ->setAuthor($user)
+                ->setStatus($commentStatus)
+            ;
 
-        if ("POST" === $request->getMethod()) {
-            $form->handleRequest($request);
-            if ($form->isValid()) {
-                $translator = $this->get('translator');
-                $flashBag = $this->get('session')->getFlashBag();
-                $entityManager = $this->getDoctrine()->getManager();
+            $form = $this->createForm(new CommentType(), $comment);
 
-                try {
-                    $entityManager->persist($comment);
-                    $entityManager->flush();
+            if ("POST" === $request->getMethod()) {
+                $form->handleRequest($request);
+                if ($form->isValid()) {
+                    $translator = $this->get('translator');
+                    $flashBag = $this->get('session')->getFlashBag();
+                    $entityManager = $this->getDoctrine()->getManager();
 
-                    $this->dispatchCommentCreateEvent($blog, $post, $comment);
+                    try {
+                        $entityManager->persist($comment);
+                        $entityManager->flush();
 
-                    $flashBag->add('success', $translator->trans('icap_blog_comment_add_success', array(), 'icap_blog'));
-                } catch (\Exception $exception) {
-                    $flashBag->add('error', $translator->trans('icap_blog_comment_add_error', array(), 'icap_blog'));
+                        $this->dispatchCommentCreateEvent($blog, $post, $comment);
+
+                        $flashBag->add('success', $translator->trans('icap_blog_comment_add_success', array(), 'icap_blog'));
+                    } catch (\Exception $exception) {
+                        $flashBag->add('error', $translator->trans('icap_blog_comment_add_error', array(), 'icap_blog'));
+                    }
+
+                    return $this->redirect($this->generateUrl('icap_blog_post_view', array('blogId' => $blog->getId(), 'postSlug' => $post->getSlug())) . '#comments');
                 }
-
-                return $this->redirect($this->generateUrl('icap_blog_post_view', array('blogId' => $blog->getId(), 'postSlug' => $post->getSlug())) . '#comments');
             }
+
+            $form = $form->createView();
         }
 
         return array(
-            '_resource' => $blog,
-            'user'      => $user,
-            'post'      => $post,
-            'form'      => $form->createView(),
-            'archives'  => $this->getArchiveDatas($blog)
+            '_resource'     => $blog,
+            '_resourceNode' => new ResourceCollection(array($blog->getResourceNode())),
+            'user'          => $user,
+            'post'          => $post,
+            'form'          => $form,
+            'archives'      => $this->getArchiveDatas($blog)
         );
     }
     /**
