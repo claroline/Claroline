@@ -12,5 +12,7 @@
         {% include 'IcapWikiBundle:Log:log_details_section_delete.html.twig' %}
     {% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogContributionCreateEvent::ACTION') == log.action %}
         {% include 'IcapWikiBundle:Log:log_details_contribution_create.html.twig' %}
+    {% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogWikiConfigureEvent::ACTION') == log.action %}
+        {% include 'IcapWikiBundle:Log:log_details_wiki_configure.html.twig' %}
     {% endif %}
 {% endblock %}

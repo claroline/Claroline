@@ -13,6 +13,7 @@ use Icap\WikiBundle\Event\Log\LogSectionDeleteEvent;
 use Icap\WikiBundle\Event\Log\LogSectionMoveEvent;
 use Icap\WikiBundle\Event\Log\LogSectionUpdateEvent;
 use Icap\WikiBundle\Event\Log\LogContributionCreateEvent;
+use Icap\WikiBundle\Event\Log\LogWikiConfigureEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -174,6 +175,19 @@ class Controller extends BaseController
     }
 
     /**
+     * @param Wiki $wiki
+     * @param array $changeSet
+     *
+     * @return Controller
+     */
+    protected function dispatchWikiConfigureEvent(Wiki $wiki, $changeSet)
+    {
+        $event = new LogWikiConfigureEvent($wiki, $changeSet);
+
+        return $this->dispatch($event);
+    }
+
+    /**
      * Retrieve a section from database
      * @param Wiki $wiki
      * @param integer $sectionId
@@ -209,6 +223,19 @@ class Controller extends BaseController
         }
 
         return $contribution;
+    }
+
+    /**
+     * Retrieve logged user. If anonymous return null.
+     * @return user
+     */
+    protected function getLoggedUser()
+    {
+        $user = $this->get('security.context')->getToken()->getUser();
+        if (is_string($user)) {
+            $user = null;
+        }
+        return $user;
     }
 
 }

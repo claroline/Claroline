@@ -61,8 +61,9 @@ class SectionController extends Controller
         $contributionRepository = $this->get('icap.wiki.contribution_repository');
         $section = $this->getSection($wiki, $sectionId);
         $collection = $collection = new ResourceCollection(array($wiki->getResourceNode()));
+        $isAdmin = $this->isUserGranted('EDIT', $wiki, $collection);
 
-        if ($section->getVisible() === true || $this->isUserGranted('EDIT', $wiki, $collection)) {
+        if ($section->getVisible() === true || $isAdmin) {
             $query = $contributionRepository->getSectionHistoryQuery($section);
             $adapter = new DoctrineORMAdapter($query);
             $pager   = new PagerFanta($adapter);
@@ -80,7 +81,8 @@ class SectionController extends Controller
                 'pager' => $pager,
                 'section' => $section,
                 'workspace' => $wiki->getResourceNode()->getWorkspace(),
-                'maxPerPageArray' => $maxPerPageArray
+                'maxPerPageArray' => $maxPerPageArray,
+                'isAdmin' => $isAdmin
             );
         }
         else {
@@ -106,13 +108,21 @@ class SectionController extends Controller
      */
     public function newAction(Request $request, $wiki, $user, $parentSectionId)
     {
-        $this->checkAccess("EDIT", $wiki);
-        $section = new Section();
-        $section->setWiki($wiki);
-        $section->setAuthor($user);
-        $section->setNewActiveContributionToSection($user);
+        $this->checkAccess("OPEN", $wiki);
+        $collection = $collection = new ResourceCollection(array($wiki->getResourceNode()));
+        $isAdmin = $this->isUserGranted('EDIT', $wiki, $collection);
+        if ($isAdmin || $wiki.getMode()!==2) {
+            $section = new Section();
+            $section->setWiki($wiki);
+            $section->setAuthor($user);
+            $section->setIsWikiAdmin($isAdmin);
+            $section->setNewActiveContributionToSection($user);
 
-        return $this->persistCreateSection($request, $wiki, $section, $user, $parentSectionId);
+            return $this->persistCreateSection($request, $wiki, $section, $user, $parentSectionId);
+        }
+        else {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        }
     }
 
     /**
@@ -134,13 +144,20 @@ class SectionController extends Controller
      */
     public function editAction(Request $request, $wiki, $user, $sectionId)
     {
-        $this->checkAccess("EDIT", $wiki);
-        $section = $this->getSection($wiki, $sectionId);
-        $oldActiveContribution = $section->getActiveContribution();
-        $section->setNewActiveContributionToSection($user);
-        $section->setPosition($sectionId);        
-        
-        return $this->persistUpdateSection($request, $wiki, $section, $oldActiveContribution, $user);
+        $this->checkAccess("OPEN", $wiki);
+        $collection = $collection = new ResourceCollection(array($wiki->getResourceNode()));
+        $isAdmin = $this->isUserGranted('EDIT', $wiki, $collection);
+        if ($isAdmin || $wiki.getMode()!==2) {
+            $section = $this->getSection($wiki, $sectionId);
+            $oldActiveContribution = $section->getActiveContribution();
+            $section->setNewActiveContributionToSection($user);
+            $section->setPosition($sectionId);
+            $section->setIsWikiAdmin($isAdmin);
+
+            return $this->persistUpdateSection($request, $wiki, $section, $oldActiveContribution, $user);
+        } else {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        }      
     }
 
     /**
@@ -249,6 +266,9 @@ class SectionController extends Controller
 
                 $parent = $this->getSection($wiki, $parentSectionId);
                 $section->setParent($parent);
+                if ($wiki->getMode() == 1) {
+                    $section->setVisible(false);
+                }
 
                 try{
                     $em = $this->getDoctrine()->getManager();
@@ -301,6 +321,10 @@ class SectionController extends Controller
                 $position = $section->getId();                
                 $activeContribution = $section->getActiveContribution();
                 try {
+                    if ($section->getHasChangedActiveContribution() === true && $wiki->getMode() == 1) {
+                        $em->persist($activeContribution);
+                        $section->setActiveContribution($oldActiveContribution);
+                    }
                     $em->persist($section);
                     $em->flush();
                     if ($section->checkMoveSection()) {

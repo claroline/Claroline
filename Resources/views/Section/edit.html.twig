@@ -13,6 +13,9 @@
     {% block wiki_content %}
         <div>
             <form id="editSection-form" name="icap_wiki_edit_section" method="POST" class="form-vertical" action="{{ path("icap_wiki_edit_section", {'wikiId': _resource.id, 'sectionId' : section.id }) }}">
+                {% if _resource.mode is sameas(1) %}
+                <div class="alert alert-warning">{{'moderate_mode_warning'|trans({},'icap_wiki')|raw}}</div>
+                {% endif %}
                 <div class="control-group">
                     {% if section.isRoot() is sameas(true) %}
                         <div class="controls">
@@ -22,8 +25,11 @@
                         <div class="controls">
                             {{ form_row(form.activeContribution.title) }}
                             {{ form_row(form.activeContribution.text) }}
+                            {% if section.getIsWikiAdmin() is sameas(true) %}
                             {{ form_row(form.visible) }}
+                            {% endif %}
                         </div>
+                        {% if section.getIsWikiAdmin() is sameas(true) %}
                         <div class="move-wiki-section-header">
                             {{ "move_section"|trans({},'icap_wiki') }}
                         </div>
@@ -31,6 +37,7 @@
                             {{ form_row(form.position) }}
                             {{ form_row(form.brother) }}
                         </div>
+                        {% endif %}
                     {% endif %}
                 </div>
                 {{ form_rest(form) }}

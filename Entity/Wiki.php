@@ -19,6 +19,15 @@ class Wiki extends AbstractResource
      */
     private $root;
 
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     * mode of wiki
+     * null or 0 : wiki open for edit
+     * 1 : wiki is on moderate mode
+     * 2 : wiki is on read only mode
+     */
+    protected $mode;
+
     //Temporary variable used only by onCopy method of WikiListener
     private $wikiCreator;
 
@@ -36,6 +45,22 @@ class Wiki extends AbstractResource
     public function getRoot()
     {
         return $this->root;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getMode()
+    {
+        return (($this->mode !== null)?$this->mode:0);
+    }
+
+    /**
+     * @param integer $mode
+     */
+    public function setMode($mode)
+    {
+        return $this->mode = $mode;
     }
 
     public function getPathArray()

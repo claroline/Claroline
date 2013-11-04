@@ -43,7 +43,7 @@ class EditSectionType extends AbstractType
                 $data = $event->getData();
 
                 $isRoot = $data->isRoot();
-                if ($isRoot === false) {
+                if ($isRoot === false && $data->getIsWikiAdmin()) {
                     $form
                         ->add('visible', 'checkbox', array(
                             'required' => false    

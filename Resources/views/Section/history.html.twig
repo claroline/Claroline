@@ -75,7 +75,7 @@
                             </span>
                             {% if contribution.id == section.activeContribution.id %}
                                 <span class="wiki-contribution-active text-success">{{'active_contribution'|trans({}, 'icap_wiki')}}</span>
-                            {% else %}
+                            {% elseif isAdmin %}
                                 <a class="wiki-contribution-set-active btn btn-default btn-xs" href="{{ path('icap_wiki_contribution_active', {"wikiId": _resource.id, "sectionId": section.id, "contributionId": contribution.id})}}">
                                     {{'set_active_contribution'|trans({}, 'icap_wiki')}}
                                 </a>

@@ -85,6 +85,11 @@ class Section
      * Variable used in section edit form to define if active contribution has changed
      */
     private $hasChangedActiveContribution = true;
+
+    /*
+     * Variable used is section edit to define if user has admin rights
+     */
+    private $isWikiAdmin = false;
     
     /**
      * @Gedmo\TreeRoot
@@ -347,6 +352,22 @@ class Section
     public function getHasChangedActiveContribution()
     {
         return (bool)$this->hasChangedActiveContribution;
+    }
+
+    /**
+     * @param boolean $brother
+     */
+    public function setIsWikiAdmin($isAdmin)
+    {
+        $this->isWikiAdmin = (bool)$isAdmin;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsWikiAdmin()
+    {
+        return (bool)$this->isWikiAdmin;
     }
 
     /**

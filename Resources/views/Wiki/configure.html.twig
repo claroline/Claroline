@@ -1,0 +1,35 @@
+{% extends 'IcapWikiBundle::layout.html.twig' %}
+
+{% trans_default_domain "icap_wiki" %}
+
+{% block title %}{{ _resource.resourceNode.name }}{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('icap_wiki_view', {"wikiId": _resource.id}) }}">{{_resource.resourceNode.name}}</a></li>
+    <li class="active">{{"options"|trans({}, 'icap_wiki')}}</li>
+{% endblock %}
+
+{% block wiki_content %}
+    <div class="wiki-page-header page-header">
+        <h1 class="wiki-title-header">
+            {{ _resource.resourceNode.name }} : {{"options"|trans({}, 'icap_wiki')}}
+        </h1>        
+    </div>
+    {% form_theme form 'IcapWikiBundle:Wiki:modeField.html.twig' %}
+    <form id="configureWiki-form-{{_resource.id}}" name="icap_wiki_configure" method="POST" class="form-vertical" action="{{ path("icap_wiki_configure", {'wikiId': _resource.id }) }}">
+        <div class="control-group">
+            <div class="controls">
+                {{ form_row(form.mode) }}
+            </div>
+        </div>
+        {{ form_rest(form) }}
+        <div class="well well-sm col-md-9 col-md-offset-3"><small>{{'note_well'|trans({},'icap_wiki')|raw}}</small></div>
+        <a class="btn btn-default cancel-btn" href="{{ path('icap_wiki_view', {"wikiId": _resource.id}) }}">{% trans %}Cancel{% endtrans %}</a>&nbsp;
+        <input type="submit" value="{% trans %}Confirm{% endtrans %}" class="btn btn-primary"/>
+    </form>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/sortable/css/jquery.sortable.css') }}'/>
+{% endblock %}

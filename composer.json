@@ -21,6 +21,6 @@
     },
     "target-dir": "Icap/WikiBundle",
     "extra": {
-        "dbVersion": "20131028142219"
+        "dbVersion": "20131031085945"
     }
 }

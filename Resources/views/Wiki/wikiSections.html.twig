@@ -1,4 +1,4 @@
-{% macro wiki_sections(sections, isAdmin, wikiId) %}
+{% macro wiki_sections(sections, isAdmin, wikiId, wikiMode, user) %}
     {% for section in sections %}
         {% if isAdmin or section.visible %}
             {% set level = section.level + 1 %}
@@ -12,7 +12,7 @@
                 <div class="{{level>2?"subsection-header":"page-header"}}" >
                     <h{{level}} {{ fontsize!=0?"style=font-size:" ~ fontsize ~ "px;":"" }}>
                         {{section.activeContribution.title}}
-                        {% if isAdmin %}
+                        {% if user is not empty and (isAdmin or wikiMode is not sameas(2)) %}
                             <small class="wiki-actions">
                                 {% if section.visible is sameas (false) %}
                                     <span class="invisible-section-text">({{"invisible"|trans({},'icap_wiki')}})</span>
@@ -25,11 +25,13 @@
                                     <a href="{{ path('icap_wiki_edit_section', { 'wikiId': wikiId, 'sectionId' : section.id }) }}" class="edit-section" data-section="{{section.id}}" >
                                         {{ 'edit'|trans({}, 'icap_wiki') }}
                                     </a> 
-                                    | 
+                                    |
+                                    {% if isAdmin %} 
                                     <a href="{{ path('icap_wiki_delete_section', { 'wikiId': wikiId, 'sectionId' : section.id }) }}" class="delete-section" data-section="{{section.id}}" >
                                         {{ 'delete'|trans({}, 'icap_wiki') }}
                                     </a> 
                                     | 
+                                    {% endif %}
                                     <a href="{{ path('icap_wiki_section_history', { 'wikiId': wikiId, 'sectionId' : section.id }) }}" class="history-section" data-section="{{section.id}}" >
                                         {{ 'history'|trans({}, 'icap_wiki') }}
                                     </a> 
@@ -42,7 +44,7 @@
                 <div class="wiki-section-text">{{section.activeContribution.text|raw}}</div>
                 {% if section.__children is not empty %}
                     <ul>
-                        {{ _self.wiki_sections(section.__children, isAdmin, wikiId) }}
+                        {{ _self.wiki_sections(section.__children, isAdmin, wikiId, wikiMode, user) }}
                     </ul>
                 {% endif %}
             </li>
@@ -51,5 +53,5 @@
 {% endmacro %}
 
 <ul id="wiki-sections-list">
-    {{ _self.wiki_sections(sections, isAdmin, wikiId) }}
+    {{ _self.wiki_sections(sections, isAdmin, wikiId, wikiMode, user) }}
 </ul>

@@ -7,6 +7,7 @@ icap_wiki_edit_section_type_position: 'Position'
 icap_wiki_edit_section_type_visible: 'Visible'
 icap_wiki_edit_section_type_brother: 'Do you want this section to be at the same level as the one selected?'
 icap_wiki_delete_section_type_children: 'Do you also want to delete its subsections?'
+icap_wiki_options_type_mode: 'Wiki mode'
 delete_section: 'Delete section'
 create_new_section: 'Create new section'
 create_section: "Create section"
@@ -24,6 +25,10 @@ history: 'History'
 added: 'Added'
 deleted: 'Removed'
 changed: 'Changed (style)'
+normal: "Normal"
+moderate: "Moderate"
+read_only: "Read only"
+options: "Options"
 active_contribution: 'Current revision'
 set_active_contribution: 'Publish this revision'
 wiki_contents: 'Contents'
@@ -40,5 +45,12 @@ icap_wiki_section_move_success: "Section was moved successfully"
 icap_wiki_section_move_error: "Error during section move"
 icap_wiki_section_delete_success: "Section was deleted successfully"
 icap_wiki_section_delete_error: "Error during section deletion"
+icap_wiki_options_save_success: "Wiki options were updated successfully"
+icap_wiki_options_save_error: "Error during updated of wiki options"
+normal_message: "Every one can contribute to the wiki. Any contribution is directly published."
+moderate_message: "Every one can contribute. However, only Administrator and Moderator can publish it."
+read_only_message: "Only Administrator and Moderator users can contribute to the wiki."
+note_well: "<strong>NB</strong>: Note that in a normal and moderate functioning, every persons authenticated on the platform has the possibility of participating in the wiki"
+moderate_mode_warning: "<div><strong>Wiki runs in moderate mode</strong></div> <div>Any changes would be available only after administrator's approval. A complete history of a section's revisions can be found in 'history' page.</div>"
 date_format: "m/d/Y \\a\\t H:i"
 

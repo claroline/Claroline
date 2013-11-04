@@ -14,9 +14,7 @@ use Claroline\CoreBundle\Entity\User;
 use Icap\WikiBundle\Entity\Wiki;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Icap\WikiBundle\Entity\Section;
-use Icap\WikiBundle\Form\SectionType;
-use Icap\WikiBundle\Form\EditSectionType;
-use Icap\WikiBundle\Form\DeleteSectionType;
+use Icap\WikiBundle\Form\WikiOptionsType;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -41,6 +39,7 @@ class WikiController extends Controller{
     {
         $this->checkAccess("OPEN", $wiki);
         $isAdmin = $this->isUserGranted("EDIT", $wiki);
+        $user = $this->getLoggedUser();
         $sectionRepository = $this->get('icap.wiki.section_repository');
         $tree = $sectionRepository->buildSectionTree($wiki, $isAdmin);
 
@@ -48,7 +47,66 @@ class WikiController extends Controller{
             '_resource' => $wiki,
             'tree' => $tree,
             'workspace' => $wiki->getResourceNode()->getWorkspace(),
-            'isAdmin' => $isAdmin
+            'isAdmin' => $isAdmin,
+            'user' => $user
         );
-    }    
+    }
+
+    /**
+     * @Route(
+     *      "/configure/{wikiId}",
+     *      requirements={"wikiId" = "\d+"},
+     *      name="icap_wiki_configure"
+     * )
+     * @ParamConverter("wiki", class="IcapWikiBundle:Wiki", options={"id" = "wikiId"})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
+     * @Template()
+     */
+    public function configureAction(Request $request, Wiki $wiki, $user)
+    {
+        $this->checkAccess("EDIT", $wiki);
+        
+        return $this->persistWikiOptions($request, $wiki, $user);
+    } 
+
+    private function persistWikiOptions (Request $request, Wiki $wiki, User $user) {
+        $form = $this->createForm(new WikiOptionsType(), $wiki);
+        if ("POST" === $request->getMethod()) {
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                $flashBag = $this->get('session')->getFlashBag();
+                $translator = $this->get('translator');
+
+                try{
+                    $em = $this->getDoctrine()->getManager();
+                    $unitOfWork = $em->getUnitOfWork();
+                    $unitOfWork->computeChangeSets();
+                    $changeSet = $unitOfWork->getEntityChangeSet($wiki);
+                    $em->persist($wiki);
+                    $em->flush();
+
+                    $this->dispatchWikiConfigureEvent($wiki, $changeSet);
+
+                    $flashBag->add('success', $translator->trans('icap_wiki_options_save_success', array(), 'icap_wiki'));
+                } catch (\Exception $exception) {
+                    $flashBag->add('error', $translator->trans('icap_wiki_options_save_error', array(), 'icap_wiki'));
+                }                
+
+                return $this->redirect(
+                    $this->generateUrl(
+                        'icap_wiki_view',
+                        array(
+                            'wikiId' => $wiki->getId()
+                        )
+                    )
+                );
+            }
+        }
+
+        return array(
+            '_resource' => $wiki,
+            'workspace' => $wiki->getResourceNode()->getWorkspace(),
+            'form' => $form->createView()
+        );
+    }   
 }

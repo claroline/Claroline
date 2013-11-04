@@ -16,6 +16,8 @@
     {{ 'log.wiki.delete_section'|trans({'%wiki%': resource, '%section%': section}, 'log')|raw }}
 {% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogContributionCreateEvent::ACTION') == log.action %}
     {{ 'log.wiki.create_contribution'|trans({'%wiki%': resource, '%contribution%': section}, 'log')|raw }}
+{% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogWikiConfigureEvent::ACTION') == log.action %}
+    {{ 'log.wiki.configure'|trans({'%wiki%': resource}, 'log')|raw }}
 {% else %}
     no default text
 {% endif %}
