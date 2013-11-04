@@ -82,8 +82,6 @@ class BlogListener extends ContainerAware
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-        $entityManager = $this->container->get('doctrine.orm.entity_manager');
-        $entityManager->remove($event->getResource());
         $event->stopPropagation();
     }
 
