@@ -43,7 +43,8 @@
                         {% endif %}
 
                         <ul class="list-inline">
-                            <li><span class="icon-user"> </span>{% if null == comment.author %}{{ 'anonymous'|trans({}, 'platform') }}{% else %}{{ comment.author.firstname ~ ' ' ~ comment.author.lastname }}{% endif %}</li>
+                            {% set authorPicture = comment.author.picture %}
+                            <li>{% if authorPicture is null %}<span class="icon-user"></span>{% else %}<img src="{{ asset('uploads/pictures/') ~ authorPicture }}" alt="{{ author.firstname ~ ' ' ~ author.lastname }}" class="img-rounded user_picture">{% endif %}&nbsp;{% if null == comment.author %}{{ 'anonymous'|trans({}, 'platform') }}{% else %}{{ comment.author.firstname ~ ' ' ~ comment.author.lastname }}{% endif %}</li>
                             {% if isPublished %}<li><span class="icon-calendar"></span>  {{ comment.publicationDate|date('date_format'|trans({}, 'platform')) }}</li>{% endif %}
                         </ul>
                     </div>
