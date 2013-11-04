@@ -38,6 +38,7 @@ if ($returnCode === 0) {
     system("php {$rootDirectory}/app/console doctrine:database:create");
     system("php {$rootDirectory}/app/console cache:clear --no-warmup");
     system("php {$rootDirectory}/app/console claroline:install --with-plugins");
+    system("php {$rootDirectory}/app/console claroline:fixture:demo");
 
     system("php {$rootDirectory}/app/console doctrine:database:drop --force --env=test");
     system("php {$rootDirectory}/app/console doctrine:database:create --env=test");
@@ -45,7 +46,6 @@ if ($returnCode === 0) {
     system("php {$rootDirectory}/app/console claroline:install --env=test");
 
     system("php {$rootDirectory}/app/console cache:clear");
-    system("php {$rootDirectory}/app/console claroline:fixture:demo");
 }
 
 $end = new DateTime();
