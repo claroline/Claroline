@@ -277,23 +277,12 @@ class PathManager
      */
     public function findAllFromWorkspace($workspace)
     {
-        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('path');
-        $resourceNodes = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findByWorkspaceAndResourceType($workspace, $resourceType);
+
         $paths = array();
-        $paths["me"] = array();
-        $paths["others"] = array();
 
-        foreach ($resourceNodes as $resourceNode) {
-            if ($resourceNode->getCreator() == $this->user){
-                $creator = "me";
-            }
-            else{
-                $creator = "others";
-            }
-
-            $paths[$creator][] = $this->em->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($resourceNode);
-        }
-
+        $paths["me"] = $this->em->getRepository('InnovaPathBundle:Path')->findAllByWorkspaceByUser($workspace, $this->user);
+        $paths["others"] = $this->em->getRepository('InnovaPathBundle:Path')->findAllByWorkspaceByNotUser($workspace, $this->user);
+        
         return $paths;
     }
 
