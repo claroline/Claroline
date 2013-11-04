@@ -53,6 +53,9 @@
                         <th>{{ 'subject'|trans({}, 'forum') }}</th>
                         <th>{{ 'responses'|trans({}, 'forum') }}</th>
                         <th>{{ 'last_message'|trans({}, 'forum') }}</th>
+                        {% if isModerator %}
+                            <th></th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody id="table-subjects-body">
@@ -67,9 +70,9 @@
                                 {{ subject['title'] }}
                             </a>
                             {% if isModerator %}
-                                <a href="{{ path('claro_forum_edit_subject', {'subjectId': subject['id'] }) }}">
+                                <a href="{{ path('claro_forum_edit_subject_form', {'subjectId': subject['id'] }) }}">
                                     <i class="icon-pencil"></i>
-                                </a> 
+                                </a>
                            {% endif %}
                             <br>
                             {{ 'started_by' | trans({}, 'forum') }}
@@ -85,6 +88,9 @@
                             {{ subject['last_message_creator_lastname'] }}<br/>
                             {{ subject['last_message_created'] }}
                         </td>
+                        {% if isModerator %}
+                            <th><a id="delete-subject" href="{{ _path('claro_forum_delete_subject', {'subject': subject['id']}) }}"> <i class="icon-remove"></i></a></th>
+                        {% endif %}
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -98,6 +104,15 @@
 
 {% block javascripts %}
     {{ parent() }}
+    {% javascripts
+        vars=["locale"]
+        "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
+        "@ClarolineForumBundle/Resources/views/removeSubjectConfirm.html.twigjs"
+        filter="twig_js"
+    %}
+    <script language="javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
     <script>
         $('#search-button').on('click', function(event) {
             event.preventDefault();
@@ -108,4 +123,36 @@
             }
         });
     </script>
+        {% if isModerator %}
+            <script>
+               function createValidationBox() {
+                    var html = Twig.render(
+                        ModalWindow,
+                        {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'confirm-modal', 'body': Twig.render(removeSubjectConfirm, {'nbItems': 1})}
+                    );
+                    $('body').append(html);
+                }
+
+                createValidationBox();
+                var tmpRoute = '';
+                var tmpEl = undefined;
+
+                $('body').on('click', '#delete-subject', function(event) {
+                    event.preventDefault();
+                    $('#confirm-modal').modal('show');
+                    tmpRoute = event.currentTarget.href;
+                    tmpEl = event.currentTarget;
+                });
+
+                $('body').on('click', '#modal-valid-button', function(event) {
+                    $('#confirm-modal').modal('hide');
+                    $.ajax({
+                        url: tmpRoute,
+                        success: function () {
+                            $(tmpEl)[0].parentElement.parentElement.remove();
+                        }
+                    });
+                });
+            </script>
+    {% endif %}
 {% endblock %}

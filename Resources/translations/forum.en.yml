@@ -18,3 +18,5 @@ forum_options_form_messages: Messages per page
 subject: Subject
 last_message: Last message
 started_by: Started by
+remove_subject_confirm_message: Are you sure you want to delete these %count% subjects ?
+remove_subjects_confirm_message: Are you sure you want to delete this subject.

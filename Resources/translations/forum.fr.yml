@@ -17,3 +17,5 @@ forum_subject_title_form_title: Titre
 subject: Sujet
 last_message: Dernier message
 started_by: Créé par
+remove_subjects_confirm_message: Êtes vous sur de vouloir supprimer ces %count% sujets ?
+remove_subject_confirm_message: Êtes vous sur de vouloir supprimer ce sujet.

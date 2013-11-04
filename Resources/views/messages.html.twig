@@ -67,9 +67,14 @@
                         <p>{{ message.getContent()|raw }}</p>
                         <p class="text-muted">{{ message.getCreationDate()| timeAgo }}</p>
                         <hr>
+                        <div class="pull-right clearfix">
                         {% if isModerator or app.security.token.user == message.getCreator() %}
-                            <a class="btn btn-default pull-right" href="{{ path('claro_forum_edit_message_form', {'message': message.getId()}) }}"> <i class="icon-pencil"></i> {{ 'edit'|trans({}, 'platform') }} </a>
+                            <a class="btn btn-default" href="{{ path('claro_forum_edit_message_form', {'message': message.getId()}) }}"> <i class="icon-pencil"></i> {{ 'edit'|trans({}, 'platform') }} </a>
                         {% endif %}
+                        {% if isModerator %}
+                            <a id="delete-message" class="btn btn-default" href="{{ path('claro_forum_delete_message', {'message': message.getId()}) }}"> <i class="icon-remove"></i> {{ 'delete'|trans({}, 'platform') }} </a>
+                        {% endif %}
+                        </div>
                      </td>
                 </tr>
             {% endfor %}
@@ -99,6 +104,15 @@
 
 {% block javascripts %}
     {{ parent() }}
+    {% javascripts
+        vars=["locale"]
+        "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeMessageConfirm.html.twigjs"
+        filter="twig_js"
+    %}
+    <script language="javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
     {% if canAnswer %}
         {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
         {{ tinymce_init() }}
@@ -132,8 +146,41 @@
                         );
                     }
                 });
+
             })();
         </script>
+    {% endif %}
+    {% if isModerator %}
+            <script>
+               function createValidationBox() {
+                    var html = Twig.render(
+                        ModalWindow,
+                        {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'confirm-modal', 'body': Twig.render(removeMessageConfirm, {'nbItems': 1})}
+                    );
+                    $('body').append(html);
+                }
+
+                createValidationBox();
+                var tmpRoute = '';
+                var tmpEl = undefined;
+
+                $('body').on('click', '#delete-message', function(event) {
+                    event.preventDefault();
+                    $('#confirm-modal').modal('show');
+                    tmpRoute = event.currentTarget.href;
+                    tmpEl = event.currentTarget;
+                });
+
+                $('body').on('click', '#modal-valid-button', function(event) {
+                    $('#confirm-modal').modal('hide');
+                    $.ajax({
+                        url: tmpRoute,
+                        success: function () {
+                            $(tmpEl)[0].parentElement.parentElement.parentElement.remove();
+                        }
+                    });
+                });
+            </script>
     {% endif %}
 {% endblock %}
 

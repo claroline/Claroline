@@ -67,11 +67,6 @@ class Subject
     protected $creator;
 
     /**
-     * @Assert\NotBlank()
-     */
-    protected $message;
-
-    /**
      * Constructor.
      */
     public function __construct()
@@ -97,16 +92,6 @@ class Subject
     public function setTitle($title)
     {
         $this->title = $title;
-    }
-
-    public function getMessage()
-    {
-        return $this->message;
-    }
-
-    public function setMessage($message)
-    {
-        return $this->message = $message;
     }
 
     public function setForum(Forum $forum)

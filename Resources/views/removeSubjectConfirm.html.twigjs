@@ -1,0 +1,9 @@
+{% twig_js name="removeSubjectConfirm" %}
+
+{# no transchoice filter in twigjs... #}
+
+{% if nbItems == 1 %}
+    {{ 'remove_subject_confirm_message'|trans({}, 'forum') }}
+{% else %}
+    {{ 'remove_subjects_confirm_message'|trans({'%count%': nbItems}, 'forum') }}
+{% endif %}

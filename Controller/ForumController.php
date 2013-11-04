@@ -131,7 +131,7 @@ class ForumController extends Controller
             //instantiation of the new resources
             $subject->setForum($forum);
             $em->persist($subject);
-            $dataMessage = $subject->getMessage();
+            $dataMessage = $form->get('message')->getData();
 
             if ($dataMessage['content'] !== null) {
                 $message = new Message();
@@ -396,8 +396,8 @@ class ForumController extends Controller
 
      /**
      * @Route(
-     *     "/edit/subject/{subjectId}",
-     *     name="claro_forum_edit_subject"
+     *     "/edit/subject/{subjectId}/form",
+     *     name="claro_forum_edit_subject_form"
      * )
      * @ParamConverter(
      *      "subject",
@@ -406,10 +406,38 @@ class ForumController extends Controller
      * )
      * @Template("ClarolineForumBundle::editSubjectForm.html.twig")
      *
-     * @param integer $subjectId
-     *
      */
     public function editSubjectFormAction(Subject $subject)
+    {
+        $sc = $this->get('security.context');
+        $isModerator = $sc->isGranted('moderate', new ResourceCollection(array($subject->getForum()->getResourceNode())));
+
+        if (!$isModerator && $sc->getToken()->getUser()) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $form = $this->container->get('form.factory')->create(new EditTitleType(), $subject);
+
+        return array(
+            'form' => $form->createView(),
+            'subjectId' => $subject->getId(),
+            'forumId' => $subject->getForum()->getId()
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/edit/subject/{subjectId}/submit",
+     *     name="claro_forum_edit_subject"
+     * )
+     * @ParamConverter(
+     *      "subject",
+     *      class="ClarolineForumBundle:Subject",
+     *      options={"id" = "subjectId", "strictId" = true}
+     * )
+     * @Template("ClarolineForumBundle::editSubjectForm.html.twig")
+     */
+    public function editSubjectAction(Subject $subject)
     {
         $sc = $this->get('security.context');
         $isModerator = $sc->isGranted('moderate', new ResourceCollection(array($subject->getForum()->getResourceNode())));
@@ -421,6 +449,7 @@ class ForumController extends Controller
 
         $form = $this->container->get('form.factory')->create(new EditTitleType(), $subject);
         $form->handleRequest($this->get('request'));
+
         if ($form->isValid()) {
             $em->persist($subject);
             $em->flush();
@@ -429,12 +458,63 @@ class ForumController extends Controller
                 $this->generateUrl('claro_forum_subjects', array('forumId' => $subject->getForum()->getId()))
             );
         }
-        
-        return array(
+
+       return array(
             'form' => $form->createView(),
             'subjectId' => $subject->getId(),
             'forumId' => $subject->getForum()->getId()
+        );
+    }
+
+
+    /**
+     * @Route(
+     *     "/delete/message/{message}",
+     *     name="claro_forum_delete_message"
+     * )
+     *
+     * @param \Claroline\ForumBundle\Entity\Message $message
+     */
+    public function deleteMessageAction(Message $message)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $sc = $this->get('security.context');
+
+        if ($sc->isGranted('moderate', new ResourceCollection(array($message->getSubject()->getForum()->getResourceNode())))) {
+            $em->remove($message);
+            $em->flush();
+
+            return new RedirectResponse(
+                $this->generateUrl('claro_forum_messages', array('subjectId' => $message->getSubject()->getId()))
             );
+        }
+
+        throw new AccessDeniedHttpException();
+    }
+
+    /**
+     * @Route(
+     *     "/delete/subject/{subject}",
+     *     name="claro_forum_delete_subject"
+     * )
+     *
+     * @param \Claroline\ForumBundle\Entity\Subject $subject
+     */
+    public function deleteSubjectAction(Subject $subject)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $sc = $this->get('security.context');
+
+        if ($sc->isGranted('moderate', new ResourceCollection(array($subject->getForum()->getResourceNode())))) {
+            $em->remove($subject);
+            $em->flush();
+
+            return new RedirectResponse(
+                $this->generateUrl('claro_forum_subjects', array('forumId' => $subject->getForum()->getId()))
+            );
+        }
+
+        throw new AccessDeniedHttpException();
     }
 
     private function checkAccess(Forum $forum)
