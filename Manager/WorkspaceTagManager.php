@@ -79,6 +79,12 @@ class WorkspaceTagManager
         return $tag;
     }
 
+    public function deleteTag(WorkspaceTag $workspaceTag)
+    {
+        $this->om->remove($workspaceTag);
+        $this->om->flush();
+    }
+
     public function createTagRelation(WorkspaceTag $tag, AbstractWorkspace $workspace)
     {
         $relWorkspaceTag = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag');
@@ -167,7 +173,7 @@ class WorkspaceTagManager
     {
         $datas = $this->tagRepo->findPossibleAdminChildren($tag);
 
-        return $this->pagerFactory->createPagerFromArray($datas, $page, 20);
+        return $this->pagerFactory->createPagerFromArray($datas, $page);
     }
 
     public function getPossibleAdminChildrenPagerBySearch(
@@ -178,7 +184,7 @@ class WorkspaceTagManager
     {
         $datas = $this->tagRepo->findPossibleAdminChildrenByName($tag, $search);
 
-        return $this->pagerFactory->createPagerFromArray($datas, $page, 20);
+        return $this->pagerFactory->createPagerFromArray($datas, $page);
     }
 
     public function getPossibleChildren(User $user, WorkspaceTag $tag)

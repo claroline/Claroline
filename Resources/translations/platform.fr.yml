@@ -82,7 +82,9 @@ cannot_delete_unique_manager: 'Impossible de supprimer le seul gestionnaire.'
 cannot_unsubscribe_from_workspace: 'Impossible de vous désincrire de l''espace d''activités'
 categories: Catégories
 categories_organization: 'Organisation des catégories'
-categorize: Catégoriser
+categorize: 'Classer par catégorie'
+category_explanations_1: 'Chaque catégorie doit avoir un nom unique.'
+category_explanations_2: 'Sélectionnez une catégorie pour gérer ses sous-catégories.'
 category_root: 'Catégories de base'
 category_structure: 'Structure des catégories'
 change_view : 'Changer l''affichage'
@@ -144,6 +146,9 @@ date_range.week: 's'
 date_range.yesterday: 'Hier'
 deletable: 'Supprimable'
 delete: Supprimer
+delete_category: 'Supprimer la catégorie'
+delete_category_confirm_title: 'Suppression d''une catégorie'
+delete_category_confirm_message: 'Voulez-vous vraiment supprimer cette catégorie ?'
 delete_home_tab: 'Supprimer l''onglet'
 desktop: Bureau
 desktop_home_tab_creation : 'Création d''un onglet pour le bureau'
@@ -370,12 +375,13 @@ remove_group_confirm_message: Êtes-vous sûr de vouloir supprimer ce groupe ?
 remove_group_s_confirm_message: Êtes-vous sûr de vouloir supprimer ces %count% groupes?
 remove_message_confirm_message: Êtes-vous sûr de vouloir supprimer ce message ?
 remove_message_s_confirm_message: Êtes-vous sûr de vouloir supprimer ces %count% messages?
+remove_subcategory: 'Retirer la sous-catégorie'
 remove_user_confirm_message: Êtes-vous sûr de vouloir supprimer cet utilisateur ?
 remove_user_s_confirm_message: Êtes-vous sûr de vouloir supprimer ces %count% utilisateurs?
 remove_workspace_from_category_confirm_message: 'Êtes-vous sûr de vouloir retirer cet espace d''activités de cette catégorie ?'
 remove_workspace_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
 rename: Renommer
-rename_category: 'Renommage de la catégorie'
+rename_category: 'Renommer la catégorie'
 rename_tool: 'Renommage d''un outil'
 rename_widget_instance: 'Renommage du Widget'
 reset: Réinitialiser

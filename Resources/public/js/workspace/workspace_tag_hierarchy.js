@@ -46,7 +46,7 @@
                     'claro_workspace_admin_tag_add_children',
                     {'tagId': tagId, 'childrenString': possibleSelectedString}
                 ),
-                type: 'GET',
+                type: 'POST',
                 success: function () {
                     $('input:checkbox[name=tag-possible-child]:checked').each(function () {
                         $(this).attr('checked', true);

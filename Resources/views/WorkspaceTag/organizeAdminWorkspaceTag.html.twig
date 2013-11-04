@@ -1,3 +1,73 @@
+{% macro showTagHierarchy(tagsList, tagsHierarchy, isRoot) %}
+    <div>
+        <ul>
+        {% for tag in tagsList %}
+        {% set tagId = tag.getId() %}
+        {% set tagName = tag.getName() %}
+            <li class="hierarchy-tag-parent tag-parent-{{ tagId }}"
+                workspace-tag-id="{{ tagId }}"
+            >
+                <span class="tag-element"
+                    workspace-tag-id="{{ tagId }}"
+                    workspace-tag-name="{{ tagName }}"
+                >
+                    <span class="open-tag-btn pointer-hand tag-name-{{ tagId }}">
+                        {{ tagName }}
+                    </span>
+
+                    <div class="btn-group tag-button-group hide">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li class="edit-tag-btn">
+                                <a href="#">
+                                    <i class="icon-pencil"></i>
+                                    {{ 'rename_category'|trans({}, 'platform') }}
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li class="create-sub-tag-btn">
+                                <a href="#">
+                                    <i class="icon-plus"></i>
+                                    {{ 'create_subcategory'|trans({}, 'platform') }}
+                                </a>
+                            </li>
+                            <li class="add-tag-btn">
+                                <a href="#">
+                                    <i class="icon-list-alt"></i>
+                                    {{ 'add_subcategory'|trans({}, 'platform') }}
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            {% if not isRoot %}
+                                <li class="remove-tag-btn">
+                                    <a href="#">
+                                        <i class="icon-remove"></i>
+                                        {{ 'remove_subcategory'|trans({}, 'platform') }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                            <li class="delete-tag-btn">
+                                <a href="#">
+                                    <i class="icon-trash"></i>
+                                    {{ 'delete_category'|trans({}, 'platform') }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </span>
+                {% if tagsHierarchy[tagId]|length > 0 %}
+                    {{ _self.showTagHierarchy(tagsHierarchy[tagId], tagsHierarchy, false) }}
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endmacro %}
+
+{% from _self import showTagHierarchy %}
+
 {% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
 
 {% block breadcrumb %}
@@ -13,6 +83,10 @@
                 'href': path('claro_workspace_list')
             },
             {
+                'name': 'workspace_classification'|trans({}, 'platform'),
+                'href': path('claro_manage_admin_workspace_tag')
+            },
+            {
                 'name': 'organize_categories'|trans({}, 'platform'),
                 'href': ''
             }
@@ -20,88 +94,36 @@
     }}
 {% endblock %}
 
-
 {% block section_content %}
 
 <div class="panel-heading">
-    <h3 class="panel-title">{{ 'categories_organization'|trans({}, 'platform') }}</h3>
+    <h3 class="panel-title">
+        {{ 'categories_organization'|trans({}, 'platform') }}
+    </h3>
 </div>
+
 <div id="workspace-organization-div" class="panel-body">
 
-    <button class="btn btn-default pull-right" id="view-tag-hierarchy">
-        <i class="icon-eye-open" id="view-tag-hierarchy-btn"></i>
-        {{ 'view_category_hierarchy'|trans({}, 'platform') }}
+    <div class="well text-muted">
+        <ul>
+            <li>
+                {{ 'category_explanations_1'|trans({}, 'platform') }}
+            </li>
+            <li>
+                {{ 'category_explanations_2'|trans({}, 'platform') }}
+            </li>
+        </ul>
+    </div>
+
+    {% if rootTags|length > 0 %}
+        {{ showTagHierarchy(rootTags, hierarchy, true) }}
+    {% else %}
+        {{ 'no_category'|trans({}, 'platform') }}
+    {% endif %}
+    <br>
+    <button id="create-root-tag-btn" type="button" class="btn btn-primary">
+        {{ 'create_category'|trans({}, 'platform') }}
     </button>
-    <br>
-    <br>
-    <div id="tag-tracks">
-        <i class="icon-home pointer-hand" id="home-track-btn"></i>
-    </div>
-
-    <br>
-    <div class="well well-sm">
-        <span id="current-tag-name-label" class="hide">
-            <b>{{ 'current_category'|trans({}, 'platform') }} :</b>
-        </span>
-        <span id="current-tag-name">
-            {{ 'category_root'|trans({}, 'platform') }}
-        </span>
-    </div>
-    <br>
-
-    <div class="table-responsive">
-        <table class="table">
-            <tr>
-                <th id="category-title">
-                    {{ 'categories'|trans({}, 'platform') }}
-                </th>
-            </tr>
-            <tr>
-                <td>
-                    <div id="workspace-tag-list">
-                        <div class="workspace-tag-group">
-                            {% for tag in tags %}
-                                <span class="label label-danger tag-element"
-                                    workspace-tag-id="{{ tag.getId() }}"
-                                >
-                                    <span class="open-tag-btn pointer-hand">
-                                        {{ tag.getName() }}
-                                    </span>
-                                    &nbsp;
-                                    <i class="icon-pencil pointer-hand edit-tag-btn"></i>
-                                </span>
-                                &nbsp;
-                            {% endfor %}
-                        </div>
-                        <br>
-                        <button type="button" class="btn btn-default create-tag-btn ">
-                            {{ 'create_category'|trans({}, 'platform') }}
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </div>
-    <br>
-
-    <div class="table-responsive">
-        <table class="table">
-            <tr>
-                <th>
-                    {{ 'workspaces_included_in_category'|trans({}, 'platform') }}
-                </th>
-            </tr>
-            <tr>
-                <td>
-                    <div id="workspace-list">
-                        <a href="{{ path('claro_workspace_list') }}">
-                            {{ 'all_workspaces'|trans({}, 'platform') }}
-                        </a>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </div>
 </div>
 
 <div id="form-modal-box" class="modal fade">
@@ -112,32 +134,6 @@
                 <h3 id="form-modal-title"></h3>
             </div>
             <div id="form-modal-body" class="modal-body">
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="tag-modal-box" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
-                <h3 id="tag-modal-title"></h3>
-            </div>
-            <div id="tag-modal-body" class="modal-body">
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="workspace-modal-box" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
-                <h3 id="workspace-modal-title"></h3>
-            </div>
-            <div id="workspace-modal-body" class="modal-body">
             </div>
         </div>
     </div>
@@ -154,42 +150,69 @@
                 <p>{{ 'workspace_tag_remove_confirm_message'|trans({}, 'platform') }}</p>
             </div>
             <div class="modal-footer">
-                <input type="button" id="remove-workspace-tag-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-                <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                <input type="button"
+                    id="remove-workspace-tag-confirm-ok"
+                    class="btn btn-primary"
+                    value="{{ 'ok'|trans({}, 'platform') }}"
+                />
+                <input type="button"
+                    class="btn btn-default"
+                    data-dismiss="modal"
+                    value="{{ 'cancel'|trans({}, 'platform') }}"
+                />
             </div>
         </div>
     </div>
 </div>
 
-<div id="remove-workspace-from-tag-validation-box" class="modal fade">
+<div id="delete-workspace-tag-validation-box" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">×</button>
-                <h3>{{ 'workspace_remove_from_category_confirm_title'|trans({}, 'platform') }}</h3>
+                <h3>{{ 'delete_category_confirm_title'|trans({}, 'platform') }}</h3>
             </div>
             <div class="modal-body">
-                <p>{{ 'workspace_remove_from_category_confirm_message'|trans({}, 'platform') }}</p>
+                <p>{{ 'delete_category_confirm_message'|trans({}, 'platform') }}</p>
             </div>
             <div class="modal-footer">
-                <input type="button" id="remove-workspace-from-tag-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-                <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                <input type="button"
+                    id="delete-workspace-tag-confirm-ok"
+                    class="btn btn-primary"
+                    value="{{ 'ok'|trans({}, 'platform') }}"
+                />
+                <input type="button"
+                    class="btn btn-default"
+                    data-dismiss="modal"
+                    value="{{ 'cancel'|trans({}, 'platform') }}"
+                />
             </div>
         </div>
     </div>
 </div>
 
-<div id="tag-hierarchy-modal-box" class="modal fade">
+<div id="add-tag-modal-box" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">×</button>
-                <h3 id="tag-hierarchy-modal-title"></h3>
+                <h3 id="add-tag-modal-title">
+                    {{ 'add_subcategory'|trans({}, 'platform')  }}
+                </h3>
             </div>
-            <div id="tag-hierarchy-modal-body" class="modal-body">
+            <div id="add-tag-modal-body" class="modal-body">
             </div>
             <div class="modal-footer">
-                <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'close'|trans({}, 'platform') }}"/>
+                <input type="button"
+                    id="add-workspace-tag-confirm-ok"
+                    class="btn btn-primary"
+                    value="{{ 'add'|trans({}, 'platform') }}"
+                />
+                <input type="button"
+                    class="btn btn-default"
+                    data-dismiss="modal"
+                    value="{{ 'close'|trans({}, 'platform') }}"
+                />
             </div>
         </div>
     </div>
@@ -200,7 +223,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script
-        src="{{ asset('bundles/clarolinecore/js/workspace/listAdminWorkspaceTag.js') }}"
+        src="{{ asset('bundles/clarolinecore/js/workspace/organizeAdminWorkspaceTag.js') }}"
         type="text/javascript"
     >
     </script>

@@ -30,7 +30,7 @@
 {% from _self import renderPager %}
 {% set nbPages = possibleChildren.getNbPages() %}
 
-<div class="panel-body">
+<div>
      <div class="input-group">
         <input class="form-control"
             type="text"
@@ -90,12 +90,4 @@
             {% endif %}
         </table>
     </div>
-</div>
-<div class="panel-footer">
-    <button type="button" class="btn btn-primary add-selected-tag-btn">
-        {{ 'add'|trans({}, 'platform') }}
-    </button>
-    <button type="button" class="btn btn-default close-current-page-btn">
-        {{ 'close'|trans({}, 'platform') }}
-    </button>
 </div>
