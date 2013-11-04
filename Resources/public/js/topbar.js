@@ -8,10 +8,13 @@
 
         if ($('#top_bar .navbar-collapse').outerHeight() > 55) {
             $('#top_bar').addClass('break');
+        } else {
+            $('#top_bar').css('overflow', 'visible');
         }
     }
 
     $(window).on('resize', function () {
+        $('#top_bar').css('overflow', 'hidden');
         clearTimeout(resizeWindow);
         resizeWindow = setTimeout(responsiveTopBar, 200);
     });
