@@ -24,12 +24,12 @@ $ pear channel-discover pear.phpmd.org
 $ pear channel-discover pear.pdepend.org
 $ pear install --alldeps phpmd/PHP_PMD
 ```
-The ruleset used in the project is defined in *app/build/tools/phpmd.xml*.
+The ruleset used in the project is defined in *app//tools/phpmd.xml*.
 
 Usage example :
 
 ```sh
-$ phpmd src/plugin/FooVendor/BarBundle text app/build/tools/phpmd.xml
+$ phpmd src/plugin/FooVendor/BarBundle text app/dev/config/phpmd.xml
 ```
 
 ### PHPCS ###
@@ -42,7 +42,7 @@ $ pear install PHP_CodeSniffer-1.5.0RC1
 ```
 
 The coding standard used in the project is defined in
-*app/build/tools/phpcs.xml*. As it relies on the Symfony conventions
+*app/dev/config/phpcs.xml*. As it relies on the Symfony conventions
 (here is a brief [description][6]) and some other sniffs associated with the
 PSR initiative, you'll need to install the following standards:
 
@@ -61,7 +61,7 @@ $ git clone https://github.com/opensky/Symfony2-coding-standard.git Symfony2
 Usage example :
 
 ```sh
-$ phpcs --extensions=php --standard=app/build/tools/phpcs.xml src/plugin/FooVendor/BarBundle
+$ phpcs --extensions=php --standard=app/dev/config/phpcs.xml src/plugin/FooVendor/BarBundle
 ```
 
 ### PHPCPD ###
@@ -93,12 +93,12 @@ $ npm install jshint -g
 ```
 
 The configuration of JSHint used in this project is defined in
-*app/build/tools/jshint.json*.
+*app/dev/config/jshint.json*.
 
 Usage example :
 
 ```sh
-$ jshint --config app/build/tools/jshint.json src/plugin/FooVendor/BarBundle
+$ jshint --config app/dev/config/jshint.json src/plugin/FooVendor/BarBundle
 ```
 
 Scripts
