@@ -164,8 +164,12 @@ body {
     }
 
     @media(min-width: @screen-md) {
-        //variable break point
+        max-height: (@navbar-height + 3);
+        overflow: hidden !important;
+
         &.break {
+            max-height: 395px !important;
+            overflow: visible !important;
 
             .navbar-header {
                 width: 100%;

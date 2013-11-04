@@ -6,7 +6,7 @@
     function responsiveTopBar() {
         $('#top_bar').removeClass('break');
 
-        if ($('#top_bar').outerHeight() > 55 && !$('#top_bar navbar-collapse').hasClass('in')) {
+        if ($('#top_bar .navbar-collapse').outerHeight() > 55) {
             $('#top_bar').addClass('break');
         }
     }
