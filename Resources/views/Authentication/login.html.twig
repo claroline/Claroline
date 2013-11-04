@@ -6,13 +6,15 @@ same message when authentication has failed (no precise validation errors).
 #}
 
 {% block content %}
-     <div class="col-md-offset-4 col-md-4">
+    {{ macros.flashBox() }}
+    <div class="col-md-offset-4 col-md-4">
         {% if error %}
             <div class="alert alert-danger">
                 <button type="button" class="close" data-dismiss="alert">×</button>
                 {{ 'login_failure'|trans({}, 'platform') }}
             </div>
         {% endif %}
+
         <div class='content-element panel panel-default'>
             <div class="panel-heading">
                 <h3 class="panel-title">{{ 'login' | trans({}, "platform")}}</h3>
