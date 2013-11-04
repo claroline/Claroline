@@ -57,12 +57,11 @@
                 .removeAttr('checked')
                 .removeAttr('selected');
             $('#myModalLabel').text(Translator.get('agenda' + ':' + 'add_event'));
-            var  currentDate = $.fullCalendar.formatDate( new Date(),'dd/MM/yyyy HH:mm'); 
-            var pickedDate = $.fullCalendar.formatDate( date,'dd/MM/yyyy HH:mm');
+            var  currentDate = Date.today().addDays(1).toString("M/d/yyyy"); 
+            var pickedDate = new Date(date).toString();
             $('#agenda_form_start').val(pickedDate);
 
             if (pickedDate > currentDate) {
-                console.debug('pic'+pickedDate+' cur'+currentDate);
 
                 $('#agenda_form_end').val(pickedDate);
 
@@ -80,14 +79,14 @@
             $('#agenda_form').find('input:radio, input:checkbox')
                 .removeAttr('checked')
                 .removeAttr('selected');
-            var  currentDate = $.fullCalendar.formatDate(new Date(), 'dd/MM/yyyy HH:mm');
-            var pickedDate = $.fullCalendar.formatDate(date, 'dd/MM/yyyy HH:mm');
-            $('#agenda_form_start').val(pickedDate)
-            if (pickedDate > currentDate) {
-                $('#agenda_form_end').val(pickedDate);
-            } else {
-                $('#agenda_form_end').val(currentDate);
-            }
+            // var  currentDate = $.fullCalendar.formatDate(new Date(), 'dd-MM-yyyy');
+            // var pickedDate = $.fullCalendar.formatDate(date, 'dd-MM-yyyy');
+            // $('#agenda_form_start').val(pickedDate)
+            // if (pickedDate > currentDate) {
+            //     $('#agenda_form_end').val(pickedDate);
+            // } else {
+            //     $('#agenda_form_end').val(currentDate);
+            // }
             $('#myModal').modal();
         };
         var dayClickFunction = context === 'desktop' ? dayClickDesktop : dayClickWorkspace;
@@ -145,7 +144,6 @@
                             //an unexpected PHP error occured
                             alert(Translator.get('agenda' + ':' + 'error'));
                             $('#save').removeAttr('disabled');
-
                         }
                     }
                 });

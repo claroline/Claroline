@@ -17,7 +17,11 @@ class AgendaType extends AbstractType
             
             $recurring[$i] = $i; 
         }
-        
+        $attr = array();
+        $attr['class'] = 'datepicker input-small';
+        $attr['data-date-format'] = 'dd-mm-yyyy';
+        $attr['autocomplete'] = 'off';
+
         $builder
             ->add('title', 'text', array('required' => true))
             ->add(
@@ -26,6 +30,7 @@ class AgendaType extends AbstractType
                 array(
                     'format' => 'd/M/yyyy H:mm',
                     'widget' => 'single_text',
+                    'attr' => $attr
                 )
             )
             ->add(
