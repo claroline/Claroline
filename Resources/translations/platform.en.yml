@@ -453,6 +453,7 @@ text_form_content: Content
 text_form_name: Name
 text_form_shareType: Sharable
 text_form_text: Text
+this_page_requires_authentication: 'This page requires authentication. Please login.'
 to: To
 to_message: To
 today: Today

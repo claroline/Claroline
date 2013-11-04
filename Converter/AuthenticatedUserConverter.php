@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Converter;
 
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -21,15 +22,18 @@ use Claroline\CoreBundle\Entity\User;
 class AuthenticatedUserConverter implements ParamConverterInterface
 {
     private $securityContext;
+    private $translator;
 
     /**
      * @DI\InjectParams({
-     *     "securityContext" = @DI\Inject("security.context")
+     *     "securityContext" = @DI\Inject("security.context"),
+     *     "translator" = @DI\Inject("translator")
      * })
      */
-    public function __construct(SecurityContextInterface $securityContext)
+    public function __construct(SecurityContextInterface $securityContext, Translator $translator)
     {
-        $this->securityContext = $securityContext;
+        $this->securityContext  = $securityContext;
+        $this->translator       = $translator;
     }
 
     /**
@@ -45,12 +49,34 @@ class AuthenticatedUserConverter implements ParamConverterInterface
         }
 
         $options = $configuration->getOptions();
-        if ($configuration->getOptions()['authenticatedUser'] === true) {
+        if ($options['authenticatedUser'] === true) {
             if (($user = $this->securityContext->getToken()->getUser()) instanceof User) {
                 $request->attributes->set($parameter, $user);
 
                 return true;
             } else {
+                $messageEnabled = $options['messageEnabled'];
+                if ($messageEnabled === true) {
+                    $messageType = 'warning';
+                    if ($options['messageType'] !== null) {
+                        $messageType = $options['messageType'];
+                    }
+
+                    $messageTranslationKey = 'this_page_requires_authentication';
+                    $messageTranslationDomain = 'platform';
+                    if ($options['messageTranslationKey'] !== null) {
+                        $messageTranslationKey = $options['messageTranslationKey'];
+                        if ($options['messageTranslationDomain'] !== null) {
+                            $messageTranslationDomain = $options['messageTranslationDomain'];
+                        }
+                    }
+
+                    $request->getSession()->getFlashBag()->add(
+                        $messageType,
+                        $this->translator->trans($messageTranslationKey, array(), $messageTranslationDomain)
+                    );
+                }
+
                 throw new AccessDeniedException();
             }
         } else {
