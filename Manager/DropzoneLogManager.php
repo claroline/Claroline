@@ -35,7 +35,9 @@ class DropzoneLogManager
         $this->sendFinishedLog($correction->getDrop());
         if ($correction->getDrop()->getUser()->getId() != $correction->getUser()->getId()) {
             $drop = $this->entityManager->getRepository('IcapDropzoneBundle:Drop')->findOneBy(array('user' => $correction->getUser()));
-            $this->sendFinishedLog($drop);
+            if ($drop !== null) {
+                $this->sendFinishedLog($drop);
+            }
         }
     }
 
