@@ -58,9 +58,9 @@
                     </a>
                 </h4>
             </div>
-            <div id="blogBannerConfigurator" class="panel-collapse collapse in">
+            <div id="blogBannerConfigurator" class="panel-collapse collapse">
                 <div class="panel-body">
-                    <form action="" method="post" {{ form_enctype(bannerForm) }} role="form" novalidate>
+                    <form action="{{ path('icap_blog_configure_banner', {'blogId': _resource.id}) }}" method="post" {{ form_enctype(bannerForm) }} role="form" novalidate>
                         {{ form_errors(bannerForm) }}
                         <div class="checkbox">
                             <label>
@@ -137,7 +137,6 @@
         <div id="blog_banner" class="col-md-12 well blog_banner{% if false == blogOptions.isBannerActivate %} hidden{% endif %}" style="height: {{ blogOptions.bannerHeight }}px; background-color: {{ blogOptions.bannerBackgroundColor }}; background-image: {{ blogOptions.bannerBackgroundImage }}; background-position: {{ blogOptions.bannerBackgroundImagePosition }}; background-repeat: {{ blogOptions.bannerBackgroundImageRepeat }};">
         </div>
         {% endif %}
-        {{ macros.flashBox() }}
         <div class="row">
             <section class="col-lg-8">
                 {% block blog_content %}{% endblock %}

@@ -1,0 +1,40 @@
+<?php
+
+namespace Icap\BlogBundle\Event\Log;
+
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
+use Icap\BlogBundle\Entity\Blog;
+use Icap\BlogBundle\Entity\BlogOptions;
+use Icap\BlogBundle\Entity\Post;
+
+class LogBlogConfigureBannerEvent extends AbstractLogResourceEvent
+{
+    const ACTION = 'resource-icap_blog-configure_banner';
+
+    /**
+     * @param Blog        $blog
+     * @param BlogOptions $blogOptions
+     * @param array       $changeSet
+     */
+    public function __construct(Blog $blog, BlogOptions $blogOptions, $changeSet)
+    {
+        $details = array(
+            'blog' => array(
+                'blog'      => $blog->getId(),
+                'options'   => json_encode($blogOptions),
+                'changeSet' => $changeSet
+            )
+        );
+
+        parent::__construct($blog->getResourceNode(), $details);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getRestriction()
+    {
+        return array(self::DISPLAYED_WORKSPACE);
+    }
+}

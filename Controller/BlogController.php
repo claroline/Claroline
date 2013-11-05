@@ -207,6 +207,52 @@ class BlogController extends Controller
     }
 
     /**
+     * @Route("/banner/{blogId}", name="icap_blog_configure_banner", requirements={"blogId" = "\d+"})
+     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
+     * @Template()
+     */
+    public function configureBannerAction(Request $request, Blog $blog)
+    {
+        $this->checkAccess("EDIT", $blog);
+
+        $blogOptions = $blog->getOptions();
+
+        $form = $this->createForm(new BlogBannerType(), $blogOptions);
+
+        if ("POST" === $request->getMethod()) {
+            $form->submit($request);
+            if ($form->isValid()) {
+                $entityManager = $this->getDoctrine()->getManager();
+                $translator = $this->get('translator');
+                $flashBag = $this->get('session')->getFlashBag();
+
+                try {
+                    $unitOfWork = $entityManager->getUnitOfWork();
+                    $unitOfWork->computeChangeSets();
+                    $changeSet = $unitOfWork->getEntityChangeSet($blogOptions);
+
+                    $entityManager->persist($blogOptions);
+                    $entityManager->flush();
+
+                    $this->dispatchBlogConfigureBannerEvent($blog, $blogOptions, $changeSet);
+
+                    $flashBag->add('success', $translator->trans('icap_blog_post_configure_banner_success', array(), 'icap_blog'));
+                } catch (\Exception $exception) {
+                    $flashBag->add('error', $translator->trans('icap_blog_post_configure_banner_error', array(), 'icap_blog'));
+                }
+
+                return $this->redirect($this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())));
+            }
+        }
+
+        return array(
+            '_resource' => $blog,
+            'form'      => $form->createView(),
+            'archives'  => $this->getArchiveDatas($blog)
+        );
+    }
+
+    /**
      * @Route("/edit/{blogId}", name="icap_blog_edit_infos", requirements={"blogId" = "\d+"})
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
      * @Template()

@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Icap\BlogBundle\Entity\BlogOptions;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
+use Icap\BlogBundle\Event\Log\LogBlogConfigureBannerEvent;
 use Icap\BlogBundle\Event\Log\LogBlogConfigureEvent;
 use Icap\BlogBundle\Event\Log\LogCommentCreateEvent;
 use Icap\BlogBundle\Event\Log\LogCommentDeleteEvent;
@@ -134,6 +135,22 @@ class Controller extends BaseController
     protected function dispatchBlogConfigureEvent(Blog $blog, BlogOptions $blogOptions, $changeSet)
     {
         $event = new LogBlogConfigureEvent($blog, $blogOptions, $changeSet);
+
+        return $this->dispatch($event);
+    }
+
+    /**
+     * @param Blog        $blog
+     *
+     * @param BlogOptions $blogOptions
+     *
+     * @param array       $changeSet
+     *
+     * @return Controller
+     */
+    protected function dispatchBlogConfigureBannerEvent(Blog $blog, BlogOptions $blogOptions, $changeSet)
+    {
+        $event = new LogBlogConfigureBannerEvent($blog, $blogOptions, $changeSet);
 
         return $this->dispatch($event);
     }
