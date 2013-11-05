@@ -128,8 +128,10 @@
                             <td>
                                 <div>
                                     {% for role in user.getEntityRoles() %}
-                                        {{ role.getTranslationKey()|trans({}, 'platform')  }}
-                                        {% if not loop.last %}, {% endif %}
+                                        {% if role.type == 1 %}
+                                            {{ role.getTranslationKey()|trans({}, 'platform')  }}
+                                            {% if not loop.last %}, {% endif %}
+                                        {% endif %}
                                     {% endfor %}
                                 </div>
                             </td>
