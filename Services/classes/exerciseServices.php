@@ -42,18 +42,25 @@
 
 namespace UJM\ExoBundle\Services\classes;
 
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+
 use Doctrine\Bundle\DoctrineBundle\Registry;
+
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 use UJM\ExoBundle\Entity\ExerciseQuestion;
 
 class exerciseServices
 {
     protected $doctrine;
+    protected $securityContext;
 
-    public function __construct(Registry $doctrine)
+    public function __construct(Registry $doctrine, SecurityContextInterface $securityContext)
     {
-        $this->doctrine  = $doctrine;
+        $this->doctrine        = $doctrine;
+        $this->securityContext = $securityContext;
     }
 
     public function getIP()
@@ -556,5 +563,31 @@ class exerciseServices
     public function roundUpDown($toBeAdjusted)
     {
         return (round($toBeAdjusted / 0.5) * 0.5);
+    }
+
+    /**
+     * To control the subscription
+     *
+     */
+    public function isExerciseAdmin($exercise)
+    {
+        $user = $this->securityContext->getToken()->getUser();
+
+        $subscription = $this->doctrine
+            ->getManager()
+            ->getRepository('UJMExoBundle:Subscription')
+            ->getControlExerciseEnroll($user->getId(), $exercise->getId());
+
+        if (count($subscription) > 0) {
+            return $subscription[0]->getAdmin();
+        } else {
+            $collection = new ResourceCollection(array($exercise->getResourceNode()));
+            if ($this->securityContext->isGranted('edit', $collection)) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+
     }
 }

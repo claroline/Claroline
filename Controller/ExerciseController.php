@@ -73,7 +73,7 @@ class ExerciseController extends Controller
 
         $workspace = $exercise->getResourceNode()->getWorkspace();
 
-        $exoAdmin = $this->isExerciseAdmin($id);
+        $exoAdmin = $this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise);
 
         if ($exoAdmin == 1) {
 
@@ -93,7 +93,7 @@ class ExerciseController extends Controller
                 )
             );
         } else {
-            return $this->redirect($this->generateUrl('ujm_exercise_open'));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $id)));
         }
     }
 
@@ -152,7 +152,7 @@ class ExerciseController extends Controller
         $this->checkAccess($exercise);
 
         $allowToCompose = 0;
-        $exoAdmin = $this->isExerciseAdmin($exerciseId);
+        $exoAdmin = $this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise);
 
         $workspace = $exercise->getResourceNode()->getWorkspace();
 
@@ -194,7 +194,7 @@ class ExerciseController extends Controller
 
         $workspace = $exercise->getResourceNode()->getWorkspace();
 
-        $exoAdmin = $this->isExerciseAdmin($id);
+        $exoAdmin = $this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise);
 
         $max = 5; // Max Per Page
         $request = $this->get('request');
@@ -262,7 +262,7 @@ class ExerciseController extends Controller
                 )
             );
         } else {
-            return $this->redirect($this->generateUrl('exercise'));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $id)));
         }
     }
 
@@ -281,7 +281,7 @@ class ExerciseController extends Controller
         $user = $this->container->get('security.context')->getToken()->getUser();
         $uid = $user->getId();
 
-        $exoAdmin = $this->isExerciseAdmin($exoID);
+        $exoAdmin = $this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise);
 
         // To paginate the result :
         $request = $this->get('request'); // Get the request which contains the following parameters :
@@ -358,7 +358,7 @@ class ExerciseController extends Controller
                 )
             );
         } else {
-            return $this->redirect($this->generateUrl('ujm_exercise'));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $exoID)));
         }
     }
 
@@ -459,7 +459,7 @@ class ExerciseController extends Controller
 
         $this->checkAccess($exercise);
 
-        $exoAdmin = $this->isExerciseAdmin($exoID);
+        $exoAdmin = $this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise);
 
         if ($exoAdmin == 1) {
             $em = $this->getDoctrine()->getManager();
@@ -499,7 +499,7 @@ class ExerciseController extends Controller
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
 
-        $exoAdmin = $this->isExerciseAdmin($id);
+        $exoAdmin = $this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise);
         $this->checkAccess($exercise);
 
         $workspace = $exercise->getResourceNode()->getWorkspace();
@@ -712,7 +712,7 @@ class ExerciseController extends Controller
 
         $papers = $em->getRepository('UJMExoBundle:Paper')->getExerciseAllPapers($exerciseId);
 
-        if ($this->get('security.context')->isGranted('ROLE_WS_CREATOR')) {
+        if ($this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise)) {
 
             $workspace = $exercise->getResourceNode()->getWorkspace();
 
@@ -746,7 +746,7 @@ class ExerciseController extends Controller
             return $this->render('UJMExoBundle:Exercise:docimology.html.twig', $parameters);
         } else {
 
-            return $this->redirect($this->generateUrl('ujm_exercise_open'));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $exerciseId)));
         }
     }
 
@@ -915,27 +915,6 @@ class ExerciseController extends Controller
         $em->flush();
 
         return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $paper->getExercise()->getId())));
-    }
-
-    /**
-     * To control the subscription
-     *
-     */
-    private function isExerciseAdmin($exoID)
-    {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-
-        $subscription = $this->getDoctrine()
-            ->getManager()
-            ->getRepository('UJMExoBundle:Subscription')
-            ->getControlExerciseEnroll($user->getId(), $exoID);
-
-        if (count($subscription) > 0) {
-            return $subscription[0]->getAdmin();
-        } else {
-            return 0;
-        }
-
     }
 
     /**

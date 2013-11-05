@@ -140,7 +140,12 @@ class InteractionGraphicController extends Controller
                     )
                 );
             } else {
-                $this->container->get('ujm.exercise_services')->setExerciseQuestion($exoID, $interGraph);
+                $em = $this->getDoctrine()->getManager();
+                $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+
+                if ($this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise)) {
+                    $this->container->get('ujm.exercise_services')->setExerciseQuestion($exoID, $interGraph);
+                }
 
                 return $this->redirect(
                     $this->generateUrl(
@@ -339,12 +344,12 @@ class InteractionGraphicController extends Controller
         $vars = array();
         $request = $this->container->get('request');
         $postVal = $req = $request->request->all();
-        
+
         if ($postVal['exoID'] != -1) {
             $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($postVal['exoID']);
             $vars['_resource'] = $exercise;
         }
-        
+
         $exerciseSer = $this->container->get('ujm.exercise_services');
         $res = $exerciseSer->responseGraphic($request);
 
@@ -357,7 +362,7 @@ class InteractionGraphicController extends Controller
         $vars['rep']     = $res['rep']; // Coordonates of the answer zones of the student's answer
         $vars['score']   = $res['score']; // Score of the student (right answer - penalty)
         $vars['exoID']   = $postVal['exoID'];
-        
+
         return $this->render('UJMExoBundle:InteractionGraphic:graphicOverview.html.twig', $vars);
     }
 

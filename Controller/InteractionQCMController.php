@@ -142,7 +142,13 @@ class InteractionQCMController extends Controller
                     )
                 );
             } else {
-                $this->container->get('ujm.exercise_services')->setExerciseQuestion($exoID, $interQCM);
+                $em = $this->getDoctrine()->getManager();
+                $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+
+                if ($this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise)) {
+                    $this->container->get('ujm.exercise_services')->setExerciseQuestion($exoID, $interQCM);
+                }
+
                 return $this->redirect(
                     $this->generateUrl('ujm_exercise_questions', array(
                         'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind)
@@ -284,12 +290,12 @@ class InteractionQCMController extends Controller
         $vars = array();
         $request = $this->get('request');
         $postVal = $req = $request->request->all();
-        
+
         if ($postVal['exoID'] != -1) {
             $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($postVal['exoID']);
             $vars['_resource'] = $exercise;
         }
-        
+
         $exerciseSer = $this->container->get('ujm.exercise_services');
         $res = $exerciseSer->responseQCM($request);
 
@@ -298,7 +304,7 @@ class InteractionQCMController extends Controller
         $vars['interQCM'] = $res['interQCM'];
         $vars['response'] = $res['response'];
         $vars['exoID']    = $postVal['exoID'];
-        
+
         return $this->render('UJMExoBundle:InteractionQCM:qcmOverview.html.twig', $vars);
     }
 

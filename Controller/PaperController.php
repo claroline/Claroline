@@ -69,11 +69,10 @@ class PaperController extends Controller
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $workspace = $exercise->getResourceNode()->getWorkspace();
 
-        $subscription = $this->getSubscription($user, $exoID);
-
         $this->checkAccess($exercise);
 
-        if ((isset($subscription[0])) && ($subscription[0]->getAdmin() == 1)) {
+        if ($this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise)) {
+
             $exoAdmin = true;
         }
 
@@ -109,7 +108,7 @@ class PaperController extends Controller
         }
 
         if (count($paper) > 0) {
-            $display = $this->ctrlDisplayPaper($user, $paper[0], $subscription);
+            $display = $this->ctrlDisplayPaper($user, $paper[0]);
         } else {
             $display = 'all';
         }
@@ -138,17 +137,15 @@ class PaperController extends Controller
         $em = $this->getDoctrine()->getManager();
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($id);
 
-        $subscription = $this->getSubscription($user, $paper->getExercise()->getId());
-
-        if (isset($subscription[0])) {
-            $admin = $subscription[0]->getAdmin();
+        if ($this->container->get('ujm.exercise_services')->isExerciseAdmin($paper->getExercise())) {
+            $admin = 1;
         } else {
             $admin = 0;
         }
 
         $worspace = $paper->getExercise()->getResourceNode()->getWorkspace();
 
-        $display = $this->ctrlDisplayPaper($user, $paper, $subscription);
+        $display = $this->ctrlDisplayPaper($user, $paper);
 
         if ((($this->checkAccess($paper->getExercise())) && ($paper->getEnd() == null)) || ($display == 'none')) {
             return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $paper->getExercise()->getId())));
@@ -295,16 +292,6 @@ class PaperController extends Controller
         return $resp;
     }
 
-    private function getSubscription($user, $exoID)
-    {
-        $subscription = $this->getDoctrine()
-                             ->getManager()
-                             ->getRepository('UJMExoBundle:Subscription')
-                             ->getControlExerciseEnroll($user->getId(), $exoID);
-
-        return $subscription;
-    }
-
     private function checkAccess($exo)
     {
         $collection = new ResourceCollection(array($exo->getResourceNode()));
@@ -314,11 +301,11 @@ class PaperController extends Controller
         }
     }
 
-    private function ctrlDisplayPaper($user, $paper, $subscription)
+    private function ctrlDisplayPaper($user, $paper)
     {
         $display = 'none';
 
-        if (((isset($subscription[0])) && ($subscription[0]->getAdmin() == 1)) ||
+        if (($this->container->get('ujm.exercise_services')->isExerciseAdmin($paper->getExercise())) ||
             ($user->getId() == $paper->getUser()->getId()) &&
             (($paper->getExercise()->getCorrectionMode() == 1) ||
             (($paper->getExercise()->getCorrectionMode() == 3) &&

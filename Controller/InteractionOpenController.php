@@ -116,7 +116,13 @@ class InteractionOpenController extends Controller
                     )
                 );
             } else {
-                $this->container->get('ujm.exercise_services')->setExerciseQuestion($exoID, $interOpen);
+                $em = $this->getDoctrine()->getManager();
+                $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+
+                if ($this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise)) {
+                    $this->container->get('ujm.exercise_services')->setExerciseQuestion($exoID, $interOpen);
+                }
+
                 return $this->redirect(
                     $this->generateUrl('ujm_exercise_questions', array(
                         'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind)
@@ -230,7 +236,7 @@ class InteractionOpenController extends Controller
             $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($postVal['exoID']);
             $vars['_resource'] = $exercise;
         }
-        
+
         $exerciseSer = $this->container->get('ujm.exercise_services');
         $res = $exerciseSer->responseOpen($request);
 
@@ -240,7 +246,7 @@ class InteractionOpenController extends Controller
         $vars['score']     = $res['score'];
         $vars['tempMark']  = $res['tempMark'];
         $vars['exoID']     =  $postVal['exoID'];
-        
+
         return $this->render('UJMExoBundle:InteractionOpen:openOverview.html.twig', $vars);
     }
 }

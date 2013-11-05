@@ -21,7 +21,7 @@ services:
 
     ujm.exercise_services:
         class: UJM\ExoBundle\Services\classes\exerciseServices
-        arguments: [@doctrine]
+        arguments: [@doctrine, @security.context]
 
     ujm.exercise.validator.isvalidqcmglobalmark:
         class: UJM\ExoBundle\Validator\Constraints\isValidQCMGlobalMarkValidator
