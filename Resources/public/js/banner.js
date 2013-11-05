@@ -106,7 +106,7 @@
     function updateBannerBackgroundImage()
     {
         var repeatString     = bannerBackgroundImageRepeatField.val();
-        var selectedPosition = $(".orientation_btn.selected", bannerBackgroundImagePositionBlock).data('value').split(" ");
+        var selectedPosition = bannerBackgroundImagePositionField.val().split(" ");
 
         banner.css('background-repeat', repeatString);
         banner.css('background-position', bannerBackgroundImagePositionField.val());
