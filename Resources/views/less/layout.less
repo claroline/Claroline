@@ -90,7 +90,7 @@ body {
     body.left-bar-push {
         margin-left: 40px;
     }
-    #top_bar.left-bar-push {
+    #top_bar.left-bar-push, .impersonalitation > .navbar-fixed-top.left-bar-push {
         padding-left: 40px;
     }
 }
@@ -99,7 +99,7 @@ body {
     body.left-bar-push {
         margin-left: 0;
     }
-    #top_bar.left-bar-push {
+    #top_bar.left-bar-push, .impersonalitation > .navbar-fixed-top.left-bar-push {
         padding-left: 0;
     }
 }
@@ -109,33 +109,37 @@ body {
 /************/
 
 #top_bar {
-    @media (max-width: (@screen-md - 1)) {
+    .dropdown-fix {
+        position: relative;
+        width: 100%;
+        border: none;
+        .box-shadow(none);
+        background: @navbar-inverse-bg;
+        li a {
+            padding-left: 15px;
+            margin: 5px;
+            color: @navbar-inverse-link-color;
+            &:hover {
+                color: @navbar-inverse-link-hover-color;
+            }
+        }
+        .divider{
+            display: none;
+        }
+
         .dropdown-header {
             color: lighten(@navbar-inverse-bg, 20%);
             padding-left: 20px;
         }
+    }
 
+    @media(max-width: (@screen-md - 1)) {
         .dropdown-menu {
-            position: relative;
-            width: 100%;
-            border: none;
-            .box-shadow(none);
-            background: @navbar-inverse-bg;
-            li a {
-                padding-left: 15px;
-                margin: 5px;
-                color: @navbar-inverse-link-color;
-                &:hover {
-                    color: @navbar-inverse-link-hover-color;
-                }
-            }
-            .divider{
-                display: none;
-            }
+            .dropdown-fix;
         }
     }
 
-    @media (min-width: @screen-md) {
+    @media(min-width: @screen-md) {
          .dropdown-menu {
             position: absolute;
             left: auto;
@@ -157,6 +161,63 @@ body {
 
     .navbar-collapse {
         margin-left: -15px;
+    }
+
+    .navbar-header {
+        max-height: @navbar-height;
+        overflow: hidden !important;
+        position: relative;
+    }
+
+    @media(min-width: @screen-md) {
+        max-height: (@navbar-height + 3);
+        overflow: hidden;
+
+        &.break {
+            max-height: 395px !important;
+            overflow: visible !important;
+
+            .navbar-header {
+                width: 100%;
+            }
+
+            .navbar-toggle {
+                display: block;
+            }
+
+            .navbar-collapse.collapse {
+                display: none !important;
+            }
+            .navbar-collapse.in {
+                display: block;
+            }
+            .navbar-collapse.collapsing {
+                overflow: hidden !important;
+            }
+            .navbar-collapse {
+                overflow: auto !important;
+                max-height: 340px  !important;
+                overflow-x: visible  !important;
+                .navbar-nav {
+                    &, li {
+                        width: 100%;
+                    }
+
+                    li a {
+                        padding-left: 10px;
+                        padding-right: 10px;
+                    }
+
+                    &.navbar-right {
+                        margin-right: 0;
+                    }
+
+                    .dropdown-menu {
+                        .dropdown-fix;
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -573,6 +634,16 @@ div.pagination
     }
 
     .navbar-fixed-top {
+        @media (max-width: @grid-float-breakpoint) {
+            .navbar-nav {
+                float: left;
+            }
+
+            .navbar-nav.navbar-right {
+                float: right;
+            }
+        }
+
         z-index: (@zindex-navbar-fixed - 1);
         background-color: darken(@brand-warning, 5%);
         border: none;
@@ -589,10 +660,8 @@ div.pagination
 
     &.spaced .navbar-fixed-top {
         margin-top: @navbar-height;
-        padding-left: 40px;
         z-index: (@zindex-navbar-fixed - 3);
     }
-
 }
 
 /**********************/
@@ -742,6 +811,14 @@ div.pagination
         border-top: 1px solid @input-border;
         .border-bottom-radius(@border-radius-base);
         margin: 0;
+
+        .navbar-nav {
+            float: left;
+        }
+
+        .navbar-nav.navbar-right {
+            float: right;
+        }
     }
 
     textarea {
