@@ -74,15 +74,25 @@
         <div class="list-group-item">
             {% if interactions is not empty %}
                 <p>{{ 'changeOrder' | trans }}.</p>
-            {%endif%}
+                {% if pagerQuestion.getNbResults > pagerQuestion.maxPerPage %}
+                    <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exerciseID, 'displayAll': 1 }) }} ">
+                        <i class="icon-plus-sign"></i> {{ 'display all on this page' | trans }}
+                    </a>
+                {% else %}
+                    <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exerciseID }) }} ">
+                        <i class="icon-minus-sign"></i> {{ 'display pagination' | trans }}
+                    </a>
+                {% endif %}
+            {% endif %}
 
             <div id="SaveOrder" style="display: none;">
-                <button type="button" class="btn btn-primary"
-                    onclick="SaveNewOrder('{{ path('ujm_exercise_question_order') }}', {{exerciseID}});">
+                <button type="button" class="btn btn-danger"
+                    onclick="SaveNewOrder('{{ path('ujm_exercise_question_order') }}', {{exerciseID}},
+                                           {{pagerQuestion.getCurrentPage}}, {{pagerQuestion.maxPerPage}});">
                     {{ 'saveNewOrder' | trans }}
                 </button>
-                <br/><br/>
             </div>
+            <br/><br/>
 
             {% if interactions is not empty %}
                 <table class="table table-striped table-bordered table-condensed" id="QuestionArray">

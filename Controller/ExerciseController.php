@@ -186,7 +186,7 @@ class ExerciseController extends Controller
      * Finds and displays a Question entity to this Exercise.
      *
      */
-    public function showQuestionsAction($id, $pageNow, $categoryToFind, $titleToFind)
+    public function showQuestionsAction($id, $pageNow, $categoryToFind, $titleToFind, $displayAll)
     {
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
@@ -205,6 +205,10 @@ class ExerciseController extends Controller
                 ->getManager()
                 ->getRepository('UJMExoBundle:Interaction')
                 ->getExerciseInteraction($em, $id, 0);
+
+            if ($displayAll == 1) {
+                $max = count($interactions);
+            }
 
             $questionWithResponse = array();
             foreach ($interactions as $interaction) {
@@ -658,8 +662,10 @@ class ExerciseController extends Controller
         if ($request->isXmlHttpRequest()) {
             $exoID = $request->request->get('exoID');
             $order = $request->request->get('order');
+            $currentPage = $request->request->get('currentPage');
+            $questionMaxPerPage = $request->request->get('questionMaxPerPage');
 
-            if ($exoID && $order) {
+            if ($exoID && $order && $currentPage && $questionMaxPerPage) {
 
                 $length = count($order);
 
@@ -669,7 +675,8 @@ class ExerciseController extends Controller
                 foreach ($exoQuestions as $exoQuestion) {
                     for ($i = 0; $i < $length; $i++) {
                         if ($exoQuestion->getQuestion()->getId() == $order[$i]) {
-                            $exoQuestion->setOrdre($i + 1);
+                            $newOrder = $i + 1 + (((int)$currentPage - 1) * (int)$questionMaxPerPage);
+                            $exoQuestion->setOrdre($newOrder);
                         }
                     }
                 }
@@ -1193,7 +1200,7 @@ class ExerciseController extends Controller
 
     /**
      * Docimology, to calulate the standard deviation for the discrimination coefficient
-     * 
+     *
      * @param type $x
      * @param type $mean
      * @return type
@@ -1205,9 +1212,9 @@ class ExerciseController extends Controller
     }
 
     /**
-     * 
+     *
      * Docimology, to calulate the standard deviation for the discrimination coefficient
-     * 
+     *
      * @param type $array
      * @return type
      */
@@ -1218,7 +1225,7 @@ class ExerciseController extends Controller
     }
 
     /**
-     * 
+     *
      * @param type $exerciseId
      * @param type $eqs
      * @return type

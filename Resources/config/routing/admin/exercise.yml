@@ -11,8 +11,8 @@ ujm_exercise_import_question:
     defaults: { _controller: UJMExoBundle:Exercise:importQuestion, pageGoNow: 1, maxPage: 10, nbItem: 1 }
 
 ujm_exercise_questions:
-    pattern:  /{id}/questions/{pageNow}/{categoryToFind}/{titleToFind}
-    defaults: { _controller: UJMExoBundle:Exercise:showQuestions, pageNow: 0, categoryToFind: z, titleToFind: z }
+    pattern:  /{id}/questions/{pageNow}/{categoryToFind}/{titleToFind}/{displayAll}
+    defaults: { _controller: UJMExoBundle:Exercise:showQuestions, pageNow: 0, categoryToFind: z, titleToFind: z, displayAll: 0 }
 
 ujm_exercise_question_delete:
     pattern:  /{exoID}/{qid}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}

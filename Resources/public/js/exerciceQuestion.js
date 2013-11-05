@@ -8,7 +8,7 @@ $(document).ready(function (){
 });
 
 // Save the new order of the questions' exercise
-function SaveNewOrder(path, exoID) {
+function SaveNewOrder(path, exoID, currentPage, questionMaxPerPage) {
 
     var order = new Array();
 
@@ -24,7 +24,9 @@ function SaveNewOrder(path, exoID) {
         url: path,
         data: {
             exoID: exoID,
-            order: order
+            order: order,
+            currentPage: currentPage,
+            questionMaxPerPage: questionMaxPerPage
         }
     });
 
