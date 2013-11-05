@@ -63,26 +63,22 @@ class ResourceVoter implements VoterInterface
                         $this->checkCreation($object->getAttribute('type'), $resource, $token)
                     );
                 }
-            }
-
-            if (strtolower($attributes[0]) == 'move') {
+            } elseif (strtolower($attributes[0]) == 'move') {
                 $errors = array_merge(
                     $errors,
                     $this->checkMove($object->getAttribute('parent'), $object->getResources(), $token)
                 );
-            }
-
-            if (strtolower($attributes[0]) == 'copy') {
+            } elseif (strtolower($attributes[0]) == 'copy') {
                 $errors = array_merge(
                     $errors,
                     $this->checkCopy($object->getAttribute('parent'), $object->getResources(), $token)
                 );
+            } else {
+                $errors = array_merge(
+                    $errors,
+                    $this->checkAction(strtolower($attributes[0]), $object->getResources(), $token)
+                );
             }
-
-            $errors = array_merge(
-                $errors,
-                $this->checkAction(strtolower($attributes[0]), $object->getResources(), $token)
-            );
 
             if (count($errors) === 0) {
                 return VoterInterface::ACCESS_GRANTED;
@@ -160,7 +156,7 @@ class ResourceVoter implements VoterInterface
             $decoder = $this->maskManager->getDecoder($type, $action);
 
             if (!$decoder) {
-                throw new \Exception('The permission ' . $action . ' does not exists for the type' . $type->getName());
+                throw new \Exception('The permission ' . $action . ' does not exists for the type ' . $type->getName());
             }
 
             $grant = $decoder ? $mask & $decoder->getValue(): 0;
