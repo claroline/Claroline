@@ -7,17 +7,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Message;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\MessageManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Pager\PagerFactory;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -32,6 +35,9 @@ class MessageController
     private $groupManager;
     private $userManager;
     private $workspaceManager;
+    private $securityContext;
+    private $utils;
+    private $pagerFactory;
 
     /**
      * @DI\InjectParams({
@@ -41,7 +47,10 @@ class MessageController
      *     "manager"            = @DI\Inject("claroline.manager.message_manager"),
      *     "groupManager"       = @DI\Inject("claroline.manager.group_manager"),
      *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
-     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager")
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "securityContext"    = @DI\Inject("security.context"),
+     *     "utils"              = @DI\Inject("claroline.security.utilities"),
+     *     "pagerFactory"       = @DI\Inject("claroline.pager.pager_factory")
      * })
      */
     public function __construct(
@@ -51,7 +60,10 @@ class MessageController
         MessageManager $manager,
         GroupManager $groupManager,
         UserManager $userManager,
-        WorkspaceManager $workspaceManager
+        WorkspaceManager $workspaceManager,
+        SecurityContextInterface $securityContext,
+        Utilities $utils,
+        PagerFactory $pagerFactory
     )
     {
         $this->request = $request;
@@ -61,6 +73,9 @@ class MessageController
         $this->groupManager = $groupManager;
         $this->userManager = $userManager;
         $this->workspaceManager = $workspaceManager;
+        $this->securityContext = $securityContext;
+        $this->utils = $utils;
+        $this->pagerFactory = $pagerFactory;
     }
 
     /**
@@ -399,8 +414,11 @@ class MessageController
             }
         } else {
             $users = array();
-            $workspaces = $this->workspaceManager
-                ->getWorkspacesByUserAndRoleNames($user, array('ROLE_WS_MANAGER'));
+            $token = $this->securityContext->getToken();
+            $roles = $this->utils->getRoles($token);
+            $workspaces = $this->workspaceManager->getWorkspacesByRoles($roles);
+//            $workspaces = $this->workspaceManager
+//                ->getWorkspacesByUserAndRoleNames($user, array('ROLE_WS_MANAGER'));
 
             if (count($workspaces) > 0) {
                 if ($trimmedSearch === '') {
@@ -461,19 +479,43 @@ class MessageController
             $groups = array();
             $workspaces = $this->workspaceManager
                 ->getWorkspacesByUserAndRoleNames($user, array('ROLE_WS_MANAGER'));
-
+            // retrieve all groups of workspace that user is manager
             if (count($workspaces) > 0) {
                 if ($trimmedSearch === '') {
                     $groups = $this->groupManager
-                        ->getGroupsByWorkspaces($workspaces, $page);
+                        ->getGroupsByWorkspaces($workspaces);
                 } else {
                     $groups = $this->groupManager->getGroupsByWorkspacesAndSearch(
                         $workspaces,
-                        $page,
                         $search
                     );
                 }
             }
+            // get groups in which user is subscribed
+            $userGroups = $user->getGroups();
+            $userGroupsFinal = array();
+
+            if ($trimmedSearch === '') {
+                $userGroupsFinal = $userGroups;
+            } else {
+                $upperSearch = strtoupper($trimmedSearch);
+
+                foreach ($userGroups as $userGroup) {
+                    $upperName = strtoupper($userGroup->getName());
+
+                    if (strpos($upperName, $upperSearch) !== false) {
+                        $userGroupsFinal[] = $userGroup;
+                    }
+                }
+            }
+            // merge the 2 groups array
+            foreach ($userGroupsFinal as $userGroupFinal) {
+                if (!in_array($userGroupFinal, $groups)) {
+                    $groups[] = $userGroupFinal;
+                }
+            }
+
+            $this->pagerFactory->createPagerFromArray($groups, $page);
         }
 
         return array('groups' => $groups, 'search' => $search);
