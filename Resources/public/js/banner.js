@@ -100,14 +100,8 @@
 
         bannerBackgroundImageRepeatField.val(repeatString);
 
-        updateBannerBackgroundImageRepeat();
+        updateBannerBackgroundImage();
     });
-
-    function updateBannerBackgroundImageRepeat()
-    {
-        console.log(bannerBackgroundImageRepeatField.val());
-        banner.css('background-repeat', bannerBackgroundImageRepeatField.val());
-    }
 
     $(".orientation_btn", bannerBackgroundImagePositionBlock).click(function (event) {
         $(".orientation_btn.selected", bannerBackgroundImagePositionBlock).removeClass('selected');
@@ -128,5 +122,13 @@
     function updateBannerBackgroundImagePosition()
     {
         banner.css('background-position', bannerBackgroundImagePositionField.val());
+    }
+
+    function updateBannerBackgroundImage()
+    {
+        var repeatString     = bannerBackgroundImageRepeatField.val();
+        var selectedPosition = $(".orientation_btn.selected", bannerBackgroundImagePositionBlock).data('value').split(" ");
+
+        banner.css('background-repeat', repeatString);
     }
 })(jQuery);
