@@ -19,6 +19,15 @@ class LogCommentDeleteEvent extends AbstractLogResourceEvent
      */
     public function __construct(Blog $blog, Post $post, Comment $comment)
     {
+        $author = $comment->getAuthor();
+
+        if (null === $author) {
+            $author = "Anonyme";
+        }
+        else {
+            $author = $comment->getAuthor()->getFirstName() . ' ' . $comment->getAuthor()->getLastName();
+        }
+
         $details = array(
             'post' => array(
                 'blog'  => $blog->getId(),
@@ -26,7 +35,7 @@ class LogCommentDeleteEvent extends AbstractLogResourceEvent
                 'slug'  => $post->getSlug()
             ),
             'comment' => array(
-                'author'  => $comment->getAuthor()->getFirstName() . ' ' . $comment->getAuthor()->getLastName(),
+                'author'  => $author,
                 'content' => $comment->getMessage()
             )
         );

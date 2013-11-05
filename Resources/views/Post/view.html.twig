@@ -57,7 +57,7 @@
         {% endfor %}
         </ul>
         {% if _resource.isCommentsAuthorized %}
-            {% if is_granted('IS_AUTHENTICATED_ANONYMOUSLY') and false == _resource.isAuthorizeAnonymousComment %}
+            {% if false == is_granted('IS_AUTHENTICATED_FULLY') and false == _resource.isAuthorizeAnonymousComment %}
                 <p class="alert alert-warning">
                     {{ 'icap_blog_post_comment_need_authentication'|trans({'%connection_url%': path('claro_security_login')}, 'icap_blog')|raw }}
                 </p>
