@@ -16,7 +16,7 @@
                     <strong>{{ path.resourceNode.name }}</strong>
                 </h3>
                 <div class="player-buttons">
-                    <a href="{{ path('claro_workspace_open_tool', {workspaceId: workspace.id, toolName: 'innova_path'}) }}" class="btn btn-danger btn-sm" tooltip="Back to list"><span class="icon-remove"></span></a>
+                    <a href="{{ path('claro_workspace_open_tool', {workspaceId: workspace.id, toolName: 'innova_path'}) }}" class="btn btn-danger btn-sm" rel="tooltip" data-original-title="{{ 'back_to_paths_list' | trans({}, 'innova_tools') }}"><span class="icon-reply"></span></a>
                 </div>
             </div>
             <div class="panel-body">
