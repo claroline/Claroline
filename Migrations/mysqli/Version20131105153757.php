@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/11/05 11:10:36
+ * Generation date: 2013/11/05 03:38:00
  */
-class Version20131105111034 extends AbstractMigration
+class Version20131105153757 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -20,7 +20,7 @@ class Version20131105111034 extends AbstractMigration
             ADD banner_background_color VARCHAR(255) DEFAULT '#FFFFFF' NOT NULL, 
             ADD banner_height SMALLINT DEFAULT '100' NOT NULL, 
             ADD banner_background_image VARCHAR(255) DEFAULT NULL, 
-            ADD banner_background_image_position VARCHAR(255) DEFAULT '0% 0%' NOT NULL, 
+            ADD banner_background_image_position VARCHAR(255) DEFAULT 'left top' NOT NULL, 
             ADD banner_background_image_repeat VARCHAR(255) DEFAULT 'no-repeat' NOT NULL
         ");
     }

@@ -14,16 +14,6 @@
     var bannerBackgroundImageRepeatFieldX    = $("#icap_blog_options_form_banner_background_image_repeat_x", bannerBackgroundImageRepeatBlock);
     var bannerBackgroundImageRepeatFieldY    = $("#icap_blog_options_form_banner_background_image_repeat_y", bannerBackgroundImageRepeatBlock);
 
-    var tabPosition = new Array();
-    tabPosition[0]  = new Array();
-    tabPosition[0]["right"]  = "100%";
-    tabPosition[0]["center"] = "50%";
-    tabPosition[0]["left"]   = "0%";
-    tabPosition[1]  = new Array();
-    tabPosition[1]["bottom"] = "100%";
-    tabPosition[1]["center"] = "50%";
-    tabPosition[1]["top"]    = "0%";
-
     bannerBackgroundImageColorPicker.colorpicker({format: 'hex'}).on('changeColor', function (event) {
         changeBannerBackgroundColor(event.color.toHex());
     });
@@ -34,7 +24,6 @@
     function changeBannerBackgroundColor(color)
     {
         bannerBackgroundColorField.val(color);
-        console.log($(".input-group-addon", this));
         $(".input-group-addon", bannerBackgroundImageColorPicker).css('background-color', color);
         banner.css('background-color', color);
     }
@@ -109,12 +98,7 @@
         var newPosition = $(this);
         newPosition.addClass('selected');
 
-        var positions = newPosition.data('value').split(" ");
-        var positionX = tabPosition[0][positions[0]];
-        var positionY = tabPosition[1][positions[1]];
-        var bannerBackgroundImagePosition = positionX + " " + positionY;
-
-        bannerBackgroundImagePositionField.val(bannerBackgroundImagePosition);
+        bannerBackgroundImagePositionField.val(newPosition.data('value'));
 
         updateBannerBackgroundImage();
     });
@@ -126,5 +110,21 @@
 
         banner.css('background-repeat', repeatString);
         banner.css('background-position', bannerBackgroundImagePositionField.val());
+
+        $(".orientation_btn.selected", bannerBackgroundImagePositionBlock).removeClass('selected');
+        switch(repeatString) {
+            case 'no-repeat':
+                $(".orientation_btn[data-value='" + bannerBackgroundImagePositionField.val() + "']", bannerBackgroundImagePositionBlock).addClass('selected');
+                break;
+            case 'repeat':
+                $(".orientation_btn", bannerBackgroundImagePositionBlock).addClass('selected');
+                break;
+            case 'repeat-x':
+                $(".orientation_btn.x" + selectedPosition[1], bannerBackgroundImagePositionBlock).addClass('selected');
+                break;
+            case 'repeat-y':
+                $(".orientation_btn.y" + selectedPosition[0], bannerBackgroundImagePositionBlock).addClass('selected');
+                break;
+        }
     }
 })(jQuery);
