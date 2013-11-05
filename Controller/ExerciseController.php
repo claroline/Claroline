@@ -715,35 +715,36 @@ class ExerciseController extends Controller
 
             $workspace = $exercise->getResourceNode()->getWorkspace();
 
-            $histoMark = $this->histoMark($exerciseId);
-            $histoSuccess = $this->histoSuccess($exerciseId, $eqs, $papers);
+            $parameters['nbPapers']  = $nbPapers;
+            $parameters['workspace'] = $workspace;
+            $parameters['exoID']     = $exerciseId;
+            $parameters['_resource'] = $exercise;
 
-            if ($exercise->getNbQuestion() == 0) {
-                $histoDiscrimination = $this->histoDiscrimination($exerciseId, $eqs, $papers);
-            } else {
-                $histoDiscrimination['coeffQ'] = 'none';
+            if ($nbPapers >= 12) {
+                $histoMark = $this->histoMark($exerciseId);
+                $histoSuccess = $this->histoSuccess($exerciseId, $eqs, $papers);
+
+                if ($exercise->getNbQuestion() == 0) {
+                    $histoDiscrimination = $this->histoDiscrimination($exerciseId, $eqs, $papers);
+                } else {
+                    $histoDiscrimination['coeffQ'] = 'none';
+                }
+
+                $histoMeasureDifficulty = $this->histoMeasureOfDifficulty($exerciseId, $eqs);
+
+                $parameters['scoreList']          = $histoMark['scoreList'];
+                $parameters['frequencyMarks']     = $histoMark['frequencyMarks'];
+                $parameters['maxY']               = $histoMark['maxY'];
+                $parameters['questionsList']      = $histoSuccess['questionsList'];
+                $parameters['seriesResponsesTab'] = $histoSuccess['seriesResponsesTab'];
+                $parameters['maxY2']              = $histoSuccess['maxY'];
+                $parameters['coeffQ']             = $histoDiscrimination['coeffQ'];
+                $parameters['MeasureDifficulty']  = $histoMeasureDifficulty;
             }
 
-            $histoMeasureDifficulty = $this->histoMeasureOfDifficulty($exerciseId, $eqs);
-
-            return $this->render(
-                'UJMExoBundle:Exercise:docimology.html.twig',
-                array(
-                    'workspace'             => $workspace,
-                    'exoID'                 => $exerciseId,
-                    'nbPapers'              => $nbPapers,
-                    'scoreList'             => $histoMark['scoreList'],
-                    'frequencyMarks'        => $histoMark['frequencyMarks'],
-                    'maxY'                  => $histoMark['maxY'],
-                    'questionsList'         => $histoSuccess['questionsList'],
-                    'seriesResponsesTab'    => $histoSuccess['seriesResponsesTab'],
-                    'maxY2'                 => $histoSuccess['maxY'],
-                    'coeffQ'                => $histoDiscrimination['coeffQ'],
-                    'MeasureDifficulty'     => $histoMeasureDifficulty,
-                    '_resource'             => $exercise
-                )
-            );
+            return $this->render('UJMExoBundle:Exercise:docimology.html.twig', $parameters);
         } else {
+
             return $this->redirect($this->generateUrl('ujm_exercise_open'));
         }
     }
