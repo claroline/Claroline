@@ -257,6 +257,7 @@ class ExerciseController extends Controller
                     'exerciseID'           => $id,
                     'questionWithResponse' => $questionWithResponse,
                     'pagerQuestion'        => $pagerQuestion,
+                    'displayAll'           => $displayAll,
                     '_resource'            => $exercise
                 )
             );

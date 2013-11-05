@@ -74,11 +74,11 @@
         <div class="list-group-item">
             {% if interactions is not empty %}
                 <p>{{ 'changeOrder' | trans }}.</p>
-                {% if pagerQuestion.getNbResults > pagerQuestion.maxPerPage %}
+                {% if pagerQuestion.getNbResults > pagerQuestion.maxPerPage and displayAll == 0 %}
                     <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exerciseID, 'displayAll': 1 }) }} ">
                         <i class="icon-plus-sign"></i> {{ 'display all on this page' | trans }}
                     </a>
-                {% else %}
+                {% elseif displayAll == 1  %}
                     <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exerciseID }) }} ">
                         <i class="icon-minus-sign"></i> {{ 'display pagination' | trans }}
                     </a>
