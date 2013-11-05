@@ -110,6 +110,62 @@ class WorkspaceRepository extends EntityRepository
     }
 
     /**
+     * Returns the workspaces whose at least one tool is accessible to one of the given roles.
+     *
+     * @param array[string] $roleNames
+     *
+     * @return array[AbstractWorkspace]
+     */
+    public function findByRoleNames(array $roleNames)
+    {
+        $dql = '
+            SELECT DISTINCT w
+            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            JOIN w.orderedTools ot
+            JOIN ot.roles r
+            WHERE r.name IN (:roleNames)
+            ORDER BY w.name
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roleNames', $roleNames);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns the workspaces whose at least one tool is accessible to one of the given roles
+     * and whose name matches the given search string.
+     *
+     * @param array[string] $roleNames
+     * @param string $search
+     *
+     * @return array[AbstractWorkspace]
+     */
+    public function findByRoleNamesBySearch(array $roleNames, $search)
+    {
+        $dql = '
+            SELECT DISTINCT w
+            FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+            JOIN w.orderedTools ot
+            JOIN ot.roles r
+            WHERE r.name IN (:roleNames)
+            AND (
+                UPPER(w.name) LIKE :search
+                OR UPPER(w.code) LIKE :search
+            )
+            ORDER BY w.name
+        ';
+
+        $upperSearch = strtoupper($search);
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roleNames', $roleNames);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $query->getResult();
+    }
+
+    /**
      * Returns the ids of the workspaces a user is member of, filtered by a set of roles
      * the user must have in those workspaces. Role names are actually prefixes of the
      * target role (e.g. 'ROLE_WS_COLLABORATOR' instead of 'ROLE_WS_COLLABORATOR_123').

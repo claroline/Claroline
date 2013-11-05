@@ -601,38 +601,6 @@ class WorkspaceTagManager
         return $displayable;
     }
 
-    public function getAddableWorkspacesPagerBySearch(
-        WorkspaceTag $workspaceTag,
-        $page = 1,
-        $search = ''
-    )
-    {
-        $relations = $this->relTagRepo->findAdminRelationsByTag($workspaceTag);
-        $excludedWorkspaces = array();
-
-        foreach ($relations as $relation) {
-            $excludedWorkspaces[] = $relation->getWorkspace();
-        }
-        if (count($excludedWorkspaces) > 0) {
-            if ($search === '') {
-                $workspaces = $this->workspaceRepo
-                    ->findDisplayableWorkspacesWithout($excludedWorkspaces);
-            } else {
-                $workspaces = $this->workspaceRepo
-                    ->findDisplayableWorkspacesWithoutBySearch($excludedWorkspaces, $search);
-            }
-        } else {
-            if ($search === '') {
-                $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
-            } else {
-                $workspaces = $this->workspaceRepo
-                    ->findDisplayableWorkspacesBySearch($search);
-            }
-        }
-
-        return $this->pagerFactory->createPagerFromArray($workspaces, $page, 20);
-    }
-
     public function getPagerRelationByTag(WorkspaceTag $workspaceTag, $page = 1)
     {
         $relations = $this->relTagRepo->findAdminRelationsByTag($workspaceTag);

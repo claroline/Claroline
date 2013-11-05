@@ -55,51 +55,6 @@ class WorkspaceTagController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/tag",
-     *     name="claro_workspace_manage_tag"
-     * )
-     * @EXT\Method("GET")
-     *
-     * @EXT\Template()
-     *
-     * Display a table showing tags associated to user's workspaces
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function manageTagAction()
-    {
-        if (!$this->securityContext->isGranted('ROLE_USER')) {
-            throw new AccessDeniedException();
-        }
-        $user = $this->securityContext->getToken()->getUser();
-        $tags = $this->tagManager->getTagsByUser($user);
-        $token = $this->securityContext->getToken();
-        $roles = $this->utils->getRoles($token);
-        $workspaces = $this->workspaceManager->getWorkspacesByRoles($roles);
-        $workspacesTags = array();
-
-        foreach ($workspaces as $workspace) {
-            $relWsTagsByWs = $this->tagManager->getAllTagRelationsByWorkspaceAndUser($workspace, $user);
-            $workspacesTags[$workspace->getId()] = $relWsTagsByWs;
-        }
-
-        $tagsNameTxt = '[';
-        foreach ($tags as $tag) {
-            $tagsNameTxt .= '"' . $tag->getName() . '",';
-        }
-        $tagsNameTxt = substr($tagsNameTxt, 0, strlen($tagsNameTxt) - 1);
-        $tagsNameTxt .= ']';
-
-        return array(
-            'user' => $user,
-            'tagsNameTxt' => $tagsNameTxt,
-            'workspaces' => $workspaces,
-            'workspacesTags' => $workspacesTags
-        );
-    }
-
-    /**
-     * @EXT\Route(
      *     "/tag/createform",
      *     name="claro_workspace_tag_create_form"
      * )
@@ -425,50 +380,6 @@ class WorkspaceTagController extends Controller
         $this->tagManager->deleteTagRelation($relWorkspaceTag);
 
         return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/tag/organize",
-     *     name="claro_workspace_organize_tag"
-     * )
-     * @EXT\Method("GET")
-     *
-     * @EXT\Template()
-     *
-     * Render a page where tags can be organized
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function organizeWorkspaceTagAction()
-    {
-        if (!$this->securityContext->isGranted('ROLE_USER')) {
-            throw new AccessDeniedException();
-        }
-        $user = $this->securityContext->getToken()->getUser();
-        $tags = $this->tagManager->getTagsByUser($user);
-        $tagsHierarchy = $this->tagManager->getAllHierarchiesByUser($user);
-        $rootTags = $this->tagManager->getRootTags($user);
-        $hierarchy = array();
-
-        foreach ($tagsHierarchy as $tagHierarchy) {
-
-            if ($tagHierarchy->getLevel() === 1) {
-
-                if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
-                    !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
-
-                    $hierarchy[$tagHierarchy->getParent()->getId()] = array();
-                }
-                $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
-            }
-        }
-
-        return array(
-            'tags' => $tags,
-            'hierarchy' => $hierarchy,
-            'rootTags' => $rootTags
-        );
     }
 
     /**
@@ -1099,58 +1010,6 @@ class WorkspaceTagController extends Controller
 
     /**
      * @EXT\Route(
-     *     "admin/tag/{workspaceTagId}/check/workspace/page/{page}",
-     *     name="claro_admin_workspace_tag_check_workspace_pager",
-     *     defaults={"page"=1, "search"=""},
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("GET")
-     * @EXT\Route(
-     *     "admin/tag/{workspaceTagId}/check/workspace/page/{page}/search/{search}",
-     *     name="claro_admin_workspace_tag_check_workspace_pager_search",
-     *     defaults={"page"=1},
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("GET")
-     * @EXT\ParamConverter(
-     *      "workspaceTag",
-     *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "workspaceTagId", "strictId" = true}
-     * )
-     *
-     * @EXT\Template()
-     *
-     * Renders list of workspaces that can be tagged by given tag
-     *
-     * @param WorkspaceTag $tag
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function checkAddableWorkspacesPagerAction(
-        WorkspaceTag $workspaceTag,
-        $page,
-        $search
-    )
-    {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
-            throw new AccessDeniedException();
-        }
-
-        $workspacePager = $this->tagManager->getAddableWorkspacesPagerBySearch(
-            $workspaceTag,
-            $page,
-            $search
-        );
-
-        return array(
-            'workspaceTag' => $workspaceTag,
-            'workspaces' => $workspacePager,
-            'search' => $search
-        );
-    }
-
-    /**
-     * @EXT\Route(
      *     "admin/tag/{workspaceTagId}/add/workspace/{workspaceId}",
      *     name="claro_admin_workspace_tag_add_to_workspace",
      *     options={"expose"=true}
@@ -1225,10 +1084,6 @@ class WorkspaceTagController extends Controller
         if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
-
-        if (is_null($workspace) || is_null($workspaceTag)) {
-            throw new \RuntimeException('Workspace or Tag cannot be null');
-        }
         $relWorkspaceTag = $this->tagManager
             ->getAdminTagRelationByWorkspaceAndTag($workspace, $workspaceTag);
         $this->tagManager->deleteTagRelation($relWorkspaceTag);
@@ -1238,44 +1093,47 @@ class WorkspaceTagController extends Controller
 
     /**
      * @EXT\Route(
-     *     "admin/tag/display/hierarchy",
-     *     name="claro_display_admin_workspace_tag_hierarchy",
+     *     "tag/{workspaceTagId}/remove/workspace/{workspaceId}",
+     *     name="claro_workspace_tag_remove_from_workspace",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
+     * @EXT\Method("DELETE")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "workspaceTag",
+     *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
+     *      options={"id" = "workspaceTagId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      *
-     * @EXT\Template()
+     * Remove Tag from Workspace
      *
-     * Render a page where admin tags can be organized
+     * @param AbstractWorkspace workspace
+     * @param WorkspaceTag $workspaceTag
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function displayAdminWorkspaceTagHierarchyAction()
+    public function removeWorkspaceTagFromWorkspace(
+        User $currentUser,
+        AbstractWorkspace $workspace,
+        WorkspaceTag $workspaceTag
+    )
     {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
-            throw new AccessDeniedException();
-        }
-        $tagsHierarchy = $this->tagManager->getAllAdminHierarchies();
-        $rootTags = $this->tagManager->getAdminRootTags();
-        $hierarchy = array();
-
-        foreach ($tagsHierarchy as $tagHierarchy) {
-
-            if ($tagHierarchy->getLevel() === 1) {
-
-                if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
-                    !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
-
-                    $hierarchy[$tagHierarchy->getParent()->getId()] = array();
-                }
-                $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
-            }
-        }
-
-        return array(
-            'hierarchy' => $hierarchy,
-            'rootTags' => $rootTags
+        $relWorkspaceTag = $this->tagManager->getTagRelationByWorkspaceAndTagAndUser(
+            $workspace,
+            $workspaceTag,
+            $currentUser
         );
+
+        if (!is_null($relWorkspaceTag)) {
+            $this->tagManager->deleteTagRelation($relWorkspaceTag);
+        }
+
+        return new Response('success', 204);
     }
 
     /**
@@ -1337,6 +1195,74 @@ class WorkspaceTagController extends Controller
         }
 
         return array(
+            'search' => $search,
+            'workspaces' => $workspaces,
+            'workspacesTags' => $workspacesTags,
+            'hierarchy' => $hierarchy,
+            'rootTags' => $rootTags
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/tag/manage/page/{page}",
+     *     name="claro_manage_workspace_tag",
+     *     defaults={"page"=1, "search"=""},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "/workspace/tag/manage/page/{page}/search/{search}",
+     *     name="claro_manage_workspace_tag_search",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
+     *
+     * @EXT\Template()
+     *
+     * Manage workspace tag
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function manageWorkspaceTagAction(User $currentUser, $page, $search)
+    {
+        $token = $this->securityContext->getToken();
+        $roleNames = $this->utils->getRoles($token);
+        $workspaces = ($search === '') ?
+            $this->workspaceManager
+                ->getWorkspacesByRoleNamesPager($roleNames, $page) :
+            $this->workspaceManager
+                ->getWorkspacesByRoleNamesBySearchPager($roleNames, $search, $page);
+        $workspacesTags = array();
+
+        foreach ($workspaces as $workspace) {
+            $relWsTagsByWs = $this->tagManager
+                ->getAllTagRelationsByWorkspaceAndUser($workspace, $currentUser);
+            $workspacesTags[$workspace->getId()] = $relWsTagsByWs;
+        }
+
+        // Get datas to display tag hierarchy
+        $tagsHierarchy = $this->tagManager->getAllHierarchiesByUser($currentUser);
+        $rootTags = $this->tagManager->getRootTags($currentUser);
+        $hierarchy = array();
+
+        foreach ($tagsHierarchy as $tagHierarchy) {
+
+            if ($tagHierarchy->getLevel() === 1) {
+
+                if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
+                    !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
+
+                    $hierarchy[$tagHierarchy->getParent()->getId()] = array();
+                }
+                $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
+            }
+        }
+
+        return array(
+            'user' => $currentUser,
             'search' => $search,
             'workspaces' => $workspaces,
             'workspacesTags' => $workspacesTags,
@@ -1418,6 +1344,78 @@ class WorkspaceTagController extends Controller
 
     /**
      * @EXT\Route(
+     *     "associate/tags/to/workspaces",
+     *     name="claro_associate_workspace_tags_to_workspaces",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "workspaces",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"multipleIds" = true, "name" = "workspaceIds"}
+     * )
+     * @EXT\ParamConverter(
+     *     "tags",
+     *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
+     *      options={"multipleIds" = true, "name" = "tagIds"}
+     * )
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
+     */
+    public function associateMultipleTagsToMultipleWorkspacesAction(
+        User $currentUser,
+        array $workspaces,
+        array $tags
+    )
+    {
+        foreach ($workspaces as $workspace) {
+            foreach ($tags as $tag) {
+                $relWsTag = $this->tagManager->getTagRelationByWorkspaceAndTagAndUser(
+                    $workspace,
+                    $tag,
+                    $currentUser
+                );
+
+                if ($relWsTag === null) {
+                    $this->tagManager->createTagRelation($tag, $workspace);
+                    // Set success flashbag message
+                    $msg = $this->translator->trans(
+                        'the_workspace',
+                        array(),
+                        'platform'
+                    );
+                    $msg .= ' [' . $workspace->getName()
+                        . ' (' . $workspace->getCode() . ')] ';
+                    $msg .= $this->translator->trans(
+                        'has_been_put_in_category',
+                        array(),
+                        'platform'
+                    );
+                    $msg .= ' [' . $tag->getName() . ']';
+                    $this->get('session')->getFlashBag()->add('success', $msg);
+                } else {// Set success flashbag message
+                    $msg = $this->translator->trans(
+                        'the_workspace',
+                        array(),
+                        'platform'
+                    );
+                    $msg .= ' [' . $workspace->getName()
+                        . ' (' . $workspace->getCode() . ')] ';
+                    $msg .= $this->translator->trans(
+                        'is_already_in_category',
+                        array(),
+                        'platform'
+                    );
+                    $msg .= ' [' . $tag->getName() . ']';
+                    $this->get('session')->getFlashBag()->add('error', $msg);
+                }
+            }
+        }
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
      *     "organize/admin/tags",
      *     name="claro_admin_workspace_tag_organize",
      *     options={"expose"=true}
@@ -1433,6 +1431,44 @@ class WorkspaceTagController extends Controller
         if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
+        $tagsHierarchy = $this->tagManager->getAllAdminHierarchies();
+        $rootTags = $this->tagManager->getAdminRootTags();
+        $hierarchy = array();
+
+        foreach ($tagsHierarchy as $tagHierarchy) {
+
+            if ($tagHierarchy->getLevel() === 1) {
+
+                if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
+                    !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
+
+                    $hierarchy[$tagHierarchy->getParent()->getId()] = array();
+                }
+                $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
+            }
+        }
+
+        return array(
+            'hierarchy' => $hierarchy,
+            'rootTags' => $rootTags
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "organize/tags",
+     *     name="claro_workspace_tag_organize",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     *
+     * Display list of workspace tags
+     *
+     */
+    public function organizeWorkspaceTagAction(User $currentUser)
+    {
         $tagsHierarchy = $this->tagManager->getAllAdminHierarchies();
         $rootTags = $this->tagManager->getAdminRootTags();
         $hierarchy = array();
