@@ -82,3 +82,16 @@
 	width:5px;
 	height:5px;
 }
+
+
+/* refacto */
+.player-buttons {
+    margin: 6px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.panel-path-player {
+    position: relative;
+}

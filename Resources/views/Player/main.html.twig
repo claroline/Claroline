@@ -2,23 +2,24 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Editor/app.css') }}"/>
     <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/player.css') }}"/>
 {% endblock %}
 
 {% block content %}
     <div class="col-md-12 section-content">
-        <div class="panel panel-default panel-path-editor">
+        <div class="panel panel-default panel-path-player">
             <div class="panel-heading">
-                <h3 class="panel-title" id="player-header">
-                    {# {{ 'path' | trans({}, 'innova_tools') }} : #} <strong>{{ path.resourceNode.name }}</strong>
+                <h3 class="panel-title">
+                    <button class="btn btn-default btn-xs" ng-click="openHelp()" tooltip="Help">
+                        <span class="icon-question-sign"></span>
+                    </button>
+                    <strong>{{ path.resourceNode.name }}</strong>
                 </h3>
-                <div class="editor-buttons">
-                    <a href="{{ path('claro_workspace_open_tool', {workspaceId: workspace.id, toolName: 'innova_path'}) }}" class="btn btn-danger btn-sm" tooltip="{{ 'back_to_paths_list' | trans({}, 'innova_tools') }}"><span class="icon-reply"></span></a>
+                <div class="player-buttons">
+                    <a href="{{ path('claro_workspace_open_tool', {workspaceId: workspace.id, toolName: 'innova_path'}) }}" class="btn btn-danger btn-sm" tooltip="Back to list"><span class="icon-remove"></span></a>
                 </div>
             </div>
             <div class="panel-body">
-
                 <div class="panel panel-default tree">
                     <div class="panel-body">
                     {% if step.lvl > 0 %}
