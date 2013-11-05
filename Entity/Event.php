@@ -67,6 +67,8 @@ class Event
     private $priority;
 
     private $recurring;
+    private $StartHours;
+    private $EndHours;
 
     public function getId()
     {
@@ -187,4 +189,22 @@ class Event
     public function setRecurring($recurring) {
         $this->recurring = $recurring;
     }
+    
+    public function getStartHours() {
+        return $this->StartHours;
+    }
+
+    public function setStartHours($StartHours) {
+        $this->StartHours = $StartHours;
+    }
+
+    public function getEndHours() {
+        return $this->EndHours;
+    }
+
+    public function setEndHours($EndHours) {
+        $this->EndHours = $EndHours;
+    }
+
+
 }

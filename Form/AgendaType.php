@@ -34,13 +34,32 @@ class AgendaType extends AbstractType
                 )
             )
             ->add(
+                'StartHours',
+                'text',
+                array(
+                    'attr' => array(
+                        'class' => 'hours'
+                        )
+                    )
+                )
+            ->add(
                 'end',
                 'date',
                 array(
                     'format' => 'd/M/yyyy H:mm',
                     'widget' => 'single_text',
+                    'attr' => $attr
                 )
             )
+            ->add(
+                'EndHours',
+                'text',
+                array(
+                    'attr' => array(
+                        'class' => 'hours'
+                        )
+                    )
+                )
             ->add(
                 'allDay',
                 'checkbox'

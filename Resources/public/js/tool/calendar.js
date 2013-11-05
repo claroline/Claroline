@@ -79,8 +79,8 @@
             $('#agenda_form').find('input:radio, input:checkbox')
                 .removeAttr('checked')
                 .removeAttr('selected');
-            // var  currentDate = $.fullCalendar.formatDate(new Date(), 'dd-MM-yyyy');
-            // var pickedDate = $.fullCalendar.formatDate(date, 'dd-MM-yyyy');
+            //  var  currentDate = $.fullCalendar.formatDate(new Date(), 'dd-MM-yyyy');
+            //  var pickedDate = $.fullCalendar.formatDate(date, 'dd-MM-yyyy');
             // $('#agenda_form_start').val(pickedDate)
             // if (pickedDate > currentDate) {
             //     $('#agenda_form_end').val(pickedDate);
@@ -94,6 +94,8 @@
         $('#save').click(function () {
             if ($('#agenda_form_title').val() !== '') {
                 $('#save').attr('disabled', 'disabled');
+                $('#agenda_form_start').val($('#agenda_form_start').val()+' '+$('#agenda_form_StartHours').val());
+                $('#agenda_form_end').val($('#agenda_form_end').val()+' '+$('#agenda_form_EndHours').val());
                 var data = new FormData($('#myForm')[0]);
                 data.append('agenda_form[description]',$('#agenda_form_description').val());
                 var url = $('#myForm').attr('action');
