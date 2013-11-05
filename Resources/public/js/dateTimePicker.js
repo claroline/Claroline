@@ -4,5 +4,7 @@
  */
 
 $(document).ready(function () {
-    $('.picker').datetimepicker();
+    $('.picker').datetimepicker({
+      language: 'fr'
+    });
 });
