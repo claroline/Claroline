@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BlogBundle\Migrations\sqlsrv;
+namespace Icap\BlogBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/10/31 01:49:51
+ * Generation date: 2013/11/05 11:10:36
  */
-class Version20131031134948 extends AbstractMigration
+class Version20131105111034 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -44,19 +44,19 @@ class Version20131031134948 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE icap__blog_options 
-            ADD banner_background_image_position SMALLINT NOT NULL
+            ADD banner_background_image_position NVARCHAR(255) NOT NULL
         ");
         $this->addSql("
             ALTER TABLE icap__blog_options 
-            ADD CONSTRAINT DF_D1AAC984_FBA21C33 DEFAULT '0' FOR banner_background_image_position
+            ADD CONSTRAINT DF_D1AAC984_FBA21C33 DEFAULT '0% 0%' FOR banner_background_image_position
         ");
         $this->addSql("
             ALTER TABLE icap__blog_options 
-            ADD banner_background_image_repeat SMALLINT NOT NULL
+            ADD banner_background_image_repeat NVARCHAR(255) NOT NULL
         ");
         $this->addSql("
             ALTER TABLE icap__blog_options 
-            ADD CONSTRAINT DF_D1AAC984_A190A6AD DEFAULT '0' FOR banner_background_image_repeat
+            ADD CONSTRAINT DF_D1AAC984_A190A6AD DEFAULT 'no-repeat' FOR banner_background_image_repeat
         ");
     }
 

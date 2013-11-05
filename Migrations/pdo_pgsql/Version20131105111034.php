@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/10/31 01:49:50
+ * Generation date: 2013/11/05 11:10:36
  */
-class Version20131031134948 extends AbstractMigration
+class Version20131105111034 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -32,11 +32,11 @@ class Version20131031134948 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE icap__blog_options 
-            ADD banner_background_image_position SMALLINT DEFAULT '0' NOT NULL
+            ADD banner_background_image_position VARCHAR(255) DEFAULT '0% 0%' NOT NULL
         ");
         $this->addSql("
             ALTER TABLE icap__blog_options 
-            ADD banner_background_image_repeat SMALLINT DEFAULT '0' NOT NULL
+            ADD banner_background_image_repeat VARCHAR(255) DEFAULT 'no-repeat' NOT NULL
         ");
     }
 
