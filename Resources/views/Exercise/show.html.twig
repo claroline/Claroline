@@ -46,13 +46,13 @@
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'exercise' | trans }} {% endblock %}
+{% block title %} {{ 'exercise' | trans }} : {{ entity.title }} {% endblock %}
 
 {% block section_content %}
     {{ tinymce_init() }}
 
     <div class="panel-heading">
-        <h1>{{ 'exercise'|trans }}</h1>
+        <h1>{{ 'exercise'|trans }} : {{ entity.title }}</h1>
     </div>
     <div class="panel-body">
         {% if isDesktop() %}
@@ -87,84 +87,6 @@
                         </td>
                     </tr>
                     <tr>
-                        <th class="classic">{{ 'random order of questions' | trans }}</th>
-                        <td class="classic">
-                            {% if entity.shuffle == 0 %}
-                                <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
-                            {% else %}
-                                <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="classic">{{ 'number of questions to draw' | trans }}</th>
-                        <td class="classic">
-                            {% if entity.nbQuestion != 0 %}
-                                {{ entity.nbQuestion }}
-                            {% else %}
-                                {{ 'allQuestion'|trans }}
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="classic">{{ 'creationDate' | trans }}</th>
-                        <td class="classic">{{ entity.dateCreate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
-                    </tr>
-                    <tr>
-                        <th class="classic">{{ 'duration' | trans }}</th>
-                        <td class="classic">
-                            {% if entity.duration != 0 %}
-                                {{ entity.duration }}
-                            {% else %}
-                                {{ 'noOne'|trans }}
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="classic">{{ 'print paper' | trans }}</th>
-                        <td class="classic">
-                            {% if entity.doprint == 0 %}
-                                <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
-                            {% else %}
-                                <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="classic">{{ 'maximum number of tries' | trans }}</th>
-                        <td class="classic">
-                            {% if entity.maxAttempts != 0 %}
-                                {{ entity.maxAttempts }}
-                            {% else %}
-                                {{ 'infiny'|trans }}
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="classic">{{ 'availability of correction' | trans }}</th>
-                        <td class="classic">
-                            {% if(entity.correctionMode == 1) %}
-                                {{ 'at the end of assessment' | trans }}
-                            {% elseif (entity.correctionMode == 2) %}
-                                {{ 'after the last attempt' | trans }}
-                            {% elseif (entity.correctionMode == 3) %}
-                                {{ 'from' | trans }}
-                            {% elseif (entity.correctionMode == 4) %}
-                                {{ 'never' | trans }}
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="classic">{{ 'availability of score' | trans }}</th>
-                        <td class="classic">
-                            {% if(entity.markMode == 1) %}
-                                {{ 'at the same time that the correction' | trans }}
-                            {% else %}
-                                {{ 'at the end of assessment' | trans }}
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
                         <th class="classic">{{ 'start date' | trans }}</th>
                         <td class="classic">{{ entity.startdate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
                     </tr>
@@ -172,9 +94,9 @@
                         <th class="classic">{{ 'use date of end' | trans }}</th>
                         <td class="classic">
                             {% if entity.useDateEnd == 0 %}
-                                <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
+                                <i class="icon-remove-sign"></i>
                             {% else %}
-                                <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
+                                <i class="icon-ok-sign"></i>
                             {% endif %}
                         </td>
                     </tr>
@@ -184,28 +106,117 @@
                             <td class="classic">{{ entity.enddate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
                         </tr>
                     {% endif %}
-                    <tr>
-                        <th class="classic">{{ 'test exit' | trans }}</th>
-                        <td class="classic">
-                            {% if  entity.dispButtonInterrupt == 0 %}
-                                <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
-                            {% else %}
-                                <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="classic">{{ 'lock attempt' | trans }}</th>
-                        <td class="classic">
-                            {% if  entity.lockAttempt == 0 %}
-                                <img src="{{ asset('bundles/ujmexo/images/checkbox_off.gif') }}">
-                            {% else %}
-                                <img src="{{ asset('bundles/ujmexo/images/checkbox_on.gif') }}">
-                            {% endif %}
-                        </td>
-                    </tr>
+
+                    {% if exoAdmin == 1 %}
+                        <tr class="hiddencells">
+                            <th class="classic">{{ 'random order of questions' | trans }}</th>
+                            <td class="classic">
+                                {% if entity.shuffle == 0 %}
+                                    <i class="icon-remove-sign"></i>
+                                {% else %}
+                                    <i class="icon-ok-sign"></i>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr class="hiddencells">
+                            <th class="classic">{{ 'number of questions to draw' | trans }}</th>
+                            <td class="classic">
+                                {% if entity.nbQuestion != 0 %}
+                                    {{ entity.nbQuestion }}
+                                {% else %}
+                                    {{ 'allQuestion'|trans }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr class="hiddencells">
+                            <th class="classic">{{ 'creationDate' | trans }}</th>
+                            <td class="classic">{{ entity.dateCreate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
+                        </tr>
+                        <tr class="hiddencells">
+                            <th class="classic">{{ 'duration' | trans }}</th>
+                            <td class="classic">
+                                {% if entity.duration != 0 %}
+                                    {{ entity.duration }}
+                                {% else %}
+                                    {{ 'noOne'|trans }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr class="hiddencells">
+                            <th class="classic">{{ 'print paper' | trans }}</th>
+                            <td class="classic">
+                                {% if entity.doprint == 0 %}
+                                    <i class="icon-remove-sign"></i>
+                                {% else %}
+                                    <i class="icon-ok-sign"></i>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr class="hiddencells">
+                            <th class="classic">{{ 'maximum number of tries' | trans }}</th>
+                            <td class="classic">
+                                {% if entity.maxAttempts != 0 %}
+                                    {{ entity.maxAttempts }}
+                                {% else %}
+                                    {{ 'infiny'|trans }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr class="hiddencells">
+                            <th class="classic">{{ 'availability of correction' | trans }}</th>
+                            <td class="classic">
+                                {% if(entity.correctionMode == 1) %}
+                                    {{ 'at the end of assessment' | trans }}
+                                {% elseif (entity.correctionMode == 2) %}
+                                    {{ 'after the last attempt' | trans }}
+                                {% elseif (entity.correctionMode == 3) %}
+                                    {{ 'from' | trans }}
+                                {% elseif (entity.correctionMode == 4) %}
+                                    {{ 'never' | trans }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr class="hiddencells">
+                            <th class="classic">{{ 'availability of score' | trans }}</th>
+                            <td class="classic">
+                                {% if(entity.markMode == 1) %}
+                                    {{ 'at the same time that the correction' | trans }}
+                                {% else %}
+                                    {{ 'at the end of assessment' | trans }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr class="hiddencells">
+                            <th class="classic">{{ 'test exit' | trans }}</th>
+                            <td class="classic">
+                                {% if  entity.dispButtonInterrupt == 0 %}
+                                    <i class="icon-remove-sign"></i>
+                                {% else %}
+                                    <i class="icon-ok-sign"></i>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr class="hiddencells">
+                            <th class="classic">{{ 'lock attempt' | trans }}</th>
+                            <td class="classic">
+                                {% if  entity.lockAttempt == 0 %}
+                                    <i class="icon-remove-sign"></i>
+                                {% else %}
+                                    <i class="icon-ok-sign"></i>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
+            {% if exoAdmin == 1 %}
+                <button type="button" id="more" class="btn btn-primary" onclick="moreInformation();">
+                    <i class="icon-plus"></i> {{ 'moreInformation' | trans }}
+                </button>
+                <button type="button" id="less" class="btn btn-primary" onclick="lessInformation();">
+                    <i class="icon-minus"></i> {{ 'lessInformation' | trans }}
+                </button>
+            {% endif %}
         </div>
         <div class="text-center panel-footer">
             {% if allowToCompose == 1 and nbQuestion > 0 %}
@@ -226,4 +237,25 @@
             </a>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script language="JavaScript">
+        $('#less').css({"display" : "none"});
+        lessInformation();
+
+        function moreInformation() {
+            $('.hiddencells').show();
+            $('#less').css({"display" : "block"});
+            $('#more').css({"display" : "none"});
+        }
+
+        function lessInformation() {
+            $('.hiddencells').hide();
+            $('#more').css({"display" : "block"});
+            $('#less').css({"display" : "none"});
+        }
+    </script>
 {% endblock %}

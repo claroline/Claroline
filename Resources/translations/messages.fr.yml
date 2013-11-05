@@ -173,6 +173,7 @@ kind of question: Quel type de question
 label: Label
 label_empty: Les champs des réponses ne doivent pas être vides
 legend: Légende
+lessInformation: Moins d'informations
 linkedDoc: Attention, le document que vous essayez de supprimer est lié à des questions
 linkpaper: Liées à un test
 linkedQuestions: Questions liées
@@ -190,6 +191,7 @@ markTooBigest: La note doit être inférieure ou égale à
 maximum number of tries: Nombre d'essai maximum
 meaningMeasureDifficulty: Si l'indice est élevé, c'est que la question est facile ; Inversement, si un indice est faible, la question est difficile
 model: Modèle
+moreInformation: Plus d'informations
 multiple response: Réponse multiples
 my account: Mon compte
 my questions: Mes questions
@@ -202,7 +204,7 @@ never: Jamais
 newCategoryName: Nouveau nom de la catégorie
 newName: Nouveau nom du document
 newDoc: Nouveau document
-no: non
+no: Non
 no answer: Pas de réponse
 noAnswerZone: Vous n\'avez mis aucune zone de réponse
 noDocFound: Pas de document trouvé

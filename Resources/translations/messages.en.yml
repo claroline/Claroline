@@ -173,6 +173,7 @@ kind of question: What kind of question
 label: Label
 label_empty: Fields of the responses should not be empty
 legend: Legend
+lessInformation: Less information
 linkedDoc: Warning, the document you tried to delete is linked to questions
 linkpaper: Link to a test
 linkedQuestions: Linked Questions
@@ -190,6 +191,7 @@ markTooBigest: The mark must be less than or equal to
 maximum number of tries: Maximum number of tries
 meaningMeasureDifficulty: If the measure is hight, the question is easy ; In return, if the measure is low, the question is difficult
 model: Model
+moreInformation: More information
 multiple response: Multiple response
 my account: My account
 my questions: My questions
