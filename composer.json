@@ -2,6 +2,7 @@
     "name": "icap/dropzone-bundle",
     "type": "claroline-plugin",
     "require": {
+        "intl": "*",
         "claroline/core-bundle": ">=2.0.5,<3.0"
     },
     "autoload": {
