@@ -4,7 +4,7 @@
     var bannerBackgroundImageColorPicker     = $('.banner_background_color');
     var bannerBackgroundColorField           = $('#icap_blog_banner_form_banner_background_color');
     var bannerBackgroundImageContainer       = $("#icap_blog_banner_form_banner_background_image_container");
-    var bannerBackgroundImageFieldTemplate   = '<input type="file" id="icap_blog_banner_form_file" name="icap_blog_banner_form[banner_background_image]" class="form-control">';
+    var bannerBackgroundImageFieldTemplate   = '<input type="file" id="icap_blog_banner_form_file" name="icap_blog_banner_form[file]" class="form-control">';
     var removeBannerBackgroundImageButton    = $("#remove_banner_background_image");
     var bannerBackgroundImageField           = $("#icap_blog_banner_form_banner_background_image");
     var bannerBackgroundImageParametersBlock = $("#banner_background_image_parameters");
