@@ -16,6 +16,9 @@ use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Icap\DropzoneBundle\Entity\Document;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
+use Icap\DropzoneBundle\Event\Log\LogDocumentCreateEvent;
+use Icap\DropzoneBundle\Event\Log\LogDocumentDeleteEvent;
+use Icap\DropzoneBundle\Event\Log\LogDocumentOpenEvent;
 use Icap\DropzoneBundle\Form\DocumentDeleteType;
 use Icap\DropzoneBundle\Form\DocumentType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -208,6 +211,9 @@ class DocumentController extends DropzoneBaseController
         $em = $this->getDoctrine()->getManager();
         $em->persist($document);
         $em->flush();
+
+        $event = new LogDocumentCreateEvent($dropzone, $drop, $document);
+        $this->dispatch($event);
     }
 
     /**
@@ -313,6 +319,9 @@ class DocumentController extends DropzoneBaseController
                 $em->remove($document);
                 $em->flush();
 
+                $event = new LogDocumentDeleteEvent($dropzone, $drop, $document);
+                $this->dispatch($event);
+
                 return $this->redirect(
                     $this->generateUrl(
                         'icap_dropzone_drop',
@@ -365,6 +374,9 @@ class DocumentController extends DropzoneBaseController
             or $document->getType() == 'file'
         ) {
             $this->get('claroline.temporary_access_resource_manager')->addTemporaryAccess($document->getResourceNode(), $user);
+
+            $event = new LogDocumentOpenEvent($dropzone, $document->getDrop(), $document);
+            $this->dispatch($event);
 
             if ($document->getResourceNode()->getResourceType()->getName() == 'file') {
                 return $this->redirect(

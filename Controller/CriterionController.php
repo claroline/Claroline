@@ -10,6 +10,9 @@ namespace Icap\DropzoneBundle\Controller;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Icap\DropzoneBundle\Entity\Criterion;
+use Icap\DropzoneBundle\Event\Log\LogCriterionCreateEvent;
+use Icap\DropzoneBundle\Event\Log\LogCriterionDeleteEvent;
+use Icap\DropzoneBundle\Event\Log\LogCriterionUpdateEvent;
 use Icap\DropzoneBundle\Form\CriterionDeleteType;
 use Icap\DropzoneBundle\Form\CriterionType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -87,7 +90,7 @@ class CriterionController extends DropzoneBaseController
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
 
-
+        $event = null;
         $criterion = new Criterion();
         if ($criterionId != 0) {
             $criterion = $this
@@ -95,8 +98,10 @@ class CriterionController extends DropzoneBaseController
                 ->getManager()
                 ->getRepository('IcapDropzoneBundle:Criterion')
                 ->find($criterionId);
+            $event = new LogCriterionUpdateEvent($dropzone, $criterion);
         } else {
             $criterion->setDropzone($dropzone);
+            $event = new LogCriterionCreateEvent($dropzone, $criterion);
         }
 
         $form = $this->createForm(new CriterionType(), $criterion);
@@ -110,6 +115,9 @@ class CriterionController extends DropzoneBaseController
             $em->persist($criterion);
             $em->persist($dropzone);
             $em->flush();
+
+
+            $this->dispatch($event);
 
             return $this->redirect(
                 $this->generateUrl(
@@ -203,6 +211,9 @@ class CriterionController extends DropzoneBaseController
             $em = $this->getDoctrine()->getManager();
             $em->remove($criterion);
             $em->flush();
+
+            $event = new LogCriterionDeleteEvent($dropzone, $criterion);
+            $this->dispatch($event);
 
             return $this->redirect(
                 $this->generateUrl(

@@ -11,6 +11,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Icap\DropzoneBundle\Entity\Dropzone;
+use Icap\DropzoneBundle\Event\Log\LogDropzoneUpdate;
 use Icap\DropzoneBundle\Form\DropzoneCommonType;
 use Icap\DropzoneBundle\Form\DropzoneCriteriaType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -127,6 +128,9 @@ class DropzoneController extends DropzoneBaseController
                 $em->persist($dropzone);
                 $em->flush();
 
+                $event = new LogDropzoneUpdate($dropzone);
+                $this->dispatch($event);
+
                 if ($dropzone->getPeerReview()) {
 
                     $stayHere = $form->get('stayHere')->getData();
@@ -161,7 +165,6 @@ class DropzoneController extends DropzoneBaseController
             'dropzone' => $dropzone,
             'form' => $form->createView()
         );
-
     }
 
     /**
@@ -229,6 +232,9 @@ class DropzoneController extends DropzoneBaseController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($dropzone);
                 $em->flush();
+
+                $event = new LogDropzoneUpdate($dropzone);
+                $this->dispatch($event);
 
                 $goBack = $form->get('goBack')->getData();
                 if ($goBack == 0) {
