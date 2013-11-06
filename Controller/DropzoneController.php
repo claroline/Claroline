@@ -136,6 +136,13 @@ class DropzoneController extends DropzoneBaseController
                     $stayHere = $form->get('stayHere')->getData();
 
                     if ($stayHere == 1) {
+                        if ($dropzone->hasCriteria() === false) {
+                            $this->getRequest()->getSession()->getFlashBag()->add(
+                                'warning',
+                                $this->get('translator')->trans('Warning your peer review offers no criteria on which to base correct copies', array(), 'icap_dropzone')
+                            );
+                        }
+
                         $this->getRequest()->getSession()->getFlashBag()->add(
                             'success',
                             $this->get('translator')->trans('The evaluation has been successfully saved', array(), 'icap_dropzone')
@@ -184,7 +191,7 @@ class DropzoneController extends DropzoneBaseController
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      */
-    public function editCriteriaAction($dropzone, $page)
+    public function editCriteriaAction(Dropzone $dropzone, $page)
     {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
@@ -236,6 +243,13 @@ class DropzoneController extends DropzoneBaseController
                 $event = new LogDropzoneUpdate($dropzone);
                 $this->dispatch($event);
 
+                if ($dropzone->hasCriteria() === false) {
+                    $this->getRequest()->getSession()->getFlashBag()->add(
+                        'warning',
+                        $this->get('translator')->trans('Warning your peer review offers no criteria on which to base correct copies', array(), 'icap_dropzone')
+                    );
+                }
+
                 $goBack = $form->get('goBack')->getData();
                 if ($goBack == 0) {
                     $this->getRequest()->getSession()->getFlashBag()->add(
@@ -252,7 +266,6 @@ class DropzoneController extends DropzoneBaseController
                         )
                     );
                 }
-
             }
         }
 

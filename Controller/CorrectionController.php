@@ -602,12 +602,17 @@ class CorrectionController extends DropzoneBaseController
             );
         }
 
+        /** @var Correction $correction */
         $correction = $this
             ->getDoctrine()
             ->getRepository('IcapDropzoneBundle:Correction')
             ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
 
         $edit = $state == 'edit';
+
+        if ($correction == null) {
+            throw new NotFoundHttpException();
+        }
 
         if ($edit === true and $correction->getEditable() === false) {
             throw new AccessDeniedException();

@@ -102,11 +102,13 @@
                                 {{ 'Relevant documents'|trans({}, 'icap_dropzone') }}
                             </div>
                             <div class="col-md-6">
-                                {% if correction.reporter == false %}
-                                    <a href="{{ path('icap_dropzone_report_drop', {'resourceId': dropzone.id, 'dropId': correction.drop.id, 'correctionId': correction.id}) }}" class="btn btn-danger pull-right launch-modal">{{ 'Report'|trans({}, 'icap_dropzone') }}</a>
-                                {% else %}
-                                    <span class="label label-danger pull-right">{{ 'Already reported'|trans({}, 'icap_dropzone') }}</span>
-                                {% endif %}
+                                {%  if correction.dropzone.isPeerReview() and correction.dropzone.hasCriteria() %}
+                                    {% if correction.reporter == false %}
+                                        <a href="{{ path('icap_dropzone_report_drop', {'resourceId': dropzone.id, 'dropId': correction.drop.id, 'correctionId': correction.id}) }}" class="btn btn-danger pull-right launch-modal">{{ 'Report'|trans({}, 'icap_dropzone') }}</a>
+                                    {% else %}
+                                        <span class="label label-danger pull-right">{{ 'Already reported'|trans({}, 'icap_dropzone') }}</span>
+                                    {% endif %}
+                                {%  endif %}
                             </div>
                         </div>
                     </h3>

@@ -112,6 +112,8 @@ class Dropzone extends AbstractResource {
      */
     protected $totalCriteriaColumn = 4;
     /**
+     * @var ArrayCollection
+     *
      * @ORM\OneToMany(
      *     targetEntity="Icap\DropzoneBundle\Entity\Drop",
      *     mappedBy="dropzone",
@@ -121,6 +123,8 @@ class Dropzone extends AbstractResource {
      */
     protected $drops;
     /**
+     * @var ArrayCollection
+     *
      * @ORM\OneToMany(
      *     targetEntity="Icap\DropzoneBundle\Entity\Criterion",
      *     mappedBy="dropzone",
@@ -370,7 +374,7 @@ class Dropzone extends AbstractResource {
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getDrops()
     {
@@ -386,7 +390,7 @@ class Dropzone extends AbstractResource {
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getPeerReviewCriteria()
     {
@@ -584,6 +588,11 @@ class Dropzone extends AbstractResource {
         } else {
             return -1;
         }
+    }
+
+    public function hasCriteria()
+    {
+        return count($this->getPeerReviewCriteria()) > 0;
     }
 
     /**

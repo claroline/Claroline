@@ -10,6 +10,7 @@ namespace Icap\DropzoneBundle\Controller;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Icap\DropzoneBundle\Entity\Criterion;
+use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Event\Log\LogCriterionCreateEvent;
 use Icap\DropzoneBundle\Event\Log\LogCriterionDeleteEvent;
 use Icap\DropzoneBundle\Event\Log\LogCriterionUpdateEvent;
@@ -196,7 +197,7 @@ class CriterionController extends DropzoneBaseController
      * @ParamConverter("criterion", class="IcapDropzoneBundle:Criterion", options={"id" = "criterionId"})
      * @Template("IcapDropzoneBundle:Dropzone:editDeleteCriterion.html.twig")
      */
-    public function editRemoveCriterionAction($dropzone, $page, $criterion)
+    public function editRemoveCriterionAction(Dropzone $dropzone, $page, Criterion $criterion)
     {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
@@ -214,6 +215,13 @@ class CriterionController extends DropzoneBaseController
 
             $event = new LogCriterionDeleteEvent($dropzone, $criterion);
             $this->dispatch($event);
+
+            if ($dropzone->hasCriteria() === false) {
+                $this->getRequest()->getSession()->getFlashBag()->add(
+                    'warning',
+                    $this->get('translator')->trans('Warning your peer review offers no criteria on which to base correct copies', array(), 'icap_dropzone')
+                );
+            }
 
             return $this->redirect(
                 $this->generateUrl(
