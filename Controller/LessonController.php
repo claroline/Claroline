@@ -32,7 +32,7 @@ class LessonController extends Controller
     /**
      * @param string $permission
      *
-     * @param Blog $blog
+     * @param Lesson $lesson
      *
      * @throws AccessDeniedException
      */

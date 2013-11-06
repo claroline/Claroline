@@ -39,10 +39,13 @@
         <div class='chapter_list_header'>{{ 'chapter_list_header'|trans({}, 'icap_lesson') }}</div>
         {{ _self.recursiveChapter(tree, chapter, _resource, true) }}
         <br />
-        <form id='moveform' action ='' method='post' style='display:none;'>
+
+{#        <form id='moveform' action ='{{ path('icap_lesson_move_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id })}}' method='post' style='display:none;'>
             {{ form_rest(form) }}
-           {# {{ form_row(form._token) }}#}
-        </form>
+        </form>#}
+        <div style='display:none;' id = 'moveChapterFormContainer'>
+            {% include 'IcapLessonBundle:Lesson:choiceMoveChapterForm.html.twig' %}
+        </div>
     </div>
 {% else %}
     {{ 'There is no chapter'|trans({}, 'icap_lesson') }}

@@ -54,8 +54,8 @@ class MoveChapterType extends AbstractType
                         }else{
                             //remove current chapter from legit destination list
                             if($data->getId() != $child->getId()){
-                                $tmp_title = str_repeat("--", $child->getLevel()).$child->getTitle();
-                                $chapters_list[$child->getId()] = $tmp_title;
+                                //$tmp_title = str_repeat("--", $child->getLevel()).$child->getTitle();
+                                $chapters_list[$child->getId()] = $child->getTitle();
                             }
                         }
                     }

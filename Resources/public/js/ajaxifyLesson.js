@@ -22,7 +22,6 @@ function injectForm(obj, hashname){
     });
 }
 
-
 /*function injectFormForMove(obj, hashname){
     var newLink = $(obj);
     newLink.attr("data-path", newLink.attr('href'));
@@ -81,6 +80,21 @@ function initSelectedChapterListener(){
     });
 }
 
+function initValidateBrotherListener(){
+    $('#icap_lesson_movechaptertype_choiceChapter').on('change', function (event){
+        checkChapterMoveDestination();
+    });
+}
+
+function checkChapterMoveDestination(){
+    //if fist element, root, selected
+    if($('#icap_lesson_movechaptertype_choiceChapter')[0].selectedIndex == 0){
+        $('#icap_lesson_movechaptertype_brother').prop('disabled', true);
+    }else{
+        $('#icap_lesson_movechaptertype_brother').prop('disabled', false);
+    }
+}
+
 $(document).ready(function() {
     'use strict';
     //form ajax insertion for chapter edition
@@ -93,7 +107,14 @@ $(document).ready(function() {
     });
     //form ajax insertion for chapter move
     $('a.movechapter').each(function(){
-        injectForm($(this), '#moveChapter');
+        $(this).on('click', function (event){
+            event.preventDefault();
+            $('#chapter_content').html($('#moveChapterFormContainer').html());
+            $('#moveChapterFormContainer').html('')
+            initValidateBrotherListener();
+            checkChapterMoveDestination();
+        });
+        //injectForm($(this), '#moveChapter');
     });
     //ajax popup for chapter delete form
     $('a.deletechapter').each(function(){
