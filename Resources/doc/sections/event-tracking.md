@@ -10,7 +10,7 @@ you want to track.
 When used this way, all user activity on such actions is calculated and
 displayed as Events in the Tracking reporting interface.
 
-Event Tracking system can collect four major event categories:
+Event Tracking system can collect five major event categories:
 
  * User events (user create, update, delete etc.)
  * Group events
@@ -18,7 +18,7 @@ Event Tracking system can collect four major event categories:
  * Roles events
  * Workspace events
 
-Non-exhaustive events list (Depending plugin)
+Exhaustive core events list
 --------------------------
 ### User events ###
 * `user-create`
@@ -58,6 +58,8 @@ Non-exhaustive events list (Depending plugin)
 * `resource-update`
 * `resource-update_rename`
 
+Non-exhaustive plugins events list
+--------------------------
 ### Dropzone events (plugin) ###
 * `resource-icap_dropzone-correction_end`
 * `resource-icap_dropzone-correction_start`
