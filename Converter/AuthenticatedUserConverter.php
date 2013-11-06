@@ -55,18 +55,17 @@ class AuthenticatedUserConverter implements ParamConverterInterface
 
                 return true;
             } else {
-                $messageEnabled = $options['messageEnabled'];
-                if ($messageEnabled === true) {
+                if (array_key_exists('messageEnabled', $options) and $options['messageEnabled'] === true) {
                     $messageType = 'warning';
-                    if ($options['messageType'] !== null) {
+                    if (array_key_exists('messageType', $options)) {
                         $messageType = $options['messageType'];
                     }
 
                     $messageTranslationKey = 'this_page_requires_authentication';
                     $messageTranslationDomain = 'platform';
-                    if ($options['messageTranslationKey'] !== null) {
+                    if (array_key_exists('messageTranslationKey', $options)) {
                         $messageTranslationKey = $options['messageTranslationKey'];
-                        if ($options['messageTranslationDomain'] !== null) {
+                        if (array_key_exists('messageTranslationDomain', $options)) {
                             $messageTranslationDomain = $options['messageTranslationDomain'];
                         }
                     }
