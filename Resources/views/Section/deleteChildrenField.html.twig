@@ -1,0 +1,35 @@
+{% extends 'ClarolineCoreBundle::form_theme.html.twig' %}
+
+{% block form_label %}
+    {% spaceless %}
+        {% set is_multichoice_widget = (checked is defined) and ('choice' in form.parent.vars.block_prefixes) %}
+        {% set is_checkbox = ('checkbox' in form.vars.block_prefixes) %}
+        {% if is_multichoice_widget %}
+            {% set label_attr = label_attr|merge({'class': 'radio' in block_prefixes ? 'radio' : 'checkbox'}) %}
+        {% elseif is_checkbox %}
+            {% set lbl_width = 'col-md-12' %}
+            {% set label_attr = label_attr|merge({'class': 'control-label ' ~ lbl_width}) %}
+        {% else%}
+            {% set lbl_width = theme_options.label_width is defined ? theme_options.label_width : 'col-md-2' %}
+            {% set label_attr = label_attr|merge({'class': 'control-label ' ~ lbl_width}) %}
+        {% endif %}
+        {% if not compound %}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {% endif %}
+        {% if required %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+        {% endif %}
+        {% if label is empty %}
+            {% set label = id|trans({}, translation_domain) %}
+        {% endif %}
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+            {% if is_checkbox %}
+                {{ form_widget(form) }}
+            {% endif %}
+            {{ label|trans({}, translation_domain) }}
+            {% if is_multichoice_widget %}
+                {{ form_widget(form) }}
+            {% endif %}
+        </label>
+    {% endspaceless %}
+{% endblock form_label %}

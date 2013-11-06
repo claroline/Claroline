@@ -42,13 +42,13 @@ class ContributionController extends Controller
         $this->contributionManager = $contributionManager;
     }
 
-	/**
+    /**
      * @Route(
      *      "/{wikiId}/section/{sectionId}/contribution/{contributionId}",
      *      requirements = {
      *          "wikiId" = "\d+", 
      *          "sectionId" = "\d+",
-     *			"contributionId" = "\d+"
+     *          "contributionId" = "\d+"
      *      },
      *      name="icap_wiki_contribution_view"
      * )
@@ -64,7 +64,7 @@ class ContributionController extends Controller
         $collection = $collection = new ResourceCollection(array($wiki->getResourceNode()));
 
         if ($section->getVisible() === true || $this->isUserGranted('EDIT', $wiki, $collection)) {
-        	$contribution = $this->getContribution($section, $contributionId);
+            $contribution = $this->getContribution($section, $contributionId);
 
             return array(
                 '_resource' => $wiki,
@@ -84,7 +84,7 @@ class ContributionController extends Controller
      *      requirements = {
      *          "wikiId" = "\d+", 
      *          "sectionId" = "\d+",
-     *			"contributionId" = "\d+"
+     *          "contributionId" = "\d+"
      *      },
      *      name="icap_wiki_contribution_active"
      * )
@@ -94,30 +94,25 @@ class ContributionController extends Controller
      */
     public function activeAction(Wiki $wiki, User $user, $sectionId, $contributionId) 
     {
-        $this->checkAccess("OPEN", $wiki);
+        $this->checkAccess("EDIT", $wiki);
         $section = $this->getSection($wiki, $sectionId);
         $collection = $collection = new ResourceCollection(array($wiki->getResourceNode()));
+        
+        $contribution = $this->getContribution($section, $contributionId);
+        $section->setActiveContribution($contribution);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($section);
+        $em->flush();
 
-        if ($section->getVisible() === true || $this->isUserGranted('EDIT', $wiki, $collection)) {
-        	$contribution = $this->getContribution($section, $contributionId);
-        	$section->setActiveContribution($contribution);
-        	$em = $this->getDoctrine()->getManager();
-        	$em->persist($section);
-        	$em->flush();
-
-        	return $this->redirect(
-                    $this->generateUrl(
-                        'icap_wiki_section_history',
-                        array(
-                            'wikiId' => $wiki->getId(),
-                        	'sectionId' => $section->getId()
-                        )
+        return $this->redirect(
+                $this->generateUrl(
+                    'icap_wiki_section_history',
+                    array(
+                        'wikiId' => $wiki->getId(),
+                        'sectionId' => $section->getId()
                     )
-                );
-        }
-        else {
-            throw new AccessDeniedException($collection->getErrorsForDisplay());
-        }
+                )
+            );       
     }
 
     /**
@@ -139,26 +134,26 @@ class ContributionController extends Controller
         $section = $this->getSection($wiki, $sectionId);
         $collection = $collection = new ResourceCollection(array($wiki->getResourceNode()));
         if ($section->getVisible() === true || $this->isUserGranted('EDIT', $wiki, $collection)) {
-        	$oldid = $request->query->get('oldid');
-        	$diff = $request->query->get('diff');
-        	if ($oldid !== null && $diff !== null) {
-        		$contributions = $this->contributionManager->compareContributions($section, array($oldid, $diff));
-        		if (count($contributions) == 2) {
-        			return array(
-		                '_resource' => $wiki,
-		                'contributions' => $contributions,
-		                'section' => $section,
-		                'workspace' => $wiki->getResourceNode()->getWorkspace()
-		            );    
-        		}
-        		else {
-        			throw new NotFoundHttpException();
-        		}
-        	}
-        	else {
-        		throw new MissingOptionsException('Missing parameters',array());
-        	}
-        		
+            $oldid = $request->query->get('oldid');
+            $diff = $request->query->get('diff');
+            if ($oldid !== null && $diff !== null) {
+                $contributions = $this->contributionManager->compareContributions($section, array($oldid, $diff));
+                if (count($contributions) == 2) {
+                    return array(
+                        '_resource' => $wiki,
+                        'contributions' => $contributions,
+                        'section' => $section,
+                        'workspace' => $wiki->getResourceNode()->getWorkspace()
+                    );    
+                }
+                else {
+                    throw new NotFoundHttpException();
+                }
+            }
+            else {
+                throw new MissingOptionsException('Missing parameters',array());
+            }
+                
         }
         else {
             throw new AccessDeniedException($collection->getErrorsForDisplay());

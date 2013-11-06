@@ -24,6 +24,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Exception\NotValidCurrentPageException;
+use Pagerfanta\Pagerfanta;
+
 class WikiController extends Controller{
 
     /**
@@ -54,23 +59,39 @@ class WikiController extends Controller{
 
     /**
      * @Route(
-     *      "/configure/{wikiId}",
-     *      requirements={"wikiId" = "\d+"},
+     *      "/configure/{wikiId}/{page}",
+     *      requirements={
+     *          "wikiId" = "\d+",
+     *          "page" = "\d+",
+     *      },
+     *      defaults = {
+     *          "page" = 1
+     *      },
      *      name="icap_wiki_configure"
      * )
      * @ParamConverter("wiki", class="IcapWikiBundle:Wiki", options={"id" = "wikiId"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function configureAction(Request $request, Wiki $wiki, $user)
+    public function configureAction(Request $request, Wiki $wiki, $user, $page)
     {
         $this->checkAccess("EDIT", $wiki);
         
-        return $this->persistWikiOptions($request, $wiki, $user);
+        return $this->persistWikiOptions($request, $wiki, $user, $page);
     } 
 
-    private function persistWikiOptions (Request $request, Wiki $wiki, User $user) {
+    private function persistWikiOptions (Request $request, Wiki $wiki, User $user, $page) {
         $form = $this->createForm(new WikiOptionsType(), $wiki);
+        $sectionRepository = $this->get('icap.wiki.section_repository');
+        $query = $sectionRepository->findDeletedSectionsQuery($wiki);
+        $adapter = new DoctrineORMAdapter($query);
+        $pager   = new PagerFanta($adapter);
+        $pager->setMaxPerPage(20);        
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $exception) {
+            throw new NotFoundHttpException();
+        }
         if ("POST" === $request->getMethod()) {
             $form->handleRequest($request);
             if ($form->isValid()) {
@@ -106,6 +127,7 @@ class WikiController extends Controller{
         return array(
             '_resource' => $wiki,
             'workspace' => $wiki->getResourceNode()->getWorkspace(),
+            'pager' => $pager,
             'form' => $form->createView()
         );
     }   

@@ -11,6 +11,14 @@
 
 {% block wiki_panel %}
     {% block wiki_content %}
+        {% if section.getIsWikiAdmin() is sameas(true) and section.isRoot() is sameas(false) %} 
+        <div class="pull-right wiki-header-buttons">
+            <a href="{{ path('icap_wiki_delete_section', { 'wikiId': _resource.id, 'sectionId' : section.id }) }}" class="delete-section btn btn-danger" data-section="{{section.id}}" >
+                <i class="icon-trash"></i> {{ 'delete_section'|trans({}, 'icap_wiki') }}
+            </a> 
+        </div>
+        <div class="clearfix"></div>
+        {% endif %}
         <div>
             <form id="editSection-form" name="icap_wiki_edit_section" method="POST" class="form-vertical" action="{{ path("icap_wiki_edit_section", {'wikiId': _resource.id, 'sectionId' : section.id }) }}">
                 {% if _resource.mode is sameas(1) %}
@@ -50,6 +58,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type='text/javascript' src="{{ asset('bundles/icapwiki/js/section.edit.js') }}"></script>
     {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
     {{ tinymce_init() }}
 {% endblock %}

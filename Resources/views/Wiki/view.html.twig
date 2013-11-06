@@ -4,6 +4,19 @@
 
 {% block title %}{{ _resource.resourceNode.name }}{% endblock %}
 
+{% block wiki_buttons %}
+    {% if user is not empty and (isAdmin or _resource.mode is not sameas(2)) %}
+    <div class="wiki-header-buttons">        
+        <a href="{{ path('icap_wiki_new_section', { 'wikiId': _resource.id, 'parentSectionId' : tree[0].id }) }}" class="new-section btn btn-primary" data-section="{{tree[0].id}}" >
+            <i class="icon-plus"></i> {{ 'create_new_section'|trans({}, 'icap_wiki') }}
+        </a>
+        {% if isAdmin %}
+        <a href="{{ path('icap_wiki_configure', { 'wikiId': _resource.id }) }}" class="btn btn-default"><i class="icon-wrench"></i> {{'options'|trans({},'icap_wiki')}}</a>
+        {% endif %}
+    </div>
+    {% endif %}
+{% endblock %}
+
 {% block wiki_content %}
     <div class="wiki-page-header page-header">
         <h1 class="wiki-title-header">
@@ -11,10 +24,6 @@
             {% if user is not empty and (isAdmin or _resource.mode is not sameas(2)) %} 
             <small class="wiki-actions"> 
                 [ 
-                <a href="{{ path('icap_wiki_new_section', { 'wikiId': _resource.id, 'parentSectionId' : tree[0].id }) }}" class="new-section" data-section="{{tree[0].id}}" >
-                    {{ 'create_new_section'|trans({}, 'icap_wiki') }}
-                </a>
-                |
                 <a href="{{ path('icap_wiki_edit_section', { 'wikiId': _resource.id, 'sectionId' : tree[0].id }) }}" class="edit-section" data-section="{{tree[0].id}}" >
                     {{ 'edit'|trans({}, 'icap_wiki') }}
                 </a>
@@ -24,11 +33,6 @@
                 </a>   
                 ]
             </small>
-            {% endif %}
-            {% if isAdmin %}
-            <div class="pull-right">
-                <a href="{{ path('icap_wiki_configure', { 'wikiId': _resource.id }) }}" class="btn btn-default"><i class="icon-wrench"></i> {{'options'|trans({},'icap_wiki')}}</a>
-            </div>
             {% endif %}
         </h1>        
     </div>

@@ -25,6 +25,10 @@ div.panel-wiki {
 	display: none;
 }
 
+.wiki-header-buttons {
+	margin-bottom: 10px;
+}
+
 .wiki-new-section-container .modal-content { box-shadow: none;}
 
 /*Wiki contents*/
@@ -44,6 +48,7 @@ div.subsection-header h4 {margin-top: 10px;}
 div.wiki-sections div.page-header {padding-bottom: 0px; margin:25px 0 10px 0;}
 div.wiki-sections div.page-header h2 {margin-bottom:2px;}
 div.wiki-sections li.invisible-wiki-section { color: #aaa; }
+div.wiki-sections div.wiki-section-text { overflow: auto;}
 
 div.wiki-sections li.invisible-wiki-section div.wiki-section-text,  
 div.wiki-sections li.invisible-wiki-section div.wiki-section-text *
@@ -57,3 +62,9 @@ span.invisible-section-text {font-style: italic;}
 
 /*Move section form*/
 .move-wiki-section-header {margin: 50px 0 20px; font-size: 20px;}
+
+/* Wiki configure */
+
+/* Restore sections */
+.wiki-deleted-sections-header{margin:40px 0 20px;}
+#wiki-deleted-sections-list li {line-height: 25px; padding: 3px;}

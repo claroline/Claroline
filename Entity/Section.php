@@ -54,6 +54,16 @@ class Section
     protected $wiki;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $deleted=false;
+
+    /**
+     * @ORM\Column(type="datetime", name="deletion_date", nullable=true)
+     */
+    protected $deletionDate;
+
+    /**
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
      */
@@ -240,6 +250,42 @@ class Section
     public function getWiki()
     {
         return $this->wiki;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getDeleted()
+    {
+        return ($this->deleted === null)?false:$this->deleted;
+    }
+
+    /**
+     * @param bool $deleted
+     */
+    public function setDeleted($deleted)
+    {
+        return $this->deleted = $deleted;
+    }
+
+    /**
+     * Returns the resource creation date.
+     *
+     * @return \DateTime
+     */
+    public function getDeletionDate()
+    {
+        return $this->deletionDate;
+    }
+
+    /**
+     * Returns the resource creation date.
+     *
+     * @return \DateTime
+     */
+    public function setDeletionDate($deletionDate)
+    {
+        return $this->deletionDate = $deletionDate;
     }
 
     /**

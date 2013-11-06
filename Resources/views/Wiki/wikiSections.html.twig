@@ -1,6 +1,6 @@
 {% macro wiki_sections(sections, isAdmin, wikiId, wikiMode, user) %}
     {% for section in sections %}
-        {% if isAdmin or section.visible %}
+        {% if section.getDeleted() is empty and (isAdmin or section.visible) %}
             {% set level = section.level + 1 %}
             {% set visibleClass = section.visible is sameas (true)?"":"invisible-wiki-section" %}
             {% set fontsize = 0 %}
@@ -26,12 +26,6 @@
                                         {{ 'edit'|trans({}, 'icap_wiki') }}
                                     </a> 
                                     |
-                                    {% if isAdmin %} 
-                                    <a href="{{ path('icap_wiki_delete_section', { 'wikiId': wikiId, 'sectionId' : section.id }) }}" class="delete-section" data-section="{{section.id}}" >
-                                        {{ 'delete'|trans({}, 'icap_wiki') }}
-                                    </a> 
-                                    | 
-                                    {% endif %}
                                     <a href="{{ path('icap_wiki_section_history', { 'wikiId': wikiId, 'sectionId' : section.id }) }}" class="history-section" data-section="{{section.id}}" >
                                         {{ 'history'|trans({}, 'icap_wiki') }}
                                     </a> 

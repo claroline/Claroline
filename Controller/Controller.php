@@ -10,6 +10,8 @@ use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Entity\Contribution;
 use Icap\WikiBundle\Event\Log\LogSectionCreateEvent;
 use Icap\WikiBundle\Event\Log\LogSectionDeleteEvent;
+use Icap\WikiBundle\Event\Log\LogSectionRestoreEvent;
+use Icap\WikiBundle\Event\Log\LogSectionRemoveEvent;
 use Icap\WikiBundle\Event\Log\LogSectionMoveEvent;
 use Icap\WikiBundle\Event\Log\LogSectionUpdateEvent;
 use Icap\WikiBundle\Event\Log\LogContributionCreateEvent;
@@ -157,6 +159,32 @@ class Controller extends BaseController
     protected function dispatchSectionDeleteEvent(Wiki $wiki, Section $section)
     {
         $event = new LogSectionDeleteEvent($wiki, $section);
+
+        return $this->dispatch($event);
+    }
+
+    /**
+     * @param Wiki $wiki
+     * @param Section $section
+     *
+     * @return Controller
+     */
+    protected function dispatchSectionRemoveEvent(Wiki $wiki, Section $section)
+    {
+        $event = new LogSectionRemoveEvent($wiki, $section);
+
+        return $this->dispatch($event);
+    }
+
+    /**
+     * @param Wiki $wiki
+     * @param Section $section
+     *
+     * @return Controller
+     */
+    protected function dispatchSectionRestoreEvent(Wiki $wiki, Section $section)
+    {
+        $event = new LogSectionRestoreEvent($wiki, $section);
 
         return $this->dispatch($event);
     }

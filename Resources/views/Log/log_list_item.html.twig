@@ -14,6 +14,10 @@
     {{ 'log.wiki.update_section'|trans({'%wiki%': resource, '%section%': section}, 'log')|raw }}
 {% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogSectionDeleteEvent::ACTION') == log.action %}
     {{ 'log.wiki.delete_section'|trans({'%wiki%': resource, '%section%': section}, 'log')|raw }}
+{% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogSectionRemoveEvent::ACTION') == log.action %}
+    {{ 'log.wiki.remove_section'|trans({'%wiki%': resource, '%section%': section}, 'log')|raw }}
+{% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogSectionRestoreEvent::ACTION') == log.action %}
+    {{ 'log.wiki.restore_section'|trans({'%wiki%': resource, '%section%': section}, 'log')|raw }}
 {% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogContributionCreateEvent::ACTION') == log.action %}
     {{ 'log.wiki.create_contribution'|trans({'%wiki%': resource, '%contribution%': section}, 'log')|raw }}
 {% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogWikiConfigureEvent::ACTION') == log.action %}

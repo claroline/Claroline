@@ -10,6 +10,10 @@
         {% include 'IcapWikiBundle:Log:log_details_section_update.html.twig' %}
     {% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogSectionDeleteEvent::ACTION') == log.action %}
         {% include 'IcapWikiBundle:Log:log_details_section_delete.html.twig' %}
+    {% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogSectionRemoveEvent::ACTION') == log.action %}
+        {% include 'IcapWikiBundle:Log:log_details_section_remove.html.twig' %}
+    {% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogSectionRestoreEvent::ACTION') == log.action %}
+        {% include 'IcapWikiBundle:Log:log_details_section_restore.html.twig' %}
     {% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogContributionCreateEvent::ACTION') == log.action %}
         {% include 'IcapWikiBundle:Log:log_details_contribution_create.html.twig' %}
     {% elseif constant('Icap\\WikiBundle\\Event\\Log\\LogWikiConfigureEvent::ACTION') == log.action %}

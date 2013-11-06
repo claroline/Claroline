@@ -111,7 +111,7 @@ class SectionController extends Controller
         $this->checkAccess("OPEN", $wiki);
         $collection = $collection = new ResourceCollection(array($wiki->getResourceNode()));
         $isAdmin = $this->isUserGranted('EDIT', $wiki, $collection);
-        if ($isAdmin || $wiki.getMode()!==2) {
+        if ($isAdmin || $wiki->getMode()!==2) {
             $section = new Section();
             $section->setWiki($wiki);
             $section->setAuthor($user);
@@ -147,7 +147,7 @@ class SectionController extends Controller
         $this->checkAccess("OPEN", $wiki);
         $collection = $collection = new ResourceCollection(array($wiki->getResourceNode()));
         $isAdmin = $this->isUserGranted('EDIT', $wiki, $collection);
-        if ($isAdmin || $wiki.getMode()!==2) {
+        if ($isAdmin || $wiki->getMode()!==2) {
             $section = $this->getSection($wiki, $sectionId);
             $oldActiveContribution = $section->getActiveContribution();
             $section->setNewActiveContributionToSection($user);
@@ -243,6 +243,47 @@ class SectionController extends Controller
         $section = $this->getSection($wiki, $sectionId);
        
         return $this->persistDeleteSection($request, $wiki, $section, $user);        
+    }
+
+    /**
+     * Displays form for section deletion confirmation
+     * @param $wikiId, $sectionId
+     * @return $wiki, $section, $form 
+     * @Route(
+     *      "/{wikiId}/section/restore/{sectionId}",
+     *      requirements = {
+     *          "wikiId" = "\d+", 
+     *          "sectionId" = "\d+"
+     *      },      
+     *      name="icap_wiki_restore_section"
+     * )
+     * @ParamConverter("wiki", class="IcapWikiBundle:Wiki", options={"id" = "wikiId"})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
+     * @Template()
+     */
+    public function restoreAction(Request $request, $wiki, $user, $sectionId)
+    {
+        $this->checkAccess("EDIT", $wiki);
+        $section = $this->getSection($wiki, $sectionId);
+        $flashBag = $this->get('session')->getFlashBag();
+        $translator = $this->get('translator');
+        try{
+            $sectionRepository = $this->get('icap.wiki.section_repository');
+            $sectionRepository->restoreSection($section, $wiki->getRoot());
+
+            $this->dispatchSectionRestoreEvent($wiki, $section);
+            $flashBag->add('success', $translator->trans('icap_wiki_section_restore_success', array(), 'icap_wiki'));
+        } catch (\Exception $exception) {
+            $flashBag->add('error', $translator->trans('icap_wiki_section_restore_error', array(), 'icap_wiki'));
+        }         
+        return $this->redirect(
+            $this->generateUrl(
+                'icap_wiki_view',
+                array(
+                    'wikiId' => $wiki->getId()
+                )
+            )
+        );
     }
 
     private function persistCreateSection (Request $request, Wiki $wiki, Section $section, User $user, $parentSectionId) {
@@ -394,40 +435,58 @@ class SectionController extends Controller
             );
         }
         elseif ("POST" === $request->getMethod()) {
-            $form->handleRequest($request);
-            if($form->isValid()){
-                $em = $this->getDoctrine()->getManager();
-                $flashBag = $this->get('session')->getFlashBag();
-                $translator = $this->get('translator');
-                //Load activeContribution in cache
-                $section->getActiveContribution()->getTitle();
-                //Proceed to deletion
-                try{
-                    if ($form->get('children')->getData() == false) {
-                        $repo = $this->get('icap.wiki.section_repository');
-                        $repo->removeFromTree($section);
-                    }
-                    else {
-                        $em->remove($section);
-                    }
-                    $this->dispatchSectionDeleteEvent($wiki, $section);
-                    $em->clear();                    
+            $flashBag = $this->get('session')->getFlashBag();
+            $translator = $this->get('translator');
+            //If section is already deleted then delete permanently
+            if ($section->getDeleted() === true) {
+                try {                    
+                    $em = $this->getDoctrine()->getManager();
+                    $em->remove($section);
                     $em->flush();
 
-                    $flashBag->add('success', $translator->trans('icap_wiki_section_delete_success', array(), 'icap_wiki'));
+                    $this->dispatchSectionRemoveEvent($wiki, $section);
+                    $flashBag->add('success', $translator->trans('icap_wiki_section_remove_success', array(), 'icap_wiki'));
                 } catch (\Exception $exception) {
-                    $flashBag->add('error', $translator->trans('icap_wiki_section_delete_error', array(), 'icap_wiki'));
-                }                
-
+                    $flashBag->add('error', $translator->trans('icap_wiki_section_remove_error', array(), 'icap_wiki'));
+                }
                 return $this->redirect(
                     $this->generateUrl(
-                        'icap_wiki_view',
+                        'icap_wiki_configure',
                         array(
                             'wikiId' => $wiki->getId()
                         )
                     )
-                );
+                ); 
+            } else {
+                $form->handleRequest($request);
+                if($form->isValid()){
+                    //Proceed to deletion
+                    try {    
+                        $repo = $this->get('icap.wiki.section_repository');
+                        if ($form->get('children')->getData() == false) {
+                            $repo->deleteFromTree($section);
+                        }
+                        else {
+                            $repo->deleteSubtree($section);
+                        }
+
+                        $this->dispatchSectionDeleteEvent($wiki, $section);
+                        $flashBag->add('success', $translator->trans('icap_wiki_section_delete_success', array(), 'icap_wiki'));
+                    } catch (\Exception $exception) {
+                        $flashBag->add('error', $translator->trans('icap_wiki_section_delete_error', array(), 'icap_wiki'));
+                    }               
+
+                    return $this->redirect(
+                        $this->generateUrl(
+                            'icap_wiki_view',
+                            array(
+                                'wikiId' => $wiki->getId()
+                            )
+                        )
+                    );
+                }
             }
+            
         }
 
         return array(
