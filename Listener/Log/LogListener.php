@@ -228,7 +228,7 @@ class LogListener
     /**
      * @DI\Observe("log")
      *
-     * @param WorkspaceLogEvent $event
+     * @param LogGenericEvent $event
      */
     public function onLog(LogGenericEvent $event)
     {
