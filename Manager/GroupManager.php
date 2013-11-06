@@ -51,18 +51,34 @@ class GroupManager
         $this->eventDispatcher = $eventDispatcher;
     }
 
+    /**
+     * Persists and flush a group.
+     *
+     * @param \Claroline\CoreBundle\Entity\Group $group
+     */
     public function insertGroup(Group $group)
     {
         $this->om->persist($group);
         $this->om->flush();
     }
 
+    /**
+     * Removes a group.
+     *
+     * @param \Claroline\CoreBundle\Entity\Group $group
+     */
     public function deleteGroup(Group $group)
     {
         $this->om->remove($group);
         $this->om->flush();
     }
 
+    /**
+     * @todo what does this method do ?
+     *
+     * @param \Claroline\CoreBundle\Entity\Group $group
+     * @param string $oldPlatformRoleTransactionKey
+     */
     public function updateGroup(Group $group, $oldPlatformRoleTransactionKey)
     {
         $unitOfWork = $this->om->getUnitOfWork();
@@ -79,6 +95,12 @@ class GroupManager
         $this->om->flush();
     }
 
+    /**
+     * Adds an array of user to a group.
+     *
+     * @param \Claroline\CoreBundle\Entity\Group $group
+     * @param User[] $users
+     */
     public function addUsersToGroup(Group $group, array $users)
     {
         foreach ($users as $user) {
@@ -92,6 +114,12 @@ class GroupManager
         $this->om->flush();
     }
 
+    /**
+     * Removes an array of user from a group.
+     *
+     * @param \Claroline\CoreBundle\Entity\Group $group
+     * @param User[] $users
+     */
     public function removeUsersFromGroup(Group $group, array $users)
     {
         foreach ($users as $user) {
@@ -102,6 +130,13 @@ class GroupManager
         $this->om->flush();
     }
 
+    /**
+     *
+     * @param \Claroline\CoreBundle\Entity\Group $group
+     * @param array $users
+     *
+     * @return array
+     */
     public function importUsers(Group $group, array $users)
     {
         $toImport = array();
@@ -135,6 +170,13 @@ class GroupManager
         return $nonImportedUsers;
     }
 
+    /**
+     * Serialize a group array.
+     *
+     * @param Group[] $groups
+     *
+     * @return array
+     */
     public function convertGroupsToArray(array $groups)
     {
         $content = array();
@@ -164,6 +206,12 @@ class GroupManager
         return $content;
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param integer $page
+     *
+     * @return \PagerFanta\PagerFanta
+     */
     public function getWorkspaceOutsiders(AbstractWorkspace $workspace, $page)
     {
         $query = $this->groupRepo->findWorkspaceOutsiders($workspace, false);
@@ -171,6 +219,13 @@ class GroupManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param string $search
+     * @param integer $page
+     *
+     * @return \PagerFanta\PagerFanta
+     */
     public function getWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $page)
     {
         $query = $this->groupRepo->findWorkspaceOutsidersByName($workspace, $search, false);
@@ -178,6 +233,12 @@ class GroupManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param integer $page
+     *
+     * @return  \PagerFanta\PagerFanta
+     */
     public function getGroupsByWorkspace(AbstractWorkspace $workspace, $page)
     {
         $query = $this->groupRepo->findByWorkspace($workspace, false);
@@ -185,6 +246,12 @@ class GroupManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[] $workspaces
+     * @param integer $page
+     *
+     * @return \PagerFanta\PagerFanta
+     */
     public function getGroupsByWorkspacesPager(array $workspaces, $page)
     {
         $query = $this->groupRepo->findGroupsByWorkspaces($workspaces, false);
@@ -192,11 +259,23 @@ class GroupManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[] $workspaces
+     *
+     * @return Group[]
+     */
     public function getGroupsByWorkspaces(array $workspaces)
     {
         return $this->groupRepo->findGroupsByWorkspaces($workspaces, true);
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[] $workspaces
+     * @param integer $page
+     * @param string $search
+     *
+     * @return \PagerFanta\PagerFanta
+     */
     public function getGroupsByWorkspacesAndSearchPager(
         array $workspaces,
         $page,
@@ -209,6 +288,12 @@ class GroupManager
         return $this->pagerFactory->createPagerFromArray($groups, $page);
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[] $workspaces
+     * @param string $search
+     *
+     * @return Group[]
+     */
     public function getGroupsByWorkspacesAndSearch(array $workspaces, $search)
     {
         return $this->groupRepo->findGroupsByWorkspacesAndSearch(
@@ -217,6 +302,13 @@ class GroupManager
         );
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param string $search
+     * @param integer $page
+     *
+     * @return \PagerFanta\PagerFanta
+     */
     public function getGroupsByWorkspaceAndName(AbstractWorkspace $workspace, $search, $page)
     {
         $query = $this->groupRepo->findByWorkspaceAndName($workspace, $search, false);
@@ -224,6 +316,11 @@ class GroupManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
+    /**
+     * @param integer $page
+     *
+     * @return \PagerFanta\PagerFanta
+     */
     public function getGroups($page)
     {
         $query = $this->groupRepo->findAll(false);
@@ -231,6 +328,12 @@ class GroupManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
+    /**
+     * @param string $search
+     * @param integer $page
+     *
+     * @return \PagerFanta\PagerFanta
+     */
     public function getGroupsByName($search, $page)
     {
         $query = $this->groupRepo->findByName($search, false);
@@ -238,6 +341,12 @@ class GroupManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Role[] $roles
+     * @param integer $page
+     *
+     * @return \PagerFanta\PagerFanta
+     */
     public function getGroupsByRoles(array $roles, $page = 1)
     {
         $query = $this->groupRepo->findByRoles($roles, true);
@@ -245,6 +354,13 @@ class GroupManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Role[] $roles
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param integer $page
+     *
+     * @return \PagerFanta\PagerFanta
+     */
     public function getOutsidersByWorkspaceRoles(array $roles, AbstractWorkspace $workspace, $page = 1)
     {
         $query = $this->groupRepo->findOutsidersByWorkspaceRoles($roles, $workspace, true);
@@ -252,6 +368,13 @@ class GroupManager
         return  $this->pagerFactory->createPager($query, $page);
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Role[] $roles
+     * @param string $name
+     * @param integer $page
+     *
+     * @return \PagerFanta\PagerFanta
+     */
     public function getGroupsByRolesAndName(array $roles, $name, $page = 1)
     {
         $query = $this->groupRepo->findByRolesAndName($roles, $name, true);
@@ -259,6 +382,14 @@ class GroupManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Role[] $roles
+     * @param string $name
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param integer $page
+     *
+     * @return \PagerFanta\PagerFanta
+     */
     public function getOutsidersByWorkspaceRolesAndName(array $roles, $name, AbstractWorkspace $workspace, $page = 1)
     {
         $query = $this->groupRepo->findOutsidersByWorkspaceRolesAndName($roles, $name, $workspace, true);
@@ -266,6 +397,11 @@ class GroupManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
+    /**
+     * @param integer $page
+     *
+     * @return \PagerFanta\PagerFanta
+     */
     public function getAllGroups($page)
     {
         $query = $this->groupRepo->findAll(false);
@@ -273,6 +409,12 @@ class GroupManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
+    /**
+     * @param integer $page
+     * @param string $search
+     *
+     * @return \PagerFanta\PagerFanta
+     */
     public function getAllGroupsBySearch($page, $search)
     {
         $query = $this->groupRepo->findAllGroupsBySearch($search);
@@ -280,6 +422,11 @@ class GroupManager
         return $this->pagerFactory->createPagerFromArray($query, $page, 2);
     }
 
+    /**
+     * @param string[] $names
+     *
+     * @return Group[]
+     */
     public function getGroupsByNames(array $names)
     {
         if (count($names) > 0) {
