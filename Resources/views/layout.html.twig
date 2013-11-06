@@ -42,7 +42,7 @@
         {% endif %}
         <ul class="nav nav-pills">
             <li>
-                <a href="{{ path('claro_workspace_open_tool', {"workspaceId":  _resource.resourceNode.workspace.id, "toolName": "resource_manager"}) ~ "#resources/" ~ user.personalWorkspace.id }}" data-toggle="tooltip" data-title="{{ 'back_to_workspace'|trans({}, 'icap_blog') }}">
+                <a href="{{ path('claro_workspace_open_tool', {"workspaceId":  _resource.resourceNode.workspace.id, "toolName": "resource_manager"}) ~ "#resources/" ~ user.personalWorkspace.id }}" data-toggle="tooltip" data-container="body" data-title="{{ 'back_to_workspace'|trans({}, 'icap_blog') }}">
                     <i class="icon-reply"></i>
                 </a>
             </li>
