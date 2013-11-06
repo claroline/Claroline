@@ -406,7 +406,7 @@ class BlogOptions
     /**
      * @return null|string
      */
-    public function getAbsolutePath()
+    public function getBannerBackgroundImageAbsolutePath()
     {
         return (null === $this->bannerBackgroundImage) ? null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->bannerBackgroundImage;
     }
@@ -414,7 +414,7 @@ class BlogOptions
     /**
      * @return null|string
      */
-    public function getWebPath()
+    public function getBannerBackgroundImageWebPath()
     {
         return (null === $this->bannerBackgroundImage) ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . $this->bannerBackgroundImage;
     }
