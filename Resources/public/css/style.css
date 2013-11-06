@@ -95,7 +95,10 @@ article .highlight {
   box-shadow: none;
 }
 .blog_banner_configurator .panel-heading {
+  width: 100%;
+  text-align: left;
   border-bottom: 0;
+  border-radius: 0;
 }
 .blog_banner_configurator .panel-body {
   background-color: #5F5F5F;
@@ -107,7 +110,7 @@ article .highlight {
   background-color: #555;
   width: 55px;
 }
-.blog_banner_configurator .panel-body .ui-spinner #icap_blog_options_form_banner_height {
+.blog_banner_configurator .panel-body .ui-spinner #icap_blog_banner_form_banner_height {
   color: white;
   margin: 0;
   border: 0;
@@ -118,7 +121,7 @@ article .highlight {
 .blog_banner_configurator .panel-body .ui-spinner .ui-spinner-button {
   border-radius: 0px;
 }
-.blog_banner_configurator .panel-body #icap_blog_options_form_banner_background_image {
+.blog_banner_configurator .panel-body #icap_blog_banner_form_banner_background_image {
   color: inherit;
   border: 0;
   background: none;

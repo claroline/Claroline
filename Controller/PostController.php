@@ -144,8 +144,7 @@ class PostController extends Controller
         return $this->persistPost($request, $blog, $post, $user, 'update', $messages);
     }
 
-    //User can be a string if anonymous.
-    protected function persistPost(Request $request, Blog $blog, Post $post, $user, $action, array $messages)
+    protected function persistPost(Request $request, Blog $blog, Post $post, User $user, $action, array $messages)
     {
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');

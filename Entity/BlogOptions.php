@@ -449,10 +449,6 @@ class BlogOptions
      */
     public function prePersist(LifecycleEventArgs $event)
     {
-        echo "<pre>";
-        var_dump($this->file);
-        echo "</pre>" . PHP_EOL;
-        die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
         if (null !== $this->file) {
             $this->bannerBackgroundImage = $this->file->getClientOriginalName();
         }
@@ -492,10 +488,6 @@ class BlogOptions
      */
     public function postPersist()
     {
-        echo "<pre>";
-        var_dump($this->file);
-        echo "</pre>" . PHP_EOL;
-        die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
         if (null === $this->file) {
             return;
         }

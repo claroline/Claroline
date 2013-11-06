@@ -50,12 +50,10 @@
         </ul>
 
         {% if is_granted('EDIT', _resourceNode) %}
-        <div class="panel panel-default blog_banner_configurator">
-            <div class="panel-heading">
+        <div class="panel blog_banner_configurator">
+            <div class="panel-heading btn btn-default" data-toggle="collapse" href="#blogBannerConfigurator">
                 <h4 class="panel-title">
-                    <a class="accordion-toggle" data-toggle="collapse" href="#blogBannerConfigurator">
-                        {{ 'icap_blog_edit_banner'|trans({}, 'icap_blog') }}
-                    </a>
+                    {{ 'icap_blog_edit_banner'|trans({}, 'icap_blog') }}
                 </h4>
             </div>
             <div id="blogBannerConfigurator" class="panel-collapse collapse">
@@ -64,12 +62,12 @@
                         {{ form_errors(bannerForm) }}
                         <div class="checkbox">
                             <label>
-                                {{ form_widget(bannerForm.banner_activate) }} {{ 'icap_blog_options_form_banner_activate'|trans({}, 'icap_blog') }}
+                                {{ form_widget(bannerForm.banner_activate) }} {{ 'icap_blog_banner_form_banner_activate'|trans({}, 'icap_blog') }}
                             </label>
                         </div>
                         <button type="submit" class="btn btn-success btn-sm">Valider les modifications</button>
                         <div class="row">
-                            <div class="col-md-4" id="icap_blog_options_form_banner_background_image_container">
+                            <div class="col-md-4" id="icap_blog_banner_form_banner_background_image_container">
                                 {{ form_label(bannerForm.banner_background_image) }}
                                 {{ form_widget(bannerForm.banner_background_image) }}
                             </div>
@@ -115,13 +113,13 @@
                             <div class="col-md-4">
                                 {{ form_label(bannerForm.banner_background_image_repeat) }}
                                 {{ form_widget(bannerForm.banner_background_image_repeat) }}
-                                <div id="icap_blog_options_form_banner_background_image_repeat_choices">
-                                    <label class="checkbox-inline" for="icap_blog_options_form_banner_background_image_repeat_x">
-                                        <input type="checkbox" id="icap_blog_options_form_banner_background_image_repeat_x" />
+                                <div id="icap_blog_banner_form_banner_background_image_repeat_choices">
+                                    <label class="checkbox-inline" for="icap_blog_banner_form_banner_background_image_repeat_x">
+                                        <input type="checkbox" id="icap_blog_banner_form_banner_background_image_repeat_x" />
                                         x
                                     </label>
-                                    <label class="checkbox-inline" for="icap_blog_options_form_banner_background_image_repeat_y">
-                                        <input type="checkbox" id="icap_blog_options_form_banner_background_image_repeat_y" />
+                                    <label class="checkbox-inline" for="icap_blog_banner_form_banner_background_image_repeat_y">
+                                        <input type="checkbox" id="icap_blog_banner_form_banner_background_image_repeat_y" />
                                         y
                                     </label>
                                 </div>
