@@ -143,7 +143,7 @@
         isSubcategory = false;
 
         $.ajax({
-            url: Routing.generate('claro_workspace_tag_create_form'),
+            url: Routing.generate('claro_admin_workspace_tag_create_form'),
             type: 'GET',
             success: function (datas) {
                 openFormModal(
@@ -164,7 +164,7 @@
 
         $.ajax({
             url: Routing.generate(
-                'claro_workspace_tag_edit_form',
+                'claro_admin_workspace_tag_edit_form',
                 {'workspaceTagId': currentTagId}
             ),
             type: 'GET',
@@ -188,7 +188,7 @@
         e.preventDefault();
 
         var form = document.getElementById('workspace_tag_form');
-        var tagNameInput = document.getElementById('workspace_tag_form_name');
+        var tagNameInput = document.getElementById('admin_workspace_tag_form_name');
         var tagName = $(tagNameInput).val();
         var action = form.getAttribute('action');
         var formData = new FormData(form);
@@ -205,7 +205,7 @@
                         if (isSubcategory) {
                             $.ajax({
                                 url: Routing.generate(
-                                    'claro_workspace_tag_add_children',
+                                    'claro_admin_workspace_tag_add_children',
                                     {'tagId': currentTagId, 'childrenString': data}
                                 ),
                                 type: 'POST',
@@ -249,7 +249,7 @@
         if (currentParentTagId) {
             $.ajax({
                 url: Routing.generate(
-                    'claro_workspace_tag_remove_child',
+                    'claro_admin_workspace_tag_remove_child',
                     {'parentTagId': currentParentTagId, 'childTagId': currentTagId}
                 ),
                 type: 'DELETE',
@@ -279,7 +279,7 @@
 
         $.ajax({
             url: Routing.generate(
-                'claro_workspace_tag_check_children_pager',
+                'claro_admin_workspace_tag_check_children_pager',
                 {'workspaceTagId': currentTagId}
             ),
             type: 'GET',
@@ -300,7 +300,7 @@
         if (possibleSelectedString !== '') {
             $.ajax({
                 url: Routing.generate(
-                    'claro_workspace_tag_add_children',
+                    'claro_admin_workspace_tag_add_children',
                     {'tagId': currentTagId, 'childrenString': possibleSelectedString}
                 ),
                 type: 'POST',
@@ -352,7 +352,7 @@
 
             if (search !== '') {
                 route = Routing.generate(
-                    'claro_workspace_tag_check_children_pager_search',
+                    'claro_admin_workspace_tag_check_children_pager_search',
                     {
                         'workspaceTagId': currentTagId,
                         'page': page,
@@ -361,7 +361,7 @@
                 );
             } else {
                 route = Routing.generate(
-                    'claro_workspace_tag_check_children_pager',
+                    'claro_admin_workspace_tag_check_children_pager',
                     {'workspaceTagId': currentTagId, 'page': page}
                 );
             }
@@ -384,7 +384,7 @@
 
         if (search !== '') {
             route = Routing.generate(
-                'claro_workspace_tag_check_children_pager_search',
+                'claro_admin_workspace_tag_check_children_pager_search',
                 {
                     'workspaceTagId': currentTagId,
                     'search': search
@@ -392,7 +392,7 @@
             );
         } else {
             route = Routing.generate(
-                'claro_workspace_tag_check_children_pager',
+                'claro_admin_workspace_tag_check_children_pager',
                 {'workspaceTagId': currentTagId}
             );
         }
@@ -416,7 +416,7 @@
 
             if (search !== '') {
                 route = Routing.generate(
-                    'claro_workspace_tag_check_children_pager_search',
+                    'claro_admin_workspace_tag_check_children_pager_search',
                     {
                         'workspaceTagId': currentTagId,
                         'search': search
@@ -424,7 +424,7 @@
                 );
             } else {
                 route = Routing.generate(
-                    'claro_workspace_tag_check_children_pager',
+                    'claro_admin_workspace_tag_check_children_pager',
                     {'workspaceTagId': currentTagId}
                 );
             }
@@ -448,7 +448,7 @@
         currentTagId = $(this).parents('.tag-element').attr('workspace-tag-id');
 
         $.ajax({
-            url: Routing.generate('claro_workspace_tag_create_form'),
+            url: Routing.generate('claro_admin_workspace_tag_create_form'),
             type: 'GET',
             success: function (datas) {
                 openFormModal(
@@ -473,7 +473,7 @@
     $('#delete-workspace-tag-confirm-ok').click(function () {
         $.ajax({
             url: Routing.generate(
-                'claro_workspace_tag_delete',
+                'claro_admin_workspace_tag_delete',
                 {'workspaceTagId': currentTagId}
             ),
             type: 'DELETE',
