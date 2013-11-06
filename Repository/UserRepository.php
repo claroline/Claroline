@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Group;
+use Doctrine\ORM\Query;
 use Claroline\CoreBundle\Persistence\MissingObjectException;
 
 class UserRepository extends EntityRepository implements UserProviderInterface
@@ -85,7 +86,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * @param AbstractWorkspace $workspace
      * @param Role              $role
      *
-     * @return array[User]
+     * @return User[]
      */
     public function findByWorkspaceAndRole(AbstractWorkspace $workspace, Role $role)
     {
@@ -124,7 +125,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * @param AbstractWorkspace $workspace
      * @param boolean           $executeQuery
      *
-     * @return array[User]|Query
+     * @return User[]|Query
      */
     public function findWorkspaceOutsiders(AbstractWorkspace $workspace, $executeQuery = true)
     {
@@ -157,7 +158,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * @param string            $search
      * @param boolean           $executeQuery
      *
-     * @return array[User]|Query
+     * @return User[]|Query
      */
     public function findWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $executeQuery = true)
     {
@@ -193,7 +194,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @param boolean $executeQuery
      *
-     * @return array[User]|Query
+     * @return User[]|Query
      */
     public function findAll($executeQuery = true)
     {
@@ -220,7 +221,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @param string $search
      *
-     * @return array[User]
+     * @return User[]
      */
     public function findAllUserBySearch($search)
     {
@@ -250,7 +251,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * @param string  $search
      * @param boolean $executeQuery
      *
-     * @return array[User]|Query
+     * @return User[]|Query
      */
     public function findByName($search, $executeQuery = true)
     {
@@ -280,7 +281,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * @param Group   $group
      * @param boolean $executeQuery
      *
-     * @return array[User]|Query
+     * @return User[]|Query
      */
     public function findByGroup(Group $group, $executeQuery = true)
     {
@@ -305,7 +306,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * @param string  $search
      * @param boolean $executeQuery
      *
-     * @return array[User]|Query
+     * @return User[]|Query
      */
     public function findByNameAndGroup($search, Group $group, $executeQuery = true)
     {
@@ -337,7 +338,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * @param AbstractWorkspace $workspace
      * @param boolean           $executeQuery
      *
-     * @return array[User]|Query
+     * @return User[]|Query
      */
     public function findByWorkspace(AbstractWorkspace $workspace, $executeQuery = true)
     {
@@ -364,7 +365,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * @param array     $workspaces
      * @param boolean   $executeQuery
      *
-     * @return array[User]|Query
+     * @return User[]|Query
      */
     public function findUsersByWorkspaces(array $workspaces,$executeQuery = true)
     {
@@ -391,7 +392,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * @param array     $workspaces
      * @param string    $search
      *
-     * @return array[User]
+     * @return User[]
      */
     public function findUsersByWorkspacesAndSearch(array $workspaces, $search)
     {
@@ -429,7 +430,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * @param string            $search
      * @param boolean           $executeQuery
      *
-     * @return array[User]|Query
+     * @return User[]|Query
      */
     public function findByWorkspaceAndName(AbstractWorkspace $workspace, $search, $executeQuery = true)
     {
@@ -461,7 +462,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * @param Group   $group
      * @param boolean $executeQuery
      *
-     * @return array[User]|Query
+     * @return User[]|Query
      */
     public function findGroupOutsiders(Group $group, $executeQuery = true)
     {
@@ -491,7 +492,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * @param string            $search
      * @param boolean           $executeQuery
      *
-     * @return array[User]|Query
+     * @return User[]|Query
      */
     public function findGroupOutsidersByName(Group $group, $search, $executeQuery = true)
     {
@@ -525,7 +526,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @param User $excludedUser
      *
-     * @return array[User]
+     * @return User[]
      */
     public function findAllExcept(User $excludedUser)
     {
@@ -544,7 +545,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @param array $usernames
      *
-     * @return array[User]
+     * @return User[]
      *
      * @throws MissingObjectException if one or more users cannot be found
      */
@@ -596,7 +597,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @param integer $max
      *
-     * @return array
+     * @return User[]
      */
     public function findUsersEnrolledInMostWorkspaces($max)
     {
@@ -630,6 +631,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getResult();
     }
 
+    /**
+     * @param Role[] $roles
+     * @param boolean $getQuery
+     *
+     * @return Query|User[]
+     */
     public function findByRoles(array $roles, $getQuery = false)
     {
         $dql = "
@@ -644,6 +651,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return ($getQuery) ? $query: $query->getResult();
     }
 
+    /**
+     * @param Role[] $roles
+     * @param boolean $getQuery
+     *
+     * @return Query|User[]
+     */
     public function findByRolesIncludingGroups(array $roles, $getQuery = false)
     {
         //reduce the number of requests needed by doctrine... it's a little bit hacky but it works
@@ -672,6 +685,13 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return ($getQuery) ? $query: $query->getResult();
     }
 
+    /**
+     * @param Role[] $roles
+     * @param string $name
+     * @param boolean $getQuery
+     *
+     * @return Query|User[]
+     */
     public function findByRolesAndName(array $roles, $name, $getQuery = false)
     {
         $search = strtoupper($name);
@@ -691,6 +711,13 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return ($getQuery) ? $query: $query->getResult();
     }
 
+    /**
+     * @param Role[] $roles
+     * @param string $name
+     * @param boolean $getQuery
+     *
+     * @return Query|User[]
+     */
     public function findByRolesAndNameIncludingGroups(array $roles, $name, $getQuery = false)
     {
         //reduce the number of requests needed by doctrine... it's a little bit hacky but it works
@@ -726,6 +753,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     /**
      * This method should be renamed.
      * Find users who are outside the workspace and users whose role are in $roles.
+     *
+     * @param Role[] $roles
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param boolean $getQuery
+     *
+     * @return Query|User[]
      */
     public function findOutsidersByWorkspaceRoles(array $roles, AbstractWorkspace $workspace, $getQuery = false)
     {
@@ -757,6 +790,13 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     /**
      * This method should be renamed.
      * Find users who are outside the workspace and users whose role are in $roles.
+     *
+     * @param Role[] $roles
+     * @param string $name
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param boolean $getQuery
+     *
+     * @return Query|User[]
      */
     public function findOutsidersByWorkspaceRolesAndName(
         array $roles,
@@ -821,6 +861,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getResult();
     }
 
+    /**
+     * @param string $username
+     * @param string $email
+     *
+     * @return User
+     */
     public function findUserByUsernameOrEmail($username, $email)
     {
         $dql = '
@@ -838,8 +884,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
-     * @param  array           $params
-     * @return ArrayCollection
+     * @param array $params
+     *
+     * @return User[]
      */
     public function extract($params)
     {

@@ -96,10 +96,21 @@ class ResourceManager
     }
 
     /**
+     * Creates a resource.
+     *
      * array $rights should be defined that way:
      * array('ROLE_WS_XXX' => array('open' => true, 'edit' => false, ...
-     * 'create' => array('directory', ...), role => $entity))
+     * 'create' => array('directory', ...), 'role' => $entity))
      *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $resourceType
+     * @param \Claroline\CoreBundle\Entity\User $creator
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceIcon $icon
+     * @param array $rights
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\AbstractResource
      */
     public function create(
         AbstractResource $resource,
@@ -293,6 +304,16 @@ class ResourceManager
         return $sortedResources;
     }
 
+    /**
+     * Creates a shortcut.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $target
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
+     * @param \Claroline\CoreBundle\Entity\User $creator
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceShortcut $shortcut
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceShortcut
+     */
     public function makeShortcut(ResourceNode $target, ResourceNode $parent, User $creator, ResourceShortcut $shortcut)
     {
         $shortcut->setName($target->getName());
@@ -318,10 +339,18 @@ class ResourceManager
     }
 
     /**
-     * @todo
-     * Define the $rights array.
-     * If there is no rights: parents rights are copied.
-     * Otherwise: use the new rights array;
+     * Set the right of a resource.
+     * If $rights = array(), the $parent node rights will be copied.
+     *
+     * array $rights should be defined that way:
+     * array('ROLE_WS_XXX' => array('open' => true, 'edit' => false, ...
+     * 'create' => array('directory', ...), 'role' => $entity))
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
+     * @param array $rights
+     *
+     * @throws RightsException
      */
     public function setRights(
         ResourceNode $node,
@@ -339,8 +368,15 @@ class ResourceManager
         }
     }
 
-    /*
-     * Creates the base rights for a resource
+    /**
+     * Create the rights for a node.
+     *
+     * array $rights should be defined that way:
+     * array('ROLE_WS_XXX' => array('open' => true, 'edit' => false, ...
+     * 'create' => array('directory', ...), 'role' => $entity))
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @param array $rights
      */
     public function createRights(
         ResourceNode $node,
@@ -420,6 +456,8 @@ class ResourceManager
      *
      * @param ResourceNode $resource
      * @param ResourceNode $next
+     *
+     * @return ResourceNode
      */
     public function insertBefore(ResourceNode $node, ResourceNode $next = null)
     {
@@ -469,6 +507,8 @@ class ResourceManager
      *
      * @param ResourceNode $child
      * @param ResourceNode $parent
+     *
+     * @return ResourceNode
      */
     public function move(ResourceNode $child, ResourceNode $parent)
     {
