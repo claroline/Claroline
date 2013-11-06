@@ -348,8 +348,7 @@ class WorkspaceRepository extends EntityRepository
             SELECT DISTINCT w FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
             JOIN w.orderedTools ot
             JOIN ot.roles r
-            WHERE w.displayable = true
-            AND w.selfUnregistration = true
+            WHERE w.selfUnregistration = true
             AND r.name IN (:roles)
             ORDER BY w.name
         ";
