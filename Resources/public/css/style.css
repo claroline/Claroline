@@ -121,7 +121,7 @@ article .highlight {
 .blog_banner_configurator .panel-body .ui-spinner .ui-spinner-button {
   border-radius: 0px;
 }
-.blog_banner_configurator .panel-body #icap_blog_banner_form_banner_background_image {
+.blog_banner_configurator .panel-body #icap_blog_banner_form_file {
   color: inherit;
   border: 0;
   background: none;

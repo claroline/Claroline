@@ -5,6 +5,7 @@ namespace Icap\BlogBundle\Entity;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -426,7 +427,7 @@ class BlogOptions
     {
         $ds = DIRECTORY_SEPARATOR;
 
-        $uploadRootDir         = sprintf('%s%s..%s..%s..%s..%s..%s..%s..%sweb%s%s', __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir());
+        $uploadRootDir         = sprintf('%s%s..%s..%s..%s..%s..%s..%sweb%s%s', __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir());
         $realpathUploadRootDir = realpath($uploadRootDir);
 
         if (false === $realpathUploadRootDir) {
@@ -441,17 +442,7 @@ class BlogOptions
      */
     protected function getUploadDir()
     {
-        return sprintf("uploads%blogs", DIRECTORY_SEPARATOR);
-    }
-
-    /**
-     * @ORM\PrePersist()
-     */
-    public function prePersist(LifecycleEventArgs $event)
-    {
-        if (null !== $this->file) {
-            $this->bannerBackgroundImage = $this->file->getClientOriginalName();
-        }
+        return sprintf("uploads%sblogs", DIRECTORY_SEPARATOR);
     }
 
     /**
@@ -481,20 +472,6 @@ class BlogOptions
         }
 
         $this->file = null;
-    }
-
-    /**
-     * @ORM\PostPersist()
-     */
-    public function postPersist()
-    {
-        if (null === $this->file) {
-            return;
-        }
-
-        $this->file->move($this->getUploadRootDir(), $this->bannerBackgroundImage);
-
-        unset($this->file);
     }
 
     /**

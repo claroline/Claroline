@@ -19,6 +19,7 @@ use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -208,6 +209,7 @@ class BlogController extends Controller
 
     /**
      * @Route("/banner/{blogId}", name="icap_blog_configure_banner", requirements={"blogId" = "\d+"})
+     * @Method({"POST"})
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
      * @Template()
      */
@@ -219,37 +221,29 @@ class BlogController extends Controller
 
         $form = $this->createForm(new BlogBannerType(), $blogOptions);
 
-        if ("POST" === $request->getMethod()) {
-            $form->submit($request);
-            if ($form->isValid()) {
-                $entityManager = $this->getDoctrine()->getManager();
-                $translator = $this->get('translator');
-                $flashBag = $this->get('session')->getFlashBag();
+        $form->submit($request);
+        if ($form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $translator = $this->get('translator');
+            $flashBag = $this->get('session')->getFlashBag();
 
-                try {
-                    $unitOfWork = $entityManager->getUnitOfWork();
-                    $unitOfWork->computeChangeSets();
-                    $changeSet = $unitOfWork->getEntityChangeSet($blogOptions);
+            try {
+                $unitOfWork = $entityManager->getUnitOfWork();
+                $unitOfWork->computeChangeSets();
+                $changeSet = $unitOfWork->getEntityChangeSet($blogOptions);
 
-                    $entityManager->persist($blogOptions);
-                    $entityManager->flush();
+                $entityManager->persist($blogOptions);
+                $entityManager->flush();
 
-                    $this->dispatchBlogConfigureBannerEvent($blog, $blogOptions, $changeSet);
+                $this->dispatchBlogConfigureBannerEvent($blog, $blogOptions, $changeSet);
 
-                    $flashBag->add('success', $translator->trans('icap_blog_post_configure_banner_success', array(), 'icap_blog'));
-                } catch (\Exception $exception) {
-                    $flashBag->add('error', $translator->trans('icap_blog_post_configure_banner_error', array(), 'icap_blog'));
-                }
-
-                return $this->redirect($this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())));
+                $flashBag->add('success', $translator->trans('icap_blog_post_configure_banner_success', array(), 'icap_blog'));
+            } catch (\Exception $exception) {
+                $flashBag->add('error', $translator->trans('icap_blog_post_configure_banner_error', array(), 'icap_blog'));
             }
         }
 
-        return array(
-            '_resource' => $blog,
-            'form'      => $form->createView(),
-            'archives'  => $this->getArchiveDatas($blog)
-        );
+        return $this->redirect($this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())));
     }
 
     /**

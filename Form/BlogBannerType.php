@@ -24,7 +24,8 @@ class BlogBannerType extends AbstractType
                     'data-min' => 100
                 )
             ))
-            ->add('banner_background_image', 'file', array(
+            ->add('file', 'file', array(
+                'label'         => 'icap_blog_banner_form_banner_background_image',
                 'theme_options' => array('label_width' => ''),
                 'required'      => false
             ))

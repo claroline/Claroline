@@ -4,7 +4,7 @@
     var bannerBackgroundImageColorPicker     = $('.banner_background_color');
     var bannerBackgroundColorField           = $('#icap_blog_banner_form_banner_background_color');
     var bannerBackgroundImageContainer       = $("#icap_blog_banner_form_banner_background_image_container");
-    var bannerBackgroundImageFieldTemplate   = '<input type="file" id="icap_blog_banner_form_banner_background_image" name="icap_blog_banner_form[banner_background_image]" class="form-control">';
+    var bannerBackgroundImageFieldTemplate   = '<input type="file" id="icap_blog_banner_form_file" name="icap_blog_banner_form[banner_background_image]" class="form-control">';
     var removeBannerBackgroundImageButton    = $("#remove_banner_background_image");
     var bannerBackgroundImageParametersBlock = $("#banner_background_image_parameters");
     var bannerBackgroundImagePositionField   = $("#icap_blog_banner_form_banner_background_image_position").hide();
@@ -47,9 +47,7 @@
             banner.css('height', $(this).val());
         });
 
-    console.log(bannerBackgroundImageContainer);
-    bannerBackgroundImageContainer.on('change', "#icap_blog_banner_form_banner_background_image", function(){
-        console.log('pouet');
+    bannerBackgroundImageContainer.on('change', "#icap_blog_banner_form_file", function(){
         var input = this;
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -68,7 +66,7 @@
         banner.css('background-image', 'none');
         removeBannerBackgroundImageButton.addClass("hidden");
         bannerBackgroundImageParametersBlock.addClass("hidden");
-        $("#icap_blog_banner_form_banner_background_image", bannerBackgroundImageContainer).remove();
+        $("#icap_blog_banner_form_file", bannerBackgroundImageContainer).remove();
         bannerBackgroundImageContainer.append(bannerBackgroundImageFieldTemplate);
     });
 
