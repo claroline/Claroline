@@ -140,7 +140,7 @@
                         if (isSubcategory) {
                             $.ajax({
                                 url: Routing.generate(
-                                    'claro_workspace_admin_tag_add_children',
+                                    'claro_admin_workspace_tag_add_children',
                                     {'tagId': currentTagId, 'childrenString': data}
                                 ),
                                 type: 'POST',
@@ -233,7 +233,7 @@
         if (possibleSelectedString !== '') {
             $.ajax({
                 url: Routing.generate(
-                    'claro_workspace_admin_tag_add_children',
+                    'claro_admin_workspace_tag_add_children',
                     {'tagId': currentTagId, 'childrenString': possibleSelectedString}
                 ),
                 type: 'POST',

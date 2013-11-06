@@ -9,17 +9,38 @@ use Doctrine\ORM\EntityRepository;
 class WorkspaceTagHierarchyRepository extends EntityRepository
 {
     /**
-     * Returns all relations where given workspaceTag is parent
+     * Returns all admin relations where given workspaceTag is parent
      */
     public function findAdminHierarchiesByParent(WorkspaceTag $workspaceTag)
     {
-        $dql = "
+        $dql = '
             SELECT h
             FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy h
             WHERE h.user IS NULL
             AND h.parent = :workspaceTag
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaceTag', $workspaceTag);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns all relations where given workspaceTag is parent
+     */
+    public function findHierarchiesByParent(
+        User $user,
+        WorkspaceTag $workspaceTag
+    )
+    {
+        $dql = '
+            SELECT h
+            FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy h
+            WHERE h.user = :user
+            AND h.parent = :workspaceTag
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
         $query->setParameter('workspaceTag', $workspaceTag);
 
         return $query->getResult();

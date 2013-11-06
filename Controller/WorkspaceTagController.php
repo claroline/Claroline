@@ -55,373 +55,8 @@ class WorkspaceTagController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/tag/createform",
-     *     name="claro_workspace_tag_create_form"
-     * )
-     * @EXT\Method("GET")
-     *
-     * @EXT\Template()
-     *
-     * Renders the Tag creation form
-     *
-     * @return Response
-     */
-    public function workspaceTagCreateFormAction()
-    {
-        if (!$this->securityContext->isGranted('ROLE_USER')) {
-            throw new AccessDeniedException();
-        }
-        $user = $this->securityContext->getToken()->getUser();
-        $workspaceTag = new WorkspaceTag();
-        $workspaceTag->setUser($user);
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_TAG, array(), $workspaceTag);
-
-        return array(
-            'form' => $form->createView(),
-            'user' => $user
-        );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/tag/admin/create",
-     *     name="claro_workspace_admin_tag_create"
-     * )
-     * @EXT\Method("POST")
-     *
-     * @EXT\Template("ClarolineCoreBundle:WorkspaceTag:workspaceAdminTagCreateForm.html.twig")
-     *
-     * Creates a new Tag
-     *
-     * @return RedirectResponse
-     */
-    public function workspaceAdminTagCreateAction()
-    {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
-            throw new AccessDeniedException();
-        }
-        $workspaceTag = new WorkspaceTag();
-        $workspaceTag->setUser(null);
-
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_ADMIN_WORKSPACE_TAG,
-            array(),
-            $workspaceTag
-        );
-        $request = $this->getRequest();
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $this->tagManager->insert($workspaceTag);
-            $this->tagManager->createTagHierarchy($workspaceTag, $workspaceTag, 0);
-
-            return $this->redirect(
-                $this->generateUrl('claro_workspace_manage_admin_tag')
-            );
-        }
-
-        return array('form' => $form->createView());
-    }
-
-    /**
-     * @EXT\Route(
-     *     "create/tag/{tagName}",
-     *     name="claro_create_workspace_tag",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
-     *
-     * Create a workspace tag.
-     *
-     * @param User              $currentUser
-     * @param string            $tagName
-     *
-     * @return Response
-     */
-    public function createWorkspaceTag(User $currentUser, $tagName)
-    {
-        $tag = $this->tagManager->getTagByNameAndUser($tagName, $currentUser);
-
-        if ($tag === null) {
-            $tag = $this->tagManager->createTag($tagName, $currentUser);
-            $this->tagManager->createTagHierarchy($tag, $tag, 0);
-        }
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "create/admin/tag/{tagName}",
-     *     name="claro_create_admin_workspace_tag",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
-     *
-     * Create an admin workspace tag.
-     *
-     * @param string            $tagName
-     *
-     * @return Response
-     */
-    public function createAdminWorkspaceTag($tagName)
-    {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
-            throw new AccessDeniedException();
-        }
-
-        $tag = $this->tagManager->getTagByNameAndUser($tagName, null);
-
-        if ($tag === null) {
-            $tag = $this->tagManager->createTag($tagName);
-            $this->tagManager->createTagHierarchy($tag, $tag, 0);
-        }
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/{userId}/workspace/{workspaceId}/tag/add/{tagName}",
-     *     name="claro_workspace_tag_add",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
-     * @EXT\ParamConverter(
-     *      "targetUser",
-     *      class="ClarolineCoreBundle:User",
-     *      options={"id" = "userId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     *
-     * Adds a user tag to a workspace.
-     *
-     * @param User              $currentUser
-     * @param User              $targetUser
-     * @param AbstractWorkspace $workspaceId
-     * @param string            $tagName
-     *
-     * @return Response
-     */
-    public function addTagToWorkspace(
-        User $currentUser,
-        User $targetUser,
-        AbstractWorkspace $workspace,
-        $tagName
-    )
-    {
-        if ($currentUser !== $targetUser) {
-            throw new AccessDeniedException();
-        }
-
-        $tag = $this->tagManager->getTagByNameAndUser($tagName, $targetUser);
-
-        if ($tag === null) {
-            $tag = $this->tagManager->createTag($tagName, $targetUser);
-            $this->tagManager->createTagHierarchy($tag, $tag, 0);
-        }
-        $relWsTag = $this->tagManager->getTagRelationByWorkspaceAndTagAndUser(
-            $workspace,
-            $tag,
-            $targetUser
-        );
-
-        if ($relWsTag === null) {
-            $this->tagManager->createTagRelation($tag, $workspace);
-        }
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/workspace/{workspaceId}/tag/add/{tagName}",
-     *     name="claro_workspace_admin_tag_add",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     *
-     * Add Tag to Workspace
-     *
-     * @param AbstractWorkspace $workspace
-     * @param string            $tagName
-     *
-     * @return Response
-     */
-    public function addAdminTagToWorkspace(AbstractWorkspace $workspace, $tagName)
-    {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
-            throw new AccessDeniedException();
-        }
-
-        if (is_null($workspace)) {
-            throw new \RuntimeException('Workspace cannot be null');
-        }
-        $tag = $this->tagManager->getTagByNameAndUser($tagName, null);
-
-        if ($tag === null) {
-            $tag = $this->tagManager->createTag($tagName);
-            $this->tagManager->createTagHierarchy($tag, $tag, 0);
-        }
-        $relWsTag = $this->tagManager->getAdminTagRelationByWorkspaceAndTag($workspace, $tag);
-
-        if ($relWsTag === null) {
-            $this->tagManager->createTagRelation($tag, $workspace);
-        }
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/{userId}/workspace/{workspaceId}/tag/remove/{workspaceTagId}",
-     *     name="claro_workspace_tag_remove",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("DELETE")
-     * @EXT\ParamConverter(
-     *      "user",
-     *      class="ClarolineCoreBundle:User",
-     *      options={"id" = "userId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *      "workspaceTag",
-     *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "workspaceTagId", "strictId" = true}
-     * )
-     *
-     * Remove Tag from Workspace
-     *
-     * @param User              $userId
-     * @param AbstractWorkspace $workspace
-     * @param WorkspaceTag      $workspaceTag
-     *
-     * @return Response
-     */
-    public function removeTagFromWorkspace(
-        User $user,
-        AbstractWorkspace $workspace,
-        WorkspaceTag $workspaceTag
-    )
-    {
-        $currentUser = $this->securityContext->getToken()->getUser();
-
-        if (!$this->securityContext->isGranted('ROLE_USER')
-            || $currentUser !== $workspaceTag->getUser()
-            || $currentUser !== $user) {
-            throw new AccessDeniedException();
-        }
-        $relWorkspaceTag = $this->tagManager
-            ->getTagRelationByWorkspaceAndTagAndUser(
-                $workspace,
-                $workspaceTag,
-                $user
-            );
-        $this->tagManager->deleteTagRelation($relWorkspaceTag);
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/workspace/{workspaceId}/tag/remove/{workspaceTagId}",
-     *     name="claro_workspace_admin_tag_remove",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("DELETE")
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *      "workspaceTag",
-     *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "workspaceTagId", "strictId" = true}
-     * )
-     *
-     * Remove admin Tag from Workspace
-     *
-     * @param AbstractWorkspace workspace
-     * @param WorkspaceTag $workspaceTag
-     *
-     * @return Response
-     */
-    public function removeAdminTagFromWorkspace(
-        AbstractWorkspace $workspace,
-        WorkspaceTag $workspaceTag
-    )
-    {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
-            throw new AccessDeniedException();
-        }
-
-        if (is_null($workspace) || is_null($workspaceTag)) {
-            throw new \RuntimeException('Workspace or Tag cannot be null');
-        }
-        $relWorkspaceTag = $this->tagManager->getAdminTagRelationByWorkspaceAndTag($workspace, $workspaceTag);
-        $this->tagManager->deleteTagRelation($relWorkspaceTag);
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/tag/check/children/{tagId}",
-     *     name="claro_workspace_tag_check_children"
-     * )
-     * @EXT\Method("GET")
-     * @EXT\ParamConverter(
-     *      "tag",
-     *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "tagId", "strictId" = true}
-     * )
-     *
-     * @EXT\Template()
-     *
-     * Render a page where children can be added to a tag
-     *
-     * @param WorkspaceTag $tag
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function checkPotentialWorkspaceTagChildrenAction(WorkspaceTag $tag)
-    {
-        if (!$this->securityContext->isGranted('ROLE_USER')) {
-            throw new AccessDeniedException();
-        }
-        $user = $this->securityContext->getToken()->getUser();
-        $children = $this->tagManager->getChildren($user, $tag);
-        $possibleChildren = $this->tagManager->getPossibleChildren($user, $tag);
-
-        return array(
-            'tag' => $tag,
-            'children' => $children,
-            'possibleChildren' => $possibleChildren
-        );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/tag/admin/add/children/{tagId}/{childrenString}",
-     *     name="claro_workspace_admin_tag_add_children",
+     *     "admin/tag/add/children/{tagId}/{childrenString}",
+     *     name="claro_admin_workspace_tag_add_children",
      *     options={"expose"=true}
      * )
      * @EXT\Method("POST")
@@ -453,7 +88,6 @@ class WorkspaceTagController extends Controller
             $childrenhierarchies = $this->tagManager->getAdminHierarchiesByParents($children);
 
             foreach ($childrenhierarchies as $childHierarchy) {
-
                 foreach ($tagsHierarchy as $tagHierarchy) {
                     $this->tagManager->createTagHierarchy(
                         $childHierarchy->getTag(),
@@ -473,12 +107,13 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_tag_add_children",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
+     * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *      "tag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
      *      options={"id" = "tagId", "strictId" = true}
      * )
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      *
      * Create hierarchy link between given tag and a given list of tags
      *
@@ -487,223 +122,29 @@ class WorkspaceTagController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function addTagChildren(WorkspaceTag $tag, $childrenString)
+    public function addTagChildren(
+        User $currentUser,
+        WorkspaceTag $tag,
+        $childrenString
+    )
     {
-        if (!$this->securityContext->isGranted('ROLE_USER')) {
-            throw new AccessDeniedException();
-        }
-        $user = $this->securityContext->getToken()->getUser();
-
         $children = explode(',', $childrenString);
 
         if (is_array($children) && count($children) > 0) {
             // Get all hierarchies where param $tag is a child
-            $tagsHierarchy = $this->tagManager->getHierarchiesByUserAndTag($tag, $user);
+            $tagsHierarchy = $this->tagManager
+                ->getHierarchiesByUserAndTag($tag, $currentUser);
             // Get all hierarchies where parent is in param
-            $childrenhierarchies = $this->tagManager->getHierarchiesByParents($user, $children);
+            $childrenhierarchies = $this->tagManager
+                ->getHierarchiesByParents($currentUser, $children);
 
             foreach ($childrenhierarchies as $childHierarchy) {
-
                 foreach ($tagsHierarchy as $tagHierarchy) {
                     $this->tagManager->createTagHierarchy(
                         $childHierarchy->getTag(),
                         $tagHierarchy->getParent(),
                         $childHierarchy->getLevel() + $tagHierarchy->getLevel() + 1
                     );
-                }
-            }
-        }
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/tag/admin/remove/children/{tagId}/{childrenString}",
-     *     name="claro_workspace_admin_tag_remove_children",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("GET")
-     * @EXT\ParamConverter(
-     *      "tag",
-     *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "tagId", "strictId" = true}
-     * )
-     *
-     * Create hierarchy link between given admin tag and a given list of admin tags
-     *
-     * @param WorkspaceTag $tag
-     * @param string       $childrenString
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function removeAdminTagChildren(WorkspaceTag $tag, $childrenString)
-    {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
-            throw new AccessDeniedException();
-        }
-        $children = explode(',', $childrenString);
-
-        if (is_array($children) && count($children) > 0) {
-            // Get all hierarchies where parent is in param $childrenString
-            $childrenHierarchy = $this->tagManager->getAdminHierarchiesByParents($children);
-            // Get an array with all parents id
-            $parentsTagsId = array();
-            $parentsTags = $this->tagManager->getAdminParentsFromTag($tag);
-
-            foreach ($parentsTags as $parentTag) {
-                $parentsTagsId[] = $parentTag->getId();
-            }
-            // Get an array with all children id
-            $childrenTagsId = array();
-            $childrenTags = $this->tagManager->getAdminChildrenFromTags($children);
-
-            foreach ($childrenTags as $childTag) {
-                $childrenTagsId[] = $childTag->getId();
-            }
-            // Get all hierarchies where parents are in array $parentsTagsId and children in $childrenTagsId
-            $multiHierarchies = $this->tagManager
-                ->getAdminHierarchiesByParentsAndChildren(
-                    $parentsTagsId,
-                    $childrenTagsId
-                );
-            // Get all hierarchies where given tag (parent) is a child
-            $parentHierarchies = $this->tagManager->getHierarchiesByTag($tag);
-            $levelsArray = array();
-
-            // Count the number of nodes by level
-            foreach ($childrenHierarchy as $childHierarchy) {
-                $childTagId = $childHierarchy->getTag()->getId();
-                $level = $childHierarchy->getLevel() + 1;
-
-                if (!isset($levelsArray[$childTagId])) {
-                    $levelsArray[$childTagId] = array();
-                }
-                if (!isset($levelsArray[$childTagId][$level])) {
-                    $levelsArray[$childTagId][$level] = 0;
-                }
-                $levelsArray[$childTagId][$level]++;
-            }
-
-            foreach ($parentHierarchies as $parentHierarchy) {
-                $levelCount = $levelsArray;
-                $parentTag = $parentHierarchy->getParent();
-                $parentLevel = $parentHierarchy->getLevel();
-
-                foreach ($multiHierarchies as $index => $singleHierarchy) {
-                    $currentTag = $singleHierarchy->getTag();
-                    $currentTagId = $currentTag->getId();
-                    $currentLevel = $singleHierarchy->getLevel();
-                    $currentParent = $singleHierarchy->getParent();
-
-                    $level = $currentLevel - $parentLevel;
-
-                    if ($currentParent === $parentTag &&
-                        isset($levelCount[$currentTagId][$level]) &&
-                        $levelCount[$currentTagId][$level] > 0) {
-
-                        $levelCount[$currentTagId][$level]--;
-                        unset($multiHierarchies[$index]);
-                        $this->tagManager->deleteTagHierarchy($singleHierarchy);
-                    }
-                }
-            }
-        }
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/tag/remove/children/{tagId}/{childrenString}",
-     *     name="claro_workspace_tag_remove_children",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("GET")
-     * @EXT\ParamConverter(
-     *      "tag",
-     *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "tagId", "strictId" = true}
-     * )
-     *
-     * Create hierarchy link between given tag and a given list of tags
-     *
-     * @param integer $tagId
-     * @param string  $childrenString
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function removeTagChildren(WorkspaceTag $tag, $childrenString)
-    {
-        if (!$this->securityContext->isGranted('ROLE_USER')) {
-            throw new AccessDeniedException();
-        }
-        $user = $this->securityContext->getToken()->getUser();
-
-        $children = explode(',', $childrenString);
-
-        if (is_array($children) && count($children) > 0) {
-            // Get all hierarchies where parent is in param $childrenString
-            $childrenHierarchy = $this->tagManager->getHierarchiesByParents($user, $children);
-
-            // Get an array with all parents id
-            $parentsTagsId = array();
-            $parentsTags = $this->tagManager->getParentsFromTag($user, $tag);
-
-            foreach ($parentsTags as $parentTag) {
-                $parentsTagsId[] = $parentTag->getId();
-            }
-            // Get an array with all children id
-            $childrenTagsId = array();
-            $childrenTags = $this->tagManager->getChildrenFromTags($user, $children);
-
-            foreach ($childrenTags as $childTag) {
-                $childrenTagsId[] = $childTag->getId();
-            }
-            // Get all hierarchies where parents are in array $parentsTagsId and children in $childrenTagsId
-            $multiHierarchies = $this->tagManager
-                ->getHierarchiesByParentsAndChildren($user, $parentsTagsId, $childrenTagsId);
-
-            // Get all hierarchies where given tag (parent) is a child
-            $parentHierarchies = $this->tagManager->getHierarchiesByUserAndTag($tag, $user);
-
-            $levelsArray = array();
-
-            // Count the number of nodes by level
-            foreach ($childrenHierarchy as $childHierarchy) {
-                $childTagId = $childHierarchy->getTag()->getId();
-                $level = $childHierarchy->getLevel() + 1;
-
-                if (!isset($levelsArray[$childTagId])) {
-                    $levelsArray[$childTagId] = array();
-                }
-                if (!isset($levelsArray[$childTagId][$level])) {
-                    $levelsArray[$childTagId][$level] = 0;
-                }
-                $levelsArray[$childTagId][$level]++;
-            }
-
-            foreach ($parentHierarchies as $parentHierarchy) {
-                $levelCount = $levelsArray;
-                $parentTag = $parentHierarchy->getParent();
-                $parentLevel = $parentHierarchy->getLevel();
-
-                foreach ($multiHierarchies as $index => $singleHierarchy) {
-                    $currentTag = $singleHierarchy->getTag();
-                    $currentTagId = $currentTag->getId();
-                    $currentLevel = $singleHierarchy->getLevel();
-                    $currentParent = $singleHierarchy->getParent();
-
-                    $level = $currentLevel - $parentLevel;
-
-                    if ($currentParent === $parentTag &&
-                        isset($levelCount[$currentTagId][$level]) &&
-                        $levelCount[$currentTagId][$level] > 0) {
-
-                        $levelCount[$currentTagId][$level]--;
-                        unset($multiHierarchies[$index]);
-                        $this->tagManager->deleteTagHierarchy($singleHierarchy);
-                    }
                 }
             }
         }
@@ -781,6 +222,73 @@ class WorkspaceTagController extends Controller
 
     /**
      * @EXT\Route(
+     *     "tag/create/form",
+     *     name="claro_workspace_tag_create_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
+     *
+     * @EXT\Template()
+     *
+     * Renders the Tag creation form
+     *
+     * @return Response
+     */
+    public function workspaceTagCreateFormAction(User $currentUser)
+    {
+        $workspaceTag = new WorkspaceTag();
+        $workspaceTag->setUser($currentUser);
+
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_WORKSPACE_TAG,
+            array(),
+            $workspaceTag
+        );
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "tag/create",
+     *     name="claro_workspace_tag_create",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
+     *
+     * @EXT\Template("ClarolineCoreBundle:WorkspaceTag:workspaceTagCreateForm.html.twig")
+     *
+     * Creates a new Tag
+     *
+     * @return RedirectResponse
+     */
+    public function workspaceTagCreateAction(User $currentUser)
+    {
+        $workspaceTag = new WorkspaceTag();
+        $workspaceTag->setUser($currentUser);
+
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_WORKSPACE_TAG,
+            array(),
+            $workspaceTag
+        );
+        $request = $this->getRequest();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $this->tagManager->insert($workspaceTag);
+            $this->tagManager->createTagHierarchy($workspaceTag, $workspaceTag, 0);
+
+            return new Response($workspaceTag->getId(), 201);
+        }
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
      *     "admin/tag/{workspaceTagId}/edit/form",
      *     name="claro_admin_workspace_tag_edit_form",
      *     options={"expose"=true}
@@ -837,6 +345,84 @@ class WorkspaceTagController extends Controller
         }
         $form = $this->formFactory->create(
             FormFactory::TYPE_ADMIN_WORKSPACE_TAG,
+            array(),
+            $workspaceTag
+        );
+        $request = $this->getRequest();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $this->tagManager->insert($workspaceTag);
+
+            return new Response('success', 204);
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'workspaceTag' => $workspaceTag
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "tag/{workspaceTagId}/edit/form",
+     *     name="claro_workspace_tag_edit_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "workspaceTag",
+     *     class="ClarolineCoreBundle:Workspace\WorkspaceTag",
+     *     options={"id" = "workspaceTagId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     *
+     * Renders the Tag edition form
+     *
+     * @return Response
+     */
+    public function workspaceTagEditFormAction(
+        User $currentUser,
+        WorkspaceTag $workspaceTag
+    )
+    {
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_WORKSPACE_TAG,
+            array(),
+            $workspaceTag
+        );
+
+        return array(
+            'form' => $form->createView(),
+            'workspaceTag' => $workspaceTag
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "tag/{workspaceTagId}/edit",
+     *     name="claro_workspace_tag_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "workspaceTag",
+     *     class="ClarolineCoreBundle:Workspace\WorkspaceTag",
+     *     options={"id" = "workspaceTagId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCoreBundle:WorkspaceTag:workspaceTagEditForm.html.twig")
+     *
+     * Edits name of a given tag
+     */
+    public function workspaceTagEditAction(
+        User $currentUser,
+        WorkspaceTag $workspaceTag
+    )
+    {
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_WORKSPACE_TAG,
             array(),
             $workspaceTag
         );
@@ -959,6 +545,109 @@ class WorkspaceTagController extends Controller
 
     /**
      * @EXT\Route(
+     *     "tag/{parentTagId}/remove/child/{childTagId}",
+     *     name="claro_workspace_tag_remove_child",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("DELETE")
+     * @EXT\ParamConverter(
+     *      "parentTag",
+     *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
+     *      options={"id" = "parentTagId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter(
+     *      "childTag",
+     *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
+     *      options={"id" = "childTagId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
+     *
+     * Removes hierarchy links between 2 admin tags
+     *
+     * @param WorkspaceTag $parentTag
+     * @param WorkspaceTag $childTag
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function removeTagHierarchy(
+        User $currentUser,
+        WorkspaceTag $parentTag,
+        WorkspaceTag $childTag
+    )
+    {
+        $childrenHierarchies = $this->tagManager
+            ->getHierarchiesByParent($currentUser, $childTag);
+        // Get an array with all parents id
+        $parentsTagsId = array();
+        $parentsTags = $this->tagManager
+            ->getParentsFromTag($currentUser, $parentTag);
+
+        foreach ($parentsTags as $tagParent) {
+            $parentsTagsId[] = $tagParent->getId();
+        }
+        // Get an array with all children id
+        $childrenTagsId = array();
+        $childrenTags = $this->tagManager
+            ->getChildrenFromTag($currentUser, $childTag);
+
+        foreach ($childrenTags as $childTag) {
+            $childrenTagsId[] = $childTag->getId();
+        }
+
+        // Get all hierarchies where parents are in array $parentsTagsId and children in $childrenTagsId
+        $multiHierarchies = $this->tagManager
+            ->getHierarchiesByParentsAndChildren(
+                $currentUser,
+                $parentsTagsId,
+                $childrenTagsId
+            );
+        // Get all hierarchies where given tag (parent) is a child
+        $parentHierarchies = $this->tagManager->getHierarchiesByTag($parentTag);
+        $levelsArray = array();
+
+        // Count the number of nodes by level
+        foreach ($childrenHierarchies as $childHierarchy) {
+            $childTagId = $childHierarchy->getTag()->getId();
+            $level = $childHierarchy->getLevel() + 1;
+
+            if (!isset($levelsArray[$childTagId])) {
+                $levelsArray[$childTagId] = array();
+            }
+            if (!isset($levelsArray[$childTagId][$level])) {
+                $levelsArray[$childTagId][$level] = 0;
+            }
+            $levelsArray[$childTagId][$level]++;
+        }
+
+        foreach ($parentHierarchies as $parentHierarchy) {
+            $levelCount = $levelsArray;
+            $parentWorkspaceTag = $parentHierarchy->getParent();
+            $parentLevel = $parentHierarchy->getLevel();
+
+            foreach ($multiHierarchies as $index => $singleHierarchy) {
+                $currentTag = $singleHierarchy->getTag();
+                $currentTagId = $currentTag->getId();
+                $currentLevel = $singleHierarchy->getLevel();
+                $currentParent = $singleHierarchy->getParent();
+
+                $level = $currentLevel - $parentLevel;
+
+                if ($currentParent === $parentWorkspaceTag &&
+                    isset($levelCount[$currentTagId][$level]) &&
+                    $levelCount[$currentTagId][$level] > 0) {
+
+                    $levelCount[$currentTagId][$level]--;
+                    unset($multiHierarchies[$index]);
+                    $this->tagManager->deleteTagHierarchy($singleHierarchy);
+                }
+            }
+        }
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
      *     "admin/tag/{workspaceTagId}/check/children/page/{page}",
      *     name="claro_admin_workspace_tag_check_children_pager",
      *     defaults={"page"=1, "search"=""},
@@ -1010,45 +699,56 @@ class WorkspaceTagController extends Controller
 
     /**
      * @EXT\Route(
-     *     "admin/tag/{workspaceTagId}/add/workspace/{workspaceId}",
-     *     name="claro_admin_workspace_tag_add_to_workspace",
+     *     "tag/{workspaceTagId}/check/children/page/{page}",
+     *     name="claro_workspace_tag_check_children_pager",
+     *     defaults={"page"=1, "search"=""},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("POST")
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "tag/{workspaceTagId}/check/children/page/{page}/search/{search}",
+     *     name="claro_workspace_tag_check_children_pager_search",
+     *     defaults={"page"=1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspaceTag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
      *      options={"id" = "workspaceTagId", "strictId" = true}
      * )
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      *
-     * Add Tag to Workspace
+     * @EXT\Template()
      *
-     * @param WorkspaceTag $workspaceTag
-     * @param AbstractWorkspace $workspace
+     * Renders list of possible children for a given tag
      *
-     * @return Response
+     * @param WorkspaceTag $tag
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function addAdminWorkspaceTagToWorkspace(
+    public function checkPotentialWorkspaceTagChildrenPagerAction(
+        User $currentUser,
         WorkspaceTag $workspaceTag,
-        AbstractWorkspace $workspace
+        $page,
+        $search
     )
     {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
-            throw new AccessDeniedException();
-        }
-        $relWsTag = $this->tagManager
-            ->getAdminTagRelationByWorkspaceAndTag($workspace, $workspaceTag);
+        $possibleChildrenPager = $search === '' ?
+            $this->tagManager
+                ->getPossibleChildrenPager($currentUser, $workspaceTag, $page) :
+            $this->tagManager->getPossibleChildrenPagerBySearch(
+                $currentUser,
+                $workspaceTag,
+                $page,
+                $search
+            );
 
-        if ($relWsTag === null) {
-            $this->tagManager->createTagRelation($workspaceTag, $workspace);
-        }
-
-        return new Response('success', 204);
+        return array(
+            'workspaceTag' => $workspaceTag,
+            'possibleChildren' => $possibleChildrenPager,
+            'search' => $search
+        );
     }
 
     /**
@@ -1469,8 +1169,8 @@ class WorkspaceTagController extends Controller
      */
     public function organizeWorkspaceTagAction(User $currentUser)
     {
-        $tagsHierarchy = $this->tagManager->getAllAdminHierarchies();
-        $rootTags = $this->tagManager->getAdminRootTags();
+        $tagsHierarchy = $this->tagManager->getAllHierarchiesByUser($currentUser);
+        $rootTags = $this->tagManager->getRootTags($currentUser);
         $hierarchy = array();
 
         foreach ($tagsHierarchy as $tagHierarchy) {
@@ -1517,6 +1217,35 @@ class WorkspaceTagController extends Controller
             throw new AccessDeniedException();
         }
         if (is_null($workspaceTag->getUser())) {
+            $this->tagManager->deleteTag($workspaceTag);
+        }
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "tag/{workspaceTagId}/delete",
+     *     name="claro_workspace_tag_delete",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("DELETE")
+     * @EXT\ParamConverter(
+     *      "workspaceTag",
+     *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
+     *      options={"id" = "workspaceTagId", "strictId" = true}
+     * )
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
+     *
+     * Delete Tag
+     *
+     * @param WorkspaceTag $workspaceTag
+     *
+     * @return Response
+     */
+    public function deleteWorkspaceTag(User $currentUser, WorkspaceTag $workspaceTag)
+    {
+        if ($workspaceTag->getUser() === $currentUser) {
             $this->tagManager->deleteTag($workspaceTag);
         }
 

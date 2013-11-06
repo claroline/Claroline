@@ -192,6 +192,26 @@ class WorkspaceTagManager
         return $this->tagRepo->findPossibleChildren($user, $tag);
     }
 
+    public function getPossibleChildrenPager(User $user, WorkspaceTag $tag, $page)
+    {
+        $datas = $this->tagRepo->findPossibleChildren($user, $tag);
+
+        return $this->pagerFactory->createPagerFromArray($datas, $page);
+    }
+
+    public function getPossibleChildrenPagerBySearch(
+        User $user,
+        WorkspaceTag $tag,
+        $page,
+        $search
+    )
+    {
+        $datas = $this->tagRepo
+            ->findPossibleChildrenByName($user, $tag, $search);
+
+        return $this->pagerFactory->createPagerFromArray($datas, $page);
+    }
+
     public function getAdminChildren(WorkspaceTag $tag)
     {
         return $this->tagRepo->findAdminChildren($tag);
@@ -220,6 +240,11 @@ class WorkspaceTagManager
     public function getAdminChildrenFromTags(array $tags)
     {
         return $this->tagRepo->findAdminChildrenFromTags($tags);
+    }
+
+    public function getChildrenFromTag(User $user, WorkspaceTag $workspaceTag)
+    {
+        return $this->tagRepo->findChildrenFromTag($user, $workspaceTag);
     }
 
     public function getChildrenFromTags(User $user, array $tags)
@@ -319,6 +344,11 @@ class WorkspaceTagManager
     public function getAdminHierarchiesByParents(array $parents)
     {
         return $this->tagHierarchyRepo->findAdminHierarchiesByParents($parents);
+    }
+
+    public function getHierarchiesByParent(User $user, WorkspaceTag $workspaceTag)
+    {
+        return $this->tagHierarchyRepo->findHierarchiesByParent($user, $workspaceTag);
     }
 
     public function getHierarchiesByParents(User $user, array $parents)
