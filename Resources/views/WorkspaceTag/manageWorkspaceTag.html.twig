@@ -32,7 +32,7 @@
         {% set tagId = tag.getId() %}
         {% set tagName = tag.getName() %}
             <li class="hierarchy-tag-parent">
-                <span class="tag-hierarchy-element pointer-hand"
+                <span class="tag-hierarchy-element pointer-hand tag-hierarchy-element-{{ tagId }}"
                     tag-id="{{ tagId }}"
                     tag-name="{{ tagName }}"
                 >

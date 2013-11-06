@@ -87,19 +87,24 @@
 
     // Click on a tag name on the tag tree in the tag hierarchy modal
     $('.tag-hierarchy-element').on('click', function () {
-        var selectedElement = $(this);
-        var checkboxElement = selectedElement.children('.tag-chk');
-        var checkIcon = selectedElement.children('.tag-checked-icon');
+        var selectedElementId = $(this).attr('tag-id');
+        var selectedElementClass = '.tag-hierarchy-element-' + selectedElementId;
 
-        if (!selectedElement.hasClass('claroline-tag-highlight')) {
-            selectedElement.addClass('claroline-tag-highlight');
-            checkIcon.removeClass('hide');
-            checkboxElement.attr('checked', 'checked');
-        } else {
-            selectedElement.removeClass('claroline-tag-highlight');
-            checkIcon.addClass('hide');
-            checkboxElement.attr('checked', false);
-        }
+        $(selectedElementClass).each(function () {
+            var selectedElement = $(this);
+            var checkboxElement = selectedElement.children('.tag-chk');
+            var checkIcon = selectedElement.children('.tag-checked-icon');
+
+            if (!selectedElement.hasClass('claroline-tag-highlight')) {
+                selectedElement.addClass('claroline-tag-highlight');
+                checkIcon.removeClass('hide');
+                checkboxElement.attr('checked', 'checked');
+            } else {
+                selectedElement.removeClass('claroline-tag-highlight');
+                checkIcon.addClass('hide');
+                checkboxElement.attr('checked', false);
+            }
+        });
     });
 
     // Click on Validate button in category selection modal
