@@ -120,8 +120,6 @@
                 $(".orientation_btn", bannerBackgroundImagePositionBlock).addClass('selected');
                 break;
             case 'repeat-x':
-                console.log(selectedPosition);
-                console.log(".orientation_btn.x" + selectedPosition[1]);
                 $(".orientation_btn.x" + selectedPosition[1], bannerBackgroundImagePositionBlock).addClass('selected');
                 break;
             case 'repeat-y':
@@ -129,4 +127,26 @@
                 break;
         }
     }
+
+    function initBannerForm()
+    {
+        if ("no-repeat" != bannerBackgroundImageRepeatField.val()) {
+            switch(bannerBackgroundImageRepeatField.val()) {
+                case "repeat":
+                    bannerBackgroundImageRepeatFieldX.attr('checked', true);
+                    bannerBackgroundImageRepeatFieldY.attr('checked', true);
+                    break;
+                case "repeat-x":
+                    bannerBackgroundImageRepeatFieldX.attr('checked', true);
+                    break;
+                case "repeat-y":
+                    bannerBackgroundImageRepeatFieldY.attr('checked', true);
+                    break;
+            }
+        }
+
+        updateBannerBackgroundImage();
+    }
+
+    initBannerForm();
 })(jQuery);

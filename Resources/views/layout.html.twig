@@ -84,9 +84,9 @@
                             </div>
                         </div>
                         <div class="row">
-                            <button type="button" class="btn btn-danger btn-xs hidden remove_banner_background_image" id="remove_banner_background_image">Réinitialiser l'image d'arrière plan</button>
+                            <button type="button" class="btn btn-danger btn-xs{% if null == blogOptions.bannerBackgroundImageWebPath %} hidden{% endif %} remove_banner_background_image" id="remove_banner_background_image">Réinitialiser l'image d'arrière plan</button>
                         </div>
-                        <div class="row  hidden" id="banner_background_image_parameters">
+                        <div class="row{% if null == blogOptions.bannerBackgroundImageWebPath %} hidden{% endif %}" id="banner_background_image_parameters">
                             <div class="col-md-2">
                                 {{ form_label(bannerForm.banner_background_image_position) }}
                                 <table class="position_table">
