@@ -200,120 +200,184 @@ class UserManager
         return $content;
     }
 
+    /**
+     * @param type $username
+     *
+     * @return User
+     */
     public function getUserByUsername($username)
     {
         return $this->userRepo->loadUserByUsername($username);
     }
 
+    /**
+     * @param \Symfony\Component\Security\Core\User\UserInterface $user
+     *
+     * @return User
+     */
     public function refreshUser(UserInterface $user)
     {
         return $this->userRepo->refreshUser($user);
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     *
+     * @return User[]
+     */
     public function getUserByWorkspaceAndRole(AbstractWorkspace $workspace, Role $role)
     {
         return $this->userRepo->findByWorkspaceAndRole($workspace, $role);
     }
 
-    public function getWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $page)
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param string $search
+     * @param integer $page
+     * @param integer $max
+     *
+     * @return Pagerfanta\Pagerfanta;
+     */
+    public function getWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $page, $max = 20)
     {
         $query = $this->userRepo->findWorkspaceOutsidersByName($workspace, $search, false);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
-    public function getWorkspaceOutsiders(AbstractWorkspace $workspace, $page)
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param integer $page
+     * @param integer $max
+     *
+     * @return Pagerfanta\Pagerfanta;
+     */
+    public function getWorkspaceOutsiders(AbstractWorkspace $workspace, $page, $max = 20)
     {
         $query = $this->userRepo->findWorkspaceOutsiders($workspace, false);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
-    public function getAllUsers($page)
+    /**
+     * @param integer $page
+     * @param integer $max
+     *
+     * @return Pagerfanta\Pagerfanta;
+     */
+    public function getAllUsers($page, $max = 20)
     {
         $query = $this->userRepo->findAll(false);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
-    public function getAllUsersBySearch($page, $search)
+    /**
+     * @param string $search
+     * @param integer $page
+     * @param integer $max
+     *
+     * @return Pagerfanta\Pagerfanta;
+     */
+    public function getAllUsersBySearch($page, $search, $max = 20)
     {
         $users = $this->userRepo->findAllUserBySearch($search);
 
-        return $this->pagerFactory->createPagerFromArray($users, $page);
+        return $this->pagerFactory->createPagerFromArray($users, $page, $max);
     }
 
-    public function getUsersByName($search, $page)
+    /**
+     * @param string $search
+     * @param integer $page
+     * @param integer $max
+     *
+     * @return Pagerfanta\Pagerfanta;
+     */
+    public function getUsersByName($search, $page, $max = 20)
     {
         $query = $this->userRepo->findByName($search, false);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
-    public function getUsersByGroup(Group $group, $page)
+    /**
+     * @param \Claroline\CoreBundle\Entity\Group $group
+     * @param integer $page
+     * @param integer $max
+     *
+     * @return Pagerfanta\Pagerfanta;
+     */
+    public function getUsersByGroup(Group $group, $page, $max = 20)
     {
         $query = $this->userRepo->findByGroup($group, false);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Group $group
+     *
+     * @return User[]
+     */
     public function getUsersByGroupWithoutPager(Group $group)
     {
         return $this->userRepo->findByGroup($group);
     }
 
-    public function getUsersByNameAndGroup($search, Group $group, $page)
+    public function getUsersByNameAndGroup($search, Group $group, $page, $max = 20)
     {
         $query = $this->userRepo->findByNameAndGroup($search, $group, false);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
-    public function getUsersByWorkspace(AbstractWorkspace $workspace, $page)
+    public function getUsersByWorkspace(AbstractWorkspace $workspace, $page, $max = 20)
     {
         $query = $this->userRepo->findByWorkspace($workspace, false);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
-    public function getUsersByWorkspaces(array $workspaces, $page)
+    public function getUsersByWorkspaces(array $workspaces, $page, $max = 20)
     {
         $query = $this->userRepo->findUsersByWorkspaces($workspaces, false);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     public function getUsersByWorkspacesAndSearch(
         array $workspaces,
         $page,
-        $search
+        $search,
+        $max = 20
     )
     {
         $users = $this->userRepo
             ->findUsersByWorkspacesAndSearch($workspaces, $search);
 
-        return $this->pagerFactory->createPagerFromArray($users, $page);
+        return $this->pagerFactory->createPagerFromArray($users, $page, $max);
     }
 
-    public function getUsersByWorkspaceAndName(AbstractWorkspace $workspace, $search, $page)
+    public function getUsersByWorkspaceAndName(AbstractWorkspace $workspace, $search, $page, $max = 20)
     {
-        $query = $this->userRepo->findByWorkspaceAndName($workspace, $search, false);
+        $query = $this->userRepo->findByWorkspaceAndName($workspace, $search, false, $max);
 
         return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getGroupOutsiders(Group $group, $page)
+    public function getGroupOutsiders(Group $group, $page, $max = 20)
     {
         $query = $this->userRepo->findGroupOutsiders($group, false);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
-    public function getGroupOutsidersByName(Group $group, $page, $search)
+    public function getGroupOutsidersByName(Group $group, $page, $search, $max = 20)
     {
         $query = $this->userRepo->findGroupOutsidersByName($group, $search, false);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     public function getAllUsersExcept(User $excludedUser)
@@ -351,46 +415,46 @@ class UserManager
         return $this->userRepo->find($userId);
     }
 
-    public function getByRolesIncludingGroups(array $roles, $page = 1)
+    public function getByRolesIncludingGroups(array $roles, $page = 1, $max = 20)
     {
         $res = $this->userRepo->findByRolesIncludingGroups($roles, true);
 
-        return $this->pagerFactory->createPager($res, $page);
+        return $this->pagerFactory->createPager($res, $page, $max);
     }
 
-    public function getByRolesAndNameIncludingGroups(array $roles, $search, $page = 1)
+    public function getByRolesAndNameIncludingGroups(array $roles, $search, $page = 1, $max = 20)
     {
         $res = $this->userRepo->findByRolesAndNameIncludingGroups($roles, $search, true);
 
-        return $this->pagerFactory->createPager($res, $page);
+        return $this->pagerFactory->createPager($res, $page, $max);
     }
 
-    public function getUsersByRoles(array $roles, $page = 1)
+    public function getUsersByRoles(array $roles, $page = 1, $max = 20)
     {
         $res = $this->userRepo->findByRoles($roles, true);
 
-        return $this->pagerFactory->createPager($res, $page);
+        return $this->pagerFactory->createPager($res, $page, $max);
     }
 
-    public function getOutsidersByWorkspaceRoles(array $roles, AbstractWorkspace $workspace, $page = 1)
+    public function getOutsidersByWorkspaceRoles(array $roles, AbstractWorkspace $workspace, $page = 1, $max = 20)
     {
         $res = $this->userRepo->findOutsidersByWorkspaceRoles($roles, $workspace, true);
 
-        return $this->pagerFactory->createPager($res, $page);
+        return $this->pagerFactory->createPager($res, $page, $max);
     }
 
-    public function getUsersByRolesAndName(array $roles, $name, $page = 1)
+    public function getUsersByRolesAndName(array $roles, $name, $page = 1, $max  = 20)
     {
         $res = $this->userRepo->findByRolesAndName($roles, $name, true);
 
-        return $this->pagerFactory->createPager($res, $page);
+        return $this->pagerFactory->createPager($res, $page, $max);
     }
 
-    public function getOutsidersByWorkspaceRolesAndName(array $roles, $name, AbstractWorkspace $workspace, $page = 1)
+    public function getOutsidersByWorkspaceRolesAndName(array $roles, $name, AbstractWorkspace $workspace, $page = 1, $max = 20)
     {
         $res = $this->userRepo->findOutsidersByWorkspaceRolesAndName($roles, $name, $workspace, true);
 
-        return ($page !== 0) ? $this->pagerFactory->createPager($res, $page): $res;
+        return ($page !== 0) ? $this->pagerFactory->createPager($res, $page, $max): $res;
     }
 
     public function getUserByEmail($email)
@@ -403,8 +467,7 @@ class UserManager
         return $this->userRepo->findOneByResetPasswordHash($resetPassword);
     }
 
-
-    public function uploadAvatar(User $user)
+    function uploadAvatar(User $user)
     {
         if (null !== $user->getPictureFile()) {
             $user->setPicture(sha1($user->getPictureFile()->getClientOriginalName()).'.'.$user->getPictureFile()->guessExtension());

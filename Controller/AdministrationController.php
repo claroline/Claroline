@@ -207,16 +207,16 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "users/page/{page}",
+     *     "users/page/{page}/items/{max}",
      *     name="claro_admin_user_list",
-     *     defaults={"page"=1, "search"=""},
+     *     defaults={"page"=1, "search"="", "max"=20},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "users/page/{page}/search/{search}",
+     *     "users/page/{page}/search/{search}/items/{max}",
      *     name="claro_admin_user_list_search",
-     *     defaults={"page"=1},
+     *     defaults={"page"=1, "max"=20},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -224,7 +224,7 @@ class AdministrationController extends Controller
      *
      * Displays the platform user list.
      */
-    public function userListAction($page, $search)
+    public function userListAction($page, $search, $max)
     {
         $pager = $search === '' ?
             $this->userManager->getAllUsers($page) :
