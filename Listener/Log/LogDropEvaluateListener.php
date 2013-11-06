@@ -1,19 +1,29 @@
 <?php
-namespace Icap\DropzoneBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\User;
+namespace Icap\DropzoneBundle\Listener\Log;
+
+use Claroline\CoreBundle\Event\Log\LogGenericEvent;
+use Claroline\CoreBundle\Event\Log\LogGroupDeleteEvent;
+use Claroline\CoreBundle\Event\Log\LogResourceDeleteEvent;
+use Claroline\CoreBundle\Event\Log\LogUserDeleteEvent;
+use Claroline\CoreBundle\Event\Log\LogWorkspaceRoleDeleteEvent;
+use Claroline\CoreBundle\Event\Log\LogNotRepeatableInterface;
+use Claroline\CoreBundle\Entity\Log\Log;
+use Claroline\CoreBundle\Event\LogCreateEvent;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Doctrine\ORM\EntityManager;
-use Icap\DropzoneBundle\Entity\Correction;
-use Icap\DropzoneBundle\Entity\Drop;
-use Icap\DropzoneBundle\Event\Log\LogDropEvaluateEvent;
-use JMS\DiExtraBundle\Annotation as DI;
+use Icap\DropzoneBundle\Event\Log\LogCorrectionEndEvent;
+use Icap\DropzoneBundle\Event\Log\LogCorrectionUpdateEvent;
+use Icap\DropzoneBundle\Event\Log\PotentialEvaluationEndInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("icap.dropzone_log.manager")
+ * @DI\Service()
  */
-class DropzoneLogManager
+class LogDropEvaluateListener
 {
     private $entityManager;
     private $eventDispatcher;
@@ -30,13 +40,21 @@ class DropzoneLogManager
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function logNewCorrection(Correction $correction)
+    /**
+     * @DI\Observe("log")
+     *
+     * @param LogGenericEvent $event
+     */
+    public function onLog(LogGenericEvent $event)
     {
-        $this->sendFinishedLog($correction->getDrop());
-        if ($correction->getDrop()->getUser()->getId() != $correction->getUser()->getId()) {
-            $drop = $this->entityManager->getRepository('IcapDropzoneBundle:Drop')->findOneBy(array('user' => $correction->getUser()));
-            if ($drop !== null) {
-                $this->sendFinishedLog($drop);
+        if ($event instanceof PotentialEvaluationEndInterface) {
+            $correction = $event->getCorrection();
+            $this->sendFinishedLog($correction->getDrop());
+            if ($correction->getDrop()->getUser()->getId() != $correction->getUser()->getId()) {
+                $drop = $this->entityManager->getRepository('IcapDropzoneBundle:Drop')->findOneBy(array('user' => $correction->getUser()));
+                if ($drop !== null) {
+                    $this->sendFinishedLog($drop);
+                }
             }
         }
     }

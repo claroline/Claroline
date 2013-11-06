@@ -38,70 +38,17 @@ class DropzoneBaseController extends Controller
     {
         $this->isAllow($dropzone, 'OPEN');
 
-        $log = new LogResourceReadEvent($dropzone->getResourceNode());
-        $this->get('event_dispatcher')->dispatch('log', $log);
+        $event = new LogResourceReadEvent($dropzone->getResourceNode());
+        $this->dispatch($event);
     }
 
-    private function checkRightToCorrect($dropzone, $user)
+    protected function dispatch($event)
     {
-        $em = $this->getDoctrine()->getManager();
-        // Check that the dropzone is in the process of peer review
-        if ($dropzone->isPeerReview() == false) {
-            $this->getRequest()->getSession()->getFlashBag()->add(
-                'error',
-                $this->get('translator')->trans('The peer review is not enabled', array(), 'icap_dropzone')
-            );
-
-            return $this->redirect(
-                $this->generateUrl(
-                    'icap_dropzone_open',
-                    array(
-                        'resourceId' => $dropzone->getId()
-                    )
-                )
-            );
+        if ($event instanceof LogResourceReadEvent) {
+            // Other logs are WIP.
+            $this->get('event_dispatcher')->dispatch('log', $event);
         }
 
-        // Check that the user has a finished dropzone for this drop.
-        $userDrop = $em->getRepository('IcapDropzoneBundle:Drop')->findOneBy(array(
-            'user' => $user,
-            'dropzone' => $dropzone,
-            'finished' => true
-        ));
-        if ($userDrop == null) {
-            $this->getRequest()->getSession()->getFlashBag()->add(
-                'error',
-                $this->get('translator')->trans('You must have made ​​your copy before correcting', array(), 'icap_dropzone')
-            );
-
-            return $this->redirect(
-                $this->generateUrl(
-                    'icap_dropzone_open',
-                    array(
-                        'resourceId' => $dropzone->getId()
-                    )
-                )
-            );
-        }
-
-        // Check that the user still make corrections
-        $nbCorrection = $em->getRepository('IcapDropzoneBundle:Correction')->countFinished($dropzone, $user);
-        if ($nbCorrection >= $dropzone->getExpectedTotalCorrection()) {
-            $this->getRequest()->getSession()->getFlashBag()->add(
-                'error',
-                $this->get('translator')->trans('You no longer have any copies to correct', array(), 'icap_dropzone')
-            );
-
-            return $this->redirect(
-                $this->generateUrl(
-                    'icap_dropzone_open',
-                    array(
-                        'resourceId' => $dropzone->getId()
-                    )
-                )
-            );
-        }
-
-        return null;
+        return $this;
     }
 }

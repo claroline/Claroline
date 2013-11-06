@@ -12,6 +12,8 @@ use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Icap\DropzoneBundle\Entity\Correction;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
+use Icap\DropzoneBundle\Event\Log\LogDropEndEvent;
+use Icap\DropzoneBundle\Event\Log\LogDropStartEvent;
 use Icap\DropzoneBundle\Form\CorrectionReportType;
 use Icap\DropzoneBundle\Form\DropType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -77,6 +79,9 @@ class DropController extends DropzoneBaseController
             $em->persist($notFinishedDrop);
             $em->flush();
             $em->refresh($notFinishedDrop);
+
+            $event = new LogDropStartEvent($dropzone, $notFinishedDrop);
+            $this->dispatch($event);
         }
 
         $form = $this->createForm(new DropType(), $notFinishedDrop);
@@ -95,6 +100,9 @@ class DropController extends DropzoneBaseController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($notFinishedDrop);
                 $em->flush();
+
+                $event = new LogDropEndEvent($dropzone, $notFinishedDrop);
+                $this->dispatch($event);
 
                 $this->getRequest()->getSession()->getFlashBag()->add(
                     'success',

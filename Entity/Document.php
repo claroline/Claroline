@@ -124,4 +124,17 @@ class Document {
     {
         return $this->type;
     }
+
+    /**
+     * @return mixed
+     */
+    public function toJson()
+    {
+        $properties = array(
+            'id' => $this->id,
+            'type' => $this->type,
+        );
+
+        return json_encode($properties);
+    }
 }
