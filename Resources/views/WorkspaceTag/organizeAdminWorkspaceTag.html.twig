@@ -1,6 +1,6 @@
-{% macro showTagHierarchy(tagsList, tagsHierarchy, isRoot) %}
+{% macro showTagHierarchy(tagsList, tagsHierarchy, isRoot, parentTagId) %}
     <div>
-        <ul>
+        <ul {% if isRoot %}id="tags-root"{% else %}class="tag-children-list-{{ parentTagId }}"{% endif %}>
         {% for tag in tagsList %}
         {% set tagId = tag.getId() %}
         {% set tagName = tag.getName() %}
@@ -39,7 +39,7 @@
                                     {{ 'add_subcategory'|trans({}, 'platform') }}
                                 </a>
                             </li>
-                            <li class="divider"></li>
+                            <li class="divider remove-tag-divider-{{ tagId }}"></li>
                             {% if not isRoot %}
                                 <li class="remove-tag-btn">
                                     <a href="#">
@@ -58,7 +58,9 @@
                     </div>
                 </span>
                 {% if tagsHierarchy[tagId]|length > 0 %}
-                    {{ _self.showTagHierarchy(tagsHierarchy[tagId], tagsHierarchy, false) }}
+                    {{ _self.showTagHierarchy(tagsHierarchy[tagId], tagsHierarchy, false, tagId) }}
+                {% else %}
+                    <div><ul class="tag-children-list-{{ tagId }}"></ul></div>
                 {% endif %}
             </li>
         {% endfor %}
@@ -116,9 +118,11 @@
     </div>
 
     {% if rootTags|length > 0 %}
-        {{ showTagHierarchy(rootTags, hierarchy, true) }}
+        {{ showTagHierarchy(rootTags, hierarchy, true, 0) }}
     {% else %}
+        <div><ul id="tags-root"></ul></div>
         {{ 'no_category'|trans({}, 'platform') }}
+        <br>
     {% endif %}
     <br>
     <button id="create-root-tag-btn" type="button" class="btn btn-primary">

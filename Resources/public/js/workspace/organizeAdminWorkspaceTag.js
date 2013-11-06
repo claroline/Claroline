@@ -72,6 +72,71 @@
         return search;
     }
 
+    function generateTagElement(tagId, tagName, isSubCategory)
+    {
+        var generatedTagElement = '<li class="hierarchy-tag-parent tag-parent-' + tagId + '"\n' +
+                'workspace-tag-id="' + tagId + '"\n' +
+            '>' +
+                '<span class="tag-element"\n' +
+                    'workspace-tag-id="' + tagId + '"\n' +
+                    'workspace-tag-name="' + tagName + '"\n' +
+                '>' +
+                    '<span class="open-tag-btn pointer-hand tag-name-' + tagId + '">\n' +
+                        tagName +
+                    '\n</span>\n' +
+
+                    '<div class="btn-group tag-button-group hide">\n' +
+                        '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">\n' +
+                            '<span class="caret"></span>\n' +
+                        '</button>\n' +
+                        '<ul class="dropdown-menu">\n' +
+                           ' <li class="edit-tag-btn">\n' +
+                                '<a href="#">\n' +
+                                    '<i class="icon-pencil"></i>\n' +
+                                    Translator.get('platform' + ':' + 'rename_category') +
+                                '\n</a>\n' +
+                            '</li>\n' +
+                            '<li class="divider"></li>\n' +
+                            '<li class="create-sub-tag-btn">\n' +
+                                '<a href="#">\n' +
+                                    '<i class="icon-plus"></i>\n' +
+                                    Translator.get('platform' + ':' + 'create_subcategory') +
+                                '\n</a>\n' +
+                            '</li>' +
+                            '<li class="add-tag-btn">\n' +
+                                '<a href="#">\n' +
+                                    '<i class="icon-list-alt"></i>\n' +
+                                    Translator.get('platform' + ':' + 'add_subcategory') +
+                                '\n</a>\n' +
+                            '</li>\n' +
+                            '<li class="divider"></li>\n';
+
+        if (isSubCategory) {
+            generatedTagElement += '<li class="remove-tag-btn">\n' +
+                                        '<a href="#">\n' +
+                                            '<i class="icon-remove"></i>\n' +
+                                            Translator.get('platform' + ':' + 'remove_subcategory') +
+                                        '\n</a>\n' +
+                                    '</li>\n';
+        }
+        generatedTagElement += '<li class="delete-tag-btn">\n' +
+                                '<a href="#">\n' +
+                                    '<i class="icon-trash"></i>\n' +
+                                    Translator.get('platform' + ':' + 'delete_category') +
+                                '\n</a>\n' +
+                            '</li>\n' +
+                        '</ul>\n' +
+                    '</div>\n' +
+                '</span>\n' +
+
+                '<div>\n' +
+                    '<ul class="tag-children-list-' + tagId + '"></ul>\n' +
+                '</div>\n' +
+            '</li>\n';
+
+        return generatedTagElement;
+    }
+
     // Click on the category create button
     $('#create-root-tag-btn').on('click', function () {
         cleanSelection();
@@ -146,13 +211,15 @@
                                 type: 'POST',
                                 async: false,
                                 success: function () {
+                                    var tagChildrenListClass = '.tag-children-list-' + currentTagId;
+                                    $(tagChildrenListClass).append(generateTagElement(data, tagName, true));
                                     closeFormModal();
-//                                    newTag = generateTagElement(data, tagName, true);
-//                                    tagsGroupElement.append(newTag);
                                 }
                             });
+                        } else {
+                            $('#tags-root').append(generateTagElement(data, tagName, false));
+                            closeFormModal();
                         }
-                        window.location.reload();
                         break;
                     case 204:
                         var tagNameClass = '.tag-name-' + currentTagId;
@@ -187,8 +254,8 @@
                 ),
                 type: 'DELETE',
                 success: function () {
-                    currentElement.remove();
                     $('#remove-workspace-tag-validation-box').modal('hide');
+                    window.location.reload();
                 }
             });
         }
@@ -239,13 +306,30 @@
                 type: 'POST',
                 success: function () {
                     $('input:checkbox[name=tag-possible-child]:checked').each(function () {
-//                        var tagId = parseInt($(this).attr('value'));
                         var possibleChildElement = $(this).parents('.possible-child-element');
-//                        var tagName = possibleChildElement.children('.possible-child-tag-name').html();
-//                        var newTagElement = generateTagElement(tagId, tagName, true);
-//                        var tagsGroupElement = $('#workspace-tag-list').children('.workspace-tag-group');
-//                        tagsGroupElement.append(newTagElement);
+                        var possibleChildId = possibleChildElement.attr('tag-id');
                         possibleChildElement.remove();
+                        var tagChildrenListClass = '.tag-children-list-' + currentTagId;
+                        var tagParentRootClass = '#tags-root > .tag-parent-' + possibleChildId;
+                        var tagParentRootElement = $(tagParentRootClass);
+
+                        if (tagParentRootElement.length > 0) {
+                            var removeTagDivider = $('.remove-tag-divider-' + possibleChildId);
+                            var removeTagLine =
+                                '<li class="remove-tag-btn">\n' +
+                                    '<a href="#">\n' +
+                                        '<i class="icon-remove"></i>\n' +
+                                        Translator.get('platform' + ':' + 'remove_subcategory') +
+                                    '\n</a>\n' +
+                                '</li>\n';
+                            removeTagDivider.after(removeTagLine);
+                            $(tagChildrenListClass).append(tagParentRootElement.clone());
+                            tagParentRootElement.remove();
+                        } else {
+                            var tagParentClass = '.tag-parent-' + possibleChildId;
+                            var tagParentElement = $(tagParentClass).first();
+                            $(tagChildrenListClass).append(tagParentElement.clone());
+                        }
                     });
                 }
             });
@@ -394,8 +478,8 @@
             ),
             type: 'DELETE',
             success: function () {
-                currentElement.remove();
                 $('#delete-workspace-tag-validation-box').modal('hide');
+                window.location.reload();
             }
         });
     });

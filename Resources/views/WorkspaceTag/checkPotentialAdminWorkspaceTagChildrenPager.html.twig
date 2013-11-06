@@ -67,7 +67,9 @@
 
                 {% for possibleChild in possibleChildren %}
                 {% set possibleChildId = possibleChild.getId() %}
-                    <tr class="possible-child-element">
+                    <tr class="possible-child-element"
+                        tag-id="{{ possibleChildId }}"
+                    >
                         <td class="possible-child-tag-name">
                             <label
                                 class="pointer-hand"
