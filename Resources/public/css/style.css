@@ -88,6 +88,27 @@ article .highlight {
   margin-top: 20px;
   margin-bottom: 20px;
 }
+.blog_nav li.back_link {
+  margin-right: 0;
+}
+.blog_nav li.back_link a {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  font-size: 17px;
+}
+.blog_nav .blog_title {
+  background: url(http://localhost/claroline/bundles/icapblog/images/icons/icap_blog_icon.png) no-repeat 0% 20%;
+  padding-left: 50px;
+  background-size: 40px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  font-size: 17px;
+}
+.blog_nav .configure_link {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  font-size: 17px;
+}
 .blog_banner_configurator {
   border: 0;
   margin-bottom: 0;
@@ -162,6 +183,7 @@ article .highlight {
 }
 .blog_banner {
   border-radius: 0;
+  border: 0;
 }
 .tree {
   margin: 0;
