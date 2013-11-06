@@ -2,12 +2,15 @@
 
 namespace Icap\BlogBundle\Entity;
 
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
  * @ORM\Table(name="icap__blog_options")
  * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\BlogOptionsRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class BlogOptions
 {
@@ -61,6 +64,61 @@ class BlogOptions
      * @ORM\Column(type="boolean", name="auto_publish_comment")
      */
     protected $autoPublishComment;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", name="banner_activate", options={"default" = true})
+     */
+    protected $bannerActivate;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", name="banner_background_color", options={"default" = "#FFFFFF"})
+     */
+    protected $bannerBackgroundColor;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint", name="banner_height", options={"default" = 100})
+     * @Assert\GreaterThanOrEqual(value = 100)
+     */
+    protected $bannerHeight;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", name="banner_background_image", nullable=true)
+     */
+    protected $bannerBackgroundImage;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", name="banner_background_image_position", options={"default" = "left top"})
+     */
+    protected $bannerBackgroundImagePosition;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", name="banner_background_image_repeat", options={"default" = "no-repeat"})
+     */
+    protected $bannerBackgroundImageRepeat;
+
+    /**
+     * @var UploadedFile
+     *
+     * @Assert\Image()
+     */
+    protected $file;
+
+    /**
+     * @var string
+     */
+    protected $olfFileName = null;
 
     public function __construct()
     {
@@ -199,4 +257,262 @@ class BlogOptions
         return $this->postPerPage;
     }
 
+    /**
+     * @param string $bannerBackgroundColor
+     *
+     * @return BlogOptions
+     */
+    public function setBannerBackgroundColor($bannerBackgroundColor)
+    {
+        $this->bannerBackgroundColor = $bannerBackgroundColor;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBannerBackgroundColor()
+    {
+        return $this->bannerBackgroundColor;
+    }
+
+    /**
+     * @param int $bannerHeight
+     *
+     * @return BlogOptions
+     */
+    public function setBannerHeight($bannerHeight)
+    {
+        $this->bannerHeight = $bannerHeight;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBannerHeight()
+    {
+        return $this->bannerHeight;
+    }
+
+    /**
+     * @param string $bannerBackgroundImage
+     *
+     * @return BlogOptions
+     */
+    public function setBannerBackgroundImage($bannerBackgroundImage)
+    {
+        $this->bannerBackgroundImage = $bannerBackgroundImage;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBannerBackgroundImage()
+    {
+        return $this->bannerBackgroundImage;
+    }
+
+    /**
+     * @param int $bannerBackgroundImagePosition
+     *
+     * @return BlogOptions
+     */
+    public function setBannerBackgroundImagePosition($bannerBackgroundImagePosition)
+    {
+        $this->bannerBackgroundImagePosition = $bannerBackgroundImagePosition;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBannerBackgroundImagePosition()
+    {
+        return $this->bannerBackgroundImagePosition;
+    }
+
+    /**
+     * @param int $bannerBackgroundImageRepeat
+     *
+     * @return BlogOptions
+     */
+    public function setBannerBackgroundImageRepeat($bannerBackgroundImageRepeat)
+    {
+        $this->bannerBackgroundImageRepeat = $bannerBackgroundImageRepeat;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBannerBackgroundImageRepeat()
+    {
+        return $this->bannerBackgroundImageRepeat;
+    }
+
+    /**
+     * @param boolean $bannerActivate
+     *
+     * @return BlogOptions
+     */
+    public function setBannerActivate($bannerActivate)
+    {
+        $this->bannerActivate = $bannerActivate;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isBannerActivate()
+    {
+        return $this->bannerActivate;
+    }
+
+    /**
+     * @param UploadedFile $file
+     *
+     * @return BlogOptions
+     */
+    public function setFile(UploadedFile $file)
+    {
+        $newFileName = $file->getClientOriginalName();
+
+        if ($this->bannerBackgroundImage !== $newFileName) {
+            $this->olfFileName = $this->bannerBackgroundImage;
+            $this->bannerBackgroundImage   = null;
+        }
+        $this->file = $file;
+
+        return $this;
+    }
+
+    /**
+     * @return UploadedFile
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+    /**
+     * @return null|string
+     */
+    public function getAbsolutePath()
+    {
+        return (null === $this->bannerBackgroundImage) ? null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->bannerBackgroundImage;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getWebPath()
+    {
+        return (null === $this->bannerBackgroundImage) ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . $this->bannerBackgroundImage;
+    }
+
+    /**
+     * @throws \Exception
+     * @return string
+     */
+    protected function getUploadRootDir()
+    {
+        $ds = DIRECTORY_SEPARATOR;
+
+        $uploadRootDir         = sprintf('%s%s..%s..%s..%s..%s..%s..%s..%sweb%s%s', __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir());
+        $realpathUploadRootDir = realpath($uploadRootDir);
+
+        if (false === $realpathUploadRootDir) {
+            throw new \Exception(sprintf("Invalid upload root dir '%s'for uploading blog banner background images.", $uploadRootDir));
+        }
+
+        return $realpathUploadRootDir;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getUploadDir()
+    {
+        return sprintf("uploads%blogs", DIRECTORY_SEPARATOR);
+    }
+
+    /**
+     * @ORM\PrePersist()
+     */
+    public function prePersist(LifecycleEventArgs $event)
+    {
+        echo "<pre>";
+        var_dump($this->file);
+        echo "</pre>" . PHP_EOL;
+        die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
+        if (null !== $this->file) {
+            $this->bannerBackgroundImage = $this->file->getClientOriginalName();
+        }
+    }
+
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function preUpdate(PreUpdateEventArgs $event)
+    {
+        if (null !== $this->file) {
+            $this->bannerBackgroundImage = $this->file->getClientOriginalName();
+        }
+    }
+
+    /**
+     * @ORM\PostUpdate()
+     */
+    public function postUpdate()
+    {
+        if (null === $this->file) {
+            return;
+        }
+
+        $this->file->move($this->getUploadRootDir(), $this->bannerBackgroundImage);
+
+        if (null !== $this->olfFileName) {
+            unlink($this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->olfFileName);
+            $this->olfFileName = null;
+        }
+
+        $this->file = null;
+    }
+
+    /**
+     * @ORM\PostPersist()
+     */
+    public function postPersist()
+    {
+        echo "<pre>";
+        var_dump($this->file);
+        echo "</pre>" . PHP_EOL;
+        die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
+        if (null === $this->file) {
+            return;
+        }
+
+        $this->file->move($this->getUploadRootDir(), $this->bannerBackgroundImage);
+
+        unset($this->file);
+    }
+
+    /**
+     * @ORM\PostRemove()
+     */
+    public function postRemove()
+    {
+        $filePath = $this->getAbsolutePath();
+        if (null !== $filePath) {
+            unlink($filePath);
+        }
+    }
 }
