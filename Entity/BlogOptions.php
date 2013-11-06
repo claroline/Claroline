@@ -119,7 +119,7 @@ class BlogOptions
     /**
      * @var string
      */
-    protected $olfFileName = null;
+    protected $oldFileName = null;
 
     public function __construct()
     {
@@ -305,6 +305,9 @@ class BlogOptions
      */
     public function setBannerBackgroundImage($bannerBackgroundImage)
     {
+        if (null !== $this->bannerBackgroundImage) {
+            $this->oldFileName = $this->bannerBackgroundImage;
+        }
         $this->bannerBackgroundImage = $bannerBackgroundImage;
 
         return $this;
@@ -388,8 +391,8 @@ class BlogOptions
         $newFileName = $file->getClientOriginalName();
 
         if ($this->bannerBackgroundImage !== $newFileName) {
-            $this->olfFileName = $this->bannerBackgroundImage;
-            $this->bannerBackgroundImage   = null;
+            $this->oldFileName           = $this->bannerBackgroundImage;
+            $this->bannerBackgroundImage = null;
         }
         $this->file = $file;
 
@@ -460,15 +463,17 @@ class BlogOptions
      */
     public function postUpdate()
     {
-        if (null === $this->file) {
+        if (null === $this->file && null === $this->oldFileName) {
             return;
         }
 
-        $this->file->move($this->getUploadRootDir(), $this->bannerBackgroundImage);
+        if (null !== $this->bannerBackgroundImage) {
+            $this->file->move($this->getUploadRootDir(), $this->bannerBackgroundImage);
+        }
 
-        if (null !== $this->olfFileName) {
-            unlink($this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->olfFileName);
-            $this->olfFileName = null;
+        if (null !== $this->oldFileName) {
+            unlink($this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->oldFileName);
+            $this->oldFileName = null;
         }
 
         $this->file = null;
@@ -479,7 +484,7 @@ class BlogOptions
      */
     public function postRemove()
     {
-        $filePath = $this->getAbsolutePath();
+        $filePath = $this->getBannerBackgroundImageAbsolutePath();
         if (null !== $filePath) {
             unlink($filePath);
         }

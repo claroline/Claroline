@@ -230,7 +230,7 @@ class BlogController extends Controller
             try {
                 $unitOfWork = $entityManager->getUnitOfWork();
                 $unitOfWork->computeChangeSets();
-                $changeSet = $unitOfWork->getEntityChangeSet($blogOptions);
+                $changeSet  = $unitOfWork->getEntityChangeSet($blogOptions);
 
                 $entityManager->persist($blogOptions);
                 $entityManager->flush();
