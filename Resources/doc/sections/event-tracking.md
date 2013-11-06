@@ -16,6 +16,68 @@ Event Tracking system can collect four major event categories:
  * Group events
  * Resources events
  * Roles events
+ * Workspace events
+
+Non-exhaustive events list (Depending plugin)
+--------------------------
+### User events ###
+* `user-create`
+* `user-delete`
+* `user-login`
+* `user-update`
+
+### Group events ###
+* `group-add_user`
+* `group-create`
+* `group-delete`
+* `group-update`
+
+### Workspace events ###
+* `workspace-role-subscribe_user`
+* `workspace-role-subscribe_group`
+* `workspace-role-unsubscribe_user`
+* `workspace-role-unsubscribe_group`
+* `workspace-create`
+* `workspace-delete`
+* `workspace-role-change_right`
+* `workspace-role-create`
+* `workspace-role-delete`
+* `workspace-role-update`
+* `workspace-tool-read`
+* `workspace-update`
+
+### Resource events ###
+* `resource-copy`
+* `resource-create`
+* `resource-custom_action`
+* `resource-delete`
+* `resource-export`
+* `resource-move`
+* `resource-read`
+* `resource-shortcut`
+* `resource-update`
+* `resource-update_rename`
+
+### Dropzone events (plugin) ###
+* `resource-icap_dropzone-correction_end`
+* `resource-icap_dropzone-correction_start`
+* `resource-icap_dropzone-criterion_create`
+* `resource-icap_dropzone-criterion_delete`
+* `resource-icap_dropzone-drop_end`
+* `resource-icap_dropzone-drop_open`
+* `resource-icap_dropzone-drop_evaluate`
+* `resource-icap_dropzone-drop_start`
+* `resource-icap_dropzone-dropzone_update`
+
+### Blog events (plugin) ###
+* `resource-icap_blog-configure`
+* `resource-icap_blog-comment_create`
+* `resource-icap_blog-comment_delete`
+* `resource-icap_blog-post_create`
+* `resource-icap_blog-post_delete`
+* `resource-icap_blog-post_read`
+* `resource-icap_blog-post_update`
+
 
 Advanced features
 -----------------
