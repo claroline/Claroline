@@ -184,6 +184,7 @@ class Configuration implements ConfigurationInterface
         $tools      = $this->listTools;
         $plugin     = $this->plugin;
         $pluginFqcn = get_class($plugin);
+        $updateMode = $this->isInUpdateMode();
         $pluginSection
             ->arrayNode('tools')
                 ->prototype('array')
@@ -192,8 +193,8 @@ class Configuration implements ConfigurationInterface
                             ->isRequired()
                                 ->validate()
                                 ->ifTrue(
-                                    function ($v) use ($tools) {
-                                        return !call_user_func_array(
+                                    function ($v) use ($tools, $updateMode) {
+                                        return !$updateMode && !call_user_func_array(
                                             __CLASS__ . '::isNameAlreadyExist',
                                             array($v, $tools)
                                         );
