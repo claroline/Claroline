@@ -83,7 +83,7 @@ class WorkspaceRepository extends EntityRepository
     /**
      * Returns the workspaces whose at least one tool is accessible to one of the given roles.
      *
-     * @param array[string] $roles
+     * @param string[] $roles
      *
      * @return array[AbstractWorkspace]
      */
