@@ -19,8 +19,13 @@ class LogCriterionDeleteEvent extends AbstractLogResourceEvent {
     public function __construct(Dropzone $dropzone, Criterion $criterion)
     {
         $details = array(
-            'dropzoneId'  => $dropzone->getId(),
-            'criterionId' => $criterion->getId(),
+            'dropzone'  => array(
+                'id' => $dropzone->getId(),
+            ),
+            'criterion' => array(
+                'id' => $criterion->getId(),
+                'instruction' => $criterion->getInstruction(),
+            )
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);

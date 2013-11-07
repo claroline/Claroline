@@ -23,3 +23,18 @@ services:
           - [setContainer, ["@service_container"]]
         tags:
           - { name: doctrine.event_listener, event: preRemove }
+
+    icap.listener.dropzone.display_log_listener:
+            class: Icap\DropzoneBundle\Listener\Log\DisplayLogListener
+            calls:
+                - [setContainer, ["@service_container"]]
+            tags:
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-dropzone_configure,        method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-criterion_create,        method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-criterion_update,        method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-icap_dropzone-criterion_delete,        method: onCreateLogDetails }
+
+                - { name: kernel.event_listener, event: create_log_list_item_resource-icap_dropzone-dropzone_configure,      method: onCreateLogListItem }
+                - { name: kernel.event_listener, event: create_log_list_item_resource-icap_dropzone-criterion_create,      method: onCreateLogListItem }
+                - { name: kernel.event_listener, event: create_log_list_item_resource-icap_dropzone-criterion_update,      method: onCreateLogListItem }
+                - { name: kernel.event_listener, event: create_log_list_item_resource-icap_dropzone-criterion_delete,      method: onCreateLogListItem }

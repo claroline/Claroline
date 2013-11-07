@@ -1,0 +1,50 @@
+{% if log.details.dropzone is defined %}
+    {% if log.getDetails().dropzone.changeSet is defined and log.getDetails().dropzone.changeSet|length > 0 %}
+    <div>
+        <h4>{{ ('log_dropzone_change_set')|trans({}, 'log') }}</h4>
+        <h5>{{ ('log_old_values')|trans({}, 'log') }}</h5>
+        {% set changeSet = log.getDetails().dropzone.changeSet %}
+        <dl class="dl-horizontal">
+            {% for key, values in changeSet %}
+                <dt>{{ key|trans({}, 'log') }}</dt>
+                {% if values[0] is null %}
+                    <dd>...</dd>
+                {% else %}
+                    {% if key == 'manualState' and values[0] is not null%}
+                        <dd>{{ ((values[0])~'ManualState')|trans({}, 'icap_dropzone') }}</dd>
+                    {% elseif key == 'startAllowDrop' or key == 'endAllowDrop' or key == 'startReview' or key == 'endReview' %}
+                        <dd>{{ values[0].date|date('formatDatetime'|trans({}, 'icap_dropzone')) }}</dd>
+                    {% elseif values[0] is sameas(true) %}
+                        <dd>{{ ('yes')|trans({}, 'platform') }}</dd>
+                    {% elseif values[0] is sameas(false) or values[0] is sameas(0) %}
+                        <dd>{{ ('no')|trans({}, 'platform') }}</dd>
+                    {% else %}
+                        <dd>{{ values[0]|raw }}</dd>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </dl>
+        <h5>{{ ('log_new_values')|trans({}, 'log') }}</h5>
+        <dl class="dl-horizontal">
+            {% for key, values in changeSet %}
+                <dt>{{ key|trans({}, 'log') }}</dt>
+                {% if values[1] is null %}
+                    <dd>...</dd>
+                {% else %}
+                    {% if key == 'manualState' and values[1] is not null%}
+                        <dd>{{ (values[1]~'ManualState')|trans({}, 'icap_dropzone') }}</dd>
+                    {% elseif key == 'startAllowDrop' or key == 'endAllowDrop' or key == 'startReview' or key == 'endReview' %}
+                        <dd>{{ values[1].date|date('formatDatetime'|trans({}, 'icap_dropzone')) }}</dd>
+                    {% elseif values[1] is sameas(true) %}
+                        <dd>{{ ('yes')|trans({}, 'platform') }}</dd>
+                    {% elseif values[1] is sameas(false) or values[1] is sameas(0) %}
+                        <dd>{{ ('no')|trans({}, 'platform') }}</dd>
+                    {% else %}
+                        <dd>{{ values[1]|raw }}</dd>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </dl>
+    </div>
+    {% endif %}
+{% endif %}

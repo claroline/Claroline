@@ -7,17 +7,20 @@ use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
 
-class LogDropzoneUpdate extends AbstractLogResourceEvent {
+class LogDropzoneConfigureEvent extends AbstractLogResourceEvent {
 
-    const ACTION = 'resource-icap_dropzone-dropzone_update';
+    const ACTION = 'resource-icap_dropzone-dropzone_configure';
 
     /**
      * @param Dropzone $dropzone
      */
-    public function __construct(Dropzone $dropzone)
+    public function __construct(Dropzone $dropzone, $changeSet)
     {
         $details = array(
-            'dropzoneId'  => $dropzone->getId(),
+            'dropzone'  => array(
+                'id' => $dropzone->getId(),
+                'changeSet' => $changeSet
+            ),
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);
