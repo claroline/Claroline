@@ -7,11 +7,11 @@
         {% endblock %}
     </h1>
 
-    <p>
+    <div class="row">
         {% block logDetailsSubtitle %}
             {% include 'ClarolineCoreBundle:Log:view_list_item.html.twig' %}
         {% endblock %}
-    </p>
+    </div>
 
     {% block logDetailsContext %}
         <h3>{{'log_context'|trans({}, 'log')}}</h3>
