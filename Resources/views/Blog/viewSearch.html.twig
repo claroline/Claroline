@@ -3,20 +3,6 @@
 {% trans_default_domain "icap_blog" %}
 
 {% block blog_content %}
-    {% if is_granted('EDIT', _resource) or is_granted('POST', _resource) %}
-    <p>
-        {% if is_granted('EDIT', _resource) or is_granted('POST', _resource) %}
-            <a href="{{ _path('icap_blog_post_new', {'blogId': _resource.id}) }}" class="btn btn-default">
-                <span class="icon-plus"></span> {{ 'new_post'|trans }}
-            </a>
-        {% endif %}
-        {% if is_granted('EDIT', _resource) %}
-            <a href="{{ path('icap_blog_configure', {"blogId": _resource.id}) }}" class="btn btn-default">
-                <i class="icon-wrench"></i> {{ 'options'|trans({}, 'platform') }}
-            </a>
-        {% endif %}
-    </p>
-    {% endif %}
     <div class="alert alert-info">
         <a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" class="close" data-toggle="tooltip" title="{{ 'delete_filter'|trans({}, 'icap_blog') }}" data-placement="top" data-original-title="{{ 'delete_filter'|trans({}, 'icap_blog') }}">&times;</a>
         {{ "post_filtered_by_search"|trans({'%searchTerms%': search}, 'icap_blog')|raw }}.

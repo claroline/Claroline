@@ -5,6 +5,8 @@ namespace Icap\BlogBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -51,17 +53,28 @@ class PostType extends AbstractType
             ->add('tags', 'tags')
         ;
 
-        if ($this->securityContext->isGranted('POST', $this->securityContext->getToken()->getUser())) {
-            $builder->add('publicationDate', 'datepicker', array(
-                    'required'      => false,
-                    'read_only'     => true,
-                    'component'     => true,
-                    'autoclose'     => true,
-                    'language'      => $options['language'],
-                    'format'        => $options['date_format']
-               )
-            );
-        }
+        $securityContext = $this->securityContext;
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function(FormEvent $event) use ($securityContext, $options) {
+                $form = $event->getForm();
+                $data = $event->getData();
+                $blog = $data->getBlog();
+
+                if ($securityContext->isGranted('EDIT', $blog) || $securityContext->isGranted('POST', $blog)) {
+                    $form->add('publicationDate', 'datepicker', array(
+                            'required'      => false,
+                            'read_only'     => true,
+                            'component'     => true,
+                            'autoclose'     => true,
+                            'language'      => $options['language'],
+                            'format'        => $options['date_format']
+                       )
+                    );
+                }
+            }
+        );
     }
 
     public function getName()

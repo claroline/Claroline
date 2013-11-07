@@ -80,11 +80,12 @@ class PostController extends Controller
         }
 
         return array(
-            '_resource'     => $blog,
-            'user'          => $user,
-            'post'          => $post,
-            'form'          => $form,
-            'archives'      => $this->getArchiveDatas($blog)
+            '_resource'  => $blog,
+            'bannerForm' => $this->getBannerForm($blog->getOptions()),
+            'user'       => $user,
+            'post'       => $post,
+            'form'       => $form,
+            'archives'   => $this->getArchiveDatas($blog)
         );
     }
     /**
@@ -184,11 +185,12 @@ class PostController extends Controller
         }
 
         return array(
-            '_resource' => $blog,
-            'user'      => $user,
-            'post'      => $post,
-            'form'      => $form->createView(),
-            'archives'  => $this->getArchiveDatas($blog)
+            '_resource'  => $blog,
+            'bannerForm' => $this->getBannerForm($blog->getOptions()),
+            'user'       => $user,
+            'post'       => $post,
+            'form'       => $form->createView(),
+            'archives'   => $this->getArchiveDatas($blog)
         );
     }
 

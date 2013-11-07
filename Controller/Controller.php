@@ -18,6 +18,7 @@ use Icap\BlogBundle\Event\Log\LogPostCreateEvent;
 use Icap\BlogBundle\Event\Log\LogPostDeleteEvent;
 use Icap\BlogBundle\Event\Log\LogPostReadEvent;
 use Icap\BlogBundle\Event\Log\LogPostUpdateEvent;
+use Icap\BlogBundle\Form\BlogBannerType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -100,6 +101,16 @@ class Controller extends BaseController
         }
 
         return $archiveDatas;
+    }
+
+    /**
+     * @param BlogOptions $blogOptions
+     *
+     * @return \Symfony\Component\Form\Form
+     */
+    protected function getBannerForm(BlogOptions $blogOptions)
+    {
+        return $this->createForm(new BlogBannerType(), $blogOptions)->createView();
     }
 
     protected function dispatch($event)

@@ -9,7 +9,6 @@ use Icap\BlogBundle\Entity\BlogOptions;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Statusable;
 use Icap\BlogBundle\Exception\TooMuchResultException;
-use Icap\BlogBundle\Form\BlogBannerType;
 use Icap\BlogBundle\Form\BlogInfosType;
 use Icap\BlogBundle\Form\BlogOptionsType;
 use Icap\BlogBundle\Entity\Tag;
@@ -94,11 +93,9 @@ class BlogController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $bannerForm = $this->createForm(new BlogBannerType(), $blog->getOptions());
-
         return array(
             '_resource'  => $blog,
-            'bannerForm' => $bannerForm->createView(),
+            'bannerForm' => $this->getBannerForm($blog->getOptions()),
             'user'       => $user,
             'pager'      => $pager,
             'archives'   => $this->getArchiveDatas($blog),
@@ -151,11 +148,9 @@ class BlogController extends Controller
             $pager->setCurrentPage($page);
         }
 
-        $bannerForm = $this->createForm(new BlogBannerType(), $blog->getOptions());
-
         return array(
             '_resource'  => $blog,
-            'bannerForm' => $bannerForm->createView(),
+            'bannerForm' => $this->getBannerForm($blog->getOptions()),
             'user'       => $user,
             'pager'      => $pager,
             'search'     => $search,
@@ -203,9 +198,10 @@ class BlogController extends Controller
         }
 
         return array(
-            '_resource' => $blog,
-            'form'      => $form->createView(),
-            'archives'  => $this->getArchiveDatas($blog)
+            '_resource'  => $blog,
+            'bannerForm' => $this->getBannerForm($blog->getOptions()),
+            'form'       => $form->createView(),
+            'archives'   => $this->getArchiveDatas($blog)
         );
     }
 
@@ -286,9 +282,10 @@ class BlogController extends Controller
         }
 
         return array(
-            '_resource' => $blog,
-            'form'      => $form->createView(),
-            'archives'  => $this->getArchiveDatas($blog)
+            '_resource'  => $blog,
+            'bannerForm' => $this->getBannerForm($blog->getOptions()),
+            'form'       => $form->createView(),
+            'archives'   => $this->getArchiveDatas($blog)
         );
     }
 

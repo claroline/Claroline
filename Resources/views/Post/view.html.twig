@@ -29,11 +29,11 @@
                         <div class="btn-group pull-right options">
                             {% if isPublished %}
                             <a href="{{ path('icap_blog_comment_unpublish', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" class="btn btn-default btn-red btn-xs">
-                                <span class="icon-minus-sign"></span> {{ 'unpublish'|trans }}
+                                {{ 'unpublish'|trans }}
                             </a>
                             {% else %}
                             <a href="{{ path('icap_blog_comment_publish', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" class="btn btn-default btn-green btn-xs">
-                                <span class="icon-ok-sign"></span> {{ 'publish'|trans }}
+                                {{ 'publish'|trans }}
                             </a>
                             {% endif %}
                             <a href="{{ path('icap_blog_comment_delete', {'blogId': _resource.id, 'postSlug': post.slug, 'commentId': comment.id}) }}" class="btn btn-xs btn-danger delete" data-confirm-title="{{ 'comment_deletion_confirm_title'|trans }}" data-confirm-message="{{ 'comment_deletion_confirm_message'|trans }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-toggle="tooltip" title="{{ 'delete'|trans({}, 'platform') }}" data-placement="top" data-original-title="{{ 'delete'|trans({}, 'platform') }}">
