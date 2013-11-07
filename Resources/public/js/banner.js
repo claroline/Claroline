@@ -191,6 +191,16 @@
         initBannerForm();
         changeBannerBackgroundColor();
         changeBannerHeight();
+        resetImageField();
+    }
+
+    function resetImageField()
+    {
+        banner.css('background-image', 'url(' + bannerBackgroundImageContainer.data("image-path") + "/" + bannerBackgroundImageField.val() + ')');
+        removeBannerBackgroundImageButton.removeClass("hidden");
+        bannerBackgroundImageParametersBlock.removeClass("hidden");
+        $("#icap_blog_banner_form_file", bannerBackgroundImageContainer).remove();
+        bannerBackgroundImageContainer.append(bannerBackgroundImageFieldTemplate);
     }
 
     bannerResetButton.click(function(event) {

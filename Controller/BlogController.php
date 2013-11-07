@@ -9,6 +9,7 @@ use Icap\BlogBundle\Entity\BlogOptions;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Statusable;
 use Icap\BlogBundle\Exception\TooMuchResultException;
+use Icap\BlogBundle\Form\BlogBannerType;
 use Icap\BlogBundle\Form\BlogInfosType;
 use Icap\BlogBundle\Form\BlogOptionsType;
 use Icap\BlogBundle\Entity\Tag;

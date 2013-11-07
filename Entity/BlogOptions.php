@@ -443,7 +443,7 @@ class BlogOptions
     /**
      * @return string
      */
-    protected function getUploadDir()
+    public function getUploadDir()
     {
         return sprintf("uploads%sblogs", DIRECTORY_SEPARATOR);
     }
