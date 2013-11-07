@@ -79,6 +79,12 @@ class WorkspaceTagManager
         return $tag;
     }
 
+    public function deleteTag(WorkspaceTag $workspaceTag)
+    {
+        $this->om->remove($workspaceTag);
+        $this->om->flush();
+    }
+
     public function createTagRelation(WorkspaceTag $tag, AbstractWorkspace $workspace)
     {
         $relWorkspaceTag = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag');
@@ -163,9 +169,47 @@ class WorkspaceTagManager
         return $this->tagRepo->findPossibleAdminChildren($tag);
     }
 
+    public function getPossibleAdminChildrenPager(WorkspaceTag $tag, $page)
+    {
+        $datas = $this->tagRepo->findPossibleAdminChildren($tag);
+
+        return $this->pagerFactory->createPagerFromArray($datas, $page);
+    }
+
+    public function getPossibleAdminChildrenPagerBySearch(
+        WorkspaceTag $tag,
+        $page,
+        $search
+    )
+    {
+        $datas = $this->tagRepo->findPossibleAdminChildrenByName($tag, $search);
+
+        return $this->pagerFactory->createPagerFromArray($datas, $page);
+    }
+
     public function getPossibleChildren(User $user, WorkspaceTag $tag)
     {
         return $this->tagRepo->findPossibleChildren($user, $tag);
+    }
+
+    public function getPossibleChildrenPager(User $user, WorkspaceTag $tag, $page)
+    {
+        $datas = $this->tagRepo->findPossibleChildren($user, $tag);
+
+        return $this->pagerFactory->createPagerFromArray($datas, $page);
+    }
+
+    public function getPossibleChildrenPagerBySearch(
+        User $user,
+        WorkspaceTag $tag,
+        $page,
+        $search
+    )
+    {
+        $datas = $this->tagRepo
+            ->findPossibleChildrenByName($user, $tag, $search);
+
+        return $this->pagerFactory->createPagerFromArray($datas, $page);
     }
 
     public function getAdminChildren(WorkspaceTag $tag)
@@ -188,9 +232,19 @@ class WorkspaceTagManager
         return $this->tagRepo->findRootTags($user);
     }
 
+    public function getAdminChildrenFromTag(WorkspaceTag $workspaceTag)
+    {
+        return $this->tagRepo->findAdminChildrenFromTag($workspaceTag);
+    }
+
     public function getAdminChildrenFromTags(array $tags)
     {
         return $this->tagRepo->findAdminChildrenFromTags($tags);
+    }
+
+    public function getChildrenFromTag(User $user, WorkspaceTag $workspaceTag)
+    {
+        return $this->tagRepo->findChildrenFromTag($user, $workspaceTag);
     }
 
     public function getChildrenFromTags(User $user, array $tags)
@@ -228,6 +282,11 @@ class WorkspaceTagManager
         );
     }
 
+    public function getAdminTagById($tagId)
+    {
+        return $this->tagRepo->findOneBy(array('id' => $tagId, 'user' => null));
+    }
+
     public function getTagRelationsByWorkspaceAndUser(AbstractWorkspace $workspace, User $user)
     {
         return $this->relTagRepo->findByWorkspaceAndUser($workspace, $user);
@@ -236,6 +295,11 @@ class WorkspaceTagManager
     public function getAdminTagRelationsByWorkspace(AbstractWorkspace $workspace)
     {
         return $this->relTagRepo->findAdminByWorkspace($workspace);
+    }
+
+    public function getAdminTagRelationsByTag(WorkspaceTag $tag)
+    {
+        return $this->relTagRepo->findAdminByTag($tag);
     }
 
     public function getTagRelationByWorkspaceAndTagAndUser(
@@ -272,9 +336,19 @@ class WorkspaceTagManager
         return $this->relTagRepo->findByAdminAndWorkspaces($workspaces);
     }
 
+    public function getAdminHierarchiesByParent(WorkspaceTag $workspaceTag)
+    {
+        return $this->tagHierarchyRepo->findAdminHierarchiesByParent($workspaceTag);
+    }
+
     public function getAdminHierarchiesByParents(array $parents)
     {
         return $this->tagHierarchyRepo->findAdminHierarchiesByParents($parents);
+    }
+
+    public function getHierarchiesByParent(User $user, WorkspaceTag $workspaceTag)
+    {
+        return $this->tagHierarchyRepo->findHierarchiesByParent($user, $workspaceTag);
     }
 
     public function getHierarchiesByParents(User $user, array $parents)
@@ -559,7 +633,7 @@ class WorkspaceTagManager
 
     public function getPagerRelationByTag(WorkspaceTag $workspaceTag, $page = 1)
     {
-        $relations = $this->relTagRepo->findAdminRelationsByTags($workspaceTag);
+        $relations = $this->relTagRepo->findAdminRelationsByTag($workspaceTag);
 
         return $this->pagerFactory->createPagerFromArray($relations, $page);
     }

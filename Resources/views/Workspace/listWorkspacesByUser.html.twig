@@ -74,14 +74,20 @@
     </div>
 
     <div class="panel-body">
-        <a href="{{ path('claro_workspace_manage_tag') }}">
-            <button type="button" class="btn btn-default">{{ 'tags_management'|trans({}, 'platform') }}</button>
+        <a href="{{ path('claro_manage_workspace_tag') }}">
+            <button type="button" class="btn btn-default">
+                {{ 'classify_workspaces'|trans({}, 'platform') }}
+            </button>
         </a>
         <a href="{{ path('claro_list_workspaces_with_self_registration') }}">
-            <button type="button" class="btn btn-default">{{ 'register_to_a_workspace'|trans({}, 'platform') }}</button>
+            <button type="button" class="btn btn-default">
+                {{ 'register_to_a_workspace'|trans({}, 'platform') }}
+            </button>
         </a>
         <a href="{{ path('claro_list_workspaces_with_self_unregistration') }}">
-            <button type="button" class="btn btn-default">{{ 'unregister_from_a_workspace'|trans({}, 'platform') }}</button>
+            <button type="button" class="btn btn-default">
+                {{ 'unregister_from_a_workspace'|trans({}, 'platform') }}
+            </button>
         </a>
 
         <hr>

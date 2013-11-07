@@ -210,9 +210,9 @@ class RelWorkspaceTagRepositoryTest extends RepositoryTestCase
         $this->assertEquals(8, count($tagRelations));
     }
 
-    public function testFindAdminRelationsByTags()
+    public function testFindAdminRelationsByTag()
     {
-        $tagRelations = self::$repo->findAdminRelationsByTags(self::get('tag_1'));
+        $tagRelations = self::$repo->findAdminRelationsByTag(self::get('tag_1'));
         $this->assertEquals(2, count($tagRelations));
         $this->assertEquals(self::get('wsa'), $tagRelations[0]->getWorkspace());
         $this->assertEquals(self::get('wsd'), $tagRelations[1]->getWorkspace());
