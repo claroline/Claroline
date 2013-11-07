@@ -26,6 +26,7 @@ class ForumRepository extends EntityRepository
             s.title as title,
             subjectCreator.lastName as subject_creator_lastname,
             subjectCreator.firstName as subject_creator_firstname,
+            subjectCreator.id as subject_creator_id,
             lastUser.lastName as last_message_creator_lastname,
             lastUser.firstName as last_message_creator_firstname,
             s.creationDate as subject_created

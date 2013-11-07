@@ -412,7 +412,7 @@ class ForumController extends Controller
         $sc = $this->get('security.context');
         $isModerator = $sc->isGranted('moderate', new ResourceCollection(array($subject->getForum()->getResourceNode())));
 
-        if (!$isModerator && $sc->getToken()->getUser()) {
+        if (!$isModerator && $sc->getToken()->getUser() !== $subject->getCreator()) {
             throw new AccessDeniedHttpException();
         }
 
@@ -443,7 +443,7 @@ class ForumController extends Controller
         $isModerator = $sc->isGranted('moderate', new ResourceCollection(array($subject->getForum()->getResourceNode())));
         $em = $this->getDoctrine()->getManager();
 
-        if (!$isModerator && $sc->getToken()->getUser()) {
+        if (!$isModerator && $sc->getToken()->getUser() !== $subject->getCreator()) {
             throw new AccessDeniedHttpException();
         }
 

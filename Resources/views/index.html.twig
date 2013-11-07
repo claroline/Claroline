@@ -69,7 +69,7 @@
                             >
                                 {{ subject['title'] }}
                             </a>
-                            {% if isModerator %}
+                            {% if isModerator or app.user.id == subject['subject_creator_id'] %}
                                 <a href="{{ path('claro_forum_edit_subject_form', {'subjectId': subject['id'] }) }}">
                                     <i class="icon-pencil"></i>
                                 </a>
