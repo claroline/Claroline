@@ -212,11 +212,11 @@ class GroupManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getWorkspaceOutsiders(AbstractWorkspace $workspace, $page)
+    public function getWorkspaceOutsiders(AbstractWorkspace $workspace, $page, $max = 50)
     {
         $query = $this->groupRepo->findWorkspaceOutsiders($workspace, false);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
@@ -226,11 +226,11 @@ class GroupManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $page)
+    public function getWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $page, $max = 50)
     {
         $query = $this->groupRepo->findWorkspaceOutsidersByName($workspace, $search, false);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
@@ -239,11 +239,11 @@ class GroupManager
      *
      * @return  \PagerFanta\PagerFanta
      */
-    public function getGroupsByWorkspace(AbstractWorkspace $workspace, $page)
+    public function getGroupsByWorkspace(AbstractWorkspace $workspace, $page, $max = 50)
     {
         $query = $this->groupRepo->findByWorkspace($workspace, false);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
@@ -252,11 +252,11 @@ class GroupManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getGroupsByWorkspacesPager(array $workspaces, $page)
+    public function getGroupsByWorkspacesPager(array $workspaces, $page, $max = 50)
     {
         $query = $this->groupRepo->findGroupsByWorkspaces($workspaces, false);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
@@ -276,16 +276,12 @@ class GroupManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getGroupsByWorkspacesAndSearchPager(
-        array $workspaces,
-        $page,
-        $search
-    )
+    public function getGroupsByWorkspacesAndSearchPager(array $workspaces, $page, $search, $max = 50)
     {
         $groups = $this->groupRepo
             ->findGroupsByWorkspacesAndSearch($workspaces, $search);
 
-        return $this->pagerFactory->createPagerFromArray($groups, $page);
+        return $this->pagerFactory->createPagerFromArray($groups, $page, $max);
     }
 
     /**
@@ -309,11 +305,11 @@ class GroupManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getGroupsByWorkspaceAndName(AbstractWorkspace $workspace, $search, $page)
+    public function getGroupsByWorkspaceAndName(AbstractWorkspace $workspace, $search, $page, $max = 50)
     {
         $query = $this->groupRepo->findByWorkspaceAndName($workspace, $search, false);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
@@ -321,11 +317,11 @@ class GroupManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getGroups($page)
+    public function getGroups($page, $max = 50)
     {
         $query = $this->groupRepo->findAll(false);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
@@ -334,11 +330,11 @@ class GroupManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getGroupsByName($search, $page)
+    public function getGroupsByName($search, $page, $max = 50)
     {
         $query = $this->groupRepo->findByName($search, false);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
@@ -347,11 +343,11 @@ class GroupManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getGroupsByRoles(array $roles, $page = 1)
+    public function getGroupsByRoles(array $roles, $page = 1, $max = 50)
     {
         $query = $this->groupRepo->findByRoles($roles, true);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
@@ -361,11 +357,11 @@ class GroupManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getOutsidersByWorkspaceRoles(array $roles, AbstractWorkspace $workspace, $page = 1)
+    public function getOutsidersByWorkspaceRoles(array $roles, AbstractWorkspace $workspace, $page = 1, $max = 50)
     {
         $query = $this->groupRepo->findOutsidersByWorkspaceRoles($roles, $workspace, true);
 
-        return  $this->pagerFactory->createPager($query, $page);
+        return  $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
@@ -375,11 +371,11 @@ class GroupManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getGroupsByRolesAndName(array $roles, $name, $page = 1)
+    public function getGroupsByRolesAndName(array $roles, $name, $page = 1, $max = 50)
     {
         $query = $this->groupRepo->findByRolesAndName($roles, $name, true);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
@@ -390,11 +386,11 @@ class GroupManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getOutsidersByWorkspaceRolesAndName(array $roles, $name, AbstractWorkspace $workspace, $page = 1)
+    public function getOutsidersByWorkspaceRolesAndName(array $roles, $name, AbstractWorkspace $workspace, $page = 1, $max = 50)
     {
         $query = $this->groupRepo->findOutsidersByWorkspaceRolesAndName($roles, $name, $workspace, true);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
@@ -402,11 +398,11 @@ class GroupManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getAllGroups($page)
+    public function getAllGroups($page, $max = 50)
     {
         $query = $this->groupRepo->findAll(false);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
@@ -415,11 +411,11 @@ class GroupManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getAllGroupsBySearch($page, $search)
+    public function getAllGroupsBySearch($page, $search, $max = 50)
     {
         $query = $this->groupRepo->findAllGroupsBySearch($search);
 
-        return $this->pagerFactory->createPagerFromArray($query, $page, 2);
+        return $this->pagerFactory->createPagerFromArray($query, $page, $max);
     }
 
     /**
