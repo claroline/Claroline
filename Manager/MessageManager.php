@@ -149,23 +149,23 @@ class MessageManager
 
     public function markAsRead(User $user, array $messages)
     {
-        $this->markMessages($user, $messages, self::MESSAGE_READ);
-    }
-
-    public function markAsRemoved(User $user, array $messages)
-    {
-        $this->markMessages($user, $messages, self::MESSAGE_REMOVED);
-    }
-
-    public function markAsUnremoved(User $user, array $messages)
-    {
-        $this->markMessages($user, $messages, self::MESSAGE_UNREMOVED);
-    }
-
-    public function remove(User $user, array $messages)
-    {
         $userMessages = $this->userMessageRepo->findByMessages($user, $messages);
 
+        $this->markMessages($userMessages, self::MESSAGE_READ);
+    }
+
+    public function markAsRemoved(array $userMessages)
+    {
+        $this->markMessages($userMessages, self::MESSAGE_REMOVED);
+    }
+
+    public function markAsUnremoved(array $userMessages)
+    {
+        $this->markMessages($userMessages, self::MESSAGE_UNREMOVED);
+    }
+
+    public function remove(array $userMessages)
+    {
         foreach ($userMessages as $userMessage) {
             $this->om->remove($userMessage);
         }
@@ -200,9 +200,8 @@ class MessageManager
         return implode(';', $usernames);
     }
 
-    private function markMessages(User $user, array $messages, $flag)
+    private function markMessages(array $userMessages, $flag)
     {
-        $userMessages = $this->userMessageRepo->findByMessages($user, $messages);
         $method = 'markAs' . $flag;
 
         foreach ($userMessages as $userMessage) {
