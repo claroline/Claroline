@@ -81,7 +81,6 @@ class PostController extends Controller
 
         return array(
             '_resource'     => $blog,
-            '_resourceNode' => new ResourceCollection(array($blog->getResourceNode())),
             'user'          => $user,
             'post'          => $post,
             'form'          => $form,

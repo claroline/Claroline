@@ -3,11 +3,18 @@
 {% trans_default_domain "icap_blog" %}
 
 {% block blog_content %}
-    {% if is_granted('EDIT', _resourceNode) or is_granted('POST', _resourceNode) %}
+    {% if is_granted('EDIT', _resource) or is_granted('POST', _resource) %}
     <p>
-        <a href="{{ _path('icap_blog_post_new', {'blogId': _resource.id}) }}" class="btn btn-default">
-            <span class="icon-plus"></span> {{ 'new_post'|trans }}
-        </a>
+        {% if is_granted('EDIT', _resource) or is_granted('POST', _resource) %}
+            <a href="{{ _path('icap_blog_post_new', {'blogId': _resource.id}) }}" class="btn btn-default">
+                <span class="icon-plus"></span> {{ 'new_post'|trans }}
+            </a>
+        {% endif %}
+        {% if is_granted('EDIT', _resource) %}
+            <a href="{{ path('icap_blog_configure', {"blogId": _resource.id}) }}" class="btn btn-default">
+                <i class="icon-wrench"></i> {{ 'options'|trans({}, 'platform') }}
+            </a>
+        {% endif %}
     </p>
     {% endif %}
     {% if tag is not null %}

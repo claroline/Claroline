@@ -1,79 +1,78 @@
-icap_blog_form_name: 'Nom'
-icap_blog_post_form_title: 'Titre'
-icap_blog_post_form_content: 'Contenu'
-icap_blog_post_form_tags: 'Tags'
-icap_blog_infos_form_infos: 'Informations'
+icap_blog_form_name: "Nom"
+icap_blog_post_form_title: "Titre"
+icap_blog_post_form_content: "Contenu"
+icap_blog_post_form_tags: "Tags"
+icap_blog_infos_form_infos: "Informations"
 icap_blog_post_form_publicationDate: "Date de publication"
-new_post: 'Nouvel article'
-no_post: 'Aucun article.'
+new_post: "Nouvel article"
+no_post: "Aucun article."
 add_new_post: "Ajout d'un article"
 edit_post: "Edition de l'article '%postTitle%'"
-back_to_workspace: "Retour à l'espace de travail"
-back_to_blog: 'Retour au blog'
+back_to_blog: "Retour au blog"
 icap_blog_edit_banner: "Modifier la bannière"
-icap_blog_options_form_authorize_comment: 'Commentaires autorisés ?'
-icap_blog_options_form_authorize_anonymous_comment: 'Commentaires anonymes autorisé ?'
+icap_blog_options_form_authorize_comment: "Commentaires autorisés ?"
+icap_blog_options_form_authorize_anonymous_comment: "Commentaires anonymes autorisé ?"
 icap_blog_options_form_post_per_page: "Articles par page"
-icap_blog_options_form_auto_publish_post: 'Publication automatique des articles ?'
-icap_blog_options_form_auto_publish_comment: 'Publication automatique des commentaires ?'
+icap_blog_options_form_auto_publish_post: "Publication automatique des articles ?"
+icap_blog_options_form_auto_publish_comment: "Publication automatique des commentaires ?"
 icap_blog_banner_form_banner_background_color: "Couleur de l'arrière-plan"
 icap_blog_banner_form_banner_activate: "Activer la bannière ?"
 icap_blog_banner_form_banner_background_image_position: "Positionnement"
 icap_blog_banner_form_banner_background_image_repeat: "Répéter"
 icap_blog_banner_form_banner_height: "Hauteur"
 icap_blog_banner_form_banner_background_image: "Image de l'arrière-plan"
-icap_blog_post_add_success: 'Article ajouté avec succès'
+icap_blog_post_add_success: "Article ajouté avec succès"
 icap_blog_post_add_error: "Erreur lors de l'ajout de l'article"
-icap_blog_post_delete_success: 'Article supprimé avec succès'
+icap_blog_post_delete_success: "Article supprimé avec succès"
 icap_blog_post_delete_error: "Erreur lors de la suppression de l'article"
-icap_blog_post_edit_success: 'Article modifié avec succès'
+icap_blog_post_edit_success: "Article modifié avec succès"
 icap_blog_post_edit_error: "Erreur lors de la modification de l'article"
-icap_blog_post_publish_success: 'Article publié avec succès'
+icap_blog_post_publish_success: "Article publié avec succès"
 icap_blog_post_publish_error: "Erreur lors de la publication de l'article"
-icap_blog_post_unpublish_success: 'Article dépublié avec succès'
+icap_blog_post_unpublish_success: "Article dépublié avec succès"
 icap_blog_post_unpublish_error: "Erreur lors de la dépublication de l'article"
-icap_blog_comment_add_success: 'Commentaire ajouté avec succès'
+icap_blog_comment_add_success: "Commentaire ajouté avec succès"
 icap_blog_comment_add_error: "Erreur lors de l'ajout du commentaire"
-icap_blog_comment_delete_success: 'Commentaire supprimé avec succès'
-icap_blog_comment_delete_error: 'Erreur lors de a suppression du commentaire'
-icap_blog_comment_publish_success: 'Commentaire publié avec succès'
-icap_blog_comment_publish_error: 'Erreur lors de la publication du commentaire'
-icap_blog_comment_unpublish_success: 'Commentaire dépublié avec succès'
-icap_blog_comment_unpublish_error: 'Erreur lors de la dépublication dU COMMENTAIRE'
+icap_blog_comment_delete_success: "Commentaire supprimé avec succès"
+icap_blog_comment_delete_error: "Erreur lors de a suppression du commentaire"
+icap_blog_comment_publish_success: "Commentaire publié avec succès"
+icap_blog_comment_publish_error: "Erreur lors de la publication du commentaire"
+icap_blog_comment_unpublish_success: "Commentaire dépublié avec succès"
+icap_blog_comment_unpublish_error: "Erreur lors de la dépublication dU COMMENTAIRE"
 icap_blog_post_need_validation_before_publishing: "Votre article ne sera publié qu'après validation d'un administrateur."
 icap_blog_post_comment_need_validation_before_publishing: "Votre commentaire ne sera publié qu'après validation d'un administrateur."
 icap_blog_post_comment_need_authentication: "<a href='%connection_url%' title='Connexion'>Connectez-vous</a> pour pouvoir commenter cet article."
 icap_blog_post_need_publishing: "Votre article devra être publié après sa validation."
-no_tags: 'Aucun tag'
-no_authors: 'Aucun rédacteurs'
-no_archives: 'Aucune archive'
-comments: 'commentaire|commentaires'
-see_comments: 'Voir les commentaires'
-publish: 'Publier'
-unpublish: 'Dépublier'
-Post: 'Article'
+no_tags: "Aucun tag"
+no_authors: "Aucun rédacteurs"
+no_archives: "Aucune archive"
+comments: "commentaire|commentaires"
+see_comments: "Voir les commentaires"
+publish: "Rendre visible"
+unpublish: "Rendre non-visible"
+Post: "Article"
 post_deletion_confirm_title: "Suppression d'un article"
 post_deletion_confirm_message: "Etes-vous sûr de vouloir supprimer l'article <strong>%postName%</strong> ?"
 comment_deletion_confirm_title: "Suppression d'un commentaire"
 comment_deletion_confirm_message: "Etes-vous sûr de vouloir supprimer ce commentaire ?"
-configure_blog: 'Configuration du blog'
-icap_blog_post_configure_success: 'Blog configuré avec succès'
-icap_blog_post_configure_error: 'Erreur lors de la configuration du blog'
+configure_blog: "Configuration du blog"
+icap_blog_post_configure_success: "Blog configuré avec succès"
+icap_blog_post_configure_error: "Erreur lors de la configuration du blog"
 icap_blog_post_configure_banner_success: "Bannière du blog configuré avec succès."
 icap_blog_post_configure_banner_error: "Erreur lors de la configuration de la bannière du blog."
-delete_filter: 'Supprimer le filtre'
-post_filtered_by_tag: 'Liste des articles filtrés par le tag <strong>%tagName%</strong>'
+delete_filter: "Supprimer le filtre"
+post_filtered_by_tag: "Liste des articles filtrés par le tag <strong>%tagName%</strong>"
 post_filtered_by_author: "Liste des articles filtrés par l'auteur <strong>%authorName%</strong>"
-post_filtered_by_search: 'Liste des articles filtrés par la recherche <strong>%searchTerms%</strong>'
-post_filtered_by_date: 'Liste des articles filtrés sur la date <strong>%date%</strong>'
-edit_blog_infos: 'Modifer les informations du blog'
-icap_blog_edit_infos_success: 'Informations du blog modifiées avec succès'
-icap_blog_edit_infos_error: 'Erreur lors de la modification des informations du blog'
+post_filtered_by_search: "Liste des articles filtrés par la recherche <strong>%searchTerms%</strong>"
+post_filtered_by_date: "Liste des articles filtrés sur la date <strong>%date%</strong>"
+edit_blog_infos: "Modifer les informations du blog"
+icap_blog_edit_infos_success: "Informations du blog modifiées avec succès"
+icap_blog_edit_infos_error: "Erreur lors de la modification des informations du blog"
 icap_blog_post_search_too_much_result: "Vos critères de recherche sont considérés comme non pertinent, veuillez rentrer d'autres mots clés."
-add_comment: 'Ajouter un commentaire'
-be_the_first_to_comment: 'Soyez le premier à commenter cet article'
-icap_blog_post_comment_form_message: 'Commentaire'
-to_comment: 'Commenter'
+add_comment: "Ajouter un commentaire"
+be_the_first_to_comment: "Soyez le premier à commenter cet article"
+icap_blog_post_comment_form_message: "Commentaire"
+to_comment: "Commenter"
 search: "Recherche"
 search_in_title_and_content: "Recherche dans les titres, contenus."
 info_bar: "Info bar"

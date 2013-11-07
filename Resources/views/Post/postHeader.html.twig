@@ -7,16 +7,16 @@
         <h1>{{ post.title }}</h1>
     {% endif %}
 
-    {% if is_granted('EDIT', _resourceNode) or (is_granted('POST', _resourceNode) and post.author == user) %}
+    {% if is_granted('EDIT', _resource) or (is_granted('POST', _resource) and post.author == user) %}
     <div class="btn-group pull-right options">
-        {% if is_granted('EDIT', _resourceNode) %}
+        {% if is_granted('EDIT', _resource) %}
             {% if isPublished %}
-            <a href="{{ path('icap_blog_post_unpublish', {'blogId': _resource.id, 'postSlug': post.slug}) }}" class="btn btn-default btn-red btn-xs">
-                <span class="icon-minus-sign"></span> {{ 'unpublish'|trans({}, 'icap_blog') }}
+            <a href="{{ path('icap_blog_post_unpublish', {'blogId': _resource.id, 'postSlug': post.slug}) }}" class="btn btn-default btn-xs">
+                {{ 'unpublish'|trans({}, 'icap_blog') }}
             </a>
             {% else %}
-            <a href="{{ path('icap_blog_post_publish', {'blogId': _resource.id, 'postSlug': post.slug}) }}" class="btn btn-default btn-green btn-xs">
-                <span class="icon-ok-sign"></span> {{ 'publish'|trans({}, 'icap_blog') }}
+            <a href="{{ path('icap_blog_post_publish', {'blogId': _resource.id, 'postSlug': post.slug}) }}" class="btn btn-default btn-xs">
+                {{ 'publish'|trans({}, 'icap_blog') }}
             </a>
             {% endif %}
         {% endif %}

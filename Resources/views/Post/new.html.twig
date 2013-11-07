@@ -23,11 +23,11 @@
 {% block blog_content %}
     <form action="{{ _path('icap_blog_post_new', {'blogId':_resource.getId()}) }}" method="post" {{ form_enctype(form) }} class="well" id="icap_blog_post_form" novalidate>
         <legend>{{ "add_new_post"|trans({}, 'icap_blog') }}</legend>
-        {% if false == is_granted('EDIT', _resourceNode) and false == _resource.isAutoPublishPost %}
+        {% if false == is_granted('EDIT', _resource) and false == _resource.isAutoPublishPost %}
         <p class="alert alert-warning">
             {{ 'icap_blog_post_need_validation_before_publishing'|trans({}, 'icap_blog') }}
         </p>
-        {% elseif is_granted('EDIT', _resourceNode) %}
+        {% elseif is_granted('EDIT', _resource) %}
         <p class="alert alert-warning">
             {{ 'icap_blog_post_need_publishing'|trans({}, 'icap_blog') }}
         </p>
@@ -37,7 +37,7 @@
         <div class="row">
             {{ form_row(form.title) }}
         </div>
-        {% if is_granted('EDIT', _resourceNode) %}
+        {% if is_granted('EDIT', _resource) %}
         <div class="row">
             <div class="form-group">
                 <label class="control-label col-md-3" for="icap_blog_post_form_publicationDate">{{ 'icap_blog_post_form_publicationDate'|trans({}, 'icap_blog') }}</label>

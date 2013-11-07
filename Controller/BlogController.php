@@ -97,15 +97,14 @@ class BlogController extends Controller
         $bannerForm = $this->createForm(new BlogBannerType(), $blog->getOptions());
 
         return array(
-            '_resource'     => $blog,
-            '_resourceNode' => new ResourceCollection(array($blog->getResourceNode())),
-            'bannerForm'    => $bannerForm->createView(),
-            'user'          => $user,
-            'pager'         => $pager,
-            'archives'      => $this->getArchiveDatas($blog),
-            'tag'           => $tag,
-            'author'        => $author,
-            'date'          => $date
+            '_resource'  => $blog,
+            'bannerForm' => $bannerForm->createView(),
+            'user'       => $user,
+            'pager'      => $pager,
+            'archives'   => $this->getArchiveDatas($blog),
+            'tag'        => $tag,
+            'author'     => $author,
+            'date'       => $date
         );
     }
 
@@ -152,12 +151,15 @@ class BlogController extends Controller
             $pager->setCurrentPage($page);
         }
 
+        $bannerForm = $this->createForm(new BlogBannerType(), $blog->getOptions());
+
         return array(
-            '_resource' => $blog,
-            'user'      => $user,
-            'pager'     => $pager,
-            'search'    => $search,
-            'archives'  => $this->getArchiveDatas($blog)
+            '_resource'  => $blog,
+            'bannerForm' => $bannerForm->createView(),
+            'user'       => $user,
+            'pager'      => $pager,
+            'search'     => $search,
+            'archives'   => $this->getArchiveDatas($blog)
         );
     }
 

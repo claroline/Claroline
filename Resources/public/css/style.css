@@ -57,12 +57,6 @@ article .highlight {
 .user_picture {
   width: 24px;
 }
-.options .btn-red {
-  color: #d9534f;
-}
-.options .btn-green {
-  color: #47a447;
-}
 .comment_list li.unpublished {
   border: 1px dotted orange;
 }
@@ -87,27 +81,6 @@ article .highlight {
   padding: 19px 20px 20px;
   margin-top: 20px;
   margin-bottom: 20px;
-}
-.blog_nav li.back_link {
-  margin-right: 0;
-}
-.blog_nav li.back_link a {
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-  font-size: 17px;
-}
-.blog_nav .blog_title {
-  background: url(http://localhost/claroline/bundles/icapblog/images/icons/icap_blog_icon.png) no-repeat 0% 20%;
-  padding-left: 50px;
-  background-size: 40px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-  font-size: 17px;
-}
-.blog_nav .configure_link {
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-  font-size: 17px;
 }
 .blog_banner_configurator {
   border: 0;
