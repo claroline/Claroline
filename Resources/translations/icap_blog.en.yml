@@ -60,6 +60,7 @@ icap_blog_post_configure_success: 'Blog configured with success'
 icap_blog_post_configure_error: 'An error occured while configuring the blog'
 icap_blog_post_configure_banner_success: "Banner's blog configured with success."
 icap_blog_post_configure_banner_error: "An error occured while configuring the banner of the blog."
+valid_banner_modification: "Validate updates"
 delete_filter: 'Delete filter'
 post_filtered_by_tag: 'Post list filtred by tag <strong>%tagName%</strong>'
 post_filtered_by_author: 'Post list filtred by author <strong>%authorName%</strong>'

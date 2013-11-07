@@ -1,5 +1,6 @@
 (function($) {
     var banner                               = $("#blog_banner");
+    var bannerActivate                       = $("#icap_blog_banner_form_banner_activate");
     var bannerHeight                         = $("#icap_blog_banner_form_banner_height");
     var bannerBackgroundImageColorPicker     = $('.banner_background_color');
     var bannerBackgroundColorField           = $('#icap_blog_banner_form_banner_background_color');
@@ -14,30 +15,46 @@
     var bannerBackgroundImageRepeatField     = $("#icap_blog_banner_form_banner_background_image_repeat", bannerBackgroundImageParametersBlock).hide();
     var bannerBackgroundImageRepeatFieldX    = $("#icap_blog_banner_form_banner_background_image_repeat_x", bannerBackgroundImageRepeatBlock);
     var bannerBackgroundImageRepeatFieldY    = $("#icap_blog_banner_form_banner_background_image_repeat_y", bannerBackgroundImageRepeatBlock);
+    var bannerResetButton                    = $("#btn_reset");
+
+    var initialIsBannerActivate                  = bannerActivate.val();
+    var initialBannerHeight                      = bannerHeight.val();
+    var initialBannerBackgroundColor             = bannerBackgroundColorField.val();
+    var initialBannerBackgroundImage             = bannerBackgroundImageField.val();
+    var initialBannerBackgroundImagePosition     = bannerBackgroundImagePositionField.val();
+    var initialBannerBackgroundImageRepeat       = bannerBackgroundImageRepeatField.val();
+
+    console.log(initialIsBannerActivate);
+    console.log(initialBannerHeight);
+    console.log(initialBannerBackgroundColor);
+    console.log(initialBannerBackgroundImage);
+    console.log(initialBannerBackgroundImagePosition);
+    console.log(initialBannerBackgroundImageRepeat);
 
     bannerBackgroundImageColorPicker.colorpicker({format: 'hex'}).on('changeColor', function (event) {
-        changeBannerBackgroundColor(event.color.toHex());
+        bannerBackgroundColorField.val(event.color.toHex());
+        changeBannerBackgroundColor();
     });
     bannerBackgroundColorField.change(function (event) {
-        changeBannerBackgroundColor($(this).val());
+        bannerBackgroundColorField.val($(this).val());
+        changeBannerBackgroundColor();
     });
 
-    function changeBannerBackgroundColor(color)
+    function changeBannerBackgroundColor()
     {
-        bannerBackgroundColorField.val(color);
+        var color = bannerBackgroundColorField.val();
         $(".input-group-addon", bannerBackgroundImageColorPicker).css('background-color', color);
         banner.css('background-color', color);
     }
 
-    $("#icap_blog_banner_form_banner_activate").change(function (event) {
+    bannerActivate.change(function (event) {
         banner.toggleClass('hidden');
     });
 
     bannerHeight.spinner(bannerHeight.data());
     bannerHeight
         .on('spin', function (event, ui) {
-            var newHeight = $(this).val();
-            banner.css('height', newHeight);
+            changeBannerHeight();
         })
         .change(function (event) {
             var newHeight = $(this).val();
@@ -45,8 +62,14 @@
             if (100 > newHeight) {
                 $(this).val(100);
             }
-            banner.css('height', $(this).val());
+
+            changeBannerHeight();
         });
+
+    function changeBannerHeight()
+    {
+        banner.css('height', bannerHeight.val());
+    }
 
     bannerBackgroundImageContainer.on('change', "#icap_blog_banner_form_file", function(){
         var input = this;
@@ -155,4 +178,22 @@
     }
 
     initBannerForm();
+
+    function resetBannerForm()
+    {
+        bannerActivate.val(initialIsBannerActivate);
+        bannerHeight.val(initialBannerHeight);
+        bannerBackgroundColorField.val(initialBannerBackgroundColor);
+        bannerBackgroundImageField.val(initialBannerBackgroundImage);
+        bannerBackgroundImagePositionField.val(initialBannerBackgroundImagePosition);
+        bannerBackgroundImageRepeatField.val(initialBannerBackgroundImageRepeat);
+
+        initBannerForm();
+        changeBannerBackgroundColor();
+        changeBannerHeight();
+    }
+
+    bannerResetButton.click(function(event) {
+        resetBannerForm();
+    });
 })(jQuery);
