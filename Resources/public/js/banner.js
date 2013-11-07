@@ -17,19 +17,12 @@
     var bannerBackgroundImageRepeatFieldY    = $("#icap_blog_banner_form_banner_background_image_repeat_y", bannerBackgroundImageRepeatBlock);
     var bannerResetButton                    = $("#btn_reset");
 
-    var initialIsBannerActivate                  = bannerActivate.val();
+    var initialIsBannerActivate                  = bannerActivate.is(":checked");
     var initialBannerHeight                      = bannerHeight.val();
     var initialBannerBackgroundColor             = bannerBackgroundColorField.val();
     var initialBannerBackgroundImage             = bannerBackgroundImageField.val();
     var initialBannerBackgroundImagePosition     = bannerBackgroundImagePositionField.val();
     var initialBannerBackgroundImageRepeat       = bannerBackgroundImageRepeatField.val();
-
-    console.log(initialIsBannerActivate);
-    console.log(initialBannerHeight);
-    console.log(initialBannerBackgroundColor);
-    console.log(initialBannerBackgroundImage);
-    console.log(initialBannerBackgroundImagePosition);
-    console.log(initialBannerBackgroundImageRepeat);
 
     bannerBackgroundImageColorPicker.colorpicker({format: 'hex'}).on('changeColor', function (event) {
         bannerBackgroundColorField.val(event.color.toHex());
@@ -181,7 +174,7 @@
 
     function resetBannerForm()
     {
-        bannerActivate.val(initialIsBannerActivate);
+        bannerActivate.attr("checked", initialIsBannerActivate);
         bannerHeight.val(initialBannerHeight);
         bannerBackgroundColorField.val(initialBannerBackgroundColor);
         bannerBackgroundImageField.val(initialBannerBackgroundImage);
@@ -201,6 +194,12 @@
         bannerBackgroundImageParametersBlock.removeClass("hidden");
         $("#icap_blog_banner_form_file", bannerBackgroundImageContainer).remove();
         bannerBackgroundImageContainer.append(bannerBackgroundImageFieldTemplate);
+        if (bannerActivate.is(":checked")) {
+            banner.removeClass('hidden');
+        }
+        else {
+            banner.addClass('hidden');
+        }
     }
 
     bannerResetButton.click(function(event) {
