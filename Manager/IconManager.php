@@ -62,6 +62,10 @@ class IconManager
 
     /**
      * Create (if possible) and|or returns an icon for a resource
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon
      */
     public function getIcon(AbstractResource $resource)
     {
@@ -228,6 +232,9 @@ class IconManager
         return $thumbnailPath;
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceIcon $icon
+     */
     public function delete(ResourceIcon $icon)
     {
         if ($icon->getMimeType() === 'custom') {
@@ -240,6 +247,14 @@ class IconManager
         }
     }
 
+    /**
+     * Replace a node icon.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resource
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceIcon $icon
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
+     */
     public function replace(ResourceNode $resource, ResourceIcon $icon)
     {
         $this->om->startFlushSuite();
@@ -252,6 +267,9 @@ class IconManager
         return $resource;
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceIcon $icon
+     */
     public function removeImageFromThumbDir(ResourceIcon $icon)
     {
         $pathName = $this->thumbDir . DIRECTORY_SEPARATOR . $icon->getIconLocation();
