@@ -8,12 +8,16 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/11/05 03:37:59
+ * Generation date: 2013/11/07 04:12:35
  */
-class Version20131105153757 extends AbstractMigration
+class Version20131107161234 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            ALTER TABLE icap__blog_options 
+            ADD display_title BOOLEAN DEFAULT 'true' NOT NULL
+        ");
         $this->addSql("
             ALTER TABLE icap__blog_options 
             ADD banner_activate BOOLEAN DEFAULT 'true' NOT NULL
@@ -42,6 +46,10 @@ class Version20131105153757 extends AbstractMigration
 
     public function down(Schema $schema)
     {
+        $this->addSql("
+            ALTER TABLE icap__blog_options 
+            DROP display_title
+        ");
         $this->addSql("
             ALTER TABLE icap__blog_options 
             DROP banner_activate

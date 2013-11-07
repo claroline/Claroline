@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BlogBundle\Migrations\sqlsrv;
+namespace Icap\BlogBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,12 +8,20 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/11/05 03:38:00
+ * Generation date: 2013/11/07 04:12:36
  */
-class Version20131105153757 extends AbstractMigration
+class Version20131107161234 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            ALTER TABLE icap__blog_options 
+            ADD display_title BIT NOT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE icap__blog_options 
+            ADD CONSTRAINT DF_D1AAC984_2A666380 DEFAULT '1' FOR display_title
+        ");
         $this->addSql("
             ALTER TABLE icap__blog_options 
             ADD banner_activate BIT NOT NULL
@@ -62,6 +70,10 @@ class Version20131105153757 extends AbstractMigration
 
     public function down(Schema $schema)
     {
+        $this->addSql("
+            ALTER TABLE icap__blog_options 
+            DROP COLUMN display_title
+        ");
         $this->addSql("
             ALTER TABLE icap__blog_options 
             DROP COLUMN banner_activate

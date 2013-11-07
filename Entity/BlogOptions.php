@@ -69,6 +69,13 @@ class BlogOptions
     /**
      * @var bool
      *
+     * @ORM\Column(type="boolean", name="display_title", options={"default" = true})
+     */
+    protected $displayTitle;
+
+    /**
+     * @var bool
+     *
      * @ORM\Column(type="boolean", name="banner_activate", options={"default" = true})
      */
     protected $bannerActivate;
@@ -256,6 +263,26 @@ class BlogOptions
     public function getPostPerPage()
     {
         return $this->postPerPage;
+    }
+
+    /**
+     * @param boolean $displayTitle
+     *
+     * @return BlogOptions
+     */
+    public function setDisplayTitle($displayTitle)
+    {
+        $this->displayTitle = $displayTitle;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getDisplayTitle()
+    {
+        return $this->displayTitle;
     }
 
     /**

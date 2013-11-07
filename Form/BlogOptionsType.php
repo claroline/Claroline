@@ -17,15 +17,19 @@ class BlogOptionsType extends AbstractType
             ->add('authorize_anonymous_comment', 'checkbox', array(
                 'required' => false,
             ))
-            ->add('post_per_page', 'choice', array(
-                'choices'  => array("5" => 5, "10" => 10, "20" => 20),
-                'required' => false,
-            ))
             ->add('auto_publish_post', 'checkbox', array(
                 'required' => false,
             ))
             ->add('auto_publish_comment', 'checkbox', array(
                 'required' => false,
+            ))
+            ->add('display_title', 'checkbox', array(
+                'required' => false,
+            ))
+            ->add('post_per_page', 'choice', array(
+                'choices'       => array("5" => 5, "10" => 10, "20" => 20),
+                'required'      => false,
+                'theme_options' => array('control_width' => 'col-md-2'),
             ))
         ;
     }

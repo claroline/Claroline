@@ -75,12 +75,14 @@ article .highlight {
 #icap_blog_post_form .row {
   margin-bottom: 15px;
 }
-#icap_blog_post_form .form-actions {
+form .form-actions {
   clear: both;
   text-align: center;
   padding: 19px 20px 20px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+}
+form.configure_blog_form .checkbox {
+  margin-left: 37px;
+  margin-bottom: 15px;
 }
 .blog_banner_configurator {
   border: 0;

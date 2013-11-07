@@ -15,6 +15,7 @@ icap_blog_options_form_authorize_anonymous_comment: 'Anonymous comments authoriz
 icap_blog_options_form_post_per_page: 'Post per page'
 icap_blog_options_form_auto_publish_post: 'Automatic publication of posts ?'
 icap_blog_options_form_auto_publish_comment: 'Automatic publication of comments ?'
+icap_blog_options_form_display_title: "Display title of the blog ?"
 icap_blog_banner_form_banner_background_color: "Background color"
 icap_blog_banner_form_banner_activate: "Activate the banner ?"
 icap_blog_banner_form_banner_background_image_position: "Positionning"

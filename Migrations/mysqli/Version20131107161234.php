@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BlogBundle\Migrations\drizzle_pdo_mysql;
+namespace Icap\BlogBundle\Migrations\mysqli;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,17 +8,18 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/11/05 03:38:00
+ * Generation date: 2013/11/07 04:12:36
  */
-class Version20131105153757 extends AbstractMigration
+class Version20131107161234 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE icap__blog_options 
-            ADD banner_activate BOOLEAN DEFAULT 'true' NOT NULL, 
+            ADD display_title TINYINT(1) DEFAULT '1' NOT NULL, 
+            ADD banner_activate TINYINT(1) DEFAULT '1' NOT NULL, 
             ADD banner_background_color VARCHAR(255) DEFAULT '#FFFFFF' NOT NULL, 
-            ADD banner_height INT DEFAULT '100' NOT NULL, 
+            ADD banner_height SMALLINT DEFAULT '100' NOT NULL, 
             ADD banner_background_image VARCHAR(255) DEFAULT NULL, 
             ADD banner_background_image_position VARCHAR(255) DEFAULT 'left top' NOT NULL, 
             ADD banner_background_image_repeat VARCHAR(255) DEFAULT 'no-repeat' NOT NULL
@@ -29,6 +30,7 @@ class Version20131105153757 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE icap__blog_options 
+            DROP display_title, 
             DROP banner_activate, 
             DROP banner_background_color, 
             DROP banner_height, 

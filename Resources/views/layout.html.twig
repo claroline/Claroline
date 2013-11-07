@@ -31,7 +31,9 @@
             {% endif %}
         </div>
         {% endif %}
+        {% if blogOptions.displayTitle %}
         <h1><a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" title="{{ _resource.resourceNode.name }}" class="blog_title">{{ _resource.resourceNode.name }}</a></h1>
+        {% endif %}
 
         {% if is_granted('EDIT', _resource) %}
         <div class="panel blog_banner_configurator">
