@@ -37,6 +37,12 @@ class Chapter
     private $lesson;
 
     /**
+     * @Gedmo\Slug(fields={"title"}, unique=true)
+     * @ORM\Column(length=128, unique=true)
+     */
+    protected $slug;
+
+    /**
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
      */
@@ -81,6 +87,29 @@ class Chapter
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set slug
+     *
+     * @param  string $slug
+     * @return Post
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * Get slug
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 
     /**
