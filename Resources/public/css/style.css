@@ -87,18 +87,12 @@ article .highlight {
   margin-bottom: 0;
   -webkit-box-shadow: none;
   box-shadow: none;
-  background-color: transparent;
-  padding-left: 10px;
-  padding-right: 10px;
 }
 .blog_banner_configurator .panel-heading {
   width: 100%;
   text-align: left;
   border-bottom: 0;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
+  border-radius: 0;
   padding: 5px 15px;
 }
 .blog_banner_configurator .panel-body {
