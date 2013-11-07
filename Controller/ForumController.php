@@ -9,6 +9,12 @@ use Claroline\ForumBundle\Form\MessageType;
 use Claroline\ForumBundle\Form\SubjectType;
 use Claroline\ForumBundle\Form\EditTitleType;
 use Claroline\ForumBundle\Form\ForumOptionsType;
+use Claroline\ForumBundle\Event\Log\CreateMessageEvent;
+use Claroline\ForumBundle\Event\Log\CreateSubjectEvent;
+use Claroline\ForumBundle\Event\Log\EditMessageEvent;
+use Claroline\ForumBundle\Event\Log\EditSubjectEvent;
+use Claroline\ForumBundle\Event\Log\DeleteMessageEvent;
+use Claroline\ForumBundle\Event\Log\DeleteSubjectEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -132,6 +138,7 @@ class ForumController extends Controller
             $subject->setForum($forum);
             $em->persist($subject);
             $dataMessage = $form->get('message')->getData();
+            $this->dispatch(new CreateSubjectEvent($subject));
 
             if ($dataMessage['content'] !== null) {
                 $message = new Message();
@@ -261,6 +268,7 @@ class ForumController extends Controller
             $message->setSubject($subject);
             $em->persist($message);
             $em->flush();
+            $this->dispatch(new CreateMessageEvent($message));
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_messages', array('subjectId' => $subjectId))
@@ -355,6 +363,7 @@ class ForumController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if ($form->isValid()) {
+            $this->dispatch(new EditMessageEvent($message, $message->getContent(), $form->get('content')->getData()));
             $message->setContent($form->get('content')->getData());
             $em->persist($message);
             $em->flush();
@@ -447,12 +456,14 @@ class ForumController extends Controller
             throw new AccessDeniedHttpException();
         }
 
+        $oldTitle = $subject->getTitle();
         $form = $this->container->get('form.factory')->create(new EditTitleType(), $subject);
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
             $em->persist($subject);
             $em->flush();
+            $this->dispatch(new EditSubjectEvent($subject, $oldTitle, $subject->getTitle()));
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_subjects', array('forumId' => $subject->getForum()->getId()))
@@ -481,6 +492,7 @@ class ForumController extends Controller
         $sc = $this->get('security.context');
 
         if ($sc->isGranted('moderate', new ResourceCollection(array($message->getSubject()->getForum()->getResourceNode())))) {
+            $this->dispatch(new DeleteMessageEvent($message));
             $em->remove($message);
             $em->flush();
 
@@ -506,6 +518,7 @@ class ForumController extends Controller
         $sc = $this->get('security.context');
 
         if ($sc->isGranted('moderate', new ResourceCollection(array($subject->getForum()->getResourceNode())))) {
+            $this->dispatch(new DeleteSubjectEvent($subject));
             $em->remove($subject);
             $em->flush();
 
@@ -524,5 +537,12 @@ class ForumController extends Controller
         if (!$this->get('security.context')->isGranted('OPEN', $collection)) {
             throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
         }
+    }
+
+    protected function dispatch($event)
+    {
+        $this->get('event_dispatcher')->dispatch('log', $event);
+
+        return $this;
     }
 }
