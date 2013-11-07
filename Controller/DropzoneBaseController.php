@@ -8,9 +8,12 @@
 namespace Icap\DropzoneBundle\Controller;
 
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
-use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Icap\DropzoneBundle\Entity\Dropzone;
+use Icap\DropzoneBundle\Event\Log\LogCriterionCreateEvent;
+use Icap\DropzoneBundle\Event\Log\LogCriterionDeleteEvent;
+use Icap\DropzoneBundle\Event\Log\LogCriterionUpdateEvent;
+use Icap\DropzoneBundle\Event\Log\LogDropzoneConfigureEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -44,10 +47,17 @@ class DropzoneBaseController extends Controller
 
     protected function dispatch($event)
     {
-        if ($event instanceof LogResourceReadEvent) {
+        if (
+                $event instanceof LogResourceReadEvent or
+                $event instanceof LogDropzoneConfigureEvent or
+                $event instanceof LogCriterionCreateEvent or
+                $event instanceof LogCriterionUpdateEvent or
+                $event instanceof LogCriterionDeleteEvent
+        ) {
             // Other logs are WIP.
             $this->get('event_dispatcher')->dispatch('log', $event);
         }
+        //$this->get('event_dispatcher')->dispatch('log', $event);
 
         return $this;
     }

@@ -14,13 +14,20 @@ class LogCriterionCreateEvent extends AbstractLogResourceEvent {
 
     /**
      * @param Dropzone $dropzone
+     * @param mixed $dropzoneChangeSet
      * @param Drop $drop
      */
-    public function __construct(Dropzone $dropzone, Criterion $criterion)
+    public function __construct(Dropzone $dropzone, $dropzoneChangeSet, Criterion $criterion)
     {
         $details = array(
-            'dropzoneId'  => $dropzone->getId(),
-            'criterionId' => $criterion->getId(),
+            'dropzone'  => array(
+                'id' => $dropzone->getId(),
+                'changeSet' => $dropzoneChangeSet
+            ),
+            'criterion' => array(
+                'id' => $criterion->getId(),
+                'instruction' => $criterion->getInstruction(),
+            )
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);

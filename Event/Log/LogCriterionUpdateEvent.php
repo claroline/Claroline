@@ -10,17 +10,25 @@ use Icap\DropzoneBundle\Entity\Dropzone;
 
 class LogCriterionUpdateEvent extends AbstractLogResourceEvent {
 
-    const ACTION = 'resource-icap_dropzone-criterion_delete';
+    const ACTION = 'resource-icap_dropzone-criterion_update';
 
     /**
      * @param Dropzone $dropzone
+     * @param mixed $dropzoneChangeSet
      * @param Drop $drop
+     * @param mixed $criterionChangeSet
      */
-    public function __construct(Dropzone $dropzone, Criterion $criterion)
+    public function __construct(Dropzone $dropzone, $dropzoneChangeSet, Criterion $criterion, $criterionChangeSet)
     {
         $details = array(
-            'dropzoneId'  => $dropzone->getId(),
-            'criterionId' => $criterion->getId(),
+            'dropzone'  => array(
+                'id' => $dropzone->getId(),
+                'changeSet' => $dropzoneChangeSet,
+            ),
+            'criterion' => array(
+                'id' => $criterion->getId(),
+                'changeSet' => $criterionChangeSet,
+            )
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);

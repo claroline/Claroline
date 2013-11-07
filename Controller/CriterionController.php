@@ -91,7 +91,7 @@ class CriterionController extends DropzoneBaseController
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
 
-        $event = null;
+        $edit = null;
         $criterion = new Criterion();
         if ($criterionId != 0) {
             $criterion = $this
@@ -99,10 +99,10 @@ class CriterionController extends DropzoneBaseController
                 ->getManager()
                 ->getRepository('IcapDropzoneBundle:Criterion')
                 ->find($criterionId);
-            $event = new LogCriterionUpdateEvent($dropzone, $criterion);
+            $edit = true;
         } else {
             $criterion->setDropzone($dropzone);
-            $event = new LogCriterionCreateEvent($dropzone, $criterion);
+            $edit = false;
         }
 
         $form = $this->createForm(new CriterionType(), $criterion);
@@ -113,10 +113,23 @@ class CriterionController extends DropzoneBaseController
             $criterion->setDropzone($dropzone);
 
             $em = $this->getDoctrine()->getManager();
+            $unitOfWork = $em->getUnitOfWork();
+            $unitOfWork->computeChangeSets();
+            $dropzoneChangeSet = $unitOfWork->getEntityChangeSet($dropzone);
+            if ($edit) {
+                $criterionChangeSet = $unitOfWork->getEntityChangeSet($criterion);
+            }
+
             $em->persist($criterion);
             $em->persist($dropzone);
             $em->flush();
 
+            $event = null;
+            if($edit === true) {
+                $event = new LogCriterionUpdateEvent($dropzone, $dropzoneChangeSet, $criterion, $criterionChangeSet);
+            } else{
+                $event = new LogCriterionCreateEvent($dropzone, $dropzoneChangeSet, $criterion);
+            }
 
             $this->dispatch($event);
 
