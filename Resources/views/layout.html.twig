@@ -33,9 +33,7 @@
             {% endif %}
         </div>
         {% endif %}
-        <ul class="nav nav-pills blog_nav">
-            <li class="active"><a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" title="{{ _resource.resourceNode.name }}" class="blog_title">{{ _resource.resourceNode.name }}</a></li>
-        </ul>
+        <h1><a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" title="{{ _resource.resourceNode.name }}" class="blog_title">{{ _resource.resourceNode.name }}</a></h1>
 
         {% if is_granted('EDIT', _resource) %}
         <div class="panel blog_banner_configurator">
