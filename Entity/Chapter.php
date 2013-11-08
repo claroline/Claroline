@@ -38,7 +38,7 @@ class Chapter
 
     /**
      * @Gedmo\Slug(fields={"title"}, unique=true)
-     * @ORM\Column(length=128, unique=true)
+     * @ORM\Column(length=128, unique=true, nullable=true)
      */
     protected $slug;
 
