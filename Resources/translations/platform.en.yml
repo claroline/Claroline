@@ -305,6 +305,7 @@ no_email: "This email doesn't match a registered user"
 no_email: 'No email found, check the spelling'
 no_group: 'No group'
 no_home_tab: "There is no Home tab"
+no_message: 'No message'
 no_search_results: 'Your search hasn''t returned any result.'
 no_tag: 'There is no tag'
 no_user: 'No user'
