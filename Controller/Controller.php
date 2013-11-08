@@ -90,12 +90,20 @@ class Controller extends BaseController
         $translator = $this->get('translator');
 
         foreach ($postDatas as $postData) {
-            $archiveDatas[$postData['year']][] = array(
-                'year'          => $postData['year'],
-                'month'         => $translator->trans('month.' . date("F", mktime(0, 0, 0, $postData['month'], 10)), array(), 'platform'),
-                'count'         => $postData['number'],
-                'urlParameters' => $postData['month'] . '-' . $postData['year']
-            );
+            $publicationDate = $postData->getPublicationDate();
+            $year = $publicationDate->format('Y');
+            $month = $publicationDate->format('m');
+
+            if (!isset($archiveDatas[$year][$month])) {
+                $archiveDatas[$year][$month] = array(
+                    'year'          => $year,
+                    'month'         => $translator->trans('month.' . date("F", mktime(0, 0, 0, $month, 10)), array(), 'platform'),
+                    'count'         => 1,
+                    'urlParameters' => $month . '-' . $year
+                );
+            } else {
+                $archiveDatas[$year][$month]['count']++;
+            }
         }
 
         return $archiveDatas;
