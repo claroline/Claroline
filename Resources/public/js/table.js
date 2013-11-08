@@ -59,9 +59,9 @@
             window.location.href = route;
         });
 
-        $('#search-items-txt').keypress(function(e){
+        $('#search-items-txt').keypress(function (e) {
 
-            if (e.keyCode == 13) {
+            if (e.keyCode === 13) {
                 var search = document.getElementById('search-items-txt').value;
                 var route;
 
@@ -74,21 +74,23 @@
 
                 window.location.href = route;
             }
-        })
+        });
 
         for (var key in parameters.route.action) {
-            var btnClass = '.'
-                + (parameters.route.action[key].btn === undefined ? 'action-button': parameters.route.action[key].btn);
-            $(btnClass).click(function (e) {
-                currentAction = $(e.currentTarget).attr('data-action');
-                var html = Twig.render(parameters.route.action[currentAction].confirmTemplate,
-                    {'nbItems': $('.chk-item:checked').length}
+            if (parameters.route.action.hasOwnProperty(key)) {
+                var btnClass = '.' + (
+                    parameters.route.action[key].btn === undefined ? 'action-button': parameters.route.action[key].btn
                 );
-                $('#table-modal .modal-body').html(html);
-                $('#table-modal').modal('show');
-            });
+                $(btnClass).click(function (e) {
+                    currentAction = $(e.currentTarget).attr('data-action');
+                    var html = Twig.render(parameters.route.action[currentAction].confirmTemplate,
+                        {'nbItems': $('.chk-item:checked').length}
+                    );
+                    $('#table-modal .modal-body').html(html);
+                    $('#table-modal').modal('show');
+                });
+            }
         }
-
         $('#modal-valid-button').on('click', function () {
             var queryString = {};
             var i = 0;

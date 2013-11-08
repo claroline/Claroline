@@ -1,5 +1,7 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
+{% block title %}{{ parent() ~ ' - ' ~ 'registration_to_workspaces' | trans({}, 'platform') ~ ' (' ~ 'groups'|trans({}, 'platform') ~ ')' }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([
@@ -19,9 +21,12 @@
         ])
     }}
 {% endblock %}
+
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'registration_to_workspaces'|trans({}, 'platform') }} ({{ 'groups'|trans({}, 'platform') }})</h3>
+        <h3 class="panel-title">
+            {{ 'registration_to_workspaces'|trans({}, 'platform') }} ({{ 'groups'|trans({}, 'platform') }})
+        </h3>
     </div>
     <div class="panel-body" id="registration-list-div" subject-type="group">
         <div>

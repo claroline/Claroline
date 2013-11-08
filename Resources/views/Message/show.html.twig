@@ -1,4 +1,13 @@
 {% extends 'ClarolineCoreBundle:Message:layout.html.twig' %}
+
+{% block title %}{% spaceless %}
+    {% if ancestors | length >= 1 %}
+        {{ parent() ~ ' - ' ~ ancestors[0].getObject() }}
+    {% else %}
+        {{ 'new_message' | trans({}, 'platform') }}
+    {% endif %}
+{% endspaceless %}{% endblock %}
+
 {% block section_content %}
     <div class="row">
         <div class="col-md-6">

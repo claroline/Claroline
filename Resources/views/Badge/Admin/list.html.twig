@@ -2,6 +2,8 @@
 
 {% trans_default_domain "badge" %}
 
+{% block title %}{{ parent() ~ ' - ' ~ 'badges_management' | trans }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([

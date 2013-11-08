@@ -43,6 +43,8 @@
 
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
+{% block title %}{{ parent() ~ ' - ' ~ 'users' | trans({}, 'platform') }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([

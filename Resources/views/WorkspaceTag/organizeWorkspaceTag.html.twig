@@ -72,6 +72,8 @@
 
 {% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
 
+{% block title %}{{ parent() ~ ' - ' ~ "tags_organization" | trans({}, "platform") }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([

@@ -1,5 +1,7 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
+{% block title %}{{ parent() ~ ' - ' ~ 'registration_to_workspaces' | trans({}, 'platform') ~ ' (' ~ 'users'|trans({}, 'platform') ~ ')' }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([
