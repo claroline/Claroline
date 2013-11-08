@@ -661,15 +661,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     {
         //reduce the number of requests needed by doctrine... it's a little bit hacky but it works
         //This function is used by the Role tool.
-        $dql = "SELECT u, g, r, ws From Claroline\CoreBundle\Entity\User u
-            JOIN u.groups g
-            JOIN u.personalWorkspace ws
-            JOIN g.roles r";
-
-        $this->_em->createQuery($dql)->getResult();
 
         $dql = "
-            SELECT u, r1, ws From Claroline\CoreBundle\Entity\User u
+            SELECT u, r1, g, r2, ws From Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.roles r1
             LEFT JOIN u.personalWorkspace ws
             LEFT JOIN u.groups g

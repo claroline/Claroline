@@ -20,7 +20,7 @@ class MailManager
      * @DI\InjectParams({
      *     "router"         = @DI\Inject("router"),
      *     "mailer"         = @DI\Inject("mailer"),
-     *     "templating"     = @Di\Inject("templating"), 
+     *     "templating"     = @Di\Inject("templating"),
      * })
      */
     public function __construct(
@@ -37,6 +37,10 @@ class MailManager
         $this->translator = $translator;
         $this->request = $request;
     }
+
+    /**
+     * @return boolean
+     */
     public function isMailerAvailable()
     {
         try {
@@ -48,6 +52,13 @@ class MailManager
         }
     }
 
+    /**
+     * @param string $from
+     * @param string $sender
+     * @param string $hash
+     *
+     * @return boolean
+     */
     public function sendForgotPassword($from, $sender, $hash)
     {
         $msg = $this->translator->trans('mail_click', array(), 'platform');
@@ -70,7 +81,14 @@ class MailManager
         return false;
     }
 
-    public function sendPlainPassword($from,$sender,$body)
+    /**
+     * @param string $from
+     * @param string $sender
+     * @param string $body
+     *
+     * @return boolean
+     */
+    public function sendPlainPassword($from, $sender, $body)
     {
         $message = \Swift_Message::newInstance()
             ->setSubject($this->translator->trans('reset_pwd', array(), 'platform'))

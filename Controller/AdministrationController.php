@@ -263,16 +263,16 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/groups/page/{page}",
+     *     "/groups/page/{page}/max/{max}",
      *     name="claro_admin_group_list",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "search"=""}
+     *     defaults={"page"=1, "search"="", "max"=50}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "groups/page/{page}/search/{search}",
+     *     "groups/page/{page}/search/{search}/max/{max}",
      *     name="claro_admin_group_list_search",
-     *     defaults={"page"=1},
+     *     defaults={"page"=1, "max"=50},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -280,13 +280,13 @@ class AdministrationController extends Controller
      *
      * Returns the platform group list.
      */
-    public function groupListAction($page, $search)
+    public function groupListAction($page, $search, $max)
     {
         $pager = $search === '' ?
-            $this->groupManager->getGroups($page) :
-            $this->groupManager->getGroupsByName($search, $page);
+            $this->groupManager->getGroups($page, $max) :
+            $this->groupManager->getGroupsByName($search, $page, $max);
 
-        return array('pager' => $pager, 'search' => $search);
+        return array('pager' => $pager, 'search' => $search, 'max' => $max);
     }
 
     /**

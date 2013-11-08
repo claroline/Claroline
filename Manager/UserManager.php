@@ -662,7 +662,7 @@ class UserManager
 
     /**
      * @todo Please describe me. I couldn't find findOneByResetPasswordHash.
-     * 
+     *
      * @param string $resetPassword
      *
      * @return User

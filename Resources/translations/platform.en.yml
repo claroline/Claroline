@@ -536,6 +536,7 @@ users_management: 'Users management'
 users_minimum_requirement_msg: 'Users validation has the following requirements: 3 chars username, 4 chars password, valid email.'
 users_registration_in_workspace: 'Users registration in workspace'
 users_visits: 'Users'' connections'
+user_per_page: 'Row per page'
 validate: Validate
 view: View
 view_category_hierarchy: 'View category hierarchy'
