@@ -123,15 +123,17 @@
                             <td>{{ user.getFirstName() }}</td>
                             <td>{{ user.getMail() }}</td>
 
-                            <td> <a href="{{ path('claro_profile_form_admin', {'user': user.getId()}) }}">
+                            <td> <a href="{{ path('claro_profile_form', {'user': user.getId()}) }}">
                                 {{ user.getUsername() }}
                             </a>
                         </td>
                             <td>
                                 <div>
                                     {% for role in user.getEntityRoles() %}
-                                        {{ role.getTranslationKey()|trans({}, 'platform')  }}
-                                        {% if not loop.last %}, {% endif %}
+                                        {% if role.type == 1 %}
+                                            {{ role.getTranslationKey()|trans({}, 'platform')  }}
+                                            {% if not loop.last %}, {% endif %}
+                                        {% endif %}
                                     {% endfor %}
                                 </div>
                             </td>

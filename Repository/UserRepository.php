@@ -407,9 +407,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             LEFT JOIN wr.workspace w
             LEFT JOIN u.personalWorkspace ws
             WHERE w IN (:workspaces)
-            AND  UPPER(u.firstName) LIKE :search
-            OR UPPER(u.lastName) LIKE :search
-            OR UPPER(u.username) LIKE :search
+            AND  (
+                UPPER(u.firstName) LIKE :search
+                OR UPPER(u.lastName) LIKE :search
+                OR UPPER(u.username) LIKE :search
+            )
             ORDER BY u.id
         ';
         $query = $this->_em->createQuery($dql);

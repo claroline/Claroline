@@ -25,7 +25,7 @@ class WorkspaceTag
     protected $id;
 
     /**
-     * @ORM\Column()
+     * @ORM\Column(nullable=false)
      */
     protected $name;
 

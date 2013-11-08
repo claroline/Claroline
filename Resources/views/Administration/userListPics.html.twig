@@ -57,6 +57,7 @@
 {% endblock %}
 
 {% block section_content %}
+
 <div class="panel-heading">
     <h3 class="panel-title">{{ 'users_list'|trans({}, 'platform') }}</h3>
 </div>
@@ -81,6 +82,7 @@
     </div>
 
     {{ renderPager(search, pager) }}
+
     <div>
     </div>
     <div class="row">
@@ -89,7 +91,9 @@
         {% else %}
             <p> <a href="{{ path('claro_admin_user_list',{'search':search})}}"> {{'change_view'|trans({}, 'platform') }}</a> </p>
         {% endif %}
+
     {% for user in pager.currentPageResults %}
+
             <div class="col-sm-6 col-md-3">
                 <div class="thumbnail">
                 <span class="row-user">
@@ -123,10 +127,14 @@
                         <i class="icon-eye-open"></i>
                     </a>
                     {% endif %}
-                    {% for role in user.getEntityRoles() %}
-                    {{ role.getTranslationKey()|trans({}, 'platform')  }}
-                    {% if not loop.last %}, {% endif %}
-                    {% endfor %}
+                        {% spaceless %}
+                        {% for role in user.getEntityRoles() %}
+                            {% if role.type == 1 %}
+                                {{ role.getTranslationKey()|trans({}, 'platform')  }}
+                                {% if not loop.last %}, {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        {% endspaceless %}
 
                     <input type="checkbox" value="{{ user.id }}" class="chk-item" align="center"></input>
 
@@ -146,7 +154,9 @@
     <div>
         {{ displayControls(workspace.getId()) }}
     </div>
+
 </div>
+
 {% endblock %}
 {% block javascripts %}
 {{ parent() }}
