@@ -1,8 +1,6 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{% block title %}
-    {{ workspace.getName() }} - {{ parent() }}
-{% endblock %}
+{% block title %}{{ workspace.getName() }}{% endblock %}
 
 {% block breadcrumb %}
     <div id="resource-breadcrumb">

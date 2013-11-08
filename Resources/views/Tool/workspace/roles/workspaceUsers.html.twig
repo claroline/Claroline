@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% macro renderPager(search, workspaceId, pager, max) %}
 {% if search == '' %}
     {{
@@ -24,12 +25,44 @@
     )
     }}
 {% endif %}
+=======
+{% macro renderPager(search, workspaceId, queryString, pager) %}
+    {% if search == '' %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_workspace_registered_user_list',
+                    'routeParams': {'workspace': workspaceId},
+                    'queryString': queryString
+                }
+            )
+        }}
+    {% else %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_workspace_registered_user_list_search',
+                    'routeParams': {'search': search, 'workspace': workspaceId},
+                    'queryString': queryString
+                }
+            )
+        }}
+    {% endif %}
+>>>>>>> bfc524e02609dfa255b9c3c05cdb68becc90517c
 {% endmacro %}
 
 {% from _self import renderPager %}
-{% from _self import displayControls %}
 
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "users_list" | trans({}, "platform") }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.workspaceBreadcrumbs(
@@ -47,53 +80,33 @@
 {% block section_content %}
     <div class="panel-body">
         <ul class="nav nav-tabs">
-            <li class="active"> <a  href="#"> {{'users'|trans({}, 'platform') }} </a> </li>
+            <li class="active"><a href="{{ path('claro_workspace_registered_user_list', {'workspace': workspace.getId()}) }}"> {{'users'|trans({}, 'platform') }} </a> </li>
             <li> <a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId() }) }}"> {{'groups'|trans({}, 'platform') }} </a> </li>
             <li> <a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()} ) }}">{{ 'roles'|trans({}, 'platform') }}</a> </li>
         </ul>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="btn-group margin-md">
+                    <a href="{{ path('claro_workspace_unregistered_user_list', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle">
+                        <i class="icon-plus"></i> {{ 'add_users'|trans({}, 'platform') }}
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-group margin-md">
+                    <input class="form-control" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
+                    <span class="input-group-btn">
+                        <button class="filter btn btn-default" type="button" id="search-button">
+                            <i class="icon-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
 
         {{ macros.flashBox() }}
-
-        {{
-            macros.breadcrumbs([
-                {
-                    'name': 'users_list'|trans({}, 'platform'),
-                    'href': ''
-                },
-            ])
-        }}
-
-        <div class="input-append pull-right">
-            <input class="input-medium" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}"></input>
-            <button class="filter btn btn-default" type="button" id="search-button">
-                <i class="icon-search"></i>
-        </div>
-        <div class="btn-group">
-            <a href="{{ path('claro_workspace_unregistered_user_list', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle">
-                {{ 'add_users'|trans({}, 'platform') }}
-            </a>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-md-10">
-                {{ renderPager(search, workspace.getId(), pager, max) }}
-            </div>
-            <div class="col-md-2" style="margin-top: 15px;">
-                <div >
-                    {{ 'user_per_page'|trans({}, 'platform') }}
-                </div>
-                <div>
-                    <select class="form-control input-md" id="max-select">
-                        <option>20</option>
-                        <option>50</option>
-                        <option>100</option>
-                        <option>200</option>
-                        <option>500</option>
-                        </div>
-                    </select>
-                </div>
-            </div>
-        </div>
+        <h3>{{ 'users_list'|trans({}, 'platform') }}</h3>
+        {{ renderPager(search, workspace.getId(), queryString, pager) }}
         <div class="table-responsive">
             <table class="table table-striped table-bordered table-condensed">
                 <thead>
@@ -147,7 +160,11 @@
                 </tbody>
             </table>
         </div>
+<<<<<<< HEAD
         {{ renderPager(search, workspace.getId(), pager, max) }}
+=======
+        {{ renderPager(search, workspace.getId(), queryString, pager) }}
+>>>>>>> bfc524e02609dfa255b9c3c05cdb68becc90517c
     </div>
 {% endblock %}
 {% block javascripts %}

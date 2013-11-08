@@ -66,15 +66,15 @@ class UserMessageRepository extends EntityRepository
     public function findRemoved(User $user, $executeQuery = true)
     {
         $dql = "
-            SELECT um, u, m FROM Claroline\CoreBundle\Entity\UserMessage um
-            JOIN um.user u
+            SELECT um
+            FROM Claroline\CoreBundle\Entity\UserMessage um
             JOIN um.message m
-            WHERE u.id = {$user->getId()}
+            WHERE um.user = :user
             AND um.isRemoved = true
-            GROUP BY m
             ORDER BY m.date DESC
         ";
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
 
         return $executeQuery ? $query->getResult() : $query;
     }

@@ -1,4 +1,7 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "role_edition" | trans({}, "platform") }} ({{ role.getTranslationKey() | trans({}, "platform") }}){% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.workspaceBreadcrumbs(
@@ -16,6 +19,7 @@
         )
     }}
 {% endblock %}
+
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'role_edition'|trans({}, 'platform') }} ({{ role.getTranslationKey() | trans({}, "platform") }})</h3>

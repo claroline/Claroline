@@ -1,4 +1,7 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "save_workspace_as_template" | trans({}, "platform") }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.workspaceBreadcrumbs(

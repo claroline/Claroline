@@ -4,6 +4,8 @@
 
 {% trans_default_domain "badge" %}
 
+{% block title %}{{ parent() ~ ' - ' ~ 'add_badge' | trans }}{% endblock %}
+
 {% block collection_widget %}
     {% spaceless %}
         {% if prototype is defined %}

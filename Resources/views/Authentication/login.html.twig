@@ -1,5 +1,7 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
+{% block title %}{{ 'login' | trans({}, 'platform') ~ ' - ' ~ parent() }}{% endblock %}
+
 {#
 This form doesn't include the usual form theme as we want it to always display the
 same message when authentication has failed (no precise validation errors).

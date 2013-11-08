@@ -2,6 +2,8 @@
 
 {% trans_default_domain "badge" %}
 
+{% block title %}{{ parent() ~ ' - ' ~ 'badges' | trans }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.workspaceBreadcrumbs(
@@ -17,7 +19,7 @@
 {% endblock %}
 
 {% block section_title %}
-    {{ 'workspace_badges'|trans }}
+    {{ 'workspace_badges' | trans }}
 {% endblock %}
 
 {% block section_body %}
