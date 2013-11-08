@@ -39,6 +39,8 @@
 
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
+{% block title %}{{ parent() ~ ' - ' ~ 'groups' | trans({}, 'platform') }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([
@@ -51,7 +53,10 @@
                 'name': 'users_management'|trans({}, 'platform'),
                 'href': path('claro_admin_users_management')
             },
-            {'name':'groups'|trans({}, 'platform'), 'href':''}
+            {
+                'name': 'groups'|trans({}, 'platform'),
+                'href':''
+            }
         ])
     }}
 {% endblock %}

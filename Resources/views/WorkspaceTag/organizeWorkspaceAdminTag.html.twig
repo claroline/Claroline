@@ -19,13 +19,7 @@
 
 {% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script
-        src='{{ asset('bundles/clarolinecore/js/workspace/organizeWorkspaceAdminTag.js') }}'
-        type="text/javascript">
-    </script>
-{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ "admin_tags_organization" | trans({}, "platform") }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -50,6 +44,7 @@
         ])
     }}
 {% endblock %}
+
 {% block section_content %}
 
     <div class="panel-heading">
@@ -124,4 +119,12 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src='{{ asset('bundles/clarolinecore/js/workspace/organizeWorkspaceAdminTag.js') }}'
+        type="text/javascript">
+    </script>
 {% endblock %}

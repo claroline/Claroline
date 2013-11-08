@@ -1,5 +1,7 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
+{% block title %}{{ parent() ~ ' - ' ~ "agenda" | trans({}, "tools") }}{% endblock %}
+
 {% set calendarPath = 'bundles/frontend/jquery/plugin/calendar/' %}
 
 {% block stylesheets %}

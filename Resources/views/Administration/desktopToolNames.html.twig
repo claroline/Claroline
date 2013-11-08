@@ -1,4 +1,7 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'desktop_tools' | trans({}, 'platform') }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([
@@ -14,6 +17,7 @@
         ])
     }}
 {% endblock %}
+
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">

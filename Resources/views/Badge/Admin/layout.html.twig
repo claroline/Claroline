@@ -1,5 +1,7 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
+{% block title %}{{ parent() ~ ' - ' ~ 'badges' | trans({}, 'badge') }}{% endblock %}
+
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">

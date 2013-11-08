@@ -1,7 +1,8 @@
-404 : 'La page que vous cherchez n''existe pas.'
 'Add a logo': 'Ajouter un logo'
+'Audience/user visits': 'Audience/Visites utilisateurs'
 'Choose a logo': 'Choisir un logo'
 'None': 'Aucun'
+404 : 'La page que vous cherchez n''existe pas.'
 Action List: 'Liste des actions'
 Actions per day: 'Nombre d''actions par jour'
 Choose visible actions in the widget: 'Choisissez les actions visibles dans le widget'
@@ -286,8 +287,8 @@ new_message: 'Nouveau message'
 new_message_alert: 'Vous avez %count% nouveaux message(s)'
 no: 'non'
 no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
-no_home_tab: 'Il n''y a aucun onglet'
 no_group: 'Aucun groupe'
+no_home_tab: 'Il n''y a aucun onglet'
 no_search_results: 'Votre recherche n''a retourné aucun résultat.'
 no_tag: 'Il n''y a aucun Tag'
 no_user: 'Aucun utilisateur'
@@ -334,7 +335,6 @@ profile_form_administrativeCode: 'Code administratif'
 profile_form_description : 'Description'
 profile_form_firstName: Prénom
 profile_form_lastName: Nom
-profile_form_userName: 'Nom d''utilisateur'
 profile_form_mail: Mail
 profile_form_note: 'Note personnelle'
 profile_form_ownedRoles: Role(s)
@@ -343,6 +343,7 @@ profile_form_pictureFile : 'Photo de profil'
 profile_form_plainPassword_first: 'Mot de passe'
 profile_form_plainPassword_second: Vérification
 profile_form_platformRoles: Rôles
+profile_form_userName: 'Nom d''utilisateur'
 profile_form_username: 'Nom d''utilisateur'
 properties: Propriétés
 public: Public
@@ -515,11 +516,11 @@ visitor: Visiteur
 warning_user_impersonation: 'Vous êtes connecté en tant que %user%.'
 warning_workspace_impersonation: 'Vous êtes connecté en tant que %role% du workspace %workspace%.'
 widget: Widget
+widget_display_form_name: Nom
 widget_home_tab_delete_confirm_message: 'Voulez-vous vraiment retirer ce widget de cet onglet ?'
 widget_home_tab_delete_confirm_title: 'Suppression du widget de l''onglet'
 widget_settings: 'Paramètres des widgets'
 widgets: Widgets
-widget_display_form_name: Nom
 widgets_configuration: 'Configuration des widgets'
 workspace.create: 'Créer un nouvel espace d''activités'
 workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'

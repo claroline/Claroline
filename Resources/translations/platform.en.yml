@@ -1,7 +1,8 @@
-404: 'Page Not found'
 'Add a logo': 'Add a logo'
+'Audience/user visits': 'Audience/user visits'
 'Choose a logo': 'Choose a logo'
 'None': 'None'
+404: 'Page Not found'
 Action List: 'Action List'
 Actions per day: 'Actions per day'
 Choose visible actions in the widget: 'Choose visible actions in the widget'
@@ -288,8 +289,8 @@ new_message_alert: 'You have %count% new message(s)'
 no: 'no'
 no_email: "This email doesn't match a registered user"
 no_email: 'No email found, check the spelling'
-no_home_tab: "There is no Home tab"
 no_group: 'No group'
+no_home_tab: "There is no Home tab"
 no_search_results: 'Your search hasn''t returned any result.'
 no_tag: 'There is no tag'
 no_user: 'No user'
@@ -336,7 +337,6 @@ profile_form_administrativeCode: 'Administrative code'
 profile_form_description : 'Description'
 profile_form_firstName: 'First name'
 profile_form_lastName: 'Last name'
-profile_form_userName: 'User name'
 profile_form_mail: Mail
 profile_form_note: 'Personnal note'
 profile_form_ownedRoles: Role(s)
@@ -345,6 +345,7 @@ profile_form_pictureFile : 'Picture profile'
 profile_form_plainPassword_first: Password
 profile_form_plainPassword_second: Verification
 profile_form_platformRoles: Roles
+profile_form_userName: 'User name'
 profile_form_username: Username
 properties: Properties
 public: Public

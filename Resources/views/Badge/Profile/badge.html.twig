@@ -1,5 +1,7 @@
 {% extends "ClarolineCoreBundle:Badge:layout.html.twig" %}
 
+{% block title %}{{ parent() ~ ' - ' ~ badge.name }}{% endblock %}
+
 {% trans_default_domain "badge" %}
 
 {% block content %}

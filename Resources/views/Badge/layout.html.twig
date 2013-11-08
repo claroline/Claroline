@@ -1,5 +1,7 @@
 {% extends "ClarolineCoreBundle::layout.html.twig" %}
 
+{% block title %}{{ 'badge' | trans({}, 'badge') }}{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets debug=false filter='lessphp'  output='bundles/clarolinecore/css/badge.css'

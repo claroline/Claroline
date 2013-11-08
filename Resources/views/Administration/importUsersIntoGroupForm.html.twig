@@ -1,4 +1,7 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'import_users' | trans({}, 'platform') }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([
@@ -26,6 +29,7 @@
         ])
     }}
 {% endblock%}
+
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'import_users'|trans({}, 'platform') }}</h3>
