@@ -4,6 +4,9 @@ namespace Claroline\AnnouncementBundle\Controller;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
+use Claroline\AnnouncementBundle\Event\Log\LogAnnouncementCreateEvent;
+use Claroline\AnnouncementBundle\Event\Log\LogAnnouncementDeleteEvent;
+use Claroline\AnnouncementBundle\Event\Log\LogAnnouncementEditEvent;
 use Claroline\AnnouncementBundle\Form\AnnouncementType;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -13,6 +16,7 @@ use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -24,6 +28,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 class AnnouncementController extends Controller
 {
     private $announcementManager;
+    private $eventDispatcher;
     private $formFactory;
     private $pagerFactory;
     private $securityContext;
@@ -34,6 +39,7 @@ class AnnouncementController extends Controller
     /**
      * @DI\InjectParams({
      *     "announcementManager" = @DI\Inject("claroline.announcement.manager.announcement_manager"),
+     *     "eventDispatcher"     = @DI\Inject("event_dispatcher"),
      *     "formFactory"         = @DI\Inject("form.factory"),
      *     "pagerFactory"        = @DI\Inject("claroline.pager.pager_factory"),
      *     "securityContext"     = @DI\Inject("security.context"),
@@ -47,13 +53,15 @@ class AnnouncementController extends Controller
         FormFactoryInterface $formFactory,
         PagerFactory $pagerFactory,
         SecurityContextInterface $securityContext,
+        EventDispatcher $eventDispatcher,
         Translator $translator,
         Utilities $utils,
         WorkspaceManager $workspaceManager
     )
     {
-        $this->formFactory = $formFactory;
         $this->announcementManager = $announcementManager;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->formFactory = $formFactory;
         $this->pagerFactory = $pagerFactory;
         $this->securityContext = $securityContext;
         $this->translator = $translator;
@@ -167,7 +175,11 @@ class AnnouncementController extends Controller
             if (!is_null($visibleFrom) && !is_null($visibleUntil) && $visibleUntil <= $visibleFrom) {
                 $this->get('session')->getFlashBag()->add(
                     'danger',
-                    $this->translator->trans('visible_from_until_condition', array(), 'announcement')
+                    $this->translator->trans(
+                        'visible_from_until_condition',
+                        array(),
+                        'announcement'
+                    )
                 );
 
                 return array(
@@ -190,6 +202,11 @@ class AnnouncementController extends Controller
             }
             $announcement->setCreator($user);
             $this->announcementManager->insertAnnouncement($announcement);
+
+            $this->eventDispatcher->dispatch(
+                'log',
+                new LogAnnouncementCreateEvent($aggregate, $announcement)
+            );
 
             return $this->redirect(
                 $this->generateUrl(
@@ -297,6 +314,14 @@ class AnnouncementController extends Controller
             }
             $this->announcementManager->insertAnnouncement($announcement);
 
+            $this->eventDispatcher->dispatch(
+                'log',
+                new LogAnnouncementEditEvent(
+                    $announcement->getAggregate(),
+                    $announcement
+                )
+            );
+
             return $this->redirect(
                 $this->generateUrl(
                     'claro_announcements_list',
@@ -335,6 +360,11 @@ class AnnouncementController extends Controller
         $resource = $announcement->getAggregate();
         $this->checkAccess('EDIT', $resource);
         $this->announcementManager->deleteAnnouncement($announcement);
+
+        $this->eventDispatcher->dispatch(
+            'log',
+            new LogAnnouncementDeleteEvent($resource, $announcement)
+        );
 
         return new Response(204);
     }
