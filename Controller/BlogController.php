@@ -300,6 +300,7 @@ class BlogController extends Controller
         $startDate         = $requestParameters['start'];
         $endDate           = $requestParameters['end'];
         $calendarDatas     = array();
+        $calendarDatasTemp = array();
 
         /** @var \Icap\BlogBundle\Repository\PostRepository $postRepository */
         $postRepository = $this->getDoctrine()->getManager()->getRepository('IcapBlogBundle:Post');
@@ -307,12 +308,27 @@ class BlogController extends Controller
         $posts = $postRepository->findCalendarDatas($blog, $startDate, $endDate);
 
         foreach ($posts as $post) {
-            $calendarDatas[] = array(
-                'id'    => '12',
-                'start' => $post['publicationDate']->format('Y-m-d'),
-                'title' => $post['nbPost'],
-                'url'   => $this->generateUrl('icap_blog_view_filter', array('blogId' => $blog->getId(), 'filter' => $post['publicationDate']->format('d-m-Y')))
-            );
+            $publicationDate = $post->getPublicationDate()->format('Y-m-d');
+            $publicationDateForSort = $post->getPublicationDate()->format('d-m-Y');
+
+            if (!isset($calendarDatasTemp[$publicationDate])) {
+                $calendarDatasTemp[$publicationDate] = array(
+                    'id'    => '12',
+                    'start' => $publicationDate,
+                    'title' => '1',
+                    'url'   => $this->generateUrl(
+                        'icap_blog_view_filter',
+                        array('blogId' => $blog->getId(), 'filter' => $publicationDateForSort)
+                    )
+                );
+            } else {
+                $title = intval($calendarDatasTemp[$publicationDate]['title']);
+                $title++;
+                $calendarDatasTemp[$publicationDate]['title'] = "$title";
+            }
+        }
+        foreach ($calendarDatasTemp as $calendarData) {
+            $calendarDatas[] = $calendarData;
         }
 
         $response = new JsonResponse($calendarDatas);
