@@ -289,7 +289,7 @@ class MessageController
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\ParamConverter("messages", class="ClarolineCoreBundle:Message", options={"multipleIds" = true})
+     * @EXT\ParamConverter("messages", class="ClarolineCoreBundle:UserMessage", options={"multipleIds" = true})
      *
      * Moves messages from the list of sent or received messages to the trash bin.
      *
@@ -300,7 +300,7 @@ class MessageController
      */
     public function softDeleteAction(User $user, array $messages)
     {
-        $this->messageManager->markAsRemoved($user, $messages);
+        $this->messageManager->markAsRemoved($messages);
 
         return new Response('Success', 204);
     }
@@ -313,7 +313,7 @@ class MessageController
      * )
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\ParamConverter("messages", class="ClarolineCoreBundle:Message", options={"multipleIds" = true})
+     * @EXT\ParamConverter("messages", class="ClarolineCoreBundle:UserMessage", options={"multipleIds" = true})
      *
      * Deletes permanently a set of messages received or sent by a user.
      *
@@ -324,7 +324,7 @@ class MessageController
      */
     public function deleteAction(User $user, array $messages)
     {
-        $this->messageManager->remove($user, $messages);
+        $this->messageManager->remove($messages);
 
         return new Response('Success', 204);
     }
@@ -336,7 +336,7 @@ class MessageController
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\ParamConverter("messages", class="ClarolineCoreBundle:Message", options={"multipleIds" = true})
+     * @EXT\ParamConverter("messages", class="ClarolineCoreBundle:UserMessage", options={"multipleIds" = true})
      *
      * Restores messages previously moved to the trash bin.
      *
@@ -347,7 +347,7 @@ class MessageController
      */
     public function restoreFromTrashAction(User $user, array $messages)
     {
-        $this->messageManager->markAsUnremoved($user, $messages);
+        $this->messageManager->markAsUnremoved($messages);
 
         return new Response('Success', 204);
     }
@@ -417,8 +417,6 @@ class MessageController
             $token = $this->securityContext->getToken();
             $roles = $this->utils->getRoles($token);
             $workspaces = $this->workspaceManager->getWorkspacesByRoles($roles);
-//            $workspaces = $this->workspaceManager
-//                ->getWorkspacesByUserAndRoleNames($user, array('ROLE_WS_MANAGER'));
 
             if (count($workspaces) > 0) {
                 if ($trimmedSearch === '') {
