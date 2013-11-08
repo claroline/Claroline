@@ -63,12 +63,14 @@ Non-exhaustive plugins events list
 ### Dropzone events (plugin) ###
 * `resource-icap_dropzone-correction_end`
 * `resource-icap_dropzone-correction_start`
+* `resource-icap_dropzone-correction_validation_change`
 * `resource-icap_dropzone-criterion_create`
 * `resource-icap_dropzone-criterion_delete`
 * `resource-icap_dropzone-drop_end`
 * `resource-icap_dropzone-drop_open`
 * `resource-icap_dropzone-drop_evaluate`
 * `resource-icap_dropzone-drop_start`
+* `resource-icap_dropzone-document_delete`
 * `resource-icap_dropzone-dropzone_update`
 
 ### Blog events (plugin) ###
