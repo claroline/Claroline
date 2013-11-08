@@ -10,7 +10,7 @@ use Icap\DropzoneBundle\Entity\Dropzone;
 
 class LogDocumentOpenEvent extends AbstractLogResourceEvent {
 
-    const ACTION = 'resource-icap_dropzone-drop_open';
+    const ACTION = 'resource-icap_dropzone-document_open';
 
     /**
      * @param Dropzone $dropzone
@@ -19,9 +19,19 @@ class LogDocumentOpenEvent extends AbstractLogResourceEvent {
     public function __construct(Dropzone $dropzone, Drop $drop, Document $document)
     {
         $details = array(
-            'dropzoneId'  => $dropzone->getId(),
-            'dropId' => $drop->getId(),
-            'documentId' => $document->getId(),
+            'dropzone'  => array(
+                'id' => $dropzone->getId(),
+            ),
+            'drop'  => array(
+                'id' => $drop->getId(),
+                'owner' => array(
+                    'id' => $drop->getUser()->getId(),
+                    'lastName' => $drop->getUser()->getLastName(),
+                    'firstName' => $drop->getUser()->getFirstName(),
+                    'username' => $drop->getUser()->getUsername(),
+                )
+            ),
+            'document' => $document->toJson(),
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);

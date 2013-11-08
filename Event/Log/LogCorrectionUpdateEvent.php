@@ -10,7 +10,7 @@ use Icap\DropzoneBundle\Entity\Dropzone;
 
 class LogCorrectionUpdateEvent extends AbstractLogResourceEvent implements PotentialEvaluationEndInterface {
 
-    const ACTION = 'resource-icap_dropzone-correction_start';
+    const ACTION = 'resource-icap_dropzone-correction_update';
 
     private $correction;
 
@@ -22,10 +22,26 @@ class LogCorrectionUpdateEvent extends AbstractLogResourceEvent implements Poten
     {
         $this->correction = $correction;
 
+        $documentsDetails = array();
+        foreach ($drop->getDocuments() as $document) {
+            $documentsDetails[] = $document->toJson();
+        }
+
         $details = array(
-            'dropzoneId'  => $dropzone->getId(),
-            'dropId' => $drop->getId(),
-            'correctionId' => $correction->getId(),
+            'dropzone'  => array(
+                'id' => $dropzone->getId(),
+            ),
+            'drop'  => array(
+                'id' => $drop->getId(),
+                'documents' => $documentsDetails,
+                'owner' => array(
+                    'id' => $drop->getUser()->getId(),
+                    'lastName' => $drop->getUser()->getLastName(),
+                    'firstName' => $drop->getUser()->getFirstName(),
+                    'username' => $drop->getUser()->getUsername(),
+                )
+            ),
+            'correction' => $correction->toJson(true)
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);

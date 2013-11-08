@@ -11,8 +11,6 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Entity\Resource\Text;
-use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
-use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Icap\DropzoneBundle\Entity\Document;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;

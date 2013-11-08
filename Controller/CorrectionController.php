@@ -13,9 +13,11 @@ use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Icap\DropzoneBundle\Entity\Correction;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Entity\Grade;
+use Icap\DropzoneBundle\Event\Log\LogCorrectionDeleteEvent;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionEndEvent;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionStartEvent;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionUpdateEvent;
+use Icap\DropzoneBundle\Event\Log\LogCorrectionValidationChangeEvent;
 use Icap\DropzoneBundle\Form\CorrectionCommentType;
 use Icap\DropzoneBundle\Form\CorrectionCriteriaPageType;
 use Icap\DropzoneBundle\Form\CorrectionStandardType;
@@ -175,11 +177,9 @@ class CorrectionController extends DropzoneBaseController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $event = null;
+        $edit = false;
         if ($correction->getFinished() === true) {
-            $event = new LogCorrectionUpdateEvent($dropzone, $correction->getDrop(), $correction);
-        } else {
-            $event = new LogCorrectionEndEvent($dropzone, $correction->getDrop(), $correction);
+            $edit = true;
         }
 
         $correction->setEndDate(new \DateTime());
@@ -190,6 +190,12 @@ class CorrectionController extends DropzoneBaseController
         $em->persist($correction);
         $em->flush();
 
+        $event = null;
+        if ($edit == true) {
+            $event = new LogCorrectionUpdateEvent($dropzone, $correction->getDrop(), $correction);
+        } else {
+            $event = new LogCorrectionEndEvent($dropzone, $correction->getDrop(), $correction);
+        }
         $this->dispatch($event);
 
         $this->getRequest()->getSession()->getFlashBag()->add(
@@ -883,6 +889,9 @@ class CorrectionController extends DropzoneBaseController
         $em->remove($correction);
         $em->flush();
 
+        $event = new LogCorrectionDeleteEvent($dropzone, $correction->getDrop(), $correction);
+        $this->dispatch($event);
+
         return $this->redirect(
             $this->generateUrl(
                 'icap_dropzone_drops_detail',
@@ -904,7 +913,7 @@ class CorrectionController extends DropzoneBaseController
      * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
      * @Template()
      */
-    public function setCorrectionValidationAction($dropzone, $correction, $value)
+    public function setCorrectionValidationAction(Dropzone $dropzone, Correction $correction, $value)
     {
         $this->isAllowToOpen($dropzone);
         $this->isAllowToEdit($dropzone);
@@ -919,6 +928,9 @@ class CorrectionController extends DropzoneBaseController
 
         $em->persist($correction);
         $em->flush();
+
+        $event = new LogCorrectionValidationChangeEvent($dropzone, $correction->getDrop(), $correction);
+        $this->dispatch($event);
 
         return $this->redirect(
             $this->generateUrl(
@@ -951,6 +963,8 @@ class CorrectionController extends DropzoneBaseController
             ->getRepository('IcapDropzoneBundle:Correction')
             ->invalidateAllCorrectionForADrop($dropzone, $drop);
 
+        //TODO invalidate all correction event
+
         return $this->redirect(
             $this->generateUrl(
                 'icap_dropzone_drops_detail',
@@ -981,12 +995,19 @@ class CorrectionController extends DropzoneBaseController
             throw new AccessDeniedException();
         }
 
+        $oldTotalGrade = $correction->getTotalGrade();
+
         $totalGrade = $this->calculateCorrectionTotalGrade($dropzone, $correction);
         $correction->setTotalGrade($totalGrade);
         $em = $this->getDoctrine()->getManager();
 
         $em->persist($correction);
         $em->flush();
+
+        if ($oldTotalGrade != $totalGrade) {
+            $event = new LogCorrectionUpdateEvent($dropzone, $correction->getDrop(), $correction);
+            $this->dispatch($event);
+        }
 
         return $this->redirect(
             $this->generateUrl(

@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Icap\DropzoneBundle\Entity\Correction;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
+use Icap\DropzoneBundle\Event\Log\LogCorrectionUpdateEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropEndEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropStartEvent;
 use Icap\DropzoneBundle\Form\CorrectionReportType;
@@ -496,6 +497,9 @@ class DropController extends DropzoneBaseController
             $em->persist($drop);
             $em->flush();
         }
+
+        $event = new LogCorrectionUpdateEvent($dropzone, $drop, $correction);
+        $this->dispatch($event);
 
         return $this->redirect(
             $this->generateUrl(

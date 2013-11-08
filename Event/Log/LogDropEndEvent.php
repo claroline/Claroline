@@ -4,6 +4,7 @@ namespace Icap\DropzoneBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
+use Icap\DropzoneBundle\Entity\Document;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
 
@@ -17,10 +18,19 @@ class LogDropEndEvent extends AbstractLogResourceEvent {
      */
     public function __construct(Dropzone $dropzone, Drop $drop)
     {
+        $documentsDetails = array();
+        foreach ($drop->getDocuments() as $document) {
+            $documentsDetails[] = $document->toJson();
+        }
+
         $details = array(
-            'dropzoneId'  => $dropzone->getId(),
-            'dropId' => $drop->getId(),
-            'learnerId' => $drop->getUser()->getId(),
+            'dropzone'  => array(
+                'id' => $dropzone->getId(),
+            ),
+            'drop'  => array(
+                'id' => $drop->getId(),
+                'documents' => $documentsDetails
+            )
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);

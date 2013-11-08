@@ -18,9 +18,12 @@ class LogDropStartEvent extends AbstractLogResourceEvent {
     public function __construct(Dropzone $dropzone, Drop $drop)
     {
         $details = array(
-            'dropzoneId'  => $dropzone->getId(),
-            'dropId' => $drop->getId(),
-            'learnerId' => $drop->getUser()->getId(),
+            'dropzone'  => array(
+                'id' => $dropzone->getId(),
+            ),
+            'drop'  => array(
+                'id' => $drop->getId(),
+            )
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);
