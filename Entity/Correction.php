@@ -350,4 +350,34 @@ class Correction {
     {
         return $this->reportComment;
     }
+
+    /**
+     * @return mixed
+     */
+    public function toJson($hydrateUser)
+    {
+        $json = array(
+            'id' => $this->getId(),
+            'editable' => $this->getEditable(),
+        );
+
+        if ($this->getFinished() === true) {
+            $json['valid'] = $this->getValid();
+            $json['totalGrade'] = $this->getTotalGrade();
+            $json['comment'] = $this->getComment();
+            $json['reporter'] = $this->getReporter();
+            $json['reportComment'] = $this->getReportComment();
+        }
+
+        if ($hydrateUser === true) {
+            $json['user'] = array (
+                'id' => $this->getUser()->getId(),
+                'lastName' => $this->getUser()->getLastName(),
+                'firstName' => $this->getUser()->getFirstName(),
+                'username' => $this->getUser()->getUsername(),
+            );
+        }
+
+        return $json;
+    }
 }

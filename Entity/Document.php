@@ -130,11 +130,18 @@ class Document {
      */
     public function toJson()
     {
-        $properties = array(
-            'id' => $this->id,
-            'type' => $this->type,
+        $json = array(
+            'id' => $this->getId(),
+            'type' => $this->getType(),
+            'url' => $this->getUrl()
         );
+        if ($this->getResourceNode() !== null) {
+            $json['resourceNode'] = array(
+                'id' => $this->getResourceNode()->getId(),
+                'name' => $this->getResourceNode()->getName(),
+            );
+        }
 
-        return json_encode($properties);
+        return $json;
     }
 }

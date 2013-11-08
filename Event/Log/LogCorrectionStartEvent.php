@@ -18,10 +18,26 @@ class LogCorrectionStartEvent extends AbstractLogResourceEvent {
      */
     public function __construct(Dropzone $dropzone, Drop $drop, Correction $correction)
     {
+        $documentsDetails = array();
+        foreach ($drop->getDocuments() as $document) {
+            $documentsDetails[] = $document->toJson();
+        }
+
         $details = array(
-            'dropzoneId'  => $dropzone->getId(),
-            'dropId' => $drop->getId(),
-            'correctionId' => $correction->getId(),
+            'dropzone'  => array(
+                'id' => $dropzone->getId(),
+            ),
+            'drop'  => array(
+                'id' => $drop->getId(),
+                'documents' => $documentsDetails,
+                'owner' => array(
+                    'id' => $drop->getUser()->getId(),
+                    'lastName' => $drop->getUser()->getLastName(),
+                    'firstName' => $drop->getUser()->getFirstName(),
+                    'username' => $drop->getUser()->getUsername(),
+                )
+            ),
+            'correction' => $correction->toJson(false)
         );
 
         parent::__construct($dropzone->getResourceNode(), $details);
