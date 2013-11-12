@@ -187,7 +187,7 @@ class BlogController extends Controller
                     $entityManager->persist($blogOptions);
                     $entityManager->flush();
 
-                    $this->dispatchBlogConfigureEvent($blog, $blogOptions, $changeSet);
+                    $this->dispatchBlogConfigureEvent($blogOptions, $changeSet);
 
                     $flashBag->add('success', $translator->trans('icap_blog_post_configure_success', array(), 'icap_blog'));
                 } catch (\Exception $exception) {
@@ -234,7 +234,7 @@ class BlogController extends Controller
                 $entityManager->persist($blogOptions);
                 $entityManager->flush();
 
-                $this->dispatchBlogConfigureBannerEvent($blog, $blogOptions, $changeSet);
+                $this->dispatchBlogConfigureBannerEvent($blogOptions, $changeSet);
 
                 $flashBag->add('success', $translator->trans('icap_blog_post_configure_banner_success', array(), 'icap_blog'));
             } catch (\Exception $exception) {

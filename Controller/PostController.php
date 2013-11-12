@@ -169,7 +169,7 @@ class PostController extends Controller
                         $this->dispatchPostCreateEvent($blog, $post);
                     }
                     elseif('update' === $action) {
-                        $this->dispatchPostUpdateEvent($blog, $post, $changeSet);
+                        $this->dispatchPostUpdateEvent($post, $changeSet);
                     }
                     else {
                         throw new \InvalidArgumentException('Unknown action type for persisting post');

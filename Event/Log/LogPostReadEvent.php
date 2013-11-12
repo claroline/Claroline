@@ -13,14 +13,15 @@ class LogPostReadEvent extends AbstractLogResourceEvent implements LogNotRepeata
     const ACTION = 'resource-icap_blog-post_read';
 
     /**
-     * @param Blog $blog
      * @param Post $post
      */
-    public function __construct(Blog $blog, Post $post)
+    public function __construct(Post $post)
     {
+        $blog = $post->getBlog();
+
         $details = array(
             'post' => array(
-                'blog'  => $post->getBlog()->getId(),
+                'blog'  => $blog->getId(),
                 'title' => $post->getTitle(),
                 'slug'  => $post->getSlug()
             )

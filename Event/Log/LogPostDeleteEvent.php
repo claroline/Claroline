@@ -17,16 +17,18 @@ class LogPostDeleteEvent extends AbstractLogResourceEvent
      */
     public function __construct(Post $post)
     {
+        $blog = $post->getBlog();
+
         $details = array(
             'post' => array(
-                'blog'   => $post->getBlog()->getId(),
+                'blog'   => $blog->getId(),
                 'title'  => $post->getTitle(),
                 'slug'   => $post->getSlug(),
                 'author' => $post->getAuthor()->getFirstName() . ' ' . $post->getAuthor()->getLastName()
             )
         );
 
-        parent::__construct($post->getBlog()->getResourceNode(), $details);
+        parent::__construct($blog->getResourceNode(), $details);
     }
 
     /**
