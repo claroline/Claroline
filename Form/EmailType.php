@@ -11,7 +11,7 @@ class EmailType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('mail', 'text',
+        $builder->add('mail', 'email',
             array(
                 'required' => true,
                 'constraints' => new Email()
