@@ -21,7 +21,7 @@ class PostController extends Controller
      * @Route("/{blogId}/post/view/{postSlug}", name="icap_blog_post_view", requirements={"id" = "\d+"})
      *
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
+     * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"blogId": "blog", "postSlug": "slug"}})
      * @Template()
      */
     public function viewAction(Request $request, Blog $blog, Post $post)
@@ -125,7 +125,7 @@ class PostController extends Controller
      * @Route("/{blogId}/post/edit/{postSlug}", name="icap_blog_post_edit", requirements={"blogId" = "\d+"})
      *
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
+     * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"blogId": "blog", "postSlug": "slug"}})
      * @Template()
      */
     public function editAction(Request $request, Blog $blog, Post $post)
