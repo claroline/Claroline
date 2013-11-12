@@ -31,11 +31,11 @@ class PostController extends Controller
         $securityContext = $this->get('security.context');
         $user            = $securityContext->getToken()->getUser();
 
-        if ($securityContext->isGranted('IS_AUTHENTICATED_ANONYMOUSLY')) {
+        if (!$securityContext->isGranted('IS_AUTHENTICATED_FULLY')) {
             $user = null;
         }
 
-        $this->dispatchPostReadEvent($blog, $post);
+        $this->dispatchPostReadEvent($post);
 
         $commentStatus = Comment::STATUS_UNPUBLISHED;
         if ($blog->isAutoPublishComment()) {
@@ -65,7 +65,7 @@ class PostController extends Controller
                         $entityManager->persist($comment);
                         $entityManager->flush();
 
-                        $this->dispatchCommentCreateEvent($blog, $post, $comment);
+                        $this->dispatchCommentCreateEvent($post, $comment);
 
                         $flashBag->add('success', $translator->trans('icap_blog_comment_add_success', array(), 'icap_blog'));
                     } catch (\Exception $exception) {

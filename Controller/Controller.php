@@ -171,7 +171,7 @@ class Controller extends BaseController
      */
     protected function dispatchPostCreateEvent(Blog $blog, Post $post)
     {
-        $event = new LogPostCreateEvent($blog, $post);
+        $event = new LogPostCreateEvent($post);
 
         return $this->dispatch($event);
     }
