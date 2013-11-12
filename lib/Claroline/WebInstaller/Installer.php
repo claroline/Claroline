@@ -48,7 +48,8 @@ class Installer
         $user->setMail($this->adminSettings->getEmail());
         $userManager->createUserWithRole($user, PlatformRoles::ADMIN);
 
-        $refresher->refresh('prod');
+        $refresher->dumpAssets('prod');
+        $refresher->clearCache();
 
         $this->writer->writeInstallFlag();
     }
