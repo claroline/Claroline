@@ -1198,14 +1198,14 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/registration/list/users/page/{page}",
+     *     "/registration/list/users/page/{page}/ordered-by/{ordered}",
      *     name="claro_users_list_registration_pager",
      *     defaults={"page"=1, "search"=""},
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/registration/list/users/page/{page}/search/{search}",
+     *     "/registration/list/users/page/{page}/search/{search}/ordered-by/{ordered}",
      *     name="claro_users_list_registration_pager_search",
      *     defaults={"page"=1},
      *     options={"expose"=true}
@@ -1218,13 +1218,13 @@ class AdministrationController extends Controller
      *
      * @return Response
      */
-    public function userListPagerAction($page, $search)
+    public function userListPagerAction($page, $search, $ordered)
     {
         $pager = $search === '' ?
-            $this->userManager->getAllUsers($page) :
-            $this->userManager->getUsersByName($search, $page);
+            $this->userManager->getAllUsers($page, $ordered) :
+            $this->userManager->getUsersByName($search, $page, $ordered);
 
-        return array('users' => $pager, 'search' => $search);
+        return array('users' => $pager, 'search' => $search, 'ordered' => $ordered);
     }
 
     /**

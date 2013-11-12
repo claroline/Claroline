@@ -325,9 +325,9 @@ class UserManager
      *
      * @return \Pagerfanta\Pagerfanta;
      */
-    public function getAllUsers($page, $max = 20)
+    public function getAllUsers($page, $max = 20, $orderedBy = 'id')
     {
-        $query = $this->userRepo->findAll(false);
+        $query = $this->userRepo->findAll(false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }

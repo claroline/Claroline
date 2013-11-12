@@ -163,6 +163,7 @@
         parameters.route.normal = {"route": "claro_workspace_registered_user_list", "parameters": {'workspace': {{  workspace.getId() }} }};
         parameters.route.search = {"route": "claro_workspace_registered_user_list_search", "parameters": {'workspace': {{  workspace.getId() }} }};
         Claroline.Table.initialize(parameters);
+        
         $('.popover-block').popover();
         $('.remove-role-button').live('click', function (event) {
             var target = $(event.currentTarget);
