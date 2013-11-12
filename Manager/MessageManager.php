@@ -196,17 +196,25 @@ class MessageManager
         $this->markMessages($userMessages, self::MESSAGE_READ);
     }
 
-
+    /**
+     * @param \Claroline\CoreBundle\Entity\Message[] $userMessages
+     */
     public function markAsRemoved(array $userMessages)
     {
         $this->markMessages($userMessages, self::MESSAGE_REMOVED);
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Message[] $userMessages
+     */
     public function markAsUnremoved(array $userMessages)
     {
         $this->markMessages($userMessages, self::MESSAGE_UNREMOVED);
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Message[] $userMessages
+     */
     public function remove(array $userMessages)
     {
         foreach ($userMessages as $userMessage) {
@@ -257,6 +265,10 @@ class MessageManager
         return implode(';', $usernames);
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Message[] $userMessages
+     * @param string $flag
+     */
     private function markMessages(array $userMessages, $flag)
     {
         $method = 'markAs' . $flag;

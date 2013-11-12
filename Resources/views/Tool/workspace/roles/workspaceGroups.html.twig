@@ -139,13 +139,7 @@
 
         $('#search-button').click(function () {
             var search = document.getElementById('search-items-txt').value;
-            var queryString = {};
-            var i = 0;
-            var array = [];
-            $('.chk-search:checked').each(function (index, element) {
-                array[i] = element.value;
-                i++;
-            });
+
             queryString.roleIds = array;
 
             if (search !== '') {

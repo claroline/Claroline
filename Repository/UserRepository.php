@@ -714,25 +714,18 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      */
     public function findByRolesAndNameIncludingGroups(array $roles, $name, $getQuery = false)
     {
-        //reduce the number of requests needed by doctrine... it's a little bit hacky but it works
-        //This function is used by the Role tool.
-        $dql = "SELECT u, g, r, ws From Claroline\CoreBundle\Entity\User u
-            JOIN u.groups g
-            JOIN u.personalWorkspace ws
-            JOIN g.roles r";
-
-        $this->_em->createQuery($dql)->getResult();
         $search = strtoupper($name);
 
         $dql = "
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.roles r1
+            SELECT u, r1, g, r2, pws FROM Claroline\CoreBundle\Entity\User u
+            LEFT JOIN u.roles r1
+            JOIN u.personalWorkspace pws
             LEFT JOIN u.groups g
-            JOIN g.roles r2
+            LEFT JOIN g.roles r2
             WHERE (r1 IN (:roles)
             OR r2 IN (:roles))
             AND (
-             UPPER(u.lastName) LIKE :search
+            UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search)
             ORDER BY u.lastName
             ";
