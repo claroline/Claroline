@@ -82,6 +82,23 @@ Non-exhaustive plugins events list
 * `resource-icap_blog-post_read`
 * `resource-icap_blog-post_update`
 
+### Wiki events (plugin) ###
+* `resource-icap_wiki-contribution_create`
+* `resource-icap_wiki-section_create`
+* `resource-icap_wiki-section_delete`
+* `resource-icap_wiki-section_move`
+* `resource-icap_wiki-section_remove`
+* `resource-icap_wiki-section_restore`
+* `resource-icap_wiki-section_update`
+* `resource-icap_wiki-configure`
+
+### Lesson events (plugin) ###
+* `resource-icap_lesson-chapter_create`
+* `resource-icap_lesson-chapter_delete`
+* `resource-icap_lesson-chapter_move`
+* `resource-icap_lesson-chapter_read`
+* `resource-icap_lesson-chapter_update`
+
 
 Advanced features
 -----------------
