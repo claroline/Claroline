@@ -13,12 +13,13 @@ class LogBlogConfigureBannerEvent extends AbstractLogResourceEvent
     const ACTION = 'resource-icap_blog-configure_banner';
 
     /**
-     * @param Blog        $blog
      * @param BlogOptions $blogOptions
      * @param array       $changeSet
      */
-    public function __construct(Blog $blog, BlogOptions $blogOptions, $changeSet)
+    public function __construct(BlogOptions $blogOptions, $changeSet)
     {
+        $blog = $blogOptions->getBlog();
+
         $details = array(
             'blog' => array(
                 'blog'      => $blog->getId(),

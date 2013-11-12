@@ -189,11 +189,21 @@
 
     function resetImageField()
     {
-        banner.css('background-image', 'url(' + bannerBackgroundImageContainer.data("image-path") + "/" + bannerBackgroundImageField.val() + ')');
-        removeBannerBackgroundImageButton.removeClass("hidden");
-        bannerBackgroundImageParametersBlock.removeClass("hidden");
-        $("#icap_blog_banner_form_file", bannerBackgroundImageContainer).remove();
-        bannerBackgroundImageContainer.append(bannerBackgroundImageFieldTemplate);
+        if ('' == initialBannerBackgroundImage) {
+            banner.css('background-image', 'none');
+            removeBannerBackgroundImageButton.addClass("hidden");
+            bannerBackgroundImageParametersBlock.addClass("hidden");
+            $("#icap_blog_banner_form_file", bannerBackgroundImageContainer).remove();
+            bannerBackgroundImageContainer.append(bannerBackgroundImageFieldTemplate);
+        }
+        else {
+            banner.css('background-image', 'url(' + bannerBackgroundImageContainer.data("image-path") + "/" + initialBannerBackgroundImage + ')');
+            removeBannerBackgroundImageButton.removeClass("hidden");
+            bannerBackgroundImageParametersBlock.removeClass("hidden");
+            $("#icap_blog_banner_form_file", bannerBackgroundImageContainer).remove();
+            bannerBackgroundImageContainer.append(bannerBackgroundImageFieldTemplate);
+        }
+
         if (bannerActivate.is(":checked")) {
             banner.removeClass('hidden');
         }

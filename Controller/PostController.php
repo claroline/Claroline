@@ -21,7 +21,7 @@ class PostController extends Controller
      * @Route("/{blogId}/post/view/{postSlug}", name="icap_blog_post_view", requirements={"id" = "\d+"})
      *
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
+     * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"blogId": "blog", "postSlug": "slug"}})
      * @Template()
      */
     public function viewAction(Request $request, Blog $blog, Post $post)
@@ -31,11 +31,11 @@ class PostController extends Controller
         $securityContext = $this->get('security.context');
         $user            = $securityContext->getToken()->getUser();
 
-        if ($securityContext->isGranted('IS_AUTHENTICATED_ANONYMOUSLY')) {
+        if (!$securityContext->isGranted('IS_AUTHENTICATED_FULLY')) {
             $user = null;
         }
 
-        $this->dispatchPostReadEvent($blog, $post);
+        $this->dispatchPostReadEvent($post);
 
         $commentStatus = Comment::STATUS_UNPUBLISHED;
         if ($blog->isAutoPublishComment()) {
@@ -65,7 +65,7 @@ class PostController extends Controller
                         $entityManager->persist($comment);
                         $entityManager->flush();
 
-                        $this->dispatchCommentCreateEvent($blog, $post, $comment);
+                        $this->dispatchCommentCreateEvent($post, $comment);
 
                         $flashBag->add('success', $translator->trans('icap_blog_comment_add_success', array(), 'icap_blog'));
                     } catch (\Exception $exception) {
@@ -125,7 +125,7 @@ class PostController extends Controller
      * @Route("/{blogId}/post/edit/{postSlug}", name="icap_blog_post_edit", requirements={"blogId" = "\d+"})
      *
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
+     * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"blogId": "blog", "postSlug": "slug"}})
      * @Template()
      */
     public function editAction(Request $request, Blog $blog, Post $post)
@@ -169,7 +169,7 @@ class PostController extends Controller
                         $this->dispatchPostCreateEvent($blog, $post);
                     }
                     elseif('update' === $action) {
-                        $this->dispatchPostUpdateEvent($blog, $post, $changeSet);
+                        $this->dispatchPostUpdateEvent($post, $changeSet);
                     }
                     else {
                         throw new \InvalidArgumentException('Unknown action type for persisting post');
@@ -198,7 +198,7 @@ class PostController extends Controller
      * @Route("/{blogId}/post/delete/{postSlug}", name="icap_blog_post_delete", requirements={"blogId" = "\d+"})
      *
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
+     * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"blogId": "blog", "postSlug": "slug"}})
      * @Template()
      */
     public function deleteAction(Blog $blog, Post $post)
@@ -213,7 +213,7 @@ class PostController extends Controller
             $entityManager->remove($post);
             $entityManager->flush();
 
-            $this->dispatchPostDeleteEvent($blog, $post);
+            $this->dispatchPostDeleteEvent($post);
 
             $flashBag->add('success', $translator->trans('icap_blog_post_delete_success', array(), 'icap_blog'));
         } catch (\Exception $exception) {
