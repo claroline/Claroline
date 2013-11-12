@@ -35,7 +35,7 @@ class FormFactory
     const TYPE_RESOURCE_PROPERTIES = 'resource_properties';
     const TYPE_WORKSPACE_ROLE = 'workspace_role';
     const TYPE_ROLE_TRANSLATION = 'workspace_role_translation';
-    const TYPE_USER_EMAIL = 'email';
+    const TYPE_USER_EMAIL = 'user_email';
     const TYPE_USER_RESET_PWD = 'user_reset_pwd';
     const TYPE_SIMPLE_TEXT = 'simple_text';
     const TYPE_HOME_TAB = 'home_tab';

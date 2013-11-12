@@ -73,7 +73,7 @@ class MailManager
     public function sendPlainPassword($from,$sender,$body)
     {
         $message = \Swift_Message::newInstance()
-            ->setSubject($this->translator->trans('reset_pwd', array(), 'platform'))
+            ->setSubject($this->translator->trans('create_new_user_account', array(), 'platform'))
             ->setFrom($from)
             ->setTo($sender)
             ->setBody($body);

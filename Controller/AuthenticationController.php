@@ -108,7 +108,7 @@ class AuthenticationController
     public function forgotPasswordAction()
     {
         if ($this->mailManager->isMailerAvailable()) {
-            $form = $this->formFactory->create(FormFactory::TYPE_USER_EMAIL, array(), null);
+            $form = $this->formFactory->create(FormFactory::TYPE_USER_EMAIL, array());
 
             return array('form' => $form->createView());
         }
