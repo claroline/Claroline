@@ -57,18 +57,8 @@
                 .removeAttr('checked')
                 .removeAttr('selected');
             $('#myModalLabel').text(Translator.get('agenda' + ':' + 'add_event'));
-            var  currentDate = Date.today().addDays(1).toString("M/d/yyyy"); 
-            var pickedDate = new Date(date).toString();
-            $('#agenda_form_start').val(pickedDate);
-
-            if (pickedDate > currentDate) {
-
-                $('#agenda_form_end').val(pickedDate);
-
-            } else {
-                $('#agenda_form_end').val(currentDate);
-                console.debug('pic'+pickedDate+' cur'+currentDate);
-            }
+            $('.hours').val('00:00');
+            
             $('#myModal').modal();
         };
         var dayClickDesktop = function (date) {
@@ -79,14 +69,7 @@
             $('#agenda_form').find('input:radio, input:checkbox')
                 .removeAttr('checked')
                 .removeAttr('selected');
-            //  var  currentDate = $.fullCalendar.formatDate(new Date(), 'dd-MM-yyyy');
-            //  var pickedDate = $.fullCalendar.formatDate(date, 'dd-MM-yyyy');
-            // $('#agenda_form_start').val(pickedDate)
-            // if (pickedDate > currentDate) {
-            //     $('#agenda_form_end').val(pickedDate);
-            // } else {
-            //     $('#agenda_form_end').val(currentDate);
-            // }
+            $('.hours').val('00:00');
             $('#myModal').modal();
         };
         var dayClickFunction = context === 'desktop' ? dayClickDesktop : dayClickWorkspace;
@@ -170,6 +153,8 @@
                 compare = 1;
            } 
             if( compare > 0 ) {
+                $('#agenda_form_start').val($('#agenda_form_start').val()+' '+$('#agenda_form_StartHours').val());
+                $('#agenda_form_end').val($('#agenda_form_end').val()+' '+$('#agenda_form_EndHours').val());
                 $('#updateBtn').attr('disabled', 'disabled');
                 var data = new FormData($('#myForm')[0]);
                 data.append('id', id);
@@ -306,13 +291,16 @@
             $('#agenda_form_description').val(calEvent.description);
             $('#agenda_form_priority option[value=' + calEvent.color + ']').attr('selected', 'selected');
             var pickedDate = new Date(calEvent.start);
-            $('#agenda_form_start').val($.fullCalendar.formatDate( pickedDate,'dd/MM/yyyy HH:mm'));
+            $('#agenda_form_start').val($.fullCalendar.formatDate( pickedDate,'dd/MM/yyyy'));
+            $('#agenda_form_StartHours').val($.fullCalendar.formatDate( pickedDate,'HH:mm'));
             if (calEvent.end === null){
-                $('#agenda_form_end').val($.fullCalendar.formatDate( pickedDate,'dd/MM/yyyy HH:mm'));
+                $('#agenda_form_end').val($.fullCalendar.formatDate( pickedDate,'dd/MM/yyyy'));
+                $('#agenda_form_EndHours').val($.fullCalendar.formatDate( pickedDate,'HH:mm'));
             }
             else{
                 var Enddate = new Date(calEvent.end);
-                $('#agenda_form_end').val($.fullCalendar.formatDate( Enddate,'dd/MM/yyyy HH:mm'));
+                $('#agenda_form_end').val($.fullCalendar.formatDate( Enddate,'dd/MM/yyyy'));
+                $('#agenda_form_EndHours').val($.fullCalendar.formatDate( Enddate,'HH:mm'));
             }
             $('#agenda_form_allDay').attr('checked', false);
             $.ajaxSetup({
@@ -441,7 +429,9 @@
                 if (!confirm('is this okay?')) {
                     revertFunc();
                 }
-            }
+            },
+            windowResize: function(view) {
+                console.debug(view)            }
         });
     };
 }) ();

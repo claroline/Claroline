@@ -13,7 +13,7 @@ class AgendaType extends AbstractType
     {
         $recurring = array();
 
-        for ($i=1; $i < 10 ; $i++) { 
+        for ($i=0; $i < 10 ; $i++) { 
             
             $recurring[$i] = $i; 
         }
@@ -26,12 +26,14 @@ class AgendaType extends AbstractType
             ->add('title', 'text', array('required' => true))
             ->add(
                 'start',
-                'date',
+                'datepicker',
                 array(
-                    'format' => 'd/M/yyyy H:mm',
-                    'widget' => 'single_text',
-                    'attr' => $attr
-                )
+                    'required'      => false,
+                    'component'     => true,
+                    'autoclose'     => true,
+                    'language'      => 'fr',
+                    'format'        => 'dd/MM/yyyy'
+               )
             )
             ->add(
                 'StartHours',
@@ -44,12 +46,13 @@ class AgendaType extends AbstractType
                 )
             ->add(
                 'end',
-                'date',
+                'datepicker',
                 array(
-                    'format' => 'd/M/yyyy H:mm',
-                    'widget' => 'single_text',
-                    'attr' => $attr
-                )
+                    'required'      => false,
+                    'component'     => true,
+                    'autoclose'     => true,
+                    'format'        => 'dd/MM/yyyy'
+               )
             )
             ->add(
                 'EndHours',

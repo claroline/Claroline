@@ -91,7 +91,7 @@ class Event
             return $this->start;
 
         } else {
-            $date = date('d-m-Y H:i', $this->start);
+            $date = date('d/m/Y H:i', $this->start);
 
             return (new \Datetime($date));
         }
@@ -115,7 +115,7 @@ class Event
             return $this->end;
 
         } else {
-            $date = date('d-m-Y H:i', $this->end);
+            $date = date('d/m/Y H:i', $this->end);
 
             return (new \Datetime($date));
         }

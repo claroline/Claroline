@@ -9,7 +9,7 @@ $('.datepicker').on('click', function (event) {
 });
 
 function validateTime(strTime) {
-    var regex = /^(20|21|22|23|[0-1][1-9]):[0-5][0-9]$/;
+    var regex = /^(20|21|22|23|[0-1][0-9]):[0-5][0-9]$/;
     if (regex.test(strTime)) {
        console.debug(strTime);
        return (strTime);

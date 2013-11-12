@@ -74,6 +74,10 @@ class WorkspaceAgendaController extends Controller
                 $event->setWorkspace($workspace);
                 $event->setUser($this->security->getToken()->getUser());
                 $this->om->persist($event);
+
+                if ($event->getRecurring() > 0) {                    
+                    $this->calculRecurrency($event);
+                }
                 $this->om->flush();
                 $data = array(
                     'id' => $event->getId(),
@@ -289,9 +293,20 @@ class WorkspaceAgendaController extends Controller
         }
     }
 
-    private function calculRecurrency($timestamp)
+    private function calculRecurrency(Event $event)
     {
-        // it calculs by week
-        return $timestamp + (3600 * 24 * 7);
+        $listEvents =  array();
+        // it calculs by day for now
+        for ($i=1; $i <= $event->getRecurring(); $i++) { 
+            $temp = clone $event;
+            $newStartDate = $temp->getStart()->getTimestamp()+((3600 * 24 * $i));
+            $temp->setStart( new \DateTime(date('d-m-Y H:i', $newStartDate)));
+            $newEndDate = $temp->getEnd()->getTimestamp()+((3600 * 24 * $i));
+            $temp->setEnd( new \DateTime(date('d-m-Y H:i', $newEndDate)));
+            $listEvents[$i] = $temp;
+            $this->om->persist($listEvents[$i]);
+
+            return ($listEvents);
+        }
     }
 }
