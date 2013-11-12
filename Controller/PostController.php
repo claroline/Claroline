@@ -198,7 +198,7 @@ class PostController extends Controller
      * @Route("/{blogId}/post/delete/{postSlug}", name="icap_blog_post_delete", requirements={"blogId" = "\d+"})
      *
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
+     * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"blogId": "blog", "postSlug": "slug"}})
      * @Template()
      */
     public function deleteAction(Blog $blog, Post $post)
@@ -213,7 +213,7 @@ class PostController extends Controller
             $entityManager->remove($post);
             $entityManager->flush();
 
-            $this->dispatchPostDeleteEvent($blog, $post);
+            $this->dispatchPostDeleteEvent($post);
 
             $flashBag->add('success', $translator->trans('icap_blog_post_delete_success', array(), 'icap_blog'));
         } catch (\Exception $exception) {

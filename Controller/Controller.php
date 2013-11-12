@@ -211,15 +211,13 @@ class Controller extends BaseController
     }
 
     /**
-     * @param Blog $blog
-     *
      * @param Post $post
      *
      * @return Controller
      */
-    protected function dispatchPostDeleteEvent(Blog $blog, Post $post)
+    protected function dispatchPostDeleteEvent(Post $post)
     {
-        $event = new LogPostDeleteEvent($blog, $post);
+        $event = new LogPostDeleteEvent($post);
 
         return $this->dispatch($event);
     }

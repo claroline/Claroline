@@ -31,7 +31,7 @@ class LogPostReadEvent extends AbstractLogResourceEvent implements LogNotRepeata
 
     public function getLogSignature()
     {
-        return self::ACTION.'_' . $this->resource->getId();
+        return self::ACTION. '_' . $this->resource->getId();
     }
 
     /**

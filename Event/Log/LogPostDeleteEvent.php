@@ -13,21 +13,20 @@ class LogPostDeleteEvent extends AbstractLogResourceEvent
     const ACTION = 'resource-icap_blog-post_delete';
 
     /**
-     * @param Blog $blog
      * @param Post $post
      */
-    public function __construct(Blog $blog, Post $post)
+    public function __construct(Post $post)
     {
         $details = array(
             'post' => array(
-                'blog'   => $blog->getId(),
+                'blog'   => $post->getBlog()->getId(),
                 'title'  => $post->getTitle(),
                 'slug'   => $post->getSlug(),
                 'author' => $post->getAuthor()->getFirstName() . ' ' . $post->getAuthor()->getLastName()
             )
         );
 
-        parent::__construct($blog->getResourceNode(), $details);
+        parent::__construct($post->getBlog()->getResourceNode(), $details);
     }
 
     /**
