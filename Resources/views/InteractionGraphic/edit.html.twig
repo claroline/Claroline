@@ -230,14 +230,15 @@
         </div>
     </form>
 
-    {{ tinymce_init() }}
-
 {% endblock %}
 
 {# ------------------------------------------------- Javascript ---------------------------------------------------------------------------- #}
 
 {% block javascripts %}
-{{ parent() }}
+    {{ parent() }}
+
+    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+    {{ tinymce_init() }}
 
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>

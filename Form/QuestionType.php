@@ -74,14 +74,8 @@ class QuestionType extends AbstractType
                     }
                 )
             )
-            ->add(
-                'description', 'textarea', array(
-                    'attr' => array(
-                        'class' => 'tinymce',
-                        'data-theme' => 'medium'
-                    ),
-                    'required' => false,
-                    'label' => 'Question.description'
+            ->add('description', 'tinymce', array(
+                    'label' => 'Question.description', 'required' => false
                 )
             )
             ->add(

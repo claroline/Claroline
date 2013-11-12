@@ -56,8 +56,6 @@
 {% endblock %}
 
 {% block section_content %}
-    {{ tinymce_init() }}
-
     <div class="panel-heading">
         <h1>{{ 'exercise edit' | trans }}</h1>
     </div>
@@ -178,6 +176,9 @@
 
 {% block javascripts %}
     {{ parent() }}
+
+    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+    {{ tinymce_init() }}
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
     <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>

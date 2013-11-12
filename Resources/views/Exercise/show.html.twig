@@ -49,7 +49,6 @@
 {% block title %} {{ 'exercise' | trans }} : {{ entity.title }} {% endblock %}
 
 {% block section_content %}
-    {{ tinymce_init() }}
 
     <div class="panel-heading">
         <h1>{{ 'exercise'|trans }} : {{ entity.title }}</h1>
@@ -241,6 +240,9 @@
 
 {% block javascripts %}
     {{ parent() }}
+
+    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+    {{ tinymce_init() }}
 
     <script language="JavaScript">
         $('#less').css({"display" : "none"});

@@ -95,7 +95,7 @@
     </form>
 </div>
 
-{# tiny MCE #}
+{% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
 {{ tinymce_init() }}
 
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionOpen.js') }}"></script>

@@ -240,7 +240,7 @@
                         <div class="panel panel-default">
                             <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
                             <div class="panel-body">
-                                <textarea name="interOpenLong" class="tinymce" data-theme="medium">{{response}}</textarea>
+                                <textarea name="interOpenLong" class="tinymce" data-theme="advanced">{{response}}</textarea>
                             </div>
                         </div>
                     {% endif %}
@@ -324,7 +324,10 @@
 
 {% block javascripts %}
     {{ parent() }}
+
+    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
     {{ tinymce_init() }}
+
     {% if interactionType == 'InteractionGraphic' %}
         <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>

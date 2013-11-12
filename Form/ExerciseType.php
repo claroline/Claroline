@@ -56,11 +56,8 @@ class ExerciseType extends AbstractType
                     'label' => 'title'
                 )
             )
-            ->add(
-                'description', 'textarea', array(
-                    'label' => 'Description',
-                    'attr' => array('class' => 'tinymce', 'data-theme' => 'medium'),
-                    'required' => false
+            ->add('description', 'tinymce', array(
+                    'label' => 'Description', 'required' => false
                 )
             )
             ->add(

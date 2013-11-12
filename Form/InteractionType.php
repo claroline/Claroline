@@ -61,15 +61,9 @@ class InteractionType extends AbstractType
                     $this->user
                 )
             )
-            //->add('type', 'text')
-            ->add(
-                'invite', 'textarea', array(
-                    'attr' => array(
-                        'class' => 'tinymce',
-                        'data-theme' => 'medium'
-                    ),
-                    'required' => false,
-                    'label' => 'Interaction.invite'
+            ->add('invite', 'tinymce', array(
+                    'label' => 'Interaction.invite',
+                    'required' => true
                 )
             )
             ->add(
@@ -77,14 +71,8 @@ class InteractionType extends AbstractType
                     'required' => false
                 )
             )
-            ->add(
-                'feedBack', 'textarea', array(
-                    'attr' => array(
-                        'class' => 'tinymce',
-                        'data-theme' => 'medium'
-                    ),
-                    'required' => false,
-                    'label' => 'Interaction.feedback'
+            ->add('feedBack', 'tinymce', array(
+                    'label' => 'Interaction.feedback', 'required' => false
                 )
             )
             //->add('locked_expertise', 'checkbox', array('required' => false))

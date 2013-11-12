@@ -62,7 +62,7 @@
 {% endblock %}
 
 {% block title %} {{ 'question creation' | trans }} {% endblock %}
-    
+
 {% if _resource is defined %}
     {% block resourceBreadcrumb %}
         <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>

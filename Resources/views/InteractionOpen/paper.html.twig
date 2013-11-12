@@ -122,7 +122,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading"><h3 class="panel-title">{{ 'response' | trans }}</h3></div>
                         <div class="panel-body">
-                            <textarea name="interOpenLong" class="tinymce" data-theme="medium"></textarea>
+                            <textarea name="interOpenLong" class="tinymce" data-theme="advanced"></textarea>
                         </div>
                     </div>
                 {% endif %}
@@ -164,6 +164,9 @@
 
 {% block javascripts %}
     {{ parent() }}
+
+    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
     {{ tinymce_init() }}
+
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
 {% endblock %}
