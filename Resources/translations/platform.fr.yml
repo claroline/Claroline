@@ -445,6 +445,8 @@ select_workspaces_for_registration: 'Choisissez les espaces d''activités pour l
 selected_workspaces_for_registration: 'Espaces d''activités sélectionnés pour l''inscription'
 selected_workspaces_will_be_put_in_it: 'Les espaces d''activités sélectionnés y seront disponibles'
 send_mail: 'Envoyer un mail'
+send_mail_form_object: Objet
+send_mail_form_content: Message
 send_message: 'Envoyer un message'
 session_id: 'Identifiant de session'
 settings: Paramètres
