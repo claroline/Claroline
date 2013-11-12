@@ -36,7 +36,7 @@ class DropzoneCommonType extends AbstractType
 
             ->add('displayNotationToLearners', 'checkbox', array('required' => false))
             ->add('displayNotationMessageToLearners', 'checkbox', array('required' => false))
-            ->add('minimumScoreToPass', 'number', array('required' => true))
+            ->add('minimumScoreToPass', 'integer', array('required' => true))
 
             ->add('manualPlanning', 'choice', array(
                 'required' => true,
