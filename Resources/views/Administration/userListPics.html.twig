@@ -114,7 +114,7 @@ macros.breadcrumbs([
                     <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}">
                         <i class="icon-user"> </i>
                     </a>
-                    <a href="{{ path('claro_profile_form_admin', {'user': user.getId()}) }}">
+                    <a href="{{ path('claro_profile_form', {'user': user.getId()}) }}">
                         <i class="icon-pencil"></i>
                     </a>
                     {% if is_granted('ROLE_ADMIN') %}
