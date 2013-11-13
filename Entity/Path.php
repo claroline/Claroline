@@ -12,7 +12,6 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
  */
 class Path extends AbstractResource
 {
-
     /**
      * @var string
      *
@@ -45,6 +44,13 @@ class Path extends AbstractResource
     private $modified;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+    
+    /**
      * Class constructor
      */
     public function __construct()
@@ -57,7 +63,6 @@ class Path extends AbstractResource
     
     /**
      * Set path
-     *
      * @param  string $path
      * @return Path
      */
@@ -70,7 +75,6 @@ class Path extends AbstractResource
 
     /**
      * Get path
-     *
      * @return string
      */
     public function getPath()
@@ -80,7 +84,6 @@ class Path extends AbstractResource
 
     /**
      * Set deployed
-     *
      * @param  boolean $deployed
      * @return Path
      */
@@ -93,7 +96,6 @@ class Path extends AbstractResource
 
     /**
      * Get deployed
-     *
      * @return boolean
      */
     public function getDeployed()
@@ -103,7 +105,6 @@ class Path extends AbstractResource
 
     /**
      * Set modified
-     *
      * @param  boolean $modified
      * @return Path
      */
@@ -116,7 +117,6 @@ class Path extends AbstractResource
 
     /**
      * Get modified
-     *
      * @return boolean
      */
     public function getModified()
@@ -126,7 +126,6 @@ class Path extends AbstractResource
 
     /**
      * Get id
-     *
      * @return integer
      */
     public function getId()
@@ -136,7 +135,6 @@ class Path extends AbstractResource
 
     /**
      * Add step
-     *
      * @param  \Innova\PathBundle\Entity\Step $step
      * @return Path
      */
@@ -150,7 +148,6 @@ class Path extends AbstractResource
 
     /**
      * Remove step
-     *
      * @param \Innova\PathBundle\Entity\Step $step
      */
     public function removeStep(\Innova\PathBundle\Entity\Step $step)
@@ -160,7 +157,6 @@ class Path extends AbstractResource
 
     /**
      * Get steps
-     *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getSteps()
@@ -168,4 +164,24 @@ class Path extends AbstractResource
         return $this->steps;
     }
 
+    /**
+     * Get description
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+    
+    /**
+     * Set description
+     * @param string $description
+     * @return \Innova\PathBundle\Entity\Path
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        
+        return $this;
+    }
 }

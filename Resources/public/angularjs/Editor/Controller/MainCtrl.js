@@ -124,6 +124,10 @@ function MainCtrl($scope, $http, $window, $location, $modal, HistoryFactory, Cli
             // All is fine => process save
             var data = 'pathName=' + path.name + '&path=' + angular.toJson(path) + '&workspaceId=' + EditorApp.workspaceId;
 
+            if (undefined != path.description && null != path.description && path.description.length !== 0) {
+                data += '&pathDescription=' + path.description;
+            }
+            
             if (EditorApp.pathId) {
                 // Update existing path
                 method = 'PUT';

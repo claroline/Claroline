@@ -1,4 +1,5 @@
 services:
+    # Path manager
     innova.manager.path_manager:
         class: Innova\PathBundle\Manager\PathManager
         arguments:
@@ -7,7 +8,17 @@ services:
         calls:
             - [setRequest, ["@?request="]]
         scope: request
-            
+
+    # Path template manager
+    innova.manager.pathtemplate_manager:
+        class: Innova\PathBundle\Manager\PathTemplateManager
+        arguments:
+            entityManager:   @doctrine.orm.entity_manager
+        calls:
+            - [setRequest, ["@?request="]]
+        scope: request
+
+    # Step manager
     innova.manager.step_manager: 
         class: Innova\PathBundle\Manager\StepManager
         arguments: ["@doctrine.orm.entity_manager"]

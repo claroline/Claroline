@@ -41,7 +41,10 @@
             <table class="table table-hover" style="margin-top: -1px;">
                 {% for count, path in paths["me"] %}
                 <tr>
-                    <td>{{ path.resourceNode.name }}</td>
+                    <td><strong>{{ path.resourceNode.name }}</strong></td>
+                    <td>
+                        {{ path.description | truncate(40, true, ' [...]') }}
+                    </td>
                     <td align="right">
                     {% if path.deployed %}
                         <form action="{{ path('innova_path_play') }}" method="post" style="display: inline-block">
@@ -83,8 +86,9 @@
                 {% for path in paths["others"] %}
                     {% if path.deployed %}
                     <tr>
+                        <td><strong>{{ path.resourceNode.name }}</strong></td>
                         <td>
-                            <span>{{ path.resourceNode.name }}</span>
+                            {{ path.description | truncate(40, true, ' [...]') }}
                         </td>
                         <td align="right">
                             <form action="{{ path('innova_path_play') }}" method="post" style="display: inline-block">
@@ -92,7 +96,6 @@
                                 <input type="hidden" value="{{ path.resourceNode.id }}" name="pathId" />
                                 <button rel="tooltip" data-original-title="{{ 'play' | trans({}, 'innova_tools') }}" class="btn btn-xs btn-primary" type="submit"><span class="icon-play"></span></button>
                             </form>
-
                         </td>
                     </tr>
                     {% endif %}

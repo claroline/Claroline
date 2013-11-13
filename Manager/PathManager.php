@@ -101,6 +101,7 @@ class PathManager
         // Create path
         $newPath = new Path();
         $newPath->setPath($this->request->get('path'));
+        $newPath->setDescription($this->request->get('pathDescription'));
         
         // Link resource node to path
         $newPath->setResourceNode($resourceNode);
@@ -184,6 +185,7 @@ class PathManager
         
             // Update path
             $path->setPath($this->request->get('path'));
+            $path->setDescription($this->request->get('pathDescription'));
             $path->setModified(true);
             $this->em->persist($path);
             

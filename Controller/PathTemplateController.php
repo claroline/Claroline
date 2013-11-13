@@ -46,7 +46,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 // Controller dependencies
 use Doctrine\ORM\EntityManagerInterface;
-
+use Innova\PathBundle\Manager\PathTemplateManager;
 use Innova\PathBundle\Entity\PathTemplate;
 
 /**
@@ -76,6 +76,12 @@ class PathTemplateController
     protected $entityManager;
     
     /**
+     * Path template manager
+     * @var \Innova\PathBundle\Manager\PathTemplateManager
+     */
+    protected $pathTemplateManager;
+    
+    /**
      * Current request
      * @var \Symfony\Component\HttpFoundation\Request
      */
@@ -84,11 +90,13 @@ class PathTemplateController
     /**
      * Class constructor
      * Inject needed dependencies
-     * @param EntityManagerInterface   $entityManager
+     * @param \Doctrine\ORM\EntityManagerInterface           $entityManager
+     * @param \Innova\PathBundle\Manager\PathTemplateManager $pathTemplateManager
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, PathTemplateManager $pathTemplateManager)
     {
         $this->entityManager = $entityManager;
+        $this->pathTemplateManager = $pathTemplateManager;
     }
     
     /**
@@ -226,5 +234,24 @@ class PathTemplateController
         $this->entityManager->flush();
 
         return new Response('ok');
+    }
+    
+    /**
+     * Check if template name is unique
+     * @return JsonResponse
+     *
+     * @Route(
+     *      "/path_template/check_name",
+     *      name = "innova_pathtemplate_check_unique_name",
+     *      options = {"expose" = true}
+     * )
+     * @Method("POST")
+     */
+    public function checkNameIsUniqueAction()
+    {
+        // TODO : Make search dependent of current user if templates become not share between all users (currently no ACL on templates)
+        $isUnique = $this->pathTemplateManager->checkNameIsUnique($this->request->get('pathTemplateName'));
+    
+        return new JsonResponse($isUnique);
     }
 }
