@@ -21,7 +21,7 @@ class Chapter
     private $id;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=false)
      */
     private $title;
 
@@ -38,7 +38,7 @@ class Chapter
 
     /**
      * @Gedmo\Slug(fields={"title"}, unique=true)
-     * @ORM\Column(length=128, unique=true, nullable=true)
+     * @ORM\Column(length=128, unique=true, nullable=false)
      */
     protected $slug;
 

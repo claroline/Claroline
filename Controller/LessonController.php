@@ -546,7 +546,7 @@ class LessonController extends Controller
 
         return($this->redirect($this->generateUrl('icap_lesson_chapter', array(
             'resourceId' => $lesson->getId(),
-            'chapterId' => $chapterId
+            'chapterSlug' => $chapter->getSlug()
         ))));
     }
 
@@ -640,7 +640,7 @@ class LessonController extends Controller
 
         return($this->redirect($this->generateUrl('icap_lesson_chapter', array(
             'resourceId' => $lesson->getId(),
-            'chapterId' => $chapter_copy->getId()
+            'chapterSlug' => $chapter_copy->getSlug()
         ))));
     }
 

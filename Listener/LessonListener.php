@@ -76,18 +76,17 @@ class LessonListener extends ContainerAware
     public function onCopy(CopyResourceEvent $event){
         $entityManager = $this->container->get('doctrine.orm.entity_manager');
         $lesson = $event->getResource();
-        $user = $this->container->get('security.context')->getToken()->getUser();
 
-        $newlesson = new Lesson();
-        $newlesson->setName($lesson->getResourceNode()->getName());
-        $entityManager->persist($newlesson);
-        $entityManager->flush($newlesson);
+        $newLesson = new Lesson();
+        $newLesson->setName($lesson->getResourceNode()->getName());
+        $entityManager->persist($newLesson);
+        $entityManager->flush($newLesson);
 
         //$chapterRepository = $entityManager->getRepository('IcapLessonBundle:Chapter');
         $chapter_manager = $this->container->get("icap.lesson.manager.chapter");
-        $chapter_manager->copyRoot($lesson->getRoot(), $newlesson->getRoot());
+        $chapter_manager->copyRoot($lesson->getRoot(), $newLesson->getRoot());
 
-        $event->setCopy($newlesson);
+        $event->setCopy($newLesson);
         $event->stopPropagation();
     }
 
