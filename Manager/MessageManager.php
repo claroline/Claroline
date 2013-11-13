@@ -47,7 +47,7 @@ class MessageManager
         $this->pagerFactory = $pagerFactory;
     }
 
-    public function send(User $sender, Message $message, $parent = null)
+    public function send(User $sender, Message $message, $parent = null, $setAsSent = true)
     {
         if (substr($receiversString = $message->getTo(), -1, 1) === ';') {
             $receiversString = substr_replace($receiversString, '', -1);
@@ -81,11 +81,14 @@ class MessageManager
         }
 
         $this->om->persist($message);
-        $userMessage = $this->om->factory('Claroline\CoreBundle\Entity\UserMessage');
-        $userMessage->setIsSent(true);
-        $userMessage->setUser($sender);
-        $userMessage->setMessage($message);
-        $this->om->persist($userMessage);
+        
+        if ($setAsSent) {
+            $userMessage = $this->om->factory('Claroline\CoreBundle\Entity\UserMessage');
+            $userMessage->setIsSent(true);
+            $userMessage->setUser($sender);
+            $userMessage->setMessage($message);
+            $this->om->persist($userMessage);
+        }
 
         foreach ($userReceivers as $userReceiver) {
             $userMessage = $this->om->factory('Claroline\CoreBundle\Entity\UserMessage');
@@ -198,6 +201,11 @@ class MessageManager
         }
 
         return implode(';', $usernames);
+    }
+
+    public function getUserMessagesBy(array $array)
+    {
+        return $this->userMessageRepo->findBy($array);
     }
 
     private function markMessages(array $userMessages, $flag)
