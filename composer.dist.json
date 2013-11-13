@@ -7,7 +7,7 @@
     "require": {
         "php": ">=5.3.3",
         "sensio/distribution-bundle": "~2.3.4",
-        "claroline/bundle-recorder": ">=2.0.2,<3.0",
+        "claroline/bundle-recorder": ">=2.0.3,<3.0",
         "claroline/core-bundle": "~2.1",
         "claroline/web-installer": ">=1.0.1,<2.0",
         "claroline/activity-tool-bundle": ">=1.0.1,<2.0",
@@ -18,8 +18,10 @@
         "claroline/rss-reader-bundle": ">=2.0.1,<3.0",
         "claroline/video-player-bundle": ">=1.0.1,<2.0",
         "icap/blog-bundle": "dev-master",
-        "icap/dropzone-bundle": "dev-master",
-        "ujm/exo-bundle": "~1.0"
+        "icap/dropzone-bundle": ">=0.1.0,<2.0",
+        "icap/wiki-bundle": ">=2.2,<3.0",
+        "icap/lesson-bundle": ">=1.2,<2.0",
+        "ujm/exo-bundle": ">=1.0.5,<2.0"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
