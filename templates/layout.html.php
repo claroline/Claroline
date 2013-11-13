@@ -5,7 +5,7 @@
     <title>Claroline installer</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
-    <link rel="shortcut icon" href="<?php echo $path('/../bundles/clarolinecore/images/ico/favicon.ico') ?>" />
+    <link rel="shortcut icon" href="<?php echo $path('/../claroline.ico') ?>" />
     <script src="//code.jquery.com/jquery-git1.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
     <style>
