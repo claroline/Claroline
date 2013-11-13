@@ -19,7 +19,7 @@
         {{ form_rest(form) }}
     </fieldset>
     <input type="submit" value="{% trans %}Confirmer{% endtrans %}" class="btn btn-primary" />
-    <a class="btn btn-default cancel-btn" href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': chapter.id }) }}">
+    <a class="btn btn-default cancel-btn" href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterSlug': chapter.slug }) }}">
        {{ 'Cancel'|trans({}, 'icap_lesson') }}
     </a>
 </form>

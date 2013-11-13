@@ -11,6 +11,7 @@ namespace Icap\LessonBundle\Installation\Updater;
 
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Icap\LessonBundle\Entity\Chapter;
+use Icap\LessonBundle\Entity\Lesson;
 
 
 class Updater13 {
@@ -31,18 +32,45 @@ class Updater13 {
 
     public function postUpdate()
     {
+        //generating missing titles (root chapters)
+        $this->setChapterTitles();
         //generate missing slugs
-        setSlug();
+        $this->setSlug();
+    }
 
+    public function setChapterTitles(){
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $chapters = $em->getRepository("IcapLessonBundle:Chapter")->findAll();
+        foreach ($chapters as $chapter) {
+            if($chapter->getTitle() == null){
+                //if root chapter, take name of its lesson
+                if($chapter->getRoot() == $chapter->getId())
+                {
+                    $chapter->setTitle($chapter->getLesson()->getResourceNode()->getName());
+                }
+                else{
+                    //case treated to match current database state (title nullable), tho this case shouldnt happen since UI prevent inputing empty titles
+                    $chapter->setTitle('Default title');
+                }
+            }
+        }
+        $em->flush();
     }
 
     public function setSlug(){
         $em = $this->container->get('doctrine.orm.entity_manager');
         $chapters = $em->getRepository("IcapLessonBundle:Chapter")->findAll();
+        $cpt = 0;
+        //first pass needed to set slug value to something other than NULL, otherwise entities wont be persisted and wont trigger slug generation
         foreach ($chapters as $chapter) {
             if($chapter->getSlug() == null){
-                $chapter->setSlug(null);
+                $chapter->setSlug('slug_placeholder_'.$cpt++);
             }
+        }
+        $em->flush();
+        //setting slug to null value will regenerate it when em is flushed
+        foreach ($chapters as $chapter) {
+            $chapter->setSlug(null);
         }
         $em->flush();
     }

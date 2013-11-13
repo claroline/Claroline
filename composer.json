@@ -8,8 +8,5 @@
     "autoload": {
         "psr-0": { "Icap\\LessonBundle": "" }
     },
-    "target-dir": "Icap/LessonBundle",
-    "extra": {
-        "dbVersion": "20131107181414"
-    }
+    "target-dir": "Icap/LessonBundle"
 }

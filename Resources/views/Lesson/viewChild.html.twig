@@ -14,7 +14,7 @@
             {% endif %}
             <i class='icon-caret-down collapsor {% if child.__children|length == 0%}empty{% endif %}' id='collapsor_icon_{{ child.id }}' data-collapsor = '{{ child.id }}'></i>
             {#<i data-handle = '{{ child.id }}' class="icon-file-text-alt handle_sortable lesson_tooltip" data-original-title='{{ 'dragndrop_button'|trans({}, 'icap_lesson') }}'></i>#}
-            <a href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterId': child.id }) }}">{{ child.title }}</a>
+            <a href="{{ path('icap_lesson_chapter', { 'resourceId': lesson.id, 'chapterSlug': child.slug }) }}">{{ child.title }}</a>
             </div>
             {{ _self.recursiveChapter(child, chapter, lesson, false) }}
             </li>

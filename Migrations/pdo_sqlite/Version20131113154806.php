@@ -8,15 +8,12 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/11/13 05:13:31
+ * Generation date: 2013/11/13 03:48:08
  */
-class Version20131113171330 extends AbstractMigration
+class Version20131113154806 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->addSql("
-            DROP INDEX UNIQ_3D7E3C8C989D9B62
-        ");
         $this->addSql("
             DROP INDEX IDX_3D7E3C8CCDF80196
         ");
@@ -33,8 +30,7 @@ class Version20131113171330 extends AbstractMigration
             lft, 
             lvl, 
             rgt, 
-            root, 
-            slug 
+            root 
             FROM icap__lesson_chapter
         ");
         $this->addSql("
@@ -45,13 +41,13 @@ class Version20131113171330 extends AbstractMigration
                 id INTEGER NOT NULL, 
                 parent_id INTEGER DEFAULT NULL, 
                 lesson_id INTEGER DEFAULT NULL, 
+                title VARCHAR(255) DEFAULT NULL, 
                 text CLOB DEFAULT NULL, 
                 lft INTEGER NOT NULL, 
                 lvl INTEGER NOT NULL, 
                 rgt INTEGER NOT NULL, 
                 root INTEGER DEFAULT NULL, 
-                title VARCHAR(255) NOT NULL, 
-                slug VARCHAR(128) NOT NULL, 
+                slug VARCHAR(128) DEFAULT NULL, 
                 PRIMARY KEY(id), 
                 CONSTRAINT FK_3D7E3C8C727ACA70 FOREIGN KEY (parent_id) 
                 REFERENCES icap__lesson_chapter (id) 
@@ -64,7 +60,7 @@ class Version20131113171330 extends AbstractMigration
         $this->addSql("
             INSERT INTO icap__lesson_chapter (
                 id, parent_id, lesson_id, title, text, 
-                lft, lvl, rgt, root, slug
+                lft, lvl, rgt, root
             ) 
             SELECT id, 
             parent_id, 
@@ -74,21 +70,20 @@ class Version20131113171330 extends AbstractMigration
             lft, 
             lvl, 
             rgt, 
-            root, 
-            slug 
+            root 
             FROM __temp__icap__lesson_chapter
         ");
         $this->addSql("
             DROP TABLE __temp__icap__lesson_chapter
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_3D7E3C8C989D9B62 ON icap__lesson_chapter (slug)
-        ");
-        $this->addSql("
             CREATE INDEX IDX_3D7E3C8CCDF80196 ON icap__lesson_chapter (lesson_id)
         ");
         $this->addSql("
             CREATE INDEX IDX_3D7E3C8C727ACA70 ON icap__lesson_chapter (parent_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_3D7E3C8C989D9B62 ON icap__lesson_chapter (slug)
         ");
     }
 
@@ -110,7 +105,6 @@ class Version20131113171330 extends AbstractMigration
             parent_id, 
             title, 
             text, 
-            slug, 
             lft, 
             lvl, 
             rgt, 
@@ -125,13 +119,12 @@ class Version20131113171330 extends AbstractMigration
                 id INTEGER NOT NULL, 
                 lesson_id INTEGER DEFAULT NULL, 
                 parent_id INTEGER DEFAULT NULL, 
+                title VARCHAR(255) DEFAULT NULL, 
                 text CLOB DEFAULT NULL, 
                 lft INTEGER NOT NULL, 
                 lvl INTEGER NOT NULL, 
                 rgt INTEGER NOT NULL, 
                 root INTEGER DEFAULT NULL, 
-                title VARCHAR(255) DEFAULT NULL, 
-                slug VARCHAR(128) DEFAULT NULL, 
                 PRIMARY KEY(id), 
                 CONSTRAINT FK_3D7E3C8CCDF80196 FOREIGN KEY (lesson_id) 
                 REFERENCES icap__lesson (id) 
@@ -144,14 +137,13 @@ class Version20131113171330 extends AbstractMigration
         $this->addSql("
             INSERT INTO icap__lesson_chapter (
                 id, lesson_id, parent_id, title, text, 
-                slug, lft, lvl, rgt, root
+                lft, lvl, rgt, root
             ) 
             SELECT id, 
             lesson_id, 
             parent_id, 
             title, 
             text, 
-            slug, 
             lft, 
             lvl, 
             rgt, 
@@ -160,9 +152,6 @@ class Version20131113171330 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE __temp__icap__lesson_chapter
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_3D7E3C8C989D9B62 ON icap__lesson_chapter (slug)
         ");
         $this->addSql("
             CREATE INDEX IDX_3D7E3C8CCDF80196 ON icap__lesson_chapter (lesson_id)

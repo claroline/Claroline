@@ -26,7 +26,7 @@
     <br/>
     <div class="form-actions">
         <button type="submit" class="btn btn-primary">{{ 'Ok'|trans({}, 'icap_lesson') }}</button>
-        <a href="{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': chapter.id }) }}">
+        <a href="{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterSlug': chapter.slug }) }}">
             <button type="button" class="btn">{{ 'Cancel'|trans({}, 'icap_lesson') }}</button>
         </a>
     </div>

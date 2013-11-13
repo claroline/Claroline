@@ -48,10 +48,11 @@ class Lesson extends AbstractResource
         if($this->getRoot() == null){
             $em = $event->getEntityManager();
             $rootLesson = $this->getRoot();
-            if($rootLesson == null){
-
+            if($rootLesson == null)
+            {
                 $rootLesson = new Chapter();
                 $rootLesson->setLesson($this);
+                $rootLesson->setTitle($this->getResourceNode()->getName());
                 $this->setRoot($rootLesson);
 
                 $em->getRepository('IcapLessonBundle:Chapter')->persistAsFirstChild($rootLesson);

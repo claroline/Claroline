@@ -29,7 +29,7 @@
         {% if chapter.id != path_part.id%}
             <li><a href="{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': path_part.id}) }}">{{ path_part.title }}</a></li>
         {%  else %}
-            <li class="active">{{ path_part.title }}</li>
+            <li class="active"><a href="{{ path('icap_lesson_chapter', { 'resourceId': _resource.id, 'chapterId': path_part.id}) }}">{{ path_part.title }}</a></li>
         {% endif %}
     {% endfor %}
 {% endmacro %}

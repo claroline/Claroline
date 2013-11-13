@@ -31,9 +31,7 @@ class LessonController extends Controller
 
     /**
      * @param string $permission
-     *
      * @param Lesson $lesson
-     *
      * @throws AccessDeniedException
      */
     protected function checkAccess($permission, Lesson $lesson)
@@ -48,32 +46,42 @@ class LessonController extends Controller
     }
 
     /**
-     * @param $resourceId, $chapterId
-     * @return $lesson, $chapters, $chapter
-     *
+    * @Route(
+    *      "view/{resourceId}",
+    *      name="icap_lesson",
+    *      requirements={"resourceId" = "\d+"}
+    * )
+    * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
+    * @Template("IcapLessonBundle:Lesson:viewChapter.html.twig")
+    */
+    public function viewLessonAction($lesson)
+    {
+        $this->checkAccess("OPEN", $lesson);
+
+        return $this->getChapterView($lesson,$this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter')->getFirstChapter($lesson));
+    }
+
+    /**
      * @Route(
-     *      "view/{resourceId}",
-     *      name="icap_lesson",
-     *      requirements={"resourceId" = "\d+"},
-     *      defaults={"chapterId" = 0}
-     * )
-     * @Route(
-     *      "view/{resourceId}/{chapterId}",
+     *      "view/{resourceId}/{chapterSlug}",
      *      name="icap_lesson_chapter",
      *      requirements={"resourceId" = "\d+", "chapterId" = "\d+"}
      * )
      * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
+     * @ParamConverter("chapter", class="IcapLessonBundle:Chapter", options={"mapping": {"chapterSlug": "slug"}})
      * @Template()
      */
-    public function viewChapterAction($lesson, $chapterId)
+    public function viewChapterAction($lesson, $chapter)
     {
         $this->checkAccess("OPEN", $lesson);
 
-        $chapterRepository = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter');
-        $chapter = null;
-        $parent = null;
-        $path = null;
-        if ($chapterId != 0) {
+        return $this->getChapterView($lesson, $chapter);
+
+    }
+
+    private function getChapterView($lesson, $chapter){
+
+/*        if ($chapterId != 0) {
             $chapter = $this->findChapter($lesson, $chapterId);
             $parent = $chapter;
             $path = $chapterRepository->getPath($chapter);
@@ -82,37 +90,49 @@ class LessonController extends Controller
         } else {
             $chapter = $chapterRepository->getFirstChapter($lesson);
             $parent = $lesson->getRoot();
-        }
-        //get complete chapter tree for this lesson
-        $tree = $chapterRepository->getChapterTree($lesson->getRoot());
-
-        //form used to move chapters, used by dragndrop methods
-        $form = $this->createForm($this->get("icap.lesson.movechaptertype"), $chapter);
+        }*/
 
         //the first time you enter the lesson there's no chapter
         $previousChapterId = null;
+        $previousChapterSlug = null;
         $nextChapterId = null;
+        $nextChapterSlug = null;
+        $tree = null;
+        $form_view = null;
+        $parent = $lesson->getRoot();
         if($chapter != null){
+            $chapterRepository = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter');
+            //get complete chapter tree for this lesson
+            $tmp_tree = $chapterRepository->getChapterTree($lesson->getRoot());
+            $tree = $tmp_tree[0];
+            //form used to move chapters, used by dragndrop methods
+            $form_view = $this->createForm($this->get("icap.lesson.movechaptertype"), $chapter)->createView();
+            $path = $chapterRepository->getPath($chapter);
+            //path first element is the lesson root, we don't show it in the breadcrumb
+            unset($path[0]);
             $this->dispatchChapterReadEvent($lesson, $chapter);
             $previous = $chapterRepository->getPreviousChapter($chapter);
             if($previous != null){
                 $previousChapterId = $previous->getId();
+                $previousChapterSlug = $previous->getSlug();
             }
             $next = $chapterRepository->getNextChapter($chapter);
             if($next != null){
                 $nextChapterId = $next->getId();
+                $nextChapterSlug = $next->getSlug();
             }
+            $parent = $chapter;
         }
 
         return array(
             '_resource'         => $lesson,
             'node'              => new ResourceCollection(array($lesson->getResourceNode())),
-            'tree'              => $tree[0],
+            'tree'              => $tree,
             'parent'            => $parent,
             'chapter'           => $chapter,
-            'form'              => $form->createView(),
-            'previous'          => $previousChapterId,
-            'next'              => $nextChapterId,
+            'form'              => $form_view,
+            'previous'          => $previousChapterSlug,
+            'next'              => $nextChapterSlug,
             'workspace'         => $lesson->getResourceNode()->getWorkspace()
         );
     }
@@ -199,7 +219,7 @@ class LessonController extends Controller
         }
         return($this->redirect($this->generateUrl('icap_lesson_chapter', array(
             'resourceId' => $lesson->getId(),
-            'chapterId' => $chapterId
+            'chapterSlug' => $chapter->getSlug()
         ))));
     }
 
@@ -386,9 +406,8 @@ class LessonController extends Controller
 
         $form = $this->createForm($this->get("icap.lesson.chaptertype"), null, array('chapters' => $chapters));
         $form->handleRequest($this->getRequest());
-       // var_dump($form->get('parentChapter')->getData());
+
         if ($form->isValid()) {
-            var_dump("passe3");
             $chapterParent = $this->findChapter($lesson, $form->get('parentChapter')->getData());
             $chapter = $form->getData();
             $chapter->setLesson($lesson);
@@ -400,7 +419,7 @@ class LessonController extends Controller
             $this->dispatchChapterCreateEvent($lesson, $chapter);
 
             $this->get('session')->getFlashBag()->add('success',$translator->trans('Your chapter has been added',array(), 'icap_lesson'));
-            return $this->redirect($this->generateUrl('icap_lesson_chapter', array('resourceId' => $lesson->getId(), 'chapterId' => $chapter->getId())));
+            return $this->redirect($this->generateUrl('icap_lesson_chapter', array('resourceId' => $lesson->getId(), 'chapterSlug' => $chapter->getSlug())));
         } else {
             $this->get('session')->getFlashBag()->add('error',$translator->trans('Your chapter has not been added',array(), 'icap_lesson'));
         }
@@ -512,8 +531,6 @@ class LessonController extends Controller
         }
 
         //a node cant be sibling with root
-/*        var_dump($firstposition);
-        die();*/
         if ($brother == true and $newParentId != $lesson->getRoot()->getId()){
             $repo->persistAsNextSiblingOf($chapter, $newParent);
         } else {
