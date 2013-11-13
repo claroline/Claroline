@@ -36,35 +36,35 @@ class BlogOptions
      *
      * @ORM\Column(type="boolean", name="authorize_comment")
      */
-    protected $authorizeComment;
+    protected $authorizeComment = false;
 
     /**
      * @var bool
      *
      * @ORM\Column(type="boolean", name="authorize_anonymous_comment")
      */
-    protected $authorizeAnonymousComment;
+    protected $authorizeAnonymousComment = false;
 
     /**
      * @var integer
      *
      * @ORM\Column(type="smallint", name="post_per_page")
      */
-    protected $postPerPage;
+    protected $postPerPage = 10;
 
     /**
      * @var bool
      *
      * @ORM\Column(type="boolean", name="auto_publish_post")
      */
-    protected $autoPublishPost;
+    protected $autoPublishPost = false;
 
     /**
      * @var bool
      *
      * @ORM\Column(type="boolean", name="auto_publish_comment")
      */
-    protected $autoPublishComment;
+    protected $autoPublishComment = false;
 
     /**
      * @var bool
@@ -127,15 +127,6 @@ class BlogOptions
      * @var string
      */
     protected $oldFileName = null;
-
-    public function __construct()
-    {
-        $this->authorizeComment          = false;
-        $this->authorizeAnonymousComment = false;
-        $this->postPerPage               = 10;
-        $this->autoPublishPost           = false;
-        $this->autoPublishComment        = false;
-    }
 
     /**
      * @return int
