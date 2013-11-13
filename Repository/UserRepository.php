@@ -265,6 +265,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             OR UPPER(u.firstName) LIKE :search
             OR UPPER(u.username) LIKE :search
             OR UPPER(u.administrativeCode) LIKE :search
+            OR UPPER(u.mail) LIKE :search
             OR CONCAT(UPPER(u.firstName), CONCAT(' ', UPPER(u.lastName))) LIKE :search
             OR CONCAT(UPPER(u.lastName), CONCAT(' ', UPPER(u.firstName))) LIKE :search
         ";

@@ -335,6 +335,7 @@ permissions: Permissions
 personal_workspace: 'Espace personnel'
 phone: Téléphone
 platform_parameters: 'Paramètres de la plateforme'
+platform_parameters_form_defaultRole: 'Role par défaut'
 platform_parameters_form_footer: 'Pied de page'
 platform_parameters_form_icon: 'Icon de la plateforme'
 platform_parameters_form_localLanguage: Langue

@@ -596,9 +596,10 @@ class AdministrationController extends Controller
     public function platformSettingsFormAction()
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
+        $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
         $form = $this->formFactory->create(
             FormFactory::TYPE_PLATFORM_PARAMETERS,
-            array($this->getThemes()),
+            array($this->getThemes(), $role),
             $platformConfig
         );
 
@@ -640,7 +641,8 @@ class AdministrationController extends Controller
                         'name' => $form['name']->getData(),
                         'support_email' => $form['support_email']->getData(),
                         'footer' => $form['footer']->getData(),
-                        'logo' => $this->request->get('selectlogo')
+                        'logo' => $this->request->get('selectlogo'),
+                        'default_role' => $form['defaultRole']->getData()->getName()
                     )
                 );
 
