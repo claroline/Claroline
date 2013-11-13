@@ -6,7 +6,9 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\Translator;
+use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
 /**
  * @DI\Service("claroline.manager.mail_manager")
@@ -18,12 +20,14 @@ class MailManager
     private $templating;
     private $translator;
     private $container;
+    private $ch;
 
     /**
      * @DI\InjectParams({
      *     "router"         = @DI\Inject("router"),
      *     "mailer"         = @DI\Inject("mailer"),
      *     "templating"     = @Di\Inject("templating"),
+     *     "ch"             = @DI\Inject("claroline.config.platform_config_handler"),
      *     "container"      = @DI\Inject("service_container")
      * })
      */
@@ -32,6 +36,7 @@ class MailManager
         TwigEngine $templating,
         UrlGeneratorInterface $router,
         Translator $translator,
+        PlatformConfigurationHandler $ch,
         ContainerInterface $container
     )
     {
@@ -40,20 +45,32 @@ class MailManager
         $this->templating = $templating;
         $this->translator = $translator;
         $this->container = $container;
+        $this->ch = $ch;
     }
+
+    /**
+     * @return boolean
+     */
     public function isMailerAvailable()
     {
         try {
             $this->mailer->getTransport()->start();
 
             return true;
+
         } catch (\Swift_TransportException $e) {
             return false;
         }
     }
 
-    public function sendForgotPassword($from, $sender, $hash)
+    /**
+     * @param User $user
+     *
+     * @return boolean
+     */
+    public function sendForgotPassword(User $user)
     {
+        $hash = $user->getResetPasswordHash();
         $msg = $this->translator->trans('mail_click', array(), 'platform');
         $link = $this->container->get('request')->server->get('HTTP_ORIGIN') . $this->router->generate(
             'claro_security_reset_password',
@@ -61,32 +78,56 @@ class MailManager
         );
 
         $body = $this->templating->render('ClarolineCoreBundle:Authentication:emailForgotPassword.html.twig',array('message' => $msg, 'link' => $link));
-        $message = \Swift_Message::newInstance()
-            ->setSubject($this->translator->trans('reset_pwd', array(), 'platform'))
-            ->setFrom($from)
-            ->setTo($sender)
-            ->setBody($body);
+        $subject = $this->translator->trans('reset_pwd', array(), 'platform');
 
-        if ($this->mailer->send($message)) {
-            return true;
-        }
-
-        return false;
+        return $this->send($subject, $body, array($user));
     }
 
-    public function sendPlainPassword($from,$sender,$body)
+    /**
+     * @param User $user
+     *
+     * @return boolean
+     */
+    public function sendPlainPassword(User $user)
     {
-        $message = \Swift_Message::newInstance()
-            ->setSubject($this->translator->trans('create_new_user_account', array(), 'platform'))
-            ->setFrom($from)
-            ->setTo($sender)
-            ->setBody($body);
+        $body = $this->translator->trans('admin_form_username', array(), 'platform').
+            ' : '.$user->getUsername().' '.
+            $this->translator->trans('admin_form_plainPassword_first', array(), 'platform').
+            ': '.$user->getPlainPassword();
 
-        if ($this->mailer->send($message)) {
-            return true;
+        $subject = $this->translator->trans('create_new_user_account', array(), 'platform');
+
+        return $this->send($subject, $body, array($user));
+    }
+
+
+    /**
+     * @param string $subject
+     * @param string $body
+     * @param string $from
+     * @param User[] $users
+     *
+     * @return boolean
+     */
+    public function send($subject, $body, array $users, $from = null)
+    {
+        if ($from === null) {
+            $from = $this->ch->getParameter('support_email');
         }
 
-        return false;
+        $to = array();
+
+        foreach ($users as $user) {
+            $to[] = $user->getMail();
+        }
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($from)
+            ->setTo($to)
+            ->setBody($body);
+
+        return $this->mailer->send($message) ? true: false;
     }
 }
 

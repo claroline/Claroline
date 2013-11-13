@@ -92,11 +92,7 @@ class UserManager
         $this->om->endFlushSuite();
 
         if ($this->mailManager->isMailerAvailable()) {
-            $body = $this->translator->trans('admin_form_username', array(), 'platform').
-                ' : '.$user->getUsername().' '.
-                $this->translator->trans('admin_form_plainPassword_first', array(), 'platform').
-                ': '.$user->getPlainPassword();
-            $this->mailManager->sendPlainPassword('noreply@claroline.net', $user->getMail(), $body);
+            $this->mailManager->sendPlainPassword($user);
         }
 
         return $user;
