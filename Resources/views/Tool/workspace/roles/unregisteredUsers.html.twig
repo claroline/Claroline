@@ -119,6 +119,7 @@
                     <tr>
                         <td></td>
                         <td>{{ 'name'|trans({}, 'platform') }}</td>
+                        <td>{{ 'roles'|trans({}, 'platform') }}</td>
                     </tr>
                 </thead>
                 <tbody id="user-table-body">
@@ -133,6 +134,27 @@
                                 data-html="true"
                                 >
                                 {{ user.lastname }} {{ user.firstname }}
+                            </td>
+                            <td>
+                                {% for role in user.getEntityRoles() %}
+                                    {% if role.getWorkspace() == workspace %}
+                                        <span class="label label-success" id="label-{{ role.getId () }}-{{ user.getId()}}">
+                                            {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                        </span>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% set groups = user.getGroups() %}
+                                    {% for group in groups %}
+                                    {% for role in group.getEntityRoles() %}
+                                        {% if role.getWorkspace() == workspace %}
+                                            <span title="{{ group.getName() }}" class="label label-default" id="label-{{ role.getId () }}-{{ user.getId()}}">
+                                                {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                            </span>
+
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
                             </td>
                         </tr>
                     {% endfor %}

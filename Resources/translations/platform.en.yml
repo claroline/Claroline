@@ -338,6 +338,7 @@ permissions: Permissions
 personal_workspace: 'Personal workspace'
 phone: Phone
 platform_parameters: 'Platform parameters'
+platform_parameters_form_defaultRole: 'Default role'
 platform_parameters_form_footer: 'Footer'
 platform_parameters_form_icon: 'Platform Icon'
 platform_parameters_form_localLanguage: Langue
