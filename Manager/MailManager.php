@@ -6,21 +6,25 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\Translator;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * @DI\Service("claroline.manager.mail_manager", scope="request")
+ * @DI\Service("claroline.manager.mail_manager")
  */
 class MailManager
 {
     private $router;
     private $mailer;
+    private $templating;
+    private $translator;
+    private $container;
 
     /**
      * @DI\InjectParams({
      *     "router"         = @DI\Inject("router"),
      *     "mailer"         = @DI\Inject("mailer"),
-     *     "templating"     = @Di\Inject("templating"), 
+     *     "templating"     = @Di\Inject("templating"),
+     *     "container"      = @DI\Inject("service_container")
      * })
      */
     public function __construct(
@@ -28,14 +32,14 @@ class MailManager
         TwigEngine $templating,
         UrlGeneratorInterface $router,
         Translator $translator,
-        Request $request
+        ContainerInterface $container
     )
     {
         $this->router = $router;
         $this->mailer = $mailer;
         $this->templating = $templating;
         $this->translator = $translator;
-        $this->request = $request;
+        $this->container = $container;
     }
     public function isMailerAvailable()
     {
@@ -51,7 +55,7 @@ class MailManager
     public function sendForgotPassword($from, $sender, $hash)
     {
         $msg = $this->translator->trans('mail_click', array(), 'platform');
-        $link = $this->request->server->get('HTTP_ORIGIN') . $this->router->generate(
+        $link = $this->container->get('request')->server->get('HTTP_ORIGIN') . $this->router->generate(
             'claro_security_reset_password',
             array('hash' => $hash)
         );
