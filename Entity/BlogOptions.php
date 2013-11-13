@@ -36,64 +36,64 @@ class BlogOptions
      *
      * @ORM\Column(type="boolean", name="authorize_comment")
      */
-    protected $authorizeComment;
+    protected $authorizeComment = false;
 
     /**
      * @var bool
      *
      * @ORM\Column(type="boolean", name="authorize_anonymous_comment")
      */
-    protected $authorizeAnonymousComment;
+    protected $authorizeAnonymousComment = false;
 
     /**
      * @var integer
      *
      * @ORM\Column(type="smallint", name="post_per_page")
      */
-    protected $postPerPage;
+    protected $postPerPage = 10;
 
     /**
      * @var bool
      *
      * @ORM\Column(type="boolean", name="auto_publish_post")
      */
-    protected $autoPublishPost;
+    protected $autoPublishPost = false;
 
     /**
      * @var bool
      *
      * @ORM\Column(type="boolean", name="auto_publish_comment")
      */
-    protected $autoPublishComment;
+    protected $autoPublishComment = false;
 
     /**
      * @var bool
      *
-     * @ORM\Column(type="boolean", name="display_title", options={"default" = true})
+     * @ORM\Column(type="boolean", name="display_title")
      */
-    protected $displayTitle;
+    protected $displayTitle = true;
 
     /**
      * @var bool
      *
-     * @ORM\Column(type="boolean", name="banner_activate", options={"default" = true})
+     * @ORM\Column(type="boolean", name="banner_activate")
      */
-    protected $bannerActivate;
+    protected $bannerActivate = true;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string", name="banner_background_color", options={"default" = "#FFFFFF"})
+     * @ORM\Column(type="string", name="banner_background_color")
      */
-    protected $bannerBackgroundColor;
+    protected $bannerBackgroundColor = '#FFFFFF';
 
     /**
      * @var integer
      *
-     * @ORM\Column(type="smallint", name="banner_height", options={"default" = 100})
+     * @ORM\Column(type="smallint", name="banner_height")
      * @Assert\GreaterThanOrEqual(value = 100)
      */
-    protected $bannerHeight;
+    protected $bannerHeight = 100;
 
     /**
      * @var string
@@ -105,16 +105,16 @@ class BlogOptions
     /**
      * @var string
      *
-     * @ORM\Column(type="string", name="banner_background_image_position", options={"default" = "left top"})
+     * @ORM\Column(type="string", name="banner_background_image_position")
      */
-    protected $bannerBackgroundImagePosition;
+    protected $bannerBackgroundImagePosition = 'left top';
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string", name="banner_background_image_repeat", options={"default" = "no-repeat"})
+     * @ORM\Column(type="string", name="banner_background_image_repeat")
      */
-    protected $bannerBackgroundImageRepeat;
+    protected $bannerBackgroundImageRepeat = 'no-repeat';
 
     /**
      * @var UploadedFile
@@ -127,15 +127,6 @@ class BlogOptions
      * @var string
      */
     protected $oldFileName = null;
-
-    public function __construct()
-    {
-        $this->authorizeComment          = false;
-        $this->authorizeAnonymousComment = false;
-        $this->postPerPage               = 10;
-        $this->autoPublishPost           = false;
-        $this->autoPublishComment        = false;
-    }
 
     /**
      * @return int
