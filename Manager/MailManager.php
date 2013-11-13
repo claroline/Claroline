@@ -104,17 +104,14 @@ class MailManager
     /**
      * @param string $subject
      * @param string $body
-     * @param string $from
      * @param User[] $users
+     * @param User $from
      *
      * @return boolean
      */
     public function send($subject, $body, array $users, $from = null)
     {
-        if ($from === null) {
-            $from = $this->ch->getParameter('support_email');
-        }
-
+        $from = ($from === null) ? $this->ch->getParameter('support_email'): $from->getMail();
         $to = array();
 
         foreach ($users as $user) {
@@ -125,7 +122,7 @@ class MailManager
             ->setSubject($subject)
             ->setFrom($from)
             ->setTo($to)
-            ->setBody($body);
+            ->setBody($body, 'text/html');
 
         return $this->mailer->send($message) ? true: false;
     }
