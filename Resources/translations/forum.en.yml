@@ -12,8 +12,12 @@ forum_subject_form_message_content: Content
 forum_message_form_content: Content
 forum_subject_form_content : Content of the subject
 forum_subject_title_form_title: Title
+forum_new_message: A new message was created in the subject "%subject%" from the forum "%forum%".
+forum_new_subject: A new subject was created in the forum "%forum%".
 forum_form_name: Nom
 forum_options_form_subjects: Subjects per page
+unsubscribe_mail_list: Ne plus recevoir les notifications
+subscribe_mail_list: Recevoir les notifications
 forum_options_form_messages: Messages per page
 subject: Subject
 last_message: Last message

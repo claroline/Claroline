@@ -9,13 +9,10 @@ use Claroline\ForumBundle\Form\MessageType;
 use Claroline\ForumBundle\Form\SubjectType;
 use Claroline\ForumBundle\Form\EditTitleType;
 use Claroline\ForumBundle\Form\ForumOptionsType;
-use Claroline\ForumBundle\Event\Log\CreateMessageEvent;
-use Claroline\ForumBundle\Event\Log\CreateSubjectEvent;
 use Claroline\ForumBundle\Event\Log\EditMessageEvent;
 use Claroline\ForumBundle\Event\Log\EditSubjectEvent;
-use Claroline\ForumBundle\Event\Log\DeleteMessageEvent;
-use Claroline\ForumBundle\Event\Log\DeleteSubjectEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Entity\User;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
@@ -27,6 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
  * ForumController
@@ -39,14 +37,14 @@ class ForumController extends Controller
      *     name="claro_forum_subjects",
      *     defaults={"page"=1}
      * )
-     *
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @Template("ClarolineForumBundle::index.html.twig")
      *
      * @param integer $resourceId
      *
      * @return Response
      */
-    public function openAction($forumId, $page)
+    public function openAction($forumId, $page, User $user)
     {
         $em = $this->getDoctrine()->getManager();
         $forum = $em->getRepository('ClarolineForumBundle:Forum')->find($forumId);
@@ -68,7 +66,8 @@ class ForumController extends Controller
             'pager' => $pager,
             '_resource' => $forum,
             'canCreateSubject' => $canCreateSubject,
-            'isModerator' => $isModerator
+            'isModerator' => $isModerator,
+            'hasSubscribed' => $this->get('claroline.manager.forum_manager')->hasSubscribed($user, $forum)
         );
     }
 
@@ -136,17 +135,15 @@ class ForumController extends Controller
             $subject->setCreator($user);
             //instantiation of the new resources
             $subject->setForum($forum);
-            $em->persist($subject);
+            $this->get('claroline.manager.forum_manager')->createSubject($subject);
             $dataMessage = $form->get('message')->getData();
-            $this->dispatch(new CreateSubjectEvent($subject));
 
             if ($dataMessage['content'] !== null) {
                 $message = new Message();
                 $message->setContent($dataMessage['content']);
                 $message->setCreator($user);
                 $message->setSubject($subject);
-                $em->persist($message);
-                $em->flush();
+                $this->get('claroline.manager.forum_manager')->createMessage($message);
 
                 return new RedirectResponse(
                     $this->generateUrl('claro_forum_subjects', array('forumId' => $forum->getId(), '_resource' => $forum))
@@ -252,8 +249,8 @@ class ForumController extends Controller
     {
         $form = $this->container->get('form.factory')->create(new MessageType, new Message());
         $form->handleRequest($this->get('request'));
-        $em = $this->getDoctrine()->getManager();
-        $subject = $em->getRepository('ClarolineForumBundle:Subject')->find($subjectId);
+        $manager = $this->get('claroline.manager.forum_manager');
+        $subject = $manager->getSubject($subjectId);
         $forum = $subject->getForum();
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
@@ -266,9 +263,7 @@ class ForumController extends Controller
             $user = $this->get('security.context')->getToken()->getUser();
             $message->setCreator($user);
             $message->setSubject($subject);
-            $em->persist($message);
-            $em->flush();
-            $this->dispatch(new CreateMessageEvent($message));
+            $manager->createMessage($message);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_messages', array('subjectId' => $subjectId))
@@ -477,7 +472,6 @@ class ForumController extends Controller
         );
     }
 
-
     /**
      * @Route(
      *     "/delete/message/{message}",
@@ -488,13 +482,10 @@ class ForumController extends Controller
      */
     public function deleteMessageAction(Message $message)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
         $sc = $this->get('security.context');
 
         if ($sc->isGranted('moderate', new ResourceCollection(array($message->getSubject()->getForum()->getResourceNode())))) {
-            $this->dispatch(new DeleteMessageEvent($message));
-            $em->remove($message);
-            $em->flush();
+            $this->get('claroline.manager.forum_manager')->deleteMessage($message);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_messages', array('subjectId' => $message->getSubject()->getId()))
@@ -502,6 +493,44 @@ class ForumController extends Controller
         }
 
         throw new AccessDeniedHttpException();
+    }
+
+    /**
+     * @Route(
+     *     "/subscribe/forum/{forum}",
+     *     name="claro_forum_subscribe"
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * @param \Claroline\ForumBundle\Entity\Forum $forum
+     */
+    public function subscribeAction(Forum $forum, User $user)
+    {
+        $manager = $this->get('claroline.manager.forum_manager');
+        $manager->subscribe($forum, $user);
+
+        return new RedirectResponse(
+            $this->generateUrl('claro_forum_subjects', array('forumId' => $forum->getId()))
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/unsubscribe/forum/{forum}",
+     *     name="claro_forum_unsubscribe"
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * @param \Claroline\ForumBundle\Entity\Forum $forum
+     */
+    public function unsubscribeAction(Forum $forum, User $user)
+    {
+        $manager = $this->get('claroline.manager.forum_manager');
+        $manager->unsubscribe($forum, $user);
+
+        return new RedirectResponse(
+            $this->generateUrl('claro_forum_subjects', array('forumId' => $forum->getId()))
+        );
     }
 
     /**
@@ -514,13 +543,11 @@ class ForumController extends Controller
      */
     public function deleteSubjectAction(Subject $subject)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
         $sc = $this->get('security.context');
 
         if ($sc->isGranted('moderate', new ResourceCollection(array($subject->getForum()->getResourceNode())))) {
-            $this->dispatch(new DeleteSubjectEvent($subject));
-            $em->remove($subject);
-            $em->flush();
+
+            $this->get('claroline.manager.forum_manager')->deleteSubject($subject);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_subjects', array('forumId' => $subject->getForum()->getId()))

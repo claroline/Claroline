@@ -28,13 +28,24 @@
     </div>
     <div class="panel-body">
         <div class="navbar row">
-            {% if canCreateSubject %}
             <div class="col-md-6">
+                {% if canCreateSubject %}
                 <a class="btn btn-primary" href="{{ _path('claro_forum_form_subject_creation', {'forumId': _resource.getId()}) }}">
                     <i class="icon-plus"></i> {{ 'new_subject'|trans({}, 'forum') }}
                 </a>
+                {% endif %}
+                {% if is_mailer_available() %}
+                    {% if hasSubscribed %}
+                        <a class="btn btn-primary" href="{{ _path('claro_forum_unsubscribe', {'forum': _resource.getId()}) }}">
+                            {{ 'unsubscribe_mail_list'|trans({}, 'forum') }}
+                        </a>
+                    {% else %}
+                        <a class="btn btn-primary" href="{{ _path('claro_forum_subscribe', {'forum': _resource.getId()}) }}">
+                            {{ 'subscribe_mail_list'|trans({}, 'forum') }}
+                        </a>
+                    {% endif %}
+                {% endif %}
             </div>
-            {% endif %}
             <div class="col-md-6">
                  <div class="input-group">
                    <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">

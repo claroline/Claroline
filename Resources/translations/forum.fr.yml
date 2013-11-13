@@ -14,6 +14,10 @@ forum_form_name: Nom
 forum_options_form_subjects: Sujets par page
 forum_options_form_messages: Messages par
 forum_subject_title_form_title: Titre
+forum_new_message: Un nouveau message a été créé dans le sujet "%subject%" du forum "%forum%".
+forum_new_subject: Un nouveau sujet a été créé dans le forum "%forum%".
+subscribe_mail_list: Recevoir les notifications
+unsubscribe_mail_list: Ne plus recevoir les notifications
 subject: Sujet
 last_message: Dernier message
 started_by: Créé par
