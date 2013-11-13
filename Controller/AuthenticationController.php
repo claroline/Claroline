@@ -117,7 +117,7 @@ class AuthenticationController
             'error' => $this->translator->trans('mail_config_problem', array(), 'platform')
         );
     }
-    
+
     /**
      * @Route(
      *     "/passwords/reset",
@@ -133,15 +133,14 @@ class AuthenticationController
     public function passwordInitializationAction(array $users)
     {
         foreach ($users as $user) {
-            $mail = $user->getMail();
             $user->setHashTime(time());
             $password = sha1(rand(1000, 10000) . $user->getUsername() . $user->getSalt());
             $user->setResetPasswordHash($password);
             $this->om->persist($user);
             $this->om->flush();
-            $this->mailManager->sendForgotPassword('noreply@claroline.net', $mail, $user->getResetPasswordHash());
+            $this->mailManager->sendForgotPassword($user);
         }
-        
+
         return new Response(204);
     }
 
@@ -170,7 +169,7 @@ class AuthenticationController
                 $this->om->persist($user);
                 $this->om->flush();
 
-                if ($this->mailManager->sendForgotPassword('noreply@claroline.net', $data['mail'], $user->getResetPasswordHash())) {
+                if ($this->mailManager->sendForgotPassword($user)) {
 
                     return array(
                         'user' => $user,

@@ -4,13 +4,16 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Manager\MailManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\SecurityExtraBundle\Annotation as SEC;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -21,26 +24,37 @@ use JMS\SecurityExtraBundle\Annotation as SEC;
 class MailController extends Controller
 {
     private $formFactory;
+    private $request;
+    private $mailManager;
+    private $router;
+    private $sc;
+    private $ch;
 
     /**
      * @DI\InjectParams({
      *     "formFactory" = @DI\Inject("claroline.form.factory"),
      *     "request"     = @DI\Inject("request"),
-     *     "mailer"      = @DI\Inject("mailer"),
-     *     "router"      = @DI\Inject("router")
+     *     "mailManager" = @DI\Inject("claroline.manager.mail_manager"),
+     *     "router"      = @DI\Inject("router"),
+     *     "sc"          = @DI\Inject("security.context"),
+     *     "ch"          = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
     public function __construct(
         FormFactory $formFactory,
         Request $request,
-        \Swift_Mailer $mailer,
-        RouterInterface $router
+        MailManager $mailManager,
+        RouterInterface $router,
+        SecurityContextInterface $sc,
+        PlatformConfigurationHandler $ch
     )
     {
         $this->formFactory = $formFactory;
         $this->request = $request;
-        $this->mailer = $mailer;
+        $this->mailManager = $mailManager;
         $this->router = $router;
+        $this->sc = $sc;
+        $this->ch = $ch;
     }
 
     /**
@@ -91,15 +105,14 @@ class MailController extends Controller
     {
         $form = $this->formFactory->create(FormFactory::TYPE_EMAIL);
         $form->handleRequest($this->request);
+        $sender = $this->sc->getToken()->getUser();
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $message = \Swift_Message::newInstance()
-                ->setSubject($data['object'])
-                ->setFrom('noreply@claroline.net')
-                ->setTo($user->getMail())
-                ->setBody($data['content'], 'text/html');
-            $this->mailer->send($message);
+            $body = $data['content'];
+            $body .= '<hr> ' . $sender->getUsername() . ' (' . $sender->getMail() .
+                ') - ClarolineConnect - ' . $this->ch->getParameter('name');
+            $this->mailManager->send($data['object'], $body, array($user));
         }
 
         return new RedirectResponse($this->router->generate('claro_profile_view', array('userId' => $user->getId())));

@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Manager\MailManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\DiExtraBundle\Annotation as DI;
 use Doctrine\ORM\Mapping as ORM;
@@ -35,6 +36,7 @@ class UserManager
     private $ch;
     private $pagerFactory;
     private $om;
+    private $mailManager;
 
     /**
      * Constructor.
@@ -49,6 +51,7 @@ class UserManager
      *     "ch"                     = @DI\Inject("claroline.config.platform_config_handler"),
      *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory"),
      *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
+     *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager")
      * })
      */
     public function __construct(
@@ -60,7 +63,8 @@ class UserManager
         Translator $translator,
         PlatformConfigurationHandler $ch,
         PagerFactory $pagerFactory,
-        ObjectManager $om
+        ObjectManager $om,
+        MailManager $mailManager
     )
     {
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
@@ -73,6 +77,7 @@ class UserManager
         $this->ch = $ch;
         $this->pagerFactory = $pagerFactory;
         $this->om = $om;
+        $this->mailManager = $mailManager;
     }
 
     public function createUser(User $user)
@@ -85,6 +90,10 @@ class UserManager
         $this->om->persist($user);
         $this->ed->dispatch('log', 'Log\LogUserCreate', array($user));
         $this->om->endFlushSuite();
+
+        if ($this->mailManager->isMailerAvailable()) {
+            $this->mailManager->sendPlainPassword($user);
+        }
 
         return $user;
     }
