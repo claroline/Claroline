@@ -13,12 +13,13 @@ class LogCommentCreateEvent extends AbstractLogResourceEvent
     const ACTION = 'resource-icap_blog-comment_create';
 
     /**
-     * @param Blog    $blog
      * @param Post    $post
      * @param Comment $comment
      */
-    public function __construct(Blog $blog, Post $post, Comment $comment)
+    public function __construct(Post $post, Comment $comment)
     {
+        $blog = $post->getBlog();
+
         $details = array(
             'post' => array(
                 'blog'  => $blog->getId(),

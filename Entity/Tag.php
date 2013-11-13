@@ -29,7 +29,7 @@ class Tag
     protected $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Post", mappedBy="tags", cascade={"all"})
+     * @ORM\ManyToMany(targetEntity="Post", mappedBy="tags")
      */
     private $posts;
 

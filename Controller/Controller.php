@@ -143,33 +143,29 @@ class Controller extends BaseController
     }
 
     /**
-     * @param Blog        $blog
-     *
      * @param BlogOptions $blogOptions
      *
      * @param array       $changeSet
      *
      * @return Controller
      */
-    protected function dispatchBlogConfigureEvent(Blog $blog, BlogOptions $blogOptions, $changeSet)
+    protected function dispatchBlogConfigureEvent(BlogOptions $blogOptions, $changeSet)
     {
-        $event = new LogBlogConfigureEvent($blog, $blogOptions, $changeSet);
+        $event = new LogBlogConfigureEvent($blogOptions, $changeSet);
 
         return $this->dispatch($event);
     }
 
     /**
-     * @param Blog        $blog
-     *
      * @param BlogOptions $blogOptions
      *
      * @param array       $changeSet
      *
      * @return Controller
      */
-    protected function dispatchBlogConfigureBannerEvent(Blog $blog, BlogOptions $blogOptions, $changeSet)
+    protected function dispatchBlogConfigureBannerEvent(BlogOptions $blogOptions, $changeSet)
     {
-        $event = new LogBlogConfigureBannerEvent($blog, $blogOptions, $changeSet);
+        $event = new LogBlogConfigureBannerEvent($blogOptions, $changeSet);
 
         return $this->dispatch($event);
     }
@@ -183,83 +179,73 @@ class Controller extends BaseController
      */
     protected function dispatchPostCreateEvent(Blog $blog, Post $post)
     {
-        $event = new LogPostCreateEvent($blog, $post);
+        $event = new LogPostCreateEvent($post);
 
         return $this->dispatch($event);
     }
 
     /**
-     * @param Blog $blog
-     *
      * @param Post $post
      *
      * @return Controller
      */
-    protected function dispatchPostReadEvent(Blog $blog, Post $post)
+    protected function dispatchPostReadEvent(Post $post)
     {
-        $event = new LogPostReadEvent($blog, $post);
+        $event = new LogPostReadEvent($post);
 
         return $this->dispatch($event);
     }
 
     /**
-     * @param Blog  $blog
-     *
      * @param Post  $post
      *
      * @param array $changeSet
      *
      * @return Controller
      */
-    protected function dispatchPostUpdateEvent(Blog $blog, Post $post, $changeSet)
+    protected function dispatchPostUpdateEvent(Post $post, $changeSet)
     {
-        $event = new LogPostUpdateEvent($blog, $post, $changeSet);
+        $event = new LogPostUpdateEvent($post, $changeSet);
 
         return $this->dispatch($event);
     }
 
     /**
-     * @param Blog $blog
-     *
      * @param Post $post
      *
      * @return Controller
      */
-    protected function dispatchPostDeleteEvent(Blog $blog, Post $post)
+    protected function dispatchPostDeleteEvent(Post $post)
     {
-        $event = new LogPostDeleteEvent($blog, $post);
+        $event = new LogPostDeleteEvent($post);
 
         return $this->dispatch($event);
     }
 
     /**
-     * @param Blog    $blog
-     *
      * @param Post    $post
      *
      * @param Comment $comment
      *
      * @return Controller
      */
-    protected function dispatchCommentCreateEvent(Blog $blog, Post $post, Comment $comment)
+    protected function dispatchCommentCreateEvent(Post $post, Comment $comment)
     {
-        $event = new LogCommentCreateEvent($blog, $post, $comment);
+        $event = new LogCommentCreateEvent($post, $comment);
 
         return $this->dispatch($event);
     }
 
     /**
-     * @param Blog    $blog
-     *
      * @param Post    $post
      *
      * @param Comment $comment
      *
      * @return Controller
      */
-    protected function dispatchCommentDeleteEvent(Blog $blog, Post $post, Comment $comment)
+    protected function dispatchCommentDeleteEvent(Post $post, Comment $comment)
     {
-        $event = new LogCommentDeleteEvent($blog, $post, $comment);
+        $event = new LogCommentDeleteEvent($post, $comment);
 
         return $this->dispatch($event);
     }
