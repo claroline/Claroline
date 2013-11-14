@@ -28,7 +28,7 @@
                 </div>
                 <p>
                     {% if user.getMail() != "" %}
-                        <a href="{{path('claro_mail_form', {'userId':user.getId()})}}"> <i class="icon-envelope"></i>
+                       <a href="{{path('claro_mail_form', {'userId':user.getId()})}}"> <i class="icon-envelope"></i>
                         {{ user.getMail() }}
                          </a>
                     {% endif %}
