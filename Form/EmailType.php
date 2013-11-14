@@ -14,7 +14,8 @@ class EmailType extends AbstractType
         $builder->add('mail', 'email',
             array(
                 'required' => true,
-                'constraints' => new Email()
+                'constraints' => new Email(),
+                'theme_options' => array('label_width' => 'col-md-12', 'control_width' => 'col-md-12')
             )
         );
     }

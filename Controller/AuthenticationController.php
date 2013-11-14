@@ -215,13 +215,13 @@ class AuthenticationController
             );
         }
 
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array($user->getId()), null);
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array(), null);
         $currentTime = time();
 
         // the link is valid for 24h
         if ($currentTime - (3600 * 24) < $user->getHashTime()) {
             return array(
-                'id' => $user->getId(),
+                'hash' => $hash,
                 'form' => $form->createView()
             );
         }
@@ -231,7 +231,7 @@ class AuthenticationController
 
     /**
      * @Route(
-     *     "/validatepassword",
+     *     "/validatepassword/{hash}",
      *     name="claro_security_new_password",
      *     options={"expose"=true}
      * )
@@ -239,16 +239,15 @@ class AuthenticationController
      *
      * @Template("ClarolineCoreBundle:Authentication:resetPassword.html.twig")
      */
-    public function newPasswordAction()
+    public function newPasswordAction($hash)
     {
         $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array(), null);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $user = $form->getData();
-            $plainPassword = $user['plainPassword'];
-            $id = $user['id'];
-            $user = $this->userManager->getUserById($id);
+            $data = $form->getData();
+            $plainPassword = $data['plainPassword'];
+            $user = $this->userManager->getResetPasswordHash($hash);
             $user->setPlainPassword($plainPassword);
             $this->om->persist($user);
             $this->om->flush();

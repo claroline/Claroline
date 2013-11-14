@@ -8,13 +8,6 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ResetPasswordType extends AbstractType
 {
-    private $userId;
-
-    public function __construct($userId = null)
-    {
-        $this->userId = $userId;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('plainPassword', 'repeated', array('type' => 'password', 'required' => true));
@@ -32,10 +25,5 @@ class ResetPasswordType extends AbstractType
                 'translation_domain' => 'platform'
             )
         );
-    }
-
-    public function getUserId()
-    {
-        return $this->userId;
     }
 }
