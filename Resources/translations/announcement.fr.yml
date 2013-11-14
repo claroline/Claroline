@@ -1,8 +1,8 @@
-announcement_creation: 'Création d''une annonce'
+announcement_creation: 'Nouvelle annonce'
 announcement_delete_confirm_message: 'Cette annonce sera définitivement supprimée.'
 announcement_delete_confirm_title: 'Voulez-vous supprimer cette annonce ?'
 announcement_edition: 'Edition de l''annonce'
-announcement_form_announcer: Annonceur
+announcement_form_announcer: Editeur
 announcement_form_content: Message
 announcement_form_title: Titre
 announcement_form_visible: Visible
@@ -12,6 +12,6 @@ announcements_list: 'Liste des annonces'
 at: à
 by: par
 created_on: 'Créée le'
-create_new_announcement: 'Créer une nouvelle annonce'
+create_new_announcement: 'Ajouter une annonce'
 published_on: 'Publiée le'
-visible_from_until_condition: 'La date de fin doit être supérieure à la date de début'
+visible_from_until_condition: 'La date de fin doit se situer après la date de début'
