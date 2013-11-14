@@ -33,17 +33,17 @@ class RolesController extends Controller
     private $request;
 
     /**
-* @DI\InjectParams({
-* "roleManager" = @DI\Inject("claroline.manager.role_manager"),
-* "userManager" = @DI\Inject("claroline.manager.user_manager"),
-* "groupManager" = @DI\Inject("claroline.manager.group_manager"),
-* "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-* "security" = @DI\Inject("security.context"),
-* "formFactory" = @DI\Inject("claroline.form.factory"),
-* "router" = @DI\Inject("router"),
-* "request" = @DI\Inject("request")
-* })
-*/
+     * @DI\InjectParams({
+     *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
+     *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
+     *     "groupManager"      = @DI\Inject("claroline.manager.group_manager"),
+     *     "resourceManager"  = @DI\Inject("claroline.manager.resource_manager"),
+     *     "security"         = @DI\Inject("security.context"),
+     *     "formFactory"      = @DI\Inject("claroline.form.factory"),
+     *     "router"           = @DI\Inject("router"),
+     *     "request"          = @DI\Inject("request")
+     * })
+     */
     public function __construct(
         RoleManager $roleManager,
         UserManager $userManager,
@@ -65,13 +65,13 @@ class RolesController extends Controller
         $this->request = $request;
     }
     /**
-* @EXT\Route(
-* "/{workspace}/roles/config",
-* name="claro_workspace_roles"
-* )
-* @EXT\Method("GET")
-* @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:roles.html.twig")
-*/
+     * @EXT\Route(
+     *     "/{workspace}/roles/config",
+     *     name="claro_workspace_roles"
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:roles.html.twig")
+     */
     public function configureRolePageAction(AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
@@ -81,13 +81,13 @@ class RolesController extends Controller
     }
 
     /**
-* @EXT\Route(
-* "/{workspace}/roles/create/form",
-* name="claro_workspace_role_create_form"
-* )
-* @EXT\Method("GET")
-* @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:roleCreation.html.twig")
-*/
+     * @EXT\Route(
+     *     "/{workspace}/roles/create/form",
+     *     name="claro_workspace_role_create_form"
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:roleCreation.html.twig")
+     */
     public function createRoleFormAction(AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
@@ -97,14 +97,14 @@ class RolesController extends Controller
     }
 
     /**
-* @EXT\Route(
-* "/{workspace}/roles/create",
-* name="claro_workspace_role_create"
-* )
-* @EXT\Method("POST")
-* @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:roleCreation.html.twig")
-* @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-*/
+     * @EXT\Route(
+     *     "/{workspace}/roles/create",
+     *     name="claro_workspace_role_create"
+     * )
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:roleCreation.html.twig")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     */
     public function createRoleAction(AbstractWorkspace $workspace, User $user)
     {
         $this->checkAccess($workspace);
@@ -136,7 +136,7 @@ class RolesController extends Controller
                     $this->resourceManager->getWorkspaceRoot($workspace),
                     null,
                     array(
-                        'ROLE_WS_' . strtoupper($name) => array(
+                        'ROLE_WS_' .  strtoupper($name) => array(
                             'open' => true,
                             'edit' => true,
                             'copy' => true,
@@ -170,12 +170,12 @@ class RolesController extends Controller
     }
 
     /**
-* @EXT\Route(
-* "/{workspace}/role/{role}/remove",
-* name="claro_workspace_role_remove"
-* )
-* @EXT\Method("GET")
-*/
+     * @EXT\Route(
+     *     "/{workspace}/role/{role}/remove",
+     *     name="claro_workspace_role_remove"
+     * )
+     * @EXT\Method("GET")
+     */
     public function removeRoleAction(AbstractWorkspace $workspace, Role $role)
     {
         $this->checkAccess($workspace);
@@ -185,13 +185,13 @@ class RolesController extends Controller
     }
 
     /**
-* @EXT\Route(
-* "/{workspace}/role/{role}/edit/form",
-* name="claro_workspace_role_edit_form"
-* )
-* @EXT\Method("GET")
-* @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:roleEdit.html.twig")
-*/
+     * @EXT\Route(
+     *     "/{workspace}/role/{role}/edit/form",
+     *     name="claro_workspace_role_edit_form"
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:roleEdit.html.twig")
+     */
     public function editRoleFormAction(Role $role, AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
@@ -201,12 +201,12 @@ class RolesController extends Controller
     }
 
     /**
-* @EXT\Route(
-* "/{workspace}/role/{role}/edit",
-* name="claro_workspace_role_edit"
-* )
-* @EXT\Method("POST")
-*/
+     * @EXT\Route(
+     *     "/{workspace}/role/{role}/edit",
+     *     name="claro_workspace_role_edit"
+     * )
+     * @EXT\Method("POST")
+     */
     public function editRoleAction(Role $role, AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
@@ -227,13 +227,13 @@ class RolesController extends Controller
     }
 
     /**
-* @EXT\Route(
-* "/{workspace}/remove/role/{role}/user/{user}",
-* name="claro_workspace_remove_role_from_user",
-* options={"expose"=true}
-* )
-* @EXT\Method({"DELETE", "GET"})
-*/
+     * @EXT\Route(
+     *     "/{workspace}/remove/role/{role}/user/{user}",
+     *     name="claro_workspace_remove_role_from_user",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method({"DELETE", "GET"})
+     */
     public function removeUserFromRoleAction(User $user, Role $role, AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
@@ -243,22 +243,22 @@ class RolesController extends Controller
     }
 
     /**
-* @EXT\Route(
-* "/{workspace}/users/unregistered/page/{page}/max/{max}",
-* name="claro_workspace_unregistered_user_list",
-* defaults={"page"=1, "search"="", "max"=50},
-* options = {"expose"=true}
-* )
-* @EXT\Method("GET")
-* @EXT\Route(
-* "/{workspace}/users/unregistered/page/{page}/search/{search}/max/{max}",
-* name="claro_workspace_unregistered_user_list_search",
-* defaults={"page"=1, "max"=50},
-* options = {"expose"=true}
-* )
-* @EXT\Method("GET")
-* @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:unregisteredUsers.html.twig")
-*/
+     * @EXT\Route(
+     *     "/{workspace}/users/unregistered/page/{page}/max/{max}",
+     *     name="claro_workspace_unregistered_user_list",
+     *     defaults={"page"=1, "search"="", "max"=50},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "/{workspace}/users/unregistered/page/{page}/search/{search}/max/{max}",
+     *     name="claro_workspace_unregistered_user_list_search",
+     *     defaults={"page"=1, "max"=50},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:unregisteredUsers.html.twig")
+     */
     public function unregisteredUserListAction($page, $search, AbstractWorkspace $workspace, $max)
     {
         $this->checkAccess($workspace);
@@ -278,22 +278,22 @@ class RolesController extends Controller
     }
 
     /**
-* @EXT\Route(
-* "/{workspace}/groups/unregistered/page/{page}/max/{max}",
-* name="claro_workspace_unregistered_group_list",
-* defaults={"page"=1, "search"="", "max"=50},
-* options = {"expose"=true}
-* )
-* @EXT\Method("GET")
-* @EXT\Route(
-* "/{workspace}/groups/unregistered/page/{page}/search/{search}/max/{max}",
-* name="claro_workspace_unregistered_group_list_search",
-* defaults={"page"=1, "max"=50},
-* options = {"expose"=true}
-* )
-* @EXT\Method("GET")
-* @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:unregisteredGroups.html.twig")
-*/
+     * @EXT\Route(
+     *     "/{workspace}/groups/unregistered/page/{page}/max/{max}",
+     *     name="claro_workspace_unregistered_group_list",
+     *     defaults={"page"=1, "search"="", "max"=50},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "/{workspace}/groups/unregistered/page/{page}/search/{search}/max/{max}",
+     *     name="claro_workspace_unregistered_group_list_search",
+     *     defaults={"page"=1, "max"=50},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:unregisteredGroups.html.twig")
+     */
     public function unregisteredGroupListAction($page, $search, AbstractWorkspace $workspace, $max)
     {
         $this->checkAccess($workspace);
@@ -313,26 +313,26 @@ class RolesController extends Controller
     }
 
     /**
-* @EXT\Route(
-* "/{workspace}/add/role/user",
-* name="claro_workspace_add_roles_to_users",
-* options={"expose"=true}
-* )
-* @EXT\Method({"PUT", "GET"})
-*
-* @EXT\ParamConverter(
-* "users",
-* class="ClarolineCoreBundle:User",
-* options={"multipleIds"=true, "name"="userIds"}
-* )
-* @EXT\ParamConverter(
-* "roles",
-* class="ClarolineCoreBundle:Role",
-* options={"multipleIds"=true, "name"="roleIds"}
-* )
-*
-* @return Response
-*/
+     * @EXT\Route(
+     *     "/{workspace}/add/role/user",
+     *     name="claro_workspace_add_roles_to_users",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method({"PUT", "GET"})
+     *
+     * @EXT\ParamConverter(
+     *     "users",
+     *     class="ClarolineCoreBundle:User",
+     *     options={"multipleIds"=true, "name"="userIds"}
+     * )
+     *  @EXT\ParamConverter(
+     *     "roles",
+     *     class="ClarolineCoreBundle:Role",
+     *     options={"multipleIds"=true, "name"="roleIds"}
+     * )
+     *
+     * @return Response
+     */
     public function addUsersToRolesAction(array $users, array $roles, AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
@@ -342,13 +342,13 @@ class RolesController extends Controller
     }
 
     /**
-* @EXT\Route(
-* "/{workspace}/remove/role/{role}/group/{group}",
-* name="claro_workspace_remove_role_from_group",
-* options={"expose"=true}
-* )
-* @EXT\Method({"DELETE", "GET"})
-*/
+     * @EXT\Route(
+     *     "/{workspace}/remove/role/{role}/group/{group}",
+     *     name="claro_workspace_remove_role_from_group",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method({"DELETE", "GET"})
+     */
     public function removeGroupFromRoleAction(Group $group, Role $role, AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
@@ -358,23 +358,23 @@ class RolesController extends Controller
     }
 
     /**
-* @EXT\Route(
-* "/{workspace}/add/role/group",
-* name="claro_workspace_add_roles_to_groups",
-* options={"expose"=true}
-* )
-* @EXT\Method("GET")
-* @EXT\ParamConverter(
-* "groups",
-* class="ClarolineCoreBundle:Group",
-* options={"multipleIds"=true, "name"="groupIds"}
-* )
-* @EXT\ParamConverter(
-* "roles",
-* class="ClarolineCoreBundle:Role",
-* options={"multipleIds"=true, "name"="roleIds"}
-* )
-*/
+     * @EXT\Route(
+     *     "/{workspace}/add/role/group",
+     *     name="claro_workspace_add_roles_to_groups",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "groups",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"multipleIds"=true, "name"="groupIds"}
+     * )
+     * @EXT\ParamConverter(
+     *     "roles",
+     *     class="ClarolineCoreBundle:Role",
+     *     options={"multipleIds"=true, "name"="roleIds"}
+     * )
+     */
     public function addGroupsToRolesAction(array $groups, array $roles, AbstractWorkspace $workspace)
     {
         $this->checkAccess($workspace);
@@ -384,27 +384,27 @@ class RolesController extends Controller
     }
 
     /**
-* @EXT\Route(
-* "/{workspace}/users/registered/page/{page}/max/{max}",
-* name="claro_workspace_registered_user_list",
-* defaults={"page"=1, "search"="", "max"=50},
-* options = {"expose"=true}
-* )
-* @EXT\Method("GET")
-* @EXT\Route(
-* "/{workspace}/users/registered/page/{page}/search/{search}/max/{max}",
-* name="claro_workspace_registered_user_list_search",
-* defaults={"page"=1, "max"=50},
-* options = {"expose"=true}
-* )
-* @EXT\ParamConverter(
-* "roles",
-* class="ClarolineCoreBundle:Role",
-* options={"multipleIds"=true, "isRequired"=false, "name"="roleIds"}
-* )
-* @EXT\Method("GET")
-* @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceUsers.html.twig")
-*/
+     * @EXT\Route(
+     *     "/{workspace}/users/registered/page/{page}/max/{max}",
+     *     name="claro_workspace_registered_user_list",
+     *     defaults={"page"=1, "search"="", "max"=50},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "/{workspace}/users/registered/page/{page}/search/{search}/max/{max}",
+     *     name="claro_workspace_registered_user_list_search",
+     *     defaults={"page"=1, "max"=50},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "roles",
+     *     class="ClarolineCoreBundle:Role",
+     *     options={"multipleIds"=true, "isRequired"=false, "name"="roleIds"}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceUsers.html.twig")
+     */
     public function usersListAction(AbstractWorkspace $workspace, $page, $search, $max)
     {
         $this->checkAccess($workspace);
@@ -424,27 +424,27 @@ class RolesController extends Controller
     }
 
     /**
-* @EXT\Route(
-* "/{workspace}/groups/registered/page/{page}/max/{max}",
-* name="claro_workspace_registered_group_list",
-* defaults={"page"=1, "search"="", "max"=50},
-* options = {"expose"=true}
-* )
-* @EXT\Method("GET")
-* @EXT\Route(
-* "/{workspace}/groups/registered/page/{page}/search/{search}/max/{max}",
-* name="claro_workspace_registered_group_list_search",
-* defaults={"page"=1, "max"=50},
-* options = {"expose"=true}
-* )
-* @EXT\Method("GET")
-* @EXT\ParamConverter(
-* "roles",
-* class="ClarolineCoreBundle:Role",
-* options={"multipleIds"=true, "isRequired"=false, "name"="roleIds"}
-* )
-* @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceGroups.html.twig")
-*/
+     * @EXT\Route(
+     *     "/{workspace}/groups/registered/page/{page}/max/{max}",
+     *     name="claro_workspace_registered_group_list",
+     *     defaults={"page"=1, "search"="", "max"=50},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "/{workspace}/groups/registered/page/{page}/search/{search}/max/{max}",
+     *     name="claro_workspace_registered_group_list_search",
+     *     defaults={"page"=1, "max"=50},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "roles",
+     *     class="ClarolineCoreBundle:Role",
+     *     options={"multipleIds"=true, "isRequired"=false, "name"="roleIds"}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceGroups.html.twig")
+     */
     public function groupsListAction(AbstractWorkspace $workspace, $page, $search, $max)
     {
         $this->checkAccess($workspace);
@@ -464,21 +464,21 @@ class RolesController extends Controller
     }
 
     /**
-* @EXT\Route(
-* "/{workspace}/groups/{group}/page/{page}/search/{search}",
-* name="claro_workspace_users_of_group_search",
-* defaults={"page"=1},
-* options = {"expose"=true}
-* )
-* @EXT\Route(
-* "/{workspace}/groups/{group}/page/{page}",
-* name="claro_workspace_users_of_group",
-* defaults={"page"=1, "search"=""},
-* options = {"expose"=true}
-* )
-* @EXT\Method("GET")
-* @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:usersOfGroup.html.twig")
-*/
+     * @EXT\Route(
+     *     "/{workspace}/groups/{group}/page/{page}/search/{search}",
+     *     name="claro_workspace_users_of_group_search",
+     *     defaults={"page"=1},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Route(
+     *     "/{workspace}/groups/{group}/page/{page}",
+     *     name="claro_workspace_users_of_group",
+     *     defaults={"page"=1, "search"=""},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:usersOfGroup.html.twig")
+     */
     public function usersOfGroupAction(
         AbstractWorkspace $workspace,
         Group $group,
@@ -501,18 +501,18 @@ class RolesController extends Controller
     }
 
     /**
-* @EXT\Route(
-* "/users/usernames",
-* name="claro_usernames_from_users",
-* options = {"expose"=true}
-* )
-* @EXT\Method({"GET"})
-* @EXT\ParamConverter(
-* "users",
-* class="ClarolineCoreBundle:User",
-* options={"multipleIds" = true, "name" = "userIds"}
-* )
-*/
+     * @EXT\Route(
+     *     "/users/usernames",
+     *     name="claro_usernames_from_users",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method({"GET"})
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "name" = "userIds"}
+     * )
+     */
     public function retrieveUsernamesFromUsersAction(array $users)
     {
         $usernames = '';
@@ -525,18 +525,18 @@ class RolesController extends Controller
     }
 
     /**
-* @EXT\Route(
-* "/groups/names",
-* name="claro_names_from_groups",
-* options = {"expose"=true}
-* )
-* @EXT\Method({"GET"})
-* @EXT\ParamConverter(
-* "groups",
-* class="ClarolineCoreBundle:Group",
-* options={"multipleIds" = true, "name" = "groupIds"}
-* )
-*/
+     * @EXT\Route(
+     *     "/groups/names",
+     *     name="claro_names_from_groups",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method({"GET"})
+     * @EXT\ParamConverter(
+     *     "groups",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"multipleIds" = true, "name" = "groupIds"}
+     * )
+     */
     public function retrieveNamesFromGroupsAction(array $groups)
     {
         $names = '';
