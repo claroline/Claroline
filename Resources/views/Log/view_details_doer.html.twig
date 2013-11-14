@@ -11,7 +11,7 @@
 
                 {% if is_granted('ROLE_ADMIN') and log.getDetails().doer.sessionId %}
                     <dt>{{ ('session_id')|trans({}, 'platform') }}</dt>
-                    <dd>{{ log.getDetails().doer.sessionId }}</dd>
+                    <dd>{{ log.doerSessionId }}</dd>
                 {% endif %}
 
                 {% if log.getDetails().doer.platformRoles is defined %}

@@ -68,6 +68,11 @@ class Log
     protected $doerIp;
 
     /**
+     * @ORM\Column(name="doer_session_id", nullable=true)
+     */
+    protected $doerSessionId;
+
+    /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Role")
      * @ORM\JoinTable(name="claro_log_doer_platform_roles")
      */
@@ -276,6 +281,29 @@ class Log
     public function getDoerIp()
     {
         return $this->doerIp;
+    }
+
+    /**
+     * Set doerSessionId
+     *
+     * @param  string $doerIp
+     * @return Log
+     */
+    public function setDoerSessionId($doerSessionId)
+    {
+        $this->doerSessionId = $doerSessionId;
+
+        return $this;
+    }
+
+    /**
+     * Get doerSessionId
+     *
+     * @return string
+     */
+    public function getDoerSessionId()
+    {
+        return $this->doerSessionId;
     }
 
     /**
