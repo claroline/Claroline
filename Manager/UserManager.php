@@ -577,30 +577,32 @@ class UserManager
     }
 
     /**
-     * @param Role[] $roles
+     * @param Role[]  $roles
      * @param integer $page
      * @param integer $max
+     * @param string  $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getByRolesIncludingGroups(array $roles, $page = 1, $max = 20)
+    public function getByRolesIncludingGroups(array $roles, $page = 1, $max = 20, $orderedBy = 'id')
     {
-        $res = $this->userRepo->findByRolesIncludingGroups($roles, true);
+        $res = $this->userRepo->findByRolesIncludingGroups($roles, true, $orderedBy);
 
         return $this->pagerFactory->createPager($res, $page, $max);
     }
 
     /**
-     * @param Role[] $roles
-     * @param string $search
+     * @param Role[]  $roles
+     * @param string  $search
      * @param integer $page
      * @param integer $max
+     * @param string  $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getByRolesAndNameIncludingGroups(array $roles, $search, $page = 1, $max = 20)
+    public function getByRolesAndNameIncludingGroups(array $roles, $search, $page = 1, $max = 20, $orderedBy = 'id')
     {
-        $res = $this->userRepo->findByRolesAndNameIncludingGroups($roles, $search, true);
+        $res = $this->userRepo->findByRolesAndNameIncludingGroups($roles, $search, true, $orderedBy);
 
         return $this->pagerFactory->createPager($res, $page, $max);
     }

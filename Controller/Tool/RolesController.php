@@ -385,41 +385,42 @@ class RolesController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/users/registered/page/{page}/max/{max}",
+     *     "/{workspace}/users/registered/page/{page}/max/{max}/order/{order}",
      *     name="claro_workspace_registered_user_list",
-     *     defaults={"page"=1, "search"="", "max"=50},
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/{workspace}/users/registered/page/{page}/search/{search}/max/{max}",
+     *     "/{workspace}/users/registered/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_workspace_registered_user_list_search",
-     *     defaults={"page"=1, "max"=50},
+     *     defaults={"page"=1, "max"=50, "order"="id"},
      *     options = {"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *     "roles",
-     *     class="ClarolineCoreBundle:Role",
-     *     options={"multipleIds"=true, "isRequired"=false, "name"="roleIds"}
      * )
      * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceUsers.html.twig")
      */
-    public function usersListAction(AbstractWorkspace $workspace, $page, $search, $max)
+    public function usersListAction(AbstractWorkspace $workspace, $page, $search, $max, $order)
     {
         $this->checkAccess($workspace);
+
+        if (!$this->userManager->isFieldOrderable($order)) {
+            return new Response('The field ' . $order . ' does not exists', 422);
+        }
+
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
         $pager = ($search === '') ?
-            $this->userManager->getByRolesIncludingGroups($wsRoles, $page, $max):
-            $this->userManager->getByRolesAndNameIncludingGroups($wsRoles, $search, $page, $max);
+            $this->userManager->getByRolesIncludingGroups($wsRoles, $page, $max, $order):
+            $this->userManager->getByRolesAndNameIncludingGroups($wsRoles, $search, $page, $max, $order);
 
         return array(
             'workspace' => $workspace,
             'pager' => $pager,
             'search' => $search,
             'wsRoles' => $wsRoles,
-            'max' => $max
+            'max' => $max,
+            'order' => $order
         );
     }
 
