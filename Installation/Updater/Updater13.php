@@ -46,7 +46,7 @@ class Updater13 {
                 //if root chapter, take name of its lesson
                 if($chapter->getRoot() == $chapter->getId())
                 {
-                    $chapter->setTitle($chapter->getLesson()->getResourceNode()->getName());
+                    $chapter->setTitle("root_".$chapter->getId());
                 }
                 else{
                     //case treated to match current database state (title nullable), tho this case shouldnt happen since UI prevent inputing empty titles

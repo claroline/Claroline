@@ -53,7 +53,7 @@ class Lesson extends AbstractResource
                 $rootLesson = new Chapter();
                 $rootLesson->setLesson($this);
                 //$this->getResourceNode()->getName()
-                $rootLesson->setTitle("index");
+                $rootLesson->setTitle("root_".$this->getId());
                 $this->setRoot($rootLesson);
 
                 $em->getRepository('IcapLessonBundle:Chapter')->persistAsFirstChild($rootLesson);
