@@ -215,7 +215,7 @@ class AuthenticationController
             );
         }
 
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array(), null);
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array(), $user);
         $currentTime = time();
 
         // the link is valid for 24h
@@ -241,13 +241,13 @@ class AuthenticationController
      */
     public function newPasswordAction($hash)
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array(), null);
+        $user = $this->userManager->getResetPasswordHash($hash);
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array(), $user);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $plainPassword = $data['plainPassword'];
-            $user = $this->userManager->getResetPasswordHash($hash);
+            $plainPassword = $data->getPlainPassword();
             $user->setPlainPassword($plainPassword);
             $this->om->persist($user);
             $this->om->flush();
@@ -259,7 +259,8 @@ class AuthenticationController
         }
 
         return array(
-            'error' => $this->translator->trans('password_missmatch', array(), 'platform')
+            'hash' => $hash,
+            'form' => $form->createView()
         );
     }
 

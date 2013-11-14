@@ -10,7 +10,15 @@ class ResetPasswordType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('plainPassword', 'repeated', array('type' => 'password', 'required' => true));
+        $builder->add(
+            'plainPassword',
+            'repeated',
+            array(
+                'type' => 'password',
+                'required' => true,
+                'theme_options' => array('label_width' => 'col-md-12', 'control_width' => 'col-md-12')
+            )
+        );
     }
 
     public function getName()
@@ -20,10 +28,9 @@ class ResetPasswordType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(
-            array(
-                'translation_domain' => 'platform'
-            )
-        );
+        $resolver->setDefaults(array(
+            'data_class' => 'Claroline\CoreBundle\Entity\User',
+            'translation_domain' => 'platform'
+        ));
     }
 }
