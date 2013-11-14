@@ -42,6 +42,7 @@ class FormFactory
     const TYPE_WIDGET_CONFIG = 'widget_config';
     const TYPE_WIDGET_INSTANCE = 'widget_instance';
     const TYPE_RESOURCE_TEXT = 'resource_text';
+    const TYPE_USER_FULL = 'user_full';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -158,6 +159,10 @@ class FormFactory
         ),
         self::TYPE_EMAIL => array(
             'formType' => 'Claroline\CoreBundle\Form\SendMailType',
+        ),
+        self::TYPE_USER_FULL => array(
+            'formType' => 'Claroline\CoreBundle\Form\ProfileCreationType',
+            'entity' => 'Claroline\CoreBundle\Entity\User'
         )
     );
 

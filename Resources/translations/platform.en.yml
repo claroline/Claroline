@@ -362,6 +362,8 @@ profile_form_phone: Phone
 profile_form_pictureFile : 'Picture profile'
 profile_form_plainPassword_first: Password
 profile_form_plainPassword_second: Verification
+profile_form_creation_plainPassword_first: Password
+profile_form_creation_plainPassword_second: Verification
 profile_form_platformRoles: Roles
 profile_form_userName: 'User name'
 profile_form_username: Username
