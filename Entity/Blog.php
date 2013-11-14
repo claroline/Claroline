@@ -9,7 +9,6 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Icap\BlogBundle\Entity\BlogOptions;
 
 /**
- * @ORM\Entity
  * @ORM\Table(name="icap__blog")
  * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\BlogRepository")
  * @ORM\HasLifecycleCallbacks

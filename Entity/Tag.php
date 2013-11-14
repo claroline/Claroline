@@ -4,9 +4,9 @@ namespace Icap\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity
  * @ORM\Table(name="icap__blog_tag")
  * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\TagRepository")
  */
@@ -27,6 +27,12 @@ class Tag
      * @ORM\Column(type="string", unique=true)
      */
     protected $name;
+
+    /**
+     * @Gedmo\Slug(fields={"title"}, unique=true)
+     * @ORM\Column(length=128, unique=true)
+     */
+    protected $slug;
 
     /**
      * @ORM\ManyToMany(targetEntity="Post", mappedBy="tags")
@@ -84,5 +90,25 @@ class Tag
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @param mixed $slug
+     *
+     * @return Tag
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 }

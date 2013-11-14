@@ -7,7 +7,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
  * @ORM\Table(name="icap__blog_comment")
  * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\CommentRepository")
  */
