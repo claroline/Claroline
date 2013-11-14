@@ -196,15 +196,17 @@ class GroupRepository extends EntityRepository
      * Returns all the groups.
      *
      * @param boolean $executeQuery
+     * @param string  $orderedBy
      *
      * @return array[Group]|Query
      */
-    public function findAll($executeQuery = true)
+    public function findAll($executeQuery = true, $orderedBy = 'id')
     {
         if (!$executeQuery) {
             return $this->_em->createQuery(
-                'SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
-                 LEFT JOIN g.roles r'
+                "SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
+                 LEFT JOIN g.roles r
+                 ORDER BY g.{$orderedBy}"
             );
         }
 
@@ -243,17 +245,19 @@ class GroupRepository extends EntityRepository
      *
      * @param string  $search
      * @param boolean $executeQuery
+     * @param string  $orderedBy
      *
      * @return array[Group]|Query
      */
-    public function findByName($search, $executeQuery = true)
+    public function findByName($search, $executeQuery = true, $orderedBy = 'id')
     {
-        $dql = '
+        $dql = "
             SELECT g, r
             FROM Claroline\CoreBundle\Entity\Group g
             LEFT JOIN g.roles r
             WHERE UPPER(g.name) LIKE :search
-        ';
+            ORDER BY g.{$orderedBy}
+        ";
         $search = strtoupper($search);
         $query = $this->_em->createQuery($dql);
         $query->setParameter('search', "%{$search}%");

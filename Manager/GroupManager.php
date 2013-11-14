@@ -314,12 +314,14 @@ class GroupManager
 
     /**
      * @param integer $page
+     * @param integer $max
+     * @param string  $orderedBy
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getGroups($page, $max = 50)
+    public function getGroups($page, $max = 50, $orderedBy = 'id')
     {
-        $query = $this->groupRepo->findAll(false);
+        $query = $this->groupRepo->findAll(false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
@@ -327,12 +329,14 @@ class GroupManager
     /**
      * @param string $search
      * @param integer $page
+     * @param integer $max
+     * @param string  $orderedBy
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getGroupsByName($search, $page, $max = 50)
+    public function getGroupsByName($search, $page, $max = 50, $orderedBy = 'id')
     {
-        $query = $this->groupRepo->findByName($search, false);
+        $query = $this->groupRepo->findByName($search, false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
@@ -430,5 +434,15 @@ class GroupManager
         }
 
         return array();
+    }
+
+    public function getOrderableFields()
+    {
+        return array('name', 'id');
+    }
+
+    public function isFieldOrderable($field)
+    {
+        return in_array($field, $this->getOrderableFields()) ? true: false;
     }
 }

@@ -254,16 +254,16 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/groups/page/{page}/max/{max}",
+     *     "/groups/page/{page}/max/{max}/order/{order}",
      *     name="claro_admin_group_list",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "search"="", "max"=50}
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "groups/page/{page}/search/{search}/max/{max}",
+     *     "groups/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_admin_group_list_search",
-     *     defaults={"page"=1, "max"=50},
+     *     defaults={"page"=1, "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -271,13 +271,17 @@ class AdministrationController extends Controller
      *
      * Returns the platform group list.
      */
-    public function groupListAction($page, $search, $max)
+    public function groupListAction($page, $search, $max, $order)
     {
-        $pager = $search === '' ?
-            $this->groupManager->getGroups($page, $max) :
-            $this->groupManager->getGroupsByName($search, $page, $max);
+        if (!$this->groupManager->isFieldOrderable($order)) {
+            return new Response('The field ' . $order . ' does not exists', 422);
+        }
 
-        return array('pager' => $pager, 'search' => $search, 'max' => $max);
+        $pager = $search === '' ?
+            $this->groupManager->getGroups($page, $max, $order) :
+            $this->groupManager->getGroupsByName($search, $page, $max, $order);
+
+        return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order);
     }
 
     /**
