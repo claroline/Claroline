@@ -193,6 +193,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * Returns all the users.
      *
      * @param boolean $executeQuery
+     * @param string $orderedBy
      *
      * @return User[]|Query
      */
@@ -251,6 +252,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @param string  $search
      * @param boolean $executeQuery
+     * @param string $orderedBy
      *
      * @return User[]|Query
      */
@@ -464,23 +466,24 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @param Group   $group
      * @param boolean $executeQuery
+     * @param string  $orderedBy
      *
      * @return User[]|Query
      */
-    public function findGroupOutsiders(Group $group, $executeQuery = true)
+    public function findGroupOutsiders(Group $group, $executeQuery = true, $orderedBy = 'id')
     {
         $dql = '
             SELECT DISTINCT u, ws, r FROM Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.personalWorkspace ws
             LEFT JOIN u.roles r WITH r IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::PLATFORM_ROLE . '
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::PLATFORM_ROLE . "
             )
             WHERE u NOT IN (
                 SELECT us FROM Claroline\CoreBundle\Entity\User us
                 JOIN us.groups gs
                 WHERE gs.id = :groupId
-            ) ORDER BY u.id
-        ';
+            ) ORDER BY u.{$orderedBy}
+        ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('groupId', $group->getId());
 
@@ -494,16 +497,17 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * @param AbstractWorkspace $workspace
      * @param string            $search
      * @param boolean           $executeQuery
+     * @param string            $orderedBy
      *
      * @return User[]|Query
      */
-    public function findGroupOutsidersByName(Group $group, $search, $executeQuery = true)
+    public function findGroupOutsidersByName(Group $group, $search, $executeQuery = true, $orderedBy = 'id')
     {
         $dql = '
             SELECT DISTINCT u, ws, r FROM Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.personalWorkspace ws
             LEFT JOIN u.roles r WITH r IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::PLATFORM_ROLE . '
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::PLATFORM_ROLE . "
             )
             WHERE (
                 UPPER(u.lastName) LIKE :search
@@ -515,7 +519,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 JOIN us.groups gr
                 WHERE gr.id = :groupId
             )
-        ';
+            ORDER BY u.{$orderedBy}
+        ";
         $search = strtoupper($search);
         $query = $this->_em->createQuery($dql);
         $query->setParameter('groupId', $group->getId());

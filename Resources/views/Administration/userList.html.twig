@@ -123,11 +123,11 @@
             <table id="user-table"  class="table table-striped table-bordered table-condensed">
                 <thead>
                     <tr>
-                        <th>{{ 'id'|trans({}, 'platform') }} <a href="{{ sortUrl(max, search, 'id') }}"><i class="icon-sort"></i></a></th>
-                        <th>{{ 'username'|trans({}, 'platform') }} <a href="{{ sortUrl(max, search, 'username') }}"><i class="icon-sort"></i></a></th>
-                        <th>{{ 'last_name'|trans({}, 'platform') }} <a href="{{ sortUrl(max, search, 'lastName') }}"><i class="icon-sort"></i></a></th>
-                        <th>{{ 'first_name'|trans({}, 'platform') }} <a href="{{ sortUrl(max, search, 'firstName') }}"><i class="icon-sort"></i></a></th>
-                        <th>{{ 'mail'|trans({}, 'platform') }} <a href="{{ sortUrl(max, search, 'mail') }}"><i class="icon-sort"></i></a></th>
+                        <th><a href="{{ sortUrl(max, search, 'id') }}">{{ 'id'|trans({}, 'platform') }}</a></th>
+                        <th><a href="{{ sortUrl(max, search, 'username') }}">{{ 'username'|trans({}, 'platform') }}</a></th>
+                        <th><a href="{{ sortUrl(max, search, 'lastName') }}">{{ 'last_name'|trans({}, 'platform') }}</a></th>
+                        <th><a href="{{ sortUrl(max, search, 'firstName') }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
+                        <th><a href="{{ sortUrl(max, search, 'mail') }}">{{ 'mail'|trans({}, 'platform') }}</a></th>
                         <th>{{ 'edit'|trans({}, 'platform') }}</th>
                         <th>{{ 'role'|trans({}, 'platform') }}</th>
                         {% if is_granted('ROLE_ADMIN') %}

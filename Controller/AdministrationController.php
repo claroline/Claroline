@@ -316,18 +316,18 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/group/add/{groupId}/page/{page}/max/{max}",
+     *     "/group/add/{groupId}/page/{page}/max/{max}/order/{order}",
      *     name="claro_admin_outside_of_group_user_list",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "search"="", "max"=50}
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"}
      * )
      * @EXT\Method("GET")
      *
      * @EXT\Route(
-     *     "/group/add/{groupId}/page/{page}/search/{search}/max/{max}",
+     *     "/group/add/{groupId}/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_admin_outside_of_group_user_list_search",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "max"=50}
+     *     defaults={"page"=1, "max"=50, "order"="id"}
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
@@ -339,13 +339,17 @@ class AdministrationController extends Controller
      *
      * Displays the user list with a control allowing to add them to a group.
      */
-    public function outsideOfGroupUserListAction(Group $group, $page, $search, $max)
+    public function outsideOfGroupUserListAction(Group $group, $page, $search, $max, $order)
     {
-        $pager = $search === '' ?
-            $this->userManager->getGroupOutsiders($group, $page, $max) :
-            $this->userManager->getGroupOutsidersByName($group, $page, $search, $max);
+        if (!$this->userManager->isFieldOrderable($order)) {
+            return new Response('The field ' . $order . ' does not exists', 422);
+        }
 
-        return array('pager' => $pager, 'search' => $search, 'group' => $group, 'max' => $max);
+        $pager = $search === '' ?
+            $this->userManager->getGroupOutsiders($group, $page, $max, $order) :
+            $this->userManager->getGroupOutsidersByName($group, $page, $search, $max, $order);
+
+        return array('pager' => $pager, 'search' => $search, 'group' => $group, 'max' => $max, 'order' => $order);
     }
 
     /**

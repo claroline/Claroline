@@ -331,6 +331,7 @@ class UserManager
     /**
      * @param integer $page
      * @param integer $max
+     * @param string $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta;
      */
@@ -359,6 +360,7 @@ class UserManager
      * @param string $search
      * @param integer $page
      * @param integer $max
+     * @param string $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta;
      */
@@ -477,12 +479,13 @@ class UserManager
      * @param \Claroline\CoreBundle\Entity\Group $group
      * @param integer $page
      * @param integer $max
+     * @param string $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getGroupOutsiders(Group $group, $page, $max = 20)
+    public function getGroupOutsiders(Group $group, $page, $max = 20, $orderedBy = 'id')
     {
-        $query = $this->userRepo->findGroupOutsiders($group, false);
+        $query = $this->userRepo->findGroupOutsiders($group, false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
@@ -492,12 +495,13 @@ class UserManager
      * @param integer $page
      * @param string $search
      * @param integer $max
+     * @param string $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getGroupOutsidersByName(Group $group, $page, $search, $max = 20)
+    public function getGroupOutsidersByName(Group $group, $page, $search, $max = 20, $orderedBy = 'id')
     {
-        $query = $this->userRepo->findGroupOutsidersByName($group, $search, false);
+        $query = $this->userRepo->findGroupOutsidersByName($group, $search, false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
