@@ -1,0 +1,195 @@
+{% macro renderPager(search, workspaceId, group, queryString, pager) %}
+{% if search == '' %}
+    {{
+        pagerfanta(
+        pager,
+        'twitter_bootstrap_translated',
+            {
+            'proximity' : 1,
+            'routeName': 'claro_workspace_users_of_group',
+            'routeParams': {'workspace': workspaceId, 'group': group.getId()},
+            'queryString': queryString
+            }
+        )
+    }}
+{% else %}
+    {{
+        pagerfanta(
+        pager,
+        'twitter_bootstrap_translated',
+            {
+            'proximity' : 1,
+            'routeName': 'claro_workspace_users_of_group_search',
+            'routeParams': {'search': search, 'workspace': workspaceId, 'group': group.getId()},
+            'queryString': queryString
+            }
+        )
+    }}
+{% endif %}
+{% endmacro %}
+
+{% macro displayControls(workspaceId) %}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% from _self import displayControls %}
+
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-book',
+                'name': 'workspaces'|trans({}, 'platform'),
+                'href': path('claro_workspace_list')
+            },
+            {
+                'name': workspace.getName() ~ ' - ' ~  workspace.getCode(),
+                'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
+            },
+            {
+                'name': 'groups'|trans({}, 'platform'),
+                'href': ''
+            },
+        ])
+    }}
+{% endblock %}
+
+
+{% block section_content %}
+    <div class="panel-body">
+        <ul class="nav nav-tabs">
+            <li> <a href="{{ path('claro_workspace_registered_user_list', {'workspace': workspace.getId() }) }}"> {{'users'|trans({}, 'platform') }} </a> </li>
+            <li class="active"> <a href="#"> {{'groups'|trans({}, 'platform') }} </a> </li>
+            <li> <a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()} ) }}">{{ 'roles'|trans({}, 'platform') }}</a> </li>
+        </ul>
+
+        {{ macros.flashBox() }}
+
+        {{
+            macros.breadcrumbs([
+                {
+                    'name': 'groups_list'|trans({}, 'platform'),
+                    'href': path('claro_workspace_registered_group_list', {'workspace': workspace.getId()})
+                },
+                {
+                    'name': group.getName(),
+                    'href': ''
+                }
+            ])
+        }}
+        {{ displayControls(workspace.getId()) }}
+        <div class="input-append pull-right">
+            <input class="input-medium" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
+            <button class="filter btn btn-default" type="button" id="search-button">
+                <i class="icon-search"></i>
+        </div>
+        <div class="btn-group">
+            <a href="{{ path('claro_workspace_unregistered_user_list', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle">
+                {{ 'add_users'|trans({}, 'platform') }}
+            </a>
+        </div>
+        <br>
+
+        {{ renderPager(search, workspace.getId(), group, queryString, pager) }}
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <td>{{ 'name'|trans({}, 'platform') }}</td>
+                        <td>{{ 'role'|trans({}, 'platform') }}</td>
+                    </tr>
+                </thead>
+                <tbody id="user-table-body">
+                    {% for user in pager.currentPageResults %}
+                        <tr id="row-{{ user.id }}" class="row-user" data-user-id="{{ user.getId() }}">
+                            <td class="popover-block"
+                                data-trigger="hover"
+                                data-content="{% render controller('ClarolineCoreBundle:User:renderPopover', {'user': user}) %}"
+                                data-container="td"
+                                data-placement="top"
+                                data-html="true"
+                                >
+                                {{ user.lastname }} {{ user.firstname }}
+                            </td>
+                            <td>
+                                {% for role in user.getEntityRoles() %}
+                                    {% if role.getWorkspace() == workspace %}
+                                        <span class="label label-success" id="label-{{ role.getId () }}-{{ user.getId()}}">
+                                            {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                            <i class="icon-remove-sign pointer-hand remove-role-button"
+                                                href="{{ path('claro_workspace_remove_role_from_user', {'workspace': workspace.getId(), 'user': user.getId(), 'role': role.getId() } ) }}"
+                                                >
+                                            </i>
+                                        </span>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% set groups = user.getGroups() %}
+                                    {% for group in groups %}
+                                    {% for role in group.getEntityRoles() %}
+                                        {% if role.getWorkspace() == workspace %}
+                                            <span title="{{ group.getName() }}" class="label label-default" id="label-{{ role.getId () }}-{{ user.getId()}}">
+                                                {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                            </span>
+
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {{ renderPager(search, workspace.getId(), group, queryString, pager) }}
+        {{ displayControls(workspace.getId()) }}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+    vars=["locale"]
+    "@ClarolineCoreBundle/Resources/views/Tool/workspace/roles/roleUserLabel.html.twigjs"
+    "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
+    filter="twig_js"
+    %}
+    <script language="javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        $('.popover-block').popover();
+        $('.remove-role-button').live('click', function (event) {
+            var target = $(event.currentTarget);
+            var route = target.attr('href');
+            $.ajax({
+                url: route,
+                type: 'DELETE',
+                success: function() {
+                    target.parent().remove();
+                }
+            });
+        });
+
+        $('#search-button').click(function () {
+            var search = document.getElementById('search-items-txt').value;
+            var queryString = {};
+            var i = 0;
+            var array = [];
+            $('.chk-search:checked').each(function (index, element) {
+                array[i] = element.value;
+                i++;
+            });
+            queryString.roleIds = array;
+
+            if (search !== '') {
+                var route = Routing.generate('claro_workspace_registered_user_list_search', {'group': {{ group.getId() }}, 'workspace': {{ workspace.getId }}, 'search': search });
+                } else {
+                var route = Routing.generate('claro_workspace_users_of_group', {'group': {{ group.getId() }}, 'workspace': {{ workspace.getId }} });
+            }
+
+            route += '?' + $.param(queryString);
+            window.location.href = route;
+        });
+    </script>
+{% endblock %}

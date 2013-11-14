@@ -3,12 +3,16 @@
 
     window.Claroline = window.Claroline || {};
     var calendar = window.Claroline.Calendar = {};
+    function t(key) {
+            return Translator.get('agenda' + ':' + key);
+        }
 
     calendar.initialize = function (context) {
         context = context || 'desktop';
         var clickedDate = null,
             id = null,
-            url = null;
+            url = null,
+            task = null;
 
         $('.filter').click(function () {
             var numberOfChecked = $('.filter:checkbox:checked').length;
@@ -105,11 +109,13 @@
                                 $('#calendar').fullCalendar(
                                     'renderEvent',
                                     {
+                                        id: data.id,
                                         title: data.title,
                                         start: data.start,
                                         end: data.end,
                                         allDay: data.allDay,
-                                        color: data.color
+                                        color: data.color,
+                                        description : data.description
                                     },
                                     true // make the event 'stick'
                                 );
@@ -146,40 +152,58 @@
         });
 
         $('#updateBtn').click(function () {
-            $('#updateBtn').attr('disabled', 'disabled');
-            var data = new FormData($('#myForm')[0]);
-            data.append('id', id);
-            data.append('agenda_form[description]',$('#agenda_form_description').val());
-            var allDay = $('#agenda_form_allDay').attr('checked') === 'checked' ? 1 : 0;
-            data.append('agenda_form[allDay]', allDay);
-            url = $('a#update').attr('href');
-            $.ajax({
-                'url': url,
-                'type': 'POST',
-                'data': data,
-                'processData': false,
-                'contentType': false,
-                'success': function (data, textStatus, xhr) {
-                        $('#myModal').modal('hide');
-                        $('#updateBtn').removeAttr('disabled');
-                        $('#calendar').fullCalendar('refetchEvents');
-                        $.ajax({
-                            'url': $('a#taska').attr('href'),
-                            'type': 'GET',
-                            'success': function (data, textStatus, xhr) {
-                                $("#tasks").html(data);
-                                
-                            }
-                        });
-                },
-                'error': function ( xhr, textStatus) {
-                    if (xhr.status === 400) {//bad request
-                        alert(Translator.get('agenda' + ':' + 'error'));
-                        $('#save').removeAttr('disabled');
-                        $('#output').html(textStatus);
+           if(task === 'no') {
+                var event2 = new Object();
+                event2.id = id;
+                event2.title = $('#agenda_form_title').val();
+                event2.start = $('#agenda_form_start').val();
+                event2.end = $('#agenda_form_end').val();
+                event2.allDay = $('#agenda_form_allDay').attr('checked') === 'checked' ? 1 : 0;
+                event2.color = $('#agenda_form_priority').val();
+                event2.description = $('#agenda_form_description').val();
+                var event1 = $('#calendar').fullCalendar('clientEvents', id);
+                var compare = compareEvents(event1[0], event2 );
+           } else {
+                compare = 1;
+           } 
+            if( compare > 0 ) {
+                $('#updateBtn').attr('disabled', 'disabled');
+                var data = new FormData($('#myForm')[0]);
+                data.append('id', id);
+                data.append('agenda_form[description]',$('#agenda_form_description').val());
+                var allDay = $('#agenda_form_allDay').attr('checked') === 'checked' ? 1 : 0;
+                data.append('agenda_form[allDay]', allDay);
+                url = $('a#update').attr('href');
+                $.ajax({
+                    'url': url,
+                    'type': 'POST',
+                    'data': data,
+                    'processData': false,
+                    'contentType': false,
+                    'success': function (data, textStatus, xhr) {
+                            $('#myModal').modal('hide');
+                            $('#updateBtn').removeAttr('disabled');
+                            $('#calendar').fullCalendar('refetchEvents');
+                            $.ajax({
+                                'url': $('a#taska').attr('href'),
+                                'type': 'GET',
+                                'success': function (data, textStatus, xhr) {
+                                    $("#tasks").html(data);
+                                    
+                                }
+                            });
+                    },
+                    'error': function ( xhr, textStatus) {
+                        if (xhr.status === 400) {//bad request
+                            alert(Translator.get('agenda' + ':' + 'error'));
+                            $('#save').removeAttr('disabled');
+                            $('#output').html(textStatus);
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                $('#myModal').modal('hide');
+            }
         });
 
         var deleteClick = function (id) {
@@ -209,9 +233,9 @@
             var id = $(e.currentTarget).attr('data-event-id');
             deleteClick(id);
         });
-
-        $('.update-task').on('click', function (e) {
+        $('#tasks').on('click','.update-task',function(e) {
             $('#save').hide();
+            task = 'task';
             var list = e.target.parentElement.children;
             $('#myModal').modal('show');
             id = $(list[5])[0].innerHTML;
@@ -226,7 +250,7 @@
             {
                 $('#agenda_form_allDay').attr('checked', true);
             }
-             $('#agenda_form_priority option[value=' + $(list[3])[0].innerHTML + ']').attr('selected', 'selected');
+            $('#agenda_form_priority option[value=' + $(list[3])[0].innerHTML + ']').attr('selected', 'selected');
         });
         function dropEvent(event, dayDelta, minuteDelta) {
             $.ajax({
@@ -261,6 +285,7 @@
         function modifiedEvent(calEvent, context)
         {
             id = calEvent.id;
+            task = 'no';
             $('#deleteBtn').show();
             $('#updateBtn').show();
             $('#save').hide();
@@ -302,6 +327,34 @@
             deleteClick(id);
         });
 
+        function compareEvents(event1 , event2)
+        {
+            event1.start = $.fullCalendar.formatDate(new Date(event1.start),'dd/MM/yyyy HH:mm');
+            // if the start & end date are the same end date is null for the fullcalendar
+            event1.end = (event1.end != null) ? $.fullCalendar.formatDate(new Date(event1.end),'dd/MM/yyyy HH:mm'): null;
+            event1.allDay = (event1.allDay == false ) ? 0 : 1;
+            if (event1.title === event2.title) {
+                if (event1.start === event2.start) {
+                    if((event1.end === event2.end) || (!event1.end)) {
+                        if ((!event1.description) && (!event2.description ) || (event1.description === event2.description)) {
+                            if(event1.allDay === event2.allDay) {
+                                if(event1.color === event2.color) {
+                                  return 0 ;
+                                } else 
+                                    return 1;
+                            } else 
+                                return 2;
+                        } else 
+                            return 3;
+                    } else 
+                        return 4;
+                }     
+                else 
+                    return 5;
+            }
+            return 6;
+        }
+
         $('#calendar').fullCalendar({
             header: {
                 left: 'prev,next today',
@@ -314,21 +367,22 @@
                 day: 'dddd d/M'
             },
             buttonText: {
-                prev: Translator.get('agenda' + ':' + 'prev'),
-                next: Translator.get('agenda' + ':' + 'next'),
-                prevYear: Translator.get('agenda' + ':' + 'prevYear'),
-                nextYear: Translator.get('agenda' + ':' + 'nextYear'),
-                today:    Translator.get('agenda' + ':' + 'today'),
-                month:    Translator.get('agenda' + ':' + 'month'),
-                week:     Translator.get('agenda' + ':' + 'week'),
-                day:      Translator.get('agenda' + ':' + 'day')
+                prev: t('prev'),
+                next: t('next'),
+                prevYear: t('prevYear'),
+                nextYear: t('nextYear'),
+                today: t('today'),
+                month: t('month'),
+                week: t('week'),
+                day: t('day')
             },
-            monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
-                'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-            monthNamesShort: ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août',
-                'sept.', 'oct.', 'nov.', 'déc.'],
-            dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
-            dayNamesShort: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
+            firstDay:1,
+            monthNames: [t('january'), t('february'), t('mars'), t('april'), t('may'), t('june'), t('july'),
+                t('august'), t('september'), t('october'), t('november'), t('december')],
+            monthNamesShort: [t('jan'), t('feb'), t('mars'), t('apr'), t('may'), t('ju'), t('jul'),
+                t('aug'), t('sept'), t('nov'), t('dec')],
+            dayNames: [ t('sunday'),t('monday'), t('tuesday'), t('wednesday'), t('thursday'), t('friday'), t('saturday')],
+            dayNamesShort: [ t('sun'), t('mon'), t('tue'), t('wed'), t('thu'), t('fri'), t('sat')],
             editable: true,
             events: $('a#link').attr('href'),
             axisFormat: 'HH:mm',
@@ -337,16 +391,17 @@
             '': 'h:mm{ - h:mm}',
             minTime: 0,
             maxTime: 24,
-            allDayText: 'all-day',
-            allDaySlot: true,
-            lazyFetching : true,
+            allDaySlot: false,
+            lazyFetching : false,
             eventDrop: function (event, dayDelta, minuteDelta) {
                 dropEvent(event, dayDelta, minuteDelta);
             },
             dayClick: dayClickFunction,
-            eventClick:  function (calEvent) {
-                modifiedEvent(calEvent ,context);
-                $('#calendar').fullCalendar( 'updateEvent', calEvent );
+            eventClick:  function (event) {
+                id = event.id;
+                console.debug(event.end);
+                modifiedEvent(event ,context);
+                //$('#calendar').fullCalendar( 'updateEvent', event );
             },
             eventRender: function (event) {
                 if (event.visible === false)

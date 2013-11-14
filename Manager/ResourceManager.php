@@ -354,7 +354,7 @@ class ResourceManager
 
         $resourceTypes = $this->resourceTypeRepo->findAll();
 
-        //@todo remove this line and grant edit requests in the resourceManager.
+        /**@todo remove this line and grant edit requests in the resourceManager.*/
         $this->rightsManager->create(
             31,
             $this->roleRepo->findOneBy(array('name' => 'ROLE_ADMIN')),
@@ -749,6 +749,13 @@ class ResourceManager
                     'DeleteResource',
                     array($resource)
                 );
+
+                $this->dispatcher->dispatch(
+                    "log",
+                    'Log\LogResourceDelete',
+                    array($node)
+                );
+
                 /*
                  * If the child isn't removed here aswell, doctrine will fail to remove $resChild
                  * because it still has $resChild in its UnitOfWork or something (I have no idea

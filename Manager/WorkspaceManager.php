@@ -388,6 +388,33 @@ class WorkspaceManager
         return $this->workspaceRepo->findByRoles($roles);
     }
 
+    public function getWorkspacesByRoleNamesPager(array $roleNames, $page)
+    {
+        if (count($roleNames) > 0) {
+            $workspaces = $this->workspaceRepo->findByRoleNames($roleNames);
+        } else {
+            $workspaces = array();
+        }
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page);
+    }
+
+    public function getWorkspacesByRoleNamesBySearchPager(
+        array $roleNames,
+        $search,
+        $page
+    )
+    {
+        if (count($roleNames) > 0) {
+            $workspaces = $this->workspaceRepo
+                ->findByRoleNamesBySearch($roleNames, $search);
+        } else {
+            $workspaces = array();
+        }
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page);
+    }
+
     public function getWorkspaceIdsByUserAndRoleNames(User $user, array $roleNames)
     {
         return $this->workspaceRepo->findIdsByUserAndRoleNames($user, $roleNames);
@@ -430,6 +457,13 @@ class WorkspaceManager
     public function getDisplayableWorkspaces()
     {
         return $this->workspaceRepo->findDisplayableWorkspaces();
+    }
+
+    public function getDisplayableWorkspacesPager($page)
+    {
+        $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page);
     }
 
     public function getWorkspacesWithSelfRegistration()

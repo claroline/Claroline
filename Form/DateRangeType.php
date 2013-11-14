@@ -4,6 +4,8 @@ namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Claroline\CoreBundle\Form\DataTransformer\DateRangeToTextTransformer;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -29,6 +31,11 @@ class DateRangeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->addViewTransformer(new DateRangeToTextTransformer($this->translator));
+    }
+
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $view->vars['theme_options'] = $form->getConfig()->getAttribute('theme_options');
     }
 
     public function getParent()

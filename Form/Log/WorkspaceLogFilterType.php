@@ -46,7 +46,8 @@ class WorkspaceLogFilterType extends AbstractType
                 'range', 'daterange', array(
                     'label'    => 'for period',
                     'required' => false,
-                    'attr'     => array('class' => 'input-sm')
+                    'attr'     => array('class' => 'input-sm'),
+                    'theme_options' => array('label_width' => 'col-md-6')
                 )
             )
             ->add(
@@ -54,7 +55,8 @@ class WorkspaceLogFilterType extends AbstractType
                     'label'            => 'for user',
                     'entity_reference' => 'user',
                     'required'         => false,
-                    'attr'             => array('class' => 'input-sm')
+                    'attr'             => array('class' => 'input-sm'),
+                    'theme_options' => array('label_width' => 'col-md-6')
                 )
             );
     }

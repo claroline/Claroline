@@ -351,7 +351,7 @@ What we call the context is the place were the resource is opened. This place
 will define wich layout should be used.
 You can find wich template to use with this code (it's not automatic yet in subject to changes)
 
-```htmldjango
+```html+jinja
 {% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
 {% if isDesktop() %}

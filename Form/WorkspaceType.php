@@ -43,7 +43,14 @@ class WorkspaceType extends AbstractType
         );
         $builder->add('displayable', 'checkbox', array('required' => false));
         $builder->add('selfRegistration', 'checkbox', array('required' => false));
-        $builder->add('selfUnregistration', 'checkbox', array('required' => false));
+        $builder->add(
+            'selfUnregistration',
+            'checkbox',
+            array(
+                'required' => false,
+                'attr' => array('checked' => 'checked')
+            )
+        );
     }
 
     public function getName()

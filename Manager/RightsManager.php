@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
+use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -22,7 +23,7 @@ class RightsManager
 {
     /** @var MaskManager */
     private $maskManager;
-
+    /** @var ResourceRightsRepository */
     private $rightsRepo;
     /** @var ResourceNodeRepository */
     private $resourceRepo;

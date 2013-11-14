@@ -49,8 +49,8 @@
 {% block layout %}
     <div id="sf-environement" data-env="{{ app.environment }}" class="hide"></div>
     <div id="homePath" class="hide">{{ path("claro_index") }}</div>
-    <div id="homeAsset" class="hide">{{ asset("") }}</div>
-    <div id="homeLocale" class="hide">
+    <div id="homeAsset" class="hide">{{ app.request.getSchemeAndHttpHost() ~ asset("") }}</div>
+    <div id="homeLocale" class="hide">{% spaceless %}
         {% if asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ ".js") %}
             {{ app.request.locale }}
         {% elseif asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ "_" ~ app.request.locale | upper ~ ".js") %}
@@ -58,7 +58,7 @@
         {% else %}
             en
         {% endif %}
-    </div>
+    {% endspaceless %}</div>
     <div id="wrap">
         <div class="please-wait">
             <h4><span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span></h4>
@@ -131,6 +131,7 @@
         '../vendor/twbs/bootstrap/js/popover.js'
         '../vendor/twbs/bootstrap/js/affix.js'
         '../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/public/js/leftbar.js'
+        '../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/public/js/topbar.js'
         %}<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     {% javascripts debug=false  output='vendor/jms/twig-js/twig.js'

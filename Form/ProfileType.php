@@ -12,24 +12,29 @@ use Symfony\Component\Validator\Constraints\Image;
 class ProfileType extends AbstractType
 {
     private $platformRoles;
-    private $isFormCreation;
+    private $isAdmin;
 
-    public function __construct($platformRoles, $isFormCreation = false)
+     /**
+      * Constructor.
+      *
+      * @param Role[]  $platformRoles
+      * @param boolean $isAdmin
+      */
+    public function __construct(array $platformRoles, $isAdmin)
     {
         $this->platformRoles = new ArrayCollection($platformRoles);
-        $this->isFormCreation = $isFormCreation;
+        $this->isAdmin = $isAdmin;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
 
-        if ($this->isFormCreation) {
-            $builder->add('firstName', 'text', array('read_only' => true))
-                ->add('lastName', 'text', array('read_only' => true))
-                ->add('username', 'text', array('read_only' => true))
-                ->add('administrativeCode', 'text', array('required' => false, 'read_only' => true))
-                ->add('plainPassword', 'repeated', array('type' => 'password'))
+        if (!$this->isAdmin) {
+            $builder->add('firstName', 'text', array('read_only' => true, 'disabled' => true))
+                ->add('lastName', 'text', array('read_only' => true, 'disabled' => true))
+                ->add('username', 'text', array('read_only' => true, 'disabled' => true))
+                ->add('administrativeCode', 'text', array('required' => false, 'read_only' => true, 'disabled' => true))
                 ->add('mail', 'email', array('required' => false))
                 ->add('phone', 'text', array('required' => false));
             $builder->add(
@@ -55,7 +60,6 @@ class ProfileType extends AbstractType
                 ->add('lastName', 'text')
                 ->add('username', 'text')
                 ->add('administrativeCode', 'text', array('required' => false))
-                ->add('plainPassword', 'repeated', array('type' => 'password'))
                 ->add('mail', 'email', array('required' => false))
                 ->add('phone', 'text', array('required' => false));
             $builder->add(
@@ -106,11 +110,10 @@ class ProfileType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver
-        ->setDefaults(
-            array(
-                'translation_domain' => 'platform'
-                )
-        );
+        $resolver->setDefaults(array(
+            'data_class' => 'Claroline\CoreBundle\Entity\User',
+            'validation_groups' => array('admin'),
+            'translation_domain' => 'platform'
+        ));
     }
 }

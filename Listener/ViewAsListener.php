@@ -60,7 +60,6 @@ class ViewAsListener
                 $baseRole = substr($viewAs, 0, strripos($viewAs, '_'));
 
                 if ($this->securityContext->isGranted('ROLE_WS_MANAGER_'.$guid)) {
-
                     if ($baseRole === 'ROLE_ANONYMOUS') {
                         throw new \Exception('No implementation yet');
                     } else {

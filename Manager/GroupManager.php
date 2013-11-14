@@ -185,11 +185,36 @@ class GroupManager
         return $this->pagerFactory->createPager($query, $page);
     }
 
-    public function getGroupsByWorkspaces(array $workspaces, $page)
+    public function getGroupsByWorkspacesPager(array $workspaces, $page)
     {
         $query = $this->groupRepo->findGroupsByWorkspaces($workspaces, false);
 
         return $this->pagerFactory->createPager($query, $page);
+    }
+
+    public function getGroupsByWorkspaces(array $workspaces)
+    {
+        return $this->groupRepo->findGroupsByWorkspaces($workspaces, true);
+    }
+
+    public function getGroupsByWorkspacesAndSearchPager(
+        array $workspaces,
+        $page,
+        $search
+    )
+    {
+        $groups = $this->groupRepo
+            ->findGroupsByWorkspacesAndSearch($workspaces, $search);
+
+        return $this->pagerFactory->createPagerFromArray($groups, $page);
+    }
+
+    public function getGroupsByWorkspacesAndSearch(array $workspaces, $search)
+    {
+        return $this->groupRepo->findGroupsByWorkspacesAndSearch(
+            $workspaces,
+            $search
+        );
     }
 
     public function getGroupsByWorkspaceAndName(AbstractWorkspace $workspace, $search, $page)
@@ -246,6 +271,13 @@ class GroupManager
         $query = $this->groupRepo->findAll(false);
 
         return $this->pagerFactory->createPager($query, $page);
+    }
+
+    public function getAllGroupsBySearch($page, $search)
+    {
+        $query = $this->groupRepo->findAllGroupsBySearch($search);
+
+        return $this->pagerFactory->createPagerFromArray($query, $page, 2);
     }
 
     public function getGroupsByNames(array $names)
