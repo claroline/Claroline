@@ -64,7 +64,7 @@ class MailManager
     }
 
     /**
-     * @param User $user
+     * @param \Claroline\CoreBundle\Entity\User $user
      *
      * @return boolean
      */
@@ -99,7 +99,6 @@ class MailManager
 
         return $this->send($subject, $body, array($user));
     }
-
 
     /**
      * @param string $subject

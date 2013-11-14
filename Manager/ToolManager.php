@@ -117,6 +117,16 @@ class ToolManager
         );
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
+     * @param integer $position
+     * @param string $name
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     *
+     * @return \Claroline\CoreBundle\Entity\Tool\OrderedTool
+     *
+     * @throws ToolPositionAlreadyOccupiedException
+     */
     public function addWorkspaceTool(Tool $tool, $position, $name, AbstractWorkspace $workspace)
     {
         $switchTool = null;
@@ -141,6 +151,11 @@ class ToolManager
         return $orderedTool;
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     */
     public function addRole(Tool $tool, Role $role, AbstractWorkspace $workspace)
     {
         $otr = $this->orderedToolRepo->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
@@ -149,6 +164,10 @@ class ToolManager
         $this->om->flush();
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Tool\OrderedTool $otr
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     */
     public function addRoleToOrderedTool(OrderedTool $otr, Role $role)
     {
         $otr->addRole($role);
@@ -156,6 +175,11 @@ class ToolManager
         $this->om->flush();
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     */
     public function removeRole(Tool $tool, Role $role, AbstractWorkspace $workspace)
     {
         $otr = $this->orderedToolRepo->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
@@ -164,6 +188,10 @@ class ToolManager
         $this->om->flush();
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Tool\OrderedTool $otr
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     */
     public function removeRoleFromOrderedTool(OrderedTool $otr, Role $role)
     {
         $otr->removeRole($role);
@@ -171,11 +199,23 @@ class ToolManager
         $this->om->flush();
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @return \Claroline\CoreBundle\Entity\Tool\Tool
+     */
     public function getDisplayedDesktopOrderedTools(User $user)
     {
          return $this->toolRepo->findDesktopDisplayedToolsByUser($user);
     }
 
+    /**
+     * Returns the sorted list of OrderedTools for a user.
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @return \Claroline\CoreBundle\Entity\Tool\OrderedTool
+     */
     public function getDesktopToolsConfigurationArray(User $user)
     {
         $orderedToolList = array();
@@ -187,7 +227,7 @@ class ToolManager
             $orderedToolList[$desktopTool->getOrder()] = $desktopTool->getTool();
         }
 
-         $undisplayedTools = $this->toolRepo->findDesktopUndisplayedToolsByUser($user);
+        $undisplayedTools = $this->toolRepo->findDesktopUndisplayedToolsByUser($user);
 
         foreach ($undisplayedTools as $tool) {
             //this field isn't mapped
@@ -197,6 +237,13 @@ class ToolManager
         return $this->utilities->arrayFill($orderedToolList, $undisplayedTools);
     }
 
+    /**
+     * Returns the sorted list of OrderedTools for a user.
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     *
+     * @return type
+     */
     public function getWorkspaceToolsConfigurationArray(AbstractWorkspace $workspace)
     {
         $missingTools = $this->addMissingWorkspaceTools($workspace);
@@ -314,6 +361,12 @@ class ToolManager
         return $missingTools;
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @throws UnremovableToolException
+     */
     public function removeDesktopTool(Tool $tool, User $user)
     {
         if ($tool->getName() === 'parameters') {
@@ -325,6 +378,14 @@ class ToolManager
         $this->om->flush();
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param integer $position
+     * @param string $name
+     *
+     * @throws ToolPositionAlreadyOccupiedException
+     */
     public function addDesktopTool(Tool $tool, User $user, $position, $name)
     {
         $switchTool = $this->orderedToolRepo->findOneBy(array('user' => $user, 'order' => $position));
@@ -342,6 +403,12 @@ class ToolManager
         $this->om->flush();
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
+     * @param integer $position
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     */
     public function move(Tool $tool, $position, User $user = null, AbstractWorkspace $workspace = null)
     {
          $movingTool = $this->orderedToolRepo
@@ -358,23 +425,38 @@ class ToolManager
          $this->om->flush();
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Tool\OrderedTool $ot
+     */
     public function editOrderedTool(OrderedTool $ot)
     {
         $this->om->persist($ot);
         $this->om->flush();
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
+     */
     public function editTool(Tool $tool)
     {
         $this->om->persist($tool);
         $this->om->flush();
     }
 
+    /**
+     * @return \Claroline\CoreBundle\Entity\Tool\Tool[] $tool
+     */
     public function getAllTools()
     {
         return $this->toolRepo->findAll();
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $ws
+     * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
+     *
+     * @return \Claroline\CoreBundle\Entity\Tool\OrderedTool
+     */
     public function getOneByWorkspaceAndTool(AbstractWorkspace $ws, Tool $tool)
     {
         return $this->orderedToolRepo->findOneBy(array('workspace' => $ws, 'tool' => $tool));
@@ -386,6 +468,11 @@ class ToolManager
         return true;
     }
 
+    /**
+     *Adds the mandatory tools at the user creation.
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     */
     public function addRequiredToolsToUser(User $user)
     {
         $requiredTools[] = $this->toolRepo->findOneBy(array('name' => 'home'));
@@ -404,16 +491,36 @@ class ToolManager
         $this->om->endFlushSuite($user);
     }
 
+    /**
+     * @param string $name
+     *
+     * @return \Claroline\CoreBundle\Entity\Tool\Tool
+     */
     public function getOneToolByName($name)
     {
         return $this->toolRepo->findOneByName($name);
     }
 
+    /**
+     * Delete to the findBy method.
+     *
+     * @param array $criterias
+     *
+     * @return \Claroline\CoreBundle\Entity\Tool\Tool
+     */
     public function getToolByCriterias(array $criterias)
     {
         return $this->toolRepo->findBy($criterias);
     }
 
+    /**
+     * Extract the files from a the template configuration array
+     *
+     * @param string $archpath
+     * @param array $confTools
+     *
+     * @return array
+     */
     public function extractFiles($archpath, $confTools)
     {
         $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('claro_ws_tmp_', true);
@@ -431,11 +538,23 @@ class ToolManager
         return $realPaths;
     }
 
+    /**
+     * @param string[] $roles
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     *
+     * @return \Claroline\CoreBundle\Entity\Tool\OrderedTool
+     */
     public function getOrderedToolsByWorkspaceAndRoles(AbstractWorkspace $workspace, array $roles)
     {
         return $this->orderedToolRepo->findByWorkspaceAndRoles($workspace, $roles);
     }
 
+    /**
+     * @param string[] $roles
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     *
+     * @return \Claroline\CoreBundle\Entity\Tool\Tool
+     */
     public function getDisplayedByRolesAndWorkspace(array $roles, AbstractWorkspace $workspace)
     {
         return $this->toolRepo->findDisplayedByRolesAndWorkspace($roles, $workspace);

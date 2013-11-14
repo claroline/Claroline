@@ -40,6 +40,8 @@
      *     'btn': 'btn-other',
      *     'confirmTemplate': templateB
      * }
+     *
+     * You can add a <select> whose id is "max-select". This will send the "max" parameter to the request.
      */
     table.initialize = function (parameters) {
         var currentAction = '';
@@ -48,6 +50,11 @@
         $('#search-button').click(function () {
             var search = document.getElementById('search-items-txt').value;
             var route;
+
+            var max = findMaxPerPage();
+            if (max) {
+               parameters.route.search.parameters.max = parameters.route.normal.parameters.max = max;
+            }
 
             if (search !== '') {
                 parameters.route.search.parameters.search = search;
@@ -61,6 +68,11 @@
 
         $('#search-items-txt').keypress(function (e) {
 
+            var max = findMaxPerPage();
+            if (max) {
+               parameters.route.search.parameters.max = parameters.route.normal.parameters.max = max;
+            }
+
             if (e.keyCode === 13) {
                 var search = document.getElementById('search-items-txt').value;
                 var route;
@@ -69,6 +81,7 @@
                     parameters.route.search.parameters.search = search;
                     route = Routing.generate(parameters.route.search.route, parameters.route.search.parameters);
                 } else {
+                    console.debug(parameters);
                     route = Routing.generate(parameters.route.normal.route, parameters.route.normal.parameters);
                 }
 
@@ -139,6 +152,10 @@
             {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'table-modal', 'body': ''}
         );
         $('body').append(html);
+    }
+
+    function findMaxPerPage() {
+        return $('#max-select').val();
     }
 
 })();

@@ -91,6 +91,14 @@ class RightsManager
             $this->nonRecursiveCreation($permissions, $role, $resource, $creations);
     }
 
+    /**
+     * @param integer $permissions the permission mask
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @param boolean $isRecursive
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceRight[] $arRights
+     */
     public function editPerms(
         $permissions,
         Role $role,
@@ -116,6 +124,14 @@ class RightsManager
         return $arRights;
     }
 
+    /**
+     * @param array $resourceTypes
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @param boolean $isRecursive
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceRight[] $arRights
+     */
     public function editCreationRights(
         array $resourceTypes,
         Role $role,
@@ -141,10 +157,13 @@ class RightsManager
         return $arRights;
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $original
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     */
     public function copy(ResourceNode $original, ResourceNode $node)
     {
         $originalRights = $this->rightsRepo->findBy(array('resourceNode' => $original));
-        $created = array();
         $this->om->startFlushSuite();
 
         foreach ($originalRights as $originalRight) {
@@ -157,8 +176,6 @@ class RightsManager
         }
 
         $this->om->endFlushSuite();
-
-        return $created;
     }
 
     /**
@@ -168,7 +185,7 @@ class RightsManager
      * @param \Claroline\CoreBundle\Entity\Role                  $role
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights[]
      */
     public function updateRightsTree(Role $role, ResourceNode $node)
     {
@@ -200,6 +217,16 @@ class RightsManager
         return $finalRights;
     }
 
+    /**
+     * Set the permission for a resource right.
+     * The array of permissions should be defined that way:
+     * array('open' => true, 'edit' => false, ...)
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceRights $rights
+     * @param array $permissions
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights
+     */
     public function setPermissions(ResourceRights $rights, array $permissions)
     {
         $resourceType = $rights->getResourceNode()->getResourceType();
@@ -235,6 +262,12 @@ class RightsManager
         return $initializedArray;
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights $resourceRights
+     */
     public function getOneByRoleAndResource(Role $role, ResourceNode $node)
     {
         $resourceRights = $this->rightsRepo->findOneBy(array('resourceNode' => $node, 'role' => $role));
@@ -248,6 +281,12 @@ class RightsManager
         return $resourceRights;
     }
 
+    /**
+     * @param string[] $roles
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     *
+     * @return array
+     */
     public function getCreatableTypes(array $roles, ResourceNode $node)
     {
         $creatableTypes = array();
@@ -262,6 +301,12 @@ class RightsManager
         return $creatableTypes;
     }
 
+    /**
+     * @param integer|array $permissions
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @param array $creations
+     */
     public function recursiveCreation(
         $permissions,
         Role $role,
@@ -282,6 +327,12 @@ class RightsManager
         $this->om->endFlushSuite();
     }
 
+    /**
+     * @param integer|array $permissions
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @param array $creations
+     */
     public function nonRecursiveCreation(
         $permissions,
         Role $role,
@@ -298,6 +349,9 @@ class RightsManager
         $this->om->flush();
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceRights $rights
+     */
     public function logChangeSet(ResourceRights $rights)
     {
         $uow = $this->om->getUnitOfWork();
@@ -318,23 +372,38 @@ class RightsManager
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      *
-     * @return array
+     * @return \Claroline\CoreBundle\Resource\ResourceRights[]ù
      */
     public function getNonAdminRights(ResourceNode $node)
     {
         return $this->rightsRepo->findNonAdminRights($node);
     }
 
+    /**
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceType[]
+     */
     public function getResourceTypes()
     {
         return $this->resourceTypeRepo->findAll();
     }
 
+    /**
+     * @param array $roles
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     *
+     * @return type
+     */
     public function getMaximumRights(array $roles, ResourceNode $node)
     {
         return $this->rightsRepo->findMaximumRights($roles, $node);
     }
 
+    /**
+     * @param string[] $roles
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     *
+     * @return array
+     */
     public function getCreationRights(array $roles, ResourceNode $node)
     {
         return $this->rightsRepo->findCreationRights($roles, $node);

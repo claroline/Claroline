@@ -194,16 +194,16 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "users/page/{page}",
+     *     "users/page/{page}/max/{max}",
      *     name="claro_admin_user_list",
-     *     defaults={"page"=1, "search"=""},
+     *     defaults={"page"=1, "search"="", "max"=50},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "users/page/{page}/search/{search}",
+     *     "users/page/{page}/search/{search}/max/{max}",
      *     name="claro_admin_user_list_search",
-     *     defaults={"page"=1},
+     *     defaults={"page"=1, "max"=50},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -211,13 +211,13 @@ class AdministrationController extends Controller
      *
      * Displays the platform user list.
      */
-    public function userListAction($page, $search)
+    public function userListAction($page, $search, $max)
     {
         $pager = $search === '' ?
-            $this->userManager->getAllUsers($page) :
-            $this->userManager->getUsersByName($search, $page);
+            $this->userManager->getAllUsers($page, $max) :
+            $this->userManager->getUsersByName($search, $page, $max);
 
-        return array('pager' => $pager, 'search' => $search);
+        return array('pager' => $pager, 'search' => $search, 'max' => $max);
     }
 
     /**
@@ -230,7 +230,7 @@ class AdministrationController extends Controller
      * @EXT\Method("GET")
      * @EXT\Route(
      *     "users/page/{page}/pic/search/{search}",
-     *     name="claro_admin_user_list_search",
+     *     name="claro_admin_user_list_search_pics",
      *     defaults={"page"=1},
      *     options = {"expose"=true}
      * )
@@ -250,16 +250,16 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/groups/page/{page}",
+     *     "/groups/page/{page}/max/{max}",
      *     name="claro_admin_group_list",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "search"=""}
+     *     defaults={"page"=1, "search"="", "max"=50}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "groups/page/{page}/search/{search}",
+     *     "groups/page/{page}/search/{search}/max/{max}",
      *     name="claro_admin_group_list_search",
-     *     defaults={"page"=1},
+     *     defaults={"page"=1, "max"=50},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -267,29 +267,29 @@ class AdministrationController extends Controller
      *
      * Returns the platform group list.
      */
-    public function groupListAction($page, $search)
+    public function groupListAction($page, $search, $max)
     {
         $pager = $search === '' ?
-            $this->groupManager->getGroups($page) :
-            $this->groupManager->getGroupsByName($search, $page);
+            $this->groupManager->getGroups($page, $max) :
+            $this->groupManager->getGroupsByName($search, $page, $max);
 
-        return array('pager' => $pager, 'search' => $search);
+        return array('pager' => $pager, 'search' => $search, 'max' => $max);
     }
 
     /**
      * @EXT\Route(
-     *     "/group/{groupId}/users/page/{page}",
+     *     "/group/{groupId}/users/page/{page}/max/{max}",
      *     name="claro_admin_user_of_group_list",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "search"=""}
+     *     defaults={"page"=1, "search"="", "max"=50}
      * )
      * @EXT\Method("GET")
      *
      * @EXT\Route(
-     *     "/group/{groupId}/users/page/{page}/search/{search}",
+     *     "/group/{groupId}/users/page/{page}/search/{search}/max/{max}",
      *     name="claro_admin_user_of_group_list_search",
      *     options={"expose"=true},
-     *     defaults={"page"=1}
+     *     defaults={"page"=1, "max"=50}
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
@@ -301,29 +301,29 @@ class AdministrationController extends Controller
      *
      * Returns the users of a group.
      */
-    public function usersOfGroupListAction(Group $group, $page, $search)
+    public function usersOfGroupListAction(Group $group, $page, $search, $max)
     {
         $pager = $search === '' ?
-            $this->userManager->getUsersByGroup($group, $page) :
-            $this->userManager->getUsersByNameAndGroup($search, $group, $page);
+            $this->userManager->getUsersByGroup($group, $page, $max) :
+            $this->userManager->getUsersByNameAndGroup($search, $group, $page, $max);
 
-        return array('pager' => $pager, 'search' => $search, 'group' => $group);
+        return array('pager' => $pager, 'search' => $search, 'group' => $group, 'max' => $max);
     }
 
     /**
      * @EXT\Route(
-     *     "/group/add/{groupId}/page/{page}",
+     *     "/group/add/{groupId}/page/{page}/max/{max}",
      *     name="claro_admin_outside_of_group_user_list",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "search"=""}
+     *     defaults={"page"=1, "search"="", "max"=50}
      * )
      * @EXT\Method("GET")
      *
      * @EXT\Route(
-     *     "/group/add/{groupId}/page/{page}/search/{search}",
+     *     "/group/add/{groupId}/page/{page}/search/{search}/max/{max}",
      *     name="claro_admin_outside_of_group_user_list_search",
      *     options={"expose"=true},
-     *     defaults={"page"=1}
+     *     defaults={"page"=1, "max"=50}
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
@@ -335,13 +335,13 @@ class AdministrationController extends Controller
      *
      * Displays the user list with a control allowing to add them to a group.
      */
-    public function outsideOfGroupUserListAction(Group $group, $page, $search)
+    public function outsideOfGroupUserListAction(Group $group, $page, $search, $max)
     {
         $pager = $search === '' ?
-            $this->userManager->getGroupOutsiders($group, $page) :
-            $this->userManager->getGroupOutsidersByName($group, $page, $search);
+            $this->userManager->getGroupOutsiders($group, $page, $max) :
+            $this->userManager->getGroupOutsidersByName($group, $page, $search, $max);
 
-        return array('pager' => $pager, 'search' => $search, 'group' => $group);
+        return array('pager' => $pager, 'search' => $search, 'group' => $group, 'max' => $max);
     }
 
     /**
@@ -1187,14 +1187,14 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/registration/list/users/page/{page}",
+     *     "/registration/list/users/page/{page}/ordered-by/{ordered}",
      *     name="claro_users_list_registration_pager",
      *     defaults={"page"=1, "search"=""},
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/registration/list/users/page/{page}/search/{search}",
+     *     "/registration/list/users/page/{page}/search/{search}/ordered-by/{ordered}",
      *     name="claro_users_list_registration_pager_search",
      *     defaults={"page"=1},
      *     options={"expose"=true}
@@ -1207,13 +1207,13 @@ class AdministrationController extends Controller
      *
      * @return Response
      */
-    public function userListPagerAction($page, $search)
+    public function userListPagerAction($page, $search, $ordered)
     {
         $pager = $search === '' ?
-            $this->userManager->getAllUsers($page) :
-            $this->userManager->getUsersByName($search, $page);
+            $this->userManager->getAllUsers($page, $ordered) :
+            $this->userManager->getUsersByName($search, $page, $ordered);
 
-        return array('users' => $pager, 'search' => $search);
+        return array('users' => $pager, 'search' => $search, 'ordered' => $ordered);
     }
 
     /**
