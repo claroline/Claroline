@@ -11,10 +11,10 @@ class ToolRepository extends EntityRepository
     /**
      * Returns the workspace tools visible by a set of roles.
      *
-     * @param array             $roles
+     * @param string[]          $roles
      * @param AbstractWorkspace $workspace
      *
-     * @return array[Tool]
+     * @return Tool[]
      *
      * @throws \RuntimeException
      */
@@ -48,7 +48,7 @@ class ToolRepository extends EntityRepository
             $dql .= ' ORDER BY ot.order';
             $query = $this->_em->createQuery($dql);
             $query->setParameter('firstRole', $firstRole);
-            
+
             foreach ($roles as $key => $role) {
                 $query->setParameter('role_'.$key, $role);
             }

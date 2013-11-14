@@ -1,5 +1,7 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
+{% block title %}{{ parent() ~ ' - ' ~ "resources" | trans({}, "platform") }}{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css')}}'>

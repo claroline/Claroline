@@ -5,10 +5,10 @@
         pager,
         'twitter_bootstrap_translated',
             {
-            'proximity' : 1,
-            'routeName': 'claro_workspace_users_of_group',
-            'routeParams': {'workspace': workspaceId, 'group': group.getId()},
-            'queryString': queryString
+                'proximity' : 1,
+                'routeName': 'claro_workspace_users_of_group',
+                'routeParams': {'workspace': workspaceId, 'group': group.getId()},
+                'queryString': queryString
             }
         )
     }}
@@ -18,23 +18,21 @@
         pager,
         'twitter_bootstrap_translated',
             {
-            'proximity' : 1,
-            'routeName': 'claro_workspace_users_of_group_search',
-            'routeParams': {'search': search, 'workspace': workspaceId, 'group': group.getId()},
-            'queryString': queryString
+                'proximity' : 1,
+                'routeName': 'claro_workspace_users_of_group_search',
+                'routeParams': {'search': search, 'workspace': workspaceId, 'group': group.getId()},
+                'queryString': queryString
             }
         )
     }}
 {% endif %}
 {% endmacro %}
 
-{% macro displayControls(workspaceId) %}
-{% endmacro %}
-
 {% from _self import renderPager %}
-{% from _self import displayControls %}
 
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "groups" | trans({}, "platform") }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -79,7 +77,6 @@
                 }
             ])
         }}
-        {{ displayControls(workspace.getId()) }}
         <div class="input-append pull-right">
             <input class="input-medium" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
             <button class="filter btn btn-default" type="button" id="search-button">
@@ -144,7 +141,6 @@
             </table>
         </div>
         {{ renderPager(search, workspace.getId(), group, queryString, pager) }}
-        {{ displayControls(workspace.getId()) }}
     </div>
 {% endblock %}
 {% block javascripts %}

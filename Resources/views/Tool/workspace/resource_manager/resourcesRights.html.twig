@@ -1,4 +1,7 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "resources_rights_management" | trans({}, "platform") }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.workspaceBreadcrumbs(

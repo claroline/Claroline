@@ -1,5 +1,7 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
+{% block title %}{{ parent() ~ ' - ' ~ "general_parameters" | trans({}, "platform") }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.workspaceBreadcrumbs(

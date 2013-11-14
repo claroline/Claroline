@@ -1,7 +1,8 @@
-404 : 'La page que vous cherchez n''existe pas.'
 'Add a logo': 'Ajouter un logo'
+'Audience/user visits': 'Audience/Visites utilisateurs'
 'Choose a logo': 'Choisir un logo'
 'None': 'Aucun'
+404 : 'La page que vous cherchez n''existe pas.'
 Action List: 'Liste des actions'
 Actions per day: 'Nombre d''actions par jour'
 Choose visible actions in the widget: 'Choisissez les actions visibles dans le widget'
@@ -104,6 +105,7 @@ create_group: 'Créer un groupe'
 create_new_admin_tag: 'Créer un nouveau Tag administrateur'
 create_new_home_tab: 'Créer un nouvel onglet'
 create_new_tag: 'Créer un nouveau Tag'
+create_new_user_account : 'Creation de votre compte ClarolineConnect'
 create_subcategory: 'Créer une sous-catégorie'
 create_user: 'Créer un utilisateur'
 create_widget_instance: 'Créer un nouveau Widget'
@@ -300,8 +302,9 @@ new_message_alert: 'Vous avez %count% nouveaux message(s)'
 no: 'non'
 no_category: 'Il n''y a aucune catégorie'
 no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
-no_home_tab: 'Il n''y a aucun onglet'
 no_group: 'Aucun groupe'
+no_home_tab: 'Il n''y a aucun onglet'
+no_message: 'Aucun message'
 no_search_results: 'Votre recherche n''a retourné aucun résultat.'
 no_tag: 'Il n''y a aucun Tag'
 no_user: 'Aucun utilisateur'
@@ -333,8 +336,9 @@ permissions: Permissions
 personal_workspace: 'Espace personnel'
 phone: Téléphone
 platform_parameters: 'Paramètres de la plateforme'
+platform_parameters_form_defaultRole: 'Rôle par défaut'
 platform_parameters_form_footer: 'Pied de page'
-platform_parameters_form_icon: 'Icon de la plateforme'
+platform_parameters_form_icon: 'Icône de la plateforme'
 platform_parameters_form_localLanguage: Langue
 platform_parameters_form_name: 'Nom de la plateforme'
 platform_parameters_form_selfRegistration: Auto-inscription
@@ -357,7 +361,10 @@ profile_form_phone: Téléphone
 profile_form_pictureFile : 'Photo de profil'
 profile_form_plainPassword_first: 'Mot de passe'
 profile_form_plainPassword_second: Vérification
+profile_form_creation_plainPassword_first: 'Mot de passe'
+profile_form_creation_plainPassword_second: Vérification
 profile_form_platformRoles: Rôles
+profile_form_userName: 'Nom d''utilisateur'
 profile_form_username: 'Nom d''utilisateur'
 properties: Propriétés
 public: Public
@@ -442,6 +449,8 @@ select_workspaces_for_registration: 'Choisissez les espaces d''activités pour l
 selected_workspaces_for_registration: 'Espaces d''activités sélectionnés pour l''inscription'
 selected_workspaces_will_be_put_in_it: 'Les espaces d''activités sélectionnés y seront disponibles'
 send_mail: 'Envoyer un mail'
+send_mail_form_object: Objet
+send_mail_form_content: Message
 send_message: 'Envoyer un message'
 session_id: 'Identifiant de session'
 settings: Paramètres
@@ -531,6 +540,7 @@ users_management: 'Gestion des utilisateurs'
 users_minimum_requirement_msg: 'Les utilisateurs doivent remplir ces conditions: login de 3 caractères, password de 4 caractères, email valide.'
 users_registration_in_workspace: 'Inscription des utilisateurs dans l''espace d''activités'
 users_visits: 'Visites des utilisateurs'
+line_per_page: 'Lignes par page'
 validate: Valider
 view: Voir
 view_category_hierarchy: 'Visualiser la structure des catégories'
@@ -540,11 +550,11 @@ visitor: Visiteur
 warning_user_impersonation: 'Vous êtes connecté en tant que %user%.'
 warning_workspace_impersonation: 'Vous êtes connecté en tant que %role% du workspace %workspace%.'
 widget: Widget
+widget_display_form_name: Nom
 widget_home_tab_delete_confirm_message: 'Voulez-vous vraiment retirer ce widget de cet onglet ?'
 widget_home_tab_delete_confirm_title: 'Suppression du widget de l''onglet'
 widget_settings: 'Paramètres des widgets'
 widgets: Widgets
-widget_display_form_name: Nom
 widgets_configuration: 'Configuration des widgets'
 workspace.create: 'Créer un nouvel espace d''activités'
 workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'

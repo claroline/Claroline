@@ -1,4 +1,7 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "admin_logs" | trans({}, "platform") }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.workspaceBreadcrumbs(
@@ -12,6 +15,7 @@
         )
     }}
 {% endblock %}
+
 {% block section_content %}
     {% set filterFormAction = path('claro_workspace_logs_show', {'workspaceId': workspace.id}) %}
     {% set pagination %}

@@ -1,0 +1,20 @@
+{% extends "ClarolineCoreBundle::layout.html.twig" %}
+
+{% block title %}{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}{% endblock %}
+
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</h3>
+        </div>
+        <form class="form-horizontal" action="{{ path('claro_profile_admin_update', {'user': user.getId()} )}}" method="post" {{ form_enctype(profile_form) }} id="profile_form">
+            <div class="panel-body">
+                {{ form_widget(profile_form) }}
+            </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                <a href="{{ path('claro_admin_user_list') }}" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

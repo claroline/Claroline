@@ -40,6 +40,19 @@ class WidgetManager
         $this->translator = $translator;
     }
 
+    /**
+     * Creates a widget instance.
+     *
+     * @param \Claroline\CoreBundle\Entity\Widget\Widget $widget
+     * @param boolean $isAdmin
+     * @param boolean $isDesktop
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $ws
+     *
+     * @return \Claroline\CoreBundle\Entity\Widget\WidgetInstance
+     *
+     * @throws \Exception
+     */
     public function createInstance(Widget $widget, $isAdmin, $isDesktop, User $user = null, AbstractWorkspace $ws = null)
     {
         if (!$widget->isDisplayableInDesktop()) {
@@ -67,68 +80,81 @@ class WidgetManager
         return $instance;
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $widgetInstance
+     */
     public function removeInstance(WidgetInstance $widgetInstance)
     {
         $this->om->remove($widgetInstance);
         $this->om->flush();
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $widgetInstance
+     */
     public function insertWidgetInstance(WidgetInstance $widgetInstance)
     {
         $this->om->persist($widgetInstance);
         $this->om->flush();
     }
 
-    public function getRedirectRoute(WidgetInstance $instance)
-    {
-        if ($instance->isAdmin()) {
-            return $this->router->generate('claro_admin_widgets');
-        }
-
-        if ($instance->getWorkspace() !== null) {
-            return $this->router->generate(
-                'claro_workspace_widget_properties',
-                array('workspace' => $instance->getWorkspace()->getId())
-            );
-        }
-
-        return $this->router->generate('claro_desktop_widget_properties');
-    }
-
-
     /**
-     * WidgetRepository access methods
+     * Finds all widgets.
+     *
+     * @return \Claroline\CoreBundle\Entity\Widget\Widget
      */
-
     public function getAll()
     {
         return  $this->widgetRepo->findAll();
     }
 
+    /**
+     * Finds all widgets displayable in the desktop.
+     *
+     * @return \Claroline\CoreBundle\Entity\Widget\Widget
+     */
     public function getDesktopWidgets()
     {
         return $this->widgetRepo->findBy(array('isDisplayableInDesktop' => true));
     }
 
+    /**
+     * Finds all widgets displayable in a workspace.
+     *
+     * @return \Claroline\CoreBundle\Entity\Widget\Widget
+     */
     public function getWorkspaceWidgets()
     {
         return $this->widgetRepo->findBy(array('isDisplayableInWorkspace' => true));
     }
 
     /**
-     * WidgetInstanceRepository access methods
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @return \Claroline\CoreBundle\Entity\Widget\WidgetInstance[]
      */
-
     public function getDesktopInstances(User $user)
     {
         return  $this->widgetInstanceRepo->findBy(array('user' => $user));
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     *
+     * @return \Claroline\CoreBundle\Entity\Widget\WidgetInstance[]
+     */
     public function getWorkspaceInstances(AbstractWorkspace $workspace)
     {
         return  $this->widgetInstanceRepo->findBy(array('workspace' => $workspace));
     }
 
+    /**
+     * @todo define what I do
+     *
+     * @param array $excludedWidgetInstances
+     *
+     * @return \Claroline\CoreBundle\Entity\Widget\WidgetInstance[]
+     */
     public function getAdminDesktopWidgetInstance(array $excludedWidgetInstances)
     {
         if (count($excludedWidgetInstances) === 0) {
@@ -145,6 +171,13 @@ class WidgetManager
             ->findAdminDesktopWidgetInstance($excludedWidgetInstances);
     }
 
+    /**
+     * @todo define what I do
+     *
+     * @param array $excludedWidgetInstances
+     *
+     * @return \Claroline\CoreBundle\Entity\Widget\WidgetInstance[]
+     */
     public function getAdminWorkspaceWidgetInstance(array $excludedWidgetInstances)
     {
         if (count($excludedWidgetInstances) === 0) {
@@ -161,6 +194,14 @@ class WidgetManager
             ->findAdminWorkspaceWidgetInstance($excludedWidgetInstances);
     }
 
+    /**
+     * @todo define what I do
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param array $excludedWidgetInstances
+     *
+     * @return \Claroline\CoreBundle\Entity\Widget\WidgetInstance[]
+     */
     public function getDesktopWidgetInstance(
         User $user,
         array $excludedWidgetInstances
@@ -181,6 +222,14 @@ class WidgetManager
             ->findDesktopWidgetInstance($user, $excludedWidgetInstances);
     }
 
+    /**
+     * @todo define what I do
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param array $excludedWidgetInstances
+     *
+     * @return \Claroline\CoreBundle\Entity\Widget\WidgetInstance[]
+     */
     public function getWorkspaceWidgetInstance(
         AbstractWorkspace $workspace,
         array $excludedWidgetInstances

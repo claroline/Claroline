@@ -1,7 +1,8 @@
-404: 'Page Not found'
 'Add a logo': 'Add a logo'
+'Audience/user visits': 'Audience/user visits'
 'Choose a logo': 'Choose a logo'
 'None': 'None'
+404: 'Page Not found'
 Action List: 'Action List'
 Actions per day: 'Actions per day'
 Choose visible actions in the widget: 'Choose visible actions in the widget'
@@ -103,6 +104,7 @@ create_group: 'Create group'
 create_new_admin_tag: 'Create new admin tag'
 create_new_home_tab: 'Create new tab'
 create_new_tag: 'Create new tag'
+create_new_user_account : 'New user account for ClarolineConnect'
 create_subcategory: 'Create a subcategory'
 create_user: 'Create user'
 create_widget_instance: 'Create a widget'
@@ -302,8 +304,9 @@ no: 'no'
 no_category: 'There is no category'
 no_email: "This email doesn't match a registered user"
 no_email: 'No email found, check the spelling'
-no_home_tab: "There is no Home tab"
 no_group: 'No group'
+no_home_tab: "There is no Home tab"
+no_message: 'No message'
 no_search_results: 'Your search hasn''t returned any result.'
 no_tag: 'There is no tag'
 no_user: 'No user'
@@ -335,6 +338,7 @@ permissions: Permissions
 personal_workspace: 'Personal workspace'
 phone: Phone
 platform_parameters: 'Platform parameters'
+platform_parameters_form_defaultRole: 'Default role'
 platform_parameters_form_footer: 'Footer'
 platform_parameters_form_icon: 'Platform Icon'
 platform_parameters_form_localLanguage: Langue
@@ -359,7 +363,10 @@ profile_form_phone: Phone
 profile_form_pictureFile : 'Picture profile'
 profile_form_plainPassword_first: Password
 profile_form_plainPassword_second: Verification
+profile_form_creation_plainPassword_first: Password
+profile_form_creation_plainPassword_second: Verification
 profile_form_platformRoles: Roles
+profile_form_userName: 'User name'
 profile_form_username: Username
 properties: Properties
 public: Public
@@ -447,6 +454,8 @@ select_workspaces_for_registration: 'Select workspaces for registration'
 selected_workspaces_for_registration: 'Selected workspaces for registration'
 selected_workspaces_will_be_put_in_it: 'Selected workspaces will be put in it'
 send_mail: 'Send a mail'
+send_mail_form_object: Object
+send_mail_form_content: Message
 send_message: 'Send a message'
 session_id: 'Session id'
 settings: Settings
@@ -536,6 +545,7 @@ users_management: 'Users management'
 users_minimum_requirement_msg: 'Users validation has the following requirements: 3 chars username, 4 chars password, valid email.'
 users_registration_in_workspace: 'Users registration in workspace'
 users_visits: 'Users'' connections'
+line_per_page: 'Row per page'
 validate: Validate
 view: View
 view_category_hierarchy: 'View category hierarchy'

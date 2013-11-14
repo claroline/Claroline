@@ -2,6 +2,8 @@
 
 {% trans_default_domain "badge" %}
 
+{% block title %}{{ 'badges' | trans ~ ' - ' ~ 'claim_badge_form' | trans }}{% endblock %}
+
 {% block content %}
     <div class="margin border well">
         <h3 class="sub-section-header">{{ 'claim_badge_form'|trans }}</h3>

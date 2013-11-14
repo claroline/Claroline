@@ -1,17 +1,17 @@
 <ul id="analytics-navbar" class="nav nav-tabs tabs">
     <li{% if path('claro_admin_analytics_show') == app.request.requesturi %} class="active"{% endif %}>
-        <a href="{{path('claro_admin_analytics_show')}}">{{'analytics_home'|trans({}, 'platform')}}</a>
+        <a href="{{path('claro_admin_analytics_show')}}">{{ 'analytics_home' | trans({}, 'platform') }}</a>
     </li>
 
     <li{% if path('claro_admin_analytics_connections') == app.request.requesturi %} class="active"{% endif %}>
-        <a href="{{path('claro_admin_analytics_connections')}}">Audience/Visites utilisateurs</a>
+        <a href="{{path('claro_admin_analytics_connections')}}">{{ 'Audience/user visits' | trans({}, 'platform') }}</a>
     </li>
 
     <li{% if path('claro_admin_analytics_resources') == app.request.requesturi %} class="active"{% endif %}>
-        <a href="{{path('claro_admin_analytics_resources')}}">Contenu plateforme</a>
+        <a href="{{path('claro_admin_analytics_resources')}}">{{ 'analytics_resources' | trans({}, 'platform') }}</a>
     </li>
 
     <li{% if path('claro_admin_analytics_top') in app.request.requesturi %} class="active"{% endif %}>
-        <a href="{{path('claro_admin_analytics_top')}}">Top des activités</a>
+        <a href="{{path('claro_admin_analytics_top')}}">{{ 'analytics_top' | trans({}, 'platform') }}</a>
     </li>
 </ul>

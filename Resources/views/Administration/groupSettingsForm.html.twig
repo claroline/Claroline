@@ -1,4 +1,7 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'group_parameter' | trans({}, 'platform') }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([
@@ -22,6 +25,7 @@
         ])
     }}
 {% endblock %}
+
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'group_configuration'|trans({}, 'platform') }} ({{ group.getName() }})</h3>

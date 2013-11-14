@@ -62,6 +62,11 @@ class WorkspaceTagManager
         $this->pagerFactory = $pagerFactory;
     }
 
+    /**
+     * Persists and flush a tag.
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\WorkspaceTag $tag
+     */
     public function insert(WorkspaceTag $tag)
     {
         $this->om->persist($tag);

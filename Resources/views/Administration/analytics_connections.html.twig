@@ -1,4 +1,7 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'Audience/user visits' | trans({}, 'platform') }}{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     <style type="text/css">
@@ -29,6 +32,23 @@
     </style>
     <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
 {% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'admin_analytics'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'admin_analytics'|trans({}, 'platform') }}</h3>

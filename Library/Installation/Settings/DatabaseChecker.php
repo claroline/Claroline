@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Library\Installation\Settings;
 
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\DBALException;
 
 class DatabaseChecker
 {
@@ -57,6 +58,8 @@ class DatabaseChecker
 
             return false;
         } catch (\PDOException $ex) {
+            return false;
+        } catch (DBALException $ex) {
             return false;
         }
     }

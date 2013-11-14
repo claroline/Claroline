@@ -1,5 +1,7 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
+{% block title %}{{ 'register' | trans({}, 'platform') }}{% endblock %}
+
 {% block content %}
     {{ macros.flashBox() }}
     <div class="panel panel-default">

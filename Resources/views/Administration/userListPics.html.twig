@@ -1,32 +1,32 @@
- {% macro renderPager(search, pager) %}
-{% if search == '' %}
-{{ pagerfanta(pager,'twitter_bootstrap_translated',{'proximity' : 1,
-    'routeName': 'claro_admin_user_list_pics'
-    }
-    )
-}}
-{% else %}
-{{ pagerfanta(pager,'twitter_bootstrap_translated',
-    {
-        'proximity' : 1,
-        'routeName': 'claro_admin_user_list_search',
-        'routeParams': {'search': search}
-    })
-}}
-{% endif %}
+{% macro renderPager(search, pager) %}
+    {% if search == '' %}
+        {{ pagerfanta(pager,'twitter_bootstrap_translated',{'proximity' : 1,
+            'routeName': 'claro_admin_user_list_pics'
+            }
+            )
+        }}
+    {% else %}
+        {{ pagerfanta(pager,'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_admin_user_list_search',
+                'routeParams': {'search': search}
+            })
+        }}
+    {% endif %}
 {% endmacro %}
 
 {% macro displayControls(workspaceId) %}
-{% if app.user %}
-    <button class="btn btn-default action-button" data-action="remove">
-        <i class="icon-trash"></i>
-        {{ 'delete'|trans({}, 'platform') }}
-    </button>
-    <button class="btn btn-default action-button" data-action="password">
-        <i class="icon-trash"></i>
-        {{ 'reset_password'|trans({}, 'platform') }}
-    </button>
-{% endif %}
+    {% if app.user %}
+        <button class="btn btn-default action-button" data-action="remove">
+            <i class="icon-trash"></i>
+            {{ 'delete'|trans({}, 'platform') }}
+        </button>
+        <button class="btn btn-default action-button" data-action="password">
+            <i class="icon-trash"></i>
+            {{ 'reset_password'|trans({}, 'platform') }}
+        </button>
+    {% endif %}
 {% endmacro %}
 
 {% from _self import renderPager %}
@@ -34,25 +34,28 @@
 
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
+{% block title %}{{ parent() ~ ' - ' ~ 'users_list' | trans({}, 'platform') }}{% endblock %}
+
 {% block breadcrumb %}
-{{
-macros.breadcrumbs([
-{
-'icon': 'icon-cog',
-'name': 'administration'|trans({}, 'platform'),
-'href': path('claro_admin_index')
-},
-{
-'name': 'users_management'|trans({}, 'platform'),
-'href': path('claro_admin_users_management')
-},
-{
-'name':'users'|trans({}, 'platform'),
-'href':''
-}
-])
-}}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'users_management'|trans({}, 'platform'),
+                'href': path('claro_admin_users_management')
+            },
+            {
+                'name':'users'|trans({}, 'platform'),
+                'href':''
+            }
+        ])
+    }}
 {% endblock %}
+
 {% block section_content %}
 
 <div class="panel-heading">
@@ -114,7 +117,7 @@ macros.breadcrumbs([
                     <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}">
                         <i class="icon-user"> </i>
                     </a>
-                    <a href="{{ path('claro_profile_form_admin', {'user': user.getId()}) }}">
+                    <a href="{{ path('claro_profile_form', {'user': user.getId()}) }}">
                         <i class="icon-pencil"></i>
                     </a>
                     {% if is_granted('ROLE_ADMIN') %}
