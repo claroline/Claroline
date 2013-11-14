@@ -17,7 +17,7 @@ class ResetPasswordType extends AbstractType
                 'type' => 'password',
                 'required' => true,
                 'theme_options' => array('label_width' => 'col-md-12', 'control_width' => 'col-md-12')
-            )
+                )
         );
     }
 

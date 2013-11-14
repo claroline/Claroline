@@ -15,6 +15,8 @@ use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Authenticator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Manager\MailManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -33,6 +35,7 @@ class AuthenticationController
     private $translator;
     private $formFactory;
     private $authenticator;
+    private $router;
 
     /**
      * @DI\InjectParams({
@@ -43,7 +46,8 @@ class AuthenticationController
      *     "translator"     = @DI\Inject("translator"),
      *     "formFactory"    = @DI\Inject("claroline.form.factory"),
      *     "authenticator"  = @DI\Inject("claroline.authenticator"),
-     *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager")
+     *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager"),
+     *     "router"         = @DI\Inject("router")
      * })
      */
     public function __construct(
@@ -54,7 +58,8 @@ class AuthenticationController
         Translator $translator,
         FormFactory $formFactory,
         Authenticator $authenticator,
-        MailManager $mailManager
+        MailManager $mailManager,
+        RouterInterface $router
     )
     {
         $this->request = $request;
@@ -65,6 +70,7 @@ class AuthenticationController
         $this->formFactory = $formFactory;
         $this->authenticator = $authenticator;
         $this->mailManager = $mailManager;
+        $this->router = $router;
     }
 
     /**
@@ -251,11 +257,9 @@ class AuthenticationController
             $user->setPlainPassword($plainPassword);
             $this->om->persist($user);
             $this->om->flush();
+            $this->request->getSession()->getFlashBag()->add('warning', $this->translator->trans('password_ok', array(), 'platform'));
 
-            return array(
-                'message' => $this->translator->trans('password_ok', array(), 'platform'),
-                'user' => $user
-            );
+            return new RedirectResponse($this->router->generate('claro_security_login'));
         }
 
         return array(
