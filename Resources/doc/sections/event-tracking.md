@@ -58,7 +58,7 @@ Exhaustive core events list
 * `resource-update`
 * `resource-update_rename`
 
-Non-exhaustive plugins events list
+Not-exhaustive plugins events list
 --------------------------
 ### Dropzone events (plugin) ###
 * `resource-icap_dropzone-correction_end`
