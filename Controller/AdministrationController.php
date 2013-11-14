@@ -124,7 +124,7 @@ class AdministrationController extends Controller
     public function userCreationFormAction(User $currentUser)
     {
         $roles = $this->roleManager->getPlatformRoles($currentUser);
-        $form = $this->formFactory->create(FormFactory::TYPE_USER, array($roles));
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_FULL, array($roles));
         if ($this->mailManager->isMailerAvailable()) {
             return array('form_complete_user' => $form->createView());
         }
@@ -151,26 +151,13 @@ class AdministrationController extends Controller
     public function createUserAction(User $currentUser)
     {
         $roles = $this->roleManager->getPlatformRoles($currentUser);
-        $form = $this->formFactory->create(FormFactory::TYPE_USER, array($roles));
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_FULL, array($roles));
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $user = $form->getData();
             $newRoles = $form->get('platformRoles')->getData();
             $this->userManager->insertUserWithRoles($user, $newRoles);
-
-            if ($this->mailManager->isMailerAvailable()) {
-                $body = $this->translator->trans('admin_form_username', array(), 'platform').
-                    ': '.$user->getUsername().
-                    $this->translator->trans('admin_form_plainPassword_first', array(), 'platform').
-                    ': '.$user->getPlainPassword();
-
-                if ($this->mailManager->sendPlainPassword('noreply@claroline.net', $user->getMail(), $body)) {
-                    return $this->redirect($this->generateUrl('claro_admin_user_list'));
-                }
-
-                return $this->redirect($this->generateUrl('claro_admin_user_list'));
-            }
 
             return $this->redirect($this->generateUrl('claro_admin_user_list'));
         }
@@ -596,9 +583,10 @@ class AdministrationController extends Controller
     public function platformSettingsFormAction()
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
+        $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
         $form = $this->formFactory->create(
             FormFactory::TYPE_PLATFORM_PARAMETERS,
-            array($this->getThemes()),
+            array($this->getThemes(), $role),
             $platformConfig
         );
 
@@ -640,7 +628,8 @@ class AdministrationController extends Controller
                         'name' => $form['name']->getData(),
                         'support_email' => $form['support_email']->getData(),
                         'footer' => $form['footer']->getData(),
-                        'logo' => $this->request->get('selectlogo')
+                        'logo' => $this->request->get('selectlogo'),
+                        'default_role' => $form['defaultRole']->getData()->getName()
                     )
                 );
 

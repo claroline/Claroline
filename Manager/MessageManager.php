@@ -51,10 +51,12 @@ class MessageManager
      * @param \Claroline\CoreBundle\Entity\User $sender
      * @param \Claroline\CoreBundle\Entity\Message $message
      * @param \Claroline\CoreBundle\Entity\Message $parent
+     * @param boolean setAsSent
      *
      * @return \Claroline\CoreBundle\Entity\Message
      */
-    public function send(User $sender, Message $message, $parent = null)
+
+    public function send(User $sender, Message $message, $parent = null, $setAsSent = true)
     {
         if (substr($receiversString = $message->getTo(), -1, 1) === ';') {
             $receiversString = substr_replace($receiversString, '', -1);
@@ -88,11 +90,14 @@ class MessageManager
         }
 
         $this->om->persist($message);
-        $userMessage = $this->om->factory('Claroline\CoreBundle\Entity\UserMessage');
-        $userMessage->setIsSent(true);
-        $userMessage->setUser($sender);
-        $userMessage->setMessage($message);
-        $this->om->persist($userMessage);
+
+        if ($setAsSent) {
+            $userMessage = $this->om->factory('Claroline\CoreBundle\Entity\UserMessage');
+            $userMessage->setIsSent(true);
+            $userMessage->setUser($sender);
+            $userMessage->setMessage($message);
+            $this->om->persist($userMessage);
+        }
 
         foreach ($userReceivers as $userReceiver) {
             $userMessage = $this->om->factory('Claroline\CoreBundle\Entity\UserMessage');
@@ -265,10 +270,18 @@ class MessageManager
         return implode(';', $usernames);
     }
 
+<<<<<<< HEAD
     /**
      * @param \Claroline\CoreBundle\Entity\Message[] $userMessages
      * @param string $flag
      */
+=======
+    public function getUserMessagesBy(array $array)
+    {
+        return $this->userMessageRepo->findBy($array);
+    }
+
+>>>>>>> 36e603310c6339d79d42ccffb94ed03564360fcc
     private function markMessages(array $userMessages, $flag)
     {
         $method = 'markAs' . $flag;

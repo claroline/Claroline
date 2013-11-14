@@ -105,6 +105,7 @@ create_group: 'Créer un groupe'
 create_new_admin_tag: 'Créer un nouveau Tag administrateur'
 create_new_home_tab: 'Créer un nouvel onglet'
 create_new_tag: 'Créer un nouveau Tag'
+create_new_user_account : 'Creation de votre compte ClarolineConnect'
 create_subcategory: 'Créer une sous-catégorie'
 create_user: 'Créer un utilisateur'
 create_widget_instance: 'Créer un nouveau Widget'
@@ -335,8 +336,9 @@ permissions: Permissions
 personal_workspace: 'Espace personnel'
 phone: Téléphone
 platform_parameters: 'Paramètres de la plateforme'
+platform_parameters_form_defaultRole: 'Rôle par défaut'
 platform_parameters_form_footer: 'Pied de page'
-platform_parameters_form_icon: 'Icon de la plateforme'
+platform_parameters_form_icon: 'Icône de la plateforme'
 platform_parameters_form_localLanguage: Langue
 platform_parameters_form_name: 'Nom de la plateforme'
 platform_parameters_form_selfRegistration: Auto-inscription
@@ -358,6 +360,8 @@ profile_form_phone: Téléphone
 profile_form_pictureFile : 'Photo de profil'
 profile_form_plainPassword_first: 'Mot de passe'
 profile_form_plainPassword_second: Vérification
+profile_form_creation_plainPassword_first: 'Mot de passe'
+profile_form_creation_plainPassword_second: Vérification
 profile_form_platformRoles: Rôles
 profile_form_userName: 'Nom d''utilisateur'
 profile_form_username: 'Nom d''utilisateur'
@@ -444,6 +448,8 @@ select_workspaces_for_registration: 'Choisissez les espaces d''activités pour l
 selected_workspaces_for_registration: 'Espaces d''activités sélectionnés pour l''inscription'
 selected_workspaces_will_be_put_in_it: 'Les espaces d''activités sélectionnés y seront disponibles'
 send_mail: 'Envoyer un mail'
+send_mail_form_object: Objet
+send_mail_form_content: Message
 send_message: 'Envoyer un message'
 session_id: 'Identifiant de session'
 settings: Paramètres

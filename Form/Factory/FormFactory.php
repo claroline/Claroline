@@ -35,13 +35,14 @@ class FormFactory
     const TYPE_RESOURCE_PROPERTIES = 'resource_properties';
     const TYPE_WORKSPACE_ROLE = 'workspace_role';
     const TYPE_ROLE_TRANSLATION = 'workspace_role_translation';
-    const TYPE_USER_EMAIL = 'email';
+    const TYPE_USER_EMAIL = 'user_email';
     const TYPE_USER_RESET_PWD = 'user_reset_pwd';
     const TYPE_SIMPLE_TEXT = 'simple_text';
     const TYPE_HOME_TAB = 'home_tab';
     const TYPE_WIDGET_CONFIG = 'widget_config';
     const TYPE_WIDGET_INSTANCE = 'widget_instance';
     const TYPE_RESOURCE_TEXT = 'resource_text';
+    const TYPE_USER_FULL = 'user_full';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -135,7 +136,8 @@ class FormFactory
             'formType' => 'Claroline\CoreBundle\Form\EmailType'
         ),
         self::TYPE_USER_RESET_PWD => array(
-            'formType' => 'Claroline\CoreBundle\Form\ResetPasswordType'
+            'formType' => 'Claroline\CoreBundle\Form\ResetPasswordType',
+            'entity' => 'Claroline\CoreBundle\Entity\User'
         ),
         self::TYPE_SIMPLE_TEXT => array(
             'formType' => 'Claroline\CoreBundle\Form\SimpleTextType'
@@ -158,6 +160,10 @@ class FormFactory
         ),
         self::TYPE_EMAIL => array(
             'formType' => 'Claroline\CoreBundle\Form\SendMailType',
+        ),
+        self::TYPE_USER_FULL => array(
+            'formType' => 'Claroline\CoreBundle\Form\ProfileCreationType',
+            'entity' => 'Claroline\CoreBundle\Entity\User'
         )
     );
 

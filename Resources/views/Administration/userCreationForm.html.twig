@@ -41,3 +41,8 @@
         </div>
     </form>
 {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+    {{ tinymce_init() }}
+{% endblock %}
