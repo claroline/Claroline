@@ -230,7 +230,7 @@ class AdministrationController extends Controller
      * @EXT\Method("GET")
      * @EXT\Route(
      *     "users/page/{page}/pic/search/{search}",
-     *     name="claro_admin_user_list_search",
+     *     name="claro_admin_user_list_search_pics",
      *     defaults={"page"=1},
      *     options = {"expose"=true}
      * )
