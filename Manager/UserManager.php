@@ -86,7 +86,6 @@ class UserManager
         $this->setPersonalWorkspace($user);
         $this->toolManager->addRequiredToolsToUser($user);
         $this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
-        $this->roleManager->setRoleToRoleSubject($user, $this->ch->getParameter('default_role'));
         $this->om->persist($user);
         $this->ed->dispatch('log', 'Log\LogUserCreate', array($user));
         $this->om->endFlushSuite();

@@ -360,6 +360,8 @@ profile_form_phone: Téléphone
 profile_form_pictureFile : 'Photo de profil'
 profile_form_plainPassword_first: 'Mot de passe'
 profile_form_plainPassword_second: Vérification
+profile_form_creation_plainPassword_first: 'Mot de passe'
+profile_form_creation_plainPassword_second: Vérification
 profile_form_platformRoles: Rôles
 profile_form_userName: 'Nom d''utilisateur'
 profile_form_username: 'Nom d''utilisateur'

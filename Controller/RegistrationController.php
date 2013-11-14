@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\BaseProfileType;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -30,11 +31,13 @@ class RegistrationController extends Controller
     private $userManager;
     private $configHandler;
     private $validator;
+    private $roleManager;
 
     /**
      * @DI\InjectParams({
      *     "request"       = @DI\Inject("request"),
      *     "userManager"   = @DI\Inject("claroline.manager.user_manager"),
+     *     "roleManager"   = @DI\Inject("claroline.manager.role_manager"),
      *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "validator"     = @DI\Inject("validator")
      * })
@@ -43,13 +46,15 @@ class RegistrationController extends Controller
         Request $request,
         UserManager $userManager,
         PlatformConfigurationHandler $configHandler,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        RoleManager $roleManager
     )
     {
         $this->request = $request;
         $this->userManager = $userManager;
         $this->configHandler = $configHandler;
         $this->validator = $validator;
+        $this->roleManager = $roleManager;
     }
     /**
      * @Route(
@@ -94,6 +99,7 @@ class RegistrationController extends Controller
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
+            $this->roleManager->setRoleToRoleSubject($user, $this->configHandler->getParameter('default_role'));
             $this->get('claroline.manager.user_manager')->createUserWithRole(
                 $user,
                 PlatformRoles::USER

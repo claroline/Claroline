@@ -124,7 +124,7 @@ class AdministrationController extends Controller
     public function userCreationFormAction(User $currentUser)
     {
         $roles = $this->roleManager->getPlatformRoles($currentUser);
-        $form = $this->formFactory->create(FormFactory::TYPE_USER, array($roles, true));
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_FULL, array($roles));
         if ($this->mailManager->isMailerAvailable()) {
             return array('form_complete_user' => $form->createView());
         }
@@ -151,7 +151,7 @@ class AdministrationController extends Controller
     public function createUserAction(User $currentUser)
     {
         $roles = $this->roleManager->getPlatformRoles($currentUser);
-        $form = $this->formFactory->create(FormFactory::TYPE_USER, array($roles, true));
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_FULL, array($roles));
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
