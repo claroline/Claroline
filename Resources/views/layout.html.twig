@@ -315,12 +315,27 @@
     {% endjavascripts %}
     <script type='text/javascript'src='{{ asset('bundles/icapblog/js/banner.js') }}'></script>
     {% endif %}
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'agenda' }) }}"></script>
     <script type="text/javascript">
         (function($) {
             $(function() {
+                function t(key) {
+                    return Translator.get('agenda' + ':' + key);
+                }
+
                 $('#calendar').fullCalendar({
-                    editable: false,
-                    events: "{{ path('icap_blog_calendar_datas', {'blogId': _resource.id}) }}"
+                    editable:        false,
+                    events:          "{{ path('icap_blog_calendar_datas', {'blogId': _resource.id}) }}",
+                    buttonText: {
+                        today: t('today')
+                    },
+                    monthNames: [t('january'), t('february'), t('mars'), t('april'), t('may'), t('june'), t('july'),
+                        t('august'), t('september'), t('october'), t('november'), t('december')],
+                    monthNamesShort: [t('jan'), t('feb'), t('mars'), t('apr'), t('may'), t('ju'), t('jul'), t('aug'),
+                        t('sept'), t('nov'), t('dec')],
+                    dayNames: [ t('sunday'),t('monday'), t('tuesday'), t('wednesday'), t('thursday'), t('friday'), t('saturday')],
+                    dayNamesShort: [ t('sun'), t('mon'), t('tue'), t('wed'), t('thu'), t('fri'), t('sat')],
+                    today: 'pouet'
                 });
 
                 $('.delete').confirmModal();
