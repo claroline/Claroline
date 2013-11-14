@@ -270,18 +270,15 @@ class MessageManager
         return implode(';', $usernames);
     }
 
-<<<<<<< HEAD
-    /**
-     * @param \Claroline\CoreBundle\Entity\Message[] $userMessages
-     * @param string $flag
-     */
-=======
     public function getUserMessagesBy(array $array)
     {
         return $this->userMessageRepo->findBy($array);
     }
-
->>>>>>> 36e603310c6339d79d42ccffb94ed03564360fcc
+    
+    /**
+     * @param \Claroline\CoreBundle\Entity\Message[] $userMessages
+     * @param string $flag
+     */
     private function markMessages(array $userMessages, $flag)
     {
         $method = 'markAs' . $flag;
