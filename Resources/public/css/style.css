@@ -54,6 +54,9 @@ article footer .tags {
 article .highlight {
   background-color: #DFFF00;
 }
+aside .calendar .fc-header-title h2 {
+  font-size: 25px;
+}
 .user_picture {
   width: 24px;
 }
