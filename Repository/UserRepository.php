@@ -196,7 +196,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @return User[]|Query
      */
-    public function findAll($executeQuery = true)
+    public function findAll($executeQuery = true, $orderedBy = 'id')
     {
         if (!$executeQuery) {
             $dql = '
@@ -204,10 +204,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 JOIN u.roles r WITH r IN (
                     SELECT pr
                     FROM Claroline\CoreBundle\Entity\Role pr
-                    WHERE pr.type = ' . Role::PLATFORM_ROLE . '
+                    WHERE pr.type = ' . Role::PLATFORM_ROLE . "
                 )
                 LEFT JOIN u.personalWorkspace pws
-            ';
+                ORDER BY u.{$orderedBy}
+            ";
             // the join on role is required because this method is only called in the administration
             // and we only want the platform roles of a user.
             return $this->_em->createQuery($dql);
@@ -253,7 +254,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @return User[]|Query
      */
-    public function findByName($search, $executeQuery = true)
+    public function findByName($search, $executeQuery = true, $orderedBy = 'id')
     {
         $upperSearch = strtoupper($search);
         $upperSearch = trim($upperSearch);
@@ -269,6 +270,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             OR UPPER(u.mail) LIKE :search
             OR CONCAT(UPPER(u.firstName), CONCAT(' ', UPPER(u.lastName))) LIKE :search
             OR CONCAT(UPPER(u.lastName), CONCAT(' ', UPPER(u.firstName))) LIKE :search
+            ORDER BY u.{$orderedBy}
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('search', "%{$upperSearch}%");

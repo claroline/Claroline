@@ -362,9 +362,9 @@ class UserManager
      *
      * @return \Pagerfanta\Pagerfanta;
      */
-    public function getUsersByName($search, $page, $max = 20)
+    public function getUsersByName($search, $page, $max = 20, $orderedBy = 'id')
     {
-        $query = $this->userRepo->findByName($search, false);
+        $query = $this->userRepo->findByName($search, false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
@@ -690,5 +690,15 @@ class UserManager
             $user->setPicture(sha1($user->getPictureFile()->getClientOriginalName()).'.'.$user->getPictureFile()->guessExtension());
             $user->getPictureFile()->move(__DIR__.'/../../../../../../web/uploads/pictures', $user->getPicture());
         }
+    }
+
+    public function getOrderableFields()
+    {
+        return array('id', 'username', 'lastName', 'firstName', 'mail');
+    }
+
+    public function isFieldOrderable($field)
+    {
+        return in_array($field, $this->getOrderableFields()) ? true: false;
     }
 }

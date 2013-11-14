@@ -194,16 +194,16 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "users/page/{page}/max/{max}",
+     *     "users/page/{page}/max/{max}/order/{order}",
      *     name="claro_admin_user_list",
-     *     defaults={"page"=1, "search"="", "max"=50},
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "users/page/{page}/search/{search}/max/{max}",
+     *     "users/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_admin_user_list_search",
-     *     defaults={"page"=1, "max"=50},
+     *     defaults={"page"=1, "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -211,13 +211,17 @@ class AdministrationController extends Controller
      *
      * Displays the platform user list.
      */
-    public function userListAction($page, $search, $max)
+    public function userListAction($page, $search, $max, $order)
     {
-        $pager = $search === '' ?
-            $this->userManager->getAllUsers($page, $max) :
-            $this->userManager->getUsersByName($search, $page, $max);
+        if (!$this->userManager->isFieldOrderable($order)) {
+            return new Response('The field ' . $order . ' does not exists', 422);
+        }
 
-        return array('pager' => $pager, 'search' => $search, 'max' => $max);
+        $pager = $search === '' ?
+            $this->userManager->getAllUsers($page, $max, $order) :
+            $this->userManager->getUsersByName($search, $page, $max, $order);
+
+        return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order);
     }
 
     /**
