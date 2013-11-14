@@ -8,16 +8,16 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ResetPasswordType extends AbstractType
 {
-    private $userId;
-
-    public function __construct($userId = null)
-    {
-        $this->userId = $userId;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('plainPassword', 'repeated', array('type' => 'password', 'required' => true));
+        $builder->add(
+            'plainPassword',
+            'repeated',
+            array(
+                'type' => 'password',
+                'required' => true
+            )
+        );
     }
 
     public function getName()
@@ -27,15 +27,9 @@ class ResetPasswordType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(
-            array(
-                'translation_domain' => 'platform'
-            )
-        );
-    }
-
-    public function getUserId()
-    {
-        return $this->userId;
+        $resolver->setDefaults(array(
+            'data_class' => 'Claroline\CoreBundle\Entity\User',
+            'translation_domain' => 'platform'
+        ));
     }
 }

@@ -15,6 +15,8 @@ use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Authenticator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Manager\MailManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -33,6 +35,7 @@ class AuthenticationController
     private $translator;
     private $formFactory;
     private $authenticator;
+    private $router;
 
     /**
      * @DI\InjectParams({
@@ -43,7 +46,8 @@ class AuthenticationController
      *     "translator"     = @DI\Inject("translator"),
      *     "formFactory"    = @DI\Inject("claroline.form.factory"),
      *     "authenticator"  = @DI\Inject("claroline.authenticator"),
-     *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager")
+     *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager"),
+     *     "router"         = @DI\Inject("router")
      * })
      */
     public function __construct(
@@ -54,7 +58,8 @@ class AuthenticationController
         Translator $translator,
         FormFactory $formFactory,
         Authenticator $authenticator,
-        MailManager $mailManager
+        MailManager $mailManager,
+        RouterInterface $router
     )
     {
         $this->request = $request;
@@ -65,6 +70,7 @@ class AuthenticationController
         $this->formFactory = $formFactory;
         $this->authenticator = $authenticator;
         $this->mailManager = $mailManager;
+        $this->router = $router;
     }
 
     /**
@@ -215,13 +221,13 @@ class AuthenticationController
             );
         }
 
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array($user->getId()), null);
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array(), $user);
         $currentTime = time();
 
         // the link is valid for 24h
         if ($currentTime - (3600 * 24) < $user->getHashTime()) {
             return array(
-                'id' => $user->getId(),
+                'hash' => $hash,
                 'form' => $form->createView()
             );
         }
@@ -231,7 +237,7 @@ class AuthenticationController
 
     /**
      * @Route(
-     *     "/validatepassword",
+     *     "/validatepassword/{hash}",
      *     name="claro_security_new_password",
      *     options={"expose"=true}
      * )
@@ -239,28 +245,26 @@ class AuthenticationController
      *
      * @Template("ClarolineCoreBundle:Authentication:resetPassword.html.twig")
      */
-    public function newPasswordAction()
+    public function newPasswordAction($hash)
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array(), null);
+        $user = $this->userManager->getResetPasswordHash($hash);
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array(), $user);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $user = $form->getData();
-            $plainPassword = $user['plainPassword'];
-            $id = $user['id'];
-            $user = $this->userManager->getUserById($id);
+            $data = $form->getData();
+            $plainPassword = $data->getPlainPassword();
             $user->setPlainPassword($plainPassword);
             $this->om->persist($user);
             $this->om->flush();
+            $this->request->getSession()->getFlashBag()->add('warning', $this->translator->trans('password_ok', array(), 'platform'));
 
-            return array(
-                'message' => $this->translator->trans('password_ok', array(), 'platform'),
-                'user' => $user
-            );
+            return new RedirectResponse($this->router->generate('claro_security_login'));
         }
 
         return array(
-            'error' => $this->translator->trans('password_missmatch', array(), 'platform')
+            'hash' => $hash,
+            'form' => $form->createView()
         );
     }
 

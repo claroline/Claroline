@@ -136,7 +136,8 @@ class FormFactory
             'formType' => 'Claroline\CoreBundle\Form\EmailType'
         ),
         self::TYPE_USER_RESET_PWD => array(
-            'formType' => 'Claroline\CoreBundle\Form\ResetPasswordType'
+            'formType' => 'Claroline\CoreBundle\Form\ResetPasswordType',
+            'entity' => 'Claroline\CoreBundle\Entity\User'
         ),
         self::TYPE_SIMPLE_TEXT => array(
             'formType' => 'Claroline\CoreBundle\Form\SimpleTextType'
