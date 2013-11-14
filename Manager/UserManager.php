@@ -375,12 +375,13 @@ class UserManager
      * @param \Claroline\CoreBundle\Entity\Group $group
      * @param integer $page
      * @param integer $max
+     * @param string  $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta;
      */
-    public function getUsersByGroup(Group $group, $page, $max = 20)
+    public function getUsersByGroup(Group $group, $page, $max = 20, $orderedBy = 'id')
     {
-        $query = $this->userRepo->findByGroup($group, false);
+        $query = $this->userRepo->findByGroup($group, false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
@@ -401,12 +402,13 @@ class UserManager
      * @param \Claroline\CoreBundle\Entity\Group $group
      * @param integer $page
      * @param integer $max
+     * @param string  $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getUsersByNameAndGroup($search, Group $group, $page, $max = 20)
+    public function getUsersByNameAndGroup($search, Group $group, $page, $max = 20, $orderedBy = 'id')
     {
-        $query = $this->userRepo->findByNameAndGroup($search, $group, false);
+        $query = $this->userRepo->findByNameAndGroup($search, $group, false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }

@@ -282,18 +282,18 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/group/{groupId}/users/page/{page}/max/{max}",
+     *     "/group/{groupId}/users/page/{page}/max/{max}/order/{order}",
      *     name="claro_admin_user_of_group_list",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "search"="", "max"=50}
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"}
      * )
      * @EXT\Method("GET")
      *
      * @EXT\Route(
-     *     "/group/{groupId}/users/page/{page}/search/{search}/max/{max}",
+     *     "/group/{groupId}/users/page/{page}/search/{search}/max/{max}/{order}",
      *     name="claro_admin_user_of_group_list_search",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "max"=50}
+     *     defaults={"page"=1, "max"=50, "order"="id"}
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
@@ -305,13 +305,17 @@ class AdministrationController extends Controller
      *
      * Returns the users of a group.
      */
-    public function usersOfGroupListAction(Group $group, $page, $search, $max)
+    public function usersOfGroupListAction(Group $group, $page, $search, $max, $order)
     {
-        $pager = $search === '' ?
-            $this->userManager->getUsersByGroup($group, $page, $max) :
-            $this->userManager->getUsersByNameAndGroup($search, $group, $page, $max);
+        if (!$this->userManager->isFieldOrderable($order)) {
+            return new Response('The field ' . $order . ' does not exists', 422);
+        }
 
-        return array('pager' => $pager, 'search' => $search, 'group' => $group, 'max' => $max);
+        $pager = $search === '' ?
+            $this->userManager->getUsersByGroup($group, $page, $max, $order) :
+            $this->userManager->getUsersByNameAndGroup($search, $group, $page, $max, $order);
+
+        return array('pager' => $pager, 'search' => $search, 'group' => $group, 'max' => $max, 'order' => $order);
     }
 
     /**
