@@ -392,7 +392,7 @@ class Post extends Statusable
      */
     public function removeTag(Tag $tag)
     {
-        $this->tags->remove($tag);
+        $this->tags->removeElement($tag);
 
         return $this;
     }
