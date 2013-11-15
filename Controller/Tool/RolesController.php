@@ -478,38 +478,47 @@ class RolesController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/groups/{group}/page/{page}/search/{search}",
+     *     "/{workspace}/groups/{group}/page/{page}/search/{search}/{max}/order/{order}",
      *     name="claro_workspace_users_of_group_search",
-     *     defaults={"page"=1},
+     *     defaults={"page"=1, "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
      * @EXT\Route(
-     *     "/{workspace}/groups/{group}/page/{page}",
+     *     "/{workspace}/groups/{group}/page/{page}/{max}/order/{order}",
      *     name="claro_workspace_users_of_group",
-     *     defaults={"page"=1, "search"=""},
+     *     defaults={"page"=1, "max"=50, "search"="", "order"="id"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:usersOfGroup.html.twig")
+     * @EXT\ParamConverter(
+     *     "order",
+     *     class="Claroline\CoreBundle\Entity\User",
+     *     options={"orderable"=true}
+     * )
      */
     public function usersOfGroupAction(
         AbstractWorkspace $workspace,
         Group $group,
         $page,
-        $search
+        $search,
+        $max,
+        $order
     )
     {
         $this->checkAccess($workspace);
 
         $pager = ($search === '') ?
-            $this->userManager->getUsersByGroup($group, $page) :
-            $this->userManager->getUsersByNameAndGroup($search, $group, $page);
+            $this->userManager->getUsersByGroup($group, $page, $max, $order) :
+            $this->userManager->getUsersByNameAndGroup($search, $group, $page, $max, $order);
 
         return array(
             'workspace' => $workspace,
             'pager' => $pager,
             'search' => $search,
-            'group' => $group
+            'group' => $group,
+            'max' => $max,
+            'order' => $order
         );
     }
 
