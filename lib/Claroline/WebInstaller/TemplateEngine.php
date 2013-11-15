@@ -31,7 +31,8 @@ class TemplateEngine
     public function render($template, array $variables = array())
     {
         $dir = $this->templateDirectory;
-        $render = function ($template, array $variables = array()) use ($dir, &$render) {
+        $helpers = $this->helpers;
+        $render = function ($template, array $variables = array()) use ($dir, $helpers, &$render) {
             $var = function ($name, $default = null) use ($variables) {
                 if (array_key_exists($name, $variables)) {
                     return $variables[$name];
@@ -44,7 +45,7 @@ class TemplateEngine
                 throw new \Exception("Unknown variable '{$name}'");
             };
 
-            foreach ($this->helpers as $name => $helper) {
+            foreach ($helpers as $name => $helper) {
                 $$name = $helper;
             }
 
