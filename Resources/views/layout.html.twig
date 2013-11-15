@@ -207,7 +207,7 @@
                     <div class="panel-body">
                         <ul class="list-unstyled list-inline">
                             {% for tag in blog_tags(_resource) %}
-                            <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': tag}) }}" title="{{ tag }}">{{ tag }}</a></li>
+                            <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': tag.slug}) }}" title="{{ tag }}">{{ tag }}</a></li>
                             {% else %}
                             <li>{{ 'no_tags'|trans({}, 'icap_blog') }}</li>
                             {% endfor %}

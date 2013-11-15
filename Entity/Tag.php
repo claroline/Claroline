@@ -29,8 +29,8 @@ class Tag
     protected $name;
 
     /**
-     * @Gedmo\Slug(fields={"title"}, unique=true)
-     * @ORM\Column(length=128, unique=true)
+     * @Gedmo\Slug(fields={"name"}, unique=true)
+     * @ORM\Column(length=128, unique=true, nullable=true)
      */
     protected $slug;
 
