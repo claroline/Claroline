@@ -66,7 +66,7 @@ class WorkspaceAgendaController extends Controller
         $this->checkUserIsAllowed('agenda', $workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
         $form->handleRequest($this->request);
-
+        
         if ($form->isValid()) {
             $event = $form->getData();
             // the end date has to be bigger
@@ -74,7 +74,6 @@ class WorkspaceAgendaController extends Controller
                 $event->setWorkspace($workspace);
                 $event->setUser($this->security->getToken()->getUser());
                 $this->om->persist($event);
-
                 if ($event->getRecurring() > 0) {                    
                     $this->calculRecurrency($event);
                 }
@@ -207,7 +206,6 @@ class WorkspaceAgendaController extends Controller
         $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')
             ->findbyWorkspaceId($workspace->getId(), false);
         $data = array();
-
         foreach ($listEvents as $key => $object) {
             $data[$key]['id'] = $object->getId();
             $data[$key]['title'] = $object->getTitle();
@@ -239,10 +237,10 @@ class WorkspaceAgendaController extends Controller
         $event = $repository->find($postData['id']);
         $this->checkUserIsAllowed('agenda', $event->getWorkspace());
         // timestamp 1h = 3600
-        $newStartDate = $event->getStart()->getTimestamp() + ((3600 * 24) * $postData['dayDelta']);
+        $newStartDate = strtotime(''.$postData['dayDelta'].' day '.$postData['minuteDelta'].' minute', $event->getStart()->getTimestamp());
         $dateStart = new \DateTime(date('d-m-Y H:i', $newStartDate));
         $event->setStart($dateStart);
-        $newEndDate = $event->getEnd()->getTimestamp() + ((3600 * 24) * $postData['dayDelta']);
+        $newEndDate = strtotime(''.$postData['dayDelta'].' day '.$postData['minuteDelta'].' minute', $event->getEnd()->getTimestamp());
         $dateEnd = new \DateTime(date('d-m-Y H:i', $newEndDate));
         $event->setStart($dateStart);
         $event->setEnd($dateEnd);

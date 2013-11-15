@@ -67,8 +67,8 @@ class Event
     private $priority;
 
     private $recurring;
-    private $StartHours;
-    private $EndHours;
+    private $startHours;
+    private $endHours;
 
     public function getId()
     {
@@ -91,7 +91,7 @@ class Event
             return $this->start;
 
         } else {
-            $date = date('d/m/Y H:i', $this->start);
+            $date = date('d-m-Y H:i', $this->start);
 
             return (new \Datetime($date));
         }
@@ -100,10 +100,12 @@ class Event
     public function setStart($start)
     {
         if (!is_null($start)) {
+            
             if ($start instanceof \Datetime) {
                 $this->start = $start->getTimestamp();
             } else {
                 $date  = new \Datetime($start);
+                
                 $this->start = $date->getTimestamp();
             }
         }
@@ -115,7 +117,7 @@ class Event
             return $this->end;
 
         } else {
-            $date = date('d/m/Y H:i', $this->end);
+            $date = date('d-m-Y H:i', $this->end);
 
             return (new \Datetime($date));
         }
@@ -191,19 +193,19 @@ class Event
     }
     
     public function getStartHours() {
-        return $this->StartHours;
+        return $this->startHours;
     }
 
-    public function setStartHours($StartHours) {
-        $this->StartHours = $StartHours;
+    public function setStartHours($startHours) {
+        $this->startHours = $startHours;
     }
 
     public function getEndHours() {
-        return $this->EndHours;
+        return $this->endHours;
     }
 
-    public function setEndHours($EndHours) {
-        $this->EndHours = $EndHours;
+    public function setEndHours($endHours) {
+        $this->endHours = $endHours;
     }
 
 

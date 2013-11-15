@@ -77,8 +77,8 @@
         $('#save').click(function () {
             if ($('#agenda_form_title').val() !== '') {
                 $('#save').attr('disabled', 'disabled');
-                $('#agenda_form_start').val($('#agenda_form_start').val()+' '+$('#agenda_form_StartHours').val());
-                $('#agenda_form_end').val($('#agenda_form_end').val()+' '+$('#agenda_form_EndHours').val());
+                $('#agenda_form_start').val($('#agenda_form_start').val()+' '+$('#agenda_form_startHours').val());
+                $('#agenda_form_end').val($('#agenda_form_end').val()+' '+$('#agenda_form_endHours').val());
                 var data = new FormData($('#myForm')[0]);
                 data.append('agenda_form[description]',$('#agenda_form_description').val());
                 var url = $('#myForm').attr('action');
@@ -153,8 +153,8 @@
                 compare = 1;
            } 
             if( compare > 0 ) {
-                $('#agenda_form_start').val($('#agenda_form_start').val()+' '+$('#agenda_form_StartHours').val());
-                $('#agenda_form_end').val($('#agenda_form_end').val()+' '+$('#agenda_form_EndHours').val());
+                $('#agenda_form_start').val($('#agenda_form_start').val()+' '+$('#agenda_form_startHours').val());
+                $('#agenda_form_end').val($('#agenda_form_end').val()+' '+$('#agenda_form_endHours').val());
                 $('#updateBtn').attr('disabled', 'disabled');
                 var data = new FormData($('#myForm')[0]);
                 data.append('id', id);
@@ -292,10 +292,10 @@
             $('#agenda_form_priority option[value=' + calEvent.color + ']').attr('selected', 'selected');
             var pickedDate = new Date(calEvent.start);
             $('#agenda_form_start').val($.fullCalendar.formatDate( pickedDate,'dd/MM/yyyy'));
-            $('#agenda_form_StartHours').val($.fullCalendar.formatDate( pickedDate,'HH:mm'));
+            $('#agenda_form_startHours').val($.fullCalendar.formatDate( pickedDate,'HH:mm'));
             if (calEvent.end === null){
                 $('#agenda_form_end').val($.fullCalendar.formatDate( pickedDate,'dd/MM/yyyy'));
-                $('#agenda_form_EndHours').val($.fullCalendar.formatDate( pickedDate,'HH:mm'));
+                $('#agenda_form_endHours').val($.fullCalendar.formatDate( pickedDate,'HH:mm'));
             }
             else{
                 var Enddate = new Date(calEvent.end);
@@ -390,9 +390,7 @@
             dayClick: dayClickFunction,
             eventClick:  function (event) {
                 id = event.id;
-                console.debug(event.end);
                 modifiedEvent(event ,context);
-                //$('#calendar').fullCalendar( 'updateEvent', event );
             },
             eventRender: function (event) {
                 if (event.visible === false)
@@ -400,7 +398,7 @@
                     return false;
                 }
             },
-            eventResize: function (event, dayDelta, minuteDelta, revertFunc) {
+            eventResize: function (event, dayDelta, minuteDelta) {
                 $.ajax({
                     'url': $('a#move').attr('href'),
                     'type': 'POST',
@@ -426,12 +424,7 @@
                         }
                     }
                 });
-                if (!confirm('is this okay?')) {
-                    revertFunc();
-                }
-            },
-            windowResize: function(view) {
-                console.debug(view)            }
+            }
         });
     };
 }) ();

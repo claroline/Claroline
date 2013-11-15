@@ -29,14 +29,13 @@ class AgendaType extends AbstractType
                 'datepicker',
                 array(
                     'required'      => false,
-                    'component'     => true,
-                    'autoclose'     => true,
-                    'language'      => 'fr',
-                    'format'        => 'dd/MM/yyyy'
+                    'widget'        => 'single_text',
+                    'format'        => 'dd-MM-yyyy HH:mm',
+                    'attr'          => $attr,
                )
             )
             ->add(
-                'StartHours',
+                'startHours',
                 'text',
                 array(
                     'attr' => array(
@@ -49,13 +48,13 @@ class AgendaType extends AbstractType
                 'datepicker',
                 array(
                     'required'      => false,
-                    'component'     => true,
-                    'autoclose'     => true,
-                    'format'        => 'dd/MM/yyyy'
+                    'widget'        => 'single_text',
+                    'format'        => 'dd-MM-yyyy HH:mm',
+                    'attr'          => $attr,
                )
             )
             ->add(
-                'EndHours',
+                'endHours',
                 'text',
                 array(
                     'attr' => array(
