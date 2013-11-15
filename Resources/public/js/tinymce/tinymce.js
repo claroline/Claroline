@@ -5,7 +5,6 @@
     var home = window.Claroline.Home;
     var language = home.locale.trim();
     var contentCSS = home.asset + 'bundles/clarolinecore/css/tinymce/tinymce.css';
-    var className = 'claroline-tiny-mce';
 
     var configTinyMCE = {
         //document_base_url: home.path,
@@ -34,11 +33,11 @@
         },
         setup: function (editor) {
             editor.on('change', function () {
-                tinymce.activeEditor.getElement().value = tinymce.activeEditor.getContent();
+                editor.getElement().value = editor.getContent();
             });
             editor.on('LoadContent', function () {
                 setTimeout(function () {
-                    tinymce.activeEditor.fire('change');
+                    editor.fire('change');
                 }, 200);
             });
             if ($(editor.getElement()).data('resource-picker') !== 'off') {
@@ -48,14 +47,21 @@
                     'tooltip': 'Resources'
                 });
             }
+            $('body').bind('ajaxComplete', function () {
+                setTimeout(function () {
+                    if (editor.getElement().value === '') {
+                        editor.setContent('');
+                    }
+                }, 200);
+            });
         }
     };
 
     function tinymceInit()
     {
-        $('textarea.' + className).each(function () {
+        $('textarea.claroline-tiny-mce:not(.tiny-mce-done)').each(function () {
             $(this).tinymce(configTinyMCE);
-            $(this).removeClass(className);
+            $(this).addClass('tiny-mce-done');
         });
     }
 

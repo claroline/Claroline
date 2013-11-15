@@ -145,12 +145,6 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts debug=false vars=["locale"]
-    "@ClarolineCoreBundle/Resources/views/Tool/workspace/roles/roleUserLabel.html.twigjs"
-    "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
-    filter="twig_js"
-    %}<script language="javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
     <script>
         $('.popover-block').popover();
         $('.remove-role-button').live('click', function (event) {

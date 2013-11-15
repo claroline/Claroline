@@ -166,8 +166,6 @@
                             title.value = '';
                             text.value = '';
                             home.resize(text);
-                            $(creatorElement).find('.generated').html('');
-
                         } else if (data === 'true') {
 
                             contentPath = 'content/' + id + '/' + type;
