@@ -9,7 +9,7 @@
         "sensio/distribution-bundle": "~2.3.4",
         "claroline/bundle-recorder": ">=2.0.3,<3.0",
         "claroline/core-bundle": "~2.1",
-        "claroline/web-installer": ">=1.0.4,<2.0",
+        "claroline/web-installer": ">=1.0.5,<2.0",
         "claroline/activity-tool-bundle": ">=1.0.1,<2.0",
         "claroline/announcement-bundle": ">=2.0.1,<3.0",
         "claroline/forum-bundle": ">=2.1.0,<3.0",
