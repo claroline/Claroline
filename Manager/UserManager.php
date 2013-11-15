@@ -331,6 +331,7 @@ class UserManager
     /**
      * @param integer $page
      * @param integer $max
+     * @param string $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta;
      */
@@ -359,12 +360,13 @@ class UserManager
      * @param string $search
      * @param integer $page
      * @param integer $max
+     * @param string $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta;
      */
-    public function getUsersByName($search, $page, $max = 20)
+    public function getUsersByName($search, $page, $max = 20, $orderedBy = 'id')
     {
-        $query = $this->userRepo->findByName($search, false);
+        $query = $this->userRepo->findByName($search, false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
@@ -373,12 +375,13 @@ class UserManager
      * @param \Claroline\CoreBundle\Entity\Group $group
      * @param integer $page
      * @param integer $max
+     * @param string  $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta;
      */
-    public function getUsersByGroup(Group $group, $page, $max = 20)
+    public function getUsersByGroup(Group $group, $page, $max = 20, $orderedBy = 'id')
     {
-        $query = $this->userRepo->findByGroup($group, false);
+        $query = $this->userRepo->findByGroup($group, false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
@@ -399,12 +402,13 @@ class UserManager
      * @param \Claroline\CoreBundle\Entity\Group $group
      * @param integer $page
      * @param integer $max
+     * @param string  $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getUsersByNameAndGroup($search, Group $group, $page, $max = 20)
+    public function getUsersByNameAndGroup($search, Group $group, $page, $max = 20, $orderedBy = 'id')
     {
-        $query = $this->userRepo->findByNameAndGroup($search, $group, false);
+        $query = $this->userRepo->findByNameAndGroup($search, $group, false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
@@ -477,12 +481,13 @@ class UserManager
      * @param \Claroline\CoreBundle\Entity\Group $group
      * @param integer $page
      * @param integer $max
+     * @param string $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getGroupOutsiders(Group $group, $page, $max = 20)
+    public function getGroupOutsiders(Group $group, $page, $max = 20, $orderedBy = 'id')
     {
-        $query = $this->userRepo->findGroupOutsiders($group, false);
+        $query = $this->userRepo->findGroupOutsiders($group, false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
@@ -492,12 +497,13 @@ class UserManager
      * @param integer $page
      * @param string $search
      * @param integer $max
+     * @param string $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getGroupOutsidersByName(Group $group, $page, $search, $max = 20)
+    public function getGroupOutsidersByName(Group $group, $page, $search, $max = 20, $orderedBy = 'id')
     {
-        $query = $this->userRepo->findGroupOutsidersByName($group, $search, false);
+        $query = $this->userRepo->findGroupOutsidersByName($group, $search, false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
@@ -571,30 +577,32 @@ class UserManager
     }
 
     /**
-     * @param Role[] $roles
+     * @param Role[]  $roles
      * @param integer $page
      * @param integer $max
+     * @param string  $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getByRolesIncludingGroups(array $roles, $page = 1, $max = 20)
+    public function getByRolesIncludingGroups(array $roles, $page = 1, $max = 20, $orderedBy = 'id')
     {
-        $res = $this->userRepo->findByRolesIncludingGroups($roles, true);
+        $res = $this->userRepo->findByRolesIncludingGroups($roles, true, $orderedBy);
 
         return $this->pagerFactory->createPager($res, $page, $max);
     }
 
     /**
-     * @param Role[] $roles
-     * @param string $search
+     * @param Role[]  $roles
+     * @param string  $search
      * @param integer $page
      * @param integer $max
+     * @param string  $orderedBy
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getByRolesAndNameIncludingGroups(array $roles, $search, $page = 1, $max = 20)
+    public function getByRolesAndNameIncludingGroups(array $roles, $search, $page = 1, $max = 20, $orderedBy = 'id')
     {
-        $res = $this->userRepo->findByRolesAndNameIncludingGroups($roles, $search, true);
+        $res = $this->userRepo->findByRolesAndNameIncludingGroups($roles, $search, true, $orderedBy);
 
         return $this->pagerFactory->createPager($res, $page, $max);
     }
@@ -690,5 +698,15 @@ class UserManager
             $user->setPicture(sha1($user->getPictureFile()->getClientOriginalName()).'.'.$user->getPictureFile()->guessExtension());
             $user->getPictureFile()->move(__DIR__.'/../../../../../../web/uploads/pictures', $user->getPicture());
         }
+    }
+
+    public function getOrderableFields()
+    {
+        return array('id', 'username', 'lastName', 'firstName', 'mail');
+    }
+
+    public function isFieldOrderable($field)
+    {
+        return in_array($field, $this->getOrderableFields()) ? true: false;
     }
 }

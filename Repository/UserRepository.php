@@ -193,10 +193,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * Returns all the users.
      *
      * @param boolean $executeQuery
+     * @param string $orderedBy
      *
      * @return User[]|Query
      */
-    public function findAll($executeQuery = true)
+    public function findAll($executeQuery = true, $orderedBy = 'id')
     {
         if (!$executeQuery) {
             $dql = '
@@ -204,10 +205,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 JOIN u.roles r WITH r IN (
                     SELECT pr
                     FROM Claroline\CoreBundle\Entity\Role pr
-                    WHERE pr.type = ' . Role::PLATFORM_ROLE . '
+                    WHERE pr.type = ' . Role::PLATFORM_ROLE . "
                 )
                 LEFT JOIN u.personalWorkspace pws
-            ';
+                ORDER BY u.{$orderedBy}
+            ";
             // the join on role is required because this method is only called in the administration
             // and we only want the platform roles of a user.
             return $this->_em->createQuery($dql);
@@ -250,10 +252,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @param string  $search
      * @param boolean $executeQuery
+     * @param string $orderedBy
      *
      * @return User[]|Query
      */
-    public function findByName($search, $executeQuery = true)
+    public function findByName($search, $executeQuery = true, $orderedBy = 'id')
     {
         $upperSearch = strtoupper($search);
         $upperSearch = trim($upperSearch);
@@ -269,6 +272,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             OR UPPER(u.mail) LIKE :search
             OR CONCAT(UPPER(u.firstName), CONCAT(' ', UPPER(u.lastName))) LIKE :search
             OR CONCAT(UPPER(u.lastName), CONCAT(' ', UPPER(u.firstName))) LIKE :search
+            ORDER BY u.{$orderedBy}
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('search', "%{$upperSearch}%");
@@ -281,19 +285,20 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @param Group   $group
      * @param boolean $executeQuery
+     * @param string  $orderedBy
      *
      * @return User[]|Query
      */
-    public function findByGroup(Group $group, $executeQuery = true)
+    public function findByGroup(Group $group, $executeQuery = true, $orderedBy = 'id')
     {
         $dql = '
             SELECT DISTINCT u, g, pw, r from Claroline\CoreBundle\Entity\User u
             JOIN u.groups g
             LEFT JOIN u.personalWorkspace pw
             LEFT JOIN u.roles r WITH r IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::PLATFORM_ROLE . '
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::PLATFORM_ROLE . "
             )
-            WHERE g.id = :groupId ORDER BY u.id';
+            WHERE g.id = :groupId ORDER BY u.{$orderedBy}";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('groupId', $group->getId());
 
@@ -305,25 +310,27 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * a given search string.
      *
      * @param string  $search
+     * @param Group   $group
      * @param boolean $executeQuery
+     * @param string  $orderedBy
      *
      * @return User[]|Query
      */
-    public function findByNameAndGroup($search, Group $group, $executeQuery = true)
+    public function findByNameAndGroup($search, Group $group, $executeQuery = true, $orderedBy = 'id')
     {
         $dql = '
             SELECT DISTINCT u, g, pw, r from Claroline\CoreBundle\Entity\User u
             JOIN u.groups g
             LEFT JOIN u.personalWorkspace pw
             LEFT JOIN u.roles r WITH r IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::PLATFORM_ROLE . '
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::PLATFORM_ROLE . "
             )
             WHERE g.id = :groupId
             AND (UPPER(u.username) LIKE :search
             OR UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search)
-            ORDER BY u.id
-        ';
+            ORDER BY u.{$orderedBy}
+        ";
         $upperSearch = strtoupper($search);
         $query = $this->_em->createQuery($dql);
         $query->setParameter('search', "%{$upperSearch}%");
@@ -462,23 +469,24 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @param Group   $group
      * @param boolean $executeQuery
+     * @param string  $orderedBy
      *
      * @return User[]|Query
      */
-    public function findGroupOutsiders(Group $group, $executeQuery = true)
+    public function findGroupOutsiders(Group $group, $executeQuery = true, $orderedBy = 'id')
     {
         $dql = '
             SELECT DISTINCT u, ws, r FROM Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.personalWorkspace ws
             LEFT JOIN u.roles r WITH r IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::PLATFORM_ROLE . '
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::PLATFORM_ROLE . "
             )
             WHERE u NOT IN (
                 SELECT us FROM Claroline\CoreBundle\Entity\User us
                 JOIN us.groups gs
                 WHERE gs.id = :groupId
-            ) ORDER BY u.id
-        ';
+            ) ORDER BY u.{$orderedBy}
+        ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('groupId', $group->getId());
 
@@ -492,16 +500,17 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * @param AbstractWorkspace $workspace
      * @param string            $search
      * @param boolean           $executeQuery
+     * @param string            $orderedBy
      *
      * @return User[]|Query
      */
-    public function findGroupOutsidersByName(Group $group, $search, $executeQuery = true)
+    public function findGroupOutsidersByName(Group $group, $search, $executeQuery = true, $orderedBy = 'id')
     {
         $dql = '
             SELECT DISTINCT u, ws, r FROM Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.personalWorkspace ws
             LEFT JOIN u.roles r WITH r IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::PLATFORM_ROLE . '
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::PLATFORM_ROLE . "
             )
             WHERE (
                 UPPER(u.lastName) LIKE :search
@@ -513,7 +522,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 JOIN us.groups gr
                 WHERE gr.id = :groupId
             )
-        ';
+            ORDER BY u.{$orderedBy}
+        ";
         $search = strtoupper($search);
         $query = $this->_em->createQuery($dql);
         $query->setParameter('groupId', $group->getId());
@@ -653,16 +663,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
-     * @param Role[] $roles
+     * @param Role[]  $roles
      * @param boolean $getQuery
+     * @param string  $orderedBy
      *
      * @return Query|User[]
      */
-    public function findByRolesIncludingGroups(array $roles, $getQuery = false)
+    public function findByRolesIncludingGroups(array $roles, $getQuery = false, $orderedBy = 'id')
     {
-        //reduce the number of requests needed by doctrine... it's a little bit hacky but it works
-        //This function is used by the Role tool.
-
         $dql = "
             SELECT u, r1, g, r2, ws From Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.roles r1
@@ -671,7 +679,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             LEFT JOIN g.roles r2
             WHERE r1 in (:roles)
             OR r2 in (:roles)
-            ORDER BY u.lastName
+            ORDER BY u.{$orderedBy}
        ";
 
         $query = $this->_em->createQuery($dql);
@@ -707,13 +715,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
-     * @param Role[] $roles
-     * @param string $name
+     * @param Role[]  $roles
+     * @param string  $name
      * @param boolean $getQuery
+     * @param strinf  $orderedBy
      *
      * @return Query|User[]
      */
-    public function findByRolesAndNameIncludingGroups(array $roles, $name, $getQuery = false)
+    public function findByRolesAndNameIncludingGroups(array $roles, $name, $getQuery = false, $orderedBy = 'id')
     {
         $search = strtoupper($name);
 
@@ -728,7 +737,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             AND (
             UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search)
-            ORDER BY u.lastName
+            ORDER BY u.{$orderedBy}
             ";
 
         $query = $this->_em->createQuery($dql);

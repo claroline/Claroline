@@ -39,7 +39,8 @@ class UserListener
                 'workspace' => $event->getWorkspace(),
                 'page' => 1,
                 'search' => '',
-                'max' => 50
+                'max' => 50,
+                'order' => 'id'
             )
         );
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
