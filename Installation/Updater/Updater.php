@@ -19,7 +19,7 @@ class Updater
     }
 
     public function UpdateMissingSlug(){
-        $tags = $this->entityManager->getRepository("IcapBlogBundle:Tag")->findAllBy(array('slug' => null));
+        $tags = $this->entityManager->getRepository("IcapBlogBundle:Tag")->findBy(array('slug' => null));
 
         foreach ($tags as $tag) {
             $tag->setSlug(uniqid());
