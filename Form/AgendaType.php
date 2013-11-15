@@ -13,15 +13,13 @@ class AgendaType extends AbstractType
     {
         $recurring = array();
 
-        for ($i=0; $i < 10 ; $i++) { 
-            
+        for ($i = 0; $i < 10 ; $i++) { 
             $recurring[$i] = $i; 
         }
         $attr = array();
         $attr['class'] = 'datepicker input-small';
         $attr['data-date-format'] = 'dd-mm-yyyy';
         $attr['autocomplete'] = 'off';
-
         $builder
             ->add('title', 'text', array('required' => true))
             ->add(
@@ -38,9 +36,7 @@ class AgendaType extends AbstractType
                 'startHours',
                 'text',
                 array(
-                    'attr' => array(
-                        'class' => 'hours'
-                        )
+                    'attr' => array('class' => 'hours')
                     )
                 )
             ->add(
@@ -57,19 +53,11 @@ class AgendaType extends AbstractType
                 'endHours',
                 'text',
                 array(
-                    'attr' => array(
-                        'class' => 'hours'
-                        )
+                    'attr' => array('class' => 'hours')
                     )
                 )
-            ->add(
-                'allDay',
-                'checkbox'
-            )
-            ->add(
-                'description',
-                'tinymce'
-            )
+            ->add('allDay','checkbox')
+            ->add('description','tinymce')
             ->add(
                 'priority',
                 'choice',
@@ -84,9 +72,7 @@ class AgendaType extends AbstractType
             ->add(
                 'recurring',
                 'choice',
-                array(
-                    'choices' => $recurring
-                    )
+                array('choices' => $recurring)
             );
     }
 

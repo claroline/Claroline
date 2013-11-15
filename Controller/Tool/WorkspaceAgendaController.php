@@ -66,7 +66,6 @@ class WorkspaceAgendaController extends Controller
         $this->checkUserIsAllowed('agenda', $workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
         $form->handleRequest($this->request);
-        
         if ($form->isValid()) {
             $event = $form->getData();
             // the end date has to be bigger
@@ -295,7 +294,7 @@ class WorkspaceAgendaController extends Controller
     {
         $listEvents =  array();
         // it calculs by day for now
-        for ($i=1; $i <= $event->getRecurring(); $i++) { 
+        for ($i = 1; $i <= $event->getRecurring(); $i++) { 
             $temp = clone $event;
             $newStartDate = $temp->getStart()->getTimestamp()+((3600 * 24 * $i));
             $temp->setStart( new \DateTime(date('d-m-Y H:i', $newStartDate)));

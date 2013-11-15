@@ -65,7 +65,6 @@ class Event
      * @ORM\Column(nullable=true)
      */
     private $priority;
-
     private $recurring;
     private $startHours;
     private $endHours;
@@ -100,12 +99,10 @@ class Event
     public function setStart($start)
     {
         if (!is_null($start)) {
-            
             if ($start instanceof \Datetime) {
                 $this->start = $start->getTimestamp();
             } else {
                 $date  = new \Datetime($start);
-                
                 $this->start = $date->getTimestamp();
             }
         }
@@ -184,29 +181,33 @@ class Event
     {
         $this->priority = $priority;
     }
-    public function getRecurring() {
+    public function getRecurring() 
+    {
         return $this->recurring;
     }
 
-    public function setRecurring($recurring) {
+    public function setRecurring($recurring) 
+    {
         $this->recurring = $recurring;
     }
     
-    public function getStartHours() {
+    public function getStartHours() 
+    {
         return $this->startHours;
     }
 
-    public function setStartHours($startHours) {
+    public function setStartHours($startHours) 
+    {
         $this->startHours = $startHours;
     }
 
-    public function getEndHours() {
+    public function getEndHours() 
+    {
         return $this->endHours;
     }
 
-    public function setEndHours($endHours) {
+    public function setEndHours($endHours) 
+    {
         $this->endHours = $endHours;
     }
-
-
 }

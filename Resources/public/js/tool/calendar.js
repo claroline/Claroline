@@ -58,7 +58,6 @@
                 .removeAttr('selected');
             $('#myModalLabel').text(Translator.get('agenda' + ':' + 'add_event'));
             $('.hours').val('00:00');
-            
             $('#myModal').modal();
         };
         var dayClickDesktop = function (date) {
@@ -152,7 +151,7 @@
            } else {
                 compare = 1;
            } 
-            if( compare > 0 ) {
+            if (compare > 0 ) {
                 $('#agenda_form_start').val($('#agenda_form_start').val()+' '+$('#agenda_form_startHours').val());
                 $('#agenda_form_end').val($('#agenda_form_end').val()+' '+$('#agenda_form_endHours').val());
                 $('#updateBtn').attr('disabled', 'disabled');

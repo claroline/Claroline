@@ -9,14 +9,4 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class AgendaListener {
 
-
-    /**
-     * @DI\Observe("configure_workspace_tool_agenda")
-     *
-     * @param DisplayToolEvent $event
-     */
-    public function onDisplay()
-    {
-
-    }
 }
