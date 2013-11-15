@@ -449,6 +449,13 @@ class BlogOptions
         $ds = DIRECTORY_SEPARATOR;
 
         $uploadRootDir         = sprintf('%s%s..%s..%s..%s..%s..%s..%sweb%s%s', __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir());
+
+        if (!is_dir($uploadRootDir)) {
+            if (false === mkdir($uploadRootDir)) {
+                throw new \Exception(sprintf("Unable to create the upload directory '%s' for blog banner.", $uploadRootDir));
+            }
+        }
+
         $realpathUploadRootDir = realpath($uploadRootDir);
 
         if (false === $realpathUploadRootDir) {
