@@ -289,7 +289,6 @@ class HomeController
         if ($id = $this->manager->createContent(
             $this->request->get('title'),
             $this->request->get('text'),
-            $this->request->get('generated'),
             $this->request->get('type'),
             $this->request->get('father')
         )) {
@@ -317,7 +316,6 @@ class HomeController
                 $content,
                 $this->request->get('title'),
                 $this->request->get('text'),
-                $this->request->get('generated'),
                 $this->request->get('size'),
                 $this->request->get('type')
             );

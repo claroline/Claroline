@@ -17,13 +17,6 @@
         {% else %}
         <input type="text" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
         {% endif %}
-        {% block datepicker_assets %}
-            <link rel="stylesheet" href="{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}" screen="media" />
-            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}"></script>
-            {% if 'en' != options.language %}
-            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/locales/bootstrap-datepicker.' ~ options.language ~ '.js') }}"></script>
-            {% endif %}
-        {% endblock %}
         <script type="text/javascript">
             $(document).ready(function() {
                 $("#{{ form.vars['id'] }}").datepicker({{ options|json_encode()|raw }});

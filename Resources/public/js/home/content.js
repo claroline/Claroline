@@ -310,30 +310,16 @@
         var creator = $('#add-link').data('element');
 
         if (urls.length > 0) {
-            home.generatedContent(creator, urls[0]);
-
-            if ($('.content-text', creator).val() === '' && $('.content-title', creator).val() === '') {
-                $('.content-text', creator).val($('#add-link input').val());
-            }
+            home.generatedContent(urls[0], function (data) {
+                $('.content-text', creator).val(
+                    $('.content-text', creator).val() + '<p><a href="' + urls[0] + '">' + urls[0] + '</a></p>' + data
+                );
+            });
 
             $(modal).modal('hide');
         } else {
             $('.form-group', modal).addClass('has-error');
         }
-    });
-
-    $('body').on('paste', '.creator textarea', function () {
-        var element = this;
-
-        setTimeout(function () {
-            var text = $(element).val();
-            var urls = home.findUrls(text);
-
-            if (urls.length > 0) {
-                home.generatedContent($(element).parents('.creator').get(0), urls[0]);
-            }
-
-        }, 100);
     });
 
     $('body').on('click', '.generated .close', function (event) {
@@ -355,7 +341,7 @@
             if (a && type) {
                 $.ajax(home.path + 'content/reorder/' + type + '/' + a + '/' + b)
                 .done(
-                    function() {
+                    function () {
                         $('.contents').trigger('ContentModified');
                     }
                 ).error(

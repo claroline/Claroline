@@ -1,31 +1,27 @@
 {% spaceless %}
-    <button type="button" class="close">×</button>
-    <div class="generated-content">
-        {% block content %}
-            {% if content["images"][0] is defined or content["image"] is defined %}
-                <a href="{{ content["url"] }}" target="_blank">
-                    {% if content["image"] is defined %}
-                        <img src="{{ content["image"] }}">
-                    {% else %}
-                        <img src="{{ content["images"][0] }}">
-
-                    {% endif %}
-                </a>
-            {% endif %}
-        {% endblock %}
-        {% if content["title"] is defined or content["description"] is defined %}
-            <div class="clearfix">
-                {% block title %}
-                    {% if content["title"] is defined %}
-                        <a href="{{ content["url"] }}" target="_blank">{{ content["title"] }}</a>
-                    {% endif %}
-                {% endblock %}
-                {% block description %}
-                    {% if content["description"] is defined %}
-                        {{ content["description"] }}
-                    {% endif %}
-                {% endblock %}
-            </div>
+    {% block content %}
+        {% if content["images"][0] is defined or content["image"] is defined %}
+            <a href="{{ content["url"] }}" target="_blank">
+                {% if content["image"] is defined %}
+                    <img src="{{ content["image"] }}">
+                {% else %}
+                    <img src="{{ content["images"][0] }}">
+                {% endif %}
+            </a>
         {% endif %}
-    </div>
+    {% endblock %}
+    {% if content["title"] is defined or content["description"] is defined %}
+        <div class="clearfix">
+            {% block title %}
+                {% if content["title"] is defined %}
+                    <a href="{{ content["url"] }}" target="_blank">{{ content["title"] }}</a>
+                {% endif %}
+            {% endblock %}
+            {% block description %}
+                {% if content["description"] is defined %}
+                    {{ content["description"] }}
+                {% endif %}
+            {% endblock %}
+        </div>
+    {% endif %}
 {% endspaceless %}

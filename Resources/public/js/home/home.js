@@ -30,39 +30,36 @@
         element = typeof(element) !== 'undefined' ? element : null;
 
         $.ajax(home.path + url)
-            .done(
-                function (data)
-                {
-                    var modal = document.createElement('div');
-                    modal.className = 'modal fade';
+        .done(
+            function (data) {
+                var modal = document.createElement('div');
+                modal.className = 'modal fade';
 
-                    if (id) {
-                        modal.setAttribute('id', id);
-                    }
-
-                    if (element) {
-                        $(modal).data('element', element);
-                    }
-
-                    modal.innerHTML = data;
-
-                    $(modal).appendTo('body');
-
-                    $(modal).modal('show');
-
-                    $(modal).on('hidden.bs.modal', function () {
-                        $(this).remove();
-                    });
-
+                if (id) {
+                    modal.setAttribute('id', id);
                 }
+
+                if (element) {
+                    $(modal).data('element', element);
+                }
+
+                modal.innerHTML = data;
+
+                $(modal).appendTo('body');
+
+                $(modal).modal('show');
+
+                $(modal).on('hidden.bs.modal', function () {
+                    $(this).remove();
+                });
+
+            }
         )
-            .error(
-                    function ()
-                    {
-                        alert('An error occurred!\n\nPlease try again later or check your internet connection');
-                    }
-                  )
-            ;
+        .error(
+            function () {
+                alert('An error occurred!\n\nPlease try again later or check your internet connection');
+            }
+        );
 
     };
 
@@ -118,7 +115,6 @@
         var text = $('.content-text', creatorElement).get(0);
         var type = $(creatorElement).data('type');
         var father = $(creatorElement).data('father');
-        var generatedContent = '';
         var path = '';
         var contentPath = '';
 
@@ -128,16 +124,11 @@
             path = 'content/create';
         }
 
-        if ($(creatorElement).find('.generated-content').html()) {
-            generatedContent = $(creatorElement).find('.generated-content').html();
-        }
-
         if (text.value !== '' || title.value !== '') {
             $.post(home.path + path,
                 {
                     'title': title.value,
                     'text': text.value,
-                    'generated': generatedContent,
                     'type': type,
                     'father': father
                 }
@@ -217,24 +208,23 @@
      *
      * @param url The url of a webpage.
      */
-    home.generatedContent = function (creator, url)
+    home.generatedContent = function (url, action)
     {
         $.post(home.path + 'content/graph', { 'generated_content_url': url })
-            .done(
-                function (data)
-                {
-                    if (data !== 'false') {
-                        $(creator).find('.generated').html(data);
-                    }
+        .done(
+            function (data)
+            {
+                if (data !== 'false') {
+                    action(data);
                 }
-             )
-            .error(
-                function ()
-                {
-                    home.modal('content/error');
-                }
-            )
-        ;
+            }
+        )
+        .error(
+            function ()
+            {
+                home.modal('content/error');
+            }
+        );
     };
 
 }());

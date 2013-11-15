@@ -142,14 +142,12 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts
-    vars=["locale"]
+    {% javascripts debug=false vars=["locale"]
     "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/confirmAddRole.html.twigjs"
     "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
     "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
     filter="twig_js"
-    %}
-    <script language="javascript" src="{{ asset_url }}"></script>
+    %}<script language="javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script>
         createValidationBox();

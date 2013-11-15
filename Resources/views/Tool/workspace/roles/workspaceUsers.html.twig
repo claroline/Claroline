@@ -134,13 +134,11 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts
-    vars=["locale"]
+    {% javascripts debug=false vars=["locale"]
     "@ClarolineCoreBundle/Resources/views/Tool/workspace/roles/roleUserLabel.html.twigjs"
     "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
     filter="twig_js"
-    %}
-    <script language="javascript" src="{{ asset_url }}"></script>
+    %}<script language="javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script>
         $('.popover-block').popover();
