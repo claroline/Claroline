@@ -1,12 +1,4 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: Nicolas
- * Date: 07/11/13
- * Time: 14:29
- * To change this template use File | Settings | File Templates.
- */
-
 namespace Icap\BlogBundle\Installation\Updater;
 
 use Doctrine\Common\Persistence\Mapping\MappingException;
