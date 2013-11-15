@@ -30,6 +30,7 @@ return array(
     'Your default timezone (%timezone%) is not supported' => 'Votre timezone par défaut (<em>%timezone%</em>) n\'est pas supportée.',
     'Parameter %parameter% must be set to %value% in your php.ini' => 'Le paramètre <em>%parameter%</em> doit être réglé à <em>%value%</em> dans votre php.ini.',
     'Parameter %parameter% should be set to %value% in your php.ini' => 'Le paramètre <em>%parameter%</em> devrait être réglé à <em>%value%</em> dans votre php.ini.',
+    'Parameter %parameter% should be equal or greater than %value% in your php.ini' => 'La valeur du paramètre <em>%parameter%</em> devrait être supérieure ou égale à <em>%value%</em> dans votre php.ini',
     'PHP extensions' => 'Extensions de PHP',
     'Extension %extension% must be installed and enabled' => 'L\'extension <em>%extension%</em> doit être installée et activée.',
     'Extension %extension% should be installed and enabled' => 'L\'extension <em>%extension%</em> devrait être installée et activée.',

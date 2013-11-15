@@ -223,6 +223,7 @@ class Controller
         $installer = $this->container->getInstaller();
         session_write_close(); // needed because symfony will init a new session
         ini_set('max_execution_time', 180);
+        ini_set('memory_limit', '256M');
         $installer->install();
         $this->request->getSession()->invalidate();
 
