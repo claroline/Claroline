@@ -28,6 +28,10 @@ class OrderableConverter implements ParamConverterInterface
             throw new InvalidConfigurationException(InvalidConfigurationException::MISSING_CLASS);
         }
 
+        if (!class_exists($entityClass)) {
+            throw new \Exception('The class ' . $entityClass. ' does not exists.');
+        }
+
         $rClass = new \ReflectionClass($entityClass);
 
         if (!$rClass->implementsInterface('Claroline\CoreBundle\Entity\OrderableInterface')) {
