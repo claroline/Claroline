@@ -135,7 +135,7 @@ class MaskManager
 
     /**
      * Adds the default action to a resource type.
-     * 
+     *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
      */
     public function addDefaultPerms(ResourceType $type)

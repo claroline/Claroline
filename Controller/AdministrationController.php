@@ -208,15 +208,16 @@ class AdministrationController extends Controller
      * )
      * @EXT\Method("GET")
      * @EXT\Template()
+     * @EXT\ParamConverter(
+     *     "order",
+     *     class="Claroline\CoreBundle\Entity\User",
+     *     options={"orderable"=true}
+     * )
      *
      * Displays the platform user list.
      */
     public function userListAction($page, $search, $max, $order)
     {
-        if (!$this->userManager->isFieldOrderable($order)) {
-            return new Response('The field ' . $order . ' does not exists', 422);
-        }
-
         $pager = $search === '' ?
             $this->userManager->getAllUsers($page, $max, $order) :
             $this->userManager->getUsersByName($search, $page, $max, $order);
@@ -268,15 +269,16 @@ class AdministrationController extends Controller
      * )
      * @EXT\Method("GET")
      * @EXT\Template()
+     * @EXT\ParamConverter(
+     *     "order",
+     *     class="Claroline\CoreBundle\Entity\Group",
+     *     options={"orderable"=true}
+     * )
      *
      * Returns the platform group list.
      */
     public function groupListAction($page, $search, $max, $order)
     {
-        if (!$this->groupManager->isFieldOrderable($order)) {
-            return new Response('The field ' . $order . ' does not exists', 422);
-        }
-
         $pager = $search === '' ?
             $this->groupManager->getGroups($page, $max, $order) :
             $this->groupManager->getGroupsByName($search, $page, $max, $order);
@@ -292,7 +294,6 @@ class AdministrationController extends Controller
      *     defaults={"page"=1, "search"="", "max"=50, "order"="id"}
      * )
      * @EXT\Method("GET")
-     *
      * @EXT\Route(
      *     "/group/{groupId}/users/page/{page}/search/{search}/max/{max}/{order}",
      *     name="claro_admin_user_of_group_list_search",
@@ -306,15 +307,16 @@ class AdministrationController extends Controller
      *      options={"id" = "groupId", "strictId" = true}
      * )
      * @EXT\Template()
+     * @EXT\ParamConverter(
+     *     "order",
+     *     class="Claroline\CoreBundle\Entity\User",
+     *     options={"orderable"=true}
+     * )
      *
      * Returns the users of a group.
      */
     public function usersOfGroupListAction(Group $group, $page, $search, $max, $order)
     {
-        if (!$this->userManager->isFieldOrderable($order)) {
-            return new Response('The field ' . $order . ' does not exists', 422);
-        }
-
         $pager = $search === '' ?
             $this->userManager->getUsersByGroup($group, $page, $max, $order) :
             $this->userManager->getUsersByNameAndGroup($search, $group, $page, $max, $order);
@@ -344,15 +346,15 @@ class AdministrationController extends Controller
      *      options={"id" = "groupId", "strictId" = true}
      * )
      * @EXT\Template()
-     *
+     * @EXT\ParamConverter(
+     *     "order",
+     *     class="Claroline\CoreBundle\Entity\User",
+     *     options={"orderable"=true}
+     * )
      * Displays the user list with a control allowing to add them to a group.
      */
     public function outsideOfGroupUserListAction(Group $group, $page, $search, $max, $order)
     {
-        if (!$this->userManager->isFieldOrderable($order)) {
-            return new Response('The field ' . $order . ' does not exists', 422);
-        }
-
         $pager = $search === '' ?
             $this->userManager->getGroupOutsiders($group, $page, $max, $order) :
             $this->userManager->getGroupOutsidersByName($group, $page, $search, $max, $order);
@@ -1203,33 +1205,32 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/registration/list/users/page/{page}/ordered-by/{ordered}",
+     *     "/registration/list/users/page/{page}",
      *     name="claro_users_list_registration_pager",
      *     defaults={"page"=1, "search"=""},
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/registration/list/users/page/{page}/search/{search}/ordered-by/{ordered}",
+     *     "/registration/list/users/page/{page}/search/{search}",
      *     name="claro_users_list_registration_pager_search",
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
-     *
      * @EXT\Template()
      *
      * Renders the user list in a pager for registration.
      *
      * @return Response
      */
-    public function userListPagerAction($page, $search, $ordered)
+    public function userListPagerAction($page, $search)
     {
         $pager = $search === '' ?
-            $this->userManager->getAllUsers($page, $ordered) :
-            $this->userManager->getUsersByName($search, $page, $ordered);
+            $this->userManager->getAllUsers($page) :
+            $this->userManager->getUsersByName($search, $page);
 
-        return array('users' => $pager, 'search' => $search, 'ordered' => $ordered);
+        return array('users' => $pager, 'search' => $search);
     }
 
     /**
@@ -1247,7 +1248,6 @@ class AdministrationController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
-     *
      * @EXT\Template()
      *
      * Renders the group list in a pager for registration.

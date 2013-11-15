@@ -256,6 +256,11 @@ class RolesController extends Controller
      *     defaults={"page"=1, "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "order",
+     *     class="Claroline\CoreBundle\Entity\User",
+     *     options={"orderable"=true}
+     * )
      * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:unregisteredUsers.html.twig")
      */
@@ -399,16 +404,16 @@ class RolesController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "order",
+     *     class="Claroline\CoreBundle\Entity\User",
+     *     options={"orderable"=true}
+     * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceUsers.html.twig")
      */
     public function usersListAction(AbstractWorkspace $workspace, $page, $search, $max, $order)
     {
         $this->checkAccess($workspace);
-
-        if (!$this->userManager->isFieldOrderable($order)) {
-            return new Response('The field ' . $order . ' does not exists', 422);
-        }
-
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
         $pager = ($search === '') ?
@@ -427,16 +432,16 @@ class RolesController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/groups/registered/page/{page}/max/{max}",
+     *     "/{workspace}/groups/registered/page/{page}/max/{max}/order/{order}",
      *     name="claro_workspace_registered_group_list",
-     *     defaults={"page"=1, "search"="", "max"=50},
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/{workspace}/groups/registered/page/{page}/search/{search}/max/{max}",
+     *     "/{workspace}/groups/registered/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_workspace_registered_group_list_search",
-     *     defaults={"page"=1, "max"=50},
+     *     defaults={"page"=1, "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -447,8 +452,9 @@ class RolesController extends Controller
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceGroups.html.twig")
      */
-    public function groupsListAction(AbstractWorkspace $workspace, $page, $search, $max)
+    public function groupsListAction(AbstractWorkspace $workspace, $page, $search, $max, $order)
     {
+        throw new \Exception('fds');
         $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 

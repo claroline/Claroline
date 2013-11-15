@@ -141,10 +141,10 @@
 
         $('#check-all-items').click(function () {
             if ($('#check-all-items').is(':checked')) {
-                $(' INPUT[@class=' + 'chk-item' + '][type="checkbox"]').attr('checked', true);
+                $('.chk-item').attr('checked', true);
             }
             else {
-                $(' INPUT[@class=' + 'chk-item' + '][type="checkbox"]').attr('checked', false);
+                $('.chk-item').attr('checked', false);
             }
         });
     };

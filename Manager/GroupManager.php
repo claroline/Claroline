@@ -435,14 +435,4 @@ class GroupManager
 
         return array();
     }
-
-    public function getOrderableFields()
-    {
-        return array('name', 'id');
-    }
-
-    public function isFieldOrderable($field)
-    {
-        return in_array($field, $this->getOrderableFields()) ? true: false;
-    }
 }
