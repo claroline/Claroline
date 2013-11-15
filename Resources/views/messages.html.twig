@@ -104,8 +104,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts
-        vars=["locale"]
+    {% javascripts vars=["locale"]
         "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeMessageConfirm.html.twigjs"
@@ -114,11 +113,8 @@
     <script language="javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     {% if canAnswer %}
-        {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
-        {{ tinymce_init() }}
-        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/home.js') }}"></script>
         <script>
-            (function (){
+            (function () {
                 'use strict';
 
                 //id="forum_message_form_content" name="forum_message_form[content]"
@@ -151,36 +147,36 @@
         </script>
     {% endif %}
     {% if isModerator %}
-            <script>
-               function createValidationBox() {
-                    var html = Twig.render(
-                        ModalWindow,
-                        {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'confirm-modal', 'body': Twig.render(removeMessageConfirm, {'nbItems': 1})}
-                    );
-                    $('body').append(html);
-                }
+        <script>
+           function createValidationBox() {
+                var html = Twig.render(
+                    ModalWindow,
+                    {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'confirm-modal', 'body': Twig.render(removeMessageConfirm, {'nbItems': 1})}
+                );
+                $('body').append(html);
+            }
 
-                createValidationBox();
-                var tmpRoute = '';
-                var tmpEl = undefined;
+            createValidationBox();
+            var tmpRoute = '';
+            var tmpEl = undefined;
 
-                $('body').on('click', '#delete-message', function(event) {
-                    event.preventDefault();
-                    $('#confirm-modal').modal('show');
-                    tmpRoute = event.currentTarget.href;
-                    tmpEl = event.currentTarget;
+            $('body').on('click', '#delete-message', function(event) {
+                event.preventDefault();
+                $('#confirm-modal').modal('show');
+                tmpRoute = event.currentTarget.href;
+                tmpEl = event.currentTarget;
+            });
+
+            $('body').on('click', '#modal-valid-button', function(event) {
+                $('#confirm-modal').modal('hide');
+                $.ajax({
+                    url: tmpRoute,
+                    success: function () {
+                        $(tmpEl)[0].parentElement.parentElement.parentElement.remove();
+                    }
                 });
-
-                $('body').on('click', '#modal-valid-button', function(event) {
-                    $('#confirm-modal').modal('hide');
-                    $.ajax({
-                        url: tmpRoute,
-                        success: function () {
-                            $(tmpEl)[0].parentElement.parentElement.parentElement.remove();
-                        }
-                    });
-                });
-            </script>
+            });
+        </script>
     {% endif %}
 {% endblock %}
 
