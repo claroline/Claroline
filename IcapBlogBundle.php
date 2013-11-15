@@ -4,6 +4,7 @@ namespace Icap\BlogBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
+use Icap\BlogBundle\Installation\AdditionalInstaller;
 
 class IcapBlogBundle extends PluginBundle
 {
@@ -12,5 +13,10 @@ class IcapBlogBundle extends PluginBundle
         $config = new ConfigurationBuilder();
 
         return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'icap_blog');
+    }
+
+    public function getAdditionalInstaller()
+    {
+        return new AdditionalInstaller();
     }
 }
