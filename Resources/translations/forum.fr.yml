@@ -1,25 +1,25 @@
 new_message: Répondre
-new_subject: Créer un sujet
+new_subject: Ajouter un sujet
 responses: Réponses
 author: Auteur
 field_content_required: Le champ contenu est requis.
 forum: Forum
 forum_settings: Paramètres du forum
-forum_subject_edit: 'Editer le sujet'
+forum_subject_edit: 'Modifier le sujet'
 forum_subject_form_title: Titre
 forum_subject_form_message: Message
 forum_subject_form_message_content: Contenu
 forum_message_form_content: Contenu
 forum_form_name: Nom
 forum_options_form_subjects: Sujets par page
-forum_options_form_messages: Messages par
+forum_options_form_messages: Messages par page
 forum_subject_title_form_title: Titre
-forum_new_message: Un nouveau message a été créé dans le sujet "%subject%" du forum "%forum%".
-forum_new_subject: Un nouveau sujet a été créé dans le forum "%forum%".
+forum_new_message: Un nouveau message a été ajouté dans le sujet "%subject%" du forum "%forum%".
+forum_new_subject: Un nouveau sujet a été ajouté dans le forum "%forum%".
 subscribe_mail_list: Recevoir les notifications
 unsubscribe_mail_list: Ne plus recevoir les notifications
 subject: Sujet
 last_message: Dernier message
-started_by: Créé par
+started_by: Initié par
 remove_subjects_confirm_message: Êtes vous sur de vouloir supprimer ces %count% sujets ?
 remove_subject_confirm_message: Êtes vous sur de vouloir supprimer ce sujet.
