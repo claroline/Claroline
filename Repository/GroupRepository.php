@@ -285,12 +285,12 @@ class GroupRepository extends EntityRepository
         return array();
     }
 
-    public function findByRoles(array $roles, $getQuery = false)
+    public function findByRoles(array $roles, $getQuery = false, $orderedBy = 'id')
     {
         $dql = "
             SELECT u FROM Claroline\CoreBundle\Entity\Group u
             JOIN u.roles r WHERE r IN (:roles)
-            ORDER BY u.name
+            ORDER BY u.{$orderedBy}
             ";
 
         $query = $this->_em->createQuery($dql);
@@ -299,14 +299,14 @@ class GroupRepository extends EntityRepository
         return ($getQuery) ? $query: $query->getResult();
     }
 
-    public function findByRolesAndName(array $roles, $name, $getQuery = false)
+    public function findByRolesAndName(array $roles, $name, $getQuery = false, $orderedBy = 'id')
     {
         $search = strtoupper($name);
         $dql = "
             SELECT u FROM Claroline\CoreBundle\Entity\Group u
             JOIN u.roles r WHERE r IN (:roles)
             AND UPPER(u.name) LIKE :search
-            ORDER BY u.name
+            ORDER BY u.{$orderedBy}
             ";
 
         $query = $this->_em->createQuery($dql);

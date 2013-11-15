@@ -19,7 +19,7 @@ use Claroline\CoreBundle\Entity\User;
  *  )
  * @DoctrineAssert\UniqueEntity("name")
  */
-class Group extends AbstractRoleSubject
+class Group extends AbstractRoleSubject implements OrderableInterface
 {
     /**
      * @ORM\Id
@@ -121,4 +121,10 @@ class Group extends AbstractRoleSubject
     {
         return $this->users->contains($user);
     }
+
+    public function getOrderableFields()
+    {
+        return array('name', 'id');
+    }
+
 }

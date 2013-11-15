@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  *
  * @todo implement AdvancedUserInterface
  */
-class User extends AbstractRoleSubject implements Serializable, UserInterface, EquatableInterface
+class User extends AbstractRoleSubject implements Serializable, UserInterface, EquatableInterface, OrderableInterface
 {
     /**
      * @var integer
@@ -719,5 +719,10 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     public function setDescription($description) {
         $this->description = $description;
+    }
+
+    public function getOrderableFields()
+    {
+        return array('id', 'username', 'lastName', 'firstName', 'mail');
     }
 }
