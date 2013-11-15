@@ -285,36 +285,42 @@ class RolesController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/groups/unregistered/page/{page}/max/{max}",
+     *     "/{workspace}/groups/unregistered/page/{page}/max/{max}/order/{order}",
      *     name="claro_workspace_unregistered_group_list",
-     *     defaults={"page"=1, "search"="", "max"=50},
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/{workspace}/groups/unregistered/page/{page}/search/{search}/max/{max}",
+     *     "/{workspace}/groups/unregistered/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_workspace_unregistered_group_list_search",
-     *     defaults={"page"=1, "max"=50},
+     *     defaults={"page"=1, "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "order",
+     *     class="Claroline\CoreBundle\Entity\Group",
+     *     options={"orderable"=true}
+     * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:unregisteredGroups.html.twig")
      */
-    public function unregisteredGroupListAction($page, $search, AbstractWorkspace $workspace, $max)
+    public function unregisteredGroupListAction($page, $search, AbstractWorkspace $workspace, $max, $order)
     {
         $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
         $pager = ($search === '') ?
-            $this->groupManager->getAllGroups($page, $max):
-            $this->groupManager->getGroupsByName($search, $page, $max);
+            $this->groupManager->getGroups($page, $max, $order):
+            $this->groupManager->getGroupsByName($search, $page, $max, $order);
 
         return array(
             'workspace' => $workspace,
             'pager' => $pager,
             'search' => $search,
             'wsRoles' => $wsRoles,
-            'max' => $max
+            'max' => $max,
+            'order' => $order
         );
     }
 
