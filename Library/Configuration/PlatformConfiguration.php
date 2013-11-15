@@ -10,6 +10,7 @@ class PlatformConfiguration
     private $localLanguage;
     private $theme;
     private $footer;
+    private $role;
 
     public function getSelfRegistration()
     {
@@ -69,5 +70,15 @@ class PlatformConfiguration
     public function setFooter($footer)
     {
         $this->footer = $footer;
+    }
+
+    public function setDefaultRole($role)
+    {
+        $this->role = $role;
+    }
+
+    public function getDefaultRole()
+    {
+        return $this->role;
     }
 }

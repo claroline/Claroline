@@ -1,5 +1,7 @@
 {% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
 
+{% block title %}{{ parent() ~ ' - ' ~ "tool_parameters" | trans({}, "platform") }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.desktopBreadcrumbs([

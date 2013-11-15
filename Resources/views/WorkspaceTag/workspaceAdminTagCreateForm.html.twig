@@ -1,5 +1,7 @@
 {% extends "ClarolineCoreBundle:WorkspaceTag:layout.html.twig" %}
 
+{% block title %}{{ parent() ~ ' - ' ~ "admin_tags_management" | trans({}, "platform") }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([
@@ -23,6 +25,7 @@
         ])
     }}
 {% endblock %}
+
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'create_new_admin_tag'|trans({}, 'platform') }}</h3>

@@ -96,10 +96,21 @@ class ResourceManager
     }
 
     /**
+     * Creates a resource.
+     *
      * array $rights should be defined that way:
      * array('ROLE_WS_XXX' => array('open' => true, 'edit' => false, ...
-     * 'create' => array('directory', ...), role => $entity))
+     * 'create' => array('directory', ...), 'role' => $entity))
      *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $resourceType
+     * @param \Claroline\CoreBundle\Entity\User $creator
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceIcon $icon
+     * @param array $rights
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\AbstractResource
      */
     public function create(
         AbstractResource $resource,
@@ -293,6 +304,16 @@ class ResourceManager
         return $sortedResources;
     }
 
+    /**
+     * Creates a shortcut.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $target
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
+     * @param \Claroline\CoreBundle\Entity\User $creator
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceShortcut $shortcut
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceShortcut
+     */
     public function makeShortcut(ResourceNode $target, ResourceNode $parent, User $creator, ResourceShortcut $shortcut)
     {
         $shortcut->setName($target->getName());
@@ -318,10 +339,18 @@ class ResourceManager
     }
 
     /**
-     * @todo
-     * Define the $rights array.
-     * If there is no rights: parents rights are copied.
-     * Otherwise: use the new rights array;
+     * Set the right of a resource.
+     * If $rights = array(), the $parent node rights will be copied.
+     *
+     * array $rights should be defined that way:
+     * array('ROLE_WS_XXX' => array('open' => true, 'edit' => false, ...
+     * 'create' => array('directory', ...), 'role' => $entity))
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
+     * @param array $rights
+     *
+     * @throws RightsException
      */
     public function setRights(
         ResourceNode $node,
@@ -339,8 +368,15 @@ class ResourceManager
         }
     }
 
-    /*
-     * Creates the base rights for a resource
+    /**
+     * Create the rights for a node.
+     *
+     * array $rights should be defined that way:
+     * array('ROLE_WS_XXX' => array('open' => true, 'edit' => false, ...
+     * 'create' => array('directory', ...), 'role' => $entity))
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @param array $rights
      */
     public function createRights(
         ResourceNode $node,
@@ -372,6 +408,13 @@ class ResourceManager
         );
     }
 
+    /**
+     * Checks if a resource already has a name.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     *
+     * @throws MissingResourceNameException
+     */
     public function checkResourcePrepared(AbstractResource $resource)
     {
         $stringErrors = '';
@@ -386,7 +429,16 @@ class ResourceManager
         }
     }
 
-    //expects an array of types array(array('name' => 'type'),...);
+    /**
+     * Checks if an array of resource type name exists.
+     * Expects an array of types array(array('name' => 'type'),...).
+     *
+     * @param array $resourceTypes
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceType
+     *
+     * @throws ResourceTypeNotFoundException
+     */
     public function checkResourceTypes(array $resourceTypes)
     {
         $validTypes = array();
@@ -420,6 +472,8 @@ class ResourceManager
      *
      * @param ResourceNode $resource
      * @param ResourceNode $next
+     *
+     * @return ResourceNode
      */
     public function insertBefore(ResourceNode $node, ResourceNode $next = null)
     {
@@ -469,6 +523,8 @@ class ResourceManager
      *
      * @param ResourceNode $child
      * @param ResourceNode $parent
+     *
+     * @return ResourceNode
      */
     public function move(ResourceNode $child, ResourceNode $parent)
     {
@@ -538,6 +594,12 @@ class ResourceManager
         $this->om->flush();
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
+     */
     public function findPreviousOrLastRes(ResourceNode $parent, ResourceNode $node = null)
     {
         return ($node !== null) ?
@@ -545,6 +607,14 @@ class ResourceManager
             $this->resourceNodeRepo->findOneBy(array('parent' => $parent, 'next' => null));
     }
 
+    /**
+     * Checks if a resource in a node has a link to the target with a shortcut.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $target
+     *
+     * @return boolean
+     */
     public function hasLinkTo(ResourceNode $parent, ResourceNode $target)
     {
         $nodes = $this->resourceNodeRepo
@@ -588,6 +658,13 @@ class ResourceManager
         return true;
     }
 
+    /**
+     * Checks if all the resource in the array are directories.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode[] $ancestors
+     *
+     * @return boolean
+     */
     public function areAncestorsDirectory(array $ancestors)
     {
         array_pop($ancestors);
@@ -629,8 +706,11 @@ class ResourceManager
     /**
      * Copies a resource in a directory.
      *
-     * @param ResourceNode $node
-     * @param ResourceNode $parent
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
     public function copy(ResourceNode $node, ResourceNode $parent, User $user)
     {
@@ -723,7 +803,7 @@ class ResourceManager
     /**
      * Removes a resource.
      *
-     * @param ResourceNode $resource
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resource
      */
     public function delete(ResourceNode $node)
     {
@@ -749,6 +829,13 @@ class ResourceManager
                     'DeleteResource',
                     array($resource)
                 );
+
+                $this->dispatcher->dispatch(
+                    "log",
+                    'Log\LogResourceDelete',
+                    array($node)
+                );
+
                 /*
                  * If the child isn't removed here aswell, doctrine will fail to remove $resChild
                  * because it still has $resChild in its UnitOfWork or something (I have no idea
@@ -767,9 +854,9 @@ class ResourceManager
     /**
      * Returns an archive with the required content.
      *
-     * @param array $nodes the nodes being exported
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode[] $nodes the nodes being exported
      *
-     * @return array('name' => 'filename', 'file' => 'filepath')
+     * @return array
      */
     public function download(array $nodes)
     {
@@ -844,8 +931,10 @@ class ResourceManager
     /**
      * Returns every children of every resource (includes the startnode).
      *
-     * @param  array      $nodes
-     * @return type
+     * @param  \Claroline\CoreBundle\Entity\Resource\ResourceNode[] $nodes
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode[]
+     *
      * @throws \Exception
      */
     public function expandResources(array $nodes)
@@ -893,6 +982,14 @@ class ResourceManager
         return $path;
     }
 
+    /**
+     * Renames a node.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @param string $name
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
+     */
     public function rename(ResourceNode $node, $name)
     {
         $node->setName($name);
@@ -903,6 +1000,14 @@ class ResourceManager
         return $node;
     }
 
+    /**
+     * Changes a node icon.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $file
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon
+     */
     public function changeIcon(ResourceNode $node, UploadedFile $file)
     {
         $this->om->startFlushSuite();
@@ -914,6 +1019,11 @@ class ResourceManager
         return $icon;
     }
 
+    /**
+     * Logs every change on a node.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     */
     public function logChangeSet(ResourceNode $node)
     {
         $uow = $this->om->getUnitOfWork();
@@ -929,6 +1039,14 @@ class ResourceManager
         }
     }
 
+    /**
+     * @param string $class
+     * @param string $name
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\AbstractResource
+     *
+     * @throws WrongClassException
+     */
     public function createResource($class, $name)
     {
         $entity = $this->om->factory($class);
@@ -944,26 +1062,53 @@ class ResourceManager
         );
     }
 
+    /**
+     * @param integer $id
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
+     */
     public function getNode($id)
     {
         return $this->resourceNodeRepo->find($id);
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @return array
+     */
     public function getRoots(User $user)
     {
         return $this->resourceNodeRepo->findWorkspaceRootsByUser($user);
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     *
+     * @return array
+     */
     public function getWorkspaceRoot(AbstractWorkspace $workspace)
     {
         return $this->resourceNodeRepo->findWorkspaceRoot($workspace);
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     *
+     * @return array
+     */
     public function getAncestors(ResourceNode $node)
     {
         return $this->resourceNodeRepo->findAncestors($node);
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @param string[] $roles
+     * @param boolean $isSorted
+     *
+     * @return array
+     */
     public function getChildren(ResourceNode $node, array $roles, $isSorted = true)
     {
         $children = $this->resourceNodeRepo->findChildren($node, $roles);
@@ -971,41 +1116,99 @@ class ResourceManager
         return ($isSorted) ? $this->sort($children): $children;
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @param boolean $includeStartNode
+     *
+     * @return array
+     */
     public function getAllChildren(ResourceNode $node, $includeStartNode)
     {
         return $this->resourceNodeRepo->getChildren($node, $includeStartNode, 'path', 'DESC');
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     *
+     * @return array
+     */
     public function getDescendants(ResourceNode $node)
     {
         return $this->resourceNodeRepo->findDescendants($node);
     }
 
+    /**
+     * @param string $mimeType
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
+     * @param string[]|RoleInterface[] $roles
+     *
+     * @return array
+     */
     public function getByMimeTypeAndParent($mimeType, ResourceNode $parent, array $roles)
     {
         return $this->resourceNodeRepo->findByMimeTypeAndParent($mimeType, $parent, $roles);
     }
 
+    /**
+     * Find all the nodes wich mach the search criteria.
+     * The search array must have the following structure (its array keys aren't required).
+     *
+     * array(
+     *     'types' => array('typename1', 'typename2'),
+     *     'roots' => array('rootpath1', 'rootpath2'),
+     *     'dateFrom' => 'date',
+     *     'dateTo' => 'date',
+     *     'name' => 'name',
+     *     'isExportable' => 'bool'
+     * )
+     *
+     *
+     * @param array $criteria
+     * @param string[] | RoleInterface[] $userRoles
+     * @param boolean $isRecursive
+     *
+     * @return array
+     */
     public function getByCriteria(array $criteria, array $userRoles = null, $isRecursive = false)
     {
         return $this->resourceNodeRepo->findByCriteria($criteria, $userRoles, $isRecursive);
     }
 
+    /**
+     * @todo define the array content
+     *
+     * @param integer[]
+     *
+     * @return array
+     */
     public function getWorkspaceInfoByIds(array $nodesIds)
     {
         return $this->resourceNodeRepo->findWorkspaceInfoByIds($nodesIds);
     }
 
+    /**
+     * @param string $name
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceType
+     */
     public function getResourceTypeByName($name)
     {
         return $this->resourceTypeRepo->findOneByName($name);
     }
 
+    /**
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceType[]
+     */
     public function getAllResourceTypes()
     {
         return $this->resourceTypeRepo->findAll();
     }
 
+    /**
+     * @param integer[] $ids
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode[]
+     */
     public function getByIds(array $ids)
     {
         return $this->om->findByIds(
@@ -1014,11 +1217,28 @@ class ResourceManager
         );
     }
 
+    /**
+     * Returns the resource linked to a node.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\AbstractResource
+     */
     public function getResourceFromNode(ResourceNode $node)
     {
         return $this->om->getRepository($node->getClass())->findOneByResourceNode($node->getId());
     }
 
+    /**
+     * Copy a resource node.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $newParent
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $last
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
+     */
     private function copyNode(ResourceNode $node, ResourceNode $newParent, User $user,  ResourceNode $last = null)
     {
         $newNode = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceNode');
@@ -1037,6 +1257,11 @@ class ResourceManager
         return $newNode;
     }
 
+    /**
+     * Set the previous and the next node of a nodes array to null.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode[] $nodes
+     */
     private function resetNodeOrder($nodes)
     {
         foreach ($nodes as $node) {
@@ -1050,7 +1275,11 @@ class ResourceManager
         $this->om->flush();
     }
 
-    /** required by insertBefore */
+    /**
+     * required by insertBefore
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $next
+     */
     public function removeNextWhereNextIs(ResourceNode $next = null)
     {
         $node = $this->resourceNodeRepo->findOneBy(array('next' => $next));
@@ -1061,7 +1290,11 @@ class ResourceManager
         }
     }
 
-    /** required by insertBefore */
+    /**
+     * required by insertBefore
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $previous
+     */
     public function removePreviousWherePreviousIs(ResourceNode $previous = null)
     {
         $node = $this->resourceNodeRepo->findOneBy(array('previous' => $previous));
@@ -1072,6 +1305,11 @@ class ResourceManager
         }
     }
 
+    /**
+     * Restore the order of each children of $parent. This may be usefull if the order is corrupted.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
+     */
     public function restoreNodeOrder(ResourceNode $parent)
     {
         $children = $parent->getChildren();

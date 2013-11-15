@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Converter;
 
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -21,15 +22,18 @@ use Claroline\CoreBundle\Entity\User;
 class AuthenticatedUserConverter implements ParamConverterInterface
 {
     private $securityContext;
+    private $translator;
 
     /**
      * @DI\InjectParams({
-     *     "securityContext" = @DI\Inject("security.context")
+     *     "securityContext" = @DI\Inject("security.context"),
+     *     "translator" = @DI\Inject("translator")
      * })
      */
-    public function __construct(SecurityContextInterface $securityContext)
+    public function __construct(SecurityContextInterface $securityContext, Translator $translator)
     {
-        $this->securityContext = $securityContext;
+        $this->securityContext  = $securityContext;
+        $this->translator       = $translator;
     }
 
     /**
@@ -44,13 +48,39 @@ class AuthenticatedUserConverter implements ParamConverterInterface
             throw new InvalidConfigurationException(InvalidConfigurationException::MISSING_NAME);
         }
 
-        if (($user = $this->securityContext->getToken()->getUser()) instanceof User) {
-            $request->attributes->set($parameter, $user);
+        $options = $configuration->getOptions();
+        if ($options['authenticatedUser'] === true) {
+            if (($user = $this->securityContext->getToken()->getUser()) instanceof User) {
+                $request->attributes->set($parameter, $user);
 
-            return true;
+                return true;
+            } else {
+                if (array_key_exists('messageEnabled', $options) and $options['messageEnabled'] === true) {
+                    $messageType = 'warning';
+                    if (array_key_exists('messageType', $options)) {
+                        $messageType = $options['messageType'];
+                    }
+
+                    $messageTranslationKey = 'this_page_requires_authentication';
+                    $messageTranslationDomain = 'platform';
+                    if (array_key_exists('messageTranslationKey', $options)) {
+                        $messageTranslationKey = $options['messageTranslationKey'];
+                        if (array_key_exists('messageTranslationDomain', $options)) {
+                            $messageTranslationDomain = $options['messageTranslationDomain'];
+                        }
+                    }
+
+                    $request->getSession()->getFlashBag()->add(
+                        $messageType,
+                        $this->translator->trans($messageTranslationKey, array(), $messageTranslationDomain)
+                    );
+                }
+
+                throw new AccessDeniedException();
+            }
+        } else {
+            $request->attributes->set($parameter, $user = $this->securityContext->getToken()->getUser());
         }
-
-        throw new AccessDeniedException();
     }
 
     /**
@@ -64,7 +94,7 @@ class AuthenticatedUserConverter implements ParamConverterInterface
 
         $options = $configuration->getOptions();
 
-        if (isset($options['authenticatedUser']) && $options['authenticatedUser'] === true) {
+        if (isset($options['authenticatedUser']) && ($options['authenticatedUser'] === true || $options['authenticatedUser'] === false )) {
             return true;
         }
 

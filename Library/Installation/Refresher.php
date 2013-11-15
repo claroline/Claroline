@@ -45,7 +45,10 @@ class Refresher
 
     public function installAssets(OutputInterface $output = null)
     {
-        $assetInstallInput = new ArrayInput(array('--symlink' => true));
+        $webDir = "{$this->container->get('kernel')->getRootDir()}/../web";
+        $assetInstallInput = new ArrayInput(
+            array('target' => $webDir, '--symlink' => true)
+        );
         $assetInstallCmd = new AssetsInstallCommand();
         $assetInstallCmd->setContainer($this->container);
         $assetInstallCmd->run($assetInstallInput, $output ?: new NullOutput());
@@ -68,7 +71,7 @@ class Refresher
         }
 
         $fileSystem = new Filesystem();
-        $baseCacheDir = $this->container->get('kernel')->getRootDir() . '/cache';
+        $baseCacheDir = "{$this->container->get('kernel')->getRootDir()}/cache";
         $cacheDir = $environment === null ? $baseCacheDir : "{$baseCacheDir}/{$environment}";
         $cacheIterator = new \DirectoryIterator($cacheDir);
 

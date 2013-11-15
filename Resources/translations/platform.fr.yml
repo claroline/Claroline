@@ -1,7 +1,8 @@
-404 : 'La page que vous cherchez n''existe pas.'
 'Add a logo': 'Ajouter un logo'
+'Audience/user visits': 'Audience/Visites utilisateurs'
 'Choose a logo': 'Choisir un logo'
 'None': 'Aucun'
+404 : 'La page que vous cherchez n''existe pas.'
 Action List: 'Liste des actions'
 Actions per day: 'Nombre d''actions par jour'
 Choose visible actions in the widget: 'Choisissez les actions visibles dans le widget'
@@ -24,17 +25,20 @@ active_widgets: 'Widgets actifs'
 activity_form_instructions: Instructions
 activity_form_name: Nom
 add: Ajouter
+add_category: 'Ajouter une catégorie'
 add_group: 'Ajouter un groupe'
 add_group_s_confirm_message: 'groupe(s) ajouté(s)'
 add_groups: 'Ajouter des groupes'
 add_resource: 'Ajouter une ressource'
 add_role: 'Ajouter un role'
 add_roles_confirm_message: 'Voulez vous ajouter le(s) role(s) suivant(s) aux %count% élément(s) sélectionné(s): '
+add_subcategory: 'Ajouter une sous-catégorie'
 add_tag: 'Ajouter un Tag'
 add_tag_to_workspace: 'Ajouter un Tag à l''espace d''activités'
 add_user: 'Ajouter un utilisateur'
 add_user_s_confirm_message: 'utilisateur(s) ajouté(s)'
 add_users: 'Ajouter des utilisateurs'
+add_workspace: 'Ajouter un espace d''activités'
 add_widget_to_home_tab: 'Ajouter un widget à l''onglet'
 admin: Administrateur
 admin_analytics: 'Statistiques plateforme'
@@ -46,13 +50,6 @@ admin_form_plainPassword_second : 'Répétez votre mot de passe'
 admin_form_username : 'Nom d''utilisateur'
 admin_home_tabs_configuration: 'Configuration des onglets pour les pages d''accueil'
 admin_logs: 'Suivi plateforme'
-admin_tag_children_list: 'Liste des enfants'
-admin_tag_potential_children_list: 'Liste des enfants potentiels'
-admin_tags_add_remove_children_to: 'Ajouter/Retirer des enfants au Tag'
-admin_tags_hierarchy: 'Hiérarchie des Tags administrateur'
-admin_tags_list: 'Liste des Tags administrateur'
-admin_tags_management: 'Gestion des Tags administrateur'
-admin_tags_organization: 'Organisation des Tags administrateur'
 admin_workspace_tag_form_name: Nom
 administration: Administration
 administrative_code: 'Code administratif'
@@ -61,7 +58,7 @@ agenda: Agenda
 all: Tous
 all_available_workspaces: 'Tous les espaces d''activités disponibles'
 all_my_workspaces: 'Tous mes espaces d''activités'
-all_workspaces: 'Tous les espaces'
+all_workspaces: 'Tous les espaces d''activités'
 an_error_occured_message: Une erreur s'est produite. Veuillez contacter l'administrateur.
 analytics_connections: 'Visites utilisateurs'
 analytics_home: 'Vue de l''ensemble'
@@ -69,6 +66,7 @@ analytics_resources: 'Contenu plateforme'
 analytics_top: 'Top des activités'
 anonymous: Anonyme
 apply: Appliquer
+at_least_one_category_has_to_be_selected: 'Au moins une catégorie doit être selectionnée'
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espaces d''activités disponibles'
 back: 'Retour'
@@ -83,8 +81,16 @@ canOpen: 'Droit d''ouvrir'
 cancel: Annuler
 cannot_delete_unique_manager: 'Impossible de supprimer le seul gestionnaire.'
 cannot_unsubscribe_from_workspace: 'Impossible de vous désincrire de l''espace d''activités'
-change_view : Changer l'affichage
+categories: Catégories
+categories_organization: 'Organisation des catégories'
+categorize: 'Classer par catégorie'
+category_explanations_1: 'Chaque catégorie doit avoir un nom unique.'
+category_explanations_2: 'Sélectionnez une catégorie pour gérer ses sous-catégories.'
+category_root: 'Catégories de base'
+category_structure: 'Structure des catégories'
+change_view : 'Changer l''affichage'
 choose_resource_form_type: 'Type de ressource'
+classify_workspaces: 'Classer les espaces d''activités'
 close: Fermer
 collaborator: Collaborateur
 communication: Communication
@@ -94,10 +100,13 @@ connections: Nb Cnx.
 copiable: 'Copiable'
 copy: Copier
 create: Créer
+create_category: 'Créer une catégorie'
 create_group: 'Créer un groupe'
 create_new_admin_tag: 'Créer un nouveau Tag administrateur'
 create_new_home_tab: 'Créer un nouvel onglet'
 create_new_tag: 'Créer un nouveau Tag'
+create_new_user_account : 'Creation de votre compte ClarolineConnect'
+create_subcategory: 'Créer une sous-catégorie'
 create_user: 'Créer un utilisateur'
 create_widget_instance: 'Créer un nouveau Widget'
 create_workspace: 'Créer un espace d''activités'
@@ -108,6 +117,7 @@ csv_users_import_infos_format: 'Format'
 csv_users_import_infos_format_a: 'Les données d''un utilisateur doivent être définies sur une ligne et séparées par une virgule'
 csv_users_import_infos_optional: 'Optionel'
 csv_users_import_infos_required: 'Requis'
+current_category: 'Catégorie courante'
 cut: Couper
 dashboard: 'Tableau de bord'
 date: Date
@@ -138,6 +148,9 @@ date_range.week: 's'
 date_range.yesterday: 'Hier'
 deletable: 'Supprimable'
 delete: Supprimer
+delete_category: 'Supprimer la catégorie'
+delete_category_confirm_title: 'Suppression d''une catégorie'
+delete_category_confirm_message: 'Voulez-vous vraiment supprimer cette catégorie ?'
 delete_home_tab: 'Supprimer l''onglet'
 desktop: Bureau
 desktop_home_tab_creation : 'Création d''un onglet pour le bureau'
@@ -190,6 +203,7 @@ group_parameter: 'Paramètres du groupe'
 groups: Groupes
 groups_list: 'Liste des groupes'
 groups_registration_in_workspace: 'Inscription des groupes à l''espace d''activités'
+has_been_put_in_category: 'a été placé dans la catégorie'
 has_been_suscribed_with_role: 'a été inscrit(e) avec le rôle'
 has_been_suscribed_with_role_group: 'a été inscrit avec le rôle'
 has_not_been_imported: 'n''a pas été importé(e)'
@@ -215,6 +229,7 @@ informations: Informations
 instructions: Consignes
 internal_error : 'Erreur interne du serveur. Veuillez contactez l''administrateur de la plateforme.'
 invalid_csv_file: 'Le fichier CSV n''est pas valide'
+is_already_in_category: 'est déjà dans la catégorie'
 jqplot_date_output_format: '%d-%m-%Y'
 lastName: Nom
 last_30_days_activity: 'Activités des 30 derniers jours'
@@ -285,9 +300,11 @@ new: Nouveau
 new_message: 'Nouveau message'
 new_message_alert: 'Vous avez %count% nouveaux message(s)'
 no: 'non'
+no_category: 'Il n''y a aucune catégorie'
 no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
-no_home_tab: 'Il n''y a aucun onglet'
 no_group: 'Aucun groupe'
+no_home_tab: 'Il n''y a aucun onglet'
+no_message: 'Aucun message'
 no_search_results: 'Votre recherche n''a retourné aucun résultat.'
 no_tag: 'Il n''y a aucun Tag'
 no_user: 'Aucun utilisateur'
@@ -304,6 +321,7 @@ options: Options
 or: Ou
 order: Ordre
 organize_admin_tags: 'Organiser les Tags administrateur'
+organize_categories: 'Organiser les catégories'
 organize_private_tags: 'Organiser les Tags personnels'
 owner: Propriétaire
 owner_s: Propriétaire(s)
@@ -318,8 +336,9 @@ permissions: Permissions
 personal_workspace: 'Espace personnel'
 phone: Téléphone
 platform_parameters: 'Paramètres de la plateforme'
+platform_parameters_form_defaultRole: 'Rôle par défaut'
 platform_parameters_form_footer: 'Pied de page'
-platform_parameters_form_icon: 'Icon de la plateforme'
+platform_parameters_form_icon: 'Icône de la plateforme'
 platform_parameters_form_localLanguage: Langue
 platform_parameters_form_name: 'Nom de la plateforme'
 platform_parameters_form_selfRegistration: Auto-inscription
@@ -334,7 +353,6 @@ profile_form_administrativeCode: 'Code administratif'
 profile_form_description : 'Description'
 profile_form_firstName: Prénom
 profile_form_lastName: Nom
-profile_form_userName: 'Nom d''utilisateur'
 profile_form_mail: Mail
 profile_form_note: 'Note personnelle'
 profile_form_ownedRoles: Role(s)
@@ -342,7 +360,10 @@ profile_form_phone: Téléphone
 profile_form_pictureFile : 'Photo de profil'
 profile_form_plainPassword_first: 'Mot de passe'
 profile_form_plainPassword_second: Vérification
+profile_form_creation_plainPassword_first: 'Mot de passe'
+profile_form_creation_plainPassword_second: Vérification
 profile_form_platformRoles: Rôles
+profile_form_userName: 'Nom d''utilisateur'
 profile_form_username: 'Nom d''utilisateur'
 properties: Propriétés
 public: Public
@@ -360,9 +381,13 @@ remove_group_confirm_message: Êtes-vous sûr de vouloir supprimer ce groupe ?
 remove_group_s_confirm_message: Êtes-vous sûr de vouloir supprimer ces %count% groupes?
 remove_message_confirm_message: Êtes-vous sûr de vouloir supprimer ce message ?
 remove_message_s_confirm_message: Êtes-vous sûr de vouloir supprimer ces %count% messages?
+remove_subcategory: 'Retirer la sous-catégorie'
 remove_user_confirm_message: Êtes-vous sûr de vouloir supprimer cet utilisateur ?
 remove_user_s_confirm_message: Êtes-vous sûr de vouloir supprimer ces %count% utilisateurs?
+remove_workspace_from_category_confirm_message: 'Êtes-vous sûr de vouloir retirer cet espace d''activités de cette catégorie ?'
+remove_workspace_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
 rename: Renommer
+rename_category: 'Renommer la catégorie'
 rename_tool: 'Renommage d''un outil'
 rename_widget_instance: 'Renommage du Widget'
 reset: Réinitialiser
@@ -409,17 +434,22 @@ save_workspace_as_template: 'Sauvegarde de l''espace d''activités comme modèle
 search: Rechercher
 search_group: 'Rechercher un groupe'
 search_user: 'Rechercher un utilisateur'
+search_workspace: 'Rechercher un espace d''activités'
 see: Voir
 see_more: Voir plus
 select all: 'Tout sélectionner'
 select_all: 'Tout sélectionner'
+select_category: 'Sélectionner une catégorie'
 select_contacts_title: 'Sélectionnez les destinataires'
 select_groups_for_registration_to_workspace: 'Choississez les groupes à inscrire'
 select_roles_to_assign: 'Selectionnez les Rôles à attribuer'
 select_users_for_registration_to_workspace: 'Choississez les utilisateurs à inscrire'
 select_workspaces_for_registration: 'Choisissez les espaces d''activités pour l''inscription'
 selected_workspaces_for_registration: 'Espaces d''activités sélectionnés pour l''inscription'
+selected_workspaces_will_be_put_in_it: 'Les espaces d''activités sélectionnés y seront disponibles'
 send_mail: 'Envoyer un mail'
+send_mail_form_object: Objet
+send_mail_form_content: Message
 send_message: 'Envoyer un message'
 session_id: 'Identifiant de session'
 settings: Paramètres
@@ -430,6 +460,7 @@ show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
 show_profile: 'Voir le profile'
 steal_session: 'Voler la session'
+subcategories: Sous-catégories
 subscribe_groups: 'Inscrire des groupes'
 subscribe_selected_groups: 'Inscrire les groupes sélectionnés'
 subscribe_selected_users: 'Inscrire les utilisateurs sélectionnés'
@@ -449,6 +480,8 @@ text_form_content: Contenu
 text_form_name: Nom
 text_form_shareType: Redistribution
 text_form_text: Texte
+the_workspace: 'L''espace d''activités'
+this_page_requires_authentication: 'Cette page requiert une authentification. Veuillez vous identifier.'
 to: Jusque
 to_message: A
 today: 'Aujourd''hui'
@@ -506,24 +539,27 @@ users_management: 'Gestion des utilisateurs'
 users_minimum_requirement_msg: 'Les utilisateurs doivent remplir ces conditions: login de 3 caractères, password de 4 caractères, email valide.'
 users_registration_in_workspace: 'Inscription des utilisateurs dans l''espace d''activités'
 users_visits: 'Visites des utilisateurs'
+line_per_page: 'Lignes par page'
 validate: Valider
 view: Voir
+view_category_hierarchy: 'Visualiser la structure des catégories'
 views: 'Nb vues'
 visible: Visible
 visitor: Visiteur
 warning_user_impersonation: 'Vous êtes connecté en tant que %user%.'
 warning_workspace_impersonation: 'Vous êtes connecté en tant que %role% du workspace %workspace%.'
 widget: Widget
+widget_display_form_name: Nom
 widget_home_tab_delete_confirm_message: 'Voulez-vous vraiment retirer ce widget de cet onglet ?'
 widget_home_tab_delete_confirm_title: 'Suppression du widget de l''onglet'
 widget_settings: 'Paramètres des widgets'
 widgets: Widgets
-widget_display_form_name: Nom
 widgets_configuration: 'Configuration des widgets'
 workspace.create: 'Créer un nouvel espace d''activités'
 workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'
 workspace: 'Espace d''activités'
 workspace_administration: Administration
+workspace_classification: 'Classification des espaces d''activités'
 workspace_delete: 'Supprimer l''espace d''activités'
 workspace_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cet espace d''activités ?'
 workspace_delete_confirm_title: 'Confirmation de suppression'
@@ -544,15 +580,20 @@ workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités
 workspace_home_tabs: 'Onglets pour les espaces d''activités'
 workspace_order_tool_edit_form_name: Nom
 workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
+workspace_remove_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
+workspace_remove_from_category_confirm_message: 'Voulez-vous vraiment retirer l''espace d''activités de cette catégorie ?'
 workspace_resource: Ressources
 workspace_role_type_form_requireDir: 'Créer un répertoire'
 workspace_role_type_form_translationKey: Nom
 workspace_tag_form_name: Nom
+workspace_tag_remove_confirm_title: 'Retrait d''une catégorie'
+workspace_tag_remove_confirm_message: 'Voulez-vous vraiment retirer cette catégorie ?'
 workspace_template_form_name: Nom
 workspace_tools: Outils
 workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet espace d''activités ?'
 workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'
+workspaces_included_in_category: 'Espaces d''activités enregistrés dans cette catégorie'
 ws_creator: 'Créateur d''espaces'
 ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: 'oui'

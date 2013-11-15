@@ -18,6 +18,12 @@ class MailingSettings extends AbstractValidator
     public function setTransport($transport)
     {
         $this->transport = trim($transport);
+
+        if ($this->transport === 'gmail') {
+            $this->blankOptions['host'] = 'smtp.gmail.com';
+            $this->blankOptions['port'] = 465;
+            $this->blankOptions['encryption'] = 'ssl';
+        }
     }
 
     public function getTransport()

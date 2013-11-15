@@ -1,4 +1,7 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'add_user' | trans({}, 'platform') }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([
@@ -11,10 +14,14 @@
                 'name': 'users_management'|trans({}, 'platform'),
                 'href': path('claro_admin_users_management')
             },
-            {'name':'add_user'|trans({}, 'platform'), 'href':''}
+            {
+                'name': 'add_user'|trans({}, 'platform'),
+                'href':''
+            }
         ])
     }}
 {% endblock %}
+
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'user_creation'|trans({}, 'platform') }}</h3>
@@ -33,4 +40,9 @@
             </a>
         </div>
     </form>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
+    {{ tinymce_init() }}
 {% endblock %}

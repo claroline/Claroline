@@ -29,6 +29,8 @@
     {% set themeTitle = "Edit theme" | trans({}, "theme") %}
 {% endif %}
 
+{% block title %}{{ parent() ~ ' - ' ~ themeTitle }}{% if theme is defined %} ({{ theme.name }}){% endif %}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([

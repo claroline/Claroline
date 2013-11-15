@@ -295,13 +295,23 @@ class LogManager
         /** @var \Claroline\CoreBundle\Repository\Log\LogRepository $repository */
         $repository = $entityManager->getRepository('ClarolineCoreBundle:Log\Log');
 
+        //Find if action refers to an resource type
+        $actionString = $action;
+        $resourceType = null;
+        preg_match('/\[\[([^\]]+)\]\]/', $action, $matches);
+        if (!empty($matches)) {
+            $resourceType = $matches[1];
+            $actionString = preg_replace('/\[\[([^\]]+)\]\]/', '', $action);
+            $actionString = trim($actionString);
+        }
         $query = $repository->findFilteredLogsQuery(
-            $action,
+            $actionString,
             $range,
             $userSearch,
             $actionsRestriction,
             $workspaceIds,
-            $maxResult
+            $maxResult,
+            $resourceType
         );
 
         $adapter = new DoctrineORMAdapter($query);
@@ -315,11 +325,13 @@ class LogManager
         }
 
         $chartData = $repository->countByDayFilteredLogs(
-            $action,
+            $actionString,
             $range,
             $userSearch,
             $actionsRestriction,
-            $workspaceIds
+            $workspaceIds,
+            false,
+            $resourceType
         );
 
         //List item delegation

@@ -1,5 +1,7 @@
 {% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
 
+{% block title %}{{ parent() ~ ' - ' ~ 'admin_tags_add_remove_children_to'|trans({}, 'platform') }} ({{ tag.getName() }}){% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([
@@ -30,7 +32,7 @@
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">
-            {{ 'admin_tags_add_remove_children_to'|trans({}, 'platform') }} [{{ tag.getName() }}]
+            {{ 'admin_tags_add_remove_children_to'|trans({}, 'platform') }} ({{ tag.getName() }})
         </h3>
     </div>
     <div class="panel-body">

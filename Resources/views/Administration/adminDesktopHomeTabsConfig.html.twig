@@ -1,5 +1,7 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
+{% block title %}{{ parent() ~ ' - ' ~ 'desktop_home_tabs' | trans({}, 'platform') }}{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}

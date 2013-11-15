@@ -10,12 +10,95 @@ you want to track.
 When used this way, all user activity on such actions is calculated and
 displayed as Events in the Tracking reporting interface.
 
-Event Tracking system can collect four major event categories:
+Event Tracking system can collect five major event categories:
 
  * User events (user create, update, delete etc.)
  * Group events
  * Resources events
  * Roles events
+ * Workspace events
+
+Exhaustive core events list
+--------------------------
+### User events ###
+* `user-create`
+* `user-delete`
+* `user-login`
+* `user-update`
+
+### Group events ###
+* `group-add_user`
+* `group-create`
+* `group-delete`
+* `group-update`
+
+### Workspace events ###
+* `workspace-role-subscribe_user`
+* `workspace-role-subscribe_group`
+* `workspace-role-unsubscribe_user`
+* `workspace-role-unsubscribe_group`
+* `workspace-create`
+* `workspace-delete`
+* `workspace-role-change_right`
+* `workspace-role-create`
+* `workspace-role-delete`
+* `workspace-role-update`
+* `workspace-tool-read`
+* `workspace-update`
+
+### Resource events ###
+* `resource-copy`
+* `resource-create`
+* `resource-custom_action`
+* `resource-delete`
+* `resource-export`
+* `resource-move`
+* `resource-read`
+* `resource-shortcut`
+* `resource-update`
+* `resource-update_rename`
+
+Not-exhaustive plugins events list
+--------------------------
+### Dropzone events (plugin) ###
+* `resource-icap_dropzone-correction_end`
+* `resource-icap_dropzone-correction_start`
+* `resource-icap_dropzone-correction_validation_change`
+* `resource-icap_dropzone-criterion_create`
+* `resource-icap_dropzone-criterion_delete`
+* `resource-icap_dropzone-drop_end`
+* `resource-icap_dropzone-drop_open`
+* `resource-icap_dropzone-drop_evaluate`
+* `resource-icap_dropzone-drop_start`
+* `resource-icap_dropzone-document_delete`
+* `resource-icap_dropzone-dropzone_update`
+
+### Blog events (plugin) ###
+* `resource-icap_blog-configure`
+* `resource-icap_blog-comment_create`
+* `resource-icap_blog-comment_delete`
+* `resource-icap_blog-post_create`
+* `resource-icap_blog-post_delete`
+* `resource-icap_blog-post_read`
+* `resource-icap_blog-post_update`
+
+### Wiki events (plugin) ###
+* `resource-icap_wiki-contribution_create`
+* `resource-icap_wiki-section_create`
+* `resource-icap_wiki-section_delete`
+* `resource-icap_wiki-section_move`
+* `resource-icap_wiki-section_remove`
+* `resource-icap_wiki-section_restore`
+* `resource-icap_wiki-section_update`
+* `resource-icap_wiki-configure`
+
+### Lesson events (plugin) ###
+* `resource-icap_lesson-chapter_create`
+* `resource-icap_lesson-chapter_delete`
+* `resource-icap_lesson-chapter_move`
+* `resource-icap_lesson-chapter_read`
+* `resource-icap_lesson-chapter_update`
+
 
 Advanced features
 -----------------

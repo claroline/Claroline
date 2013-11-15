@@ -1,5 +1,7 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
+{% block title %}{{ "workspaces" | trans({}, "platform") }}{% endblock %}
+
 {% block leftbar %}
     {% if is_granted('ROLE_USER') %}
        <div class="list-group menu">

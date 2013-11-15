@@ -38,6 +38,8 @@
 
 {% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
 
+{% block title %}{{ parent() ~ ' - ' ~ "register_to_a_public_workspace" | trans({}, "platform") }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([

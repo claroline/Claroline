@@ -40,6 +40,8 @@
      *     'btn': 'btn-other',
      *     'confirmTemplate': templateB
      * }
+     *
+     * You can add a <select> whose id is "max-select". This will send the "max" parameter to the request.
      */
     table.initialize = function (parameters) {
         var currentAction = '';
@@ -48,6 +50,11 @@
         $('#search-button').click(function () {
             var search = document.getElementById('search-items-txt').value;
             var route;
+
+            var max = findMaxPerPage();
+            if (max) {
+               parameters.route.search.parameters.max = parameters.route.normal.parameters.max = max;
+            }
 
             if (search !== '') {
                 parameters.route.search.parameters.search = search;
@@ -59,9 +66,14 @@
             window.location.href = route;
         });
 
-        $('#search-items-txt').keypress(function(e){
+        $('#search-items-txt').keypress(function (e) {
 
-            if (e.keyCode == 13) {
+            var max = findMaxPerPage();
+            if (max) {
+               parameters.route.search.parameters.max = parameters.route.normal.parameters.max = max;
+            }
+
+            if (e.keyCode === 13) {
                 var search = document.getElementById('search-items-txt').value;
                 var route;
 
@@ -69,26 +81,29 @@
                     parameters.route.search.parameters.search = search;
                     route = Routing.generate(parameters.route.search.route, parameters.route.search.parameters);
                 } else {
+                    console.debug(parameters);
                     route = Routing.generate(parameters.route.normal.route, parameters.route.normal.parameters);
                 }
 
                 window.location.href = route;
             }
-        })
+        });
 
         for (var key in parameters.route.action) {
-            var btnClass = '.'
-                + (parameters.route.action[key].btn === undefined ? 'action-button': parameters.route.action[key].btn);
-            $(btnClass).click(function (e) {
-                currentAction = $(e.currentTarget).attr('data-action');
-                var html = Twig.render(parameters.route.action[currentAction].confirmTemplate,
-                    {'nbItems': $('.chk-item:checked').length}
+            if (parameters.route.action.hasOwnProperty(key)) {
+                var btnClass = '.' + (
+                    parameters.route.action[key].btn === undefined ? 'action-button': parameters.route.action[key].btn
                 );
-                $('#table-modal .modal-body').html(html);
-                $('#table-modal').modal('show');
-            });
+                $(btnClass).click(function (e) {
+                    currentAction = $(e.currentTarget).attr('data-action');
+                    var html = Twig.render(parameters.route.action[currentAction].confirmTemplate,
+                        {'nbItems': $('.chk-item:checked').length}
+                    );
+                    $('#table-modal .modal-body').html(html);
+                    $('#table-modal').modal('show');
+                });
+            }
         }
-
         $('#modal-valid-button').on('click', function () {
             var queryString = {};
             var i = 0;
@@ -137,6 +152,10 @@
             {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'table-modal', 'body': ''}
         );
         $('body').append(html);
+    }
+
+    function findMaxPerPage() {
+        return $('#max-select').val();
     }
 
 })();

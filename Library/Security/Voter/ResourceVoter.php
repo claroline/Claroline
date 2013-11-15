@@ -4,14 +4,13 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -43,13 +42,15 @@ class ResourceVoter implements VoterInterface
         $this->em = $em;
         $this->repository = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
         $this->translator = $translator;
-        $this->specialActions = array('move', 'create');
+        $this->specialActions = array('move', 'create', 'copy');
         $this->ut = $ut;
         $this->maskManager = $maskManager;
     }
 
     public function vote(TokenInterface $token, $object, array $attributes)
     {
+       $object = $object instanceof AbstractResource ? $object->getResourceNode(): $object;
+
         if ($object instanceof ResourceCollection) {
             $errors = array();
 
@@ -62,26 +63,22 @@ class ResourceVoter implements VoterInterface
                         $this->checkCreation($object->getAttribute('type'), $resource, $token)
                     );
                 }
-            }
-
-            if (strtolower($attributes[0]) == 'move') {
+            } elseif (strtolower($attributes[0]) == 'move') {
                 $errors = array_merge(
                     $errors,
                     $this->checkMove($object->getAttribute('parent'), $object->getResources(), $token)
                 );
-            }
-
-            if (strtolower($attributes[0]) == 'copy') {
+            } elseif (strtolower($attributes[0]) == 'copy') {
                 $errors = array_merge(
                     $errors,
                     $this->checkCopy($object->getAttribute('parent'), $object->getResources(), $token)
                 );
+            } else {
+                $errors = array_merge(
+                    $errors,
+                    $this->checkAction(strtolower($attributes[0]), $object->getResources(), $token)
+                );
             }
-
-            $errors = array_merge(
-                $errors,
-                $this->checkAction(strtolower($attributes[0]), $object->getResources(), $token)
-            );
 
             if (count($errors) === 0) {
                 return VoterInterface::ACCESS_GRANTED;
@@ -90,6 +87,17 @@ class ResourceVoter implements VoterInterface
             $object->setErrors($errors);
 
             return VoterInterface::ACCESS_DENIED;
+
+        } elseif ($object instanceof ResourceNode) {
+
+            if (in_array($attributes[0], $this->specialActions)) {
+                throw new \Exception('A ResourceCollection class must be used for this action.');
+            }
+
+            $errors = $this->checkAction($attributes[0], array($object), $token);
+
+            return count($errors) === 0 ? VoterInterface::ACCESS_GRANTED: VoterInterface::ACCESS_DENIED;
+
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
@@ -148,7 +156,7 @@ class ResourceVoter implements VoterInterface
             $decoder = $this->maskManager->getDecoder($type, $action);
 
             if (!$decoder) {
-                throw new \Exception('The permission ' . $action . ' does not exists for the type' . $type->getName());
+                throw new \Exception('The permission ' . $action . ' does not exists for the type ' . $type->getName());
             }
 
             $grant = $decoder ? $mask & $decoder->getValue(): 0;

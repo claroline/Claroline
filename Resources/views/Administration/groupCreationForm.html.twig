@@ -1,5 +1,7 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
+{% block title %}{{ parent() ~ ' - ' ~ 'create_group' | trans({}, 'platform') }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([

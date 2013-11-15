@@ -124,7 +124,7 @@ class AdministrationController extends Controller
     public function userCreationFormAction(User $currentUser)
     {
         $roles = $this->roleManager->getPlatformRoles($currentUser);
-        $form = $this->formFactory->create(FormFactory::TYPE_USER, array($roles));
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_FULL, array($roles));
         if ($this->mailManager->isMailerAvailable()) {
             return array('form_complete_user' => $form->createView());
         }
@@ -151,26 +151,13 @@ class AdministrationController extends Controller
     public function createUserAction(User $currentUser)
     {
         $roles = $this->roleManager->getPlatformRoles($currentUser);
-        $form = $this->formFactory->create(FormFactory::TYPE_USER, array($roles));
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_FULL, array($roles));
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $user = $form->getData();
             $newRoles = $form->get('platformRoles')->getData();
             $this->userManager->insertUserWithRoles($user, $newRoles);
-
-            if ($this->mailManager->isMailerAvailable()) {
-                $body = $this->translator->trans('admin_form_username', array(), 'platform').
-                    ': '.$user->getUsername().
-                    $this->translator->trans('admin_form_plainPassword_first', array(), 'platform').
-                    ': '.$user->getPlainPassword();
-
-                if ($this->mailManager->sendPlainPassword('noreply@claroline.net', $user->getMail(), $body)) {
-                    return $this->redirect($this->generateUrl('claro_admin_user_list'));
-                }
-
-                return $this->redirect($this->generateUrl('claro_admin_user_list'));
-            }
 
             return $this->redirect($this->generateUrl('claro_admin_user_list'));
         }
@@ -207,16 +194,16 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "users/page/{page}",
+     *     "users/page/{page}/max/{max}/order/{order}",
      *     name="claro_admin_user_list",
-     *     defaults={"page"=1, "search"=""},
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "users/page/{page}/search/{search}",
+     *     "users/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_admin_user_list_search",
-     *     defaults={"page"=1},
+     *     defaults={"page"=1, "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -224,13 +211,17 @@ class AdministrationController extends Controller
      *
      * Displays the platform user list.
      */
-    public function userListAction($page, $search)
+    public function userListAction($page, $search, $max, $order)
     {
-        $pager = $search === '' ?
-            $this->userManager->getAllUsers($page) :
-            $this->userManager->getUsersByName($search, $page);
+        if (!$this->userManager->isFieldOrderable($order)) {
+            return new Response('The field ' . $order . ' does not exists', 422);
+        }
 
-        return array('pager' => $pager, 'search' => $search);
+        $pager = $search === '' ?
+            $this->userManager->getAllUsers($page, $max, $order) :
+            $this->userManager->getUsersByName($search, $page, $max, $order);
+
+        return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order);
     }
 
     /**
@@ -243,7 +234,7 @@ class AdministrationController extends Controller
      * @EXT\Method("GET")
      * @EXT\Route(
      *     "users/page/{page}/pic/search/{search}",
-     *     name="claro_admin_user_list_search",
+     *     name="claro_admin_user_list_search_pics",
      *     defaults={"page"=1},
      *     options = {"expose"=true}
      * )
@@ -263,16 +254,16 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/groups/page/{page}",
+     *     "/groups/page/{page}/max/{max}/order/{order}",
      *     name="claro_admin_group_list",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "search"=""}
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "groups/page/{page}/search/{search}",
+     *     "groups/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_admin_group_list_search",
-     *     defaults={"page"=1},
+     *     defaults={"page"=1, "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -280,29 +271,33 @@ class AdministrationController extends Controller
      *
      * Returns the platform group list.
      */
-    public function groupListAction($page, $search)
+    public function groupListAction($page, $search, $max, $order)
     {
-        $pager = $search === '' ?
-            $this->groupManager->getGroups($page) :
-            $this->groupManager->getGroupsByName($search, $page);
+        if (!$this->groupManager->isFieldOrderable($order)) {
+            return new Response('The field ' . $order . ' does not exists', 422);
+        }
 
-        return array('pager' => $pager, 'search' => $search);
+        $pager = $search === '' ?
+            $this->groupManager->getGroups($page, $max, $order) :
+            $this->groupManager->getGroupsByName($search, $page, $max, $order);
+
+        return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order);
     }
 
     /**
      * @EXT\Route(
-     *     "/group/{groupId}/users/page/{page}",
+     *     "/group/{groupId}/users/page/{page}/max/{max}/order/{order}",
      *     name="claro_admin_user_of_group_list",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "search"=""}
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"}
      * )
      * @EXT\Method("GET")
      *
      * @EXT\Route(
-     *     "/group/{groupId}/users/page/{page}/search/{search}",
+     *     "/group/{groupId}/users/page/{page}/search/{search}/max/{max}/{order}",
      *     name="claro_admin_user_of_group_list_search",
      *     options={"expose"=true},
-     *     defaults={"page"=1}
+     *     defaults={"page"=1, "max"=50, "order"="id"}
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
@@ -314,29 +309,33 @@ class AdministrationController extends Controller
      *
      * Returns the users of a group.
      */
-    public function usersOfGroupListAction(Group $group, $page, $search)
+    public function usersOfGroupListAction(Group $group, $page, $search, $max, $order)
     {
-        $pager = $search === '' ?
-            $this->userManager->getUsersByGroup($group, $page) :
-            $this->userManager->getUsersByNameAndGroup($search, $group, $page);
+        if (!$this->userManager->isFieldOrderable($order)) {
+            return new Response('The field ' . $order . ' does not exists', 422);
+        }
 
-        return array('pager' => $pager, 'search' => $search, 'group' => $group);
+        $pager = $search === '' ?
+            $this->userManager->getUsersByGroup($group, $page, $max, $order) :
+            $this->userManager->getUsersByNameAndGroup($search, $group, $page, $max, $order);
+
+        return array('pager' => $pager, 'search' => $search, 'group' => $group, 'max' => $max, 'order' => $order);
     }
 
     /**
      * @EXT\Route(
-     *     "/group/add/{groupId}/page/{page}",
+     *     "/group/add/{groupId}/page/{page}/max/{max}/order/{order}",
      *     name="claro_admin_outside_of_group_user_list",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "search"=""}
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"}
      * )
      * @EXT\Method("GET")
      *
      * @EXT\Route(
-     *     "/group/add/{groupId}/page/{page}/search/{search}",
+     *     "/group/add/{groupId}/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_admin_outside_of_group_user_list_search",
      *     options={"expose"=true},
-     *     defaults={"page"=1}
+     *     defaults={"page"=1, "max"=50, "order"="id"}
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
@@ -348,13 +347,17 @@ class AdministrationController extends Controller
      *
      * Displays the user list with a control allowing to add them to a group.
      */
-    public function outsideOfGroupUserListAction(Group $group, $page, $search)
+    public function outsideOfGroupUserListAction(Group $group, $page, $search, $max, $order)
     {
-        $pager = $search === '' ?
-            $this->userManager->getGroupOutsiders($group, $page) :
-            $this->userManager->getGroupOutsidersByName($group, $page, $search);
+        if (!$this->userManager->isFieldOrderable($order)) {
+            return new Response('The field ' . $order . ' does not exists', 422);
+        }
 
-        return array('pager' => $pager, 'search' => $search, 'group' => $group);
+        $pager = $search === '' ?
+            $this->userManager->getGroupOutsiders($group, $page, $max, $order) :
+            $this->userManager->getGroupOutsidersByName($group, $page, $search, $max, $order);
+
+        return array('pager' => $pager, 'search' => $search, 'group' => $group, 'max' => $max, 'order' => $order);
     }
 
     /**
@@ -596,9 +599,10 @@ class AdministrationController extends Controller
     public function platformSettingsFormAction()
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
+        $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
         $form = $this->formFactory->create(
             FormFactory::TYPE_PLATFORM_PARAMETERS,
-            array($this->getThemes()),
+            array($this->getThemes(), $role),
             $platformConfig
         );
 
@@ -640,7 +644,8 @@ class AdministrationController extends Controller
                         'name' => $form['name']->getData(),
                         'support_email' => $form['support_email']->getData(),
                         'footer' => $form['footer']->getData(),
-                        'logo' => $this->request->get('selectlogo')
+                        'logo' => $this->request->get('selectlogo'),
+                        'default_role' => $form['defaultRole']->getData()->getName()
                     )
                 );
 
@@ -1198,14 +1203,14 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/registration/list/users/page/{page}",
+     *     "/registration/list/users/page/{page}/ordered-by/{ordered}",
      *     name="claro_users_list_registration_pager",
      *     defaults={"page"=1, "search"=""},
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/registration/list/users/page/{page}/search/{search}",
+     *     "/registration/list/users/page/{page}/search/{search}/ordered-by/{ordered}",
      *     name="claro_users_list_registration_pager_search",
      *     defaults={"page"=1},
      *     options={"expose"=true}
@@ -1218,13 +1223,13 @@ class AdministrationController extends Controller
      *
      * @return Response
      */
-    public function userListPagerAction($page, $search)
+    public function userListPagerAction($page, $search, $ordered)
     {
         $pager = $search === '' ?
-            $this->userManager->getAllUsers($page) :
-            $this->userManager->getUsersByName($search, $page);
+            $this->userManager->getAllUsers($page, $ordered) :
+            $this->userManager->getUsersByName($search, $page, $ordered);
 
-        return array('users' => $pager, 'search' => $search);
+        return array('users' => $pager, 'search' => $search, 'ordered' => $ordered);
     }
 
     /**

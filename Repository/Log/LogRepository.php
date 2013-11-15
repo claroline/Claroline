@@ -36,7 +36,7 @@ class LogRepository extends EntityRepository
         return $this->extractChartData($queryBuilder->getQuery()->getResult(), $range);
     }
 
-    public function countByDayFilteredLogs($action, $range, $userSearch, $actionRestriction, $workspaceIds = null, $unique = false)
+    public function countByDayFilteredLogs($action, $range, $userSearch, $actionRestriction, $workspaceIds = null, $unique = false, $resourceType = null)
     {
         $queryBuilder = $this
             ->createQueryBuilder('log')
@@ -53,11 +53,12 @@ class LogRepository extends EntityRepository
         $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, $action, $actionRestriction);
         $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
         $queryBuilder = $this->addUserFilterToQueryBuilder($queryBuilder, $userSearch);
+        $queryBuilder = $this->addResourceTypeFilterToQueryBuilder($queryBuilder, $resourceType);
 
         if ($workspaceIds !== null and count($workspaceIds) > 0) {
             $queryBuilder = $this->addWorkspaceFilterToQueryBuilder($queryBuilder, $workspaceIds);
         }
-
+        
         return $this->extractChartData($queryBuilder->getQuery()->getResult(), $range);
     }
 
@@ -93,7 +94,8 @@ class LogRepository extends EntityRepository
         $userSearch,
         $actionsRestriction,
         $workspaceIds = null,
-        $maxResult = -1
+        $maxResult = -1,
+        $resourceType = null
     )
     {
         $queryBuilder = $this
@@ -104,6 +106,7 @@ class LogRepository extends EntityRepository
         $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, $action, $actionsRestriction);
         $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
         $queryBuilder = $this->addUserFilterToQueryBuilder($queryBuilder, $userSearch);
+        $queryBuilder = $this->addResourceTypeFilterToQueryBuilder($queryBuilder, $resourceType);
 
         if ($workspaceIds !== null and count($workspaceIds) > 0) {
             $queryBuilder = $this->addWorkspaceFilterToQueryBuilder($queryBuilder, $workspaceIds);
@@ -318,7 +321,7 @@ class LogRepository extends EntityRepository
             }
         }
 
-        if (null !== $action) {
+        if (null !== $action && $action !== 'all') {
             $queryBuilder
                 ->andWhere("log.action LIKE :action")
                 ->setParameter('action', '%' . $action . '%');
@@ -425,6 +428,18 @@ class LogRepository extends EntityRepository
                     ->andWhere('log.action IN (:actions)')
                     ->setParameter('actions', $config->getRestrictions());
             }
+        }
+
+        return $queryBuilder;
+    }
+
+    private function addResourceTypeFilterToQueryBuilder($queryBuilder, $resourceType)
+    {
+        if (!empty($resourceType)) {
+            $queryBuilder
+                ->leftJoin('log.resourceType', 'resourceType')
+                ->andWhere('resourceType.name = :resourceType')
+                ->setParameter('resourceType', $resourceType);
         }
 
         return $queryBuilder;

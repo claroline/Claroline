@@ -244,69 +244,71 @@ class RolesController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/users/unregistered/page/{page}",
+     *     "/{workspace}/users/unregistered/page/{page}/max/{max}",
      *     name="claro_workspace_unregistered_user_list",
-     *     defaults={"page"=1, "search"=""},
+     *     defaults={"page"=1, "search"="", "max"=50},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/{workspace}/users/unregistered/page/{page}/search/{search}",
+     *     "/{workspace}/users/unregistered/page/{page}/search/{search}/max/{max}",
      *     name="claro_workspace_unregistered_user_list_search",
-     *     defaults={"page"=1},
+     *     defaults={"page"=1, "max"=50},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:unregisteredUsers.html.twig")
      */
-    public function unregisteredUserListAction($page, $search, AbstractWorkspace $workspace)
+    public function unregisteredUserListAction($page, $search, AbstractWorkspace $workspace, $max)
     {
         $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
         $pager = ($search === '') ?
-            $this->userManager->getAllUsers($page):
-            $this->userManager->getUsersByName($search, $page);
+            $this->userManager->getAllUsers($page, $max):
+            $this->userManager->getUsersByName($search, $page, $max);
 
         return array(
             'workspace' => $workspace,
             'pager' => $pager,
             'search' => $search,
-            'wsRoles' => $wsRoles
+            'wsRoles' => $wsRoles,
+            'max' => $max
         );
     }
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/groups/unregistered/page/{page}",
+     *     "/{workspace}/groups/unregistered/page/{page}/max/{max}",
      *     name="claro_workspace_unregistered_group_list",
-     *     defaults={"page"=1, "search"=""},
+     *     defaults={"page"=1, "search"="", "max"=50},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/{workspace}/groups/unregistered/page/{page}/search/{search}",
+     *     "/{workspace}/groups/unregistered/page/{page}/search/{search}/max/{max}",
      *     name="claro_workspace_unregistered_group_list_search",
-     *     defaults={"page"=1},
+     *     defaults={"page"=1, "max"=50},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:unregisteredGroups.html.twig")
      */
-    public function unregisteredGroupListAction($page, $search, AbstractWorkspace $workspace)
+    public function unregisteredGroupListAction($page, $search, AbstractWorkspace $workspace, $max)
     {
         $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
         $pager = ($search === '') ?
-            $this->groupManager->getAllGroups($page):
-            $this->groupManager->getGroupsByName($search, $page);
+            $this->groupManager->getAllGroups($page, $max):
+            $this->groupManager->getGroupsByName($search, $page, $max);
 
         return array(
             'workspace' => $workspace,
             'pager' => $pager,
             'search' => $search,
-            'wsRoles' => $wsRoles
+            'wsRoles' => $wsRoles,
+            'max' => $max
         );
     }
 
@@ -383,59 +385,57 @@ class RolesController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/users/registered/page/{page}",
+     *     "/{workspace}/users/registered/page/{page}/max/{max}/order/{order}",
      *     name="claro_workspace_registered_user_list",
-     *     defaults={"page"=1, "search"="", "withUnregistered"=0},
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/{workspace}/users/registered/page/{page}/search/{search}",
+     *     "/{workspace}/users/registered/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_workspace_registered_user_list_search",
-     *     defaults={"page"=1, "withUnregistered"=0},
+     *     defaults={"page"=1, "max"=50, "order"="id"},
      *     options = {"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *     "roles",
-     *     class="ClarolineCoreBundle:Role",
-     *     options={"multipleIds"=true, "isRequired"=false, "name"="roleIds"}
      * )
      * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceUsers.html.twig")
      */
-    public function usersListAction(
-        AbstractWorkspace $workspace,
-        $page,
-        $search
-    )
+    public function usersListAction(AbstractWorkspace $workspace, $page, $search, $max, $order)
     {
         $this->checkAccess($workspace);
+
+        if (!$this->userManager->isFieldOrderable($order)) {
+            return new Response('The field ' . $order . ' does not exists', 422);
+        }
+
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
         $pager = ($search === '') ?
-            $this->userManager->getByRolesIncludingGroups($wsRoles, $page):
-            $this->userManager->getByRolesAndNameIncludingGroups($wsRoles, $search, $page);
+            $this->userManager->getByRolesIncludingGroups($wsRoles, $page, $max, $order):
+            $this->userManager->getByRolesAndNameIncludingGroups($wsRoles, $search, $page, $max, $order);
 
         return array(
             'workspace' => $workspace,
             'pager' => $pager,
             'search' => $search,
-            'wsRoles' => $wsRoles
+            'wsRoles' => $wsRoles,
+            'max' => $max,
+            'order' => $order
         );
     }
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/groups/registered/page/{page}",
+     *     "/{workspace}/groups/registered/page/{page}/max/{max}",
      *     name="claro_workspace_registered_group_list",
-     *     defaults={"page"=1, "search"=""},
+     *     defaults={"page"=1, "search"="", "max"=50},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/{workspace}/groups/registered/page/{page}/search/{search}",
+     *     "/{workspace}/groups/registered/page/{page}/search/{search}/max/{max}",
      *     name="claro_workspace_registered_group_list_search",
-     *     defaults={"page"=1},
+     *     defaults={"page"=1, "max"=50},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -446,24 +446,21 @@ class RolesController extends Controller
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceGroups.html.twig")
      */
-    public function groupsListAction(
-        AbstractWorkspace $workspace,
-        $page,
-        $search
-    )
+    public function groupsListAction(AbstractWorkspace $workspace, $page, $search, $max)
     {
         $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
         $pager = ($search === '') ?
-            $pager = $this->groupManager->getGroupsByRoles($wsRoles, $page):
-            $pager = $this->groupManager->getGroupsByRolesAndName($wsRoles, $search, $page);
+            $pager = $this->groupManager->getGroupsByRoles($wsRoles, $page, $max):
+            $pager = $this->groupManager->getGroupsByRolesAndName($wsRoles, $search, $page, $max);
 
         return array(
             'workspace' => $workspace,
             'pager' => $pager,
             'search' => $search,
-            'wsRoles' => $wsRoles
+            'wsRoles' => $wsRoles,
+            'max' => $max
         );
     }
 

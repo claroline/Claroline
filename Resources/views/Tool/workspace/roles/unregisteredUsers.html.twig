@@ -1,40 +1,37 @@
-{% macro renderPager(search, workspaceId, withUnregistered, queryString, pager) %}
-{% if search == '' %}
-    {{
-    pagerfanta(
-    pager,
-    'twitter_bootstrap_translated',
-    {
-    'proximity' : 1,
-    'routeName': 'claro_workspace_unregistered_user_list',
-    'routeParams': {'workspace': workspaceId}
-    }
-    )
-    }}
-{% else %}
-    {{
-    pagerfanta(
-    pager,
-    'twitter_bootstrap_translated',
-    {
-    'proximity' : 1,
-    'routeName': 'claro_workspace_unregistered_user_list_search',
-    'routeParams': {'search': search, 'workspace': workspaceId}
-    }
-    )
-    }}
-{% endif %}
-{% endmacro %}
-
-{% macro displayControls(workspaceId) %}
-{% if app.user %}
-{% endif %}
+{% macro renderPager(search, workspaceId, withUnregistered, pager, max) %}
+    {% if search == '' %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_workspace_unregistered_user_list',
+                    'routeParams': {'workspace': workspaceId, 'max': max}
+                }
+            )
+        }}
+    {% else %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_workspace_unregistered_user_list_search',
+                    'routeParams': {'search': search, 'workspace': workspaceId, 'max': max}
+                }
+            )
+        }}
+    {% endif %}
 {% endmacro %}
 
 {% from _self import renderPager %}
-{% from _self import displayControls %}
 
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "users_registration_in_workspace" | trans({}, "platform") }}{% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.workspaceBreadcrumbs(
@@ -42,6 +39,10 @@
             [
                 {
                     'name': 'users'|trans({}, 'platform'),
+                    'href': path('claro_workspace_registered_user_list', {'workspace': workspace.getId()})
+                },
+                {
+                    'name': 'users_registration_in_workspace'|trans({}, 'platform'),
                     'href': ''
                 }
             ]
@@ -52,25 +53,67 @@
 {% block section_content %}
     <div class="panel-body">
         <ul class="nav nav-tabs">
-            <li class="active"> <a  href="#"> {{'users'|trans({}, 'platform') }} </a> </li>
-            <li> <a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId() })~'?'~queryString }}"> {{'groups'|trans({}, 'platform') }} </a> </li>
-            <li> <a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()} ) }}">{{ 'roles'|trans({}, 'platform') }}</a> </li>
+            <li class="active"><a href="{{ path('claro_workspace_registered_user_list', {'workspace': workspace.getId()}) }}"> {{'users'|trans({}, 'platform') }} </a> </li>
+            <li><a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId() })~'?'~queryString }}"> {{'groups'|trans({}, 'platform') }} </a></li>
+            <li><a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()} ) }}">{{ 'roles'|trans({}, 'platform') }}</a></li>
         </ul>
 
-        {{ macros.flashBox() }}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="btn-group  margin-md">
+                    <div class="btn-group">
+                        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            {{ 'roles'|trans({}, 'platform') }}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" >
+                            {% for role in wsRoles %}
+                                <li>
+                                &nbsp;<input
+                                class="chk-role chk-item"
+                                type="checkbox"
+                                value="{{ role.getId() }}"
+                                data-name="{{ role.getTranslationKey()|trans({}, 'platform') }}"
+                                {% for toCheck in roles %}
+                                    {% if toCheck.getId() == role.getId() %}
+                                        checked
+                                    {% endif %}
+                                {% endfor %}
+                                > {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                </input>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <button id="add-role-button" class="btn btn-default">
+                        <i class="icon-plus"></i> {{ 'add'|trans({}, 'platform' ) }}
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-group margin-md">
+                    <input class="form-control" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
+                    <span class="input-group-btn">
+                        <button class="filter btn btn-default" type="button" id="search-button">
+                            <i class="icon-search"></i>
+                        </button>
+                    </span>
+                </div>
+                <div class="pull-right">
+                    {{ 'line_per_page'|trans({}, 'platform') }}
+                    <select class="form-control input-md" id="max-select">
+                        <option>20</option>
+                        <option>50</option>
+                        <option>100</option>
+                        <option>200</option>
+                        <option>500</option>
+                        </div>
+                    </select>
+                </div>
+            </div>
+        </div>
 
-        {{
-            macros.breadcrumbs([
-                {
-                    'name': 'users_list'|trans({}, 'platform'),
-                    'href': path('claro_workspace_registered_user_list', {'workspace': workspace.getId()})
-                },
-                {
-                    'name': 'users_registration_in_workspace'|trans({}, 'platform'),
-                    'href': ''
-                }
-            ])
-        }}
+        {{ macros.flashBox() }}
 
         <div>
             <div id="custom-flashbag-div" class="alert alert-success hide">
@@ -79,50 +122,15 @@
                 </ul>
             </div>
         </div>
-
-        {{ displayControls(workspace.getId()) }}
-        <div class="input-append pull-right">
-            <input class="input-medium" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
-            <button class="filter btn btn-default" type="button" id="search-button">
-                <i class="icon-search"></i>
-            </button>
-        </div>
-        <div class="btn-group">
-            <div class="btn-group">
-                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    {{ 'roles'|trans({}, 'platform') }}
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu" >
-                    {% for role in wsRoles %}
-                        <li>
-                        <input
-                        class="chk-role chk-item"
-                        type="checkbox"
-                        value="{{ role.getId() }}"
-                        data-name="{{ role.getTranslationKey()|trans({}, 'platform') }}"
-                        {% for toCheck in roles %}
-                            {% if toCheck.getId() == role.getId() %}
-                                checked
-                            {% endif %}
-                        {% endfor %}
-                        > {{ role.getTranslationKey()|trans({}, 'platform') }}
-                        </input>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-            <button id="add-role-button" class="btn btn-default"> {{ 'add'|trans({}, 'platform' ) }} </button>
-        </div>
-        <br>
-
-        {{ renderPager(search, workspace.getId(), withUnregistered, queryString, pager) }}
+        <h3>{{ 'users_registration_in_workspace'|trans({}, 'platform') }}</h3>
+        {{ renderPager(search, workspace.getId(), withUnregistered, pager, max) }}
         <div class="table-responsive">
             <table class="table table-striped table-bordered table-condensed">
                 <thead>
                     <tr>
                         <td></td>
                         <td>{{ 'name'|trans({}, 'platform') }}</td>
+                        <td>{{ 'roles'|trans({}, 'platform') }}</td>
                     </tr>
                 </thead>
                 <tbody id="user-table-body">
@@ -131,20 +139,40 @@
                             <td> <input class="chk-user" type="checkbox" value="{{ user.getId() }}"> </input></td>
                             <td class="popover-block"
                                 data-trigger="hover"
-                                data-content="{% render controller('ClarolineCoreBundle:User:renderPopover', {'user': user}) %}"
+                                {#data-content="{% render controller('ClarolineCoreBundle:User:renderPopover', {'user': user}) %}"#}
                                 data-container="td"
                                 data-placement="top"
                                 data-html="true"
                                 >
                                 {{ user.lastname }} {{ user.firstname }}
                             </td>
+                            <td>
+                                {% for role in user.getEntityRoles() %}
+                                    {% if role.getWorkspace() == workspace %}
+                                        <span class="label label-success" id="label-{{ role.getId () }}-{{ user.getId()}}">
+                                            {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                        </span>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% set groups = user.getGroups() %}
+                                    {% for group in groups %}
+                                    {% for role in group.getEntityRoles() %}
+                                        {% if role.getWorkspace() == workspace %}
+                                            <span title="{{ group.getName() }}" class="label label-default" id="label-{{ role.getId () }}-{{ user.getId()}}">
+                                                {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                            </span>
+
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        {{ renderPager(search, workspace.getId(), withUnregistered, queryString, pager) }}
-        {{ displayControls(workspace.getId()) }}
+        {{ renderPager(search, workspace.getId(), withUnregistered,  pager, max) }}
     </div>
 {% endblock %}
 
@@ -160,9 +188,12 @@
     <script language="javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script>
+        $('#max-select').val({{ max }});
+
         createValidationBox();
 
         $('#search-button').click(function () {
+            var max = $('#max-select').val();
             var search = document.getElementById('search-items-txt').value;
             var queryString = {};
             var i = 0;
@@ -174,9 +205,9 @@
             queryString.roleIds = array;
 
             if (search !== '') {
-                var route = Routing.generate('claro_workspace_unregistered_user_list_search', {'workspace': {{ workspace.getId }}, 'search': search });
+                var route = Routing.generate('claro_workspace_unregistered_user_list_search', {'workspace': {{ workspace.getId }}, 'search': search, 'max': max});
                 } else {
-                var route = Routing.generate('claro_workspace_unregistered_user_list', {'workspace': {{ workspace.getId }} });
+                var route = Routing.generate('claro_workspace_unregistered_user_list', {'workspace': {{ workspace.getId }}, 'max': max });
             }
 
             route += '?' + $.param(queryString);
