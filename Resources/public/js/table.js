@@ -104,36 +104,39 @@
                 });
             }
         }
+
         $('#modal-valid-button').on('click', function () {
-            var queryString = {};
-            var i = 0;
-            var array = [];
-            $('.chk-item:checked').each(function (index, element) {
-                array[i] = element.value;
-                i++;
-            });
-            queryString.ids = array;
-            var route = Routing.generate(
-                parameters.route.action[currentAction].route,
-                parameters.route.action[currentAction].parameters
-            );
-            var type =  parameters.route.action[currentAction].type === undefined ?
-                'GET':
-                parameters.route.action[currentAction].type;
-            route += '?' + $.param(queryString);
-            $.ajax({
-                url: route,
-                type: type,
-                success: function () {
-                    if (parameters.route.action[currentAction].delete) {
-                        $('.chk-item:checked').each(function (index, element) {
-                            $(element).parent().parent().remove();
-                        });
+            if (currentAction) {
+                var queryString = {};
+                var i = 0;
+                var array = [];
+                $('.chk-item:checked').each(function (index, element) {
+                    array[i] = element.value;
+                    i++;
+                });
+                queryString.ids = array;
+                var route = Routing.generate(
+                    parameters.route.action[currentAction].route,
+                    parameters.route.action[currentAction].parameters
+                );
+                var type =  parameters.route.action[currentAction].type === undefined ?
+                    'GET':
+                    parameters.route.action[currentAction].type;
+                route += '?' + $.param(queryString);
+                $.ajax({
+                    url: route,
+                    type: type,
+                    success: function () {
+                        if (parameters.route.action[currentAction].delete) {
+                            $('.chk-item:checked').each(function (index, element) {
+                                $(element).parent().parent().remove();
+                            });
+                        }
                     }
-                }
-            });
-            $('#table-modal').modal('hide');
-            $('.modal-body').empty();
+                });
+                $('#table-modal').modal('hide');
+                $('.modal-body').empty();
+            }
         });
 
         $('#check-all-items').click(function () {
