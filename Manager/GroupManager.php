@@ -347,9 +347,9 @@ class GroupManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getGroupsByRoles(array $roles, $page = 1, $max = 50)
+    public function getGroupsByRoles(array $roles, $page = 1, $max = 50, $orderedBy = 'id')
     {
-        $query = $this->groupRepo->findByRoles($roles, true);
+        $query = $this->groupRepo->findByRoles($roles, true, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
@@ -375,9 +375,9 @@ class GroupManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getGroupsByRolesAndName(array $roles, $name, $page = 1, $max = 50)
+    public function getGroupsByRolesAndName(array $roles, $name, $page = 1, $max = 50, $orderedBy = 'id')
     {
-        $query = $this->groupRepo->findByRolesAndName($roles, $name, true);
+        $query = $this->groupRepo->findByRolesAndName($roles, $name, true, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }

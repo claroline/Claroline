@@ -450,24 +450,29 @@ class RolesController extends Controller
      *     class="ClarolineCoreBundle:Role",
      *     options={"multipleIds"=true, "isRequired"=false, "name"="roleIds"}
      * )
+     * @EXT\ParamConverter(
+     *     "order",
+     *     class="Claroline\CoreBundle\Entity\Group",
+     *     options={"orderable"=true}
+     * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceGroups.html.twig")
      */
     public function groupsListAction(AbstractWorkspace $workspace, $page, $search, $max, $order)
     {
-        throw new \Exception('fds');
         $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
         $pager = ($search === '') ?
-            $pager = $this->groupManager->getGroupsByRoles($wsRoles, $page, $max):
-            $pager = $this->groupManager->getGroupsByRolesAndName($wsRoles, $search, $page, $max);
+            $pager = $this->groupManager->getGroupsByRoles($wsRoles, $page, $max, $order):
+            $pager = $this->groupManager->getGroupsByRolesAndName($wsRoles, $search, $page, $max, $order);
 
         return array(
             'workspace' => $workspace,
             'pager' => $pager,
             'search' => $search,
             'wsRoles' => $wsRoles,
-            'max' => $max
+            'max' => $max,
+            'order' => $order
         );
     }
 
