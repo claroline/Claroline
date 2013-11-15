@@ -58,17 +58,19 @@ Exhaustive core events list
 * `resource-update`
 * `resource-update_rename`
 
-Non-exhaustive plugins events list
+Not-exhaustive plugins events list
 --------------------------
 ### Dropzone events (plugin) ###
 * `resource-icap_dropzone-correction_end`
 * `resource-icap_dropzone-correction_start`
+* `resource-icap_dropzone-correction_validation_change`
 * `resource-icap_dropzone-criterion_create`
 * `resource-icap_dropzone-criterion_delete`
 * `resource-icap_dropzone-drop_end`
 * `resource-icap_dropzone-drop_open`
 * `resource-icap_dropzone-drop_evaluate`
 * `resource-icap_dropzone-drop_start`
+* `resource-icap_dropzone-document_delete`
 * `resource-icap_dropzone-dropzone_update`
 
 ### Blog events (plugin) ###
@@ -79,6 +81,23 @@ Non-exhaustive plugins events list
 * `resource-icap_blog-post_delete`
 * `resource-icap_blog-post_read`
 * `resource-icap_blog-post_update`
+
+### Wiki events (plugin) ###
+* `resource-icap_wiki-contribution_create`
+* `resource-icap_wiki-section_create`
+* `resource-icap_wiki-section_delete`
+* `resource-icap_wiki-section_move`
+* `resource-icap_wiki-section_remove`
+* `resource-icap_wiki-section_restore`
+* `resource-icap_wiki-section_update`
+* `resource-icap_wiki-configure`
+
+### Lesson events (plugin) ###
+* `resource-icap_lesson-chapter_create`
+* `resource-icap_lesson-chapter_delete`
+* `resource-icap_lesson-chapter_move`
+* `resource-icap_lesson-chapter_read`
+* `resource-icap_lesson-chapter_update`
 
 
 Advanced features

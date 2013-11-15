@@ -18,6 +18,9 @@
 </style>
 
 <div class='logs-list'>
+    <div class='row'>
+        {% include 'ClarolineCoreBundle:Log:view_list_item_header.html.twig' %}
+    </div>
     {% for log in logs %}
     <div class='row {% if loop.index is divisibleby(2) %}row-odd{% else %}row-even{% endif %}'>
         {% if listItemViews[log.getId()] is defined %}

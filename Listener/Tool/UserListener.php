@@ -38,7 +38,9 @@ class UserListener
                 '_controller' => 'ClarolineCoreBundle:Tool\Roles:usersList',
                 'workspace' => $event->getWorkspace(),
                 'page' => 1,
-                'search' => ''
+                'search' => '',
+                'max' => 50,
+                'order' => 'id'
             )
         );
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);

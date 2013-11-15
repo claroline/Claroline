@@ -1,4 +1,4 @@
-{% macro renderPager(search, pager) %}
+{% macro renderPager(search, pager, max, order) %}
     {% if search == '' %}
     {{
         pagerfanta(
@@ -6,7 +6,8 @@
             'twitter_bootstrap_translated',
             {
                 'proximity' : 1,
-                'routeName': 'claro_admin_user_list'
+                'routeName': 'claro_admin_user_list',
+                'routeParams': {'max': max, 'order': order}
             }
         )
     }}
@@ -18,7 +19,7 @@
                 {
                     'proximity' : 1,
                     'routeName': 'claro_admin_user_list_search',
-                    'routeParams': {'search': search}
+                    'routeParams': {'search': search, 'max': max, 'order': order}
                 }
             )
         }}
@@ -38,8 +39,17 @@
     {% endif %}
 {% endmacro %}
 
+{% macro sortUrl(max, search, order) %}
+    {% if search == '' %}
+        {{ path('claro_admin_user_list', {'max': max, 'order': order}) }}
+    {% else %}
+        {{ path('claro_admin_user_list_search', {'search': search, 'max': max, 'order': order}) }}
+    {% endif %}
+{% endmacro %}
+
 {% from _self import renderPager %}
 {% from _self import displayControls %}
+{% from _self import sortUrl %}
 
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
@@ -88,22 +98,36 @@
             </div>
         </div>
 
-        {{ renderPager(search, pager) }}
+        <div class="row">
+            <div class="col-md-10">
+                {{ renderPager(search, pager, max, order) }}
+            </div>
+            <div class="col-md-2" style="margin-top: 15px;">
+                <div >
+                    {{ 'line_per_page'|trans({}, 'platform') }}
+                </div>
+                <div>
+                    <select class="form-control input-md" id="max-select">
+                        <option>20</option>
+                        <option>50</option>
+                        <option>100</option>
+                        <option>200</option>
+                        <option>500</option>
+                        </div>
+                    </select>
+                </div>
+            </div>
+        </div>
 
-        {% if search == '' %}
-            <p> <a href="{{ path('claro_admin_user_list_pics')}}"> {{'change_view'|trans({}, 'platform') }}</a> </p>
-        {% else %}
-            <p> <a href="{{ path('claro_admin_user_list_pics',{'search':search,'page': pager})}}"> {{'change_view'|trans({}, 'platform') }}</a> </p>
-        {% endif %}
         <div class="table-responsive">
             <table id="user-table"  class="table table-striped table-bordered table-condensed">
                 <thead>
                     <tr>
-                        <th>{{ 'id'|trans({}, 'platform') }}</th>
-                        <th>{{ 'username'|trans({}, 'platform') }}</th>
-                        <th>{{ 'last_name'|trans({}, 'platform') }}</th>
-                        <th>{{ 'first_name'|trans({}, 'platform') }}</th>
-                        <th>{{ 'mail'|trans({}, 'platform') }}</th>
+                        <th><a href="{{ sortUrl(max, search, 'id') }}">{{ 'id'|trans({}, 'platform') }}</a></th>
+                        <th><a href="{{ sortUrl(max, search, 'username') }}">{{ 'username'|trans({}, 'platform') }}</a></th>
+                        <th><a href="{{ sortUrl(max, search, 'lastName') }}">{{ 'last_name'|trans({}, 'platform') }}</a></th>
+                        <th><a href="{{ sortUrl(max, search, 'firstName') }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
+                        <th><a href="{{ sortUrl(max, search, 'mail') }}">{{ 'mail'|trans({}, 'platform') }}</a></th>
                         <th>{{ 'edit'|trans({}, 'platform') }}</th>
                         <th>{{ 'role'|trans({}, 'platform') }}</th>
                         {% if is_granted('ROLE_ADMIN') %}
@@ -154,7 +178,7 @@
                 </tbody>
             </table>
         </div>
-        {{ renderPager(search, pager) }}
+        {{ renderPager(search, pager, max, order) }}
         <div>
             {{ displayControls(workspace.getId()) }}
         </div>
@@ -172,11 +196,12 @@
     {% endjavascripts %}
     <script src='{{ asset('bundles/clarolinecore/js/table.js') }}' type="text/javascript"></script>
     <script>
+        $('#max-select').val({{ max }});
         parameters = {};
         parameters.route = {};
         parameters.route.action = {};
-        parameters.route.normal = {"route": "claro_admin_user_list", "parameters": {}};
-        parameters.route.search = {"route": "claro_admin_user_list_search", "parameters": {}};
+        parameters.route.normal = {"route": "claro_admin_user_list", "parameters": {'order': '{{ order }}' }};
+        parameters.route.search = {"route": "claro_admin_user_list_search", "parameters": {'order': '{{ order }}' }};
         parameters.route.action.remove = {"route": "claro_admin_multidelete_user", "parameters": {}, "type": "DELETE", "confirmTemplate": removeUserConfirm, "delete": true};
         parameters.route.action.password = {"route": "claro_security_initialize_password", "parameters": {}, "type": "POST", "confirmTemplate": resetPasswordConfirm};
         Claroline.Table.initialize(parameters);

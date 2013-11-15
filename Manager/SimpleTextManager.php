@@ -23,6 +23,11 @@ class SimpleTextManager
         $this->om = $om;
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance $config
+     *
+     * @return \Claroline\CoreBundle\Entity\Widget\SimpleTextConfig
+     */
     public function getTextConfig(WidgetInstance $config)
     {
         return $this->om

@@ -22,7 +22,8 @@ class PlatformConfigurationHandler
         'logo' => 'clarolineconnect.png',
         'allow_self_registration' => true,
         'locale_language' => 'fr',
-        'theme' => 'claroline'
+        'theme' => 'claroline',
+        'default_role' => 'ROLE_USER'
     );
 
     public function __construct(array $configFiles)
@@ -80,6 +81,7 @@ class PlatformConfigurationHandler
         $config->setSelfRegistration($this->parameters['allow_self_registration']);
         $config->setLocalLanguage($this->parameters['locale_language']);
         $config->setTheme($this->parameters['theme']);
+        $config->setDefaultRole($this->parameters['default_role']);
 
         return $config;
     }

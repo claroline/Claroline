@@ -36,6 +36,14 @@ class MaskManager
         $this->menuRepo = $om->getRepository('ClarolineCoreBundle:Resource\MenuAction');
     }
 
+    /**
+     * Returns an array containing the permission for a mask and a resource type.
+     *
+     * @param integer $mask
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
+     *
+     * @return array
+     */
     public function decodeMask($mask, ResourceType $type)
     {
         $decoders = $this->maskRepo->findBy(array('resourceType' => $type));
@@ -48,6 +56,17 @@ class MaskManager
         return $perms;
     }
 
+    /**
+     * Encode a mask for an array of permission and a resource type.
+     * The array of permissions should be defined that way:
+     *
+     * array('open' => true, 'edit' => false, ...)
+     *
+     * @param array $perms
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
+     *
+     * @return integer
+     */
     public function encodeMask($perms, ResourceType $type)
     {
         $decoders = $this->maskRepo->findBy(array('resourceType' => $type));
@@ -62,6 +81,13 @@ class MaskManager
         return $mask;
     }
 
+    /**
+     * Returns an array containing the possible permission for a resource type.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
+     *
+     * @return array
+     */
     public function getPermissionMap(ResourceType $type)
     {
         $decoders = $this->maskRepo->findBy(array('resourceType' => $type));
@@ -74,21 +100,44 @@ class MaskManager
         return $permsMap;
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
+     * @param string $action
+     *
+     * @return MaskDecoder
+     */
     public function getDecoder(ResourceType $type, $action)
     {
         return $this->maskRepo->findOneBy(array('resourceType' => $type, 'name' => $action));
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
+     * @param integer $value
+     *
+     * @return MaskDecoder
+     */
     public function getByValue(ResourceType $type, $value)
     {
         return $this->maskRepo->findOneBy(array('resourceType' => $type, 'value' => $value));
     }
 
+    /**
+     * @param string $name
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
+     *
+     * @return MenuAction
+     */
     public function getMenuFromNameAndResourceType($name, ResourceType $type)
     {
         return $this->menuRepo->findOneBy(array('name' => $name, 'resourceType' => $type));
     }
 
+    /**
+     * Adds the default action to a resource type.
+     * 
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
+     */
     public function addDefaultPerms(ResourceType $type)
     {
         $createdPerms = array();

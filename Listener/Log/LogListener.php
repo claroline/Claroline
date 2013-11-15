@@ -50,8 +50,8 @@ class LogListener
     {
         //Add doer details
         $doer = null;
-        $sessionId = null;
         $doerIp = null;
+        $doerSessionId = null;
         $doerType = null;
 
         //Event can override the doer
@@ -69,7 +69,7 @@ class LogListener
                     $doerType = Log::doerTypeUser;
                 }
                 $request = $this->container->get('request');
-                $sessionId = $request->getSession()->getId();
+                $doerSessionId = $request->getSession()->getId();
                 $doerIp = $request->getClientIp();
             }
         } else {
@@ -94,6 +94,7 @@ class LogListener
         $log->setDoerType($doerType);
 
         $log->setDoerIp($doerIp);
+        $log->setDoerSessionId($doerSessionId);
         if ($event->getAction() !== LogUserDeleteEvent::ACTION) {
             //Prevent user delete case
             $log->setReceiver($event->getReceiver());
@@ -148,8 +149,7 @@ class LogListener
         if ($doer !== null) {
             $details['doer'] = array(
                 'firstName' => $doer->getFirstName(),
-                'lastName' => $doer->getLastName(),
-                'sessionId' => $sessionId
+                'lastName' => $doer->getLastName()
             );
 
             if (count($log->getDoerPlatformRoles()) > 0) {
