@@ -53,7 +53,7 @@ class BlogController extends Controller
         $date   = null;
 
         if (null !== $filter) {
-            $tag = $this->get('icap.blog.tag_repository')->findOneByName($filter);
+            $tag = $this->get('icap.blog.tag_repository')->findOneBySlug($filter);
 
             if (null === $tag) {
                 $author = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByUsername($filter);
