@@ -1,66 +1,47 @@
-{% extends 'form_div_layout.html.twig' %}
+{% extends 'ClarolineCoreBundle::form_theme.html.twig' %}
 
 {% block twolevelselect_widget %}
     {% spaceless %}
-        {{ block('choice_widget') }}
+        {{ block('hidden_widget') }}
         <script type="text/javascript">
             $(document).ready(function () {
-                var firstLevelOptions = "";
-                var firstLevelOptionsHtml = [];
-                var secondLevelOptionsHtml = [];
-
-                var onClickFirstLevel = function (elt) {
-                    var formField = $("#{{ form.vars['id'] }}");
-                    if (elt.hasClass('first-level')) {
-                        formField.html(firstLevelOptionsHtml[elt.val()]);
-                        formField.val(elt.val());
-                        formField.attr('readonly', true);
-                    } else {
-                        formField.html(secondLevelOptionsHtml[elt.val()]);
-                        $("#{{ form.vars['id'] }}_first_level").val(elt.val());
-                        formField.attr('readonly', false);
-                    }
+                var choices = {{form.vars['choices']|json_encode()|raw}};
+                console.log(choices);
+                var choicesTree = {};
+                var preselectedValuePath = buildChoicesTree(choices, choicesTree, [], "{{form.vars['value']}}");
+                if (preselectedValuePath == null) {
+                    preselectedValuePath = [choices[0]['label']];
+                }
+                var choicesTreeOptions = {
+                    preselect:{"{{form.vars['id']}}":preselectedValuePath},
+                    choose:''
                 };
-
-                $("#{{ form.vars['id'] }} > option").each(function(index, element){
-                    $(element).addClass("first-level");
-                    firstLevelOptions += element.outerHTML;
-                    $(element).removeClass("first-level");
-                    firstLevelOptionsHtml[$(this).val()] = element.outerHTML;
-                });
-                $("#{{ form.vars['id'] }} > optgroup").each(function (index) {
-                    firstLevelOptions += "<option class='second-level' value='group_"+index+"'>" + $(this).attr("label") + "</option>";
-                    secondLevelOptionsHtml["group_"+index] = $(this).html();
-                });
-                var formField = $("#{{ form.vars['id'] }}");
-                formField.before("<select id='{{ form.vars['id'] }}_first_level' class='input-sm form-control' style='width: auto'>" + firstLevelOptions + "</select> <span> : </<span> ");
-                formField.empty();
-                formField.attr('readonly', true);
-                formField.css('width', 'auto');
-                $("#{{ form.vars['id'] }}_first_level").on('change', function () {
-                    onClickFirstLevel($(this).find('option[value="'+$(this).val()+'"]'));
-                });
-
-                var defaultValue = "{{ form.vars['value']|raw }}";
-                if (defaultValue) {
-                    var firstElement = firstLevelOptionsHtml[defaultValue];
-                    if (firstElement) {
-                        //Its a first level
-                        onClickFirstLevel($("#{{ form.vars['id'] }}_first_level option[value='"+defaultValue+"']"));
+                $("{{"#"~form.vars['id']}}").optionTree(choicesTree, choicesTreeOptions);
+            });
+            function buildChoicesTree(choices, choicesTree, pathToNode, preselectedValue)
+            {
+                var preselectedValuePath = null;
+                for (var key in choices) {
+                    if (typeof choices[key].label != 'undefined') {
+                        choicesTree[choices[key].label] = choices[key].value;
+                        if (preselectedValue == choices[key].value) {
+                            preselectedValuePath = pathToNode.slice();
+                            preselectedValuePath.push(choices[key].label);
+                        }
                     } else {
-                        //Its a second level
-                        for (var key in secondLevelOptionsHtml) {
-                            var secondLevelElement = secondLevelOptionsHtml[key];
-                            if (secondLevelElement.indexOf(defaultValue) > -1) {
-                                onClickFirstLevel($("#{{ form.vars['id'] }}_first_level option[value='"+key+"']"));
-                                formField.val(defaultValue);
-                            }
+                        choicesTree[key] = {};
+                        var newPathToNode = pathToNode.slice();
+                        newPathToNode.push(key);
+                        var tempPreselectedPath = buildChoicesTree(choices[key], choicesTree[key], newPathToNode, preselectedValue);                        
+                        if (tempPreselectedPath != null) {
+                            preselectedValuePath = tempPreselectedPath;
                         }
                     }
-                } else {
-                    onClickFirstLevel($("#{{ form.vars['id'] }}_first_level option:first-child"));
                 }
-            });
+                
+                return preselectedValuePath;                
+            }
         </script>
+        <script src="{{ asset('bundles/frontend/jquery/plugin/jquery.optionTree.js') }}"></script>
     {% endspaceless %}
 {% endblock %}
