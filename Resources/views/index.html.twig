@@ -115,14 +115,10 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts
-        vars=["locale"]
-        "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
-        "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
+    {% javascripts debug=false vars=["locale"]
         "@ClarolineForumBundle/Resources/views/removeSubjectConfirm.html.twigjs"
         filter="twig_js"
-    %}
-    <script language="javascript" src="{{ asset_url }}"></script>
+    %}<script language="javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script>
         $('#search-button').on('click', function(event) {
