@@ -63,23 +63,24 @@ class LessonController extends Controller
 
     /**
      * @Route(
-     *      "view/{resourceId}/{chapter}",
+     *      "view/{resourceId}/{chapterId}",
      *      name="icap_lesson_chapter",
      *      requirements={"resourceId" = "\d+"}
      * )
      * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
      * @Template()
      */
-    public function viewChapterAction($lesson, $chapter)
+    public function viewChapterAction($lesson, $chapterId)
     {
         $this->checkAccess("OPEN", $lesson);
         $chapter = null;
-        if(is_numeric($chapter)){
-           $chapter = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter')->getChapterById($chapter, $lesson->getId());
-        }else{
-            $chapter = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter')->getChapterBySlug($chapter, $lesson->getId());
+        //ugly fix for compliance with old permalinks using chapter ID
+        if(is_numeric($chapterId)){
+           $chapter = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter')->getChapterById($chapterId, $lesson->getId());
         }
-
+        if($chapter == null){
+            $chapter = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter')->getChapterBySlug($chapterId, $lesson->getId());
+        }
         return $this->getChapterView($lesson, $chapter);
 
     }
@@ -224,7 +225,7 @@ class LessonController extends Controller
         }
         return($this->redirect($this->generateUrl('icap_lesson_chapter', array(
             'resourceId' => $lesson->getId(),
-            'chapterSlug' => $chapter->getSlug()
+            'chapterId' => $chapter->getSlug()
         ))));
     }
 
@@ -424,7 +425,7 @@ class LessonController extends Controller
             $this->dispatchChapterCreateEvent($lesson, $chapter);
 
             $this->get('session')->getFlashBag()->add('success',$translator->trans('Your chapter has been added',array(), 'icap_lesson'));
-            return $this->redirect($this->generateUrl('icap_lesson_chapter', array('resourceId' => $lesson->getId(), 'chapterSlug' => $chapter->getSlug())));
+            return $this->redirect($this->generateUrl('icap_lesson_chapter', array('resourceId' => $lesson->getId(), 'chapterId' => $chapter->getSlug())));
         } else {
             $this->get('session')->getFlashBag()->add('error',$translator->trans('Your chapter has not been added',array(), 'icap_lesson'));
         }
@@ -551,7 +552,7 @@ class LessonController extends Controller
 
         return($this->redirect($this->generateUrl('icap_lesson_chapter', array(
             'resourceId' => $lesson->getId(),
-            'chapterSlug' => $chapter->getSlug()
+            'chapterId' => $chapter->getSlug()
         ))));
     }
 
@@ -645,7 +646,7 @@ class LessonController extends Controller
 
         return($this->redirect($this->generateUrl('icap_lesson_chapter', array(
             'resourceId' => $lesson->getId(),
-            'chapterSlug' => $chapter_copy->getSlug()
+            'chapterId' => $chapter_copy->getSlug()
         ))));
     }
 

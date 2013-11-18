@@ -128,7 +128,7 @@ class ChapterRepository extends NestedTreeRepository{
                 ->add('from', 'Icap\LessonBundle\Entity\Chapter c')
                 ->innerJoin('c.lesson',' l')
                 ->where($qb->expr()->andx(
-                    $qb->expr()->lt('c.id', '?1'),
+                    $qb->expr()->eq('c.id', '?1'),
                     $qb->expr()->eq('l.id', '?2')
                 ))
                 ->setParameter(1, $chapterId)
@@ -147,7 +147,7 @@ class ChapterRepository extends NestedTreeRepository{
                 ->add('from', 'Icap\LessonBundle\Entity\Chapter c')
                 ->innerJoin('c.lesson',' l')
                 ->where($qb->expr()->andx(
-                    $qb->expr()->lt('c.slug', '?1'),
+                    $qb->expr()->eq('c.slug', '?1'),
                     $qb->expr()->eq('l.id', '?2')
                 ))
                 ->setParameter(1, $chapterSlug)
