@@ -148,7 +148,7 @@ class PaperController extends Controller
         $display = $this->ctrlDisplayPaper($user, $paper);
 
         if ((($this->checkAccess($paper->getExercise())) && ($paper->getEnd() == null)) || ($display == 'none')) {
-            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $paper->getExercise()->getId())));
+            return $this->redirect($this->generateUrl('ujm_paper_list', array('exoID' => $paper->getExercise()->getId())));
         }
 
         $interactions = $this->getDoctrine()

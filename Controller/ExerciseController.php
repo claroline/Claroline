@@ -523,7 +523,7 @@ class ExerciseController extends Controller
             //if not exist a paper no finished
             if (count($paper) == 0) {
                 if ($this->controlMaxAttemps($exercise, $user, $exoAdmin) === false) {
-                   return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $id)));
+                   return $this->redirect($this->generateUrl('ujm_paper_list', array('exoID' => $id)));
                 }
 
                 $paper = new Paper();
@@ -566,7 +566,7 @@ class ExerciseController extends Controller
             //To display selectioned question
             return $this->displayQuestion(1, $interactions[0], $typeInter, $exercise->getDispButtonInterrupt(), $workspace);
         } else {
-            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $id)));
+            return $this->redirect($this->generateUrl('ujm_paper_list', array('exoID' => $id)));
         }
     }
 

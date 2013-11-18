@@ -1,7 +1,7 @@
 ujm_exercise_open:
    pattern: /open/{exerciseId}
    defaults: { _controller: UJMExoBundle:Exercise:open }
-   
+
 ujm_exercise_paper:
     pattern:  /{id}/paper
     defaults: { _controller: "UJMExoBundle:Exercise:exercisePaper" }
