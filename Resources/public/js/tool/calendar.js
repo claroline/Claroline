@@ -102,9 +102,9 @@
                                         allDay: data.allDay,
                                         color: data.color,
                                         description : data.description
-                                    },
-                                    true // make the event 'stick'
+                                    }
                                 );
+                                
                                 $('#calendar').fullCalendar('unselect');
                             } else {
                                 $.ajax({
@@ -382,7 +382,7 @@
             minTime: 0,
             maxTime: 24,
             allDaySlot: false,
-            lazyFetching : false,
+            lazyFetching : true,
             eventDrop: function (event, dayDelta, minuteDelta) {
                 dropEvent(event, dayDelta, minuteDelta);
             },
