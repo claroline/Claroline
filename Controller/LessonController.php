@@ -63,17 +63,22 @@ class LessonController extends Controller
 
     /**
      * @Route(
-     *      "view/{resourceId}/{chapterSlug}",
+     *      "view/{resourceId}/{chapter}",
      *      name="icap_lesson_chapter",
-     *      requirements={"resourceId" = "\d+", "chapterId" = "\d+"}
+     *      requirements={"resourceId" = "\d+"}
      * )
      * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
-     * @ParamConverter("chapter", class="IcapLessonBundle:Chapter", options={"mapping": {"chapterSlug": "slug"}})
      * @Template()
      */
     public function viewChapterAction($lesson, $chapter)
     {
         $this->checkAccess("OPEN", $lesson);
+        $chapter = null;
+        if(is_numeric($chapter)){
+           $chapter = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter')->getChapterById($chapter, $lesson->getId());
+        }else{
+            $chapter = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter')->getChapterBySlug($chapter, $lesson->getId());
+        }
 
         return $this->getChapterView($lesson, $chapter);
 

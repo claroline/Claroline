@@ -120,4 +120,42 @@ class ChapterRepository extends NestedTreeRepository{
             return null;
         }
     }
+
+    function getChapterById($chapterId, $lessonId){
+        try{
+            $qb = $this->_em->createQueryBuilder();
+            return $this->_em->createQueryBuilder()->add('select', 'c')
+                ->add('from', 'Icap\LessonBundle\Entity\Chapter c')
+                ->innerJoin('c.lesson',' l')
+                ->where($qb->expr()->andx(
+                    $qb->expr()->lt('c.id', '?1'),
+                    $qb->expr()->eq('l.id', '?2')
+                ))
+                ->setParameter(1, $chapterId)
+                ->setParameter(2, $lessonId)
+                ->getQuery()
+                ->getSingleResult();
+        } catch (\Doctrine\Orm\NoResultException $e) {
+            return null;
+        }
+    }
+
+    function getChapterBySLug($chapterSlug, $lessonId){
+        try{
+            $qb = $this->_em->createQueryBuilder();
+            return $this->_em->createQueryBuilder()->add('select', 'c')
+                ->add('from', 'Icap\LessonBundle\Entity\Chapter c')
+                ->innerJoin('c.lesson',' l')
+                ->where($qb->expr()->andx(
+                    $qb->expr()->lt('c.slug', '?1'),
+                    $qb->expr()->eq('l.id', '?2')
+                ))
+                ->setParameter(1, $chapterSlug)
+                ->setParameter(2, $lessonId)
+                ->getQuery()
+                ->getSingleResult();
+        } catch (\Doctrine\Orm\NoResultException $e) {
+            return null;
+        }
+    }
 }
