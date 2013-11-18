@@ -41,7 +41,7 @@ class FileController extends Controller
             }
         );
 
-        $response->headers->set('Content-Type', $file->getMimeType());
+        $response->headers->set('Content-Type', $node->getMimeType());
 
         return $response;
     }

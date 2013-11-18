@@ -6,7 +6,7 @@
 
         <link rel="stylesheet" href="{{ asset('') ~ 'themes/' ~ theme.getName() | lower | replace({ ' ': '-' }) ~ '/bootstrap.css' }}" screen="media" />
 
-        {% stylesheets debug=false filter='lessphp'  output='vendor/fortawesome/font-awesome/css/font-awesome.css'
+        {% stylesheets debug=false filter='lessphp, cssmin'  output='vendor/fortawesome/font-awesome/css/font-awesome.css'
         '../vendor/fortawesome/font-awesome/less/font-awesome.less'
         %}
             <link rel="stylesheet" href="{{ asset_url }}" screen="media" />

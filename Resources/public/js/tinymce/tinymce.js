@@ -3,6 +3,7 @@
 
     var tinymce = window.tinymce;
     var home = window.Claroline.Home;
+
     var language = home.locale.trim();
     var contentCSS = home.asset + 'bundles/clarolinecore/css/tinymce/tinymce.css';
 
@@ -145,6 +146,4 @@
     $('body').on('click', '.mce-resource-picker', function () {
         resourcePickerOpen();
     });
-
-
 }());

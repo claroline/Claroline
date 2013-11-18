@@ -42,6 +42,8 @@
         "composer/composer": "dev-master",
         "willdurand/expose-translation-bundle": "~0.3.0",
         "mrclay/minify": "dev-master",
+        "natxet/CssMin": "dev-master",
+        "werkint/jsmin": "dev-master",
 
         "claroline/bundle-recorder": ">=2.0.2,<3.0",
         "claroline/kernel-bundle": "~1.0",

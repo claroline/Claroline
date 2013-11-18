@@ -461,13 +461,13 @@
             render: function (node, isSelectionAllowed, hasMenu) {
                 this.el.id = node.id;
                 node.displayableName = Claroline.Utilities.formatText(node.name, 20, 2);
-                $(this.el).html(Twig.render(ResourceManagerThumbnail, {
+                this.el.innerHTML = Twig.render(ResourceManagerThumbnail, {
                     'node': node,
                     'isSelectionAllowed': isSelectionAllowed,
                     'hasMenu': hasMenu,
                     'actions': this.parameters.resourceTypes[node.type].actions || {},
                     'webRoot': this.parameters.webPath
-                }));
+                });
             }
         }),
         Nodes: Backbone.View.extend({
@@ -1147,7 +1147,7 @@
             window.location = this.parameters.appPath + '/resource/custom/' + action + '/' + nodeId;
         },
         picker: function (action, callback) {
-            if (action === 'open' && !this.views.picker.isAppended) {
+            if (action === 'open'){// && !this.views.picker.isAppended) {
                 this.displayResources('0', 'picker');
             }
 
