@@ -9,6 +9,8 @@
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}'
+    >
 {% endblock %}
 {% block breadcrumb %}
     {{
@@ -92,4 +94,7 @@
         });
     </script>
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'agenda' }) }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}">
+    </script> <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tool/calendarDatePicker.js') }}">
+    </script>
 {% endblock javascripts %}

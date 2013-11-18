@@ -65,6 +65,9 @@ class Event
      * @ORM\Column(nullable=true)
      */
     private $priority;
+    private $recurring;
+    private $startHours;
+    private $endHours;
 
     public function getId()
     {
@@ -177,5 +180,34 @@ class Event
     public function setPriority( $priority)
     {
         $this->priority = $priority;
+    }
+    public function getRecurring() 
+    {
+        return $this->recurring;
+    }
+
+    public function setRecurring($recurring) 
+    {
+        $this->recurring = $recurring;
+    }
+    
+    public function getStartHours() 
+    {
+        return $this->startHours;
+    }
+
+    public function setStartHours($startHours) 
+    {
+        $this->startHours = $startHours;
+    }
+
+    public function getEndHours() 
+    {
+        return $this->endHours;
+    }
+
+    public function setEndHours($endHours) 
+    {
+        $this->endHours = $endHours;
     }
 }

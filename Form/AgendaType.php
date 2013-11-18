@@ -11,32 +11,52 @@ class AgendaType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $recurring = array();
+        for ($i = 0; $i < 10 ; $i++) { 
+            $recurring[$i] = $i; 
+        }
+        $attr = array();
+        $attr['class'] = 'datepicker input-small';
+        $attr['data-date-format'] = 'dd-mm-yyyy';
+        $attr['autocomplete'] = 'off';
         $builder
             ->add('title', 'text', array('required' => true))
             ->add(
                 'start',
-                'date',
+                'datepicker',
                 array(
-                    'format' => 'd/M/yyyy H:mm',
-                    'widget' => 'single_text',
-                )
+                    'required'      => false,
+                    'widget'        => 'single_text',
+                    'format'        => 'dd-MM-yyyy HH:mm',
+                    'attr'          => $attr,
+               )
             )
+            ->add(
+                'startHours',
+                'text',
+                array(
+                    'attr' => array('class' => 'hours')
+                    )
+                )
             ->add(
                 'end',
-                'date',
+                'datepicker',
                 array(
-                    'format' => 'd/M/yyyy H:mm',
-                    'widget' => 'single_text',
+                    'required'      => false,
+                    'widget'        => 'single_text',
+                    'format'        => 'dd-MM-yyyy HH:mm',
+                    'attr'          => $attr,
+               )
+            )
+            ->add(
+                'endHours',
+                'text',
+                array(
+                    'attr' => array('class' => 'hours')
+                    )
                 )
-            )
-            ->add(
-                'allDay',
-                'checkbox'
-            )
-            ->add(
-                'description',
-                'tinymce'
-            )
+            ->add('allDay','checkbox')
+            ->add('description','tinymce')
             ->add(
                 'priority',
                 'choice',
@@ -47,6 +67,11 @@ class AgendaType extends AbstractType
                         '#848484' => 'low',
                     )
                 )
+            )
+            ->add(
+                'recurring',
+                'choice',
+                array('choices' => $recurring)
             );
     }
 
