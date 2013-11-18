@@ -131,7 +131,7 @@ class PaperController extends Controller
      * Finds and displays a Paper entity.
      *
      */
-    public function showAction($id)
+    public function showAction($id, $p)
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -148,7 +148,7 @@ class PaperController extends Controller
         $display = $this->ctrlDisplayPaper($user, $paper);
 
         if ((($this->checkAccess($paper->getExercise())) && ($paper->getEnd() == null)) || ($display == 'none')) {
-            return $this->redirect($this->generateUrl('ujm_paper_list', array('exoID' => $paper->getExercise()->getId())));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $paper->getExercise()->getId())));
         }
 
         $interactions = $this->getDoctrine()
@@ -170,18 +170,23 @@ class PaperController extends Controller
             ->getRepository('UJMExoBundle:LinkHintPaper')
             ->getHintViewed($paper->getId());
 
+        $nbMaxQuestion = count($interactions);
+
         return $this->render(
             'UJMExoBundle:Paper:show.html.twig',
             array(
-                'workspace'    => $worspace,
-                'exoId'        => $paper->getExercise()->getId(),
-                'interactions' => $interactions,
-                'responses'    => $responses,
-                'hintViewed'   => $hintViewed,
-                'correction'   => $paper->getExercise()->getCorrectionMode(),
-                'display'      => $display,
-                'admin'        => $admin,
-                '_resource'    => $paper->getExercise()
+                'workspace'     => $worspace,
+                'exoId'         => $paper->getExercise()->getId(),
+                'interactions'  => $interactions,
+                'responses'     => $responses,
+                'hintViewed'    => $hintViewed,
+                'correction'    => $paper->getExercise()->getCorrectionMode(),
+                'display'       => $display,
+                'admin'         => $admin,
+                '_resource'     => $paper->getExercise(),
+                'p'             => $p,
+                'nbMaxQuestion' => $nbMaxQuestion,
+                'paperID'       => $paper->getId()
             )
         );
     }

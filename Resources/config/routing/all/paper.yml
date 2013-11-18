@@ -3,5 +3,5 @@ ujm_paper_list:
     defaults: { _controller: UJMExoBundle:Paper:index, page: 1 }
 
 ujm_paper_show:
-    pattern:  /{id}/show
-    defaults: { _controller: "UJMExoBundle:Paper:show" }
+    pattern:  /{id}/show/{p}
+    defaults: { _controller: UJMExoBundle:Paper:show, p: 0 }
