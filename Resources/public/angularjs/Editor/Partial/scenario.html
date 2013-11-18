@@ -49,7 +49,7 @@
                 <br/>
 
                 <h3><span class="icon-info-sign"></span> Instructions</h3>
-                <p>{{ previewStep.instructions || "There is no instructions for this step" }}</p>
+                <p ng-bind-html-unsafe="previewStep.instructions"></p>
 
                 <br/>
 

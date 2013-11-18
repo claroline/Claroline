@@ -205,7 +205,7 @@ function TreeCtrl($scope, $modal, HistoryFactory, PathFactory, StepFactory, Reso
                 // Inject edited step in path
                 PathFactory.replaceStep(step);
 
-                if (removedResources.length !== 0) {
+                if (typeof removedResources != undefined && null != removedResources && removedResources.length !== 0) {
                     // There are resources to remove from path
                     for (var i = 0; i < removedResources.length; i++) {
                         PathFactory.removeResource(removedResource[i]);
