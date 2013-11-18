@@ -37,7 +37,7 @@ class Post extends Statusable
     protected $content;
 
     /**
-     * @Gedmo\Slug(fields={"title"}, unique=true)
+     * @Gedmo\Slug(fields={"title"}, unique=true, updatable=false)
      * @ORM\Column(length=128, unique=true)
      */
     protected $slug;
