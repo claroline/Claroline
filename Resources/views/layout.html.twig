@@ -177,26 +177,12 @@
                     </div>
                 </div>
 
-                <div class="panel panel-default">
+                <div class="panel panel-default rss_panel">
                     <div class="panel-heading">
                         <h3 class="panel-title">
-                            {{ 'informations'|trans({}, 'icap_blog') }}
-                            <button type="button" class="btn btn-default btn-xs pull-right" data-toggle="collapse" data-target="#informations">
-                                <i class="icon-chevron-down"></i>
-                            </button>
+                            {{ 'blog_rss_feed'|trans({}, 'icap_blog') }}
+                            <a href="{{ path('icap_blog_rss', {'blogId': _resource.id}) }}" title="{{ 'blog_rss_feed'|trans({}, 'icap_blog') }}" class="label label-warning pull-right white"><span class="icon-rss-sign"></span> {{ 'rss_feed'|trans({}, 'icap_blog') }}</a>
                         </h3>
-                    </div>
-                    <div id="informations" class="panel-collapse collapse out">
-                        <div class="panel-body">
-                            <p>
-                                Date de création : {{ _resource.creationDate|date('date_format'|trans({}, 'platform')) }}<br />
-                                Commentaires autorisés : {% if blogOptions.authorizeComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
-                                Commentaires anonymes autorisés : {% if blogOptions.authorizeAnonymousComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
-                                Nb d'article/pages : {{ blogOptions.postPerPage }}<br />
-                                Publication automatique des billets : {% if blogOptions.autoPublishPost %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
-                                Publication automatique des commentaires : {% if blogOptions.autoPublishComment %}{{ 'yes'|trans({}, 'platform') }}{% else %}{{ 'no'|trans({}, 'platform') }}{% endif %}<br />
-                            </p>
-                        </div>
                     </div>
                 </div>
 

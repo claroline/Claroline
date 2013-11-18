@@ -57,6 +57,9 @@ article .highlight {
 aside .calendar .fc-header-title h2 {
   font-size: 25px;
 }
+aside .rss_panel .panel-heading {
+  border-bottom: 0;
+}
 .user_picture {
   width: 24px;
 }

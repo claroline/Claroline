@@ -3,6 +3,7 @@
 namespace Icap\BlogBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\BlogOptions;
@@ -24,6 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BlogController extends Controller
@@ -288,6 +290,43 @@ class BlogController extends Controller
             'form'       => $form->createView(),
             'archives'   => $this->getArchiveDatas($blog)
         );
+    }
+
+    /**
+     * @Route("/rss/{blogId}", name="icap_blog_rss", requirements={"blogId" = "\d+"})
+     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
+     */
+    public function rssAction(Blog $blog)
+    {
+        $feed = array(
+            'title'       => $blog->getName(),
+            'description' => $blog->getInfos(),
+            'siteUrl'     => $this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())),
+            'feedUrl'     => $this->generateUrl('icap_blog_rss', array('blogId' => $blog->getId())),
+            'lang'        => $this->get("claroline.config.platform_config_handler")->getParameter('locale_language')
+        );
+
+        /** @var \Icap\BlogBundle\Entity\Post[] $posts */
+        $posts = $this->getDoctrine()->getRepository('IcapBlogBundle:Post')->findRssDatas($blog);;
+
+        $items = array();
+        foreach ($posts as $post) {
+            $items[] = array(
+                'title'  => $post->getTitle(),
+                'url'    => $this->generateUrl('icap_blog_post_view', array('blogId' => $blog->getId(), 'postSlug' => $post->getSlug())),
+                'date'   => $post->getPublicationDate()->format("d/m/Y h:i:s"),
+                'intro'  => $post->getContent(),
+                'author' => $post->getAuthor()->getFirstName() - $post->getAuthor()->getLastName()
+            );
+        }
+
+        return new Response($this->renderView("IcapBlogBundle:Blog:rss.html.twig", array(
+                'feed'  => $feed,
+                'items' => $items
+            )), 200, array(
+                "Content-Type" => "application/rss+xml",
+                "charset"      => "utf-8"
+            ));
     }
 
     /**

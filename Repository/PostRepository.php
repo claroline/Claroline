@@ -125,6 +125,27 @@ class PostRepository extends EntityRepository
      * @param Blog $blog
      * @param bool $executeQuery
      *
+     * @return Post[]|\Doctrine\ORM\AbstractQuery
+     */
+    public function findRssDatas(Blog $blog, $executeQuery = true)
+    {
+        $query = $this->createQueryBuilder('post')
+            ->select(array('post'))
+            ->andWhere('post.blog = :blogId')
+            ->andWhere('post.status = :postStatus')
+            ->andWhere('post.publicationDate IS NOT NULL')
+            ->setParameter('blogId', $blog->getId())
+            ->setParameter('postStatus', Statusable::STATUS_PUBLISHED)
+            ->getQuery()
+        ;
+
+        return $executeQuery ? $query->getResult(): $query;
+    }
+
+    /**
+     * @param Blog $blog
+     * @param bool $executeQuery
+     *
      * @return array|\Doctrine\ORM\AbstractQuery
      */
     public function findArchiveDatasByBlog(Blog $blog, $executeQuery = true)
