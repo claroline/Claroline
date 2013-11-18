@@ -52,7 +52,6 @@ class Lesson extends AbstractResource
             {
                 $rootLesson = new Chapter();
                 $rootLesson->setLesson($this);
-                //$this->getResourceNode()->getName()
                 $rootLesson->setTitle("root_".$this->getId());
                 $this->setRoot($rootLesson);
 
