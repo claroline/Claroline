@@ -453,21 +453,6 @@ class LessonController extends Controller
         $this->checkAccess("EDIT", $lesson);
         $chapter = $this->findChapter($lesson, $chapterId);
 
-        $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository('IcapLessonBundle:Chapter');
-
-        //retrieve current chapter and its children, current chapter cant be dropped in those
-        $nonLegitTargets =  $repo->getChapterAndChapterChildren($chapter);
-        $chapters = $repo->getChapterAndChapterChildren($lesson->getRoot());
-        //remove $nonLegitTargets from $chapters
-        foreach ($chapters as $key => $chap) {
-            foreach ($nonLegitTargets as $key2 => $chap2) {
-                if($chap->getId() == $chap2->getId()){
-                    unset($chapters[$key]);
-                }
-            }
-        }
-
         $form = $this->createForm($this->get("icap.lesson.movechaptertype"), $chapter);
         $form->handleRequest($this->getRequest());
 

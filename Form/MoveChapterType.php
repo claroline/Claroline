@@ -44,7 +44,10 @@ class MoveChapterType extends AbstractType
                 $data = $event->getData();
 
                 if($data != null){
-                    $chapters = $this->entityManager->getRepository('IcapLessonBundle:Chapter')->getChapterAndChapterChildren($data->getLesson()->getRoot());
+                    $chapterRepository = $this->entityManager->getRepository('IcapLessonBundle:Chapter');
+                    $chapters = $chapterRepository->getChapterAndChapterChildren($data->getLesson()->getRoot());
+                    $nonLegitTargets =  $chapterRepository->getChapterAndChapterChildren($data);
+
                     $chapters_list = array();
                     $root = true;
                     foreach ($chapters as $child) {
@@ -52,8 +55,8 @@ class MoveChapterType extends AbstractType
                             $chapters_list[$child->getId()] = $this->translator->trans('Root', array(), 'icap_lesson');
                             $root = false;
                         }else{
-                            //remove current chapter from legit destination list
-                            if($data->getId() != $child->getId()){
+                            //remove non legit targets form destination
+                            if( $this->isLegitTarget($child, $nonLegitTargets)){
                                 //$tmp_title = str_repeat("--", $child->getLevel()).$child->getTitle();
                                 $chapters_list[$child->getId()] = $child->getTitle();
                             }
@@ -78,6 +81,15 @@ class MoveChapterType extends AbstractType
                         'data' => 'false'
                     ));
         });
+    }
+
+    private function isLegitTarget($chapter, $list){
+        foreach ($list as $key2 => $chap2) {
+            if($chapter->getId() == $chap2->getId()){
+                return false;
+            }
+        }
+        return true;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

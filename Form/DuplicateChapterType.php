@@ -65,6 +65,8 @@ class DuplicateChapterType extends AbstractType
                 }
 
                 $form
+                    ->add('title', 'text'
+                    )
                     ->add('parent', 'choice',
                         array(
                             'mapped' => false,
