@@ -4,7 +4,7 @@
     "keywords": ["Claroline", "Core"],
     "homepage": "http://www.claroline.net",
     "type": "claroline-core",
-    "license": "",
+    "license": "GPL-3.0+",
     "authors": [
         {
             "name": "Claroline development team",
