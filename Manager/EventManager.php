@@ -31,11 +31,11 @@ class EventManager
     /**
      * Get all existing event name with their associated label
      *
-     * @param string|null $restiction
+     * @param string|null $restriction
      *
      * @return array
      */
-    public function getEvents($restiction = null)
+    public function getEvents($restriction = null)
     {
         $suffixLogPath      = '/Event/Log';
         $suffixLogNamespace = '\Event\Log';
@@ -47,7 +47,38 @@ class EventManager
             if (file_exists($bundleEventLogDirectory)) {
                 $finder = new Finder();
                 $finder->files()->in($bundleEventLogDirectory)->sortByName();
-                $events = array_merge($events, $this->getEventsByBundle($finder, $bundle->getNamespace(), $suffixLogNamespace, $restiction));
+                $events = array_merge($events, $this->getEventsByBundle($finder, $bundle->getNamespace(), $suffixLogNamespace, $restriction));
+            }
+        }
+
+        return $events;
+    }
+
+    /**
+     * Get all existing event name with their associated label
+     *
+     * @param string|null $restriction
+     *
+     * @return array
+     */
+    public function getEventsForBundle($restriction = null, $resourceClass)
+    {
+        $suffixLogPath      = '/Event/Log';
+        $suffixLogNamespace = '\Event\Log';
+        $bundles            = $this->kernel->getBundles();
+        $events             = array();
+
+        foreach ($bundles as $bundle) {
+            if (0 === strpos($resourceClass, $bundle->getNamespace()) || 0 === strpos(get_class($this), $bundle->getNamespace())) {
+                if (0 !== strpos(get_class($this), $bundle->getNamespace())) {
+                    array_push($events, null);
+                }
+                $bundleEventLogDirectory = $bundle->getPath() . $suffixLogPath;
+                if (file_exists($bundleEventLogDirectory)) {
+                    $finder = new Finder();
+                    $finder->files()->in($bundleEventLogDirectory)->sortByName();
+                    $events = array_merge($events, $this->getEventsByBundle($finder, $bundle->getNamespace(), $suffixLogNamespace, $restriction));
+                }
             }
         }
 
@@ -70,7 +101,7 @@ class EventManager
         foreach ($finder as $file) {
             $classNamespace = $bundleNamespace . $suffixLogNamespace . '\\' . $file->getBasename('.' . $file->getExtension());
             if (in_array('Claroline\CoreBundle\Event\Log\LogGenericEvent', class_parents($classNamespace))) {
-                $events = array_merge($events, $this->getActionConstantsforClass($classNamespace, $restriction));
+                $events = array_merge($events, $this->getActionConstantsForClass($classNamespace, $restriction));
             }
         }
 
@@ -83,7 +114,7 @@ class EventManager
      *
      * @return array
      */
-    protected function getActionConstantsforClass($classNamespace, $restriction)
+    protected function getActionConstantsForClass($classNamespace, $restriction)
     {
         $constants       = array();
         /** @var \Claroline\CoreBundle\Event\Log\LogGenericEvent $reflectionClass */
@@ -94,7 +125,6 @@ class EventManager
 
                 if (in_array($restriction, $restrictions)) {
                     $classConstants  = $reflectionClass->getConstants();
-
                     foreach ($classConstants as $key => $classConstant) {
                         if (preg_match('/^ACTION/', $key)) {
                             $constants[] = $classConstant;
@@ -104,7 +134,6 @@ class EventManager
             }
             else {
                 $classConstants  = $reflectionClass->getConstants();
-
                 foreach ($classConstants as $key => $classConstant) {
                     if (preg_match('/^ACTION/', $key)) {
                         $constants[] = $classConstant;
@@ -173,6 +202,28 @@ class EventManager
                     $sortedEvents[$this->translator->trans('resource', array(), 'platform')][$this->translator->trans($sortedKey, array(), 'resource')]['null'] = null;
                     $sortedEvents[$this->translator->trans('resource', array(), 'platform')][$this->translator->trans($sortedKey, array(), 'resource')][$resourceEventKey] = $resourceEventValue;
                 }
+            }
+        }
+
+        return $sortedEvents;
+    }
+
+    /**
+     * @param string|null $restriction
+     *
+     * @return array
+     */
+    public function getResourceEventsForFilter($restriction = null, $resourceClass = null)
+    {
+        $textEvents = $this->getEventsForBundle($restriction, $resourceClass);
+        $sortedEvents = array();
+        $sortedEvents['all'] = 'all';
+        foreach ($textEvents as $textEvent) {
+            if ($textEvent === null) {
+                $sortedEvents['null'] = null;
+            }
+            else if (0 === strpos($textEvent, 'resource')) {
+                $sortedEvents[$textEvent] = 'log_' . $textEvent . '_filter';
             }
         }
 

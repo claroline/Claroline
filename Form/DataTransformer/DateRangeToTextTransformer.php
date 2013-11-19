@@ -32,7 +32,8 @@ class DateRangeToTextTransformer implements DataTransformerInterface
             }
 
             $format = $this->translator->trans('date_range.format', array(), 'platform');
-            $outputValue = date($format, $startDate).' - '.date($format, $endDate);
+            $separator = $this->translator->trans('date_range.separator', array(), 'platform');
+            $outputValue = date($format, $startDate).' '. $separator .' '.date($format, $endDate);
             if ($startDate == $endDate) {
                 $outputValue = date($format, $startDate);
             }
@@ -51,9 +52,10 @@ class DateRangeToTextTransformer implements DataTransformerInterface
     {
         $startDate = time();
         $endDate = time();
+        $separator = $this->translator->trans('date_range.separator', array(), 'platform');
 
         if ($string != null) {
-            $array = explode(' - ', $string);
+            $array = explode(' '. $separator .' ', $string);
 
             if (array_key_exists(0, $array)) {
                 $startDate = $endDate = strtotime($array[0]);

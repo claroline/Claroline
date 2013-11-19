@@ -3,16 +3,16 @@
 namespace Claroline\CoreBundle\Form\Log;
 
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Claroline\CoreBundle\Manager\EventManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Manager\EventManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * @DI\Service("claroline.form.adminLogFilter")
+ * @DI\Service("claroline.form.resourceLogFilter")
  */
-class AdminLogFilterType extends AbstractType
+class ResourceLogFilterType extends AbstractType
 {
     /** @var \Claroline\CoreBundle\Manager\EventManager */
     private $eventManager;
@@ -29,24 +29,19 @@ class AdminLogFilterType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $actionChoices = $this->eventManager->getSortedEventsForFilter(LogGenericEvent::DISPLAYED_ADMIN);
+        $actionChoices = $this->eventManager->getResourceEventsForFilter(LogGenericEvent::DISPLAYED_WORKSPACE, $options['data']['resourceClass']);
 
         $builder
             ->add(
-                'action', 'twolevelselect', array(
+                'action', 'choice', array(
                     'label'              => 'Show actions for',
-                    'translation_domain' => 'log',
                     'attr'               => array('class' => 'input-sm'),
-                    'choices'            => $actionChoices,
-                    'empty_value'        => 'all',
-                    'empty_data'         => null,
-                    'theme_options' => array('label_width' => 'col-md-3')
+                    'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3'),
+                    'choices'            => $actionChoices
                 )
             )
             ->add(
-                'range',
-                'daterange',
-                array(
+                'range', 'daterange', array(
                     'label'    => 'for period',
                     'required' => false,
                     'attr'     => array('class' => 'input-sm'),
@@ -54,9 +49,7 @@ class AdminLogFilterType extends AbstractType
                 )
             )
             ->add(
-                'user',
-                'simpleautocomplete',
-                array(
+                'user', 'simpleautocomplete', array(
                     'label'            => 'for user',
                     'entity_reference' => 'user',
                     'required'         => false,
@@ -68,16 +61,16 @@ class AdminLogFilterType extends AbstractType
 
     public function getName()
     {
-        return 'admin_log_filter_form';
+        return 'workspace_log_filter_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver
-        ->setDefaults(
-            array(
-                'translation_domain' => 'log'
-            )
-        );
+            ->setDefaults(
+                array(
+                    'translation_domain' => 'log'
+                )
+            );
     }
 }

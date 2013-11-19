@@ -16,7 +16,7 @@ class MaskManager
     private static $defaultActions = array('open', 'copy', 'export', 'edit', 'delete');
     private static $defaultMenus= array(
         'export' => array('download' => false),
-        'edit' => array('rename' => true, 'edit-properties' => true, 'edit-rights' => true),
+        'edit' => array('rename' => true, 'edit-properties' => true, 'edit-rights' => true, 'open-tracking' => false),
         'delete' => array('delete' => false)
     );
 

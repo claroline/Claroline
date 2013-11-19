@@ -54,6 +54,12 @@ class AdditionalInstaller extends BaseInstaller
         if (version_compare($currentVersion, '2.1.5', '<')) {
              $this->createAclTablesIfNotExist();
         }
+
+        if (version_compare($currentVersion, '2.2.1', '<')) {
+            $updater020201 = new Updater\Updater020201($this->container);
+            $updater020201->setLogger($this->logger);
+            $updater020201->postUpdate();
+        }
     }
 
     private function createDatabaseIfNotExists()
