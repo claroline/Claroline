@@ -25,16 +25,21 @@
         toolbar1: 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | preview fullscreen resourcePicker',
         toolbar2: 'undo redo | bullist numlist outdent indent | link image media print | forecolor backcolor emoticons',
         paste_preprocess: function (plugin, args) {
-            var url = args.content.match(/href='([^']*')/g);
+            var url = args.content.match(/href='([^']*')|href="([^"]*")/g);
+
             if (url) {
                 home.generatedContent(url[0].slice(6, -1), function (data) {
-                    tinymce.activeEditor.getElement().value = tinymce.activeEditor.getContent() + data;
+                    var newNode = tinymce.activeEditor.getDoc().createElement('div');
+                    newNode.innerHTML = data;
+                    tinymce.activeEditor.selection.getRng().insertNode(newNode);
                 });
             }
         },
         setup: function (editor) {
             editor.on('change', function () {
-                editor.getElement().value = editor.getContent();
+                if (editor.getElement()) {
+                    editor.getElement().value = editor.getContent();
+                }
             });
             editor.on('LoadContent', function () {
                 setTimeout(function () {
@@ -50,7 +55,7 @@
             }
             $('body').bind('ajaxComplete', function () {
                 setTimeout(function () {
-                    if (editor.getElement().value === '') {
+                    if (editor.getElement() && editor.getElement().value === '') {
                         editor.setContent('');
                     }
                 }, 200);
