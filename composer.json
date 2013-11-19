@@ -1,10 +1,10 @@
 {
     "name": "claroline/activity-tool-bundle",
     "description": "Claroline activity tool bundle",
-    "keywords": ["Claroline","ActivityTool"],
+    "keywords": ["Claroline", "Activity", "Tool"],
     "homepage": "http://www.claroline.net",
+    "license": "GPL-3.0+",
     "type": "claroline-plugin",
-    "license": "",
     "authors": [
         {
             "name": "Claroline development team",
