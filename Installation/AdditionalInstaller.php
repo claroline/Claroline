@@ -8,7 +8,7 @@ class AdditionalInstaller extends BaseInstaller
 {
     public function postUpdate($currentVersion, $targetVersion)
     {
-        if (version_compare($currentVersion, '1.0', '<')) {
+        if ("9999999-dev" === $currentVersion) {
             $updater = new Updater($this->container->get('doctrine.orm.entity_manager'));
             $updater->postUpdate();
         }
