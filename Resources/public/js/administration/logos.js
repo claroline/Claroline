@@ -28,24 +28,18 @@
 
         if (logo && element) {
             $.ajax(home.path + 'admin/delete/logo/' + logo)
-            .done(
-                function (data)
-                {
-                    if (data === 'true') {
-                        $(element).hide('slow', function () {
-                            $(this).remove();
-                        });
-                    } else {
-                        home.modal('content/error');
-                    }
-                }
-            )
-            .error(
-                function ()
-                {
+            .done(function (data) {
+                if (data === 'true') {
+                    $(element).hide('slow', function () {
+                        $(this).remove();
+                    });
+                } else {
                     home.modal('content/error');
                 }
-            );
+            })
+            .error(function () {
+                home.modal('content/error');
+            });
         }
     });
 

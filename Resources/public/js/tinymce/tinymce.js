@@ -18,7 +18,7 @@
         content_css: contentCSS,
         plugins: [
             'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
-            'searchreplace wordcount visualblocks visualchars code fullscreen',
+            'searchreplace wordcount visualblocks visualchars fullscreen',
             'insertdatetime media nonbreaking save table directionality',
             'template paste textcolor emoticons'
         ],
@@ -106,23 +106,18 @@
         if ($('#resourcePicker').get(0) === undefined) {
             $('body').append('<div id="resourcePicker"></div>');
             $.ajax(home.path + 'resource/init')
-            .done(
-                function (data) {
-                    var resourceInit = JSON.parse(data);
-                    resourceInit.parentElement = $('#resourcePicker');
-                    resourceInit.isPickerMultiSelectAllowed = false;
-                    resourceInit.isPickerOnly = true;
-                    resourceInit.pickerCallback = function (nodes) { callBack(nodes); };
-                    Claroline.ResourceManager.initialize(resourceInit);
-                    Claroline.ResourceManager.picker('open');
-                }
-            )
-            .error(
-                function ()
-                {
-                    home.modal('content/error');
-                }
-            );
+            .done(function (data) {
+                var resourceInit = JSON.parse(data);
+                resourceInit.parentElement = $('#resourcePicker');
+                resourceInit.isPickerMultiSelectAllowed = false;
+                resourceInit.isPickerOnly = true;
+                resourceInit.pickerCallback = function (nodes) { callBack(nodes); };
+                Claroline.ResourceManager.initialize(resourceInit);
+                Claroline.ResourceManager.picker('open');
+            })
+            .error(function () {
+                home.modal('content/error');
+            });
         } else {
             Claroline.ResourceManager.picker('open');
         }

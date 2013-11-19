@@ -958,7 +958,7 @@
                     context: this,
                     url: this.parameters.appPath + urlMap[type],
                     success: function (form) {
-                        -this.views.form.render(form, node.id, type);
+                        this.views.form.render(form, node.id, type);
 
                         if (!this.views.form.isAppended) {
                             this.parameters.parentElement.append(this.views.form.el);
