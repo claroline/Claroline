@@ -65,7 +65,10 @@ class DuplicateChapterType extends AbstractType
                 }
 
                 $form
-                    ->add('title', 'text'
+                    ->add('title', 'text', array(
+                            'mapped' => false,
+                            'data' => $this->translator->trans('copy_prefix', array(), 'icap_lesson').$data->getTitle()
+                        )
                     )
                     ->add('parent', 'choice',
                         array(

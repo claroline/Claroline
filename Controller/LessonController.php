@@ -624,7 +624,7 @@ class LessonController extends Controller
                 ));
         }
 
-        $chapter_copy = $chapter_manager->copyChapter($chapter, $parent, $copy_children, true);
+        $chapter_copy = $chapter_manager->copyChapter($chapter, $parent, $copy_children, $form->get('title')->getData());
         $em->flush();
 
         $this->dispatchChapterCreateEvent($lesson, $chapter_copy);
