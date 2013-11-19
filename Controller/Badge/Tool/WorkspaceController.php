@@ -207,10 +207,11 @@ class WorkspaceController extends Controller
 
     /**
      * @Route("/delete/{id}", name="claro_workspace_tool_badges_delete")
+     * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"id" = "workspaceId"})
      *
      * @Template()
      */
-    public function deleteAction($workspaceId, Badge $badge)
+    public function deleteAction($workspace, Badge $badge)
     {
         $this->checkUserIsAllowed($workspace);
 
