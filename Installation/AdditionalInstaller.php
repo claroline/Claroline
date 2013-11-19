@@ -20,7 +20,7 @@ class AdditionalInstaller extends BaseInstaller
 
     public function postUpdate($currentVersion, $targetVersion)
     {
-        if (version_compare($currentVersion, '1.3', '<') && version_compare($currentVersion, '1.2', '>=') && version_compare($targetVersion, '1.3', '>=') ) {
+        if (version_compare($currentVersion, '1.3', '<') && version_compare($targetVersion, '1.3', '>=') ) {
             $updater13 = new Updater13($this->container);
             $updater13->setLogger($this);
             $updater13->postUpdate();
