@@ -53,9 +53,7 @@
 
         if (id && type && element) {
             $.post(home.path + 'content/update/' + id, { 'size': size, 'type': type })
-        .done(
-            function (data)
-            {
+            .done(function (data) {
                 if (data === 'true') {
                     $(element).removeClass(function (index, css) {
                         return (css.match(/\bcontent-\d+/g) || []).join(' ');
@@ -69,15 +67,10 @@
                 } else {
                     home.modal('content/error');
                 }
-            }
-            )
-        .error(
-                function ()
-                {
-                    home.modal('content/error');
-                }
-              )
-        ;
+            })
+            .error(function () {
+                home.modal('content/error');
+            });
         }
     });
 
@@ -95,19 +88,12 @@
 
         if (id && name) {
             $.ajax(home.path + 'region/' + name + '/' + id)
-                .done(
-                    function ()
-                    {
-                        location.reload();
-                    }
-                )
-                .error(
-                    function ()
-                    {
-                        home.modal('content/error');
-                    }
-                )
-            ;
+            .done(function () {
+                location.reload();
+            })
+            .error(function () {
+                home.modal('content/error');
+            });
         }
     });
 
@@ -123,25 +109,19 @@
 
         if (id && element) {
             $.ajax(home.path + 'content/delete/' + id)
-            .done(
-                function (data)
-                {
-                    if (data === 'true') {
-                        $(element).hide('slow', function () {
-                            $(this).remove();
-                            $('.contents').trigger('ContentModified');
-                        });
-                    } else {
-                        home.modal('content/error');
-                    }
-                }
-            )
-            .error(
-                function ()
-                {
+            .done(function (data) {
+                if (data === 'true') {
+                    $(element).hide('slow', function () {
+                        $(this).remove();
+                        $('.contents').trigger('ContentModified');
+                    });
+                } else {
                     home.modal('content/error');
                 }
-            );
+            })
+            .error(function () {
+                home.modal('content/error');
+            });
         }
     });
 
@@ -157,24 +137,18 @@
 
         if (id && element) {
             $.ajax(home.path + 'content/deletetype/' + id)
-            .done(
-                function (data)
-                {
-                    if (data === 'true') {
-                        $(element).parent().hide('slow', function () {
-                            $(this).remove();
-                        });
-                    } else {
-                        home.modal('content/error');
-                    }
-                }
-            )
-            .error(
-                function ()
-                {
+            .done(function (data) {
+                if (data === 'true') {
+                    $(element).parent().hide('slow', function () {
+                        $(this).remove();
+                    });
+                } else {
                     home.modal('content/error');
                 }
-            );
+            })
+            .error(function () {
+                home.modal('content/error');
+            });
         }
     });
 
@@ -184,33 +158,24 @@
 
         if (typeCreator && name.val()) {
             $.ajax(home.path + 'content/typeexist/' + name.val())
-            .done(
-                function (data)
-                {
-                    if (data === 'false') {
-                        $.ajax(home.path + 'content/createtype/' + name.val())
-                        .done(
-                            function (data)
-                            {
-                                if (data !== 'false' && data !== '') {
-                                    $('.panel .panel-body', typeCreator).append(data);
-                                    name.val('');
-                                } else {
-                                    home.modal('content/error');
-                                }
-                            }
-                        )
-                        .error(
-                            function ()
-                            {
-                                home.modal('content/error');
-                            }
-                        );
-                    } else {
-                        home.modal('content/typeerror');
-                    }
+            .done(function (data) {
+                if (data === 'false') {
+                    $.ajax(home.path + 'content/createtype/' + name.val())
+                    .done(function (data) {
+                        if (data !== 'false' && data !== '') {
+                            $('.panel .panel-body', typeCreator).append(data);
+                            name.val('');
+                        } else {
+                            home.modal('content/error');
+                        }
+                    })
+                    .error(function () {
+                        home.modal('content/error');
+                    });
+                } else {
+                    home.modal('content/typeerror');
                 }
-            );
+            });
         }
     });
 
@@ -228,24 +193,17 @@
             }
 
             $.ajax(home.path + contentPath)
-                .done(
-                    function (data)
-                    {
-                        $(element).replaceWith(data);
+            .done(function (data) {
+                $(element).replaceWith(data);
 
-                        $('.creator textarea').each(function () {
-                            home.resize(this);
-                        });
-                        $('.contents').trigger('ContentModified');
-                    }
-                )
-                .error(
-                    function ()
-                    {
-                        home.modal('content/error');
-                    }
-                )
-            ;
+                $('.creator textarea').each(function () {
+                    home.resize(this);
+                });
+                $('.contents').trigger('ContentModified');
+            })
+            .error(function () {
+                home.modal('content/error');
+            });
         }
     });
 
@@ -277,20 +235,13 @@
             }
 
             $.ajax(home.path + contentPath)
-                .done(
-                    function (data)
-                    {
-                        $(element).replaceWith(data);
-                        $('.contents').trigger('ContentModified');
-                    }
-                )
-                .error(
-                    function ()
-                    {
-                        home.modal('content/error');
-                    }
-                )
-            ;
+            .done(function (data) {
+                $(element).replaceWith(data);
+                $('.contents').trigger('ContentModified');
+            })
+            .error(function () {
+                home.modal('content/error');
+            });
         }
     });
 
@@ -319,30 +270,16 @@
         var creator = $('#add-link').data('element');
 
         if (urls.length > 0) {
-            home.generatedContent(creator, urls[0]);
-
-            if ($('.content-text', creator).val() === '' && $('.content-title', creator).val() === '') {
-                $('.content-text', creator).val($('#add-link input').val());
-            }
+            home.generatedContent(urls[0], function (data) {
+                $('.content-text', creator).val(
+                    $('.content-text', creator).val() + '<p><a href="' + urls[0] + '">' + urls[0] + '</a></p>' + data
+                );
+            });
 
             $(modal).modal('hide');
         } else {
             $('.form-group', modal).addClass('has-error');
         }
-    });
-
-    $('body').on('paste', '.creator textarea', function () {
-        var element = this;
-
-        setTimeout(function () {
-            var text = $(element).val();
-            var urls = home.findUrls(text);
-
-            if (urls.length > 0) {
-                home.generatedContent($(element).parents('.creator').get(0), urls[0]);
-            }
-
-        }, 100);
     });
 
     $('body').on('click', '.generated .close', function (event) {
@@ -363,17 +300,12 @@
 
             if (a && type) {
                 $.ajax(home.path + 'content/reorder/' + type + '/' + a + '/' + b)
-                .done(
-                    function() {
-                        $('.contents').trigger('ContentModified');
-                    }
-                ).error(
-                        function ()
-                        {
-                            home.modal('content/error');
-                        }
-                    )
-                ;
+                .done(function () {
+                    $('.contents').trigger('ContentModified');
+                })
+                .error(function () {
+                    home.modal('content/error');
+                });
             }
         }
     });

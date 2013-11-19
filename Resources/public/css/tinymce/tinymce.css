@@ -83,3 +83,7 @@ td.mce-item-selected, th.mce-item-selected {
 .mce-edit-focus {
 	outline: 1px dotted #333;
 }
+
+img {
+    max-width: 100%;
+}

@@ -18,17 +18,11 @@
     </div>
     <form novalidate="validate" method="post" action="{{ _path('claro_text_edit', {'old':_resource.getId()}) }}" id="edit_form">
         <div class="panel-body">
-            <textarea name="content" cols="50" rows="15" data-theme="advanced" class="hide tinymce">{{ text|raw }}</textarea>
+            <textarea name="content" cols="50" rows="15" data-theme="advanced" class="hide claroline-tiny-mce">{{ text|raw }}</textarea>
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
             <a class="btn btn-default" href="{{ path('claro_text_open', {'text': _resource.getId()} ) }}">{{ 'cancel' | trans({}, 'platform') }}</a>
         </div>
     </form>
-{% endblock %}
-
-{% block javascripts %}
-{{ parent() }}
-    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
-    {{ tinymce_init() }}
 {% endblock %}

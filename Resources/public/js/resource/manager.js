@@ -470,13 +470,13 @@
             render: function (node, isSelectionAllowed, hasMenu) {
                 this.el.id = node.id;
                 node.displayableName = Claroline.Utilities.formatText(node.name, 20, 2);
-                $(this.el).html(Twig.render(ResourceManagerThumbnail, {
+                this.el.innerHTML = Twig.render(ResourceManagerThumbnail, {
                     'node': node,
                     'isSelectionAllowed': isSelectionAllowed,
                     'hasMenu': hasMenu,
                     'actions': this.parameters.resourceTypes[node.type].actions || {},
                     'webRoot': this.parameters.webPath
-                }));
+                });
             }
         }),
         Nodes: Backbone.View.extend({
@@ -722,13 +722,6 @@
                 } else {
                     $('.modal-body', this.el).html(form);
                     $('#modal-form', this.el).modal('show');
-                }
-            },
-            afterRender: function (form) {
-                var textArea = $('textarea', form)[0];
-
-                if (textArea) {
-                    initTinyMCE(stfalcon_tinymce_config);
                 }
             }
         })
@@ -980,8 +973,6 @@
                             this.parameters.parentElement.append(this.views.form.el);
                             this.views.form.isAppended = true;
                         }
-
-                        this.views.form.afterRender(form);
                     }
                 });
             }
@@ -1000,8 +991,6 @@
                     } else {
                         this.views.form.render(data, parentDirectoryId, 'create');
                     }
-
-                    this.views.form.afterRender(data);
                 }
             });
         },
@@ -1167,7 +1156,7 @@
             window.location = this.parameters.appPath + '/resource/custom/' + action + '/' + nodeId;
         },
         picker: function (action, callback) {
-            if (action === 'open' && !this.views.picker.isAppended) {
+            if (action === 'open'){// && !this.views.picker.isAppended) {
                 this.displayResources('0', 'picker');
             }
 

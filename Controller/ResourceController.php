@@ -329,7 +329,7 @@ class ResourceController
         $mimeType = $data['mimeType'];
         $response = new StreamedResponse();
 
-        $file = $data['file'] ? : tempnam('tmp', 'tmp') ;
+        $file = $data['file'] ? : tempnam('tmp', 'tmp');
         $response->setCallBack(
             function () use ($file) {
                 readfile($file);
@@ -670,5 +670,14 @@ class ResourceController
         if (!$this->sc->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
+    }
+
+    /**
+     * @EXT\Route("/init", name="claro_resource_init")
+     * @EXT\Template("ClarolineCoreBundle:Resource:init.html.twig")
+     */
+    public function initAction()
+    {
+        return array('resourceTypes' => $this->resourceManager->getAllResourceTypes());
     }
 }

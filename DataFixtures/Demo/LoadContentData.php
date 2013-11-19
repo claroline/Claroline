@@ -45,17 +45,6 @@ class LoadContentData extends AbstractFixture
             'http://fr.wikipedia.org/wiki/Claroline'
         );
 
-        $generated = array(
-            file_get_contents("{$textDir}/text2.txt", 'r'),
-            '',
-            file_get_contents("{$textDir}/text3.txt", 'r'),
-            '',
-            file_get_contents("{$textDir}/text3.txt", 'r'),
-            file_get_contents("{$textDir}/text5.txt", 'r'),
-            file_get_contents("{$textDir}/text6.txt", 'r'),
-            file_get_contents("{$textDir}/text7.txt", 'r')
-        );
-
         $types = array('home', 'home', 'home', 'home', 'opengraph', 'opengraph', 'opengraph', 'opengraph');
         $sizes = array(
             'content-5', 'content-7', 'content-7', 'content-5', 'content-12', 'content-12', 'content-12', 'content-12'
@@ -67,7 +56,6 @@ class LoadContentData extends AbstractFixture
             $content[$i] = new Content();
             $content[$i]->setTitle($title);
             $content[$i]->setContent($texts[$i]);
-            $content[$i]->setGeneratedContent($generated[$i]);
 
             $first = $manager->getRepository('ClarolineCoreBundle:Home\Content2Type')->findOneBy(
                 array('back' => null, 'type' => $type)

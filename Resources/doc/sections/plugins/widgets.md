@@ -79,9 +79,6 @@ $event->stopPropagation();
 **your_form.html.twig:**
 
 ```html+jinja
-<script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-1.7.1.min.js') }}'></script>
-{% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
-{{ tinymce_init() }}
 
 {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
 <form class="form-horizontal"

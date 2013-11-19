@@ -323,10 +323,8 @@
 {% endblock %}
 
 {% block javascripts %}
-{{ parent() }}
-{% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
-{{ tinymce_init() }}
-<script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
-<script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/edit.js') }}'></script>
-<script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/rules.js') }}'></script>
+    {{ parent() }}
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/edit.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/rules.js') }}'></script>
 {% endblock %}
