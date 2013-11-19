@@ -64,10 +64,10 @@ class AdditionalInstaller extends BaseInstaller
              $this->createAclTablesIfNotExist();
         }
 
-        if (version_compare($currentVersion, '2.2.1', '<')) {
-            $updater020201 = new Updater\Updater020201($this->container);
-            $updater020201->setLogger($this->logger);
-            $updater020201->postUpdate();
+        if (version_compare($currentVersion, '2.2.0', '<')) {
+            $updater020200 = new Updater\Updater020200($this->container);
+            $updater020200->setLogger($this->logger);
+            $updater020200->postUpdate();
         }
     }
 

@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 
-class Updater020115
+class Updater020200
 {
     private $container;
     private $logger;
