@@ -131,7 +131,7 @@ class PaperController extends Controller
      * Finds and displays a Paper entity.
      *
      */
-    public function showAction($id, $p)
+    public function showAction($id, $p = -2)
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();

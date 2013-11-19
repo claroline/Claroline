@@ -4,4 +4,4 @@ ujm_paper_list:
 
 ujm_paper_show:
     pattern:  /{id}/show/{p}
-    defaults: { _controller: UJMExoBundle:Paper:show, p: 0 }
+    defaults: { _controller: UJMExoBundle:Paper:show, p: -2 }

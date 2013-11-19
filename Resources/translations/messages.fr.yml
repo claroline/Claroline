@@ -200,6 +200,7 @@ my shared questions: Mes questions partagées
 # N
 nameUser2Shared: Nom de l'utilisateur avec qui partager la question
 nbr_choices: Le nombre de choix doit être supérieur à deux
+need Correction: Questions nécessitant une correction
 never: Jamais
 newCategoryName: Nouveau nom de la catégorie
 newName: Nouveau nom du document
@@ -259,6 +260,9 @@ qcm: QCM
 qcm creation: Création d'une question de type QCM
 qcm edition: Edition d'une question de type QCM
 question: Question
+question graphic: Question Graphique
+question open: Question à Réponse Ouverte
+question qcm: Question QCM
 questions: Questions
 question creation: Création d'une question
 questionSharedWith: Cette question est partagée avec les utilisateurs suivants

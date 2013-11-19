@@ -428,10 +428,53 @@
                 </div>
             </div>
         {% endif %}
+
+        {% if p == -2 %}
+            <div class="panel-body">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3>{{ 'list of question' | trans }} :</h3></div>
+                    <div class="panel-body">
+                        <ol>
+                            {% set i = 0 %}
+                            {% for interaction in interactions %}
+
+                                {% if responses[i].mark == -1 %}
+                                    <li>
+                                        <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': i }) }}" style="color: red;">
+                                            {{ interaction.question.title }}
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': i }) }}">
+                                            {{ interaction.question.title }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                {% set i = i + 1 %}
+                            {% endfor %}
+                        </ol>
+
+                        <h6 style="color: red;">( {{ 'need Correction' | trans }} ).</h6>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     </div>
 
     <div class="text-center panel-footer">
+
         <ul class="pagination">
+
+            {% if p != -2 %}
+                <li>
+                    <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': -2 }) }}" class="btn btn-primary" style="background-color: #428BCA;">
+                        {{ 'list of question' |trans }}
+                    </a>
+                </li>
+            {% endif %}
+
             {% if p != 0 %}
                 <li>
                     <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': 0 }) }}">
@@ -439,7 +482,7 @@
                     </a>
                 </li>
 
-                {% if p != -1 %}
+                {% if p != -1 and p != -2 %}
                     <li>
                         <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': p - 1 }) }}">
                             <i class="icon-chevron-left"></i>
@@ -453,14 +496,25 @@
 
             {% for interaction in interactions %}
                 {% if loop.index != p + 1 %}
-                    <li><a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">{{ loop.index }}</a></li>
+                    {% if interaction.type == 'InteractionOpen' %}
+                        <li><a style="color: purple;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
+                            {{ loop.index }}</a>
+                        </li>
+                    {% elseif interaction.type == 'InteractionQCM' %}
+                        <li><a style="color: green;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
+                            {{ loop.index }}</a>
+                        </li>
+                    {% elseif interaction.type == 'InteractionGraphic' %}
+                        <li><a style="color: black;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
+                            {{ loop.index }}</a></li>
+                    {% endif %}
                 {% else %}
-                    <li class="active"><a href="#">{{ loop.index }}</a></li>
+                    <li class="active"><a href="#" onclick="event.preventDefault();">{{ loop.index }}</a></li>
                 {% endif %}
             {% endfor %}
 
             {% if p != nbMaxQuestion - 1 %}
-                {% if p != -1 %}
+                {% if p != -1 and p != -2 %}
                     <li>
                         <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': p + 1 }) }}">
                             <i class="icon-chevron-right"></i>
@@ -478,10 +532,21 @@
             {% endif %}
 
             {% if p != -1 %}
-                <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-                <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': -1 }) }}" class="btn btn-primary">{{ 'final mark' |trans }}</a>
+                <li>
+                    <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': -1 }) }}" class="btn btn-primary" style="background-color: #428BCA;">
+                        {{ 'final mark' |trans }}
+                    </a>
+                </li>
             {% endif %}
         </ul>
+
+            <div>
+                (
+                <h6 style="color: black; display: inline;">{{ 'question graphic' | trans }}</h6>,
+                <h6 style="color: green; display: inline;">{{ 'question qcm' | trans }}</h6>,
+                <h6 style="color: purple; display: inline;">{{ 'question open' | trans }}</h6>
+                ).
+            </div>
     </div>
 {% endblock %}
 

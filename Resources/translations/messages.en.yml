@@ -200,6 +200,7 @@ my shared questions: My shared questions
 # N
 nameUser2Shared: Name of user to share the question
 nbr_choices: The number of choices must be greater than two
+need Correction: Questions which need correction
 never: Never
 newCategoryName: New name of the category
 newName: New name of the document
@@ -259,6 +260,9 @@ qcm: QCM
 qcm creation: Creation of a question of type QCM
 qcm edition: Edition of a question of type QCM
 question: Question
+question graphic: Graphic Question
+question open: Open Question
+question qcm: QCM Question
 questions: Questions
 question creation: Question creation
 questionSharedWith: This question is shared with users below
