@@ -181,19 +181,21 @@
                 'click ul.zoom li a': function (event) {
                     event.preventDefault();
 
-                    var zoom = event.currentTarget.getAttribute('id');
-                    var tmp = $('.node-thumbnail')[0].className.substring(
-                        $('.node-thumbnail')[0].className.indexOf('zoom')
-                    );
+                    if ($('.node-thumbnail').get(0) !== undefined) {
+                        var zoom = event.currentTarget.getAttribute('id');
+                        var currentZoom = $('.node-thumbnail').get(0).className.match(/\bzoom\d+/g);
 
-                    $('.dropdown-menu.zoom li').removeClass('active');
-                    $(event.currentTarget).parent().addClass('active');
-
-                    var thumbnail = $('.node-thumbnail');
-
-                    thumbnail.removeClass(tmp);
-                    thumbnail.addClass(zoom);
-
+                        $('.dropdown-menu.zoom li').removeClass('active');
+                        $(event.currentTarget).parent().addClass('active');
+                        $('.node-thumbnail').each(function () {
+                            for (var i in currentZoom) {
+                                if (currentZoom.hasOwnProperty(i)) {
+                                    $(this).removeClass(currentZoom[i]);
+                                }
+                            }
+                            $(this).addClass(zoom);
+                        });
+                    }
                 },
                 'click a.delete': function () {
                     if (!(this.$('a.delete').hasClass('disabled'))) {
@@ -403,6 +405,7 @@
                 parameters.searchedName = searchParameters ? searchParameters.name : null;
                 parameters.creatableTypes = creatableTypes;
                 parameters.isPasteAllowed = this.isReadyToPaste && !this.isSearchMode && directory.id !== '0';
+                parameters.isSearchMode = this.isSearchMode;
                 parameters.isCreateAllowed = parameters.isAddAllowed = directory.id !== 0 &&
                     _.size(creatableTypes) > 0 &&
                     (this.parameters.isPickerMode || !this.isSearchMode);
@@ -515,7 +518,9 @@
                 }
             },
             changeThumbnailIcon: function (nodeId, newIconPath, successHandler) {
-                this.$('#node-element-' + nodeId).attr('style', "background-image:url('" + this.parameters.webPath + newIconPath + "');");
+                this.$('#node-element-' + nodeId).attr(
+                    'style', 'background-image:url("' + this.parameters.webPath + newIconPath + '");'
+                );
                 console.debug(this.parameters.webPath + newIconPath);
                 if (successHandler) {
                     successHandler();
@@ -664,7 +669,7 @@
                         }
                     });
                 },
-                'click .modal-close': function (event) {
+                'click .modal-close': function () {
                     $('#modal-check-role').empty();
                     $('#rights-form-resource-tab-content').css('display', 'block');
                     $('#rights-form-resource-nav-tabs').css('display', 'block');
@@ -741,7 +746,8 @@
                     _.each(parameters, function (parameter) {
                         parameter = parameter.split('=');
 
-                        if (['name', 'dateFrom', 'dateTo', 'roots[]', 'types[]'].indexOf(parameter[0]) > -1) {
+                        if (['name', 'dateFrom', 'dateTo', 'roots[]', 'types[]'].indexOf(parameter[0]) > -1 &&
+                            searchParameters) {
                             searchParameters[parameter[0].replace('[]', '')] = parameter[1];
                         }
                     });
@@ -763,8 +769,15 @@
             'create': function (event) {
                 this.create(event.action, event.data, event.nodeId);
             },
-            'delete': function (event) {
-                this.remove(event.ids);
+            'delete': function () {
+                var ids = [];
+                $('.node-thumbnail input[type=checkbox]:checked').each(function () {
+                    ids.push($($(this).parents('.node-thumbnail').get(0)).attr('id'));
+                });
+
+                if (ids.length >= 1) {
+                    this.remove(ids);
+                }
             },
             'download': function (event) {
                 this.download(event.ids);
@@ -790,8 +803,9 @@
                 } else {
                     if (event.nodeId) {
                         this.router.navigate('resources/' + event.nodeId, {trigger: true});
+                    } else {
+                        document.location.href = event.el.attr('href');
                     }
-                    document.location.href = event.el.attr('href');
                 }
             },
             'node-click': function (event) {
@@ -1029,6 +1043,9 @@
                     }
                 });
             });
+            $('#confirm-modal').on('hidden.bs.modal', function () {
+                $(this).remove();
+            });
         },
         copy: function (nodeIds, directoryId) {
             $.ajax({
@@ -1153,16 +1170,16 @@
                 type: 'POST',
                 processData: false,
                 contentType: false,
-                success: function() {
+                success: function () {
                     this.views.form.close();
                 }
             });
         },
-        custom: function (action, nodeId, redirect) {
+        custom: function (action, nodeId) {
             window.location = this.parameters.appPath + '/resource/custom/' + action + '/' + nodeId;
         },
         picker: function (action, callback) {
-            if (action === 'open'){// && !this.views.picker.isAppended) {
+            if (action === 'open') {// && !this.views.picker.isAppended) {
                 this.displayResources('0', 'picker');
             }
 
@@ -1175,7 +1192,7 @@
             }
 
             var parentElementId = this.views.picker.$el[0].id;
-            $("#" + parentElementId+ " .modal").modal(action === 'open' ? 'show' : 'hide');
+            $('#' + parentElementId + ' .modal').modal(action === 'open' ? 'show' : 'hide');
         }
     };
 

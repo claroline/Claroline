@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Entity\Badge;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Rule\Rulable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -21,6 +22,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Claroline\CoreBundle\Form\Badge\Constraints as BadgeAssert;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * Class Badge
@@ -31,8 +34,9 @@ use Claroline\CoreBundle\Form\Badge\Constraints as BadgeAssert;
  * @BadgeAssert\AutomaticWithRules
  * @BadgeAssert\HasImage
  * @BadgeAssert\AtLeastOneTranslation
+ * @ExclusionPolicy("all")
  */
-class Badge
+class Badge extends Rulable
 {
     /**
      * @var integer
@@ -40,6 +44,7 @@ class Badge
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Expose
      */
     protected $id;
 
@@ -47,6 +52,7 @@ class Badge
      * @var integer
      *
      * @ORM\Column(type="smallint", nullable=false)
+     * @Expose
      */
     protected $version;
 
@@ -54,6 +60,7 @@ class Badge
      * @var boolean
      *
      * @ORM\Column(name="automatic_award", type="boolean", nullable=true)
+     * @Expose
      */
     protected $automaticAward;
 
@@ -61,6 +68,7 @@ class Badge
      * @var string
      *
      * @ORM\Column(name="image", type="string", nullable=false)
+     * @Expose
      */
     protected $imagePath;
 
@@ -68,6 +76,7 @@ class Badge
      * @var \DateTime
      *
      * @ORM\Column(name="expired_at", type="datetime", nullable=true)
+     * @Expose
      */
     protected $expiredAt;
 
@@ -105,6 +114,7 @@ class Badge
      * @var ArrayCollection|BadgeRule[]
      *
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\BadgeRule", mappedBy="badge", cascade={"persist"})
+     * @Expose
      */
     protected $badgeRules;
 
@@ -124,6 +134,7 @@ class Badge
      *   mappedBy="badge",
      *   cascade={"all"}
      * )
+     * @Expose
      */
     protected $translations;
 
@@ -464,11 +475,11 @@ class Badge
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Badge\BadgeRule[]|\Doctrine\Common\Collections\ArrayCollection $badgeRules
+     * @param \Claroline\CoreBundle\Entity\Badge\BadgeRule[] $badgeRules
      *
      * @return Badge
      */
-    public function setBadgeRules($badgeRules)
+    public function setRules($badgeRules)
     {
         foreach ($badgeRules as $rule) {
             $rule->setBadge($this);
@@ -482,17 +493,9 @@ class Badge
     /**
      * @return \Claroline\CoreBundle\Entity\Badge\BadgeRule[]|\Doctrine\Common\Collections\ArrayCollection
      */
-    public function getBadgeRules()
+    public function getRules()
     {
         return $this->badgeRules;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasRules()
-    {
-        return (0 < count($this->getBadgeRules()));
     }
 
     /**
@@ -685,5 +688,18 @@ class Badge
         if (null !== $filePath) {
             unlink($filePath);
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getRestriction()
+    {
+        $restriction = array();
+        if (null !== $this->getWorkspace()) {
+            $restriction['workspace'] = $this->getWorkspace();
+        }
+
+        return $restriction;
     }
 }

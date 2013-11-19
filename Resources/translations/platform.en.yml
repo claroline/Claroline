@@ -20,6 +20,7 @@ Your changes have been saved: 'Your changes have been saved'
 account_created: 'Account created.'
 account_general_statistics: 'Account general statistics'
 action: Action
+actions: Actions
 active_widgets: 'Active widgets'
 activity_form_instructions: Instructions
 activity_form_name: Name
@@ -70,6 +71,7 @@ available_widgets: 'Available widgets'
 available_workspaces: 'Available workspaces'
 back: 'Back'
 badges_management: 'Badges management'
+bad_request: The request is incorrect. If you arrived at this page via an internal link, please report the problem to the platform administrator.
 by: by
 canCopy: 'Right to copy'
 canCreate: 'Create %type%'
@@ -114,6 +116,7 @@ creation_date: 'Creation date'
 csv_users_import_infos: 'CSV file informations'
 csv_users_import_infos_format: 'Format'
 csv_users_import_infos_format_a: 'User informations must be defined in one line and separated by comma'
+csv_users_import_infos_format_b: 'Note that you must not add a file header'
 csv_users_import_infos_optional: 'Optional'
 csv_users_import_infos_required: 'Required'
 current_category: 'Current category'
@@ -397,6 +400,7 @@ rename_widget_instance: 'Rename widget'
 reset: Reset
 reset_password: Reset password
 reset_password_message: 'Do you really want to reset these passwords ?'
+reset_password_txt: 'You asked for your password reinitialisation. If You did not ask for it, please just ignore this message.'
 reset_pwd: 'Reset Your Password'
 reset_pwd_form_plainPassword_first: 'New password'
 reset_pwd_form_plainPassword_second : 'Repeat the password'
@@ -605,3 +609,4 @@ ws_creator: 'Workspace creator'
 ws_most_viewed: 'Most viewed workspaces'
 yes: 'yes'
 yesterday_activity: 'Yesterday''s activity'
+your_username : 'Your username is '

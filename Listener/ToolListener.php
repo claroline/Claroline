@@ -33,6 +33,9 @@ class ToolListener
     private $templating;
     private $request;
     private $httpKernel;
+    const R_U = "ROLE_USER";
+    const R_A = "ROLE_ADMIN";
+
 
     /**
      * @DI\InjectParams({
@@ -156,15 +159,23 @@ class ToolListener
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, true);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, 1);
         $usr = $this->container->get('security.context')->getToken()->getUser();
+        $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr);
+        $owner = array();
+        foreach ($owners as $o) {
+            $temp = $o->getWorkspace()->getName();
+            $owner[] = $temp;
+        }
+
         if ($usr === 'anon.') {
             return $this->templating->render(
                 'ClarolineCoreBundle:Tool/workspace/agenda:agenda_read_only.html.twig',
                 array(
                     'workspace' => $workspace,
                     'form' => $form->createView(),
-                    'listEvents' => $listEvents
+                    'listEvents' => $listEvents,
+                    'owners' => array_unique($owner)
                 )
             );
         }
@@ -197,8 +208,8 @@ class ToolListener
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
         $em = $this->container-> get('doctrine.orm.entity_manager');
         $usr = $this->container->get('security.context')->getToken()->getUser();
-        $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, false);
+        $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, 1);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
         $cours = array();
         $translator = $this->container->get('translator');
 

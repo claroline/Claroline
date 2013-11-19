@@ -11,7 +11,6 @@
 {% block section_content %}
     <div class="row">
         <div class="col-md-6">
-
             {% for ancestor in ancestors %}
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -29,7 +28,7 @@
                         <p>
                             {{ ancestor.getContent()|raw }}
                             <p class="text-muted">
-                                {{ message.getDate()|timeAgo }}
+                                {{ ancestor.getDate()|timeAgo }}
                             </p>
                         </p>
                     </div>
@@ -68,7 +67,7 @@
                     <h3>{{ 'select_contacts_title'|trans({}, 'platform') }}</h3>
                 </div>
                 <div class="modal-body">
-                    <ul class="nav nav-tabs">
+                    <ul class="nav nav-tabs margin-bottom-md">
                         <li class="active" id="users-nav-tab">
                             <a href="#">
                                 {{ 'users'|trans({}, 'platform') }}

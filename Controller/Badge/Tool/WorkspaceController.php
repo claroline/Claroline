@@ -98,7 +98,7 @@ class WorkspaceController extends Controller
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
-        $form = $this->createForm($this->get('claroline.form.badge'), $badge);
+        $form = $this->createForm($this->get('claroline.form.tool.badge'), $badge);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -156,11 +156,11 @@ class WorkspaceController extends Controller
 
         /** @var BadgeRule[] $originalRules */
         $originalRules = array();
-        foreach ($badge->getBadgeRules() as $rule) {
+        foreach ($badge->getRules() as $rule) {
             $originalRules[] = $rule;
         }
 
-        $form = $this->createForm($this->get('claroline.form.badge'), $badge);
+        $form = $this->createForm($this->get('claroline.form.tool.badge'), $badge);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -172,7 +172,7 @@ class WorkspaceController extends Controller
                     $entityManager = $doctrine->getManager();
 
                     // Compute which rules was deleted
-                    foreach ($badge->getBadgeRules() as $rule) {
+                    foreach ($badge->getRules() as $rule) {
                         foreach ($originalRules as $key => $originalRule) {
                             if ($originalRule->getId() === $rule->getId()) {
                                 unset($originalRules[$key]);
@@ -394,7 +394,7 @@ class WorkspaceController extends Controller
 
     private function checkUserIsAllowed(AbstractWorkspace $workspace)
     {
-        if (!$this->get("security.context")->isGranted("badge", $workspace)) {
+        if (!$this->get("security.context")->isGranted("badges", $workspace)) {
             throw new AccessDeniedException();
         }
     }

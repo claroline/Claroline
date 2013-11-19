@@ -24,6 +24,29 @@ body {
     height: 100%;
 }
 
+table th {
+    background: @gray-lighter;
+
+    &, a {
+        color: @gray;
+        font-weight: bold;
+    }
+
+    a {
+        &:after {
+            content: " \25BE";
+        }
+
+        &:hover {
+            color: @gray;
+        }
+    }
+}
+
+body:not(.mce-content-body) video {
+    background: @gray;
+}
+
 /*************/
 /*  Left Bar */
 /*************/
@@ -109,6 +132,17 @@ body {
 /************/
 
 #top_bar {
+    .badge {
+        color: @navbar-inverse-bg;
+        background: @navbar-inverse-link-color;
+    }
+
+    li.active {
+        .badge {
+            color: @navbar-inverse-link-active-bg;
+        }
+    }
+
     .dropdown-fix {
         position: relative;
         width: 100%;
@@ -243,6 +277,22 @@ body {
                 font-weight: bold;
             }
         }
+    }
+}
+
+/***********************/
+/*  Checkbox dropdown  */
+/***********************/
+
+.dropdown-menu li label {
+    font-weight: normal !important;
+    display: block;
+    padding: 5px 15px;
+    margin: 0;
+
+    &:hover, &.active {
+        color:@dropdown-link-hover-color;
+        background:@dropdown-link-hover-bg;
     }
 }
 
@@ -568,27 +618,43 @@ body {
 /*  Tabs  */
 /**********/
 
-.tabs.nav.nav-tabs
-{
-    margin-bottom: 20px;
+.nav.nav-tabs li {
+    a {
+        margin-right: 5px !important;
+        color: @nav-tabs-active-link-hover-color;
+    }
+
+    &:not(.active) a {
+        background: @nav-tabs-link-hover-border-color;
+        border: 1px solid @nav-tabs-border-color;
+
+        &:hover {
+            background: @nav-tabs-active-link-hover-bg;
+        }
+    }
 }
 
 /****************/
 /*  Pagination  */
 /****************/
 
-div.pagination
-{
+div.pagination {
     margin: 0;
+    padding: 0;
 
     ul {
-        .pagination
+        .pagination;
     }
 }
 
 /********/
 /* MISC */
 /********/
+
+.table-responsive {
+    overflow-y: hidden;
+    overflow-x: auto;
+}
 
 .margin-top-sm {
     margin-top: 10px;
@@ -633,6 +699,10 @@ div.pagination
 }
 
 .panel {
+    > table thead tr td,
+    > table tbody tr td,
+    > table thead tr th,
+    > table tbody tr th,
     > table tr td,
     > table tr th,
     .workspace-list-pager > table tr td,

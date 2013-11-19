@@ -1,0 +1,6 @@
+fos_oauth_server:
+    db_driver:           orm
+    client_class:        Icap\Bundle\ApiBundle\Entity\Client
+    access_token_class:  Icap\Bundle\ApiBundle\Entity\AccessToken
+    refresh_token_class: Icap\Bundle\ApiBundle\Entity\RefreshToken
+    auth_code_class:     Icap\Bundle\ApiBundle\Entity\AuthCode

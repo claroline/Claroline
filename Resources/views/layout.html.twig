@@ -132,6 +132,7 @@
         '../vendor/twbs/bootstrap/js/affix.js'
         '../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/public/js/leftbar.js'
         '../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/public/js/topbar.js'
+        '../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/public/js/checkbox-dropdown.js'
         %}<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     {% javascripts debug=false  output='vendor/jms/twig-js/twig.js'
@@ -151,7 +152,9 @@
         "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeGroupConfirm.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeUserConfirm.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeMessageConfirm.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/restoreMessageConfirm.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/resetPasswordConfirm.html.twigjs"
+        "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/addUserConfirm.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/Tool/workspace/roles/roleUserLabel.html.twigjs"
         "@ClarolineCoreBundle/Resources/views/Tool/workspace/roles/roleGroupLabel.html.twigjs"
         %}<script type="text/javascript" src="{{ asset_url }}"></script>
@@ -184,4 +187,9 @@
     <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script><!-- this is not duplicated file -->
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
+    <script type="text/javascript">
+        $('body').tooltip({
+            selector: '[data-toggle=tooltip]'
+        });
+    </script>
 {% endblock %}

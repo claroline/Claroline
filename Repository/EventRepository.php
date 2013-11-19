@@ -74,4 +74,24 @@ class EventRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findByUserWithoutAllDay(User $user)
+    {
+        $dql = "
+            SELECT e
+            FROM Claroline\CoreBundle\Entity\Event e
+            JOIN e.workspace ws
+            WITH ws in (
+                SELECT w
+                FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w
+                JOIN w.roles r
+                JOIN r.users u
+                WHERE u.id = :userId
+            )
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $user->getId());
+
+        return $query->getResult();
+    }
 }

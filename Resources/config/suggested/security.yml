@@ -11,13 +11,32 @@ security:
         install:
             pattern: ^/install
             security: false
+
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+        oauth_token:
+            pattern:    ^/oauth/v2/token
+            security:   false
+
+        oauth_authorize:
+            pattern:    ^/oauth/v2/auth
+            form_login:
+                check_path: /oauth/v2/auth_login_check
+                login_path: /oauth/v2/auth_login
+                use_referer: true
+            anonymous: true
+
+        api:
+            pattern:    ^/api
+            fos_oauth:  true
+            stateless:  true
+
         main:
             pattern: ^/
             form_login:
-              failure_handler: claroline.security.ajax_authentication_failure_handler
+                failure_handler: claroline.security.ajax_authentication_failure_handler
             anonymous: ~
             logout: true
             switch_user: { role: ROLE_ADMIN, parameter: _switch }
@@ -29,3 +48,7 @@ security:
 
     access_decision_manager:
         allow_if_all_abstain: false
+
+    access_control:
+        - { path: ^/oauth/v2/auth_login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api,                  role: IS_AUTHENTICATED_FULLY }

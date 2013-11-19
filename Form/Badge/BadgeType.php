@@ -36,7 +36,7 @@ class BadgeType extends AbstractType
 
     /**
      * @DI\InjectParams({
-     *     "badgeRuleType"         = @DI\Inject("claroline.form.badgeRule"),
+     *     "badgeRuleType"         = @DI\Inject("claroline.form.badge.rule"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "translator"            = @DI\Inject("translator")
      * })
@@ -72,7 +72,7 @@ class BadgeType extends AbstractType
                 'language'  => $this->platformConfigHandler->getParameter('locale_language'),
                 'format'    => $this->translator->trans('date_form_format', array(), 'platform')
             ))
-            ->add('badgeRules', 'collection', array(
+            ->add('rules', 'collection', array(
                 'type'          => $this->badgeRuleType,
                 'by_reference'  => false,
                 'attr'          => array('class' => 'rule-collections'),

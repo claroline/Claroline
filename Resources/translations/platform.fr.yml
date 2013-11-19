@@ -21,6 +21,7 @@ Your changes have been saved: 'Vos changements ont été sauvegardés'
 account_created: 'Compte créé'
 account_general_statistics: 'Statistiques générales sur les comptes'
 action: Action
+actions: Actions
 active_widgets: 'Widgets actifs'
 activity_form_instructions: Instructions
 activity_form_name: Nom
@@ -71,6 +72,7 @@ available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espaces d''activités disponibles'
 back: 'Retour'
 badges_management: 'Gestion des badges'
+bad_request: La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l''administrateur de la plateforme.
 by: par
 canCopy: 'Droit de copier'
 canCreate: 'Creation de %type%'
@@ -115,6 +117,7 @@ creation_date: 'Date de création'
 csv_users_import_infos: 'Informations sur le format du fichier CSV'
 csv_users_import_infos_format: 'Format'
 csv_users_import_infos_format_a: 'Les données d''un utilisateur doivent être définies sur une ligne et séparées par une virgule'
+csv_users_import_infos_format_b: 'Notez que vous ne devez pas ajouter un en-tête de fichier'
 csv_users_import_infos_optional: 'Optionel'
 csv_users_import_infos_required: 'Requis'
 current_category: 'Catégorie courante'
@@ -394,6 +397,7 @@ rename_tool: 'Renommage d''un outil'
 rename_widget_instance: 'Renommage du Widget'
 reset: Réinitialiser
 reset_password: 'Réinitialiser mot de passe'
+reset_password_txt: 'Vous avez demandé la réinitiation de votre mot de passe. Si vous n''êtes pas l''origine de ce message, veuillez l''ignorer.'
 reset_password_message: 'Etes vous sur de vouloir réinitialiser le mot de passe ?'
 reset_pwd: 'Réinitialisation de votre mot de passe'
 reset_pwd_form_plainPassword_first: 'Nouveau mot de passe'
@@ -600,3 +604,4 @@ ws_creator: 'Créateur d''espaces'
 ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: 'oui'
 yesterday_activity: 'Activité de la veille'
+your_username: 'Votre nom d''utilisateur est '

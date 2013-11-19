@@ -33,7 +33,7 @@ class PlatformParametersType extends AbstractType
             ->add('name', 'text', array('required' => false))
             ->add('support_email', 'email', array('label' => 'support_email'))
             ->add('footer', 'text', array('required' => false))
-            ->add('selfRegistration', 'checkbox')
+            ->add('selfRegistration', 'checkbox', array('required' => false))
             ->add(
                 'defaultRole',
                 'entity',

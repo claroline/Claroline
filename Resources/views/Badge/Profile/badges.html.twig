@@ -40,12 +40,3 @@
         </div>
     </div>
 {% endblock %}
-
-{% block javascripts %}
-{{ parent() }}
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('[data-toggle=tooltip]').tooltip();
-    });
-</script>
-{% endblock %}

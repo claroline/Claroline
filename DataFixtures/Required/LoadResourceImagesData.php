@@ -49,6 +49,7 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
             array('res_text.png', 'custom/text'),
             array('res_url.png', 'custom/url'),
             array('res_exercice.png', 'custom/exercice'),
+            array('res_audio.png', 'audio'),
             array('res_video.png', 'video'),
             array('res_msexcel.png', 'application/excel'),
             array('res_mspowerpoint.png', 'application/powerpoint'),
