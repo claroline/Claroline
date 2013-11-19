@@ -8,9 +8,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\MissingObjectException;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service()

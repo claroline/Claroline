@@ -699,14 +699,4 @@ class UserManager
             $user->getPictureFile()->move(__DIR__.'/../../../../../../web/uploads/pictures', $user->getPicture());
         }
     }
-
-    public function getOrderableFields()
-    {
-        return array('id', 'username', 'lastName', 'firstName', 'mail');
-    }
-
-    public function isFieldOrderable($field)
-    {
-        return in_array($field, $this->getOrderableFields()) ? true: false;
-    }
 }

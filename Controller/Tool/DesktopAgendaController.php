@@ -113,6 +113,8 @@ class DesktopAgendaController extends Controller
                  array('Content-Type' => 'application/json')
              );
         }
+
+        return new Response('Invalid data', 422);
     }
 
     /**
