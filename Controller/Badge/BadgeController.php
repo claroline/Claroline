@@ -11,15 +11,15 @@
 
 namespace Claroline\CoreBundle\Controller\Badge;
 
-use Claroline\CoreBundle\Badge\BadgeRuleChecker;
+use Claroline\CoreBundle\Badge\BadgeRuleValidator;
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BadgeController extends Controller
@@ -57,7 +57,7 @@ class BadgeController extends Controller
         $badgePager = $pagerFactory->createPager($badgeQueryBuilder->getQuery(), $parameters['badgePage'], 10);
         $claimPager = $pagerFactory->createPager($badgeClaimQuery, $parameters['claimPage'], 10);
 
-        $badgeRuleChecker = new BadgeRuleChecker($this->getDoctrine()->getRepository('ClarolineCoreBundle:Log\Log'));
+        $badgeRuleChecker = new BadgeRuleValidator($this->getDoctrine()->getRepository('ClarolineCoreBundle:Log\Log'));
 
         return $this->render(
             'ClarolineCoreBundle:Badge:Template/list.html.twig',

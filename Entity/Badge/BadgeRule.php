@@ -11,6 +11,10 @@
 
 namespace Claroline\CoreBundle\Entity\Badge;
 
+use Claroline\CoreBundle\Badge\Constraints\ResultConstraint;
+use Claroline\CoreBundle\Entity\Log\Log;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -191,5 +195,25 @@ class BadgeRule
                      self::RESULT_INFERIOR_EQUAL,
                      self::RESULT_SUPERIOR,
                      self::RESULT_SUPERIOR_EQUAL);
+    }
+
+    /**
+     * @param mixed $resource
+     *
+     * @return BadgeRule
+     */
+    public function setResource($resource)
+    {
+        $this->resource = $resource;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResource()
+    {
+        return $this->resource;
     }
 }

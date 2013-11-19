@@ -14,7 +14,8 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-class ResourceTypeController extends Controller{
+class ResourceTypeController extends Controller
+{
     /**
      * @Template("ClarolineCoreBundle:Resource:configResourcesManager.html.twig")
      */

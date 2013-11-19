@@ -1,16 +1,8 @@
 <?php
 
-/*
- * This file is part of the Claroline Connect package.
- *
- * (c) Claroline Consortium <consortium@claroline.net>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Claroline\CoreBundle\Form\Badge\Tool;
 
-namespace Claroline\CoreBundle\Form\Badge;
-
+use Claroline\CoreBundle\Form\Badge\BadgeTranslationType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
@@ -21,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @DI\Service("claroline.form.badge")
+ * @DI\Service("claroline.form.tool.badge")
  */
 class BadgeType extends AbstractType
 {
@@ -36,7 +28,7 @@ class BadgeType extends AbstractType
 
     /**
      * @DI\InjectParams({
-     *     "badgeRuleType"         = @DI\Inject("claroline.form.badge.rule"),
+     *     "badgeRuleType"         = @DI\Inject("claroline.form.tool.badge.rule.tool"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "translator"            = @DI\Inject("translator")
      * })
@@ -80,7 +72,7 @@ class BadgeType extends AbstractType
                 'prototype'     => true,
                 'allow_add'     => true,
                 'allow_delete'  => true
-             ));
+            ));
     }
 
     public function getName()

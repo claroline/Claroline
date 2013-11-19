@@ -98,7 +98,7 @@ class WorkspaceController extends Controller
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
-        $form = $this->createForm($this->get('claroline.form.badge'), $badge);
+        $form = $this->createForm($this->get('claroline.form.tool.badge'), $badge);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -160,7 +160,7 @@ class WorkspaceController extends Controller
             $originalRules[] = $rule;
         }
 
-        $form = $this->createForm($this->get('claroline.form.badge'), $badge);
+        $form = $this->createForm($this->get('claroline.form.tool.badge'), $badge);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -207,10 +207,11 @@ class WorkspaceController extends Controller
 
     /**
      * @Route("/delete/{id}", name="claro_workspace_tool_badges_delete")
+     * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"id" = "workspaceId"})
      *
      * @Template()
      */
-    public function deleteAction($workspaceId, Badge $badge)
+    public function deleteAction($workspace, Badge $badge)
     {
         $this->checkUserIsAllowed($workspace);
 
@@ -393,7 +394,7 @@ class WorkspaceController extends Controller
 
     private function checkUserIsAllowed(AbstractWorkspace $workspace)
     {
-        if (!$this->get("security.context")->isGranted("badge", $workspace)) {
+        if (!$this->get("security.context")->isGranted("badges", $workspace)) {
             throw new AccessDeniedException();
         }
     }

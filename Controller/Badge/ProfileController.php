@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\Badge;
 
-use Claroline\CoreBundle\Badge\BadgeRuleChecker;
+use Claroline\CoreBundle\Badge\BadgeRuleValidator;
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\UserBadge;
 use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
@@ -96,8 +96,8 @@ class ProfileController extends Controller
 
         $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
 
-        $badgeRuleChecker = new BadgeRuleChecker($this->getDoctrine()->getRepository('ClarolineCoreBundle:Log\Log'));
-        $checkedLogs = $badgeRuleChecker->checkBadge($badge, $user);
+        $badgeRuleChecker = new BadgeRuleValidator($this->getDoctrine()->getRepository('ClarolineCoreBundle:Log\Log'));
+        $checkedLogs = $badgeRuleChecker->validateBadge($badge, $user);
 
         $userBadge = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findOneBy(array('badge' => $badge, 'user' => $user));
 

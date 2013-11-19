@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Listener\Badge;
 
-use Claroline\CoreBundle\Badge\BadgeRuleChecker;
+use Claroline\CoreBundle\Badge\BadgeRuleValidator;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\LogCreateEvent;
@@ -67,12 +67,12 @@ class BadgeListener
 
         if (0 < count($badges)) {
 
-            $badgeRuleChecker = new BadgeRuleChecker($this->entityManager->getRepository('ClarolineCoreBundle:Log\Log'));
+            $badgeRuleChecker = new BadgeRuleValidator($this->entityManager->getRepository('ClarolineCoreBundle:Log\Log'));
             $user             = $event->getLog()->getDoer();
 
             foreach ($badges as $badge) {
                 if (!$user->hasBadge($badge)) {
-                    $resources = $badgeRuleChecker->checkBadge($badge, $user);
+                    $resources = $badgeRuleChecker->validateBadge($badge, $user);
 
                     if ($resources) {
                         $this->badgeManager->addBadgeToUsers($badge, array($user));

@@ -1,15 +1,6 @@
 <?php
 
-/*
- * This file is part of the Claroline Connect package.
- *
- * (c) Claroline Consortium <consortium@claroline.net>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Claroline\CoreBundle\Form\Badge;
+namespace Claroline\CoreBundle\Form\Badge\Tool;
 
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Manager\EventManager;
@@ -20,7 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * @DI\Service("claroline.form.badge.rule")
+ * @DI\Service("claroline.form.tool.badge.rule.tool")
  */
 class BadgeRuleType extends AbstractType
 {
