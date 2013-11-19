@@ -4,7 +4,7 @@
     "keywords": ["Claroline","Installation"],
     "homepage": "http://www.claroline.net",
     "type": "bundle",
-    "license": "",
+    "license": "GPL-3.0+",
     "authors": [
         {
             "name": "Claroline development team",
