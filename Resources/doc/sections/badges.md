@@ -33,13 +33,11 @@ Badge can be issue to a user.
 A user can ask for earning a badge.
 
 A badge manager must issue him the badge if criteria is reunited.
-Validation is now manual, but there will be an automatic process in the future.
 
 Rules can be added to a badge.
-This rules will be used to determine if a badge can be awarded or not,
-automatically or not.
+This rules will be used to determine if a badge can be awarded or not.
 
-By the way you can now specify if a badge can be automatically awarded or not.
+A badge can be automatically awarded, if configured in this way.
 
 [index documentation][1]
 
