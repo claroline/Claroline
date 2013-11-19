@@ -3,7 +3,7 @@
     "description": "Claroline web installer",
     "keywords": ["Claroline", "Web installer"],
     "homepage": "http://www.claroline.net",
-    "license": "",
+    "license": "GPL-3.0+",
     "authors": [
         {
             "name": "Claroline development team",
