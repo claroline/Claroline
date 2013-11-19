@@ -6,12 +6,6 @@
 
 {% extends layout %}
 
-{% block javascripts %}
-{{ parent() }}
-{% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
-{{ tinymce_init() }}
-{% endblock %}
-
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_forum_subjects', { 'forumId': _resource.getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
     <li><a href="{{ path('claro_forum_messages', {'subjectId': subject.getId()}) }}">{{ subject.getTitle() }}</a></li>

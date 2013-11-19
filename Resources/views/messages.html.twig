@@ -85,8 +85,10 @@
         </div>
     </div>
     {% if canAnswer %}
-        <textarea class="tinymce row" data-theme="advanced"></textarea>
-        {{ form_widget(form._token) }}
+        <div class='creator'>
+            <textarea class="forum-answer claroline-tiny-mce hide"></textarea>
+            {{ form_widget(form._token) }}
+        </div>
     {% endif %}
     <div class="panel-footer clearfix">
         <div class="pull-right">
@@ -95,7 +97,7 @@
             </a>
             {% if canAnswer %}
                 <a class="btn btn-primary">
-                    <i class="icon-reply"></i> {{ 'new_message'|trans({}, 'forum') }}
+                    <i class="icon-reply"></i> {{ 'new_message' | trans({}, 'forum') }}
                 </a>
             {% endif %}
         </div>
@@ -104,26 +106,13 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts
-        vars=["locale"]
-        "@ClarolineCoreBundle/Resources/views/Modal/modal.html.twigjs"
-        "@ClarolineCoreBundle/Resources/views/Modal/validationFooter.html.twigjs"
-        "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeMessageConfirm.html.twigjs"
-        filter="twig_js"
-    %}
-    <script language="javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
     {% if canAnswer %}
-        {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
-        {{ tinymce_init() }}
-        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/home.js') }}"></script>
         <script>
-            (function (){
+            (function () {
                 'use strict';
-
                 //id="forum_message_form_content" name="forum_message_form[content]"
                 $('body').on('click', '.panel-footer .btn-primary', function() {
-                    var content = $('textarea.tinymce.row').val();
+                    var content = $('textarea.claroline-tiny-mce').val();
                     var token = $('#forum_message_form__token').val();
 
                     if (content != undefined && content != '') {
@@ -151,36 +140,36 @@
         </script>
     {% endif %}
     {% if isModerator %}
-            <script>
-               function createValidationBox() {
-                    var html = Twig.render(
-                        ModalWindow,
-                        {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'confirm-modal', 'body': Twig.render(removeMessageConfirm, {'nbItems': 1})}
-                    );
-                    $('body').append(html);
-                }
+        <script>
+           function createValidationBox() {
+                var html = Twig.render(
+                    ModalWindow,
+                    {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'confirm-modal', 'body': Twig.render(removeMessageConfirm, {'nbItems': 1})}
+                );
+                $('body').append(html);
+            }
 
-                createValidationBox();
-                var tmpRoute = '';
-                var tmpEl = undefined;
+            createValidationBox();
+            var tmpRoute = '';
+            var tmpEl = undefined;
 
-                $('body').on('click', '#delete-message', function(event) {
-                    event.preventDefault();
-                    $('#confirm-modal').modal('show');
-                    tmpRoute = event.currentTarget.href;
-                    tmpEl = event.currentTarget;
+            $('body').on('click', '#delete-message', function(event) {
+                event.preventDefault();
+                $('#confirm-modal').modal('show');
+                tmpRoute = event.currentTarget.href;
+                tmpEl = event.currentTarget;
+            });
+
+            $('body').on('click', '#modal-valid-button', function(event) {
+                $('#confirm-modal').modal('hide');
+                $.ajax({
+                    url: tmpRoute,
+                    success: function () {
+                        $(tmpEl)[0].parentElement.parentElement.parentElement.remove();
+                    }
                 });
-
-                $('body').on('click', '#modal-valid-button', function(event) {
-                    $('#confirm-modal').modal('hide');
-                    $.ajax({
-                        url: tmpRoute,
-                        success: function () {
-                            $(tmpEl)[0].parentElement.parentElement.parentElement.remove();
-                        }
-                    });
-                });
-            </script>
+            });
+        </script>
     {% endif %}
 {% endblock %}
 
