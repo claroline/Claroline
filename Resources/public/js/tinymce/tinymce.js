@@ -32,6 +32,7 @@
                     var newNode = tinymce.activeEditor.getDoc().createElement('div');
                     newNode.innerHTML = data;
                     tinymce.activeEditor.selection.getRng().insertNode(newNode);
+                    tinymce.activeEditor.fire('change');
                 });
             }
         },
