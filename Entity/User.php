@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Claroline\CoreBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
@@ -24,7 +33,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  *
  * @todo implement AdvancedUserInterface
  */
-class User extends AbstractRoleSubject implements Serializable, UserInterface, EquatableInterface
+class User extends AbstractRoleSubject implements Serializable, UserInterface, EquatableInterface, OrderableInterface
 {
     /**
      * @var integer
@@ -719,5 +728,10 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     public function setDescription($description) {
         $this->description = $description;
+    }
+
+    public function getOrderableFields()
+    {
+        return array('id', 'username', 'lastName', 'firstName', 'mail');
     }
 }

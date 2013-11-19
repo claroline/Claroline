@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Claroline\CoreBundle\Listener\Log;
 
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
@@ -50,8 +59,8 @@ class LogListener
     {
         //Add doer details
         $doer = null;
-        $sessionId = null;
         $doerIp = null;
+        $doerSessionId = null;
         $doerType = null;
 
         //Event can override the doer
@@ -69,7 +78,7 @@ class LogListener
                     $doerType = Log::doerTypeUser;
                 }
                 $request = $this->container->get('request');
-                $sessionId = $request->getSession()->getId();
+                $doerSessionId = $request->getSession()->getId();
                 $doerIp = $request->getClientIp();
             }
         } else {
@@ -94,6 +103,7 @@ class LogListener
         $log->setDoerType($doerType);
 
         $log->setDoerIp($doerIp);
+        $log->setDoerSessionId($doerSessionId);
         if ($event->getAction() !== LogUserDeleteEvent::ACTION) {
             //Prevent user delete case
             $log->setReceiver($event->getReceiver());
@@ -148,8 +158,7 @@ class LogListener
         if ($doer !== null) {
             $details['doer'] = array(
                 'firstName' => $doer->getFirstName(),
-                'lastName' => $doer->getLastName(),
-                'sessionId' => $sessionId
+                'lastName' => $doer->getLastName()
             );
 
             if (count($log->getDoerPlatformRoles()) > 0) {

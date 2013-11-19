@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Claroline\CoreBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
@@ -65,6 +74,9 @@ class Event
      * @ORM\Column(nullable=true)
      */
     private $priority;
+    private $recurring;
+    private $startHours;
+    private $endHours;
 
     public function getId()
     {
@@ -177,5 +189,34 @@ class Event
     public function setPriority( $priority)
     {
         $this->priority = $priority;
+    }
+    public function getRecurring() 
+    {
+        return $this->recurring;
+    }
+
+    public function setRecurring($recurring) 
+    {
+        $this->recurring = $recurring;
+    }
+    
+    public function getStartHours() 
+    {
+        return $this->startHours;
+    }
+
+    public function setStartHours($startHours) 
+    {
+        $this->startHours = $startHours;
+    }
+
+    public function getEndHours() 
+    {
+        return $this->endHours;
+    }
+
+    public function setEndHours($endHours) 
+    {
+        $this->endHours = $endHours;
     }
 }

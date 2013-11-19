@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Claroline\CoreBundle\Entity\Log;
 
 use Claroline\CoreBundle\Entity\Group;
@@ -66,6 +75,11 @@ class Log
      * @ORM\Column(name="doer_ip", nullable=true)
      */
     protected $doerIp;
+
+    /**
+     * @ORM\Column(name="doer_session_id", nullable=true)
+     */
+    protected $doerSessionId;
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Role")
@@ -276,6 +290,29 @@ class Log
     public function getDoerIp()
     {
         return $this->doerIp;
+    }
+
+    /**
+     * Set doerSessionId
+     *
+     * @param  string $doerIp
+     * @return Log
+     */
+    public function setDoerSessionId($doerSessionId)
+    {
+        $this->doerSessionId = $doerSessionId;
+
+        return $this;
+    }
+
+    /**
+     * Get doerSessionId
+     *
+     * @return string
+     */
+    public function getDoerSessionId()
+    {
+        return $this->doerSessionId;
     }
 
     /**

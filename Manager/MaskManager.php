@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
@@ -135,7 +144,7 @@ class MaskManager
 
     /**
      * Adds the default action to a resource type.
-     * 
+     *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
      */
     public function addDefaultPerms(ResourceType $type)

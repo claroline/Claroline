@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -194,30 +203,35 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "users/page/{page}/max/{max}",
+     *     "users/page/{page}/max/{max}/order/{order}",
      *     name="claro_admin_user_list",
-     *     defaults={"page"=1, "search"="", "max"=50},
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "users/page/{page}/search/{search}/max/{max}",
+     *     "users/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_admin_user_list_search",
-     *     defaults={"page"=1, "max"=50},
+     *     defaults={"page"=1, "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Template()
+     * @EXT\ParamConverter(
+     *     "order",
+     *     class="Claroline\CoreBundle\Entity\User",
+     *     options={"orderable"=true}
+     * )
      *
      * Displays the platform user list.
      */
-    public function userListAction($page, $search, $max)
+    public function userListAction($page, $search, $max, $order)
     {
         $pager = $search === '' ?
-            $this->userManager->getAllUsers($page, $max) :
-            $this->userManager->getUsersByName($search, $page, $max);
+            $this->userManager->getAllUsers($page, $max, $order) :
+            $this->userManager->getUsersByName($search, $page, $max, $order);
 
-        return array('pager' => $pager, 'search' => $search, 'max' => $max);
+        return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order);
     }
 
     /**
@@ -250,46 +264,50 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/groups/page/{page}/max/{max}",
+     *     "/groups/page/{page}/max/{max}/order/{order}",
      *     name="claro_admin_group_list",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "search"="", "max"=50}
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "groups/page/{page}/search/{search}/max/{max}",
+     *     "groups/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_admin_group_list_search",
-     *     defaults={"page"=1, "max"=50},
+     *     defaults={"page"=1, "max"=50, "order"="id"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Template()
+     * @EXT\ParamConverter(
+     *     "order",
+     *     class="Claroline\CoreBundle\Entity\Group",
+     *     options={"orderable"=true}
+     * )
      *
      * Returns the platform group list.
      */
-    public function groupListAction($page, $search, $max)
+    public function groupListAction($page, $search, $max, $order)
     {
         $pager = $search === '' ?
-            $this->groupManager->getGroups($page, $max) :
-            $this->groupManager->getGroupsByName($search, $page, $max);
+            $this->groupManager->getGroups($page, $max, $order) :
+            $this->groupManager->getGroupsByName($search, $page, $max, $order);
 
-        return array('pager' => $pager, 'search' => $search, 'max' => $max);
+        return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order);
     }
 
     /**
      * @EXT\Route(
-     *     "/group/{groupId}/users/page/{page}/max/{max}",
+     *     "/group/{groupId}/users/page/{page}/max/{max}/order/{order}",
      *     name="claro_admin_user_of_group_list",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "search"="", "max"=50}
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"}
      * )
      * @EXT\Method("GET")
-     *
      * @EXT\Route(
-     *     "/group/{groupId}/users/page/{page}/search/{search}/max/{max}",
+     *     "/group/{groupId}/users/page/{page}/search/{search}/max/{max}/{order}",
      *     name="claro_admin_user_of_group_list_search",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "max"=50}
+     *     defaults={"page"=1, "max"=50, "order"="id"}
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
@@ -298,32 +316,37 @@ class AdministrationController extends Controller
      *      options={"id" = "groupId", "strictId" = true}
      * )
      * @EXT\Template()
+     * @EXT\ParamConverter(
+     *     "order",
+     *     class="Claroline\CoreBundle\Entity\User",
+     *     options={"orderable"=true}
+     * )
      *
      * Returns the users of a group.
      */
-    public function usersOfGroupListAction(Group $group, $page, $search, $max)
+    public function usersOfGroupListAction(Group $group, $page, $search, $max, $order)
     {
         $pager = $search === '' ?
-            $this->userManager->getUsersByGroup($group, $page, $max) :
-            $this->userManager->getUsersByNameAndGroup($search, $group, $page, $max);
+            $this->userManager->getUsersByGroup($group, $page, $max, $order) :
+            $this->userManager->getUsersByNameAndGroup($search, $group, $page, $max, $order);
 
-        return array('pager' => $pager, 'search' => $search, 'group' => $group, 'max' => $max);
+        return array('pager' => $pager, 'search' => $search, 'group' => $group, 'max' => $max, 'order' => $order);
     }
 
     /**
      * @EXT\Route(
-     *     "/group/add/{groupId}/page/{page}/max/{max}",
+     *     "/group/add/{groupId}/page/{page}/max/{max}/order/{order}",
      *     name="claro_admin_outside_of_group_user_list",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "search"="", "max"=50}
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id"}
      * )
      * @EXT\Method("GET")
      *
      * @EXT\Route(
-     *     "/group/add/{groupId}/page/{page}/search/{search}/max/{max}",
+     *     "/group/add/{groupId}/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_admin_outside_of_group_user_list_search",
      *     options={"expose"=true},
-     *     defaults={"page"=1, "max"=50}
+     *     defaults={"page"=1, "max"=50, "order"="id"}
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
@@ -332,16 +355,20 @@ class AdministrationController extends Controller
      *      options={"id" = "groupId", "strictId" = true}
      * )
      * @EXT\Template()
-     *
+     * @EXT\ParamConverter(
+     *     "order",
+     *     class="Claroline\CoreBundle\Entity\User",
+     *     options={"orderable"=true}
+     * )
      * Displays the user list with a control allowing to add them to a group.
      */
-    public function outsideOfGroupUserListAction(Group $group, $page, $search, $max)
+    public function outsideOfGroupUserListAction(Group $group, $page, $search, $max, $order)
     {
         $pager = $search === '' ?
-            $this->userManager->getGroupOutsiders($group, $page, $max) :
-            $this->userManager->getGroupOutsidersByName($group, $page, $search, $max);
+            $this->userManager->getGroupOutsiders($group, $page, $max, $order) :
+            $this->userManager->getGroupOutsidersByName($group, $page, $search, $max, $order);
 
-        return array('pager' => $pager, 'search' => $search, 'group' => $group, 'max' => $max);
+        return array('pager' => $pager, 'search' => $search, 'group' => $group, 'max' => $max, 'order' => $order);
     }
 
     /**
@@ -1187,33 +1214,32 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/registration/list/users/page/{page}/ordered-by/{ordered}",
+     *     "/registration/list/users/page/{page}",
      *     name="claro_users_list_registration_pager",
      *     defaults={"page"=1, "search"=""},
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/registration/list/users/page/{page}/search/{search}/ordered-by/{ordered}",
+     *     "/registration/list/users/page/{page}/search/{search}",
      *     name="claro_users_list_registration_pager_search",
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
-     *
      * @EXT\Template()
      *
      * Renders the user list in a pager for registration.
      *
      * @return Response
      */
-    public function userListPagerAction($page, $search, $ordered)
+    public function userListPagerAction($page, $search)
     {
         $pager = $search === '' ?
-            $this->userManager->getAllUsers($page, $ordered) :
-            $this->userManager->getUsersByName($search, $page, $ordered);
+            $this->userManager->getAllUsers($page) :
+            $this->userManager->getUsersByName($search, $page);
 
-        return array('users' => $pager, 'search' => $search, 'ordered' => $ordered);
+        return array('users' => $pager, 'search' => $search);
     }
 
     /**
@@ -1231,7 +1257,6 @@ class AdministrationController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
-     *
      * @EXT\Template()
      *
      * Renders the group list in a pager for registration.

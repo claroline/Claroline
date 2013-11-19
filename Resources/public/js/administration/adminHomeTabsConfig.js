@@ -1,3 +1,12 @@
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 (function () {
     'use strict';
 
@@ -560,10 +569,6 @@
                 widgetEditionElement.html(datas);
                 widgetEditionElement.removeClass('hide');
                 var textArea = $('textarea', datas)[0];
-
-                if (textArea) {
-                    initTinyMCE(stfalcon_tinymce_config);
-                }
             }
         });
     });

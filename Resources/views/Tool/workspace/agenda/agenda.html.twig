@@ -9,6 +9,11 @@
 <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.css') }}'/>
 <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
 <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
+<link
+        rel='stylesheet'
+        type='text/css'
+        href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}'
+    >
 {% endblock %}
 {% block breadcrumb %}
     {{
@@ -42,7 +47,6 @@
                             <button class="btn btn-danger" id="deleteBtn" >
                                 {{ 'delete'|trans({}, 'platform') }}
                             </button>
-                            {{ tinymce_init() }}
                             <form method="post" action="{{ path('claro_workspace_agenda_add_event', {workspaceId: workspace.getId()}) }}" id="myForm" {{ form_enctype(form) }}>
                                 {{ form_widget(form) }}
                             </form>
@@ -79,9 +83,6 @@
 
 {% block javascripts %}
 {{ parent() }}
-{% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
-{{ tinymce_init() }}
-<script type='text/javascript' src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}' ></script>
 <script type='text/javascript' src='{{ asset(calendarPath ~ 'js/fullcalendar.js') }}' ></script>
 <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/calendar.js') }}'></script>
 <script type='text/javascript'src='{{ asset('bundles/frontend/date.js') }}'></script>
@@ -91,4 +92,11 @@
             });
 </script>
 <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'agenda' }) }}"></script>
+<script
+        type="text/javascript"
+        src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}">
+</script>
+<script type="text/javascript"
+        src="{{ asset('bundles/clarolinecore/js/tool/calendarDatePicker.js') }}">
+    </script>
 {% endblock javascripts %}

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -364,7 +373,7 @@ class ResourceController
         $mimeType = $data['mimeType'];
         $response = new StreamedResponse();
 
-        $file = $data['file'] ? : tempnam('tmp', 'tmp') ;
+        $file = $data['file'] ? : tempnam('tmp', 'tmp');
         $response->setCallBack(
             function () use ($file) {
                 readfile($file);
@@ -705,5 +714,14 @@ class ResourceController
         if (!$this->sc->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
+    }
+
+    /**
+     * @EXT\Route("/init", name="claro_resource_init")
+     * @EXT\Template("ClarolineCoreBundle:Resource:init.html.twig")
+     */
+    public function initAction()
+    {
+        return array('resourceTypes' => $this->resourceManager->getAllResourceTypes());
     }
 }

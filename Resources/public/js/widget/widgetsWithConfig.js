@@ -1,3 +1,12 @@
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 (function () {
     'use strict';
 
@@ -98,12 +107,12 @@
             type: 'POST',
             success: function () {
                 if (newVisible === 'visible') {
-                    visibilityBtn.attr('visiblility-value', 'visible')
+                    visibilityBtn.attr('visiblility-value', 'visible');
                     visibilityBtn.removeClass('icon-eye-close');
                     visibilityBtn.addClass('icon-eye-open');
                     currentElement.removeClass('toggle-visible');
                 } else {
-                    visibilityBtn.attr('visiblility-value', 'invisible')
+                    visibilityBtn.attr('visiblility-value', 'invisible');
                     visibilityBtn.removeClass('icon-eye-open');
                     visibilityBtn.addClass('icon-eye-close');
                     currentElement.addClass('toggle-visible');
@@ -240,7 +249,7 @@
             type: 'POST',
             processData: false,
             contentType: false,
-            complete: function(jqXHR) {
+            complete: function (jqXHR) {
                 switch (jqXHR.status) {
                     case 204:
                         var value = $('#widget_display_form_name').val();
@@ -290,11 +299,6 @@
                 widgetViewElement.addClass('hide');
                 widgetEditionElement.html(datas);
                 widgetEditionElement.removeClass('hide');
-                var textArea = $('textarea', datas)[0];
-
-                if (textArea) {
-                    initTinyMCE(stfalcon_tinymce_config);
-                }
             }
         });
     });
@@ -303,7 +307,7 @@
     $('#widgets-list-panel').on(
         'submit',
         '.widget-instance-edition > form',
-        function(e) {
+        function (e) {
             e.stopImmediatePropagation();
             e.preventDefault();
 
@@ -322,7 +326,7 @@
                 type: 'POST',
                 processData: false,
                 contentType: false,
-                complete: function(jqXHR) {
+                complete: function (jqXHR) {
                     switch (jqXHR.status) {
                         case 204:
                             $.ajax({
@@ -407,7 +411,7 @@
             type: 'POST',
             processData: false,
             contentType: false,
-            success: function(datas, textStatus, jqXHR) {
+            success: function (datas, textStatus, jqXHR) {
                 switch (jqXHR.status) {
                     case 201:
                         var route;

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -196,15 +205,17 @@ class GroupRepository extends EntityRepository
      * Returns all the groups.
      *
      * @param boolean $executeQuery
+     * @param string  $orderedBy
      *
      * @return array[Group]|Query
      */
-    public function findAll($executeQuery = true)
+    public function findAll($executeQuery = true, $orderedBy = 'id')
     {
         if (!$executeQuery) {
             return $this->_em->createQuery(
-                'SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
-                 LEFT JOIN g.roles r'
+                "SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
+                 LEFT JOIN g.roles r
+                 ORDER BY g.{$orderedBy}"
             );
         }
 
@@ -243,17 +254,19 @@ class GroupRepository extends EntityRepository
      *
      * @param string  $search
      * @param boolean $executeQuery
+     * @param string  $orderedBy
      *
      * @return array[Group]|Query
      */
-    public function findByName($search, $executeQuery = true)
+    public function findByName($search, $executeQuery = true, $orderedBy = 'id')
     {
-        $dql = '
+        $dql = "
             SELECT g, r
             FROM Claroline\CoreBundle\Entity\Group g
             LEFT JOIN g.roles r
             WHERE UPPER(g.name) LIKE :search
-        ';
+            ORDER BY g.{$orderedBy}
+        ";
         $search = strtoupper($search);
         $query = $this->_em->createQuery($dql);
         $query->setParameter('search', "%{$search}%");
@@ -281,12 +294,12 @@ class GroupRepository extends EntityRepository
         return array();
     }
 
-    public function findByRoles(array $roles, $getQuery = false)
+    public function findByRoles(array $roles, $getQuery = false, $orderedBy = 'id')
     {
         $dql = "
             SELECT u FROM Claroline\CoreBundle\Entity\Group u
             JOIN u.roles r WHERE r IN (:roles)
-            ORDER BY u.name
+            ORDER BY u.{$orderedBy}
             ";
 
         $query = $this->_em->createQuery($dql);
@@ -295,14 +308,14 @@ class GroupRepository extends EntityRepository
         return ($getQuery) ? $query: $query->getResult();
     }
 
-    public function findByRolesAndName(array $roles, $name, $getQuery = false)
+    public function findByRolesAndName(array $roles, $name, $getQuery = false, $orderedBy = 'id')
     {
         $search = strtoupper($name);
         $dql = "
             SELECT u FROM Claroline\CoreBundle\Entity\Group u
             JOIN u.roles r WHERE r IN (:roles)
             AND UPPER(u.name) LIKE :search
-            ORDER BY u.name
+            ORDER BY u.{$orderedBy}
             ";
 
         $query = $this->_em->createQuery($dql);

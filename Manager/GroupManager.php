@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Group;
@@ -314,12 +323,14 @@ class GroupManager
 
     /**
      * @param integer $page
+     * @param integer $max
+     * @param string  $orderedBy
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getGroups($page, $max = 50)
+    public function getGroups($page, $max = 50, $orderedBy = 'id')
     {
-        $query = $this->groupRepo->findAll(false);
+        $query = $this->groupRepo->findAll(false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
@@ -327,12 +338,14 @@ class GroupManager
     /**
      * @param string $search
      * @param integer $page
+     * @param integer $max
+     * @param string  $orderedBy
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getGroupsByName($search, $page, $max = 50)
+    public function getGroupsByName($search, $page, $max = 50, $orderedBy = 'id')
     {
-        $query = $this->groupRepo->findByName($search, false);
+        $query = $this->groupRepo->findByName($search, false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
@@ -343,9 +356,9 @@ class GroupManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getGroupsByRoles(array $roles, $page = 1, $max = 50)
+    public function getGroupsByRoles(array $roles, $page = 1, $max = 50, $orderedBy = 'id')
     {
-        $query = $this->groupRepo->findByRoles($roles, true);
+        $query = $this->groupRepo->findByRoles($roles, true, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
@@ -371,9 +384,9 @@ class GroupManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getGroupsByRolesAndName(array $roles, $name, $page = 1, $max = 50)
+    public function getGroupsByRolesAndName(array $roles, $name, $page = 1, $max = 50, $orderedBy = 'id')
     {
-        $query = $this->groupRepo->findByRolesAndName($roles, $name, true);
+        $query = $this->groupRepo->findByRolesAndName($roles, $name, true, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }

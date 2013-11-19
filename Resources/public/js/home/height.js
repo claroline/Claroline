@@ -1,7 +1,16 @@
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 /**
  * The height of a content in home page must be resized when:
  *
- *reorder content
+ * reorder content
  * create content
  * delete content
  * update content
@@ -60,7 +69,7 @@
 
     function resizeDivs()
     {
-        $.when($(selector).height('auto')).done( function () {
+        $.when($(selector).height('auto')).done(function () {
             var divs = getResizeDivs(selector);
             var minHeight = 0;
             var currentline = -1;
@@ -104,18 +113,19 @@
 
     $(window).on('resize', function () {
         clearTimeout(resizeWindow);
-        resizeWindow = setTimeout(resizeDivs, 400);
+        resizeWindow = setTimeout(resizeDivs, 500);
     });
 
     $(document).ready(function () {
-        resizeDivs();
+        clearTimeout(resizeWindow);
+        resizeWindow = setTimeout(resizeDivs, 500);
     });
 
     // use custom ContentModified instead DOMSubtreeModified
     // example $('.contents').trigger('ContentModified');
     $('.contents').bind('ContentModified', function () {
         clearTimeout(domChange);
-        domChange = setTimeout(resizeDivs, 400);
+        domChange = setTimeout(resizeDivs, 500);
     });
 
 }());

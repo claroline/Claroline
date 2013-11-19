@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -66,7 +75,6 @@ class WorkspaceAgendaController extends Controller
         $this->checkUserIsAllowed('agenda', $workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
         $form->handleRequest($this->request);
-
         if ($form->isValid()) {
             $event = $form->getData();
             // the end date has to be bigger
@@ -74,6 +82,9 @@ class WorkspaceAgendaController extends Controller
                 $event->setWorkspace($workspace);
                 $event->setUser($this->security->getToken()->getUser());
                 $this->om->persist($event);
+                if ($event->getRecurring() > 0) {                    
+                    $this->calculRecurrency($event);
+                }
                 $this->om->flush();
                 $data = array(
                     'id' => $event->getId(),
@@ -203,7 +214,6 @@ class WorkspaceAgendaController extends Controller
         $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')
             ->findbyWorkspaceId($workspace->getId(), false);
         $data = array();
-
         foreach ($listEvents as $key => $object) {
             $data[$key]['id'] = $object->getId();
             $data[$key]['title'] = $object->getTitle();
@@ -235,10 +245,10 @@ class WorkspaceAgendaController extends Controller
         $event = $repository->find($postData['id']);
         $this->checkUserIsAllowed('agenda', $event->getWorkspace());
         // timestamp 1h = 3600
-        $newStartDate = $event->getStart()->getTimestamp() + ((3600 * 24) * $postData['dayDelta']);
+        $newStartDate = strtotime(''.$postData['dayDelta'].' day '.$postData['minuteDelta'].' minute', $event->getStart()->getTimestamp());
         $dateStart = new \DateTime(date('d-m-Y H:i', $newStartDate));
         $event->setStart($dateStart);
-        $newEndDate = $event->getEnd()->getTimestamp() + ((3600 * 24) * $postData['dayDelta']);
+        $newEndDate = strtotime(''.$postData['dayDelta'].' day '.$postData['minuteDelta'].' minute', $event->getEnd()->getTimestamp());
         $dateEnd = new \DateTime(date('d-m-Y H:i', $newEndDate));
         $event->setStart($dateStart);
         $event->setEnd($dateEnd);
@@ -286,6 +296,23 @@ class WorkspaceAgendaController extends Controller
     {
         if (!$this->security->isGranted($permission, $workspace)) {
             throw new AccessDeniedException();
+        }
+    }
+
+    private function calculRecurrency(Event $event)
+    {
+        $listEvents =  array();
+        // it calculs by day for now
+        for ($i = 1; $i <= $event->getRecurring(); $i++) { 
+            $temp = clone $event;
+            $newStartDate = $temp->getStart()->getTimestamp()+((3600 * 24 * $i));
+            $temp->setStart( new \DateTime(date('d-m-Y H:i', $newStartDate)));
+            $newEndDate = $temp->getEnd()->getTimestamp()+((3600 * 24 * $i));
+            $temp->setEnd( new \DateTime(date('d-m-Y H:i', $newEndDate)));
+            $listEvents[$i] = $temp;
+            $this->om->persist($listEvents[$i]);
+
+            return ($listEvents);
         }
     }
 }

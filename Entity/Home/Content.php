@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Claroline\CoreBundle\Entity\Home;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -34,13 +43,6 @@ class Content
      * @ORM\Column(type="text", nullable=true)
      */
     private $content;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="generated_content", type="text", nullable=true)
-     */
-    private $generatedContent;
 
     /**
      * @var \DateTime
@@ -173,30 +175,5 @@ class Content
     public function getModified()
     {
         return $this->modified;
-    }
-
-    /**
-     * Set generated_content
-     *
-     * @param  string  $generatedContent
-     * @return Content
-     */
-    public function setGeneratedContent($generatedContent)
-    {
-        if ($generatedContent !== null) {
-            $this->generatedContent = $generatedContent;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get generated_content
-     *
-     * @return string
-     */
-    public function getGeneratedContent()
-    {
-        return $this->generatedContent;
     }
 }

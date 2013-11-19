@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Claroline\CoreBundle\Controller\Badge\Tool;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
@@ -20,6 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/workspace/{workspaceId}/badges")
@@ -34,6 +44,8 @@ class WorkspaceController extends Controller
      */
     public function listAction(AbstractWorkspace $workspace, $badgePage, $claimPage)
     {
+        $this->checkUserIsAllowed($workspace);
+
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
@@ -71,6 +83,8 @@ class WorkspaceController extends Controller
      */
     public function addAction(Request $request, AbstractWorkspace $workspace)
     {
+        $this->checkUserIsAllowed($workspace);
+
         $badge = new Badge();
 
         //@TODO Get locales from locale source (database etc...)
@@ -122,6 +136,8 @@ class WorkspaceController extends Controller
      */
     public function editAction(Request $request, AbstractWorkspace $workspace, Badge $badge, $page = 1)
     {
+        $this->checkUserIsAllowed($workspace);
+
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
         $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
@@ -191,11 +207,14 @@ class WorkspaceController extends Controller
 
     /**
      * @Route("/delete/{id}", name="claro_workspace_tool_badges_delete")
+     * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\AbstractWorkspace", options={"id" = "workspaceId"})
      *
      * @Template()
      */
-    public function deleteAction($workspaceId, Badge $badge)
+    public function deleteAction($workspace, Badge $badge)
     {
+        $this->checkUserIsAllowed($workspace);
+
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator = $this->get('translator');
         try {
@@ -221,6 +240,8 @@ class WorkspaceController extends Controller
      */
     public function awardAction(Request $request, AbstractWorkspace $workspace, Badge $badge)
     {
+        $this->checkUserIsAllowed($workspace);
+
         $form = $this->createForm(new BadgeAwardType());
 
         if ($request->isMethod('POST')) {
@@ -299,6 +320,8 @@ class WorkspaceController extends Controller
      */
     public function unawardAction(Request $request, AbstractWorkspace $workspace, Badge $badge, User $user)
     {
+        $this->checkUserIsAllowed($workspace);
+
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator = $this->get('translator');
         try {
@@ -336,6 +359,8 @@ class WorkspaceController extends Controller
      */
     public function manageClaimAction(Request $request, AbstractWorkspace $workspace, BadgeClaim $badgeClaim, $validate = false)
     {
+        $this->checkUserIsAllowed($workspace);
+
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator = $this->get('translator');
         try {
@@ -365,5 +390,12 @@ class WorkspaceController extends Controller
         }
 
         return $this->redirect($this->generateUrl('claro_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
+    }
+
+    private function checkUserIsAllowed(AbstractWorkspace $workspace)
+    {
+        if (!$this->get("security.context")->isGranted("badge", $workspace)) {
+            throw new AccessDeniedException();
+        }
     }
 }

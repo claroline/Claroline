@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Claroline\CoreBundle\Manager;
 
 use JMS\DiExtraBundle\Annotation as DI;
@@ -110,20 +119,24 @@ class MailManager
      */
     public function send($subject, $body, array $users, $from = null)
     {
-        $from = ($from === null) ? $this->ch->getParameter('support_email'): $from->getMail();
-        $to = array();
+        if ($this->isMailerAvailable()) {
+            $from = ($from === null) ? $this->ch->getParameter('support_email'): $from->getMail();
+            $to = array();
 
-        foreach ($users as $user) {
-            $to[] = $user->getMail();
+            foreach ($users as $user) {
+                $to[] = $user->getMail();
+            }
+
+            $message = \Swift_Message::newInstance()
+                ->setSubject($subject)
+                ->setFrom($from)
+                ->setTo($to)
+                ->setBody($body, 'text/html');
+
+            return $this->mailer->send($message) ? true: false;
         }
 
-        $message = \Swift_Message::newInstance()
-            ->setSubject($subject)
-            ->setFrom($from)
-            ->setTo($to)
-            ->setBody($body, 'text/html');
-
-        return $this->mailer->send($message) ? true: false;
+        return false;
     }
 }
 

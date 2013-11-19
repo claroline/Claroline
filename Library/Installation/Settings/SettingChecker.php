@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Claroline\CoreBundle\Library\Installation\Settings;
 
 class SettingChecker
@@ -102,12 +111,20 @@ class SettingChecker
             false === ini_get('detect_unicode')
         );
 
+        $category->addRecommendation(
+            'Parameter %parameter% should be equal or greater than %value% in your php.ini',
+            array('parameter' => 'memory_limit', 'value' => '128M'),
+            $this->isGreaterOrEqual(ini_get('memory_limit'), '128M')
+        );
+
         $recommendedSettings = array(
             'short_open_tag' => false,
             'magic_quotes_gpc' => false,
             'register_globals' => false,
-            'session.auto_start' => false
+            'session.auto_start' => false,
+            'file_uploads' => true
         );
+
         foreach ($recommendedSettings as $parameter => $value) {
             $category->addRecommendation(
                 'Parameter %parameter% should be set to %value% in your php.ini',
@@ -220,6 +237,7 @@ class SettingChecker
             'composer.json' => 'file',
             'composer.lock' => 'file',
             'vendor' => 'directory',
+            'web' => 'directory',
             'web/bundles' => 'directory',
             'web/themes' => 'directory',
             'web/thumbnails' => 'directory',
@@ -235,5 +253,30 @@ class SettingChecker
         }
 
         $this->categories[] = $category;
+    }
+
+    private function isGreaterOrEqual($firstVal, $secondVal)
+    {
+        if ($firstVal[0] === '-') {
+            return true;
+        }
+
+        $toBytes = function ($val) {
+            $val = trim($val);
+            $last = strtolower($val[strlen($val) - 1]);
+
+            switch($last) {
+                case 'g':
+                    $val *= 1024;
+                case 'm':
+                    $val *= 1024;
+                case 'k':
+                    $val *= 1024;
+            }
+
+            return $val;
+        };
+
+        return $toBytes($firstVal) >= $toBytes($secondVal);
     }
 }
