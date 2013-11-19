@@ -3,7 +3,7 @@
     "description": "Claroline bundle recorder",
     "keywords": ["Claroline", "Bundle recorder"],
     "homepage": "http://www.claroline.net",
-    "license": "",
+    "license": "GPL-3.0+",
     "authors": [
         {
             "name": "Claroline development team",
