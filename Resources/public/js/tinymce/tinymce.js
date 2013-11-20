@@ -60,7 +60,11 @@
                 editor.addButton('resourcePicker', {
                     'icon': 'newdocument',
                     'classes': 'widget btn resource-picker',
-                    'tooltip': 'Resources'
+                    'tooltip': 'Resources',
+                    'onclick': function () {
+                        tinymce.activeEditor = editor;
+                        resourcePickerOpen();
+                    }
                 });
             }
             $('body').bind('ajaxComplete', function () {
@@ -151,9 +155,5 @@
 
     $(document).ready(function () {
         tinymceInit();
-    });
-
-    $('body').on('click', '.mce-resource-picker', function () {
-        resourcePickerOpen();
     });
 }());
