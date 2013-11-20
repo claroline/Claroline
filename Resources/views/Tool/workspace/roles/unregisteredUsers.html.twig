@@ -190,6 +190,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src='{{ asset('bundles/clarolinecore/js/table.js') }}' type="text/javascript"></script>
     <script>
         $('#max-select').val({{ max }});
 
