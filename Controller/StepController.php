@@ -36,7 +36,6 @@
  */
 namespace Innova\PathBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -51,8 +50,6 @@ use Innova\PathBundle\Manager\StepManager;
 
 use Innova\PathBundle\Entity\Path;
 use Innova\PathBundle\Entity\Step;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 /**
  * Class StepController
@@ -69,7 +66,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
  * @Route(
  *      "",
  *      name = "innova_step",
- *      service="innova.step.controller"
+ *      service="innova.controller.step"
  * )
  */
 class StepController
@@ -203,7 +200,7 @@ class StepController
     /**
      * @todo put it into a manager or repository and remove function
      */
-    private function getAllParents($step, &$allParents)
+    private function getAllParents(Step $step, array &$allParents)
     {
         if ($step->getParent()) {
             $allParents[$step->getParent()->getLvl()] = $step->getParent();
@@ -214,7 +211,7 @@ class StepController
     /**
      * @todo put it into a manager or repository and remove function
      */
-    private function getFullPath($step, $path, &$fullPath)
+    private function getFullPath(Step $step, Path $path, array &$fullPath)
     {
         if ($stepParent = $step->getParent()) {
             if ($parentSiblings = $this->entityManager->getRepository('InnovaPathBundle:Step')->findBy(array('parent' => $stepParent->getParent(), 'path' => $path))) {
@@ -308,7 +305,7 @@ class StepController
     /**
      * @todo put it into a manager or repository and remove function
      */
-    private function getPropagatedResources($step, &$heritedResources, $excludedResources)
+    private function getPropagatedResources(Step $step, array &$heritedResources, array $excludedResources)
     {
         $resources = $this->stepManager->getStepPropagatedResourceNodes($step);
         

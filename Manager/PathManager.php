@@ -7,19 +7,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+
 use Innova\PathBundle\Entity\Path;
 use Innova\PathBundle\Entity\Step;
-use Innova\PathBundle\Entity\Resource;
-use Innova\PathBundle\Entity\StepType;
-use Innova\PathBundle\Entity\StepWho;
-use Innova\PathBundle\Entity\StepWhere;
 use Innova\PathBundle\Entity\Step2ResourceNode;
 use Innova\PathBundle\Entity\NonDigitalResource;
-
-use Claroline\CoreBundle\Entity\Resource\Activity;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 
 /**
  * Path Manager
@@ -140,7 +134,7 @@ class PathManager
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $worspace
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
-    protected function createDirectory($worspace)
+    protected function createDirectory(AbstractWorkspace $workspace)
     {
         $directory = new ResourceNode();
         
@@ -205,7 +199,7 @@ class PathManager
     /**
      * Delete path
      * @return boolean
-     * @throws Exception
+     * @throws \Exception
      * @throws NotFoundHttpException
      */
     public function delete()
@@ -228,7 +222,7 @@ class PathManager
             }
             else {
                 // User can't delete path from other users
-                throw new Exception('You can delete only your own paths.');
+                throw new \Exception('You can delete only your own paths.');
             }
         }
         else {

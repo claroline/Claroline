@@ -3,9 +3,6 @@
 namespace Innova\PathBundle\Manager;
 
 use Innova\PathBundle\Entity\Step;
-use Innova\PathBundle\Entity\Step2ResourceNode;
-use Innova\PathBundle\Entity\NonDigitalResource;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\EntityManager;
 
 class StepManager

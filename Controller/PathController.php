@@ -70,7 +70,7 @@ use Innova\PathBundle\Manager\PathManager;
  * @Route(
  *      "",
  *      name = "innova_path",
- *      service="innova.path.controller"
+ *      service="innova.controller.path"
  * )
  */
 class PathController
@@ -240,7 +240,7 @@ class PathController
      * )
      * @Method("PUT")
      */
-    public function editAction($id)
+    public function editAction()
     {
         $pathId = $this->pathManager->edit();
     
@@ -276,7 +276,7 @@ class PathController
                     $this->translator->trans("path_delete_error", array(), "innova_tools")
                 );
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // User is not authorized to delete current path
             // or Path to delete is not found
             $this->session->getFlashBag()->add(
@@ -412,7 +412,7 @@ class PathController
                     $this->translator->trans("deploy_error", array(), "innova_tools")
                 );
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // Exception trows during deployement
             $this->session->getFlashBag()->add(
                 'error',

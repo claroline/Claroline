@@ -39,10 +39,10 @@ namespace Innova\PathBundle\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 // Controller dependencies
 use Doctrine\ORM\EntityManagerInterface;
@@ -64,7 +64,7 @@ use Innova\PathBundle\Entity\PathTemplate;
  * @Route(
  *      "",
  *      name = "innova_path_template",
- *      service="innova.path_template.controller"
+ *      service="innova.controller.path_template"
  * )
  */
 class PathTemplateController

@@ -1,7 +1,8 @@
 parameters: 
     # Controllers
-    innova.controller.path.class: Innova\PathBundle\Controller\PathController
-    innova.controller.step.class: Innova\PathBundle\Controller\StepController
+    innova.controller.path.class:          Innova\PathBundle\Controller\PathController
+    innova.controller.step.class:          Innova\PathBundle\Controller\StepController
     innova.controller.path_template.class: Innova\PathBundle\Controller\PathTemplateController
+    innova.controller.path_player.class:   Innova\PathBundle\Controller\PlayerController
     
     # Managers

@@ -1,6 +1,6 @@
 services: 
     # Path controller
-    innova.path.controller:
+    innova.controller.path:
         class: %innova.controller.path.class%
         arguments:
             entityManager:   @doctrine.orm.entity_manager
@@ -14,7 +14,7 @@ services:
         scope: request
         
     # Step controller
-    innova.step.controller:
+    innova.controller.step:
         class: %innova.controller.step.class%
         arguments:
             entityManager:   @doctrine.orm.entity_manager
@@ -25,11 +25,18 @@ services:
         scope: request
         
     # Path template controller
-    innova.path_template.controller:
+    innova.controller.path_template:
         class: %innova.controller.path_template.class%
         arguments:
             entityManager:       @doctrine.orm.entity_manager
             pathTemplateManager: @innova.manager.pathtemplate_manager
+        calls:
+          - [setRequest, ["@?request="]]
+        scope: request
+        
+    # Player controller
+    innova.controller.path_player:
+        class: %innova.controller.path_player.class%
         calls:
           - [setRequest, ["@?request="]]
         scope: request

@@ -10,6 +10,8 @@
                 <input class="form-control" type="text" id="step-name" ng-model="formStep.name" value="{{ formStep.name }}" required />
             </div>
 
+            <p ng-bind-html-unsafe="formStep.instructions"></p>
+
             <div class="form-group col-md-12">
                 <textarea ng-tinymce="true" class="form-control" id="step-instructions" name="step-instructions" ng-model="formStep.instructions" placeholder="Tip step instructions here"></textarea>
             </div>
