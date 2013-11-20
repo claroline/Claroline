@@ -10,21 +10,6 @@ use Claroline\CoreBundle\Event\DisplayToolEvent;
 
 class ToolListener extends ContainerAware
 {
-     /**
-     * @DI\Observe("open_path")
-     */
-    public function onPathOpen(OpenResourceEvent $event)
-    {   
-        $pathId = $event->getResource()->getResourceNode()->getId();
-        $workspaceId = $event->getResource()->getResourceNode()->getWorkspace()->getId();
-        
-        $subRequest = $this->container->get('request')->duplicate( array(), array('pathId' => $pathId, 'workspaceId' => $workspaceId), array("_controller" => 'InnovaPathBundle:Path:showPath'));
-        $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-
-        $event->setResponse($response);
-        $event->stopPropagation();
-    }
-
     public function onWorkspaceOpen(DisplayToolEvent $event)
     {
         $id = $event->getWorkspace()->getId();
