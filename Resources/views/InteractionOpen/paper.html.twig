@@ -165,8 +165,5 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
-    {{ tinymce_init() }}
-
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
 {% endblock %}

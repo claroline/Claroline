@@ -241,9 +241,6 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
-    {{ tinymce_init() }}
-
     <script language="JavaScript">
         $('#less').css({"display" : "none"});
         lessInformation();
