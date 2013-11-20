@@ -4,10 +4,10 @@ role: 'Rôle'
 group: 'Groupe'
 user: 'Utilisateur'
 workspace: "Espace d'activités"
-Show actions for: 'Afficher les actions sur'
-for user: "de l'utilisateur"
+Show actions for: 'Afficher les actions suivantes :'
+for user: "Filtrer sur l'utilisateur :"
 log_default_user: 'Claroline Connect'
-log_filter_actions: 'Filtrer les actions'
+log_filter_actions: 'Afficher les actions'
 log_no_actions_found: 'Aucune action trouvé'
 log_hidden_workspace_widget_config_amount : "Nombre d'actions"
 log_create: 'Création'
