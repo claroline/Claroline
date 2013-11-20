@@ -39,7 +39,6 @@ class Controller extends BaseController
      */
     protected function checkAccess($permissions, Blog $blog, $comparison = "AND")
     {
-        $collection = new ResourceCollection(array($blog->getResourceNode()));
         $isGranted = true;
 
         if (false === is_array($permissions)) {
@@ -47,16 +46,17 @@ class Controller extends BaseController
         }
 
         foreach ($permissions as $permission) {
+            $currentIsGranted = $this->get('security.context')->isGranted($permission, $blog);
             if ("OR" === $comparison) {
-                $isGranted = $isGranted || $this->get('security.context')->isGranted($permission, $collection);
+                $isGranted = $isGranted || $currentIsGranted;
             }
             else {
-                $isGranted += $this->get('security.context')->isGranted($permission, $collection);
+                $isGranted = $isGranted && $currentIsGranted;
             }
         }
 
         if (false === $isGranted) {
-            throw new AccessDeniedException($collection->getErrorsForDisplay());
+            throw new AccessDeniedException();
         }
 
         $logEvent = new LogResourceReadEvent($blog->getResourceNode());
