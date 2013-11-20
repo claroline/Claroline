@@ -38,11 +38,16 @@
 
             if (url) {
                 home.generatedContent(url[0].slice(6, -1), function (data) {
-                    var newNode = tinymce.activeEditor.getDoc().createElement('div');
-                    newNode.innerHTML = data;
-                    tinymce.activeEditor.selection.getRng().insertNode(newNode);
-                    tinymce.activeEditor.fire('change');
+                    insertContent(data);
                 });
+            } else {
+                url = home.findUrls(args.content);
+                if (url.length === 1) {
+                    args.content = '<a href="' + url[0] + '">' + url[0] + '</a>';
+                    home.generatedContent(url[0], function (data) {
+                        insertContent(data);
+                    });
+                }
             }
         },
         setup: function (editor) {
@@ -52,9 +57,7 @@
                 }
             });
             editor.on('LoadContent', function () {
-                setTimeout(function () {
-                    editor.fire('change');
-                }, 200);
+                editorChange(editor);
             });
             if ($(editor.getElement()).data('resource-picker') !== 'off') {
                 editor.addButton('resourcePicker', {
@@ -76,6 +79,21 @@
             });
         }
     };
+
+    function editorChange(editor)
+    {
+        setTimeout(function () {
+            editor.fire('change');
+        }, 200);
+    }
+
+    function insertContent(content)
+    {
+        var newNode = tinymce.activeEditor.getDoc().createElement('div');
+        newNode.innerHTML = content;
+        tinymce.activeEditor.selection.getRng().insertNode(newNode);
+        editorChange(tinymce.activeEditor);
+    }
 
     function tinymceInit()
     {
@@ -116,9 +134,7 @@
             }
         }
 
-        setTimeout(function () {
-            tinymce.activeEditor.fire('change');
-        }, 200);
+        editorChange(tinymce.activeEditor);
     }
 
     function resourcePickerOpen()
