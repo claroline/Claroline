@@ -209,6 +209,8 @@ function CheckScore(message) {
 // Submit form without an empty field
 function Check(noTitle, noQuestion, noImg, noAnswerZone, questiontitle, invite) {
 
+    $("*[id$='_penalty']").val($("*[id$='_penalty']").val().replace(/[-]/, ''));
+
     var empty = false; // Answer zone aren't defined
 
     for (j = 0 ; j < grade ; j++) {
