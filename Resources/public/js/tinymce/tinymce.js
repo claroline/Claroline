@@ -59,7 +59,7 @@
             if ($(editor.getElement()).data('resource-picker') !== 'off') {
                 editor.addButton('resourcePicker', {
                     'icon': 'newdocument',
-                    'classes': 'widget btn resource-picker',
+                    'classes': 'widget btn',
                     'tooltip': 'Resources',
                     'onclick': function () {
                         tinymce.activeEditor = editor;
@@ -101,23 +101,24 @@
             tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() +
                 '<a href="' + route + '">' + nodes[_.keys(nodes)][0] + '</a>'
             );
-            tinymce.activeEditor.fire('change');
         } else {
             if (mimeArray.indexOf(mimeType) > -1) {
                 tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() +
                     '<img src="' + Routing.generate('claro_file_get_image', {'node': id}) +
                     '" style="max-width:100%"/>'
                 );
-                tinymce.activeEditor.fire('change');
             } else {
                 tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() +
                     '<a href="' +
                     Routing.generate('claro_resource_open', {'resourceType': resourceTypes, 'node' : nodeId}) +
                     '">' + nodes[_.keys(nodes)][0] + '</a>'
                 );
-                tinymce.activeEditor.fire('change');
             }
         }
+
+        setTimeout(function () {
+            tinymce.activeEditor.fire('change');
+        }, 200);
     }
 
     function resourcePickerOpen()
