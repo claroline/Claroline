@@ -332,28 +332,7 @@ class PathController
             return new RedirectResponse($url, 302);
         }
     }
-
-    /**
-     * Display playable path
-     * @return array
-     * 
-     * @Route(
-     *      "workspace/{workspaceId}/path/player/{pathId}",
-     *      name = "innova_path_player",
-     *      defaults={"pathId"= null},
-     *      options = {"expose"=true}
-     * )
-     * @Template("InnovaPathBundle:Player:main.html.twig")
-     */
-    public function playerAction($workspaceId, $pathId = null)
-    {
-        $workspace = $this->entityManager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
-
-        return array (
-            'workspace' => $workspace,
-        );
-    }
-
+    
     /**
      * getPathAction function
      * @param string $id

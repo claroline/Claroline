@@ -5,9 +5,12 @@ namespace Innova\PathBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+
 use Symfony\Component\HttpFoundation\Request;
 use Innova\PathBundle\Entity\Path;
 use Innova\PathBundle\Entity\Step;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 
 /**
  * Player controller
@@ -45,15 +48,21 @@ class PlayerController
      * @return array
      * 
      * @Route(
-     *      "innova_path_player_index",
-     *      name="",
+     *      "workspace/{workspaceId}/path/player/{pathId}",
+     *      name="innova_path_player_index",
      *      options={"expose" = true}
      * )
+     * @ParamConverter("workspace", class="ClarolineCoreBundle:AbstractWorkspace", options={"mapping": {"workspaceId": "id"}})
+     * @ParamConverter("workspace", class="InnovaPathBundle:Path", options={"mapping": {"pathId": "id"}})
      * @Method("GET")
+     * @Template("InnovaPathBundle:Player:main.html.twig")
      */
-    public function displayAction(Path $path)
+    public function displayAction(AbstractWorkspace $workspace, Path $path)
     {
-        return array ();
+        return array (
+            'workspace' => $workspace,
+            'path' => $path,
+        );
     }
     
     /**

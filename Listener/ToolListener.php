@@ -4,32 +4,12 @@ namespace Innova\PathBundle\Listener;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 
-/**
- * @DI\Service
- */
-class ToolListener implements ContainerAwareInterface
+class ToolListener extends ContainerAware
 {
-    private $container;
-
-    /**
-     * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container")
-     * })
-     *
-     * @param ContainerInterface $container
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
      /**
      * @DI\Observe("open_path")
      */
