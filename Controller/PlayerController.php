@@ -64,7 +64,11 @@ class PlayerController extends ContainerAware
      */
     public function displayBreadcrumbsAction(AbstractWorkspace $workspace, Path $path, Step $currentStep = null)
     {
-        return array ();
+        return array (
+            'workspace' => $workspace,
+            'path' => $path,
+            'currentStep' => $currentStep
+        );
     }
     
     /**

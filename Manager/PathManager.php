@@ -86,7 +86,7 @@ class PathManager
         $directory = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneByName("_paths");
         if (!$directory) {
             // Create path directory
-            $directory = $this->createDirectory($worspace);
+            $directory = $this->createDirectory($workspace);
         }
         
         // Create resource node
@@ -131,7 +131,7 @@ class PathManager
     
     /**
      * Create path directory in workspace
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $worspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
     protected function createDirectory(AbstractWorkspace $workspace)
@@ -312,7 +312,7 @@ class PathManager
         $pathsDirectory = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneByName("_paths");
         if (!$pathsDirectory) {
             // Create path directory
-            $pathsDirectory = $this->createDirectory($worspace);
+            $pathsDirectory = $this->createDirectory($workspace);
         }
 
         // lancement récursion

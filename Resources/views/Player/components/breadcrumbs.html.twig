@@ -1,1 +1,19 @@
-test breadcrumb
+<ul>
+    {# Current workspace #}
+    <li>
+        <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.id, 'toolName': 'home'}) }}">
+            <span class="icon-book"></span>
+            {{ workspace.getName() ~ ' - ' ~ workspace.getCode() }}
+        </a>
+    </li>
+    
+    {# Current path #}
+    <li>
+        <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id}) }}">
+            <span class="icon-road"></span>
+            {{ path.resourceNode.name }}
+        </a>
+    </li>
+    
+    {# Display all step chain to current selected step #}
+</ul>
