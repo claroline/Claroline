@@ -137,6 +137,7 @@ date_range.last_thirty_days: 'Last 30 days'
 date_range.last_week: 'Last week'
 date_range.last_year: 'Last year'
 date_range.month_names: '["January","February","March","April","May","June","July","August","September","October","November","December"]'
+date_range.separator: '-'
 date_range.this_month: 'This month'
 date_range.this_school_year: 'This school year'
 date_range.this_week: 'This week'
@@ -244,6 +245,7 @@ lock: Lock
 login: Login
 login_failure: 'Login has failed. Check your username and password are correct.'
 logout: Logout
+logs: tracking
 mail: Mail
 mail_click: 'Click on this link to reset your password'
 mail_config_problem : Please contact your administrator platform to reinitialize your password.

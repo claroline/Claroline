@@ -23,5 +23,6 @@ download: Download
 rename: Rename
 edit-properties: Edit properties
 edit-rights: Edit rights
+open-tracking: View tracking
 delete: Delete
 write: Write

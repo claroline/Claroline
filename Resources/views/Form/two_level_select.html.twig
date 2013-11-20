@@ -6,7 +6,6 @@
         <script type="text/javascript">
             $(document).ready(function () {
                 var choices = {{form.vars['choices']|json_encode()|raw}};
-                console.log(choices);
                 var choicesTree = {};
                 var preselectedValuePath = buildChoicesTree(choices, choicesTree, [], "{{form.vars['value']}}");
                 if (preselectedValuePath == null) {

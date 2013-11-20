@@ -775,6 +775,9 @@
             'edit-properties': function (event) {
                 this.editProperties(event.action, event.data, event.nodeId);
             },
+            'open-tracking': function (event) {
+                this.openTracking(event.ids[0]);
+            },
             'custom': function (event) {
                 this.custom(event.action, event.id, event.redirect);
             },
@@ -1108,6 +1111,9 @@
                     }
                 }
             });
+        },
+        openTracking: function (nodeId) {
+            window.location = this.parameters.appPath + '/resource/log/' + nodeId;
         },
         download: function (nodeIds) {
             window.location = this.parameters.appPath + '/resource/download?' + $.param({ids: nodeIds});
