@@ -5,4 +5,3 @@ services:
       - [setContainer, ["@service_container"]]
     tags:
       - { name: kernel.event_listener, event: open_tool_workspace_innova_path, method: onWorkspaceOpen }
-      - { name: kernel.event_listener, event: open_tool_desktop_innova_path, method: onDesktopOpen }

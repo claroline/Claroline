@@ -1,4 +1,15 @@
-{% extends "ClarolineCoreBundle::layout.html.twig" %}
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
 {% block content %}
+    <div class="breadcrumbs">
+        {{ render(controller('innova.controller.path_player:displayBreadcrumbsAction', { 'workspace': workspace, 'path': path })) }}
+    </div>
+    
+    <div class="squares-browser">
+        {{ render(controller('innova.controller.path_player:displaySquaresBrowserAction')) }}
+    </div>
+    
+    <div class="current-step">
+        {{ render(controller('innova.controller.path_player:displayCurrentStepAction', {'currentStep': currentStep})) }}
+    </div>
 {% endblock %}

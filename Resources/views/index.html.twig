@@ -47,11 +47,9 @@
                     </td>
                     <td align="right">
                     {% if path.deployed %}
-                        <form action="{{ path('innova_path_play') }}" method="post" style="display: inline-block">
-                            <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />
-                            <input type="hidden" value="{{ path.resourceNode.id }}" name="pathId" />
-                            <button rel="tooltip" data-original-title="{{ 'play' | trans({}, 'innova_tools') }}" class="btn btn-xs btn-default" type="submit"><span class="icon-play"></span></button>
-                        </form>
+                        <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id}) }}" data-original-title="{{ 'play' | trans({}, 'innova_tools') }}" class="btn btn-xs btn-default" />
+                            <span class="icon-play"></span>
+                        </a>
                     {% endif %}
                         <form action="{{ path('innova_path_editor', {workspaceId: workspace.id, pathId: path.resourceNode.id}) }}" method="post" style="display: inline-block">
                             <input type="hidden" value="{{ workspace.id }}" name="workspaceId" />

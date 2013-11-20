@@ -38,5 +38,4 @@ services:
     innova.controller.path_player:
         class: %innova.controller.path_player.class%
         calls:
-          - [setRequest, ["@?request="]]
-        scope: request
+          - [setContainer, ["@service_container"]]
