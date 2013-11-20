@@ -9,8 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Badge;
+namespace Claroline\CoreBundle\Rule;
 
+use Claroline\CoreBundle\Entity\Rule\Rule;
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\Log\Log;
@@ -21,10 +22,10 @@ use \Mockery as m;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
-class BadgeRuleValidatorTest extends MockeryTestCase
+class RuleValidatorTest extends MockeryTestCase
 {
-    /** @var BadgeRuleValidator */
-    private $badgeRuleChecker;
+    /** @var RuleValidator */
+    private $ruleChecker;
     private $logRepository;
     private $entityManager;
 
@@ -38,9 +39,9 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule, $user)
                 ->andReturn(array());
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertFalse($this->badgeRuleChecker->validateRule(null, $badgeRule, $user));
+        $this->assertFalse($this->ruleChecker->validateRule(null, $badgeRule, $user));
     }
 
     public function testValidateRuleOneRuleMatchOneLog()
@@ -54,9 +55,9 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule, $user)
                 ->andReturn(array($log));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertEquals(array($log), $this->badgeRuleChecker->validateRule(null, $badgeRule, $user));
+        $this->assertEquals(array($log), $this->ruleChecker->validateRule(null, $badgeRule, $user));
     }
 
     public function testValidateRuleOneRuleMatchTwoLog()
@@ -71,9 +72,9 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule, $user)
                 ->andReturn(array($log, $log2));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertEquals(array($log, $log2), $this->badgeRuleChecker->validateRule(null, $badgeRule, $user));
+        $this->assertEquals(array($log, $log2), $this->ruleChecker->validateRule(null, $badgeRule, $user));
     }
 
     public function testCheckBadgeTwoRuleMatchNoLog()
@@ -91,16 +92,16 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule2, $user)
                 ->andReturn(array());
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
         $badgeRules = array($badgeRule, $badgeRule2);
 
         /** @var badge $badge */
         $badge = new Badge();
         $badge
-            ->setBadgeRules($badgeRules);
+            ->setRules($badgeRules);
 
-        $this->assertFalse($this->badgeRuleChecker->validateBadge($badge, $user));
+        $this->assertFalse($this->ruleChecker->validate($badge, $user));
     }
 
     public function testCheckBadgeTwoRuleMatchOneLog()
@@ -118,15 +119,15 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule2, $user)
                 ->andReturn(array());
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
         $badgeRules = array($badgeRule, $badgeRule2);
 
         /** @var badge $badge */
         $badge = new Badge();
-        $badge->setBadgeRules($badgeRules);
+        $badge->setRules($badgeRules);
 
-        $this->assertFalse($this->badgeRuleChecker->validateBadge($badge, $user));
+        $this->assertFalse($this->ruleChecker->validate($badge, $user));
     }
 
     public function testCheckBadgeTwoRuleMatchTwoLog()
@@ -146,15 +147,15 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule2, $user)
                 ->andReturn(array($log2));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
         $badgeRules = array($badgeRule, $badgeRule2);
 
         /** @var badge $badge */
         $badge = new Badge();
-        $badge->setBadgeRules($badgeRules);
+        $badge->setRules($badgeRules);
 
-        $this->assertEquals(array($log, $log2), $this->badgeRuleChecker->validateBadge($badge, $user));
+        $this->assertEquals(array($log, $log2), $this->ruleChecker->validate($badge, $user));
     }
 
     public function testCheckBadgeNoRule()
@@ -167,12 +168,12 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->shouldReceive('findByWorkspaceBadgeRuleAndUser')
                 ->never();
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
         /** @var badge $badge */
         $badge = new Badge();
 
-        $this->assertFalse($this->badgeRuleChecker->validateBadge($badge, $user));
+        $this->assertFalse($this->ruleChecker->validate($badge, $user));
     }
 
     public function testCheckBadgeOneRuleMatchNoLogOnWorkspace()
@@ -186,9 +187,9 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with($workspace, $badgeRule, $user)
                 ->andReturn(array());
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertFalse($this->badgeRuleChecker->validateRule($workspace, $badgeRule, $user));
+        $this->assertFalse($this->ruleChecker->validateRule($workspace, $badgeRule, $user));
     }
 
     public function testCheckBadgeOneRuleMatchOneLogOnWorkspace()
@@ -203,9 +204,9 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with($workspace, $badgeRule, $user)
                 ->andReturn(array($log));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertEquals(array($log), $this->badgeRuleChecker->validateRule($workspace, $badgeRule, $user));
+        $this->assertEquals(array($log), $this->ruleChecker->validateRule($workspace, $badgeRule, $user));
     }
 
     public function testCheckBadgeOneRuleMatchTwoLogOnWorkspace()
@@ -221,9 +222,9 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with($workspace, $badgeRule, $user)
                 ->andReturn(array($log, $log2));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertEquals(array($log, $log2), $this->badgeRuleChecker->validateRule($workspace, $badgeRule, $user));
+        $this->assertEquals(array($log, $log2), $this->ruleChecker->validateRule($workspace, $badgeRule, $user));
     }
 
     public function testCheckBadgeTwoRuleMatchNoLogOnWorkspace()
@@ -242,17 +243,17 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with($workspace, $badgeRule2, $user)
                 ->andReturn(array());
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
         $badgeRules = array($badgeRule, $badgeRule2);
 
         /** @var badge $badge */
         $badge = new Badge();
         $badge
-            ->setBadgeRules($badgeRules)
+            ->setRules($badgeRules)
             ->setWorkspace($workspace);
 
-        $this->assertFalse($this->badgeRuleChecker->validateBadge($badge, $user));
+        $this->assertFalse($this->ruleChecker->validate($badge, $user));
     }
 
     public function testCheckBadgeTwoRuleMatchOneLogOnWorkspace()
@@ -271,17 +272,17 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with($workspace, $badgeRule2, $user)
                 ->andReturn(array());
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
         $badgeRules = array($badgeRule, $badgeRule2);
 
         /** @var badge $badge */
         $badge = new Badge();
         $badge
-            ->setBadgeRules($badgeRules)
+            ->setRules($badgeRules)
             ->setWorkspace($workspace);
 
-        $this->assertFalse($this->badgeRuleChecker->validateBadge($badge, $user));
+        $this->assertFalse($this->ruleChecker->validate($badge, $user));
     }
 
     public function testCheckBadgeTwoRuleMatchTwoLogOnWorkspace()
@@ -302,17 +303,17 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with($workspace, $badgeRule2, $user)
                 ->andReturn(array($log2));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
         $badgeRules = array($badgeRule, $badgeRule2);
 
         /** @var badge $badge */
         $badge = new Badge();
         $badge
-            ->setBadgeRules($badgeRules)
+            ->setRules($badgeRules)
             ->setWorkspace($workspace);
 
-        $this->assertEquals(array($log, $log2), $this->badgeRuleChecker->validateBadge($badge, $user));
+        $this->assertEquals(array($log, $log2), $this->ruleChecker->validate($badge, $user));
     }
 
     public function testValidateRuleOneRuleWithResultComparisonEqualMatchNoLog()
@@ -332,9 +333,9 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule, $user)
                 ->andReturn(array($log));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertFalse($this->badgeRuleChecker->validateRule(null, $badgeRule, $user));
+        $this->assertFalse($this->ruleChecker->validateRule(null, $badgeRule, $user));
     }
 
     public function testValidateRuleOneRuleWithResultComparisonEqualMatchOneLog()
@@ -354,9 +355,9 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule, $user)
                 ->andReturn(array($log));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertEquals(array($log), $this->badgeRuleChecker->validateRule(null, $badgeRule, $user));
+        $this->assertEquals(array($log), $this->ruleChecker->validateRule(null, $badgeRule, $user));
     }
 
     public function testValidateRuleOneRuleWithResultComparisonSuperiorMatchNoLog()
@@ -376,9 +377,9 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule, $user)
                 ->andReturn(array($log));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertFalse($this->badgeRuleChecker->validateRule(null, $badgeRule, $user));
+        $this->assertFalse($this->ruleChecker->validateRule(null, $badgeRule, $user));
     }
 
     public function testValidateRuleOneRuleWithResultComparisonSuperiorMatchOneLog()
@@ -398,9 +399,9 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule, $user)
                 ->andReturn(array($log));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertEquals(array($log), $this->badgeRuleChecker->validateRule(null, $badgeRule, $user));
+        $this->assertEquals(array($log), $this->ruleChecker->validateRule(null, $badgeRule, $user));
     }
 
     public function testValidateRuleOneRuleWithResultComparisonSuperiorEqualMatchNoLog()
@@ -420,9 +421,9 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule, $user)
                 ->andReturn(array($log));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertFalse($this->badgeRuleChecker->validateRule(null, $badgeRule, $user));
+        $this->assertFalse($this->ruleChecker->validateRule(null, $badgeRule, $user));
     }
 
     public function testValidateRuleOneRuleWithResultComparisonSuperiorEqualMatchOneLog()
@@ -442,9 +443,9 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule, $user)
                 ->andReturn(array($log));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertEquals(array($log), $this->badgeRuleChecker->validateRule(null, $badgeRule, $user));
+        $this->assertEquals(array($log), $this->ruleChecker->validateRule(null, $badgeRule, $user));
     }
 
     public function testValidateRuleOneRuleWithResultComparisonSuperiorEqualMatchOneLog2()
@@ -464,9 +465,9 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule, $user)
                 ->andReturn(array($log));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertEquals(array($log), $this->badgeRuleChecker->validateRule(null, $badgeRule, $user));
+        $this->assertEquals(array($log), $this->ruleChecker->validateRule(null, $badgeRule, $user));
     }
 
     public function testValidateRuleOneRuleWithResultComparisonInferiorMatchNoLog()
@@ -486,9 +487,9 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule, $user)
                 ->andReturn(array($log));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertFalse($this->badgeRuleChecker->validateRule(null, $badgeRule, $user));
+        $this->assertFalse($this->ruleChecker->validateRule(null, $badgeRule, $user));
     }
 
     public function testValidateRuleOneRuleWithResultComparisonInferiorMatchNoLog2()
@@ -508,9 +509,9 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule, $user)
                 ->andReturn(array($log));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertFalse($this->badgeRuleChecker->validateRule(null, $badgeRule, $user));
+        $this->assertFalse($this->ruleChecker->validateRule(null, $badgeRule, $user));
     }
 
     public function testValidateRuleOneRuleWithResultComparisonInferiorMatchOneLog()
@@ -530,9 +531,9 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule, $user)
                 ->andReturn(array($log));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertEquals(array($log), $this->badgeRuleChecker->validateRule(null, $badgeRule, $user));
+        $this->assertEquals(array($log), $this->ruleChecker->validateRule(null, $badgeRule, $user));
     }
 
     public function testValidateRuleOneRuleWithResultComparisonInferiorEqualMatchNoLog()
@@ -552,9 +553,9 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule, $user)
                 ->andReturn(array($log));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertFalse($this->badgeRuleChecker->validateRule(null, $badgeRule, $user));
+        $this->assertFalse($this->ruleChecker->validateRule(null, $badgeRule, $user));
     }
 
     public function testValidateRuleOneRuleWithResultComparisonInferiorEqualMatchOneLog()
@@ -574,9 +575,9 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule, $user)
                 ->andReturn(array($log));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertEquals(array($log), $this->badgeRuleChecker->validateRule(null, $badgeRule, $user));
+        $this->assertEquals(array($log), $this->ruleChecker->validateRule(null, $badgeRule, $user));
     }
 
     public function testValidateRuleOneRuleWithResultComparisonInferiorEqualMatchOneLog2()
@@ -596,9 +597,9 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule, $user)
                 ->andReturn(array($log));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertEquals(array($log), $this->badgeRuleChecker->validateRule(null, $badgeRule, $user));
+        $this->assertEquals(array($log), $this->ruleChecker->validateRule(null, $badgeRule, $user));
     }
 
     public function testValidateRuleOneRuleMatchOneLogOnWrongResource()
@@ -622,9 +623,9 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule, $user)
                 ->andReturn(array($log));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertFalse($this->badgeRuleChecker->validateRule(null, $badgeRule, $user));
+        $this->assertFalse($this->ruleChecker->validateRule(null, $badgeRule, $user));
     }
 
     public function testValidateRuleOneRuleMatchOneLogOnRightResource()
@@ -645,8 +646,8 @@ class BadgeRuleValidatorTest extends MockeryTestCase
                 ->with(null, $badgeRule, $user)
                 ->andReturn(array($log));
         });
-        $this->badgeRuleChecker = new BadgeRuleValidator($this->logRepository);
+        $this->ruleChecker = new RuleValidator($this->logRepository);
 
-        $this->assertEquals(array($log), $this->badgeRuleChecker->validateRule(null, $badgeRule, $user));
+        $this->assertEquals(array($log), $this->ruleChecker->validateRule(null, $badgeRule, $user));
     }
 }

@@ -1,0 +1,15 @@
+<?php
+
+namespace Claroline\CoreBundle\Rule;
+
+abstract class Rulable implements RulableInterface
+{
+    /**
+     * @return bool
+     */
+    public function hasRules()
+    {
+        return (0 < count($this->getRules()));
+    }
+}
+ 

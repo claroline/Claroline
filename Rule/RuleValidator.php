@@ -9,19 +9,20 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Badge;
+namespace Claroline\CoreBundle\Rule;
 
-use Claroline\CoreBundle\Badge\Constraints\OccurenceConstraint;
-use Claroline\CoreBundle\Badge\Constraints\ResourceConstraint;
-use Claroline\CoreBundle\Badge\Constraints\ResultConstraint;
+use Claroline\CoreBundle\Rule\Constraints\OccurenceConstraint;
+use Claroline\CoreBundle\Rule\Constraints\ResourceConstraint;
+use Claroline\CoreBundle\Rule\Constraints\ResultConstraint;
+use Claroline\CoreBundle\Entity\Rule\Rule;
+use Claroline\CoreBundle\Rule\Rulable;
 use Claroline\CoreBundle\Entity\Badge\Badge;
-use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
 
-class BadgeRuleValidator
+class RuleValidator
 {
     /**
      * @var LogRepository
@@ -34,22 +35,22 @@ class BadgeRuleValidator
     }
 
     /**
-     * @param Badge $badge
-     * @param User  $user
+     * @param Rulable $rulable
+     * @param User    $user
      *
      * @return array
      */
-    public function validateBadge(Badge $badge, User $user)
+    public function validate(Rulable $rulable, User $user)
     {
         $return    = array();
         $isChecked = true;
 
-        $badgeRules = $badge->getBadgeRules();
+        $badgeRules = $rulable->getRules();
 
         if (0 < count($badgeRules)) {
             foreach ($badgeRules as $badgeRule) {
 
-                $checkedLogs = $this->validateRule($badge->getWorkspace(), $badgeRule, $user);
+                $checkedLogs = $this->validateRule($rulable->getWorkspace(), $badgeRule, $user);
 
                 if (false === $checkedLogs) {
                     $isChecked = false;
@@ -70,30 +71,30 @@ class BadgeRuleValidator
 
     /**
      * @param AbstractWorkspace|null $workspace
-     * @param BadgeRule              $badgeRule
+     * @param Rule                   $rule
      * @param User                   $user
      *
      * @return bool|Log[]
      */
-    public function validateRule($workspace, BadgeRule $badgeRule, User $user)
+    public function validateRule($workspace, Rule $rule, User $user)
     {
         /** @var \Claroline\CoreBundle\Entity\Log\Log[] $associatedLogs */
-        $associatedLogs = $this->logRepository->findByWorkspaceBadgeRuleAndUser($workspace, $badgeRule, $user);
+        $associatedLogs = $this->logRepository->findByWorkspaceBadgeRuleAndUser($workspace, $rule, $user);
 
         $isValid     = true;
         $constraints = array();
 
-        $occurenceConstraint = new OccurenceConstraint($badgeRule, $associatedLogs);
+        $occurenceConstraint = new OccurenceConstraint($rule, $associatedLogs);
 
         if ($occurenceConstraint->validate()) {
-            $badgeRuleResult = $badgeRule->getResult();
-            if (null !== $badgeRuleResult) {
-                $constraints[] = new ResultConstraint($badgeRule, $associatedLogs);
+            $ruleResult = $rule->getResult();
+            if (null !== $ruleResult) {
+                $constraints[] = new ResultConstraint($rule, $associatedLogs);
             }
 
-            $badgeRuleResource = $badgeRule->getResource();
-            if (null !== $badgeRuleResource) {
-                $constraints[] = new ResourceConstraint($badgeRule, $associatedLogs);
+            $ruleResource = $rule->getResource();
+            if (null !== $ruleResource) {
+                $constraints[] = new ResourceConstraint($rule, $associatedLogs);
             }
 
             foreach ($constraints as $constraint) {

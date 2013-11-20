@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Entity\Badge;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Rule\Rulable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -32,7 +33,7 @@ use Claroline\CoreBundle\Form\Badge\Constraints as BadgeAssert;
  * @BadgeAssert\HasImage
  * @BadgeAssert\AtLeastOneTranslation
  */
-class Badge
+class Badge extends Rulable
 {
     /**
      * @var integer
@@ -464,11 +465,11 @@ class Badge
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Badge\BadgeRule[]|\Doctrine\Common\Collections\ArrayCollection $badgeRules
+     * @param \Claroline\CoreBundle\Entity\Badge\BadgeRule[] $badgeRules
      *
      * @return Badge
      */
-    public function setBadgeRules($badgeRules)
+    public function setRules($badgeRules)
     {
         foreach ($badgeRules as $rule) {
             $rule->setBadge($this);
@@ -482,17 +483,9 @@ class Badge
     /**
      * @return \Claroline\CoreBundle\Entity\Badge\BadgeRule[]|\Doctrine\Common\Collections\ArrayCollection
      */
-    public function getBadgeRules()
+    public function getRules()
     {
         return $this->badgeRules;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasRules()
-    {
-        return (0 < count($this->getBadgeRules()));
     }
 
     /**

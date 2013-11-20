@@ -141,7 +141,7 @@ class AdminController extends Controller
 
         /** @var BadgeRule[] $originalRules */
         $originalRules = array();
-        foreach ($badge->getBadgeRules() as $rule) {
+        foreach ($badge->getRules() as $rule) {
             $originalRules[] = $rule;
         }
 
@@ -157,7 +157,7 @@ class AdminController extends Controller
                     $entityManager = $doctrine->getManager();
 
                     // Compute which rules was deleted
-                    foreach ($badge->getBadgeRules() as $rule) {
+                    foreach ($badge->getRules() as $rule) {
                         foreach ($originalRules as $key => $originalRule) {
                             if ($originalRule->getId() === $rule->getId()) {
                                 unset($originalRules[$key]);
