@@ -184,4 +184,33 @@ class Path extends AbstractResource
         
         return $this;
     }
+    
+    /**
+     * Get root step of the path
+     * @return \Innova\PathBundle\Entity\Step
+     */
+    public function getRootStep()
+    {
+        if (empty($this->steps)) {
+            // Current path has no step
+            throw new \Exception('Unable to find root Step for ' . get_class($this) . ' (ID = ' . $this->id . '). Path has no step.');
+        }
+        
+        $root = null;
+        foreach ($this->steps as $step)
+        {
+            if ($step->getParent() === null) {
+                // Root step found
+                $root = $step;
+                break;
+            }
+        }
+        
+        if (empty($root)) {
+            // Unable to find root step in steps list
+            throw new \Exception('Unable to find root Step for ' . get_class($this) . ' (ID = ' . $this->id . ').');
+        }
+        
+        return $root;
+    }
 }
