@@ -588,6 +588,94 @@ class exerciseServices
                 return 0;
             }
         }
+    }
 
+    public function getInfosPaper($paper)
+    {
+        $infosPaper = array();
+        $scorePaper = 0;
+        $scoreTemp = false;
+
+        $em = $this->doctrine->getManager();
+
+        $interactions = $this->doctrine
+            ->getManager()
+            ->getRepository('UJMExoBundle:Interaction')
+            ->getPaperInteraction($em, str_replace(';', '\',\'', substr($paper->getOrdreQuestion(), 0, -1)));
+
+        $interactions = $this->orderInteractions($interactions, $paper->getOrdreQuestion());
+
+        $infosPaper['interactions'] = $interactions;
+
+        $responses = $this->doctrine
+            ->getManager()
+            ->getRepository('UJMExoBundle:Response')
+            ->getPaperResponses($paper->getUser()->getId(), $paper->getId());
+
+        $responses = $this->orderResponses($responses, $paper->getOrdreQuestion());
+
+        $infosPaper['responses'] = $responses;
+
+        $infosPaper['maxExoScore'] = $this->getExercisePaperTotalScore($paper->getId());
+
+        foreach ($responses as $response) {
+            if ($response->getMark() != -1) {
+                $scorePaper += $response->getMark();
+            } else {
+                $scoreTemp = true;
+            }
+        }
+
+        $infosPaper['scorePaper'] = $scorePaper;
+        $infosPaper['scoreTemp'] = $scoreTemp;
+
+        return $infosPaper;
+    }
+
+    private function orderInteractions($interactions, $order)
+    {
+        $inter = array();
+        $order = substr($order, 0, strlen($order) - 1);
+        $order = explode(';', $order);
+
+        foreach ($order as $interId) {
+            foreach ($interactions as $key => $interaction) {
+                if ($interaction->getId() == $interId) {
+                    $inter[] = $interaction;
+                    unset($interactions[$key]);
+                    break;
+                }
+            }
+        }
+
+        return $inter;
+    }
+
+    private function orderResponses($responses, $order)
+    {
+        $resp = array();
+        $order = substr($order, 0, strlen($order) - 1);
+        $order = explode(';', $order);
+        foreach ($order as $interId) {
+            $tem = 0;
+            foreach ($responses as $key => $response) {
+                if ($response->getInteraction()->getId() == $interId) {
+                    $tem++;
+                    $resp[] = $response;
+                    unset($responses[$key]);
+                    break;
+                }
+            }
+            //if no response
+            if ($tem == 0) {
+                $response = new \UJM\ExoBundle\Entity\Response();
+                $response->setResponse('');
+                $response->setMark(0);
+
+                $resp[] = $response;
+            }
+        }
+
+        return $resp;
     }
 }

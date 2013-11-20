@@ -167,20 +167,15 @@
                                 <div class="panel-heading"><h3 class="panel-title">{{ 'mark' | trans }}</h3></div>
                                 <div class="panel-body">
                                 {% for hv in hintViewed %}
-                                    {% if( hv.hint.interaction.id == interaction.id ) %}
+                                    {% if( hv.hint.interaction.id == interactions[p].id ) %}
                                         {{ 'penalty' | trans }} : {{ hv.hint.penalty }}
                                     {% endif %}
                                 {% endfor %}
                                 <br/>
                                 {{ 'mark' | trans }} : {{ responses[p].mark }} / {{ interInfo['maxScore'] }}
-                                {% set exoMark = exoMark + responses[p].mark %}
-                                {% set exoScoreMax = exoScoreMax + interInfo['maxScore'] %}
                                 </div>
                             </div>
                         </div>
-                    {% else %}
-                        {% set exoMark = exoMark + responses[p].mark %}
-                        {% set exoScoreMax = exoScoreMax + interInfo['maxScore'] %}
                     {% endif %}
                 </div>
             </div>
@@ -275,14 +270,12 @@
                                 <div class="panel-heading"><h3 class="panel-title">{{ 'mark' | trans }}</h3></div>
                                 <div class="panel-body">
                                     {% for hv in hintViewed %}
-                                        {% if( hv.hint.interaction.id == interaction.id ) %}
+                                        {% if( hv.hint.interaction.id == interactions[p].id ) %}
                                             {{ 'penalty' | trans }} : {{ hv.hint.penalty }}
                                         {% endif %}
                                     {% endfor %}
                                     <br/>
                                     {{ 'mark' | trans }} : {{ responses[p].mark }} / {{ maxScore }}
-                                    {% set exoMark = exoMark + responses[p].mark %}
-                                    {% set exoScoreMax = exoScoreMax + maxScore %}
 
                                     {% set point = responses[p].mark + hv.hint.penalty %}
                                 </div>
@@ -296,8 +289,6 @@
                             {% set x = x + 1 %}
                         {% endfor %}
 
-                        {% set exoMark = exoMark + responses[p].mark %}
-                        {% set exoScoreMax = exoScoreMax + maxScore %}
                     {% endif %}
                 </div>
             </div>
@@ -366,7 +357,7 @@
                                 <div class="panel-heading"><h3 class="panel-title">{{ 'mark' | trans }}</h3></div>
                                 <div class="panel-body">
                                     {% for hv in hintViewed %}
-                                        {% if( hv.hint.interaction.id == interaction.id ) %}
+                                        {% if( hv.hint.interaction.id == interactions[p].id ) %}
                                             {{ 'penalty' | trans }} : {{ hv.hint.penalty }}
                                         {% endif %}
                                     {% endfor %}
@@ -393,13 +384,7 @@
                                 </div>
                             </div>
                         </div>
-                    {% else %}
-                        {% if responses[p].mark != -1 %}
-                            {% set exoMark = exoMark + responses[p].mark %}
-                        {% endif %}
                     {% endif %}
-
-                    {% set exoScoreMax = exoScoreMax + interInfo['maxScore'] %}
                 </div>
             </div>
         {% endif %}
@@ -409,12 +394,10 @@
                 <div class="panel panel-default">
                     <div class="panel-heading"><h3>{{ 'mark' | trans }} :</h3></div>
                     <div class="panel-body">
-                        <input type="hidden" value="{{ exoMark }}" id="exoMark" />
-                        <input type="hidden" value="{{ exoScoreMax }}" id="exoScoreMax" />
-                        {% set scoreFinal = exoMark / exoScoreMax %}
+                        {% set scoreFinal = scorePaper / maxExoScore %}
                         {% set scoreFinal = scoreFinal * 20 %}
                         <h4 id="finalLabel">
-                            {% if temporaryMark == true %}
+                            {% if scoreTemp == true %}
                                 {{ "temporary mark" | trans }} :
                             {% else %}
                                 {{ 'final mark' | trans }} :

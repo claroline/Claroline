@@ -151,7 +151,9 @@ class PaperController extends Controller
             return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $paper->getExercise()->getId())));
         }
 
-        $interactions = $this->getDoctrine()
+        $infosPaper = $this->container->get('ujm.exercise_services')->getInfosPaper($paper);
+
+        /*$interactions = $this->getDoctrine()
             ->getManager()
             ->getRepository('UJMExoBundle:Interaction')
             ->getPaperInteraction($em, str_replace(';', '\',\'', substr($paper->getOrdreQuestion(), 0, -1)));
@@ -163,22 +165,25 @@ class PaperController extends Controller
             ->getRepository('UJMExoBundle:Response')
             ->getPaperResponses($paper->getUser()->getId(), $id);
 
-        $responses = $this->orderResponses($responses, $paper->getOrdreQuestion());
+        $responses = $this->orderResponses($responses, $paper->getOrdreQuestion());*/
 
         $hintViewed = $this->getDoctrine()
             ->getManager()
             ->getRepository('UJMExoBundle:LinkHintPaper')
             ->getHintViewed($paper->getId());
 
-        $nbMaxQuestion = count($interactions);
+        $nbMaxQuestion = count($infosPaper['interactions']);
 
         return $this->render(
             'UJMExoBundle:Paper:show.html.twig',
             array(
                 'workspace'     => $worspace,
                 'exoId'         => $paper->getExercise()->getId(),
-                'interactions'  => $interactions,
-                'responses'     => $responses,
+                'interactions'  => $infosPaper['interactions'],
+                'responses'     => $infosPaper['responses'],
+                'scorePaper'    => $infosPaper['scorePaper'],
+                'scoreTemp'     => $infosPaper['scoreTemp'],
+                'maxExoScore'   => $infosPaper['maxExoScore'],
                 'hintViewed'    => $hintViewed,
                 'correction'    => $paper->getExercise()->getCorrectionMode(),
                 'display'       => $display,
@@ -248,53 +253,6 @@ class PaperController extends Controller
         return $this->createFormBuilder(array('id' => $id))
                     ->add('id', 'hidden')
                     ->getForm();
-    }
-
-    private function orderInteractions($interactions, $order)
-    {
-        $inter = array();
-        $order = substr($order, 0, strlen($order) - 1);
-        $order = explode(';', $order);
-
-        foreach ($order as $interId) {
-            foreach ($interactions as $key => $interaction) {
-                if ($interaction->getId() == $interId) {
-                    $inter[] = $interaction;
-                    unset($interactions[$key]);
-                    break;
-                }
-            }
-        }
-
-        return $inter;
-    }
-
-    private function orderResponses($responses, $order)
-    {
-        $resp = array();
-        $order = substr($order, 0, strlen($order) - 1);
-        $order = explode(';', $order);
-        foreach ($order as $interId) {
-            $tem = 0;
-            foreach ($responses as $key => $response) {
-                if ($response->getInteraction()->getId() == $interId) {
-                    $tem++;
-                    $resp[] = $response;
-                    unset($responses[$key]);
-                    break;
-                }
-            }
-            //if no response
-            if ($tem == 0) {
-                $response = new \UJM\ExoBundle\Entity\Response();
-                $response->setResponse('');
-                $response->setMark(0);
-
-                $resp[] = $response;
-            }
-        }
-
-        return $resp;
     }
 
     private function checkAccess($exo)
