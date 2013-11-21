@@ -72,6 +72,8 @@
 
         <hr/>
 
+        <h6 style="color: red; text-align: right;">(Copies nécessitant une correction manuelle).</h6>
+
         <div>
             {% if papers is not empty %}
                 <table class="table table-striped table-bordered table-condensed records_list" id="UserArray">
@@ -105,11 +107,11 @@
                                 <i class="icon-chevron-down" id="downE"  style="display: none;"></i>
                                 {{ 'end date' | trans }}
                             </th>
-                            <th class="classic">{{ 'isInterupt' | trans }}
-                            </th>
+                            <th class="classic">{{ 'isInterupt' | trans }}</th>
                             {% if display != 'none' %}
-                                <th class="classic">{{ 'actions' | trans }}
-                                </th>
+                                <th class="classic">{{ 'actions' | trans }}</th>
+
+                                <th class="classic">{{ 'mark' | trans }}</th>
                             {% endif %}
                         </tr>
                     </thead>
@@ -150,6 +152,16 @@
                                         </li>
                                     </ul>
                                 </td>
+
+                                {% set scoreFinal = arrayMarkPapers[paper.id].scorePaper / arrayMarkPapers[paper.id].maxExoScore %}
+                                {% set scoreFinal = scoreFinal * 20 %}
+                                {% set scoreFinal = roundUpOrDown(scoreFinal) %}
+
+                                {% if arrayMarkPapers[paper.id].scoreTemp == true %}
+                                    <td class="classic" style="color: red;"> {{ scoreFinal }} / 20</td>
+                                {% else %}
+                                    <td class="classic"> {{ scoreFinal }} / 20</td>
+                                {% endif %}
                             {% endif %}
                         </tr>
                     {% endfor %}

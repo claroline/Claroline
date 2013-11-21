@@ -62,6 +62,7 @@ class PaperController extends Controller
     public function indexAction($exoID, $page)
     {
         $exoAdmin = false;
+        $arrayMarkPapers = array();
 
         $user = $this->container->get('security.context')->getToken()->getUser();
 
@@ -113,6 +114,10 @@ class PaperController extends Controller
             $display = 'all';
         }
 
+        foreach ($paper as $p) {
+            $arrayMarkPapers[$p->getId()] = $this->container->get('ujm.exercise_services')->getInfosPaper($p);
+        }
+
         return $this->render(
             'UJMExoBundle:Paper:index.html.twig',
             array(
@@ -122,7 +127,8 @@ class PaperController extends Controller
                 'pager'     => $pagerfanta,
                 'exoID'     => $exoID,
                 'display'   => $display,
-                '_resource' => $exercise
+                '_resource' => $exercise,
+                'arrayMarkPapers' => $arrayMarkPapers
             )
         );
     }
