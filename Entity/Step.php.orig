@@ -14,8 +14,12 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Step
 {
+<<<<<<< HEAD
     /**
      * Unique identifier of the step
+=======
+     /**
+>>>>>>> master-arnaud
      * @var integer
      *
      * @ORM\Column(name="id", type="integer")
@@ -49,11 +53,16 @@ class Step
     protected $stepOrder;
 
     /**
+<<<<<<< HEAD
      * Parent step
      * @var \Innova\PathBundle\Entity\Step
      * 
      * @ORM\ManyToOne(targetEntity="Step", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
+=======
+     * @ORM\ManyToOne(targetEntity="Step")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+>>>>>>> master-arnaud
      */
     protected $parent;
 
@@ -527,27 +536,27 @@ class Step
      */
     public function getSiblings()
     {
-        $siblings = array ();
-        
         $parent = $this->getParent();
-        if (!empty($parent)) {
-            // Current step has a parent
-            $siblings = $parent->getChildren();
-        
-            // Remove current step from parent children
-            $siblings->removeElement($this);
-            $siblings = $siblings->toArray();
-            
-            // Order siblings by stepOrder
-            $sortSiblings = function ($a, $b) {
-                if ($a->stepOrder === $b->stepOrder) {
-                    return 0;
-                }
-                return ($a->stepOrder > $b->stepOrder) ? -1 : 1;
-            };
-            
-            uasort($siblings, $sortSiblings);
+        if (empty($parent)) {
+            // Current step has no parent
+            throw new \Exception('Unable to find siblings for Innova\PathBundle\Entity\Step (ID = ' . $this->id . '). Step has no parent.');
         }
+        
+        $siblings = $parent->getChildren();
+        
+        // Remove current step from parent children
+        $siblings->removeElement($this);
+        $siblings = $siblings->toArray();
+        
+        // Order siblings by stepOrder
+        $sortSiblings = function ($a, $b) {
+            if ($a->stepOrder === $b->stepOrder) {
+                return 0;
+            }
+            return ($a->stepOrder > $b->stepOrder) ? -1 : 1;
+        };
+        
+        uasort($siblings, $sortSiblings);
         
         return $siblings;
     }

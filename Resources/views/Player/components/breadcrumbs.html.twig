@@ -9,7 +9,7 @@
     
     {# Current path #}
     <li>
-        <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id}) }}">
+        <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: currentStep.id}) }}">
             <span class="icon-road"></span>
             {{ path.resourceNode.name }}
         </a>

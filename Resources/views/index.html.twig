@@ -47,7 +47,7 @@
                     </td>
                     <td align="right">
                     {% if path.deployed %}
-                        <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id}) }}" data-original-title="{{ 'play' | trans({}, 'innova_tools') }}" class="btn btn-xs btn-default" />
+                        <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: path.getRootStep().id}) }}" data-original-title="{{ 'play' | trans({}, 'innova_tools') }}" class="btn btn-xs btn-default" />
                             <span class="icon-play"></span>
                         </a>
                     {% endif %}

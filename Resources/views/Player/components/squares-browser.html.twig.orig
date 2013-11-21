@@ -1,0 +1,39 @@
+<<<<<<< HEAD
+square browser
+=======
+<div class="panel panel-default tree">
+    <div class="panel-body">
+
+    {# Affichage des parents et leurs frères. #}
+    {% if currentStep.lvl > 0 %}
+        {% for i in 0..currentStep.lvl - 1 %}
+            {% for parent in allParents[i] %}
+                <a rel="tooltip" data-original-title="{{ parent.name}}" class="parent step btn btn-lg btn-default lvl-{{ i }}" href="{{ path('innova_step_show', { workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : parent.id }) }}">
+                <div class="parent-siblings-{{ i }}">
+                {% for item in parent.siblings %}
+                    <a rel="tooltip" data-original-title="{{ parent.name }}" class="parent-sibling step btn btn-lg btn-default lvl-{{ i }}" href="{{ path('innova_step_show', { workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : parent.id }) }}">
+                {% endfor %}
+                </div>
+            {% endfor %}
+            <span class="separator"></span>
+        {% endfor %}
+    {% endif %}
+
+    {# Affichage de l'élément courant et de ses frères. #}
+    <a rel="tooltip" data-original-title="{{ currentStep.name }}" class="current step btn btn-lg btn-default lvl-{{ i }}" href="{{ path('innova_step_show', { workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : currentStep.id }) }}">
+    {% for sibling in currentStep.siblings %}
+            <a rel="tooltip" data-original-title="{{ sibling.name }}" class="step btn btn-lg btn-default lvl-{{ sibling.lvl }}" href="{{ path('innova_step_show', { workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : sibling.id }) }}">
+            </a>
+    {% endfor %}
+        
+    {# Affichage des enfants de l'élément courant #}
+    {% if children %}
+        <span class="separator"></span>
+        {% for child in children %}
+        <a rel="tooltip" data-original-title="{{ child.name }}" class="btn step children btn-lg btn-default" href="{{ path('innova_step_show', { workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : child.id }) }}">
+        </a>
+        {% endfor %}
+    {% endif %}
+    </div>
+</div>
+>>>>>>> master-arnaud

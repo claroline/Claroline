@@ -1,0 +1,66 @@
+.path-player .breadcrumbs ul {
+    background-color: #F5F5F5;
+    border-radius: 3px;
+<<<<<<< HEAD
+    font-size: 0;
+=======
+>>>>>>> master-arnaud
+}
+
+.path-player .breadcrumbs ul,
+.path-player .breadcrumbs ul > li {
+    padding: 0;
+    list-style-type: none;
+}
+
+.path-player .breadcrumbs ul > li {
+    display: inline-block;
+    background-color: rgb(235, 235, 235);
+    position: relative;
+<<<<<<< HEAD
+    font-size: 14px;
+=======
+>>>>>>> master-arnaud
+}
+
+.path-player .breadcrumbs ul > li:first-child {
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.path-player .breadcrumbs ul > li > a {
+    display: block;
+    padding: 8px 16px;
+    padding-left: 28px;
+    line-height: 20px;
+}
+
+.path-player .breadcrumbs ul > li > a:after {
+    content: "";
+    position: absolute;
+    right: -18px;
+    top: 0;
+    z-index: 5;
+    border-top:    18px solid rgba(0,0,0,0);
+    border-bottom: 18px solid rgba(0,0,0,0);
+    border-left:   18px solid rgb(235, 235, 235);
+}
+
+.path-player .breadcrumbs ul > li > a:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-top:    18px solid rgba(0, 0, 0, 0);
+    border-bottom: 18px solid rgba(0, 0, 0, 0);
+    border-left:   18px solid #fff;
+}
+
+.path-player .breadcrumbs ul > li:first-child > a {
+    padding-left: 18px;
+}
+
+.path-player .breadcrumbs ul > li:first-child > a:before {
+    border: none;
+}
+

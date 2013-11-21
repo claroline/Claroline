@@ -12,11 +12,15 @@
         </div>
         
         <div class="squares-browser">
-            {{ render(controller('innova.controller.path_player:displaySquaresBrowserAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep} )) }}
+<<<<<<< HEAD
+            {{ render(controller('innova.controller.path_player:displaySquaresBrowserAction')) }}
         </div>
         
         <div class="resources">
             {{ render(controller('innova.controller.path_player:displayResourcesAction')) }}
+=======
+            {{ render(controller('innova.controller.path_player:displaySquaresBrowserAction', {'path': path, 'currentStep': currentStep} )) }}
+>>>>>>> master-arnaud
         </div>
         
         <div class="current-step">
