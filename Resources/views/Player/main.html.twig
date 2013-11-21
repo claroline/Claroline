@@ -2,28 +2,30 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/main.css') }}"/>
-    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/squares-browser.css') }}"/>
+    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/breadcrumbs.css') }}"/>
+	<link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/squares-browser.css') }}"/>
 {% endblock %}
 
 {% block content %}
-    <div class="path-player">
-        <div class="breadcrumbs">
-            {{ render(controller('innova.controller.path_player:displayBreadcrumbsAction', { 'workspace': workspace, 'path': path })) }}
-        </div>
+<div class="path-player">
+    <div class="breadcrumbs">
+        {{ render(controller('innova.controller.path_player:displayBreadcrumbsAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
+    </div>
         
-        <div class="squares-browser">
-            {{ render(controller('innova.controller.path_player:displaySquaresBrowserAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep} )) }}
-        </div>
+    <div class="squares-browser">
+        {{ render(controller('innova.controller.path_player:displaySquaresBrowserAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
+    </div>
         
-        <div class="resources">
+    <div class="content row">
+        <div class="resources col-md-3">
             {{ render(controller('innova.controller.path_player:displayResourcesAction')) }}
         </div>
         
-        <div class="current-step">
-            {{ render(controller('innova.controller.path_player:displayCurrentStepAction', {'currentStep': currentStep})) }}
+        <div class="current-step col-md-9">
+            {{ render(controller('innova.controller.path_player:displayCurrentStepAction', { 'currentStep': currentStep })) }}
         </div>
     </div>
+</div>
 {% endblock %}
 
 {% block javascripts %}
