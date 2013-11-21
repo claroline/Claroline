@@ -1,0 +1,52 @@
+<form class="tree-item form-inline" ng-class="{'active-step': previewStep.id == step.id}" ng-click="setPreviewStep(step)" ng-mouseenter="showButtons = step.id" ng-mouseleave="showButtons = null">
+    <span ng-show="currentEditingStep != step.id && step.image == null" class="icon-chevron-right"></span>
+    <img ng-show="currentEditingStep != step.id && step.image != null" height="28" src="{{ webDir }}images/steps/{{ step.image }}" />
+    <span ng-show="currentEditingStep != step.id" class="step-name">{{ step.name | truncate }}</span>
+
+    <div ng-show="currentEditingStep == step.id"  class="input-group input-group-sm">
+        <input type="text" value="{{ step.name }}" ng-model="step.name" class="form-control" />
+        <span class="input-group-btn">
+            <button class="btn btn-default" type="button" ng-click="closeEditStepName()"><span class="icon-ok"></span></button>
+        </span>
+    </div>
+
+    <span ng-show="showButtons == step.id && currentEditingStep != step.id" class="pull-right">
+        <!-- Ajout du bouton pour l'édition. -->
+        <!-- Voir TreeCtrl.js pour editStepName -->
+        <button class="btn btn-default btn-xs" ng-click="editStepName(step)" tooltip="Edit step name" ng-hide="isRootNode" >
+            <i class="icon-pencil"></i>
+        </button>
+
+        <button class="btn btn-default btn-xs" ng-click="addChild(step)" tooltip="Add a child">
+            <i class="icon-plus"></i>
+        </button>
+
+        <button ng-hide="isRootNode" class="btn btn-default btn-xs" ng-click="addSibling(step)" tooltip="Add a sibling">
+            <i class="icon-plus-sign"></i>
+        </button>
+
+        <button class="btn btn-default btn-xs" ng-click="copy(step)" tooltip="Copy">
+            <i class="icon-copy"></i>
+        </button>
+
+        <button class="btn btn-default btn-xs" ng-click="paste(step)" ng-disabled="pasteDisabled" tooltip="Paste">
+            <i class="icon-paste"></i>
+        </button>
+
+        <button class="btn btn-info btn-xs" ng-click="editTemplate(step)" tooltip="Add to favorites">
+            <i class="icon-heart"></i>
+        </button>
+
+        <button ng-hide="isRootNode" class="btn btn-danger btn-xs" ng-click="remove(step)" tooltip="Delete">
+            <i class="icon-trash"></i>
+        </button>
+
+        <button class="btn btn-danger btn-xs" ng-click="removeChildren(step)" ng-show="step.children.length > 0" tooltip="Delete children">
+            <i class="icon-list"></i>
+        </button>
+    </span>
+</form>
+
+<ul ui-sortable="sortableOptions" ng-model="step.children">
+    <li ng-repeat="step in step.children" ng-include="webDir + 'angularjs/Step/Partial/tree-item.html'" onload="isRootNode = false"></li>
+</ul>

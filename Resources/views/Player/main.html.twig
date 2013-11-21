@@ -1,175 +1,22 @@
-{% extends "ClarolineCoreBundle::layout.html.twig" %}
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/app.css') }}"/>
-    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/step-edit.css') }}"/>
-    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/navbar.css') }}"/>
-    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/player.css') }}"/>
+    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/main.css') }}"/>
 {% endblock %}
 
 {% block content %}
-    <div ng-cloak class="col-md-12 section-content" ng-app="playerApp">
-        <div class="panel panel-default panel-path-editor" ng-controller="MainCtrl">
-            <div class="panel-heading">
-                <h3 class="panel-title" id="player-header">
-                    {# {{ 'path' | trans({}, 'innova_tools') }} : #} <strong>{{ path.resourceNode.name }}</strong>
-                </h3>
-                <div class="editor-buttons">
-                    <a href="{{ path('claro_workspace_open_tool', {workspaceId: workspace.id, toolName: 'innova_path'}) }}" class="btn btn-danger btn-sm" tooltip="{{ 'back_to_paths_list' | trans({}, 'innova_tools') }}"><span class="icon-reply"></span></a>
-                </div>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-3">
-                         <div class="panel panel-default">
-                            <div class="panel-heading"><i class="icon-pushpin"></i> {{ 'informations' | trans({}, 'innova_tools') }}</div>
-                            <div class="panel-body">
-                                {% if step.duration|date('H:i') !=  "00:00" %} 
-                                    <img rel="tooltip" data-original-title="{{ 'duration' | trans({}, 'innova_tools') }}" src="{{ asset('bundles/innovapath/images/icons/time.png') }}"/>  {{ step.duration|date('H:i') }} 
-                                {% endif %}
-                                {% if step.stepWho %} 
-                                    <img rel="tooltip" data-original-title="{{ step.stepWho.name | trans({}, 'innova_tools') }}" src="{{ asset('bundles/innovapath/images/icons/who/'~ step.stepWho.id  ~'.png') }}"/>
-                                {% endif %}
-                                {% if step.stepWhere %} 
-                                    <img rel="tooltip" data-original-title="{{ step.stepWhere.name | trans({}, 'innova_tools') }}" src="{{ asset('bundles/innovapath/images/icons/where/'~ step.stepWhere.id  ~'.png') }}"/> 
-                                {% endif %}
-                                {% if step.withComputer %}
-                                    <img rel="tooltip" data-original-title="{{ 'with_computer' | trans({}, 'innova_tools') }}" src="{{ asset('bundles/innovapath/images/icons/computer.png') }}"/>
-                                {% else %}  
-                                    <img rel="tooltip" data-original-title="{{ 'without_computer' | trans({}, 'innova_tools') }}" src="{{ asset('bundles/innovapath/images/icons/no_computer.png') }}"/>
-                                {% endif %}
-                                {% if step.withTutor %}
-                                    <img rel="tooltip" data-original-title="{{ 'with_tutor' | trans({}, 'innova_tools') }}" src="{{ asset('bundles/innovapath/images/icons/tutor.png') }}"/>
-                                {% else %}  
-                                    <img rel="tooltip" data-original-title="{{ 'without_tutor' | trans({}, 'innova_tools') }}" src="{{ asset('bundles/innovapath/images/icons/no_tutor.png') }}"/>
-                                {% endif %}
-                            </div>
-                        </div>
-                        
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><i class="icon-briefcase"></i>  {{ 'resources' | trans({}, 'innova_tools') }}</div>
-                            <div class="panel-body">
-                                <input type="hidden" id="step-id" value="{{ path('innova_herited_resources', {stepId: step.id}) }}"/>
-                                <div id="herited-resources"></div>
-                                {% if resources %}
-                                <div class="panel panel-default">
-                                    <div class="panel-heading"><strong>{{ 'local' | trans({}, 'innova_tools') }}</strong></div>
-                                    <div class="panel-body">
-                                        {% for resource in resources["digital"] %}
-                                            <a target="_blank" href="{{ path('claro_resource_open', {'resourceType': resource.resourceType.name, 'node': resource.id })  }}?_mode=path"><img rel="tooltip" data-original-title="{{ resource.name }}" width="32px" src="{{asset(resource.icon.relativeUrl) }}"/></a>
-                                        {% endfor %}
-                                        {% for resource in resources["nonDigital"] %}
-                                            <img rel="tooltip" data-original-title="{{ resource.resourceNode.name }}" width="32px" src="{{ asset('bundles/innovapath/images/icons/document/32x32/'~ resource.nonDigitalResourceType.name  ~'.png') }}"/>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-9">
-                        <div class="row" id="step-map">
-                    <div id="step-map-body" data-status="closed">
-                        <table id="smallTree" class="table">
-                        <tbody>
-                        <tr>
-                            <td>
-                                {% if step.parent.id %}
-                                    <a class="btn btn-default " href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.parent.id }) }}">{{ 'back_to' | trans({}, 'innova_tools') }} <strong>{{step.parent.name}}</strong> <span class="icon-arrow-left"></span></a> 
-                                {% else %}
-                                    {# <a class="btn btn-success" disabled=disabled href="#">Début du parcours</a> #}
-                                {% endif %}
-                            </td>
-                            <td class="text-center">
-                                <a class="btn btn-primary" disabled=disabled href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : step.id }) }}">{{ 'current_position' | trans({}, 'innova_tools') }} : <strong>{{step.name}}</strong></a>
-                            </td>
-                            <td>
-                            {% if children %}
-                                <div >
-                                    {% for child in children %}
-                                           <a class="btn btn-default" href="{{ path('innova_step_show', {workspaceId: workspace.id, pathId: path.resourceNode.id, stepId : child.id }) }}"><span class="icon-arrow-right"></span> {{child.name}}</a>
-                                     {% endfor %}
-                                </div>
-                            {% else %}
-                                    {# <a class="btn btn-danger pull-right" disabled=disabled href="#">Fin du parcours</a>  #}
-                            {% endif %}
-                            </td>
-                        </tr>
-                        </tbody>
-                        </table>
-                    </div>
-                    <div id="step-map-buttons">
-                        <span id="step-map-open">
-                            <a class="btn btn-default icon-chevron-down step-map-button"> {{ 'progression' | trans({}, 'innova_tools') }}</a>
-                        </span>
-                    </div>
-                </div>
-                        <div class="text-center">
-                            <h1>{{ step.name }}</h1>
-                            {% if step.image %}
-                                <img src="{{ asset('bundles/innovapath/images/steps/' ~  step.image) }}"/>
-                            {% endif %}
-                        </div>
-                        {% if step.instructions|raw %}
-                        <div class="justified">
-                            <strong>{{ 'instructions' | trans({}, 'innova_tools') }} :</strong>   {{ step.instructions }}
-                        </div>
-                        {% endif %}
-                    </div>
-                    <!--
-                    <div class="col-md-3">
-                        <h3><i class="icon-wrench"></i> Informations</h3>
-                    </div>
-                    -->
-                </div>
-
-            </div>
+    <div class="path-player">
+        <div class="breadcrumbs">
+            {{ render(controller('innova.controller.path_player:displayBreadcrumbsAction', { 'workspace': workspace, 'path': path })) }}
+        </div>
+        
+        <div class="squares-browser">
+            {{ render(controller('innova.controller.path_player:displaySquaresBrowserAction', {'path': path, 'currentStep': currentStep} )) }}
+        </div>
+        
+        <div class="current-step">
+            {{ render(controller('innova.controller.path_player:displayCurrentStepAction', {'currentStep': currentStep})) }}
         </div>
     </div>
-{% endblock %}
-
-{% block javascripts %}
-    {# Load Claroline JS #}
-    {{ parent() }}
-    
-    {# Load Angular Libraries #}
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-cookies.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-loader.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-resource.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularjs/js/angular-sanitize.min.js') }}"></script>
-    
-    {# Angular UI #}
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/ui-bootstrap-0.6.0.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularui/js/ui-bootstrap-tpls-0.6.0.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovaangularpageslide/js/angular-pageslide-directive.js') }}"></script>
-    
-   
-    {# Main #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Player/Controller/MainCtrl.js') }}"></script>
-    
-    {# Help  #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Help/Controller/HelpModalCtrl.js') }}"></script>
-    
-    {# Resources #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Resource/Factory/ResourceFactory.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Resource/Controller/ResourceModalCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Resource/Controller/ResourceSidebarCtrl.js') }}"></script>
-    
-    {# Templates #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Template/Factory/TemplateFactory.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Template/Controller/TemplateCtrl.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Template/Controller/TemplateModalCtrl.js') }}"></script>
-    
-    {# Global APP #}
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Player/PlayerApp.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Player/player.js') }}"></script>
-
-    <script type="text/javascript">
-        // TODO : find more beautiful
-        playerApp.pathId = "{{ path.id }}";
-        playerApp.workspaceId = "{{ workspace.id }}";
-        playerApp.templateRoute = "{{ asset('bundles/innovapath/js/Player/Partial/') }}";
-    </script>
 {% endblock %}

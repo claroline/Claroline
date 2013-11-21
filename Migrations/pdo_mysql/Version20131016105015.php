@@ -15,14 +15,14 @@ class Version20131016105015 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            CREATE TABLE innova_stepType (
+            CREATE TABLE IF NOT EXISTS innova_stepType (
                 id INT AUTO_INCREMENT NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
-            CREATE TABLE innova_step2resourceNode (
+            CREATE TABLE IF NOT EXISTS innova_step2resourceNode (
                 id INT AUTO_INCREMENT NOT NULL, 
                 step_id INT DEFAULT NULL, 
                 propagated TINYINT(1) NOT NULL, 
@@ -35,7 +35,7 @@ class Version20131016105015 extends AbstractMigration
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
-            CREATE TABLE innova_user2path (
+            CREATE TABLE IF NOT EXISTS innova_user2path (
                 id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT NOT NULL, 
                 path_id INT NOT NULL, 
@@ -46,7 +46,7 @@ class Version20131016105015 extends AbstractMigration
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
-            CREATE TABLE innova_pathtemplate (
+            CREATE TABLE IF NOT EXISTS innova_pathtemplate (
                 id INT AUTO_INCREMENT NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
                 description LONGTEXT DEFAULT NULL, 
@@ -55,14 +55,14 @@ class Version20131016105015 extends AbstractMigration
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
-            CREATE TABLE innova_stepWhere (
+            CREATE TABLE IF NOT EXISTS innova_stepWhere (
                 id INT AUTO_INCREMENT NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
-            CREATE TABLE innova_path (
+            CREATE TABLE IF NOT EXISTS innova_path (
                 id INT AUTO_INCREMENT NOT NULL, 
                 path LONGTEXT NOT NULL, 
                 deployed TINYINT(1) NOT NULL, 
@@ -73,14 +73,14 @@ class Version20131016105015 extends AbstractMigration
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
-            CREATE TABLE innova_stepWho (
+            CREATE TABLE IF NOT EXISTS innova_stepWho (
                 id INT AUTO_INCREMENT NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
-            CREATE TABLE innova_nonDigitalResource (
+            CREATE TABLE IF NOT EXISTS innova_nonDigitalResource (
                 id INT AUTO_INCREMENT NOT NULL, 
                 description LONGTEXT NOT NULL, 
                 type VARCHAR(255) NOT NULL, 
@@ -90,7 +90,7 @@ class Version20131016105015 extends AbstractMigration
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
-            CREATE TABLE innova_step (
+            CREATE TABLE IF NOT EXISTS innova_step (
                 id INT AUTO_INCREMENT NOT NULL, 
                 parent_id INT DEFAULT NULL, 
                 path_id INT DEFAULT NULL, 

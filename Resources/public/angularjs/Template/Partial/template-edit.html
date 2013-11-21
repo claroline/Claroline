@@ -1,0 +1,49 @@
+<div class="modal-header">
+    <h4 class="modal-title"><i class="icon-pencil"></i> Editing template : <strong>&lt;{{ formTemplate.name }}&gt;</strong></h4>
+</div>
+
+<div class="modal-body">
+    <form name="templateForm" role="form">
+        <fieldset class="row">
+            <div class="form-group col-md-12">
+                <label for="template-name">Name</label>
+                <input type="text" name="template-name" ng-class="{'ng-invalid': !pathTemplateName.isUnique, 'ng-valid': pathTemplateName.isUnique}" ng-model="formTemplate.name" class="form-control" value="{{ formTemplate.name }}" />
+                <p class="help-block"><span ng-class="{'text-danger': !pathTemplateName.isUnique}">Name must be unique.</span></p>
+            </div>
+            
+            <div class="form-group col-md-12">
+                <label for="template-description">Description</label>
+                <textarea class="form-control" name="template-description" id="template-description" cols="30" rows="4" ng-model="formTemplate.description"></textarea>
+            </div>
+            
+            <div ng-hide="undefined != formTemplate.id && null != formTemplate.id && formTemplate.id.length != 0" class="form-group col-md-12">
+                <label class="checkbox">
+                    <input type="checkbox" ng-model="formTemplate.withResources" />
+                    Save documents &amp; tools too ?
+                </label>
+            </div>
+            
+            <input type="hidden" ng-model="formTemplate.step" value="{{ formTemplate.step }}" name="template-step" />
+        </fieldset>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span class="icon-road"></span> Selected steps
+                    </div>
+                    <div class="panel-body">
+                        <ul class="tree">
+                            <li ng-include="webDir + 'angularjs/Template/Partial/tree-item.html'" onload="step = formTemplate.step"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="save(formTemplate)" ng-disabled="!templateForm.$valid">Save template</button>
+    <button class="btn btn-default cancel" ng-click="close()">Cancel</button>
+</div>

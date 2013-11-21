@@ -1,0 +1,41 @@
+services: 
+    # Path controller
+    innova.controller.path:
+        class: %innova.controller.path.class%
+        arguments:
+            entityManager:   @doctrine.orm.entity_manager
+            session:         @session
+            securityContext: @security.context
+            router:          @router
+            translator:      @translator
+            pathManager:     @innova.manager.path_manager
+        calls:
+          - [setRequest, ["@?request="]]
+        scope: request
+        
+    # Step controller
+    innova.controller.step:
+        class: %innova.controller.step.class%
+        arguments:
+            entityManager:   @doctrine.orm.entity_manager
+            securityContext: @security.context
+            stepManager:     @innova.manager.step_manager
+        calls:
+          - [setRequest, ["@?request="]]
+        scope: request
+        
+    # Path template controller
+    innova.controller.path_template:
+        class: %innova.controller.path_template.class%
+        arguments:
+            entityManager:       @doctrine.orm.entity_manager
+            pathTemplateManager: @innova.manager.pathtemplate_manager
+        calls:
+          - [setRequest, ["@?request="]]
+        scope: request
+        
+    # Player controller
+    innova.controller.path_player:
+        class: %innova.controller.path_player.class%
+        calls:
+          - [setContainer, ["@service_container"]]

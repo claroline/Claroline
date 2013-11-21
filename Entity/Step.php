@@ -13,7 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Step
 {
-
      /**
      * @var integer
      *
@@ -45,9 +44,9 @@ class Step
     private $stepOrder;
 
     /**
-    * @ORM\ManyToOne(targetEntity="Step")
-    * @ORM\JoinColumn(onDelete="CASCADE")
-    */
+     * @ORM\ManyToOne(targetEntity="Step")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
     protected $parent;
 
     /**
