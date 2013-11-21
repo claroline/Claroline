@@ -3,7 +3,9 @@
 namespace Innova\PathBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+
 /**
  * Path
  *
@@ -13,6 +15,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 class Path extends AbstractResource
 {
     /**
+     * JSON structure of the path
      * @var string
      *
      * @ORM\Column(name="path", type="text")
@@ -20,13 +23,16 @@ class Path extends AbstractResource
     private $path;
 
     /**
-    * @ORM\OneToMany(targetEntity="Step", mappedBy="path")
-    */
+     * Steps linked to the path
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * 
+     * @ORM\OneToMany(targetEntity="Step", mappedBy="path")
+     */
     protected $steps;
 
     /**
-    * @ORM\OneToMany(targetEntity="User2Path", mappedBy="path")
-    */
+     * @ORM\OneToMany(targetEntity="User2Path", mappedBy="path")
+     */
     protected $users;
 
     /**
@@ -55,8 +61,8 @@ class Path extends AbstractResource
      */
     public function __construct()
     {
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->steps = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->users = new ArrayCollection();
+        $this->steps = new ArrayCollection();
         $this->deployed = false;
         $this->modified = false;
     }
@@ -64,7 +70,7 @@ class Path extends AbstractResource
     /**
      * Set path
      * @param  string $path
-     * @return Path
+     * @return \Innova\PathBundle\Entity\Path
      */
     public function setPath($path)
     {
@@ -85,7 +91,7 @@ class Path extends AbstractResource
     /**
      * Set deployed
      * @param  boolean $deployed
-     * @return Path
+     * @return \Innova\PathBundle\Entity\Path
      */
     public function setDeployed($deployed)
     {
@@ -95,10 +101,10 @@ class Path extends AbstractResource
     }
 
     /**
-     * Get deployed
+     * Is path already deployed
      * @return boolean
      */
-    public function getDeployed()
+    public function isDeployed()
     {
         return $this->deployed;
     }
@@ -106,7 +112,7 @@ class Path extends AbstractResource
     /**
      * Set modified
      * @param  boolean $modified
-     * @return Path
+     * @return \Innova\PathBundle\Entity\Path
      */
     public function setModified($modified)
     {
@@ -116,27 +122,18 @@ class Path extends AbstractResource
     }
 
     /**
-     * Get modified
+     * Is path modified since the last deployement
      * @return boolean
      */
-    public function getModified()
+    public function isModified()
     {
         return $this->modified;
     }
 
     /**
-     * Get id
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * Add step
      * @param  \Innova\PathBundle\Entity\Step $step
-     * @return Path
+     * @return \Innova\PathBundle\Entity\Path
      */
     public function addStep(\Innova\PathBundle\Entity\Step $step)
     {
@@ -153,6 +150,8 @@ class Path extends AbstractResource
     public function removeStep(\Innova\PathBundle\Entity\Step $step)
     {
         $this->steps->removeElement($step);
+        
+        return $this;
     }
 
     /**
