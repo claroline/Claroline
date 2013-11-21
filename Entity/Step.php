@@ -540,10 +540,10 @@ class Step
             
             // Order siblings by stepOrder
             $sortSiblings = function ($a, $b) {
-                if ($a->stepOrder === $b->stepOrder) {
+                if ($a->getStepOrder() === $b->getStepOrder()) {
                     return 0;
                 }
-                return ($a->stepOrder > $b->stepOrder) ? -1 : 1;
+                return ($a->getStepOrder() < $b->getStepOrder()) ? -1 : 1;
             };
             
             uasort($siblings, $sortSiblings);
@@ -564,6 +564,16 @@ class Step
         if (!empty($parent)) {
             $parents[] = $parent;
             $parents = array_merge($parents, $parent->getParents());
+            
+            // Sort parents
+            $sortParents = function ($a, $b) {
+                if ($a->getLvl() === $b->getLvl()) {
+                    return 0;
+                }
+                return ($a->getLvl() < $b->getLvl()) ? -1 : 1;
+            };
+            
+            uasort($parents, $sortParents);
         }
         
         return $parents;
