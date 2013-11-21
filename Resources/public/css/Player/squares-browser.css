@@ -12,7 +12,7 @@
     border-color:grey;
 }
 
-.squares-browser .step:first-child {
+.squares-browser .parent-siblings:first-child .step:first-child {
     margin-left: 0;
 }
 

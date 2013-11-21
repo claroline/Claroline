@@ -6,18 +6,18 @@
             {% set parentSiblings = parent.getSiblings() %}
             {% set parentIsDisplayed = false %}
             {% for parentSibling in parentSiblings %}
-                {% if parentSibling.stepOrder == currentStep.stepOrder + 1 and not parentIsDisplayed %}
+                {% if parentSibling.stepOrder == parent.stepOrder + 1 and not parentIsDisplayed %}
                     {% set parentIsDisplayed = true %}
                     <a rel="tooltip" data-original-title="{{ parent.name}}" class="parent step current btn btn-lg btn-default lvl-{{ parent.lvl }}" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId : parent.id }) }}"></a>
                 {% endif %}
                 <a rel="tooltip" data-original-title="{{ parentSibling.name }}" class="parent-sibling step btn btn-lg btn-default lvl-{{ parentSibling.lvl }}" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId : parentSibling.id }) }}"></a>
             {% endfor %}
+
+	        {% if not parentIsDisplayed %}
+	            <a rel="tooltip" data-original-title="{{ parent.name}}" class="parent step current btn btn-lg btn-default lvl-{{ parent.lvl }}" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId : parent.id }) }}"></a>
+	        {% endif %}
         </div>
-
-        {% if not parentIsDisplayed %}
-            <a rel="tooltip" data-original-title="{{ parent.name}}" class="parent step current btn btn-lg btn-default lvl-{{ parent.lvl }}" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId : parent.id }) }}"></a>
-        {% endif %}
-
+        
         <div class="separator"></div>
     {% endfor %}
 {% endif %}
