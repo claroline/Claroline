@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle::layout.html.twig" %}
 
-{% block title %}{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}{% endblock %}
+{% block title %}{{ user.getLastName() ~ ' ' ~ user.getFirstName() | striptags | raw }}{% endblock %}
 
 {% block content %}
     <div class="panel panel-default panel-user">

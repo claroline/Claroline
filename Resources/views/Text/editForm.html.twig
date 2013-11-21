@@ -6,7 +6,7 @@
 
 {% extends layout %}
 
-{% block title %}{{ _resource.getResourceNode().getName() }}{% endblock %}
+{% block title %}{{ _resource.getResourceNode().getName() | striptags | raw }}{% endblock %}
 
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_text_open', {'text': _resource.getId()} ) }}">{{ _resource.getResourceNode().getName() }}</a></li>

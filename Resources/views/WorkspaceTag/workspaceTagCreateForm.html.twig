@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:WorkspaceTag:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ "create_new_tag" | trans({}, "platform") }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ "create_new_tag" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{

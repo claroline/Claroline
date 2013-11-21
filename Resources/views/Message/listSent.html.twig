@@ -39,7 +39,7 @@
 
 {% extends 'ClarolineCoreBundle:Message:layout.html.twig' %}
 
-{% block title %}{{ 'messages_sent' | trans({}, 'platform') }}{% endblock %}
+{% block title %}{{ 'messages_sent' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block section_content %}
     <div class="search-bar row">

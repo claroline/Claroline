@@ -4,7 +4,7 @@
 
 {% trans_default_domain "badge" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'edit_badge' | trans }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'edit_badge' | trans | striptags | raw }}{% endblock %}
 
 {% block collection_widget %}
     {% spaceless %}

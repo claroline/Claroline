@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{% block title %}{{ 'messages' | trans({}, 'platform') }}{% endblock %}
+{% block title %}{{ 'messages' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block content %}
     <div class="panel panel-default">

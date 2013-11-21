@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{% block title %}{{ 'administration'|trans({}, 'platform') }}{% endblock %}
+{% block title %}{{ 'administration'|trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block leftbar %}
     <div class="list-group menu">

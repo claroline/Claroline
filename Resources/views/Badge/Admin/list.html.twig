@@ -2,7 +2,7 @@
 
 {% trans_default_domain "badge" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'badges_management' | trans }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'badges_management' | trans | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
