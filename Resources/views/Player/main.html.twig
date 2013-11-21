@@ -12,7 +12,7 @@
         </div>
         
         <div class="squares-browser">
-            {{ render(controller('innova.controller.path_player:displaySquaresBrowserAction')) }}
+            {{ render(controller('innova.controller.path_player:displaySquaresBrowserAction', {'path': path, 'currentStep': currentStep} )) }}
         </div>
         
         <div class="resources">

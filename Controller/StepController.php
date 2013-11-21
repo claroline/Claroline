@@ -167,62 +167,6 @@ class StepController
         );
     }
 
-    /**
-     * Finds and displays a Step entity.
-     * @return array
-     * 
-     * @Route("/path/{pathId}/step/{stepId}", name="innova_pass_show")
-     * @Method("GET")
-     * @Template("InnovaPathBundle:Player:pass.html.twig")
-     */
-    public function showPassAction($pathId, $stepId)
-    {
-        // TODO : put it into a manager or repository
-        $step = $this->entityManager->getRepository('InnovaPathBundle:Step')->findOneById($stepId);
-        $path = $this->entityManager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
-        $root = $this->entityManager->getRepository('InnovaPathBundle:Step')->findOneBy(array('path' => $path, 'parent' => null));
-        $children = $this->entityManager->getRepository('InnovaPathBundle:Step')->findByParent($step);
-        $siblings = $this->entityManager->getRepository('InnovaPathBundle:Step')->findBy(array('parent' => $step->getParent(), 'path' => $path));
-        $resources = $this->stepManager->getStepResourceNodes($step);
-        
-        return array(
-            'step' => $step,
-            'siblings' => $siblings,
-            'resources' => $resources,
-            'fullPath' => $fullPath,
-            'path' => $path,
-            'children' => $children,
-            'allParents' => $allParents,
-            'root' => $root
-        );
-    }
-
-    /**
-     * @todo put it into a manager or repository and remove function
-     */
-    private function getAllParents(Step $step, array &$allParents)
-    {
-        if ($step->getParent()) {
-            $allParents[$step->getParent()->getLvl()] = $step->getParent();
-            $this->getAllParents($step->getParent(), $allParents);
-        }
-    }
-
-    /**
-     * @todo put it into a manager or repository and remove function
-     */
-    private function getFullPath(Step $step, Path $path, array &$fullPath)
-    {
-        if ($stepParent = $step->getParent()) {
-            if ($parentSiblings = $this->entityManager->getRepository('InnovaPathBundle:Step')->findBy(array('parent' => $stepParent->getParent(), 'path' => $path))) {
-                foreach ($parentSiblings as $parentSibling) {
-                    $fullPath[$stepParent->getLvl()][] = $parentSibling;
-                }
-                $this->getFullPath($parentSiblings[0], $path, $fullPath);
-            }
-        }
-        
-    }
 
     /**
      * Get available resources for current user
