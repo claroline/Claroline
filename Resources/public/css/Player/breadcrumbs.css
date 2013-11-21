@@ -26,7 +26,7 @@
 .path-player .breadcrumbs ul > li > a {
     display: block;
     padding: 8px 16px;
-    padding-left: 28px;
+    padding-left: 30px;
     line-height: 20px;
 }
 
@@ -52,7 +52,7 @@
 }
 
 .path-player .breadcrumbs ul > li:first-child > a {
-    padding-left: 18px;
+    padding-left: 16px;
 }
 
 .path-player .breadcrumbs ul > li:first-child > a:before {
