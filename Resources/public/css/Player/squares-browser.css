@@ -33,22 +33,41 @@
     border-color:black;
 }
 
+
+
 .lvl-0{
-	background-color:#468966;
+	background-color:#32742C;
 }
 
 .lvl-1{
-	background-color:#FFF0A5;
+	background-color:#E54028;
 }
 
 .lvl-2{
-	background-color:#FFB03B;
+	background-color:#00A1CB;
 }
 
 .lvl-3{
-	background-color:#B64926;
+	background-color:#F18D05;
 }
 
 .lvl-4{
-	background-color:#8E2800;
+	background-color:#616161;
 }
+
+.lvl-5{
+	background-color:#61AE24;
+}
+
+.lvl-6{
+	background-color:#00A1CB;
+}
+
+.lvl-7{
+	background-color:#D70060;
+}
+
+
+
+
+

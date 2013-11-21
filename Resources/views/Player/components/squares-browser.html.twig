@@ -44,7 +44,7 @@
 {% if currentStep.children is not empty %}
     <div class="separator"></div>
     {% for child in currentStep.children %}
-    <a rel="tooltip" data-original-title="{{ child.name }}" class="btn step children btn-lg btn-default" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId : child.id }) }}">
+    <a rel="tooltip" data-original-title="{{ child.name }}" class="btn step btn-lg btn-default" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId : child.id }) }}">
     </a>
     {% endfor %}
 {% endif %}
