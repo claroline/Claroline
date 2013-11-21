@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Entity\Event;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -32,26 +33,30 @@ class WorkspaceAgendaController extends Controller
     private $formFactory;
     private $om;
     private $request;
+    private $rm;
 
     /**
      * @DI\InjectParams({
      *     "security"           = @DI\Inject("security.context"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "request"            = @DI\Inject("request")
+     *     "request"            = @DI\Inject("request"),
+     *     "rm"                =  @DI\Inject("claroline.manager.role_manager")
      * })
      */
     public function __construct(
         SecurityContextInterface $security,
         FormFactory $formFactory,
         ObjectManager $om,
-        Request $request
+        Request $request,
+        RoleManager $rm
     )
     {
         $this->security = $security;
         $this->formFactory = $formFactory;
         $this->om = $om;
         $this->request = $request;
+        $this->rm = $rm;
     }
 
     /**
@@ -211,8 +216,22 @@ class WorkspaceAgendaController extends Controller
     {
 
         $this->checkUserIsAllowed('agenda', $workspace);
+        $usr = $this->security->getToken()->getUser();
+        $rm = $this->rm->getManagerRole($workspace);
+        $ru = $this->rm->getWorkspaceRolesForUser($usr, $workspace);
+       // var_dump($rm);
+        //var_dump($ru);
         $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')
             ->findbyWorkspaceId($workspace->getId(), false);
+        $role = '';
+        foreach ($ru as $role )
+        {
+            if ($role->getTranslationKey() === $rm->getTranslationKey() ) {
+                $role = true;
+            } else {
+                $role = false;
+            }
+        }
         $data = array();
         foreach ($listEvents as $key => $object) {
             $data[$key]['id'] = $object->getId();
@@ -222,6 +241,8 @@ class WorkspaceAgendaController extends Controller
             $data[$key]['end'] = $object->getEnd()->getTimestamp();
             $data[$key]['color'] = $object->getPriority();
             $data[$key]['description'] = $object->getDescription();
+            $data[$key]['owner'] = $object->getUser()->getUsername();
+            $data[$key]['editable'] = $role;
         }
 
         return new Response(
