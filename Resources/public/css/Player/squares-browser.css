@@ -1,38 +1,31 @@
 
-.lvl-0{
-	background-color:grey;
+.squares-browser{
+	vertical-align: middle;
 }
 
-.lvl-1 {
+.squares-browser .step{
 	background-color:lightgrey;
-}
-
-.lvl-2 {
-	background-color:white;
-}
-
-#square-browser{
-	clear:both;
-	height: 40px;
-}
-
-#square-browser .step{
+	vertical-align: middle;
 	width:40px;
 	height:40px;
 	border:2px solid black;
-	float:left;
 	margin:0 5px;
-	position:relative;
+	display:inline-block;
 } 
 
 
-#square-browser .separator{
-	float:left;
-	display:block;
+.squares-browser .separator{
+	vertical-align: middle;
+	display:inline-block;
 	height:40px;
 	width:2px;
 	background-color:black;
-	margin:0 5px;
-
 }
 
+.squares-browser .parent-siblings{
+	display:inline-block;
+}
+
+.squares-browser .current{
+	background-color:red;
+}
