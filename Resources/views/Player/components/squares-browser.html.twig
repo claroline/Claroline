@@ -16,8 +16,9 @@
 {# Affichage de l'élément courant et de ses frères. #}
 
 {% set siblings = currentStep.getSiblings() %}
+{% set currentStepIsDisplayed = false %}
 {% for sibling in siblings %}
-    {% if sibling.stepOrder == currentStep.stepOrder + 1 and currentStepIsDisplayed is not defined %}
+    {% if sibling.stepOrder == currentStep.stepOrder + 1 and not currentStepIsDisplayed %}
         {% set currentStepIsDisplayed = true %}
         <a rel="tooltip" data-original-title="{{ currentStep.name }}" class="current step btn btn-lg btn-default lvl-{{ currentStep.lvl }}" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId : currentStep.id }) }}"></a>
     {% endif %}
@@ -25,7 +26,7 @@
     </a>
 {% endfor %}
 
-{% if currentStepIsDisplayed is not defined %}
+{% if not currentStepIsDisplayed %}
     <a rel="tooltip" data-original-title="{{ currentStep.name }}" class="current step btn btn-lg btn-default lvl-{{ currentStep.lvl }}" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId : currentStep.id }) }}"></a>
 {% endif %}
 
