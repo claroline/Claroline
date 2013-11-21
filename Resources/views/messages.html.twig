@@ -22,6 +22,8 @@
 
 {% extends layout %}
 
+{% block title %}{{ _resource.getResourceNode().getName() ~ '(' ~ subject.getTitle() ~ ')' ~ ' - ' ~ parent() | striptags | raw  }}{% endblock %}
+
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_forum_subjects', { 'forumId': _resource.getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
     <li class="active">{{ subject.getTitle() }}</li>
@@ -83,6 +85,7 @@
         <div>
             {{ renderPager(subject.getId(), pager) }}
         </div>
+        {% if canAnswer %}<h4><i class="icon-reply"></i> {{ 'new_message' | trans({}, 'forum') }}:</h4>{% endif %}
     </div>
     {% if canAnswer %}
         <div class='creator'>

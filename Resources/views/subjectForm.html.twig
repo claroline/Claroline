@@ -6,6 +6,8 @@
 
 {% extends layout %}
 
+{% block title %}{{ 'search' | trans({}, 'platform') ~ ' (' ~ _resource.getResourceNode().getName() ~ ')' ~ ' - ' ~ parent() | striptags | raw  }}{% endblock %}
+
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_forum_subjects', { 'forumId': _resource.getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
     <li class="active">{{ 'new_subject'|trans({}, 'forum') }}</li>

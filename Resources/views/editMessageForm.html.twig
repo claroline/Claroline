@@ -6,6 +6,8 @@
 
 {% extends layout %}
 
+{% block title %}{{ 'edit' | trans({}, 'forum') ~ ' (' ~ subject.getTitle() ~ ')' ~ ' - ' ~ parent() | striptags | raw  }}{% endblock %}
+
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_forum_subjects', { 'forumId': _resource.getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
     <li><a href="{{ path('claro_forum_messages', {'subjectId': subject.getId()}) }}">{{ subject.getTitle() }}</a></li>

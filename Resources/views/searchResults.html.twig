@@ -22,15 +22,19 @@
 
 {% extends layout %}
 
+{% block title %}{{ 'search' | trans({}, 'platform') ~ ' (' ~ _resource.getResourceNode().getName() ~ ')' ~ ' - ' ~ parent() | striptags | raw  }}{% endblock %}
+
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_forum_subjects', { 'forumId': _resource.getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
     <li class="active">{{ 'search'|trans({}, 'platform')}}</li>
 {% endblock %}
 
 {% block section_content %}
-
-<div>
-    <div class="navbar">
+<div class="panel-heading">
+    <h3 class="panel-title">{{ 'search' | trans({}, 'platform') ~ ' (' ~ _resource.getResourceNode().getName() ~ ')'  }}</h3>
+</div>
+<div class="panel-body">
+    <div class="row">
         <div class="col-md-6">
             {{ renderPager(_resource, search, pager, page) }}
         </div>
