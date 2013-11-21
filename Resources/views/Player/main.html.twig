@@ -3,6 +3,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/main.css') }}"/>
+    <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/squares-browser.css') }}"/>
 {% endblock %}
 
 {% block content %}
@@ -23,4 +24,9 @@
             {{ render(controller('innova.controller.path_player:displayCurrentStepAction', {'currentStep': currentStep})) }}
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Player/squares-browser.js') }}"></script>
 {% endblock %}

@@ -1,6 +1,4 @@
-<div class="panel panel-default tree">
-    <div class="panel-body">
-
+<div id="square-browser">
     {# Affichage des parents et leurs frères. #}
     {% set allParents = currentStep.getParents() %}
     {% if allParents is defined and allParents is not empty %}
@@ -9,10 +7,9 @@
             <div class="parent-siblings-{{ i }}">
                 {% set parentSiblings = parent.getSiblings() %}
                 {% for parentSibling in parentSiblings %}
-                    {{ parentSibling.id }}
                     <a rel="tooltip" data-original-title="{{ parentSibling.name }}" class="parent-sibling step btn btn-lg btn-default lvl-{{ i }}" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId : parentSibling.id }) }}"></a>
                 {% endfor %}
-                </div>
+            </div>
             <span class="separator"></span>
         {% endfor %}
     {% endif %}
@@ -33,5 +30,4 @@
         </a>
         {% endfor %}
     {% endif %}
-    </div>
 </div>
