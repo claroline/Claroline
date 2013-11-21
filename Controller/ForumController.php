@@ -434,7 +434,8 @@ class ForumController extends Controller
         return array(
             'form' => $form->createView(),
             'subjectId' => $subject->getId(),
-            'forumId' => $subject->getForum()->getId()
+            'forumId' => $subject->getForum()->getId(),
+            '_resource' => $subject->getForum()
         );
     }
 
@@ -453,7 +454,9 @@ class ForumController extends Controller
     public function editSubjectAction(Subject $subject)
     {
         $sc = $this->get('security.context');
-        $isModerator = $sc->isGranted('moderate', new ResourceCollection(array($subject->getForum()->getResourceNode())));
+        $isModerator = $sc->isGranted(
+            'moderate', new ResourceCollection(array($subject->getForum()->getResourceNode()))
+        );
         $em = $this->getDoctrine()->getManager();
 
         if (!$isModerator && $sc->getToken()->getUser() !== $subject->getCreator()) {
@@ -474,10 +477,11 @@ class ForumController extends Controller
             );
         }
 
-       return array(
+        return array(
             'form' => $form->createView(),
             'subjectId' => $subject->getId(),
-            'forumId' => $subject->getForum()->getId()
+            'forumId' => $subject->getForum()->getId(),
+            '_resource' => $subject->getForum()
         );
     }
 
