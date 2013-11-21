@@ -187,6 +187,7 @@ class Path extends AbstractResource
     
     /**
      * Get root step of the path
+     * @throws \Exception
      * @return \Innova\PathBundle\Entity\Step
      */
     public function getRootStep()

@@ -4,6 +4,7 @@ namespace Innova\PathBundle\Entity;
 
 use Innova\PathBundle\Entity\Step2ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Step
@@ -13,115 +14,197 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Step
 {
-     /**
+    /**
+     * Unique identifier of the step
      * @var integer
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
-     /**
+    /**
+     * Name of the step
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
      */
-    private $name;
+    protected $name;
 
     /**
+     * Depth of the step in the Path
      * @var integer
      *
      * @ORM\Column(name="lvl", type="integer")
      */
-    private $lvl;
+    protected $lvl;
 
     /**
+     * Order of the steps relative to his siblings in the path
      * @var integer
      *
      * @ORM\Column(name="stepOrder", type="integer")
      */
-    private $stepOrder;
+    protected $stepOrder;
 
     /**
-    * @ORM\ManyToOne(targetEntity="Step")
-    * @ORM\JoinColumn(onDelete="CASCADE")
-    */
+     * Parent step
+     * @var \Innova\PathBundle\Entity\Step
+     * 
+     * @ORM\ManyToOne(targetEntity="Step", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
+     */
     protected $parent;
 
+    /**
+     * Children steps
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * 
+     * @ORM\OneToMany(targetEntity="Step", mappedBy="parent")
+     */
+    protected $children;
+    
     /**
      * @var boolean
      *
      * @ORM\Column(name="expanded", type="boolean")
      */
-    private $expanded;
+    protected $expanded;
 
     /**
      * @var string
      *
      * @ORM\Column(name="instructions", type="text", nullable=true)
      */
-    private $instructions = null;
+    protected $instructions = null;
 
     /**
      * @var string
      *
      * @ORM\Column(name="image", type="string", length=255, nullable=true)
      */
-    private $image;
+    protected $image;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="withTutor", type="boolean")
      */
-    private $withTutor;
+    protected $withTutor;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="withComputer", type="boolean")
      */
-    private $withComputer;
+    protected $withComputer;
 
     /**
+     * Step duration
      * @var \DateTime
      *
      * @ORM\Column(name="duration", type="datetime")
      */
-    private $duration;
+    protected  $duration;
 
     /**
-    * @ORM\ManyToOne(targetEntity="Path", inversedBy="steps")
-    * @ORM\JoinColumn(onDelete="CASCADE")
-    */
+     * Path
+     * @var Innova\PathBundle\Entity\Path
+     * 
+     * @ORM\ManyToOne(targetEntity="Path", inversedBy="steps")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
     protected $path;
 
     /**
-    * @ORM\ManyToOne(targetEntity="StepType", inversedBy="steps")
-    */
+     * Type of the step
+     * @var \Innova\PathBundle\Entity\StepType
+     * 
+     * @ORM\ManyToOne(targetEntity="StepType", inversedBy="steps")
+     */
     protected $stepType;
 
     /**
-    * @ORM\ManyToOne(targetEntity="StepWho", inversedBy="steps")
-    */
+     * @ORM\ManyToOne(targetEntity="StepWho", inversedBy="steps")
+     */
     protected $stepWho;
 
     /**
-    * @ORM\ManyToOne(targetEntity="StepWhere", inversedBy="steps")
-    */
+     * @ORM\ManyToOne(targetEntity="StepWhere", inversedBy="steps")
+     */
     protected $stepWhere;
 
     /**
-    * @ORM\OneToMany(targetEntity="Step2ResourceNode", mappedBy="step")
-    */
+     * @ORM\OneToMany(targetEntity="Step2ResourceNode", mappedBy="step")
+     */
     protected $step2ResourceNodes;
 
     /**
+     * Class constructor
+     */
+    public function __construct()
+    {
+        $this->children = new ArrayCollection();
+        $this->step2ResourceNodes = new ArrayCollection();
+    }
+    
+    
+    /**
+     * Get id
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+    
+    /**
+     * Set name
+     * @param string $name
+     * @return \Innova\PathBundle\Entity\Step
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    
+        return $this;
+    }
+    
+    /**
+     * Get name
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+    
+    /**
+     * Set lvl
+     * @param integer $lvl
+     * @return \Innova\PathBundle\Entity\Step
+     */
+    public function setLvl($lvl)
+    {
+        $this->lvl = $lvl;
+    
+        return $this;
+    }
+    
+    /**
+     * Get lvl
+     * @return integer
+     */
+    public function getLvl()
+    {
+        return $this->lvl;
+    }
+    
+    /**
      * Set expanded
-     *
      * @param  boolean $expanded
-     * @return Step
+     * @return \Innova\PathBundle\Entity\Step
      */
     public function setExpanded($expanded)
     {
@@ -132,7 +215,6 @@ class Step
 
     /**
      * Get expanded
-     *
      * @return boolean
      */
     public function getExpanded()
@@ -142,9 +224,8 @@ class Step
 
     /**
      * Set instructions
-     *
      * @param  string $instructions
-     * @return Step
+     * @return \Innova\PathBundle\Entity\Step
      */
     public function setInstructions($instructions)
     {
@@ -155,7 +236,6 @@ class Step
 
     /**
      * Get instructions
-     *
      * @return string
      */
     public function getInstructions()
@@ -165,9 +245,8 @@ class Step
 
     /**
      * Set image
-     *
      * @param  string $image
-     * @return Step
+     * @return \Innova\PathBundle\Entity\Step
      */
     public function setImage($image)
     {
@@ -178,7 +257,6 @@ class Step
     
     /**
      * Get image
-     *
      * @return string
      */
     public function getImage()
@@ -188,9 +266,8 @@ class Step
 
     /**
      * Set withTutor
-     *
      * @param  boolean $withTutor
-     * @return Step
+     * @return \Innova\PathBundle\Entity\Step
      */
     public function setWithTutor($withTutor)
     {
@@ -201,19 +278,17 @@ class Step
 
     /**
      * Get withTutor
-     *
      * @return boolean
      */
-    public function getWithTutor()
+    public function isWithTutor()
     {
         return $this->withTutor;
     }
 
     /**
      * Set withComputer
-     *
      * @param  boolean $withComputer
-     * @return Step
+     * @return \Innova\PathBundle\Entity\Step
      */
     public function setWithComputer($withComputer)
     {
@@ -224,19 +299,17 @@ class Step
 
     /**
      * Get withComputer
-     *
      * @return boolean
      */
-    public function getWithComputer()
+    public function isWithComputer()
     {
         return $this->withComputer;
     }
 
     /**
      * Set duration
-     *
      * @param  \DateTime $duration
-     * @return Step
+     * @return \Innova\PathBundle\Entity\Step
      */
     public function setDuration($duration)
     {
@@ -247,7 +320,6 @@ class Step
 
     /**
      * Get duration
-     *
      * @return \DateTime
      */
     public function getDuration()
@@ -256,20 +328,9 @@ class Step
     }
 
     /**
-     * Get deployable
-     *
-     * @return boolean
-     */
-    public function getDeployable()
-    {
-        return $this->deployable;
-    }
-
-    /**
      * Set stepOrder
-     *
      * @param  integer $stepOrder
-     * @return Step
+     * @return \Innova\PathBundle\Entity\Step
      */
     public function setStepOrder($stepOrder)
     {
@@ -279,8 +340,7 @@ class Step
     }
 
     /**
-     * Get stepOrder
-     *
+     * Get oreder of the step
      * @return integer
      */
     public function getStepOrder()
@@ -288,12 +348,10 @@ class Step
         return $this->stepOrder;
     }
 
-  
     /**
-     * Set stepType
-     *
+     * Set type of the step
      * @param  \Innova\PathBundle\Entity\StepType $stepType
-     * @return Step
+     * @return \Innova\PathBundle\Entity\Step
      */
     public function setStepType(\Innova\PathBundle\Entity\StepType $stepType = null)
     {
@@ -304,7 +362,6 @@ class Step
 
     /**
      * Get stepType
-     *
      * @return \Innova\PathBundle\Entity\StepType
      */
     public function getStepType()
@@ -314,9 +371,8 @@ class Step
 
     /**
      * Set stepWho
-     *
      * @param  \Innova\PathBundle\Entity\StepWho $stepWho
-     * @return Step
+     * @return \Innova\PathBundle\Entity\Step
      */
     public function setStepWho(\Innova\PathBundle\Entity\StepWho $stepWho = null)
     {
@@ -327,7 +383,6 @@ class Step
 
     /**
      * Get stepWho
-     *
      * @return \Innova\PathBundle\Entity\StepWho
      */
     public function getStepWho()
@@ -337,9 +392,8 @@ class Step
 
     /**
      * Set stepWhere
-     *
      * @param  \Innova\PathBundle\Entity\StepWhere $stepWhere
-     * @return Step
+     * @return \Innova\PathBundle\Entity\Step
      */
     public function setStepWhere(\Innova\PathBundle\Entity\StepWhere $stepWhere = null)
     {
@@ -350,7 +404,6 @@ class Step
 
     /**
      * Get stepWhere
-     *
      * @return \Innova\PathBundle\Entity\StepWhere
      */
     public function getStepWhere()
@@ -360,9 +413,8 @@ class Step
 
     /**
      * Set path
-     *
      * @param  \Innova\PathBundle\Entity\Path $path
-     * @return Step
+     * @return \Innova\PathBundle\Entity\
      */
     public function setPath(\Innova\PathBundle\Entity\Path $path = null)
     {
@@ -373,7 +425,6 @@ class Step
 
     /**
      * Get path
-     *
      * @return \Innova\PathBundle\Entity\Path
      */
     public function getPath()
@@ -383,11 +434,10 @@ class Step
 
     /**
      * Set parent
-     *
      * @param  \Innova\PathBundle\Entity\Step $parent
-     * @return Step
+     * @return \Innova\PathBundle\Entity\Step
      */
-    public function setParent(\Innova\PathBundle\Entity\Step $parent = null)
+    public function setParent(Step $parent = null)
     {
         $this->parent = $parent;
 
@@ -396,7 +446,6 @@ class Step
 
     /**
      * Get parent
-     *
      * @return \Innova\PathBundle\Entity\Step
      */
     public function getParent()
@@ -405,20 +454,46 @@ class Step
     }
 
     /**
-     * Constructor
+     * Get children of the step
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function __construct()
+    public function getChildren()
     {
-        $this->step2ResourceNodes = new \Doctrine\Common\Collections\ArrayCollection();
-    }  
-
+        return $this->children;
+    }
+    
+    /**
+     * Add new child to the step
+     * @param \Innova\PathBundle\Entity\Step $step
+     * @return \Innova\PathBundle\Entity\Step
+     */
+    public function addChild(Step $step)
+    {
+        $this->children->add($step);
+        $step->setParent($this);
+        
+        return $this;
+    }
+    
+    /**
+     * Remove a step from children
+     * @param \Innova\PathBundle\Entity\Step $step
+     * @return \Innova\PathBundle\Entity\Step
+     */
+    public function removeChild(Step $step) 
+    {
+        $this->children->removeElement($step);
+        $step->setParent(null);
+        
+        return $this;
+    }
+    
     /**
      * Add step2ResourceNodes
-     *
      * @param \Innova\PathBundle\Entity\Step2ResourceNode $step2ResourceNodes
-     * @return Step
+     * @return \Innova\PathBundle\Entity\Step
      */
-    public function addStep2ResourceNode(\Innova\PathBundle\Entity\Step2ResourceNode $step2ResourceNodes)
+    public function addStep2ResourceNode(Step2ResourceNode $step2ResourceNodes)
     {
         $this->step2ResourceNodes[] = $step2ResourceNodes;
 
@@ -427,80 +502,70 @@ class Step
 
     /**
      * Remove step2ResourceNodes
-     *
      * @param \Innova\PathBundle\Entity\Step2ResourceNode $step2ResourceNodes
      */
-    public function removeStep2ResourceNode(\Innova\PathBundle\Entity\Step2ResourceNode $step2ResourceNodes)
+    public function removeStep2ResourceNode(Step2ResourceNode $step2ResourceNodes)
     {
         $this->step2ResourceNodes->removeElement($step2ResourceNodes);
+        
+        return $this;
     }
 
     /**
      * Get step2ResourceNodes
-     *
      * @return \Doctrine\Common\Collections\Collection 
      */
     public function getStep2ResourceNodes()
     {
         return $this->step2ResourceNodes;
     }
-
-
+    
     /**
-     * Get id
-     *
-     * @return integer 
+     * Get all siblings of the steps
+     * @throws \Exception
+     * @return array
      */
-    public function getId()
+    public function getSiblings()
     {
-        return $this->id;
+        $parent = $this->getParent();
+        if (empty($parent)) {
+            // Current step has no parent
+            throw new \Exception('Unable to find siblings for Innova\PathBundle\Entity\Step (ID = ' . $this->id . '). Step has no parent.');
+        }
+        
+        $siblings = $parent->getChildren();
+        
+        // Remove current step from parent children
+        $siblings->removeElement($this);
+        $siblings = $siblings->toArray();
+        
+        // Order siblings by stepOrder
+        $sortSiblings = function ($a, $b) {
+            if ($a->stepOrder === $b->stepOrder) {
+                return 0;
+            }
+            return ($a->stepOrder > $b->stepOrder) ? -1 : 1;
+        };
+        
+        uasort($siblings, $sortSiblings);
+        
+        return $siblings;
     }
-
+    
     /**
-     * Set name
-     *
-     * @param string $name
-     * @return Step
+     * Get all the parents chain of the step
+     * @return array
      */
-    public function setName($name)
+    public function getParents()
     {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-
-
-    /**
-     * Set lvl
-     *
-     * @param integer $lvl
-     * @return Step
-     */
-    public function setLvl($lvl)
-    {
-        $this->lvl = $lvl;
-
-        return $this;
-    }
-
-    /**
-     * Get lvl
-     *
-     * @return integer 
-     */
-    public function getLvl()
-    {
-        return $this->lvl;
+        $parents = array ();
+        
+        $parent = $this->getParent();
+        if (!empty($parent)) {
+            $parents[] = $parent;
+            $parents = array_merge($parents, $parent->getParents());
+        }
+        
+        return $parents;
     }
 }
