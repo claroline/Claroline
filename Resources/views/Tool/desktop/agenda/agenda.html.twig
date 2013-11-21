@@ -2,7 +2,7 @@
 
 {% set calendarPath = 'bundles/frontend/jquery/plugin/calendar/' %}
 
-{% block title %}{{ parent() ~ ' - ' ~ "agenda" | trans({}, "platform") }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ "agenda" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}

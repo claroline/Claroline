@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
-{% block title %}{{ parent() ~ ' - ' ~ "rename_tool" | trans({}, "platform") }} ({{ wot.getTool().getName()|trans({}, 'platform') }}){% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ "rename_tool" | trans({}, "platform") | striptags | raw }} ({{ wot.getTool().getName()|trans({}, 'platform') | striptags | raw }}){% endblock %}
 
 {% block breadcrumb %}
     {{

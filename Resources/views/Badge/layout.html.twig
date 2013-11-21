@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle::layout.html.twig" %}
 
-{% block title %}{{ 'badge' | trans({}, 'badge') }}{% endblock %}
+{% block title %}{{ 'badge' | trans({}, 'badge') | striptags | raw }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}

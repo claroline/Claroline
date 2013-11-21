@@ -6,7 +6,7 @@
 
 {% extends layout %}
 
-{% block title %}{{ _resource.getResourceNode().getName() }}{% endblock %}
+{% block title %}{{ _resource.getResourceNode().getName() | striptags | raw }}{% endblock %}
 
 {% block section_content %}
     <div class="panel-heading">

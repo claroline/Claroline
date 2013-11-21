@@ -2,7 +2,7 @@
 
 {% trans_default_domain "badge" %}
 
-{% block title %}{{ 'badges' | trans ~ ' - ' ~ 'claim_badge_form' | trans }}{% endblock %}
+{% block title %}{{ 'badges' | trans ~ ' - ' ~ 'claim_badge_form' | trans | striptags | raw }}{% endblock %}
 
 {% block content %}
     <div class="margin border well">
