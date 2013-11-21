@@ -143,6 +143,9 @@ class WorkspaceAgendaController extends Controller
     public function updateAction(AbstractWorkspace $workspace)
     {
         $this->checkUserIsAllowed('agenda', $workspace);
+        if (!$this->checkUserIsAllowedtoWrite($workspace)) {
+            throw new AccessDeniedException();
+        }
         $postData = $this->request->request->all();
         $event = $this->om->getRepository('ClarolineCoreBundle:Event')->find($postData['id']);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
@@ -183,6 +186,9 @@ class WorkspaceAgendaController extends Controller
     {
 
         $this->checkUserIsAllowed('agenda', $workspace);
+        if (!$this->checkUserIsAllowedtoWrite($workspace)) {
+            throw new AccessDeniedException();
+        }
         $repository = $this->om->getRepository('ClarolineCoreBundle:Event');
         $postData = $this->request->request->all();
         $event = $repository->find($postData['id']);
@@ -216,22 +222,9 @@ class WorkspaceAgendaController extends Controller
     {
 
         $this->checkUserIsAllowed('agenda', $workspace);
-        $usr = $this->security->getToken()->getUser();
-        $rm = $this->rm->getManagerRole($workspace);
-        $ru = $this->rm->getWorkspaceRolesForUser($usr, $workspace);
-       // var_dump($rm);
-        //var_dump($ru);
         $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')
             ->findbyWorkspaceId($workspace->getId(), false);
-        $role = '';
-        foreach ($ru as $role )
-        {
-            if ($role->getTranslationKey() === $rm->getTranslationKey() ) {
-                $role = true;
-            } else {
-                $role = false;
-            }
-        }
+        $role = $this->checkUserIsAllowedtoWrite($workspace);
         $data = array();
         foreach ($listEvents as $key => $object) {
             $data[$key]['id'] = $object->getId();
@@ -242,7 +235,11 @@ class WorkspaceAgendaController extends Controller
             $data[$key]['color'] = $object->getPriority();
             $data[$key]['description'] = $object->getDescription();
             $data[$key]['owner'] = $object->getUser()->getUsername();
-            $data[$key]['editable'] = $role;
+            if ($data[$key]['owner'] === $this->security->getToken()->getUser()->getUsername()) {
+                $data[$key]['editable'] = true;
+            } else {
+                $data[$key]['editable'] = $role;
+            }
         }
 
         return new Response(
@@ -265,6 +262,9 @@ class WorkspaceAgendaController extends Controller
         $repository = $this->om->getRepository('ClarolineCoreBundle:Event');
         $event = $repository->find($postData['id']);
         $this->checkUserIsAllowed('agenda', $event->getWorkspace());
+        if (!$this->checkUserIsAllowedtoWrite( $event->getWorkspace())) {
+            throw new AccessDeniedException();
+        }
         // timestamp 1h = 3600
         $newStartDate = strtotime(''.$postData['dayDelta'].' day '.$postData['minuteDelta'].' minute', $event->getStart()->getTimestamp());
         $dateStart = new \DateTime(date('d-m-Y H:i', $newStartDate));
@@ -317,6 +317,21 @@ class WorkspaceAgendaController extends Controller
     {
         if (!$this->security->isGranted($permission, $workspace)) {
             throw new AccessDeniedException();
+        }
+    }
+
+    private function checkUserIsAllowedtoWrite(  AbstractWorkspace $workspace)
+    {
+        $usr = $this->security->getToken()->getUser();
+        $rm = $this->rm->getManagerRole($workspace);
+        $ru = $this->rm->getWorkspaceRolesForUser($usr, $workspace);
+
+        foreach ($ru as $role )
+        {
+            if ($role->getTranslationKey() === $rm->getTranslationKey() ) {
+                return true;
+            }
+            return false;
         }
     }
 
