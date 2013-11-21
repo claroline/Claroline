@@ -4,11 +4,9 @@
 }
 
 .squares-browser .step{
-    background-color:lightgrey;
     vertical-align: middle;
     width:40px;
     height:40px;
-    border:2px solid black;
     margin:0 5px;
     display:inline-block;
 }
@@ -20,9 +18,10 @@
 .squares-browser .separator{
     vertical-align: middle;
     display:inline-block;
-    height:40px;
-    width:2px;
+    height:35px;
+    width:1px;
     background-color:black;
+    margin:0 5px;
 }
 
 .squares-browser .parent-siblings{
@@ -30,5 +29,25 @@
 }
 
 .squares-browser .current{
-    background-color:red;
+    border:2px solid black;
+}
+
+.lvl-0{
+	background-color:#468966;
+}
+
+.lvl-1{
+	background-color:#FFF0A5;
+}
+
+.lvl-2{
+	background-color:#FFB03B;
+}
+
+.lvl-3{
+	background-color:#B64926;
+}
+
+.lvl-4{
+	background-color:#8E2800;
 }
