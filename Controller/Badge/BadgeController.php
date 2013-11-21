@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\Badge;
 
-use Claroline\CoreBundle\Badge\BadgeRuleValidator;
+use Claroline\CoreBundle\Rule\Validator;
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
 use Doctrine\ORM\QueryBuilder;
@@ -57,7 +57,7 @@ class BadgeController extends Controller
         $badgePager = $pagerFactory->createPager($badgeQueryBuilder->getQuery(), $parameters['badgePage'], 10);
         $claimPager = $pagerFactory->createPager($badgeClaimQuery, $parameters['claimPage'], 10);
 
-        $badgeRuleChecker = new BadgeRuleValidator($this->getDoctrine()->getRepository('ClarolineCoreBundle:Log\Log'));
+        $badgeRuleChecker = new Validator($this->getDoctrine()->getRepository('ClarolineCoreBundle:Log\Log'));
 
         return $this->render(
             'ClarolineCoreBundle:Badge:Template/list.html.twig',

@@ -22,5 +22,10 @@ interface RulableInterface
      * @return bool
      */
     public function hasRules();
+
+    /**
+     * @return array
+     */
+    public function getRestriction();
 }
  

@@ -679,4 +679,17 @@ class Badge extends Rulable
             unlink($filePath);
         }
     }
+
+    /**
+     * @return array
+     */
+    public function getRestriction()
+    {
+        $restriction = array();
+        if (null !== $this->getWorkspace()) {
+            $restriction['workspace'] = $this->getWorkspace();
+        }
+
+        return $restriction;
+    }
 }
