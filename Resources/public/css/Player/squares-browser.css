@@ -1,31 +1,34 @@
 .squares-browser{
-	vertical-align: middle;
-	margin-bottom: 20px;
+    vertical-align: middle;
+    margin-bottom: 20px;
 }
 
 .squares-browser .step{
-	background-color:lightgrey;
-	vertical-align: middle;
-	width:40px;
-	height:40px;
-	border:2px solid black;
-	margin:0 5px;
-	display:inline-block;
-} 
+    background-color:lightgrey;
+    vertical-align: middle;
+    width:40px;
+    height:40px;
+    border:2px solid black;
+    margin:0 5px;
+    display:inline-block;
+}
 
+.squares-browser .step:first-child {
+    margin-left: 0;
+}
 
 .squares-browser .separator{
-	vertical-align: middle;
-	display:inline-block;
-	height:40px;
-	width:2px;
-	background-color:black;
+    vertical-align: middle;
+    display:inline-block;
+    height:40px;
+    width:2px;
+    background-color:black;
 }
 
 .squares-browser .parent-siblings{
-	display:inline-block;
+    display:inline-block;
 }
 
 .squares-browser .current{
-	background-color:red;
+    background-color:red;
 }
