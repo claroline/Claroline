@@ -9,6 +9,7 @@
     height:40px;
     margin:0 5px;
     display:inline-block;
+    border-color:grey;
 }
 
 .squares-browser .step:first-child {

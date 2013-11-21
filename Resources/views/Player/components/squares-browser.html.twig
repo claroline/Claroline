@@ -1,12 +1,12 @@
 {# Affichage des parents et leurs frères. #}
 {% set allParents = currentStep.getParents() %}
 {% if allParents is defined and allParents is not empty %}
-    {% for i, parent in allParents %}
-        <a rel="tooltip" data-original-title="{{ parent.name}}" class="parent step btn btn-lg btn-default lvl-{{ i }}" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId : parent.id }) }}"></a>
-        <div class="parent-siblings parent-siblings-{{ i }}">
+    {% for parent in allParents %}
+        <a rel="tooltip" data-original-title="{{ parent.name}}" class="parent step btn btn-lg btn-default lvl-{{ parent.lvl }}" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId : parent.id }) }}"></a>
+        <div class="parent-siblings parent-siblings-{{ parent.lvl }}">
             {% set parentSiblings = parent.getSiblings() %}
             {% for parentSibling in parentSiblings %}
-                <a rel="tooltip" data-original-title="{{ parentSibling.name }}" class="parent-sibling step btn btn-lg btn-default lvl-{{ i }}" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId : parentSibling.id }) }}"></a>
+                <a rel="tooltip" data-original-title="{{ parentSibling.name }}" class="parent-sibling step btn btn-lg btn-default lvl-{{ parentSibling.lvl }}" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId : parentSibling.id }) }}"></a>
             {% endfor %}
         </div>
         <div class="separator"></div>
