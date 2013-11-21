@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class="path-player">
-    <div class="breadcrumbs">
+    <div class="breadcrumbs panel panel-default">
         {{ render(controller('innova.controller.path_player:displayBreadcrumbsAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
     </div>
         
