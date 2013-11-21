@@ -1,5 +1,5 @@
 .path-player .breadcrumbs ul {
-    background-color: #F5F5F5;
+    background-color: #7B7B7B;
     border-radius: 3px;
     font-size: 0;
 }
@@ -13,7 +13,7 @@
 
 .path-player .breadcrumbs ul > li {
     display: inline-block;
-    background-color: rgb(235, 235, 235);
+/*     background-color: rgb(235, 235, 235); */
     position: relative;
     font-size: 14px;
 }
@@ -28,6 +28,9 @@
     padding: 8px 16px;
     padding-left: 30px;
     line-height: 20px;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 1);
 }
 
 .path-player .breadcrumbs ul > li > a:after {
@@ -36,26 +39,48 @@
     right: -18px;
     top: 0;
     z-index: 5;
-    border-top:    18px solid rgba(0,0,0,0);
-    border-bottom: 18px solid rgba(0,0,0,0);
-    border-left:   18px solid rgb(235, 235, 235);
-}
-
-.path-player .breadcrumbs ul > li > a:before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
     border-top:    18px solid rgba(0, 0, 0, 0);
     border-bottom: 18px solid rgba(0, 0, 0, 0);
-    border-left:   18px solid #fff;
+    border-left-width: 18px;
+    border-left-style: solid;
 }
 
-.path-player .breadcrumbs ul > li:first-child > a {
+.path-player .breadcrumbs ul > .lvl-0 > a {
     padding-left: 16px;
 }
 
-.path-player .breadcrumbs ul > li:first-child > a:before {
-    border: none;
+.path-player .breadcrumbs ul > .lvl-0 > a:after {
+    border-left-color: #7B7B7B;
 }
 
+.path-player .breadcrumbs ul > .lvl-1 > a:after {
+    border-left-color: #4790aD;
+}
+
+.path-player .breadcrumbs ul > .lvl-2 > a:after {
+    border-left-color: #8C6796;
+}
+
+.path-player .breadcrumbs ul > .lvl-3 > a:after {
+    border-left-color: #d86178;
+}
+
+.path-player .breadcrumbs ul > .lvl-4 > a:after {
+    border-left-color: #FF7A40;
+}
+
+.path-player .breadcrumbs ul > .lvl-5 > a:after {
+    border-left-color: #FDBE3E;
+}
+
+.path-player .breadcrumbs ul > .lvl-6 > a:after {
+    border-left-color: #b8d855;
+}
+
+.path-player .breadcrumbs ul > .lvl-7 > a:after {
+    border-left-color: #47aD90;
+}
+
+.path-player .breadcrumbs ul > .lvl-8 > a:after {
+    border-left-color: #91deea;
+}

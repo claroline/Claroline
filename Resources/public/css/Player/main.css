@@ -1,0 +1,44 @@
+.lvl-0 {
+    background-color: #7B7B7B;
+    border-color: #4B4B4B;
+}
+
+.lvl-1 {
+    background-color: #4790aD;
+    border-color: #17607D;
+}
+
+.lvl-2 {
+    background-color: #8C6796;
+    border-color: #5C3766;
+}
+
+.lvl-3 {
+    background-color: #d86178;
+    border-color: #a83148;
+}
+
+.lvl-4 {
+    background-color: #FF7A40;
+    border-color: #CF4A30;
+}
+
+.lvl-5 {
+    background-color: #FDBE3E;
+    border-color: #cD8E0E;
+}
+
+.lvl-6 {
+    background-color: #b8d855;
+    border-color: #88A825;
+}
+
+.lvl-7 {
+    background-color: #47aD90;
+    border-color: #177D60;
+}
+
+.lvl-8 {
+    background-color: #91deea;
+    border-color: #61aeba;
+}
