@@ -7,13 +7,20 @@
         </a>
     </li>
     
-    {# Current path #}
+    {# Display all step chain to current selected step #}
+    {% set parents = currentStep.getParents() %}
+    {% for parent in parents %}
     <li>
-        <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: currentStep.id}) }}">
-            <span class="icon-road"></span>
-            {{ path.resourceNode.name }}
+        <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: parent.id}) }}">
+            {{ parent.name }}
         </a>
     </li>
+    {% endfor %}
     
-    {# Display all step chain to current selected step #}
+    {# Display current step #}
+    <li>
+        <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: currentStep.id}) }}">
+            {{ currentStep.name }}
+        </a>
+    </li>
 </ul>
