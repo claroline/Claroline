@@ -143,14 +143,14 @@ class WorkspaceAgendaController extends Controller
     public function updateAction(AbstractWorkspace $workspace)
     {
         $this->checkUserIsAllowed('agenda', $workspace);
-        if (!$this->checkUserIsAllowedtoWrite($workspace)) {
-            throw new AccessDeniedException();
-        }
         $postData = $this->request->request->all();
         $event = $this->om->getRepository('ClarolineCoreBundle:Event')->find($postData['id']);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
         $form->handleRequest($this->request);
         if ($form->isValid()) {
+            if (!$this->checkUserIsAllowedtoWrite($workspace, $event)) {
+                throw new AccessDeniedException();
+            }
             $event->setAllDay($postData['agenda_form']['allDay']);
             $this->om->flush();
 
@@ -186,12 +186,12 @@ class WorkspaceAgendaController extends Controller
     {
 
         $this->checkUserIsAllowed('agenda', $workspace);
-        if (!$this->checkUserIsAllowedtoWrite($workspace)) {
-            throw new AccessDeniedException();
-        }
         $repository = $this->om->getRepository('ClarolineCoreBundle:Event');
         $postData = $this->request->request->all();
         $event = $repository->find($postData['id']);
+        if (!$this->checkUserIsAllowedtoWrite($workspace, $event)) {
+            throw new AccessDeniedException();
+        }
         $this->om->remove($event);
         $this->om->flush();
 
@@ -320,15 +320,20 @@ class WorkspaceAgendaController extends Controller
         }
     }
 
-    private function checkUserIsAllowedtoWrite(  AbstractWorkspace $workspace)
+    private function checkUserIsAllowedtoWrite(AbstractWorkspace $workspace, Event $event = null)
     {
         $usr = $this->security->getToken()->getUser();
         $rm = $this->rm->getManagerRole($workspace);
         $ru = $this->rm->getWorkspaceRolesForUser($usr, $workspace);
-
+        if( !is_null($event))
+        {
+            if ($event->getUser()->getUsername()=== $usr->getUsername()) {
+                return true;
+            }
+        }
         foreach ($ru as $role )
         {
-            if ($role->getTranslationKey() === $rm->getTranslationKey() ) {
+            if ($role->getTranslationKey() === $rm->getTranslationKey()) {
                 return true;
             }
             return false;

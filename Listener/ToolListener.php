@@ -161,10 +161,6 @@ class ToolListener
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, true);
         $usr = $this->container->get('security.context')->getToken()->getUser();
-        $roleUser = $usr->getRoles();
-        if ($usr) {
-
-        }
         if ($usr === 'anon.') {
             return $this->templating->render(
                 'ClarolineCoreBundle:Tool/workspace/agenda:agenda_read_only.html.twig',
