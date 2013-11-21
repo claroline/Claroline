@@ -30,7 +30,7 @@
 }
 
 .squares-browser .current{
-    border:2px solid black;
+    border-color:black;
 }
 
 .lvl-0{
