@@ -11,13 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Badge;
 
-use Claroline\CoreBundle\Badge\Constraints\ResultConstraint;
-use Claroline\CoreBundle\Entity\Log\Log;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Rule\Rule;
+use Claroline\CoreBundle\Rule\Entity\Rule;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class BadgeRule

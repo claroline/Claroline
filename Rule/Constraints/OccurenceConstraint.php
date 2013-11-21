@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Rule\Constraints;
 
-use Claroline\CoreBundle\Entity\Rule\Rule;
+use Claroline\CoreBundle\Rule\Entity\Rule;
 use Claroline\CoreBundle\Entity\Log\Log;
 
 class OccurenceConstraint extends AbstractConstraint

@@ -4,6 +4,8 @@ Badge system
 Claroline provides a badge system based on the [Open Badge][2] standard from
 [Mozilla][3].
 
+It uses the [rule system][4] also provided by Claroline.
+
 Create badges
 -------------
 
@@ -25,7 +27,7 @@ To create a badge you need to provide some mandatories datas :
       expired and needs to be re-upped. Must be formatted "YYYY-MM-DD" or a unix
       timestamp.
 
-Manage badges
+How it works
 -------------
 
 Badge can be issue to a user.
@@ -44,3 +46,4 @@ A badge can be automatically awarded, if configured in this way.
 [1]: ../index.md
 [2]: http://openbadges.org/
 [3]: http://www.mozilla.org/
+[4]: rules.md

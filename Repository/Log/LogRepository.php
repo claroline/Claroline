@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Repository\Log;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Rule\Rule;
+use Claroline\CoreBundle\Rule\Entity\Rule;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;

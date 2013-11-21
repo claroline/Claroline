@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Rule;
 
-use Claroline\CoreBundle\Entity\Rule\Rule;
+use Claroline\CoreBundle\Rule\Entity\Rule;
 
 interface RulableInterface
 {
@@ -12,7 +12,7 @@ interface RulableInterface
     public function getRules();
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Rule\Rule[] $rules
+     * @param \Claroline\CoreBundle\Rule\Entity\Rule[] $rules
      *
      * @return RulableInterface
      */

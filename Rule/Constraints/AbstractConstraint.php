@@ -11,13 +11,13 @@
 
 namespace Claroline\CoreBundle\Rule\Constraints;
 
-use Claroline\CoreBundle\Entity\Rule\Rule;
+use Claroline\CoreBundle\Rule\Entity\Rule;
 use Claroline\CoreBundle\Entity\Log\Log;
 
 abstract class AbstractConstraint implements ConstraintInterface
 {
     /**
-     * @var \Claroline\CoreBundle\Entity\Rule\Rule
+     * @var \Claroline\CoreBundle\Rule\Entity\Rule
      */
     protected $rule;
 

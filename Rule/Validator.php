@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Rule;
 use Claroline\CoreBundle\Rule\Constraints\OccurenceConstraint;
 use Claroline\CoreBundle\Rule\Constraints\ResourceConstraint;
 use Claroline\CoreBundle\Rule\Constraints\ResultConstraint;
-use Claroline\CoreBundle\Entity\Rule\Rule;
+use Claroline\CoreBundle\Rule\Entity\Rule;
 use Claroline\CoreBundle\Rule\Rulable;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Log\Log;
@@ -72,7 +72,7 @@ class Validator
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Rule\Rule $rule
+     * @param \Claroline\CoreBundle\Rule\Entity\Rule $rule
      * @param \Claroline\CoreBundle\Entity\User      $user
      * @param array                                  $restriction
      *
