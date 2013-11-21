@@ -1,7 +1,7 @@
 <ul>
     {# Current workspace #}
     <li>
-        <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.id, 'toolName': 'home'}) }}">
+        <a href="{{ path('claro_workspace_open_tool', {workspaceId: workspace.id, toolName: 'innova_path'}) }}">
             <span class="icon-book"></span>
             {{ workspace.getName() ~ ' - ' ~ workspace.getCode() }}
         </a>
