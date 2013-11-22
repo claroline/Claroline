@@ -39,39 +39,32 @@
         element = typeof(element) !== 'undefined' ? element : null;
 
         $.ajax(home.path + url)
-            .done(
-                function (data)
-                {
-                    var modal = document.createElement('div');
-                    modal.className = 'modal fade';
+        .done(function (data) {
+            var modal = document.createElement('div');
+            modal.className = 'modal fade';
 
-                    if (id) {
-                        modal.setAttribute('id', id);
-                    }
+            if (id) {
+                modal.setAttribute('id', id);
+            }
 
-                    if (element) {
-                        $(modal).data('element', element);
-                    }
+            if (element) {
+                $(modal).data('element', element);
+            }
 
-                    modal.innerHTML = data;
+            modal.innerHTML = data;
 
-                    $(modal).appendTo('body');
+            $(modal).appendTo('body');
 
-                    $(modal).modal('show');
+            $(modal).modal('show');
 
-                    $(modal).on('hidden.bs.modal', function () {
-                        $(this).remove();
-                    });
+            $(modal).on('hidden.bs.modal', function () {
+                $(this).remove();
+            });
 
-                }
-        )
-            .error(
-                    function ()
-                    {
-                        alert('An error occurred!\n\nPlease try again later or check your internet connection');
-                    }
-                  )
-            ;
+        })
+        .error(function () {
+            alert('An error occurred!\n\nPlease try again later or check your internet connection');
+        });
 
     };
 
@@ -127,7 +120,6 @@
         var text = $('.content-text', creatorElement).get(0);
         var type = $(creatorElement).data('type');
         var father = $(creatorElement).data('father');
-        var generatedContent = '';
         var path = '';
         var contentPath = '';
 
@@ -137,87 +129,61 @@
             path = 'content/create';
         }
 
-        if ($(creatorElement).find('.generated-content').html()) {
-            generatedContent = $(creatorElement).find('.generated-content').html();
-        }
-
         if (text.value !== '' || title.value !== '') {
-            $.post(home.path + path,
-                {
-                    'title': title.value,
-                    'text': text.value,
-                    'generated': generatedContent,
-                    'type': type,
-                    'father': father
+            $.post(home.path + path, {
+                'title': title.value,
+                'text': text.value,
+                'type': type,
+                'father': father
+            })
+            .done(function (data) {
+                if (!isNaN(data) && data !== '') {
+                    contentPath = 'content/' + data + '/' + type;
+
+                    var insertElement = function (content) {
+                        $(creatorElement).next().prepend(content).hide().fadeIn('slow');
+                    };
+
+                    if (father) {
+                        contentPath = 'content/' + data + '/' + type + '/' + father;
+
+                        insertElement = function (content)
+                        {
+                            $('.creator' + father).after(content);
+                            $('.creator' + father).find('.collapse' + father).collapse('hide');
+                        };
+                    }
+
+                    $.ajax(home.path + contentPath)
+                    .done(function (data) {
+                        insertElement(data);
+                        $('.contents').trigger('ContentModified');
+                    });
+
+                    title.value = '';
+                    text.value = '';
+                    home.resize(text);
+                } else if (data === 'true') {
+
+                    contentPath = 'content/' + id + '/' + type;
+
+                    if (father) {
+                        creatorElement = $(creatorElement).parents('.creator' + father).get(0);
+                        contentPath = 'content/' + id + '/' + type + '/' + father;
+                    }
+
+                    $.ajax(home.path + contentPath)
+                    .done(function (data) {
+                        $(creatorElement).replaceWith(data);
+                        $('.contents').trigger('ContentModified');
+                    });
+                } else {
+                    home.modal('content/error');
                 }
-            )
-                .done(
-                    function (data)
-                    {
-                        if (!isNaN(data) && data !== '') {
-                            contentPath = 'content/' + data + '/' + type;
-
-                            var insertElement = function (content) {
-                                $(creatorElement).next().prepend(content).hide().fadeIn('slow');
-                            };
-
-                            if (father) {
-                                contentPath = 'content/' + data + '/' + type + '/' + father;
-
-                                insertElement = function (content)
-                                {
-                                    $('.creator' + father).after(content);
-                                    $('.creator' + father).find('.collapse' + father).collapse('hide');
-                                };
-                            }
-
-                            $.ajax(home.path + contentPath)
-                                .done(
-                                        function (data)
-                                        {
-                                            insertElement(data);
-                                            $('.contents').trigger('ContentModified');
-                                        }
-                                )
-                            ;
-
-                            title.value = '';
-                            text.value = '';
-                            home.resize(text);
-                            $(creatorElement).find('.generated').html('');
-
-                        } else if (data === 'true') {
-
-                            contentPath = 'content/' + id + '/' + type;
-
-                            if (father) {
-                                creatorElement = $(creatorElement).parents('.creator' + father).get(0);
-                                contentPath = 'content/' + id + '/' + type + '/' + father;
-                            }
-
-                            $.ajax(home.path + contentPath)
-                                 .done(
-                                    function (data)
-                                    {
-                                        $(creatorElement).replaceWith(data);
-                                        $('.contents').trigger('ContentModified');
-                                    }
-                                )
-                            ;
-
-                        } else {
-                            home.modal('content/error');
-                        }
-                    }
-                )
-                .error(
-                    function ()
-                    {
-                        home.modal('content/error');
-                    }
-                  )
-            ;
-
+            })
+            .error(function () {
+                home.modal('content/error');
+            });
         }
     };
 
@@ -226,24 +192,17 @@
      *
      * @param url The url of a webpage.
      */
-    home.generatedContent = function (creator, url)
+    home.generatedContent = function (url, action)
     {
         $.post(home.path + 'content/graph', { 'generated_content_url': url })
-            .done(
-                function (data)
-                {
-                    if (data !== 'false') {
-                        $(creator).find('.generated').html(data);
-                    }
-                }
-             )
-            .error(
-                function ()
-                {
-                    home.modal('content/error');
-                }
-            )
-        ;
+        .done(function (data) {
+            if (data !== 'false') {
+                action(data);
+            }
+        })
+        .error(function () {
+            home.modal('content/error');
+        });
     };
 
 }());

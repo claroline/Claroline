@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
-{% block title %}{{ parent() ~ ' - ' ~ "admin_logs" | trans({}, "platform") }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ "admin_logs" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{

@@ -10,18 +10,10 @@
         <textarea
             class="claroline-tiny-mce form-control content-text"
             placeholder="{{ "Create" | trans({}, 'home') }} {{ "a content" | trans({}, 'home') }}..."
+            data-resource-picker='off'
             >{% if content is defined %}{{ content.content }}{% endif %}</textarea>
-        <div class="generated">
-            {% if content.generatedContent is defined and content.generatedContent != "" %}
-                <button type="button" class="close">×</button>
-                <div class="generated-content">
-                    {{ content.generatedContent | raw }}
-                </div>
-            {% endif %}
-        </div>
         <div class="navbar navbar-default navbar-static-top">
             <ul class="nav navbar-nav">
-                <!--<li><a href="#"><i class="icon-picture"></i> {{ "Add Pictures" | trans({}, 'home') }}</a></li>-->
                 <li><a class="pointer-hand addlink"><i class="icon-link"></i> {{ "Add a link" | trans({}, 'home') }}</a></li>
                 <li class="divider-vertical"></li>
             </ul>

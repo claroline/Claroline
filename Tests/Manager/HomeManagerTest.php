@@ -131,7 +131,6 @@ class HomeManagerTest extends MockeryTestCase
         $this->repository->shouldReceive('findOneBy')->times(2)->andReturn($this->type, $this->contentType);
         $this->content->shouldReceive('setTitle')->once();
         $this->content->shouldReceive('setContent')->once();
-        $this->content->shouldReceive('setGeneratedContent')->once();
         $this->content->shouldReceive('setModified')->once();
         $this->contentType->shouldReceive('setSize')->once();
         $this->assertEquals(
@@ -194,11 +193,11 @@ class HomeManagerTest extends MockeryTestCase
     public function testContentToRegion()
     {
         $this->markTestSkipped();
-//        $this->repository->shouldReceive('findOneBy')->once()->andReturn($this->contentRegion);
-//        $this->manager->shouldReceive('persist')->once();
-//        $this->manager->shouldReceive('flush')->once();
-//        $this->contentRegion->shouldReceive('setBack')->once();
-//        $this->assertEquals(null, $this->homeManager->contentToRegion($this->region, $this->content));
+        //$this->repository->shouldReceive('findOneBy')->once()->andReturn($this->contentRegion);
+        //$this->manager->shouldReceive('persist')->once();
+        //$this->manager->shouldReceive('flush')->once();
+        //$this->contentRegion->shouldReceive('setBack')->once();
+        //$this->assertEquals(null, $this->homeManager->contentToRegion($this->region, $this->content));
     }
 
     public function testGetCreator()

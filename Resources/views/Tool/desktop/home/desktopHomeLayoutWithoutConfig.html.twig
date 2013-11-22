@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
 
-{% block title %}{{ parent() ~ ' - ' ~ "home" | trans({}, "platform") }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ "home" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{

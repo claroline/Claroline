@@ -25,7 +25,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 class TinymceType extends TextareaType
 {
     private $defaultAttributes = array(
-        'class' => 'tinymce',
+        'class' => 'claroline-tiny-mce hide',
         'data-theme' => 'advanced'
     );
 

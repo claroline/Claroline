@@ -47,7 +47,7 @@ the *path* of the output file that will be stored in the *web* directory.
 ```django
 {% stylesheets
     debug=false
-    filter="lessphp"
+    filter="lessphp, cssmin"
     output="themes/examplebundle-theme/bootstrap.css"
     "@ClarolineExampleBundle/Resources/views/less/example/common.less"
 %}

@@ -46,7 +46,7 @@ class LogRepository extends EntityRepository
         return $this->extractChartData($queryBuilder->getQuery()->getResult(), $range);
     }
 
-    public function countByDayFilteredLogs($action, $range, $userSearch, $actionRestriction, $workspaceIds = null, $unique = false, $resourceType = null)
+    public function countByDayFilteredLogs($action, $range, $userSearch, $actionRestriction, $workspaceIds = null, $unique = false, $resourceType = null, $resourceNodeIds = null)
     {
         $queryBuilder = $this
             ->createQueryBuilder('log')
@@ -67,6 +67,9 @@ class LogRepository extends EntityRepository
 
         if ($workspaceIds !== null and count($workspaceIds) > 0) {
             $queryBuilder = $this->addWorkspaceFilterToQueryBuilder($queryBuilder, $workspaceIds);
+        }
+        if ($resourceNodeIds !== null and count($resourceNodeIds) > 0) {
+            $queryBuilder = $this->addResourceFilterToQueryBuilder($queryBuilder, $resourceNodeIds);
         }
         
         return $this->extractChartData($queryBuilder->getQuery()->getResult(), $range);
@@ -105,7 +108,8 @@ class LogRepository extends EntityRepository
         $actionsRestriction,
         $workspaceIds = null,
         $maxResult = -1,
-        $resourceType = null
+        $resourceType = null,
+        $resourceNodeIds = null
     )
     {
         $queryBuilder = $this
@@ -120,6 +124,9 @@ class LogRepository extends EntityRepository
 
         if ($workspaceIds !== null and count($workspaceIds) > 0) {
             $queryBuilder = $this->addWorkspaceFilterToQueryBuilder($queryBuilder, $workspaceIds);
+        }
+        if ($resourceNodeIds !== null and count($resourceNodeIds) > 0) {
+            $queryBuilder = $this->addResourceFilterToQueryBuilder($queryBuilder, $resourceNodeIds);
         }
 
         if ($maxResult > 0) {
@@ -412,6 +419,21 @@ class LogRepository extends EntityRepository
                 $queryBuilder->setParameter('workspaceId', $workspaceIds[0]);
             } else {
                 $queryBuilder->andWhere("workspace.id IN (:workspaceIds)")->setParameter('workspaceIds', $workspaceIds);
+            }
+        }
+
+        return $queryBuilder;
+    }
+
+    private function addResourceFilterToQueryBuilder($queryBuilder, $resourceNodeIds)
+    {
+        if ($resourceNodeIds !== null and count($resourceNodeIds) > 0) {
+            $queryBuilder->leftJoin('log.resourceNode', 'resource');
+            if (count($resourceNodeIds) == 1) {
+                $queryBuilder->andWhere("resource.id = :resourceId");
+                $queryBuilder->setParameter('resourceId', $resourceNodeIds[0]);
+            } else {
+                $queryBuilder->andWhere("resource.id IN (:resourceNodeIds)")->setParameter('resourceNodeIds', $resourceNodeIds);
             }
         }
 

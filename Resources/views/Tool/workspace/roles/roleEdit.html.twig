@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
-{% block title %}{{ parent() ~ ' - ' ~ "role_edition" | trans({}, "platform") }} ({{ role.getTranslationKey() | trans({}, "platform") }}){% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ "role_edition" | trans({}, "platform") | striptags | raw }} ({{ role.getTranslationKey() | trans({}, "platform") | striptags | raw }}){% endblock %}
 
 {% block breadcrumb %}
     {{

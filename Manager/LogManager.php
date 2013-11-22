@@ -255,13 +255,34 @@ class LogManager
         return $params;
     }
 
+    public function getResourceList($resource, $page, $maxResult = -1)
+    {
+        $resourceNodeIds = array($resource->getResourceNode()->getId());
+
+        $params = $this->getList(
+            $page,
+            'workspace',
+            $this->container->get('claroline.form.resourceLogFilter'),
+            'workspace_log_filter_form',
+            null,
+            $maxResult,
+            $resourceNodeIds,
+            get_class($resource)
+        );
+        $params['_resource'] = $resource;
+
+        return $params;
+    }
+
     public function getList(
         $page,
         $actionsRestriction,
         $logFilterFormType,
         $queryParamName,
         $workspaceIds = null,
-        $maxResult = -1
+        $maxResult = -1,
+        $resourceNodeIds = null,
+        $resourceClass = null
     )
     {
         $request = $this->container->get('request');
@@ -295,8 +316,10 @@ class LogManager
         $data['range'] = $range;
         $data['user'] = $userSearch;
 
-        $filterForm = $this->container->get('form.factory')->create($logFilterFormType);
-        $filterForm->setData($data);
+        if ($resourceClass !== null) {
+            $data['resourceClass'] = $resourceClass;
+        }
+        $filterForm = $this->container->get('form.factory')->create($logFilterFormType, $data);
 
         $data['range'] = $dateRangeToTextTransformer->transform($range);
         $filter = urlencode(json_encode($data));
@@ -321,7 +344,8 @@ class LogManager
             $actionsRestriction,
             $workspaceIds,
             $maxResult,
-            $resourceType
+            $resourceType,
+            $resourceNodeIds
         );
 
         $adapter = new DoctrineORMAdapter($query);
@@ -341,7 +365,8 @@ class LogManager
             $actionsRestriction,
             $workspaceIds,
             false,
-            $resourceType
+            $resourceType,
+            $resourceNodeIds
         );
 
         //List item delegation

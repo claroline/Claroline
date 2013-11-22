@@ -4,7 +4,7 @@
 
 {% trans_default_domain "badge" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'add_badge' | trans }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'add_badge' | trans | striptags | raw }}{% endblock %}
 
 {% block collection_widget %}
     {% spaceless %}
@@ -199,8 +199,6 @@
 
 {% block javascripts %}
 {{ parent() }}
-{% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
-{{ tinymce_init() }}
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jquery.optionTree.js') }}"></script>
 <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
 <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/add.js') }}'></script>

@@ -45,13 +45,6 @@ class Content
     private $content;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="generated_content", type="text", nullable=true)
-     */
-    private $generatedContent;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime")
@@ -182,30 +175,5 @@ class Content
     public function getModified()
     {
         return $this->modified;
-    }
-
-    /**
-     * Set generated_content
-     *
-     * @param  string  $generatedContent
-     * @return Content
-     */
-    public function setGeneratedContent($generatedContent)
-    {
-        if ($generatedContent !== null) {
-            $this->generatedContent = $generatedContent;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get generated_content
-     *
-     * @return string
-     */
-    public function getGeneratedContent()
-    {
-        return $this->generatedContent;
     }
 }

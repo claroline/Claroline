@@ -20,8 +20,3 @@
         </form>
     </div>
 {% endblock %}
-{% block javascripts %}
-    {{ parent() }}
-    {{ tinymce_init() }}
-    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
-{% endblock %}

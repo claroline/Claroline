@@ -48,7 +48,8 @@ class AdminLogFilterType extends AbstractType
                     'attr'               => array('class' => 'input-sm'),
                     'choices'            => $actionChoices,
                     'empty_value'        => 'all',
-                    'empty_data'         => null
+                    'empty_data'         => null,
+                    'theme_options' => array('label_width' => 'col-md-3')
                 )
             )
             ->add(
@@ -57,7 +58,8 @@ class AdminLogFilterType extends AbstractType
                 array(
                     'label'    => 'for period',
                     'required' => false,
-                    'attr'     => array('class' => 'input-sm')
+                    'attr'     => array('class' => 'input-sm'),
+                    'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3')
                 )
             )
             ->add(
@@ -67,7 +69,8 @@ class AdminLogFilterType extends AbstractType
                     'label'            => 'for user',
                     'entity_reference' => 'user',
                     'required'         => false,
-                    'attr'             => array('class' => 'input-sm')
+                    'attr'             => array('class' => 'input-sm'),
+                    'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3')
                 )
             );
     }

@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
-{% block title %}{{ parent() ~ ' - ' ~ "agenda" | trans({}, "tools") }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ "agenda" | trans({}, "tools") | striptags | raw }}{% endblock %}
 
 {% set calendarPath = 'bundles/frontend/jquery/plugin/calendar/' %}
 
@@ -51,9 +51,6 @@
 
 {% block javascripts %}
 {{ parent() }}
-{% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
-{{ tinymce_init() }}
-<script type='text/javascript' src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}' ></script>
 <script type='text/javascript' src='{{ asset(calendarPath ~ 'js/fullcalendar.js') }}' ></script>
 <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/calendar_read_only.js') }}'></script>
 <script type='text/javascript'>

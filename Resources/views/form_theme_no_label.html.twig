@@ -9,7 +9,7 @@
     {% spaceless %}
         <div class="form-group row{% if errors|length > 0 %} has-error{% endif %}">
             {{ form_label(form, label|default(null)) }}
-            {% set ctrl_width = theme_options.control_width is defined ? theme_options.control_width : 'col-md-10' %}
+            {% set ctrl_width = 'col-md-12' %}
             <div class="{{ ctrl_width }}">
                 {{ form_widget(form) }}
                 {{ form_errors(form) }}

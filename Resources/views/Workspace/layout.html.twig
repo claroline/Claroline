@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{% block title %}{{ workspace.getName() }}{% endblock %}
+{% block title %}{{ workspace.getName() | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     <div id="resource-breadcrumb">

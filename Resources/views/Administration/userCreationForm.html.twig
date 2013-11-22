@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'add_user' | trans({}, 'platform') }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'add_user' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -40,9 +40,4 @@
             </a>
         </div>
     </form>
-{% endblock %}
-{% block javascripts %}
-    {{ parent() }}
-    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
-    {{ tinymce_init() }}
 {% endblock %}

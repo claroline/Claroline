@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle:Administration:layout.html.twig' %}
 
-{% block title %}{{ parent() ~ ' - ' ~ "Theme Generator" | trans({}, "theme") }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ "Theme Generator" | trans({}, "theme") | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{

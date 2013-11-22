@@ -56,7 +56,7 @@ class WorkspaceLogFilterType extends AbstractType
                     'label'    => 'for period',
                     'required' => false,
                     'attr'     => array('class' => 'input-sm'),
-                    'theme_options' => array('label_width' => 'col-md-6')
+                    'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3')
                 )
             )
             ->add(
@@ -65,7 +65,7 @@ class WorkspaceLogFilterType extends AbstractType
                     'entity_reference' => 'user',
                     'required'         => false,
                     'attr'             => array('class' => 'input-sm'),
-                    'theme_options' => array('label_width' => 'col-md-6')
+                    'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3')
                 )
             );
     }

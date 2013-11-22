@@ -1,16 +1,6 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'workspace_home_tabs' | trans({}, 'platform') }}{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
-    {{ tinymce_init() }}
-    <script
-        src='{{ asset('bundles/clarolinecore/js/administration/adminHomeTabsConfig.js') }}'
-        type="text/javascript">
-    </script>
-{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'workspace_home_tabs' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -206,4 +196,12 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src='{{ asset('bundles/clarolinecore/js/administration/adminHomeTabsConfig.js') }}'
+        type="text/javascript">
+    </script>
 {% endblock %}

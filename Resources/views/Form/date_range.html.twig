@@ -2,9 +2,12 @@
 
 {% block daterange_widget %}
     {% spaceless %}
-        {{ block('form_widget') }}
+        <div class="input-group input-group-sm">
+            {{ block('form_widget') }}
+            <span class="input-group-addon"><i class="icon-calendar"></i></span>
+        </div>
         {% block daterange_assets %}
-            {% stylesheets debug=false filter='lessphp'  output='bundles/clarolinecore/css/jquery.daterangepicker.css'
+            {% stylesheets debug=false filter='lessphp, cssmin'  output='bundles/clarolinecore/css/jquery.daterangepicker.css'
               'bundles/frontend/jquery/plugin/daterangepicker/less/bootstrap-daterangepicker.less'
             %}
                 <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
@@ -119,6 +122,7 @@
                 $("#{{ form.vars['id'] }}").daterangepicker({
                     format: "{{ 'date_range.js_format'|trans({}, 'platform') }}",
                     ranges: ranges,
+                    separator: "{{ " " ~ 'date_range.separator'|trans({}, 'platform') ~ " " }}",
                     clearClass: 'btn hide',
                     locale: {
                         applyLabel: "{{ 'date_range.apply'|trans({}, 'platform') }}",

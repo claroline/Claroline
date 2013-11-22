@@ -218,13 +218,12 @@ class HomeManager
      *
      * @return The id of the new content.
      */
-    public function createContent($title, $text, $generated = null, $type = null, $father = null)
+    public function createContent($title, $text, $type = null, $father = null)
     {
         if ($title or $text) {
             $content = new Content();
             $content->setTitle($title);
             $content->setContent($text);
-            $content->setGeneratedContent($generated);
             $this->manager->persist($content);
 
             if ($father) {
@@ -254,11 +253,10 @@ class HomeManager
      *
      * @return This function doesn't return anything.
      */
-    public function updateContent($content, $title, $text, $generated = null, $size = null, $type = null)
+    public function updateContent($content, $title, $text, $size = null, $type = null)
     {
         $content->setTitle($title);
         $content->setContent($text);
-        $content->setGeneratedContent($generated);
 
         if ($size and $type) {
             $type = $this->type->findOneBy(array('name' => $type));

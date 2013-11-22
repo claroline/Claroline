@@ -7,7 +7,7 @@ workspace: "Workspace"
 Show actions for: 'Show actions for'
 for user: 'for user'
 log_default_user: 'Claroline Connect'
-log_filter_actions: 'Filter actions'
+log_filter_actions: 'Show actions'
 log_no_actions_found: 'No action found'
 log_hidden_workspace_widget_config_amount : 'Amount'
 log_create: 'Create'

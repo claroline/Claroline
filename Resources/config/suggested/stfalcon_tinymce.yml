@@ -1,7 +1,7 @@
 stfalcon_tinymce:
     include_jquery: false
     tinymce_jquery: true
-    selector: '.tinymce'
+    selector: '.deprecated-tinymce'
     use_callback_tinymce_init: true
     external_plugins:
         imagemanager:

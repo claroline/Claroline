@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'desktop_tools' | trans({}, 'platform') }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'desktop_tools' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{

@@ -138,6 +138,7 @@ date_range.last_thirty_days: '30 derniers jours'
 date_range.last_week: 'Semaine précédente'
 date_range.last_year: 'Année précédente'
 date_range.month_names: '["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"]'
+date_range.separator: '/'
 date_range.this_month: 'Mois en cours'
 date_range.this_school_year: 'Année sco. en cours'
 date_range.this_week: 'Semaine en cours'
@@ -186,7 +187,7 @@ filter: Filtrer
 find_workspaces: 'Tous les espaces'
 firstName: Prénom
 first_name: Prénom
-for period: 'sur la période du'
+for period: 'sur la période du :'
 forgot_password: 'Mot de passe oublié ?'
 form_role: Rôle
 from: Depuis
@@ -243,6 +244,7 @@ lock: Verrouiller
 login: Connexion
 login_failure: 'La connexion a échoué. Vérifiez que votre nom d''utilisateur et votre mot de passe sont corrects.'
 logout: Déconnexion
+logs: suivi
 mail: Mail
 mail_click: 'Cliquez sur ce lien pour réinitialiser votre mot de passe'
 mail_config_problem : Veuillez contacter l'administrateur pour reinitialiser votre mot de passe.

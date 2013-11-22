@@ -1,10 +1,10 @@
 {% extends "ClarolineCoreBundle::layout.html.twig" %}
 
-{% block title %}{{ 'badge' | trans({}, 'badge') }}{% endblock %}
+{% block title %}{{ 'badge' | trans({}, 'badge') | striptags | raw }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets debug=false filter='lessphp'  output='bundles/clarolinecore/css/badge.css'
+    {% stylesheets debug=false filter='lessphp, cssmin'  output='bundles/clarolinecore/css/badge.css'
       "@ClarolineCoreBundle/Resources/views/Badge/less/badge.less"
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />

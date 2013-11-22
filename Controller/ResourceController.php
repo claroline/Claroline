@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use \Exception;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +29,7 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\LogManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -42,6 +44,7 @@ class ResourceController
     private $request;
     private $dispatcher;
     private $maskManager;
+    private $logManager;
 
     /**
      * @DI\InjectParams({
@@ -52,7 +55,8 @@ class ResourceController
      *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "translator"      = @DI\Inject("translator"),
      *     "request"         = @DI\Inject("request"),
-     *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher")
+     *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "logManager"      = @DI\Inject("claroline.log.manager")
      * })
      */
     public function __construct
@@ -64,7 +68,8 @@ class ResourceController
         Translator $translator,
         Request $request,
         StrictDispatcher $dispatcher,
-        MaskManager $maskManager
+        MaskManager $maskManager,
+        LogManager $logManager
     )
     {
         $this->sc = $sc;
@@ -75,6 +80,7 @@ class ResourceController
         $this->request = $request;
         $this->dispatcher = $dispatcher;
         $this->maskManager = $maskManager;
+        $this->logManager = $logManager;
     }
 
     /**
@@ -301,6 +307,44 @@ class ResourceController
 
     /**
      * @EXT\Route(
+     *     "/log/{node}",
+     *     name="claro_resource_logs",
+     *     defaults={"page" = 1},
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\Route(
+     *     "/log/{node}/{page}",
+     *     name="claro_resource_logs_paginated",
+     *     requirements={"page" = "\d+"},
+     *     defaults={"page" = 1},
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Resource/logs:logList.html.twig")
+     *
+     * Shows resource logs list
+     *
+     * @param ResourceNode $node         the resource
+     *
+     * @return Response
+     * @throws \Exception
+     */
+    public function logAction(ResourceNode $node, $page)
+    {
+        $resource = $this->resourceManager->getResourceFromNode($node);
+        $collection = new ResourceCollection(array($node));
+        $this->checkAccess("EDIT", $collection);
+
+        //$type = $node->getResourceType();
+        $logs = $this->logManager
+            ->getResourceList($resource, $page);
+
+        return $logs;
+    }
+
+    /**
+     * @EXT\Route(
      *     "/download",
      *     name="claro_resource_download",
      *     options={"expose"=true}
@@ -329,7 +373,7 @@ class ResourceController
         $mimeType = $data['mimeType'];
         $response = new StreamedResponse();
 
-        $file = $data['file'] ? : tempnam('tmp', 'tmp') ;
+        $file = $data['file'] ? : tempnam('tmp', 'tmp');
         $response->setCallBack(
             function () use ($file) {
                 readfile($file);
@@ -670,5 +714,14 @@ class ResourceController
         if (!$this->sc->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
+    }
+
+    /**
+     * @EXT\Route("/init", name="claro_resource_init")
+     * @EXT\Template("ClarolineCoreBundle:Resource:init.html.twig")
+     */
+    public function initAction()
+    {
+        return array('resourceTypes' => $this->resourceManager->getAllResourceTypes());
     }
 }
