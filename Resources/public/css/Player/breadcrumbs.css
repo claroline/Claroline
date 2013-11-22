@@ -1,21 +1,22 @@
 .path-player .breadcrumbs ul {
-    background-color: #7B7B7B;
     border-radius: 3px;
     font-size: 0;
+    margin: 0;
+    margin-bottom: 16px;
 }
 
 .path-player .breadcrumbs ul,
 .path-player .breadcrumbs ul > li {
     padding: 0;
     list-style-type: none;
-    margin: 0;
 }
 
 .path-player .breadcrumbs ul > li {
     display: inline-block;
-/*     background-color: rgb(235, 235, 235); */
     position: relative;
     font-size: 14px;
+    margin: 0;
+    margin-bottom: 4px;
 }
 
 .path-player .breadcrumbs ul > li:first-child {

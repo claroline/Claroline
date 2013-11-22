@@ -5,20 +5,23 @@
 
 .squares-browser .step {
     vertical-align: middle;
-    width:40px;
-    height:40px;
-    margin:0 5px;
-    display:inline-block;
+    width: 24px;
+    height: 40px;
+    
+    margin: 0 2px;
+    display: inline-block;
     border-radius: 4px;
     font-size: 18px;
     line-height: 1.33;
-    padding: 10px 16px;
+    padding: 10px 4px;
     border-width: 2px;
     border-style: solid;
+    opacity: 0.3;
 }
 
 .squares-browser .step:hover {
     box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.6);
+    opacity: 1;
 }
 
 .squares-browser .parent-siblings:first-child .step:first-child {
@@ -26,7 +29,10 @@
 }
 
 .squares-browser .step.current {
-	border-radius: 20px;
+	padding: 10px 10px;
+    width: 40px;
+    height: 40px;
+    opacity: 1;
 }
 
 .squares-browser .separator {
