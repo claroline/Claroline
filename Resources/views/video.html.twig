@@ -6,6 +6,8 @@
 
 {% extends layout %}
 
+{% block title %}{{ video.getResourceNode().getName() ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}
+
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ video.getResourceNode().getName() }}</h3>
