@@ -33,29 +33,11 @@ class InnovaPathBundle extends PluginBundle implements AutoConfigurableInterface
 
     public function suggestConfigurationFor(Bundle $bundle, $environment)
     {
-        $config = new ConfigurationBuilder();
-        $bundles = array(
-            'Innova\AngularJSBundle' => 'angularjs'
-        );
-
-        if (in_array($bundleClass = get_class($bundle), array_keys($bundles))) {
-            if (in_array($environment, array('prod', 'dev', 'test'))) {
-                return $config->addContainerResource(
-                    __DIR__ . "/Resources/config/suggested/{$bundles[$bundleClass]}_{$environment}.yml"
-                );
-            }
-        }
-
-        // if ($bundle instanceof \Symfony\Bundle\TwigBundle\TwigBundle) {
-        //     return $config->addContainerResource(
-        //         __DIR__ . "/Resources/config/suggested/twig.yml"
-        //     );
-        // }
+        
     }
 
      public function getAdditionalInstaller()
     {
         return new AdditionalInstaller();
     }
-
 }

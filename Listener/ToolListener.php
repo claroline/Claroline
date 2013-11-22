@@ -5,7 +5,6 @@ namespace Innova\PathBundle\Listener;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 
 class ToolListener extends ContainerAware

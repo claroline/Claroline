@@ -48,7 +48,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Innova\PathBundle\Manager\StepManager;
 
-use Innova\PathBundle\Entity\Path;
 use Innova\PathBundle\Entity\Step;
 
 /**
