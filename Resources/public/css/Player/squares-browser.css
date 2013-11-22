@@ -38,12 +38,17 @@
 .squares-browser .separator {
     vertical-align: middle;
     display: inline-block;
-    height: 35px;
-    width: 1px;
-    background-color: black;
-    margin: 0 5px;
 }
 
 .squares-browser .parent-siblings {
+    display: inline-block;
+}
+
+.hidden{
+    display:none;
+}
+
+.hide-sibling, .show-sibling{
+    vertical-align: middle;
     display: inline-block;
 }
