@@ -23,7 +23,7 @@ class AutomaticWithRulesValidator extends ConstraintValidator
      */
     public function validate($badge, Constraint $constraint)
     {
-        if ($badge->getAutomaticAward() && 0 >= count($badge->getBadgeRules())) {
+        if ($badge->getAutomaticAward() && 0 >= count($badge->getRules())) {
             $this->context->addViolation($constraint->message, array(), null);
         }
     }

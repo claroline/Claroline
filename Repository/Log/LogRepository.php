@@ -11,7 +11,8 @@
 
 namespace Claroline\CoreBundle\Repository\Log;
 
-use Claroline\CoreBundle\Entity\Badge\BadgeRule;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Rule\Entity\Rule;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
@@ -516,29 +517,36 @@ class LogRepository extends EntityRepository
     }
 
     /**
-     * @param AbstractWorkspace|null $workspace
-     * @param BadgeRule              $badgeRule
-     * @param User                   $user
-     * @param bool                   $executeQuery
+     * @param Rule  $rule
+     * @param User  $user
+     * @param array $restrictions
+     * @param bool  $executeQuery
      *
-     * @return array|Query
+     * @return array|QueryBuilder
      */
-    public function findByWorkspaceBadgeRuleAndUser($workspace, BadgeRule $badgeRule, User $user, $executeQuery = true)
+    public function findByRuleAndUser(Rule $rule, User $user, array $restrictions, $executeQuery = true)
     {
         $queryBuilder = $this->createQueryBuilder('l')
             ->where('l.action = :action')
             ->andWhere('l.doer = :doer')
             ->orderBy('l.dateLog')
-            ->setMaxResults($badgeRule->getOccurrence())
-            ->setParameter('action', $badgeRule->getAction())
+            ->setMaxResults($rule->getOccurrence())
+            ->setParameter('action', $rule->getAction())
             ->setParameter('doer', $user);
 
-        if (null !== $workspace) {
+        $ruleResource = $rule->getResource();
+        if (null !== $ruleResource) {
             $queryBuilder
-                ->andWhere('l.workspace = :workspace')
-                ->setParameter('workspace', $workspace);
+                ->andWhere('l.resourceNode = :resourceNode')
+                ->setParameter('resourceNode', $ruleResource->getResourceNode());
         }
 
-        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
+        foreach ($restrictions as $key => $restriction) {
+            $queryBuilder
+                ->andWhere(sprintf("l.%s = :%s", $key, $key))
+                ->setParameter($key, $restriction);
+        }
+
+        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder;
     }
 }
