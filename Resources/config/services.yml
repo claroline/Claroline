@@ -17,9 +17,9 @@ services:
         class: Symfony\Component\Yaml\Yaml
         public: false
 
-    claroline.repository.badge:
-        class:           Claroline\CoreBundle\Repository\Badge\BadgeRepository
+    claroline.repository.log:
+        class:           Claroline\CoreBundle\Repository\Log\LogRepository
         factory_service: doctrine.orm.entity_manager
         factory_method:  getRepository
         arguments:
-            - Claroline\CoreBundle\Entity\Badge\Badge
+            - Claroline\CoreBundle\Entity\Log\Log

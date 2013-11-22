@@ -20,7 +20,11 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.rule.validator")
+ */
 class Validator
 {
     /**
@@ -28,6 +32,11 @@ class Validator
      */
     private $logRepository;
 
+    /**
+     * @DI\InjectParams({
+     *     "logRepository" = @DI\Inject("claroline.repository.log"),
+     * })
+     */
     public function __construct(LogRepository $logRepository)
     {
         $this->logRepository = $logRepository;

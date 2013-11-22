@@ -40,18 +40,25 @@ class BadgeListener
      */
     private $templateingEngine;
 
+    /***
+     * @var \Claroline\CoreBundle\Rule\Validator
+     */
+    private $ruleValidator;
+
     /**
      * @DI\InjectParams({
      *     "entityManager"     = @DI\Inject("doctrine.orm.entity_manager"),
      *     "badgeManager"      = @DI\Inject("claroline.manager.badge"),
-     *     "templatingEngine"  = @DI\Inject("templating")
+     *     "templatingEngine"  = @DI\Inject("templating"),
+     *     "ruleValidator"     = @DI\Inject("claroline.rule.validator")
      * })
      */
-    public function __construct(EntityManager $entityManager, BadgeManager $badgeManager, TwigEngine $templatingEngine)
+    public function __construct(EntityManager $entityManager, BadgeManager $badgeManager, TwigEngine $templatingEngine, Validator $ruleValidator)
     {
         $this->entityManager     = $entityManager;
         $this->badgeManager      = $badgeManager;
         $this->templateingEngine = $templatingEngine;
+        $this->ruleValidator     = $ruleValidator;
     }
 
     /**
@@ -68,8 +75,8 @@ class BadgeListener
 
         if (0 < count($badges)) {
 
-            $ruleValidator = new Validator($this->entityManager->getRepository('ClarolineCoreBundle:Log\Log'));
-            $user        = $event->getLog()->getDoer();
+            $ruleValidator = $this->ruleValidator;
+            $user          = $event->getLog()->getDoer();
 
             foreach ($badges as $badge) {
                 if (!$user->hasBadge($badge)) {
