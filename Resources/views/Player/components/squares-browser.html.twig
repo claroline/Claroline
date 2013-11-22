@@ -14,15 +14,11 @@
             {% endfor %}
 	        {% if not parentIsDisplayed %}
 	            <a rel="tooltip" data-original-title="{{ parent.name }}" class="parent step current lvl-{{ parent.lvl + 1 }}" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId : parent.id }) }}"></a>
-	        {% else %}
-                <div class="show-sibling" data-lvl="{{ parent.lvl + 1 }}">
-                    <span class="icon icon-plus-sign"></span>
-                </div>
             {% endif %}
-
-           
+	        {% if parentSiblings is not empty %}
+                <div class="toggle-sibling show-sibling icon icon-plus-sign" data-lvl="{{ parent.lvl + 1 }}"></div>
+            {% endif %}
         </div>
-        
         <div class="separator icon-chevron-right icon"></div>
     {% endfor %}
 {% endif %}
@@ -41,10 +37,9 @@
 
 {% if not currentStepIsDisplayed %}
     <a rel="tooltip" data-original-title="{{ currentStep.name }}" class="current step lvl-{{ currentStep.lvl + 1 }}" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId : currentStep.id }) }}"></a>
-    {% else %}
-    <div class="show-sibling" data-lvl="{{ currentStep.lvl + 1 }}">
-        <span class="icon icon-plus-sign"></span>
-    </div>
+{% endif %}
+{% if siblings is not empty %}
+    <div class="toggle-sibling show-sibling icon icon-plus-sign" data-lvl="{{ currentStep.lvl + 1 }}"></div>
 {% endif %}
 
 
