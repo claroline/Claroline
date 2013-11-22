@@ -96,6 +96,18 @@ class PlayerController extends ContainerAware
     
     /**
      * @Method("GET")
+     * @Template("InnovaPathBundle:Player:components/tree-browser.html.twig")
+     */
+    public function displayTreeBrowserAction(Path $path, Step $currentStep)
+    {
+        return array (
+            'path' => $path,
+            'currentStep' => $currentStep,
+        );
+    }
+    
+    /**
+     * @Method("GET")
      * @Template("InnovaPathBundle:Player:components/current-step.html.twig")
      */
     public function displayCurrentStepAction(Step $currentStep)

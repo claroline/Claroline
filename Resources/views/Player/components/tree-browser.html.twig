@@ -1,0 +1,21 @@
+{% macro displayTreeItem(item) %}
+    <li>
+        <a href="#">{{ rootStep.name }}</a>
+        <ul>
+            {% set children = rootStep.children %}
+            {% for child in children %}
+            <li>
+                <a href="#">{{ child.name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </li>
+{% endmacro %}
+
+{% set rootStep = path.getRootStep() %}
+<ul>
+    <li>
+        <a href="#">{{ rootStep.name }}</a>
+    </li>
+    {% set children = rootStep.children %}
+</ul>

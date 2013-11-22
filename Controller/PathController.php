@@ -181,34 +181,6 @@ class PathController
             'paths' => $paths,
         );
     }
-
-    /**
-     * showPathAction function
-     * @param string $path path of activity
-     * @return RedirectResponse
-     *
-     * @Route(
-     *     "/path/show",
-     *     name = "innova_path_play",
-     *     options = {"expose"=true}
-     * )
-     * @Method("POST")
-     */
-    public function showAction()
-    {
-        $pathId = $this->request->get('pathId');
-        $workspaceId = $this->request->get('workspaceId');
-        $path = $this->entityManager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
-        $stepId = $this->entityManager->getRepository('InnovaPathBundle:Step')->findOneBy(array('path' => $path, 'parent' => null))->getId();
-    
-        $url = $this->router->generate('innova_step_show', array(
-            'workspaceId' => $workspaceId, 
-            'pathId' => $pathId, 
-            'stepId' => $stepId,
-        ));
-    
-        return new RedirectResponse($url, 302);
-    }
     
     /**
      * Create a new path

@@ -1,7 +1,7 @@
 <ul>
     {# Current workspace #}
     <li class="lvl-0">
-        <a href="{{ path('claro_workspace_open_tool', {workspaceId: workspace.id, toolName: 'innova_path'}) }}">
+        <a href="{{ path('claro_workspace_open_tool', { workspaceId: workspace.id, toolName: 'innova_path' }) }}">
             <span class="icon-book"></span>
             {{ workspace.getName() ~ ' - ' ~ workspace.getCode() }}
         </a>
@@ -11,7 +11,7 @@
     {% set parents = currentStep.getParents() %}
     {% for parent in parents %}
     <li class="lvl-{{ parent.lvl + 1 }}">
-        <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: parent.id}) }}">
+        <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: parent.id }) }}">
             {{ parent.name }}
         </a>
     </li>
@@ -19,7 +19,7 @@
     
     {# Display current step #}
     <li class="lvl-{{ currentStep.lvl + 1 }}">
-        <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: currentStep.id}) }}">
+        <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: currentStep.id }) }}">
             {{ currentStep.name }}
         </a>
     </li>

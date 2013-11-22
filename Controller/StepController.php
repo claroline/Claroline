@@ -124,49 +124,6 @@ class StepController
     
         return $this;
     }
-    
-     /**
-     * Finds and displays a Step entity.
-     * @return array
-     * 
-     * @Route(
-     *      "workspace/{workspaceId}/path/{pathId}/step/{stepId}", 
-     *      name="innova_step_show"
-     * )
-     * @Method("GET")
-     * @Template("InnovaPathBundle:Player:main.html.twig")
-     */
-    public function showAction($workspaceId, $pathId, $stepId)
-    {
-        // TODO : put it into a manager or repository
-        $workspace = $this->entityManager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->find($workspaceId);
-        $step = $this->entityManager->getRepository('InnovaPathBundle:Step')->findOneById($stepId);
-        $path = $this->entityManager->getRepository('InnovaPathBundle:Path')->findOneByResourceNode($pathId);
-        $root = $this->entityManager->getRepository('InnovaPathBundle:Step')->findOneBy(array('path' => $path, 'parent' => null));
-        $children = $this->entityManager->getRepository('InnovaPathBundle:Step')->findByParent($step);
-        $siblings = $this->entityManager->getRepository('InnovaPathBundle:Step')->findBy(array('parent' => $step->getParent(), 'path' => $path));
-        
-        $resources = $this->stepManager->getStepResourceNodes($step);
-
-        $fullPath = array();
-        $this->getFullPath($step, $path, $fullPath);
-        
-        $allParents = array();
-        $this->getAllParents($step, $allParents);
-
-       return array(
-            'workspace' => $workspace,
-            'step' => $step,
-            'siblings' => $siblings,
-            'resources' => $resources,
-            'fullPath' => $fullPath,
-            'path' => $path,
-            'children' => $children,
-            'allParents' => $allParents,
-            'root' => $root
-        );
-    }
-
 
     /**
      * Get available resources for current user
