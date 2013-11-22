@@ -6,6 +6,7 @@
 
 {% extends layout %}
 
+{% block title %}{{ image.getResourceNode().getName() ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}
 
 {% block section_content %}
     <div class="panel-heading">
