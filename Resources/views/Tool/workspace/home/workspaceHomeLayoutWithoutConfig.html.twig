@@ -39,7 +39,7 @@
     </div>
 
     <div class="panel-body">
-        <ul class="nav nav-tabs tabs">
+        <ul class="nav nav-tabs margin-bottom-md">
             {% for workspaceHomeTabConfig in workspaceHomeTabConfigs %}
             {% set workspaceHomeTab = workspaceHomeTabConfig.getHomeTab() %}
             <li class="hometab-element {% if workspaceHomeTab.getId() == tabId %} active {% endif %}">
