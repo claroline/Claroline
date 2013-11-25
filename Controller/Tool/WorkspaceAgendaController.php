@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Entity\Event;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -32,26 +33,30 @@ class WorkspaceAgendaController extends Controller
     private $formFactory;
     private $om;
     private $request;
+    private $rm;
 
     /**
      * @DI\InjectParams({
      *     "security"           = @DI\Inject("security.context"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "request"            = @DI\Inject("request")
+     *     "request"            = @DI\Inject("request"),
+     *     "rm"                =  @DI\Inject("claroline.manager.role_manager")
      * })
      */
     public function __construct(
         SecurityContextInterface $security,
         FormFactory $formFactory,
         ObjectManager $om,
-        Request $request
+        Request $request,
+        RoleManager $rm
     )
     {
         $this->security = $security;
         $this->formFactory = $formFactory;
         $this->om = $om;
         $this->request = $request;
+        $this->rm = $rm;
     }
 
     /**
@@ -143,6 +148,9 @@ class WorkspaceAgendaController extends Controller
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
         $form->handleRequest($this->request);
         if ($form->isValid()) {
+            if (!$this->checkUserIsAllowedtoWrite($workspace, $event)) {
+                throw new AccessDeniedException();
+            }
             $event->setAllDay($postData['agenda_form']['allDay']);
             $this->om->flush();
 
@@ -181,6 +189,9 @@ class WorkspaceAgendaController extends Controller
         $repository = $this->om->getRepository('ClarolineCoreBundle:Event');
         $postData = $this->request->request->all();
         $event = $repository->find($postData['id']);
+        if (!$this->checkUserIsAllowedtoWrite($workspace, $event)) {
+            throw new AccessDeniedException();
+        }
         $this->om->remove($event);
         $this->om->flush();
 
@@ -213,6 +224,7 @@ class WorkspaceAgendaController extends Controller
         $this->checkUserIsAllowed('agenda', $workspace);
         $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')
             ->findbyWorkspaceId($workspace->getId(), false);
+        $role = $this->checkUserIsAllowedtoWrite($workspace);
         $data = array();
         foreach ($listEvents as $key => $object) {
             $data[$key]['id'] = $object->getId();
@@ -222,6 +234,12 @@ class WorkspaceAgendaController extends Controller
             $data[$key]['end'] = $object->getEnd()->getTimestamp();
             $data[$key]['color'] = $object->getPriority();
             $data[$key]['description'] = $object->getDescription();
+            $data[$key]['owner'] = $object->getUser()->getUsername();
+            if ($data[$key]['owner'] === $this->security->getToken()->getUser()->getUsername()) {
+                $data[$key]['editable'] = true;
+            } else {
+                $data[$key]['editable'] = $role;
+            }
         }
 
         return new Response(
@@ -244,6 +262,9 @@ class WorkspaceAgendaController extends Controller
         $repository = $this->om->getRepository('ClarolineCoreBundle:Event');
         $event = $repository->find($postData['id']);
         $this->checkUserIsAllowed('agenda', $event->getWorkspace());
+        if (!$this->checkUserIsAllowedtoWrite( $event->getWorkspace())) {
+            throw new AccessDeniedException();
+        }
         // timestamp 1h = 3600
         $newStartDate = strtotime(''.$postData['dayDelta'].' day '.$postData['minuteDelta'].' minute', $event->getStart()->getTimestamp());
         $dateStart = new \DateTime(date('d-m-Y H:i', $newStartDate));
@@ -296,6 +317,26 @@ class WorkspaceAgendaController extends Controller
     {
         if (!$this->security->isGranted($permission, $workspace)) {
             throw new AccessDeniedException();
+        }
+    }
+
+    private function checkUserIsAllowedtoWrite(AbstractWorkspace $workspace, Event $event = null)
+    {
+        $usr = $this->security->getToken()->getUser();
+        $rm = $this->rm->getManagerRole($workspace);
+        $ru = $this->rm->getWorkspaceRolesForUser($usr, $workspace);
+        if( !is_null($event))
+        {
+            if ($event->getUser()->getUsername()=== $usr->getUsername()) {
+                return true;
+            }
+        }
+        foreach ($ru as $role )
+        {
+            if ($role->getTranslationKey() === $rm->getTranslationKey()) {
+                return true;
+            }
+            return false;
         }
     }
 

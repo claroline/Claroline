@@ -282,9 +282,15 @@
         {
             id = calEvent.id;
             task = 'no';
-            $('#deleteBtn').show();
-            $('#updateBtn').show();
-            $('#save').hide();
+            if (calEvent.editable === false) {
+                $('#deleteBtn').hide();
+                $('#updateBtn').hide();
+                $('#save').hide();
+            } else {
+                $('#deleteBtn').show();
+                $('#updateBtn').show();
+                $('#save').hide();
+            }
             $('#myModalLabel').text(Translator.get('agenda' + ':' + 'modify'));
             var title = calEvent.title;
             if (context === 'desktop')

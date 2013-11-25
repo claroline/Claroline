@@ -33,6 +33,9 @@ class ToolListener
     private $templating;
     private $request;
     private $httpKernel;
+    const R_U = "ROLE_USER";
+    const R_A = "ROLE_ADMIN";
+
 
     /**
      * @DI\InjectParams({
