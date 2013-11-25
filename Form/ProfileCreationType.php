@@ -41,7 +41,7 @@ class ProfileCreationType extends AbstractType
                 ->add('username', 'text', array('label' => 'profile_form_username'))
                 ->add('plainPassword', 'repeated', array('type' => 'password', 'required' => true))
                 ->add('administrativeCode', 'text', array('required' => false, 'label' => 'profile_form_administrativeCode'))
-                ->add('mail', 'email', array('required' => false, 'label' => 'profile_form_mail'))
+                ->add('mail', 'email', array('required' => true, 'label' => 'profile_form_mail'))
                 ->add('phone', 'text', array('required' => false, 'label' => 'profile_form_phone'))
                 ->add(
                 'platformRoles',
@@ -72,7 +72,6 @@ class ProfileCreationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Claroline\CoreBundle\Entity\User',
-            'validation_groups' => array('admin'),
             'translation_domain' => 'platform'
         ));
     }
