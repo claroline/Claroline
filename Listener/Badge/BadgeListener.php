@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Listener\Badge;
 
-use Claroline\CoreBundle\Badge\BadgeRuleChecker;
+use Claroline\CoreBundle\Rule\Validator;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\LogCreateEvent;
@@ -40,18 +40,25 @@ class BadgeListener
      */
     private $templateingEngine;
 
+    /***
+     * @var \Claroline\CoreBundle\Rule\Validator
+     */
+    private $ruleValidator;
+
     /**
      * @DI\InjectParams({
      *     "entityManager"     = @DI\Inject("doctrine.orm.entity_manager"),
      *     "badgeManager"      = @DI\Inject("claroline.manager.badge"),
-     *     "templatingEngine"  = @DI\Inject("templating")
+     *     "templatingEngine"  = @DI\Inject("templating"),
+     *     "ruleValidator"     = @DI\Inject("claroline.rule.validator")
      * })
      */
-    public function __construct(EntityManager $entityManager, BadgeManager $badgeManager, TwigEngine $templatingEngine)
+    public function __construct(EntityManager $entityManager, BadgeManager $badgeManager, TwigEngine $templatingEngine, Validator $ruleValidator)
     {
         $this->entityManager     = $entityManager;
         $this->badgeManager      = $badgeManager;
         $this->templateingEngine = $templatingEngine;
+        $this->ruleValidator     = $ruleValidator;
     }
 
     /**
@@ -63,16 +70,17 @@ class BadgeListener
     {
         /** @var \Claroline\CoreBundle\Repository\Badge\BadgeRuleRepository $badgeRuleRepository */
         $badgeRuleRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\BadgeRule');
-        $badges = $badgeRuleRepository->findBadgeFromAction($event->getLog()->getAction());
+        /** @var \Claroline\CoreBundle\Entity\badge\Badge[] $badges */
+        $badges              = $badgeRuleRepository->findBadgeFromAction($event->getLog()->getAction());
 
         if (0 < count($badges)) {
 
-            $badgeRuleChecker = new BadgeRuleChecker($this->entityManager->getRepository('ClarolineCoreBundle:Log\Log'));
-            $user             = $event->getLog()->getDoer();
+            $ruleValidator = $this->ruleValidator;
+            $user          = $event->getLog()->getDoer();
 
             foreach ($badges as $badge) {
                 if (!$user->hasBadge($badge)) {
-                    $resources = $badgeRuleChecker->checkBadge($badge, $user);
+                    $resources = $ruleValidator->validate($badge, $user);
 
                     if ($resources) {
                         $this->badgeManager->addBadgeToUsers($badge, array($user));
