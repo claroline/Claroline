@@ -159,7 +159,7 @@ class ToolListener
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, true);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, 1);
         $usr = $this->container->get('security.context')->getToken()->getUser();
         if ($usr === 'anon.') {
             return $this->templating->render(
@@ -200,8 +200,8 @@ class ToolListener
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
         $em = $this->container-> get('doctrine.orm.entity_manager');
         $usr = $this->container->get('security.context')->getToken()->getUser();
-        $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, false);
+        $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, 1);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
         $cours = array();
         $translator = $this->container->get('translator');
 

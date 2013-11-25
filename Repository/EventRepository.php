@@ -74,4 +74,15 @@ class EventRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+}    public function findAllCours(User $user)
+    {
+        $dql = "
+            SELECT e.workspace
+            FROM Claroline\CoreBundle\Entity\Event e
+        ";
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }
