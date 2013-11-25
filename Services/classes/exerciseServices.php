@@ -248,20 +248,22 @@ class exerciseServices
 
         for ($i = 0; $i < $max - 1; $i++) {
             for ($j = 0; $j < $max - 1; $j++) {
-                list($xa,$ya) = explode("-", $coords[$j]); // Answers of the student
-                list($xr,$yr) = explode(",", $rightCoords[$i]->getValue()); // Right answers
+                if (preg_match('/[0-9]+/', $coords[$j])) {
+                    list($xa,$ya) = explode("-", $coords[$j]); // Answers of the student
+                    list($xr,$yr) = explode(",", $rightCoords[$i]->getValue()); // Right answers
 
-                $valid = $rightCoords[$i]->getSize() / 2; // Size of the answer zone
+                    $valid = $rightCoords[$i]->getSize() / 2; // Size of the answer zone
 
-                // If answer student is in right answer
-                if ((($xa) < ($xr + $valid)) && (($xa) > ($xr - $valid)) && (($ya) < ($yr + $valid)) &&
-                    (($ya) > ($yr - $valid))
-                ) {
-                    // Not get points twice for one answer
-                    if ($this->alreadyDone($rightCoords[$i]->getValue(), $verif, $z)) {
-                        $point += $rightCoords[$i]->getScoreCoords(); // Score of the student without penalty
-                        $verif[$z] = $rightCoords[$i]->getValue(); // Add this answer zone to already answered zones
-                        $z++;
+                    // If answer student is in right answer
+                    if ((($xa) < ($xr + $valid)) && (($xa) > ($xr - $valid)) && (($ya) < ($yr + $valid)) &&
+                        (($ya) > ($yr - $valid))
+                    ) {
+                        // Not get points twice for one answer
+                        if ($this->alreadyDone($rightCoords[$i]->getValue(), $verif, $z)) {
+                            $point += $rightCoords[$i]->getScoreCoords(); // Score of the student without penalty
+                            $verif[$z] = $rightCoords[$i]->getValue(); // Add this answer zone to already answered zones
+                            $z++;
+                        }
                     }
                 }
             }

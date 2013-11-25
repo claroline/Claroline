@@ -9,5 +9,7 @@ function insertStyle() {
 }
 
 function CheckForm() {
-    $("*[id$='_penalty']").val($("*[id$='_penalty']").val().replace(/[-]/, ''));
+    if ($("*[id$='_penalty']").length > 0) {
+        $("*[id$='_penalty']").val($("*[id$='_penalty']").val().replace(/[-]/, ''));
+    }
 }

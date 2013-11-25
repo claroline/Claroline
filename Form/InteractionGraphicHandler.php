@@ -87,8 +87,8 @@ class InteractionGraphicHandler
         $interGraph->getInteraction()->getQuestion()->setUser($this->user); // add the user to the question
         $interGraph->getInteraction()->setType('InteractionGraphic'); // set the type of the question
 
-        $width = $this->request->get('imgwidth'); // Get the width of the image
-        $height = $this->request->get('imgheight'); // Get the height of the image
+        $width = $this->request->get('imagewidth'); // Get the width of the image
+        $height = $this->request->get('imageheight'); // Get the height of the image
 
         $interGraph->setHeight($height);
         $interGraph->setWidth($width);
@@ -134,8 +134,8 @@ class InteractionGraphicHandler
 
     private function onSuccessUpdate(InteractionGraphic $interGraphic, $originalHints)
     {
-        $width = $this->request->get('imgwidth'); // Get the width of the image
-        $height = $this->request->get('imgheight'); // Get the height of the image
+        $width = $this->request->get('imagewidth'); // Get the width of the image
+        $height = $this->request->get('imageheight'); // Get the height of the image
 
         $interGraphic->setHeight($height);
         $interGraphic->setWidth($width);
