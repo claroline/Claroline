@@ -129,5 +129,66 @@ function position(shape, color, i, prefix, value, size, points) {
         }
     });
 
+    $('#dragContainer' + grade).append('<p id="num' + parseInt(grade + 1) +'" style="position: absolute; left: 5px; top: -20px;">'
+        + parseInt(grade + 1) + '</p>');
+
+    alreadyPlacedAnswersZoneEdit(shape, color, prefix, points);
+
     grade++;
+}
+
+function alreadyPlacedAnswersZoneEdit(shape, color, pathImg, point) {
+
+    var contenu = '<tr><td class="classic">' + (parseInt(grade) + 1) + '</td><td class="classic">';
+
+    if (shape == 'square') {
+        contenu += '<select class="form-control" id="shape' + grade + '" size="1" onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">\n\
+                        <option value="circle">' + translations['tradCircle'] + '</option>\n\
+                        <option value="square" selected>' + translations['tradSquare'] + '</option>\n\
+                    </select></td>'
+    } else {
+        contenu += '<select class="form-control" id="shape' + grade + '" size="1" onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">\n\
+                        <option value="circle" selected>' + translations['tradCircle'] + '</option>\n\
+                        <option value="square">' + translations['tradSquare'] + '</option>\n\
+                    </select></td>';
+    }
+
+    contenu += '<td class="classic">';
+
+    if (color == 'red') {
+         contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #FF0000" \n\
+                        onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
+    } else if (color == 'blue') {
+         contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #002FFF" \n\
+                        onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
+    } else if (color == 'purple') {
+         contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #8B008B" \n\
+                        onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
+    } else if (color == 'green') {
+        contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #008600" \n\
+                        onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
+    } else if (color == 'orange') {
+        contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #FF7A00" \n\
+                        onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
+    } else if (color == 'yellow') {
+        contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #FFFF09" \n\
+                        onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
+    } else {
+        contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #FFFFFF" \n\
+                        onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
+    }
+
+    contenu += '<option value="white"  style="background-color:#FFFFFF;"> &nbsp;&nbsp;&nbsp; </option>\n\
+                <option value="red"    style="background-color:#FF0000;"> &nbsp;&nbsp;&nbsp; </option>\n\
+                <option value="blue"   style="background-color:#002FFF;"> &nbsp;&nbsp;&nbsp; </option>\n\
+                <option value="purple" style="background-color:#8B008B;"> &nbsp;&nbsp;&nbsp; </option>\n\
+                <option value="green"  style="background-color:#008600;"> &nbsp;&nbsp;&nbsp; </option>\n\
+                <option value="orange" style="background-color:#FF7A00;"> &nbsp;&nbsp;&nbsp; </option>\n\
+                <option value="yellow" style="background-color:#FFFF09;"> &nbsp;&nbsp;&nbsp; </option>\n\
+            </select></td>';
+
+    contenu += '<td class="classic"><input class="form-control" type="TEXT" id="points' + grade + '" value="'
+                    + point + '" onblur="changePoints(\'' + translations['tradWrongPoint'] + '\', this);"></td></tr>';
+
+    $('#AlreadyPlacedArray').find('tbody').append(contenu);
 }

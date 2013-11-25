@@ -48,6 +48,7 @@ alert ending: Etes-vous sur de vouloir terminer ? (Vous ne pourrez plus modifier
 allQuestion: Toutes
 already: Cette question est déjà partagée avec cet utilisateur
 alreadyExist: Ce nom existe déjà.
+alreadyPlaced: Réponses déjà placées
 alter category: Modifier cette catégorie
 answer_coched: Aucune réponse attendue n\'est cochée
 answer zone: Zone de réponse

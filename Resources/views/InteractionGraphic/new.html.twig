@@ -125,13 +125,13 @@ presently reading this means that you have had
                                                      id="movable"/>
                                             </td>
                                             <td class="classic">
-                                                <select class="form-control" id="shape" name="shape" size="1" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
+                                                <select class="form-control" id="shape" size="1" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
                                                     <option value="circle"  selected>{{ 'cercle' | trans }}</option>
                                                     <option value="square" >{{ 'square' | trans }}</option>
                                                 </select>
                                             </td>
                                             <td class="classic">
-                                                <select class="form-control" id="color" name="color" size="1" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
+                                                <select class="form-control" id="color" size="1" onchange="changezone('{{ asset('bundles/ujmexo/images/graphic/') }}');">
                                                     <option value="white"    style="background-color:#FFFFFF;" selected> &nbsp;&nbsp;&nbsp; </option>
                                                     <option value="red"      style="background-color:#FF0000;">          &nbsp;&nbsp;&nbsp; </option>
                                                     <option value="blue"     style="background-color:#002FFF;">          &nbsp;&nbsp;&nbsp; </option>
@@ -142,9 +142,30 @@ presently reading this means that you have had
                                                 </select>
                                             </td>
                                             <td class="classic">
-                                                <input class="form-control" type="TEXT" id="points" name="points" value="1" onblur="CheckScore('{{ 'wrongPoint' | trans }}');">
+                                                <input class="form-control" type="TEXT" id="points" value="1" onblur="CheckScore('{{ 'wrongPoint' | trans }}');">
                                             </td>
                                         </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">{{ 'alreadyPlaced' | trans }}</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div id="AlreadyPlacedArray">
+                                    <table class="table table-striped table-bordered table-condensed">
+                                        <thead>
+                                            <tr>
+                                                <th class="classic">{{ 'response' | trans }}</th>
+                                                <th class="classic">{{ 'shape' | trans }}</th>
+                                                <th class="classic">{{ 'color' | trans }}</th>
+                                                <th class="classic">{{ 'points' | trans }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -152,10 +173,9 @@ presently reading this means that you have had
                     </div>
                 </div>
 
-
-                <input class="form-control" type="hidden" id="imgwidth" name="imgwidth" value="0"/>
-                <input class="form-control" type="hidden" id="imgheight" name="imgheight" value="0"/>
-                <input class="form-control" type="hidden" id="coordsZone" name="coordsZone" value=""/>
+                <input type="hidden" id="imagewidth" name="imagewidth" value="0"/>
+                <input type="hidden" id="imageheight" name="imageheight" value="0"/>
+                <input type="hidden" id="coordsZone" name="coordsZone" value=""/>
 
                 <input class="form-control" type="hidden" name="exercise" value="{{ exoID }}"/>
 
@@ -189,5 +209,13 @@ presently reading this means that you have had
 {% else %}
     <script type="text/javascript">
         newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
+    </script>
+
+    <script type="text/javascript">
+        var translations = {
+            'tradWrongPoint' : '{{ 'wrongPoint' | trans }}',
+            'tradCircle' : '{{ 'cercle' | trans }}',
+            'tradSquare' : '{{ 'square' | trans }}'
+        }
     </script>
 {% endif %}

@@ -48,6 +48,7 @@ alert ending: Are you sure you want to finish ? (You can't alter your answers an
 allQuestion: All
 already: This question is already shared with this user
 alreadyExist: This name exist already
+alreadyPlaced: Already placed answers.
 alter category: Alter this cataegory
 answer_coched: No response expected is checked
 answer zone: Answer zone

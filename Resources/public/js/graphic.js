@@ -124,7 +124,9 @@ $(function () {
             if($('#AnswerImage').length){
 
                 $('#Answer').append('<div id="dragContainer' + grade +
-                    '"><i class="icon-move" style="cursor: move; position: absolute; left: -10px; top: -15px;"></i></div>');
+                    '"><i class="icon-move" style="cursor: move; position: absolute; left: -10px; top: -15px;"></i>'
+                    + '<p id="num' + parseInt(grade + 1) +'" style="position: absolute; left: 5px; top: -20px;">'
+                    + parseInt(grade + 1) + '</p></div>');
 
                 var stoppos = $(this).position();
 
@@ -138,10 +140,8 @@ $(function () {
                 // With the url of the dragged image
                 $(img).attr('src', el.attr('src'));
 
-
                 // Add it to the page
                 $('#dragContainer' + grade).append(img);
-
 
                 imgx = parseInt(stoppos.left);
                 imgx -= $('#Answer').position().left; // $('#Answer').prop('offsetLeft');
@@ -156,7 +156,6 @@ $(function () {
                     "left" : String(imgx) + 'px',
                     "top"  : String(imgy) + 'px'
                 });
-
 
                 // Make the new answer zone draggable and save its new position when stop drag
                 $(img).resizable({
@@ -176,13 +175,17 @@ $(function () {
                     }
                 });
 
-                grade++;
-
                 // Alter symbol score in order to insert right score into the database
                 var score = $('#points').val().replace(/[.,]/, '/');
 
                 // Save the score matching to an answer zone (thanks to its id)
                 point[img.id] = score;
+
+                var infos = getImageInformations($(img).attr('src'));
+
+                alreadyPlacedAnswersZone(infos['shape'], infos['color'], infos['pathImg'], score);
+
+                grade++;
             }
             // If add a new answer zone, the reference image go back to its initial place
             if (event.target.id == 'movable') {
@@ -209,7 +212,9 @@ function CheckScore(message) {
 // Submit form without an empty field
 function Check(noTitle, noQuestion, noImg, noAnswerZone, questiontitle, invite) {
 
-    $("*[id$='_penalty']").val($("*[id$='_penalty']").val().replace(/[-]/, ''));
+    if ($("*[id$='_penalty']").length > 0) {
+        $("*[id$='_penalty']").val($("*[id$='_penalty']").val().replace(/[-]/, ''));
+    }
 
     var empty = false; // Answer zone aren't defined
 
@@ -247,8 +252,8 @@ function Check(noTitle, noQuestion, noImg, noAnswerZone, questiontitle, invite) 
                 } else {
 
                     // Submit if required fields not empty
-                    $('#imgwidth').val($('#AnswerImage').width()); // Pass width of the image to the controller
-                    $('#imgheight').val($('#AnswerImage').height()); // Pass height of the image to the controller
+                    $('#imagewidth').val($('#AnswerImage').width()); // Pass width of the image to the controller
+                    $('#imageheight').val($('#AnswerImage').height()); // Pass height of the image to the controller
 
                     for (j = 0 ; j < grade ; j++) {
 
@@ -286,89 +291,97 @@ function Check(noTitle, noQuestion, noImg, noAnswerZone, questiontitle, invite) 
 // Change the shape and the color of the answer zone
 function changezone(prefix) {
 
-    if ($('#shape').val() == 'circle') {
-        switch ($('#color').val()) {
+    var shape = $('#shape').val();
+    var color = $('#color').val();
+    var target = el;
+
+    switchColorShape(prefix, shape, color, target, $('#color'));
+}
+
+function switchColorShape(prefix, shape, color, target, targetColor) {
+    if (shape == 'circle') {
+        switch (color) {
         case 'white' :
-            el.attr("src", prefix + 'circlew.png');
-            $('#color').css({ 'background-color' : '#FFFFFF' });
+            target.attr("src", prefix + 'circlew.png');
+            targetColor.css({ 'background-color' : '#FFFFFF' });
             break;
 
         case 'red' :
-            el.attr("src", prefix + 'circler.png');
-            $('#color').css({ 'background-color' : '#FF0000' });
+            target.attr("src", prefix + 'circler.png');
+            targetColor.css({ 'background-color' : '#FF0000' });
             break;
 
         case 'blue' :
-            el.attr("src", prefix + 'circleb.png');
-            $('#color').css({ 'background-color' : '#002FFF' });
+            target.attr("src", prefix + 'circleb.png');
+            targetColor.css({ 'background-color' : '#002FFF' });
             break;
 
         case 'purple' :
-            el.attr("src", prefix + 'circlep.png');
-            $('#color').css({ 'background-color' : '#8B008B' });
+            target.attr("src", prefix + 'circlep.png');
+            targetColor.css({ 'background-color' : '#8B008B' });
             break;
 
         case 'green' :
-            el.attr("src", prefix + 'circleg.png');
-            $('#color').css({ 'background-color' : '#008600' });
+            target.attr("src", prefix + 'circleg.png');
+            targetColor.css({ 'background-color' : '#008600' });
             break;
 
         case 'orange' :
-            el.attr("src", prefix + 'circleo.png');
-            $('#color').css({ 'background-color' : '#FF7A00' });
+            target.attr("src", prefix + 'circleo.png');
+            targetColor.css({ 'background-color' : '#FF7A00' });
             break;
 
         case 'yellow' :
-            el.attr("src", prefix + 'circley.png');
-            $('#color').css({ 'background-color' : '#FFFF09' });
+            target.attr("src", prefix + 'circley.png');
+            targetColor.css({ 'background-color' : '#FFFF09' });
             break;
 
         default :
-            el.attr("src", prefix + 'circlew.png');
-            $('#color').css({ 'background-color' : '#FFFFFF' });
+            target.attr("src", prefix + 'circlew.png');
+            targetColor.css({ 'background-color' : '#FFFFFF' });
             break;
         }
 
-    } else if ($('#shape').val() == 'square') {
-        switch ($('#color').val()) {
+    } else if (shape == 'square') {
+        switch (color) {
         case 'white' :
-            el.attr("src", prefix + 'squarew.jpg');
-            $('#color').css({ 'background-color' : '#FFFFFF' });
+            target.attr("src", prefix + 'squarew.jpg');
+            targetColor.css({ 'background-color' : '#FFFFFF' });
             break;
 
         case 'red' :
-            el.attr("src", prefix + 'squarer.jpg');
-            $('#color').css({ 'background-color' : '#FF0000' });
+            target.attr("src", prefix + 'squarer.jpg');
+            targetColor.css({ 'background-color' : '#FF0000' });
             break;
 
         case 'blue' :
-            el.attr("src", prefix + 'squareb.jpg');
-            $('#color').css({ 'background-color' : '#002FFF' });
+            target.attr("src", prefix + 'squareb.jpg');
+            targetColor.css({ 'background-color' : '#002FFF' });
             break;
 
         case 'purple' :
-            el.attr("src", prefix + 'squarep.jpg');
-            $('#color').css({ 'background-color' : '#8B008B' });
+            target.attr("src", prefix + 'squarep.jpg');
+            targetColor.css({ 'background-color' : '#8B008B' });
             break;
 
         case 'green' :
-            el.attr("src", prefix + 'squareg.jpg');
-            $('#color').css({ 'background-color' : '#008600' });
+            target.attr("src", prefix + 'squareg.jpg');
+            targetColor.css({ 'background-color' : '#008600' });
             break;
 
         case 'orange' :
-            el.attr("src", prefix + 'squareo.jpg');
-            $('#color').css({ 'background-color' : '#FF7A00' });
+            target.attr("src", prefix + 'squareo.jpg');
+            targetColor.css({ 'background-color' : '#FF7A00' });
             break;
 
         case 'yellow' :
-            el.attr("src", prefix + 'squarey.jpg');
-            $('#color').css({ 'background-color' : '#FFFF09' });
+            target.attr("src", prefix + 'squarey.jpg');
+            targetColor.css({ 'background-color' : '#FFFF09' });
             break;
 
         default :
-            el.attr("src", prefix + 'squarew.jpg');
-            $('#color').css({ 'background-color' : '#FFFFFF' });
+            target.attr("src", prefix + 'squarew.jpg');
+            targetColor.css({ 'background-color' : '#FFFFFF' });
         }
     }
 }
@@ -394,6 +407,14 @@ document.addEventListener('click', function (e) {
         for (j = 0 ; j < grade ; j++) {
             if ($(e.target).hasClass('icon-move')) {
                 $(e.target).parent('div').remove();
+
+                var containerID = $(e.target).parent('div').attr('id');
+                var numToDel = parseInt(containerID.substring(containerID.indexOf('er') + 2, containerID.indexOf('er') + 3)) + 1;
+
+                $('#AlreadyPlacedArray').find('td:contains("' + numToDel + '")').parent('tr').remove();
+
+                setOrderAfterDel();
+
                 break;
             }
         }
@@ -413,11 +434,159 @@ function addPicture(url) {
 }
 
 function picturePop(data) {
-
     $('body').append(data);
-
 }
 
 $(document.body).on('hidden.bs.modal', function () {
     $('#modaladdpicture').remove();
 });
+
+function alreadyPlacedAnswersZone(shape, color, pathImg, point) {
+
+    var contenu = '<tr><td class="classic">' + (parseInt(grade) + 1) + '</td><td class="classic">';
+
+    if (shape == 'square') {
+        contenu += '<select class="form-control" id="shape' + grade + '" size="1" onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">\n\
+                        <option value="circle">' + translations['tradCircle'] + '</option>\n\
+                        <option value="square" selected>' + translations['tradSquare'] + '</option>\n\
+                    </select></td>'
+    } else {
+        contenu += '<select class="form-control" id="shape' + grade + '" size="1" onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">\n\
+                        <option value="circle" selected>' + translations['tradCircle'] + '</option>\n\
+                        <option value="square">' + translations['tradSquare'] + '</option>\n\
+                    </select></td>';
+    }
+
+    contenu += '<td class="classic">';
+
+    if (color == 'r') {
+         contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #FF0000" \n\
+                        onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
+    } else if (color == 'b') {
+         contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #002FFF" \n\
+                        onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
+    } else if (color == 'p') {
+         contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #8B008B" \n\
+                        onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
+    } else if (color == 'g') {
+        contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #008600" \n\
+                        onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
+    } else if (color == 'o') {
+        contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #FF7A00" \n\
+                        onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
+    } else if (color == 'y') {
+        contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #FFFF09" \n\
+                        onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
+    } else {
+        contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #FFFFFF" \n\
+                        onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
+    }
+
+    contenu += '<option value="white"  style="background-color:#FFFFFF;"> &nbsp;&nbsp;&nbsp; </option>\n\
+                <option value="red"    style="background-color:#FF0000;"> &nbsp;&nbsp;&nbsp; </option>\n\
+                <option value="blue"   style="background-color:#002FFF;"> &nbsp;&nbsp;&nbsp; </option>\n\
+                <option value="purple" style="background-color:#8B008B;"> &nbsp;&nbsp;&nbsp; </option>\n\
+                <option value="green"  style="background-color:#008600;"> &nbsp;&nbsp;&nbsp; </option>\n\
+                <option value="orange" style="background-color:#FF7A00;"> &nbsp;&nbsp;&nbsp; </option>\n\
+                <option value="yellow" style="background-color:#FFFF09;"> &nbsp;&nbsp;&nbsp; </option>\n\
+            </select></td>';
+
+    contenu += '<td class="classic"><input class="form-control" type="TEXT" id="points' + grade + '" value="'
+                    + point + '" onblur="changePoints(\'' + translations['tradWrongPoint'] + '\', this);"></td></tr>';
+
+    $('#AlreadyPlacedArray').find('tbody').append(contenu);
+}
+
+function alterAlreadyPlaced(pathImg, alterSelect) {
+
+    var newParam = $('#' + alterSelect.id).val();
+    var numChange = alterSelect.id.substring(5);
+    var idImgToChange = 'img' + numChange;
+    var shape, color;
+
+    if (newParam == 'square' || newParam == 'circle') {
+        shape = newParam;
+        color = $('#color' + numChange).val();
+    } else {
+        color = newParam;
+        shape = $('#shape' + numChange).val();
+    }
+
+    switchColorShape(pathImg, shape, color, $('#' + idImgToChange), $('#color' + numChange));
+}
+
+function changePoints(tradWrongPoint, targetChange) {
+    var numChange = targetChange.id.substring(6);
+    var idImgToChange = 'img' + (parseInt(numChange) - 1);
+
+    point[idImgToChange] = $('#points' + numChange).val();
+    CheckScore(tradWrongPoint);
+}
+
+function getImageInformations(src) {
+    var infos = {};
+
+    infos['shape'] = src.substring(src.indexOf('c/') + 2, (src.indexOf('c/') + 8));
+    infos['color'] = src.substring(src.indexOf('.') - 1, src.indexOf('.'));
+    infos['pathImg'] = src.substring(0, src.indexOf('c/') + 2);
+
+    return (infos);
+}
+
+function setOrderAfterDel() {
+    grade = 0;
+    var oldPoints = point;
+    point = {};
+
+    $('#AlreadyPlacedArray').find('tr:not(:first)').each(function () {
+        num = grade + 1;
+        $(this).find('td').eq(0).replaceWith('<td class="classic">' + num + '</td>');
+        grade++;
+    });
+
+    grade = 0;
+
+    $("*[id^='dragContainer']").each(function () {
+        num = grade + 1;
+        $(this).attr('id', String('dragContainer' + grade));
+        $(this).find('p').replaceWith(String('<p id="num' + num +'" style="position: absolute; left: 5px; top: -20px;">' + num + '</p>'));
+        grade++;
+    });
+
+    grade = 0;
+
+    $("*[id^='img']").each(function () {
+        var oldId = $(this).attr('id');
+        num = grade + 1;
+        $(this).attr('id', String('img' + grade));
+        point[$(this).attr('id')] = oldPoints[oldId];
+        grade++;
+    });
+
+    grade = 0;
+
+    $("*[id^='shape']").each(function () {
+        if ($(this).attr('id').length > 5) {
+            $(this).attr('id', String('shape' + grade));
+            grade++;
+        }
+    });
+
+    grade = 0;
+
+    $("*[id^='color']").each(function () {
+        if ($(this).attr('id').length > 5) {
+            $(this).attr('id', String('color' + grade));
+            grade++;
+        }
+    });
+
+    grade = 0;
+
+    $("*[id^='points']").each(function () {
+        if ($(this).attr('id').length > 6) {
+            $(this).attr('id', String('points' + grade));
+            grade++;
+        }
+    });
+}
