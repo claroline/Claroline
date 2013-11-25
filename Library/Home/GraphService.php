@@ -29,7 +29,7 @@ class GraphService
         $headers = get_headers($url, 1);
         $type = $headers['Content-Type'];
 
-        if (strpos($type, 'image/') === 0) {
+        if (is_string($type) and strpos($type, 'image/') === 0) {
             $this->graph['type'] = 'raw';
             $this->graph['images'][] = $url;
         } else {
