@@ -21,7 +21,11 @@
 
         <li>
             <a href="{{ url}}">
-                {{ node.name }}
+                {% if not isDesktop() and loop.first %}
+                    {{ 'resources' | trans({}, 'platform') }}
+                {% else %}
+                    {{ node.name }}
+                {% endif %}
             </a>
         </li>
     {% endif %}
