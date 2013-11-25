@@ -81,11 +81,6 @@
                             <div class="col-md-9">
                                 <div class="input-group">
                                     {{ form_widget(edit_form.start_date) }}
-                                    <span class="input-group-btn add-on">
-                                        <a class="btn btn-default">
-                                            <i class="icon-calendar"></i>
-                                        </a>
-                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -98,9 +93,6 @@
                             <div class="col-md-9">
                                 <div class="input-group">
                                     {{ form_widget(edit_form.end_date) }}
-                                    <span class="input-group-btn add-on">
-                                        <a class="btn btn-default"><i class="icon-calendar"></i></a>
-                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -135,9 +127,6 @@
                             <div class="col-md-9">
                                 <div class="input-group">
                                     {{ form_widget(edit_form.dateCorrection) }}
-                                    <span class="input-group-btn add-on">
-                                        <a class="btn btn-default"><i class="icon-calendar"></i></a>
-                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -176,14 +165,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-
-    <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.js"></script>
-    <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-
-    <script src="{{ asset('bundles/ujmexo/js/dateTimePicker.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datetimepicker/src/js/locales/bootstrap-datetimepicker.fr.js') }}"></script>
 
     <script type="text/javascript">
 
