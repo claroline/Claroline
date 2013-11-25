@@ -515,7 +515,9 @@
                 }
             },
             changeThumbnailIcon: function (nodeId, newIconPath, successHandler) {
-                this.$('#node-element-' + nodeId).attr('style', "background-image:url('" + this.parameters.webPath + newIconPath + "');");
+                this.$('#node-element-' + nodeId).attr(
+                    'style', 'background-image:url("' + this.parameters.webPath + newIconPath + '");'
+                );
                 console.debug(this.parameters.webPath + newIconPath);
                 if (successHandler) {
                     successHandler();
@@ -664,7 +666,7 @@
                         }
                     });
                 },
-                'click .modal-close': function (event) {
+                'click .modal-close': function () {
                     $('#modal-check-role').empty();
                     $('#rights-form-resource-tab-content').css('display', 'block');
                     $('#rights-form-resource-nav-tabs').css('display', 'block');
@@ -790,8 +792,9 @@
                 } else {
                     if (event.nodeId) {
                         this.router.navigate('resources/' + event.nodeId, {trigger: true});
+                    } else {
+                        document.location.href = event.el.attr('href');
                     }
-                    document.location.href = event.el.attr('href');
                 }
             },
             'node-click': function (event) {
@@ -1153,16 +1156,16 @@
                 type: 'POST',
                 processData: false,
                 contentType: false,
-                success: function() {
+                success: function () {
                     this.views.form.close();
                 }
             });
         },
-        custom: function (action, nodeId, redirect) {
+        custom: function (action, nodeId) {
             window.location = this.parameters.appPath + '/resource/custom/' + action + '/' + nodeId;
         },
         picker: function (action, callback) {
-            if (action === 'open'){// && !this.views.picker.isAppended) {
+            if (action === 'open') {// && !this.views.picker.isAppended) {
                 this.displayResources('0', 'picker');
             }
 
@@ -1175,7 +1178,7 @@
             }
 
             var parentElementId = this.views.picker.$el[0].id;
-            $("#" + parentElementId+ " .modal").modal(action === 'open' ? 'show' : 'hide');
+            $('#' + parentElementId + ' .modal').modal(action === 'open' ? 'show' : 'hide');
         }
     };
 

@@ -1,7 +1,12 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{% block title %}{{ workspace.getName() | striptags | raw }}{% endblock %}
-
+{% block title %}{% spaceless %}
+{% if _resource is defined %}
+    {{ _resource.getResourceNode().getName() | striptags | raw }}
+{% else %}
+    {{ parent() }}
+{% endif %}
+{% endspaceless %}{% endblock %}
 {% block breadcrumb %}
     <div id="resource-breadcrumb">
         {% if _resource is defined %}
@@ -13,6 +18,11 @@
             {% if not is_path_mode  %}
                 <ul class="breadcrumb">
                     <li><a href="{{ path('claro_workspace_list') }}"><i class="icon-book"></i> {{ 'workspaces'|trans({}, 'platform') }}</a></li>
+                    <li>
+                        <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': _resource.getResourceNode().getWorkspace().getId() }) }}">
+                            {{ _resource.getResourceNode().getWorkspace().getName() ~ ' - ' ~ _resource.getResourceNode().getWorkspace().getCode() }}
+                        </a>
+                    </li>
                     {% render controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
                         {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
                     %}
