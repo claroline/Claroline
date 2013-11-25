@@ -80,11 +80,11 @@
                             <a class="link-subject"
                                 href="{{ _path('claro_forum_messages', {'subjectId': subject['id'] }) }}"
                             >
-                                {{ subject['title'] }}
+                                <b>{{ subject['title'] }}</b>
                             </a>
                             {% if isModerator or app.user.id == subject['subject_creator_id'] %}
-                                <a href="{{ path('claro_forum_edit_subject_form', {'subjectId': subject['id'] }) }}">
-                                    <i class="icon-pencil"></i>
+                                <a class="pull-right" href="{{ path('claro_forum_edit_subject_form', {'subjectId': subject['id'] }) }}">
+                                    <i class="icon-pencil"></i> {{ 'edit' | trans({}, 'platform') }}
                                 </a>
                            {% endif %}
                             <br>
@@ -102,7 +102,11 @@
                             {{ subject['last_message_created'] }}
                         </td>
                         {% if isModerator %}
-                            <th><a id="delete-subject" href="{{ _path('claro_forum_delete_subject', {'subject': subject['id']}) }}"> <i class="icon-remove"></i></a></th>
+                            <td>
+                                <a id="delete-subject" href="{{ _path('claro_forum_delete_subject', {'subject': subject['id']}) }}">
+                                    <i class="icon-trash"></i> {{ 'delete' | trans({}, 'platform') }}
+                                </a>
+                            </td>
                         {% endif %}
                     </tr>
                 {% endfor %}
