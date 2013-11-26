@@ -49,7 +49,14 @@
 		{% set allParents = currentStep.getParents() %}
 		{% for parent in allParents %}
 			{% for resource in parent.step2ResourceNodes if resource.propagated == true %}
-				{{ macros.displayResource(resource, parent) }}
+				{# todo - à revoir, y'a surement plus intelligent à faire... mais on est limité par le modèle de données un peu bancal ici #}
+				{% set thisResourceIsExcluded = false %}
+				{% for resourceCurrentStep in currentStep.step2ResourceNodes if resourceCurrentStep.excluded == true and resourceCurrentStep.resourceNode == resource.resourceNode %}
+						{% set thisResourceIsExcluded = true %}
+				{% endfor %}
+				{% if thisResourceIsExcluded == false %}
+					{{ macros.displayResource(resource, parent) }}
+				{% endif %}
 			{% endfor %}
 		{% endfor %}
 
