@@ -17,10 +17,6 @@
         {{ render(controller('innova.controller.path_player:displaySquaresBrowserAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
     </div>
     
-    <div class="tree-browser">
-        {{ render(controller('innova.controller.path_player:displayTreeBrowserAction', { 'path': path, 'currentStep': currentStep } )) }}
-    </div>
-    
     <div class="content row">
         <div class="resources col-md-3">
             {{ render(controller('innova.controller.path_player:displayResourcesAction', { 'currentStep': currentStep } )) }}
