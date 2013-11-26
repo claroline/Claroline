@@ -161,13 +161,22 @@ class ToolListener
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, 1);
         $usr = $this->container->get('security.context')->getToken()->getUser();
+        $owners = $em->getRepository('ClarolineCoreBundle:Event')->findAllCours($usr);
+        $owner = array();
+        foreach ($owners as $o) {
+
+            $temp = $o->getWorkspace()->getName();
+            $owner[] = $temp;
+        }
+
         if ($usr === 'anon.') {
             return $this->templating->render(
                 'ClarolineCoreBundle:Tool/workspace/agenda:agenda_read_only.html.twig',
                 array(
                     'workspace' => $workspace,
                     'form' => $form->createView(),
-                    'listEvents' => $listEvents
+                    'listEvents' => $listEvents,
+                    'owners' => array_unique($owner)
                 )
             );
         }
