@@ -75,7 +75,7 @@ class EventRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findAllCours(User $user)
+    public function findByUserWithoutAllDay(User $user)
     {
         $dql = "
             SELECT e

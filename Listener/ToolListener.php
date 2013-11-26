@@ -161,7 +161,7 @@ class ToolListener
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, 1);
         $usr = $this->container->get('security.context')->getToken()->getUser();
-        $owners = $em->getRepository('ClarolineCoreBundle:Event')->findAllCours($usr);
+        $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr);
         $owner = array();
         foreach ($owners as $o) {
             $temp = $o->getWorkspace()->getName();
