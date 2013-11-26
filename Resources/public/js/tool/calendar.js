@@ -69,7 +69,6 @@
             $('.hours').each(function() {
                 $(this).val('00:00');
             });
-
             $('#myModal').modal();
         };
         var dayClickDesktop = function (date) {

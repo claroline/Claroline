@@ -164,7 +164,6 @@ class ToolListener
         $owners = $em->getRepository('ClarolineCoreBundle:Event')->findAllCours($usr);
         $owner = array();
         foreach ($owners as $o) {
-
             $temp = $o->getWorkspace()->getName();
             $owner[] = $temp;
         }
