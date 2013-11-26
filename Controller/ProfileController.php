@@ -127,12 +127,12 @@ class ProfileController extends Controller
 
         if ($form->isValid()) {
             $user = $form->getData();
-
             $em = $this->getDoctrine()->getManager();
             $unitOfWork = $em->getUnitOfWork();
             $unitOfWork->computeChangeSets();
             $changeSet = $unitOfWork->getEntityChangeSet($user);
-            $newRoles = $this->roleManager->getPlatformRoles($user);
+            $newRoles = $form['platformRoles']->getData();
+            $this->userManager->setPlatformRoles($user, $newRoles);
 
             $rolesChangeSet = array();
             //Detect added
