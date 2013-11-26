@@ -1,8 +1,12 @@
 {% macro displayResource(resource, step) %}
-	{# {% if resource.resourceNode.resourceType.name == "non_digital_resource" %} #}
 	<li class="list-group-item"> 
 		<span rel="tooltip" data-original-title="Hérité de {{ step.name }}" class="lvl-{{ step.lvl + 1 }} badge parent-resource">&nbsp;</span>
-		{{ resource.resourceNode.name }}
+		{% if resource.resourceNode.resourceType.name == "non_digital_resource" %}
+			{{ resource.resourceNode.name }}
+		{% else %}
+		<a target="_blank" href="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}">
+            {{ resource.resourceNode.name }}
+		{% endif %}
 	</li>
 {% endmacro %}
 
