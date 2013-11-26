@@ -24,12 +24,12 @@ ujm_exercise_update:
     requirements: { _method: post }
 
 ujm_exercise_validate_import:
-    pattern: /{exoID}/{qid}/import/{pageGoNow}
-    defaults: { _controller: UJMExoBundle:Exercise:importValidate, pageGoNow: 1 }
+    pattern: /import
+    defaults: { _controller: "UJMExoBundle:Exercise:importValidate" }
 
 ujm_exercise_validate_import_shared:
-    pattern: /import/shared/{exoID}/{qid}/{pageGoNow}
-    defaults: { _controller: UJMExoBundle:Exercise:importValidateShared, pageGoNow: 1 }
+    pattern: /import/shared
+    defaults: { _controller: "UJMExoBundle:Exercise:importValidateShared" }
 
 ujm_exercise_question_order:
     pattern:  /ExerciseQuestion/changeOrder

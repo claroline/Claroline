@@ -539,3 +539,83 @@ window.onload = function () {
         }
     }
 };
+
+function importQuestion(pathmy, pathshared, exoID, pageToGo, nothingToImport) {
+    var questionIdArrayMy = [];
+    var questionIdArrayShared = [];
+    var i = 0;
+    var j = 0;
+
+    $("input[type=checkbox][name=my]").each(function () {
+        if ($(this).is(':checked')) {
+            questionIdArrayMy[i] = $(this).val();
+            i++;
+        }
+    });
+
+    $("input[type=checkbox][name=shared]").each(function () {
+        if ($(this).is(':checked')) {
+            questionIdArrayShared[j] = $(this).val();
+            j++;
+        }
+    });
+
+    if (i == 0 && j == 0) {
+        alert(nothingToImport);
+    } else if (i == 0) {
+        $.ajax({
+            type: 'POST',
+            url: pathshared,
+            data: {
+                exoID : exoID,
+                pageGoNow : pageToGo,
+                qid: questionIdArrayShared
+            },
+            cache: false,
+            success: function (data) {
+                window.location.href = data;
+            }
+        });
+    } else if (j == 0) {
+        $.ajax({
+            type: 'POST',
+            url: pathmy,
+            data: {
+                exoID : exoID,
+                pageGoNow : pageToGo,
+                qid: questionIdArrayMy
+
+            },
+            cache: false,
+            success: function (data) {
+                window.location.href = data;
+            }
+        });
+    } else {
+        $.ajax({
+            type: 'POST',
+            url: pathmy,
+            data: {
+                exoID : exoID,
+                pageGoNow : pageToGo,
+                qid: questionIdArrayMy
+
+            }
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: pathshared,
+            data: {
+                exoID : exoID,
+                pageGoNow : pageToGo,
+                qid: questionIdArrayShared
+
+            },
+            cache: false,
+            success: function (data) {
+                window.location.href = data;
+            }
+        });
+    }
+}

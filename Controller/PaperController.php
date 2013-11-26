@@ -159,20 +159,6 @@ class PaperController extends Controller
 
         $infosPaper = $this->container->get('ujm.exercise_services')->getInfosPaper($paper);
 
-        /*$interactions = $this->getDoctrine()
-            ->getManager()
-            ->getRepository('UJMExoBundle:Interaction')
-            ->getPaperInteraction($em, str_replace(';', '\',\'', substr($paper->getOrdreQuestion(), 0, -1)));
-
-        $interactions = $this->orderInteractions($interactions, $paper->getOrdreQuestion());
-
-        $responses = $this->getDoctrine()
-            ->getManager()
-            ->getRepository('UJMExoBundle:Response')
-            ->getPaperResponses($paper->getUser()->getId(), $id);
-
-        $responses = $this->orderResponses($responses, $paper->getOrdreQuestion());*/
-
         $hintViewed = $this->getDoctrine()
             ->getManager()
             ->getRepository('UJMExoBundle:LinkHintPaper')

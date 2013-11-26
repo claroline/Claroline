@@ -217,6 +217,7 @@ noPaperFound: No paper found
 noQuestion: You ask for nothing
 noQuestionFound: No question found
 noRightAnswer: No right answer
+nothingToImport: No question is checked for the import
 notImageMesssage: The document should be an image
 noTitle: The question has no title
 notEnoughtPapers: To display docimology, it must have at least 12 papers
