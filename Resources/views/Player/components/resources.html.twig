@@ -1,25 +1,33 @@
-{% macro displayResource(resource, step) %}
-	<li class="list-group-item"> 
+{# Bootstrap modale HTML #}
+{% macro modale(resource) %}
+<div class="modal fade" id="resource-{{ resource.id }}">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">{{ resource.resourceNode.name }}</h4>
+			</div>
+			<div class="modal-body">
+				<p>{{ resource.resourceNode.description }}</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+{% endmacro %}
 
+{# Affichage d'une ressource #}
+{% macro displayResource(resource, step) %}
+	{% import _self as macros %}
+	<li class="list-group-item"> 
 		<span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} badge parent-resource">&nbsp;</span>
+		{# Cas des ressources non digitales -> modale #}
 		{% if resource.resourceNode.resourceType.name == "non_digital_resource" %}
 			<a href="#" data-toggle="modal" data-target="#resource-{{ resource.id }}">{{ resource.resourceNode.name }}</a>
-			<div class="modal fade" id="resource-{{ resource.id }}">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-							<h4 class="modal-title">{{ resource.resourceNode.name }}</h4>
-						</div>
-						<div class="modal-body">
-							<p>{{ resource.resourceNode.description }}</p>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						</div>
-					</div><!-- /.modal-content -->
-				</div><!-- /.modal-dialog -->
-			</div><!-- /.modal -->
+			{{ macros.modale(resource) }}
+		{# Cas des ressources digitales #}
 		{% else %}
 		<a target="_blank" href="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}">{{ resource.resourceNode.name }}</a>
 		{% endif %}
@@ -36,22 +44,19 @@
         </h4>
     </div>
     <div class="panel-body">
-    	{# Gestion des ressources héritées #}
-		{% set allParents = currentStep.getParents() %}
+		{# Gestion des ressources héritées #}
 		<ul class="list-group">
+		{% set allParents = currentStep.getParents() %}
 		{% for parent in allParents %}
-			{% for resource in parent.step2ResourceNodes %}
-				{% if resource.propagated == true %}
-					{{ macros.displayResource(resource, parent) }}
-				{% endif %}
+			{% for resource in parent.step2ResourceNodes if resource.propagated == true %}
+				{{ macros.displayResource(resource, parent) }}
 			{% endfor %}
 		{% endfor %}
 
 		{# Gestion des ressources locales #}
-    	{% set resources = currentStep.step2ResourceNodes %}
-    	{% for resource in resources %}
-    		{{ macros.displayResource(resource, currentStep) }}
-    	{% endfor %}
-    	</ul>
+		{% for resource in currentStep.step2ResourceNodes if resource.excluded == false %}
+				{{ macros.displayResource(resource, currentStep) }}
+		{% endfor %}
+		</ul>
     </div>
 </div>
