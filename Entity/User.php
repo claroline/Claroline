@@ -574,6 +574,8 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
     /**
      * Replace the old platform role of a user by a new one.
+     * @todo This function is working for now but it's buggy. A user can have many platform
+     * roles
      *
      * @param Role $platformRole
      */
@@ -592,6 +594,31 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
         }
 
         $this->roles->add($platformRole);
+    }
+
+    /**
+     * Replace the old platform role of a user by a new one.
+     *
+     * @param Role $platformRole
+     */
+    public function setPlatformRoles($platformRoles)
+    {
+        $roles = $this->getEntityRoles();
+        $removedRoles = array();
+
+        foreach ($roles as $role) {
+            if ($role->getType() != Role::WS_ROLE) {
+                $removedRoles[] = $role;
+            }
+        }
+
+        foreach ($removedRoles as $removedRole) {
+            $this->roles->removeElement($removedRole);
+        }
+
+        foreach ($platformRoles as $platformRole) {
+            $this->roles->add($platformRole);
+        }
     }
 
     public function getOrderedTools()
