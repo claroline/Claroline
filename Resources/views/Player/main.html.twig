@@ -23,11 +23,11 @@
     
     <div class="content row">
         <div class="resources col-md-3">
-            {{ render(controller('innova.controller.path_player:displayResourcesAction')) }}
+            {{ render(controller('innova.controller.path_player:displayResourcesAction', { 'currentStep': currentStep } )) }}
         </div>
         
         <div class="current-step col-md-9">
-            {{ render(controller('innova.controller.path_player:displayCurrentStepAction', { 'currentStep': currentStep })) }}
+            {{ render(controller('innova.controller.path_player:displayCurrentStepAction', { 'currentStep': currentStep } )) }}
         </div>
     </div>
 </div>
@@ -36,4 +36,5 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Player/squares-browser.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/innovapath/js/Player/resources.js') }}"></script>
 {% endblock %}

@@ -75,9 +75,11 @@ class PlayerController extends ContainerAware
      * @Method("GET")
      * @Template("InnovaPathBundle:Player:components/resources.html.twig")
      */
-    public function displayResourcesAction()
+    public function displayResourcesAction(Step $currentStep)
     {
-        return array ();
+        return array (
+            'currentStep' => $currentStep,
+        );
     }
     
     /**

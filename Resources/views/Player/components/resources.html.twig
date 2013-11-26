@@ -1,10 +1,36 @@
+{% macro displayResource(resource, step) %}
+	{# {% if resource.resourceNode.resourceType.name == "non_digital_resource" %} #}
+	<li class="list-group-item"> 
+		<span rel="tooltip" data-original-title="Hérité de {{ step.name }}" class="lvl-{{ step.lvl + 1 }} badge parent-resource">&nbsp;</span>
+		{{ resource.resourceNode.name }}
+	</li>
+{% endmacro %}
+
+{% import _self as macros %}
+
 <div class="panel panel-default">
     <div class="panel-heading">
         <h4 class="panel-title">
             <span class="icon-folder-open"></span>
-            Resources
+            Ressources
         </h4>
     </div>
     <div class="panel-body">
+    	{# Gestion des ressources héritées #}
+		{% set allParents = currentStep.getParents() %}
+		{% for parent in allParents %}
+			{% for resource in parent.step2ResourceNodes %}
+				{% if resource.propagated == true %}
+					{{ macros.displayResource(resource, parent) }}
+				{% endif %}
+			{% endfor %}
+		{% endfor %}
+
+		{# Gestion des ressources locales #}
+    	{% set resources = currentStep.step2ResourceNodes %}
+    	{% for resource in resources %}
+    		{{ macros.displayResource(resource, currentStep ) }}
+    	{% endfor %}
+    	</ul>
     </div>
 </div>
