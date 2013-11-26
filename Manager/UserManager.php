@@ -239,6 +239,19 @@ class UserManager
     }
 
     /**
+     * Sets an array of platform role to a user.
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param ArrayCollection $roles
+     */
+    public function setPlatformRoles(User $user, ArrayCollection $roles)
+    {
+        $user->setPlatformRoles($roles);
+        $this->om->persist($user);
+        $this->om->flush();
+    }
+
+    /**
      * Serialize a user.
      *
      * @param array $users
