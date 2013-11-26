@@ -181,19 +181,21 @@
                 'click ul.zoom li a': function (event) {
                     event.preventDefault();
 
-                    var zoom = event.currentTarget.getAttribute('id');
-                    var tmp = $('.node-thumbnail')[0].className.substring(
-                        $('.node-thumbnail')[0].className.indexOf('zoom')
-                    );
+                    if ($('.node-thumbnail').get(0) !== undefined) {
+                        var zoom = event.currentTarget.getAttribute('id');
+                        var currentZoom = $('.node-thumbnail').get(0).className.match(/\bzoom\d+/g);
 
-                    $('.dropdown-menu.zoom li').removeClass('active');
-                    $(event.currentTarget).parent().addClass('active');
-
-                    var thumbnail = $('.node-thumbnail');
-
-                    thumbnail.removeClass(tmp);
-                    thumbnail.addClass(zoom);
-
+                        $('.dropdown-menu.zoom li').removeClass('active');
+                        $(event.currentTarget).parent().addClass('active');
+                        $('.node-thumbnail').each(function () {
+                            for (var i in currentZoom) {
+                                if (currentZoom.hasOwnProperty(i)) {
+                                    $(this).removeClass(currentZoom[i]);
+                                }
+                            }
+                            $(this).addClass(zoom);
+                        });
+                    }
                 },
                 'click a.delete': function () {
                     if (!(this.$('a.delete').hasClass('disabled'))) {
@@ -403,6 +405,7 @@
                 parameters.searchedName = searchParameters ? searchParameters.name : null;
                 parameters.creatableTypes = creatableTypes;
                 parameters.isPasteAllowed = this.isReadyToPaste && !this.isSearchMode && directory.id !== '0';
+                parameters.isSearchMode = this.isSearchMode;
                 parameters.isCreateAllowed = parameters.isAddAllowed = directory.id !== 0 &&
                     _.size(creatableTypes) > 0 &&
                     (this.parameters.isPickerMode || !this.isSearchMode);

@@ -5,7 +5,7 @@
 {% block content %}
     <div class="panel panel-default">
         <div class="panel-body">
-            <ul class="tabs nav nav-tabs">
+            <ul class="nav nav-tabs margin-bottom-md">
                 <li class="{% if 'claro_message_list_received' == app.request.get('_route') %}active{% endif %}">
                     <a href="{{ path('claro_message_list_received') }}" id="link_message_list_received_layout"><i class="icon-envelope-alt"></i> {{ 'messages_received'|trans({}, 'platform') }}</a>
                 </li>

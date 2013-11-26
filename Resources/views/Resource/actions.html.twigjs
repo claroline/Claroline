@@ -47,7 +47,7 @@
             </a>
         </li>
         <li class="dropdown">
-            <a class="dropdown-toggle zoom" data-toggle="dropdown">
+            <a class="dropdown-toggle zoom{% if isSearchMode == true %} disabled{% endif %}" data-toggle="dropdown">
                 <i class="icon-zoom-in"></i>
                 <span class="caret"></span>
             </a>
