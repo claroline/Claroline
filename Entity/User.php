@@ -597,11 +597,11 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     }
 
     /**
-     * Replace the old platform role of a user by a new one.
+     * Replace the old platform roles of a user by a new array.
      *
-     * @param Role $platformRole
+     * @param array $platformRoles
      */
-    public function setPlatformRoles($platformRoles)
+    public function setPlatformRoles(array $platformRoles)
     {
         $roles = $this->getEntityRoles();
         $removedRoles = array();
