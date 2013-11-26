@@ -130,8 +130,13 @@ class MailManager
             $message = \Swift_Message::newInstance()
                 ->setSubject($subject)
                 ->setFrom($from)
-                ->setTo($to)
                 ->setBody($body, 'text/html');
+
+            if (count($to) > 1) {
+                $message->setCc($to);
+            } else {
+                $message->setTo($to);
+            }
 
             return $this->mailer->send($message) ? true: false;
         }
