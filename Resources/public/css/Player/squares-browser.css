@@ -52,3 +52,7 @@
     vertical-align: middle;
     display: inline-block;
 }
+
+.toggle-sibling{
+    cursor:pointer;
+}

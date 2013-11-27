@@ -20,13 +20,13 @@
 
 {# Affichage d'une ressource #}
 {% macro displayResource(resource, step) %}
-	{% import _self as macros %}
+	{% import _self as resourcesMacro %}
 	<li class="list-group-item"> 
 		<span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} resource-owner">&nbsp;</span>
 		{# Cas des ressources non digitales -> modale #}
 		{% if resource.resourceNode.resourceType.name == "non_digital_resource" %}
 			<a href="#" data-toggle="modal" data-target="#resource-{{ resource.id }}">{{ resource.resourceNode.name }}</a>
-			{{ macros.modale(resource) }}
+			{{ resourcesMacro.modale(resource) }}
 		{# Cas des ressources digitales #}
 		{% else %}
 		<a target="_blank" href="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}">{{ resource.resourceNode.name }}</a>
@@ -34,7 +34,7 @@
 	</li>
 {% endmacro %}
 
-{% import _self as macros %}
+{% import _self as resourcesMacro %}
 
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -43,27 +43,25 @@
             Ressources
         </h4>
     </div>
-    <div class="panel-body">
-		{# Gestion des ressources héritées #}
-		<ul class="list-group">
-		{% set allParents = currentStep.getParents() %}
-		{% for parent in allParents %}
-			{% for resource in parent.step2ResourceNodes if resource.propagated == true %}
-				{# todo - à revoir, y'a surement plus intelligent à faire... mais on est limité par le modèle de données un peu bancal ici #}
-				{% set thisResourceIsExcluded = false %}
-				{% for resourceCurrentStep in currentStep.step2ResourceNodes if resourceCurrentStep.excluded == true and resourceCurrentStep.resourceNode == resource.resourceNode %}
-						{% set thisResourceIsExcluded = true %}
-				{% endfor %}
-				{% if thisResourceIsExcluded == false %}
-					{{ macros.displayResource(resource, parent) }}
-				{% endif %}
+	{# Gestion des ressources héritées #}
+	<ul class="list-group">
+	{% set allParents = currentStep.getParents() %}
+	{% for parent in allParents %}
+		{% for resource in parent.step2ResourceNodes if resource.propagated == true %}
+			{# todo - à revoir, y'a surement plus intelligent à faire... mais on est limité par le modèle de données un peu bancal ici #}
+			{% set thisResourceIsExcluded = false %}
+			{% for resourceCurrentStep in currentStep.step2ResourceNodes if resourceCurrentStep.excluded == true and resourceCurrentStep.resourceNode == resource.resourceNode %}
+					{% set thisResourceIsExcluded = true %}
 			{% endfor %}
+			{% if thisResourceIsExcluded == false %}
+				{{ resourcesMacro.displayResource(resource, parent) }}
+			{% endif %}
 		{% endfor %}
+	{% endfor %}
 
-		{# Gestion des ressources locales #}
-		{% for resource in currentStep.step2ResourceNodes if resource.excluded == false %}
-				{{ macros.displayResource(resource, currentStep) }}
-		{% endfor %}
-		</ul>
-    </div>
+	{# Gestion des ressources locales #}
+	{% for resource in currentStep.step2ResourceNodes if resource.excluded == false %}
+			{{ resourcesMacro.displayResource(resource, currentStep) }}
+	{% endfor %}
+	</ul>
 </div>
