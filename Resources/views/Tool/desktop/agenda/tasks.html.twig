@@ -3,8 +3,8 @@
             <button type="button" class="delete-task close" data-event-id="{{e.id}}" data-dismiss="alert">&times;</button>
             <h5 data-event-title="{{e.title}}"> {{ e.title }}</h5>
             <ul>
-                <li> {{ e.start|date("d/m/Y h:i")}} </li>
-                <li> {{ e.end|date("d/m/Y h:i") }} </li>
+                <li> {{ e.start|date("d-m-Y h:i")}} </li>
+                <li> {{ e.end|date("d-m-Y h:i") }} </li>
                 <li> {{ e.description|raw }}</li>
                 <li class="hidden"> {{e.allDay}}</li>
                 <li class="hidden"> {{e.priority}}</li>
