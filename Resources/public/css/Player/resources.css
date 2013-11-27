@@ -1,3 +1,6 @@
 .resource-owner{
 	width : 10px;
+	display:inline-block;
+	border-radius:2px;
+	margin-right:3px;
 }
