@@ -61,7 +61,7 @@
 
 {% block section_content %}
     <div class="panel-body">
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs margin-bottom-md">
             <li> <a href="{{ path('claro_workspace_registered_user_list', {'workspace': workspace.getId() }) }}"> {{'users'|trans({}, 'platform') }} </a> </li>
             <li class="active"> <a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId()}) }}"> {{'groups'|trans({}, 'platform') }} </a> </li>
             <li> <a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()} ) }}">{{ 'roles'|trans({}, 'platform') }}</a> </li>
