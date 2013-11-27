@@ -66,12 +66,3 @@
         </div>
     </div>
 {% endblock %}
-
-{% block javascripts %}
-{{ parent() }}
-<script type="text/javascript">
-    $(function(){
-        $('[data-toggle=tooltip]').tooltip();
-    });
-</script>
-{% endblock %}

@@ -185,4 +185,9 @@
     <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script><!-- this is not duplicated file -->
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
+    <script type="text/javascript">
+        $('body').tooltip({
+            selector: '[data-toggle=tooltip]'
+        });
+    </script>
 {% endblock %}

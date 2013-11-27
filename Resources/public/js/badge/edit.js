@@ -15,8 +15,6 @@ $(function(){
 
     $(".nav-tabs a.has-error:first").tab("show");
 
-    $('[data-toggle=tooltip]').tooltip();
-
     $('.delete').confirmModal();
 
     var awardFormContainer  = $("#award_form_container");
