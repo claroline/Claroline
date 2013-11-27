@@ -1,3 +1,3 @@
 $( document ).ready(function() {
-	$('.badge.parent-resource').tooltip({placement:'top'});
+	$('.resource-owner').tooltip({placement:'top'});
 });
