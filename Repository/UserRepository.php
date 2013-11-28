@@ -209,14 +209,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function findAll($executeQuery = true, $orderedBy = 'id')
     {
         if (!$executeQuery) {
-            $dql = '
-                SELECT u, r, pws from Claroline\CoreBundle\Entity\User u
-                JOIN u.roles r WITH r IN (
-                    SELECT pr
-                    FROM Claroline\CoreBundle\Entity\Role pr
-                    WHERE pr.type = ' . Role::PLATFORM_ROLE . "
-                )
+            $dql = "
+                SELECT u, pws, g, r from Claroline\CoreBundle\Entity\User u
                 LEFT JOIN u.personalWorkspace pws
+                LEFT JOIN u.groups g
+                LEFT JOIN u.roles r
                 ORDER BY u.{$orderedBy}
             ";
             // the join on role is required because this method is only called in the administration
