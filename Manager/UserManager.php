@@ -60,7 +60,7 @@ class UserManager
      *     "ch"                     = @DI\Inject("claroline.config.platform_config_handler"),
      *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory"),
      *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
-     *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager")
+     *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager")
      * })
      */
     public function __construct(
