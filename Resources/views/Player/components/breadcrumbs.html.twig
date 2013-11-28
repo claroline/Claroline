@@ -23,6 +23,18 @@
             {{ currentStep.name }}
         </a>
     </li>
-    
-    {# Display history if needed #}
+
+    {% set history = app.session.get('history') %}
+    {% set visitedSteps = history[path.id] %}
+
+    {% for i, visitedStep in visitedSteps if i < 6  and i > 0 %}
+        {% for stepId, stepName in visitedStep %}
+         <li class="lvl-history">
+            <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: stepId }) }}">
+                {{ stepName }}
+            </a>
+        </li>
+        {% endfor %}
+    {% endfor %}
+
 </ul>

@@ -11,6 +11,8 @@ use Innova\PathBundle\Entity\Path;
 use Innova\PathBundle\Entity\Step;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Player controller
@@ -42,15 +44,7 @@ class PlayerController extends ContainerAware
      */
     public function displayAction(AbstractWorkspace $workspace, Path $path, Step $currentStep)
     {
-        // Get root step of path if no step requested
-        if (empty($currentStep)) {
-            $steps = $path->getSteps();
-            if (!empty($steps) && !empty($steps[0])) {
-                // Root step exists => grab it
-                $currentStep = $steps[0];
-            }
-        }
-        
+
         return array (
             'workspace' => $workspace,
             'path' => $path,
@@ -64,6 +58,23 @@ class PlayerController extends ContainerAware
      */
     public function displayBreadcrumbsAction(AbstractWorkspace $workspace, Path $path, Step $currentStep)
     {
+        $session = $this->container->get('request')->getSession();
+        $history = $session->get('history');
+        
+        if(!array_key_exists($path->getId(), $history)){
+            $history[$path->getId()] = array();
+        }
+
+        foreach($history[$path->getId()] as $order => $stepId){
+            if(array_key_exists($currentStep->getId(), $stepId)){
+                unset($history[$path->getId()][$order]);
+            }
+        }
+        array_unshift($history[$path->getId()], array($currentStep->getId() => $currentStep->getName()));
+        $session->set('history', $history);
+
+
+
         return array (
             'workspace' => $workspace,
             'path' => $path,
