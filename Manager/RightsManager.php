@@ -167,6 +167,8 @@ class RightsManager
     }
 
     /**
+     * Copy the rights from the parent to its children.
+     *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $original
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      */
