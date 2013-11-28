@@ -37,6 +37,7 @@ class VideoPlayerController extends Controller
                 readfile($path);
             }
         );
+
         $response->headers->set('Content-Type', $node->getMimeType());
 
         return $response;

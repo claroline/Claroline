@@ -38,6 +38,7 @@ class VideoPlayerListener extends ContainerAware
 
     /**
      * @DI\Observe("play_file_video")
+     * @DI\Observe("play_file_audio")
      */
     public function onOpenVideo(PlayFileEvent $event)
     {
