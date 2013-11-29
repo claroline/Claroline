@@ -33,13 +33,13 @@
     <h3 class="panel-title">{{ 'agenda'|trans({}, 'platform') }}</h3>
 </div>
 <div class="panel-body">
-    <div id="selectOwner">
-        {% for o in owners %}
-            {{o}}
-            <input type="checkbox" name="{{o}}"  class="filter" />
-        {% endfor %}
-    </div>
     <div class="row">
+        <div id="selectOwner">
+            {% for o in owners %}
+                {{o}}
+                <input type="checkbox" name="{{o}}"  class="filterO" />
+            {% endfor %}
+        </div>
         <div id='calendar' class="col-md-9"></div>
         <div  id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">

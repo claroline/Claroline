@@ -164,9 +164,10 @@ class ToolListener
         $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr);
         $owner = array();
         foreach ($owners as $o) {
-            $temp = $o->getWorkspace()->getName();
+            $temp = $o->getUser()->getUserName();
             $owner[] = $temp;
         }
+        $owners = array_unique($owner);
 
         if ($usr === 'anon.') {
             return $this->templating->render(
@@ -175,7 +176,7 @@ class ToolListener
                     'workspace' => $workspace,
                     'form' => $form->createView(),
                     'listEvents' => $listEvents,
-                    'owners' => array_unique($owner)
+                    'owners' => $owners
                 )
             );
         }
@@ -185,7 +186,8 @@ class ToolListener
             array(
                 'workspace' => $workspace,
                 'form' => $form->createView(),
-                'listEvents' => $listEvents
+                'listEvents' => $listEvents,
+                'owners' => $owners
             )
         );
 
