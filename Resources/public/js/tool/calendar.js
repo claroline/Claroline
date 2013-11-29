@@ -315,15 +315,15 @@
             $('#agenda_form_description').val(calEvent.description);
             $('#agenda_form_priority option[value=' + calEvent.color + ']').attr('selected', 'selected');
             var pickedDate = new Date(calEvent.start);
-            $('#agenda_form_start').val($.fullCalendar.formatDate( pickedDate,'dd/MM/yyyy'));
+            $('#agenda_form_start').val($.fullCalendar.formatDate( pickedDate,'dd-MM-yyyy'));
             $('#agenda_form_startHours').val($.fullCalendar.formatDate( pickedDate,'HH:mm'));
             if (calEvent.end === ''){
-                $('#agenda_form_end').val($.fullCalendar.formatDate( pickedDate,'dd/MM/yyyy'));
+                $('#agenda_form_end').val($.fullCalendar.formatDate( pickedDate,'dd-MM-yyyy'));
                 $('#agenda_form_endHours').val('00:00');
             }
             else{
                 var Enddate = new Date(calEvent.end);
-                $('#agenda_form_end').val($.fullCalendar.formatDate( Enddate,'dd/MM/yyyy'));
+                $('#agenda_form_end').val($.fullCalendar.formatDate( Enddate,'dd-MM-yyyy'));
                 $('#agenda_form_endHours').val($.fullCalendar.formatDate( Enddate,'HH:mm'));
             }
             $('#agenda_form_allDay').attr('checked', false);
@@ -344,9 +344,9 @@
 
         function compareEvents(event1 , event2)
         {
-            event1.start = $.fullCalendar.formatDate(new Date(event1.start),'dd/MM/yyyy HH:mm');
+            event1.start = $.fullCalendar.formatDate(new Date(event1.start),'dd-MM-yyyy HH:mm');
             // if the start & end date are the same end date is null for the fullcalendar
-            event1.end = (event1.end != null) ? $.fullCalendar.formatDate(new Date(event1.end),'dd/MM/yyyy HH:mm'): null;
+            event1.end = (event1.end != null) ? $.fullCalendar.formatDate(new Date(event1.end),'dd-MM-yyyy HH:mm'): null;
             event1.allDay = (event1.allDay == false ) ? 0 : 1;
             if (event1.title === event2.title) {
                 if (event1.start === event2.start) {

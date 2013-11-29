@@ -53,23 +53,23 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
         );
         // simple container configuration, same for every environment
         $simpleConfigs = array(
-            'Symfony\Bundle\SecurityBundle\SecurityBundle' => 'security',
-            'Symfony\Bundle\TwigBundle\TwigBundle' => 'twig',
-            'Symfony\Bundle\AsseticBundle\AsseticBundle' => 'assetic',
-            'JMS\DiExtraBundle\JMSDiExtraBundle' => 'jms_di_extra',
-            'JMS\SecurityExtraBundle\JMSSecurityExtraBundle' => 'jms_security_extra',
-            'Zenstruck\Bundle\FormBundle\ZenstruckFormBundle' => 'zenstruck_form',
+            'Symfony\Bundle\SecurityBundle\SecurityBundle'               => 'security',
+            'Symfony\Bundle\TwigBundle\TwigBundle'                       => 'twig',
+            'Symfony\Bundle\AsseticBundle\AsseticBundle'                 => 'assetic',
+            'JMS\DiExtraBundle\JMSDiExtraBundle'                         => 'jms_di_extra',
+            'JMS\SecurityExtraBundle\JMSSecurityExtraBundle'             => 'jms_security_extra',
+            'Zenstruck\Bundle\FormBundle\ZenstruckFormBundle'            => 'zenstruck_form',
             'Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle' => 'stof_doctrine_extensions',
-            'BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle' => 'sso',
-            'Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle' => 'stfalcon_tinymce',
-            'IDCI\Bundle\ExporterBundle\IDCIExporterBundle' => 'idci_exporter'
+            'BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle'               => 'sso',
+            'Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle'        => 'stfalcon_tinymce',
+            'IDCI\Bundle\ExporterBundle\IDCIExporterBundle'              => 'idci_exporter'
         );
         // one configuration file for every standard environment (prod, dev, test)
         $envConfigs = array(
-            'Symfony\Bundle\FrameworkBundle\FrameworkBundle' => 'framework',
-            'Symfony\Bundle\MonologBundle\MonologBundle' => 'monolog',
+            'Symfony\Bundle\FrameworkBundle\FrameworkBundle'        => 'framework',
+            'Symfony\Bundle\MonologBundle\MonologBundle'         => 'monolog',
             'Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle' => 'swiftmailer',
-            'Doctrine\Bundle\DoctrineBundle\DoctrineBundle' => 'doctrine'
+            'Doctrine\Bundle\DoctrineBundle\DoctrineBundle'      => 'doctrine'
         );
 
         if (in_array($bundleClass, $emptyConfigs)) {
