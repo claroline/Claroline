@@ -17,7 +17,6 @@
     var contentCSS = home.asset + 'bundles/clarolinecore/css/tinymce/tinymce.css';
 
     var configTinyMCE = {
-        //document_base_url: home.path,
         relative_urls: false,
         theme: 'modern',
         language: language,
@@ -107,7 +106,6 @@
     {
         var nodeId = _.keys(nodes)[0];
         var mimeType = nodes[_.keys(nodes)][2];
-        //var resourceTypes = nodes[_.keys(nodes)][1];
 
         $.ajax(home.path + 'resource/embed/' + nodeId + '/' + mimeType)
         .done(function (data) {
