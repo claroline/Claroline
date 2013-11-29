@@ -168,14 +168,11 @@ class MessageManagerTest extends MockeryTestCase
 
     public function testRemove()
     {
-        $user = $this->mock('Claroline\CoreBundle\Entity\User');
-        $msg = $this->mock('Claroline\CoreBundle\Entity\Message');
         $usrMsg = $this->mock('Claroline\CoreBundle\Entity\UserMessage');
 
-        $this->userMessageRepo->shouldReceive('findByMessages')->once()->andReturn(array($usrMsg));
         $this->om->shouldReceive('remove')->with($usrMsg)->once();
         $this->om->shouldReceive('flush')->once();
-        $this->manager->remove($user, array($msg));
+        $this->manager->remove(array($usrMsg));
     }
 
     public function testgenerateGroupeQrStr()

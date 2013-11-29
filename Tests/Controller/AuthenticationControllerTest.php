@@ -26,6 +26,7 @@ class AuthenticationControllerTest extends MockeryTestCase
     private $formFactory;
     private $authenticator;
     private $controller;
+    private $router;
 
     protected function setUp()
     {
@@ -39,6 +40,7 @@ class AuthenticationControllerTest extends MockeryTestCase
         $this->translator = $this->mock('Symfony\Component\Translation\Translator');
         $this->formFactory = $this->mock('Claroline\CoreBundle\Form\Factory\FormFactory');
         $this->authenticator = $this->mock('Claroline\CoreBundle\Library\Security\Authenticator');
+        $this->router = $this->mock('Symfony\Component\Routing\RouterInterface');
 
         $this->controller = new AuthenticationController(
             $this->request,
@@ -48,7 +50,8 @@ class AuthenticationControllerTest extends MockeryTestCase
             $this->translator,
             $this->formFactory,
             $this->authenticator,
-            $this->mailManager
+            $this->mailManager,
+            $this->router
         );
     }
 

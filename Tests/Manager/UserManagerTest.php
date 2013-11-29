@@ -28,6 +28,7 @@ class UserManagerTest extends MockeryTestCase
     private $ch;
     private $pagerFactory;
     private $om;
+    private $mailManager;
 
     public function setUp()
     {
@@ -42,6 +43,7 @@ class UserManagerTest extends MockeryTestCase
         $this->ch = $this->mock('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
         $this->pagerFactory = $this->mock('Claroline\CoreBundle\Pager\PagerFactory');
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->mailManager = $this->mock('Claroline\CoreBundle\Manager\MailManager');
     }
 
     public function testCreateUser()
@@ -60,6 +62,9 @@ class UserManagerTest extends MockeryTestCase
         $this->roleManager->shouldReceive('setRoleToRoleSubject')
             ->with($user, PlatformRoles::USER)
             ->once();
+        $this->mailManager->shouldReceive('isMailerAvailable')->once()->andReturn(true);
+        $this->mailManager->shouldReceive('sendPlainPassword')->once()->with($user);
+
         $this->om->shouldReceive('startFlushSuite')->once();
         $this->om->shouldReceive('endFlushSuite')->once();
         $this->om->shouldReceive('persist')->with($user)->once();
@@ -98,6 +103,8 @@ class UserManagerTest extends MockeryTestCase
             ->shouldReceive('setRoleToRoleSubject')
             ->with($user, PlatformRoles::USER)
             ->once();
+        $this->mailManager->shouldReceive('isMailerAvailable')->once()->andReturn(true);
+        $this->mailManager->shouldReceive('sendPlainPassword')->once()->with($user);
         $this->om->shouldReceive('persist')->with($user)->once();
         $this->strictDispatcher
             ->shouldReceive('dispatch')
@@ -137,6 +144,8 @@ class UserManagerTest extends MockeryTestCase
         $this->roleManager->shouldReceive('associateRoles')
             ->with($user, $roles)
             ->once();
+        $this->mailManager->shouldReceive('isMailerAvailable')->once()->andReturn(true);
+        $this->mailManager->shouldReceive('sendPlainPassword')->once()->with($user);
         $this->om->shouldReceive('persist')
             ->with($user)
             ->once();
@@ -321,7 +330,7 @@ class UserManagerTest extends MockeryTestCase
             ->once()
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 20)
             ->once()
             ->andReturn('pager');
 
@@ -339,7 +348,7 @@ class UserManagerTest extends MockeryTestCase
             ->once()
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 20)
             ->once()
             ->andReturn('pager');
 
@@ -352,11 +361,11 @@ class UserManagerTest extends MockeryTestCase
         $query = new \Doctrine\ORM\Query($em);
 
         $this->userRepo->shouldReceive('findAll')
-            ->with(false)
+            ->with(false, 'id')
             ->once()
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 20)
             ->once()
             ->andReturn('pager');
 
@@ -369,11 +378,11 @@ class UserManagerTest extends MockeryTestCase
         $query = new \Doctrine\ORM\Query($em);
 
         $this->userRepo->shouldReceive('findByName')
-            ->with('search', false)
+            ->with('search', false, 'id')
             ->once()
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 20)
             ->once()
             ->andReturn('pager');
 
@@ -387,11 +396,11 @@ class UserManagerTest extends MockeryTestCase
         $query = new \Doctrine\ORM\Query($em);
 
         $this->userRepo->shouldReceive('findByGroup')
-            ->with($group, false)
+            ->with($group, false, 'id')
             ->once()
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 20)
             ->once()
             ->andReturn('pager');
 
@@ -405,11 +414,11 @@ class UserManagerTest extends MockeryTestCase
         $query = new \Doctrine\ORM\Query($em);
 
         $this->userRepo->shouldReceive('findByNameAndGroup')
-            ->with('search', $group, false)
+            ->with('search', $group, false, 'id')
             ->once()
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 20)
             ->once()
             ->andReturn('pager');
 
@@ -427,7 +436,7 @@ class UserManagerTest extends MockeryTestCase
             ->once()
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 20)
             ->once()
             ->andReturn('pager');
 
@@ -445,7 +454,7 @@ class UserManagerTest extends MockeryTestCase
             ->once()
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 20)
             ->once()
             ->andReturn('pager');
 
@@ -459,11 +468,11 @@ class UserManagerTest extends MockeryTestCase
         $query = new \Doctrine\ORM\Query($em);
 
         $this->userRepo->shouldReceive('findGroupOutsiders')
-            ->with($group, false)
+            ->with($group, false, 'id')
             ->once()
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 20)
             ->once()
             ->andReturn('pager');
 
@@ -477,11 +486,11 @@ class UserManagerTest extends MockeryTestCase
         $query = new \Doctrine\ORM\Query($em);
 
         $this->userRepo->shouldReceive('findGroupOutsidersByName')
-            ->with($group, 'search', false)
+            ->with($group, 'search', false, 'id')
             ->once()
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 20)
             ->once()
             ->andReturn('pager');
 
@@ -593,7 +602,7 @@ class UserManagerTest extends MockeryTestCase
             ->andReturn($query);
 
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 20)
             ->once()
             ->andReturn('pager');
 
@@ -614,7 +623,7 @@ class UserManagerTest extends MockeryTestCase
             ->andReturn($query);
 
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 20)
             ->once()
             ->andReturn('pager');
 
@@ -634,7 +643,7 @@ class UserManagerTest extends MockeryTestCase
             ->andReturn($query);
 
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 20)
             ->once()
             ->andReturn('pager');
 
@@ -655,7 +664,7 @@ class UserManagerTest extends MockeryTestCase
             ->andReturn($query);
 
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 20)
             ->once()
             ->andReturn('pager');
 
@@ -680,7 +689,8 @@ class UserManagerTest extends MockeryTestCase
                 $this->translator,
                 $this->ch,
                 $this->pagerFactory,
-                $this->om
+                $this->om,
+                $this->mailManager
             );
         }
 
@@ -704,7 +714,8 @@ class UserManagerTest extends MockeryTestCase
                 $this->translator,
                 $this->ch,
                 $this->pagerFactory,
-                $this->om
+                $this->om,
+                $this->mailManager
             )
         );
     }

@@ -35,12 +35,15 @@ class WorkspaceManagerTest extends MockeryTestCase
     private $ut;
     private $templateDir;
     private $pagerFactory;
+    private $homeTabManager;
+    private $workpaceFavouriteRepo;
 
     public function setUp()
     {
         parent::setUp();
 
         vfsStream::setup('template');
+        $this->homeTabManager = $this->mock('Claroline\CoreBundle\Manager\HomeTabManager');
         $this->roleManager = $this->mock('Claroline\CoreBundle\Manager\RoleManager');
         $this->toolManager = $this->mock('Claroline\CoreBundle\Manager\ToolManager');
         $this->resourceManager = $this->mock('Claroline\CoreBundle\Manager\ResourceManager');
@@ -49,8 +52,10 @@ class WorkspaceManagerTest extends MockeryTestCase
         $this->resourceRightsRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceRightsRepository');
         $this->resourceTypeRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceTypeRepository');
         $this->roleRepo = $this->mock('Claroline\CoreBundle\Repository\RoleRepository');
+        $this->workspaceRepo = $this->mock('Claroline\CoreBundle\Repository\AbstractWorkspaceRepository');
+        $this->workpaceFavouriteRepo = $this->mock('Claroline\CoreBundle\Repository\WorkspaceFavouriteRepository');
         $this->rightsRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceRightsRepository');
-        $this->workspaceRepo = $this->mock('Claroline\CoreBundle\Repository\AbstractResourceRepository');
+        $this->workspaceFavouriteRepo = $this->mock('Claroline\CoreBundle\Repository\AbstractResourceRepository');
         $this->strictDispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->ut = $this->mock('Claroline\CoreBundle\Library\Utilities\ClaroUtilities');
@@ -673,9 +678,12 @@ class WorkspaceManagerTest extends MockeryTestCase
             ->andReturn($this->resourceRightsRepo);
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Workspace\AbstractWorkspace')
             ->andReturn($this->workspaceRepo);
+        $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Workspace\WorkspaceFavourite')
+            ->andReturn($this->workspaceFavouriteRepo);
 
         if (count($mockedMethods) === 0) {
             return new WorkspaceManager(
+                $this->homeTabManager,
                 $this->roleManager,
                 $this->maskManager,
                 $this->resourceManager,
@@ -699,6 +707,7 @@ class WorkspaceManagerTest extends MockeryTestCase
             return $this->mock(
                 'Claroline\CoreBundle\Manager\WorkspaceManager' . $stringMocked,
                 array(
+                    $this->homeTabManager,
                     $this->roleManager,
                     $this->maskManager,
                     $this->resourceManager,
