@@ -105,36 +105,18 @@
 
     function callBack(nodes)
     {
-        var id = _.keys(nodes)[0];
-        var resourceTypes = nodes[_.keys(nodes)][1];
         var nodeId = _.keys(nodes)[0];
-        var mimeArray = new Array('image/jpeg', 'image/gif', 'image/png');
         var mimeType = nodes[_.keys(nodes)][2];
+        //var resourceTypes = nodes[_.keys(nodes)][1];
 
-        if (resourceTypes === 'directory') {
-            //the breadcrumbs could be appended to the query string aswell
-            var route = Routing.generate(
-                'claro_desktop_open_tool', {'toolName': 'resource_manager'}
-            ) + '#resources/' + id;
-            tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() +
-                '<a href="' + route + '">' + nodes[_.keys(nodes)][0] + '</a>'
-            );
-        } else {
-            if (mimeArray.indexOf(mimeType) > -1) {
-                tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() +
-                    '<img src="' + Routing.generate('claro_file_get_image', {'node': id}) +
-                    '" style="max-width:100%"/>'
-                );
-            } else {
-                tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() +
-                    '<a href="' +
-                    Routing.generate('claro_resource_open', {'resourceType': resourceTypes, 'node' : nodeId}) +
-                    '">' + nodes[_.keys(nodes)][0] + '</a>'
-                );
-            }
-        }
-
-        editorChange(tinymce.activeEditor);
+        $.ajax(home.path + 'resource/embed/' + nodeId + '/' + mimeType)
+        .done(function (data) {
+            tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() + data);
+            editorChange(tinymce.activeEditor);
+        })
+        .error(function () {
+            home.modal('content/error');
+        });
     }
 
     function resourcePickerOpen()

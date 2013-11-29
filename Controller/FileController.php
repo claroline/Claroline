@@ -25,8 +25,8 @@ class FileController extends Controller
 {
     /**
      * @EXT\Route(
-     *     "resource/img/{node}",
-     *     name="claro_file_get_image",
+     *     "resource/media/{node}",
+     *     name="claro_file_get_media",
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -35,18 +35,18 @@ class FileController extends Controller
      *
      * @return Response
      */
-    public function streamImageAction(ResourceNode $node)
+    public function streamMediaAction(ResourceNode $node)
     {
         $collection = new ResourceCollection(array($node));
         $this->checkAccess('OPEN', $collection);
         $file = $this->get('claroline.manager.resource_manager')->getResourceFromNode($node);
-        $imgpath = $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR
+        $path = $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR
             . $file->getHashName();
 
         $response = new StreamedResponse();
         $response->setCallBack(
-            function () use ($imgpath) {
-                readfile($imgpath);
+            function () use ($path) {
+                readfile($path);
             }
         );
 
