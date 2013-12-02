@@ -71,6 +71,7 @@ available_widgets: 'Available widgets'
 available_workspaces: 'Available workspaces'
 back: 'Back'
 badges_management: 'Badges management'
+bad_request: The request is incorrect. If you arrived at this page via an internal link, please report the problem to the platform administrator.
 by: by
 canCopy: 'Right to copy'
 canCreate: 'Create %type%'
