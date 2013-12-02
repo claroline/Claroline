@@ -775,7 +775,7 @@
                     ids.push($($(this).parents('.node-thumbnail').get(0)).attr('id'));
                 });
 
-                if (ids.length <= 1) {
+                if (ids.length >= 1) {
                     this.remove(ids);
                 }
             },
