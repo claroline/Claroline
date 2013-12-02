@@ -213,8 +213,10 @@ class GroupRepository extends EntityRepository
     {
         if (!$executeQuery) {
             return $this->_em->createQuery(
-                "SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
+                "SELECT g, r, ws, uws FROM Claroline\CoreBundle\Entity\Group g
                  LEFT JOIN g.roles r
+                 LEFT JOIN r.workspace ws
+                 LEFT JOIN ws.personalUser uws
                  ORDER BY g.{$orderedBy}"
             );
         }
@@ -261,9 +263,11 @@ class GroupRepository extends EntityRepository
     public function findByName($search, $executeQuery = true, $orderedBy = 'id')
     {
         $dql = "
-            SELECT g, r
+            SELECT g, r, ws, uws
             FROM Claroline\CoreBundle\Entity\Group g
             LEFT JOIN g.roles r
+            LEFT JOIN r.workspace ws
+            LEFT JOIN ws.personalUser uws
             WHERE UPPER(g.name) LIKE :search
             ORDER BY g.{$orderedBy}
         ";
@@ -297,8 +301,10 @@ class GroupRepository extends EntityRepository
     public function findByRoles(array $roles, $getQuery = false, $orderedBy = 'id')
     {
         $dql = "
-            SELECT u FROM Claroline\CoreBundle\Entity\Group u
-            JOIN u.roles r WHERE r IN (:roles)
+            SELECT u, ws, r FROM Claroline\CoreBundle\Entity\Group u
+            JOIN u.roles r
+            LEFT JOIN r.workspace ws
+            WHERE r IN (:roles)
             ORDER BY u.{$orderedBy}
             ";
 
@@ -312,8 +318,10 @@ class GroupRepository extends EntityRepository
     {
         $search = strtoupper($name);
         $dql = "
-            SELECT u FROM Claroline\CoreBundle\Entity\Group u
-            JOIN u.roles r WHERE r IN (:roles)
+            SELECT u, ws, r FROM Claroline\CoreBundle\Entity\Group u
+            JOIN u.roles r
+            LEFT JOIN r.workspace ws
+            WHERE r IN (:roles)
             AND UPPER(u.name) LIKE :search
             ORDER BY u.{$orderedBy}
             ";
