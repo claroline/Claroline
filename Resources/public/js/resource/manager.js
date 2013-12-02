@@ -769,8 +769,15 @@
             'create': function (event) {
                 this.create(event.action, event.data, event.nodeId);
             },
-            'delete': function (event) {
-                this.remove(event.ids);
+            'delete': function () {
+                var ids = [];
+                $('.node-thumbnail input[type=checkbox]:checked').each(function () {
+                    ids.push($($(this).parents('.node-thumbnail').get(0)).attr('id'));
+                });
+
+                if (ids.length <= 1) {
+                    this.remove(ids);
+                }
             },
             'download': function (event) {
                 this.download(event.ids);
@@ -1035,6 +1042,9 @@
                         $('#confirm-modal').modal('hide');
                     }
                 });
+            });
+            $('#confirm-modal').on('hidden.bs.modal', function () {
+                $(this).remove();
             });
         },
         copy: function (nodeIds, directoryId) {
