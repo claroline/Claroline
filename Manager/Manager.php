@@ -152,7 +152,6 @@ class Manager
         $this->om->persist($subject);
         $this->om->flush();
         $this->dispatch(new CreateSubjectEvent($subject));
-        $this->sendSubjectNotification($subject, $subject->getCreator());
     }
 
     /**
@@ -189,25 +188,6 @@ class Manager
 
         $this->mailManager->send($title, $body, $users);
 
-    }
-
-
-    public function sendSubjectNotification(Subject $subject, User $user)
-    {
-        $forum = $subject->getForum();
-        $notifications = $this->notificationRepo->findBy(array('forum' => $forum));
-        $users = array();
-
-        foreach ($notifications as $notification) {
-            $users[] = $notification->getUser();
-        }
-
-        $url =  $link = $this->container->get('request')->server->get('HTTP_ORIGIN') .
-                $this->router->generate('claro_forum_subjects', array('forumId' => $forum->getId()));
-        $title = $this->translator->trans('forum_new_subject', array('%forum%' => $forum->getResourceNode()->getName()), 'forum');
-        $body = "{$title} </br> <a href='{$url}'>{$subject->getForum()->getResourceNode()->getName()} - {$subject->getTitle()}</a>";
-
-        $this->mailManager->send($title, $body, $users);
     }
 
     /**
