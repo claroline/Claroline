@@ -17,17 +17,29 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Event dispatched by the administration page when the administration page of a plugin is asked
  */
-class PluginOptionsEvent extends Event
+class PluginOptionsEvent extends Event implements DataConveyorEventInterface, MandatoryEventInterface
 {
     protected $response;
+    private $isPopulated = false;
 
     public function setResponse(Response $response)
     {
-        $this->response = $response;
+        $this->isPopulated = true;
+        $this->response    = $response;
     }
 
     public function getResponse()
     {
         return $this->response;
+    }
+
+    /**
+     * Checks if the event has been populated.
+     *
+     * @return boolean
+     */
+    public function isPopulated()
+    {
+        return $this->isPopulated;
     }
 }
