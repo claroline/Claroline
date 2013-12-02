@@ -63,6 +63,12 @@
         }
     ],
     "scripts": {
+        "pre-install-cmd": [
+            "Claroline\\BundleRecorder\\ScriptHandler::prePlatformInstall"
+        ],
+        "pre-update-cmd": [
+            "Claroline\\BundleRecorder\\ScriptHandler::prePlatformUpdate"
+        ],
         "post-package-install": [
             "Claroline\\BundleRecorder\\ScriptHandler::postPackageInstall"
         ],
