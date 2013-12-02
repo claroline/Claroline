@@ -71,6 +71,7 @@ available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espaces d''activités disponibles'
 back: 'Retour'
 badges_management: 'Gestion des badges'
+bad_request: La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l''administrateur de la plateforme.
 by: par
 canCopy: 'Droit de copier'
 canCreate: 'Creation de %type%'
