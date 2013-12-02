@@ -743,7 +743,6 @@
                 if (queryString) {
                     //searchParameters = {};
                     var parameters = decodeURIComponent(queryString.substr(1)).split('&');
-
                     _.each(parameters, function (parameter) {
                         parameter = parameter.split('=');
 
