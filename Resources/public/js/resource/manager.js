@@ -746,7 +746,8 @@
                     _.each(parameters, function (parameter) {
                         parameter = parameter.split('=');
 
-                        if (['name', 'dateFrom', 'dateTo', 'roots[]', 'types[]'].indexOf(parameter[0]) > -1) {
+                        if (['name', 'dateFrom', 'dateTo', 'roots[]', 'types[]'].indexOf(parameter[0]) > -1 &&
+                            searchParameters) {
                             searchParameters[parameter[0].replace('[]', '')] = parameter[1];
                         }
                     });
