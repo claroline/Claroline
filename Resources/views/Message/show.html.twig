@@ -11,7 +11,7 @@
 {% block section_content %}
     <div class="row">
         <div class="col-md-6">
-
+           {# {{ dump(message) }}#}
             {% for ancestor in ancestors %}
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -29,7 +29,7 @@
                         <p>
                             {{ ancestor.getContent()|raw }}
                             <p class="text-muted">
-                                {{ message.getDate()|timeAgo }}
+                                {{ ancestor.getDate()|timeAgo }}
                             </p>
                         </p>
                     </div>
