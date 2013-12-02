@@ -107,4 +107,16 @@ class Recorder
             unset($this->removableBundles[$package->getPrettyName()]);
         }
     }
+
+    public function preInstallCheck()
+    {
+        $this->preUpdateCheck();
+    }
+
+    public function preUpdateCheck()
+    {
+        if (false === $this->operationHandler->isFileEmpty()) {
+            throw new \Exception("A non empty operation file is already present (assumed not executed).");
+        }
+    }
 }
