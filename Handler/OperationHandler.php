@@ -46,7 +46,7 @@ class OperationHandler extends BaseHandler
 
     public function getOperations()
     {
-        if ('' === trim(file_get_contents($this->targetFile))) {
+        if ($this->isFileEmpty()) {
             return array();
         }
 
@@ -75,7 +75,7 @@ class OperationHandler extends BaseHandler
 
     private function writeOperations()
     {
-        if (!$this->isPreviousFileChecked && '' !== file_get_contents($this->targetFile)) {
+        if (!$this->isPreviousFileChecked && !$this->isFileEmpty()) {
             throw new \Exception(
                 'A non empty operation file is already present (assumed not executed)'
             );

@@ -32,4 +32,12 @@ class BaseHandler
             $log($message);
         }
     }
+
+    /**
+     * @return bool
+     */
+    public function isFileEmpty()
+    {
+        return '' === trim(file_get_contents($this->targetFile));
+    }
 }

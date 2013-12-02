@@ -11,6 +11,8 @@
 
 namespace Claroline\BundleRecorder;
 
+use Composer\Script\CommandEvent;
+use Composer\Script\Event;
 use Composer\Script\PackageEvent;
 use Claroline\BundleRecorder\Operation;
 use Claroline\BundleRecorder\Detector\Detector;
@@ -20,6 +22,16 @@ use Claroline\BundleRecorder\Handler\OperationHandler;
 class ScriptHandler
 {
     private static $recorder;
+
+    public static function prePlatformInstall(CommandEvent $event)
+    {
+        static::getRecorder($event)->preInstallCheck();
+    }
+
+    public static function prePlatformUpdate(CommandEvent $event)
+    {
+        static::getRecorder($event)->preUpdateCheck();
+    }
 
     public static function postPackageInstall(PackageEvent $event)
     {
@@ -44,7 +56,12 @@ class ScriptHandler
         static::getRecorder($event)->uninstall($event->getOperation()->getPackage());
     }
 
-    private static function getRecorder(PackageEvent $event)
+    /**
+     * @param Event $event
+     *
+     * @return Recorder
+     */
+    private static function getRecorder(Event $event)
     {
         if (!isset(static::$recorder)) {
             $io = $event->getIO();
