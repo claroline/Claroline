@@ -75,7 +75,7 @@ class OperationHandler extends BaseHandler
 
     private function writeOperations()
     {
-        if (!$this->isPreviousFileChecked && $this->isFileEmpty()) {
+        if (!$this->isPreviousFileChecked && !$this->isFileEmpty()) {
             throw new \Exception(
                 'A non empty operation file is already present (assumed not executed)'
             );
