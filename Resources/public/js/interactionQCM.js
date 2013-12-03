@@ -37,7 +37,31 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
     });
 
     // Make the choices' table sortable with jquery ui plugin
-    $('tbody').sortable();
+    //$('tbody').sortable();
+     
+    // Return a helper with preserved width of cells
+    var fixHelper = function(e, ui) {
+        ui.children().each(function() {
+                $(this).width($(this).width());
+        });
+        return ui;
+    };
+
+    $('tbody').sortable({
+        helper: fixHelper,
+        cancel: 'contenteditable',
+        start: function (e, ui){
+            $(this).find('.claroline-tiny-mce').each(function () {
+                tinyMCE.execCommand( 'mceRemoveControl', false, $(this).attr('id') );
+            });
+        },
+        stop: function (e,ui) {
+            $(this).find('.claroline-tiny-mce').each(function () {
+                tinyMCE.execCommand( 'mceAddControl', true, $(this).attr('id') );
+                $(this).sortable("refresh");
+            });
+        }
+    });
 }
 
 // QCM Edition
@@ -89,7 +113,31 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
     });
 
     // Make the choices' table sortable with jquery ui plugin
-    $('tbody').sortable();
+    //$('tbody').sortable();
+    
+    // Return a helper with preserved width of cells
+    var fixHelper = function(e, ui) {
+        ui.children().each(function() {
+                $(this).width($(this).width());
+        });
+        return ui;
+    };
+
+    $('tbody').sortable({
+        helper: fixHelper,
+        cancel: 'contenteditable',
+        start: function (e, ui){
+            $(this).find('.claroline-tiny-mce').each(function () {
+                tinyMCE.execCommand( 'mceRemoveControl', false, $(this).attr('id') );
+            });
+        },
+        stop: function (e,ui) {
+            $(this).find('.claroline-tiny-mce').each(function () {
+                tinyMCE.execCommand( 'mceAddControl', true, $(this).attr('id') );
+                $(this).sortable("refresh");
+            });
+        }
+    });
 }
 
 // Add a choice

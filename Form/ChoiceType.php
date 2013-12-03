@@ -55,7 +55,7 @@ class ChoiceType extends AbstractType
                 )
             )
             ->add(
-                'label', 'textarea', array(
+                'label', 'tinymce', array(
                     'label' => ' '
                 )
             )
