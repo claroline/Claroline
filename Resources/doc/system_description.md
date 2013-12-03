@@ -43,12 +43,12 @@ The actions that raise a notification can be divided in two categories, dependin
 
 A user receives a notification only if he is enrolled to the workspace.
 
-*	*Add a user to a group*: Notifies target user (the one that has been added to the group)
-*	*Enroll group to a workspace*: Notifies the group users
-*	*Enroll user to a workspace*: Notifies the target user
-*	*Create new resource*: Notifies all enrolled users to workspace that a new resource has been added
-*	*Give access to a resource*: Notifies users that they can access the resource
-*	*Move resource to another workspace*: Notifies users enrolled to the new workspace about the presence of a new resource
+*	**Add a user to a group**: Notifies target user (the one that has been added to the group)
+*	**Enroll group to a workspace**: Notifies the group users
+*	**Enroll user to a workspace**: Notifies the target user
+*	**Create new resource**: Notifies all enrolled users to workspace that a new resource has been added
+*	**Give access to a resource**: Notifies users that they can access the resource
+*	**Move resource to another workspace**: Notifies users enrolled to the new workspace about the presence of a new resource
 
 
 ### Resource level notifications
