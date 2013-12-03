@@ -66,7 +66,7 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             'Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle'           => 'stfalcon_tinymce',
             'IDCI\Bundle\ExporterBundle\IDCIExporterBundle'                 => 'idci_exporter',
             'Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle' => 'sensio_framework_extra',
-            'FOS\RestBundle\FOSRestBundleBundle'                            => 'fos_rest'
+            'FOS\RestBundle\FOSRestBundle'                                  => 'fos_rest'
         );
         // one configuration file for every standard environment (prod, dev, test)
         $envConfigs = array(
