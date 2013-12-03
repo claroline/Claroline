@@ -70,10 +70,10 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
         );
         // one configuration file for every standard environment (prod, dev, test)
         $envConfigs = array(
-            'Symfony\Bundle\FrameworkBundle\FrameworkBundle' => 'framework',
-            'Symfony\Bundle\MonologBundle\MonologBundle' => 'monolog',
+            'Symfony\Bundle\FrameworkBundle\FrameworkBundle'     => 'framework',
+            'Symfony\Bundle\MonologBundle\MonologBundle'         => 'monolog',
             'Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle' => 'swiftmailer',
-            'Doctrine\Bundle\DoctrineBundle\DoctrineBundle' => 'doctrine'
+            'Doctrine\Bundle\DoctrineBundle\DoctrineBundle'      => 'doctrine'
         );
 
         if (in_array($bundleClass, $emptyConfigs)) {
