@@ -398,6 +398,7 @@ rename_widget_instance: 'Rename widget'
 reset: Reset
 reset_password: Reset password
 reset_password_message: 'Do you really want to reset these passwords ?'
+reset_password_txt: 'You asked for your password reinitialisation. If You did not ask for it, please just ignore this message.'
 reset_pwd: 'Reset Your Password'
 reset_pwd_form_plainPassword_first: 'New password'
 reset_pwd_form_plainPassword_second : 'Repeat the password'
