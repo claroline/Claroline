@@ -20,6 +20,7 @@ Your changes have been saved: 'Your changes have been saved'
 account_created: 'Account created.'
 account_general_statistics: 'Account general statistics'
 action: Action
+actions: Actions
 active_widgets: 'Active widgets'
 activity_form_instructions: Instructions
 activity_form_name: Name
@@ -91,6 +92,7 @@ change_view : 'Change the display'
 choose_resource_form_type: 'Resource type'
 classify_workspaces: 'Classify workspaces'
 close: Close
+code: Code
 collaborator: Collaborator
 communication: Communication
 configuration: Configuration
@@ -171,6 +173,7 @@ editable: 'Editable'
 email_form_mail : 'Enter your email'
 empty_file: 'Empty file'
 enter_tag_name_message: 'Please enter a tag name'
+entries_per_day: "Entries per day"
 export: Export
 exportable: 'Exportable'
 fast_answer: 'Fast answer'
@@ -507,6 +510,7 @@ top_users_workspaces_enrolled: 'Top users having access in most workspaces'
 top_users_workspaces_owners: 'Top users having the most workspaces'
 top_workspaces_connections: 'Top most visited workspaces'
 top_workspaces_resources: 'Top workspaces having the most resources'
+total: Total
 trash : Trash
 type: Type
 type_s: Type(s)

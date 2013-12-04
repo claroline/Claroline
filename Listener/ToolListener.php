@@ -95,6 +95,16 @@ class ToolListener
     }
 
     /**
+     * @DI\Observe("open_tool_workspace_analytics")
+     *
+     * @param DisplayToolEvent $event
+     */
+    public function onDisplayWorkspaceAnalytics(DisplayToolEvent $event)
+    {
+        $event->setContent($this->workspaceAnalytics($event->getWorkspace()));
+    }
+
+    /**
      * @DI\Observe("open_tool_desktop_parameters")
      *
      * @param DisplayToolEvent $event
@@ -188,6 +198,14 @@ class ToolListener
         return $this->templating->render(
             'ClarolineCoreBundle:Tool/workspace/logs:logList.html.twig',
             $this->container->get('claroline.log.manager')->getWorkspaceList($workspace, 1)
+        );
+    }
+
+    public function workspaceAnalytics($workspace)
+    {
+        return $this->templating->render(
+            'ClarolineCoreBundle:Tool/workspace/analytics:analytics.html.twig',
+            $this->container->get('claroline.manager.analytics_manager')->getWorkspaceAnalytics($workspace)
         );
     }
 

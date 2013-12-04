@@ -27,7 +27,8 @@ class AdminAnalyticsConnectionsType extends AbstractType
                     'choices' => array(
                         'false' => 'connections',
                         'true' => 'unique connections'
-                    )
+                    ),
+                    'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-3')
                 )
             )
             ->add(
@@ -36,10 +37,8 @@ class AdminAnalyticsConnectionsType extends AbstractType
                 array(
                     'label' => 'for period',
                     'required' => false,
-                    'attr' => array(
-                        'class' => 'input-sm',
-                        'style' => 'max-width:200px'
-                    )
+                    'attr' => array('class' => 'input-sm'),
+                    'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-3')
                 )
             );
     }

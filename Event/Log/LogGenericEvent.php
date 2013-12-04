@@ -41,6 +41,9 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     /** @var bool */
     protected $isDisplayedInWorkspace = false;
 
+    /** @var bool */
+    protected $isWorkspaceEnterEvent = false;
+
     /**
      * Constructor.
      */
@@ -53,7 +56,8 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
         Role $role = null,
         AbstractWorkspace $workspace = null,
         User $owner = null,
-        $toolName = null
+        $toolName = null,
+        $isWorkspaceEnterEvent = false
     )
     {
         $this->action                 = $action;
@@ -65,6 +69,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
         $this->workspace              = $workspace;
         $this->owner                  = $owner;
         $this->toolName               = $toolName;
+        $this->isWorkspaceEnterEvent = $isWorkspaceEnterEvent;
 
         $this->setVisibiltyFromRestriction();
     }
@@ -170,6 +175,16 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     public function getIsDisplayedInWorkspace()
     {
         return $this->isDisplayedInWorkspace;
+    }
+
+    /**
+     * Return the visibility in workspace for the associated log
+     *
+     * @return bool
+     */
+    public function getIsWorkspaceEnterEvent()
+    {
+        return $this->isWorkspaceEnterEvent;
     }
 
     /**

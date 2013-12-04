@@ -13,6 +13,14 @@
         table td.text-right{
             text-align:right!important;
         }
+        span.user-count-number{
+            font-size: 25px;
+        }
+        div#users-pie-chart{
+            min-height: 200px;
+        }
+        div.jqplot-pie-series.jqplot-data-label {font-size: 10px;}
+        table tr.odd td {background-color: #F9F9F9 }
     </style>
     <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
 {% endblock %}
@@ -59,8 +67,22 @@
                     {{'account_general_statistics'|trans({}, 'platform')}}
                 </div>
                 <div id="analytics-userstats" class="panel-body">
-                    <div id="container-userstats">
-                        {{usersCount}} {{'user_accounts'|trans({}, 'platform')}}
+                    <div id="container-userstats" class="row">
+                        <div class="col-md-2">
+                            <span class="user-count-number">{{ usersCount['user_accounts'] }}</span><br/>
+                            <span class="user-count-label">{{ 'user_accounts'|trans({}, 'platform') }}</span>
+                        </div>
+                        {% for key, value in usersCount|reverse %}
+                            {% if(key != 'user_accounts') %}
+                            <div class="col-md-2">
+                                <span class="user-count-number">{{ value }}</span><br/>
+                                <span class="user-count-label">{{ key|trans({}, 'platform') }}</span>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                        <div class="col-md-4">
+                            <div id="users-pie-chart"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -78,9 +100,9 @@
                     <table class="table table-condensed table-hovered">
                         <tr><th>#</th><th>{{'name'|trans({}, 'platform')}}</th><th>{{'connections'|trans({}, 'platform')}}</th></tr>
                         {% for ws in mostViewedWS %}
-                            <tr><td>{{loop.index}}</td><td>{{ws.name}} ({{ws.code}})</td><td>{{ws.actions}}</td></tr>
+                        <tr class="{{ cycle(['odd', 'even'], loop.index) }}"><td>{{loop.index}}</td><td>{{ws.name}} ({{ws.code}})</td><td>{{ws.actions}}</td></tr>
                         {% endfor %}
-                        <tr><td colspan="3" class="text-right"><a href="{{ path('claro_admin_analytics_top', { 'top_type': 'top_workspaces_connections' }) }}">{{'see_more'|trans({}, 'platform')}}...</a></td></tr>
+                        <tr><td colspan="3" class="text-right"><a href="{{ path('claro_admin_analytics_top', { 'topType': 'top_workspaces_connections' }) }}">{{'see_more'|trans({}, 'platform')}}...</a></td></tr>
                     </table>
                 </div>
             </div>
@@ -94,9 +116,9 @@
                     <table class="table table-condensed table-hovered">
                         <tr><th>#</th><th>{{'name'|trans({}, 'platform')}}</th><th>{{'views'|trans({}, 'platform')}}</th></tr>
                         {% for media in mostViewedMedia %}
-                            <tr><td>{{loop.index}}</td><td>{{media.name}}</td><td>{{media.actions}}</td></tr>
+                            <tr class="{{ cycle(['odd', 'even'], loop.index) }}"><td>{{loop.index}}</td><td>{{media.name}}</td><td>{{media.actions}}</td></tr>
                         {% endfor %}
-                        <tr><td colspan="3" class="text-right"><a href="{{ path('claro_admin_analytics_top', { 'top_type': 'top_media_views' }) }}">{{'see_more'|trans({}, 'platform')}}...</a></td></tr>
+                        <tr><td colspan="3" class="text-right"><a href="{{ path('claro_admin_analytics_top', { 'topType': 'top_media_views' }) }}">{{'see_more'|trans({}, 'platform')}}...</a></td></tr>
                     </table>
                 </div>
             </div>
@@ -110,9 +132,9 @@
                     <table class="table table-condensed table-hovered">
                         <tr><th>#</th><th>{{'name'|trans({}, 'platform')}}</th><th>{{'downloads'|trans({}, 'platform')}}</th></tr>
                         {% for resource in mostDownloadedResources %}
-                            <tr><td>{{loop.index}}</td><td>{{resource.name}}</td><td>{{resource.actions}}</td></tr>
+                        <tr class="{{ cycle(['odd', 'even'], loop.index) }}"><td>{{loop.index}}</td><td>{{resource.name}}</td><td>{{resource.actions}}</td></tr>
                         {% endfor %}
-                        <tr><td colspan="3" class="text-right"><a href="{{ path('claro_admin_analytics_top', { 'top_type': 'top_resources_downloads' }) }}">{{'see_more'|trans({}, 'platform')}}...</a></td></tr>
+                        <tr><td colspan="3" class="text-right"><a href="{{ path('claro_admin_analytics_top', { 'topType': 'top_resources_downloads' }) }}">{{'see_more'|trans({}, 'platform')}}...</a></td></tr>
                     </table>
                 </div>
             </div>
@@ -125,6 +147,7 @@
     <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/excanvas.min.js') }}"></script><![endif]-->
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/jquery.jqplot.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.highlighter.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pieRenderer.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasTextRenderer.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.dateAxisRenderer.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.barRenderer.min.js') }}"></script>
@@ -133,6 +156,12 @@
 
     <script type="text/javascript">
         var chartData = {{ barChartData|json_encode|raw }};
+        var userPieChartData = [];
+        {% for key, value in usersCount|reverse %}
+            {% if(key != 'user_accounts') %}
+                userPieChartData.push(["{{key|trans({}, 'platform')}}",{{value}}]);
+            {% endif %}
+        {% endfor %}
         var bg_color = "transparent";
         if ($.browser.msie && parseInt($.browser.version, 10) <= 8) bg_color = "#fff";
         $(document).ready(function(){
@@ -203,6 +232,55 @@
                             shadow:false
                         }
                     }
+                );
+            }
+
+            if (userPieChartData.length>0) {
+                var usersPlot = $.jqplot(
+                        'users-pie-chart',
+                        [userPieChartData],
+                        {
+                            title: {show: false},
+                            grid: {
+                                drawBorder: false,
+                                shadow: false,
+                                background: bg_color,
+                                useNegativeColors: false
+                            },
+                            highlighter: {
+                                show: false
+                            },
+                            cursor: {
+                                show: false,
+                                zoom: false,
+                                showTooltip: false
+                            },
+                            seriesDefaults: {
+                                showMarker:true,
+                                renderer:$.jqplot.PieRenderer,
+                                rendererOptions:{
+                                    showDataLabels: true,
+                                    dataLabelThreshold: 2,
+                                    dataLabels: 'percent',
+                                    sliceMargin:0.3,
+                                    dataLabelFormatString: '%.1f%%',
+                                    highlightMouseOver:false
+                                },
+                                shadow:false
+                            },
+                            legend:{
+                                location: 'e',
+                                border:'none',
+                                renderer: $.jqplot.CavasTextRenderer,
+                                show:true,
+                                showMarker:true,
+                                rendererOptions:{
+                                    numberRows:7
+                                },
+                                backgroundColor:bg_color,
+                                placement:'outsideGrid'
+                            }
+                        }
                 );
             }
         });
