@@ -9,11 +9,7 @@
 <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.css') }}'/>
 <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
 <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
-<link
-        rel='stylesheet'
-        type='text/css'
-        href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}'
-    >
+<link rel='stylesheet'type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}' />
 {% endblock %}
 {% block breadcrumb %}
     {{
@@ -54,6 +50,7 @@
                                 {{ 'delete'|trans({}, 'platform') }}
                             </button>
                             <form method="post" action="{{ path('claro_workspace_agenda_add_event', {workspaceId: workspace.getId()}) }}" id="myForm" {{ form_enctype(form) }}>
+                                <div id="text" class="col-md-10 filters"> </div>
                                 {{ form_widget(form) }}
                             </form>
                         </div>
