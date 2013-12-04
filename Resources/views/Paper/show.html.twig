@@ -419,6 +419,7 @@
         {% if p == -2 %}
             <div class="panel-body">
                 <div class="panel panel-default">
+                    {% set needLegend = false %}
                     <div class="panel-heading"><h3>{{ 'list of question' | trans }} :</h3></div>
                     <div class="panel-body">
                         <ol>
@@ -427,6 +428,7 @@
 
                                 {% if (display == 'all') %}
                                     {% if responses[i].mark == -1 %}
+                                        {% set needLegend = true %}
                                         <li>
                                             <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': i }) }}" style="color: red;">
                                                 {{ interaction.question.title }}
@@ -447,9 +449,10 @@
                             {% endfor %}
                         </ol>
 
-                        <hr/>
-
-                        <h6 style="color: red;">( {{ 'need Correction' | trans }} ).</h6>
+                        {% if needLegend == true %}
+                            <hr/>
+                            <h6 style="color: red;">( {{ 'need Correction' | trans }} ).</h6>
+                        {% endif %}
                     </div>
                 </div>
             </div>
