@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use \Exception;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\User;
@@ -72,7 +71,7 @@ class ResourceController
         Request $request,
         StrictDispatcher $dispatcher,
         MaskManager $maskManager,
-        TimedTwigEngine $templating,
+        TwigEngine $templating,
         LogManager $logManager
     )
     {
