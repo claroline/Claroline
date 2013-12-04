@@ -233,6 +233,10 @@ claro_workspaces_widget:
     prefix: widget
     type: annotation
 
+claro_security_oauth:
+    resource: "@ClarolineCoreBundle/Controller/Oauth/SecurityController.php"
+    type: annotation
+
 # Api routes
 claro_api:
     resource: "@ClarolineCoreBundle/Controller/Api"
