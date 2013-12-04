@@ -97,6 +97,7 @@ delete document: Deletion of document
 delete of my bank: Delete of my bank
 delete of my exercise: Delete of my exercise
 description: Description
+displayAllList: Display the whole list
 display all on this page: Display all on this page
 display pagination: Display with pagination
 docimology: Docimology
@@ -287,6 +288,7 @@ saveNewOrder: Save the new order
 sawHint: of penalty for seen hints
 search: Search
 searchQuestion: Search questions
+searchUserPaper: Search papers of user
 seeDoc: See linked questions to this document
 seeSharedWith: Question shared with users
 select: Select

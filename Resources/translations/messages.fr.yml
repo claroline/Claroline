@@ -97,6 +97,7 @@ delete document: Suppression de document
 delete of my bank: Supprimer de ma banque
 delete of my exercise: Supprimer de mon exercice
 description: Description
+displayAllList: Afficher la liste complète
 display all on this page: Tout afficher sur cette page
 display pagination: Afficher la pagination
 docimology: Docimologie
@@ -287,6 +288,7 @@ saveNewOrder: Enregistrer le nouvel ordre
 sawHint: de pénalité pour indices vus
 search: Rechercher un document
 searchQuestion: Chercher des questions
+searchUserPaper: Rechercher les copies de l'utilisateur
 seeDoc: Voir les questions liées à ce document
 seeSharedWith: Question partagée avec des utilisateurs
 select: Sélectionner

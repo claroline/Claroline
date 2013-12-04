@@ -1,11 +1,11 @@
 // To know if sorting is up or down
-var clickC = clickTi = clickTy = clickI = clickL = clickT = clickU = clickN = clickS
+var clickC = clickTi = clickTy = clickI = clickL = clickT = clickU = clickN = clickS = clickM
     = clickE = clickSps = clickSn = clickSp = clickDl = clickTl = clickQl = clickCl = clickPl = clickRl = 'no';
 
 // Arrows to show the directions of the sorting
-var upC, upTi, upTy, upI, upL, upT, upU, upN, upS, upE, upSps, upSn, upSp, upDl, upTl, upQl, upCl, upPl, upRl,
+var upC, upTi, upTy, upI, upL, upT, upU, upN, upS, upE, upSps, upSn, upSp, upDl, upTl, upQl, upCl, upPl, upRl, upM,
     downC, downTi, downTy, downI, downL, downT, downU, downN, downS, downE, downSps, downSn, downSp,
-    downDl, downTl, downQl, downCl, downPl, downRl;
+    downDl, downTl, downQl, downCl, downPl, downRl, downM;
 
 // Sort questions by selected column (type)
 function SortQuestions(type, array) {
@@ -48,10 +48,12 @@ function selectArrows(array) {
         upN = $('#upN');
         upS = $('#upS');
         upE = $('#upE');
+        upM = $('#upM');
         downU = $('#downU');
         downN = $('#downN');
         downS = $('#downS');
         downE = $('#downE');
+        downM = $('#downM');
     }
 
     if (array == 'user-table') {
@@ -91,10 +93,12 @@ function hideArrows(array) {
         upN.css({"display" : "none"});
         upS.css({"display" : "none"});
         upE.css({"display" : "none"});
+        upM.css({"display" : "none"});
         downU.css({"display" : "none"});
         downN.css({"display" : "none"});
         downS.css({"display" : "none"});
         downE.css({"display" : "none"});
+        downM.css({"display" : "none"});
     } else if (array == 'user-table') {
         upSps.css({"display" : "none"});
         upSn.css({"display" : "none"});
@@ -344,6 +348,17 @@ function switchType(type, array) {
                 clickRl = 'no';
             }
             break;
+        case 'mark':
+            if (clickM == 'no') {
+                sortTable(array, 6, SCOREA, type);
+                downM.css({"display" : "inline-block"});
+                clickM = 'yes';
+            } else {
+                sortTable(array, 6, SCORED, type);
+                upM.css({"display" : "inline-block"});
+                clickM = 'no';
+            }
+            break;
     }
 }
 // To sort decreasing
@@ -376,12 +391,12 @@ function ASC(a, b) {
 
 // To sort increasing
 function NUMA(a, b) {
-    return a - b;
+    return a[1] - b[1];
 }
 
 // To sort decreasing
 function NUMD(a, b) {
-    return b - a;
+    return b[1] - a[1];
 }
 
 function DATE(x) {
@@ -431,6 +446,20 @@ function DATED(a, b) {
     }
 }
 
+function SCOREA(a,b) {
+    scorea = a[1].substring(0, a[1].indexOf(' / '));
+    scoreb = b[1].substring(0, b[1].indexOf(' / '));
+
+    return scorea - scoreb;
+}
+
+function SCORED(a,b) {
+    scorea = a[1].substring(0, a[1].indexOf(' / '));
+    scoreb = b[1].substring(0, b[1].indexOf(' / '));
+
+    return scoreb - scorea;
+}
+
 // To display the rows in the right order
 function sortTable(tid, col, ord, type) {
 
@@ -453,7 +482,7 @@ function sortTable(tid, col, ord, type) {
                 sorter.push([$(this), link]);
             // Sort string
             } else {
-                contenu =  $(this).find('td').eq(col).html().toLowerCase();
+                contenu =  $(this).find('td').eq(col).html().toLowerCase().trim();
                 sorter.push([$(this), contenu]);
             }
         }
@@ -543,6 +572,24 @@ window.onload = function () {
         }
     }
 };
+
+function searchUserPaper(path) {
+
+    var userName = $('#nameUser').val();
+
+    // Send theses informations to the controller to have the matching questions and display it
+    $.ajax({
+        type: 'GET',
+        url: path,
+        data: {
+            userName: userName
+        },
+        cache: false,
+        success: function (data) {
+            $('#resultSearch').html(data);
+       }
+    });
+}
 
 function importQuestion(pathmy, pathshared, exoID, pageToGo, nothingToImport) {
     var questionIdArrayMy = [];

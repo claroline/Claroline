@@ -1,9 +1,13 @@
 ujm_paper_mark_open_question:
     pattern:  /{respid}/{maxScore}/mark/open
     defaults: { _controller: "UJMExoBundle:Paper:markedOpen" }
-    
+
 ujm_paper_mark_open_question_record:
     pattern:  /mark/open/record
     defaults: { _controller: "UJMExoBundle:Paper:markedOpenRecord" }
     requirements:
       _method: POST
+
+ujm_paper_searchUserPaper:
+    pattern:  /search/user/paper
+    defaults: { _controller: "UJMExoBundle:Paper:searchUserPaper" }
