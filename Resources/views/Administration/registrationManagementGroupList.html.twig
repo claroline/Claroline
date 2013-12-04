@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'registration_to_workspaces' | trans({}, 'platform') ~ ' (' ~ 'groups'|trans({}, 'platform') ~ ')' }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'registration_to_workspaces' | trans({}, 'platform') ~ ' (' ~ 'groups'|trans({}, 'platform') ~ ')' | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{

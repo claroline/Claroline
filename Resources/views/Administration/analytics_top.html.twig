@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'analytics_top' | trans({}, 'platform') }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'analytics_top' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}

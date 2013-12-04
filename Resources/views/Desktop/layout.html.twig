@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{% block title %}{{ 'desktop' | trans({}, 'platform') }}{% endblock %}
+{% block title %}{{ 'desktop' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     <div id="resource-breadcrumb">
@@ -49,15 +49,4 @@
     </div>
     {% block section_after_content %}{% endblock %}
 
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript">
-
-        $('body').tooltip({
-            selector: '[data-toggle=tooltip]'
-        })
-
-    </script>
 {% endblock %}

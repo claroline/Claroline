@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
-{% block title %}{{ parent() ~ ' - ' ~ "roles" | trans({}, "platform") }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ "roles" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -18,24 +18,25 @@
 
 {% block section_content %}
     <div class="panel-body">
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs margin-bottom-md">
             <li> <a href="{{ path('claro_workspace_registered_user_list', {'workspace': workspace.getId() }) }}"> {{'users'|trans({}, 'platform') }} </a> </li>
             <li> <a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId() }) }}"> {{'groups'|trans({}, 'platform') }} </a> </li>
             <li class="active"> <a href="#">{{ 'roles'|trans({}, 'platform') }}</a> </li>
         </ul>
-        <div class="margin-md">
-            <a class="btn btn-default" href="{{ path('claro_workspace_role_create_form', {'workspace': workspace.getId() }) }}">
-                <i class="icon-plus"></i> {{ 'add_role'|trans({}, 'platform') }}
-            </a>
-        </div>
         <h3>{{ 'roles_management'|trans({}, 'platform') }}</h3>
-        <div>
+    </div>
+    <div class="list-group">
+        <div class="list-group-item">
+            <div class="margin-md">
+                <a class="btn btn-default" href="{{ path('claro_workspace_role_create_form', {'workspace': workspace.getId() }) }}">
+                    <i class="icon-plus"></i> {{ 'add_role'|trans({}, 'platform') }}
+                </a>
+            </div>
             <div class="table-responsive">
                 <table class="table-striped table-bordered table-condensed" width="100%">
                     <thead>
                         <th> {{ 'name'|trans({}, 'platform') }} </th>
-                        <th> {{ 'edit'|trans({}, 'platform') }} </th>
-                        <th> {{ 'delete'|trans({}, 'platform') }} </th>
+                        <th colspan="2"> {{ 'Actions'|trans({}, 'platform') }} </th>
                     </thead>
                     <tbody>
                         {% for role in roles %}

@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'Plugins' | trans({}, 'platform') }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'Plugins' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -23,6 +23,7 @@
         <h3 class="panel-title">{{ 'Plugins'|trans({}, 'platform') }}</h3>
     </div>
     <div class="panel-body">
+        <div>{{ macros.flashBox() }}</div>
         <div class="row">
             {% for plugin in plugins %}
                 <div class="col-md-3">

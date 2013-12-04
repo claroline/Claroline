@@ -24,7 +24,7 @@
             {% else %}
                 {% set pagetitle = 'Claroline Connect' %}
         {% endif %}
-        <title>{% block title %}{{ pagetitle }}{% endblock %}</title>
+        <title>{% block title %}{{ pagetitle | striptags | raw }}{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
 
         {% block favicon %}

@@ -2,7 +2,7 @@
 
 {% trans_default_domain "badge" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'badges_management' | trans }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'badges_management' | trans | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -27,13 +27,6 @@
 {% endblock %}
 
 {% block javascripts %}
-{{ parent() }}
-<script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
-<script type="text/javascript">
-    $(function(){
-        $("[data-toggle=tooltip]").tooltip();
-
-        $(".confirm").confirmModal();
-    });
-</script>
+    {{ parent() }}
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
 {% endblock %}

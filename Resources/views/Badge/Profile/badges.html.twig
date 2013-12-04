@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:Badge:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'my_badges' | trans({}, 'platform') }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'my_badges' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% trans_default_domain "badge" %}
 
@@ -39,13 +39,4 @@
             {% include 'ClarolineCoreBundle:Badge/Badge:display.html.twig' with {'badgeUrl': 'claro_profile_view_badge', 'paginationurl': 'claro_profile_view_badges', 'routeParams': {}} %}
         </div>
     </div>
-{% endblock %}
-
-{% block javascripts %}
-{{ parent() }}
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('[data-toggle=tooltip]').tooltip();
-    });
-</script>
 {% endblock %}

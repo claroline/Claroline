@@ -66,7 +66,9 @@
                 .removeAttr('checked')
                 .removeAttr('selected');
             $('#myModalLabel').text(Translator.get('agenda' + ':' + 'add_event'));
-            $('.hours').val('00:00');
+            $('.hours').each(function() {
+                $(this).val('00:00');
+            });
             $('#myModal').modal();
         };
         var dayClickDesktop = function (date) {
@@ -77,7 +79,9 @@
             $('#agenda_form').find('input:radio, input:checkbox')
                 .removeAttr('checked')
                 .removeAttr('selected');
-            $('.hours').val('00:00');
+            $('.hours').each(function() {
+                $(this).val('00:00');
+            });
             $('#myModal').modal();
         };
         var dayClickFunction = context === 'desktop' ? dayClickDesktop : dayClickWorkspace;
@@ -239,8 +243,14 @@
             $('#myModalLabel').text(Translator.get('agenda' + ':' + 'modify'));
             $('#agenda_form_title')
                 .attr('value', $(e.target.parentElement.parentElement.children)[1].innerHTML);
-            $('#agenda_form_start').val($(list[0])[0].innerHTML);
-            $('#agenda_form_end').val($(list[1])[0].innerHTML);
+            var hours = $(list[0])[0].innerHTML;
+            hours = hours.split(' ');
+            $('#agenda_form_start').val(hours[1]);
+            $('#agenda_form_startHours').val(hours[2]);
+            hours = $(list[1])[0].innerHTML;
+            hours = hours.split(' ');
+            $('#agenda_form_end').val(hours[1]);
+            $('#agenda_form_endHours').val(hours[2]);
             $('#agenda_form_description').val($(list[2])[0].innerHTML);
             if( $(list[3])[0].innerHTML == 1)
             {
@@ -282,9 +292,15 @@
         {
             id = calEvent.id;
             task = 'no';
-            $('#deleteBtn').show();
-            $('#updateBtn').show();
-            $('#save').hide();
+            if (calEvent.editable === false) {
+                $('#deleteBtn').hide();
+                $('#updateBtn').hide();
+                $('#save').hide();
+            } else {
+                $('#deleteBtn').show();
+                $('#updateBtn').show();
+                $('#save').hide();
+            }
             $('#myModalLabel').text(Translator.get('agenda' + ':' + 'modify'));
             var title = calEvent.title;
             if (context === 'desktop')
@@ -299,16 +315,16 @@
             $('#agenda_form_description').val(calEvent.description);
             $('#agenda_form_priority option[value=' + calEvent.color + ']').attr('selected', 'selected');
             var pickedDate = new Date(calEvent.start);
-            $('#agenda_form_start').val($.fullCalendar.formatDate( pickedDate,'dd/MM/yyyy'));
+            $('#agenda_form_start').val($.fullCalendar.formatDate( pickedDate,'dd-MM-yyyy'));
             $('#agenda_form_startHours').val($.fullCalendar.formatDate( pickedDate,'HH:mm'));
-            if (calEvent.end === null){
-                $('#agenda_form_end').val($.fullCalendar.formatDate( pickedDate,'dd/MM/yyyy'));
-                $('#agenda_form_endHours').val($.fullCalendar.formatDate( pickedDate,'HH:mm'));
+            if (calEvent.end === ''){
+                $('#agenda_form_end').val($.fullCalendar.formatDate( pickedDate,'dd-MM-yyyy'));
+                $('#agenda_form_endHours').val('00:00');
             }
             else{
                 var Enddate = new Date(calEvent.end);
-                $('#agenda_form_end').val($.fullCalendar.formatDate( Enddate,'dd/MM/yyyy'));
-                $('#agenda_form_EndHours').val($.fullCalendar.formatDate( Enddate,'HH:mm'));
+                $('#agenda_form_end').val($.fullCalendar.formatDate( Enddate,'dd-MM-yyyy'));
+                $('#agenda_form_endHours').val($.fullCalendar.formatDate( Enddate,'HH:mm'));
             }
             $('#agenda_form_allDay').attr('checked', false);
             $.ajaxSetup({
@@ -328,9 +344,9 @@
 
         function compareEvents(event1 , event2)
         {
-            event1.start = $.fullCalendar.formatDate(new Date(event1.start),'dd/MM/yyyy HH:mm');
+            event1.start = $.fullCalendar.formatDate(new Date(event1.start),'dd-MM-yyyy HH:mm');
             // if the start & end date are the same end date is null for the fullcalendar
-            event1.end = (event1.end != null) ? $.fullCalendar.formatDate(new Date(event1.end),'dd/MM/yyyy HH:mm'): null;
+            event1.end = (event1.end != null) ? $.fullCalendar.formatDate(new Date(event1.end),'dd-MM-yyyy HH:mm'): null;
             event1.allDay = (event1.allDay == false ) ? 0 : 1;
             if (event1.title === event2.title) {
                 if (event1.start === event2.start) {

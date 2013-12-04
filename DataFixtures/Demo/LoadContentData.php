@@ -22,32 +22,30 @@ class LoadContentData extends AbstractFixture
     public function load(ObjectManager $manager)
     {
         $titles = array(
-            '',
             'ClarolineConnect© : plateforme Claroline de nouvelle génération.',
+            '',
             '',
             'ClarolineConnect© Demo',
             'Youtube',
             'Vimeo',
-            'Simple Website',
             'Wikipedia'
         );
 
         $textDir = __DIR__. '/files/homepage';
 
         $texts = array(
-            'http://fr.slideshare.net/batier/claroline-connect',
             file_get_contents("{$textDir}/text1.txt", 'r'),
-            'http://www.youtube.com/watch?v=4mlWeQed0_I',
+            file_get_contents("{$textDir}/text2.txt", 'r'),
+            file_get_contents("{$textDir}/text3.txt", 'r'),
             file_get_contents("{$textDir}/text4.txt", 'r'),
-            'http://youtu.be/4mlWeQed0_I',
-            'http://vimeo.com/63773788',
-            'http://www.opengraph.be/',
-            'http://fr.wikipedia.org/wiki/Claroline'
+            file_get_contents("{$textDir}/text3.txt", 'r'),
+            file_get_contents("{$textDir}/text5.txt", 'r'),
+            file_get_contents("{$textDir}/text6.txt", 'r')
         );
 
         $types = array('home', 'home', 'home', 'home', 'opengraph', 'opengraph', 'opengraph', 'opengraph');
         $sizes = array(
-            'content-5', 'content-7', 'content-7', 'content-5', 'content-12', 'content-12', 'content-12', 'content-12'
+            'content-6', 'content-6', 'content-5', 'content-7', 'content-12', 'content-12', 'content-12', 'content-12'
         );
 
         foreach ($titles as $i => $title) {

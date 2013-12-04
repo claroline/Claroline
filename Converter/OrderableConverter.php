@@ -38,7 +38,9 @@ class OrderableConverter implements ParamConverterInterface
             throw new \Exception($entityClass. ' is not orderable.');
         }
 
-        if (in_array($request->attributes->get($parameter), $entityClass::getOrderableFields())) {
+        $orderableFields = $rClass->newInstanceWithoutConstructor()->getOrderableFields();
+
+        if (in_array($request->attributes->get($parameter), $orderableFields)) {
             return true;
         } else {
             throw new BadRequestHttpException();

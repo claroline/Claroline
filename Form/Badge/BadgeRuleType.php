@@ -20,7 +20,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * @DI\Service("claroline.form.badgeRule")
+ * @DI\Service("claroline.form.badge.rule")
  */
 class BadgeRuleType extends AbstractType
 {

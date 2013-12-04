@@ -4,7 +4,7 @@
 
 {% trans_default_domain "badge" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'add_badge' | trans }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'add_badge' | trans | striptags | raw }}{% endblock %}
 
 {% block collection_widget %}
     {% spaceless %}
@@ -184,7 +184,7 @@
             </div>
         </div>
 
-        {{ form_widget(form.badgeRules) }}
+        {{ form_widget(form.rules) }}
 
         {{ form_rest(form) }}
         <div class="form-actions">
@@ -196,8 +196,9 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/add.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/rules.js') }}'></script>
+{{ parent() }}
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jquery.optionTree.js') }}"></script>
+<script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+<script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/add.js') }}'></script>
+<script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/rules.js') }}'></script>
 {% endblock %}

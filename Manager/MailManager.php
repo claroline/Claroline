@@ -86,7 +86,7 @@ class MailManager
             array('hash' => $hash)
         );
 
-        $body = $this->templating->render('ClarolineCoreBundle:Authentication:emailForgotPassword.html.twig',array('message' => $msg, 'link' => $link));
+        $body = $this->templating->render('ClarolineCoreBundle:Authentication:emailForgotPassword.html.twig',array('message' => $msg, 'link' => $link, 'user' => $user));
         $subject = $this->translator->trans('reset_pwd', array(), 'platform');
 
         return $this->send($subject, $body, array($user));
@@ -130,8 +130,13 @@ class MailManager
             $message = \Swift_Message::newInstance()
                 ->setSubject($subject)
                 ->setFrom($from)
-                ->setTo($to)
                 ->setBody($body, 'text/html');
+
+            if (count($to) > 1) {
+                $message->setCc($to);
+            } else {
+                $message->setTo($to);
+            }
 
             return $this->mailer->send($message) ? true: false;
         }

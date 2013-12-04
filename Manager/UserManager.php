@@ -60,7 +60,7 @@ class UserManager
      *     "ch"                     = @DI\Inject("claroline.config.platform_config_handler"),
      *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory"),
      *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
-     *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager")
+     *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager")
      * })
      */
     public function __construct(
@@ -234,6 +234,19 @@ class UserManager
 
         $workspace = $this->workspaceManager->create($config, $user);
         $user->setPersonalWorkspace($workspace);
+        $this->om->persist($user);
+        $this->om->flush();
+    }
+
+    /**
+     * Sets an array of platform role to a user.
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param ArrayCollection $roles
+     */
+    public function setPlatformRoles(User $user, ArrayCollection $roles)
+    {
+        $user->setPlatformRoles($roles);
         $this->om->persist($user);
         $this->om->flush();
     }

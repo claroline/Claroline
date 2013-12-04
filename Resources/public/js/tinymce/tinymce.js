@@ -17,7 +17,6 @@
     var contentCSS = home.asset + 'bundles/clarolinecore/css/tinymce/tinymce.css';
 
     var configTinyMCE = {
-        //document_base_url: home.path,
         relative_urls: false,
         theme: 'modern',
         language: language,
@@ -38,11 +37,16 @@
 
             if (url) {
                 home.generatedContent(url[0].slice(6, -1), function (data) {
-                    var newNode = tinymce.activeEditor.getDoc().createElement('div');
-                    newNode.innerHTML = data;
-                    tinymce.activeEditor.selection.getRng().insertNode(newNode);
-                    tinymce.activeEditor.fire('change');
+                    insertContent(data);
                 });
+            } else {
+                url = home.findUrls(args.content);
+                if (url.length === 1) {
+                    args.content = '<a href="' + url[0] + '">' + url[0] + '</a>';
+                    home.generatedContent(url[0], function (data) {
+                        insertContent(data);
+                    });
+                }
             }
         },
         setup: function (editor) {
@@ -52,15 +56,17 @@
                 }
             });
             editor.on('LoadContent', function () {
-                setTimeout(function () {
-                    editor.fire('change');
-                }, 200);
+                editorChange(editor);
             });
             if ($(editor.getElement()).data('resource-picker') !== 'off') {
                 editor.addButton('resourcePicker', {
                     'icon': 'newdocument',
-                    'classes': 'widget btn resource-picker',
-                    'tooltip': 'Resources'
+                    'classes': 'widget btn',
+                    'tooltip': 'Resources',
+                    'onclick': function () {
+                        tinymce.activeEditor = editor;
+                        resourcePickerOpen();
+                    }
                 });
             }
             $('body').bind('ajaxComplete', function () {
@@ -73,6 +79,21 @@
         }
     };
 
+    function editorChange(editor)
+    {
+        setTimeout(function () {
+            editor.fire('change');
+        }, 200);
+    }
+
+    function insertContent(content)
+    {
+        var newNode = tinymce.activeEditor.getDoc().createElement('div');
+        newNode.innerHTML = content;
+        tinymce.activeEditor.selection.getRng().insertNode(newNode);
+        editorChange(tinymce.activeEditor);
+    }
+
     function tinymceInit()
     {
         $('textarea.claroline-tiny-mce:not(.tiny-mce-done)').each(function () {
@@ -83,37 +104,17 @@
 
     function callBack(nodes)
     {
-        var id = _.keys(nodes)[0];
-        var resourceTypes = nodes[_.keys(nodes)][1];
         var nodeId = _.keys(nodes)[0];
-        var mimeArray = new Array('image/jpeg', 'image/gif', 'image/png');
         var mimeType = nodes[_.keys(nodes)][2];
 
-        if (resourceTypes === 'directory') {
-            //the breadcrumbs could be appended to the query string aswell
-            var route = Routing.generate(
-                'claro_desktop_open_tool', {'toolName': 'resource_manager'}
-            ) + '#resources/' + id;
-            tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() +
-                '<a href="' + route + '">' + nodes[_.keys(nodes)][0] + '</a>'
-            );
-            tinymce.activeEditor.fire('change');
-        } else {
-            if (mimeArray.indexOf(mimeType) > -1) {
-                tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() +
-                    '<img src="' + Routing.generate('claro_file_get_image', {'node': id}) +
-                    '" style="max-width:100%"/>'
-                );
-                tinymce.activeEditor.fire('change');
-            } else {
-                tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() +
-                    '<a href="' +
-                    Routing.generate('claro_resource_open', {'resourceType': resourceTypes, 'node' : nodeId}) +
-                    '">' + nodes[_.keys(nodes)][0] + '</a>'
-                );
-                tinymce.activeEditor.fire('change');
-            }
-        }
+        $.ajax(home.path + 'resource/embed/' + nodeId + '/' + mimeType)
+        .done(function (data) {
+            tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() + data);
+            editorChange(tinymce.activeEditor);
+        })
+        .error(function () {
+            home.modal('content/error');
+        });
     }
 
     function resourcePickerOpen()
@@ -151,9 +152,5 @@
 
     $(document).ready(function () {
         tinymceInit();
-    });
-
-    $('body').on('click', '.mce-resource-picker', function () {
-        resourcePickerOpen();
     });
 }());

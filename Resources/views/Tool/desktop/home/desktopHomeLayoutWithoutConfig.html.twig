@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
 
-{% block title %}{{ parent() ~ ' - ' ~ "home" | trans({}, "platform") }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ "home" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -30,7 +30,7 @@
     </div>
 
     <div class="panel-body">
-        <ul class="nav nav-tabs tabs">
+        <ul class="nav nav-tabs margin-bottom-md">
             {% for adminHomeTabConfig in adminHomeTabConfigs %}
             {% set adminHomeTab = adminHomeTabConfig.getHomeTab() %}
             <li class="hometab-element {% if adminHomeTab.getId() == tabId %} active {% endif %}">

@@ -33,7 +33,7 @@
             {{ 'delete'|trans({}, 'platform') }}
         </button>
         <button class="btn btn-default action-button" data-action="password">
-            <i class="icon-trash"></i>
+            <i class="icon-refresh"></i>
             {{ 'reset_password'|trans({}, 'platform') }}
         </button>
     {% endif %}
@@ -53,7 +53,7 @@
 
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'users' | trans({}, 'platform') }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'users' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -83,10 +83,10 @@
             {{ macros.flashBox() }}
         </div>
         <div class="search-bar row">
-            <div class="col-md-6">
+            <div class="col-md-8">
                 {{ displayControls(workspace.getId()) }}
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                  <div class="input-group">
                     <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value={{search}}>
                     <span class="input-group-btn">
@@ -99,22 +99,19 @@
         </div>
 
         <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-8">
                 {{ renderPager(search, pager, max, order) }}
             </div>
-            <div class="col-md-2" style="margin-top: 15px;">
-                <div >
-                    {{ 'line_per_page'|trans({}, 'platform') }}
-                </div>
-                <div>
+            <div class="col-md-4" style="margin-top: 15px;">
+                <div class="input-group margin-md">
                     <select class="form-control input-md" id="max-select">
                         <option>20</option>
                         <option>50</option>
                         <option>100</option>
                         <option>200</option>
                         <option>500</option>
-                        </div>
                     </select>
+                    <span class="input-group-addon">{{ 'line_per_page'|trans({}, 'platform') }}</span>
                 </div>
             </div>
         </div>
@@ -123,22 +120,28 @@
             <table id="user-table"  class="table table-striped table-bordered table-condensed">
                 <thead>
                     <tr>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <th><input type="checkbox" name="all" id="check-all-items"></input></th>
+                        {% endif %}
                         <th><a href="{{ sortUrl(max, search, 'id') }}">{{ 'id'|trans({}, 'platform') }}</a></th>
                         <th><a href="{{ sortUrl(max, search, 'username') }}">{{ 'username'|trans({}, 'platform') }}</a></th>
                         <th><a href="{{ sortUrl(max, search, 'lastName') }}">{{ 'last_name'|trans({}, 'platform') }}</a></th>
                         <th><a href="{{ sortUrl(max, search, 'firstName') }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
                         <th><a href="{{ sortUrl(max, search, 'mail') }}">{{ 'mail'|trans({}, 'platform') }}</a></th>
-                        <th>{{ 'edit'|trans({}, 'platform') }}</th>
                         <th>{{ 'role'|trans({}, 'platform') }}</th>
                         {% if is_granted('ROLE_ADMIN') %}
-                            <th>{{ 'show_as'|trans({}, 'platform') }}</th>
-                            <th><input type="checkbox" name="all" id="check-all-items"></input></th>
+                            <th>{{ 'actions' | trans({}, 'platform') }}</th>
                         {% endif %}
                     </tr>
                 </thead>
                 <tbody id="user-table-body">
                     {% for user in pager.currentPageResults %}
                         <tr id="{{ user.getId() }}" class="row-user">
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <td>
+                                    <input type="checkbox" value="{{ user.id }}" class="chk-item" align="center"></input>
+                                </td>
+                            {% endif %}
                             <td>{{ user.getId() }}</td>
                             <td>
                                 <a href="{{ path('claro_profile_view', {'userId': user.getId()}) }}"> {{user.getUsername()}}</a>
@@ -146,32 +149,26 @@
                             <td>{{ user.getLastName() }}</td>
                             <td>{{ user.getFirstName() }}</td>
                             <td>{{ user.getMail() }}</td>
-
-                            <td> <a href="{{ path('claro_profile_form', {'user': user.getId()}) }}">
-                                {{ user.getUsername() }}
-                            </a>
-                        </td>
                             <td>
                                 <div>
                                     {% for role in user.getEntityRoles() %}
                                         {% if role.type == 1 %}
-                                            {{ role.getTranslationKey()|trans({}, 'platform')  }}
-                                            {% if not loop.last %}, {% endif %}
+                                            {{ role.getTranslationKey()|trans({}, 'platform')  }}{% if not loop.last %}, {% endif %}
                                         {% endif %}
                                     {% endfor %}
                                 </div>
                             </td>
                             {% if is_granted('ROLE_ADMIN') %}
-                            <td>
-                                {% if user.getId() != app.user.id %}
-                                    <a href="{{ path('claro_desktop_open', {'_switch': user.getUsername()}) }}">
-                                        {{ 'show'|trans({}, 'platform') }}
+                                <td>
+                                    {% if user.getId() != app.user.id %}
+                                        <a class='btn btn-default' href="{{ path('claro_desktop_open', {'_switch': user.getUsername()}) }}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ 'show_as'|trans({}, 'platform') }}">
+                                            <i class='icon-eye-open'></i>
+                                        </a>
+                                    {% endif %}
+                                    <a class='btn btn-default' href="{{ path('claro_profile_form', {'user': user.getId()}) }}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ 'edit'|trans({}, 'platform') }}">
+                                        <i class='icon-pencil'></i>
                                     </a>
-                                {% endif %}
-                            </td>
-                            <td>
-                                <input type="checkbox" value="{{ user.id }}" class="chk-item" align="center"></input>
-                            </td>
+                                </td>
                             {% endif %}
                         </tr>
                     {% endfor %}

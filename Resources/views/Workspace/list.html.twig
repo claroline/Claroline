@@ -36,7 +36,7 @@
 
 {% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
 
-{% block title %}{{ parent() ~ ' - ' ~ "all_workspaces" | trans({}, "platform") }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ "all_workspaces" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{

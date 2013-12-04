@@ -29,7 +29,7 @@
     {% set themeTitle = "Edit theme" | trans({}, "theme") %}
 {% endif %}
 
-{% block title %}{{ parent() ~ ' - ' ~ themeTitle }}{% if theme is defined %} ({{ theme.name }}){% endif %}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ themeTitle | striptags | raw }}{% if theme is defined %} ({{ theme.name  | striptags | raw }}){% endif %}{% endblock %}
 
 {% block breadcrumb %}
     {{

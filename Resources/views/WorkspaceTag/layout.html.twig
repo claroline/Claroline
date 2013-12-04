@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{% block title %}{{ "workspaces" | trans({}, "platform") }}{% endblock %}
+{% block title %}{{ "workspaces" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
 {% block leftbar %}
     {% if is_granted('ROLE_USER') %}

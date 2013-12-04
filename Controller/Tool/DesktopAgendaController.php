@@ -67,7 +67,7 @@ class DesktopAgendaController extends Controller
     {
         $usr = $this->get('security.context')->getToken()->getUser();
         $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
-        $desktopEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, false);
+        $desktopEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, 0);
         $data = array_merge($this->convertEventoArray($listEvents), $this->convertEventoArray($desktopEvents));
 
         return new Response(
@@ -193,7 +193,7 @@ class DesktopAgendaController extends Controller
     public function tasksAction()
     {
         $usr = $this->get('security.context')->getToken()->getUser();
-        $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
+        $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, 1);
 
         return  array('listEvents' => $listEvents );
     }

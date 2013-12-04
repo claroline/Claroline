@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use \Exception;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,6 +44,7 @@ class ResourceController
     private $request;
     private $dispatcher;
     private $maskManager;
+    private $templating;
     private $logManager;
 
     /**
@@ -56,6 +57,7 @@ class ResourceController
      *     "translator"      = @DI\Inject("translator"),
      *     "request"         = @DI\Inject("request"),
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "templating"      = @DI\Inject("templating"),
      *     "logManager"      = @DI\Inject("claroline.log.manager")
      * })
      */
@@ -69,6 +71,7 @@ class ResourceController
         Request $request,
         StrictDispatcher $dispatcher,
         MaskManager $maskManager,
+        TwigEngine $templating,
         LogManager $logManager
     )
     {
@@ -80,6 +83,7 @@ class ResourceController
         $this->request = $request;
         $this->dispatcher = $dispatcher;
         $this->maskManager = $maskManager;
+        $this->templating = $templating;
         $this->logManager = $logManager;
     }
 
@@ -723,5 +727,31 @@ class ResourceController
     public function initAction()
     {
         return array('resourceTypes' => $this->resourceManager->getAllResourceTypes());
+    }
+
+    /**
+     * Render the HTML of embed resource based in his mine type
+     * @EXT\Route("/embed/{node}/{type}/{extension}", name="claro_resource_embed")
+     */
+    public function embedResource(ResourceNode $node, $type, $extension, $view = 'default')
+    {
+        switch ($type) {
+            case 'video':
+                $view = 'video';
+                break;
+            case 'audio':
+                $view = 'audio';
+                break;
+            case 'image':
+                $view = 'image';
+                break;
+        }
+
+        return new Response(
+            $this->templating->render(
+                "ClarolineCoreBundle:Resource:embed/$view.html.twig",
+                array('node' => $node, 'type' => $type, 'extension' => $extension)
+            )
+        );
     }
 }

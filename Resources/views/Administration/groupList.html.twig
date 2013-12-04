@@ -49,7 +49,7 @@
 
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'groups' | trans({}, 'platform') }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'groups' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -77,10 +77,10 @@
     </div>
     <div class="panel-body">
         <div class="search-bar row">
-            <div class="col-md-6">
+            <div class="col-md-8">
                 {{ displayControls(workspace.getId()) }}
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                  <div class="input-group">
                     <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value={{search}}>
                     <span class="input-group-btn">
@@ -93,22 +93,19 @@
         </div>
 
         <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-8">
                 {{ renderPager(search, pager, max, order) }}
             </div>
-            <div class="col-md-2" style="margin-top: 15px;">
-                <div >
-                    {{ 'line_per_page'|trans({}, 'platform') }}
-                </div>
-                <div>
+            <div class="col-md-4" style="margin-top: 15px;">
+                <div class="input-group margin-md">
                     <select class="form-control input-md" id="max-select">
                         <option>20</option>
                         <option>50</option>
                         <option>100</option>
                         <option>200</option>
                         <option>500</option>
-                        </div>
                     </select>
+                    <span class="input-group-addon">{{ 'line_per_page'|trans({}, 'platform') }}</span>
                 </div>
             </div>
         </div>
@@ -118,26 +115,28 @@
             <table class="table table-striped table-bordered table-condensed" id="group-table">
                 <thead>
                     <tr>
+                        <th> <input type="checkbox" name="all" id="check-all-items"></input> </th>
                         <th><a href="{{ sortUrl(max, search, 'id') }}">{{ 'id'|trans({}, 'platform') }}</a></th>
                         <th><a href="{{ sortUrl(max, search, 'name') }}">{{ 'name'|trans({}, 'platform') }}</a></th>
-                        <th>{{ 'users'|trans({}, 'platform') }}</th>
-                        <th>{{ 'settings'|trans({}, 'platform') }}</th>
-                        <th> <input type="checkbox" name="all" id="check-all-items"></input> </th>
+                        <th>{{ 'actions'|trans({}, 'platform') }}</th>
                     </tr>
                 </thead>
                 <tbody id="group-table-body">
                     {% for group in pager.currentPageResults %}
                         <tr id="group-{{ group.getId() }}" class="row-group"/>
-                            <td>{{ group.getId() }}</td>
-                            <td>{{ group.getName() }}</td>
-                            <td>
-                                <a href="{{ path('claro_admin_user_of_group_list', {'groupId': group.getId()}) }}" id="link-show-{{ group.getId() }}">{{ 'show'|trans({}, 'platform') }}</a>
-                            </td>
-                            <td>
-                                <a href="{{ path('claro_admin_group_settings_form', {'groupId': group.getId()}) }}" id="link-settings-{{ group.getId() }}">{{ 'settings'|trans({}, 'platform') }}</a>
-                            </td>
                             <td>
                                 <input type="checkbox" class="chk-item" value="{{ group.getId() }}"></input>
+                            </td>
+                            <td>{{ group.getId() }}</td>
+                            <td>
+                                <a href="{{ path('claro_admin_user_of_group_list', {'groupId': group.getId()}) }}" id="link-show-{{ group.getId() }}">
+                                    {{ group.getName() }}
+                                </a>
+                            </td>
+                            <td>
+                                <a class="btn btn-default" href="{{ path('claro_admin_group_settings_form', {'groupId': group.getId()}) }}" id="link-settings-{{ group.getId() }}"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ 'settings'|trans({}, 'platform') }}">
+                                    <i class="icon-cog"></i>
+                                </a>
                             </td>
                         </tr>
                     {% endfor %}

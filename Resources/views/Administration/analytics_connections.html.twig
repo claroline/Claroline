@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'Audience/user visits' | trans({}, 'platform') }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'Audience/user visits' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}

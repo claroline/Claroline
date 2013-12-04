@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:Badge:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ badge.name }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ badge.name | striptags | raw }}{% endblock %}
 
 {% trans_default_domain "badge" %}
 
@@ -29,7 +29,7 @@
                     {{ badge.criteria|raw }}
                 </div>
             </div>
-            {% if 0 < badge.badgeRules|length %}
+            {% if 0 < badge.rules|length %}
                 {% if false == checkedLogs %}
                 <div class="alert alert-danger">{{ 'badge_awarding_rules_not_respected'|trans({}, 'badge') }}.</div>
                 {% else %}
@@ -65,13 +65,4 @@
             {% endif %}
         </div>
     </div>
-{% endblock %}
-
-{% block javascripts %}
-{{ parent() }}
-<script type="text/javascript">
-    $(function(){
-        $('[data-toggle=tooltip]').tooltip();
-    });
-</script>
 {% endblock %}

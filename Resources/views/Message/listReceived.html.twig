@@ -39,7 +39,7 @@
 
 {% extends 'ClarolineCoreBundle:Message:layout.html.twig' %}
 
-{% block title %}{{ 'messages_received' | trans({}, 'platform') }}{% endblock %}
+{% block title %}{{ 'messages_received' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block section_content %}
     <div class="search-bar row">
@@ -62,17 +62,21 @@
         <table class="table table-striped table-bordered table-condensed" id="messages-table">
             <thead>
                 <tr>
-                    <th></th>
-                    <th>{{ 'date'|trans({}, 'platform') }}</th>
-                    <th>{{ 'from_message'|trans({}, 'platform') }}</th>
+                    <th><input type="checkbox" name="all" id="check-all-items"></input></th>
                     <th>{{ 'object'|trans({}, 'platform') }}</th>
-                    <td><input type="checkbox" name="all" id="check-all-items"></input></td>
+                    <th>{{ 'from_message'|trans({}, 'platform') }}</th>
+                    <th>{{ 'date'|trans({}, 'platform') }}</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody id="message-table-body">
                 {% if pager|length > 0 %}
                     {% for userMessage in pager.currentPageResults %}
                         <tr class="row-user-message">
+                            <td><input class="chk-item" value="{{ userMessage.getId() }}" type="checkbox"></input></td>
+                            <td><a href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}">{{ userMessage.getMessage().getObject() }}</a></td>
+                            <td>{{ userMessage.getMessage().getSenderUsername() }}</td>
+                            <td>{{ userMessage.getMessage().getDate()|intl_date_format }}</td>
                             <td>
                                 {% if userMessage.isRead() %}
                                     <div style="color: green" class="icon-ok-sign"></div>
@@ -80,10 +84,6 @@
                                     <a href="{{ path('claro_message_mark_as_read', {'message': userMessage.getMessage().getId()}) }}" class="mark-as-read"><i class="icon-envelope"></i></a>
                                 {% endif %}
                             </td>
-                            <td>{{ userMessage.getMessage().getDate()|intl_date_format }}</td>
-                            <td>{{ userMessage.getMessage().getSenderUsername() }}</td>
-                            <td><a href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}">{{ userMessage.getMessage().getObject() }}</a></td>
-                            <td><input class="chk-item" value="{{ userMessage.getId() }}" type="checkbox"></input></td>
                         </tr>
                     {% endfor %}
                 {% else %}
