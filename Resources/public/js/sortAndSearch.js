@@ -518,12 +518,16 @@ window.onload = function () {
             $("input[type=radio][name=QuestionSearch][value='Title']").attr('checked', true);
         } else if (type == 'Contain') {
             $("input[type=radio][name=QuestionSearch][value='Contain']").attr('checked', true);
+        } else if (type == 'All') {
+            $("input[type=radio][name=QuestionSearch][value='All']").attr('checked', true);
         }
 
         if (where == 'my') {
-            $("input[type=radio][name=QuestionSearch][value='my']").attr('checked', true);
+            $("input[type=radio][name=WhereSearch][value='my']").attr('checked', true);
         } else if (where == 'shared') {
-            $("input[type=radio][name=QuestionSearch][value='shared']").attr('checked', true);
+            $("input[type=radio][name=WhereSearch][value='shared']").attr('checked', true);
+        } else if (where == 'all') {
+            $("input[type=radio][name=WhereSearch][value='all']").attr('checked', true);
         }
     }
 

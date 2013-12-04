@@ -45,7 +45,8 @@ add user: Add user
 administration: Administration
 after the last attempt: After the last attempt
 alert ending: Are you sure you want to finish ? (You can't alter your answers anymore)
-allQuestion: All
+all: All
+allQuestion: All the questions
 already: This question is already shared with this user
 alreadyExist: This name exist already
 alreadyPlaced: Already placed answers.
@@ -201,7 +202,7 @@ my shared questions: My shared questions
 # N
 nameUser2Shared: Name of user to share the question
 nbr_choices: The number of choices must be greater than two
-need Correction: Questions which need correction
+need Correction: The red questions need correction
 never: Never
 newCategoryName: New name of the category
 newName: New name of the document
