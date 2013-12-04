@@ -16,6 +16,8 @@ Request format
 
 All request can be `get` or `post` request, it's up to you.
 
+When data is returned it's always in `json`.
+
 
 Authorization Code flow
 -----------------------
