@@ -1,0 +1,41 @@
+{% extends "ClarolineCoreBundle::layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'my_applications' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% trans_default_domain "badge" %}
+
+{% block content %}
+    {{ macros.flashBox() }}
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {{ 'my_applications'|trans({}, 'platform') }}
+            </h3>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Url</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in applications %}
+                    <tr>
+                        <td>{{ application.client.name }}</td>
+                        <td>{{ application.redirectUri }}</td>
+                        <td><a href="#" title="" class="btn btn-danger">Révoquer l'accès</a></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3">{{ 'no_app_connect_to_your_account'|trans({}, 'api') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

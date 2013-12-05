@@ -293,6 +293,7 @@ move: Déplacer
 my_account: 'Mon compte'
 my_agenda: 'Mon agenda'
 my_badges: 'Mes badges'
+my_applications: "Mes applications"
 my_contacts: 'Mes contacts'
 my_favourite_workspaces: 'Mes espaces d''activités favoris'
 my_notes: 'Mes notes'

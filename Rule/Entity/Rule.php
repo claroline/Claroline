@@ -76,7 +76,7 @@ abstract class Rule
     /**
      * @var ResourceNode
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode", inversedBy="resource")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(nullable=true)
      */
     protected $resource;
