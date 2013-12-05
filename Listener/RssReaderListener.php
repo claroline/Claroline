@@ -11,13 +11,10 @@
 
 namespace Claroline\RssReaderBundle\Listener;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\RssReaderBundle\Form\ConfigType;
-use Claroline\RssReaderBundle\Entity\Config;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\RssReaderBundle\Library\RssManager;
 use Symfony\Component\Form\FormFactory;
 use Claroline\RssReaderBundle\Library\ReaderProvider;
@@ -27,12 +24,11 @@ use JMS\DiExtraBundle\Annotation as DI;
 /**
  * @DI\Service
  */
-class RssReaderListener extends ContainerAware
+class RssReaderListener
 {
     private $rssManager;
     private $formFactory;
     private $templating;
-    private $sc;
     private $rssReader;
 
     /**
@@ -40,7 +36,6 @@ class RssReaderListener extends ContainerAware
      *      "rssManager" = @DI\Inject("claroline.manager.rss_manager"),
      *      "formFactory"       = @DI\Inject("form.factory"),
      *      "templating"        = @DI\Inject("templating"),
-     *      "sc"                = @DI\Inject("security.context"),
      *      "rssReader"         = @DI\Inject("claroline.rss_reader.provider")
      * })
      */
@@ -48,14 +43,12 @@ class RssReaderListener extends ContainerAware
         RssManager $rssManager,
         FormFactory $formFactory,
         TwigEngine $templating,
-        SecurityContextInterface $sc,
         ReaderProvider $rssReader
     )
     {
         $this->rssManager = $rssManager;
         $this->formFactory = $formFactory;
         $this->templating = $templating;
-        $this->sc = $sc;
         $this->rssReader = $rssReader;
     }
 
@@ -67,11 +60,13 @@ class RssReaderListener extends ContainerAware
     public function onDisplay(DisplayWidgetEvent $event)
     {
         $config = $this->rssManager->getConfig($event->getInstance());
+
         if ($config) {
-            $event->setContent($this->getRssContent($config));
+            $event->setContent($this->getRssContent($config, $event->getInstance()->getId()));
         } else {
             $event->setContent('');
         }
+
         $event->stopPropagation();
     }
 
@@ -100,17 +95,17 @@ class RssReaderListener extends ContainerAware
         $event->setContent($content);
     }
 
-    private function getRssContent($rssconfig)
+    private function getRssContent($rssConfig, $widgetId)
     {
         // TODO : handle feed format exception...
-        $urlcontent = @file_get_contents($rssconfig->getUrl());
+        $content = @file_get_contents($rssConfig->getUrl());
 
-        if ($urlcontent === false) {
+        if ($content === false) {
             return $this->templating->render('ClarolineRssReaderBundle::invalid.html.twig');
         }
 
         $items = $this->rssReader
-            ->getReaderFor($urlcontent)
+            ->getReaderFor($content)
             ->getFeedItems(10);
 
         foreach ($items as $item) {
@@ -118,7 +113,8 @@ class RssReaderListener extends ContainerAware
         }
 
         return $this->templating->render(
-            'ClarolineRssReaderBundle::rss.html.twig', array('rss' => $items)
+            'ClarolineRssReaderBundle::rss.html.twig',
+            array('rss' => $items, 'widgetId' => $widgetId)
         );
     }
 }
