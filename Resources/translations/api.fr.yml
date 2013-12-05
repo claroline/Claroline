@@ -1,0 +1,3 @@
+oauth_application_acceptance: "Confirmation d'accès"
+oauth_app_ask_access: "Demande d'accès à la plateforme"
+app_want_access_to_your_account: "L'application '%clientName%' souhaite avoir accès à votre compte."

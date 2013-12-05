@@ -19,7 +19,7 @@ same message when authentication has failed (no precise validation errors).
 
         <div class='content-element panel panel-default'>
             <div class="panel-heading">
-                <h3 class="panel-title">{{ 'oauth_login' | trans({}, "claro_api")}}</h3>
+                <h3 class="panel-title">{{ 'login' | trans({}, "platform")}}</h3>
             </div>
             <form id="login" class="vertical" action="{{ path('claro_api_oauth_login_check') }}" method="post">
                 {% if(error) %}
