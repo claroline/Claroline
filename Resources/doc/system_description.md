@@ -31,7 +31,7 @@ A notification is divided in four parts:
 
 Below it’s given a concrete example of the notification representation:
 
-![Notifications example](/img/notifications_mockup.png "Notifications example")
+![Notifications example](img/notifications_mockup.png "Notifications example")
 
 
 List of actions that can push a notification
@@ -61,14 +61,14 @@ This notification category, contains all those notifications defined by inside e
 
 In the diagram below it is shown the table structure for the Notification System. As we can see there is the Notification table (entity) linked though a many to one relationship with the user (doer, the one whose action resulted the notification) but also linked through a one to many relationship with the NotificationViewer table (entity). The NotificationViewer is essentially the intermediate entity that connects a user (viewer) to a notification (view) as a user can receive many notifications and a notification can be diffused to many users. There is a status attribute in the NotificationViewer class that changes when the notification has been seen by the user.
 
-![Notifications system UML](/img/notifications_system_uml.jpg "Notifications system UML")
+![Notifications system UML](img/notifications_system_uml.jpg "Notifications system UML")
 
 
 ### Implementation
 
 The implementation of the notification system is achieved through the “Notifiable” interface. Every log event that can raise a notification must implement the notifiable interface. This interface contains all the information about the users that need to be informed, (if the notification will be sent to the resource’s followers, it can include other users as well or even exclude ones). It also contains all necessary data to create a notification (date, action, icon, url etc.).
 
-![Notifiable class](/img/notifiable_class.jpg "Notifiable class")
+![Notifiable class](img/notifiable_class.jpg "Notifiable class")
 
 
 ### Future expansion (Real Time Notification Push)
