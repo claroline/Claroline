@@ -295,7 +295,7 @@ my_account: 'My account'
 my_agenda: 'My agenda'
 my_badges: 'My badges'
 my_contacts: 'My contacts'
-my_favourite_workspaces: 'My favourite worksapces'
+my_favourite_workspaces: 'My favourite workspaces'
 my_notes: 'My notes'
 my_portfolio: 'My portfolio'
 my_resources: 'My resources'
@@ -558,7 +558,7 @@ views: Views
 visible: Visible
 visitor: Visitor
 warning_user_impersonation: 'You are connected as %user%.'
-warning_workspace_impersonation: 'You are connected as %role% from the workspace %workspace.'
+warning_workspace_impersonation: 'You are connected as %role% from the workspace %workspace%.'
 widget: Widget
 widget_display_form_name: Name
 widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab ?'
