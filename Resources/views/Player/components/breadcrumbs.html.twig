@@ -10,28 +10,71 @@
     {# Display all step chain to current selected step #}
     {% set parents = currentStep.getParents() %}
     {% for parent in parents %}
-    <li class="lvl-{{ parent.lvl + 1 }}">
-        <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: parent.id }) }}">
+    <li class="dropdown lvl-{{ parent.lvl + 1 }}">
+        <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: parent.id }) }}">
             {{ parent.name }}
+            <b class="caret"></b>
         </a>
+        <ul id="branches-dropdown" class="dropdown-menu">
+        {% for i, sibling in parent.getSiblings() %}
+            {% if sibling.stepOrder == parent.stepOrder + 1  %}
+                <li style="display:block" class="lvl-{{ parent.lvl + 1 }}">
+                    <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: parent.id }) }}">
+                    {{ parent.name }}
+                    </a>
+                </li>
+            {% endif %}
+            <li style="display:block" class="lvl-{{ sibling.lvl + 1 }}">
+                <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: sibling.id }) }}">
+                {{ sibling.name }}
+                </a>
+            </li>
+        {% endfor %}
+        </ul>
     </li>
     {% endfor %}
     
     {# Display current step #}
-    <li class="lvl-{{ currentStep.lvl + 1 }}">
-        <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: currentStep.id }) }}">
+    <li class="dropdown lvl-{{ currentStep.lvl + 1 }}">
+        <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: currentStep.id }) }}">
             {{ currentStep.name }}
+            <b class="caret"></b>
         </a>
+        <ul id="branches-dropdown" class="dropdown-menu">
+        {% for i, sibling in currentStep.getSiblings() %}
+            {% if sibling.stepOrder == currentStep.stepOrder + 1  %}
+                <li style="display:block" class="lvl-{{ currentStep.lvl + 1 }}">
+                    <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: currentStep.id }) }}">
+                    {{ currentStep.name }}
+                    </a>
+                </li>
+            {% endif %}
+            <li style="display:block" class="lvl-{{ sibling.lvl + 1 }}">
+                <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: sibling.id }) }}">
+                {{ sibling.name }}
+                </a>
+            </li>
+        {% endfor %}
+        </ul>
     </li>
 
     
-    {% for child in currentStep.children %}
-       <div class="pull-right btn btn-default">
-            <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: child.id }) }}">
-            {{ child.name }}
-            </a>
-        </div>
-    {% endfor %}
+    {# Display current step #}
+    <li class="dropdown">
+        <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: currentStep.id }) }}">
+            ...
+            <b class="caret"></b>
+        </a>
+        <ul id="branches-dropdown" class="dropdown-menu">
+        {% for child in currentStep.children %}
+            <li style="display:block" class="lvl-{{ child.lvl + 1 }}">
+                <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: child.id }) }}">
+                {{ child.name }}
+                </a>
+            </li>
+        {% endfor %}
+        </ul>
+    </li>
 </ul>
 
 <div id="hop-on-my-thumb">
@@ -47,7 +90,9 @@
 </div>
 
 
-
-
-   
     
+
+
+
+
+
