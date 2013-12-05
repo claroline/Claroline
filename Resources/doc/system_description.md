@@ -21,7 +21,7 @@ Features
 Template
 ----------------------
 
-![Notification template](/img/notification_template.jpg "Notification template")
+![Notification template](img/notification_template.jpg "Notification template")
 
 A notification is divided in four parts:
 *	The avatar of the user whose action raised the notification (square 1)
