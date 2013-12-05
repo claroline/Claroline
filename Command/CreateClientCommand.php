@@ -26,6 +26,7 @@ class CreateClientCommand extends ContainerAwareCommand
             ->setDescription('Creates a new client')
             ->addOption('redirect-uri', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Sets redirect uri for client. Use this option multiple times to set multiple redirect URIs.', null)
             ->addOption('grant-type', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Sets allowed grant type for client. Use this option multiple times to set multiple grant types..', null)
+            ->addArgument('client-name', InputArgument::REQUIRED, 'Sets name for client.', null)
             ->setHelp(
                 <<<EOT
                     The <info>%command.name%</info>command creates a new client.
@@ -38,10 +39,13 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /** @var \FOS\OAuthServerBundle\Entity\ClientManager $clientManager */
         $clientManager = $this->getContainer()->get('fos_oauth_server.client_manager.default');
+        /** @var \Claroline\CoreBundle\Entity\Oauth\Client $client */
         $client = $clientManager->createClient();
         $client->setRedirectUris($input->getOption('redirect-uri'));
         $client->setAllowedGrantTypes($input->getOption('grant-type'));
+        $client->setName($input->getArgument('client-name'));
         $clientManager->updateClient($client);
         $output->writeln(
             sprintf(

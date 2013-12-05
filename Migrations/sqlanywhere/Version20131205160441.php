@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\sqlsrv;
+namespace Claroline\CoreBundle\Migrations\sqlanywhere;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,36 +8,40 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/12/03 04:38:14
+ * Generation date: 2013/12/05 04:04:46
  */
-class Version20131203163808 extends AbstractMigration
+class Version20131205160441 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_api_client (
                 id INT IDENTITY NOT NULL, 
-                random_id NVARCHAR(255) NOT NULL, 
-                redirect_uris VARCHAR(MAX) NOT NULL, 
-                secret NVARCHAR(255) NOT NULL, 
-                allowed_grant_types VARCHAR(MAX) NOT NULL, 
+                random_id VARCHAR(255) NOT NULL, 
+                redirect_uris TEXT NOT NULL, 
+                secret VARCHAR(255) NOT NULL, 
+                allowed_grant_types TEXT NOT NULL, 
+                name VARCHAR(255) NOT NULL, 
                 PRIMARY KEY (id)
             )
+        ");
+        $this->addSql("
+            COMMENT ON COLUMN claro_api_client.redirect_uris IS '(DC2Type:array)'
+        ");
+        $this->addSql("
+            COMMENT ON COLUMN claro_api_client.allowed_grant_types IS '(DC2Type:array)'
         ");
         $this->addSql("
             CREATE TABLE claro_api_access_token (
                 id INT IDENTITY NOT NULL, 
                 client_id INT NOT NULL, 
-                user_id INT, 
-                token NVARCHAR(255) NOT NULL, 
-                expires_at INT, 
-                scope NVARCHAR(255), 
+                user_id INT DEFAULT NULL, 
+                token VARCHAR(255) NOT NULL, 
+                expires_at INT DEFAULT NULL, 
+                scope VARCHAR(255) DEFAULT NULL, 
+                CONSTRAINT UNIQ_CE948285F37A13B UNIQUE (token), 
                 PRIMARY KEY (id)
             )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_CE948285F37A13B ON claro_api_access_token (token) 
-            WHERE token IS NOT NULL
         ");
         $this->addSql("
             CREATE INDEX IDX_CE9482819EB6921 ON claro_api_access_token (client_id)
@@ -49,16 +53,13 @@ class Version20131203163808 extends AbstractMigration
             CREATE TABLE claro_api_refresh_token (
                 id INT IDENTITY NOT NULL, 
                 client_id INT NOT NULL, 
-                user_id INT, 
-                token NVARCHAR(255) NOT NULL, 
-                expires_at INT, 
-                scope NVARCHAR(255), 
+                user_id INT DEFAULT NULL, 
+                token VARCHAR(255) NOT NULL, 
+                expires_at INT DEFAULT NULL, 
+                scope VARCHAR(255) DEFAULT NULL, 
+                CONSTRAINT UNIQ_B1292B905F37A13B UNIQUE (token), 
                 PRIMARY KEY (id)
             )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_B1292B905F37A13B ON claro_api_refresh_token (token) 
-            WHERE token IS NOT NULL
         ");
         $this->addSql("
             CREATE INDEX IDX_B1292B9019EB6921 ON claro_api_refresh_token (client_id)
@@ -70,17 +71,14 @@ class Version20131203163808 extends AbstractMigration
             CREATE TABLE claro_api_auth_code (
                 id INT IDENTITY NOT NULL, 
                 client_id INT NOT NULL, 
-                user_id INT, 
-                token NVARCHAR(255) NOT NULL, 
-                redirect_uri VARCHAR(MAX) NOT NULL, 
-                expires_at INT, 
-                scope NVARCHAR(255), 
+                user_id INT DEFAULT NULL, 
+                token VARCHAR(255) NOT NULL, 
+                redirect_uri TEXT NOT NULL, 
+                expires_at INT DEFAULT NULL, 
+                scope VARCHAR(255) DEFAULT NULL, 
+                CONSTRAINT UNIQ_9DFA4575F37A13B UNIQUE (token), 
                 PRIMARY KEY (id)
             )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_9DFA4575F37A13B ON claro_api_auth_code (token) 
-            WHERE token IS NOT NULL
         ");
         $this->addSql("
             CREATE INDEX IDX_9DFA45719EB6921 ON claro_api_auth_code (client_id)
@@ -124,15 +122,15 @@ class Version20131203163808 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_api_access_token 
-            DROP CONSTRAINT FK_CE9482819EB6921
+            DROP FOREIGN KEY FK_CE9482819EB6921
         ");
         $this->addSql("
             ALTER TABLE claro_api_refresh_token 
-            DROP CONSTRAINT FK_B1292B9019EB6921
+            DROP FOREIGN KEY FK_B1292B9019EB6921
         ");
         $this->addSql("
             ALTER TABLE claro_api_auth_code 
-            DROP CONSTRAINT FK_9DFA45719EB6921
+            DROP FOREIGN KEY FK_9DFA45719EB6921
         ");
         $this->addSql("
             DROP TABLE claro_api_client

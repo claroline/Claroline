@@ -26,7 +26,7 @@
                     {% for application in applications %}
                     <tr>
                         <td>{{ application.client.name }}</td>
-                        <td>{{ application.redirectUri }}</td>
+                        <td><a href="{{ application.redirectUri }}" title="{{ application.redirectUri }}">{{ application.redirectUri }}</a></td>
                         <td><a href="#" title="" class="btn btn-danger">Révoquer l'accès</a></td>
                     </tr>
                     {% else %}

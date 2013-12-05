@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\drizzle_pdo_mysql;
+namespace Claroline\CoreBundle\Migrations\pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/12/03 04:38:14
+ * Generation date: 2013/12/05 04:04:43
  */
-class Version20131203163808 extends AbstractMigration
+class Version20131205160441 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -18,11 +18,12 @@ class Version20131203163808 extends AbstractMigration
             CREATE TABLE claro_api_client (
                 id INT AUTO_INCREMENT NOT NULL, 
                 random_id VARCHAR(255) NOT NULL, 
-                redirect_uris TEXT NOT NULL COMMENT '(DC2Type:array)', 
+                redirect_uris LONGTEXT NOT NULL COMMENT '(DC2Type:array)', 
                 secret VARCHAR(255) NOT NULL, 
-                allowed_grant_types TEXT NOT NULL COMMENT '(DC2Type:array)', 
+                allowed_grant_types LONGTEXT NOT NULL COMMENT '(DC2Type:array)', 
+                name VARCHAR(255) NOT NULL, 
                 PRIMARY KEY(id)
-            )
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_api_access_token (
@@ -31,12 +32,12 @@ class Version20131203163808 extends AbstractMigration
                 user_id INT DEFAULT NULL, 
                 token VARCHAR(255) NOT NULL, 
                 expires_at INT DEFAULT NULL, 
-                `scope` VARCHAR(255) DEFAULT NULL, 
-                PRIMARY KEY(id), 
+                scope VARCHAR(255) DEFAULT NULL, 
                 UNIQUE INDEX UNIQ_CE948285F37A13B (token), 
                 INDEX IDX_CE9482819EB6921 (client_id), 
-                INDEX IDX_CE94828A76ED395 (user_id)
-            )
+                INDEX IDX_CE94828A76ED395 (user_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_api_refresh_token (
@@ -45,12 +46,12 @@ class Version20131203163808 extends AbstractMigration
                 user_id INT DEFAULT NULL, 
                 token VARCHAR(255) NOT NULL, 
                 expires_at INT DEFAULT NULL, 
-                `scope` VARCHAR(255) DEFAULT NULL, 
-                PRIMARY KEY(id), 
+                scope VARCHAR(255) DEFAULT NULL, 
                 UNIQUE INDEX UNIQ_B1292B905F37A13B (token), 
                 INDEX IDX_B1292B9019EB6921 (client_id), 
-                INDEX IDX_B1292B90A76ED395 (user_id)
-            )
+                INDEX IDX_B1292B90A76ED395 (user_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_api_auth_code (
@@ -58,14 +59,14 @@ class Version20131203163808 extends AbstractMigration
                 client_id INT NOT NULL, 
                 user_id INT DEFAULT NULL, 
                 token VARCHAR(255) NOT NULL, 
-                redirect_uri TEXT NOT NULL, 
+                redirect_uri LONGTEXT NOT NULL, 
                 expires_at INT DEFAULT NULL, 
-                `scope` VARCHAR(255) DEFAULT NULL, 
-                PRIMARY KEY(id), 
+                scope VARCHAR(255) DEFAULT NULL, 
                 UNIQUE INDEX UNIQ_9DFA4575F37A13B (token), 
                 INDEX IDX_9DFA45719EB6921 (client_id), 
-                INDEX IDX_9DFA457A76ED395 (user_id)
-            )
+                INDEX IDX_9DFA457A76ED395 (user_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             ALTER TABLE claro_api_access_token 
