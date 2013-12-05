@@ -1219,9 +1219,12 @@ class QuestionController extends Controller
      * Display form to search questions
      *
      */
-    public function searchQuestionAction()
+    public function searchQuestionAction($exoID)
     {
-        return $this->render('UJMExoBundle:Question:searchQuestion.html.twig');
+        return $this->render('UJMExoBundle:Question:searchQuestion.html.twig', array(
+            'exoID' => $exoID
+            )
+        );
     }
 
     /**
@@ -1243,6 +1246,7 @@ class QuestionController extends Controller
         $whatToFind = $request->query->get('whatToFind'); // Which text to find
         $where = $request->query->get('where'); // In which database
         $page = $request->query->get('page'); // Which page
+        $exoID = $request->query->get('exoID'); // If we import or see the questions
 
         // If what and where to search is defined
         if ($type && $whatToFind && $where) {
@@ -1312,23 +1316,59 @@ class QuestionController extends Controller
                     }
                 }
 
-                $pagination = $this->pagination($listInteractions, $max, $page);
+                if ($exoID == -1) {
+                    $pagination = $this->pagination($listInteractions, $max, $page);
+                } else {
+                    $exoQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(array('exercise' => $exoID));
+
+                    $finalList = array();
+                    $length = count($listInteractions);
+                    $already = false;
+
+                    for ($i = 0; $i < $length; $i++) {
+                        foreach ($exoQuestions as $exoQuestion) {
+                            if ($exoQuestion->getQuestion()->getId() == $listInteractions[$i]->getQuestion()->getId()) {
+                                $already = true;
+                                break;
+                            }
+                        }
+                        if ($already == false) {
+                            $finalList[] = $listInteractions[$i];
+                        }
+                        $already = false;
+                    }
+                    $pagination = $this->pagination($finalList, $max, $page);
+                }
 
                 $listQuestionsPager = $pagination[0];
                 $pagerSearch = $pagination[1];
 
                 // Put the result in a twig
-                $divResultSearch = $this->render(
-                    'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
-                    'listQuestions' => $listQuestionsPager,
-                    'canDisplay' => $where,
-                    'pagerSearch' => $pagerSearch,
-                    'type'        => $type,
-                    'whatToFind'  => $whatToFind,
-                    'questionWithResponse' => $questionWithResponse,
-                    'alreadyShared' => $alreadyShared
-                    )
-                );
+                if ($exoID == -1) {
+                    $divResultSearch = $this->render(
+                        'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
+                        'listQuestions' => $listQuestionsPager,
+                        'canDisplay' => $where,
+                        'pagerSearch' => $pagerSearch,
+                        'type'        => $type,
+                        'whatToFind'  => $whatToFind,
+                        'questionWithResponse' => $questionWithResponse,
+                        'alreadyShared' => $alreadyShared,
+                        'exoID' => $exoID
+                        )
+                    );
+                } else {
+                    $divResultSearch = $this->render(
+                        'UJMExoBundle:Question:searchQuestionImport.html.twig', array(
+                            'listQuestions' => $listQuestionsPager,
+                            'pagerSearch'   => $pagerSearch,
+                            'exoID'         => $exoID,
+                            'canDisplay'    => $where,
+                            'whatToFind'    => $whatToFind,
+                            'type'          => $type
+                        )
+                    );
+                }
 
                 // If request is ajax (first display of the first search result (page = 1))
                 if ($request->isXmlHttpRequest()) {
@@ -1340,7 +1380,8 @@ class QuestionController extends Controller
                     // Send the form to search and the result
                     return $this->render(
                         'UJMExoBundle:Question:searchQuestion.html.twig', array(
-                        'divResultSearch' => $divResultSearch
+                        'divResultSearch' => $divResultSearch,
+                        'exoID' => $exoID
                         )
                     );
                 }
@@ -1408,21 +1449,57 @@ class QuestionController extends Controller
                         break;
                 }
 
-                $pagination = $this->pagination($listInteractions, $max, $page);
+                if ($exoID == -1) {
+                    $pagination = $this->pagination($listInteractions, $max, $page);
+                } else {
+                    $exoQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(array('exercise' => $exoID));
+
+                    $finalList = array();
+                    $length = count($listInteractions);
+                    $already = false;
+
+                    for ($i = 0; $i < $length; $i++) {
+                        foreach ($exoQuestions as $exoQuestion) {
+                            if ($exoQuestion->getQuestion()->getId() == $listInteractions[$i]->getQuestion()->getId()) {
+                                $already = true;
+                                break;
+                            }
+                        }
+                        if ($already == false) {
+                            $finalList[] = $listInteractions[$i];
+                        }
+                        $already = false;
+                    }
+                    $pagination = $this->pagination($finalList, $max, $page);
+                }
 
                 $listQuestionsPager = $pagination[0];
                 $pagerSearch = $pagination[1];
 
                 // Put the result in a twig
-                $divResultSearch = $this->render(
-                    'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
-                    'listQuestions' => $listQuestionsPager,
-                    'canDisplay' => $where,
-                    'pagerSearch' => $pagerSearch,
-                    'type'        => $type,
-                    'whatToFind'  => $whatToFind
-                    )
-                );
+                if ($exoID == -1) {
+                    $divResultSearch = $this->render(
+                        'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
+                        'listQuestions' => $listQuestionsPager,
+                        'canDisplay' => $where,
+                        'pagerSearch' => $pagerSearch,
+                        'type'        => $type,
+                        'whatToFind'  => $whatToFind,
+                        'exoID' => $exoID
+                        )
+                    );
+                } else {
+                    $divResultSearch = $this->render(
+                        'UJMExoBundle:Question:searchQuestionImport.html.twig', array(
+                            'listQuestions' => $listQuestionsPager,
+                            'pagerSearch' => $pagerSearch,
+                            'exoID' => $exoID,
+                            'canDisplay' => $where,
+                            'whatToFind'  => $whatToFind,
+                            'type'        => $type
+                        )
+                    );
+                }
 
                 // If request is ajax (first display of the first search result (page = 1))
                 if ($request->isXmlHttpRequest()) {
@@ -1434,7 +1511,8 @@ class QuestionController extends Controller
                     // Send the form to search and the result
                     return $this->render(
                         'UJMExoBundle:Question:searchQuestion.html.twig', array(
-                        'divResultSearch' => $divResultSearch
+                        'divResultSearch' => $divResultSearch,
+                        'exoID' => $exoID
                         )
                     );
                 }
@@ -1544,23 +1622,59 @@ class QuestionController extends Controller
                     }
                 }
 
-                $pagination = $this->pagination($listInteractions, $max, $page);
+                if ($exoID == -1) {
+                    $pagination = $this->pagination($listInteractions, $max, $page);
+                } else {
+                    $exoQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(array('exercise' => $exoID));
+
+                    $finalList = array();
+                    $length = count($listInteractions);
+                    $already = false;
+
+                    for ($i = 0; $i < $length; $i++) {
+                        foreach ($exoQuestions as $exoQuestion) {
+                            if ($exoQuestion->getQuestion()->getId() == $listInteractions[$i]->getQuestion()->getId()) {
+                                $already = true;
+                                break;
+                            }
+                        }
+                        if ($already == false) {
+                            $finalList[] = $listInteractions[$i];
+                        }
+                        $already = false;
+                    }
+                    $pagination = $this->pagination($finalList, $max, $page);
+                }
 
                 $listQuestionsPager = $pagination[0];
                 $pagerSearch = $pagination[1];
 
                 // Put the result in a twig
-                $divResultSearch = $this->render(
-                    'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
-                    'listQuestions' => $listQuestionsPager,
-                    'canDisplay' => $where,
-                    'pagerSearch' => $pagerSearch,
-                    'type'        => $type,
-                    'whatToFind'  => $whatToFind,
-                    'questionWithResponse' => $questionWithResponse,
-                    'alreadyShared' => $alreadyShared
-                    )
-                );
+                if ($exoID == -1) {
+                    $divResultSearch = $this->render(
+                        'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
+                        'listQuestions' => $listQuestionsPager,
+                        'canDisplay' => $where,
+                        'pagerSearch' => $pagerSearch,
+                        'type'        => $type,
+                        'whatToFind'  => $whatToFind,
+                        'questionWithResponse' => $questionWithResponse,
+                        'alreadyShared' => $alreadyShared,
+                        'exoID' => $exoID
+                        )
+                    );
+                } else {
+                    $divResultSearch = $this->render(
+                        'UJMExoBundle:Question:searchQuestionImport.html.twig', array(
+                            'listQuestions' => $listQuestionsPager,
+                            'pagerSearch' => $pagerSearch,
+                            'exoID' => $exoID,
+                            'canDisplay' => $where,
+                            'whatToFind'  => $whatToFind,
+                            'type'        => $type
+                        )
+                    );
+                }
 
                 // If request is ajax (first display of the first search result (page = 1))
                 if ($request->isXmlHttpRequest()) {
@@ -1572,7 +1686,8 @@ class QuestionController extends Controller
                     // Send the form to search and the result
                     return $this->render(
                         'UJMExoBundle:Question:searchQuestion.html.twig', array(
-                        'divResultSearch' => $divResultSearch
+                        'divResultSearch' => $divResultSearch,
+                        'exoID' => $exoID
                         )
                     );
                 }

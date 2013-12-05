@@ -65,8 +65,8 @@ ujm_question_shareQuestionUser:
         _method: POST
 
 ujm_question_search_question:
-    pattern:  /SearchQuestion
-    defaults: { _controller: "UJMExoBundle:Question:searchQuestion" }
+    pattern:  /SearchQuestion/{exoID}
+    defaults: { _controller: UJMExoBundle:Question:searchQuestion, exoID: -1 }
 
 ujm_question_searchQuestion:
     pattern:  /SearchQuestionType

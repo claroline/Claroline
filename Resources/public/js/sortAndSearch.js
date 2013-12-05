@@ -500,7 +500,7 @@ function sortTable(tid, col, ord, type) {
 }
 
 // To search questions (with parameters in all the user's questions)
-function searchQuestion(path, page) {
+function searchQuestion(path, page, exoID) {
 
     // The text to find
     var whatToFind = $('#what2search').val();
@@ -517,7 +517,8 @@ function searchQuestion(path, page) {
             type : type,
             whatToFind : whatToFind,
             where : where,
-            page: page
+            page: page,
+            exoID: exoID
         },
         cache: false,
         success: function (data) {
@@ -614,53 +615,84 @@ function importQuestion(pathmy, pathshared, exoID, pageToGo, nothingToImport) {
     if (i == 0 && j == 0) {
         alert(nothingToImport);
     } else if (i == 0) {
-        $.ajax({
-            type: 'POST',
-            url: pathshared,
-            data: {
-                exoID : exoID,
-                pageGoNow : pageToGo,
-                qid: questionIdArrayShared
-            },
-            cache: false,
-            success: function (data) {
-                window.location.href = data;
-            }
-        });
+        ajaxImport(pathshared, exoID, pageToGo, questionIdArrayShared, true, '');
     } else if (j == 0) {
-        $.ajax({
-            type: 'POST',
-            url: pathmy,
-            data: {
-                exoID : exoID,
-                pageGoNow : pageToGo,
-                qid: questionIdArrayMy
+        ajaxImport(pathmy, exoID, pageToGo, questionIdArrayMy, true, '');
+    } else {
+        ajaxImport(pathmy, exoID, pageToGo, questionIdArrayMy, false, '');
+        ajaxImport(pathshared, exoID, pageToGo, questionIdArrayShared, true, '');
+    }
+}
 
-            },
-            cache: false,
-            success: function (data) {
-                window.location.href = data;
-            }
-        });
+function importQuestionSearch(path, exoID, nothingToImport) {
+    var type;
+    var  arrayIdQuestion = [];
+    var i = 0;
+
+    $("input[type=radio][name=WhereSearch]").each(function () {
+        if ($(this).is(':checked')) {
+            type = $(this).val();
+        }
+    });
+
+    $("input[type=checkbox][name=import]").each(function () {
+        if ($(this).is(':checked')) {
+            arrayIdQuestion[i] = $(this).val();
+            i++;
+        }
+    });
+
+    if (i == 0) {
+        alert(nothingToImport);
+    } else {
+        if (type == 'my') {
+            ajaxImport(path, exoID, -1, arrayIdQuestion, true, type);
+        } else if (type == 'shared') {
+            ajaxImport(path, exoID, -1, arrayIdQuestion, true, type);
+        } else {
+            // all
+            ajaxImport(path, exoID, -1, arrayIdQuestion, true, type);
+        }
+    }
+}
+
+function ajaxImport(path, exoID, pageToGo, arrayIdQuestion, redirection, type) {
+
+    if (pageToGo != -1) {
+        if (redirection == true) {
+            $.ajax({
+                type: 'POST',
+                url: path,
+                data: {
+                    exoID : exoID,
+                    pageGoNow : pageToGo,
+                    qid: arrayIdQuestion
+                },
+                cache: false,
+                success: function (data) {
+                    window.location.href = data;
+                }
+            });
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: path,
+                data: {
+                    exoID : exoID,
+                    pageGoNow : pageToGo,
+                    qid: arrayIdQuestion
+
+                }
+            });
+        }
     } else {
         $.ajax({
             type: 'POST',
-            url: pathmy,
+            url: path,
             data: {
                 exoID : exoID,
-                pageGoNow : pageToGo,
-                qid: questionIdArrayMy
-
-            }
-        });
-
-        $.ajax({
-            type: 'POST',
-            url: pathshared,
-            data: {
-                exoID : exoID,
-                pageGoNow : pageToGo,
-                qid: questionIdArrayShared
+                qid: arrayIdQuestion,
+                type: type
 
             },
             cache: false,

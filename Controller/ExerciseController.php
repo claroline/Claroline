@@ -290,7 +290,7 @@ class ExerciseController extends Controller
         $pagerMy = $request->query->get('pagerMy', 1); // Get the page of the array my question (default 1)
         $pagerShared = $request->query->get('pagerShared', 1); // Get the pager of the array my shared question (default 1)
         $pageToGo = $request->query->get('pageGoNow'); // Page to go for the list of the questions of the exercise
-        $max = 5; // Max of questions per page
+        $max = 10; // Max of questions per page
 
         // If change page of my questions array
         if ($click == 'my') {
@@ -440,6 +440,7 @@ class ExerciseController extends Controller
 
                     $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
                          . 'WHERE eq.exercise='.$exoID;
+
                     $query = $em->createQuery($dql);
                     $maxOrdre = $query->getResult();
 
@@ -454,6 +455,66 @@ class ExerciseController extends Controller
 
             return new \Symfony\Component\HttpFoundation\Response($url);
         } else {
+            return $this->redirect($this->generateUrl('ujm_exercise_import_question', array('exoID' => $exoID)));
+        }
+    }
+
+    public function importValidateSearchAction()
+    {
+        $request = $this->container->get('request');
+
+        if ($request->isXmlHttpRequest()) {
+            $exoID = $request->request->get('exoID');
+            $type = $request->request->get('type');
+            $qid = $request->request->get('qid');
+
+            $user = $this->container->get('security.context')->getToken()->getUser();
+            $em = $this->getDoctrine()->getManager();
+
+            foreach ($qid as $q) {
+                if ($type == 'my') {
+                    $question = $this->getDoctrine()
+                        ->getManager()
+                        ->getRepository('UJMExoBundle:Question')
+                        ->getControlOwnerQuestion($user->getId(), $q);
+                } else if ($type == 'shared') {
+                    $question = $em->getRepository('UJMExoBundle:Share')
+                        ->findBy(array('question' => $q));
+                } else {
+                    $question = $this->getDoctrine()
+                        ->getManager()
+                        ->getRepository('UJMExoBundle:Question')
+                        ->getControlOwnerQuestion($user->getId(), $q);
+                    if (count($question) == 0) {
+                        $question = $em->getRepository('UJMExoBundle:Share')
+                            ->findBy(array('question' => $q));
+                    }
+                }
+
+                if (count($question) > 0) {
+
+                    $exo = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+                    $question = $em->getRepository('UJMExoBundle:Question')->find($q);
+
+                    $eq = new ExerciseQuestion($exo, $question);
+
+                    $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
+                         . 'WHERE eq.exercise='.$exoID;
+
+                    $query = $em->createQuery($dql);
+                    $maxOrdre = $query->getResult();
+
+                    $eq->setOrdre((int) $maxOrdre[0][1] + 1);
+                    $em->persist($eq);
+                }
+            }
+
+            $em->flush();
+
+            $url = (string)$this->generateUrl('ujm_exercise_questions',array('id' => $exoID,'pageNow' => 1));
+
+            return new \Symfony\Component\HttpFoundation\Response($url);
+         } else {
             return $this->redirect($this->generateUrl('ujm_exercise_import_question', array('exoID' => $exoID)));
         }
     }
