@@ -93,6 +93,24 @@ class RoleRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * Returns all platform roles.
+     *
+     * @return array[Role]
+     */
+    public function findAllPlatformRoles()
+    {
+        $queryBuilder = $this
+            ->createQueryBuilder('role')
+            ->andWhere("role.type = :roleType")
+            ->setParameter("roleType", Role::PLATFORM_ROLE);
+        $queryBuilder->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->eq('role.name','?1')))
+            ->setParameter(1, 'ROLE_ANONYMOUS');
+        $query = $queryBuilder->getQuery();
+
+        return $query->getResult();
+    }
+
     public function findByUserAndWorkspace(User $user, AbstractWorkspace $workspace)
     {
         $dql = "
