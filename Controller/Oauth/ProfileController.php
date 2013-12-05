@@ -32,11 +32,6 @@ class ProfileController extends Controller
     {
         $clients = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Oauth\Client')->findByUserWithAuthCode($user);
 
-//        echo "<pre>";
-//        var_dump($clients);
-//        echo "</pre>" . PHP_EOL;
-//        die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
-
         return array(
             'applications' => $clients
         );
