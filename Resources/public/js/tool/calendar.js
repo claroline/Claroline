@@ -426,7 +426,7 @@
                     title: event.title,
                     placement: 'auto',
                     content:  '<a href="#" data-target="#myModal" role="button" data-toggle="modal" class="launch" data-id='+event.id+'>'+
-                    'Launch demo modal</a>'+
+                        Translator.get('platform' + ':' + 'edit')+'</a>'+
                         ' <div> Start: '+
                         $.fullCalendar.formatDate(event.start ,'dd-MM-yyyy') + '</div>'+
                         '<div>End: ' + $.fullCalendar.formatDate(event.end ,'dd-MM-yyyy') +'</div>' +'<br />Description: ' + event.description,
