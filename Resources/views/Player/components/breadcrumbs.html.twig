@@ -24,17 +24,30 @@
         </a>
     </li>
 
+    
+    {% for child in currentStep.children %}
+       <div class="pull-right btn btn-default">
+            <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: child.id }) }}">
+            {{ child.name }}
+            </a>
+        </div>
+    {% endfor %}
+</ul>
+
+<div id="hop-on-my-thumb">
     {% set history = app.session.get('history') %}
     {% set visitedSteps = history[path.id] %}
-
     {% for i, visitedStep in visitedSteps if i < 6  and i > 0 %}
         {% for stepId, stepName in visitedStep %}
-         <li class="lvl-history">
-            <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: stepId }) }}">
+            <a class="btn btn-default btn-sm" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: stepId }) }}">
                 {{ stepName }}
             </a>
-        </li>
         {% endfor %}
     {% endfor %}
+</div>
 
-</ul>
+
+
+
+   
+    

@@ -95,19 +95,6 @@ class PlayerController extends ContainerAware
     
     /**
      * @Method("GET")
-     * @Template("InnovaPathBundle:Player:components/squares-browser.html.twig")
-     */
-    public function displaySquaresBrowserAction(AbstractWorkspace $workspace, Path $path, Step $currentStep)
-    {
-        return array (
-            'workspace' => $workspace,
-            'path' => $path,
-            'currentStep' => $currentStep,
-        );
-    }
-    
-    /**
-     * @Method("GET")
      * @Template("InnovaPathBundle:Player:components/tree-browser.html.twig")
      */
     public function displayTreeBrowserAction(Path $path, Step $currentStep)
