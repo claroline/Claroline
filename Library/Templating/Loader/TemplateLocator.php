@@ -51,7 +51,6 @@ class TemplateLocator extends baseTemplateLocator
      */
     public function locate($template, $currentPath = null, $first = true)
     {
-        file_put_contents("/home/maxime/workspace/Claroline/app/logs/template_locator.log", $template->get('bundle') . '/' . $template->get('controller') . '/' . $template->get('name') . '.html.twig' . PHP_EOL, FILE_APPEND);
         if (!$template instanceof TemplateReferenceInterface) {
             throw new \InvalidArgumentException('The template must be an instance of TemplateReferenceInterface.');
         }
