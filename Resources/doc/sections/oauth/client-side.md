@@ -158,9 +158,6 @@ Refresh flow
 The `access_tokens` have a lifetime of one hour, after which they will expire.
 With every `access_token` you were provided a `refresh_token`. You can exchange `refresh_token` and get a new pair of `access_token` and `refresh_token`.
 
-<pre>
-PROVIDER_HOST/oauth/v2/token?client_id=CLIENT_ID&client_secret=CLIENT_SECRET&grant_type=refresh_token&refresh_token=REFRESH_TOKEN
-</pre>
 **url**:
 > PROVIDER_HOST/oauth/v2/token
 
