@@ -11,9 +11,11 @@
 
 namespace Claroline\CoreBundle\Controller\Oauth;
 
+use Claroline\CoreBundle\Entity\Oauth\Client;
 use Claroline\CoreBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -38,6 +40,32 @@ class AdminController extends Controller
         return array(
             'clients' => $clients
         );
+    }
+
+    /**
+     * @Route("/applications/delete/{client_id}", name="admin_application_delete")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @ParamConverter("client", class="ClarolineCoreBundle:Oauth\Client", options={"id" = "client_id"})
+     *
+     * @Template()
+     */
+    public function revokAction(Request $request, User $user, Client $client)
+    {
+        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        $translator = $this->get('translator');
+        try {
+            /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $entityManager->remove($client);
+            $entityManager->flush();
+
+            $this->get('session')->getFlashBag()->add('success', $translator->trans('thrid_party_application_delete_success_message', array('%application%' => $client->getName()), 'api'));
+        } catch (\Exception $exception) {
+            $this->get('session')->getFlashBag()->add('error', $translator->trans('thrid_party_application_delete_error_message', array('%application%' => $client->getName()), 'api'));
+        }
+
+        return $this->redirect($this->generateUrl('admin_application_list'));
     }
 }
  
