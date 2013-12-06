@@ -91,3 +91,28 @@
 .path-player #hop-on-my-thumb{
     margin-bottom:10px;
 }
+
+.path-player .breadcrumbs ul.dropdown-menu li{
+    display:block;
+}
+
+.path-player .breadcrumbs li.dropdown{
+    position:relative;
+}
+
+.path-player .breadcrumbs a.dropdown-label{
+    padding-right:22px;
+}
+
+.path-player .breadcrumbs a.dropdown-toggle{
+    padding-right:6px;
+    padding-left:6px;
+    margin:auto;
+    position:absolute;
+    top:0;
+    right:0;
+}
+
+.path-player .breadcrumbs li > a.step:hover{
+    text-decoration:underline;
+}

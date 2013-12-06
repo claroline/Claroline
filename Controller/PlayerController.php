@@ -73,8 +73,6 @@ class PlayerController extends ContainerAware
         array_unshift($history[$path->getId()], array($currentStep->getId() => $currentStep->getName()));
         $session->set('history', $history);
 
-
-
         return array (
             'workspace' => $workspace,
             'path' => $path,
