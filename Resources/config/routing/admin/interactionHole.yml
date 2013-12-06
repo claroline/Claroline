@@ -1,0 +1,14 @@
+ujm_interactionhole_create:
+    pattern: /create
+    defaults: { _controller: "UJMExoBundle:InteractionHole:create" }
+    requirements: { _method: post }
+
+ujm_interactionohole_response:
+    pattern: /testHole
+    defaults: { _controller: "UJMExoBundle:InteractionHole:responseOpen" }
+    requirements: { _method: post }
+
+ujm_interactionhole_update:
+    pattern: /{id}/update
+    defaults: { _controller: "UJMExoBundle:InteractionHole:update" }
+    requirements: { _method: post }

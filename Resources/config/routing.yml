@@ -9,6 +9,10 @@ admin_exercise:
 admin_interaction_graphic:
     resource: "routing/admin/interactionGraphic.yml"
     prefix:   /admin/interactiongraphic
+
+admin_interaction_hole:
+    resource: "routing/admin/interactionHole.yml"
+    prefix:   /admin/interactionhole    
     
 admin_interaction_open:
     resource: "routing/admin/interactionOpen.yml"
