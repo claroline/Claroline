@@ -42,6 +42,7 @@ add_workspace: 'Add workspace'
 add_widget_to_home_tab: 'Add widget to Home tab'
 admin: Administrator
 admin_analytics: 'Platform analytics'
+admin_third_party_application: 'Third-party applications'
 admin_form_firstName : 'first name'
 admin_form_lastName : 'Lastname'
 admin_form_mail : 'Email adress'

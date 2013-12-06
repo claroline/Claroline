@@ -17,18 +17,23 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 
-class ProfileController extends Controller
+/**
+ * @SEC\PreAuthorize("hasRole('ADMIN')")
+ * @Route("/admin")
+ */
+class AdminController extends Controller
 {
     /**
-     * @Route("/profile/applications", name="claro_profile_applications")
+     * @Route("/applications", name="admin_application_list")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @Template()
      */
     public function listAction(Request $request, User $user)
     {
-        $clients = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Oauth\Client')->findByUserWithAccessToken($user);
+        $clients = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Oauth\Client')->findAll();
 
         return array(
             'clients' => $clients
