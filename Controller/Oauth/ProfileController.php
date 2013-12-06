@@ -33,7 +33,7 @@ class ProfileController extends Controller
         $clients = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Oauth\Client')->findByUserWithAuthCode($user);
 
         return array(
-            'applications' => $clients
+            'accessTokens' => $clients
         );
     }
 }

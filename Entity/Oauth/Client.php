@@ -58,5 +58,4 @@ class Client extends BaseClient
     {
         return $this->name;
     }
-
 }

@@ -17,17 +17,17 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Nom</th>
-                        <th>Url</th>
-                        <th>Action</th>
+                        <th>{{ 'name'|trans({}, 'api') }}</th>
+                        <th>{{ 'url'|trans({}, 'api') }}</th>
+                        <th>{{ 'actions'|trans({}, 'api') }}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for application in applications %}
+                    {% for accessToken in accessTokens %}
                     <tr>
-                        <td>{{ application.client.name }}</td>
-                        <td><a href="{{ application.redirectUri }}" title="{{ application.redirectUri }}">{{ application.redirectUri }}</a></td>
-                        <td><a href="#" title="" class="btn btn-danger">Révoquer l'accès</a></td>
+                        <td>{{ accessToken.client.name }}</td>
+                        <td><a href="{{ accessToken.redirectUri }}" title="{{ accessToken.redirectUri }}">{{ accessToken.redirectUri }}</a></td>
+                        <td><a href="{{ path('claro_profile_applications_revoke', {'client_id': accessToken.client.id, 'accessToken_id': accessToken.id}) }}" title="{{ 'user_application_revoke_confirm_title'|trans({}, 'api') }}" class="btn btn-danger revoke" data-confirm-title="{{ 'user_application_revoke_confirm_title'|trans({}, 'api') }}" data-confirm-message="{{ 'user_application_revoke_confirm_message'|trans({'%application%': accessToken.client.name}, 'api')|raw }}" data-confirm-ok="{{ 'revoke'|trans({}, 'api') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">{{ 'revoke_access'|trans({}, 'api') }}</a></td>
                     </tr>
                     {% else %}
                     <tr>
@@ -38,4 +38,14 @@
             </table>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+    <script type="text/javascript">
+        $(function() {
+            $('.revoke').confirmModal();
+        });
+    </script>
 {% endblock %}
