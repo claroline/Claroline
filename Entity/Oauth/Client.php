@@ -36,17 +36,17 @@ class Client extends BaseClient
     protected $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="AccessToken", mappedBy="client")
+     * @ORM\OneToMany(targetEntity="AccessToken", mappedBy="client", cascade={"remove"})
      */
     protected $accessTokens;
 
     /**
-     * @ORM\OneToMany(targetEntity="AuthCode", mappedBy="client")
+     * @ORM\OneToMany(targetEntity="AuthCode", mappedBy="client", cascade={"remove"})
      */
     protected $authCodes;
 
     /**
-     * @ORM\OneToMany(targetEntity="RefreshToken", mappedBy="client")
+     * @ORM\OneToMany(targetEntity="RefreshToken", mappedBy="client", cascade={"remove"})
      */
     protected $refreshTokens;
 
