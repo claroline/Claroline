@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Oauth;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use FOS\OAuthServerBundle\Entity\Client as BaseClient;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,9 +35,28 @@ class Client extends BaseClient
      */
     protected $name;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AccessToken", mappedBy="client")
+     */
+    protected $accessTokens;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AuthCode", mappedBy="client")
+     */
+    protected $authCodes;
+
+    /**
+     * @ORM\OneToMany(targetEntity="RefreshToken", mappedBy="client")
+     */
+    protected $refreshTokens;
+
     public function __construct()
     {
         parent::__construct();
+
+        $this->accessTokens  = new ArrayCollection();
+        $this->authCodes     = new ArrayCollection();
+        $this->refreshTokens = new ArrayCollection();
     }
 
     /**
@@ -57,5 +77,65 @@ class Client extends BaseClient
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @param mixed $accessTokens
+     *
+     * @return Client
+     */
+    public function setAccessTokens($accessTokens)
+    {
+        $this->accessTokens = $accessTokens;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAccessTokens()
+    {
+        return $this->accessTokens;
+    }
+
+    /**
+     * @param mixed $authCodes
+     *
+     * @return Client
+     */
+    public function setAuthCodes($authCodes)
+    {
+        $this->authCodes = $authCodes;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAuthCodes()
+    {
+        return $this->authCodes;
+    }
+
+    /**
+     * @param mixed $refreshTokens
+     *
+     * @return Client
+     */
+    public function setRefreshTokens($refreshTokens)
+    {
+        $this->refreshTokens = $refreshTokens;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRefreshTokens()
+    {
+        return $this->refreshTokens;
     }
 }

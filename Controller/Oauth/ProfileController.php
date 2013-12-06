@@ -30,10 +30,10 @@ class ProfileController extends Controller
      */
     public function listAction(Request $request, User $user)
     {
-        $clients = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Oauth\Client')->findByUserWithAuthCode($user);
+        $clients = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Oauth\Client')->findByUserWithAccessToken($user);
 
         return array(
-            'accessTokens' => $clients
+            'clients' => $clients
         );
     }
 }

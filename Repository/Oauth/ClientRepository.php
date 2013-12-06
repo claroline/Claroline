@@ -26,14 +26,14 @@ class ClientRepository extends EntityRepository
      *
      * @return Query|array
      */
-    public function findByUserWithAuthCode(User $user, $executeQuery = true)
+    public function findByUserWithAccessToken(User $user, $executeQuery = true)
     {
         $query = $this->getEntityManager()
             ->createQuery(
-                'SELECT c, ac
-                FROM ClarolineCoreBundle:Oauth\AuthCode ac
-                JOIN ac.client c
-                WHERE ac.user = :userId
+                'SELECT c, at
+                FROM ClarolineCoreBundle:Oauth\Client c
+                JOIN c.accessTokens at
+                WHERE at.user = :userId
             ')
             ->setParameter('userId', $user->getId());
 

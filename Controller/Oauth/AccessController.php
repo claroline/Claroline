@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\Oauth;
 
-use Claroline\CoreBundle\Entity\Oauth\AccessToken;
+use Claroline\CoreBundle\Entity\Oauth\AuthCode;
 use Claroline\CoreBundle\Entity\Oauth\Client;
 use Claroline\CoreBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -22,17 +22,16 @@ use Symfony\Component\HttpFoundation\Request;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
-class AccessTokenController extends Controller
+class AccessController extends Controller
 {
     /**
-     * @Route("/oauth/revok/{client_id}/{accessToken_id}", name="claro_profile_applications_revoke")
+     * @Route("/oauth/revok/{client_id}", name="claro_profile_applications_revoke")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @ParamConverter("client", class="ClarolineCoreBundle:Oauth\Client", options={"id" = "client_id"})
-     * @ParamConverter("accessToken", class="ClarolineCoreBundle:Oauth\AccessToken", options={"id" = "accessToken_id"})
      *
      * @Template()
      */
-    public function revokAction(Request $request, User $user, Client $client, AccessToken $accessToken)
+    public function revokAction(Request $request, User $user, Client $client)
     {
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator = $this->get('translator');
@@ -40,14 +39,21 @@ class AccessTokenController extends Controller
             /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
             $entityManager = $this->getDoctrine()->getManager();
 
-            if ($client !== $accessToken->getClient()) {
-                throw new \InvalidArgumentException("Access token client doesn't match provided client.");
-            }
-            if ($user !== $accessToken->getUser()) {
-                throw new \InvalidArgumentException("Access token user doesn't match connected user.");
+            $criteria = array('client' => $client, 'user' => $user);
+
+            $accessToken = $entityManager->getRepository('ClarolineCoreBundle:Oauth\AccessToken')->findOneBy($criteria);
+            $entityManager->remove($accessToken);
+
+            $refreshToken = $entityManager->getRepository('ClarolineCoreBundle:Oauth\RefreshToken')->findOneBy($criteria);
+            if (null !== $refreshToken) {
+                $entityManager->remove($refreshToken);
             }
 
-            $entityManager->remove($accessToken);
+            $authCodes = $entityManager->getRepository('ClarolineCoreBundle:Oauth\AuthCode')->findBy($criteria);
+            foreach ($authCodes as $authCode) {
+                $entityManager->remove($authCode);
+            }
+
             $entityManager->flush();
 
             $this->get('session')->getFlashBag()->add('success', $translator->trans('application_revoked_success_message', array('%application%' => $client->getName()), 'api'));

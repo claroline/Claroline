@@ -28,7 +28,7 @@ class AccessToken extends BaseAccessToken
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Oauth\Client")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Oauth\Client", inversedBy="accessTokens")
      * @ORM\JoinColumn(nullable=false)
      */
     protected $client;

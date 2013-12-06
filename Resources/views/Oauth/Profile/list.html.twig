@@ -23,11 +23,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for accessToken in accessTokens %}
+                    {% for client in clients %}
                     <tr>
-                        <td>{{ accessToken.client.name }}</td>
-                        <td><a href="{{ accessToken.redirectUri }}" title="{{ accessToken.redirectUri }}">{{ accessToken.redirectUri }}</a></td>
-                        <td><a href="{{ path('claro_profile_applications_revoke', {'client_id': accessToken.client.id, 'accessToken_id': accessToken.id}) }}" title="{{ 'user_application_revoke_confirm_title'|trans({}, 'api') }}" class="btn btn-danger revoke" data-confirm-title="{{ 'user_application_revoke_confirm_title'|trans({}, 'api') }}" data-confirm-message="{{ 'user_application_revoke_confirm_message'|trans({'%application%': accessToken.client.name}, 'api')|raw }}" data-confirm-ok="{{ 'revoke'|trans({}, 'api') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">{{ 'revoke_access'|trans({}, 'api') }}</a></td>
+                        <td>{{ client.name }}</td>
+                        <td><ul class="list-inline">{% for redirectUrl in client.redirectUris %}<li><a href="{{ redirectUrl }}" title="{{ redirectUrl }}">{{ redirectUrl }}</a></li>{% endfor %}</ul></td>
+                        <td><a href="{{ path('claro_profile_applications_revoke', {'client_id': client.id}) }}" title="{{ 'user_application_revoke_confirm_title'|trans({}, 'api') }}" class="btn btn-danger revoke" data-confirm-title="{{ 'user_application_revoke_confirm_title'|trans({}, 'api') }}" data-confirm-message="{{ 'user_application_revoke_confirm_message'|trans({'%application%': client.name}, 'api')|raw }}" data-confirm-ok="{{ 'revoke'|trans({}, 'api') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">{{ 'revoke_access'|trans({}, 'api') }}</a></td>
                     </tr>
                     {% else %}
                     <tr>

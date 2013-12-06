@@ -28,7 +28,7 @@ class RefreshToken extends BaseRefreshToken
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Oauth\Client")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Oauth\Client", inversedBy="refreshTokens")
      * @ORM\JoinColumn(nullable=false)
      */
     protected $client;
