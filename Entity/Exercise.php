@@ -77,6 +77,13 @@ class Exercise extends AbstractResource
     private $nbQuestion;
 
     /**
+     * @var boolean $keepSameQuestion
+     *
+     * @ORM\Column(name="keepSameQuestion", type="boolean", nullable=true)
+     */
+    private $keepSameQuestion;
+
+    /**
      * @var datetime $dateCreate
      *
      * @ORM\Column(name="date_create", type="datetime")
@@ -275,6 +282,24 @@ class Exercise extends AbstractResource
     public function getNbQuestion()
     {
         return $this->nbQuestion;
+    }
+
+    /**
+     * Set keepSameQuestion
+     *
+     * @param boolean $keepSameQuestion
+     */
+    public function setKeepSameQuestion($keepSameQuestion)
+    {
+        $this->keepSameQuestion = $keepSameQuestion;
+    }
+
+    /**
+     * Get keepSameQuestion
+     */
+    public function getKeepSameQuestion()
+    {
+        return $this->keepSameQuestion;
     }
 
     /**

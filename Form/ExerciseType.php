@@ -70,6 +70,11 @@ class ExerciseType extends AbstractType
                     'label' => 'number of questions to draw'
                 )
             )
+            ->add(
+                'keepSameQuestion', 'checkbox', array(
+                    'required' => false, 'label' => 'Exercise.keepSameQuestion'
+                )
+            )
             //->add('dateCreate')
             ->add(
                 'duration', 'text', array(

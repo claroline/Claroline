@@ -516,8 +516,6 @@ class ExerciseController extends Controller
 
         if ($this->controlDate($exoAdmin, $exercise) === true) {
             $session = $this->getRequest()->getSession();
-            $orderInter = '';
-            $tabOrderInter = array();
 
             $dql = 'SELECT max(p.numPaper) FROM UJM\ExoBundle\Entity\Paper p '
                 . 'WHERE p.exercise='.$id.' AND p.user='.$uid;
@@ -544,17 +542,28 @@ class ExerciseController extends Controller
                 $paper->setArchive(0);
                 $paper->setInterupt(0);
 
-                $interactions = $this->getDoctrine()
-                    ->getManager()
-                    ->getRepository('UJMExoBundle:Interaction')
-                    ->getExerciseInteraction(
-                        $this->getDoctrine()->getManager(), $id,
-                        $exercise->getShuffle(), $exercise->getNbQuestion()
-                    );
-
-                foreach ($interactions as $interaction) {
-                    $orderInter = $orderInter.$interaction->getId().';';
-                    $tabOrderInter[] = $interaction->getId();
+                if ( ($exercise->getNbQuestion() > 0) && ($exercise->getKeepSameQuestion()) == true ) {
+                    $papers = $this->getDoctrine()
+                        ->getManager()
+                        ->getRepository('UJMExoBundle:Paper')
+                        ->getExerciseUserPapers($user->getId(), $id);
+                    if(count($papers) == 0) {
+                        $tab = $this->prepareInteractionsPaper($id, $exercise);
+                        $interactions  = $tab['interactions'];
+                        $orderInter    = $tab['orderInter'];
+                        $tabOrderInter = $tab['tabOrderInter'];
+                    } else {
+                        $lastPaper = $papers[count($papers) - 1];
+                        $orderInter = $lastPaper->getOrdreQuestion();
+                        $tabOrderInter = explode(';', $lastPaper->getOrdreQuestion());
+                        unset($tabOrderInter[count($tabOrderInter) - 1]);
+                        $interactions[0] = $em->getRepository('UJMExoBundle:Interaction')->find($tabOrderInter[0]);
+                    }
+                } else {
+                    $tab = $this->prepareInteractionsPaper($id, $exercise);
+                    $interactions  = $tab['interactions'];
+                    $orderInter    = $tab['orderInter'];
+                    $tabOrderInter = $tab['tabOrderInter'];
                 }
 
                 $paper->setOrdreQuestion($orderInter);
@@ -578,6 +587,37 @@ class ExerciseController extends Controller
         } else {
             return $this->redirect($this->generateUrl('ujm_paper_list', array('exoID' => $id)));
         }
+    }
+
+    /**
+     * To create new paper
+     *
+     */
+    private function prepareInteractionsPaper($id, $exercise)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $orderInter = '';
+        $tabOrderInter = array();
+        $tab = array();
+
+        $interactions = $this->getDoctrine()
+                        ->getManager()
+                        ->getRepository('UJMExoBundle:Interaction')
+                        ->getExerciseInteraction(
+                            $this->getDoctrine()->getManager(), $id,
+                            $exercise->getShuffle(), $exercise->getNbQuestion()
+                        );
+
+        foreach ($interactions as $interaction) {
+            $orderInter = $orderInter.$interaction->getId().';';
+            $tabOrderInter[] = $interaction->getId();
+        }
+
+        $tab['interactions']  = $interactions;
+        $tab['orderInter']    = $orderInter;
+        $tab['tabOrderInter'] = $tabOrderInter;
+
+        return $tab;
     }
 
     /**

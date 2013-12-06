@@ -363,6 +363,7 @@ Exercise.dispButtonIterrupt: Allow the test to be stopped
 Exercise.doprint: Print the copy at the end of the test
 Exercise.duration: Duration
 Exercise.end_date: End date
+Exercise.keepSameQuestion: Keep the same questions for a same user
 Exercise.lockAttempt: Lock the test
 Exercise.markMode: Availability of the notation
 Exercise.maxAttemps: Tries allowed
