@@ -59,7 +59,7 @@ class PaperController extends Controller
      * Lists all Paper entities.
      *
      */
-    public function indexAction($exoID, $page)
+    public function indexAction($exoID, $page, $all)
     {
         $exoAdmin = false;
         $arrayMarkPapers = array();
@@ -94,7 +94,11 @@ class PaperController extends Controller
         }
 
         // Pagination of the paper list
-        $max = 10; // Max per page
+        if ($all == 1) {
+            $max = count($paper);
+        } else {
+            $max = 10; // Max per page
+        }
 
         $adapter = new ArrayAdapter($paper);
         $pagerfanta = new Pagerfanta($adapter);
@@ -237,6 +241,54 @@ class PaperController extends Controller
         } else {
 
             return new Response('Error');
+        }
+    }
+
+    public function searchUserPaperAction()
+    {
+        $papersOneUser = array();
+
+        $request = $this->get('request');
+        $em = $this->getDoctrine()->getManager();
+
+        $nameUser = $request->query->get('userName');
+
+        $userList = $em->getRepository('ClarolineCoreBundle:User')->findByName($nameUser);
+        $end = count($userList);
+
+        for ($i = 0; $i < $end; $i++) {
+            $papersOneUser[] = $em->getRepository('UJMExoBundle:Paper')->getPaperUser($userList[$i]->getId());
+
+            if ($i > 0) {
+                $papersUser = array_merge($papersOneUser[$i - 1], $papersOneUser[$i]);
+            } else {
+                $papersUser = $papersOneUser[$i];
+            }
+        }
+
+        foreach ($papersUser as $p) {
+            $arrayMarkPapers[$p->getId()] = $this->container->get('ujm.exercise_services')->getInfosPaper($p);
+        }
+
+        $divResultSearch = $this->render(
+            'UJMExoBundle:Paper:userPaper.html.twig', array(
+                'papers'    => $papersUser,
+                'arrayMarkPapers' => $arrayMarkPapers
+            )
+        );
+        // If request is ajax (first display of the first search result (page = 1))
+        if ($request->isXmlHttpRequest()) {
+            return $divResultSearch; // Send the twig with the result
+        } else {
+            // Cut the header of the request to only have the twig with the result
+            $divResultSearch = substr($divResultSearch, strrpos($divResultSearch, '<link'));
+
+            // Send the form to search and the result
+            return $this->render(
+                'UJMExoBundle:Paper:index.html.twig', array(
+                'divResultSearch' => $divResultSearch
+                )
+            );
         }
     }
 

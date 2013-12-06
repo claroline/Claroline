@@ -112,7 +112,7 @@ class ShareRepository extends EntityRepository
 
     public function findByTypeShared($userId, $whatToFind)
     {
-        $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s JOIN UJM\ExoBundle\Entity\Interaction i
+        $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s, UJM\ExoBundle\Entity\Interaction i
                 WHERE s.question = i.question
                 AND s.user = '.$userId.'
                 AND i.type LIKE :search
@@ -126,10 +126,25 @@ class ShareRepository extends EntityRepository
 
     public function findByContainShared($userId, $whatToFind)
     {
-         $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s JOIN UJM\ExoBundle\Entity\Interaction i
+         $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s, UJM\ExoBundle\Entity\Interaction i
                 WHERE s.question = i.question
                 AND s.user = '.$userId.'
                 AND i.invite LIKE :search
+        ';
+
+        $query = $this->_em->createQuery($dql)
+            ->setParameter('search', "%{$whatToFind}%");
+
+        return $query->getResult();
+    }
+
+    public function findByAllShared($userId, $whatToFind)
+    {
+        $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s, UJM\ExoBundle\Entity\Interaction i,
+                UJM\ExoBundle\Entity\Question q, UJM\ExoBundle\Entity\Category c
+                WHERE s.question = i.question AND i.question = q AND q.category = c
+                AND s.user = '.$userId.'
+                AND (i.invite LIKE :search OR i.type LIKE :search OR c.value LIKE :search OR q.title LIKE :search)
         ';
 
         $query = $this->_em->createQuery($dql)

@@ -225,4 +225,17 @@ class InteractionRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findByAll($userId, $whatToFind)
+    {
+        $dql = 'SELECT i FROM UJM\ExoBundle\Entity\Interaction i JOIN i.question q JOIN q.category c
+            WHERE (i.invite LIKE :search OR i.type LIKE :search OR c.value LIKE :search OR q.title LIKE :search)
+            AND q.user = '.$userId.'
+        ';
+
+        $query = $this->_em->createQuery($dql)
+            ->setParameter('search', "%{$whatToFind}%");
+
+        return $query->getResult();
+    }
 }

@@ -50,9 +50,16 @@
     </div>
 
     <div class="panel-body">
-        <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
-            <i class="icon-arrow-left"></i> {{ 'back' | trans }}
-        </a>
+
+        {% if exoID == -1 %}
+            <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
+                <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+            </a>
+        {% else %}
+            <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID':  exoID }) }}">
+                <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+            </a>
+        {% endif %}
     </div>
 
     <div class="list-group">
@@ -77,6 +84,8 @@
                                 <input type="radio" name="QuestionSearch" value="Title"/> {{ 'title'|trans }}
                                 &nbsp;&nbsp;|&nbsp;&nbsp;
                                 <input type="radio" name="QuestionSearch" value="Contain"/> {{ 'containSearch'|trans }} ...
+                                &nbsp;&nbsp;|&nbsp;&nbsp;
+                                <input type="radio" name="QuestionSearch" value="All"/> {{ 'all'|trans }}
                             </div>
                         </div>
 
@@ -88,6 +97,8 @@
                                 <input type="radio" name="WhereSearch" value="my" checked/> {{ 'my questions'|trans }}
                                 &nbsp;&nbsp;|&nbsp;&nbsp;
                                 <input type="radio" name="WhereSearch" value="shared"/> {{ 'my shared questions'|trans }}
+                                &nbsp;&nbsp;|&nbsp;&nbsp;
+                                <input type="radio" name="WhereSearch" value="all"/> {{ 'all'|trans }}
                             </div>
                         </div>
 
@@ -98,10 +109,12 @@
                             <div class="panel-body">
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="what2search" placeholder="{{ 'search'|trans({}, 'platform') }}"
-                                        onkeydown="if (event.keyCode == 13) { searchQuestion('{{ path('ujm_question_searchQuestion') }}', 1);return false; }">
+                                        onkeydown="if (event.keyCode == 13) {
+                                            searchQuestion('{{ path('ujm_question_searchQuestion') }}', 1, {{ exoID}});
+                                            return false; }">
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="button" id="SubmitSearchQuestion"
-                                            onClick="searchQuestion('{{ path('ujm_question_searchQuestion') }}', 1);">
+                                            onClick="searchQuestion('{{ path('ujm_question_searchQuestion') }}', 1, {{ exoID}});">
                                         <i class="icon-search"></i></button>
                                     </span>
                                 </div>
@@ -112,7 +125,7 @@
             </div>
         </div>
     </div>
-    <div id="resultSearch"  class="panel-body">
+    <div id="resultSearch" class="panel-body">
         {% if divResultSearch is defined %}
             {{ divResultSearch | raw }}
         {% endif %}

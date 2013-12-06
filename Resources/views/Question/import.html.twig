@@ -65,6 +65,9 @@
         <a class="btn btn-primary" href="{{ path('ujm_question_new', { 'exoID': exoID }) }}">
             <i class="icon-plus"></i> {{ 'create a new entry' | trans }}
         </a>
+        <a class="btn btn-primary" href="{{ path('ujm_question_search_question', { 'exoID': exoID }) }}">
+            <i class="icon-question"></i> {{ 'searchQuestion' | trans }}
+        </a>
         <a class="btn btn-primary" href="#" onclick="importQuestion('{{ path('ujm_exercise_validate_import') }}',
             '{{ path('ujm_exercise_validate_import_shared') }}', {{ exoID }}, {{ pageToGo }}, '{{ 'nothingToImport' | trans }}');event.preventDefault();">
                 <i class="icon-download"></i> {{ 'import' | trans }}

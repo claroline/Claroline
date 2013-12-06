@@ -31,6 +31,10 @@ ujm_exercise_validate_import_shared:
     pattern: /import/shared
     defaults: { _controller: "UJMExoBundle:Exercise:importValidateShared" }
 
+ujm_exercise_validate_import_search:
+    pattern: /import/search
+    defaults: { _controller: "UJMExoBundle:Exercise:importValidateSearch" }
+
 ujm_exercise_question_order:
     pattern:  /ExerciseQuestion/changeOrder
     defaults: { _controller: "UJMExoBundle:Exercise:changeQuestionOrder" }

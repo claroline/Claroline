@@ -45,6 +45,7 @@ add user: Ajouter un utilisateur
 administration: Administration
 after the last attempt: Après le dernier essai
 alert ending: Etes-vous sur de vouloir terminer ? (Vous ne pourrez plus modifier vos réponses)
+all: Tout
 allQuestion: Toutes
 already: Cette question est déjà partagée avec cet utilisateur
 alreadyExist: Ce nom existe déjà.
@@ -96,6 +97,7 @@ delete document: Suppression de document
 delete of my bank: Supprimer de ma banque
 delete of my exercise: Supprimer de mon exercice
 description: Description
+displayAllList: Afficher la liste complète
 display all on this page: Tout afficher sur cette page
 display pagination: Afficher la pagination
 docimology: Docimologie
@@ -201,7 +203,7 @@ my shared questions: Mes questions partagées
 # N
 nameUser2Shared: Nom de l'utilisateur avec qui partager la question
 nbr_choices: Le nombre de choix doit être supérieur à deux
-need Correction: Questions nécessitant une correction
+need Correction: Les questions en rouge nécessitent une correction
 never: Jamais
 newCategoryName: Nouveau nom de la catégorie
 newName: Nouveau nom du document
@@ -286,6 +288,7 @@ saveNewOrder: Enregistrer le nouvel ordre
 sawHint: de pénalité pour indices vus
 search: Rechercher un document
 searchQuestion: Chercher des questions
+searchUserPaper: Rechercher les copies de l'utilisateur
 seeDoc: Voir les questions liées à ce document
 seeSharedWith: Question partagée avec des utilisateurs
 select: Sélectionner

@@ -1,11 +1,11 @@
 // To know if sorting is up or down
-var clickC = clickTi = clickTy = clickI = clickL = clickT = clickU = clickN = clickS
+var clickC = clickTi = clickTy = clickI = clickL = clickT = clickU = clickN = clickS = clickM
     = clickE = clickSps = clickSn = clickSp = clickDl = clickTl = clickQl = clickCl = clickPl = clickRl = 'no';
 
 // Arrows to show the directions of the sorting
-var upC, upTi, upTy, upI, upL, upT, upU, upN, upS, upE, upSps, upSn, upSp, upDl, upTl, upQl, upCl, upPl, upRl,
+var upC, upTi, upTy, upI, upL, upT, upU, upN, upS, upE, upSps, upSn, upSp, upDl, upTl, upQl, upCl, upPl, upRl, upM,
     downC, downTi, downTy, downI, downL, downT, downU, downN, downS, downE, downSps, downSn, downSp,
-    downDl, downTl, downQl, downCl, downPl, downRl;
+    downDl, downTl, downQl, downCl, downPl, downRl, downM;
 
 // Sort questions by selected column (type)
 function SortQuestions(type, array) {
@@ -48,10 +48,12 @@ function selectArrows(array) {
         upN = $('#upN');
         upS = $('#upS');
         upE = $('#upE');
+        upM = $('#upM');
         downU = $('#downU');
         downN = $('#downN');
         downS = $('#downS');
         downE = $('#downE');
+        downM = $('#downM');
     }
 
     if (array == 'user-table') {
@@ -91,10 +93,12 @@ function hideArrows(array) {
         upN.css({"display" : "none"});
         upS.css({"display" : "none"});
         upE.css({"display" : "none"});
+        upM.css({"display" : "none"});
         downU.css({"display" : "none"});
         downN.css({"display" : "none"});
         downS.css({"display" : "none"});
         downE.css({"display" : "none"});
+        downM.css({"display" : "none"});
     } else if (array == 'user-table') {
         upSps.css({"display" : "none"});
         upSn.css({"display" : "none"});
@@ -344,6 +348,17 @@ function switchType(type, array) {
                 clickRl = 'no';
             }
             break;
+        case 'mark':
+            if (clickM == 'no') {
+                sortTable(array, 6, SCOREA, type);
+                downM.css({"display" : "inline-block"});
+                clickM = 'yes';
+            } else {
+                sortTable(array, 6, SCORED, type);
+                upM.css({"display" : "inline-block"});
+                clickM = 'no';
+            }
+            break;
     }
 }
 // To sort decreasing
@@ -376,12 +391,12 @@ function ASC(a, b) {
 
 // To sort increasing
 function NUMA(a, b) {
-    return a - b;
+    return a[1] - b[1];
 }
 
 // To sort decreasing
 function NUMD(a, b) {
-    return b - a;
+    return b[1] - a[1];
 }
 
 function DATE(x) {
@@ -431,6 +446,20 @@ function DATED(a, b) {
     }
 }
 
+function SCOREA(a,b) {
+    scorea = a[1].substring(0, a[1].indexOf(' / '));
+    scoreb = b[1].substring(0, b[1].indexOf(' / '));
+
+    return scorea - scoreb;
+}
+
+function SCORED(a,b) {
+    scorea = a[1].substring(0, a[1].indexOf(' / '));
+    scoreb = b[1].substring(0, b[1].indexOf(' / '));
+
+    return scoreb - scorea;
+}
+
 // To display the rows in the right order
 function sortTable(tid, col, ord, type) {
 
@@ -453,7 +482,7 @@ function sortTable(tid, col, ord, type) {
                 sorter.push([$(this), link]);
             // Sort string
             } else {
-                contenu =  $(this).find('td').eq(col).html().toLowerCase();
+                contenu =  $(this).find('td').eq(col).html().toLowerCase().trim();
                 sorter.push([$(this), contenu]);
             }
         }
@@ -471,7 +500,7 @@ function sortTable(tid, col, ord, type) {
 }
 
 // To search questions (with parameters in all the user's questions)
-function searchQuestion(path, page) {
+function searchQuestion(path, page, exoID) {
 
     // The text to find
     var whatToFind = $('#what2search').val();
@@ -488,7 +517,8 @@ function searchQuestion(path, page) {
             type : type,
             whatToFind : whatToFind,
             where : where,
-            page: page
+            page: page,
+            exoID: exoID
         },
         cache: false,
         success: function (data) {
@@ -518,12 +548,16 @@ window.onload = function () {
             $("input[type=radio][name=QuestionSearch][value='Title']").attr('checked', true);
         } else if (type == 'Contain') {
             $("input[type=radio][name=QuestionSearch][value='Contain']").attr('checked', true);
+        } else if (type == 'All') {
+            $("input[type=radio][name=QuestionSearch][value='All']").attr('checked', true);
         }
 
         if (where == 'my') {
-            $("input[type=radio][name=QuestionSearch][value='my']").attr('checked', true);
+            $("input[type=radio][name=WhereSearch][value='my']").attr('checked', true);
         } else if (where == 'shared') {
-            $("input[type=radio][name=QuestionSearch][value='shared']").attr('checked', true);
+            $("input[type=radio][name=WhereSearch][value='shared']").attr('checked', true);
+        } else if (where == 'all') {
+            $("input[type=radio][name=WhereSearch][value='all']").attr('checked', true);
         }
     }
 
@@ -539,6 +573,24 @@ window.onload = function () {
         }
     }
 };
+
+function searchUserPaper(path) {
+
+    var userName = $('#nameUser').val();
+
+    // Send theses informations to the controller to have the matching questions and display it
+    $.ajax({
+        type: 'GET',
+        url: path,
+        data: {
+            userName: userName
+        },
+        cache: false,
+        success: function (data) {
+            $('#resultSearch').html(data);
+       }
+    });
+}
 
 function importQuestion(pathmy, pathshared, exoID, pageToGo, nothingToImport) {
     var questionIdArrayMy = [];
@@ -563,53 +615,84 @@ function importQuestion(pathmy, pathshared, exoID, pageToGo, nothingToImport) {
     if (i == 0 && j == 0) {
         alert(nothingToImport);
     } else if (i == 0) {
-        $.ajax({
-            type: 'POST',
-            url: pathshared,
-            data: {
-                exoID : exoID,
-                pageGoNow : pageToGo,
-                qid: questionIdArrayShared
-            },
-            cache: false,
-            success: function (data) {
-                window.location.href = data;
-            }
-        });
+        ajaxImport(pathshared, exoID, pageToGo, questionIdArrayShared, true, '');
     } else if (j == 0) {
-        $.ajax({
-            type: 'POST',
-            url: pathmy,
-            data: {
-                exoID : exoID,
-                pageGoNow : pageToGo,
-                qid: questionIdArrayMy
+        ajaxImport(pathmy, exoID, pageToGo, questionIdArrayMy, true, '');
+    } else {
+        ajaxImport(pathmy, exoID, pageToGo, questionIdArrayMy, false, '');
+        ajaxImport(pathshared, exoID, pageToGo, questionIdArrayShared, true, '');
+    }
+}
 
-            },
-            cache: false,
-            success: function (data) {
-                window.location.href = data;
-            }
-        });
+function importQuestionSearch(path, exoID, nothingToImport) {
+    var type;
+    var  arrayIdQuestion = [];
+    var i = 0;
+
+    $("input[type=radio][name=WhereSearch]").each(function () {
+        if ($(this).is(':checked')) {
+            type = $(this).val();
+        }
+    });
+
+    $("input[type=checkbox][name=import]").each(function () {
+        if ($(this).is(':checked')) {
+            arrayIdQuestion[i] = $(this).val();
+            i++;
+        }
+    });
+
+    if (i == 0) {
+        alert(nothingToImport);
+    } else {
+        if (type == 'my') {
+            ajaxImport(path, exoID, -1, arrayIdQuestion, true, type);
+        } else if (type == 'shared') {
+            ajaxImport(path, exoID, -1, arrayIdQuestion, true, type);
+        } else {
+            // all
+            ajaxImport(path, exoID, -1, arrayIdQuestion, true, type);
+        }
+    }
+}
+
+function ajaxImport(path, exoID, pageToGo, arrayIdQuestion, redirection, type) {
+
+    if (pageToGo != -1) {
+        if (redirection == true) {
+            $.ajax({
+                type: 'POST',
+                url: path,
+                data: {
+                    exoID : exoID,
+                    pageGoNow : pageToGo,
+                    qid: arrayIdQuestion
+                },
+                cache: false,
+                success: function (data) {
+                    window.location.href = data;
+                }
+            });
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: path,
+                data: {
+                    exoID : exoID,
+                    pageGoNow : pageToGo,
+                    qid: arrayIdQuestion
+
+                }
+            });
+        }
     } else {
         $.ajax({
             type: 'POST',
-            url: pathmy,
+            url: path,
             data: {
                 exoID : exoID,
-                pageGoNow : pageToGo,
-                qid: questionIdArrayMy
-
-            }
-        });
-
-        $.ajax({
-            type: 'POST',
-            url: pathshared,
-            data: {
-                exoID : exoID,
-                pageGoNow : pageToGo,
-                qid: questionIdArrayShared
+                qid: arrayIdQuestion,
+                type: type
 
             },
             cache: false,

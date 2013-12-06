@@ -144,7 +144,7 @@
             {% if pagerSearch.haveToPaginate %}
                 <div class="text-center panel-footer">
                     {{ pagerfanta(pagerSearch, 'twitter_bootstrap_translated', {'routeName': 'ujm_question_searchQuestion',
-                        'routeParams': {'where': canDisplay, 'whatToFind': whatToFind,  'type': type} }) }}
+                        'routeParams': {'where': canDisplay, 'whatToFind': whatToFind,  'type': type, 'exoID': exoID } }) }}
                 </div>
             {% endif %}
         {% else %}
