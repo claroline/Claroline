@@ -284,11 +284,20 @@ body:not(.mce-content-body) video {
 /*  Checkbox dropdown  */
 /***********************/
 
-.dropdown-menu li label {
+.nav.nav-tabs .dropdown {
+    display: inline;
+    margin-left: 5px;
+    li i {
+        width: 100%;
+    }
+}
+
+.dropdown-menu li label, .nav.nav-tabs .dropdown li i {
     font-weight: normal !important;
     display: block;
     padding: 5px 15px;
     margin: 0;
+    cursor: pointer;
 
     &:hover, &.active {
         color:@dropdown-link-hover-color;
@@ -650,6 +659,10 @@ div.pagination {
 /********/
 /* MISC */
 /********/
+
+.strike, *:hover.strike {
+    text-decoration: line-through !important;
+}
 
 .table-responsive {
     overflow-y: hidden;
