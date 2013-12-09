@@ -49,7 +49,7 @@ class AdminController extends Controller
      *
      * @Template()
      */
-    public function revokAction(Request $request, User $user, Client $client)
+    public function deleteAction(Request $request, User $user, Client $client)
     {
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator = $this->get('translator');
