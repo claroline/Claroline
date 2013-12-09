@@ -2,7 +2,7 @@
     border-radius: 3px;
     font-size: 0;
     margin: 0;
-    margin-bottom: 16px;
+    margin-bottom: 6px;
 }
 
 .path-player .breadcrumbs ul,
@@ -31,8 +31,10 @@
     line-height: 20px;
     font-weight: bold;
     color: #FFFFFF;
-    text-shadow: 0 0 2px rgba(0, 0, 0, 1);
-}
+    text-shadow:    -1px 0 0 rgba(0, 0, 0, 0.2), 
+                    1px 0 0 rgba(0, 0, 0, 0.7),
+                    0 -1px 0 rgba(0, 0, 0, 0.2),
+                    0 1px 0 rgba(0, 0, 0, 0.7);}
 
 .path-player .breadcrumbs ul > li > a:after {
     content: "";
@@ -84,4 +86,33 @@
 
 .path-player .breadcrumbs ul > .lvl-8 > a:after {
     border-left-color: #91deea;
+}
+
+.path-player #hop-on-my-thumb{
+    margin-bottom:10px;
+}
+
+.path-player .breadcrumbs ul.dropdown-menu li{
+    display:block;
+}
+
+.path-player .breadcrumbs li.dropdown{
+    position:relative;
+}
+
+.path-player .breadcrumbs a.dropdown-label{
+    padding-right:22px;
+}
+
+.path-player .breadcrumbs a.dropdown-toggle{
+    padding-right:6px;
+    padding-left:6px;
+    margin:auto;
+    position:absolute;
+    top:0;
+    right:0;
+}
+
+.path-player .breadcrumbs li > a.step:hover{
+    text-decoration:underline;
 }
