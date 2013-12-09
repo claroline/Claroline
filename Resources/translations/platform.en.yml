@@ -42,6 +42,7 @@ add_widget_to_home_tab: 'Add widget to Home tab'
 add_workspace: 'Add workspace'
 admin: Administrator
 admin_analytics: 'Platform analytics'
+admin_third_party_application: 'Third-party applications'
 admin_form_firstName : 'first name'
 admin_form_lastName : 'Lastname'
 admin_form_mail : 'Email adress'
@@ -300,6 +301,7 @@ move: Move
 my_account: 'My account'
 my_agenda: 'My agenda'
 my_badges: 'My badges'
+my_applications: "Mes applications"
 my_contacts: 'My contacts'
 my_favourite_workspaces: 'My favourite workspaces'
 my_notes: 'My notes'

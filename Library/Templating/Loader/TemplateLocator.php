@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Library\Templating\Loader;
 
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Themes\ThemeService;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator as baseTemplateLocator;
@@ -33,7 +35,7 @@ class TemplateLocator extends baseTemplateLocator
      * @param ThemeService                 $themeService  Claroline theme service
      * @param string                       $cacheDir      The cache path
      */
-    public function __construct(FileLocatorInterface $locator, $configHandler, $themeService, $cacheDir = null)
+    public function __construct(FileLocatorInterface $locator, PlatformConfigurationHandler $configHandler, ThemeService $themeService, $cacheDir = null)
     {
         if (null !== $cacheDir && is_file($cache = $cacheDir.'/templates.php')) {
             $this->cache = require $cache;
@@ -49,7 +51,6 @@ class TemplateLocator extends baseTemplateLocator
      */
     public function locate($template, $currentPath = null, $first = true)
     {
-//        return parent::locate($template, $currentPath, $first);
         if (!$template instanceof TemplateReferenceInterface) {
             throw new \InvalidArgumentException('The template must be an instance of TemplateReferenceInterface.');
         }
@@ -58,25 +59,15 @@ class TemplateLocator extends baseTemplateLocator
         $theme = $this->themeService->findTheme(array('path' => $path));
         $bundle = substr($path, 0, strpos($path, ':'));
 
-        if (is_object($theme) and
+        if ($theme !== null and
             $bundle !== '' and
             $bundle !== $template->get('bundle') and
             $template->get('bundle') === 'ClarolineCoreBundle'
         ) {
-            $tmp = clone $template;
-
-            $tmp->set('bundle', $bundle);
-            $tmp->set(
-                'controller',
-                strtolower(str_replace(' ', '', $theme->getName())).'/'.$template->get('controller')
-            );
-
-            try {
-                $this->locator->locate($tmp->getPath(), $currentPath);
-                $template = $tmp;
-            } catch (\Exception $e) {
-                //var_dump($template);
-                unset($tmp);
+            $template = $this->locateTemplate($template, $bundle, $theme, $currentPath);
+        } elseif ($template->get('bundle') === 'FOSOAuthServerBundle') {
+            if ('Authorize' === $template->get('controller') && 'authorize' === $template->get('name')) {
+                $template = $this->locateTemplate($template, 'ClarolineCoreBundle', $theme, $currentPath);
             }
         }
 
@@ -93,5 +84,35 @@ class TemplateLocator extends baseTemplateLocator
                 sprintf('Unable to find template "%s" : "%s".', $template, $e->getMessage()), 0, $e
             );
         }
+    }
+
+    /**
+     * @param TemplateReferenceInterface                    $template
+     * @param string                                        $bundle
+     * @param \Claroline\CoreBundle\Entity\Theme\Theme|null $theme
+     * @param string                                        $currentPath
+     *
+     * @return TemplateReferenceInterface
+     */
+    private function locateTemplate(TemplateReferenceInterface $template, $bundle, $theme, $currentPath)
+    {
+        $newTemplate = clone $template;
+        $controller  = $template->get('controller');
+
+        if (null !== $theme) {
+            $controller = sprintf("%s/%s", strtolower(str_replace(' ', '', $theme->getName())), $template->get('controller'));
+        }
+
+        $newTemplate
+            ->set('bundle', $bundle)
+            ->set('controller', $controller);
+
+        try {
+            $this->locator->locate($newTemplate->getPath(), $currentPath);
+        } catch (\Exception $e) {
+            $newTemplate = $template;
+        }
+
+        return $newTemplate;
     }
 }

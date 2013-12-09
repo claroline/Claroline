@@ -23,7 +23,6 @@ class Updater020200
         $this->container = $container;
     }
 
-
     public function postUpdate()
     {
         $em = $this->container->get('doctrine.orm.entity_manager');

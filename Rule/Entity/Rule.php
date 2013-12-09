@@ -16,9 +16,12 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * @ORM\MappedSuperclass
+ * @ExclusionPolicy("all")
  */
 abstract class Rule
 {
@@ -34,6 +37,7 @@ abstract class Rule
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Expose
      */
     protected $id;
 
@@ -41,6 +45,7 @@ abstract class Rule
      * @var integer
      *
      * @ORM\Column(type="smallint", nullable=false)
+     * @Expose
      */
     protected $occurrence;
 
@@ -48,6 +53,7 @@ abstract class Rule
      * @var string
      *
      * @ORM\Column(type="string", nullable=false)
+     * @Expose
      */
     protected $action;
 
@@ -55,6 +61,7 @@ abstract class Rule
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
+     * @Expose
      */
     protected $result;
 
@@ -62,13 +69,14 @@ abstract class Rule
      * @var string
      *
      * @ORM\Column(type="smallint", nullable=true)
+     * @Expose
      */
     protected $resultComparison;
 
     /**
      * @var ResourceNode
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode", inversedBy="resource")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(nullable=true)
      */
     protected $resource;

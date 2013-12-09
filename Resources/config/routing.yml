@@ -210,9 +210,6 @@ claro_file:
 idci_exporter:
     resource: "../../vendor/idci/exporter-bundle/IDCI/Bundle/ExporterBundle/Controller"
     type:     annotation
-# app/config/routing.yml
-_bazinga_exposetranslation:
-    resource: "@BazingaExposeTranslationBundle/Resources/config/routing/routing.yml"
 
 # Badge routes
 claro_badge_admin:
@@ -235,3 +232,13 @@ claro_workspaces_widget:
     resource: "@ClarolineCoreBundle/Controller/Widget/MyWorkspacesWidgetController.php"
     prefix: widget
     type: annotation
+
+claro_oauth:
+    resource: "@ClarolineCoreBundle/Controller/Oauth"
+    type: annotation
+
+# Api routes
+claro_api:
+    resource: "@ClarolineCoreBundle/Controller/Api"
+    type:     annotation
+    prefix:   /api
