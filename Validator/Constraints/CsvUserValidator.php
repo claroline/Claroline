@@ -92,40 +92,40 @@ class CsvUserValidator extends ConstraintValidator
         }
         foreach ($usernames as $username => $lines) {
             if (count($lines) > 1) {
+                $msg = $this->translator->trans(
+                    'username_found_at',
+                    array('%username%' => $username, '%lines%' => $this->getLines($lines)),
+                    'platform'
+                ) . ' ';
 
-                $countLines = count($lines);
-                $l = '';
-
-                foreach ($lines as $i => $line) {
-                    $l .= $line;
-
-                    if ($i < $countLines - 1) {
-                        $l.= ', ';
-                    }
-                }
-
-                $msg = $this->translator->trans('username_found_at', array('%username%' => $username, '%lines%' => $l), 'platform') . ' ';
                 $this->context->addViolation($msg);
             }
         }
 
         foreach ($mails as $mail => $lines) {
             if (count($lines) > 1) {
-
-                $countLines = count($lines);
-                $l = '';
-
-                foreach ($lines as $i => $line) {
-                    $l .= $line;
-
-                    if ($i < $countLines - 1) {
-                        $l.= ', ';
-                    }
-                }
-
-                $msg = $this->translator->trans('email_found_at', array('%email%' => $mail, '%lines%' => $l), 'platform') . ' ';
+                $msg = $this->translator->trans(
+                    'email_found_at',
+                    array('%email%' => $mail, '%lines%' => $this->getLines($lines)),
+                    'platform'
+                ) . ' ';
                 $this->context->addViolation($msg);
             }
         }
+    }
+
+    private function getLines($lines) {
+        $countLines = count($lines);
+        $l = '';
+
+        foreach ($lines as $i => $line) {
+            $l .= $line;
+
+            if ($i < $countLines - 1) {
+                $l.= ', ';
+            }
+        }
+
+        return $l;
     }
 }

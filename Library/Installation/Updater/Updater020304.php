@@ -56,4 +56,3 @@ class Updater020304
         }
     }
 }
-

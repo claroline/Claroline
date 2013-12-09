@@ -13,6 +13,8 @@ namespace Claroline\CoreBundle\Entity\Badge;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * @ORM\Entity
@@ -23,6 +25,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *          @ORM\UniqueConstraint(name="badge_slug_translation_unique_idx", columns={"slug", "locale", "badge_id"})
  *      }
  * )
+ * @ExclusionPolicy("all")
  */
 class BadgeTranslation
 {
@@ -32,6 +35,7 @@ class BadgeTranslation
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Expose
      */
     protected $id;
 
@@ -45,6 +49,7 @@ class BadgeTranslation
      * @var string $locale
      *
      * @ORM\Column(type="string", length=8, nullable=false)
+     * @Expose
      */
     protected $locale;
 
@@ -52,6 +57,7 @@ class BadgeTranslation
      * @var string $name
      *
      * @ORM\Column(type="string", length=128, nullable=false)
+     * @Expose
      */
     protected $name;
 
@@ -59,6 +65,7 @@ class BadgeTranslation
      * @var string $description
      *
      * @ORM\Column(type="string", length=128, nullable=false)
+     * @Expose
      */
     protected $description;
 
@@ -74,6 +81,7 @@ class BadgeTranslation
      * @var string $criteria
      *
      * @ORM\Column(type="text", nullable=false)
+     * @Expose
      */
     protected $criteria;
 

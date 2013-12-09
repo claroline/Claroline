@@ -31,7 +31,7 @@ class ClaroUtilities implements ContainerAwareInterface
     {
         $this->container = $container;
     }
-    
+
     /**
      * Fill the empty value on $fillable with $array and sort it.
      *
@@ -137,20 +137,20 @@ class ClaroUtilities implements ContainerAwareInterface
             mt_rand(0, 65535)
         );
     }
-    
+
     public function getDefaultEncoding()
     {
         $headers = $this->container->get('request')->server->getHeaders();
         $userAgent = $headers['USER_AGENT'];
-        
+
         if (strpos($userAgent, 'Linux') !== false) {
             return 'ISO-8859-1';
         }
-        
+
         if (strpos($userAgent, 'Windows') !== false) {
             return 'CP437';
         }
-        
+
         //default
         return 'ISO-8859-1';
     }
