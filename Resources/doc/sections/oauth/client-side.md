@@ -5,7 +5,7 @@ Third-party authentication - Client-side
 Registration
 ------------
 
-Third-party application that need to access the platform will first need to be register in it.
+Third-party application that need access to the platform will first need to be register in it.
 
 There are multiple flow to authenticate third-party application.
 Choosing the flow is done when registering the application and its up to the administrator of the platform to decide.
