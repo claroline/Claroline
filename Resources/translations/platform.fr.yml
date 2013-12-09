@@ -61,6 +61,7 @@ all: Tous
 all_available_workspaces: 'Tous les espaces d''activités disponibles'
 all_my_workspaces: 'Tous mes espaces d''activités'
 all_workspaces: 'Tous les espaces d''activités'
+already_existing_user: L'utilisateur existe déjà.
 an_error_occured_message: Une erreur s'est produite. Veuillez contacter l'administrateur.
 analytics_connections: 'Visites utilisateurs'
 analytics_home: 'Vue de l''ensemble'
@@ -176,6 +177,7 @@ drop_file: Déposez le fichier
 edit: Modifier
 editable: 'Modifiable'
 email_form_mail : 'Entrez votre adresse email'
+email_found_at: 'L''email %email% a été trouvé aux lignes: %lines%'
 empty_file: 'Fichier vide'
 enter_tag_name_message: 'Veuillez entrer un nom de Tag'
 entries_per_day: "Nombre d'entrées par jour"
@@ -246,6 +248,7 @@ last_name: Nom
 left: 'Gauche'
 line_per_page: 'Lignes par page'
 link: Lien
+line_number: 'Ligne %line%:'
 link_outdated : 'le lien n''est plus valide'
 list_groups: 'Lister les groupes'
 list_users: 'Lister les utilisateurs'
@@ -496,6 +499,7 @@ text_form_name: Nom
 text_form_shareType: Redistribution
 text_form_text: Texte
 the_workspace: 'L''espace d''activités'
+the_following_users_were_not_imported: 'Les utilisateurs suivant n''ont pas pu être importés:'
 this_page_requires_authentication: 'Cette page requiert une authentification. Veuillez vous identifier.'
 to: Jusque
 to_message: A
@@ -547,12 +551,13 @@ user_form_plainPassword_second: Vérification
 user_form_username: 'Nom d''utilisateur'
 user_parameters: 'Paramètres de l''utilisateur'
 username: 'Nom d''utilisateur'
+username_found_at: 'Le nom d''utilisateur %username% a été trouvé aux lignes: %lines%'
 users: Utilisateurs
 users_connected_once: 'utilisateurs connectés au moins 1 fois sur la plateforme'
 users_import: 'Importer des utilisateurs'
 users_list: 'Liste des utilisateurs'
 users_management: 'Gestion des utilisateurs'
-users_minimum_requirement_msg: 'Les utilisateurs doivent remplir ces conditions: login de 3 caractères, password de 4 caractères, email valide.'
+users_minimum_requirement_msg: 'Les utilisateurs doivent remplir ces conditions: login de 3 caractères, mot de passe de 4 caractères, email valide.'
 users_registration_in_workspace: 'Inscription des utilisateurs dans l''espace d''activités'
 users_visits: 'Visites des utilisateurs'
 validate: Valider
