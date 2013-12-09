@@ -7,8 +7,26 @@ Registration
 
 Third-party application that need access to the platform will first need to be register in it.
 
+To do so a command line utility is available:
+
+```
+php app/console claroline:client:create --redirect-uri="http://www.example.com/" --grant-type="authorization_code" --grant-type="password" --grant-type="refresh_token" --grant-type="token" --grant-type="client_credentials" client_name
+```
+
+If everything went fine you should get a response from the command with something like:
+
+```
+Added a new client with public id 4_3cpk8blr9fswcggkc4gkkgok0oc0kgc8sw4gk80ksso4040wcs, secret np3j4uvzxs0wo4wk4ccggococ0k84kog8gs0so0c840oggos4
+```
+
+In this example we created a client with all possible grant types allowed, but for real use case maybe just the one needed will be enough.
+The redirect uri represents a URL, where your client application is deployed.
+You will get redirected here if everything went as planned, when redirection is involved in the authorization process.
+
+This public_id and secret have to be given to the third-party applciation developers as they'll need it for further request.
+
+
 There are multiple flow to authenticate third-party application.
-Choosing the flow is done when registering the application and its up to the administrator of the platform to decide.
 `Token` flow is the only one needed to allow third-party application to access the platform, the other served to authenticate and authorize it.
 
 
@@ -25,6 +43,8 @@ Authorization Code flow
 
 That’s the most commonly used one, recommended to authorize end customers.
 A good example is the Facebook Login for websites. Here’s how it works.
+
+The Authorization Code flow generates an authorization code when the user grants access and the OAuth2 client needs to make a subsequent request to get the access and refresh tokens.
 
 Make the following request:
 
@@ -81,6 +101,7 @@ Implicit Grant flow
 
 It’s similar to Authorization Code grant, it’s just a bit simpler.
 You just need to make only one request, and you will get the access_token as a part of redirect URL, there’s no need for second response.
+Refresh tokens are not supported in this flow.
 That’s for the situations where you trust the user and the client, but you still want the user to identify himself in the browser.
 
 **url**:
@@ -131,7 +152,7 @@ Response:
 Client Credentials flow
 -----------------------
 
-This one is the most simplistic flow of them all. You just need to provide CLIENT_ID and CLIENT_SECRET.
+This one is the most simplistic flow of them all. You just need to provide CLIENT_ID and CLIENT_SECRET to get back an access token.
 
 **url**:
 > PROVIDER_HOST/oauth/v2/token
