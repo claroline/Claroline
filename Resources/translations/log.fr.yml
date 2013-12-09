@@ -46,6 +46,7 @@ log_group-add_user_shortname: 'Ajout'
 log_group-remove_user_shortname: 'Retrait'
 log_group-delete_shortname: 'Suppression'
 log_group-update_shortname: 'Modification'
+log_workspace-enter_shortname: 'Ouverture'
 log_workspace-role-subscribe_user_shortname: 'Inscription'
 log_workspace-role-unsubscribe_user_shortname: 'Désinscription'
 log_workspace-role-subscribe_group_shortname: 'Inscription'
@@ -76,6 +77,7 @@ log_group-add_user_sentence: 'a ajouté %receiver_user% au groupe %receiver_grou
 log_group-remove_user_sentence: 'a retiré %receiver_user% du groupe %receiver_group%'
 log_group-delete_sentence: 'a supprimé le groupe %receiver_group%'
 log_group-update_sentence: 'a modifié le groupe %receiver_group%'
+log_workspace-enter_sentence: "a accédé l'espace d'activités %workspace%"
 log_workspace-role-subscribe_user_sentence: 'a inscrit %receiver_user% au rôle %role% dans %workspace%'
 log_workspace-role-unsubscribe_user_sentence: 'a désinscrit %receiver_user% du rôle %role% dans %workspace%'
 log_workspace-role-subscribe_group_sentence: 'a inscrit %receiver_group% au rôle %role% dans %workspace%'
@@ -127,6 +129,7 @@ log_user-create_title: "Création d'un utilisateur"
 log_user-login_title: "Connexion d'un utilisateur"
 log_user-delete_title: "Suppression d'un utilisateur"
 log_user-update_title: "Mise à jour d'un utilisateur"
+log_workspace-enter_title: "Accès à un espace d'activités"
 log_workspace-role-subscribe_user_title: "Inscription d'un utilisateur à un rôle (espace d'activités)"
 log_workspace-role-unsubscribe_user_title: "Retrait d'un utilisateur d'un rôle (espace d'activités)"
 log_workspace-role-subscribe_group_title: "Inscription d'un groupe à un rôle (espace d'activités)"
@@ -157,6 +160,7 @@ log_user-create_filter: "Création d'un utilisateur"
 log_user-login_filter: "Connexion d'un utilisateur"
 log_user-delete_filter: "Suppression d'un utilisateur"
 log_user-update_filter: "Mise à jour d'un utilisateur"
+log_workspace-enter_filter: "Accès à un espace d'activités"
 log_workspace-role-subscribe_user_filter: "Inscription d'un utilisateur à un rôle"
 log_workspace-role-unsubscribe_user_filter: "Retrait d'un utilisateur d'un rôle"
 log_workspace-role-subscribe_group_filter: "Inscription d'un groupe à un rôle"

@@ -558,6 +558,27 @@ class UserManager
         return $this->userRepo->count();
     }
 
+    public function countUsersForPlatformRoles()
+    {
+        $roles = $this->roleManager->getAllPlatformRoles();
+        $usersInRoles = array();
+        $usersInRoles['user_accounts'] = 0;
+        foreach ($roles as $role)
+        {
+            $restrictionRoleNames = null;
+            if ($role->getName() === 'ROLE_USER') {
+                $restrictionRoleNames = array('ROLE_WS_CREATOR', 'ROLE_ADMIN');
+            }
+            elseif ($role->getName() === 'ROLE_WS_CREATOR') {
+                $restrictionRoleNames = array('ROLE_ADMIN');
+            }
+            $usersInRoles[$role->getTranslationKey()] = intval($this->userRepo->countUsersByRole($role, $restrictionRoleNames));
+            $usersInRoles['user_accounts'] += $usersInRoles[$role->getTranslationKey()];
+        }
+
+        return $usersInRoles;
+    }
+
     /**
      * @param integer[] $ids
      *

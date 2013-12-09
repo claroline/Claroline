@@ -98,6 +98,16 @@ class ToolListener
     }
 
     /**
+     * @DI\Observe("open_tool_workspace_analytics")
+     *
+     * @param DisplayToolEvent $event
+     */
+    public function onDisplayWorkspaceAnalytics(DisplayToolEvent $event)
+    {
+        $event->setContent($this->workspaceAnalytics($event->getWorkspace()));
+    }
+
+    /**
      * @DI\Observe("open_tool_desktop_parameters")
      *
      * @param DisplayToolEvent $event
@@ -164,9 +174,10 @@ class ToolListener
         $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr);
         $owner = array();
         foreach ($owners as $o) {
-            $temp = $o->getWorkspace()->getName();
+            $temp = $o->getUser()->getUserName();
             $owner[] = $temp;
         }
+        $owners = array_unique($owner);
 
         if ($usr === 'anon.') {
             return $this->templating->render(
@@ -175,7 +186,7 @@ class ToolListener
                     'workspace' => $workspace,
                     'form' => $form->createView(),
                     'listEvents' => $listEvents,
-                    'owners' => array_unique($owner)
+                    'owners' => $owners
                 )
             );
         }
@@ -185,7 +196,8 @@ class ToolListener
             array(
                 'workspace' => $workspace,
                 'form' => $form->createView(),
-                'listEvents' => $listEvents
+                'listEvents' => $listEvents,
+                'owners' => $owners
             )
         );
 
@@ -199,6 +211,14 @@ class ToolListener
         return $this->templating->render(
             'ClarolineCoreBundle:Tool/workspace/logs:logList.html.twig',
             $this->container->get('claroline.log.manager')->getWorkspaceList($workspace, 1)
+        );
+    }
+
+    public function workspaceAnalytics($workspace)
+    {
+        return $this->templating->render(
+            'ClarolineCoreBundle:Tool/workspace/analytics:analytics.html.twig',
+            $this->container->get('claroline.manager.analytics_manager')->getWorkspaceAnalytics($workspace)
         );
     }
 

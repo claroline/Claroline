@@ -18,24 +18,18 @@
 
 {% block section_content %}
 
-    <div class="panel-heading">
+    <div class="panel-heading relative">
         <h3 class="panel-title">
             {{ 'home'|trans({}, 'tools') }}
-            {% if is_granted('ROLE_WS_MANAGER_' ~ workspace.getGuid()) %}
-                <a href="{{
-                    path(
-                        'claro_display_workspace_home_tabs_with_config',
-                        {
-                            'tabId': tabId,
-                            'workspaceId': workspace.getId()
-                        }
-                    )
-                    }}"
-                >
-                    <i id="switch-config-mode" class="icon-cog pull-right pointer-hand"></i>
-                </a>
-            {% endif %}
+
         </h3>
+        {% if is_granted('ROLE_WS_MANAGER_' ~ workspace.getGuid()) %}
+            <div class="float-right-top">
+                <a class="btn btn-primary" href="{{ path( 'claro_display_workspace_home_tabs_with_config', { 'tabId': tabId, 'workspaceId': workspace.getId()}) }}">
+                    <i id="switch-config-mode" class="icon-pencil"></i>
+                </a>
+            </div>
+        {% endif %}
     </div>
 
     <div class="panel-body">

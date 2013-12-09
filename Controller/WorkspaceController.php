@@ -418,6 +418,11 @@ class WorkspaceController extends Controller
             'Log\LogWorkspaceToolRead',
             array($workspace, $toolName)
         );
+        $this->eventDispatcher->dispatch(
+            'log',
+            'Log\LogWorkspaceEnter',
+            array($workspace)
+        );
 
         if ($toolName === 'resource_manager') {
             $this->get('session')->set('isDesktop', false);

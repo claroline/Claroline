@@ -68,7 +68,6 @@ class Installer
     {
         $this->checkInstallationStatus($plugin, false);
         $this->validatePlugin($plugin);
-
         $this->baseInstaller->install($plugin);
         $this->log('Saving plugin configuration...');
         $this->recorder->register($plugin, $this->validator->getPluginConfiguration());
@@ -82,8 +81,6 @@ class Installer
     public function uninstall(PluginBundle $plugin)
     {
         $this->checkInstallationStatus($plugin, true);
-        $this->validatePlugin($plugin);
-
         $this->log('Removing plugin configuration...');
         $this->recorder->unregister($plugin);
         $this->baseInstaller->uninstall($plugin);

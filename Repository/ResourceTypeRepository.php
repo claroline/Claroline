@@ -36,14 +36,22 @@ class ResourceTypeRepository extends EntityRepository
      *
      * @return array
      */
-    public function countResourcesByType()
+    public function countResourcesByType($workspace = null)
     {
         $qb = $this
             ->createQueryBuilder('type')
             ->select('type.id, type.name, COUNT(rs.id) AS total')
             ->leftJoin('Claroline\CoreBundle\Entity\Resource\ResourceNode', 'rs', 'WITH', 'type = rs.resourceType')
+            ->andWhere('type.name != :directoryName')
+            ->setParameter('directoryName', 'directory')
             ->groupBy('type.id')
             ->orderBy('total', 'DESC');
+
+        if (!empty($workspace)) {
+            $qb->leftJoin('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace', 'ws', 'WITH', 'ws = rs.workspace')
+                ->andWhere('ws = :workspace')
+                ->setParameter('workspace', $workspace);
+        }
 
         return $qb->getQuery()->getResult();
     }

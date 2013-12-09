@@ -1,0 +1,50 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "analytics" | trans({}, "platform") }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+    macros.workspaceBreadcrumbs(
+    workspace,
+    [
+    {
+    'name': 'analytics'|trans({}, 'platform'),
+    'href': ''
+    }
+    ]
+    )
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-body logs-container">
+        {% if 0 < chartData|length %}
+            {% include 'ClarolineCoreBundle:Log:count_by_day_chart.html.twig' with {'actionName' : 'entries_per_day'} %}
+            <br/><br/>
+        {% endif %}
+
+        {% if 0 < resourceCount|length %}
+            <div class="row">
+                <div class="col-md-6">
+                    {% include 'ClarolineCoreBundle:Log:resource_by_type_chart.html.twig' with {'filesImported' : true, 'resourceCount' : resourceCount, 'chartHeight' : 400, 'numberRows' : 4} %}
+                </div>
+                <div class="col-md-6">
+                    <div id="analytics-resources-list" class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="icon-list"></i>
+                            {{'resources_usage_list'|trans({}, 'platform')}}
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-condensed">
+                                <tr><th>{{'resource'|trans({}, 'platform')}}</th><th>#</th></tr>
+                                {% for resource in resourceCount %}
+                                    <tr><td>{{resource.name|trans({}, 'resource')}}</td><td>{{resource.total}}</td></tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

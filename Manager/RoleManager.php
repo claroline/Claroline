@@ -502,6 +502,14 @@ class RoleManager
     }
 
     /**
+     * @return \Claroline\CoreBundle\Entity\Role[]
+     */
+    public function getAllPlatformRoles()
+    {
+        return $this->roleRepo->findAllPlatformRoles();
+    }
+
+    /**
      * @param string $key The translation key
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      *
