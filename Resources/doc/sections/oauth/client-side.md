@@ -9,6 +9,7 @@ Third-party application that need access to the platform will first need to be r
 
 There are multiple flow to authenticate third-party application.
 Choosing the flow is done when registering the application and its up to the administrator of the platform to decide.
+`Token` flow is the only one needed to allow third-party application to access the platform, the other served to authenticate and authorize it.
 
 
 Request format
