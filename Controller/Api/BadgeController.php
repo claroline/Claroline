@@ -61,8 +61,6 @@ class BadgeController
     {
         $badges = $this->badgeRepository->findAll();
 
-        $view = View::create();
-
         $view = View::create()
             ->setStatusCode(200)
             ->setData($badges);
