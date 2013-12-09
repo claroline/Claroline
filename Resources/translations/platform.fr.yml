@@ -1,7 +1,6 @@
 'Add a logo': 'Ajouter un logo'
 'Audience/user visits': 'Audience/Visites utilisateurs'
 'Choose a logo': 'Choisir un logo'
-'None': 'Aucun'
 404 : 'La page que vous cherchez n''existe pas.'
 Action List: 'Liste des actions'
 Actions per day: 'Nombre d''actions par jour'
@@ -10,6 +9,7 @@ Choose workspaces displayed in the widget: 'Choisissez les espaces de travail af
 Draw an area on the graph to zoom, double-click to cancel: 'Tracez une zone sur le graphique pour zoomer; double cliquez pour annuler'
 Filter actions: 'Filtrer les actions'
 Last action: '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
+None: 'Aucun'
 Overview of all recent activities in %workspaceName%: 'Aperçu de toutes les activités récentes de %workspaceName%'
 Overview of recent activities in %workspaceName%: 'Aperçu des activités récentes de %workspaceName%'
 Overview of recent activities of your workspaces: 'Aperçu des activités récentes de vos espaces de travail'
@@ -39,8 +39,8 @@ add_tag_to_workspace: 'Ajouter un Tag à l''espace d''activités'
 add_user: 'Ajouter un utilisateur'
 add_user_s_confirm_message: 'utilisateur(s) ajouté(s)'
 add_users: 'Ajouter des utilisateurs'
-add_workspace: 'Ajouter un espace d''activités'
 add_widget_to_home_tab: 'Ajouter un widget à l''onglet'
+add_workspace: 'Ajouter un espace d''activités'
 admin: Administrateur
 admin_analytics: 'Statistiques plateforme'
 admin_form_firstName : 'Prénom'
@@ -154,8 +154,8 @@ date_range.yesterday: 'Hier'
 deletable: 'Supprimable'
 delete: Supprimer
 delete_category: 'Supprimer la catégorie'
-delete_category_confirm_title: 'Suppression d''une catégorie'
 delete_category_confirm_message: 'Voulez-vous vraiment supprimer cette catégorie ?'
+delete_category_confirm_title: 'Suppression d''une catégorie'
 delete_home_tab: 'Supprimer l''onglet'
 desktop: Bureau
 desktop_home_tab_creation : 'Création d''un onglet pour le bureau'
@@ -165,6 +165,7 @@ desktop_tools: 'Outils du bureau'
 directory: Répertoire
 directory_form_name: Nom
 directory_form_shareType: Redistribution
+display: 'Afficher'
 display_options: 'Options d''affichage'
 done_on: 'effectuée sur'
 download: Télécharger
@@ -214,6 +215,7 @@ has_been_suscribed_with_role: 'a été inscrit(e) avec le rôle'
 has_been_suscribed_with_role_group: 'a été inscrit avec le rôle'
 has_not_been_imported: 'n''a pas été importé(e)'
 has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
+hide: 'Cacher'
 history: Historique
 home: Accueil
 home_parameters: 'Paramètres de l''accueil'
@@ -240,6 +242,8 @@ jqplot_date_output_format: '%d-%m-%Y'
 lastName: Nom
 last_30_days_activity: 'Activités des 30 derniers jours'
 last_name: Nom
+left: 'Gauche'
+line_per_page: 'Lignes par page'
 link: Lien
 link_outdated : 'le lien n''est plus valide'
 list_groups: 'Lister les groupes'
@@ -357,6 +361,8 @@ please_wait: 'Veuillez patienter...'
 position: Position
 private: Privée
 profile_form_administrativeCode: 'Code administratif'
+profile_form_creation_plainPassword_first: 'Mot de passe'
+profile_form_creation_plainPassword_second: Vérification
 profile_form_description : 'Description'
 profile_form_firstName: Prénom
 profile_form_lastName: Nom
@@ -367,8 +373,6 @@ profile_form_phone: Téléphone
 profile_form_pictureFile : 'Photo de profil'
 profile_form_plainPassword_first: 'Mot de passe'
 profile_form_plainPassword_second: Vérification
-profile_form_creation_plainPassword_first: 'Mot de passe'
-profile_form_creation_plainPassword_second: Vérification
 profile_form_platformRoles: Rôles
 profile_form_userName: 'Nom d''utilisateur'
 profile_form_username: 'Nom d''utilisateur'
@@ -428,6 +432,7 @@ restore : Restaurer
 restore_messages_confirm_message: 'message(s) restaurés'
 results: Résultats
 results_for_search_on: 'Résultats de la recherche sur'
+right: 'Droit'
 rights: Droits
 rights_management: 'Gestion des droits'
 role: Rôle
@@ -456,8 +461,8 @@ select_workspaces_for_registration: 'Choisissez les espaces d''activités pour l
 selected_workspaces_for_registration: 'Espaces d''activités sélectionnés pour l''inscription'
 selected_workspaces_will_be_put_in_it: 'Les espaces d''activités sélectionnés y seront disponibles'
 send_mail: 'Envoyer un mail'
-send_mail_form_object: Objet
 send_mail_form_content: Message
+send_mail_form_object: Objet
 send_message: 'Envoyer un message'
 session_id: 'Identifiant de session'
 settings: Paramètres
@@ -548,7 +553,6 @@ users_management: 'Gestion des utilisateurs'
 users_minimum_requirement_msg: 'Les utilisateurs doivent remplir ces conditions: login de 3 caractères, password de 4 caractères, email valide.'
 users_registration_in_workspace: 'Inscription des utilisateurs dans l''espace d''activités'
 users_visits: 'Visites des utilisateurs'
-line_per_page: 'Lignes par page'
 validate: Valider
 view: Voir
 view_category_hierarchy: 'Visualiser la structure des catégories'
@@ -589,14 +593,14 @@ workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités
 workspace_home_tabs: 'Onglets pour les espaces d''activités'
 workspace_order_tool_edit_form_name: Nom
 workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
-workspace_remove_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
 workspace_remove_from_category_confirm_message: 'Voulez-vous vraiment retirer l''espace d''activités de cette catégorie ?'
+workspace_remove_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
 workspace_resource: Ressources
 workspace_role_type_form_requireDir: 'Créer un répertoire'
 workspace_role_type_form_translationKey: Nom
 workspace_tag_form_name: Nom
-workspace_tag_remove_confirm_title: 'Retrait d''une catégorie'
 workspace_tag_remove_confirm_message: 'Voulez-vous vraiment retirer cette catégorie ?'
+workspace_tag_remove_confirm_title: 'Retrait d''une catégorie'
 workspace_template_form_name: Nom
 workspace_tools: Outils
 workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet espace d''activités ?'
