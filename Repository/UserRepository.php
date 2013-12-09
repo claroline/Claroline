@@ -209,14 +209,13 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function findAll($executeQuery = true, $orderedBy = 'id')
     {
         if (!$executeQuery) {
-            $dql = '
-                SELECT u, r, pws from Claroline\CoreBundle\Entity\User u
-                JOIN u.roles r WITH r IN (
-                    SELECT pr
-                    FROM Claroline\CoreBundle\Entity\Role pr
-                    WHERE pr.type = ' . Role::PLATFORM_ROLE . "
-                )
+            $dql = "
+                SELECT u, pws, g, r , rws, urws from Claroline\CoreBundle\Entity\User u
                 LEFT JOIN u.personalWorkspace pws
+                LEFT JOIN u.groups g
+                LEFT JOIN u.roles r
+                LEFT JOIN r.workspace rws
+                LEFT JOIN rws.personalUser urws
                 ORDER BY u.{$orderedBy}
             ";
             // the join on role is required because this method is only called in the administration
@@ -271,9 +270,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $upperSearch = trim($upperSearch);
         $upperSearch = preg_replace('/\s+/', ' ', $upperSearch);
         $dql = "
-            SELECT u, r, pws FROM Claroline\CoreBundle\Entity\User u
-            LEFT JOIN u.roles r
+            SELECT u, r, pws, g, rws, urws FROM Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.personalWorkspace pws
+            LEFT JOIN u.groups g
+            LEFT JOIN u.roles r
+            LEFT JOIN r.workspace rws
+            LEFT JOIN rws.personalUser urws
             WHERE UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search
             OR UPPER(u.username) LIKE :search
@@ -612,6 +614,44 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
+     * Counts the users subscribed in a platform role
+     *
+     * @return integer
+     */
+    public function countUsersByRole($role, $restrictionRoleNames)
+    {
+        $qb = $this->createQueryBuilder('user')
+            ->select('COUNT(DISTINCT user.id)')
+            ->leftJoin('user.roles', 'roles')
+            ->andWhere('roles.id = :roleId')
+            ->setParameter('roleId', $role->getId());
+        if (!empty($restrictionRoleNames)) {
+            $qb->andWhere('user.id NOT IN (:userIds)')
+                ->setParameter('userIds', $this->findUserIdsInRoles($restrictionRoleNames));
+        }
+        $query = $qb->getQuery();
+
+        return $query->getSingleScalarResult();
+    }
+
+    /**
+     * Returns user Ids that are subscribed to one of the roles given
+     * @param array $roleNames
+     * @return array
+     */
+    public function findUserIdsInRoles ($roleNames)
+    {
+        $qb = $this->createQueryBuilder('user')
+            ->select('user.id')
+            ->leftJoin('user.roles', 'roles')
+            ->andWhere('roles.name IN (:roleNames)')
+            ->setParameter('roleNames', $roleNames);
+        $query = $qb->getQuery();
+
+        return $query->getArrayResult();
+    }
+
+    /**
      * Returns the first name, last name, username and number of workspaces of
      * each user enrolled in at least one workspace.
      *
@@ -622,7 +662,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function findUsersEnrolledInMostWorkspaces($max)
     {
         $dql = "
-            SELECT CONCAT(CONCAT(u.firstName, ' '), u.lastName), u.username, COUNT(DISTINCT ws.id) AS total
+            SELECT CONCAT(CONCAT(u.firstName, ' '), u.lastName) AS name, u.username, COUNT(DISTINCT ws.id) AS total
             FROM Claroline\CoreBundle\Entity\User u, Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws
             WHERE CONCAT(CONCAT(u.id,':'), ws.id) IN
             (
@@ -852,7 +892,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function findUsersOwnersOfMostWorkspaces($max)
     {
         $dql = "
-            SELECT CONCAT(CONCAT(u.firstName,' '), u.lastName), u.username, COUNT(DISTINCT ws.id) AS total
+            SELECT CONCAT(CONCAT(u.firstName,' '), u.lastName) AS name, u.username, COUNT(DISTINCT ws.id) AS total
             FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws
             JOIN ws.creator u
             GROUP BY u.id

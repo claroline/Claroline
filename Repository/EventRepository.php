@@ -33,6 +33,7 @@ class EventRepository extends EntityRepository
                 WHERE u.id = :userId
             )
             WHERE e.allDay = :allDay
+            ORDER BY e.start DESC
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
@@ -52,6 +53,7 @@ class EventRepository extends EntityRepository
             WHERE e.workspace is NULL
             AND e.allDay = :allDay
             AND e.user =:userId
+            ORDER BY e.start DESC
             ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('allDay', $allDay);
@@ -67,6 +69,7 @@ class EventRepository extends EntityRepository
             FROM Claroline\CoreBundle\Entity\Event e
             WHERE e.workspace = :workspaceId
             AND e.allDay = :allDay
+            ORDER BY e.start DESC
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspaceId);

@@ -71,6 +71,7 @@ available_widgets: 'Available widgets'
 available_workspaces: 'Available workspaces'
 back: 'Back'
 badges_management: 'Badges management'
+bad_request: The request is incorrect. If you arrived at this page via an internal link, please report the problem to the platform administrator.
 by: by
 canCopy: 'Right to copy'
 canCreate: 'Create %type%'
@@ -92,6 +93,7 @@ change_view : 'Change the display'
 choose_resource_form_type: 'Resource type'
 classify_workspaces: 'Classify workspaces'
 close: Close
+code: Code
 collaborator: Collaborator
 communication: Communication
 configuration: Configuration
@@ -174,6 +176,7 @@ editable: 'Editable'
 email_form_mail : 'Enter your email'
 empty_file: 'Empty file'
 enter_tag_name_message: 'Please enter a tag name'
+entries_per_day: "Entries per day"
 export: Export
 exportable: 'Exportable'
 fast_answer: 'Fast answer'
@@ -298,7 +301,7 @@ my_account: 'My account'
 my_agenda: 'My agenda'
 my_badges: 'My badges'
 my_contacts: 'My contacts'
-my_favourite_workspaces: 'My favourite worksapces'
+my_favourite_workspaces: 'My favourite workspaces'
 my_notes: 'My notes'
 my_portfolio: 'My portfolio'
 my_resources: 'My resources'
@@ -403,6 +406,7 @@ rename_widget_instance: 'Rename widget'
 reset: Reset
 reset_password: Reset password
 reset_password_message: 'Do you really want to reset these passwords ?'
+reset_password_txt: 'You asked for your password reinitialisation. If You did not ask for it, please just ignore this message.'
 reset_pwd: 'Reset Your Password'
 reset_pwd_form_plainPassword_first: 'New password'
 reset_pwd_form_plainPassword_second : 'Repeat the password'
@@ -514,6 +518,7 @@ top_users_workspaces_enrolled: 'Top users having access in most workspaces'
 top_users_workspaces_owners: 'Top users having the most workspaces'
 top_workspaces_connections: 'Top most visited workspaces'
 top_workspaces_resources: 'Top workspaces having the most resources'
+total: Total
 trash : Trash
 type: Type
 type_s: Type(s)
@@ -560,7 +565,7 @@ views: Views
 visible: Visible
 visitor: Visitor
 warning_user_impersonation: 'You are connected as %user%.'
-warning_workspace_impersonation: 'You are connected as %role% from the workspace %workspace.'
+warning_workspace_impersonation: 'You are connected as %role% from the workspace %workspace%.'
 widget: Widget
 widget_display_form_name: Name
 widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab ?'
@@ -611,3 +616,4 @@ ws_creator: 'Workspace creator'
 ws_most_viewed: 'Most viewed workspaces'
 yes: 'yes'
 yesterday_activity: 'Yesterday''s activity'
+your_username : 'Your username is '

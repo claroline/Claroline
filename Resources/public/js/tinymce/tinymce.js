@@ -109,7 +109,7 @@
 
         $.ajax(home.path + 'resource/embed/' + nodeId + '/' + mimeType)
         .done(function (data) {
-            tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() + data);
+            tinymce.activeEditor.execCommand('mceInsertContent', false, data);
             editorChange(tinymce.activeEditor);
         })
         .error(function () {

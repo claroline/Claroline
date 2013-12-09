@@ -9,11 +9,7 @@
 <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.css') }}'/>
 <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
 <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
-<link
-        rel='stylesheet'
-        type='text/css'
-        href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}'
-    >
+<link rel='stylesheet'type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}' />
 {% endblock %}
 {% block breadcrumb %}
     {{
@@ -33,13 +29,13 @@
     <h3 class="panel-title">{{ 'agenda'|trans({}, 'platform') }}</h3>
 </div>
 <div class="panel-body">
-    <div id="selectOwner">
-        {% for o in owners %}
-            {{o}}
-            <input type="checkbox" name="{{o}}"  class="filter" />
-        {% endfor %}
-    </div>
     <div class="row">
+        <div id="selectOwner">
+            {% for o in owners %}
+                {{o}}
+                <input type="checkbox" name="{{o}}"  class="filterO" />
+            {% endfor %}
+        </div>
         <div id='calendar' class="col-md-9"></div>
         <div  id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -54,6 +50,7 @@
                                 {{ 'delete'|trans({}, 'platform') }}
                             </button>
                             <form method="post" action="{{ path('claro_workspace_agenda_add_event', {workspaceId: workspace.getId()}) }}" id="myForm" {{ form_enctype(form) }}>
+                                <div id="text" class="col-md-10 filters"> </div>
                                 {{ form_widget(form) }}
                             </form>
                         </div>
@@ -101,5 +98,6 @@
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}"> </script>
 <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tool/calendarDatePicker.js') }}"> </script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.draggable.min.js') }}"> </script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.resizable.min.js') }}"> </script>
 
 {% endblock javascripts %}

@@ -72,6 +72,7 @@ available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espaces d''activités disponibles'
 back: 'Retour'
 badges_management: 'Gestion des badges'
+bad_request: La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l''administrateur de la plateforme.
 by: par
 canCopy: 'Droit de copier'
 canCreate: 'Creation de %type%'
@@ -93,6 +94,7 @@ change_view : 'Changer l''affichage'
 choose_resource_form_type: 'Type de ressource'
 classify_workspaces: 'Classer les espaces d''activités'
 close: Fermer
+code: Code
 collaborator: Collaborateur
 communication: Communication
 configuration: Configuration
@@ -130,9 +132,9 @@ date_range.clear: 'Effacer'
 date_range.custom_range: 'Plage personnalisée'
 date_range.day_names: '["Di","Lu","Ma","Me","Je","Ve","Sa"]'
 date_range.first_day: '1'
-date_range.format: 'd-m-Y'
+date_range.format: 'd/m/Y'
 date_range.from: 'De'
-date_range.js_format: 'dd-MM-yyyy'
+date_range.js_format: 'dd/MM/yyyy'
 date_range.last_month: 'Mois précédent'
 date_range.last_school_year: 'Année sco. précédente'
 date_range.last_seven_days: '7 derniers jours'
@@ -140,7 +142,7 @@ date_range.last_thirty_days: '30 derniers jours'
 date_range.last_week: 'Semaine précédente'
 date_range.last_year: 'Année précédente'
 date_range.month_names: '["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"]'
-date_range.separator: '/'
+date_range.separator: '-'
 date_range.this_month: 'Mois en cours'
 date_range.this_school_year: 'Année sco. en cours'
 date_range.this_week: 'Semaine en cours'
@@ -175,6 +177,7 @@ editable: 'Modifiable'
 email_form_mail : 'Entrez votre adresse email'
 empty_file: 'Fichier vide'
 enter_tag_name_message: 'Veuillez entrer un nom de Tag'
+entries_per_day: "Nombre d'entrées par jour"
 export: Exporter
 exportable: 'Exportable'
 fast_answer: 'Réponse rapide'
@@ -400,6 +403,7 @@ rename_tool: 'Renommage d''un outil'
 rename_widget_instance: 'Renommage du Widget'
 reset: Réinitialiser
 reset_password: 'Réinitialiser mot de passe'
+reset_password_txt: 'Vous avez demandé la réinitiation de votre mot de passe. Si vous n''êtes pas l''origine de ce message, veuillez l''ignorer.'
 reset_password_message: 'Etes vous sur de vouloir réinitialiser le mot de passe ?'
 reset_pwd: 'Réinitialisation de votre mot de passe'
 reset_pwd_form_plainPassword_first: 'Nouveau mot de passe'
@@ -510,6 +514,7 @@ top_users_workspaces_enrolled: 'Top des utilisateurs étant inscrits dans le plu
 top_users_workspaces_owners: 'Top des utilisateurs ayant crée le plus de modules'
 top_workspaces_connections: 'Top des espaces d''activités les plus consultés'
 top_workspaces_resources: 'Top des espaces d''activités avec le plus des resources'
+total: Total
 trash : Corbeille
 type: Type
 type_s: Type(s)
@@ -606,3 +611,4 @@ ws_creator: 'Créateur d''espaces'
 ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: 'oui'
 yesterday_activity: 'Activité de la veille'
+your_username: 'Votre nom d''utilisateur est '

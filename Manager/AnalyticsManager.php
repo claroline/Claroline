@@ -16,10 +16,12 @@ use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Repository\AbstractResourceRepository;
+use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -29,6 +31,8 @@ class AnalyticsManager
 {
     /** @var AbstractResourceRepository */
     private $resourceRepo;
+    /** @var AbstractResourceRepository */
+    private $resourceTypeRepo;
     /** @var UserRepository */
     private $userRepo;
     /** @var WorkspaceRepository */
@@ -45,6 +49,7 @@ class AnalyticsManager
     {
         $this->om            = $objectManager;
         $this->resourceRepo  = $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
+        $this->resourceTypeRepo  = $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceType');
         $this->userRepo      = $objectManager->getRepository('ClarolineCoreBundle:User');
         $this->workspaceRepo = $objectManager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
         $this->logRepository = $objectManager->getRepository('ClarolineCoreBundle:Log\Log');
@@ -78,7 +83,7 @@ class AnalyticsManager
         return array($startDate->getTimestamp(), $endDate->getTimestamp());
     }
 
-    public function getDailyActionNumberForDateRange($range = null, $action = null, $unique = false)
+    public function getDailyActionNumberForDateRange($range = null, $action = null, $unique = false, $workspaceIds = null)
     {
         if ($action === null) {
             $action = '';
@@ -89,7 +94,6 @@ class AnalyticsManager
         }
 
         $userSearch = null;
-        $workspaceIds = null;
         $actionRestriction = null;
         $chartData = $this->logRepository->countByDayFilteredLogs(
             $action,
@@ -213,5 +217,22 @@ class AnalyticsManager
         $resultData = $this->logRepository->activeUsers();
 
         return $resultData;
+    }
+
+    /**
+     * Retrieve analytics for workspace: chartData and resource statistics
+     */
+    public function getWorkspaceAnalytics(AbstractWorkspace $workspace)
+    {
+        $range = $this->getDefaultRange();
+        $action = 'workspace-enter';
+        $workspaceIds = array($workspace->getId());
+        $chartData = $this->getDailyActionNumberForDateRange($range, $action, false, $workspaceIds);
+        $resourcesByType = $this->resourceTypeRepo->countResourcesByType($workspace);
+
+        return array('chartData' => $chartData,
+            'resourceCount' => $resourcesByType,
+            'workspace' => $workspace
+        );
     }
 }

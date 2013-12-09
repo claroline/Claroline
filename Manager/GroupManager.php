@@ -257,40 +257,12 @@ class GroupManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[] $workspaces
-     * @param integer $page
-     *
-     * @return \PagerFanta\PagerFanta
-     */
-    public function getGroupsByWorkspacesPager(array $workspaces, $page, $max = 50)
-    {
-        $query = $this->groupRepo->findGroupsByWorkspaces($workspaces, false);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[] $workspaces
      *
      * @return Group[]
      */
     public function getGroupsByWorkspaces(array $workspaces)
     {
         return $this->groupRepo->findGroupsByWorkspaces($workspaces, true);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[] $workspaces
-     * @param integer $page
-     * @param string $search
-     *
-     * @return \PagerFanta\PagerFanta
-     */
-    public function getGroupsByWorkspacesAndSearchPager(array $workspaces, $page, $search, $max = 50)
-    {
-        $groups = $this->groupRepo
-            ->findGroupsByWorkspacesAndSearch($workspaces, $search);
-
-        return $this->pagerFactory->createPagerFromArray($groups, $page, $max);
     }
 
     /**

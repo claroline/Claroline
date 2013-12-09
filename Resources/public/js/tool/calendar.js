@@ -189,7 +189,6 @@
                                 'type': 'GET',
                                 'success': function (data, textStatus, xhr) {
                                     $("#tasks").html(data);
-                                    
                                 }
                             });
                     },
@@ -288,8 +287,7 @@
                 }
             });
         }
-        function modifiedEvent(calEvent, context)
-        {
+        function modifiedEvent(calEvent, context) {
             id = calEvent.id;
             task = 'no';
             if (calEvent.editable === false) {
@@ -308,8 +306,7 @@
                 var reg = new RegExp('[:]+', 'g');
                 title = title.split(reg);
                 $('#agenda_form_title').attr('value', title[1]);
-            } else
-            {
+            } else {
                 $('#agenda_form_title').attr('value', title);
             }
             $('#agenda_form_description').val(calEvent.description);
@@ -320,8 +317,7 @@
             if (calEvent.end === ''){
                 $('#agenda_form_end').val($.fullCalendar.formatDate( pickedDate,'dd-MM-yyyy'));
                 $('#agenda_form_endHours').val('00:00');
-            }
-            else{
+            } else {
                 var Enddate = new Date(calEvent.end);
                 $('#agenda_form_end').val($.fullCalendar.formatDate( Enddate,'dd-MM-yyyy'));
                 $('#agenda_form_endHours').val($.fullCalendar.formatDate( Enddate,'HH:mm'));
@@ -341,7 +337,11 @@
         $('#deleteBtn').on('click', function () {
             deleteClick(id);
         });
-
+        $('body').on('click','.launch', function(e) {
+                var event1 = $('#calendar').fullCalendar('clientEvents', $(e.currentTarget).attr('data-id'));
+                modifiedEvent(event1[0], context);
+            }
+        );
         function compareEvents(event1 , event2)
         {
             event1.start = $.fullCalendar.formatDate(new Date(event1.start),'dd-MM-yyyy HH:mm');
@@ -374,7 +374,7 @@
             header: {
                 left: 'prev,next today',
                 center: 'title',
-                right: 'month,agendaWeek,agendaDay',      
+                right: 'month,agendaWeek,agendaDay'
             },
             columnFormat: {
                 month: 'ddd',
@@ -414,13 +414,24 @@
             dayClick: dayClickFunction,
             eventClick:  function (event) {
                 id = event.id;
-                modifiedEvent(event ,context);
+                //modifiedEvent(event ,context);
+                $('.popover').popover('show');
             },
-            eventRender: function (event) {
+            eventRender: function (event, element) {
                 if (event.visible === false)
                 {
                     return false;
                 }
+                element.popover({
+                    title: event.title,
+                    placement: 'auto',
+                    content:  '<a href="#" data-target="#myModal" role="button" data-toggle="modal" class="launch" data-id='+event.id+'>'+
+                        Translator.get('platform' + ':' + 'edit')+'</a>'+
+                        ' <div> Start: '+
+                        $.fullCalendar.formatDate(event.start ,'dd-MM-yyyy') + '</div>'+
+                        '<div>End: ' + $.fullCalendar.formatDate(event.end ,'dd-MM-yyyy') +'</div>' +'<br />Description: ' + event.description,
+                    html:true
+                });
             },
             eventResize: function (event, dayDelta, minuteDelta) {
                 $.ajax({

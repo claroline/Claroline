@@ -130,7 +130,7 @@ class RegistrationController extends Controller
 
         if (!in_array($format, $formats)) {
             Return new Response(
-                "The format {$format} is not supported (supported formats are 'json', 'xml'",
+                "The format {$format} is not supported (supported formats are 'json', 'xml')",
                 400
             );
         }

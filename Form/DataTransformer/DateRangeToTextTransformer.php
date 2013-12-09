@@ -67,10 +67,10 @@ class DateRangeToTextTransformer implements DataTransformerInterface
             $array = explode(' '. $separator .' ', $string);
 
             if (array_key_exists(0, $array)) {
-                $startDate = $endDate = strtotime($array[0]);
+                $startDate = $endDate = \DateTime::createFromFormat($this->translator->trans('date_range.format', array(), 'platform'), $array[0])->getTimestamp();
             }
             if (array_key_exists(1, $array)) {
-                $endDate = strtotime($array[1]);
+                $endDate = \DateTime::createFromFormat($this->translator->trans('date_range.format', array(), 'platform'), $array[1])->getTimestamp();
             }
 
             return array($startDate, $endDate);
