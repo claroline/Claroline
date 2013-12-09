@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
+use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Pager\PagerFactory;
@@ -57,6 +58,8 @@ class WorkspaceManager
     /** @var RoleRepository */
     private $roleRepo;
     /** @var WorkspaceRepository */
+    private $userRepo;
+    /** @var UserRepository */
     private $workspaceRepo;
     /** @var ToolManager */
     private $toolManager;
@@ -116,6 +119,7 @@ class WorkspaceManager
         $this->resourceRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
         $this->resourceRightsRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
         $this->workspaceFavouriteRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceFavourite');
         $this->pagerFactory = $pagerFactory;
@@ -136,6 +140,7 @@ class WorkspaceManager
         $config->check();
         $this->om->startFlushSuite();
         $workspace = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace');
+        $workspace->setCreator($manager);
         $workspace->setName($config->getWorkspaceName());
         $workspace->setPublic($config->isPublic());
         $workspace->setCode($config->getWorkspaceCode());
@@ -726,5 +731,17 @@ class WorkspaceManager
     {
         return $this->workspaceFavouriteRepo
             ->findOneBy(array('workspace' => $workspace, 'user' => $user));
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     *
+     * @return \Claroline\CoreBundle\Entity\User|null
+     */
+    public function findPersonalUser(AbstractWorkspace $workspace)
+    {
+        $user = $this->userRepo->findBy(array('personalWorkspace' => $workspace));
+
+        return $user;
     }
 }

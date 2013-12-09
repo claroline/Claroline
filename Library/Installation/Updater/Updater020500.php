@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Tool\Tool;
 
-class Updater020402
+class Updater020500
 {
     private $container;
     private $logger;
@@ -23,6 +23,38 @@ class Updater020402
         $this->container = $container;
     }
 
+    public function preUpdate()
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
+        $translator = $this->get('translator');
+        $workspaces = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findAll();
+
+        foreach ($workspaces as $workspace) {
+
+            if ($workspace->isDisplayable() === null) {
+                $workspace->setDisplayable(false);
+            }
+
+            if ($workspace->getSelfRegistration() === null) {
+                $workspace->setSelfRegistration(false);
+            }
+
+            if ($workspace->getSelfUnregistration() === null) {
+                $workspace->setSelfUnregistration(false);
+            }
+
+            $user = $workspaceManager->findPersonalUser($workspace);
+
+            if ($user) {
+                $name = $translator->trans('';)
+                $workspace->setName('heyman');
+            }
+
+            $this->em->persist($workspace);
+            $this->em->flush();
+        }
+    }
 
     public function postUpdate()
     {
