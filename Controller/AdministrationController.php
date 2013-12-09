@@ -813,7 +813,8 @@ class AdministrationController extends Controller
                             $nonImportedUser['firstName'] . ' ' .
                             $nonImportedUser['lastName'] . ' [' .
                             $nonImportedUser['username'] . '] ' .
-                            $this->translator->trans('has_not_been_imported', array(), 'platform')
+                            $this->translator->trans('has_not_been_imported', array(), 'platform') . ' : ' .
+                            $this->translator->trans($nonImportedUser['reason'], array(), 'platform')
                         );
                     }
                     $this->get('session')->getFlashBag()->add(
@@ -1112,7 +1113,7 @@ class AdministrationController extends Controller
                 "range" => $this->analyticsManager->getDefaultRange()
             )
         );
-        
+
         $criteriaForm->handleRequest($request);
 
         $range = $criteriaForm->get('range')->getData();

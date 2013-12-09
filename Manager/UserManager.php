@@ -204,10 +204,16 @@ class UserManager
                 $newUser->setPhone($phone);
                 $this->createUser($newUser);
             } else {
+                if (count($existingUsers) > 0) {
+                    $reason = 'already_existing_user';
+                } else {
+                    $reason = 'mail_not_exist';
+                }
                 $nonImportedUsers[] = array(
                     'username' => $username,
                     'firstName' => $firstName,
-                    'lastName' => $lastName
+                    'lastName' => $lastName,
+                    'reason' => $reason
                 );
             }
         }

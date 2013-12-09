@@ -59,6 +59,7 @@ all: All
 all_available_workspaces: 'All available workspaces'
 all_my_workspaces: 'All my workspaces'
 all_workspaces: 'All workspaces'
+already_existing_user: 'The user already exists'
 an_error_occured_message: An error occured. Please contact the administrator.
 analytics_connections: Connections
 analytics_home: Home

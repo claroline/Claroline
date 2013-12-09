@@ -60,6 +60,7 @@ all: Tous
 all_available_workspaces: 'Tous les espaces d''activités disponibles'
 all_my_workspaces: 'Tous mes espaces d''activités'
 all_workspaces: 'Tous les espaces d''activités'
+already_existing_user: L'utilisateur existe déjà.
 an_error_occured_message: Une erreur s'est produite. Veuillez contacter l'administrateur.
 analytics_connections: 'Visites utilisateurs'
 analytics_home: 'Vue de l''ensemble'
