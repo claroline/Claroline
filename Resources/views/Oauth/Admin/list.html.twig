@@ -40,7 +40,7 @@
                     {% for client in clients %}
                     <tr>
                         <td>{{ client.name }}</td>
-                        <td><ul class="list-inline">{% for redirectUrl in client.redirectUris %}<li><a href="{{ redirectUrl }}" title="{{ redirectUrl }}">{{ redirectUrl }}</a></li>{% endfor %}</ul></td>
+                        <td><ul class="list-inline">{% for redirectUrl in client.redirectUris %}<li><a href="{{ redirectUrl }}" title="{{ redirectUrl }}">{{ redirectUrl }}</a></li>{% else %}{{ 'no_redirect_urls'|trans({}, 'api') }}{% endfor %}</ul></td>
                         <td><a href="{{ path('admin_application_delete', {'client_id': client.id}) }}" title="{{ 'thrid_party_application_delete_confirm_title'|trans({}, 'api') }}" class="btn btn-danger delete" data-confirm-title="{{ 'thrid_party_application_delete_confirm_title'|trans({}, 'api') }}" data-confirm-message="{{ 'thrid_party_application_delete_confirm_message'|trans({'%application%': client.name}, 'api')|raw }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">{{ 'delete'|trans({}, 'platform') }}</a></td>
                     </tr>
                     {% else %}

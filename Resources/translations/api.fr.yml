@@ -16,3 +16,4 @@ thrid_party_application_delete_success_message: "L'accès à la plateforme a bie
 thrid_party_application_delete_error_message: "Erreur lors de la suppression de l'accès à la plateforme pour l'application tierce '%application%'"
 thrid_party_application_delete_confirm_title: "Suppression d'accès à la plateforme"
 thrid_party_application_delete_confirm_message: "Etes-vous sûr de vouloir supprimer l'accès à la plateforme pour l'application tierce <strong>%application%</strong> ?"
+no_redirect_urls: "Aucune adresse."
