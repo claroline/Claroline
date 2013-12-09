@@ -7,8 +7,14 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 
+/**
+ * Loads configuration for the Path Bundle
+ */
 class InnovaPathExtension extends Extension
 {
+    /**
+     * @see \Symfony\Component\DependencyInjection\Extension\ExtensionInterface::load()
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $this->loadParameters($container);
@@ -21,12 +27,12 @@ class InnovaPathExtension extends Extension
     {
         $locator = new FileLocator(__DIR__ . '/../Resources/config/services');
         $loader = new YamlFileLoader($container, $locator);
-        
+    
         $loader->load('services.yml');
         $loader->load('listeners.yml');
         $loader->load('managers.yml');
         $loader->load('controllers.yml');
-        
+    
         return $this;
     }
     
@@ -34,9 +40,9 @@ class InnovaPathExtension extends Extension
     {
         $locator = new FileLocator(__DIR__ . '/../Resources/config');
         $loader = new YamlFileLoader($container, $locator);
-        
+    
         $loader->load('parameters.yml');
-        
+    
         return $this;
     }
 }

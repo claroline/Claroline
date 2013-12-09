@@ -104,9 +104,9 @@ class Step
      * Step duration
      * @var \DateTime
      *
-     * @ORM\Column(name="duration", type="datetime")
+     * @ORM\Column(name="duration", type="datetime", nullable=true)
      */
-    protected  $duration;
+    protected $duration;
 
     /**
      * Path

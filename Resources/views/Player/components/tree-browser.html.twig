@@ -1,21 +1,18 @@
+{% import _self as localMacros %}
 {% macro displayTreeItem(item) %}
+    {% import _self as localMacros %}
     <li>
-        <a href="#">{{ rootStep.name }}</a>
+        <a href="#">{{ item.name }}</a>
+        {% if item.children is not empty %}
         <ul>
-            {% set children = rootStep.children %}
-            {% for child in children %}
-            <li>
-                <a href="#">{{ child.name }}</a>
-            </li>
+            {% for child in item.children %}
+            {{ localMacros.displayTreeItem(child) }}
             {% endfor %}
         </ul>
+        {% endif %}
     </li>
 {% endmacro %}
 
-{% set rootStep = path.getRootStep() %}
 <ul>
-    <li>
-        <a href="#">{{ rootStep.name }}</a>
-    </li>
-    {% set children = rootStep.children %}
+    {{ localMacros.displayTreeItem(path.getRootStep()) }}
 </ul>
