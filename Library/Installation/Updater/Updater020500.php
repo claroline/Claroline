@@ -47,8 +47,9 @@ class Updater020500
             $user = $workspaceManager->findPersonalUser($workspace);
 
             if ($user) {
-                $name = $translator->trans('';)
-                $workspace->setName('heyman');
+                $personalWorkspaceName = $translator->trans('personal_workspace', array(), 'platform') .
+                ' - ' . $user->getUsername();
+                $workspace->setName($personalWorkspaceName);
             }
 
             $this->em->persist($workspace);

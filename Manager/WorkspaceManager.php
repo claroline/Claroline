@@ -126,6 +126,22 @@ class WorkspaceManager
     }
 
     /**
+     * Rename a workspace.
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param string $name
+     */
+    public function rename(AbstractWorkspace $workspace, $name)
+    {
+        $workspace->setName($name);
+        $root = $this->resourceManager->getWorkspaceRoot($workspace);
+        $root->setName($name);
+        $this->om->persist($workspace);
+        $this->om->persist($root);
+        $this->om->flush();
+    }
+
+    /**
      * Creates a workspace.
      *
      * @param \Claroline\CoreBundle\Library\Workspace\Configuration $config
@@ -152,7 +168,7 @@ class WorkspaceManager
         $baseRoles['ROLE_ANONYMOUS'] = $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
         $this->roleManager->associateRole($manager, $baseRoles["ROLE_WS_MANAGER"]);
         $dir = $this->om->factory('Claroline\CoreBundle\Entity\Resource\Directory');
-        $dir->setName("{$workspace->getName()} - {$workspace->getCode()}");
+        $dir->setName($workspace->getName());
         $rights = $config->getPermsRootConfiguration();
         $preparedRights = $this->prepareRightsArray($rights, $baseRoles);
         $root = $this->resourceManager->create(

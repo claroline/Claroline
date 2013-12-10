@@ -23,10 +23,10 @@ class Configuration
     private $workspaceType;
     private $workspaceName;
     private $workspaceCode;
-    private $isPublic;
-    private $displayable;
-    private $selfRegistration;
-    private $selfUnregistration;
+    private $isPublic = false;
+    private $displayable = false;
+    private $selfRegistration = false;
+    private $selfUnregistration = false;
     /**
      * If you want to use the role_anonymous from the platform, use
      * 'ROLE_ANONYMOUS'.
