@@ -1,0 +1,15 @@
+{% set history = app.session.get('history') %}
+{% set visitedSteps = history[path.id] %}
+
+{% if visitedSteps |length > 1 %}
+	<div class="title">Historique</div>
+	<div class="stones">
+	{% for i, visitedStep in visitedSteps if i < 8 and i > 0 %}
+		{% for stepId, step in visitedStep %}
+			<a class="btn btn-default btn-sm" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: stepId }) }}">
+			{{ step["name"] }}<span class="lvl-indicator lvl-{{  step["level"] + 1 }}"></span>
+			</a>
+		{% endfor %}
+	{% endfor %}
+	</div>
+{% endif %}

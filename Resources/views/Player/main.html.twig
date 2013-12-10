@@ -4,7 +4,7 @@
     {{ parent() }}
     <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/main.css') }}"/>
     <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/breadcrumbs.css') }}"/>
-	<link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/squares-browser.css') }}"/>
+	<link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/petit-poucet.css') }}"/>
     <link rel="stylesheet" media="screen" href="{{ asset('bundles/innovapath/css/Player/resources.css') }}"/>
 {% endblock %}
 
@@ -12,6 +12,10 @@
 <div class="path-player">
     <div class="breadcrumbs">
         {{ render(controller('innova.controller.path_player:displayBreadcrumbsAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
+    </div>
+
+    <div class="petit-poucet">
+        {{ render(controller('innova.controller.path_player:displayPetitPoucetAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
     </div>
 
     {#

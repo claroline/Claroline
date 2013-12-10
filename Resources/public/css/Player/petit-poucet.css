@@ -1,0 +1,26 @@
+.path-player .petit-poucet .title{
+	padding:3px 16px;
+	display:inline-block;
+} 
+
+.path-player .petit-poucet .stones{
+	display:inline-block;
+    padding:3px 3px 3px 0px;
+}
+
+.path-player .petit-poucet{
+	margin-bottom:10px;
+	border-radius: 3px;
+	background-color:#F5F5F5;
+	color: #333333;
+	box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.15);
+}
+
+.path-player .petit-poucet .stones .lvl-indicator{
+	width:10px;
+	height:10px;
+	display:inline-block;
+	border-radius:50%;
+	color:black;
+	margin-left:5px;
+} 

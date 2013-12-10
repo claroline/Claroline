@@ -58,6 +58,20 @@ class PlayerController extends ContainerAware
      */
     public function displayBreadcrumbsAction(AbstractWorkspace $workspace, Path $path, Step $currentStep)
     {
+
+        return array (
+            'workspace' => $workspace,
+            'path' => $path,
+            'currentStep' => $currentStep,
+        );
+    }
+
+    /**
+     * @Method("GET")
+     * @Template("InnovaPathBundle:Player:components/petit-poucet.html.twig")
+     */
+    public function displayPetitPoucetAction(AbstractWorkspace $workspace, Path $path, Step $currentStep)
+    {
         $session = $this->container->get('request')->getSession();
         $history = $session->get('history');
         
@@ -70,15 +84,15 @@ class PlayerController extends ContainerAware
                 unset($history[$path->getId()][$order]);
             }
         }
-        array_unshift($history[$path->getId()], array($currentStep->getId() => $currentStep->getName()));
+        array_unshift($history[$path->getId()], array($currentStep->getId() => array("name" => $currentStep->getName(), "level" => $currentStep->getLvl())));
         $session->set('history', $history);
 
-        return array (
+        return array(
             'workspace' => $workspace,
             'path' => $path,
-            'currentStep' => $currentStep,
         );
     }
+
     
     /**
      * @Method("GET")
