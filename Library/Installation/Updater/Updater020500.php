@@ -25,9 +25,10 @@ class Updater020500
 
     public function preUpdate()
     {
+        $this->log('updating workspace...');
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
-        $translator = $this->get('translator');
+        $translator = $this->container->get('translator');
         $workspaces = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findAll();
 
         foreach ($workspaces as $workspace) {
@@ -46,15 +47,16 @@ class Updater020500
 
             $user = $workspaceManager->findPersonalUser($workspace);
 
-            if ($user) {
+            if ($user[0] !== null) {
                 $personalWorkspaceName = $translator->trans('personal_workspace', array(), 'platform') .
-                ' - ' . $user->getUsername();
-                $workspace->setName($personalWorkspaceName);
+                ' - ' . $user[0]->getUsername();
+                $this->container->get('claroline.manager.workspace_manager')->rename($workspace, $personalWorkspaceName);
             }
 
-            $this->em->persist($workspace);
-            $this->em->flush();
+            $em->persist($workspace);
+            $em->flush();
         }
+
     }
 
     public function postUpdate()
