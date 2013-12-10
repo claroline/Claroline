@@ -363,8 +363,8 @@ class WorkspaceRepository extends EntityRepository
     }
 
     /**
-     * Returns the workspaces which are visible for a authenticated user
-     * and allow self-registration (user's workspaces are excluded).
+     * Returns the workspaces which are visible for an authenticated user and allow
+     * self-registration (user's workspaces are excluded).
      *
      * @param User $user
      *
