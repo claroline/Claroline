@@ -20,7 +20,7 @@
                     <li><a href="{{ path('claro_workspace_list') }}"><i class="icon-book"></i> {{ 'workspaces'|trans({}, 'platform') }}</a></li>
                     <li>
                         <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': _resource.getResourceNode().getWorkspace().getId() }) }}">
-                            {{ _resource.getResourceNode().getWorkspace().getName() ~ ' - ' ~ _resource.getResourceNode().getWorkspace().getCode() }}
+                            {{ _resource.getResourceNode().getWorkspace().getName() ~ ' (' ~ _resource.getResourceNode().getWorkspace().getCode() ~ ') ' }}
                         </a>
                     </li>
                     {% render controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",

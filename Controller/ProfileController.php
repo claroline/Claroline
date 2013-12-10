@@ -127,6 +127,7 @@ class ProfileController extends Controller
 
         if ($form->isValid()) {
             $user = $form->getData();
+            $this->userManager->rename($user, $user->getUsername());
             $em = $this->getDoctrine()->getManager();
             $unitOfWork = $em->getUnitOfWork();
             $unitOfWork->computeChangeSets();
