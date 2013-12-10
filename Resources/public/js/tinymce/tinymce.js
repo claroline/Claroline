@@ -91,7 +91,6 @@
     function tinymceInit()
     {
         $('textarea.claroline-tiny-mce:not(.tiny-mce-done)').each(function () {
-            console.log('done');
             $(this).tinymce(configTinyMCE);
             $(this).addClass('tiny-mce-done');
         });
