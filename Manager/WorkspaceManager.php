@@ -633,14 +633,6 @@ class WorkspaceManager
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[]
-     */
-    public function getWorkspacesWithSelfRegistration()
-    {
-        return $this->workspaceRepo->findWorkspacesWithSelfRegistration();
-    }
-
-    /**
      * @param string $search
      *
      * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[]

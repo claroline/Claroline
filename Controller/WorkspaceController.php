@@ -129,16 +129,7 @@ class WorkspaceController extends Controller
      */
     public function listAction()
     {
-        $datas = $this->tagManager->getDatasForWorkspaceList(false);
-
-        return array(
-            'workspaces' => $datas['workspaces'],
-            'tags' => $datas['tags'],
-            'tagWorkspaces' => $datas['tagWorkspaces'],
-            'hierarchy' => $datas['hierarchy'],
-            'rootTags' => $datas['rootTags'],
-            'displayable' => $datas['displayable']
-        );
+        return $this->tagManager->getDatasForWorkspaceList(false);
     }
 
     /**
@@ -162,27 +153,21 @@ class WorkspaceController extends Controller
         $user = $token->getUser();
         $roles = $this->utils->getRoles($token);
 
-        $datas = $this->tagManager->getDatasForWorkspaceListByUser($user, $roles);
+        $data = $this->tagManager->getDatasForWorkspaceListByUser($user, $roles);
         $favouriteWorkspaces = $this->workspaceManager
             ->getFavouriteWorkspacesByUser($user);
         $favourites = array();
 
-        foreach ($datas['workspaces'] as $workspace) {
+        foreach ($data['workspaces'] as $workspace) {
             if (isset($favouriteWorkspaces[$workspace->getId()])) {
                 $favourites[$workspace->getId()] = $workspace;
             }
         }
 
-        return array(
-            'user' => $user,
-            'workspaces' => $datas['workspaces'],
-            'tags' => $datas['tags'],
-            'tagWorkspaces' => $datas['tagWorkspaces'],
-            'hierarchy' => $datas['hierarchy'],
-            'rootTags' => $datas['rootTags'],
-            'displayable' => $datas['displayable'],
-            'favourites' => $favourites
-        );
+        $data['user'] = $user;
+        $data['favourites'] = $favourites;
+
+        return $data;
     }
 
     /**
@@ -202,19 +187,9 @@ class WorkspaceController extends Controller
     public function listWorkspacesWithSelfRegistrationAction()
     {
         $this->assertIsGranted('ROLE_USER');
-        $token = $this->security->getToken();
-        $user = $token->getUser();
-        $datas = $this->tagManager->getDatasForSelfRegistrationWorkspaceList();
+        $user = $this->security->getToken()->getUser();
 
-        return array(
-            'user' => $user,
-            'workspaces' => $datas['workspaces'],
-            'tags' => $datas['tags'],
-            'tagWorkspaces' => $datas['tagWorkspaces'],
-            'hierarchy' => $datas['hierarchy'],
-            'rootTags' => $datas['rootTags'],
-            'displayable' => $datas['displayable']
-        );
+        return $this->tagManager->getDatasForSelfRegistrationWorkspaceList($user);
     }
 
     /**
@@ -797,11 +772,17 @@ class WorkspaceController extends Controller
      *
      * Renders the workspace list with self-registration in a pager.
      *
+     * @param int $page
+     *
      * @return Response
      */
     public function workspaceCompleteListWithSelfRegPagerAction($page = 1)
     {
-        $workspaces = $this->tagManager->getPagerAllWorkspacesWithSelfReg($page);
+        $this->assertIsGranted('ROLE_USER');
+        $workspaces = $this->tagManager->getPagerAllWorkspacesWithSelfReg(
+            $this->security->getToken()->getUser(),
+            $page
+        );
 
         return array('workspaces' => $workspaces);
     }
@@ -829,7 +810,7 @@ class WorkspaceController extends Controller
      * Removes an user from a workspace.
      *
      * @param AbstractWorkspace $workspace
-     * @param User              $userId
+     * @param \Claroline\CoreBundle\Entity\User $user
      *
      * @return Response
      */
@@ -883,6 +864,9 @@ class WorkspaceController extends Controller
      *
      * Renders the workspace list associate to a tag in a pager for registation.
      *
+     * @param \Claroline\CoreBundle\Entity\Workspace\WorkspaceTag $workspaceTag
+     * @param int $page
+     *
      * @return Response
      */
     public function workspaceListByTagRegistrationPagerAction(WorkspaceTag $workspaceTag, $page = 1)
@@ -908,6 +892,8 @@ class WorkspaceController extends Controller
      *
      * Renders the workspace list in a pager for registration.
      *
+     * @param int $page
+     *
      * @return Response
      */
     public function workspaceCompleteListRegistrationPagerAction($page = 1)
@@ -929,6 +915,9 @@ class WorkspaceController extends Controller
      * @EXT\Template()
      *
      * Renders the workspace list in a pager for registration.
+     *
+     * @param string    $search
+     * @param int       $page
      *
      * @return Response
      */
