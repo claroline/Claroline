@@ -804,25 +804,7 @@ class AdministrationController extends Controller
             }
 
             if ($validFile) {
-                $nonImportedUsers = $this->userManager->importUsers($users);
-
-                if (count($nonImportedUsers) > 0) {
-                    foreach ($nonImportedUsers as $nonImportedUser) {
-                        $this->get('session')->getFlashBag()->add(
-                            'error',
-                            $nonImportedUser['firstName'] . ' ' .
-                            $nonImportedUser['lastName'] . ' [' .
-                            $nonImportedUser['username'] . '] ' .
-                            $this->translator->trans('has_not_been_imported', array(), 'platform')
-                        );
-                    }
-                    $this->get('session')->getFlashBag()->add(
-                        'error',
-                        $this->translator->trans('users_minimum_requirement_msg', array(), 'platform')
-                    );
-
-                    return array('form' => $form->createView());
-                }
+                $this->userManager->importUsers($users);
 
                 return $this->redirect($this->generateUrl('claro_admin_user_list'));
             }
@@ -1112,7 +1094,7 @@ class AdministrationController extends Controller
                 "range" => $this->analyticsManager->getDefaultRange()
             )
         );
-        
+
         $criteriaForm->handleRequest($request);
 
         $range = $criteriaForm->get('range')->getData();

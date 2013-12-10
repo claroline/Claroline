@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Library\Workspace;
 
 use Symfony\Component\Yaml\Yaml;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
 class TemplateBuilder
 {

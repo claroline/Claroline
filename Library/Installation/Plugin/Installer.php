@@ -30,9 +30,9 @@ class Installer
     /**
      * Constructor.
      *
-     * @param Validator             $validator
-     * @param Recorder              $recorder
-     * @param InstallationManager   $installer
+     * @param Validator           $validator
+     * @param Recorder            $recorder
+     * @param InstallationManager $installer
      *
      * @DI\InjectParams({
      *     "validator"      = @DI\Inject("claroline.plugin.validator"),
@@ -89,9 +89,9 @@ class Installer
     /**
      * Upgrades/downgrades a plugin to a specific version.
      *
-     * @param PluginBundle  $plugin
-     * @param string        $currentVersion
-     * @param string        $targetVersion
+     * @param PluginBundle $plugin
+     * @param string       $currentVersion
+     * @param string       $targetVersion
      */
     public function update(PluginBundle $plugin, $currentVersion, $targetVersion)
     {
@@ -143,4 +143,3 @@ class Installer
         }
     }
 }
-

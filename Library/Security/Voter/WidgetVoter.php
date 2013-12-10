@@ -51,7 +51,8 @@ class WidgetVoter implements VoterInterface
 
     }
 
-    private function canUpdate(TokenInterface $token, $object, $attributes) {
+    private function canUpdate(TokenInterface $token, $object, $attributes)
+    {
         $roles = $token->getRoles();
 
         foreach ($roles as $role) {
@@ -70,10 +71,10 @@ class WidgetVoter implements VoterInterface
 
                 foreach ($tools as $tool) {
                     if ($tool->getName() === 'parameters') {
-
                         return VoterInterface::ACCESS_GRANTED;
                     }
                 }
+
                 return VoterInterface::ACCESS_DENIED;
             }
 

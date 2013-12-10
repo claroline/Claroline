@@ -42,6 +42,7 @@ add_widget_to_home_tab: 'Add widget to Home tab'
 add_workspace: 'Add workspace'
 admin: Administrator
 admin_analytics: 'Platform analytics'
+admin_third_party_application: 'Third-party applications'
 admin_form_firstName : 'first name'
 admin_form_lastName : 'Lastname'
 admin_form_mail : 'Email adress'
@@ -59,6 +60,7 @@ all: All
 all_available_workspaces: 'All available workspaces'
 all_my_workspaces: 'All my workspaces'
 all_workspaces: 'All workspaces'
+already_existing_user: 'The user already exists'
 an_error_occured_message: An error occured. Please contact the administrator.
 analytics_connections: Connections
 analytics_home: Home
@@ -174,6 +176,7 @@ drop_file: Drop the file
 edit: Edit
 editable: 'Editable'
 email_form_mail : 'Enter your email'
+email_found_at: 'The email %email% was found at lines: %lines%'
 empty_file: 'Empty file'
 enter_tag_name_message: 'Please enter a tag name'
 entries_per_day: "Entries per day"
@@ -246,6 +249,7 @@ last_name: 'Last name'
 left: 'Left'
 line_per_page: 'Row per page'
 link: Link
+line_number: 'Line %line%:'
 link_outdated : 'link is no more valid'
 list_groups: 'List groups'
 list_users: 'List users'
@@ -300,6 +304,7 @@ move: Move
 my_account: 'My account'
 my_agenda: 'My agenda'
 my_badges: 'My badges'
+my_applications: "Mes applications"
 my_contacts: 'My contacts'
 my_favourite_workspaces: 'My favourite workspaces'
 my_notes: 'My notes'
@@ -498,6 +503,7 @@ text_form_name: Name
 text_form_shareType: Sharable
 text_form_text: Text
 the_workspace: Workspace
+the_following_users_were_not_imported: The following users were not imported.
 this_page_requires_authentication: 'This page requires authentication. Please login.'
 to: To
 to_message: To
@@ -550,6 +556,7 @@ user_form_plainPassword_second: Verification
 user_form_username: Username
 user_parameters: 'User parameters'
 username: Username
+username_found_at: 'The username %username% was found at lines: %lines%'
 users: Users
 users_connected_once: 'users connected at least once'
 users_import: 'Users import'

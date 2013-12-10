@@ -26,6 +26,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Manager\MailManager;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\ValidatorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -46,6 +47,7 @@ class UserManager
     private $pagerFactory;
     private $om;
     private $mailManager;
+    private $validator;
 
     /**
      * Constructor.
@@ -60,7 +62,8 @@ class UserManager
      *     "ch"                     = @DI\Inject("claroline.config.platform_config_handler"),
      *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory"),
      *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
-     *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager")
+     *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager"),
+     *     "validator"              = @DI\Inject("validator")
      * })
      */
     public function __construct(
@@ -73,7 +76,8 @@ class UserManager
         PlatformConfigurationHandler $ch,
         PagerFactory $pagerFactory,
         ObjectManager $om,
-        MailManager $mailManager
+        MailManager $mailManager,
+        ValidatorInterface $validator
     )
     {
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
@@ -87,6 +91,7 @@ class UserManager
         $this->pagerFactory = $pagerFactory;
         $this->om = $om;
         $this->mailManager = $mailManager;
+        $this->validator = $validator;
     }
 
     /**
@@ -191,30 +196,19 @@ class UserManager
             $email = $user[4];
             $code = isset($user[5])? $user[5] : null;
             $phone = isset($user[6])? $user[6] : null;
-            $existingUsers = $this->userRepo->findUserByUsernameOrEmail($username, $email);
 
-            if (count($existingUsers) === 0 && filter_var($email, FILTER_VALIDATE_EMAIL) !== false) {
-                $newUser = $this->om->factory('Claroline\CoreBundle\Entity\User');
-                $newUser->setFirstName($firstName);
-                $newUser->setLastName($lastName);
-                $newUser->setUsername($username);
-                $newUser->setPlainPassword($pwd);
-                $newUser->setMail($email);
-                $newUser->setAdministrativeCode($code);
-                $newUser->setPhone($phone);
-                $this->createUser($newUser);
-            } else {
-                $nonImportedUsers[] = array(
-                    'username' => $username,
-                    'firstName' => $firstName,
-                    'lastName' => $lastName
-                );
-            }
+            $newUser = $this->om->factory('Claroline\CoreBundle\Entity\User');
+            $newUser->setFirstName($firstName);
+            $newUser->setLastName($lastName);
+            $newUser->setUsername($username);
+            $newUser->setPlainPassword($pwd);
+            $newUser->setMail($email);
+            $newUser->setAdministrativeCode($code);
+            $newUser->setPhone($phone);
+            $this->createUser($newUser);
         }
 
         $this->om->endFlushSuite();
-
-        return $nonImportedUsers;
     }
 
     /**
