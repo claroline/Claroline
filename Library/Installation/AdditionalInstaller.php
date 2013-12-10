@@ -32,6 +32,7 @@ class AdditionalInstaller extends BaseInstaller
 
     public function preInstall()
     {
+        $this->setLocale();
         $this->createDatabaseIfNotExists();
         $this->createAclTablesIfNotExist();
         $this->buildDefaultTemplate();
@@ -40,7 +41,7 @@ class AdditionalInstaller extends BaseInstaller
     public function preUpdate($currentVersion, $targetVersion)
     {
         $this->setLocale();
-        
+
         if (version_compare($currentVersion, '2.0', '<') && version_compare($targetVersion, '2.0', '>=') ) {
             $updater020000 = new Updater\Updater020000($this->container);
             $updater020000->setLogger($this->logger);
@@ -56,6 +57,8 @@ class AdditionalInstaller extends BaseInstaller
 
     public function postUpdate($currentVersion, $targetVersion)
     {
+        $this->setLocale();
+        
         if (version_compare($currentVersion, '2.0', '<')  && version_compare($targetVersion, '2.0', '>=') ) {
             $updater020000 = new Updater\Updater020000($this->container);
             $updater020000->setLogger($this->logger);
