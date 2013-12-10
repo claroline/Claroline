@@ -94,6 +94,7 @@ category_structure: 'Category structure'
 change_view : 'Change the display'
 choose_resource_form_type: 'Resource type'
 classify_workspaces: 'Classify workspaces'
+classify_my_workspaces: 'Classify my workspaces'
 close: Close
 code: Code
 collaborator: Collaborator
