@@ -49,7 +49,7 @@ badge_form_automatic_award: 'Automatic awarding, if rules are respected'
 badge_form_expired_at: 'Expiration date'
 badge_form_choose_image: "Choose badge image"
 badge_form_change_image: "Change badge image"
-badge_form_badgeRules: "Awarding rules"
+badge_form_rules: "Awarding rules"
 badge_form_awarding_on_result_action: "Award on action result's"
 badge_form_execute: "Execute"
 badge_form_times: "times"

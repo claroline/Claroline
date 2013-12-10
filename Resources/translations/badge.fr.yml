@@ -49,7 +49,7 @@ badge_form_automatic_award: 'Attribution automatique, si les règles sont respec
 badge_form_expired_at: "Date d'expiration"
 badge_form_choose_image: "Choisir l'image du badge"
 badge_form_change_image: "Changer l'image du badge"
-badge_form_badgeRules: "Règles d'attribution"
+badge_form_rules: "Règles d'attribution"
 badge_form_awarding_on_result_action: "Attribuer en fonction du résultat de l'action"
 badge_form_execute: "Exécuter"
 badge_form_times: "fois"
