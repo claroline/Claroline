@@ -47,9 +47,9 @@ class Updater020500
 
             $user = $workspaceManager->findPersonalUser($workspace);
 
-            if ($user[0] !== null) {
+            if ($user !== null) {
                 $personalWorkspaceName = $translator->trans('personal_workspace', array(), 'platform') .
-                ' - ' . $user[0]->getUsername();
+                ' - ' . $user->getUsername();
                 $this->container->get('claroline.manager.workspace_manager')->rename($workspace, $personalWorkspaceName);
             }
 

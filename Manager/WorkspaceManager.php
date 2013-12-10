@@ -758,6 +758,6 @@ class WorkspaceManager
     {
         $user = $this->userRepo->findBy(array('personalWorkspace' => $workspace));
 
-        return $user;
+        return (count($user) === 1) ? $user[0]: null;
     }
 }
