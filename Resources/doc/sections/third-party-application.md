@@ -7,9 +7,9 @@ Claroline provides a way to thrid-party application to interact with the platfor
 Server-side
 -----------
 
-The server will provide an interface to the user to manage thrid-party application which has access to their account.
+The server provide an interface to the user to manage thrid-party application which has access to their account.
 
-In the administration panel there will be an interface that list third-party application that can access the platform.
+In the administration panel there is an interface that list third-party application that can access the platform.
 
 
 [Client-side][2]
