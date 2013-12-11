@@ -23,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
 class BadgeRule extends Rule
 {
     /**
-     * @var Badge[]
+     * @var Badge
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Badge\Badge", inversedBy="badgeRules")
      * @ORM\JoinColumn(name="badge_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
@@ -43,7 +43,7 @@ class BadgeRule extends Rule
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\Badge\Badge[]|\Doctrine\Common\Collections\ArrayCollection
+     * @return \Claroline\CoreBundle\Entity\Badge\Badge|\Doctrine\Common\Collections\ArrayCollection
      */
     public function getBadge()
     {
