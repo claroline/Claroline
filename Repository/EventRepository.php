@@ -78,7 +78,7 @@ class EventRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findByUserWithoutAllDay(User $user)
+    public function findByUserWithoutAllDay(User $user, $limit)
     {
         $dql = "
             SELECT e
@@ -91,9 +91,13 @@ class EventRepository extends EntityRepository
                 JOIN r.users u
                 WHERE u.id = :userId
             )
+            ORDER BY e.start DESC
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
+        if ($limit > 0) {
+            $query->setMaxResults($limit);
+        }
 
         return $query->getResult();
     }
