@@ -78,6 +78,7 @@ abstract class Rule
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(nullable=true)
+     * @Expose
      */
     protected $resource;
 
@@ -199,5 +200,25 @@ abstract class Rule
     public function getResource()
     {
         return $this->resource;
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Rule\Entity\Badge $targetBadge
+     *
+     * @return Rule
+     */
+    public function setTargetBadge($targetBadge)
+    {
+        $this->targetBadge = $targetBadge;
+
+        return $this;
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Rule\Entity\Badge
+     */
+    public function getTargetBadge()
+    {
+        return $this->targetBadge;
     }
 }

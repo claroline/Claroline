@@ -1,9 +1,9 @@
 all: 'Tous'
-resource: 'Ressource'
 role: 'Rôle'
 group: 'Groupe'
 user: 'Utilisateur'
 workspace: "Espace d'activités"
+badge: "Badge"
 Show actions for: 'Afficher les actions suivantes :'
 for user: "Filtrer sur l'utilisateur :"
 log_default_user: 'Claroline Connect'

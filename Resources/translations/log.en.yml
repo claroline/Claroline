@@ -1,5 +1,4 @@
 all: 'All'
-resource: 'Resource'
 role: 'Role'
 group: 'Group'
 user: 'User'
