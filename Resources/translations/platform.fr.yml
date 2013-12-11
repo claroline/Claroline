@@ -94,7 +94,8 @@ category_root: 'Catégories de base'
 category_structure: 'Structure des catégories'
 change_view : 'Changer l''affichage'
 choose_resource_form_type: 'Type de ressource'
-classify_workspaces: 'Classer les espaces d''activités'
+classify_workspaces: 'Classer les espaces'
+classify_my_workspaces: 'Classer mes espaces'
 close: Fermer
 code: Code
 collaborator: Collaborateur
@@ -384,12 +385,12 @@ profile_form_userName: 'Nom d''utilisateur'
 profile_form_username: 'Nom d''utilisateur'
 properties: Propriétés
 public: Public
-public_workspace_empty: 'Il n''y a aucun espace d''activité publique.'
-public_workspaces: 'Espaces d''activités publiques'
+public_workspace_empty: 'Il n''y a aucun espace d''activités public.'
+public_workspaces: 'Espaces d''activités publics'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 register: Inscription
-register_to_a_public_workspace: 'Inscription à un espace d''activités publique'
-register_to_a_workspace: 'S''inscrire à un espace d''activités'
+register_to_a_public_workspace: 'Inscription à un espace d''activités public'
+register_to_a_workspace: 'M''inscrire à un espace'
 registered: 'Inscrit'
 registered_groups: 'Groupes enregistrés'
 registered_users: 'Utilisateurs enregistrés'
@@ -528,7 +529,7 @@ type_s: Type(s)
 unauthorized : 'Vous n''êtes pas autorisé à consulter cette page.'
 unique connections: 'Nb Cnx. uniques'
 unregister: Désinscription
-unregister_from_a_workspace: 'Désinscription d''un espace d''activités'
+unregister_from_a_workspace: 'Me désinscrire d''un espace'
 unregistered: 'Non inscrit'
 unregistered_groups: 'Groupes non enregistrés'
 unregistered_users: 'Utilisateurs non enregistrés'
@@ -586,12 +587,12 @@ workspace_delete: 'Supprimer l''espace d''activités'
 workspace_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cet espace d''activités ?'
 workspace_delete_confirm_title: 'Confirmation de suppression'
 workspace_edit_form_code: Code
-workspace_edit_form_displayable: Publique
+workspace_edit_form_displayable: Public
 workspace_edit_form_name: Nom
 workspace_edit_form_selfRegistration: 'Inscription publique'
 workspace_edit_form_selfUnregistration: 'Désinscription publique'
 workspace_form_code: Code
-workspace_form_displayable: Publique
+workspace_form_displayable: Public
 workspace_form_name: Nom
 workspace_form_selfRegistration: 'Inscription publique'
 workspace_form_selfUnregistration: 'Désinscription publique'

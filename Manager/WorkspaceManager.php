@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
+use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Pager\PagerFactory;
@@ -57,6 +58,8 @@ class WorkspaceManager
     /** @var RoleRepository */
     private $roleRepo;
     /** @var WorkspaceRepository */
+    private $userRepo;
+    /** @var UserRepository */
     private $workspaceRepo;
     /** @var ToolManager */
     private $toolManager;
@@ -116,9 +119,26 @@ class WorkspaceManager
         $this->resourceRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
         $this->resourceRightsRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
         $this->workspaceFavouriteRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceFavourite');
         $this->pagerFactory = $pagerFactory;
+    }
+
+    /**
+     * Rename a workspace.
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param string $name
+     */
+    public function rename(AbstractWorkspace $workspace, $name)
+    {
+        $workspace->setName($name);
+        $root = $this->resourceManager->getWorkspaceRoot($workspace);
+        $root->setName($name);
+        $this->om->persist($workspace);
+        $this->om->persist($root);
+        $this->om->flush();
     }
 
     /**
@@ -136,6 +156,7 @@ class WorkspaceManager
         $config->check();
         $this->om->startFlushSuite();
         $workspace = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace');
+        $workspace->setCreator($manager);
         $workspace->setName($config->getWorkspaceName());
         $workspace->setPublic($config->isPublic());
         $workspace->setCode($config->getWorkspaceCode());
@@ -147,7 +168,7 @@ class WorkspaceManager
         $baseRoles['ROLE_ANONYMOUS'] = $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
         $this->roleManager->associateRole($manager, $baseRoles["ROLE_WS_MANAGER"]);
         $dir = $this->om->factory('Claroline\CoreBundle\Entity\Resource\Directory');
-        $dir->setName("{$workspace->getName()} - {$workspace->getCode()}");
+        $dir->setName($workspace->getName());
         $rights = $config->getPermsRootConfiguration();
         $preparedRights = $this->prepareRightsArray($rights, $baseRoles);
         $root = $this->resourceManager->create(
@@ -633,14 +654,6 @@ class WorkspaceManager
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[]
-     */
-    public function getWorkspacesWithSelfRegistration()
-    {
-        return $this->workspaceRepo->findWorkspacesWithSelfRegistration();
-    }
-
-    /**
      * @param string $search
      *
      * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[]
@@ -726,5 +739,17 @@ class WorkspaceManager
     {
         return $this->workspaceFavouriteRepo
             ->findOneBy(array('workspace' => $workspace, 'user' => $user));
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     *
+     * @return \Claroline\CoreBundle\Entity\User|null
+     */
+    public function findPersonalUser(AbstractWorkspace $workspace)
+    {
+        $user = $this->userRepo->findBy(array('personalWorkspace' => $workspace));
+
+        return (count($user) === 1) ? $user[0]: null;
     }
 }
