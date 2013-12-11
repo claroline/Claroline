@@ -1,9 +1,6 @@
 <div class="list-group menu">
-    <div class="list-group-item disabled">
-        {{ workspace.getName() }} <em>({{ workspace.getCode() }})</em>
-    </div>
+    <div class="list-group-item disabled">{{ workspace.getName() }} <em>({{ workspace.getCode() }})</em></div>
     {% if is_granted('ROLE_WS_MANAGER_' ~ workspace.getGuid()) %}
-
         <a class="list-group-item accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse">
             <i class="icon-eye-open"></i>
             {{ 'show_as'|trans({}, 'platform') }}

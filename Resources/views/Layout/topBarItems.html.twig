@@ -39,7 +39,7 @@
     {% block rightSide %}
         {% import _self as topbar %}
         {% if isInAWorkspace %}
-            {% set workspacesName = currentWorkspace.getName() ~ ' (' ~ currentWorkspace.getCode() ~ ')' %}
+            {% set workspacesName = currentWorkspace.getName()|length > 16 ? currentWorkspace.getName()|slice(0, 16) ~ '...' : currentWorkspace.getName() %}
         {% else %}
             {% set workspacesName =  'workspaces' %}
         {% endif %}

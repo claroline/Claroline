@@ -5,9 +5,7 @@
 {% block leftbar %}
     {% if is_granted('ROLE_USER') %}
        <div class="list-group menu">
-            <div class="list-group-item disabled">
-                {{ 'workspaces' | trans({}, "platform")}}
-            </div>
+            <div class="list-group-item disabled">{{ 'workspaces' | trans({}, "platform")}}</div>
             <a class="list-group-item{{ "/workspaces/" | activeLink  }}" href="{{ path('claro_workspace_list') }}">
                 <i class="icon-book"></i>
                 {{ 'all_workspaces'|trans({}, 'platform') }}
