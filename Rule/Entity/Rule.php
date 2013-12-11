@@ -201,24 +201,4 @@ abstract class Rule
     {
         return $this->resource;
     }
-
-    /**
-     * @param \Claroline\CoreBundle\Rule\Entity\Badge $targetBadge
-     *
-     * @return Rule
-     */
-    public function setTargetBadge($targetBadge)
-    {
-        $this->targetBadge = $targetBadge;
-
-        return $this;
-    }
-
-    /**
-     * @return \Claroline\CoreBundle\Rule\Entity\Badge
-     */
-    public function getTargetBadge()
-    {
-        return $this->targetBadge;
-    }
 }
