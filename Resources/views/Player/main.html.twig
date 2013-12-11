@@ -13,20 +13,20 @@
     <div class="breadcrumbs">
         {{ render(controller('innova.controller.path_player:displayBreadcrumbsAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
     </div>
-
-    <div class="petit-poucet">
-        {{ render(controller('innova.controller.path_player:displayPetitPoucetAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
-    </div>
-
-    {#
+{#
     <div class="tree-browser">
         {{ render(controller('innova.controller.path_player:displayTreeBrowserAction', { 'path': path, 'currentStep': currentStep } )) }}
     </div>
-    #}
+#}
 
     <div class="content row">
-        <div class="resources col-md-3">
-            {{ render(controller('innova.controller.path_player:displayResourcesAction', { 'currentStep': currentStep } )) }}
+        <div class="col-md-3">
+            <div class="petit-poucet">
+                {{ render(controller('innova.controller.path_player:displayPetitPoucetAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
+            </div>
+            <div class="resources">
+                {{ render(controller('innova.controller.path_player:displayResourcesAction', { 'currentStep': currentStep } )) }}
+            </div>
         </div>
         
         <div class="current-step col-md-9">

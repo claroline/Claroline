@@ -1,15 +1,24 @@
 {% set history = app.session.get('history') %}
 {% set visitedSteps = history[path.id] %}
 
-{% if visitedSteps |length > 1 %}
-	<div class="title">Historique</div>
-	<div class="stones">
-	{% for i, visitedStep in visitedSteps if i < 8 and i > 0 %}
+<div class="btn-group panel panel-default">
+  <div class="dropdown-toggle panel-heading" data-toggle="dropdown">
+		<h4 class="panel-title">
+			<span class="icon-time"></span>
+			Historique 
+			<span class="caret"></span>
+		</h4>
+  </div>
+  <ul class="dropdown-menu">
+  	{% for i, visitedStep in visitedSteps if i < 10 and i > 0 %}
 		{% for stepId, step in visitedStep %}
-			<a class="btn btn-default btn-sm" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: stepId }) }}">
-			{{ step["name"] }}<span class="lvl-indicator lvl-{{  step["level"] + 1 }}"></span>
+     	<li>
+     		<a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: stepId }) }}">
+				<span class="lvl-indicator lvl-{{  step["level"] + 1 }}"></span>
+				<span>{{ step["name"] }}</span>
 			</a>
+		</li>
 		{% endfor %}
 	{% endfor %}
-	</div>
-{% endif %}
+  </ul>
+</div>
