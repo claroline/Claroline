@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Claroline Connect package.
  *
@@ -35,7 +36,7 @@ class AgendaListener
      *      "formFactory"       = @DI\Inject("claroline.form.factory"),
      *      "templating"        = @DI\Inject("templating"),
      *      "sc"                = @DI\Inject("security.context"),
-     *     "container" = @DI\Inject("service_container")
+     *     "container"          = @DI\Inject("service_container")
      * })
      */
     public function __construct(
@@ -58,14 +59,17 @@ class AgendaListener
      */
     public function onDisplay(DisplayWidgetEvent $event)
     {
-        $event->setContent($this->workspaceAgenda($event->getInstance()));
+        if ($event->getInstance()->isDesktop()) {
+            $event->setContent($this->desktopAgenda($event->getInstance()));
+        } else {
+            $event->setContent($this->workspaceAgenda($event->getInstance()));
+        }
         $event->stopPropagation();
     }
 
     public function workspaceAgenda($workspaceId)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
         $usr = $this->container->get('security.context')->getToken()->getUser();
         $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr , 5);
 
@@ -73,8 +77,22 @@ class AgendaListener
             'ClarolineCoreBundle:Tool/workspace/agenda:agenda_widget.html.twig',
             array(
                 'workspace' => $workspaceId,
-                'form' => $form->createView(),
                 'listEvents' => $owners,
+            )
+        );
+    }
+
+    public function desktopAgenda()
+    {
+        $em = $this->container-> get('doctrine.orm.entity_manager');
+        $usr = $this->container->get('security.context')->getToken()->getUser();
+        $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, 1);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
+
+        return $this->templating->render(
+            'ClarolineCoreBundle:Tool/workspace/agenda:agenda_widget.html.twig',
+            array(
+                'listEvents' => array_merge($listEvents, $listEventsDesktop),
             )
         );
     }
