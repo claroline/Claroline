@@ -28,25 +28,19 @@
             'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
             'searchreplace wordcount visualblocks visualchars fullscreen',
             'insertdatetime media nonbreaking save table directionality',
-            'template paste textcolor emoticons'
+            'template paste textcolor emoticons code'
         ],
         toolbar1: 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | preview fullscreen resourcePicker',
-        toolbar2: 'undo redo | bullist numlist outdent indent | link image media print | forecolor backcolor emoticons',
+        toolbar2: 'undo redo | forecolor backcolor emoticons | bullist numlist outdent indent | link image media print code',
         paste_preprocess: function (plugin, args) {
-            var url = args.content.match(/href='([^']*')|href="([^"]*")/g);
+            var link = $('<div>' + args.content + '</div>').text().trim(); //inside div because a bug of jquery
+            var url = link.match(/^(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)|((mailto:)?[_.\w-]+@([\w][\w\-]+\.)+[a-zA-Z]{2,3})$/);
 
             if (url) {
-                home.generatedContent(url[0].slice(6, -1), function (data) {
+                args.content = '<a href="' + link + '">' + link + '</a>';
+                home.generatedContent(link, function (data) {
                     insertContent(data);
-                });
-            } else {
-                url = home.findUrls(args.content);
-                if (url.length === 1) {
-                    args.content = '<a href="' + url[0] + '">' + url[0] + '</a>';
-                    home.generatedContent(url[0], function (data) {
-                        insertContent(data);
-                    });
-                }
+                }, false);
             }
         },
         setup: function (editor) {
@@ -109,7 +103,7 @@
 
         $.ajax(home.path + 'resource/embed/' + nodeId + '/' + mimeType)
         .done(function (data) {
-            tinymce.activeEditor.setContent(tinymce.activeEditor.getContent() + data);
+            tinymce.activeEditor.execCommand('mceInsertContent', false, data);
             editorChange(tinymce.activeEditor);
         })
         .error(function () {

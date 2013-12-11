@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Library\Logo;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\DiExtraBundle\Annotation\Service;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Symfony\Component\Finder\Finder;

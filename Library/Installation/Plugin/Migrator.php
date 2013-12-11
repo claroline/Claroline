@@ -62,8 +62,8 @@ class Migrator
     /**
      * Updates the schema of a plugin.
      *
-     * @param PluginBundle  $plugin
-     * @param string        $version
+     * @param PluginBundle $plugin
+     * @param string       $version
      */
     public function migrate(PluginBundle $plugin, $version)
     {

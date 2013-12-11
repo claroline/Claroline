@@ -1,7 +1,6 @@
 'Add a logo': 'Ajouter un logo'
 'Audience/user visits': 'Audience/Visites utilisateurs'
 'Choose a logo': 'Choisir un logo'
-'None': 'Aucun'
 404 : 'La page que vous cherchez n''existe pas.'
 Action List: 'Liste des actions'
 Actions per day: 'Nombre d''actions par jour'
@@ -10,6 +9,7 @@ Choose workspaces displayed in the widget: 'Choisissez les espaces de travail af
 Draw an area on the graph to zoom, double-click to cancel: 'Tracez une zone sur le graphique pour zoomer; double cliquez pour annuler'
 Filter actions: 'Filtrer les actions'
 Last action: '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
+None: 'Aucun'
 Overview of all recent activities in %workspaceName%: 'Aperçu de toutes les activités récentes de %workspaceName%'
 Overview of recent activities in %workspaceName%: 'Aperçu des activités récentes de %workspaceName%'
 Overview of recent activities of your workspaces: 'Aperçu des activités récentes de vos espaces de travail'
@@ -39,8 +39,8 @@ add_tag_to_workspace: 'Ajouter un Tag à l''espace d''activités'
 add_user: 'Ajouter un utilisateur'
 add_user_s_confirm_message: 'utilisateur(s) ajouté(s)'
 add_users: 'Ajouter des utilisateurs'
-add_workspace: 'Ajouter un espace d''activités'
 add_widget_to_home_tab: 'Ajouter un widget à l''onglet'
+add_workspace: 'Ajouter un espace d''activités'
 admin: Administrateur
 admin_analytics: 'Statistiques plateforme'
 admin_form_firstName : 'Prénom'
@@ -51,6 +51,7 @@ admin_form_plainPassword_second : 'Répétez votre mot de passe'
 admin_form_username : 'Nom d''utilisateur'
 admin_home_tabs_configuration: 'Configuration des onglets pour les pages d''accueil'
 admin_logs: 'Suivi plateforme'
+admin_third_party_application: 'Applications tierces'
 admin_workspace_tag_form_name: Nom
 administration: Administration
 administrative_code: 'Code administratif'
@@ -60,6 +61,7 @@ all: Tous
 all_available_workspaces: 'Tous les espaces d''activités disponibles'
 all_my_workspaces: 'Tous mes espaces d''activités'
 all_workspaces: 'Tous les espaces d''activités'
+already_existing_user: L'utilisateur existe déjà.
 an_error_occured_message: Une erreur s'est produite. Veuillez contacter l'administrateur.
 analytics_connections: 'Visites utilisateurs'
 analytics_home: 'Vue de l''ensemble'
@@ -71,8 +73,8 @@ at_least_one_category_has_to_be_selected: 'Au moins une catégorie doit être se
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espaces d''activités disponibles'
 back: 'Retour'
-badges_management: 'Gestion des badges'
 bad_request: La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l''administrateur de la plateforme.
+badges_management: 'Gestion des badges'
 by: par
 canCopy: 'Droit de copier'
 canCreate: 'Creation de %type%'
@@ -92,8 +94,10 @@ category_root: 'Catégories de base'
 category_structure: 'Structure des catégories'
 change_view : 'Changer l''affichage'
 choose_resource_form_type: 'Type de ressource'
-classify_workspaces: 'Classer les espaces d''activités'
+classify_workspaces: 'Classer les espaces'
+classify_my_workspaces: 'Classer mes espaces'
 close: Fermer
+code: Code
 collaborator: Collaborateur
 communication: Communication
 configuration: Configuration
@@ -131,9 +135,9 @@ date_range.clear: 'Effacer'
 date_range.custom_range: 'Plage personnalisée'
 date_range.day_names: '["Di","Lu","Ma","Me","Je","Ve","Sa"]'
 date_range.first_day: '1'
-date_range.format: 'd-m-Y'
+date_range.format: 'd/m/Y'
 date_range.from: 'De'
-date_range.js_format: 'dd-MM-yyyy'
+date_range.js_format: 'dd/MM/yyyy'
 date_range.last_month: 'Mois précédent'
 date_range.last_school_year: 'Année sco. précédente'
 date_range.last_seven_days: '7 derniers jours'
@@ -141,7 +145,7 @@ date_range.last_thirty_days: '30 derniers jours'
 date_range.last_week: 'Semaine précédente'
 date_range.last_year: 'Année précédente'
 date_range.month_names: '["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"]'
-date_range.separator: '/'
+date_range.separator: '-'
 date_range.this_month: 'Mois en cours'
 date_range.this_school_year: 'Année sco. en cours'
 date_range.this_week: 'Semaine en cours'
@@ -153,8 +157,8 @@ date_range.yesterday: 'Hier'
 deletable: 'Supprimable'
 delete: Supprimer
 delete_category: 'Supprimer la catégorie'
-delete_category_confirm_title: 'Suppression d''une catégorie'
 delete_category_confirm_message: 'Voulez-vous vraiment supprimer cette catégorie ?'
+delete_category_confirm_title: 'Suppression d''une catégorie'
 delete_home_tab: 'Supprimer l''onglet'
 desktop: Bureau
 desktop_home_tab_creation : 'Création d''un onglet pour le bureau'
@@ -164,8 +168,10 @@ desktop_tools: 'Outils du bureau'
 directory: Répertoire
 directory_form_name: Nom
 directory_form_shareType: Redistribution
+display: 'Afficher'
 display_options: 'Options d''affichage'
 done_on: 'effectuée sur'
+down: 'Descendre'
 download: Télécharger
 downloads: 'Nb tchgr.'
 drag_file_here: Déplacez le fichier ici
@@ -173,8 +179,10 @@ drop_file: Déposez le fichier
 edit: Modifier
 editable: 'Modifiable'
 email_form_mail : 'Entrez votre adresse email'
+email_found_at: 'L''email %email% a été trouvé aux lignes: %lines%'
 empty_file: 'Fichier vide'
 enter_tag_name_message: 'Veuillez entrer un nom de Tag'
+entries_per_day: "Nombre d'entrées par jour"
 export: Exporter
 exportable: 'Exportable'
 fast_answer: 'Réponse rapide'
@@ -212,6 +220,7 @@ has_been_suscribed_with_role: 'a été inscrit(e) avec le rôle'
 has_been_suscribed_with_role_group: 'a été inscrit avec le rôle'
 has_not_been_imported: 'n''a pas été importé(e)'
 has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
+hide: 'Cacher'
 history: Historique
 home: Accueil
 home_parameters: 'Paramètres de l''accueil'
@@ -238,6 +247,9 @@ jqplot_date_output_format: '%d-%m-%Y'
 lastName: Nom
 last_30_days_activity: 'Activités des 30 derniers jours'
 last_name: Nom
+left: 'Gauche'
+line_number: 'Ligne %line%:'
+line_per_page: 'Lignes par page'
 link: Lien
 link_outdated : 'le lien n''est plus valide'
 list_groups: 'Lister les groupes'
@@ -292,6 +304,7 @@ month.September: "Septembre"
 move: Déplacer
 my_account: 'Mon compte'
 my_agenda: 'Mon agenda'
+my_applications: "Mes applications"
 my_badges: 'Mes badges'
 my_contacts: 'Mes contacts'
 my_favourite_workspaces: 'Mes espaces d''activités favoris'
@@ -355,6 +368,8 @@ please_wait: 'Veuillez patienter...'
 position: Position
 private: Privée
 profile_form_administrativeCode: 'Code administratif'
+profile_form_creation_plainPassword_first: 'Mot de passe'
+profile_form_creation_plainPassword_second: Vérification
 profile_form_description : 'Description'
 profile_form_firstName: Prénom
 profile_form_lastName: Nom
@@ -365,19 +380,17 @@ profile_form_phone: Téléphone
 profile_form_pictureFile : 'Photo de profil'
 profile_form_plainPassword_first: 'Mot de passe'
 profile_form_plainPassword_second: Vérification
-profile_form_creation_plainPassword_first: 'Mot de passe'
-profile_form_creation_plainPassword_second: Vérification
 profile_form_platformRoles: Rôles
 profile_form_userName: 'Nom d''utilisateur'
 profile_form_username: 'Nom d''utilisateur'
 properties: Propriétés
 public: Public
-public_workspace_empty: 'Il n''y a aucun espace d''activité publique.'
-public_workspaces: 'Espaces d''activités publiques'
+public_workspace_empty: 'Il n''y a aucun espace d''activités public.'
+public_workspaces: 'Espaces d''activités publics'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 register: Inscription
-register_to_a_public_workspace: 'Inscription à un espace d''activités publique'
-register_to_a_workspace: 'S''inscrire à un espace d''activités'
+register_to_a_public_workspace: 'Inscription à un espace d''activités public'
+register_to_a_workspace: 'M''inscrire à un espace'
 registered: 'Inscrit'
 registered_groups: 'Groupes enregistrés'
 registered_users: 'Utilisateurs enregistrés'
@@ -397,8 +410,8 @@ rename_tool: 'Renommage d''un outil'
 rename_widget_instance: 'Renommage du Widget'
 reset: Réinitialiser
 reset_password: 'Réinitialiser mot de passe'
-reset_password_txt: 'Vous avez demandé la réinitiation de votre mot de passe. Si vous n''êtes pas l''origine de ce message, veuillez l''ignorer.'
 reset_password_message: 'Etes vous sur de vouloir réinitialiser le mot de passe ?'
+reset_password_txt: 'Vous avez demandé la réinitiation de votre mot de passe. Si vous n''êtes pas l''origine de ce message, veuillez l''ignorer.'
 reset_pwd: 'Réinitialisation de votre mot de passe'
 reset_pwd_form_plainPassword_first: 'Nouveau mot de passe'
 reset_pwd_form_plainPassword_second : 'Répétez le mot de passe'
@@ -426,6 +439,7 @@ restore : Restaurer
 restore_messages_confirm_message: 'message(s) restaurés'
 results: Résultats
 results_for_search_on: 'Résultats de la recherche sur'
+right: 'Droit'
 rights: Droits
 rights_management: 'Gestion des droits'
 role: Rôle
@@ -454,8 +468,8 @@ select_workspaces_for_registration: 'Choisissez les espaces d''activités pour l
 selected_workspaces_for_registration: 'Espaces d''activités sélectionnés pour l''inscription'
 selected_workspaces_will_be_put_in_it: 'Les espaces d''activités sélectionnés y seront disponibles'
 send_mail: 'Envoyer un mail'
-send_mail_form_object: Objet
 send_mail_form_content: Message
+send_mail_form_object: Objet
 send_message: 'Envoyer un message'
 session_id: 'Identifiant de session'
 settings: Paramètres
@@ -486,6 +500,7 @@ text_form_content: Contenu
 text_form_name: Nom
 text_form_shareType: Redistribution
 text_form_text: Texte
+the_following_users_were_not_imported: 'Les utilisateurs suivant n''ont pas pu être importés:'
 the_workspace: 'L''espace d''activités'
 this_page_requires_authentication: 'Cette page requiert une authentification. Veuillez vous identifier.'
 to: Jusque
@@ -507,17 +522,19 @@ top_users_workspaces_enrolled: 'Top des utilisateurs étant inscrits dans le plu
 top_users_workspaces_owners: 'Top des utilisateurs ayant crée le plus de modules'
 top_workspaces_connections: 'Top des espaces d''activités les plus consultés'
 top_workspaces_resources: 'Top des espaces d''activités avec le plus des resources'
+total: Total
 trash : Corbeille
 type: Type
 type_s: Type(s)
 unauthorized : 'Vous n''êtes pas autorisé à consulter cette page.'
 unique connections: 'Nb Cnx. uniques'
 unregister: Désinscription
-unregister_from_a_workspace: 'Désinscription d''un espace d''activités'
+unregister_from_a_workspace: 'Me désinscrire d''un espace'
 unregistered: 'Non inscrit'
 unregistered_groups: 'Groupes non enregistrés'
 unregistered_users: 'Utilisateurs non enregistrés'
 unwritable_file_exception: "Vous n'avez pas la permission d'écrire dans le fichier %path%."
+up: 'Monter'
 upload: 'Téléchargement'
 upload_denied: "Vous n'avez pas la permission de créer une ressource à cet endroit"
 upload_fail: 'Echec du téléchargement'
@@ -537,15 +554,15 @@ user_form_plainPassword_second: Vérification
 user_form_username: 'Nom d''utilisateur'
 user_parameters: 'Paramètres de l''utilisateur'
 username: 'Nom d''utilisateur'
+username_found_at: 'Le nom d''utilisateur %username% a été trouvé aux lignes: %lines%'
 users: Utilisateurs
 users_connected_once: 'utilisateurs connectés au moins 1 fois sur la plateforme'
 users_import: 'Importer des utilisateurs'
 users_list: 'Liste des utilisateurs'
 users_management: 'Gestion des utilisateurs'
-users_minimum_requirement_msg: 'Les utilisateurs doivent remplir ces conditions: login de 3 caractères, password de 4 caractères, email valide.'
+users_minimum_requirement_msg: 'Les utilisateurs doivent remplir ces conditions: login de 3 caractères, mot de passe de 4 caractères, email valide.'
 users_registration_in_workspace: 'Inscription des utilisateurs dans l''espace d''activités'
 users_visits: 'Visites des utilisateurs'
-line_per_page: 'Lignes par page'
 validate: Valider
 view: Voir
 view_category_hierarchy: 'Visualiser la structure des catégories'
@@ -570,12 +587,12 @@ workspace_delete: 'Supprimer l''espace d''activités'
 workspace_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cet espace d''activités ?'
 workspace_delete_confirm_title: 'Confirmation de suppression'
 workspace_edit_form_code: Code
-workspace_edit_form_displayable: Publique
+workspace_edit_form_displayable: Public
 workspace_edit_form_name: Nom
 workspace_edit_form_selfRegistration: 'Inscription publique'
 workspace_edit_form_selfUnregistration: 'Désinscription publique'
 workspace_form_code: Code
-workspace_form_displayable: Publique
+workspace_form_displayable: Public
 workspace_form_name: Nom
 workspace_form_selfRegistration: 'Inscription publique'
 workspace_form_selfUnregistration: 'Désinscription publique'
@@ -586,14 +603,14 @@ workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités
 workspace_home_tabs: 'Onglets pour les espaces d''activités'
 workspace_order_tool_edit_form_name: Nom
 workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
-workspace_remove_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
 workspace_remove_from_category_confirm_message: 'Voulez-vous vraiment retirer l''espace d''activités de cette catégorie ?'
+workspace_remove_from_category_confirm_title: 'Retrait d''un espace d''activités d''une catégorie'
 workspace_resource: Ressources
 workspace_role_type_form_requireDir: 'Créer un répertoire'
 workspace_role_type_form_translationKey: Nom
 workspace_tag_form_name: Nom
-workspace_tag_remove_confirm_title: 'Retrait d''une catégorie'
 workspace_tag_remove_confirm_message: 'Voulez-vous vraiment retirer cette catégorie ?'
+workspace_tag_remove_confirm_title: 'Retrait d''une catégorie'
 workspace_template_form_name: Nom
 workspace_tools: Outils
 workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet espace d''activités ?'

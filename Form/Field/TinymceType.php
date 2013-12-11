@@ -26,7 +26,6 @@ class TinymceType extends TextareaType
 {
     private $defaultAttributes = array(
         'class' => 'claroline-tiny-mce hide',
-        'data-theme' => 'advanced'
     );
 
     public function buildForm(FormBuilderInterface $builder, array $options)

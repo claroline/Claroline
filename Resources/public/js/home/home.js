@@ -192,8 +192,10 @@
      *
      * @param url The url of a webpage.
      */
-    home.generatedContent = function (url, action)
+    home.generatedContent = function (url, action, error)
     {
+        error = typeof(error) !== 'undefined' ? error : true;
+
         $.post(home.path + 'content/graph', { 'generated_content_url': url })
         .done(function (data) {
             if (data !== 'false') {
@@ -201,7 +203,9 @@
             }
         })
         .error(function () {
-            home.modal('content/error');
+            if (error) {
+                home.modal('content/error');
+            }
         });
     };
 

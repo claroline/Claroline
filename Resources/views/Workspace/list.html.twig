@@ -58,15 +58,18 @@
         <h3 class="panel-title">{{ 'workspaces'|trans({}, 'platform') }}</h3>
     </div>
     <div id="workspace-list-div" class="panel-body">
-
         {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('claro_manage_admin_workspace_tag') }}">
-                <button type="button" class="btn btn-default">
-                    {{ 'classify_workspaces'|trans({}, 'platform') }}
-                </button>
+            <a href="{{ path('claro_manage_admin_workspace_tag') }}" class="btn btn-default">
+                {{ 'classify_workspaces'|trans({}, 'platform') }}
             </a>
-            <hr>
         {% endif %}
+
+        {% if is_granted('ROLE_USER') %}
+            <a href="{{ path('claro_list_workspaces_with_self_registration') }}" class="btn btn-default">
+                {{ 'register_to_a_workspace'|trans({}, 'platform') }}
+            </a>
+        {% endif %}
+        <hr/>
 
         {% if workspaces is empty %}
             {{ 'no_workspace' | trans({}, 'platform') }}

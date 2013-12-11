@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle;
 
+use FOS\OAuthServerBundle\FOSOAuthServerBundle;
+use Nelmio\ApiDocBundle\NelmioApiDocBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
@@ -43,30 +45,32 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
         // no special configuration, work in any environment
         $emptyConfigs = array(
             'Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle',
-            'Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle',
             'FOS\JsRoutingBundle\FOSJsRoutingBundle',
             'JMS\AopBundle\JMSAopBundle',
             'JMS\TwigJsBundle\JMSTwigJsBundle',
             'WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle',
             'Claroline\MigrationBundle\ClarolineMigrationBundle',
-            'Claroline\Bundle\FrontEndBundle\FrontEndBundle'
+            'Claroline\Bundle\FrontEndBundle\FrontEndBundle',
+            'JMS\SerializerBundle\JMSSerializerBundle'
         );
         // simple container configuration, same for every environment
         $simpleConfigs = array(
-            'Symfony\Bundle\SecurityBundle\SecurityBundle'               => 'security',
-            'Symfony\Bundle\TwigBundle\TwigBundle'                       => 'twig',
-            'Symfony\Bundle\AsseticBundle\AsseticBundle'                 => 'assetic',
-            'JMS\DiExtraBundle\JMSDiExtraBundle'                         => 'jms_di_extra',
-            'JMS\SecurityExtraBundle\JMSSecurityExtraBundle'             => 'jms_security_extra',
-            'Zenstruck\Bundle\FormBundle\ZenstruckFormBundle'            => 'zenstruck_form',
-            'Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle' => 'stof_doctrine_extensions',
-            'BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle'               => 'sso',
-            'Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle'        => 'stfalcon_tinymce',
-            'IDCI\Bundle\ExporterBundle\IDCIExporterBundle'              => 'idci_exporter'
+            'Symfony\Bundle\SecurityBundle\SecurityBundle'                  => 'security',
+            'Symfony\Bundle\TwigBundle\TwigBundle'                          => 'twig',
+            'Symfony\Bundle\AsseticBundle\AsseticBundle'                    => 'assetic',
+            'JMS\DiExtraBundle\JMSDiExtraBundle'                            => 'jms_di_extra',
+            'JMS\SecurityExtraBundle\JMSSecurityExtraBundle'                => 'jms_security_extra',
+            'Zenstruck\Bundle\FormBundle\ZenstruckFormBundle'               => 'zenstruck_form',
+            'Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle'    => 'stof_doctrine_extensions',
+            'BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle'                  => 'sso',
+            'Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle'           => 'stfalcon_tinymce',
+            'IDCI\Bundle\ExporterBundle\IDCIExporterBundle'                 => 'idci_exporter',
+            'Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle' => 'sensio_framework_extra',
+            'FOS\RestBundle\FOSRestBundle'                                  => 'fos_rest'
         );
         // one configuration file for every standard environment (prod, dev, test)
         $envConfigs = array(
-            'Symfony\Bundle\FrameworkBundle\FrameworkBundle'        => 'framework',
+            'Symfony\Bundle\FrameworkBundle\FrameworkBundle'     => 'framework',
             'Symfony\Bundle\MonologBundle\MonologBundle'         => 'monolog',
             'Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle' => 'swiftmailer',
             'Doctrine\Bundle\DoctrineBundle\DoctrineBundle'      => 'doctrine'
@@ -82,6 +86,18 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             }
         } elseif ($bundle instanceof \Bazinga\ExposeTranslationBundle\BazingaExposeTranslationBundle) {
             return $config->addRoutingResource($this->buildPath('bazinga_routing'));
+        } elseif ($bundle instanceof FOSOAuthServerBundle) {
+            $config = new ConfigurationBuilder();
+            $config
+                ->addContainerResource($this->buildPath('fos_oauth_server_config'))
+                ->addRoutingResource($this->buildPath('fos_oauth_server_routing'));
+            return $config;
+        } elseif ($bundle instanceof NelmioApiDocBundle) {
+            $config = new ConfigurationBuilder();
+            $config
+                ->addContainerResource($this->buildPath('nelmio_api_doc_config'))
+                ->addRoutingResource($this->buildPath('nelmio_api_doc_routing'));
+            return $config;
         } elseif (in_array($environment, array('dev', 'test'))) {
             if ($bundle instanceof \Symfony\Bundle\WebProfilerBundle\WebProfilerBundle) {
                 return $config

@@ -30,9 +30,9 @@ class Installer
     /**
      * Constructor.
      *
-     * @param Validator             $validator
-     * @param Recorder              $recorder
-     * @param InstallationManager   $installer
+     * @param Validator           $validator
+     * @param Recorder            $recorder
+     * @param InstallationManager $installer
      *
      * @DI\InjectParams({
      *     "validator"      = @DI\Inject("claroline.plugin.validator"),
@@ -68,7 +68,6 @@ class Installer
     {
         $this->checkInstallationStatus($plugin, false);
         $this->validatePlugin($plugin);
-
         $this->baseInstaller->install($plugin);
         $this->log('Saving plugin configuration...');
         $this->recorder->register($plugin, $this->validator->getPluginConfiguration());
@@ -82,8 +81,6 @@ class Installer
     public function uninstall(PluginBundle $plugin)
     {
         $this->checkInstallationStatus($plugin, true);
-        $this->validatePlugin($plugin);
-
         $this->log('Removing plugin configuration...');
         $this->recorder->unregister($plugin);
         $this->baseInstaller->uninstall($plugin);
@@ -92,9 +89,9 @@ class Installer
     /**
      * Upgrades/downgrades a plugin to a specific version.
      *
-     * @param PluginBundle  $plugin
-     * @param string        $currentVersion
-     * @param string        $targetVersion
+     * @param PluginBundle $plugin
+     * @param string       $currentVersion
+     * @param string       $targetVersion
      */
     public function update(PluginBundle $plugin, $currentVersion, $targetVersion)
     {
@@ -146,4 +143,3 @@ class Installer
         }
     }
 }
-

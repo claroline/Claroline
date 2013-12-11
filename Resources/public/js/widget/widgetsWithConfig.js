@@ -16,6 +16,30 @@
     var displayedHomeTabId = $('#hometab-id-div').attr('hometab-id');
     var homeTabType = $('#hometab-type-div').attr('hometab-type-value');
 
+    function inverseBtns(current, previous)
+    {
+        var currentBtnUp = current.find('.widget-order-up').parent();
+        var currentBtnDown = current.find('.widget-order-down').parent();
+        var previousBtnUp = previous.find('.widget-order-up').parent();
+        var previousBtnDown = previous.find('.widget-order-down').parent();
+        if (previousBtnUp) {
+            current.find('.widget-instance-menu').append(previousBtnUp.wrap('<p/>').parent().html());
+        }
+        if (previousBtnDown) {
+            current.find('.widget-instance-menu').append(previousBtnDown.wrap('<p/>').parent().html());
+        }
+        if (currentBtnUp) {
+            previous.find('.widget-instance-menu').append(currentBtnUp.wrap('<p/>').parent().html());
+        }
+        if (currentBtnDown) {
+            previous.find('.widget-instance-menu').append(currentBtnDown.wrap('<p/>').parent().html());
+        }
+        currentBtnUp.remove();
+        currentBtnDown.remove();
+        previousBtnUp.remove();
+        previousBtnDown.remove();
+    }
+
     if (homeTabType === 'workspace') {
         var workspaceId = $('#workspace-id-div').attr('workspace-id');
     }
@@ -86,6 +110,7 @@
         var visible = visibilityBtn.attr('visiblility-value');
         var newVisible = (visible === 'visible') ? 'invisible' : 'visible';
         var route;
+        var translator = window.Translator;
 
         if (homeTabType === 'desktop') {
             route = Routing.generate(
@@ -108,14 +133,16 @@
             success: function () {
                 if (newVisible === 'visible') {
                     visibilityBtn.attr('visiblility-value', 'visible');
-                    visibilityBtn.removeClass('icon-eye-close');
-                    visibilityBtn.addClass('icon-eye-open');
-                    currentElement.removeClass('toggle-visible');
+                    visibilityBtn.find('i').removeClass('icon-eye-open');
+                    visibilityBtn.find('i').addClass('icon-eye-close');
+                    visibilityBtn.find('span').html(translator.get('platform:hide'));
+                    currentElement.find('.panel-title').first().removeClass('strike');
                 } else {
                     visibilityBtn.attr('visiblility-value', 'invisible');
-                    visibilityBtn.removeClass('icon-eye-open');
-                    visibilityBtn.addClass('icon-eye-close');
-                    currentElement.addClass('toggle-visible');
+                    visibilityBtn.find('i').removeClass('icon-eye-close');
+                    visibilityBtn.find('i').addClass('icon-eye-open');
+                    visibilityBtn.find('span').html(translator.get('platform:display'));
+                    currentElement.find('.panel-title').first().addClass('strike');
                 }
             }
         });
@@ -152,12 +179,8 @@
                 if (status === '-1') {
                     var previousSibling = currentElement.prev();
                     previousSibling.before(currentElement);
-                    var currentOrderBtns = currentElement.find('.widget-order-btn-group');
-                    var previousOrderBtns = previousSibling.find('.widget-order-btn-group');
-                    var currentHtml = currentOrderBtns.html();
-                    var previousHtml = previousOrderBtns.html();
-                    currentOrderBtns.html(previousHtml);
-                    previousOrderBtns.html(currentHtml);
+
+                    inverseBtns(currentElement, previousSibling);
                 }
             }
         });
@@ -194,12 +217,8 @@
                 if (status === '1') {
                     var nextSibling = currentElement.next();
                     nextSibling.after(currentElement);
-                    var currentOrderBtns = currentElement.find('.widget-order-btn-group');
-                    var nextOrderBtns = nextSibling.find('.widget-order-btn-group');
-                    var currentHtml = currentOrderBtns.html();
-                    var nextHtml = nextOrderBtns.html();
-                    currentOrderBtns.html(nextHtml);
-                    nextOrderBtns.html(currentHtml);
+
+                    inverseBtns(currentElement, nextSibling);
                 }
             }
         });

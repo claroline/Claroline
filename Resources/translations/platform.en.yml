@@ -1,7 +1,6 @@
 'Add a logo': 'Add a logo'
 'Audience/user visits': 'Audience/user visits'
 'Choose a logo': 'Choose a logo'
-'None': 'None'
 404: 'Page Not found'
 Action List: 'Action List'
 Actions per day: 'Actions per day'
@@ -10,6 +9,7 @@ Choose workspaces displayed in the widget: 'Choose workspaces displayed in the w
 Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the graph to zoom, double-click to cancel'
 Filter actions: 'Filter actions'
 Last action: '{1} Last action|[1,Inf] Last %logAmount% actions'
+None: 'None'
 Overview of all recent activities in %workspaceName% : 'Overview of all recent activities in %workspaceName%'
 Overview of recent activities in %workspaceName%: 'Overview of recent activities in %workspaceName%'
 Overview of recent activities of your workspaces: 'Overview of recent activities of your workspaces'
@@ -38,8 +38,8 @@ add_tag_to_workspace: 'Add tag to workspace'
 add_user: 'Add user'
 add_user_s_confirm_message: 'users(s) added'
 add_users: 'Add users'
-add_workspace: 'Add workspace'
 add_widget_to_home_tab: 'Add widget to Home tab'
+add_workspace: 'Add workspace'
 admin: Administrator
 admin_analytics: 'Platform analytics'
 admin_form_firstName : 'first name'
@@ -50,6 +50,7 @@ admin_form_plainPassword_second : 'Repeat your password'
 admin_form_username : 'Username'
 admin_home_tabs_configuration: 'Home tabs configuration'
 admin_logs: 'Platform logs'
+admin_third_party_application: 'Third-party applications'
 admin_workspace_tag_form_name: Name
 administration: Administration
 administrative_code: 'Administrative code'
@@ -59,6 +60,7 @@ all: All
 all_available_workspaces: 'All available workspaces'
 all_my_workspaces: 'All my workspaces'
 all_workspaces: 'All workspaces'
+already_existing_user: 'The user already exists'
 an_error_occured_message: An error occured. Please contact the administrator.
 analytics_connections: Connections
 analytics_home: Home
@@ -70,8 +72,8 @@ at_least_one_category_has_to_be_selected: 'At least one category has to be selec
 available_widgets: 'Available widgets'
 available_workspaces: 'Available workspaces'
 back: 'Back'
-badges_management: 'Badges management'
 bad_request: The request is incorrect. If you arrived at this page via an internal link, please report the problem to the platform administrator.
+badges_management: 'Badges management'
 by: by
 canCopy: 'Right to copy'
 canCreate: 'Create %type%'
@@ -92,7 +94,9 @@ category_structure: 'Category structure'
 change_view : 'Change the display'
 choose_resource_form_type: 'Resource type'
 classify_workspaces: 'Classify workspaces'
+classify_my_workspaces: 'Classify my workspaces'
 close: Close
+code: Code
 collaborator: Collaborator
 communication: Communication
 configuration: Configuration
@@ -152,8 +156,8 @@ date_range.yesterday: 'Yesterday'
 deletable: 'Deletable'
 delete: Delete
 delete_category: 'Delete category'
-delete_category_confirm_title: 'Category deletion'
 delete_category_confirm_message: 'Do you really want to delete this category ?'
+delete_category_confirm_title: 'Category deletion'
 delete_home_tab: 'Delete tab'
 desktop: Desktop
 desktop_home_tab_creation : 'Desktop Home tab creation'
@@ -163,8 +167,10 @@ desktop_tools: Desktop tools
 directory: Directory
 directory_form_name: Name
 directory_form_shareType: Sharable
+display: 'Display'
 display_options: 'Display options'
 done_on: 'done on'
+down: 'Down'
 download: Download
 downloads: Downloads
 drag_file_here: Drag the file here
@@ -172,8 +178,10 @@ drop_file: Drop the file
 edit: Edit
 editable: 'Editable'
 email_form_mail : 'Enter your email'
+email_found_at: 'The email %email% was found at lines: %lines%'
 empty_file: 'Empty file'
 enter_tag_name_message: 'Please enter a tag name'
+entries_per_day: "Entries per day"
 export: Export
 exportable: 'Exportable'
 fast_answer: 'Fast answer'
@@ -212,6 +220,7 @@ has_been_suscribed_with_role: 'has been suscribed with role'
 has_been_suscribed_with_role_group: 'has been suscribed with role'
 has_not_been_imported: 'has not been imported'
 has_not_been_imported_into_the_group: 'has not been imported into the group'
+hide: 'Hide'
 history: History
 home: Home
 home_parameters: 'Home parameters'
@@ -239,6 +248,9 @@ lastName: 'Last name'
 lastName: Last name
 last_30_days_activity: 'Activity over the last 30 days'
 last_name: 'Last name'
+left: 'Left'
+line_number: 'Line %line%:'
+line_per_page: 'Row per page'
 link: Link
 link_outdated : 'link is no more valid'
 list_groups: 'List groups'
@@ -293,9 +305,10 @@ month.September: "September"
 move: Move
 my_account: 'My account'
 my_agenda: 'My agenda'
+my_applications: "Mes applications"
 my_badges: 'My badges'
 my_contacts: 'My contacts'
-my_favourite_workspaces: 'My favourite worksapces'
+my_favourite_workspaces: 'My favourite workspaces'
 my_notes: 'My notes'
 my_portfolio: 'My portfolio'
 my_resources: 'My resources'
@@ -357,6 +370,8 @@ please_wait: 'Please wait...'
 position: Position
 private: Private
 profile_form_administrativeCode: 'Administrative code'
+profile_form_creation_plainPassword_first: Password
+profile_form_creation_plainPassword_second: Verification
 profile_form_description : 'Description'
 profile_form_firstName: 'First name'
 profile_form_lastName: 'Last name'
@@ -367,8 +382,6 @@ profile_form_phone: Phone
 profile_form_pictureFile : 'Picture profile'
 profile_form_plainPassword_first: Password
 profile_form_plainPassword_second: Verification
-profile_form_creation_plainPassword_first: Password
-profile_form_creation_plainPassword_second: Verification
 profile_form_platformRoles: Roles
 profile_form_userName: 'User name'
 profile_form_username: Username
@@ -431,6 +444,7 @@ restore : Restore
 restore_messages_confirm_message: 'restored message(s)'
 results: Results
 results_for_search_on: 'Results for search on'
+right: 'Right'
 rights: Rights
 rights_management: 'Rights Management'
 role: Role
@@ -459,8 +473,8 @@ select_workspaces_for_registration: 'Select workspaces for registration'
 selected_workspaces_for_registration: 'Selected workspaces for registration'
 selected_workspaces_will_be_put_in_it: 'Selected workspaces will be put in it'
 send_mail: 'Send a mail'
-send_mail_form_object: Object
 send_mail_form_content: Message
+send_mail_form_object: Object
 send_message: 'Send a message'
 session_id: 'Session id'
 settings: Settings
@@ -490,6 +504,7 @@ text_form_content: Content
 text_form_name: Name
 text_form_shareType: Sharable
 text_form_text: Text
+the_following_users_were_not_imported: The following users were not imported.
 the_workspace: Workspace
 this_page_requires_authentication: 'This page requires authentication. Please login.'
 to: To
@@ -511,6 +526,7 @@ top_users_workspaces_enrolled: 'Top users having access in most workspaces'
 top_users_workspaces_owners: 'Top users having the most workspaces'
 top_workspaces_connections: 'Top most visited workspaces'
 top_workspaces_resources: 'Top workspaces having the most resources'
+total: Total
 trash : Trash
 type: Type
 type_s: Type(s)
@@ -523,6 +539,7 @@ unregistered_groups: 'Unregistered groups'
 unregistered_users: 'Unregistered users'
 unwritable_file_exception: "You don't have the permission to write in the file %path%."
 unwritable_file_exception: 'The file %path% is not writable.'
+up: 'Up'
 upload: 'upload'
 upload_denied: "Permission denied"
 upload_fail: 'Upload failed'
@@ -542,6 +559,7 @@ user_form_plainPassword_second: Verification
 user_form_username: Username
 user_parameters: 'User parameters'
 username: Username
+username_found_at: 'The username %username% was found at lines: %lines%'
 users: Users
 users_connected_once: 'users connected at least once'
 users_import: 'Users import'
@@ -550,7 +568,6 @@ users_management: 'Users management'
 users_minimum_requirement_msg: 'Users validation has the following requirements: 3 chars username, 4 chars password, valid email.'
 users_registration_in_workspace: 'Users registration in workspace'
 users_visits: 'Users'' connections'
-line_per_page: 'Row per page'
 validate: Validate
 view: View
 view_category_hierarchy: 'View category hierarchy'
@@ -558,7 +575,7 @@ views: Views
 visible: Visible
 visitor: Visitor
 warning_user_impersonation: 'You are connected as %user%.'
-warning_workspace_impersonation: 'You are connected as %role% from the workspace %workspace.'
+warning_workspace_impersonation: 'You are connected as %role% from the workspace %workspace%.'
 widget: Widget
 widget_display_form_name: Name
 widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab ?'
@@ -591,14 +608,14 @@ workspace_home_tab_edition: 'Workspace Home tab edition'
 workspace_home_tabs: 'Workspace Home tabs'
 workspace_order_tool_edit_form_name: Name
 workspace_registration_confirm_title: 'Do you really want to register to this workspace ?'
-workspace_remove_from_category_confirm_title: 'Remove workspace from category'
 workspace_remove_from_category_confirm_message: 'Do you really want to remove this workspace from this category ?'
+workspace_remove_from_category_confirm_title: 'Remove workspace from category'
 workspace_resource: Resources
 workspace_role_type_form_requireDir: 'Create a directory'
 workspace_role_type_form_translationKey: Name
 workspace_tag_form_name: Name
-workspace_tag_remove_confirm_title: 'Remove category'
 workspace_tag_remove_confirm_message: 'Do you really want to remove this category ?'
+workspace_tag_remove_confirm_title: 'Remove category'
 workspace_template_form_name: Name
 workspace_tools: Tools
 workspace_unregistration_confirm_title: 'Do you really want to unregister from this workspace ?'

@@ -614,6 +614,44 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
+     * Counts the users subscribed in a platform role
+     *
+     * @return integer
+     */
+    public function countUsersByRole($role, $restrictionRoleNames)
+    {
+        $qb = $this->createQueryBuilder('user')
+            ->select('COUNT(DISTINCT user.id)')
+            ->leftJoin('user.roles', 'roles')
+            ->andWhere('roles.id = :roleId')
+            ->setParameter('roleId', $role->getId());
+        if (!empty($restrictionRoleNames)) {
+            $qb->andWhere('user.id NOT IN (:userIds)')
+                ->setParameter('userIds', $this->findUserIdsInRoles($restrictionRoleNames));
+        }
+        $query = $qb->getQuery();
+
+        return $query->getSingleScalarResult();
+    }
+
+    /**
+     * Returns user Ids that are subscribed to one of the roles given
+     * @param array $roleNames
+     * @return array
+     */
+    public function findUserIdsInRoles ($roleNames)
+    {
+        $qb = $this->createQueryBuilder('user')
+            ->select('user.id')
+            ->leftJoin('user.roles', 'roles')
+            ->andWhere('roles.name IN (:roleNames)')
+            ->setParameter('roleNames', $roleNames);
+        $query = $qb->getQuery();
+
+        return $query->getArrayResult();
+    }
+
+    /**
      * Returns the first name, last name, username and number of workspaces of
      * each user enrolled in at least one workspace.
      *
@@ -624,7 +662,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function findUsersEnrolledInMostWorkspaces($max)
     {
         $dql = "
-            SELECT CONCAT(CONCAT(u.firstName, ' '), u.lastName), u.username, COUNT(DISTINCT ws.id) AS total
+            SELECT CONCAT(CONCAT(u.firstName, ' '), u.lastName) AS name, u.username, COUNT(DISTINCT ws.id) AS total
             FROM Claroline\CoreBundle\Entity\User u, Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws
             WHERE CONCAT(CONCAT(u.id,':'), ws.id) IN
             (
@@ -854,7 +892,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function findUsersOwnersOfMostWorkspaces($max)
     {
         $dql = "
-            SELECT CONCAT(CONCAT(u.firstName,' '), u.lastName), u.username, COUNT(DISTINCT ws.id) AS total
+            SELECT CONCAT(CONCAT(u.firstName,' '), u.lastName) AS name, u.username, COUNT(DISTINCT ws.id) AS total
             FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace ws
             JOIN ws.creator u
             GROUP BY u.id

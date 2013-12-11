@@ -804,25 +804,7 @@ class AdministrationController extends Controller
             }
 
             if ($validFile) {
-                $nonImportedUsers = $this->userManager->importUsers($users);
-
-                if (count($nonImportedUsers) > 0) {
-                    foreach ($nonImportedUsers as $nonImportedUser) {
-                        $this->get('session')->getFlashBag()->add(
-                            'error',
-                            $nonImportedUser['firstName'] . ' ' .
-                            $nonImportedUser['lastName'] . ' [' .
-                            $nonImportedUser['username'] . '] ' .
-                            $this->translator->trans('has_not_been_imported', array(), 'platform')
-                        );
-                    }
-                    $this->get('session')->getFlashBag()->add(
-                        'error',
-                        $this->translator->trans('users_minimum_requirement_msg', array(), 'platform')
-                    );
-
-                    return array('form' => $form->createView());
-                }
+                $this->userManager->importUsers($users);
 
                 return $this->redirect($this->generateUrl('claro_admin_user_list'));
             }
@@ -991,7 +973,7 @@ class AdministrationController extends Controller
         $mostViewedWS = $this->analyticsManager->topWSByAction(null, 'ws_tool_read', 5);
         $mostViewedMedia = $this->analyticsManager->topMediaByAction(null, 'resource_read', 5);
         $mostDownloadedResources = $this->analyticsManager->topResourcesByAction(null, 'resource_export', 5);
-        $usersCount = $this->userManager->getNbUsers();
+        $usersCount = $this->userManager->countUsersForPlatformRoles();
 
         return array(
             'barChartData' => $lastMonthActions,
@@ -1100,8 +1082,9 @@ class AdministrationController extends Controller
      *
      * @throws \Exception
      */
-    public function analyticsTopAction($topType)
+    public function analyticsTopAction(Request $request, $topType)
     {
+
         $criteriaForm = $this->formFactory->create(
             FormFactory::TYPE_ADMIN_ANALYTICS_TOP,
             array(),
@@ -1112,7 +1095,7 @@ class AdministrationController extends Controller
             )
         );
 
-        $criteriaForm->handleRequest($this->request);
+        $criteriaForm->handleRequest($request);
 
         $range = $criteriaForm->get('range')->getData();
         $topType = $criteriaForm->get('top_type')->getData();

@@ -177,6 +177,7 @@ class WorkspaceParametersController extends Controller
 
         if ($form->isValid()) {
             $this->workspaceManager->createWorkspace($workspace);
+            $this->workspaceManager->rename($workspace, $workspace->getName());
             $displayable = $workspace->isDisplayable();
 
             if (!$displayable && $displayable !== $wsRegisteredDisplayable) {

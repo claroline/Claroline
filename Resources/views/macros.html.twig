@@ -1,4 +1,19 @@
+{% macro renderList(array) %}
+    {% import _self as self %}
+    <ul>
+    {% for element in array %}
+        {% if element is iterable %}
+             {{ self.renderList(element) }}
+        {% else %}
+        <li> {{ element }} </li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endmacro %}
+
+
 {% macro flashBox() %}
+    {% import _self as self %}
     {% set flashBag = app.session.getFlashBag() %}
     {% if flashBag|length > 0 %}
         {% set flashes =
@@ -14,11 +29,7 @@
             {% if msgs|length > 0 %}
                 <div class="alert alert-{{ category }}">
                     <a class="close" data-dismiss="alert" href="#">×</a>
-                    <ul>
-                        {% for msg in msgs %}
-                            <li>{{ msg }}</li>
-                        {% endfor %}
-                    </ul>
+                    {{ self.renderList(msgs) }}
                 </div>
             {% endif %}
         {% endfor %}
@@ -74,7 +85,7 @@
                 'href': path('claro_workspace_by_user')
             },
             {
-                'name': workspace.getName() ~ ' - ' ~  workspace.getCode(),
+                'name': workspace.getName() ~ ' (' ~  workspace.getCode() ~ ') ',
                 'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
             }
         ]

@@ -601,22 +601,6 @@ class WorkspaceManagerTest extends MockeryTestCase
         );
     }
 
-    public function testGetWorkspacesWithSelfRegistration()
-    {
-        $workspaces = array('workspaceA', 'workspaceB');
-
-        m::getConfiguration()->allowMockingNonExistentMethods(true);
-        $this->workspaceRepo->shouldReceive('findWorkspacesWithSelfRegistration')
-            ->once()
-            ->andReturn($workspaces);
-        m::getConfiguration()->allowMockingNonExistentMethods(false);
-
-        $this->assertEquals(
-            $workspaces,
-            $this->getManager()->getWorkspacesWithSelfRegistration()
-        );
-    }
-
     public function testGetDisplayableWorkspacesBySearch()
     {
         $workspaces = array('workspaceA', 'workspaceB');

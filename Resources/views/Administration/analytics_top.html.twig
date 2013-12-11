@@ -45,9 +45,9 @@
     <div class="panel-body" id="workspace-list-div">
         {% include 'ClarolineCoreBundle:Administration:analytics_navbar.html.twig'%}
         <div class="margin clearfix">
-            <form id="top_criteria" action="{{ path('claro_admin_analytics_top') }}" method="POST" class="form-horizontal">
+            <form id="top_criteria" action="{{ path('claro_admin_analytics_top') }}" method="POST">
                 {{ form_widget(form_criteria) }}
-                <div class="form-group"> <div class="col-md-9 col-md-offset-3"><input type="submit" value="{{ 'Show'|trans({}, 'platform') }}" class="btn btn-primary"/> </div></div>
+                <div class="form-group"><input type="submit" value="{{ 'Show'|trans({}, 'platform') }}" class="btn btn-primary"/></div>
             </form>
         </div>
         <div class="margin clearfix">
@@ -57,7 +57,19 @@
         </div>
     </div>
     <div class="table-responsive">
-        <table id="top_analytics_table" class="table table-condensed">
+        <table id="top_analytics_table" class="table table-condensed table-striped">
+            {% if list_data is not empty %}
+                <thead>
+                    <tr>
+                    {% for key, col in list_data[0] %}
+                        {% if key != 'id' %}
+                            <th>{{ key|trans({}, 'platform') }}</th>
+                        {% endif %}
+                    {% endfor %}
+                    </tr>
+                </thead>
+            {% endif %}
+            <tbody>
             {% for row in list_data %}
                 <tr>
                     {% for key, col in row %}
@@ -67,6 +79,7 @@
                     {% endfor %}
                 </tr>
             {% endfor %}
+            </tbody>
         </table>
     </div>
 {% endblock %}

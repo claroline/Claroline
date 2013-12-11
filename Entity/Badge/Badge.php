@@ -22,6 +22,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Claroline\CoreBundle\Form\Badge\Constraints as BadgeAssert;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 
 /**
  * Class Badge
@@ -32,6 +34,7 @@ use Claroline\CoreBundle\Form\Badge\Constraints as BadgeAssert;
  * @BadgeAssert\AutomaticWithRules
  * @BadgeAssert\HasImage
  * @BadgeAssert\AtLeastOneTranslation
+ * @ExclusionPolicy("all")
  */
 class Badge extends Rulable
 {
@@ -41,6 +44,7 @@ class Badge extends Rulable
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Expose
      */
     protected $id;
 
@@ -48,6 +52,7 @@ class Badge extends Rulable
      * @var integer
      *
      * @ORM\Column(type="smallint", nullable=false)
+     * @Expose
      */
     protected $version;
 
@@ -55,6 +60,7 @@ class Badge extends Rulable
      * @var boolean
      *
      * @ORM\Column(name="automatic_award", type="boolean", nullable=true)
+     * @Expose
      */
     protected $automaticAward;
 
@@ -62,6 +68,7 @@ class Badge extends Rulable
      * @var string
      *
      * @ORM\Column(name="image", type="string", nullable=false)
+     * @Expose
      */
     protected $imagePath;
 
@@ -69,6 +76,7 @@ class Badge extends Rulable
      * @var \DateTime
      *
      * @ORM\Column(name="expired_at", type="datetime", nullable=true)
+     * @Expose
      */
     protected $expiredAt;
 
@@ -106,6 +114,7 @@ class Badge extends Rulable
      * @var ArrayCollection|BadgeRule[]
      *
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\BadgeRule", mappedBy="badge", cascade={"persist"})
+     * @Expose
      */
     protected $badgeRules;
 
@@ -125,6 +134,7 @@ class Badge extends Rulable
      *   mappedBy="badge",
      *   cascade={"all"}
      * )
+     * @Expose
      */
     protected $translations;
 

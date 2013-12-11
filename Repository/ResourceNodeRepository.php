@@ -263,7 +263,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
     public function findMimeTypesWithMostResources($max)
     {
         $qb = $this->createQueryBuilder('resource');
-        $qb->select('resource.mimeType, COUNT(resource.id) AS total')
+        $qb->select('resource.mimeType AS type, COUNT(resource.id) AS total')
             ->where($qb->expr()->isNotNull('resource.mimeType'))
             ->groupBy('resource.mimeType')
             ->orderBy('total', 'DESC');

@@ -32,6 +32,7 @@ class AdditionalInstaller extends BaseInstaller
 
     public function preInstall()
     {
+        $this->setLocale();
         $this->createDatabaseIfNotExists();
         $this->createAclTablesIfNotExist();
         $this->buildDefaultTemplate();
@@ -39,15 +40,25 @@ class AdditionalInstaller extends BaseInstaller
 
     public function preUpdate($currentVersion, $targetVersion)
     {
+        $this->setLocale();
+
         if (version_compare($currentVersion, '2.0', '<') && version_compare($targetVersion, '2.0', '>=') ) {
             $updater020000 = new Updater\Updater020000($this->container);
             $updater020000->setLogger($this->logger);
             $updater020000->preUpdate();
         }
+
+        if (version_compare($currentVersion, '2.5.0', '<')) {
+            $updater020500 = new Updater\Updater020500($this->container);
+            $updater020500->setLogger($this->logger);
+            $updater020500->preUpdate();
+        }
     }
 
     public function postUpdate($currentVersion, $targetVersion)
     {
+        $this->setLocale();
+        
         if (version_compare($currentVersion, '2.0', '<')  && version_compare($targetVersion, '2.0', '>=') ) {
             $updater020000 = new Updater\Updater020000($this->container);
             $updater020000->setLogger($this->logger);
@@ -82,11 +93,19 @@ class AdditionalInstaller extends BaseInstaller
             $updater020304->postUpdate();
         }
 
-        if (version_compare($currentVersion, '2.3.4', '<')) {
-            $updater020305 = new Updater\Updater020305($this->container);
-            $updater020305->setLogger($this->logger);
-            $updater020305->postUpdate();
+        if (version_compare($currentVersion, '2.5.0', '<')) {
+            $updater020500 = new Updater\Updater020500($this->container);
+            $updater020500->setLogger($this->logger);
+            $updater020500->postUpdate();
         }
+    }
+
+    private function setLocale()
+    {
+        $ch = $this->container->get('claroline.config.platform_config_handler');
+        $locale = $ch->getParameter('locale_language');
+        $translator = $this->container->get('translator');
+        $translator->setLocale($locale);
     }
 
     private function createDatabaseIfNotExists()

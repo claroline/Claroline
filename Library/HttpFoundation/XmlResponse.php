@@ -61,7 +61,7 @@ class XmlResponse extends Response
     private function buildXml($data, \DOMDocument $doc, \DOMNode $parentNode = null)
     {
         if (is_array($data)) {
-            foreach($data as $elementName => $element) {
+            foreach ($data as $elementName => $element) {
                 if (is_int($elementName)) {
                     $elementName = 'item';
                 }
