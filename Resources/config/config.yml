@@ -15,5 +15,5 @@ plugin:
         - name: moderate
 
   widgets:
-     - name: claroline_forum_lastmessage
-       is_configurable: true
+     - name: claroline_forum_widget
+       is_configurable: false
