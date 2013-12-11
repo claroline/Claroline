@@ -38,7 +38,7 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
 
     // Make the choices' table sortable with jquery ui plugin
     //$('tbody').sortable();
-     
+
     // Return a helper with preserved width of cells
     var fixHelper = function(e, ui) {
         ui.children().each(function() {
@@ -50,15 +50,11 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
     $('tbody').sortable({
         helper: fixHelper,
         cancel: 'contenteditable',
-        start: function (e, ui){
-            $(this).find('.claroline-tiny-mce').each(function () {
-                tinyMCE.execCommand( 'mceRemoveControl', false, $(this).attr('id') );
-            });
-        },
-        stop: function (e,ui) {
-            $(this).find('.claroline-tiny-mce').each(function () {
-                tinyMCE.execCommand( 'mceAddControl', true, $(this).attr('id') );
-                $(this).sortable("refresh");
+        stop: function (event, ui) {
+            $(ui.item).find('.claroline-tiny-mce').each(function () {
+                tinyMCE.get($(this).attr('id')).remove();
+                $(this).removeClass('tiny-mce-done');
+                $('body').trigger('DOMSubtreeModified');
             });
         }
     });
@@ -114,7 +110,7 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
 
     // Make the choices' table sortable with jquery ui plugin
     //$('tbody').sortable();
-    
+
     // Return a helper with preserved width of cells
     var fixHelper = function(e, ui) {
         ui.children().each(function() {
@@ -126,15 +122,11 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
     $('tbody').sortable({
         helper: fixHelper,
         cancel: 'contenteditable',
-        start: function (e, ui){
-            $(this).find('.claroline-tiny-mce').each(function () {
-                tinyMCE.execCommand( 'mceRemoveControl', false, $(this).attr('id') );
-            });
-        },
-        stop: function (e,ui) {
-            $(this).find('.claroline-tiny-mce').each(function () {
-                tinyMCE.execCommand( 'mceAddControl', true, $(this).attr('id') );
-                $(this).sortable("refresh");
+        stop: function (event, ui) {
+            $(ui.item).find('.claroline-tiny-mce').each(function () {
+                tinyMCE.get($(this).attr('id')).remove();
+                $(this).removeClass('tiny-mce-done');
+                $('body').trigger('DOMSubtreeModified');
             });
         }
     });
