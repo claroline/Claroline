@@ -11,41 +11,40 @@
 
 namespace Claroline\CoreBundle\Rule\Constraints;
 
-use Claroline\CoreBundle\Rule\Entity\Rule;
+use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\Log\Log;
-use Claroline\CoreBundle\Rule\Rulable;
+use Claroline\CoreBundle\Rule\Entity\Rule;
 use Doctrine\ORM\QueryBuilder;
 
-class OccurenceConstraint extends AbstractConstraint
+class ResourceConstraint extends AbstractConstraint
 {
     /**
      * @return bool
      */
     public function validate()
     {
-        $isValid               = false;
-        $countedAssociatedLogs = count($this->getAssociatedLogs());
-
-        if (0 < $countedAssociatedLogs && $countedAssociatedLogs >= $this->getRule()->getOccurrence()) {
-            $isValid = true;
-        }
-
-        return $isValid;
+        return true;
     }
 
     /**
-     * {@inheritdoc}
+     * @param Rule $rule
+     *
+     * @return bool
      */
     public function isApplicableTo(Rule $rule)
     {
-        return null !== $rule->getOccurrence();
+        return (null !== $rule->getResource());
     }
 
     /**
-     * {@inheritdoc}
+     * @param QueryBuilder $queryBuilder
+     *
+     * @return QueryBuilder
      */
     public function getQuery(QueryBuilder $queryBuilder)
     {
-        return $queryBuilder->setMaxResults($this->getRule()->getOccurrence());
+        return $queryBuilder
+                ->andWhere('l.resourceNode = :resourceNode')
+                ->setParameter('resourceNode', $this->getRule()->getResource());
     }
 }

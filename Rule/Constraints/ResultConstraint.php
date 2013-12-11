@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Rule\Constraints;
 
 use Claroline\CoreBundle\Rule\Entity\Rule;
 use Claroline\CoreBundle\Entity\Log\Log;
+use Doctrine\ORM\QueryBuilder;
 
 class ResultConstraint extends AbstractConstraint
 {
@@ -37,5 +38,21 @@ class ResultConstraint extends AbstractConstraint
         }
 
         return $isValid;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isApplicableTo(Rule $rule)
+    {
+        return (null !== $rule->getResult());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getQuery(QueryBuilder $queryBuilder)
+    {
+        return $queryBuilder;
     }
 }

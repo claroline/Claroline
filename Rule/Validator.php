@@ -53,15 +53,22 @@ class Validator
         return $this->validateRules($rulable->getRules(), $user, $rulable->getRestriction());
     }
 
-    protected function validateRules($rules, User $user, array $restriction)
+    /**
+     * @param \Claroline\CoreBundle\Rule\Entity\Rule[]  $rules
+     * @param User  $user
+     * @param array $restriction
+     *
+     * @return array|bool
+     */
+    protected function validateRules(array $rules, User $user, array $restriction)
     {
         $return    = array();
         $isChecked = true;
 
         if (0 < count($rules)) {
             foreach ($rules as $rule) {
-
-                $checkedLogs = $this->validateRule($rule, $user, $restriction);
+                $rule->setUser($user);
+                $checkedLogs = $this->validateRule($rule, $restriction);
 
                 if (false === $checkedLogs) {
                     $isChecked = false;
@@ -82,33 +89,66 @@ class Validator
 
     /**
      * @param \Claroline\CoreBundle\Rule\Entity\Rule $rule
-     * @param \Claroline\CoreBundle\Entity\User      $user
-     * @param array                                  $restriction
+     * @param array                                  $restrictions
      *
      * @return bool|Log[]
      */
-    public function validateRule(Rule $rule, User $user, array $restriction = array())
+    public function validateRule(Rule $rule, array $restrictions = array())
     {
-        /** @var \Claroline\CoreBundle\Entity\Log\Log[] $associatedLogs */
-        $associatedLogs      = $queryBuilder = $this->logRepository->findByRuleAndUser($rule, $user, $restriction);
-        $isValid             = true;
-        $constraints         = array();
-        $occurenceConstraint = new OccurenceConstraint($rule, $associatedLogs);
+        $isValid            = true;
+        /** @var \Claroline\CoreBundle\Rule\Constraints\AbstractConstraint[] $constraints */
+        $constraints        = array();
+        /** @var \Claroline\CoreBundle\Rule\Constraints\AbstractConstraint[] $existedConstraints */
+        $existedConstraints = array(
+            new OccurenceConstraint(),
+            new ResultConstraint(),
+            new ResourceConstraint()
+        );
 
-        if ($occurenceConstraint->validate()) {
-            $ruleResult = $rule->getResult();
-            if (null !== $ruleResult) {
-                $constraints[] = new ResultConstraint($rule, $associatedLogs);
-            }
-
-            foreach ($constraints as $constraint) {
-                $isValid = $isValid && $constraint->validate();
+        foreach ($existedConstraints as $existedConstraint) {
+            if ($existedConstraint->isApplicableTo($rule)) {
+                $constraints[] = $existedConstraint;
             }
         }
-        else {
-            $isValid = false;
+
+        $queryBuilder = $this->buildQuery($constraints, $restrictions);
+
+        /** @var \Claroline\CoreBundle\Entity\Log\Log[] $associatedLogs */
+        $associatedLogs = $queryBuilder->getQuery()->getResult();
+
+        foreach ($constraints as $constraint) {
+            $constraint
+                ->setRule($rule)
+                ->setAssociatedLogs($associatedLogs);
+
+            $isValid = $isValid && $constraint->validate();
         }
 
         return ($isValid) ? $associatedLogs : $isValid;
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Rule\Constraints\AbstractConstraint[] $constraints
+     *
+     * @param array                                                       $restrictions
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    protected function buildQuery(array $constraints, array $restrictions = null)
+    {
+        /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
+        $queryBuilder = $queryBuilder = $this->logRepository->defaultQueryBuilderForBadge();
+
+        foreach ($restrictions as $key => $restriction) {
+            $queryBuilder
+                ->andWhere(sprintf("l.%s = :%s", $key, $key))
+                ->setParameter($key, $restriction);
+        }
+
+        foreach ($constraints as $constraint) {
+            $queryBuilder = $constraint->getQuery($queryBuilder);
+        }
+
+        return $queryBuilder;
     }
 }

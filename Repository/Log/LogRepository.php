@@ -549,4 +549,12 @@ class LogRepository extends EntityRepository
 
         return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder;
     }
+
+    /**
+     * @return QueryBuilder
+     */
+    public function defaultQueryBuilderForBadge()
+    {
+        return $this->createQueryBuilder('l')->orderBy('l.dateLog');
+    }
 }

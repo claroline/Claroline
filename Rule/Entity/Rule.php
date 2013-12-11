@@ -83,6 +83,11 @@ abstract class Rule
     protected $resource;
 
     /**
+     * @var \Claroline\CoreBundle\Entity\User
+     */
+    protected $user;
+
+    /**
      * @return int
      */
     public function getId()
@@ -200,5 +205,29 @@ abstract class Rule
     public function getResource()
     {
         return $this->resource;
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @return Rule
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @throws \RuntimeException
+     * @return \Claroline\CoreBundle\Entity\User
+     */
+    public function getUser()
+    {
+        if (null === $this->user) {
+            throw new \RuntimeException("No user given to the rule. Rule inevitably apply to a user, neither it's a doer or a receiver.");
+        }
+        return $this->user;
     }
 }
