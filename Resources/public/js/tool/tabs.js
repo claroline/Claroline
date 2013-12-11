@@ -22,7 +22,7 @@
             url: url,
             type: 'GET',
             success: function (data) {
-                $('#hometab-modal-title').html(translator.get('platform' + ':' + title));
+                $('#hometab-modal-title').html(translator.get('platform:' + title));
                 $('#hometab-modal-body').html(data);
                 $('#hometab-modal-box').modal('show');
             }
@@ -121,14 +121,18 @@
             type: 'POST',
             success: function () {
                 if (newVisible === 'visible') {
-                    $('.hometab-link .hometab-visibility-btn', tabs.currentElement.get(0)).html(' ' + translator.get('platform:hide'));
+                    $('.hometab-link .hometab-visibility-btn', tabs.currentElement.get(0)).html(
+                        ' ' + translator.get('platform:hide')
+                    );
                     $('.hometab-link', tabs.currentElement.get(0)).removeClass('strike');
                     visibilityBtn.attr('visiblility-value', 'visible');
                     visibilityBtn.removeClass('icon-eye-open');
                     visibilityBtn.addClass('icon-eye-close');
                     tabs.currentElement.removeClass('toggle-visible');
                 } else {
-                    $('.hometab-link .hometab-visibility-btn', tabs.currentElement.get(0)).html(' ' + translator.get('platform:display'));
+                    $('.hometab-link .hometab-visibility-btn', tabs.currentElement.get(0)).html(
+                        ' ' + translator.get('platform:display')
+                    );
                     $('.hometab-link', tabs.currentElement.get(0)).addClass('strike');
                     visibilityBtn.attr('visiblility-value', 'invisible');
                     visibilityBtn.removeClass('icon-eye-close');

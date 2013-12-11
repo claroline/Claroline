@@ -43,7 +43,6 @@ add_widget_to_home_tab: 'Ajouter un widget à l''onglet'
 add_workspace: 'Ajouter un espace d''activités'
 admin: Administrateur
 admin_analytics: 'Statistiques plateforme'
-admin_third_party_application: 'Applications tierces'
 admin_form_firstName : 'Prénom'
 admin_form_lastName : 'Nom de famille'
 admin_form_mail : 'Adresse email'
@@ -52,6 +51,7 @@ admin_form_plainPassword_second : 'Répétez votre mot de passe'
 admin_form_username : 'Nom d''utilisateur'
 admin_home_tabs_configuration: 'Configuration des onglets pour les pages d''accueil'
 admin_logs: 'Suivi plateforme'
+admin_third_party_application: 'Applications tierces'
 admin_workspace_tag_form_name: Nom
 administration: Administration
 administrative_code: 'Code administratif'
@@ -73,8 +73,8 @@ at_least_one_category_has_to_be_selected: 'Au moins une catégorie doit être se
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espaces d''activités disponibles'
 back: 'Retour'
-badges_management: 'Gestion des badges'
 bad_request: La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l''administrateur de la plateforme.
+badges_management: 'Gestion des badges'
 by: par
 canCopy: 'Droit de copier'
 canCreate: 'Creation de %type%'
@@ -170,6 +170,7 @@ directory_form_shareType: Redistribution
 display: 'Afficher'
 display_options: 'Options d''affichage'
 done_on: 'effectuée sur'
+down: 'Descendre'
 download: Télécharger
 downloads: 'Nb tchgr.'
 drag_file_here: Déplacez le fichier ici
@@ -246,9 +247,9 @@ lastName: Nom
 last_30_days_activity: 'Activités des 30 derniers jours'
 last_name: Nom
 left: 'Gauche'
+line_number: 'Ligne %line%:'
 line_per_page: 'Lignes par page'
 link: Lien
-line_number: 'Ligne %line%:'
 link_outdated : 'le lien n''est plus valide'
 list_groups: 'Lister les groupes'
 list_users: 'Lister les utilisateurs'
@@ -302,8 +303,8 @@ month.September: "Septembre"
 move: Déplacer
 my_account: 'Mon compte'
 my_agenda: 'Mon agenda'
-my_badges: 'Mes badges'
 my_applications: "Mes applications"
+my_badges: 'Mes badges'
 my_contacts: 'Mes contacts'
 my_favourite_workspaces: 'Mes espaces d''activités favoris'
 my_notes: 'Mes notes'
@@ -408,8 +409,8 @@ rename_tool: 'Renommage d''un outil'
 rename_widget_instance: 'Renommage du Widget'
 reset: Réinitialiser
 reset_password: 'Réinitialiser mot de passe'
-reset_password_txt: 'Vous avez demandé la réinitiation de votre mot de passe. Si vous n''êtes pas l''origine de ce message, veuillez l''ignorer.'
 reset_password_message: 'Etes vous sur de vouloir réinitialiser le mot de passe ?'
+reset_password_txt: 'Vous avez demandé la réinitiation de votre mot de passe. Si vous n''êtes pas l''origine de ce message, veuillez l''ignorer.'
 reset_pwd: 'Réinitialisation de votre mot de passe'
 reset_pwd_form_plainPassword_first: 'Nouveau mot de passe'
 reset_pwd_form_plainPassword_second : 'Répétez le mot de passe'
@@ -498,8 +499,8 @@ text_form_content: Contenu
 text_form_name: Nom
 text_form_shareType: Redistribution
 text_form_text: Texte
-the_workspace: 'L''espace d''activités'
 the_following_users_were_not_imported: 'Les utilisateurs suivant n''ont pas pu être importés:'
+the_workspace: 'L''espace d''activités'
 this_page_requires_authentication: 'Cette page requiert une authentification. Veuillez vous identifier.'
 to: Jusque
 to_message: A
@@ -532,6 +533,7 @@ unregistered: 'Non inscrit'
 unregistered_groups: 'Groupes non enregistrés'
 unregistered_users: 'Utilisateurs non enregistrés'
 unwritable_file_exception: "Vous n'avez pas la permission d'écrire dans le fichier %path%."
+up: 'Monter'
 upload: 'Téléchargement'
 upload_denied: "Vous n'avez pas la permission de créer une ressource à cet endroit"
 upload_fail: 'Echec du téléchargement'
