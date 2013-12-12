@@ -45,22 +45,22 @@ class MessageRepository extends EntityRepository
     public function findNLastByForum(array $workspaces, array $roles, $n)
     {
         $dql = "SELECT m FROM Claroline\ForumBundle\Entity\Message m
-				JOIN m.subject s
-				JOIN s.forum as f
-				JOIN f.resourceNode n
-				JOIN n.workspace w
-				JOIN n.rights r
-				JOIN r.role rr
-				WHERE w IN (:workspaces)
-				AND rr.name in (:roles)
+                JOIN m.subject s
+                JOIN s.forum as f
+                JOIN f.resourceNode n
+                JOIN n.workspace w
+                JOIN n.rights r
+                JOIN r.role rr
+                WHERE w IN (:workspaces)
+                AND rr.name in (:roles)
                 ORDER BY m.creationDate DESC
-				";
- 		$query = $this->_em->createQuery($dql);
+                ";
+        $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaces', $workspaces);
         $query->setParameter('roles', $roles);
-		$query->setFirstResult(0)->setMaxResults($n);
+        $query->setFirstResult(0)->setMaxResults($n);
 
-		$paginator = new Paginator($query, $fetchJoinCollection = true);
+        $paginator = new Paginator($query, $fetchJoinCollection = true);
 
         return $paginator;
     }

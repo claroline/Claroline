@@ -600,7 +600,7 @@ class ForumController extends Controller
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
-     * @EXT\Template("ClarolineForumBundle::forumsWorkspaceWidget.html.twig")
+     * @EXT\Template()
      *
      * Renders last messages from the forums' workspace
      *
@@ -611,14 +611,14 @@ class ForumController extends Controller
         $sc = $this->get('security.context');
         $user = $sc->getToken()->getUser();
         $utils = $this->get('claroline.security.utilities');
-		$token = $sc->getToken($user);
+        $token = $sc->getToken($user);
         $roles = $utils->getRoles($token);
 
-		$workspaces = array();
-		$workspaces[] = $workspace;
+        $workspaces = array();
+        $workspaces[] = $workspace;
         $em = $this->getDoctrine()->getManager();
-		// Get the 3 last messages from all forums from the workspace
-		$messages = $em->getRepository('ClarolineForumBundle:Message')
+        // Get the 3 last messages from all forums from the workspace
+        $messages = $em->getRepository('ClarolineForumBundle:Message')
                 ->findNLastByForum($workspaces, $roles,3);
 
         return array('widgetType' => 'workspace', 'messages' => $messages);
@@ -632,7 +632,7 @@ class ForumController extends Controller
      * )
      * @EXT\Method("GET")
      *
-     * @EXT\Template("ClarolineForumBundle::forumsDesktopWidget.html.twig")
+     * @EXT\Template()
      *
      * Renders last messages from the forums' workspaces
      *
@@ -640,19 +640,19 @@ class ForumController extends Controller
      */
     public function forumsDesktopWidgetAction()
     {
-		$sc = $this->get('security.context');
+        $sc = $this->get('security.context');
         $user = $sc->getToken()->getUser();
         $utils = $this->get('claroline.security.utilities');
-		$token = $sc->getToken();
+        $token = $sc->getToken();
         $roles = $utils->getRoles($token);
 
-		// Get user workspaces  
-		$manager = $this->get('claroline.manager.workspace_manager');
-		$workspaces = $manager->getWorkspacesByUser($user);
+        // Get user workspaces  
+        $manager = $this->get('claroline.manager.workspace_manager');
+        $workspaces = $manager->getWorkspacesByUser($user);
         $em = $this->getDoctrine()->getManager();
 
-		// Get the 3 last messages from all forums from the workspaces
-		$messages = $em->getRepository('ClarolineForumBundle:Message')
+        // Get the 3 last messages from all forums from the workspaces
+        $messages = $em->getRepository('ClarolineForumBundle:Message')
                 ->findNLastByForum($workspaces, $roles,3);
 
         return array('widgetType' => 'desktop', 'messages' => $messages);
