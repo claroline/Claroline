@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Widget\Widget;
 
 class Updater020500
 {
@@ -56,6 +57,17 @@ class Updater020500
             $em->persist($workspace);
             $em->flush();
         }
+
+        $this->log('Adding agenda widget...');
+        $widget = new Widget();
+        $widget->setName('agenda');
+        $widget->setConfigurable(false);
+        $widget->setIcon('fake/icon/path');
+        $widget->setPlugin(null);
+        $widget->setExportable(false);
+        $widget->setDisplayableInDesktop(true);
+        $widget->setDisplayableInWorkspace(true);
+        $em->persist($widget);
 
     }
 

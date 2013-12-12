@@ -14,7 +14,7 @@ end : "end"
 event_update : 'Updated'
 error: "An unexpeded error occured, please try again"
 new entry : "new entry"
-start date : "start datet"
+start date : "start date"
 non plan task : "non plan tasks"
 tasks: 'Tasks'
 title : "title"
