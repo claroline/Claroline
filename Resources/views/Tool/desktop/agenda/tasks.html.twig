@@ -5,7 +5,9 @@
             <ul>
                 <li> {{ e.start|date("d-m-Y h:i")}} </li>
                 <li> {{ e.end|date("d-m-Y h:i") }} </li>
-                <li> {{ e.description|raw }}</li>
+                {% if e.description is not empty %}
+                    <li>{{ e.description |raw }}</li>
+                {% endif %}
                 <li class="hidden"> {{e.allDay}}</li>
                 <li class="hidden"> {{e.priority}}</li>
                 <li class="hidden"> {{e.id}}</li>

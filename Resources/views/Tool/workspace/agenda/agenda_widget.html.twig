@@ -4,9 +4,9 @@
        <h5 style="color:{{ e.priority }}"> {{ e.title }}</h5>
        <ul>
             <li> {{ e.start|date("d/m/Y")}}  -> {{ e.end|date("d/m/Y") }} </li>
-           {% if e.description is not empty %}
-               <li>{{ e.description |raw }}</li>
-           {% endif %}
+               {% if e.description is not empty %}
+                   <li>{{ e.description |raw }}</li>
+               {% endif %}
             <li class="hidden"> {{e.priority}}</li>
         </ul>
     </div>
