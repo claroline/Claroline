@@ -298,8 +298,6 @@ class PathManager
         $stepsToNotDelete = array();
         $excludedResourcesToResourceNodes = array();
 
-        //todo - lister les liens resources2step pour supprimer ceux inutilisés.
-
         // JSON string to Object - Récupération des childrens de la racine
         $json = json_decode($path->getPath());
         $json_root_steps = $json->steps;
@@ -308,25 +306,12 @@ class PathManager
         $workspaceId = $this->request->get('workspaceId');
         $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($workspaceId);
 
-        // Try to retrieve path directory
-        $pathsDirectory = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneByName("_paths");
-        if (!$pathsDirectory) {
-            // Create path directory
-            $pathsDirectory = $this->createDirectory($workspace);
-        }
-
         // lancement récursion
-        $this->JSONParser($json_root_steps, $this->user, $workspace, $pathsDirectory, 0, null, 0, $path, $stepsToNotDelete, $excludedResourcesToResourceNodes);
+        $this->JSONParser($json_root_steps, $this->user, $workspace, $path->getResourceNode()->getParent(), 0, null, 0, $path, $stepsToNotDelete, $excludedResourcesToResourceNodes);
 
         // On nettoie la base des steps qui n'ont pas été réutilisé et les step2resourceNode associés
         foreach ($steps as $step) {
            if (!in_array($step->getId(),$stepsToNotDelete)) {
-                /*
-                $step2ressourceNodes = $this->em->getRepository('InnovaPathBundle:Step2ResourceNode')->findByStep($step->getId());
-                foreach ($step2ressourceNodes as $step2ressourceNode) {
-                    $this->em->remove($step2ressourceNode);
-                }
-                */
                 $this->em->remove($step);
             }
         }
@@ -367,9 +352,6 @@ class PathManager
             } else {
                 $currentStep = $this->em->getRepository('InnovaPathBundle:Step')->findOneById($step->resourceId);
             }
-           
-            // JSON_STEP UPDATE
-            $step->resourceId = $currentStep->getId();
 
             // STEPSTONODELETE ARRAY UPDATE
             $stepsToNotDelete[] = $currentStep->getId();
@@ -395,6 +377,10 @@ class PathManager
             $currentStep->setImage($step->image);
 
             $this->em->persist($currentStep);
+            $this->em->flush();
+
+            // JSON_STEP UPDATE
+            $step->resourceId = $currentStep->getId();
 
             // STEP'S RESOURCES MANAGEMENT
             $currentStep2resourceNodes = $currentStep->getStep2ResourceNodes();
@@ -409,20 +395,20 @@ class PathManager
                     if ($resource->resourceId == null){
                         $resourceNode = new ResourceNode();
                         $nonDigitalResource = new NonDigitalResource();
+                        $resourceNode->setClass("Innova\PathBundle\Entity\NonDigitalResource");
+                        $resourceNode->setCreator($user);
+                        $resourceNode->setResourceType($this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("non_digital_resource"));
+                        $resourceNode->setWorkspace($workspace);
+                        $resourceNode->setParent($pathsDirectory);
+                        $resourceNode->setMimeType("");
+                        $resourceNode->setIcon($this->em->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(3));
                     }
                     else {
                         $resourceNode = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId);
                         $nonDigitalResource = $this->em->getRepository('InnovaPathBundle:NonDigitalResource')->findOneByResourceNode($resourceNode);
                     }
 
-                    $resourceNode->setClass("Innova\PathBundle\Entity\NonDigitalResource");
-                    $resourceNode->setCreator($user);
-                    $resourceNode->setResourceType($this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("non_digital_resource"));
-                    $resourceNode->setWorkspace($workspace);
-                    $resourceNode->setParent($pathsDirectory);
-                    $resourceNode->setMimeType("");
                     $resourceNode->setName($resource->name);
-                    $resourceNode->setIcon($this->em->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(3));
                     $this->em->persist($resourceNode);
                     $nonDigitalResource->setNonDigitalResourceType($this->em->getRepository('InnovaPathBundle:NonDigitalResourceType')->findOneByName($resource->subType));
                     $nonDigitalResource->setResourceNode($resourceNode);
