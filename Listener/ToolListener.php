@@ -6,7 +6,11 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
+
+use Innova\PathBundle\Entity\Path;
 
 class ToolListener extends ContainerAware
 {
@@ -34,5 +38,58 @@ class ToolListener extends ContainerAware
 	        );
 	    $event->setResponse(new RedirectResponse($route));
 	    $event->stopPropagation();
+    }
+
+
+    public function onPathCreate(CreateResourceEvent $event)
+    {
+    	// Create form
+        $form = $this->container->get('form.factory')->create('path', new Path());
+        
+		// Try to prcess form
+		$request = $this->container->get('request');
+		$form->handleRequest($request);
+
+		if ($form->isValid()) {
+			$path = $form->getData();
+
+			$properties = array (
+				'name' => $path->getName(),
+				'description' => $path->getDescription(),
+			);
+
+			$path->setPath(json_encode($properties));
+			$event->setResources(array ($path));
+		}
+		else {
+			$content = $this->container->get('templating')->render(
+	            'ClarolineCoreBundle:Resource:createForm.html.twig',
+	            array(
+	                'form' => $form->createView(),
+	                'resourceType' => 'path'
+	            )
+	        );
+
+			$event->setErrorFormContent($content);
+		}
+        
+        $event->stopPropagation();
+    }
+
+    public function onPathCreateForm(CreateFormResourceEvent $event)
+    {
+        // Create form
+        $form = $this->container->get('form.factory')->create('path', new Path());
+        
+		$content = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            array(
+                'form' => $form->createView(),
+                'resourceType' => 'path'
+            )
+        );
+
+		$event->setResponseContent($content);
+        $event->stopPropagation();
     }
 }

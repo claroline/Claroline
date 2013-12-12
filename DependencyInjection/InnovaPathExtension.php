@@ -32,6 +32,7 @@ class InnovaPathExtension extends Extension
         $loader->load('listeners.yml');
         $loader->load('managers.yml');
         $loader->load('controllers.yml');
+        $loader->load('forms.yml');
     
         return $this;
     }

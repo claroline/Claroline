@@ -6,3 +6,6 @@ parameters:
     innova.controller.path_player.class:   Innova\PathBundle\Controller\PlayerController
     
     # Managers
+
+    # Form types
+    innova_path.form.type.path.class: Innova\PathBundle\Form\Type\PathType
