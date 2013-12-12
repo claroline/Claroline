@@ -46,6 +46,7 @@
     border-bottom: 18px solid rgba(0, 0, 0, 0);
     border-left-width: 18px;
     border-left-style: solid;
+    color:transparent;
 }
 
 .path-player .breadcrumbs ul > .lvl-0 > a {
@@ -86,10 +87,6 @@
 
 .path-player .breadcrumbs ul > .lvl-8 > a:after {
     border-left-color: #91deea;
-}
-
-.path-player #hop-on-my-thumb{
-    margin-bottom:10px;
 }
 
 .path-player .breadcrumbs ul.dropdown-menu li{

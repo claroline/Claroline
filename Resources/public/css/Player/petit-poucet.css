@@ -1,0 +1,11 @@
+.path-player .petit-poucet .lvl-indicator{
+	width:10px;
+	height:10px;
+	display:inline-block;
+	border-radius:50%;
+	margin-right:5px;
+}
+
+.path-player .petit-poucet .panel{
+	width:100%;
+}
