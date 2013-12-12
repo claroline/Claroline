@@ -21,11 +21,11 @@
 
     <div class="content row">
         <div class="col-md-3">
-            <div class="petit-poucet">
-                {{ render(controller('innova.controller.path_player:displayPetitPoucetAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
-            </div>
             <div class="resources">
                 {{ render(controller('innova.controller.path_player:displayResourcesAction', { 'currentStep': currentStep } )) }}
+            </div>
+            <div class="petit-poucet">
+                {{ render(controller('innova.controller.path_player:displayPetitPoucetAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
             </div>
         </div>
         

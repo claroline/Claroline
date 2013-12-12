@@ -22,7 +22,7 @@
 {% macro displayResource(resource, step) %}
 	{% import _self as resourcesMacro %}
 	<li class="list-group-item"> 
-		<span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} resource-owner">&nbsp;</span>
+		<span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} lvl-indicator">&nbsp;</span>
 		{# Cas des ressources non digitales -> modale #}
 		{% if resource.resourceNode.resourceType.name == "non_digital_resource" %}
 			<a href="#" data-toggle="modal" data-target="#resource-{{ resource.id }}">{{ resource.resourceNode.name }}</a>
