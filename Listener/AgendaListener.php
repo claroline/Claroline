@@ -74,9 +74,8 @@ class AgendaListener
         $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr , 5);
 
         return $this->templating->render(
-            'ClarolineCoreBundle:Tool/workspace/agenda:agenda_widget.html.twig',
+            'ClarolineCoreBundle:Widget:agenda_widget.html.twig',
             array(
-                'workspace' => $workspaceId,
                 'listEvents' => $owners,
             )
         );
@@ -90,7 +89,7 @@ class AgendaListener
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
 
         return $this->templating->render(
-            'ClarolineCoreBundle:Tool/workspace/agenda:agenda_widget.html.twig',
+            'ClarolineCoreBundle:Widget:agenda_widget.html.twig',
             array(
                 'listEvents' => array_merge($listEvents, $listEventsDesktop),
             )
