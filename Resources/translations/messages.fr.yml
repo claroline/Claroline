@@ -153,6 +153,8 @@ histoMarks: Histogramme des notes
 histoMeasureOfDifficulty: Histogramme de l'indice de difficulté
 histoSuccess: Histogramme de réussite
 hole: Blancs
+hole creation: Création d'une question à trous
+hole edition: Edition d'une question à trous
 
 # I
 infiny: Infini

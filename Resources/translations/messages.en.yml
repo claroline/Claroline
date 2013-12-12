@@ -153,6 +153,8 @@ histoMarks: Marks' histogram
 histoMeasureOfDifficulty: Histogram of the measure of the difficulty
 histoSuccess: Success' histogram
 hole: Hole
+hole creation: Creation of a question with holes
+hole edition: Edition of a question with holes
 
 # I
 infiny: Indefinite
