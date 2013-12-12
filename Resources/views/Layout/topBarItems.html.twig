@@ -39,7 +39,7 @@
     {% block rightSide %}
         {% import _self as topbar %}
         {% if isInAWorkspace %}
-            {% set workspacesName = currentWorkspace.getName()|length > 16 ? currentWorkspace.getName()|slice(0, 16) ~ '...' : currentWorkspace.getName() %}
+            {% set workspacesName = currentWorkspace.getName() | length > 16 ? currentWorkspace.getName() | slice(0, 16) ~ '...' : currentWorkspace.getName() %}
         {% else %}
             {% set workspacesName =  'workspaces' %}
         {% endif %}
@@ -57,7 +57,8 @@
 
     {% block logged %}
         {% import _self as topbar %}
-        {{ topbar.item(username, null, 'user', '/profile', null, block('dropdownLogged')) }}
+        {% set user = username | length > 16 ? username | slice(0, 16) ~ '...' : username %}
+        {{ topbar.item(user, null, 'user', '/profile', null, block('dropdownLogged')) }}
     {% endblock logged %}
 
     {% block dropdownWorkspace %}

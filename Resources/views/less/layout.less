@@ -94,7 +94,9 @@ body:not(.mce-content-body) video {
             }
 
             &.disabled{
-                width: @screen-lg;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
                 //height: (@navbar-height + 4);
                 border-bottom: 4px solid @gray-light !important;
                 //padding: 15px 0 0  40px !important;
