@@ -91,8 +91,16 @@
     function tinymceInit()
     {
         $('textarea.claroline-tiny-mce:not(.tiny-mce-done)').each(function () {
-            $(this).tinymce(configTinyMCE);
-            $(this).addClass('tiny-mce-done');
+            var element = this;
+
+            $(element).tinymce(configTinyMCE);
+            $(element).on('remove', function () {
+                var editor = tinymce.get($(element).attr('id'));
+                if (editor) {
+                    editor.destroy();
+                }
+            });
+            $(element).addClass('tiny-mce-done');
         });
     }
 

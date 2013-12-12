@@ -29,10 +29,7 @@
 {% block leftbar %}
     {% if not is_path_mode %}
         <div class="list-group menu">
-            <div class="list-group-item disabled">
-               {{ 'desktop'|trans({}, 'platform') }}
-            </div>
-
+            <div class="list-group-item disabled">{{ 'desktop'|trans({}, 'platform') }}</div>
             {% render controller("ClarolineCoreBundle:Desktop:renderToolList") %}
         </div>
     {% endif %}
