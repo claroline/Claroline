@@ -1260,6 +1260,7 @@ class ResourceManager
         $newNode->setNext(null);
         $newNode->setIcon($node->getIcon());
         $newNode->setClass($node->getClass());
+        $newNode->setMimeType($node->getMimeType());
         $this->rightsManager->copy($node, $newNode);
         $this->om->persist($newNode);
 
