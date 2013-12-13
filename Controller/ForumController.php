@@ -23,6 +23,7 @@ use Claroline\ForumBundle\Form\ForumOptionsType;
 use Claroline\ForumBundle\Event\Log\EditMessageEvent;
 use Claroline\ForumBundle\Event\Log\EditSubjectEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -757,5 +758,76 @@ class ForumController extends Controller
         $this->get('event_dispatcher')->dispatch('log', $event);
 
         return $this;
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/forums/workspace/{workspaceId}",
+     *     name="claro_workspace_forums",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     *
+     * @EXT\Template()
+     *
+     * Renders last messages from the forums' workspace
+     *
+     * @return Response
+     */
+    public function forumsWorkspaceWidgetAction(AbstractWorkspace $workspace)
+    {
+        $sc = $this->get('security.context');
+        $user = $sc->getToken()->getUser();
+        $utils = $this->get('claroline.security.utilities');
+        $token = $sc->getToken($user);
+        $roles = $utils->getRoles($token);
+
+        $workspaces = array();
+        $workspaces[] = $workspace;
+        $em = $this->getDoctrine()->getManager();
+        // Get the 3 last messages from all forums from the workspace
+        $messages = $em->getRepository('ClarolineForumBundle:Message')
+                ->findNLastByForum($workspaces, $roles,3);
+
+        return array('widgetType' => 'workspace', 'messages' => $messages);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/forums",
+     *     name="claro_desktop_forums",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @EXT\Template()
+     *
+     * Renders last messages from the forums' workspaces
+     *
+     * @return Response
+     */
+    public function forumsDesktopWidgetAction()
+    {
+        $sc = $this->get('security.context');
+        $user = $sc->getToken()->getUser();
+        $utils = $this->get('claroline.security.utilities');
+        $token = $sc->getToken();
+        $roles = $utils->getRoles($token);
+
+        // Get user workspaces  
+        $manager = $this->get('claroline.manager.workspace_manager');
+        $workspaces = $manager->getWorkspacesByUser($user);
+        $em = $this->getDoctrine()->getManager();
+
+        // Get the 3 last messages from all forums from the workspaces
+        $messages = $em->getRepository('ClarolineForumBundle:Message')
+                ->findNLastByForum($workspaces, $roles,3);
+
+        return array('widgetType' => 'desktop', 'messages' => $messages);
     }
 }
