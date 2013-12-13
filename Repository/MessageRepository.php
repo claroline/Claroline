@@ -46,7 +46,8 @@ class MessageRepository extends EntityRepository
     {
         $dql = "SELECT m FROM Claroline\ForumBundle\Entity\Message m
                 JOIN m.subject s
-                JOIN s.forum as f
+                JOIN s.category c
+                JOIN c.forum as f
                 JOIN f.resourceNode n
                 JOIN n.workspace w
                 JOIN n.rights r
