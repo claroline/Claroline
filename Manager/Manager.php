@@ -18,10 +18,9 @@ use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Notification;
+use Claroline\ForumBundle\Entity\Category;
 use Claroline\ForumBundle\Event\Log\CreateMessageEvent;
 use Claroline\ForumBundle\Event\Log\CreateSubjectEvent;
-use Claroline\ForumBundle\Event\Log\EditMessageEvent;
-use Claroline\ForumBundle\Event\Log\EditSubjectEvent;
 use Claroline\ForumBundle\Event\Log\DeleteMessageEvent;
 use Claroline\ForumBundle\Event\Log\DeleteSubjectEvent;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -114,6 +113,28 @@ class Manager
     }
 
     /**
+     * @param \Claroline\ForumBundle\Entity\Forum $forum
+     * @param string $name
+     */
+    public function createCategory(Forum $forum, $name)
+    {
+        $category = new Category();
+        $category->setName($name);
+        $category->setForum($forum);
+        $this->om->persist($category);
+        $this->om->flush();
+    }
+
+    /**
+     * @param \Claroline\ForumBundle\Entity\Category $category
+     */
+    public function deleteCategory(Category $category)
+    {
+        $this->om->remove($category);
+        $this->om->flush();
+    }
+
+    /**
      * @param \Claroline\ForumBundle\Entity\Message $message
      */
     public function createMessage(Message $message)
@@ -168,7 +189,7 @@ class Manager
 
     public function sendMessageNotification(Message $message, User $user)
     {
-        $forum = $message->getSubject()->getForum();
+        $forum = $message->getSubject()->getCategory()->getForum();
         $notifications = $this->notificationRepo->findBy(array('forum' => $forum));
         $users = array();
 
@@ -183,7 +204,7 @@ class Manager
         );
 
         $url =  $link = $this->container->get('request')->server->get('HTTP_ORIGIN') .
-                $this->router->generate('claro_forum_subjects', array('forumId' => $forum->getId()));
+                $this->router->generate('claro_forum_subjects', array('category' => $message->getSubject()->getCategory()->getId()));
         $body = "<a href='{$url}'>{$title}</a><hr>{$message->getContent()}";
 
         $this->mailManager->send($title, $body, $users);

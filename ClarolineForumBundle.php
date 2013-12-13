@@ -13,6 +13,7 @@ namespace Claroline\ForumBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
+use Claroline\ForumBundle\Installation\AdditionalInstaller;
 
 /**
  * Bundle class.
@@ -24,6 +25,11 @@ class ClarolineForumBundle extends PluginBundle
         $config = new ConfigurationBuilder();
 
         return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'forum');
+    }
+
+    public function getAdditionalInstaller()
+    {
+        return new AdditionalInstaller();
     }
 
     public function getRequiredFixturesDirectory($environment)

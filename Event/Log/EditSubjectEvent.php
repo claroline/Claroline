@@ -27,12 +27,12 @@ class EditSubjectEvent extends AbstractLogResourceEvent
                 'new_title' => $newTitle
             ),
             'forum' => array(
-                'forum' => $subject->getForum()->getId()
+                'forum' => $subject->getCategory()->getForum()->getId()
             )
         );
 
 
-        parent::__construct($subject->getForum()->getResourceNode(), $details);
+        parent::__construct($subject->getCategory()->getForum()->getResourceNode(), $details);
     }
 
     /**

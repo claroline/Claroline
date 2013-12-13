@@ -14,8 +14,10 @@ namespace Claroline\ForumBundle\Controller;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Forum;
+use Claroline\ForumBundle\Entity\Category;
 use Claroline\ForumBundle\Form\MessageType;
 use Claroline\ForumBundle\Form\SubjectType;
+use Claroline\ForumBundle\Form\CategoryType;
 use Claroline\ForumBundle\Form\EditTitleType;
 use Claroline\ForumBundle\Form\ForumOptionsType;
 use Claroline\ForumBundle\Event\Log\EditMessageEvent;
@@ -42,8 +44,8 @@ class ForumController extends Controller
 {
     /**
      * @Route(
-     *     "/{forumId}/subjects/page/{page}",
-     *     name="claro_forum_subjects",
+     *     "/{forum}/category",
+     *     name="claro_forum_categories",
      *     defaults={"page"=1}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
@@ -53,22 +55,50 @@ class ForumController extends Controller
      *
      * @return Response
      */
-    public function openAction($forumId, $page, User $user)
+    public function openAction(Forum $forum, User $user)
     {
         $em = $this->getDoctrine()->getManager();
-        $forum = $em->getRepository('ClarolineForumBundle:Forum')->find($forumId);
+        $this->checkAccess($forum);
+        $categories = $em->getRepository('ClarolineForumBundle:Forum')->findCategories($forum);
+        $sc = $this->get('security.context');
+        $isModerator = $sc->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
+
+        return array(
+            '_resource' => $forum,
+            'isModerator' => $isModerator,
+            'categories' => $categories
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/category/{category}/subjects/page/{page}",
+     *     name="claro_forum_subjects",
+     *     defaults={"page"=1}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @Template("ClarolineForumBundle::subjects.html.twig")
+     *
+     * @param integer $resourceId
+     *
+     * @return Response
+     */
+    public function showSubjectsAction(Category $category, $page, User $user)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $forum = $category->getForum();
         $this->checkAccess($forum);
         $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $limit = $limits[0]->getSubjects();
-        $subjects = $em->getRepository('ClarolineForumBundle:Forum')->findSubjects($forum);
+        $subjects = $em->getRepository('ClarolineForumBundle:Forum')->findSubjects($category);
         $adapter = new ArrayAdapter($subjects);
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage($limit);
         $pager->setCurrentPage($page);
 
         $collection = new ResourceCollection(array($forum->getResourceNode()));
-        $canCreateSubject = $this->get('security.context')->isGranted('post', $collection);
         $sc = $this->get('security.context');
+        $canCreateSubject = $sc->isGranted('post', $collection);
         $isModerator = $sc->isGranted('moderate', $collection);
 
         return array(
@@ -76,13 +106,14 @@ class ForumController extends Controller
             '_resource' => $forum,
             'canCreateSubject' => $canCreateSubject,
             'isModerator' => $isModerator,
-            'hasSubscribed' => $this->get('claroline.manager.forum_manager')->hasSubscribed($user, $forum)
+            'hasSubscribed' => $this->get('claroline.manager.forum_manager')->hasSubscribed($user, $forum),
+            'category' => $category
         );
     }
 
     /**
      * @Route(
-     *     "/form/subject/{forumId}",
+     *     "/form/subject/{category}",
      *     name="claro_forum_form_subject_creation"
      * )
      *
@@ -92,10 +123,10 @@ class ForumController extends Controller
      *
      * @return Response
      */
-    public function forumSubjectCreationFormAction($forumId)
+    public function forumSubjectCreationFormAction(Category $category)
     {
         $em = $this->get('doctrine.orm.entity_manager');
-        $forum = $em->getRepository('ClarolineForumBundle:Forum')->find($forumId);
+        $forum = $category->getForum();
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
         if (!$this->get('security.context')->isGranted('post', $collection)) {
@@ -106,16 +137,77 @@ class ForumController extends Controller
 
         return array(
             '_resource' => $forum,
-            'form' => $formSubject->createView()
+            'form' => $formSubject->createView(),
+            'category' => $category
         );
     }
 
-    /*
-     * The form submission is working but I had to do some weird things to make it works.
-     */
     /**
      * @Route(
-     *     "/subject/create/{forumId}",
+     *     "/form/category/{forum}",
+     *     name="claro_forum_form_category_creation"
+     * )
+     *
+     * @Template("ClarolineForumBundle::categoryForm.html.twig")
+     *
+     * @param Forum $forum
+     *
+     * @return Response
+     */
+    public function forumCategoryCreationFormAction(Forum $forum)
+    {
+        $collection = new ResourceCollection(array($forum->getResourceNode()));
+
+        if (!$this->get('security.context')->isGranted('post', $collection)) {
+            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+        }
+
+        $formCategory = $this->get('form.factory')->create(new CategoryType());
+
+        return array(
+            '_resource' => $forum,
+            'form' => $formCategory->createView()
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/category/create/{forum}",
+     *     name="claro_forum_create_category"
+     * )
+     *
+     * @param Forum $forum
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @param \Claroline\ForumBundle\Entity\Forum $forum
+     */
+    public function createCategoryAction(Forum $forum)
+    {
+        $collection = new ResourceCollection(array($forum->getResourceNode()));
+
+        if (!$this->get('security.context')->isGranted('post', $collection)) {
+            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+        }
+
+        $form = $this->get('form.factory')->create(new CategoryType(), new Category());
+        $form->handleRequest($this->get('request'));
+
+        if ($form->isValid()) {
+            $category = $form->getData();
+            $this->get('claroline.manager.forum_manager')->createCategory($forum, $category->getName());
+        }
+
+        return new RedirectResponse(
+            $this->generateUrl('claro_forum_categories', array('forum' => $forum->getId()))
+        );
+    }
+
+    /**
+     *
+     * The form submission is working but I had to do some weird things to make it works.
+     * @Route(
+     *     "/subject/create/{category}",
      *     name="claro_forum_create_subject"
      * )
      *
@@ -125,10 +217,10 @@ class ForumController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function createSubjectAction($forumId)
+    public function createSubjectAction(Category $category)
     {
         $em = $this->getDoctrine()->getManager();
-        $forum = $em->getRepository('ClarolineForumBundle:Forum')->find($forumId);
+        $forum = $category->getForum();
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
         if (!$this->get('security.context')->isGranted('post', $collection)) {
@@ -143,7 +235,7 @@ class ForumController extends Controller
             $subject = $form->getData();
             $subject->setCreator($user);
             //instantiation of the new resources
-            $subject->setForum($forum);
+            $subject->setCategory($category);
             $this->get('claroline.manager.forum_manager')->createSubject($subject);
             $dataMessage = $form->get('message')->getData();
 
@@ -155,7 +247,7 @@ class ForumController extends Controller
                 $this->get('claroline.manager.forum_manager')->createMessage($message);
 
                 return new RedirectResponse(
-                    $this->generateUrl('claro_forum_subjects', array('forumId' => $forum->getId(), '_resource' => $forum))
+                    $this->generateUrl('claro_forum_subjects', array('category' => $category->getId()))
                 );
             }
         }
@@ -173,7 +265,7 @@ class ForumController extends Controller
 
     /**
      * @Route(
-     *     "/subject/{subjectId}/messages/page/{page}",
+     *     "/subject/{subject}/messages/page/{page}",
      *     name="claro_forum_messages",
      *     defaults={"page"=1}
      * )
@@ -182,11 +274,10 @@ class ForumController extends Controller
      *
      * @return Response
      */
-    public function showMessagesAction($subjectId, $page)
+    public function showMessagesAction(Subject $subject, $page)
     {
         $em = $this->getDoctrine()->getManager();
-        $subject = $em->getRepository('ClarolineForumBundle:Subject')->find($subjectId);
-        $forum = $subject->getForum();
+        $forum = $subject->getCategory()->getForum();
         $this->checkAccess($forum);
         $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
         $limit = $limits[0]->getMessages();
@@ -206,7 +297,8 @@ class ForumController extends Controller
             '_resource' => $forum,
             'isModerator' => $isModerator,
             'form' => $form->createView(),
-            'canAnswer' => $canAnswer
+            'canAnswer' => $canAnswer,
+            'category' => $subject->getCategory()
         );
     }
 
@@ -244,7 +336,7 @@ class ForumController extends Controller
 
     /**
      * @Route(
-     *     "/create/message/{subjectId}",
+     *     "/create/message/{subject}",
      *     name="claro_forum_create_message"
      * )
      *
@@ -254,13 +346,12 @@ class ForumController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function createMessageAction($subjectId)
+    public function createMessageAction(Subject $subject)
     {
         $form = $this->container->get('form.factory')->create(new MessageType, new Message());
         $form->handleRequest($this->get('request'));
         $manager = $this->get('claroline.manager.forum_manager');
-        $subject = $manager->getSubject($subjectId);
-        $forum = $subject->getForum();
+        $forum = $subject->getCategory()->getForum();
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
         if (!$this->get('security.context')->isGranted('post', $collection)) {
@@ -275,12 +366,12 @@ class ForumController extends Controller
             $manager->createMessage($message);
 
             return new RedirectResponse(
-                $this->generateUrl('claro_forum_messages', array('subjectId' => $subjectId))
+                $this->generateUrl('claro_forum_messages', array('subject' => $subject->getId()))
             );
         }
 
         return array(
-            'subjectId' => $subjectId,
+            'subjectId' => $subject->getId(),
             'form' => $form->createView(),
             '_resource' => $forum
         );
@@ -326,7 +417,7 @@ class ForumController extends Controller
     {
         $sc = $this->get('security.context');
         $subject = $message->getSubject();
-        $forum = $subject->getForum();
+        $forum = $subject->getCategory()->getForum();
         $isModerator = $sc->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
 
         if (!$isModerator && $sc->getToken()->getUser() !== $message->getCreator()) {
@@ -355,7 +446,7 @@ class ForumController extends Controller
     {
         $sc = $this->get('security.context');
         $subject = $message->getSubject();
-        $forum = $subject->getForum();
+        $forum = $subject->getCategory()->getForum();
         $isModerator = $sc->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
 
         if (!$isModerator && $sc->getToken()->getUser() !== $message->getCreator()) {
@@ -373,7 +464,7 @@ class ForumController extends Controller
             $em->flush();
 
             return new RedirectResponse(
-                $this->generateUrl('claro_forum_messages', array('subjectId' => $subject->getId()))
+                $this->generateUrl('claro_forum_messages', array('subject' => $subject->getId()))
             );
         }
 
@@ -383,6 +474,88 @@ class ForumController extends Controller
             'message' => $message,
             '_resource' => $forum
         );
+    }
+
+    /**
+     * @Route(
+     *     "/edit/category/{category}/form",
+     *     name="claro_forum_edit_category_form"
+     * )
+     *
+     * @Template("ClarolineForumBundle::editCategoryForm.html.twig")
+     */
+    public function editCategoryFormAction(Category $category)
+    {
+        $sc = $this->get('security.context');
+        $forum = $category->getForum();
+        $isModerator = $sc->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
+
+        if (!$isModerator && $sc->getToken()->getUser()) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $form = $this->container->get('form.factory')->create(new CategoryType, $category);
+        $form->handleRequest($this->get('request'));
+
+        return array(
+            'category' => $category,
+            'form' => $form->createView(),
+            '_resource' => $category->getForum()
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/edit/category/{category}",
+     *     name="claro_forum_edit_category"
+     * )
+     */
+    public function editCategoryAction(Category $category)
+    {
+        $sc = $this->get('security.context');
+        $forum = $category->getForum();
+        $isModerator = $sc->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
+
+        if (!$isModerator && $sc->getToken()->getUser()) {
+            throw new AccessDeniedHttpException();
+        }
+
+        $form = $this->container->get('form.factory')->create(new CategoryType, $category);
+        $form->handleRequest($this->get('request'));
+
+        if ($form->isValid()) {
+            $em = $this->get('doctrine.orm.entity_manager');
+            $em->persist($category);
+            $em->flush();
+
+            return new RedirectResponse(
+                $this->generateUrl('claro_forum_categories', array('forum' => $category->getForum()->getId()))
+            );
+        }
+    }
+
+    /**
+     * @Route(
+     *     "/delete/category/{category}",
+     *     name="claro_forum_delete_category"
+     * )
+     *
+     * @param \Claroline\ForumBundle\Entity\Subject $subject
+     */
+    public function deleteCategory(Category $category)
+    {
+        $sc = $this->get('security.context');
+
+        if ($sc->isGranted('moderate', new ResourceCollection(array($category->getForum()->getResourceNode())))) {
+
+            $this->get('claroline.manager.forum_manager')->deleteCategory($category);
+
+            return new RedirectResponse(
+                $this->generateUrl('claro_forum_subjects', array('category' => $category->getId()))
+            );
+        }
+
+        throw new AccessDeniedHttpException();
     }
 
     /**
@@ -423,7 +596,7 @@ class ForumController extends Controller
     public function editSubjectFormAction(Subject $subject)
     {
         $sc = $this->get('security.context');
-        $isModerator = $sc->isGranted('moderate', new ResourceCollection(array($subject->getForum()->getResourceNode())));
+        $isModerator = $sc->isGranted('moderate', new ResourceCollection(array($subject->getCategory()->getForum()->getResourceNode())));
 
         if (!$isModerator && $sc->getToken()->getUser() !== $subject->getCreator()) {
             throw new AccessDeniedHttpException();
@@ -433,9 +606,9 @@ class ForumController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'subjectId' => $subject->getId(),
-            'forumId' => $subject->getForum()->getId(),
-            '_resource' => $subject->getForum()
+            'subject' => $subject,
+            'forumId' => $subject->getCategory()->getForum()->getId(),
+            '_resource' => $subject->getCategory()->getForum()
         );
     }
 
@@ -455,7 +628,7 @@ class ForumController extends Controller
     {
         $sc = $this->get('security.context');
         $isModerator = $sc->isGranted(
-            'moderate', new ResourceCollection(array($subject->getForum()->getResourceNode()))
+            'moderate', new ResourceCollection(array($subject->getCategory()->getForum()->getResourceNode()))
         );
         $em = $this->getDoctrine()->getManager();
 
@@ -473,7 +646,7 @@ class ForumController extends Controller
             $this->dispatch(new EditSubjectEvent($subject, $oldTitle, $subject->getTitle()));
 
             return new RedirectResponse(
-                $this->generateUrl('claro_forum_subjects', array('forumId' => $subject->getForum()->getId()))
+                $this->generateUrl('claro_forum_subjects', array('category' => $subject->getCategory()->getId()))
             );
         }
 
@@ -497,11 +670,11 @@ class ForumController extends Controller
     {
         $sc = $this->get('security.context');
 
-        if ($sc->isGranted('moderate', new ResourceCollection(array($message->getSubject()->getForum()->getResourceNode())))) {
+        if ($sc->isGranted('moderate', new ResourceCollection(array($message->getSubject()->getCategory()->getForum()->getResourceNode())))) {
             $this->get('claroline.manager.forum_manager')->deleteMessage($message);
 
             return new RedirectResponse(
-                $this->generateUrl('claro_forum_messages', array('subjectId' => $message->getSubject()->getId()))
+                $this->generateUrl('claro_forum_messages', array('subject' => $message->getSubject()->getId()))
             );
         }
 
@@ -558,12 +731,12 @@ class ForumController extends Controller
     {
         $sc = $this->get('security.context');
 
-        if ($sc->isGranted('moderate', new ResourceCollection(array($subject->getForum()->getResourceNode())))) {
+        if ($sc->isGranted('moderate', new ResourceCollection(array($subject->getCategory()->getForum()->getResourceNode())))) {
 
             $this->get('claroline.manager.forum_manager')->deleteSubject($subject);
 
             return new RedirectResponse(
-                $this->generateUrl('claro_forum_subjects', array('forumId' => $subject->getForum()->getId()))
+                $this->generateUrl('claro_forum_subjects', array('category' => $subject->getCategory()->getId()))
             );
         }
 

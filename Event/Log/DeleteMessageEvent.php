@@ -29,11 +29,11 @@ class DeleteMessageEvent extends AbstractLogResourceEvent
                 'subject' => $message->getSubject()->getId()
             ),
             'forum' => array(
-                'forum' => $message->getSubject()->getForum()->getId()
+                'forum' => $message->getSubject()->getCategory()->getForum()->getId()
             )
         );
 
-        parent::__construct($message->getSubject()->getForum()->getResourceNode(), $details);
+        parent::__construct($message->getSubject()->getCategory()->getForum()->getResourceNode(), $details);
     }
 
     /**

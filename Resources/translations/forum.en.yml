@@ -1,5 +1,6 @@
 new_message: Answer
 new_subject: New topic
+new_category: New category
 responses: Answers
 author: Author
 field_content_required: Content field is required.
