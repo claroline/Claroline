@@ -5,6 +5,7 @@ services:
         arguments:
             entityManager:   @doctrine.orm.entity_manager
             securityContext: @security.context
+            resourceManager: @claroline.manager.resource_manager
         calls:
             - [setRequest, ["@?request="]]
         scope: request
