@@ -98,10 +98,10 @@ class PathManager
         $newPath->setDescription($this->request->get('pathDescription'));
         
         // Link resource node to path
-        //$newPath->setResourceNode($resourceNode);
+        $newPath->setResourceNode($resourceNode);
         
         // Persist data
-        //$this->em->persist($resourceNode);
+        $this->em->persist($resourceNode);
         $this->em->persist($newPath);
         $this->em->flush();
         
