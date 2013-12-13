@@ -141,7 +141,6 @@ class StepController
         $user = $this->securityContext->getToken()->getUser();
         $resourceNodes = $this->entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findByCreator($user);
         
-        
         $resources = array();
 
         foreach ($resourceNodes as $resourceNode) {
