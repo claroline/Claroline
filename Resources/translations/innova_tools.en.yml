@@ -35,3 +35,4 @@ deploy_error: The path has not been deployed due to a technical problem. Please 
 path_not_found: Path not found
 path_delete_success: Path has been deleted
 path_delete_error: Le parcours has not been deleted due to technical problem. Please try again
+next: Next

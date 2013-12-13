@@ -113,3 +113,9 @@
 .path-player .breadcrumbs li > a.step:hover{
     text-decoration:underline;
 }
+
+.path-player .breadcrumbs ul > li > a.children{
+    color:grey;
+    text-shadow:0;
+    text-shadow:none;
+}
