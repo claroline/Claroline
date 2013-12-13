@@ -141,11 +141,10 @@ class StepController
         $user = $this->securityContext->getToken()->getUser();
         $resourceNodes = $this->entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findByCreator($user);
         
-        $resourceTypeToShow = array("1", "3", "5", "7", "10");
+        
         $resources = array();
 
         foreach ($resourceNodes as $resourceNode) {
-            if (in_array($resourceNode->getResourceType()->getId(), $resourceTypeToShow)) {
                 $resource = new \stdClass();
                 $resource->id = $resourceNode->getId();
                 $resource->workspace = $resourceNode->getWorkspace()->getName();
@@ -154,7 +153,6 @@ class StepController
                 $resource->icon = $resourceNode->getIcon()->getIconLocation();
 
                 $resources[] = $resource;
-            }
         }
         return new JsonResponse($resources);
     }
