@@ -55,7 +55,13 @@ class StepManager
         return $resourceNodes;
     }
 
-    public function edit(Step $step, $jsonStep, $path, $parent, $lvl, $order){
+    public function edit($id, $jsonStep, $path, $parent, $lvl, $order){
+        if ($id == null) {
+            $step = new Step();
+        } else {
+            $step = $this->manager->getRepository('InnovaPathBundle:Step')->findOneById($id);
+        }
+
         $step->setPath($path);
         $step->setName($jsonStep->name);
         $step->setStepOrder($order);
@@ -77,5 +83,7 @@ class StepManager
 
         $this->manager->persist($step);
         $this->manager->flush();
+
+        return $step;
     }
 }

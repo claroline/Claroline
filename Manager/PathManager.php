@@ -310,19 +310,11 @@ class PathManager
         foreach ($steps as $step) {
             $order++;
 
-            // CLARO_STEP MANAGEMENT
-            if ($step->resourceId == null) {
-                $currentStep = new Step();
-                
-            } else {
-                $currentStep = $this->em->getRepository('InnovaPathBundle:Step')->findOneById($step->resourceId);
-            }
+            //  mise à jour du step en base
+            $currentStep = $this->stepManager->edit($step->resourceId, $step, $path, $parent, $lvl, $order);
 
             // STEPSTONOT DELETE ARRAY UPDATE  - le step ne sera pas supprimé.
             $stepsToNotDelete[] = $currentStep->getId();
-
-            //  mise à jour du step en base
-            $this->stepManager->edit($currentStep, $step, $path, $parent, $lvl, $order);
 
             // mise à jour du step dans le JSON
             $step->resourceId = $currentStep->getId();
