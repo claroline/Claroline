@@ -27,9 +27,10 @@ class RevisionRepository extends EntityRepository
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Resource\Revision r
-            WHERE r.id IN (SELECT max(r_1.id) FROM Claroline\CoreBundle\Entity\Resource\Revision r_1
-            JOIN r_1.text t
-            WHERE t.id = {$text->getId()})
+            JOIN r.text t2
+            WHERE r.version = (SELECT MAX(r2.version) FROM Claroline\CoreBundle\Entity\Resource\Revision r2
+            JOIN r2.text t WHERE t.id = {$text->getId()})
+            and t2.id = {$text->getId()}
         ";
         $query = $this->_em->createQuery($dql);
 
