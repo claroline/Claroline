@@ -66,10 +66,17 @@
                             <h3 class="panel-title">{{ 'hole' | trans }}</h3>
                         </div>
                         <div class="panel-body">
-                            {{ form_row(form.holes) }}
+                            <a id="create_hole" class="btn btn-primary" onclick="createHole();">
+                                <i class="icon-plus"></i> {{ 'create hole' | trans }}
+                            </a>
+                            <a id="create_hole" class="btn btn-primary" onclick="delHole();">
+                                <i class="icon-trash"></i> {{ 'delete hole' | trans }}
+                            </a>
+                            </br></br>
+                            {#{ form_row(form.holes) }#}
                             <div id="holeError"></div>
                             <div id="tableHole"></div>
-                            {{ form_row(form.holes) | replace({"col-md-3": "col-md-12"}) | raw }}
+                            {{ form_widget(form.holes) | replace({"col-md-3": "col-md-12"}) | raw }}
                             {{ form_errors(form.holes) }}
                         </div>
                     </div>

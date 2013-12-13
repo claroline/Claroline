@@ -88,12 +88,14 @@ create: Create
 create a new category: Create a new category
 create a new entry: Create a new entry
 creationDate: Creation date
+create hole : Create hole
 
 # D
 date: Date
 delDocQuestion: Delete this document and all the linked questions
 delete: Delete
 delete document: Deletion of document
+delete hole: Delete the hole
 delete of my bank: Delete of my bank
 delete of my exercise: Delete of my exercise
 description: Description

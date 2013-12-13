@@ -419,3 +419,32 @@ function word_css_edit(nbResponses, indexHole)
     $('#newTableWord'+indexHole+' tr').contents('td').css({'border': '1px solid #aaaaaa'});
 
 }
+
+function createHole()
+{
+    var $blank = tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.getContent({format : 'text'});
+        
+    var $nbHole = tinyMCE.activeEditor.dom.select('input').length;
+    var $indexHole = 1;
+
+    if($nbHole > 0) {
+        tinymce.each(tinyMCE.activeEditor.dom.select('input'), function(n) {
+            if($indexHole <= n.id) {
+                $indexHole = parseInt(n.id)+1;
+            }
+        });
+    }
+    
+    var el = tinyMCE.get('ujm_exobundle_interactionholetype_html')
+            .dom.create('input', {'id' : $indexHole, 'type' : 'text', 'size' : '15', 'value' : $blank, 'class' : 'blank'});
+    
+    tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setNode(el);
+}
+
+function delHole()
+{
+    //alert(document.activeElement.value);
+    //alert(tinymce.get('ujm_exobundle_interactionholetype_html').selection.getNode().getContent({format : 'text'}));
+    //var $val = tinymce.get('ujm_exobundle_interactionholetype_html').selection.getContent({format : 'text'});
+    //tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent('toto');
+}

@@ -88,12 +88,14 @@ create: Créer
 create a new category: Créer une nouvelle catégorie
 create a new entry: Créer une nouvelle entrée
 creationDate: Date de création
+create hole : Créer un blanc
 
 # D
 date: Date
 delDocQuestion: Supprimer ce document ainsi que toutes les questions qui y sont liées
 delete: Supprimer
 delete document: Suppression de document
+delete hole: Supprimer le blanc
 delete of my bank: Supprimer de ma banque
 delete of my exercise: Supprimer de mon exercice
 description: Description
