@@ -41,6 +41,18 @@ class PathManager
      * @var \Claroline\CoreBundle\Manager\ResourceManager
      */
     protected $resourceManager;
+
+    /**
+     * innova nondigitalresource manager
+     * @var \Innova\PathBundle\Manager\NonDigitalResourceManager
+     */
+    protected $nonDigitalResourceManager;
+
+    /**
+     * innova step manager
+     * @var \Innova\PathBundle\Manager\StepManager
+     */
+    protected $stepManager;
     
     /**
      * Current security context
@@ -59,11 +71,19 @@ class PathManager
      * @param EntityManager $entityManager
      * @param SecurityContext $securityContext
      */
-    public function __construct(EntityManager $entityManager, SecurityContext $securityContext, ResourceManager $resourceManager)
+    public function __construct(
+                    EntityManager $entityManager, 
+                    SecurityContext $securityContext, 
+                    ResourceManager $resourceManager, 
+                    NonDigitalResourceManager $nonDigitalResourceManager,
+                    StepManager $stepManager
+    )
     {
         $this->em = $entityManager;
         $this->resourceManager = $resourceManager;
+        $this->stepManager = $stepManager;
         $this->security = $securityContext;
+        $this->nonDigitalResourceManager = $nonDigitalResourceManager;
         
         // Retrieve current user
         $this->user = $this->security->getToken()->getUser();
@@ -298,33 +318,13 @@ class PathManager
                 $currentStep = $this->em->getRepository('InnovaPathBundle:Step')->findOneById($step->resourceId);
             }
 
-            // STEPSTONODELETE ARRAY UPDATE
+            // STEPSTONOT DELETE ARRAY UPDATE  - le step ne sera pas supprimé.
             $stepsToNotDelete[] = $currentStep->getId();
 
-            // CLARO STEP ATTRIBUTES UPDATE
-            $currentStep->setPath($path);
-            $currentStep->setName($step->name);
-            $currentStep->setStepOrder($order);
-            $stepType = $this->em->getRepository('InnovaPathBundle:StepType')->findOneById($step->type);
-            $currentStep->setStepType($stepType);
-            $stepWho = $this->em->getRepository('InnovaPathBundle:StepWho')->findOneById($step->who);
-            $currentStep->setStepWho($stepWho);
-            $stepWhere = $this->em->getRepository('InnovaPathBundle:StepWhere')->findOneById($step->where);
-            $parent = $this->em->getRepository('InnovaPathBundle:Step')->findOneById($parent);
-            $currentStep->setParent($parent);
-            $currentStep->setLvl($lvl);
-            $currentStep->setStepWhere($stepWhere);
-            $currentStep->setDuration(new \DateTime("00-00-00 ".intval($step->durationHours).":".intval($step->durationMinutes).":00"));
-            $currentStep->setExpanded($step->expanded);
-            $currentStep->setWithTutor($step->withTutor);
-            $currentStep->setWithComputer($step->withComputer);
-            $currentStep->setInstructions($step->instructions);
-            $currentStep->setImage($step->image);
+            //  mise à jour du step en base
+            $this->stepManager->edit($currentStep, $step, $path, $parent, $lvl, $order);
 
-            $this->em->persist($currentStep);
-            $this->em->flush();
-
-            // JSON_STEP UPDATE
+            // mise à jour du step dans le JSON
             $step->resourceId = $currentStep->getId();
 
             // STEP'S RESOURCES MANAGEMENT
@@ -338,30 +338,25 @@ class PathManager
                 // Gestion des ressources non digitales
                 if (!$resource->isDigital) {
                     if ($resource->resourceId == null){
-                        $resourceNode = new ResourceNode();
-                        $nonDigitalResource = new NonDigitalResource();
-                        $resourceNode->setClass("Innova\PathBundle\Entity\NonDigitalResource");
-                        $resourceNode->setCreator($user);
-                        $resourceNode->setResourceType($this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("non_digital_resource"));
-                        $resourceNode->setWorkspace($workspace);
-                        $resourceNode->setParent($pathsDirectory);
-                        $resourceNode->setMimeType("");
-                        $resourceNode->setIcon($this->em->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findOneById(3));
+                        $nonDigitalResource = $this->nonDigitalResourceManager->create($workspace, $resource->name);
+                        $resourceNode = $nonDigitalResource->getResourceNode();
                     }
                     else {
                         $resourceNode = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId);
                         $nonDigitalResource = $this->em->getRepository('InnovaPathBundle:NonDigitalResource')->findOneByResourceNode($resourceNode);
                     }
 
-                    $resourceNode->setName($resource->name);
-                    $this->em->persist($resourceNode);
+                    // mise à jour de la resource et du resourceNode associé
                     $nonDigitalResource->setNonDigitalResourceType($this->em->getRepository('InnovaPathBundle:NonDigitalResourceType')->findOneByName($resource->subType));
                     $nonDigitalResource->setResourceNode($resourceNode);
                     $nonDigitalResource->setDescription($resource->description);
+                    $resourceNode->setName($resource->name);
+
                     $this->em->persist($nonDigitalResource);
-                   
+                    $this->em->persist($resourceNode);
                     $this->em->flush();
 
+                    // update JSON
                     $resource->resourceId = $resourceNode->getId();
                 }
 
@@ -414,13 +409,6 @@ class PathManager
                 }
             }
 
-            /*
-            // TO DO : GESTION DES DROITS
-            $right = new ResourceRights();
-            $right->setRole($this->em->getRepository('ClarolineCoreBundle:Role')->findOneById(3));
-            $right->setResourceNode($resourceNode);
-            $this->em->persist($right);
-            */
             $this->em->flush();
 
             // récursivité sur les enfants possibles.

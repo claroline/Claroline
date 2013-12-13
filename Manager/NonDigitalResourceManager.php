@@ -66,20 +66,18 @@ class NonDigitalResourceManager
      * Create a new path
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
-    public function create()
+    public function create(AbstractWorkspace $workspace, $name)
     {
         $nonDigitalResource = new NonDigitalResource();
-        $nonDigitalResource->setName();
-        $nonDigitalResource->setDescription();
+        $nonDigitalResource->setName($name);
         $this->em->persist($nonDigitalResource);
         $this->em->flush();
 
         $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("non_digital_resource");
-        $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById();
         $parent = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
         
-        $nonDigitalResource = $this->resourceManager->create($newPath, $resourceType, $this->user, $workspace, $parent, null);
+        $nonDigitalResource = $this->resourceManager->create($nonDigitalResource, $resourceType, $this->user, $workspace, $parent, null);
         
-        return $nonDigitalResource->getResourceNode();
+        return $nonDigitalResource;
     }
 }

@@ -54,4 +54,28 @@ class StepManager
 
         return $resourceNodes;
     }
+
+    public function edit(Step $step, $jsonStep, $path, $parent, $lvl, $order){
+        $step->setPath($path);
+        $step->setName($jsonStep->name);
+        $step->setStepOrder($order);
+        $stepType = $this->manager->getRepository('InnovaPathBundle:StepType')->findOneById($jsonStep->type);
+        $step->setStepType($stepType);
+        $stepWho = $this->manager->getRepository('InnovaPathBundle:StepWho')->findOneById($jsonStep->who);
+        $step->setStepWho($stepWho);
+        $stepWhere = $this->manager->getRepository('InnovaPathBundle:StepWhere')->findOneById($jsonStep->where);
+        $parent = $this->manager->getRepository('InnovaPathBundle:Step')->findOneById($parent);
+        $step->setParent($parent);
+        $step->setLvl($lvl);
+        $step->setStepWhere($stepWhere);
+        $step->setDuration(new \DateTime("00-00-00 ".intval($jsonStep->durationHours).":".intval($jsonStep->durationMinutes).":00"));
+        $step->setExpanded($jsonStep->expanded);
+        $step->setWithTutor($jsonStep->withTutor);
+        $step->setWithComputer($jsonStep->withComputer);
+        $step->setInstructions($jsonStep->instructions);
+        $step->setImage($jsonStep->image);
+
+        $this->manager->persist($step);
+        $this->manager->flush();
+    }
 }

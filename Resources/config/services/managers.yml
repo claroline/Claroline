@@ -7,6 +7,7 @@ services:
             securityContext: @security.context
             resourceManager: @claroline.manager.resource_manager
             nonDigitalResourceManager: @innova.manager.nondigitalresource_manager
+            stepManager: @innova.manager.step_manager
         calls:
             - [setRequest, ["@?request="]]
         scope: request
