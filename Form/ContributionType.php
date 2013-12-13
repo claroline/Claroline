@@ -20,10 +20,9 @@ class ContributionType extends AbstractType
                 if ($data === null || $data->getSection() === null || $data->getSection()->isRoot() === false) {
                     $form->add('title', 'text');
                 }
-                $form->add('text', 'textarea', array(
+                $form->add('text', 'tinymce', array(
                     'attr' => array(
-                        'class' => 'tinymce',
-                        'data-theme' => 'advanced',
+                        'style' => 'height: 300px;',
                         'id' => 'icap_wiki_section_text'
                         )
                     )

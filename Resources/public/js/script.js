@@ -22,7 +22,6 @@ $(document).ready(function() {
                         newLink.attr('data-empty','false');
                         containerNewForm = $('#newSectionContainer-'+newLink.attr('data-section'));
                         containerNewForm.find('#icap_wiki_section_type_activeContribution_text').attr('id', 'icap_wiki_section_type_'+newLink.attr('data-section'));
-                        initTinyMCE();
                         $('#wnsc-'+newLink.attr('data-section')).show();
                     })
                 ;

@@ -74,8 +74,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% render controller('ClarolineCoreBundle:ResourceType:initPicker') %}
-    {{ tinymce_init() }}
     <script type='text/javascript'src='{{ asset('bundles/frontend/jquery/plugin/sortable/js/jquery-sortable-min.js') }}'></script>
     <script type='text/javascript'>
         var moveSectionRoute = "{{ path('icap_wiki_move_section', { 
