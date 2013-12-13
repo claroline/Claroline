@@ -96,7 +96,6 @@ class PathManager
 
         $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("path");
         $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findOneById($this->request->get('workspaceId'));
-        $rights = array('ROLE_WS_XXX' => array('open' => true, 'edit' => true, 'create' => true));
         $parent = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
         
         $path = $this->resourceManager->create($newPath, $resourceType, $this->user, $workspace, $parent, null);

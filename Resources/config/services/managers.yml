@@ -6,9 +6,18 @@ services:
             entityManager:   @doctrine.orm.entity_manager
             securityContext: @security.context
             resourceManager: @claroline.manager.resource_manager
+            nonDigitalResourceManager: @innova.manager.nondigitalresource_manager
         calls:
             - [setRequest, ["@?request="]]
         scope: request
+
+    # NonDigitalResource manager
+    innova.manager.nondigitalresource_manager:
+        class: Innova\PathBundle\Manager\NonDigitalResourceManager
+        arguments:
+            entityManager:   @doctrine.orm.entity_manager
+            securityContext: @security.context
+            resourceManager: @claroline.manager.resource_manager
 
     # Path template manager
     innova.manager.pathtemplate_manager:
