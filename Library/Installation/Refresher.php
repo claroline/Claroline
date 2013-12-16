@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
-use Assetic\Extension\Twig\TwigResource;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
