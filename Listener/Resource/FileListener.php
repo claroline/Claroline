@@ -117,7 +117,7 @@ class FileListener implements ContainerAwareInterface
             . DIRECTORY_SEPARATOR
             . $event->getResource()->getHashName();
         if (file_exists($pathName)) {
-            unlink($pathName);
+           $event->setFiles(array($pathName));
         }
         $event->stopPropagation();
     }

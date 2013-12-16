@@ -833,7 +833,7 @@ class ResourceManager
              * target should be removed aswell.
              */
             if ($resource !== null) {
-                $this->dispatcher->dispatch(
+                $event = $this->dispatcher->dispatch(
                     "delete_{$node->getResourceType()->getName()}",
                     'DeleteResource',
                     array($resource)
@@ -844,6 +844,10 @@ class ResourceManager
                     'Log\LogResourceDelete',
                     array($node)
                 );
+
+                foreach ($event->getFiles() as $file) {
+                    unlink($file);
+                }
 
                 /*
                  * If the child isn't removed here aswell, doctrine will fail to remove $resChild
