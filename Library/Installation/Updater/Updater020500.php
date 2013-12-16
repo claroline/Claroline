@@ -71,17 +71,17 @@ class Updater020500
 
         $om->endFlushSuite();
 
-//        $this->log('Adding agenda widget...');
-//        $widget = new Widget();
-//        $widget->setName('agenda');
-//        $widget->setConfigurable(false);
-//        $widget->setIcon('fake/icon/path');
-//        $widget->setPlugin(null);
-//        $widget->setExportable(false);
-//        $widget->setDisplayableInDesktop(true);
-//        $widget->setDisplayableInWorkspace(true);
-//        $om->persist($widget);
-//        $om->flush();
+        $this->log('Adding agenda widget...');
+        $widget = new Widget();
+        $widget->setName('agenda');
+        $widget->setConfigurable(false);
+        $widget->setIcon('fake/icon/path');
+        $widget->setPlugin(null);
+        $widget->setExportable(false);
+        $widget->setDisplayableInDesktop(true);
+        $widget->setDisplayableInWorkspace(true);
+        $om->persist($widget);
+        $om->flush();
 
         $this->log('Setting known default file mime types...');
         $this->log('This operation may take a while');
@@ -91,8 +91,8 @@ class Updater020500
 
         foreach ($fileNodes as $node) {
             if  ($node->getMimeType() === null) {
-                $name = $node->getName();
-                $extension = array_pop(explode('.', $name));
+                $nameParts = explode('.', $node->getName());
+                $extension = array_pop($nameParts);
                 $node->setMimeType($this->container->get('claroline.utilities.mime_type_guesser')->guess($extension));
                 $om->persist($node);
 
@@ -104,8 +104,6 @@ class Updater020500
 
         $om->flush();
     }
-
-
 
     public function postUpdate()
     {
