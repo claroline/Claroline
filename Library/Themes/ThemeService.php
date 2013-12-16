@@ -191,8 +191,9 @@ class ThemeService
     /**
      * Compile Less Themes that are defined in a twig file with lessphp filter
      *
-     * @param mixed $themes An array of Theme entities or an strig of the template with following syntax:
-     *                        'ClarolineCoreBundle:less:bootstrap-default/theme.html.twig'
+     * @param mixed $themes An array of Theme entities or a string of the template with following syntax:
+     *                      'ClarolineCoreBundle:less:bootstrap-default/theme.html.twig'
+     * @param string $webPath
      *
      * @todo Find something better for web path
      */
@@ -201,7 +202,6 @@ class ThemeService
         $assetManager = $this->container->get('assetic.asset_manager');
         $twigEnvironment = $this->container->get('twig');
         $twigLoader = $this->container->get('twig.loader');
-        $lessGenerated = array();
 
         // enable loading assets from twig templates
         $assetManager->setLoader('twig', new TwigFormulaLoader($twigEnvironment));
@@ -228,10 +228,16 @@ class ThemeService
         $writer->writeManagerAssets($assetManager);
     }
 
-    private function compileRaw($files)
+    /**
+     * Compiles a list of generated themes from the themes/less folder.
+     *
+     * @param array $themeNames The names of the themes, as stored in the database
+     */
+    public function compileRaw(array $themeNames)
     {
-        foreach ($files as $file) {
-            $folder = str_replace(' ', '-', strtolower($file));
+        foreach ($themeNames as $name) {
+            $folder = str_replace(' ', '-', strtolower($name));
+
             if (!file_exists($this->themePath.$folder)) {
                 mkdir($this->themePath.$folder, 0777, true);
             }
