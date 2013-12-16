@@ -49,6 +49,7 @@ class Refresher
         $output = $this->output ?: new NullOutput();
         $this->installAssets($output);
         $this->dumpAssets($environment, $output);
+        $this->compileGeneratedThemes($output);
         $this->clearCache($environment, $output);
     }
 
@@ -88,6 +89,23 @@ class Refresher
             if (!$item->isDot()) {
                 $fileSystem->remove($item->getPathname());
             }
+        }
+    }
+
+    public function compileGeneratedThemes(OutputInterface $output = null)
+    {
+        if ($output) {
+            $output->writeln('Re-compiling generated themes...');
+        }
+
+        $themeService = $this->container->get('claroline.common.theme_service');
+
+        foreach ($themeService->getThemes('less-generated') as $theme) {
+            if ($output) {
+                $output->writeln("    Compiling '{$theme->getName()}' theme...");
+            }
+
+            $themeService->compileRaw(array($theme->getName()));
         }
     }
 }
