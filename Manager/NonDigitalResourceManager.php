@@ -62,22 +62,47 @@ class NonDigitalResourceManager
         $this->user = $this->security->getToken()->getUser();
     }
     
-    /**
-     * Create a new path
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
-     */
+
+
     public function create(AbstractWorkspace $workspace, $name)
     {
         $nonDigitalResource = new NonDigitalResource();
         $nonDigitalResource->setName($name);
         $this->em->persist($nonDigitalResource);
-        $this->em->flush();
 
         $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName("non_digital_resource");
         $parent = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
         
         $nonDigitalResource = $this->resourceManager->create($nonDigitalResource, $resourceType, $this->user, $workspace, $parent, null);
-        
+
         return $nonDigitalResource;
     }
+
+
+    public function edit(AbstractWorkspace $workspace, $resourceId, $name, $description, $type)
+    {
+        if ($resourceId == null)
+        {
+            $nonDigitalResource = $this->create($workspace, $name);
+            $resourceNode = $nonDigitalResource->getResourceNode();
+        }
+        else
+        {
+            $resourceNode = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resourceId);
+            $nonDigitalResource = $this->em->getRepository('InnovaPathBundle:NonDigitalResource')->findOneByResourceNode($resourceNode);
+        }
+
+        $nonDigitalResource->setName($name);
+        $nonDigitalResource->setDescription($description);
+        $nonDigitalResource->setResourceNode($resourceNode);
+        $nonDigitalResource->setNonDigitalResourceType($this->em->getRepository('InnovaPathBundle:NonDigitalResourceType')->findOneByName($type));
+        $resourceNode->setName($name);
+
+        $this->em->persist($nonDigitalResource);
+        $this->em->persist($resourceNode);
+        $this->em->flush();
+
+        return $nonDigitalResource;
+    }
+    
 }

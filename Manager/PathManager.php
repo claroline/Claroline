@@ -49,6 +49,12 @@ class PathManager
     protected $nonDigitalResourceManager;
 
     /**
+     * innova Step2ResourceNode manager
+     * @var \Innova\PathBundle\Manager\Step2ResourceNodeManager
+     */
+    protected $step2ResourceNodeManager;
+
+    /**
      * innova step manager
      * @var \Innova\PathBundle\Manager\StepManager
      */
@@ -76,6 +82,7 @@ class PathManager
                     SecurityContext $securityContext, 
                     ResourceManager $resourceManager, 
                     NonDigitalResourceManager $nonDigitalResourceManager,
+                    Step2ResourceNodeManager $step2ResourceNodeManager,
                     StepManager $stepManager
     )
     {
@@ -84,6 +91,7 @@ class PathManager
         $this->stepManager = $stepManager;
         $this->security = $securityContext;
         $this->nonDigitalResourceManager = $nonDigitalResourceManager;
+        $this->step2ResourceNodeManager = $step2ResourceNodeManager;
         
         // Retrieve current user
         $this->user = $this->security->getToken()->getUser();
@@ -326,83 +334,31 @@ class PathManager
             $resourceOrder = 0;
             foreach ($step->resources as $resource) {
                 $resourceOrder++;
-
                 // Gestion des ressources non digitales
                 if (!$resource->isDigital) {
-                    if ($resource->resourceId == null){
-                        $nonDigitalResource = $this->nonDigitalResourceManager->create($workspace, $resource->name);
-                        $resourceNode = $nonDigitalResource->getResourceNode();
-                    }
-                    else {
-                        $resourceNode = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId);
-                        $nonDigitalResource = $this->em->getRepository('InnovaPathBundle:NonDigitalResource')->findOneByResourceNode($resourceNode);
-                    }
-
-                    // mise à jour de la resource et du resourceNode associé
-                    $nonDigitalResource->setNonDigitalResourceType($this->em->getRepository('InnovaPathBundle:NonDigitalResourceType')->findOneByName($resource->subType));
-                    $nonDigitalResource->setResourceNode($resourceNode);
-                    $nonDigitalResource->setDescription($resource->description);
-                    $resourceNode->setName($resource->name);
-
-                    $this->em->persist($nonDigitalResource);
-                    $this->em->persist($resourceNode);
-                    $this->em->flush();
-
+                    $nonDigitalResource = $this->nonDigitalResourceManager->edit($workspace, $resource->resourceId, $resource->name, $resource->description, $resource->subType);
                     // update JSON
-                    $resource->resourceId = $resourceNode->getId();
+                    $resource->resourceId = $nonDigitalResource->getResourceNode()->getId();
                 }
 
                 $excludedResourcesToResourceNodes[$resource->id] = $resource->resourceId;
-                $step2ressourceNode = $this->em->getRepository('InnovaPathBundle:Step2ResourceNode')->findOneBy(array (
-                    'step' => $currentStep, 
-                    'resourceNode' => $resource->resourceId,
-                    'excluded' => false,
-                ));
-                
-                if (!$step2ressourceNode) {
-                    $step2ressourceNode = new Step2ResourceNode();
-                }
-
+                $step2ressourceNode = $this->step2ResourceNodeManager->edit($currentStep, $resource->resourceId, false, $resource->propagateToChildren, $resourceOrder);
                 $step2resourceNodesToNotDelete[] = $step2ressourceNode->getId();
-                $step2ressourceNode->setResourceNode($this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId));
-                $step2ressourceNode->setStep($currentStep);
-                $step2ressourceNode->setExcluded(false);
-                $step2ressourceNode->setPropagated($resource->propagateToChildren);
-                $step2ressourceNode->setResourceOrder($resourceOrder);
-                $this->em->persist($step2ressourceNode);
             }
 
-            // STEP'S EXCLUDED RESOURCES MANAGEMENT
+            // Gestion des ressources exclues
             foreach ($step->excludedResources as $excludedResource) {
-                // boucler sur les ressourcesnodes exclues en base et les comparer à ce qu'il y a dans le JSON
-
-                $step2ressourceNode = $this->em->getRepository('InnovaPathBundle:Step2ResourceNode')->findOneBy(array(
-                    'step' => $currentStep,
-                    'resourceNode' => $excludedResourcesToResourceNodes[$excludedResource],
-                    'excluded' => true,
-                ));
-                
-                if (!$step2ressourceNode) {
-                    $step2ressourceNode = new Step2ResourceNode();
-                }
-                
+                $step2ressourceNode = $this->step2ResourceNodeManager->edit($currentStep, $excludedResourcesToResourceNodes[$excludedResource], true, false, $resourceOrder);
                 $step2resourceNodesToNotDelete[] = $step2ressourceNode->getId();
-                $step2ressourceNode->setResourceNode($this->em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($excludedResourcesToResourceNodes[$excludedResource]));
-                $step2ressourceNode->setStep($currentStep);
-                $step2ressourceNode->setExcluded(true);
-                $step2ressourceNode->setPropagated(false);
-                $step2ressourceNode->setResourceOrder(null);
-                $this->em->persist($step2ressourceNode);
             }
 
+            // Suppression des Step2ResourceNode inutilisés
             foreach ($currentStep2resourceNodes as $currentStep2resourceNode) {
                 if (!in_array($currentStep2resourceNode->getId(),$step2resourceNodesToNotDelete)) {
                     $this->em->remove($currentStep2resourceNode);
                 }
             }
-
             $this->em->flush();
-
             // récursivité sur les enfants possibles.
             $this->JSONParser($step->children, $user, $workspace, $pathsDirectory, $lvl+1, $currentStep->getId(), 0, $path, $stepsToNotDelete, $excludedResourcesToResourceNodes);
         }
