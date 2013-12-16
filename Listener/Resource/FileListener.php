@@ -116,9 +116,11 @@ class FileListener implements ContainerAwareInterface
         $pathName = $this->container->getParameter('claroline.param.files_directory')
             . DIRECTORY_SEPARATOR
             . $event->getResource()->getHashName();
+
         if (file_exists($pathName)) {
-           $event->setFiles(array($pathName));
+            $event->setFiles(array($pathName));
         }
+        
         $event->stopPropagation();
     }
 

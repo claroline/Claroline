@@ -21,7 +21,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 class DeleteResourceEvent extends Event implements MandatoryEventInterface
 {
     private $resource;
-    private $files;
+    private $files = array();
 
     /**
      * Constructor.
