@@ -30,5 +30,10 @@
             <input name="isRecursive" type="checkbox"/> {{ 'recursive_dir_action'|trans({}, 'platform')}}
         </div>
     </div>
-    <input type="submit" value="{{ 'ok'|trans({}, 'platform') }}" class="pull-right"/>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
+        <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+    </div>
+
 </form>

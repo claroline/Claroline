@@ -129,7 +129,10 @@ class WorkspaceController extends Controller
      */
     public function listAction()
     {
-        return $this->tagManager->getDatasForWorkspaceList(false);
+        $currentUser = $this->security->getToken()->getUser();
+        $user = $currentUser instanceof User ? $currentUser : null;
+
+        return $this->tagManager->getDatasForWorkspaceList(false, $user);
     }
 
     /**

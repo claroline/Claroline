@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Widget\Widget;
 
 class Updater020500
 {
@@ -25,11 +26,16 @@ class Updater020500
 
     public function preUpdate()
     {
-        $this->log('updating workspace...');
-        $em = $this->container->get('doctrine.orm.entity_manager');
+        $this->log('updating workspaced names...');
+        $this->log('This operation may take a while.');
+        $om = $this->container->get('claroline.persistence.object_manager');
         $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
         $translator = $this->container->get('translator');
-        $workspaces = $em->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findAll();
+        $workspaces = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findAll();
+        $batchSize = 200;
+        $i = 0;
+        $trans = $translator->trans('personal_workspace', array(), 'platform');
+        $om->startFlushSuite();
 
         foreach ($workspaces as $workspace) {
 
@@ -48,15 +54,55 @@ class Updater020500
             $user = $workspaceManager->findPersonalUser($workspace);
 
             if ($user !== null) {
-                $personalWorkspaceName = $translator->trans('personal_workspace', array(), 'platform') .
-                ' - ' . $user->getUsername();
+                $personalWorkspaceName = $trans . ' - ' . $user->getUsername();
                 $this->container->get('claroline.manager.workspace_manager')->rename($workspace, $personalWorkspaceName);
             }
 
-            $em->persist($workspace);
-            $em->flush();
+            $this->log('Renaming ' . $personalWorkspaceName);
+            $om->persist($workspace);
+            $i++;
+
+            if ($i % $batchSize === 0) {
+                $this->log('flushing database...');
+                $om->endFlushSuite();
+                $om->startFlushSuite();
+            }
         }
 
+        $om->endFlushSuite();
+
+        $this->log('Adding agenda widget...');
+        $widget = new Widget();
+        $widget->setName('agenda');
+        $widget->setConfigurable(false);
+        $widget->setIcon('fake/icon/path');
+        $widget->setPlugin(null);
+        $widget->setExportable(false);
+        $widget->setDisplayableInDesktop(true);
+        $widget->setDisplayableInWorkspace(true);
+        $om->persist($widget);
+        $om->flush();
+
+        $this->log('Setting known default file mime types...');
+        $this->log('This operation may take a while');
+
+        $fileType = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('file');
+        $fileNodes = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findBy(array('resourceType' => $fileType));
+
+        foreach ($fileNodes as $node) {
+            if  ($node->getMimeType() === null) {
+                $nameParts = explode('.', $node->getName());
+                $extension = array_pop($nameParts);
+                $node->setMimeType($this->container->get('claroline.utilities.mime_type_guesser')->guess($extension));
+                $om->persist($node);
+
+                if ($i % $batchSize === 0) {
+                    $om->flush();
+                }
+            }
+        }
+
+        $om->flush();
     }
 
     public function postUpdate()
