@@ -1,3 +1,107 @@
+var container = $('div#ujm_exobundle_interactionholetype_holes'); // Div which contain the dataprototype
+var tableHoles = $('#tableHoles'); // div which contain the choices array
+
+function displayDelButton() {
+    alert('le focus marche !!!!!');
+}
+
+function addFormHole(add, Response, point, size, orthography, selector, source_image_add)
+{
+    tableHoles.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+size+'</th><th class="classic">'+orthography+'</th><th class="classic">'+selector+'</th><th class="classic">'+Response+'</th></tr></thead><tbody></tbody></table>');
+}
+
+$('#ujm_exobundle_interactionholetype_html').click(function() {alert('ok');
+    if (tinyMCE.activeEditor.selection.getNode().nodeName == 'INPUT' 
+            && tinyMCE.activeEditor.selection.getNode().getAttribute('class')== 'blank') {
+        $('#delete_hole').css({"display" : "inline-block"});
+    }
+});
+
+function createHole()
+{
+    var blank = tinyMCE.activeEditor.selection.getContent({format : 'text'});
+        
+    var nbHole = tinyMCE.activeEditor.dom.select('input').length;
+    var indexHole = 1;
+
+    if(nbHole > 0) {
+        tinymce.each(tinyMCE.activeEditor.dom.select('input'), function(n) {
+            if(indexHole <= n.id) {
+                indexHole = parseInt(n.id)+1;
+            }
+        });
+    }
+    
+    var el = tinyMCE.activeEditor.dom
+            .create('input', {'id' : indexHole, 'type' : 'text', 'size' : '15', 'value' : blank, 'class' : 'blank', 'onFocus' : 'displayDelButton();'});
+    
+    tinyMCE.activeEditor.selection.setNode(el);
+    
+    addHole(indexHole, blank);
+}
+
+function delHole()
+{
+    if (tinyMCE.activeEditor.selection.getNode().nodeName == 'INPUT' 
+            && tinyMCE.activeEditor.selection.getNode().getAttribute('class')== 'blank') {
+        var val = tinymce.activeEditor.selection.getNode().value;
+        tinyMCE.activeEditor.selection.setContent(val);
+    }
+}
+
+function addHole(indHole, valHole)
+{
+    $('#newTable').find('tbody').append('<tr></tr>');
+    
+    index = $('#newTable').find('tr:not(:first)').length;
+
+    container.append(
+        $(container.attr('data-prototype').replace(/__name__/g, index))
+    );
+    
+    //add_form_word(add, source_image_add, index);
+    $('#ujm_exobundle_interactionholetype_holes_'+index+'_wordResponses_0_response').val(valHole);
+    
+    container.find('.row').each(function () {
+        if ($(this).find('input').length) {
+            $('#newTable').find('tr:last').append('<td class="classic"></td>');
+            $('#newTable').find('td:last').append($(this).find('input'));
+        }
+    });
+    
+    $('#ujm_exobundle_interactionholetype_holes_'+index+'_size').val('15');
+    
+    // Remove the useless fileds form
+    container.remove();
+    
+    //hole_css(indHole);
+    
+   /* var index = $('#newTable').find('tr:not(:first)').length;
+    // change the "name" by the index and delete the symfony delete form button
+    var contain = $(container.attr('data-prototype').replace(/__name__label__/g, 'Hole n°' + (index))
+        .replace(/__name__/g, index)
+        .replace('<a class="btn btn-danger remove" href="#">Delete</a>', '')
+    );
+
+    // Add the modified dataprototype to the page
+    container.append(contain);
+
+    // Get the form field to fill rows of the holes' table
+    /*container.find('.row').each(function () {
+        fillChoicesArray($(this));
+    });*/
+
+    // Remove the useless fileds form
+    /*container.remove();
+    tableChoices.next().remove();
+
+    // Increase number of choices
+    index++;*/
+
+}
+
+//**************************************************************************************************************************************************
+
 function insert_style(){
 
     $('#ujm_exobundle_interactionholetype_interaction').find('div').first().find('label').first().remove();
@@ -77,7 +181,7 @@ function hole_css(indHole)
     $('#newTable tr').contents('td').css({'border': '1px solid #aaaaaa'});
 
     $("td:hidden").find('input').attr('value','1');
-
+    
 }
 
 function hole_css_edit(add, source_image_add, nbResponses)
@@ -418,33 +522,4 @@ function word_css_edit(nbResponses, indexHole)
     //css td
     $('#newTableWord'+indexHole+' tr').contents('td').css({'border': '1px solid #aaaaaa'});
 
-}
-
-function createHole()
-{
-    var $blank = tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.getContent({format : 'text'});
-        
-    var $nbHole = tinyMCE.activeEditor.dom.select('input').length;
-    var $indexHole = 1;
-
-    if($nbHole > 0) {
-        tinymce.each(tinyMCE.activeEditor.dom.select('input'), function(n) {
-            if($indexHole <= n.id) {
-                $indexHole = parseInt(n.id)+1;
-            }
-        });
-    }
-    
-    var el = tinyMCE.get('ujm_exobundle_interactionholetype_html')
-            .dom.create('input', {'id' : $indexHole, 'type' : 'text', 'size' : '15', 'value' : $blank, 'class' : 'blank'});
-    
-    tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setNode(el);
-}
-
-function delHole()
-{
-    //alert(document.activeElement.value);
-    //alert(tinymce.get('ujm_exobundle_interactionholetype_html').selection.getNode().getContent({format : 'text'}));
-    //var $val = tinymce.get('ujm_exobundle_interactionholetype_html').selection.getContent({format : 'text'});
-    //tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent('toto');
 }

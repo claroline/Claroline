@@ -69,14 +69,14 @@
                             <a id="create_hole" class="btn btn-primary" onclick="createHole();">
                                 <i class="icon-plus"></i> {{ 'create hole' | trans }}
                             </a>
-                            <a id="create_hole" class="btn btn-primary" onclick="delHole();">
+                            <a id="delete_hole" class="btn btn-primary" onclick="delHole();" style="display: none;">
                                 <i class="icon-trash"></i> {{ 'delete hole' | trans }}
                             </a>
                             </br></br>
                             {#{ form_row(form.holes) }#}
                             <div id="holeError"></div>
-                            <div id="tableHole"></div>
-                            {{ form_widget(form.holes) | replace({"col-md-3": "col-md-12"}) | raw }}
+                            <div id="tableHoles"></div>
+                            {{ form_widget(form.holes) }}
                             {{ form_errors(form.holes) }}
                         </div>
                     </div>
@@ -99,13 +99,13 @@
 {% if error is defined %}
     <script type="text/javascript">
         newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
-        insert_style();
-        add_form_hole('{{ "add" | trans }}', '{{ "Response" | trans }}', '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', '{{ "Inter_Hole.orthography" | trans }}', '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
+        //insert_style();
+        addFormHole('{{ "add" | trans }}', '{{ "Response" | trans }}', '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', '{{ "Inter_Hole.orthography" | trans }}', '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
     </script>
 {% else %}
     <script type="text/javascript">
         newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
-        insert_style();
-        add_form_hole('{{ "add" | trans }}', '{{ "Response" | trans }}', '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', '{{ "Inter_Hole.orthography" | trans }}', '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
+        //insert_style();
+        addFormHole('{{ "add" | trans }}', '{{ "Response" | trans }}', '{{ "point" | trans }}', '{{ "Inter_Hole.size" | trans }}', '{{ "Inter_Hole.orthography" | trans }}', '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}');
     </script>
 {% endif %}
