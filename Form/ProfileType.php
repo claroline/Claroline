@@ -22,6 +22,7 @@ class ProfileType extends AbstractType
 {
     private $platformRoles;
     private $isAdmin;
+    private $langs;
 
      /**
       * Constructor.
@@ -29,10 +30,16 @@ class ProfileType extends AbstractType
       * @param Role[]  $platformRoles
       * @param boolean $isAdmin
       */
-    public function __construct(array $platformRoles, $isAdmin)
+    public function __construct(array $platformRoles, $isAdmin, array $langs)
     {
         $this->platformRoles = new ArrayCollection($platformRoles);
         $this->isAdmin = $isAdmin;
+
+        if (!empty($langs)) {
+            $this->langs = $langs;
+        } else {
+            $this->langs = array('en' => 'en', 'fr' => 'fr');
+        }
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -43,6 +50,7 @@ class ProfileType extends AbstractType
             $builder->add('firstName', 'text', array('read_only' => true, 'disabled' => true))
                 ->add('lastName', 'text', array('read_only' => true, 'disabled' => true))
                 ->add('username', 'text', array('read_only' => true, 'disabled' => true))
+                ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false))
                 ->add('administrativeCode', 'text', array('required' => false, 'read_only' => true, 'disabled' => true))
                 ->add('mail', 'email', array('required' => false))
                 ->add('phone', 'text', array('required' => false));
@@ -68,6 +76,7 @@ class ProfileType extends AbstractType
             $builder->add('firstName', 'text')
                 ->add('lastName', 'text')
                 ->add('username', 'text')
+                ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false))
                 ->add('administrativeCode', 'text', array('required' => false))
                 ->add('mail', 'email', array('required' => false))
                 ->add('phone', 'text', array('required' => false));

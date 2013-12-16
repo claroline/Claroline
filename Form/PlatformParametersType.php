@@ -11,20 +11,27 @@
 
 namespace Claroline\CoreBundle\Form;
 
+use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Claroline\CoreBundle\Entity\Role;
 
 class PlatformParametersType extends AbstractType
 {
     private $themes;
+    private $langs;
     private $role;
 
-    public function __construct(array $themes, $role)
+    public function __construct(array $themes, array $langs, $role)
     {
         $this->themes = $themes;
         $this->role = $role;
+
+        if (!empty($langs)) {
+            $this->langs = $langs;
+        } else {
+            $this->langs = array('en' => 'en', 'fr' => 'fr');
+        }
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -55,7 +62,7 @@ class PlatformParametersType extends AbstractType
                 'localLanguage',
                 'choice',
                 array(
-                    'choices' => array('en' => 'en', 'fr' => 'fr')
+                    'choices' => $this->langs
                 )
             )
             ->add('theme', 'choice', array('choices' => $this->themes));

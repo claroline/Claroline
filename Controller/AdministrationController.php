@@ -11,28 +11,29 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Configuration\UnwritableException;
+use Claroline\CoreBundle\Library\Lang\LangService;
+use Claroline\CoreBundle\Manager\AnalyticsManager;
+use Claroline\CoreBundle\Manager\GroupManager;
+use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Manager\WorkspaceTagManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use JMS\SecurityExtraBundle\Annotation as SEC;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\Translator;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Configuration\UnwritableException;
-use Claroline\CoreBundle\Manager\AnalyticsManager;
-use Claroline\CoreBundle\Manager\GroupManager;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Manager\WorkspaceTagManager;
-use Claroline\CoreBundle\Manager\MailManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use JMS\SecurityExtraBundle\Annotation as SEC;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -56,6 +57,7 @@ class AdministrationController extends Controller
     private $translator;
     private $request;
     private $mailManager;
+    private $lang;
 
     /**
      * @DI\InjectParams({
@@ -71,7 +73,8 @@ class AdministrationController extends Controller
      *     "analyticsManager"    = @DI\Inject("claroline.manager.analytics_manager"),
      *     "translator"          = @DI\Inject("translator"),
      *     "request"             = @DI\Inject("request"),
-     *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager")
+     *     "mailManager"         = @DI\Inject("claroline.manager.mail_manager"),
+     *     "lang"                = @DI\Inject("claroline.common.lang_service")
      * })
      */
     public function __construct(
@@ -87,7 +90,8 @@ class AdministrationController extends Controller
         AnalyticsManager $analyticsManager,
         Translator $translator,
         Request $request,
-        MailManager $mailManager
+        MailManager $mailManager,
+        LangService $lang
     )
     {
         $this->userManager = $userManager;
@@ -103,6 +107,7 @@ class AdministrationController extends Controller
         $this->translator = $translator;
         $this->request = $request;
         $this->mailManager = $mailManager;
+        $this->lang = $lang;
     }
 
     /**
@@ -613,7 +618,7 @@ class AdministrationController extends Controller
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
         $form = $this->formFactory->create(
             FormFactory::TYPE_PLATFORM_PARAMETERS,
-            array($this->getThemes(), $role),
+            array($this->getThemes(), $this->lang->getLangs(), $role),
             $platformConfig
         );
 
@@ -640,7 +645,7 @@ class AdministrationController extends Controller
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
             FormFactory::TYPE_PLATFORM_PARAMETERS,
-            array($this->getThemes()),
+            array($this->getThemes(), $this->lang->getLangs()),
             $platformConfig
         );
         $form->handleRequest($this->request);

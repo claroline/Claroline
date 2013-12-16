@@ -22,7 +22,7 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
  */
 class LocaleSetter
 {
-    protected $configHandler;
+    private $defaultLocale;
 
     /**
      * @DI\InjectParams({
@@ -35,7 +35,7 @@ class LocaleSetter
      */
     public function __construct(PlatformConfigurationHandler $configHandler)
     {
-        $this->configHandler = $configHandler;
+        $this->defaultLocale = $configHandler->getParameter('locale_language');
     }
 
     /**
@@ -47,6 +47,17 @@ class LocaleSetter
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        $event->getRequest()->setLocale($this->configHandler->getParameter('locale_language'));
+        $request = $event->getRequest();
+        if (!$request->hasPreviousSession()) {
+            return;
+        }
+
+        // try to see if the locale has been set as a _locale routing parameter
+        if ($locale = $request->attributes->get('_locale')) {
+            $request->getSession()->set('_locale', $locale);
+        } else {
+            // if no explicit locale has been set on this request, use one from the session
+            $request->setLocale($request->getSession()->get('_locale', $this->defaultLocale));
+        }
     }
 }
