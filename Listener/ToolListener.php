@@ -92,4 +92,19 @@ class ToolListener extends ContainerAware
 		$event->setResponseContent($content);
         $event->stopPropagation();
     }
+
+
+    public function onNonDigitalResourceOpen(OpenResourceEvent $event){
+    	$nonDigitalResource = $event->getResource();
+	    $route = $this->container
+	        ->get('router')
+	        ->generate(
+	            'innova_nondigitalresource_player',
+	            array(
+	            	'nonDigitalResourceId' => $nonDigitalResource->getId(),
+	            )
+	        );
+	    $event->setResponse(new RedirectResponse($route));
+	    $event->stopPropagation();
+    }
 }

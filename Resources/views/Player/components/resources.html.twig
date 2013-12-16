@@ -1,36 +1,9 @@
-{# Bootstrap modal HTML #}
-{% macro modale(resource) %}
-<div class="modal fade" id="resource-{{ resource.id }}">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title">{{ resource.resourceNode.name }}</h4>
-			</div>
-			<div class="modal-body">
-				<p>{{ resource.description }}</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			</div>
-		</div>
-	</div>
-</div>
-{% endmacro %}
-
 {# Affichage d'une ressource #}
 {% macro displayResource(resource, step) %}
 	{% import _self as resourcesMacro %}
 	<li class="list-group-item"> 
 		<span rel="tooltip" data-original-title="{{ step.name }}" class="lvl-{{ step.lvl + 1 }} lvl-indicator">&nbsp;</span>
-		{# Cas des ressources non digitales -> modale #}
-		{% if resource.resourceNode.resourceType.name == "non_digital_resource" %}
-			<a href="#" data-toggle="modal" data-target="#resource-{{ resource.id }}">{{ resource.resourceNode.name }}</a>
-			{{ resourcesMacro.modale(resource) }}
-		{# Cas des ressources digitales #}
-		{% else %}
 		<a target="_blank" href="{{ path('claro_resource_open', {'node': resource.resourceNode.id, 'resourceType': resource.resourceNode.resourceType.name }) }}">{{ resource.resourceNode.name }}</a>
-		{% endif %}
 	</li>
 {% endmacro %}
 

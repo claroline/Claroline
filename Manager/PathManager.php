@@ -318,7 +318,7 @@ class PathManager
         foreach ($steps as $step) {
             $order++;
 
-            //  mise à jour du step en base
+            //  mise à jour du step 
             $currentStep = $this->stepManager->edit($step->resourceId, $step, $path, $parent, $lvl, $order);
 
             // STEPSTONOT DELETE ARRAY UPDATE  - le step ne sera pas supprimé.
