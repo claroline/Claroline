@@ -61,3 +61,7 @@ $('.filterO').click(function () {
     }
 });
 
+$('body').on('click','.pop-close', function () {
+    $(this).parents('.popover').first().remove();
+});
+

@@ -161,6 +161,7 @@
                 event2.description = $('#agenda_form_description').val();
                 var event1 = $('#calendar').fullCalendar('clientEvents', id);
                 var compare = compareEvents(event1[0], event2 );
+                //$('.popover').popover('hide');
            } else {
                 compare = 1;
            } 
@@ -174,6 +175,7 @@
                 var allDay = $('#agenda_form_allDay').attr('checked') === 'checked' ? 1 : 0;
                 data.append('agenda_form[allDay]', allDay);
                 url = $('a#update').attr('href');
+                //$('.popover').popover('hide');
                 $.ajax({
                     'url': url,
                     'type': 'POST',
@@ -202,6 +204,7 @@
                 });
             } else {
                 $('#myModal').modal('hide');
+
             }
         });
 
@@ -407,15 +410,19 @@
             minTime: 0,
             maxTime: 24,
             allDaySlot: false,
-            lazyFetching : true,
+            lazyFetching : false,
             eventDrop: function (event, dayDelta, minuteDelta) {
                 dropEvent(event, dayDelta, minuteDelta);
             },
             dayClick: dayClickFunction,
             eventClick:  function (event) {
                 id = event.id;
-                //modifiedEvent(event ,context);
-                $('.popover').popover('show');
+               /* $('.popover').each(function(e) {
+                    if(this !== $(".mypopo" + event.id).parents('.popover').get(0)) {
+                        $(this).popover('hide');
+                    }
+
+               });*/
             },
             eventRender: function (event, element) {
                 if (event.visible === false)
@@ -423,14 +430,14 @@
                     return false;
                 }
                 element.popover({
-                    title: event.title,
-                    placement: 'auto',
+                    title: event.title + '<button type="button" class="pop-close close" data-dismiss="popover" aria-hidden="true">&times;</button>',
                     content:  '<a href="#" data-target="#myModal" role="button" data-toggle="modal" class="launch" data-id='+event.id+'>'+
                         Translator.get('platform' + ':' + 'edit')+'</a>'+
-                        ' <div> Start: '+
+                        ' <div>'+t('agenda_form_start') +' : '+
                         $.fullCalendar.formatDate(event.start ,'dd-MM-yyyy') + '</div>'+
-                        '<div>End: ' + $.fullCalendar.formatDate(event.end ,'dd-MM-yyyy') +'</div>' +'<br />Description: ' + event.description,
-                    html:true
+                        '<div class="mypopo' + event.id + '">'+t('agenda_form_end') +':'  + $.fullCalendar.formatDate(event.end ,'dd-MM-yyyy') +'</div>' +'<br />Description: ' + event.description,
+                    html:true,
+                    container:'body'
                 });
             },
             eventResize: function (event, dayDelta, minuteDelta) {
@@ -460,6 +467,7 @@
                     }
                 });
             }
+
         });
     };
 }) ();
