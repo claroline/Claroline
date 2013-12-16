@@ -400,9 +400,9 @@ class WorkspaceTagManager
         return $this->tagHierarchyRepo->findBy(array('tag' => $tag));
     }
 
-    public function getDatasForWorkspaceList($withRoles = true)
+    public function getDatasForWorkspaceList($withRoles = true, User $currentUser = null)
     {
-        $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
+        $workspaces = $this->workspaceRepo->findDisplayableWorkspaces($currentUser);
         $tags = $this->getNonEmptyAdminTags();
         $relTagWorkspace = $this->getTagRelationsByAdmin();
         $tagWorkspaces = array();
