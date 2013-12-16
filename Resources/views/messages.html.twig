@@ -25,6 +25,7 @@
 {% block title %}{{ _resource.getResourceNode().getName() ~ '(' ~ subject.getTitle() ~ ')' ~ ' - ' ~ parent() | striptags | raw  }}{% endblock %}
 
 {% block resourceBreadcrumb %}
+    <li><a href="{{ path('claro_forum_categories', { 'forum': category.getForum().getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
     <li><a href="{{ path('claro_forum_subjects', { 'category': category.getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
     <li class="active">{{ subject.getTitle() }}</li>
 {% endblock %}

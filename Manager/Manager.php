@@ -116,13 +116,16 @@ class Manager
      * @param \Claroline\ForumBundle\Entity\Forum $forum
      * @param string $name
      */
-    public function createCategory(Forum $forum, $name)
+    public function createCategory(Forum $forum, $name, $flush = true)
     {
         $category = new Category();
         $category->setName($name);
         $category->setForum($forum);
         $this->om->persist($category);
-        $this->om->flush();
+
+        if ($flush) {
+            $this->om->flush();
+        }
     }
 
     /**
@@ -229,5 +232,19 @@ class Manager
         $this->dispatcher->dispatch('log', $event);
 
         return $this;
+    }
+
+    public function moveMessage(Message $message, Subject $newSubject)
+    {
+        $message->setSubject($newSubject);
+        $this->om->persist($message);
+        $this->om->flush();
+    }
+
+    public function moveSubject(Subject $subject, Category $newCategory)
+    {
+        $subject->setCategory($newCategory);
+        $this->om->persist($message);
+        $this->om->flush();
     }
 }

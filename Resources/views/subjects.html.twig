@@ -24,6 +24,11 @@
 
 {% block title %}{{ _resource.getResourceNode().getName() ~ ' - ' ~ parent() | striptags | raw  }}{% endblock %}
 
+{% block resourceBreadcrumb %}
+    <li><a href="{{ path('claro_forum_categories', { 'forum': category.getForum().getId() }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+    <li class="active"> {{ category.getName() }} </li>
+{% endblock %}
+
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}</h3>

@@ -819,7 +819,7 @@ class ForumController extends Controller
         $token = $sc->getToken();
         $roles = $utils->getRoles($token);
 
-        // Get user workspaces  
+        // Get user workspaces
         $manager = $this->get('claroline.manager.workspace_manager');
         $workspaces = $manager->getWorkspacesByUser($user);
         $em = $this->getDoctrine()->getManager();
@@ -829,5 +829,17 @@ class ForumController extends Controller
                 ->findNLastByForum($workspaces, $roles,3);
 
         return array('widgetType' => 'desktop', 'messages' => $messages);
+    }
+
+    public function moveMessageAction(Message $message, Subject $newSubject)
+    {
+        $manager = $this->get('claroline.manager.workspace_manager');
+        $manager->moveMessage($message, $newSubject);
+    }
+
+    public function moveSubjectAction(Subject $subject, Category $newCategory)
+    {
+        $manager = $this->get('claroline.manager.workspace_manager');
+        $manager->moveCategory($subject, $newCategory);
     }
 }
