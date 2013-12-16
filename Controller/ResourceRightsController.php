@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Manager\RightsManager;
@@ -82,35 +83,28 @@ class ResourceRightsController
      * Displays the resource rights form.
      *
      * @param ResourceNode $node
+     * @param \Claroline\CoreBundle\Entity\Role $role
      *
      * @return Response
-     *
-     * @throws AccessDeniedException if the current user is not allowed to edit the resource
      */
     public function rightFormAction(ResourceNode $node, Role $role = null)
     {
         $collection = new ResourceCollection(array($node));
         $this->checkAccess('EDIT', $collection);
-        $isDir = ($node->getResourceType()->getName() === 'directory') ? true: false;
+        $isDir = $node->getResourceType()->getName() === 'directory';
 
-        if ($role === null) {
+        if (!$role) {
+            $currentUser = $this->sc->getToken()->getUser();
+            $user = $currentUser instanceof User ? $currentUser : null;
+            $data = $this->wsTagManager->getDatasForWorkspaceList(true, $user);
             $rolesRights = $this->rightsManager->getNonAdminRights($node);
-            $datas = $this->wsTagManager->getDatasForWorkspaceList(true);
+            $data['resourceRights'] = $rolesRights;
+            $data['resource'] = $node;
+            $data['isDir'] = $isDir;
 
             return $this->templating->renderResponse(
                 'ClarolineCoreBundle:Resource:multipleRightsPage.html.twig',
-                array(
-                    'resourceRights' => $rolesRights,
-                    'resource' => $node,
-                    'isDir' => $isDir,
-                    'workspaces' => $datas['workspaces'],
-                    'tags' => $datas['tags'],
-                    'tagWorkspaces' => $datas['tagWorkspaces'],
-                    'hierarchy' => $datas['hierarchy'],
-                    'rootTags' => $datas['rootTags'],
-                    'displayable' => $datas['displayable'],
-                    'workspaceRoles' => $datas['workspaceRoles']
-                )
+                $data
             );
         } else {
             $resourceRights = $this->rightsManager->getOneByRoleAndResource($role, $node);
@@ -119,7 +113,8 @@ class ResourceRightsController
                 'ClarolineCoreBundle:Resource:singleRightsForm.html.twig',
                 array(
                     'resourceRights' => $resourceRights,
-                    'isDir' => $isDir
+                    'isDir' => $isDir,
+                    'role' => $role
                 )
             );
         }
