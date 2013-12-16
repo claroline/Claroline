@@ -161,7 +161,6 @@
                 event2.description = $('#agenda_form_description').val();
                 var event1 = $('#calendar').fullCalendar('clientEvents', id);
                 var compare = compareEvents(event1[0], event2 );
-                //$('.popover').popover('hide');
            } else {
                 compare = 1;
            } 
@@ -204,7 +203,6 @@
                 });
             } else {
                 $('#myModal').modal('hide');
-
             }
         });
 
@@ -417,12 +415,6 @@
             dayClick: dayClickFunction,
             eventClick:  function (event) {
                 id = event.id;
-               /* $('.popover').each(function(e) {
-                    if(this !== $(".mypopo" + event.id).parents('.popover').get(0)) {
-                        $(this).popover('hide');
-                    }
-
-               });*/
             },
             eventRender: function (event, element) {
                 if (event.visible === false)
@@ -467,7 +459,6 @@
                     }
                 });
             }
-
         });
     };
 }) ();
