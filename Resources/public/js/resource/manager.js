@@ -769,10 +769,11 @@
             'create': function (event) {
                 this.create(event.action, event.data, event.nodeId);
             },
-            'delete': function () {
+            'delete': function (event) {
                 var ids = [];
-                $('.node-thumbnail input[type=checkbox]:checked').each(function () {
-                    ids.push($($(this).parents('.node-thumbnail').get(0)).attr('id'));
+
+                $(event.ids).each(function (index) {
+                    ids.push(event.ids[index]);
                 });
 
                 if (ids.length >= 1) {
