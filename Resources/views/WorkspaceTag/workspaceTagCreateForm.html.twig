@@ -1,5 +1,3 @@
-
-
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'create_new_tag'|trans({}, 'platform') }}</h3>
@@ -11,13 +9,13 @@
         <div class="panel-body">
             {{ form_widget(form) }}
         </div>
-    <div class="panel-footer">
-        <button id="form-workspace-tag-ok-btn" type="submit" class="btn btn-primary">
-            {{ 'ok'|trans({}, 'platform') }}
-        </button>
-        <button id="form-cancel-btn" type="button" class="btn btn-default">
-            {{ 'cancel'|trans({}, 'platform') }}
-        </button>
-    </div>
-</form>
+        <div class="panel-footer">
+            <button id="form-workspace-tag-ok-btn" type="submit" class="btn btn-primary">
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
+            <button id="form-cancel-btn" type="button" class="btn btn-default">
+                {{ 'cancel'|trans({}, 'platform') }}
+            </button>
+         </div>
+    </form>
 {% endblock %}
