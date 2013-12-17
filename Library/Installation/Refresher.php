@@ -56,12 +56,15 @@ class Refresher
     public function installAssets(OutputInterface $output = null)
     {
         $webDir = "{$this->container->get('kernel')->getRootDir()}/../web";
-        $assetInstallInput = new ArrayInput(
-            array('target' => $webDir, '--symlink' => true)
-        );
+        $args = array('target' => $webDir);
+
+        if (function_exists('symlink')) {
+            $args['--symlink'] = true;
+        }
+
         $assetInstallCmd = new AssetsInstallCommand();
         $assetInstallCmd->setContainer($this->container);
-        $assetInstallCmd->run($assetInstallInput, $output ?: new NullOutput());
+        $assetInstallCmd->run(new ArrayInput($args), $output ?: new NullOutput());
     }
 
     public function dumpAssets($environment, OutputInterface $output = null)
