@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Lang\LangService;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Observe;
@@ -28,21 +29,28 @@ class LocaleSetter
 {
     private $defaultLocale;
     private $context;
+    private $langs;
 
     /**
      * @InjectParams({
      *     "configHandler" = @Inject("claroline.config.platform_config_handler"),
-     *     "context"       = @Inject("security.context")
+     *     "context"       = @Inject("security.context"),
+     *     "lang"          = @Inject("claroline.common.lang_service")
      * })
      *
      * Constructor.
      *
      * @param PlatformConfigurationHandler $configHandler
      */
-    public function __construct(PlatformConfigurationHandler $configHandler, SecurityContext $context)
+    public function __construct(
+        PlatformConfigurationHandler $configHandler,
+        SecurityContext $context,
+        LangService $lang
+    )
     {
         $this->defaultLocale = $configHandler->getParameter('locale_language');
         $this->context = $context;
+        $this->langs = $lang->getLangs();
     }
 
     /**
@@ -56,10 +64,7 @@ class LocaleSetter
     {
         $request = $event->getRequest();
         $user = $this->context->getToken()->getUser();
-
-        if (!$request->hasPreviousSession()) {
-            return;
-        }
+        $preferred = explode('_', $request->getPreferredLanguage());
 
         // try to see if the locale has been set in locale user setting
         if (is_object($user) and $user->getLocale() and $user->getLocale() !== '') {
@@ -70,6 +75,9 @@ class LocaleSetter
         if ($locale = $request->attributes->get('_locale')) {
             $request->getSession()->set('_locale', $locale);
         } else {
+            if (isset($preferred[0]) and isset($this->langs[$preferred[0]])) {
+                $this->defaultLocale = $preferred[0];
+            }
             // if no explicit locale has been set on this request, use one from the session
             $request->setLocale($request->getSession()->get('_locale', $this->defaultLocale));
         }
