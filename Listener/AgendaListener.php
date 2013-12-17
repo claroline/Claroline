@@ -85,8 +85,8 @@ class AgendaListener
     {
         $em = $this->container-> get('doctrine.orm.entity_manager');
         $usr = $this->container->get('security.context')->getToken()->getUser();
-        $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, 1);
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
+        $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, false);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
 
         return $this->templating->render(
             'ClarolineCoreBundle:Widget:agenda_widget.html.twig',
