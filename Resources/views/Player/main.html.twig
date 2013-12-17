@@ -30,7 +30,7 @@
         </div>
         
         <div class="current-step col-md-9">
-            {{ render(controller('innova.controller.path_player:displayCurrentStepAction', { 'currentStep': currentStep } )) }}
+            {{ render(controller('innova.controller.path_player:displayCurrentStepAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
         </div>
     </div>
 </div>

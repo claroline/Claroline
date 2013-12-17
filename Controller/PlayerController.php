@@ -121,9 +121,11 @@ class PlayerController extends ContainerAware
      * @Method("GET")
      * @Template("InnovaPathBundle:Player:components/current-step.html.twig")
      */
-    public function displayCurrentStepAction(Step $currentStep)
+    public function displayCurrentStepAction(AbstractWorkspace $workspace, Path $path, Step $currentStep)
     {
         return array (
+            'workspace' => $workspace,
+            'path' => $path,
             'currentStep' => $currentStep,
         );
     }

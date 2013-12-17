@@ -4,5 +4,18 @@
     </div>
     <div class="panel-body">
         {{ currentStep.instructions | raw }}
+
+        {% if currentStep.instructions is null %}
+			<ul class="">
+				{% for child in currentStep.children %}
+					<li class="btn btn-default btn-block">
+						<a class="" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: child.id }) }}">
+        				{{ child.name }}
+        				</a>
+					</li>
+				{% endfor %}
+			</ul>
+			
+        {% endif %}
     </div>
 </div>
