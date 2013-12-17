@@ -68,6 +68,7 @@ class Updater020200
         $this->conn->query('INSERT IGNORE INTO claro_forum_message SELECT * FROM claro_forum_message_temp');
         $this->conn->query('DROP TABLE claro_forum_message_temp');
         $this->conn->query('DROP TABLE claro_forum_subject_temp');
+        $this->conn->query('DROP TABLE claro_forum_options');
 
         $this->log('adding the forum widget...');
 
@@ -82,6 +83,8 @@ class Updater020200
         $widget->setExportable(false);
         $widget->setIcon('none');
         $widget->setPlugin($plugin);
+        $em->persist($widget);
+        $plugin->setHasOptions(true);
         $em->persist($widget);
         $em->flush();
     }

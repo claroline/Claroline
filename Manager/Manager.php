@@ -268,4 +268,18 @@ class Manager
 
         return $this->pagerFactory->createPagerFromArray($subjects, $page);
     }
+
+    public function getMessagesPager(Subject $subject, $page = 1)
+    {
+        $messages = $this->messageRepo->findBySubject($subject);
+
+        return $this->pagerFactory->createPagerFromArray($messages, $page);
+    }
+
+    public function searchPager(Forum $forum, $search, $page)
+    {
+        $query = $this->forumRepo->search($forum, $search);
+
+        return $this->pagerFactory->createPager($query, $page);
+    }
 }

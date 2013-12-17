@@ -17,7 +17,7 @@ use Claroline\ForumBundle\Entity\Subject;
 
 class MessageRepository extends EntityRepository
 {
-    public function findBySubject($subject, $getQuery = false)
+    public function findBySubject(Subject $subject, $getQuery = false)
     {
         $dql = "
             SELECT m, u FROM Claroline\ForumBundle\Entity\Message m

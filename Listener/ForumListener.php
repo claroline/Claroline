@@ -79,22 +79,6 @@ class ForumListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    public function onAdministrate(PluginOptionsEvent $event)
-    {
-        $forumOptions = $this->container
-            ->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
-        $form = $this->container->get('form.factory')->create(new ForumOptionsType, $forumOptions[0]);
-        $content = $this->container->get('templating')->render(
-            'ClarolineForumBundle::pluginOptionsForm.html.twig', array(
-            'form' => $form->createView()
-            )
-        );
-        $response = new Response($content);
-        $event->setResponse($response);
-        $event->stopPropagation();
-    }
-
     public function onDelete(DeleteResourceEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');

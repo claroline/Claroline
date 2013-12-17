@@ -1,5 +1,5 @@
 plugin:
-  has_options: true
+  has_options: false
   icon: res_forum.png
 
   resources:

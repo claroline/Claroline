@@ -1,9 +1,8 @@
 <?php
 
-//SUBSCRIBE & UNSUBSCRIBE REDIRECTIONS
-//REMOVE ADMIN CONFIG
+//SEARCH
 //CUSTOM PAGINATION
-//STICKY TOPICS
+//ADD EVENT TRACKING
 
 /*
  * This file is part of the Claroline Connect package.
@@ -24,15 +23,11 @@ use Claroline\ForumBundle\Form\MessageType;
 use Claroline\ForumBundle\Form\SubjectType;
 use Claroline\ForumBundle\Form\CategoryType;
 use Claroline\ForumBundle\Form\EditTitleType;
-use Claroline\ForumBundle\Form\ForumOptionsType;
 use Claroline\ForumBundle\Event\Log\EditMessageEvent;
 use Claroline\ForumBundle\Event\Log\EditSubjectEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
-use Pagerfanta\Adapter\ArrayAdapter;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -84,13 +79,13 @@ class ForumController extends Controller
      *     defaults={"page"=1}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @Template("ClarolineForumBundle::subjects.html.twig")
+     * @Template()
      *
      * @param integer $resourceId
      *
      * @return Response
      */
-    public function showSubjectsAction(Category $category, $page, User $user)
+    public function subjectsAction(Category $category, $page, User $user)
     {
         $forum = $category->getForum();
         $this->checkAccess($forum);
@@ -114,14 +109,12 @@ class ForumController extends Controller
      *     "/form/subject/{category}",
      *     name="claro_forum_form_subject_creation"
      * )
-     *
-     * @Template("ClarolineForumBundle::subjectForm.html.twig")
-     *
+     * @Template()
      * @param integer $forumId
      *
      * @return Response
      */
-    public function forumSubjectCreationFormAction(Category $category)
+    public function subjectFormAction(Category $category)
     {
         $forum = $category->getForum();
         $collection = new ResourceCollection(array($forum->getResourceNode()));
@@ -144,14 +137,12 @@ class ForumController extends Controller
      *     "/form/category/{forum}",
      *     name="claro_forum_form_category_creation"
      * )
-     *
-     * @Template("ClarolineForumBundle::categoryForm.html.twig")
-     *
+     * @Template()
      * @param Forum $forum
      *
      * @return Response
      */
-    public function forumCategoryCreationFormAction(Forum $forum)
+    public function categoryFormAction(Forum $forum)
     {
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
@@ -172,7 +163,7 @@ class ForumController extends Controller
      *     "/category/create/{forum}",
      *     name="claro_forum_create_category"
      * )
-     *
+     * @Template()
      * @param Forum $forum
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -201,15 +192,13 @@ class ForumController extends Controller
     }
 
     /**
-     *
      * The form submission is working but I had to do some weird things to make it works.
+     *
      * @Route(
      *     "/subject/create/{category}",
      *     name="claro_forum_create_subject"
      * )
-     *
-     * @Template("ClarolineForumBundle::subjectForm.html.twig")
-     *
+     * @Template("ClarolineForumBundle:Forum:subjectForm.html.twig")
      * @param integer $forumId
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -265,24 +254,16 @@ class ForumController extends Controller
      *     name="claro_forum_messages",
      *     defaults={"page"=1}
      * )
-     *
-     * @Template("ClarolineForumBundle::messages.html.twig")
+     * @Template()
      *
      * @return Response
      */
-    public function showMessagesAction(Subject $subject, $page)
+    public function messagesAction(Subject $subject, $page)
     {
-        $em = $this->getDoctrine()->getManager();
         $forum = $subject->getCategory()->getForum();
         $this->checkAccess($forum);
-        $limits = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
-        $limit = $limits[0]->getMessages();
-        $query = $em->getRepository('ClarolineForumBundle:Message')->findBySubject($subject, true);
-        $adapter = new DoctrineORMAdapter($query);
-        $pager = new Pagerfanta($adapter);
-        $pager->setMaxPerPage($limit);
-        $pager->setCurrentPage($page);
         $isModerator = $this->get('security.context')->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
+        $pager = $this->get('claroline.manager.forum_manager')->getMessagesPager($subject, $page);
         $collection = new ResourceCollection(array($forum->getResourceNode()));
         $canAnswer = $this->get('security.context')->isGranted('post', $collection);
         $form = $this->get('form.factory')->create(new MessageType());
@@ -335,39 +316,10 @@ class ForumController extends Controller
 
     /**
      * @Route(
-     *     "/options/edit",
-     *     name="claro_forum_edit_options"
-     * )
-     *
-     * @Template("ClarolineForumBundle::pluginOptionsForm.html.twig")
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function editForumOptionsAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-        $forumOptions = $em->getRepository('ClarolineForumBundle:ForumOptions')->findAll();
-        $form = $this->container->get('form.factory')->create(new ForumOptionsType(), $forumOptions[0]);
-        $form->handleRequest($this->get('request'));
-
-        if ($form->isValid()) {
-            $forumOptions = $form->getData();
-            $em->persist($forumOptions);
-            $em->flush();
-
-            return new RedirectResponse($this->generateUrl('claro_admin_plugins'));
-        }
-
-        return array('form' => $form->createView());
-    }
-
-    /**
-     * @Route(
      *     "/edit/message/{message}/form",
      *     name="claro_forum_edit_message_form"
      * )
-     *
-     * @Template("ClarolineForumBundle::editMessageForm.html.twig")
+     * @Template()
      */
     public function editMessageFormAction(Message $message)
     {
@@ -396,7 +348,7 @@ class ForumController extends Controller
      *     name="claro_forum_edit_message"
      * )
      *
-     * @Template("ClarolineForumBundle::editMessageForm.html.twig")
+     * @Template("ClarolineForumBundle:Forum:editMessageForm.html.twig")
      */
     public function editMessageAction(Message $message)
     {
@@ -437,8 +389,7 @@ class ForumController extends Controller
      *     "/edit/category/{category}/form",
      *     name="claro_forum_edit_category_form"
      * )
-     *
-     * @Template("ClarolineForumBundle::editCategoryForm.html.twig")
+     * @Template()
      */
     public function editCategoryFormAction(Category $category)
     {
@@ -525,13 +476,7 @@ class ForumController extends Controller
      */
     public function searchAction(Forum $forum, $page, $search)
     {
-        $em = $this->getDoctrine()->getManager();
-        $repo = $em->getRepository('ClarolineForumBundle:Forum');
-        $query = $repo->search($forum, $search);
-        $adapter = new DoctrineORMAdapter($query);
-        $pager = new Pagerfanta($adapter);
-        $pager->setMaxPerPage(20);
-        $pager->setCurrentPage($page);
+        $pager = $this->get('claroline.manager.forum_manager')->searchPager($forum, $search, $page);
 
         return array('pager' => $pager, '_resource' => $forum, 'search' => $search, 'page' => $page);
     }
@@ -546,8 +491,7 @@ class ForumController extends Controller
      *      class="ClarolineForumBundle:Subject",
      *      options={"id" = "subjectId", "strictId" = true}
      * )
-     * @Template("ClarolineForumBundle::editSubjectForm.html.twig")
-     *
+     * @Template()
      */
     public function editSubjectFormAction(Subject $subject)
     {
@@ -578,7 +522,7 @@ class ForumController extends Controller
      *      class="ClarolineForumBundle:Subject",
      *      options={"id" = "subjectId", "strictId" = true}
      * )
-     * @Template("ClarolineForumBundle::editSubjectForm.html.twig")
+     * @Template("ClarolineForumBundle:Forum:editSubjectForm.html.twig")
      */
     public function editSubjectAction(Subject $subject)
     {
