@@ -33,6 +33,7 @@ class ForumRepository extends EntityRepository
             MAX(m.creationDate) AS last_message_created,
             s.id as subjectId,
             s.title as title,
+            s.isSticked as isSticked,
             subjectCreator.lastName as subject_creator_lastname,
             subjectCreator.firstName as subject_creator_firstname,
             subjectCreator.id as subject_creator_id,
@@ -62,7 +63,7 @@ class ForumRepository extends EntityRepository
                 )
             WHERE category.id = :categoryId
             GROUP BY s.id, subjectCreator.lastName, subjectCreator.firstName, lastUser.lastName, lastUser.firstName
-            ORDER BY last_message_created DESC
+            ORDER BY isSticked DESC, last_message_created DESC
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('categoryId', $category->getId());

@@ -244,7 +244,28 @@ class Manager
     public function moveSubject(Subject $subject, Category $newCategory)
     {
         $subject->setCategory($newCategory);
-        $this->om->persist($message);
+        $this->om->persist($subject);
         $this->om->flush();
+    }
+
+    public function stickSubject(Subject $subject)
+    {
+        $subject->setIsSticked(true);
+        $this->om->persist($subject);
+        $this->om->flush();
+    }
+
+    public function unstickSubject(Subject $subject)
+    {
+        $subject->setIsSticked(false);
+        $this->om->persist($subject);
+        $this->om->flush();
+    }
+
+    public function getSubjectsPager(Category $category, $page = 1)
+    {
+        $subjects = $this->forumRepo->findSubjects($category);
+
+        return $this->pagerFactory->createPagerFromArray($subjects, $page);
     }
 }

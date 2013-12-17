@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\ForumBundle\Migrations\pdo_sqlsrv;
+namespace Claroline\ForumBundle\Migrations\sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/12/11 09:59:01
+ * Generation date: 2013/12/17 03:30:55
  */
-class Version20131211095900 extends AbstractMigration
+class Version20131217153054 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -37,6 +37,10 @@ class Version20131211095900 extends AbstractMigration
             sp_RENAME 'claro_forum_subject.forum_id', 
             'category_id', 
             'COLUMN'
+        ");
+        $this->addSql("
+            ALTER TABLE claro_forum_subject 
+            ADD isSticked BIT NOT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_forum_subject ALTER COLUMN category_id INT
@@ -79,6 +83,10 @@ class Version20131211095900 extends AbstractMigration
             sp_RENAME 'claro_forum_subject.category_id', 
             'forum_id', 
             'COLUMN'
+        ");
+        $this->addSql("
+            ALTER TABLE claro_forum_subject 
+            DROP COLUMN isSticked
         ");
         $this->addSql("
             ALTER TABLE claro_forum_subject ALTER COLUMN forum_id INT

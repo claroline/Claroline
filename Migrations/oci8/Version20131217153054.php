@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/12/11 09:59:01
+ * Generation date: 2013/12/17 03:30:55
  */
-class Version20131211095900 extends AbstractMigration
+class Version20131217153054 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -62,6 +62,12 @@ class Version20131211095900 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE claro_forum_subject 
+            ADD (
+                isSticked NUMBER(1) NOT NULL
+            )
+        ");
+        $this->addSql("
             ALTER TABLE claro_forum_subject RENAME COLUMN forum_id TO category_id
         ");
         $this->addSql("
@@ -93,6 +99,10 @@ class Version20131211095900 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_forum_subject RENAME COLUMN category_id TO forum_id
+        ");
+        $this->addSql("
+            ALTER TABLE claro_forum_subject 
+            DROP (isSticked)
         ");
         $this->addSql("
             DROP INDEX IDX_273AA20B12469DE2

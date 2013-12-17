@@ -76,6 +76,11 @@ class Subject
     protected $creator;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $isSticked = false;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -137,5 +142,15 @@ class Subject
     public function getMessages()
     {
         return $this->messages;
+    }
+
+    public function setIsSticked($boolean)
+    {
+        $this->isSticked = $boolean;
+    }
+
+    public function isSticked()
+    {
+        return $this->isSticked;
     }
 }

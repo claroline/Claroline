@@ -75,6 +75,7 @@
                             <a class="btn btn-default" href="{{ path('claro_forum_edit_message_form', {'message': message.getId()}) }}"> <i class="icon-pencil"></i> {{ 'edit'|trans({}, 'platform') }} </a>
                         {% endif %}
                         {% if isModerator %}
+                            <a id="move-message" class="btn btn-default" href="{{ path('claro_message_move_form', {'message': message.getId()}) }}"> {{ 'move'|trans({}, 'platform') }} </a>
                             <a id="delete-message" class="btn btn-default" href="{{ path('claro_forum_delete_message', {'message': message.getId()}) }}"> <i class="icon-remove"></i> {{ 'delete'|trans({}, 'platform') }} </a>
                         {% endif %}
                         </div>

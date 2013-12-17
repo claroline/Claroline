@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2013/12/11 09:59:01
+ * Generation date: 2013/12/17 03:30:55
  */
-class Version20131211095900 extends AbstractMigration
+class Version20131217153054 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -28,16 +28,16 @@ class Version20131211095900 extends AbstractMigration
             CREATE INDEX IDX_2192ACF729CCBAD0 ON claro_forum_category (forum_id)
         ");
         $this->addSql("
-            DROP INDEX IDX_273AA20B29CCBAD0
+            DROP INDEX IDX_273AA20BA76ED395
         ");
         $this->addSql("
-            DROP INDEX IDX_273AA20BA76ED395
+            DROP INDEX IDX_273AA20B29CCBAD0
         ");
         $this->addSql("
             CREATE TEMPORARY TABLE __temp__claro_forum_subject AS 
             SELECT id, 
-            user_id, 
             forum_id, 
+            user_id, 
             title, 
             created, 
             updated 
@@ -54,6 +54,7 @@ class Version20131211095900 extends AbstractMigration
                 title VARCHAR(255) NOT NULL, 
                 created DATETIME NOT NULL, 
                 updated DATETIME NOT NULL, 
+                isSticked BOOLEAN NOT NULL, 
                 PRIMARY KEY(id), 
                 CONSTRAINT FK_273AA20BA76ED395 FOREIGN KEY (user_id) 
                 REFERENCES claro_user (id) NOT DEFERRABLE INITIALLY IMMEDIATE, 
@@ -64,12 +65,12 @@ class Version20131211095900 extends AbstractMigration
         ");
         $this->addSql("
             INSERT INTO claro_forum_subject (
-                id, user_id, category_id, title, created, 
+                id, category_id, user_id, title, created, 
                 updated
             ) 
             SELECT id, 
-            user_id, 
             forum_id, 
+            user_id, 
             title, 
             created, 
             updated 

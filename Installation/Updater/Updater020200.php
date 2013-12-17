@@ -58,7 +58,8 @@ class Updater020200
                     {$rowsSubject['user_id']},
                     {$this->conn->quote($rowsSubject['title'])},
                     '{$rowsSubject['created']}',
-                    '{$rowsSubject['updated']}'
+                    '{$rowsSubject['updated']}',
+                    false
                 )");
             }
         }
