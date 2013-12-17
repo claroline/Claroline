@@ -113,8 +113,8 @@ class SettingChecker
 
         $category->addRecommendation(
             'Parameter %parameter% should be equal or greater than %value% in your php.ini',
-            array('parameter' => 'memory_limit', 'value' => '128M'),
-            $this->isGreaterOrEqual(ini_get('memory_limit'), '128M')
+            array('parameter' => 'memory_limit', 'value' => '256M'),
+            $this->isGreaterOrEqual(ini_get('memory_limit'), '256M')
         );
 
         $recommendedSettings = array(
