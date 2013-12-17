@@ -1,3 +1,3 @@
 $( document ).ready(function() {
-	$('.resource-owner').tooltip({placement:'top'});
+	$('.lvl-indicator').tooltip({placement:'top'});
 });
