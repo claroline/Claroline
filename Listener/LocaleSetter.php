@@ -63,8 +63,15 @@ class LocaleSetter
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
-        $user = $this->context->getToken()->getUser();
+        $token = $this->context->getToken();
         $preferred = explode('_', $request->getPreferredLanguage());
+        $user = null;
+
+        //throw new \Exception(var_dump($request->getSession()->get('_locale')));
+
+        if (is_object($token)) {
+            $user = $token->getUser();
+        }
 
         // try to see if the locale has been set in locale user setting
         if (is_object($user) and $user->getLocale() and $user->getLocale() !== '') {
