@@ -47,7 +47,7 @@
 
     $('body').on('click', '#form-node-creation-rights :submit', function (e) {
         e.preventDefault();
-        var formAction = $(e.currentTarget.parentElement).attr('action');
+        var formAction = $('#form-node-creation-rights').attr('action');
         var form = document.getElementById('form-node-creation-rights');
         var formData = new FormData(form);
         submitForm(formAction, formData);

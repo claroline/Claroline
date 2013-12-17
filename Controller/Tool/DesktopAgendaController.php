@@ -193,7 +193,7 @@ class DesktopAgendaController extends Controller
     public function tasksAction()
     {
         $usr = $this->get('security.context')->getToken()->getUser();
-        $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, 1);
+        $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
 
         return  array('listEvents' => $listEvents );
     }
