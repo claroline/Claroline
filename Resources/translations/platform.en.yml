@@ -1,7 +1,7 @@
-'Select a Language': 'Select a Language'
 'Add a logo': 'Add a logo'
 'Audience/user visits': 'Audience/user visits'
 'Choose a logo': 'Choose a logo'
+'Select a Language': 'Select a Language'
 404: 'Page Not found'
 Action List: 'Action List'
 Actions per day: 'Actions per day'
@@ -9,6 +9,7 @@ Choose visible actions in the widget: 'Choose visible actions in the widget'
 Choose workspaces displayed in the widget: 'Choose workspaces displayed in the widget'
 Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the graph to zoom, double-click to cancel'
 Filter actions: 'Filter actions'
+Language: 'Language'
 Last action: '{1} Last action|[1,Inf] Last %logAmount% actions'
 None: 'None'
 Overview of all recent activities in %workspaceName% : 'Overview of all recent activities in %workspaceName%'
@@ -94,8 +95,8 @@ category_root: 'Root categories'
 category_structure: 'Category structure'
 change_view : 'Change the display'
 choose_resource_form_type: 'Resource type'
-classify_workspaces: 'Classify workspaces'
 classify_my_workspaces: 'Classify my workspaces'
+classify_workspaces: 'Classify workspaces'
 close: Close
 code: Code
 collaborator: Collaborator
@@ -195,7 +196,7 @@ file_form_shareType_0: Yes
 file_form_shareType_1: false
 files: Files
 filter: Filter
-find_workspaces: 'Find workspaces'
+find_workspaces: 'All workspaces'
 firstName: 'First name'
 firstName: First name
 first_name: 'First name'
@@ -306,7 +307,7 @@ month.September: "September"
 move: Move
 my_account: 'My account'
 my_agenda: 'My agenda'
-my_applications: "Mes applications"
+my_applications: "My applications"
 my_badges: 'My badges'
 my_contacts: 'My contacts'
 my_favourite_workspaces: 'My favourite workspaces'
@@ -360,7 +361,7 @@ platform_parameters: 'Platform parameters'
 platform_parameters_form_defaultRole: 'Default role'
 platform_parameters_form_footer: 'Footer'
 platform_parameters_form_icon: 'Platform Icon'
-platform_parameters_form_localLanguage: Langue
+platform_parameters_form_localLanguage: 'Language'
 platform_parameters_form_name: 'Name of the platform'
 platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_theme: Theme

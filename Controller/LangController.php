@@ -12,12 +12,15 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Library\Lang\LangService;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * @TODO doc
@@ -26,17 +29,23 @@ class LangController
 {
     private $lang;
     private $session;
+    private $context;
+    private $manager;
 
     /**
      * @InjectParams({
-     *     "lang" = @Inject("claroline.common.lang_service"),
-     *     "session" = @Inject("session")
+     *     "lang"       = @Inject("claroline.common.lang_service"),
+     *     "session"    = @Inject("session"),
+     *     "context"    = @Inject("security.context"),
+     *     "manager"    = @Inject("claroline.persistence.object_manager")
      * })
      */
-    public function __construct(LangService $lang, $session)
+    public function __construct(LangService $lang, Session $session, SecurityContext $context, ObjectManager $manager)
     {
         $this->lang = $lang;
         $this->session = $session;
+        $this->context = $context;
+        $this->manager = $manager;
     }
 
     /**
@@ -62,6 +71,15 @@ class LangController
      */
     public function changeLocale($_locale)
     {
+        $langs = $this->lang->getLangs();
+        $user = $this->context->getToken()->getUser();
+
+        if (isset($langs[$_locale]) and is_object($user)) {
+            $user->setLocale($_locale);
+            $this->manager->persist($user);
+            $this->manager->flush();
+        }
+
         return new Response(200);
     }
 }

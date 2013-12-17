@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Form;
 
-use Symfony\Component\Form\FormBuilderInterface;
 use Claroline\CoreBundle\Entity\Role;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Validator\Constraints\Image;
 
@@ -50,53 +50,53 @@ class ProfileType extends AbstractType
             $builder->add('firstName', 'text', array('read_only' => true, 'disabled' => true))
                 ->add('lastName', 'text', array('read_only' => true, 'disabled' => true))
                 ->add('username', 'text', array('read_only' => true, 'disabled' => true))
-                ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false))
                 ->add('administrativeCode', 'text', array('required' => false, 'read_only' => true, 'disabled' => true))
                 ->add('mail', 'email', array('required' => false))
-                ->add('phone', 'text', array('required' => false));
-            $builder->add(
-                'platformRoles',
-                'entity',
-                array(
-                    'mapped' => false,
-                    'data' => $this->platformRoles,
-                    'class' => 'Claroline\CoreBundle\Entity\Role',
-                    'expanded' => false,
-                    'multiple' => true,
-                    'property' => 'translationKey',
-                    'disabled' => true,
-                    'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
-                        return $er->createQueryBuilder('r')
-                                ->where("r.type != " . Role::WS_ROLE)
-                                ->andWhere("r.name != 'ROLE_ANONYMOUS'");
-                    }
-                )
-            );
+                ->add('phone', 'text', array('required' => false))
+                ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'))
+                ->add(
+                    'platformRoles',
+                    'entity',
+                    array(
+                        'mapped' => false,
+                        'data' => $this->platformRoles,
+                        'class' => 'Claroline\CoreBundle\Entity\Role',
+                        'expanded' => false,
+                        'multiple' => true,
+                        'property' => 'translationKey',
+                        'disabled' => true,
+                        'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                            return $er->createQueryBuilder('r')
+                                    ->where("r.type != " . Role::WS_ROLE)
+                                    ->andWhere("r.name != 'ROLE_ANONYMOUS'");
+                        }
+                    )
+                );
         } else {
             $builder->add('firstName', 'text')
                 ->add('lastName', 'text')
                 ->add('username', 'text')
-                ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false))
                 ->add('administrativeCode', 'text', array('required' => false))
                 ->add('mail', 'email', array('required' => false))
-                ->add('phone', 'text', array('required' => false));
-            $builder->add(
-                'platformRoles',
-                'entity',
-                array(
-                    'mapped' => false,
-                    'data' => $this->platformRoles,
-                    'class' => 'Claroline\CoreBundle\Entity\Role',
-                    'expanded' => false,
-                    'multiple' => true,
-                    'property' => 'translationKey',
-                    'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
-                        return $er->createQueryBuilder('r')
-                                ->where("r.type != " . Role::WS_ROLE)
-                                ->andWhere("r.name != 'ROLE_ANONYMOUS'");
-                    }
-                )
-            );
+                ->add('phone', 'text', array('required' => false))
+                ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'))
+                ->add(
+                    'platformRoles',
+                    'entity',
+                    array(
+                        'mapped' => false,
+                        'data' => $this->platformRoles,
+                        'class' => 'Claroline\CoreBundle\Entity\Role',
+                        'expanded' => false,
+                        'multiple' => true,
+                        'property' => 'translationKey',
+                        'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                            return $er->createQueryBuilder('r')
+                                    ->where("r.type != " . Role::WS_ROLE)
+                                    ->andWhere("r.name != 'ROLE_ANONYMOUS'");
+                        }
+                    )
+                );
         }
         $builder->add(
             'pictureFile',
@@ -118,7 +118,7 @@ class ProfileType extends AbstractType
             'description',
             'tinymce',
             array('required' => false)
-            );
+        );
     }
 
     public function getName()
@@ -128,10 +128,12 @@ class ProfileType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'Claroline\CoreBundle\Entity\User',
-            'validation_groups' => array('admin'),
-            'translation_domain' => 'platform'
-        ));
+        $resolver->setDefaults(
+            array(
+                'data_class' => 'Claroline\CoreBundle\Entity\User',
+                'validation_groups' => array('admin'),
+                'translation_domain' => 'platform'
+            )
+        );
     }
 }

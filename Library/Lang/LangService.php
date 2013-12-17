@@ -28,6 +28,9 @@ class LangService
         $this->path = $path;
     }
 
+    /**
+     * Get a list of available languages in the platform.
+     */
     public function getLangs()
     {
         $langs = array();

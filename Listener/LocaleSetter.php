@@ -11,35 +11,42 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
+use JMS\DiExtraBundle\Annotation\Observe;
+use JMS\DiExtraBundle\Annotation\Service;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
- * @DI\Service
+ * @Service
  *
  * Listener setting the platform language according to platform_options.yml.
  */
 class LocaleSetter
 {
     private $defaultLocale;
+    private $context;
 
     /**
-     * @DI\InjectParams({
-     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler")
+     * @InjectParams({
+     *     "configHandler" = @Inject("claroline.config.platform_config_handler"),
+     *     "context"       = @Inject("security.context")
      * })
      *
      * Constructor.
      *
      * @param PlatformConfigurationHandler $configHandler
      */
-    public function __construct(PlatformConfigurationHandler $configHandler)
+    public function __construct(PlatformConfigurationHandler $configHandler, SecurityContext $context)
     {
         $this->defaultLocale = $configHandler->getParameter('locale_language');
+        $this->context = $context;
     }
 
     /**
-     * @DI\Observe("kernel.request")
+     * @Observe("kernel.request")
      *
      * Sets the platform language.
      *
@@ -48,8 +55,15 @@ class LocaleSetter
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
+        $user = $this->context->getToken()->getUser();
+
         if (!$request->hasPreviousSession()) {
             return;
+        }
+
+        // try to see if the locale has been set in locale user setting
+        if (is_object($user) and $user->getLocale() and $user->getLocale() !== '') {
+            $request->getSession()->set('_locale', $user->getLocale());
         }
 
         // try to see if the locale has been set as a _locale routing parameter
