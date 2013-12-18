@@ -134,19 +134,11 @@ class Migrator
             return $this->cacheConfigs[$bundle->getName()];
         }
 
-        $migrationsDir = "{$bundle->getPath()}/Migrations";
-        $migrationsName = "{$bundle->getName()} migration";
-        $migrationsNamespace = "{$bundle->getNamespace()}\\Migrations";
-        $migrationsTableName = 'doctrine_' . strtolower($bundle->getName()) . '_versions';
-
-        // temporary fix allowing old dbal migrations to be executed
         $driverName = $this->connection->getDriver()->getName();
-        $isDriverSpecific = is_dir("{$migrationsDir}/{$driverName}");
-
-        if ($isDriverSpecific) {
-            $migrationsDir .= "/{$driverName}";
-            $migrationsNamespace .= "\\{$driverName}";
-        }
+        $migrationsDir = "{$bundle->getPath()}/Migrations/{$driverName}";
+        $migrationsName = "{$bundle->getName()} migration";
+        $migrationsNamespace = "{$bundle->getNamespace()}\\Migrations\\{$driverName}";
+        $migrationsTableName = 'doctrine_' . strtolower($bundle->getName()) . '_versions';
 
         $config = new Configuration($this->connection);
         $config->setName($migrationsName);
