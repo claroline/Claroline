@@ -5,7 +5,9 @@ namespace Innova\PathBundle\Listener;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+
 use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
@@ -106,5 +108,9 @@ class ToolListener extends ContainerAware
 	        );
 	    $event->setResponse(new RedirectResponse($route));
 	    $event->stopPropagation();
+    }
+
+    public function onPathDelete(DeleteResourceEvent $event){
+    	$event->stopPropagation();
     }
 }

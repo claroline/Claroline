@@ -6,6 +6,15 @@ services:
     tags:
       - { name: kernel.event_listener, event: open_tool_workspace_innova_path, method: onWorkspaceOpen }
       - { name: kernel.event_listener, event: open_path, method: onPathOpen }
+      - { name: kernel.event_listener, event: delete_path, method: onPathDelete }
       - { name: kernel.event_listener, event: create_form_path, method: onPathCreateForm }
       - { name: kernel.event_listener, event: create_path, method: onPathCreate }
       - { name: kernel.event_listener, event: open_non_digital_resource, method: onNonDigitalResourceOpen }
+
+
+
+
+
+
+
+
