@@ -135,7 +135,8 @@ class ForumRepository extends EntityRepository
     {
         $dql = "SELECT m FROM Claroline\ForumBundle\Entity\Message m
             JOIN m.subject s
-            JOIN s.forum f
+            JOIN s.category c
+            JOIN c.forum f
             WHERE m.content LIKE :content
             and f.id = {$forum->getId()}
         ";
