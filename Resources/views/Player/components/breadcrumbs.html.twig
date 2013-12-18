@@ -8,7 +8,13 @@
 
 {% macro dropdownBreadcrumb(workspace, path, step) %}
     {% import _self as macros %}
-    <li class="dropdown lvl-{{ step.lvl + 1 }}">
+
+    {% set isTerminalClass = "" %}
+    {% if step.children is empty %}
+        {% set isTerminalClass = "terminal" %}
+    {% endif %}
+    
+    <li class="dropdown lvl-{{ step.lvl + 1 }} {{ isTerminalClass }}">
         <a class="dropdown-label" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
             {{ step.name }}
         </a>

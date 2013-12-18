@@ -39,7 +39,7 @@ class ToolListener extends ContainerAware
 	            )
 	        );
 	    $event->setResponse(new RedirectResponse($route));
-	    $event->stopPropagation();
+		$event->stopPropagation();
     }
 
 

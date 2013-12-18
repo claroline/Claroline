@@ -119,3 +119,7 @@
     text-shadow:0;
     text-shadow:none;
 }
+
+.path-player .breadcrumbs ul > li.terminal > a:after {
+    display:none;
+}
