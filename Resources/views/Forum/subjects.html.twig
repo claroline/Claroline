@@ -1,4 +1,4 @@
-{% macro renderPager(categoryId, pager) %}
+{% macro renderPager(categoryId, pager, max) %}
     {{
         pagerfanta(
             pager,
@@ -6,7 +6,7 @@
             {
                 'proximity' : 1,
                 'routeName': 'claro_forum_subjects',
-                'routeParams': {'category': categoryId}
+                'routeParams': {'category': categoryId, 'max': max}
             }
         )
     }}
@@ -43,13 +43,18 @@
                 {% endif %}
             </div>
             <div class="col-md-6">
-                 <div class="input-group">
-                   <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
-                    <span class="input-group-btn">
-                        <button class="filter btn btn-default" type="button" id="search-button">
-                            <i class="icon-search"></i>
-                        </button>
-                    </span>
+                <div class="input-group margin-md">
+                    <select class="form-control input-md" id="max-select">
+                        <option>20</option>
+                        <option>50</option>
+                        <option>100</option>
+                        <option>200</option>
+                        <option>500</option>
+                    </select>
+                    <span class="input-group-addon">{{ 'subjets_per_page'|trans({}, 'forum') }}</span>
+                    <button class="filter btn btn-default" type="button" id="search-button">
+                        <i class="icon-search"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -122,7 +127,7 @@
             </table>
         </div>
         <div>
-            {{ renderPager(category.getId(), pager) }}
+            {{ renderPager(category.getId(), pager, max) }}
         </div>
     </div>
 {% endblock %}
@@ -135,13 +140,10 @@
     %}<script language="javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script>
+        $('#max-select').val({{ max }});
         $('#search-button').on('click', function(event) {
-            event.preventDefault();
-            var search = document.getElementById('search-items-txt').value;
-            if (search !== '') {
-                var route = Routing.generate('claro_forum_search', {'forum': {{ _resource.getId()}}, 'search': document.getElementById('search-items-txt').value});
-                window.location.href = route;
-            }
+            var route = Routing.generate('claro_forum_subjects', {'category': {{ category.getId()}}, 'max': $('#max-select').val() });
+            window.location.href = route;
         });
     </script>
         {% if isModerator %}

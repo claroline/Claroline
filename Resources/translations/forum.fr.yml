@@ -26,5 +26,8 @@ unsubscribe_mail_list: Ne plus recevoir les notifications
 subject: Sujet
 last_message: Dernier message
 started_by: Initié par
-remove_subjects_confirm_message: Êtes vous sur de vouloir supprimer ces %count% sujets ?
-remove_subject_confirm_message: Êtes vous sur de vouloir supprimer ce sujet.
+remove_subjects_confirm_message: Êtes vous sûr de vouloir supprimer ces %count% sujets ?
+remove_subject_confirm_message: Êtes vous sûr de vouloir supprimer ce sujet.
+remove_category_confirm_message: Êtes vous sûr de vouloir supprimer cette catégorie ?
+messages_per_page: Messages par page
+subjets_per_page: Sujets par page

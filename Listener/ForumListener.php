@@ -11,7 +11,6 @@
 
 namespace Claroline\ForumBundle\Listener;
 
-use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
@@ -22,11 +21,9 @@ use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Message;
-use Claroline\ForumBundle\Form\ForumOptionsType;
 use Claroline\ForumBundle\Form\ForumType;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class ForumListener extends ContainerAware
 {

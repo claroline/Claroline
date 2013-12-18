@@ -2,7 +2,6 @@
 
 //SEARCH
 //TRANSLATIONS (messagebox)!
-//CUSTOM PAGINATION
 
 /*
  * This file is part of the Claroline Connect package.
@@ -31,7 +30,6 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
@@ -49,9 +47,8 @@ class ForumController extends Controller
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @Template("ClarolineForumBundle::index.html.twig")
      *
-     * @param integer $resourceId
-     *
-     * @return Response
+     * @param Forum $forum
+     * @param User $user
      */
     public function openAction(Forum $forum, User $user)
     {
@@ -71,22 +68,22 @@ class ForumController extends Controller
 
     /**
      * @Route(
-     *     "/category/{category}/subjects/page/{page}",
+     *     "/category/{category}/subjects/page/{page}/max/{max}",
      *     name="claro_forum_subjects",
-     *     defaults={"page"=1}
+     *     defaults={"page"=1, "max"=20},
+     *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      *
-     * @param integer $resourceId
-     *
-     * @return Response
+     * @param Category $category
+     * @param integer $page
+     * @param integer $max
      */
-    public function subjectsAction(Category $category, $page, User $user)
+    public function subjectsAction(Category $category, $page, $max)
     {
         $forum = $category->getForum();
         $this->checkAccess($forum);
-        $pager = $this->get('claroline.manager.forum_manager')->getSubjectsPager($category, $page);
+        $pager = $this->get('claroline.manager.forum_manager')->getSubjectsPager($category, $page, $max);
         $collection = new ResourceCollection(array($forum->getResourceNode()));
         $sc = $this->get('security.context');
         $canCreateSubject = $sc->isGranted('post', $collection);
@@ -97,7 +94,8 @@ class ForumController extends Controller
             '_resource' => $forum,
             'canCreateSubject' => $canCreateSubject,
             'isModerator' => $isModerator,
-            'category' => $category
+            'category' => $category,
+            'max' => $max
         );
     }
 
@@ -107,9 +105,8 @@ class ForumController extends Controller
      *     name="claro_forum_form_subject_creation"
      * )
      * @Template()
-     * @param integer $forumId
      *
-     * @return Response
+     * @param Category $category
      */
     public function subjectFormAction(Category $category)
     {
@@ -135,9 +132,8 @@ class ForumController extends Controller
      *     name="claro_forum_form_category_creation"
      * )
      * @Template()
-     * @param Forum $forum
      *
-     * @return Response
+     * @param Forum $forum
      */
     public function categoryFormAction(Forum $forum)
     {
@@ -162,10 +158,6 @@ class ForumController extends Controller
      * )
      * @Template()
      * @param Forum $forum
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     *
-     * @param \Claroline\ForumBundle\Entity\Forum $forum
      */
     public function createCategoryAction(Forum $forum)
     {
@@ -196,9 +188,7 @@ class ForumController extends Controller
      *     name="claro_forum_create_subject"
      * )
      * @Template("ClarolineForumBundle:Forum:subjectForm.html.twig")
-     * @param integer $forumId
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @param Category $category
      */
     public function createSubjectAction(Category $category)
     {
@@ -247,20 +237,23 @@ class ForumController extends Controller
 
     /**
      * @Route(
-     *     "/subject/{subject}/messages/page/{page}",
+     *     "/subject/{subject}/messages/page/{page}/max/{max}",
      *     name="claro_forum_messages",
-     *     defaults={"page"=1}
+     *     defaults={"page"=1, "max"= 20},
+     *     options={"expose"=true}
      * )
      * @Template()
      *
-     * @return Response
+     * @param Subject $subject
+     * @param integer $page
+     * @param integer $max
      */
-    public function messagesAction(Subject $subject, $page)
+    public function messagesAction(Subject $subject, $page, $max)
     {
         $forum = $subject->getCategory()->getForum();
         $this->checkAccess($forum);
         $isModerator = $this->get('security.context')->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
-        $pager = $this->get('claroline.manager.forum_manager')->getMessagesPager($subject, $page);
+        $pager = $this->get('claroline.manager.forum_manager')->getMessagesPager($subject, $page, $max);
         $collection = new ResourceCollection(array($forum->getResourceNode()));
         $canAnswer = $this->get('security.context')->isGranted('post', $collection);
         $form = $this->get('form.factory')->create(new MessageType());
@@ -272,7 +265,8 @@ class ForumController extends Controller
             'isModerator' => $isModerator,
             'form' => $form->createView(),
             'canAnswer' => $canAnswer,
-            'category' => $subject->getCategory()
+            'category' => $subject->getCategory(),
+            'max' => $max
         );
     }
 
@@ -282,9 +276,7 @@ class ForumController extends Controller
      *     name="claro_forum_create_message"
      * )
      *
-     * @param integer $subjectId
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @param Subject $subject
      */
     public function createMessageAction(Subject $subject)
     {
@@ -317,6 +309,7 @@ class ForumController extends Controller
      *     name="claro_forum_edit_message_form"
      * )
      * @Template()
+     * @param Message $message
      */
     public function editMessageFormAction(Message $message)
     {
@@ -346,6 +339,7 @@ class ForumController extends Controller
      * )
      *
      * @Template("ClarolineForumBundle:Forum:editMessageForm.html.twig")
+     * @param Message $message
      */
     public function editMessageAction(Message $message)
     {
@@ -385,6 +379,7 @@ class ForumController extends Controller
      *     name="claro_forum_edit_category_form"
      * )
      * @Template()
+     * @param Category $category
      */
     public function editCategoryFormAction(Category $category)
     {
@@ -411,6 +406,7 @@ class ForumController extends Controller
      *     "/edit/category/{category}",
      *     name="claro_forum_edit_category"
      * )
+     * @param Category $category
      */
     public function editCategoryAction(Category $category)
     {
@@ -442,7 +438,7 @@ class ForumController extends Controller
      *     name="claro_forum_delete_category"
      * )
      *
-     * @param \Claroline\ForumBundle\Entity\Subject $subject
+     * @param Category $category
      */
     public function deleteCategory(Category $category)
     {
@@ -469,6 +465,9 @@ class ForumController extends Controller
      *     options={"expose"=true}
      * )
      * @Template("ClarolineForumBundle::searchResults.html.twig")
+     * @param Forum $forum
+     * @param integer $page
+     * @param string $search
      */
     public function searchAction(Forum $forum, $page, $search)
     {
@@ -488,6 +487,7 @@ class ForumController extends Controller
      *      options={"id" = "subjectId", "strictId" = true}
      * )
      * @Template()
+     * @param Subject $subject
      */
     public function editSubjectFormAction(Subject $subject)
     {
@@ -519,6 +519,7 @@ class ForumController extends Controller
      *      options={"id" = "subjectId", "strictId" = true}
      * )
      * @Template("ClarolineForumBundle:Forum:editSubjectForm.html.twig")
+     * @param Subject $subject
      */
     public function editSubjectAction(Subject $subject)
     {
@@ -582,7 +583,8 @@ class ForumController extends Controller
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
-     * @param \Claroline\ForumBundle\Entity\Forum $forum
+     * @param Forum $forum
+     * @param User $user
      */
     public function subscribeAction(Forum $forum, User $user)
     {
@@ -601,7 +603,8 @@ class ForumController extends Controller
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
-     * @param \Claroline\ForumBundle\Entity\Forum $forum
+     * @param Forum $forum
+     * @param User $user
      */
     public function unsubscribeAction(Forum $forum, User $user)
     {
@@ -619,7 +622,7 @@ class ForumController extends Controller
      *     name="claro_forum_delete_subject"
      * )
      *
-     * @param \Claroline\ForumBundle\Entity\Subject $subject
+     * @param Subject $subject
      */
     public function deleteSubjectAction(Subject $subject)
     {
@@ -637,6 +640,10 @@ class ForumController extends Controller
         throw new AccessDeniedHttpException();
     }
 
+    /**
+     * @param \Claroline\ForumBundle\Entity\Forum $forum
+     * @throws AccessDeniedHttpException
+     */
     private function checkAccess(Forum $forum)
     {
         $collection = new ResourceCollection(array($forum->getResourceNode()));
@@ -670,7 +677,7 @@ class ForumController extends Controller
      *
      * Renders last messages from the forums' workspace
      *
-     * @return Response
+     * @param AbstractWorkspace $workspace
      */
     public function forumsWorkspaceWidgetAction(AbstractWorkspace $workspace)
     {
@@ -701,8 +708,6 @@ class ForumController extends Controller
      * @EXT\Template()
      *
      * Renders last messages from the forums' workspaces
-     *
-     * @return Response
      */
     public function forumsDesktopWidgetAction()
     {
@@ -732,8 +737,7 @@ class ForumController extends Controller
      * )
      * @EXT\Method("GET")
      * @EXT\Template()
-     *
-     * @return Response
+     * @param Subject $subject
      */
     public function moveSubjectFormAction(Subject $subject)
     {
@@ -759,8 +763,8 @@ class ForumController extends Controller
      * )
      * @EXT\Method("GET")
      * @EXT\Template()
-     *
-     * @return Response
+     * @param Message $message
+     * @param integer $page
      */
     public function moveMessageFormAction(Message $message, $page)
     {
@@ -787,7 +791,8 @@ class ForumController extends Controller
      * )
      * @EXT\Method("GET")
      *
-     * @return Response
+     * @param Message $message
+     * @param Subject $newSubject
      */
     public function moveMessageAction(Message $message, Subject $newSubject)
     {
@@ -809,7 +814,8 @@ class ForumController extends Controller
      * )
      * @EXT\Method("GET")
      *
-     * @return Response
+     * @param Subject $subject
+     * @param Category $newCategory
      */
     public function moveSubjectAction(Subject $subject, Category $newCategory)
     {
@@ -831,7 +837,7 @@ class ForumController extends Controller
      * )
      * @EXT\Method("GET")
      *
-     * @return RedirectResponse
+     * @param Subject $subject
      */
     public function stickSubjectAction(Subject $subject)
     {
@@ -853,7 +859,7 @@ class ForumController extends Controller
      * )
      * @EXT\Method("GET")
      *
-     * @return RedirectResponse
+     * @param Subject $subject
      */
     public function unstickSubjectAction(Subject $subject)
     {

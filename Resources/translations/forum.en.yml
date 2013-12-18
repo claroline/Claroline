@@ -28,3 +28,6 @@ last_message: Last post
 started_by: Initiated by
 remove_subject_confirm_message: Are you sure you want to delete this post ?
 remove_subjects_confirm_message: Are you sure you want to delete these %count% topics ?
+remove_category_confirm_message: Are you sure you want to delete this category ?
+messages_per_page: Messages per page
+subjets_per_page: Subjects per page

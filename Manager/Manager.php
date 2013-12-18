@@ -339,14 +339,15 @@ class Manager
      *
      * @param \Claroline\ForumBundle\Entity\Category $category
      * @param integer $page
+     * @param integer $max
      *
      * @return @return \Pagerfanta\Pagerfanta
      */
-    public function getSubjectsPager(Category $category, $page = 1)
+    public function getSubjectsPager(Category $category, $page = 1, $max = 20)
     {
         $subjects = $this->forumRepo->findSubjects($category);
 
-        return $this->pagerFactory->createPagerFromArray($subjects, $page);
+        return $this->pagerFactory->createPagerFromArray($subjects, $page, $max);
     }
 
     /**
@@ -354,14 +355,15 @@ class Manager
      *
      * @param \Claroline\ForumBundle\Entity\Subject $subject
      * @param integer $page
+     * @param integer $max
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getMessagesPager(Subject $subject, $page = 1)
+    public function getMessagesPager(Subject $subject, $page = 1, $max = 20)
     {
         $messages = $this->messageRepo->findBySubject($subject);
 
-        return $this->pagerFactory->createPagerFromArray($messages, $page);
+        return $this->pagerFactory->createPagerFromArray($messages, $page, $max);
     }
 
     /**
