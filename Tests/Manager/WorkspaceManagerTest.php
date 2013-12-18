@@ -36,6 +36,7 @@ class WorkspaceManagerTest extends MockeryTestCase
     private $templateDir;
     private $pagerFactory;
     private $homeTabManager;
+    private $workpaceFavouriteRepo;
 
     public function setUp()
     {
@@ -53,8 +54,8 @@ class WorkspaceManagerTest extends MockeryTestCase
         $this->workspaceFavouriteRepo = $this->mock('ClarolineCoreBundle\Repository\WorkspaceFavouriteRepository');
         $this->userRepo = $this->mock('Claroline\CoreBundle\Repository\UserRepository');
         $this->roleRepo = $this->mock('Claroline\CoreBundle\Repository\RoleRepository');
+        $this->workspaceRepo = $this->mock('Claroline\CoreBundle\Repository\AbstractWorkspaceRepository');
         $this->rightsRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceRightsRepository');
-        $this->workspaceRepo = $this->mock('Claroline\CoreBundle\Repository\AbstractResourceRepository');
         $this->strictDispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->ut = $this->mock('Claroline\CoreBundle\Library\Utilities\ClaroUtilities');

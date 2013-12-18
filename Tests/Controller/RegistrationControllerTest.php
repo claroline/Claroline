@@ -28,6 +28,7 @@ class RegistrationControllerTest extends MockeryTestCase
     private $configHandler;
     private $validator;
     private $controller;
+    private $roleManager;
 
     protected function setUp()
     {
@@ -37,11 +38,13 @@ class RegistrationControllerTest extends MockeryTestCase
         $this->userManager = $this->mock('Claroline\CoreBundle\Manager\UserManager');
         $this->configHandler = $this->mock('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
         $this->validator = $this->mock('Symfony\Component\Validator\ValidatorInterface');
+        $this->roleManager = $this->mock('Claroline\CoreBundle\Manager\RoleManager');
         $this->controller = new RegistrationController(
             $this->request,
             $this->userManager,
             $this->configHandler,
-            $this->validator
+            $this->validator,
+            $this->roleManager
         );
     }
 
