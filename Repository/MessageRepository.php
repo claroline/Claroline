@@ -20,8 +20,9 @@ class MessageRepository extends EntityRepository
     public function findBySubject(Subject $subject, $getQuery = false)
     {
         $dql = "
-            SELECT m, u FROM Claroline\ForumBundle\Entity\Message m
+            SELECT m, u, pws FROM Claroline\ForumBundle\Entity\Message m
             JOIN m.creator u
+            JOIN u.personalWorkspace pws
             JOIN m.subject subject
             WHERE subject.id = {$subject->getId()}";
 

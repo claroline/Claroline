@@ -1,8 +1,5 @@
 <?php
 
-//SEARCH
-//TRANSLATIONS (messagebox)!
-
 /*
  * This file is part of the Claroline Connect package.
  *
