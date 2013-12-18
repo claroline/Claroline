@@ -52,12 +52,12 @@
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu zoom">
-                <li><a id='zoom50'>50%</a></li>
-                <li><a id='zoom75'>75%</a></li>
-                <li class="active"><a id='zoom100'>100%</a></li>
-                <li><a id='zoom125'>125%</a></li>
-                <li><a id='zoom150'>150%</a></li>
-                <li><a id='zoom200'>200%</a></li>
+                <li{% if resourceZoom == 'zoom50' %} class="active"{% endif %}><a id='zoom50'>50%</a></li>
+                <li{% if resourceZoom == 'zoom75' %} class="active"{% endif %}><a id='zoom75'>75%</a></li>
+                <li{% if resourceZoom == 'zoom100' %} class="active"{% endif %}><a id='zoom100'>100%</a></li>
+                <li{% if resourceZoom == 'zoom125' %} class="active"{% endif %}><a id='zoom125'>125%</a></li>
+                <li{% if resourceZoom == 'zoom150' %} class="active"{% endif %}><a id='zoom150'>150%</a></li>
+                <li{% if resourceZoom == 'zoom200' %} class="active"{% endif %}><a id='zoom200'>200%</a></li>
             </ul>
         </li>
     </ul>

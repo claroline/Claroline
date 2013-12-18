@@ -139,7 +139,8 @@ class ResourceManagerListener
                 'directoryId' => $directoryId,
                 'resourceTypes' => $resourceTypes,
                 'jsonPath' => $jsonPath,
-                'maxPostSize' => ini_get('post_max_size')
+                'maxPostSize' => ini_get('post_max_size'),
+                'resourceZoom' => $this->getZoom()
              )
         );
     }
@@ -155,7 +156,11 @@ class ResourceManagerListener
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\desktop\resource_manager:resources.html.twig',
-            array('resourceTypes' => $resourceTypes, 'maxPostSize' => ini_get('post_max_size'))
+            array(
+                'resourceTypes' => $resourceTypes,
+                'maxPostSize' => ini_get('post_max_size'),
+                'resourceZoom' => $this->getZoom()
+            )
         );
     }
 
@@ -185,5 +190,14 @@ class ResourceManagerListener
                 'workspaceRoles' => $datas['workspaceRoles']
             )
         );
+    }
+
+    public function getZoom($zoom = "zoom100")
+    {
+        if ($this->request->getSession()->get('resourceZoom')) {
+            $zoom = $this->request->getSession()->get('resourceZoom');
+        }
+
+        return $zoom;
     }
 }

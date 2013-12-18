@@ -29,6 +29,7 @@
                 "appPath": "{{ app.request.getBaseUrl }}",
                 "webPath": "{{ asset('') }}",
                 "language": "{{ app.request.locale }}",
+                "resourceZoom": "{{ resourceZoom }}",
                 "resourceTypes": {
                     {% for resourceType in resourceTypes %}
                         "{{ resourceType.getName() }}": {
