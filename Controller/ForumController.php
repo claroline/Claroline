@@ -1,8 +1,8 @@
 <?php
 
 //SEARCH
+//TRANSLATIONS (messagebox)!
 //CUSTOM PAGINATION
-//ADD EVENT TRACKING
 
 /*
  * This file is part of the Claroline Connect package.
@@ -12,7 +12,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Claroline\ForumBundle\Controller;
 
 use Claroline\ForumBundle\Entity\Message;
@@ -23,8 +22,6 @@ use Claroline\ForumBundle\Form\MessageType;
 use Claroline\ForumBundle\Form\SubjectType;
 use Claroline\ForumBundle\Form\CategoryType;
 use Claroline\ForumBundle\Form\EditTitleType;
-use Claroline\ForumBundle\Event\Log\EditMessageEvent;
-use Claroline\ForumBundle\Event\Log\EditSubjectEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\User;
@@ -361,15 +358,13 @@ class ForumController extends Controller
             throw new AccessDeniedHttpException();
         }
 
+        $oldContent = $message->getContent();
         $form = $this->container->get('form.factory')->create(new MessageType, new Message());
         $form->handleRequest($this->get('request'));
-        $em = $this->getDoctrine()->getManager();
 
         if ($form->isValid()) {
-            $this->dispatch(new EditMessageEvent($message, $message->getContent(), $form->get('content')->getData()));
-            $message->setContent($form->get('content')->getData());
-            $em->persist($message);
-            $em->flush();
+            $newContent = $form->get('content')->getData();
+            $this->get('claroline.manager.forum_manager')->editMessage($message, $oldContent, $newContent);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_messages', array('subject' => $subject->getId()))
@@ -427,13 +422,13 @@ class ForumController extends Controller
             throw new AccessDeniedHttpException();
         }
 
+        $oldName = $category->getName();
         $form = $this->container->get('form.factory')->create(new CategoryType, $category);
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
-            $em = $this->get('doctrine.orm.entity_manager');
-            $em->persist($category);
-            $em->flush();
+            $newName = $form->get('name')->getData();
+            $this->get('claroline.manager.forum_manager')->editCategory($category, $oldName, $newName);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_categories', array('forum' => $category->getForum()->getId()))
@@ -452,13 +447,14 @@ class ForumController extends Controller
     public function deleteCategory(Category $category)
     {
         $sc = $this->get('security.context');
+        $forum = $category->getForum();
 
         if ($sc->isGranted('moderate', new ResourceCollection(array($category->getForum()->getResourceNode())))) {
 
             $this->get('claroline.manager.forum_manager')->deleteCategory($category);
 
             return new RedirectResponse(
-                $this->generateUrl('claro_forum_subjects', array('category' => $category->getId()))
+                $this->generateUrl('claro_forum_categories', array('forum' => $forum->getId()))
             );
         }
 
@@ -530,7 +526,6 @@ class ForumController extends Controller
         $isModerator = $sc->isGranted(
             'moderate', new ResourceCollection(array($subject->getCategory()->getForum()->getResourceNode()))
         );
-        $em = $this->getDoctrine()->getManager();
 
         if (!$isModerator && $sc->getToken()->getUser() !== $subject->getCreator()) {
             throw new AccessDeniedHttpException();
@@ -541,9 +536,8 @@ class ForumController extends Controller
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
-            $em->persist($subject);
-            $em->flush();
-            $this->dispatch(new EditSubjectEvent($subject, $oldTitle, $subject->getTitle()));
+            $newTitle = $form->get('title')->getData();
+            $this->get('claroline.manager.forum_manager')->editSubject($subject, $oldTitle, $newTitle);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_subjects', array('category' => $subject->getCategory()->getId()))

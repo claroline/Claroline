@@ -18,19 +18,27 @@ class EditMessageEvent extends AbstractLogResourceEvent
 {
     const ACTION = 'forum-edit-message';
 
+    /**
+     * @param \Claroline\ForumBundle\Entity\Message $message
+     * @param string $oldContent
+     * @param string $newContent
+     */
     public function __construct(Message $message, $oldContent, $newContent)
     {
         $details = array(
             'message' => array(
-                'message' => $message->getId(),
+                'id' => $message->getId(),
                 'old_content' => $oldContent,
                 'new_content' => $newContent
             ),
             'subject' => array(
-                'subject' => $message->getSubject()->getId()
+                'id' => $message->getSubject()->getId()
+            ),
+            'category' => array(
+                'id' => $message->getSubject()->getCategory()->getId()
             ),
             'forum' => array(
-                'forum' => $message->getSubject()->getCategory()->getForum()->getId()
+                'id' => $message->getSubject()->getCategory()->getForum()->getId()
             )
         );
 

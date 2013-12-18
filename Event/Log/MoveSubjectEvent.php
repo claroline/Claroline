@@ -12,24 +12,27 @@
 namespace Claroline\ForumBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
+use Claroline\ForumBundle\Entity\Category;
 use Claroline\ForumBundle\Entity\Subject;
 
-class DeleteSubjectEvent extends AbstractLogResourceEvent
+class MoveSubjectEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'forum-delete-subject';
+    const ACTION = 'forum-move-subject';
 
     /**
-     * @param Subject $subject
+     * @param \Claroline\ForumBundle\Entity\Subject $subject
+     * @param \Claroline\ForumBundle\Entity\Category $oldCategory
+     * @param \Claroline\ForumBundle\Entity\Category $newCategory
      */
-    public function __construct(Subject $subject)
+    public function __construct(Subject $subject, Category $oldCategory, Category $newCategory)
     {
         $details = array(
             'subject' => array(
-                'id' => $subject->getId(),
-                'title' => $subject->getTitle()
+                'id' => $subject->getId()
             ),
             'category' => array(
-                'id' => $subject->getCategory()->getId()
+                'oldCategoryId' => $oldCategory->getId(),
+                'newCategoryId' => $newCategory->getId(),
             ),
             'forum' => array(
                 'id' => $subject->getCategory()->getForum()->getId()

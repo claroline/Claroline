@@ -12,33 +12,27 @@
 namespace Claroline\ForumBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
-use Claroline\ForumBundle\Entity\Message;
+use Claroline\ForumBundle\Entity\Category;
 
-class CreateMessageEvent extends AbstractLogResourceEvent
+class DeleteCategoryEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'forum-create-message';
+    const ACTION = 'forum-delete-category';
 
     /**
-     * @param Message $message
+     * @param \Claroline\ForumBundle\Entity\Category $category
      */
-    public function __construct(Message $message)
+    public function __construct(Category $category)
     {
         $details = array(
-            'message' => array(
-                'id' => $message->getId()
-            ),
-            'subject' => array(
-                'id' => $message->getSubject()->getId()
-            ),
             'category' => array(
-                'id' => $message->getSubject()->getCategory()->getId()
+                'id' => $category->getId()
             ),
             'forum' => array(
-                'id' => $message->getSubject()->getCategory()->getForum()->getId()
+                'id' => $category->getForum()->getId()
             )
         );
 
-        parent::__construct($message->getSubject()->getCategory()->getForum()->getResourceNode(), $details);
+        parent::__construct($category->getForum()->getResourceNode(), $details);
     }
 
     /**
