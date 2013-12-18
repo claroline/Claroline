@@ -19,6 +19,8 @@ use JMS\DiExtraBundle\Annotation as DI;
  * application configuration files. It uses dedicated components to perform
  * this task.
  *
+ * @todo Remove this class (as there's only one writer now -> refactor DatabaseWriter)
+ *
  * @DI\Service("claroline.plugin.recorder")
  */
 class Recorder
