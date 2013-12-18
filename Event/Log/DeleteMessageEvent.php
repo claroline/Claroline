@@ -18,22 +18,28 @@ class DeleteMessageEvent extends AbstractLogResourceEvent
 {
     const ACTION = 'forum-delete-message';
 
+    /**
+     * @param \Claroline\ForumBundle\Entity\Message $message
+     */
     public function __construct(Message $message)
     {
         $details = array(
             'message' => array(
-                'message' => $message->getId(),
+                'id' => $message->getId(),
                 'content' => $message->getContent()
             ),
             'subject' => array(
-                'subject' => $message->getSubject()->getId()
+                'id' => $message->getSubject()->getId()
+            ),
+            'category' => array(
+                'id' => $message->getSubject()->getCategory()->getId()
             ),
             'forum' => array(
-                'forum' => $message->getSubject()->getForum()->getId()
+                'id' => $message->getSubject()->getCategory()->getForum()->getId()
             )
         );
 
-        parent::__construct($message->getSubject()->getForum()->getResourceNode(), $details);
+        parent::__construct($message->getSubject()->getCategory()->getForum()->getResourceNode(), $details);
     }
 
     /**

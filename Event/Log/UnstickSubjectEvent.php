@@ -12,33 +12,31 @@
 namespace Claroline\ForumBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
-use Claroline\ForumBundle\Entity\Message;
+use Claroline\ForumBundle\Entity\Subject;
 
-class CreateMessageEvent extends AbstractLogResourceEvent
+class UnstickSubjectEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'forum-create-message';
+    const ACTION = 'forum-unstick-subject';
 
     /**
-     * @param Message $message
+     * @param Subject $subject
      */
-    public function __construct(Message $message)
+    public function __construct(Subject $subject)
     {
         $details = array(
-            'message' => array(
-                'id' => $message->getId()
-            ),
             'subject' => array(
-                'id' => $message->getSubject()->getId()
+                'id' => $subject->getId(),
+                'title' => $subject->getTitle()
             ),
             'category' => array(
-                'id' => $message->getSubject()->getCategory()->getId()
+                'id' => $subject->getCategory()->getId()
             ),
             'forum' => array(
-                'id' => $message->getSubject()->getCategory()->getForum()->getId()
+                'id' => $subject->getCategory()->getForum()->getId()
             )
         );
 
-        parent::__construct($message->getSubject()->getCategory()->getForum()->getResourceNode(), $details);
+        parent::__construct($subject->getCategory()->getForum()->getResourceNode(), $details);
     }
 
     /**

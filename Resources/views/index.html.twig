@@ -1,17 +1,3 @@
-{% macro renderPager(forumId, pager) %}
-    {{
-        pagerfanta(
-            pager,
-            'twitter_bootstrap_translated',
-            {
-                'proximity' : 1,
-                'routeName': 'claro_forum_subjects',
-                'routeParams': {'forumId': forumId}
-            }
-        )
-    }}
-{% endmacro %}
-
 {% from _self import renderPager %}
 
 {% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
@@ -31,9 +17,9 @@
     <div class="panel-body">
         <div class="navbar row">
             <div class="col-md-6">
-                {% if canCreateSubject %}
-                <a class="btn btn-primary" href="{{ _path('claro_forum_form_subject_creation', {'forumId': _resource.getId()}) }}">
-                    <i class="icon-plus"></i> {{ 'new_subject'|trans({}, 'forum') }}
+                {% if isModerator %}
+                <a class="btn btn-primary" href="{{ _path('claro_forum_form_category_creation', {'forum': _resource.getId()}) }}">
+                    <i class="icon-plus"></i> {{ 'new_category'|trans({}, 'forum') }}
                 </a>
                 {% endif %}
                 {% if is_mailer_available() %}
@@ -63,8 +49,8 @@
             <table id="subjects_table" class="table table-striped table-bordered table-condensed">
                 <thead>
                     <tr>
-                        <th>{{ 'subject'|trans({}, 'forum') }}</th>
-                        <th>{{ 'responses'|trans({}, 'forum') }}</th>
+                        <th>{{ 'category'|trans({}, 'forum') }}</th>
+                        <th>{{ 'messages'|trans({}, 'forum') }} </th>
                         <th>{{ 'last_message'|trans({}, 'forum') }}</th>
                         {% if isModerator %}
                             <th></th>
@@ -72,38 +58,33 @@
                     </tr>
                 </thead>
                 <tbody id="table-subjects-body">
-                {% for subject in pager.currentPageResults %}
-                    {% set messages = subject.getMessages() %}
-                    {% set lastMessage = messages[nbMessages - 1] %}
-                    <tr class='row-subject'>
+                {% for category in categories %}
+                    <tr class='row-category'>
                         <td>
-                            <a class="link-subject"
-                                href="{{ _path('claro_forum_messages', {'subjectId': subject['id'] }) }}"
+                            <a class="link-category"
+                                href="{{ path('claro_forum_subjects', {'category': category['id']} ) }}"
                             >
-                                <b>{{ subject['title'] }}</b>
+                                {{ category['name'] }}
                             </a>
-                            {% if isModerator or app.user.id == subject['subject_creator_id'] %}
-                                <a class="pull-right" href="{{ path('claro_forum_edit_subject_form', {'subjectId': subject['id'] }) }}">
+                            {% if isModerator %}
+                                <a class="pull-right" href="{{ path('claro_forum_edit_category_form', {'category': category['id']}) }}">
                                     <i class="icon-pencil"></i> {{ 'edit' | trans({}, 'platform') }}
                                 </a>
                            {% endif %}
                             <br>
-                            {{ 'started_by' | trans({}, 'forum') }}
-                            {{ subject['subject_creator_firstname'] }}
-                            {{ subject['subject_creator_lastname'] }},
-                            {{ subject['subject_created']|intl_date_format() }}
+                        <td>
+                            {{ category['count_messages'] }}
                         </td>
                         <td>
-                            {{ subject['count_messages'] }}
-                        </td>
-                        <td>
-                            {{ subject['last_message_creator_firstname'] }}
-                            {{ subject['last_message_creator_lastname'] }}<br/>
-                            {{ subject['last_message_created'] }}
+                            {{ category['last_message_creator_firstname'] }}
+                            {{ category['last_message_creator_lastname'] }}<br/>
+                            {% if  category['last_message_created'] %}
+                                 {{ category['last_message_created']|timeAgo() }}
+                            {% endif %}
                         </td>
                         {% if isModerator %}
                             <td>
-                                <a id="delete-subject" href="{{ _path('claro_forum_delete_subject', {'subject': subject['id']}) }}">
+                                <a id="delete-category" href="{{ path('claro_forum_delete_category', {'category': category['id']}) }}">
                                     <i class="icon-trash"></i> {{ 'delete' | trans({}, 'platform') }}
                                 </a>
                             </td>
@@ -113,16 +94,13 @@
                 </tbody>
             </table>
         </div>
-        <div>
-            {{ renderPager(_resource.getId(), pager) }}
-        </div>
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     {% javascripts debug=false vars=["locale"]
-        "@ClarolineForumBundle/Resources/views/removeSubjectConfirm.html.twigjs"
+        "@ClarolineForumBundle/Resources/views/removeCategoryConfirm.html.twigjs"
         filter="twig_js"
     %}<script language="javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -141,7 +119,7 @@
                function createValidationBox() {
                     var html = Twig.render(
                         ModalWindow,
-                        {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'confirm-modal', 'body': Twig.render(removeSubjectConfirm, {'nbItems': 1})}
+                        {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'confirm-modal', 'body': Twig.render(removeCategoryConfirm, {'nbItems': 1})}
                     );
                     $('body').append(html);
                 }
@@ -150,7 +128,7 @@
                 var tmpRoute = '';
                 var tmpEl = undefined;
 
-                $('body').on('click', '#delete-subject', function(event) {
+                $('body').on('click', '#delete-category', function(event) {
                     event.preventDefault();
                     $('#confirm-modal').modal('show');
                     tmpRoute = event.currentTarget.href;

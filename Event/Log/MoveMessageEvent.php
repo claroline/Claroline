@@ -12,23 +12,27 @@
 namespace Claroline\ForumBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
+use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Message;
 
-class CreateMessageEvent extends AbstractLogResourceEvent
+class MoveMessageEvent extends AbstractLogResourceEvent
 {
-    const ACTION = 'forum-create-message';
+    const ACTION = 'forum-move-message';
 
     /**
-     * @param Message $message
+     * @param \Claroline\ForumBundle\Entity\Message $message
+     * @param \Claroline\ForumBundle\Entity\Subject $oldSubject
+     * @param \Claroline\ForumBundle\Entity\Subject $newSubject
      */
-    public function __construct(Message $message)
+    public function __construct(Message $message, Subject $oldSubject, Subject $newSubject)
     {
         $details = array(
             'message' => array(
                 'id' => $message->getId()
             ),
             'subject' => array(
-                'id' => $message->getSubject()->getId()
+                'oldSubjectId' => $oldSubject->getId(),
+                'newSubjectId' => $newSubject->getId()
             ),
             'category' => array(
                 'id' => $message->getSubject()->getCategory()->getId()

@@ -17,11 +17,12 @@ use Claroline\ForumBundle\Entity\Subject;
 
 class MessageRepository extends EntityRepository
 {
-    public function findBySubject($subject, $getQuery = false)
+    public function findBySubject(Subject $subject, $getQuery = false)
     {
         $dql = "
-            SELECT m, u FROM Claroline\ForumBundle\Entity\Message m
+            SELECT m, u, pws FROM Claroline\ForumBundle\Entity\Message m
             JOIN m.creator u
+            JOIN u.personalWorkspace pws
             JOIN m.subject subject
             WHERE subject.id = {$subject->getId()}";
 
@@ -46,7 +47,8 @@ class MessageRepository extends EntityRepository
     {
         $dql = "SELECT m FROM Claroline\ForumBundle\Entity\Message m
                 JOIN m.subject s
-                JOIN s.forum as f
+                JOIN s.category c
+                JOIN c.forum as f
                 JOIN f.resourceNode n
                 JOIN n.workspace w
                 JOIN n.rights r
