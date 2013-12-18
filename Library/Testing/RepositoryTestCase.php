@@ -690,16 +690,16 @@ abstract class RepositoryTestCase extends WebTestCase
     protected static function createAdminWidgetDisplayConfig(
         $name,
         Widget $widget,
-        $isVisible,
-        $isLocked,
+        $name,
+        $isAdmin,
         $isDesktop
     )
     {
         $widgetDisplayConfig = new WidgetInstance();
         $widgetDisplayConfig->setWidget($widget);
-        $widgetDisplayConfig->setVisible($isVisible);
-        $widgetDisplayConfig->setLock($isLocked);
-        $widgetDisplayConfig->setDesktop($isDesktop);
+        $widgetDisplayConfig->setName($name);
+        $widgetDisplayConfig->setIsAdmin(($isAdmin));
+        $widgetDisplayConfig->setIsDesktop($isDesktop);
 
         self::create($name, $widgetDisplayConfig);
         self::$om->flush();
