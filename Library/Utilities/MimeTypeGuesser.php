@@ -24,6 +24,9 @@ class MimeTypeGuesser extends MimeTypeExtensionGuesser
         $this->defaultExtensions['image/jpeg'] = 'jpg';
     }
 
+    /**
+     * @todo Use array_search instead of flipping the whole array
+     */
     public function guess($extension)
     {
         $mimeArray = array_flip($this->defaultExtensions);
