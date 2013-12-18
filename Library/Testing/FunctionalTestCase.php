@@ -15,6 +15,9 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 use Claroline\CoreBundle\Library\Installation\Plugin\Loader;
 
+/**
+ * @todo Remove this class when when we have a real functional test tool
+ */
 abstract class FunctionalTestCase extends FixtureTestCase
 {
     protected function logUser(User $user)
