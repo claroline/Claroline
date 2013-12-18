@@ -78,8 +78,8 @@
                         <td>
                             {{ category['last_message_creator_firstname'] }}
                             {{ category['last_message_creator_lastname'] }}<br/>
-                                {% if  category['last_message_created'] %}
-                            {{ category['last_message_created']|timeAgo() }}
+                            {% if  category['last_message_created'] %}
+                                 {{ category['last_message_created']|timeAgo() }}
                             {% endif %}
                         </td>
                         {% if isModerator %}
