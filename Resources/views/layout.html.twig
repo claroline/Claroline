@@ -264,20 +264,7 @@
     {% endstylesheets %}
 
     {% if blogOptions.isBannerActivate or (false == blogOptions.isBannerActivate and is_granted('EDIT', _resource)) %}
-    {% stylesheets debug=false output='vendor/bootstrap-colorpicker/css/bootstrap-colorpicker.css'
-    '../vendor/xaguilars/bootstrap-colorpicker/css/bootstrap-colorpicker.css'
-    %}
-        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
-    {% endstylesheets %}
-    {% image debug=false output='vendor/bootstrap-colorpicker/img/bootstrap-colorpicker/alpha.png'
-        '../vendor/xaguilars/bootstrap-colorpicker/img/bootstrap-colorpicker/alpha.png' %}
-    {% endimage %}
-    {% image debug=false output='vendor/bootstrap-colorpicker/img/bootstrap-colorpicker/hue.png'
-        '../vendor/xaguilars/bootstrap-colorpicker/img/bootstrap-colorpicker/hue.png' %}
-    {% endimage %}
-    {% image debug=false output='vendor/bootstrap-colorpicker/img/bootstrap-colorpicker/saturation.png'
-        '../vendor/xaguilars/bootstrap-colorpicker/img/bootstrap-colorpicker/saturation.png' %}
-    {% endimage %}
+        <link rel="stylesheet" href="{{ asset('bundles/frontend/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css') }}" screen="media" />
     {% endif %}
 {% endblock %}
 
@@ -293,14 +280,12 @@
     <script type='text/javascript' src='{{ asset(calendarPath ~ 'js/fullcalendar.js') }}' ></script>
     <script type='text/javascript'src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
     <script type='text/javascript'src='{{ asset('bundles/icapblog/js/jquery-tree.js') }}'></script>
+
     {% if blogOptions.isBannerActivate or (false == blogOptions.isBannerActivate and is_granted('EDIT', _resource)) %}
-    {% javascripts debug=false output='vendor/bootstrap-colorpicker/js/bootstrap-colorpicker.js'
-    '../vendor/xaguilars/bootstrap-colorpicker/js/bootstrap-colorpicker.js'
-    %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-    <script type='text/javascript'src='{{ asset('bundles/icapblog/js/banner.js') }}'></script>
+        <script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js') }}"></script>
+        <script type='text/javascript'src='{{ asset('bundles/icapblog/js/banner.js') }}'></script>
     {% endif %}
+
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'agenda' }) }}"></script>
     <script type="text/javascript">
         (function($) {
