@@ -37,7 +37,27 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
     });
 
     // Make the choices' table sortable with jquery ui plugin
-    $('tbody').sortable();
+    //$('tbody').sortable();
+
+    // Return a helper with preserved width of cells
+    var fixHelper = function(e, ui) {
+        ui.children().each(function() {
+                $(this).width($(this).width());
+        });
+        return ui;
+    };
+
+    $('tbody').sortable({
+        helper: fixHelper,
+        cancel: 'contenteditable',
+        stop: function (event, ui) {
+            $(ui.item).find('.claroline-tiny-mce').each(function () {
+                tinyMCE.get($(this).attr('id')).remove();
+                $(this).removeClass('tiny-mce-done');
+                $('body').trigger('DOMSubtreeModified');
+            });
+        }
+    });
 }
 
 // QCM Edition
@@ -89,7 +109,27 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
     });
 
     // Make the choices' table sortable with jquery ui plugin
-    $('tbody').sortable();
+    //$('tbody').sortable();
+
+    // Return a helper with preserved width of cells
+    var fixHelper = function(e, ui) {
+        ui.children().each(function() {
+                $(this).width($(this).width());
+        });
+        return ui;
+    };
+
+    $('tbody').sortable({
+        helper: fixHelper,
+        cancel: 'contenteditable',
+        stop: function (event, ui) {
+            $(ui.item).find('.claroline-tiny-mce').each(function () {
+                tinyMCE.get($(this).attr('id')).remove();
+                $(this).removeClass('tiny-mce-done');
+                $('body').trigger('DOMSubtreeModified');
+            });
+        }
+    });
 }
 
 // Add a choice
