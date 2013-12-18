@@ -24,7 +24,7 @@ Project setup
 
 ### Requirements
 
-- PHP >= 5.3.3
+- PHP >= 5.4.1
 - PHP extensions:
     - fileinfo (for mime type detection)
     - Optionaly:
