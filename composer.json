@@ -39,7 +39,6 @@
         "leafo/lessphp": "0.4.0",
         "twbs/bootstrap": "3.0.0",
         "fortawesome/font-awesome": "~3.2.1",
-        "xaguilars/bootstrap-colorpicker": "dev-master#03ee349aba1d84b6ed3039557732fb3f830de738",
         "zenstruck/form-bundle": "dev-master",
         "besimple/sso-auth-bundle": "*",
         "composer/composer": "dev-master",
@@ -52,7 +51,7 @@
         "claroline/bundle-recorder": ">=2.0.2,<3.0",
         "claroline/kernel-bundle": "~1.0",
         "claroline/installation-bundle": ">=3.0.4,<4.0",
-        "claroline/front-end-bundle": "~1.0",
+        "claroline/front-end-bundle": ">=1.0.7,<2.0",
         "claroline/migration-bundle": "~1.0"
     },
     "require-dev": {
@@ -63,8 +62,5 @@
     "autoload": {
         "psr-0": { "Claroline\\CoreBundle": "" }
     },
-    "target-dir": "Claroline/CoreBundle",
-    "extra": {
-        "dbVersion": "20131020200726"
-    }
+    "target-dir": "Claroline/CoreBundle"
 }
