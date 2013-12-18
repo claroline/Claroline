@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\UserMessage;
 
 class MessageManagerTest extends MockeryTestCase
 {
@@ -130,9 +129,9 @@ class MessageManagerTest extends MockeryTestCase
     }
 
     /**
-     * @dataProvider testMarkAsReadProvider
+     * @dataProvider testMarkAsRemovedProvider
      */
-    public function testSetMarkAsRead($flag, $managerMethod)
+    public function testSetMarkAsRemoved($flag, $managerMethod)
     {
         $user = $this->mock('Claroline\CoreBundle\Entity\User');
         $usrMsgA = $this->mock('Claroline\CoreBundle\Entity\UserMessage');
@@ -146,13 +145,12 @@ class MessageManagerTest extends MockeryTestCase
         $this->om->shouldReceive('persist')->with($usrMsgA)->once();
         $this->om->shouldReceive('persist')->with($usrMsgB)->once();
         $this->om->shouldReceive('flush')->once();
-        $this->manager->{$managerMethod}($user, array('message1', 'message2'));
+        $this->manager->{$managerMethod}(array($usrMsgA, $usrMsgB));
     }
 
-    public function testMarkAsReadProvider()
+    public function testMarkAsRemovedProvider()
     {
         return array(
-            array('Read','markAsRead'),
             array('Removed','markAsRemoved'),
             array('Unremoved','markAsUnremoved')
         );
@@ -175,7 +173,7 @@ class MessageManagerTest extends MockeryTestCase
         $this->userMessageRepo->shouldReceive('findByMessages')->once()->andReturn(array($usrMsg));
         $this->om->shouldReceive('remove')->with($usrMsg)->once();
         $this->om->shouldReceive('flush')->once();
-        $this->manager->remove($user, array($msg));
+        $this->manager->remove(array($usrMsg));
     }
 
     public function testgenerateGroupeQrStr()
