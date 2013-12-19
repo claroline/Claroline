@@ -48,7 +48,7 @@ class LocaleManager
      *
      * @return Array
      */
-    private function retriveAvailableLocales($path)
+    private function retriveAvailableLocales($path = '/../Resources/translations/')
     {
         $locales = array();
         $finder = $this->finder->files()->in(__DIR__.$path)->name('/platform\.[^.]*\.yml/');
@@ -64,11 +64,9 @@ class LocaleManager
     /**
      * Get a list of available languages in the platform.
      *
-     * @param $path The path of translations files
-     *
      * @return Array
      */
-    public function getAvailableLocales($path = '/../Resources/translations/')
+    public function getAvailableLocales()
     {
         if (!$this->locales) {
             $this->locales = $this->retriveAvailableLocales();
