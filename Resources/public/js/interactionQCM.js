@@ -134,8 +134,17 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
 
 // Add a choice
 function addChoice(container, deleteChoice) {
+    var uniqChoiceID = false;
 
     var index = $('#newTable').find('tr:not(:first)').length;
+
+    while (uniqChoiceID == false) {
+        if ($('#ujm_exobundle_interactionqcmtype_choices_' + index + '_label').length) {
+            index++;
+        } else {
+            uniqChoiceID = true;
+        }
+    }
 
     // change the "name" by the index and delete the symfony delete form button
     var contain = $(container.attr('data-prototype').replace(/__name__label__/g, 'Choice n°' + (index))
