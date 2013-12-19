@@ -14,7 +14,7 @@ services:
               config: "@claroline.plugin.config_checker"
     # vendor classes used as service arguments
     claroline.symfony_yaml:
-        class: Symfony\Component\Yaml\Yaml
+        class: Symfony\Component\Yaml\Parser
         public: false
 
     claroline.repository.log:
