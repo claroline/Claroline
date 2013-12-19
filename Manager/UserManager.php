@@ -182,6 +182,7 @@ class UserManager
     /**
      * Import users from an array.
      * There is the array format:
+     * @todo some batch processing
      *
      * array(
      *     array(firstname, lastname, username, pwd, email, code, phone),
@@ -197,7 +198,6 @@ class UserManager
     {
         $this->om->startFlushSuite();
 
-        //batch processing. Require a counter to flush every ~150 users.
         foreach ($users as $user) {
             $firstName = $user[0];
             $lastName = $user[1];

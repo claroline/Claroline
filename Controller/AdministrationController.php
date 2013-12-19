@@ -13,8 +13,10 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Entity\User;
@@ -56,6 +58,7 @@ class AdministrationController extends Controller
     private $translator;
     private $request;
     private $mailManager;
+    private $router;
 
     /**
      * @DI\InjectParams({
@@ -71,7 +74,8 @@ class AdministrationController extends Controller
      *     "analyticsManager"    = @DI\Inject("claroline.manager.analytics_manager"),
      *     "translator"          = @DI\Inject("translator"),
      *     "request"             = @DI\Inject("request"),
-     *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager")
+     *     "mailManager"         = @DI\Inject("claroline.manager.mail_manager"),
+     *     "router"              = @DI\Inject("router")
      * })
      */
     public function __construct(
@@ -87,7 +91,8 @@ class AdministrationController extends Controller
         AnalyticsManager $analyticsManager,
         Translator $translator,
         Request $request,
-        MailManager $mailManager
+        MailManager $mailManager,
+        RouterInterface $router
     )
     {
         $this->userManager = $userManager;
@@ -103,6 +108,7 @@ class AdministrationController extends Controller
         $this->translator = $translator;
         $this->request = $request;
         $this->mailManager = $mailManager;
+        $this->router = $router;
     }
 
     /**
@@ -791,7 +797,6 @@ class AdministrationController extends Controller
      */
     public function importUsers()
     {
-        $validFile = true;
         $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
         $form->handleRequest($this->request);
 
@@ -803,11 +808,9 @@ class AdministrationController extends Controller
                 $users[] = str_getcsv($line);
             }
 
-            if ($validFile) {
-                $this->userManager->importUsers($users);
+            $this->userManager->importUsers($users);
 
-                return $this->redirect($this->generateUrl('claro_admin_user_list'));
-            }
+            return new RedirectResponse($this->router->generate('claro_admin_user_list'));
         }
 
         return array('form' => $form->createView());
@@ -863,39 +866,15 @@ class AdministrationController extends Controller
             $lines = str_getcsv(file_get_contents($file), PHP_EOL, ',');
 
             foreach ($lines as $line) {
-                $linesTab = explode(',', $line);
-                $nbElements = count($linesTab);
-
-                if ($nbElements < 5) {
-                    $validFile = false;
-                    $this->get('session')->getFlashBag()->add(
-                        'error',
-                        $this->translator->trans('invalid_csv_file', array(), 'platform')
-                    );
-                    break;
-                }
                 $users[] = str_getcsv($line);
             }
 
             if ($validFile) {
                 $this->userManager->importUsers($users);
-                $nonImportedUsers = $this->groupManager->importUsers($group, $users);
+                $this->groupManager->importUsers($group, $users);
 
-                foreach ($nonImportedUsers as $nonImportedUser) {
-                    $this->get('session')->getFlashBag()->add(
-                        'error',
-                        $nonImportedUser['firstName'] . ' ' .
-                        $nonImportedUser['lastName'] . ' [' .
-                        $nonImportedUser['username'] . '] ' .
-                        $this->translator->trans('has_not_been_imported_into_the_group', array(), 'platform')
-                    );
-                }
-
-                return $this->redirect(
-                    $this->generateUrl(
-                        'claro_admin_user_of_group_list',
-                        array('groupId' => $group->getId())
-                    )
+                return new RedirectResponse(
+                    $this->router->generate('claro_admin_user_of_group_list', array('groupId' => $group->getId()))
                 );
             }
         }
