@@ -87,11 +87,7 @@ class AuthenticationControllerTest extends MockeryTestCase
         $this->mailManager
             ->shouldReceive('sendForgotPassword')
             ->once()
-            ->with(
-                'noreply@claroline.net',
-                'toto@claroline.com',
-                '123'
-            )
+            ->with($user)
             ->andReturn(true);
         $form->shouldReceive('createView')
             ->once()

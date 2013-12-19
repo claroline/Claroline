@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Message;
+use Claroline\CoreBundle\Entity\UserMessage;
 
 class MessageControllerTest extends MockeryTestCase
 {
@@ -166,7 +167,10 @@ class MessageControllerTest extends MockeryTestCase
             $this->messageManager,
             $this->groupManager,
             $this->userManager,
-            $this->workspaceManager
+            $this->workspaceManager,
+            $this->sc,
+            $this->utils,
+            $this->pagerFactory
         );
 
         $user = $this->mock('Claroline\CoreBundle\Entity\User');
@@ -209,10 +213,10 @@ class MessageControllerTest extends MockeryTestCase
     public function testActOnMessages($controllerAction, $managerMethod)
     {
         $user = new User();
-        $messages = array('foo');
+        $messages = array(new UserMessage());
         $this->messageManager->shouldReceive($managerMethod)
             ->once()
-            ->with($user, $messages);
+            ->with($messages);
         $response = $this->controller->{"{$controllerAction}Action"}($user, $messages);
         $this->assertEquals(204, $response->getStatusCode());
     }
