@@ -210,7 +210,7 @@ class GroupManagerTest extends MockeryTestCase
             ->once()
             ->andReturn('pager');
 
-        $this->assertEquals('pager', $this->getManager()->getWorkspaceOutsiders($workspace, 1));
+        $this->assertEquals('pager', $this->getManager()->getWorkspaceOutsiders($workspace, 1, 50));
     }
 
     public function testGetWorkspaceOutsidersByName()

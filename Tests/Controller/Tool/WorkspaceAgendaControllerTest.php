@@ -25,6 +25,7 @@ class WorkspaceAgendaControllerTest extends MockeryTestCase
     private $formFactory;
     private $om;
     private $request;
+    private $roleManager;
 
     protected function setUp()
     {
@@ -33,7 +34,7 @@ class WorkspaceAgendaControllerTest extends MockeryTestCase
         $this->formFactory = $this->mock('Claroline\CoreBundle\Form\Factory\FormFactory');
         $this->security = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
         $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
-
+        $this->roleManager = $this->mock('Claroline\CoreBundle\Manager\RoleManager');
     }
 
     public function testAddEventAction()
@@ -178,7 +179,9 @@ class WorkspaceAgendaControllerTest extends MockeryTestCase
                 $this->security,
                 $this->formFactory,
                 $this->om,
-                $this->request
+                $this->request,
+                $this->roleManager
+
             );
         } else {
             $stringMocked = '[';
@@ -196,7 +199,8 @@ class WorkspaceAgendaControllerTest extends MockeryTestCase
                     $this->security,
                     $this->formFactory,
                     $this->om,
-                    $this->request
+                    $this->request,
+                    $this->roleManager
                 )
             );
         }

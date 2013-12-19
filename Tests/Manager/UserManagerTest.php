@@ -64,6 +64,9 @@ class UserManagerTest extends MockeryTestCase
         $this->roleManager->shouldReceive('setRoleToRoleSubject')
             ->with($user, PlatformRoles::USER)
             ->once();
+        $this->mailManager->shouldReceive('isMailerAvailable')->once()->andReturn(true);
+        $this->mailManager->shouldReceive('sendPlainPassword')->once()->with($user);
+
         $this->om->shouldReceive('startFlushSuite')->once();
         $this->om->shouldReceive('endFlushSuite')->once();
         $this->om->shouldReceive('persist')->with($user)->once();
@@ -104,6 +107,8 @@ class UserManagerTest extends MockeryTestCase
             ->shouldReceive('setRoleToRoleSubject')
             ->with($user, PlatformRoles::USER)
             ->once();
+        $this->mailManager->shouldReceive('isMailerAvailable')->once()->andReturn(true);
+        $this->mailManager->shouldReceive('sendPlainPassword')->once()->with($user);
         $this->om->shouldReceive('persist')->with($user)->once();
         $this->strictDispatcher
             ->shouldReceive('dispatch')
@@ -145,6 +150,8 @@ class UserManagerTest extends MockeryTestCase
         $this->roleManager->shouldReceive('associateRoles')
             ->with($user, $roles)
             ->once();
+        $this->mailManager->shouldReceive('isMailerAvailable')->once()->andReturn(true);
+        $this->mailManager->shouldReceive('sendPlainPassword')->once()->with($user);
         $this->om->shouldReceive('persist')
             ->with($user)
             ->once();

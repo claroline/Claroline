@@ -35,6 +35,7 @@ class WorkspaceControllerTest extends MockeryTestCase
     private $utils;
     private $formFactory;
     private $tokenUpdater;
+    private $widgetManager;
 
     protected function setUp()
     {
@@ -52,6 +53,7 @@ class WorkspaceControllerTest extends MockeryTestCase
         $this->utils = $this->mock('Claroline\CoreBundle\Library\Security\Utilities');
         $this->formFactory = $this->mock('Claroline\CoreBundle\Form\Factory\FormFactory');
         $this->tokenUpdater = $this->mock('Claroline\CoreBundle\Library\Security\TokenUpdater');
+        $this->widgetManager = $this->mock('Claroline\CoreBundle\Manager\WidgetManager');
     }
 
     public function testListAction()
@@ -697,7 +699,8 @@ class WorkspaceControllerTest extends MockeryTestCase
                 $this->router,
                 $this->utils,
                 $this->formFactory,
-                $this->tokenUpdater
+                $this->tokenUpdater,
+                $this->widgetManager
             );
         }
 
@@ -725,7 +728,8 @@ class WorkspaceControllerTest extends MockeryTestCase
                 $this->router,
                 $this->utils,
                 $this->formFactory,
-                $this->tokenUpdater
+                $this->tokenUpdater,
+                $this->widgetManager
             )
         );
     }

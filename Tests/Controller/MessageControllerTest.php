@@ -28,6 +28,9 @@ class MessageControllerTest extends MockeryTestCase
     private $userManager;
     private $workspaceManager;
     private $controller;
+    private $sc;
+    private $utils;
+    private $pagerFactory;
 
     protected function setUp()
     {
@@ -40,6 +43,10 @@ class MessageControllerTest extends MockeryTestCase
         $this->groupManager = $this->mock('Claroline\CoreBundle\Manager\GroupManager');
         $this->userManager = $this->mock('Claroline\CoreBundle\Manager\UserManager');
         $this->workspaceManager = $this->mock('Claroline\CoreBundle\Manager\WorkspaceManager');
+        $this->sc = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
+        $this->utils = $this->mock('Claroline\CoreBundle\Library\Security\Utilities');
+        $this->pagerFactory =  $this->mock('Claroline\CoreBundle\Pager\PagerFactory');
+
         $this->controller = $this->mock(
             'Claroline\CoreBundle\Controller\MessageController[checkAccess]',
             array(
@@ -49,7 +56,10 @@ class MessageControllerTest extends MockeryTestCase
                 $this->messageManager,
                 $this->groupManager,
                 $this->userManager,
-                $this->workspaceManager
+                $this->workspaceManager,
+                $this->sc,
+                $this->utils,
+                $this->pagerFactory
             )
         );
     }
