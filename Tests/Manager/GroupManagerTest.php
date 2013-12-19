@@ -206,11 +206,11 @@ class GroupManagerTest extends MockeryTestCase
             ->once()
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 50)
             ->once()
             ->andReturn('pager');
 
-        $this->assertEquals('pager', $this->getManager()->getWorkspaceOutsiders($workspace, 1));
+        $this->assertEquals('pager', $this->getManager()->getWorkspaceOutsiders($workspace, 1, 50));
     }
 
     public function testGetWorkspaceOutsidersByName()
@@ -224,7 +224,7 @@ class GroupManagerTest extends MockeryTestCase
             ->once()
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 50)
             ->once()
             ->andReturn('pager');
 
@@ -242,7 +242,7 @@ class GroupManagerTest extends MockeryTestCase
             ->once()
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 50)
             ->once()
             ->andReturn('pager');
 
@@ -260,7 +260,7 @@ class GroupManagerTest extends MockeryTestCase
             ->once()
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 50)
             ->once()
             ->andReturn('pager');
 
@@ -273,11 +273,11 @@ class GroupManagerTest extends MockeryTestCase
         $query = new \Doctrine\ORM\Query($em);
 
         $this->groupRepo->shouldReceive('findAll')
-            ->with(false)
+            ->with(false, 'id')
             ->once()
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 50)
             ->once()
             ->andReturn('pager');
 
@@ -290,11 +290,11 @@ class GroupManagerTest extends MockeryTestCase
         $query = new \Doctrine\ORM\Query($em);
 
         $this->groupRepo->shouldReceive('findByName')
-            ->with('search', false)
+            ->with('search', false, 'id')
             ->once()
             ->andReturn($query);
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 50)
             ->once()
             ->andReturn('pager');
 
@@ -309,12 +309,12 @@ class GroupManagerTest extends MockeryTestCase
         $roles = array($role);
 
         $this->groupRepo->shouldReceive('findByRoles')
-            ->with($roles, true)
+            ->with($roles, true, 'id')
             ->once()
             ->andReturn($query);
 
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 50)
             ->once()
             ->andReturn('pager');
 
@@ -335,7 +335,7 @@ class GroupManagerTest extends MockeryTestCase
             ->andReturn($query);
 
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 50)
             ->once()
             ->andReturn('pager');
 
@@ -350,12 +350,12 @@ class GroupManagerTest extends MockeryTestCase
         $roles = array($role);
 
         $this->groupRepo->shouldReceive('findByRolesAndName')
-            ->with($roles, 'name', true)
+            ->with($roles, 'name', true, 'id')
             ->once()
             ->andReturn($query);
 
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 50)
             ->once()
             ->andReturn('pager');
 
@@ -376,7 +376,7 @@ class GroupManagerTest extends MockeryTestCase
             ->andReturn($query);
 
         $this->pagerFactory->shouldReceive('createPager')
-            ->with($query, 1)
+            ->with($query, 1, 50)
             ->once()
             ->andReturn('pager');
 

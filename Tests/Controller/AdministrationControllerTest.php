@@ -71,7 +71,7 @@ class AdministrationControllerTest extends MockeryTestCase
             ->once()
             ->andReturn($roles);
         $this->formFactory->shouldReceive('create')
-            ->with(FormFactory::TYPE_USER, array($roles))
+            ->with(FormFactory::TYPE_USER_FULL, array($roles))
             ->once()
             ->andReturn($form);
         $this->mailManager
@@ -107,7 +107,7 @@ class AdministrationControllerTest extends MockeryTestCase
             ->once()
             ->andReturn($roles);
         $this->formFactory->shouldReceive('create')
-            ->with(FormFactory::TYPE_USER, array($roles))
+            ->with(FormFactory::TYPE_USER_FULL, array($roles))
             ->once()
             ->andReturn($form);
         $form->shouldReceive('handleRequest')
@@ -201,52 +201,52 @@ class AdministrationControllerTest extends MockeryTestCase
     public function testUserListActionWithoutSearch()
     {
         $this->userManager->shouldReceive('getAllUsers')
-            ->with(1)
+            ->with(1, 50, 'id')
             ->once()
             ->andReturn('pager');
 
         $this->assertEquals(
-            array('pager' => 'pager', 'search' => ''),
-            $this->getController()->userListAction(1, '')
+            array('pager' => 'pager', 'search' => '', 'max' => 50, 'order' => 'id'),
+            $this->getController()->userListAction(1, '', 50, 'id')
         );
     }
 
     public function testUserListActionWithSearch()
     {
         $this->userManager->shouldReceive('getUsersByName')
-            ->with('search', 1)
+            ->with('search', 1, 50, 'id')
             ->once()
             ->andReturn('pager');
 
         $this->assertEquals(
-            array('pager' => 'pager', 'search' => 'search'),
-            $this->getController()->userListAction(1, 'search')
+            array('pager' => 'pager', 'search' => 'search', 'max' => 50, 'order' => 'id'),
+            $this->getController()->userListAction(1, 'search', 50, 'id')
         );
     }
 
     public function testGroupListActionWithoutSearch()
     {
         $this->groupManager->shouldReceive('getGroups')
-            ->with(1)
+            ->with(1, 50, 'id')
             ->once()
             ->andReturn('pager');
 
         $this->assertEquals(
-            array('pager' => 'pager', 'search' => ''),
-            $this->getController()->groupListAction(1, '')
+            array('pager' => 'pager', 'search' => '', 'max' => 50, 'order' => 'id'),
+            $this->getController()->groupListAction(1, '', 50, 'id')
         );
     }
 
     public function testGroupListActionWithSearch()
     {
         $this->groupManager->shouldReceive('getGroupsByName')
-            ->with('search', 1)
+            ->with('search', 1, 50, 'id')
             ->once()
             ->andReturn('pager');
 
         $this->assertEquals(
-            array('pager' => 'pager', 'search' => 'search'),
-            $this->getController()->groupListAction(1, 'search')
+            array('pager' => 'pager', 'search' => 'search', 'max' => 50, 'order' => 'id'),
+            $this->getController()->groupListAction(1, 'search', 50, 'id')
         );
     }
 
@@ -255,13 +255,13 @@ class AdministrationControllerTest extends MockeryTestCase
         $group = new Group();
 
         $this->userManager->shouldReceive('getUsersByGroup')
-            ->with($group, 1)
+            ->with($group, 1, 50, 'id')
             ->once()
             ->andReturn('pager');
 
         $this->assertEquals(
-            array('pager' => 'pager', 'search' => '', 'group' => $group),
-            $this->getController()->usersOfGroupListAction($group, 1, '')
+            array('pager' => 'pager', 'search' => '', 'group' => $group, 'max' => 50, 'order' => 'id'),
+            $this->getController()->usersOfGroupListAction($group, 1, '', 50, 'id')
         );
     }
 
@@ -270,13 +270,13 @@ class AdministrationControllerTest extends MockeryTestCase
         $group = new Group();
 
         $this->userManager->shouldReceive('getUsersByNameAndGroup')
-            ->with('search', $group, 1)
+            ->with('search', $group, 1, 50, 'id')
             ->once()
             ->andReturn('pager');
 
         $this->assertEquals(
-            array('pager' => 'pager', 'search' => 'search', 'group' => $group),
-            $this->getController()->usersOfGroupListAction($group, 1, 'search')
+            array('pager' => 'pager', 'search' => 'search', 'group' => $group, 'max' => 50, 'order' => 'id'),
+            $this->getController()->usersOfGroupListAction($group, 1, 'search', 50, 'id')
         );
     }
 
@@ -285,13 +285,13 @@ class AdministrationControllerTest extends MockeryTestCase
         $group = new Group();
 
         $this->userManager->shouldReceive('getGroupOutsiders')
-            ->with($group, 1)
+            ->with($group, 1, 50, 'id')
             ->once()
             ->andReturn('pager');
 
         $this->assertEquals(
-            array('pager' => 'pager', 'search' => '', 'group' => $group),
-            $this->getController()->outsideOfGroupUserListAction($group, 1, '')
+            array('pager' => 'pager', 'search' => '', 'group' => $group, 'max' => 50, 'order' => 'id'),
+            $this->getController()->outsideOfGroupUserListAction($group, 1, '', 50, 'id')
         );
     }
 
@@ -300,13 +300,13 @@ class AdministrationControllerTest extends MockeryTestCase
         $group = new Group();
 
         $this->userManager->shouldReceive('getGroupOutsidersByName')
-            ->with($group, 'search', 1)
+            ->with($group, 1, 'search', 50, 'id')
             ->once()
             ->andReturn('pager');
 
         $this->assertEquals(
-            array('pager' => 'pager', 'search' => 'search', 'group' => $group),
-            $this->getController()->outsideOfGroupUserListAction($group, 1, 'search')
+            array('pager' => 'pager', 'search' => 'search', 'group' => $group, 'max' => 50, 'order' => 'id'),
+            $this->getController()->outsideOfGroupUserListAction($group, 1, 'search', 50, 'id')
         );
     }
 

@@ -103,7 +103,7 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
         $children = self::$repo->findChildren(self::get('dir_1')->getResourceNode(), array('ROLE_1', 'ROLE_2'));
         $this->assertEquals(1, count($children));
         $this->assertEquals('dir_2', $children[0]['name']);
-        $this->assertEquals(7, $children[0]['mask']);
+        $this->assertEquals(3, $children[0]['mask']);
     }
 
     public function testFindWorkspaceRootsByUser()

@@ -470,8 +470,10 @@ class ResourceManagerTest extends MockeryTestCase
         $node->shouldReceive('getResourceType')->andReturn($resourceType);
         $node->shouldReceive('getIcon')->andReturn($icon);
         $node->shouldReceive('getClass')->once()->andReturn('class');
+        $node->shouldReceive('getMimeType')->once()->andReturn('mime');
         $resourceType->shouldReceive('getName')->andReturn('type_name');
         $copy = new \Claroline\CoreBundle\Entity\Resource\Directory();
+        $newNode->shouldReceive('setMimeType')->once()->with('mime');
         $newNode->shouldReceive('setResourceType')->once()->with($resourceType);
         $newNode->shouldReceive('setCreator')->once()->with($user);
         $newNode->shouldReceive('setWorkspace')->once()->with($workspace);
@@ -485,6 +487,7 @@ class ResourceManagerTest extends MockeryTestCase
         $this->eventDispatcher->shouldReceive('dispatch')->andReturn($event);
         $event->shouldReceive('getCopy')->andReturn($copy);
         $parent->shouldReceive('getWorkspace')->andReturn($workspace);
+
         $last->shouldReceive('setNext')
             ->once()
             ->with(anInstanceOf('Claroline\CoreBundle\Entity\Resource\ResourceNode'));
@@ -516,9 +519,11 @@ class ResourceManagerTest extends MockeryTestCase
         $node->shouldReceive('getResourceType')->andReturn($resourceType);
         $node->shouldReceive('getIcon')->andReturn($icon);
         $node->shouldReceive('getClass')->once()->andReturn('class');
+        $node->shouldReceive('getMimeType')->once()->andReturn('mime');
         $manager->shouldReceive('getResourceFromNode')->once()
             ->with($node)->andReturn(new \Claroline\CoreBundle\Entity\Resource\Directory);
 
+        $newNode->shouldReceive('setMimeType')->once()->with('mime');
         $newNode->shouldReceive('setResourceType')->once()->with($resourceType);
         $newNode->shouldReceive('setCreator')->once()->with($user);
         $newNode->shouldReceive('setWorkspace')->once()->with($workspace);

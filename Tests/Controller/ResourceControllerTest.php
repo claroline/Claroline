@@ -28,6 +28,8 @@ class ResourceControllerTest extends MockeryTestCase
     private $request;
     private $dispatcher;
     private $maskManager;
+    private $twigEngine;
+    private $logManager;
 
     public function setUp()
     {
@@ -41,6 +43,8 @@ class ResourceControllerTest extends MockeryTestCase
         $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
         $this->dispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
         $this->maskManager = $this->mock('Claroline\CoreBundle\Manager\MaskManager');
+        $this->twigEngine = $this->mock('Symfony\Bundle\TwigBundle\TwigEngine');
+        $this->logManager = $this->mock('Claroline\CoreBundle\Manager\LogManager');
     }
 
     public function testCustomAction()
@@ -86,7 +90,9 @@ class ResourceControllerTest extends MockeryTestCase
                 $this->translator,
                 $this->request,
                 $this->dispatcher,
-                $this->maskManager
+                $this->maskManager,
+                $this->twigEngine,
+                $this->logManager
             );
         }
 
@@ -109,7 +115,9 @@ class ResourceControllerTest extends MockeryTestCase
                 $this->translator,
                 $this->request,
                 $this->dispatcher,
-                $this->maskManager
+                $this->maskManager,
+                $this->twigEngine,
+                $this->logManager
             )
         );
     }

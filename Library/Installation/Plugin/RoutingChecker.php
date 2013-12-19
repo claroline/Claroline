@@ -21,6 +21,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 /**
  * Checker used to validate the routing of a plugin.
  *
+ * @todo Remove or rewrite this checker (multiple routing formats, prefix checking, etc.)
+ *
  * @DI\Service("claroline.plugin.routing_checker")
  */
 class RoutingChecker implements CheckerInterface

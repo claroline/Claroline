@@ -120,16 +120,15 @@ class WorkspaceController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
-     *
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = false})
      * @EXT\Template()
      *
      * Renders the workspace list page with its claroline layout.
      *
      * @return Response
      */
-    public function listAction()
+    public function listAction($currentUser)
     {
-        $currentUser = $this->security->getToken()->getUser();
         $user = $currentUser instanceof User ? $currentUser : null;
 
         return $this->tagManager->getDatasForWorkspaceList(false, $user);

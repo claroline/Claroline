@@ -11,9 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\CoreBundle\Event\Log\LogRoleSubscribeEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -35,6 +33,7 @@ class WorkspaceControllerTest extends MockeryTestCase
     private $utils;
     private $formFactory;
     private $tokenUpdater;
+    private $widgetManager;
 
     protected function setUp()
     {
@@ -52,10 +51,13 @@ class WorkspaceControllerTest extends MockeryTestCase
         $this->utils = $this->mock('Claroline\CoreBundle\Library\Security\Utilities');
         $this->formFactory = $this->mock('Claroline\CoreBundle\Form\Factory\FormFactory');
         $this->tokenUpdater = $this->mock('Claroline\CoreBundle\Library\Security\TokenUpdater');
+        $this->widgetManager = $this->mock('Claroline\CoreBundle\Manager\WidgetManager');
     }
 
     public function testListAction()
     {
+        $user = new User();
+
         $datas = array(
             'workspaces' => 'workspaces',
             'tags' => 'tags',
@@ -68,7 +70,7 @@ class WorkspaceControllerTest extends MockeryTestCase
 
         $this->tagManager
             ->shouldReceive('getDatasForWorkspaceList')
-            ->with(false)
+            ->with(false, $user)
             ->once()
             ->andReturn($datas);
 
@@ -79,17 +81,20 @@ class WorkspaceControllerTest extends MockeryTestCase
                 'tagWorkspaces' => $datas['tagWorkspaces'],
                 'hierarchy' => $datas['hierarchy'],
                 'rootTags' => $datas['rootTags'],
-                'displayable' => $datas['displayable']
+                'displayable' => $datas['displayable'],
+                'workspaceRoles' => $datas['workspaceRoles']
             ),
-            $this->getController()->listAction()
+            $this->getController()->listAction($user)
         );
     }
 
     public function testListWorkspacesByUserAction()
     {
         $controller = $this->getController(array('assertIsGranted'));
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+
         $datas = array(
-            'workspaces' => 'workspaces',
+            'workspaces' => array($workspace),
             'tags' => 'tags',
             'tagWorkspaces' => 'tagWorkspaces',
             'hierarchy' => 'hierarchy',
@@ -99,6 +104,7 @@ class WorkspaceControllerTest extends MockeryTestCase
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $user = new User();
         $roles = array('ROLE_A', 'ROLE_B');
+        $favourites = array();
 
         $this->security
             ->shouldReceive('isGranted')
@@ -113,16 +119,19 @@ class WorkspaceControllerTest extends MockeryTestCase
             ->with($user, $roles)
             ->once()
             ->andReturn($datas);
+        $this->workspaceManager->shouldReceive('getFavouriteWorkspacesByUser')->once()->with($user)
+            ->andReturn($favourites);
 
         $this->assertEquals(
             array(
                 'user' => $user,
-                'workspaces' => 'workspaces',
+                'workspaces' => array($workspace),
                 'tags' => 'tags',
                 'tagWorkspaces' => 'tagWorkspaces',
                 'hierarchy' => 'hierarchy',
                 'rootTags' => 'rootTags',
-                'displayable' => 'displayable'
+                'displayable' => 'displayable',
+                'favourites' => array()
             ),
             $controller->listWorkspacesByUserAction()
         );
@@ -152,7 +161,6 @@ class WorkspaceControllerTest extends MockeryTestCase
 
         $this->assertEquals(
             array(
-                'user' => $user,
                 'workspaces' => $datas['workspaces'],
                 'tags' => $datas['tags'],
                 'tagWorkspaces' => $datas['tagWorkspaces'],
@@ -310,6 +318,14 @@ class WorkspaceControllerTest extends MockeryTestCase
                 'log',
                 'Log\LogWorkspaceToolRead',
                 array($workspace, $toolName)
+            )
+            ->once();
+        $this->eventDispatcher
+            ->shouldReceive('dispatch')
+            ->with(
+                'log',
+                'Log\LogWorkspaceEnter',
+                array($workspace)
             )
             ->once();
         $event->shouldReceive('getContent')->once()->andReturn('content');
@@ -697,7 +713,8 @@ class WorkspaceControllerTest extends MockeryTestCase
                 $this->router,
                 $this->utils,
                 $this->formFactory,
-                $this->tokenUpdater
+                $this->tokenUpdater,
+                $this->widgetManager
             );
         }
 
@@ -725,7 +742,8 @@ class WorkspaceControllerTest extends MockeryTestCase
                 $this->router,
                 $this->utils,
                 $this->formFactory,
-                $this->tokenUpdater
+                $this->tokenUpdater,
+                $this->widgetManager
             )
         );
     }

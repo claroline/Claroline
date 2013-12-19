@@ -195,7 +195,6 @@ class UserManager
      */
     public function importUsers(array $users)
     {
-        $nonImportedUsers = array();
         $this->om->startFlushSuite();
 
         //batch processing. Require a counter to flush every ~150 users.
@@ -499,9 +498,9 @@ class UserManager
      */
     public function getUsersByWorkspaceAndName(AbstractWorkspace $workspace, $search, $page, $max = 20)
     {
-        $query = $this->userRepo->findByWorkspaceAndName($workspace, $search, false, $max);
+        $query = $this->userRepo->findByWorkspaceAndName($workspace, $search, false);
 
-        return $this->pagerFactory->createPager($query, $page);
+        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
