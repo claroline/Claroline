@@ -3,19 +3,26 @@
         <h4 class="panel-title">{{ currentStep.name }}</h4>
     </div>
     <div class="panel-body">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h5 class="panel-title text-center">
+                    <a data-toggle="collapse" href="#collapse-children">
+                    Suivant
+                    </a>
+                </h5>
+            </div>
+            <ul id="collapse-children" class="list-group collapse {% if currentStep.instructions is null %}in{% endif %}">
+            {% for child in currentStep.children %}
+                <li class="list-group-item">
+                    <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: child.id }) }}">
+                    {{ child.name }}
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
         {{ currentStep.instructions | raw }}
-
-        {% if currentStep.instructions is null %}
-			<ul class="">
-				{% for child in currentStep.children %}
-					<li class="btn btn-default btn-block">
-						<a class="" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: child.id }) }}">
-        				{{ child.name }}
-        				</a>
-					</li>
-				{% endfor %}
-			</ul>
-			
-        {% endif %}
     </div>
 </div>
+
+
