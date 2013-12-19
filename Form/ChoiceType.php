@@ -65,7 +65,7 @@ class ChoiceType extends AbstractType
                 )
             )
             ->add(
-                'feedback', 'textarea', array(
+                'feedback', 'tinymce', array(
                     'required' => false, 'label' => ' '
                 )
             )
