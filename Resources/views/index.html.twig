@@ -43,7 +43,7 @@
                 <tr>
                     <td><strong>{{ path.resourceNode.name }}</strong></td>
                     <td>
-                        {{ path.description | truncate(40, true, ' [...]') }}
+                        {{ path.description | striptags | truncate(40, true, ' [...]') }}
                     </td>
                     <td align="right">
                     {% if path.deployed %}
@@ -86,7 +86,7 @@
                     <tr>
                         <td><strong>{{ path.resourceNode.name }}</strong></td>
                         <td>
-                            {{ path.description | truncate(40, true, ' [...]') }}
+                            {{ path.description | striptags | truncate(40, true, ' [...]') }}
                         </td>
                         <td align="right">
                             <form action="{{ path('innova_path_play') }}" method="post" style="display: inline-block">
