@@ -57,7 +57,6 @@ class HomeControllerTest extends MockeryTestCase
 
     public function testHomeAction()
     {
-        $this->markTestSkipped();
         $this->manager->shouldReceive('getRegionContents')->once()->andReturn(
             array('header' => array(array('type' => 'home')))
         );
@@ -65,10 +64,14 @@ class HomeControllerTest extends MockeryTestCase
         $this->security->shouldReceive('isGranted')->with('ROLE_ADMIN')->once()->andReturn(true);
         $this->homeService->shouldReceive('defaultTemplate')->once();
         $this->templating->shouldReceive('render')->times(2);
-        $this->assertEquals(
-            array('region' => array('header' => ''), 'content' => ''),
-            $this->controller->homeAction($this->type)
-        );
+
+        $return = $this->controller->homeAction($this->type);
+
+        $this->assertEquals($return->headers->getCacheControlDirective('no-cache'), true);
+        $this->assertEquals($return->headers->getCacheControlDirective('max-age'), 0);
+        $this->assertEquals($return->headers->getCacheControlDirective('must-revalidate'), true);
+        $this->assertEquals($return->headers->getCacheControlDirective('no-store'), true);
+        $this->assertEquals($return->headers->getCacheControlDirective('expires'), '-1');
     }
 
     public function testTypeAction()

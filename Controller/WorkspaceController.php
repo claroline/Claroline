@@ -20,6 +20,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
@@ -61,6 +62,8 @@ class WorkspaceController extends Controller
     private $formFactory;
     private $tokenUpdater;
     private $widgetManager;
+    private $request;
+    private $templateDir;
 
     /**
      * @DI\InjectParams({
@@ -77,7 +80,9 @@ class WorkspaceController extends Controller
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "tokenUpdater"       = @DI\Inject("claroline.security.token_updater"),
-     *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
+     *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager"),
+     *     "request"            = @DI\Inject("request"),
+     *     "templateDir"        = @DI\Inject("%claroline.param.templates_directory%")
      * })
      */
     public function __construct(
@@ -94,7 +99,9 @@ class WorkspaceController extends Controller
         Utilities $utils,
         FormFactory $formFactory,
         TokenUpdater $tokenUpdater,
-        WidgetManager $widgetManager
+        WidgetManager $widgetManager,
+        Request $request,
+        $templateDir
     )
     {
         $this->homeTabManager = $homeTabManager;
@@ -111,6 +118,8 @@ class WorkspaceController extends Controller
         $this->formFactory = $formFactory;
         $this->tokenUpdater = $tokenUpdater;
         $this->widgetManager = $widgetManager;
+        $this->request = $request;
+        $this->templateDir = $templateDir;
     }
 
     /**
@@ -262,16 +271,16 @@ class WorkspaceController extends Controller
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE);
-        $form->handleRequest($this->getRequest());
-
-        $templateDir = $this->container->getParameter('claroline.param.templates_directory');
+        $form->handleRequest($this->request);
         $ds = DIRECTORY_SEPARATOR;
 
         if ($form->isValid()) {
             $type = $form->get('type')->getData() == 'simple' ?
                 Configuration::TYPE_SIMPLE :
                 Configuration::TYPE_AGGREGATOR;
-            $config = Configuration::fromTemplate($templateDir.$ds.$form->get('template')->getData()->getHash());
+            $config = Configuration::fromTemplate(
+                $this->templateDir . $ds . $form->get('template')->getData()->getHash()
+            );
             $config->setWorkspaceType($type);
             $config->setWorkspaceName($form->get('name')->getData());
             $config->setWorkspaceCode($form->get('code')->getData());

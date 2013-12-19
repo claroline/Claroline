@@ -20,7 +20,6 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 /**
@@ -94,12 +93,11 @@ class HomeController
                 'content' => $this->typeAction($type)->getContent()
             )
         );
-
         $response->headers->addCacheControlDirective('no-cache', true);
         $response->headers->addCacheControlDirective('max-age', 0);
         $response->headers->addCacheControlDirective('must-revalidate', true);
         $response->headers->addCacheControlDirective('no-store', true);
-        $response->headers->addCacheControlDirective('Expires', '-1');
+        $response->headers->addCacheControlDirective('expires', '-1');
 
         return $response;
     }
