@@ -11,11 +11,15 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+
+class ResourceQueryBuilderTest extends MockeryTestCase
 {
+    /**
+     * @expectedException Claroline\CoreBundle\Repository\Exception\MissingSelectClauseException
+     */
     public function testASelectClauseIsRequired()
     {
-        $this->setExpectedException('Claroline\CoreBundle\Repository\Exception\MissingSelectClauseException');
         $qb = new ResourceQueryBuilder();
         $qb->getDql();
     }
@@ -102,18 +106,12 @@ class ResourceQueryBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $qb = new ResourceQueryBuilder();
 
-        $mockedWorkspace = $this->getMock('Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace');
-        $mockedWorkspace->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue(123));
-        $mockedParent = $this->getMock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
-        $mockedParent->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue(456));
-        $mockedUser = $this->getMock('Claroline\CoreBundle\Entity\User');
-        $mockedUser->expects($this->once())
-            ->method('getId')
-            ->will($this->returnValue(789));
+        $mockedWorkspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace');
+        $mockedWorkspace->shouldReceive('getId')->once()->andReturn(123);
+        $mockedParent = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $mockedParent->shouldReceive('getId')->once()->andReturn(456);
+        $mockedUser = $this->mock('Claroline\CoreBundle\Entity\User');
+        $mockedUser->shouldReceive('getId')->once()->andReturn(789);
 
         $dql = $qb->selectAsEntity(true)
             ->whereInWorkspace($mockedWorkspace)
