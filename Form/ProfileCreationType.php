@@ -21,15 +21,22 @@ class ProfileCreationType extends AbstractType
 {
     private $platformRoles;
     private $isAdmin;
+    private $langs;
 
      /**
       * Constructor.
       *
       * @param Role[]  $platformRoles
       */
-    public function __construct(array $platformRoles)
+    public function __construct(array $platformRoles, array $langs)
     {
         $this->platformRoles = new ArrayCollection($platformRoles);
+
+        if (!empty($langs)) {
+            $this->langs = $langs;
+        } else {
+            $this->langs = array('en' => 'en', 'fr' => 'fr');
+        }
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -40,12 +47,19 @@ class ProfileCreationType extends AbstractType
                 ->add('lastName', 'text', array('label' => 'profile_form_lastName'))
                 ->add('username', 'text', array('label' => 'profile_form_username'))
                 ->add('plainPassword', 'repeated', array('type' => 'password', 'required' => true))
-                ->add('administrativeCode', 'text', array('required' => false, 'label' => 'profile_form_administrativeCode'))
+                ->add(
+                    'administrativeCode',
+                    'text',
+                    array(
+                        'required' => false, 'label' => 'profile_form_administrativeCode'
+                    )
+                )
                 ->add('mail', 'email', array('required' => true, 'label' => 'profile_form_mail'))
                 ->add('phone', 'text', array('required' => false, 'label' => 'profile_form_phone'))
+                ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'))
                 ->add(
-                'platformRoles',
-                'entity',
+                    'platformRoles',
+                    'entity',
                     array(
                         'label' => 'profile_form_platformRoles',
                         'mapped' => false,
@@ -60,7 +74,7 @@ class ProfileCreationType extends AbstractType
                                     ->andWhere("r.name != 'ROLE_ANONYMOUS'");
                         }
                     )
-            );
+                );
     }
 
     public function getName()
@@ -70,9 +84,11 @@ class ProfileCreationType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'Claroline\CoreBundle\Entity\User',
-            'translation_domain' => 'platform'
-        ));
+        $resolver->setDefaults(
+            array(
+                'data_class' => 'Claroline\CoreBundle\Entity\User',
+                'translation_domain' => 'platform'
+            )
+        );
     }
 }

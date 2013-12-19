@@ -11,20 +11,21 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Form\ResetPasswordType;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Event\StrictDispatcher;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\HttpFoundation\Request;
+use Claroline\CoreBundle\Manager\UserManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
-use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -39,6 +40,7 @@ class ProfileController extends Controller
     private $eventDispatcher;
     private $security;
     private $request;
+    private $localeManager;
 
     /**
      * @DI\InjectParams({
@@ -46,7 +48,8 @@ class ProfileController extends Controller
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "security"           = @DI\Inject("security.context"),
-     *     "request"            = @DI\Inject("request")
+     *     "request"            = @DI\Inject("request"),
+     *     "localeManager"      = @DI\Inject("claroline.common.locale_manager")
      * })
      */
     public function __construct(
@@ -54,7 +57,8 @@ class ProfileController extends Controller
         RoleManager $roleManager,
         StrictDispatcher $eventDispatcher,
         SecurityContextInterface $security,
-        Request $request
+        Request $request,
+        LocaleManager $localeManager
     )
     {
         $this->userManager = $userManager;
@@ -62,6 +66,7 @@ class ProfileController extends Controller
         $this->eventDispatcher = $eventDispatcher;
         $this->security = $security;
         $this->request = $request;
+        $this->localeManager = $localeManager;
     }
 
     private function isInRoles($role, $roles)
@@ -96,7 +101,9 @@ class ProfileController extends Controller
         }
 
         $roles = $this->roleManager->getPlatformRoles($user);
-        $form = $this->createForm(new ProfileType($roles, $isAdmin), $user);
+        $form = $this->createForm(
+            new ProfileType($roles, $isAdmin, $this->localeManager->getAvailableLocales()), $user
+        );
 
         return array('profile_form' => $form->createView(), 'user' => $user);
     }
@@ -122,7 +129,9 @@ class ProfileController extends Controller
         }
 
         $roles = $this->roleManager->getPlatformRoles($loggedUser);
-        $form = $this->createForm(new ProfileType($roles, $isAdmin), $user);
+        $form = $this->createForm(
+            new ProfileType($roles, $isAdmin, $this->localeManager->getAvailableLocales()), $user
+        );
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

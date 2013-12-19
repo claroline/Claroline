@@ -11,35 +11,35 @@
 
 namespace Claroline\CoreBundle\Listener;
 
+use Claroline\CoreBundle\Manager\LocaleManager;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
+use JMS\DiExtraBundle\Annotation\Observe;
+use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
- * @DI\Service
+ * @Service
  *
  * Listener setting the platform language according to platform_options.yml.
  */
 class LocaleSetter
 {
-    protected $configHandler;
+    private $localeManager;
 
     /**
-     * @DI\InjectParams({
-     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler")
+     * @InjectParams({
+     *     "localeManager"  = @Inject("claroline.common.locale_manager")
      * })
-     *
-     * Constructor.
-     *
-     * @param PlatformConfigurationHandler $configHandler
      */
-    public function __construct(PlatformConfigurationHandler $configHandler)
+    public function __construct(LocaleManager $localeManager)
     {
-        $this->configHandler = $configHandler;
+        $this->localeManager = $localeManager;
     }
 
     /**
-     * @DI\Observe("kernel.request")
+     * @Observe("kernel.request")
      *
      * Sets the platform language.
      *
@@ -47,6 +47,7 @@ class LocaleSetter
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        $event->getRequest()->setLocale($this->configHandler->getParameter('locale_language'));
+        $request = $event->getRequest();
+        $request->setLocale($this->localeManager->getUserLocale($request));
     }
 }

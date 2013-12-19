@@ -1,6 +1,7 @@
 'Add a logo': 'Ajouter un logo'
 'Audience/user visits': 'Audience/Visites utilisateurs'
 'Choose a logo': 'Choisir un logo'
+'Select a Language': 'Sélectionnez une langue'
 404 : 'La page que vous cherchez n''existe pas.'
 Action List: 'Liste des actions'
 Actions per day: 'Nombre d''actions par jour'
@@ -8,6 +9,7 @@ Choose visible actions in the widget: 'Choisissez les actions visibles dans le w
 Choose workspaces displayed in the widget: 'Choisissez les espaces de travail affichés par le widget'
 Draw an area on the graph to zoom, double-click to cancel: 'Tracez une zone sur le graphique pour zoomer; double cliquez pour annuler'
 Filter actions: 'Filtrer les actions'
+Language: 'Langue'
 Last action: '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
 None: 'Aucun'
 Overview of all recent activities in %workspaceName%: 'Aperçu de toutes les activités récentes de %workspaceName%'
@@ -94,8 +96,8 @@ category_root: 'Catégories de base'
 category_structure: 'Structure des catégories'
 change_view : 'Changer l''affichage'
 choose_resource_form_type: 'Type de ressource'
-classify_workspaces: 'Classer les espaces'
 classify_my_workspaces: 'Classer mes espaces'
+classify_workspaces: 'Classer les espaces'
 close: Fermer
 code: Code
 collaborator: Collaborateur
@@ -357,7 +359,7 @@ platform_parameters: 'Paramètres de la plateforme'
 platform_parameters_form_defaultRole: 'Rôle par défaut'
 platform_parameters_form_footer: 'Pied de page'
 platform_parameters_form_icon: 'Icône de la plateforme'
-platform_parameters_form_localLanguage: Langue
+platform_parameters_form_localLanguage: 'Langue par défaut'
 platform_parameters_form_name: 'Nom de la plateforme'
 platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_theme: Thème

@@ -11,73 +11,76 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
+use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\UserRepository;
-use Claroline\CoreBundle\Manager\MailManager;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\ValidatorInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Translation\Translator;
+use Symfony\Component\Validator\ValidatorInterface;
 
 /**
  * @DI\Service("claroline.manager.user_manager")
  */
 class UserManager
 {
-    /** @var UserRepository */
-    private $userRepo;
-    private $roleManager;
-    private $workspaceManager;
-    private $toolManager;
-    private $ed;
-    private $personalWsTemplateFile;
-    private $translator;
     private $ch;
-    private $pagerFactory;
-    private $om;
+    private $context;
+    private $ed;
     private $mailManager;
+    private $om;
+    private $pagerFactory;
+    private $personalWsTemplateFile;
+    private $roleManager;
+    private $toolManager;
+    private $translator;
+    private $userRepo;
     private $validator;
+    private $workspaceManager;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
-     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
-     *     "ed"                     = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "translator"             = @DI\Inject("translator"),
      *     "ch"                     = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory"),
-     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
+     *     "context"                = @DI\Inject("security.context"),
+     *     "ed"                     = @DI\Inject("claroline.event.event_dispatcher"),
      *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager"),
-     *     "validator"              = @DI\Inject("validator")
+     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
+     *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory"),
+     *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
+     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
+     *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
+     *     "translator"             = @DI\Inject("translator"),
+     *     "validator"              = @DI\Inject("validator"),
+     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
-        RoleManager $roleManager,
-        WorkspaceManager $workspaceManager,
-        ToolManager $toolManager,
-        StrictDispatcher $ed,
         $personalWsTemplateFile,
-        Translator $translator,
-        PlatformConfigurationHandler $ch,
-        PagerFactory $pagerFactory,
-        ObjectManager $om,
         MailManager $mailManager,
-        ValidatorInterface $validator
+        ObjectManager $om,
+        PagerFactory $pagerFactory,
+        PlatformConfigurationHandler $ch,
+        RoleManager $roleManager,
+        SecurityContext $context,
+        StrictDispatcher $ed,
+        ToolManager $toolManager,
+        Translator $translator,
+        ValidatorInterface $validator,
+        WorkspaceManager $workspaceManager
     )
     {
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
@@ -92,6 +95,7 @@ class UserManager
         $this->om = $om;
         $this->mailManager = $mailManager;
         $this->validator = $validator;
+        $this->context = $context;
     }
 
     /**
@@ -504,6 +508,18 @@ class UserManager
     }
 
     /**
+     * Get Current User
+     *
+     * @return mixed Claroline\CoreBundle\Entity\User or null
+     */
+    public function getCurrentUser()
+    {
+        if (is_object($token = $this->context->getToken()) and is_object($user = $token->getUser())) {
+            return $user;
+        }
+    }
+
+    /**
      * @param \Claroline\CoreBundle\Entity\Group $group
      * @param integer $page
      * @param integer $max
@@ -567,16 +583,16 @@ class UserManager
         $roles = $this->roleManager->getAllPlatformRoles();
         $usersInRoles = array();
         $usersInRoles['user_accounts'] = 0;
-        foreach ($roles as $role)
-        {
+        foreach ($roles as $role) {
             $restrictionRoleNames = null;
             if ($role->getName() === 'ROLE_USER') {
                 $restrictionRoleNames = array('ROLE_WS_CREATOR', 'ROLE_ADMIN');
-            }
-            elseif ($role->getName() === 'ROLE_WS_CREATOR') {
+            } elseif ($role->getName() === 'ROLE_WS_CREATOR') {
                 $restrictionRoleNames = array('ROLE_ADMIN');
             }
-            $usersInRoles[$role->getTranslationKey()] = intval($this->userRepo->countUsersByRole($role, $restrictionRoleNames));
+            $usersInRoles[$role->getTranslationKey()] = intval(
+                $this->userRepo->countUsersByRole($role, $restrictionRoleNames)
+            );
             $usersInRoles['user_accounts'] += $usersInRoles[$role->getTranslationKey()];
         }
 
@@ -707,7 +723,9 @@ class UserManager
      *
      * @return \Pagerfanta\Pagerfanta| \Doctrine\ORM\Query
      */
-    public function getOutsidersByWorkspaceRolesAndName(array $roles, $name, AbstractWorkspace $workspace, $page = 1, $max = 20)
+    public function getOutsidersByWorkspaceRolesAndName(
+        array $roles, $name, AbstractWorkspace $workspace, $page = 1, $max = 20
+    )
     {
         $res = $this->userRepo->findOutsidersByWorkspaceRolesAndName($roles, $name, $workspace, true);
 
@@ -739,11 +757,26 @@ class UserManager
     /**
      * @param \Claroline\CoreBundle\Entity\User $user
      */
-    function uploadAvatar(User $user)
+    public function uploadAvatar(User $user)
     {
         if (null !== $user->getPictureFile()) {
-            $user->setPicture(sha1($user->getPictureFile()->getClientOriginalName()).'.'.$user->getPictureFile()->guessExtension());
+            $user->setPicture(
+                sha1($user->getPictureFile()->getClientOriginalName()).'.'.$user->getPictureFile()->guessExtension()
+            );
             $user->getPictureFile()->move(__DIR__.'/../../../../../../web/uploads/pictures', $user->getPicture());
         }
+    }
+
+    /**
+     * Set the user locale.
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param String $locale Language with format en, fr, es, etc.
+     */
+    public function setLocale(User $user, $locale = 'en')
+    {
+        $user->setLocale($locale);
+        $this->om->persist($user);
+        $this->om->flush();
     }
 }

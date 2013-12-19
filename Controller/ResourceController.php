@@ -754,4 +754,16 @@ class ResourceController
             )
         );
     }
+
+    /**
+     * @EXT\Route("/zoom/{zoom}", name="claro_resource_change_zoom", options={"expose"=true})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function changeZoom($zoom)
+    {
+        $this->request->getSession()->set('resourceZoom', $zoom);
+
+        return new Response(200);
+    }
 }

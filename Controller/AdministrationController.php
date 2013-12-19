@@ -11,30 +11,29 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Translation\Translator;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
+use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
 use Claroline\CoreBundle\Manager\GroupManager;
+use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
-use Claroline\CoreBundle\Manager\MailManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use JMS\SecurityExtraBundle\Annotation as SEC;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\SecurityExtraBundle\Annotation as SEC;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Translation\Translator;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -58,6 +57,7 @@ class AdministrationController extends Controller
     private $translator;
     private $request;
     private $mailManager;
+    private $localeManager;
     private $router;
 
     /**
@@ -75,6 +75,7 @@ class AdministrationController extends Controller
      *     "translator"          = @DI\Inject("translator"),
      *     "request"             = @DI\Inject("request"),
      *     "mailManager"         = @DI\Inject("claroline.manager.mail_manager"),
+     *     "localeManager"       = @DI\Inject("claroline.common.locale_manager"),
      *     "router"              = @DI\Inject("router")
      * })
      */
@@ -92,6 +93,7 @@ class AdministrationController extends Controller
         Translator $translator,
         Request $request,
         MailManager $mailManager,
+        LocaleManager $localeManager,
         RouterInterface $router
     )
     {
@@ -108,6 +110,7 @@ class AdministrationController extends Controller
         $this->translator = $translator;
         $this->request = $request;
         $this->mailManager = $mailManager;
+        $this->localeManager = $localeManager;
         $this->router = $router;
     }
 
@@ -139,7 +142,9 @@ class AdministrationController extends Controller
     public function userCreationFormAction(User $currentUser)
     {
         $roles = $this->roleManager->getPlatformRoles($currentUser);
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_FULL, array($roles));
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_USER_FULL, array($roles, $this->localeManager->getAvailableLocales())
+        );
         if ($this->mailManager->isMailerAvailable()) {
             return array('form_complete_user' => $form->createView());
         }
@@ -166,7 +171,9 @@ class AdministrationController extends Controller
     public function createUserAction(User $currentUser)
     {
         $roles = $this->roleManager->getPlatformRoles($currentUser);
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_FULL, array($roles));
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_USER_FULL, array($roles, $this->localeManager->getAvailableLocales())
+        );
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -619,7 +626,7 @@ class AdministrationController extends Controller
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
         $form = $this->formFactory->create(
             FormFactory::TYPE_PLATFORM_PARAMETERS,
-            array($this->getThemes(), $role),
+            array($this->getThemes(), $this->localeManager->getAvailableLocales(), $role),
             $platformConfig
         );
 
@@ -646,7 +653,7 @@ class AdministrationController extends Controller
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
             FormFactory::TYPE_PLATFORM_PARAMETERS,
-            array($this->getThemes()),
+            array($this->getThemes(), $this->localeManager->getAvailableLocales()),
             $platformConfig
         );
         $form->handleRequest($this->request);

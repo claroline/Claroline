@@ -663,6 +663,12 @@ div.pagination {
 /* MISC */
 /********/
 
+.locale-select {
+   margin-left: 30px ;
+   font-size: 16px;
+   cursor: pointer;
+}
+
 .strike, *:hover.strike {
     text-decoration: line-through !important;
 }
@@ -796,7 +802,7 @@ div.pagination {
         .content-@{index} {
             width: unit(((@index * 100 / @content-iteration) - @content-margin - 0.1), "%");
             /*margin-left: unit(@content-margin, "%");*/
-		    margin-right: unit(@content-margin, "%");
+            margin-right: unit(@content-margin, "%");
             float: left;
         }
 
@@ -820,7 +826,7 @@ div.pagination {
 
         .content-@{index} {
             margin-left: 0;
-		    margin-right: 0;
+            margin-right: 0;
         }
 
         .content-offset@{index} {

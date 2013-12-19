@@ -109,10 +109,10 @@
         var nodeId = _.keys(nodes)[0];
         var mimeType = nodes[_.keys(nodes)][2];
 
-          if (mimeType === '') {
-              //fix me some day.
-              mimeType = 'unknown/mimetype';
-          }
+        if (mimeType === '') {
+            //fix me one day.
+            mimeType = 'unknown/mimetype';
+        }
 
         $.ajax(home.path + 'resource/embed/' + nodeId + '/' + mimeType)
         .done(function (data) {
