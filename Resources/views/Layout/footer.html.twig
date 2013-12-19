@@ -6,13 +6,13 @@
                     {{ config.getParameter('footer') }}
                     <span class="pull-right">
                         Powered by <a href="http://www.claroline.net">Claroline</a>
-                        <span class="lang-select label label-default">{{ app.request.locale | upper }}</span>
+                        <span class="locale-select label label-default">{{ app.request.locale | upper }}</span>
                     </span>
                 </p>
             {% else %}
                 <p>
                     Powered by <a href="http://www.claroline.net">Claroline</a>
-                    <span class="pull-right lang-select label label-default">{{ app.request.locale | upper }}</span>
+                    <span class="pull-right locale-select label label-default">{{ app.request.locale | upper }}</span>
                 </p>
             {% endif %}
         </div>

@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Form\ResetPasswordType;
-use Claroline\CoreBundle\Library\Lang\LangService;
+use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -40,7 +40,7 @@ class ProfileController extends Controller
     private $eventDispatcher;
     private $security;
     private $request;
-    private $lang;
+    private $localeManager;
 
     /**
      * @DI\InjectParams({
@@ -49,7 +49,7 @@ class ProfileController extends Controller
      *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "security"           = @DI\Inject("security.context"),
      *     "request"            = @DI\Inject("request"),
-     *     "lang"               = @DI\Inject("claroline.common.lang_service")
+     *     "localeManager"      = @DI\Inject("claroline.common.locale_manager")
      * })
      */
     public function __construct(
@@ -58,7 +58,7 @@ class ProfileController extends Controller
         StrictDispatcher $eventDispatcher,
         SecurityContextInterface $security,
         Request $request,
-        LangService $lang
+        LocaleManager $localeManager
     )
     {
         $this->userManager = $userManager;
@@ -66,7 +66,7 @@ class ProfileController extends Controller
         $this->eventDispatcher = $eventDispatcher;
         $this->security = $security;
         $this->request = $request;
-        $this->lang = $lang;
+        $this->localeManager = $localeManager;
     }
 
     private function isInRoles($role, $roles)
@@ -101,7 +101,9 @@ class ProfileController extends Controller
         }
 
         $roles = $this->roleManager->getPlatformRoles($user);
-        $form = $this->createForm(new ProfileType($roles, $isAdmin, $this->lang->getLangs()), $user);
+        $form = $this->createForm(
+            new ProfileType($roles, $isAdmin, $this->localeManager->getAvailableLocales()), $user
+        );
 
         return array('profile_form' => $form->createView(), 'user' => $user);
     }
@@ -127,7 +129,9 @@ class ProfileController extends Controller
         }
 
         $roles = $this->roleManager->getPlatformRoles($loggedUser);
-        $form = $this->createForm(new ProfileType($roles, $isAdmin, $this->lang->getLangs()), $user);
+        $form = $this->createForm(
+            new ProfileType($roles, $isAdmin, $this->localeManager->getAvailableLocales()), $user
+        );
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

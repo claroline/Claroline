@@ -110,7 +110,7 @@
         var mimeType = nodes[_.keys(nodes)][2];
 
         if (mimeType === '') {
-            //fix me some day.
+            //fix me one day.
             mimeType = 'unknown/mimetype';
         }
 

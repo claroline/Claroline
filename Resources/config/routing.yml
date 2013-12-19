@@ -9,8 +9,8 @@ claro_index:
     resource: "@ClarolineCoreBundle/Controller/HomeController.php"
     type: annotation
 
-claro_lang:
-    resource: "@ClarolineCoreBundle/Controller/LangController.php"
+claro_locale:
+    resource: "@ClarolineCoreBundle/Controller/LocaleController.php"
     type: annotation
 
 claro_theme:

@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
-use Claroline\CoreBundle\Library\Lang\LangService;
+use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\MailManager;
@@ -57,7 +57,7 @@ class AdministrationController extends Controller
     private $translator;
     private $request;
     private $mailManager;
-    private $lang;
+    private $localeManager;
 
     /**
      * @DI\InjectParams({
@@ -74,7 +74,7 @@ class AdministrationController extends Controller
      *     "translator"          = @DI\Inject("translator"),
      *     "request"             = @DI\Inject("request"),
      *     "mailManager"         = @DI\Inject("claroline.manager.mail_manager"),
-     *     "lang"                = @DI\Inject("claroline.common.lang_service")
+     *     "localeManager"       = @DI\Inject("claroline.common.locale_manager")
      * })
      */
     public function __construct(
@@ -91,7 +91,7 @@ class AdministrationController extends Controller
         Translator $translator,
         Request $request,
         MailManager $mailManager,
-        LangService $lang
+        LocaleManager $localeManager
     )
     {
         $this->userManager = $userManager;
@@ -107,7 +107,7 @@ class AdministrationController extends Controller
         $this->translator = $translator;
         $this->request = $request;
         $this->mailManager = $mailManager;
-        $this->lang = $lang;
+        $this->localeManager = $localeManager;
     }
 
     /**
@@ -138,7 +138,9 @@ class AdministrationController extends Controller
     public function userCreationFormAction(User $currentUser)
     {
         $roles = $this->roleManager->getPlatformRoles($currentUser);
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_FULL, array($roles, $this->lang->getLangs()));
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_USER_FULL, array($roles, $this->localeManager->getAvailableLocales())
+        );
         if ($this->mailManager->isMailerAvailable()) {
             return array('form_complete_user' => $form->createView());
         }
@@ -165,7 +167,9 @@ class AdministrationController extends Controller
     public function createUserAction(User $currentUser)
     {
         $roles = $this->roleManager->getPlatformRoles($currentUser);
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_FULL, array($roles, $this->lang->getLangs()));
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_USER_FULL, array($roles, $this->localeManager->getAvailableLocales())
+        );
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -618,7 +622,7 @@ class AdministrationController extends Controller
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
         $form = $this->formFactory->create(
             FormFactory::TYPE_PLATFORM_PARAMETERS,
-            array($this->getThemes(), $this->lang->getLangs(), $role),
+            array($this->getThemes(), $this->localeManager->getAvailableLocales(), $role),
             $platformConfig
         );
 
@@ -645,7 +649,7 @@ class AdministrationController extends Controller
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
             FormFactory::TYPE_PLATFORM_PARAMETERS,
-            array($this->getThemes(), $this->lang->getLangs()),
+            array($this->getThemes(), $this->localeManager->getAvailableLocales()),
             $platformConfig
         );
         $form->handleRequest($this->request);

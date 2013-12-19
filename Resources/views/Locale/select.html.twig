@@ -5,8 +5,8 @@
             <h4>{{ "Select a Language" | trans({}, "platform")}}</h4>
         </div>
         <div class="modal-body">
-            {% for lang in langs %}
-                <span class="lang-select label label-default">{{ lang | upper }}</span>
+            {% for locale in locales %}
+                <span class="locale-select label label-default">{{ locale | upper }}</span>
             {% endfor %}
         </div>
         <div class="modal-footer">

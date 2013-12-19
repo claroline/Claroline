@@ -12,11 +12,11 @@
 
     var home = window.Claroline.Home;
 
-    $('body').on('click', '.lang-select', function () {
+    $('body').on('click', '.locale-select', function () {
         if (!$(this).parents('.modal').get(0)) {
-            home.modal('lang/select');
+            home.modal('locale/select');
         } else {
-            $.ajax(home.path + 'lang/change/' + $(this).html().toLowerCase())
+            $.ajax(home.path + 'locale/change/' + $(this).html().toLowerCase())
             .done(function () {
                 window.location.reload();
             });
