@@ -200,11 +200,11 @@ class RelWorkspaceTagRepositoryTest extends RepositoryTestCase
         $user = self::get('user');
         $workspace = self::get('wsa');
         $tagRelations = self::$repo->findAllByWorkspaceAndUser($workspace, $user);
-        $this->assertEquals(4, count($tagRelations));
+        $this->assertEquals(2, count($tagRelations));
         $this->assertEquals($workspace, $tagRelations[0]->getWorkspace());
         $this->assertEquals($workspace, $tagRelations[1]->getWorkspace());
-        $this->assertEquals($workspace, $tagRelations[2]->getWorkspace());
-        $this->assertEquals($workspace, $tagRelations[3]->getWorkspace());
+        $this->assertEquals(self::get('user_tag_1'), $tagRelations[0]->getTag());
+        $this->assertEquals(self::get('user_tag_4'), $tagRelations[1]->getTag());
     }
 
     public function testFindByUser()

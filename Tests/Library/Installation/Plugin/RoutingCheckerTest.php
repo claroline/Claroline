@@ -11,18 +11,21 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\CoreBundle\Tests\Library\Installation\Plugin\StubPluginTestCase;
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Claroline\CoreBundle\Library\Testing\StubPluginTrait;
+use Symfony\Component\Yaml\Parser;
 
-class RoutingCheckerTest extends StubPluginTestCase
+class RoutingCheckerTest extends MockeryTestCase
 {
-    /** @var CommonChecker */
+    use StubPluginTrait;
+
+    private $router;
     private $checker;
 
     protected function setUp()
     {
-        parent::setUp();
-        $container = static::createClient()->getContainer();
-        $this->checker = $container->get('claroline.plugin.routing_checker');
+        $this->router = $this->mock('Symfony\Bundle\FrameworkBundle\Routing\Router');
+        $this->checker = new RoutingChecker($this->router, new Parser());
     }
 
     /**
@@ -30,8 +33,7 @@ class RoutingCheckerTest extends StubPluginTestCase
      */
     public function testCheckerReturnsAnErrorOnInvalidRoutingPrefix($pluginFqcn)
     {
-        $path = $this->buildPluginPath($pluginFqcn);
-        $errors = $this->checker->check($this->getLoader()->load($pluginFqcn, $path));
+        $errors = $this->checker->check($this->loadPlugin($pluginFqcn));
         $this->assertEquals(RoutingChecker::INVALID_ROUTING_PREFIX, $errors[0]->getCode());
     }
 
@@ -41,8 +43,7 @@ class RoutingCheckerTest extends StubPluginTestCase
     public function testCheckerReturnsAnErrorIfRoutingPrefixIsAlreadyRegistered($pluginFqcn)
     {
         $this->markTestSkipped('Symfony 2.2 doesn\'t provide a way to retrieve the registered prefixes');
-        $path = $this->buildPluginPath($pluginFqcn);
-        $errors = $this->checker->check($this->getLoader()->load($pluginFqcn, $path));
+        $errors = $this->checker->check($this->loadPlugin($pluginFqcn));
         $this->assertEquals(RoutingChecker::ALREADY_REGISTERED_PREFIX, $errors[0]->getCode());
     }
 
@@ -51,8 +52,7 @@ class RoutingCheckerTest extends StubPluginTestCase
      */
     public function testCheckerReturnsAnErrorOnNonExistentRoutingResource($pluginFqcn)
     {
-        $path = $this->buildPluginPath($pluginFqcn);
-        $errors = $this->checker->check($this->getLoader()->load($pluginFqcn, $path));
+        $errors = $this->checker->check($this->loadPlugin($pluginFqcn));
         $this->assertEquals(RoutingChecker::NON_EXISTENT_ROUTING_FILE, $errors[0]->getCode());
     }
 
@@ -61,8 +61,7 @@ class RoutingCheckerTest extends StubPluginTestCase
      */
     public function testCheckerReturnsAnErrorOnUnexpectedRoutingResourceLocation($pluginFqcn)
     {
-        $path = $this->buildPluginPath($pluginFqcn);
-        $errors = $this->checker->check($this->getLoader()->load($pluginFqcn, $path));
+        $errors = $this->checker->check($this->loadPlugin($pluginFqcn));
         $this->assertEquals(RoutingChecker::INVALID_ROUTING_LOCATION, $errors[0]->getCode());
     }
 
@@ -71,8 +70,7 @@ class RoutingCheckerTest extends StubPluginTestCase
      */
     public function testCheckerReturnsAnErrorOnNonYamlRoutingFile($pluginFqcn)
     {
-        $path = $this->buildPluginPath($pluginFqcn);
-        $errors = $this->checker->check($this->getLoader()->load($pluginFqcn, $path));
+        $errors = $this->checker->check($this->loadPlugin($pluginFqcn));
         $this->assertEquals(RoutingChecker::INVALID_ROUTING_EXTENSION, $errors[0]->getCode());
     }
 
@@ -81,9 +79,16 @@ class RoutingCheckerTest extends StubPluginTestCase
      */
     public function testCheckerReturnsAnErrorOnUnloadableYamlRoutingFile($pluginFqcn)
     {
-        $path = $this->buildPluginPath($pluginFqcn);
-        $errors = $this->checker->check($this->getLoader()->load($pluginFqcn, $path));
+        $errors = $this->checker->check($this->loadPlugin($pluginFqcn));
         $this->assertEquals(RoutingChecker::INVALID_YAML_ROUTING_FILE, $errors[0]->getCode());
+    }
+
+    /**
+     * @dataProvider provideValidPlugins
+     */
+    public function testCheckerReturnsNoErrorOnValidPlugin($pluginFqcn)
+    {
+        $this->assertEquals(0, count($this->checker->check($this->loadPlugin($pluginFqcn))));
     }
 
     public function invalidRoutingPrefixProvider()

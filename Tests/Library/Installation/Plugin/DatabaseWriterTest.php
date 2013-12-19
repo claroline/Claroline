@@ -37,7 +37,7 @@ class DatabaseWriterTest extends MockeryTestCase
         $this->kernel->shouldReceive('getRootDir')->andReturn('kernelRootDir');
         $this->kernel->shouldReceive('getEnvironment')->andReturn('test');
         $this->kernelRootDir = 'kernelRootDir';
-        $this->dbwriter = new DatabaseWriter(
+        $this->dbWriter = new DatabaseWriter(
             $this->em,
             $this->im,
             $this->fileSystem,
@@ -49,7 +49,7 @@ class DatabaseWriterTest extends MockeryTestCase
 
     public function testPersistCustomActionIfDecodersAreFound()
     {
-        $this->markTestSkipped();
+        $this->markTestSkipped('Database writer should be refactored and properly tested');
         $resourceType = new \Claroline\CoreBundle\Entity\Resource\ResourceType();
         $actions = array(array('name' => 'open', 'menu_name' => 'open'));
         $decoder = new \Claroline\CoreBundle\Entity\Resource\MaskDecoder();
@@ -62,6 +62,6 @@ class DatabaseWriterTest extends MockeryTestCase
 
     public function testPersistCustomActionIfDecodersAreUnknown()
     {
-        $this->markTestSkipped();
+        $this->markTestSkipped('Database writer should be refactored and properly tested');
     }
 }

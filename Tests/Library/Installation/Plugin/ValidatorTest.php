@@ -11,15 +11,18 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\CoreBundle\Tests\Library\Installation\Plugin\StubPluginTestCase;
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Claroline\CoreBundle\Library\Testing\StubPluginTrait;
 
-class ValidatorTest extends StubPluginTestCase
+class ValidatorTest extends MockeryTestCase
 {
+    use StubPluginTrait;
+
     public function testValidatorAcceptsOnlyInstancesOfCheckerInterface()
     {
         $this->setExpectedException('InvalidArgumentException');
         $checkers = array(
-            'regular' => $this->getMock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface'),
+            'regular' => $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface'),
             'wrong' => new \stdClass()
         );
 
@@ -28,63 +31,31 @@ class ValidatorTest extends StubPluginTestCase
 
     public function testValidatorCollectsValidationErrorsFromCheckers()
     {
-        $firstChecker = $this->getMock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface');
-        $secondChecker = $this->getMock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface');
-        $thirdChecker = $this->getMock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface');
-        $plugin = $this->getMock('Claroline\CoreBundle\Library\PluginBundle');
+        $firstChecker = $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface');
+        $secondChecker = $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface');
+        $thirdChecker = $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface');
+        $plugin = $this->mock('Claroline\CoreBundle\Library\PluginBundle');
 
         $firstError = new ValidationError('foo');
         $secondError = new ValidationError('bar');
         $thirdError = new ValidationError('baz');
 
-        $firstChecker->expects($this->once())
-            ->method('check')
-            ->with($plugin)
-            ->will($this->returnValue(array()));
-        $secondChecker->expects($this->once())
-            ->method('check')
-            ->with($plugin)
-            ->will($this->returnValue(array($firstError)));
-        $thirdChecker->expects($this->once())
-            ->method('check')
-            ->with($plugin)
-            ->will($this->returnValue(array($secondError, $thirdError)));
+        $firstChecker->shouldReceive('check')
+            ->once()
+            ->with($plugin, false)
+            ->andReturn(array());
+        $secondChecker->shouldReceive('check')
+            ->once()
+            ->with($plugin, false)
+            ->andReturn(array($firstError));
+        $thirdChecker->shouldReceive('check')
+            ->once()
+            ->with($plugin, false)
+            ->andReturn(array($secondError, $thirdError));
 
         $validator = new Validator(array($firstChecker, $secondChecker, $thirdChecker));
-        $errors = $validator->validate($plugin);
 
+        $errors = $validator->validate($plugin);
         $this->assertEquals(array($firstError, $secondError, $thirdError), $errors);
-    }
-
-    /**
-     * @dataProvider validPluginProvider
-     */
-    public function testValidatorReturnsNoErrorForValidPlugins($pluginFqcn)
-    {
-        $ds = DIRECTORY_SEPARATOR;
-        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}"
-            . "WithCustomResources{$ds}Entity{$ds}ResourceA.php";
-        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}"
-            . "WithCustomResources{$ds}Entity{$ds}ResourceB.php";
-        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Valid{$ds}"
-            . "WithCustomActions{$ds}Entity{$ds}ResourceX.php";
-
-        $container = static::createClient()->getContainer();
-        $validator = $container->get('claroline.plugin.validator');
-        $path = $this->buildPluginPath($pluginFqcn);
-        $plugin = $this->getLoader()->load($pluginFqcn, $path);
-        $errors = $validator->validate($plugin);
-        $this->assertEquals(0, count($errors));
-    }
-
-    public function validPluginProvider()
-    {
-        return array(
-            array('Valid\Minimal\ValidMinimal'),
-            array('Valid\Simple\ValidSimple'),
-            array('Valid\Custom\ValidCustom'),
-            array('Valid\WithMigrations\ValidWithMigrations'),
-            array('Valid\WithCustomResources\ValidWithCustomResources')
-        );
     }
 }

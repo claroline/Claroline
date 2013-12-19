@@ -11,22 +11,31 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\CoreBundle\Tests\Library\Installation\Plugin\StubPluginTestCase;
+use Claroline\CoreBundle\Library\Testing\StubPluginTrait;
 
-class LoaderTest extends StubPluginTestCase
+class LoaderTest extends \PHPUnit_Framework_TestCase
 {
+    use StubPluginTrait;
+
+    private $loader;
+
+    public function setUp()
+    {
+        $this->loader = new Loader();
+    }
+
     public function testLoaderCanReturnAnInstanceOfALoadablePluginBundleClass()
     {
-        $path = $this->buildPluginPath('Valid\Simple\ValidSimple');
-        $plugin = $this->getLoader()->load('Valid\Simple\ValidSimple', $path);
+        $path = $this->getPluginClassPath('Valid\Simple\ValidSimple');
+        $plugin = $this->loader->load('Valid\Simple\ValidSimple', $path);
         $this->assertInstanceOf('Valid\Simple\ValidSimple', $plugin);
     }
 
     public function testLoaderThrowsAnExceptionIfExpectedBundleClassFileDoesntExist()
     {
         try {
-            $path = $this->buildPluginPath('Invalid\NoBundleClassFile\InvalidNoBundleClassFile');
-            $this->getLoader()->load('Invalid\NoBundleClassFile\InvalidNoBundleClassFile', $path);
+            $path = $this->getPluginClassPath('Invalid\NoBundleClassFile\InvalidNoBundleClassFile');
+            $this->loader->load('Invalid\NoBundleClassFile\InvalidNoBundleClassFile', $path);
             $this->fail('No exception thrown');
         } catch (\RuntimeException $ex) {
             $this->assertEquals(Loader::NO_PLUGIN_FOUND, $ex->getCode());
@@ -39,8 +48,8 @@ class LoaderTest extends StubPluginTestCase
     public function testLoaderThrowsAnExceptionIfExpectedBundleClassDoesntExist($fqcn)
     {
         try {
-            $path = $this->buildPluginPath($fqcn);
-            $this->getLoader()->load($fqcn, $path);
+            $path = $this->getPluginClassPath($fqcn);
+            $this->loader->load($fqcn, $path);
             $this->fail('No exception thrown');
         } catch (\RuntimeException $ex) {
             $this->assertEquals(Loader::NON_EXISTENT_BUNDLE_CLASS, $ex->getCode());
@@ -53,8 +62,8 @@ class LoaderTest extends StubPluginTestCase
     public function testLoaderThrowsAnExceptionIfBundleClassIsNotInstantiable($fqcn)
     {
         try {
-            $path = $this->buildPluginPath($fqcn);
-            $this->getLoader()->load($fqcn, $path);
+            $path = $this->getPluginClassPath($fqcn);
+            $this->loader->load($fqcn, $path);
             $this->fail('No exception thrown');
         } catch (\RuntimeException $ex) {
             $this->assertEquals(Loader::NON_INSTANTIABLE_BUNDLE_CLASS, $ex->getCode());
@@ -67,8 +76,8 @@ class LoaderTest extends StubPluginTestCase
     public function testLoaderThrowsAnExceptionIfBundleClassDoesntExtendPluginBundle($fqcn)
     {
         try {
-            $path = $this->buildPluginPath($fqcn);
-            $this->getLoader()->load($fqcn, $path);
+            $path = $this->getPluginClassPath($fqcn);
+            $this->loader->load($fqcn, $path);
             $this->fail('No exception thrown');
         } catch (\RuntimeException $ex) {
             $this->assertEquals(Loader::UNEXPECTED_BUNDLE_TYPE, $ex->getCode());
