@@ -1,16 +1,31 @@
-<div class="span3">
+
+<table class="table">
+    <thead> Last events </thead>
+        <th> {{ 'agenda_form_title'|trans({}, 'calendar') }}</th>
+        <th> {{ 'workspace'|trans({}, 'calendar') }}</th>
+        <th> {{ 'length'|trans({}, 'calendar') }} </th>
+        <th> {{ 'agenda_form_description'|trans({}, 'calendar') }} </th>
+        <th> {{ 'agenda_form_priority'|trans({}, 'calendar') }} </th>
+    <tbody>
     {% for e in listEvents  %}
-    <div class="border">
-       <h5 style="color:{{ e.priority }}"> {{ e.title }}</h5>
-       <ul>
-            <li> {{ e.start|date("d/m/Y")}}  -> {{ e.end|date("d/m/Y") }} </li>
+        <td> <h5 style="color:{{ e.priority }}"> {{ e.title }} </h5> </td>
+        <td> {{  e.getWorkspace().getName() }} </td>
+        <td> {{ e.start|date("F jS \\a\\t g:ia")}}  -> {{ e.end|date("d/m/Y") }} </td>
+        <td>
                {% if e.description is not empty %}
-                   <li>{{ e.description |raw }}</li>
+                   {{ e.description |raw }}
                {% endif %}
-            <li class="hidden"> {{e.priority}}</li>
-        </ul>
-    </div>
+        </td>
+        <td> {% if e.priority == '#848484' %}
+                {{ 'agenda_form_priority_medium'|trans({}, 'calendar') }}
+            {% elseif e.priority == '#FF0000' %}
+                {{ 'agenda_form_priority_High'|trans({}, 'calendar') }}
+            {% else %}
+                {{ 'low'|trans({}, 'calendar') }}
+            {% endif %}
+        </td>
+    </tbody>
     {% else %}
-        <li>{{ 'no event found'|trans({}, 'calendar') }}</li>
+        {{ 'no event found'|trans({}, 'calendar') }}</li>
     {% endfor %}
-</div>
+</table>

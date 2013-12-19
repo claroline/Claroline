@@ -20,9 +20,12 @@ use Claroline\CoreBundle\Manager\SimpleTextManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @DI\Service
+ *  @DI\Service(scope="request")
  */
 class AgendaListener
 {
@@ -30,26 +33,39 @@ class AgendaListener
     private $templating;
     private $sc;
     private $container;
+    private $router;
+    private $request;
+    private $httpKernel;
 
     /**
      * @DI\InjectParams({
      *      "formFactory"       = @DI\Inject("claroline.form.factory"),
      *      "templating"        = @DI\Inject("templating"),
      *      "sc"                = @DI\Inject("security.context"),
-     *     "container"          = @DI\Inject("service_container")
+     *     "container"          = @DI\Inject("service_container"),
+     *         "router"         = @DI\Inject("router"),
+     *     "request"            = @DI\Inject("request"),
+     *     "httpKernel"         = @DI\Inject("http_kernel"),
+     * })
      * })
      */
     public function __construct(
         FormFactory $formFactory,
         TwigEngine $templating,
         SecurityContextInterface $sc,
-        ContainerInterface $container
+        ContainerInterface $container,
+        RouterInterface $router,
+        Request $request,
+        HttpKernelInterface $httpKernel
     )
     {
         $this->formFactory = $formFactory;
         $this->templating = $templating;
         $this->sc = $sc;
         $this->container = $container;
+        $this->router = $router;
+        $this->request = $request;
+        $this->httpKernel = $httpKernel;
     }
 
     /**
@@ -72,7 +88,7 @@ class AgendaListener
         $em = $this->container->get('doctrine.orm.entity_manager');
         $usr = $this->container->get('security.context')->getToken()->getUser();
         $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr , 5);
-
+        $this->router->generate('');
         return $this->templating->render(
             'ClarolineCoreBundle:Widget:agenda_widget.html.twig',
             array(
@@ -83,16 +99,14 @@ class AgendaListener
 
     public function desktopAgenda()
     {
-        $em = $this->container-> get('doctrine.orm.entity_manager');
-        $usr = $this->container->get('security.context')->getToken()->getUser();
-        $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, false);
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
-
-        return $this->templating->render(
-            'ClarolineCoreBundle:Widget:agenda_widget.html.twig',
-            array(
-                'listEvents' => array_merge($listEvents, $listEventsDesktop),
-            )
+        $params = array();
+        $params['_controller'] = 'ClarolineCoreBundle::DesktopAgenda';
+        $subRequest = $this->request->duplicate(
+            array(),
+            null,
+            $params
         );
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        return $response;
     }
 } 
