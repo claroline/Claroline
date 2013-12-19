@@ -12,47 +12,43 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * @Service("claroline.common.locale_manager")
  */
 class LocaleManager
 {
-    private $context;
     private $defaultLocale;
     private $finder;
     private $locales;
-    private $manager;
-    private $session;
+    private $userManager;
 
     /**
      * @InjectParams({
      *     "configHandler"  = @Inject("claroline.config.platform_config_handler"),
-     *     "context"        = @Inject("security.context"),
-     *     "manager"        = @Inject("claroline.persistence.object_manager"),
-     *     "session"        = @Inject("session")
+     *     "userManager"    = @Inject("claroline.manager.user_manager")
      * })
      */
-    public function __construct(
-        PlatformConfigurationHandler $configHandler, SecurityContext $context, ObjectManager $manager, Session $session
-    )
+    public function __construct(PlatformConfigurationHandler $configHandler, UserManager $userManager)
     {
-        $this->context = $context;
+        $this->userManager = $userManager;
         $this->defaultLocale = $configHandler->getParameter('locale_language');
         $this->finder = new Finder();
-        $this->manager = $manager;
-        $this->locales = $this->retriveAvailableLocales();
-        $this->session = $session;
     }
 
-    private function retriveAvailableLocales($path = '/../Resources/translations/')
+    /**
+     * Get a list of available languages in the platform.
+     *
+     * @param $path The path of translations files
+     *
+     * @return Array
+     */
+    private function retriveAvailableLocales($path)
     {
         $locales = array();
         $finder = $this->finder->files()->in(__DIR__.$path)->name('/platform\.[^.]*\.yml/');
@@ -67,53 +63,58 @@ class LocaleManager
 
     /**
      * Get a list of available languages in the platform.
+     *
+     * @param $path The path of translations files
+     *
+     * @return Array
      */
-    public function getAvailableLocales()
+    public function getAvailableLocales($path = '/../Resources/translations/')
     {
+        if (!$this->locales) {
+            $this->locales = $this->retriveAvailableLocales();
+        }
+
         return $this->locales;
     }
 
     /**
-     * Set the user locale.
+     * Set locale setting for current user if this locale is present in the platform
+     *
+     * @param string $locale The locale string as en, fr, es, etc.
      */
-    public function setUserLocale($locale = 'en')
+    public function setUserLocale($locale)
     {
-        $user = $this->context->getToken()->getUser();
+        $locales = $this->getAvailableLocales();
 
-        if (isset($this->locales[$locale]) and is_object($user)) {
-            $user->setLocale($locale);
-            $this->manager->persist($user);
-            $this->manager->flush();
+        if (isset($locales[$locale]) and ($user = $this->userManager->getCurrentUser())) {
+
+            $this->userManager->setLocale($user, $locale);
         }
     }
 
-    public function getUserLocale()
+    /**
+     * This methond returns the user locale and store it in session, if there is no user this method return default
+     * language or the browser language if it is present in translations.
+     *
+     * @param $request Symfony\Component\HttpFoundation\Request
+     *
+     * @return string The locale string as en, fr, es, etc.
+     */
+    public function getUserLocale($request)
     {
-        if (is_object($token = $this->context->getToken()) and
-            is_object($user = $token->getUser()) and ($locale = $user->getLocale()) !== '') {
-            return $locale;
-        }
-    }
-
-    public function preferredLocale($request)
-    {
+        $locales = $this->getAvailableLocales();
+        $locale = $this->defaultLocale;
         $preferred = explode('_', $request->getPreferredLanguage());
 
-        if (isset($preferred[0]) and isset($this->locales[$preferred[0]])) {
-            $this->defaultLocale = $preferred[0];
-        }
-    }
-
-    public function setRequestLocale($request)
-    {
-        if ($locale = $this->getUserLocale()) {
-            $request->getSession()->set('_locale', $locale);
+        switch (true) {
+            case ($locale = $request->attributes->get('_locale')): break;
+            case (($user = $this->userManager->getCurrentUser()) and ($locale = $user->getLocale()) !== ''): break;
+            case ($locale = $request->getSession()->get('_locale')): break;
+            case (isset($preferred[0]) and isset($locales[$preferred[0]]) and ($locale = $preferred[0])): break;
         }
 
-        if ($locale = $request->attributes->get('_locale')) {
-            $request->getSession()->set('_locale', $locale);
-        }
+        $request->getSession()->set('_locale', $locale);
 
-        $request->setLocale($request->getSession()->get('_locale', $this->defaultLocale));
+        return $locale;
     }
 }
