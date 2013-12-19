@@ -58,17 +58,17 @@ class HomeControllerTest extends MockeryTestCase
     public function testHomeAction()
     {
         $this->markTestSkipped();
-//        $this->manager->shouldReceive('getRegionContents')->once()->andReturn(
-//            array('header' => array(array('type' => 'home')))
-//        );
-//        $this->manager->shouldReceive('contentLayout')->once()->andReturn(array('content' => array('type' => 'home')));
-//        $this->security->shouldReceive('isGranted')->with('ROLE_ADMIN')->once()->andReturn(true);
-//        $this->homeService->shouldReceive('defaultTemplate')->once();
-//        $this->templating->shouldReceive('render')->times(2);
-//        $this->assertEquals(
-//            array('region' => array('header' => ''), 'content' => ''),
-//            $this->controller->homeAction($this->type)
-//        );
+        $this->manager->shouldReceive('getRegionContents')->once()->andReturn(
+            array('header' => array(array('type' => 'home')))
+        );
+        $this->manager->shouldReceive('contentLayout')->once()->andReturn(array('content' => array('type' => 'home')));
+        $this->security->shouldReceive('isGranted')->with('ROLE_ADMIN')->once()->andReturn(true);
+        $this->homeService->shouldReceive('defaultTemplate')->once();
+        $this->templating->shouldReceive('render')->times(2);
+        $this->assertEquals(
+            array('region' => array('header' => ''), 'content' => ''),
+            $this->controller->homeAction($this->type)
+        );
     }
 
     public function testTypeAction()
@@ -146,7 +146,7 @@ class HomeControllerTest extends MockeryTestCase
 
     public function testCreateAction()
     {
-        $this->request->shouldReceive('get')->times(5);
+        $this->request->shouldReceive('get')->times(4);
         $this->manager->shouldReceive('createContent')->once()->andReturn('true');
         $response = new Response('true');
         $controller = $this->controller->createAction();
@@ -155,7 +155,7 @@ class HomeControllerTest extends MockeryTestCase
 
     public function testUpdateAction()
     {
-        $this->request->shouldReceive('get')->times(5);
+        $this->request->shouldReceive('get')->times(4);
         $this->manager->shouldReceive('updateContent')->once()->andReturn('true');
         $response = $this->controller->updateAction($this->content);
         $this->assertEquals('true', $response->getContent());
