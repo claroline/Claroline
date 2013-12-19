@@ -143,7 +143,7 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
 
     public function testFindWorkspacesWithSelfRegistration()
     {
-        $workspaces = self::$repo->findWorkspacesWithSelfRegistration();
+        $workspaces = self::$repo->findWorkspacesWithSelfRegistration(self::get('john'));
         $this->assertEquals(2, count($workspaces));
         $this->assertEquals(self::get('ws_3'), $workspaces[0]);
         $this->assertEquals(self::get('ws_5'), $workspaces[1]);
