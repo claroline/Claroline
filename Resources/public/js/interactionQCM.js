@@ -136,6 +136,7 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
 function addChoice(container, deleteChoice) {
 
     var index = $('#newTable').find('tr:not(:first)').length;
+
     // change the "name" by the index and delete the symfony delete form button
     var contain = $(container.attr('data-prototype').replace(/__name__label__/g, 'Choice n°' + (index))
         .replace(/__name__/g, index)
@@ -155,14 +156,11 @@ function addChoice(container, deleteChoice) {
 
     // Add the delete button
     $('#newTable').find('tr:last').append('<td class="classic"></td>');
-    $('#newTable').find('td:last').append(container.find('a:contains("Supprimer")'));
+    $('#newTable').find('td:last').append(contain.find('a:contains("'+deleteChoice+'")'));
 
     // Remove the useless fileds form
     container.remove();
     tableChoices.next().remove();
-
-    // Increase number of choices
-    index++;
 
     whichChecked();
 }
