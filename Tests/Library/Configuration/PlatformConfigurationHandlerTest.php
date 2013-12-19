@@ -11,31 +11,21 @@
 
 namespace Claroline\CoreBundle\Library\Configuration;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Yaml\Yaml;
+use org\bovigo\vfs\vfsStream;
 
-class PlatformConfigurationHandlerTest extends WebTestCase
+class PlatformConfigurationHandlerTest extends \PHPUnit_Framework_TestCase
 {
     /** @var PlatformConfigurationHandler */
     private $handler;
 
     /** @var string */
-    private $stubConfigFile;
+    private $configFile;
 
     protected function setUp()
     {
-        parent::setUp();
-        $this->stubConfigFile = __DIR__ . '/../../Stub/Misc/platform_options.yml';
-        $this->initStubConfiguration();
-        $this->handler = new PlatformConfigurationHandler(
-            array('prod' => $this->stubConfigFile)
-        );
-    }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
-        $this->eraseStubConfiguration();
+        vfsStream::setup('configDir', null, array('platform_options.yml' => ''));
+        $this->configFile = vfsStream::url('configDir/platform_options.yml');
+        $this->handler = new PlatformConfigurationHandler(array('prod' => $this->configFile));
     }
 
     /**
@@ -49,9 +39,8 @@ class PlatformConfigurationHandlerTest extends WebTestCase
 
     public function testExistentParameterCanBeAccessed()
     {
-        $this->assertEquals('bar', $this->handler->getParameter('foo'));
-        $this->handler->setParameter('foo', 'new_value');
-        $this->assertEquals('new_value', $this->handler->getParameter('foo'));
+        $this->handler->setParameter('name', 'foo');
+        $this->assertEquals('foo', $this->handler->getParameter('name'));
     }
 
     public function parameterAccessorProvider()
@@ -60,15 +49,5 @@ class PlatformConfigurationHandlerTest extends WebTestCase
             array('getParameter'),
             array('setParameter')
         );
-    }
-
-    private function initStubConfiguration()
-    {
-        file_put_contents($this->stubConfigFile, Yaml::dump(array('foo' => 'bar')));
-    }
-
-    private function eraseStubConfiguration()
-    {
-        file_put_contents($this->stubConfigFile, Yaml::dump(array()));
     }
 }

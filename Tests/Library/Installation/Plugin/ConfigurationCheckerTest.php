@@ -11,45 +11,52 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\CoreBundle\Tests\Library\Installation\Plugin\StubPluginTestCase;
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Claroline\CoreBundle\Library\Testing\StubPluginTrait;
 use Claroline\CoreBundle\Library\Installation\Plugin\ValidationError;
+use Symfony\Component\Yaml\Parser;
 
-class ResourceCheckerTest extends StubPluginTestCase
+class ConfigurationCheckerTest extends MockeryTestCase
 {
-    /** @var CommonChecker */
+    use StubPluginTrait;
+
     private $checker;
 
     protected function setUp()
     {
         parent::setUp();
-        $container = static::createClient()->getContainer();
-        $this->checker = $container->get('claroline.plugin.config_checker');
+        $resourceTypeRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceTypeRepository');
+        $resourceTypeRepo->shouldReceive('findAll')->andReturn(array());
+        $toolRepo = $this->mock('Claroline\CoreBundle\Repository\ToolRepository');
+        $toolRepo->shouldReceive('findAll')->andReturn(array());
+        $em = $this->mock('Doctrine\ORM\EntityManager');
+        $em->shouldReceive('getRepository')
+            ->with('ClarolineCoreBundle:Resource\ResourceType')
+            ->andReturn($resourceTypeRepo);
+        $em->shouldReceive('getRepository')
+            ->with('ClarolineCoreBundle:Tool\Tool')
+            ->andReturn($toolRepo);
+        $this->checker = new ConfigurationChecker(new Parser(), $em);
     }
 
     public function testCheckerReturnsAnErrorOnNonExistentResourceFile()
     {
         $pluginFqcn = 'Invalid\NonExistentConfigFile1\InvalidNonExistentConfigFile1';
-        $path = $this->buildPluginPath($pluginFqcn);
-        $errors = $this->checker->check($this->getLoader()->load($pluginFqcn, $path));
+        $errors = $this->checker->check($this->loadPlugin($pluginFqcn));
         $this->assertContains("config.yml file missing", $errors[0]->getMessage());
     }
 
     public function testCheckerReturnsAnErrorOnMissingResourceKey()
     {
         $pluginFqcn = 'Invalid\MissingResourceKey1\InvalidMissingResourceKey1';
-        $path = $this->buildPluginPath($pluginFqcn);
-        $errors = $this->checker->check($this->getLoader()->load($pluginFqcn, $path));
+        $errors = $this->checker->check($this->loadPlugin($pluginFqcn));
         $this->assertTrue($errors[0] instanceof ValidationError);
     }
 
     public function testCheckerReturnsAnErrorOnUnloadableResourceClass()
     {
         $pluginFqcn = 'Invalid\UnloadableResourceClass1\InvalidUnloadableResourceClass1';
-        $ds = DIRECTORY_SEPARATOR;
-        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Invalid{$ds}"
-            . "UnloadableResourceClass1{$ds}Entity{$ds}ResourceX.php";
-        $path = $this->buildPluginPath($pluginFqcn);
-        $errors = $this->checker->check($this->getLoader()->load($pluginFqcn, $path));
+        $errors = $this->checker->check($this->loadPlugin($pluginFqcn));
         $this->assertTrue($errors[0] instanceof ValidationError);
         $this->assertContains('was not found', $errors[0]->getMessage());
     }
@@ -57,11 +64,8 @@ class ResourceCheckerTest extends StubPluginTestCase
     public function testCheckerReturnsAnErrorOnUnloadableResourceClass2()
     {
         $pluginFqcn = 'Invalid\UnloadableResourceClass2\InvalidUnloadableResourceClass2';
-        $ds = DIRECTORY_SEPARATOR;
-        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Invalid{$ds}"
-            . "UnloadableResourceClass2{$ds}Entity{$ds}ResourceX.php";
-        $path = $this->buildPluginPath($pluginFqcn);
-        $errors = $this->checker->check($this->getLoader()->load($pluginFqcn, $path));
+        $this->requirePluginClass('Invalid\UnloadableResourceClass2\Entity\ResourceX');
+        $errors = $this->checker->check($this->loadPlugin($pluginFqcn));
         $this->assertTrue($errors[0] instanceof ValidationError);
         $this->assertContains('must extend', $errors[0]->getMessage());
     }
@@ -69,11 +73,8 @@ class ResourceCheckerTest extends StubPluginTestCase
     public function testCheckerReturnsAnErrorOnUnexpectedLargeIcon()
     {
         $pluginFqcn = 'Invalid\UnexpectedResourceIcon\InvalidUnexpectedResourceIcon';
-        $ds = DIRECTORY_SEPARATOR;
-        require_once __DIR__."{$ds}..{$ds}..{$ds}..{$ds}Stub{$ds}plugin{$ds}Invalid{$ds}"
-            . "UnexpectedResourceIcon{$ds}Entity{$ds}ResourceX.php";
-        $path = $this->buildPluginPath($pluginFqcn);
-        $errors = $this->checker->check($this->getLoader()->load($pluginFqcn, $path));
+        $this->requirePluginClass('Invalid\UnexpectedResourceIcon\Entity\ResourceX');
+        $errors = $this->checker->check($this->loadPlugin($pluginFqcn));
         $this->assertTrue($errors[0] instanceof ValidationError);
         $this->assertContains('this file was not found', $errors[0]->getMessage());
     }
@@ -81,9 +82,16 @@ class ResourceCheckerTest extends StubPluginTestCase
     public function testCheckerReturnsAnErrorOnUnexpectedIcon()
     {
         $pluginFqcn = 'Invalid\UnexpectedIcon\InvalidUnexpectedIcon';
-        $path = $this->buildPluginPath($pluginFqcn);
-        $errors = $this->checker->check($this->getLoader()->load($pluginFqcn, $path));
+        $errors = $this->checker->check($this->loadPlugin($pluginFqcn));
         $this->assertTrue($errors[0] instanceof ValidationError);
         $this->assertContains('this file was not found', $errors[0]->getMessage());
+    }
+
+    /**
+     * @dataProvider provideValidPlugins
+     */
+    public function testCheckerReturnsNoErrorOnValidPlugin($pluginFqcn)
+    {
+        $this->assertEquals(0, count($this->checker->check($this->loadPlugin($pluginFqcn))));
     }
 }

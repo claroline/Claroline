@@ -21,6 +21,7 @@ class AuthenticatedUserConverterTest extends MockeryTestCase
     private $configuration;
     private $securityContext;
     private $token;
+    private $translator;
     private $converter;
 
     protected function setUp()
@@ -30,7 +31,8 @@ class AuthenticatedUserConverterTest extends MockeryTestCase
         $this->securityContext = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
         $this->token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $this->securityContext->shouldReceive('getToken')->andReturn($this->token);
-        $this->converter = new AuthenticatedUserConverter($this->securityContext);
+        $this->translator = $this->mock('Symfony\Bundle\FrameworkBundle\Translation\Translator');
+        $this->converter = new AuthenticatedUserConverter($this->securityContext, $this->translator);
     }
 
     public function testSupportsAcceptsOnlyParamConverterConfiguration()
@@ -39,15 +41,13 @@ class AuthenticatedUserConverterTest extends MockeryTestCase
         $this->assertFalse($this->converter->supports($configuration));
     }
 
-    public function testSupportsAcceptsOnlyAnAuthenticatedUserParameterSetToTrue()
+    public function testSupportsAcceptsOnlyAnAuthenticatedUserParameter()
     {
         $configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
         $configuration->shouldReceive('getOptions')->times(3)->andReturn(
             array('some_other_option'),
-            array('authenticatedUser' => false),
             array('authenticatedUser' => true)
         );
-        $this->assertFalse($this->converter->supports($configuration));
         $this->assertFalse($this->converter->supports($configuration));
         $this->assertTrue($this->converter->supports($configuration));
     }
@@ -68,6 +68,9 @@ class AuthenticatedUserConverterTest extends MockeryTestCase
     public function testApplyThrowsAnExceptionIfThereIsNoAuthenticatedUser()
     {
         $this->configuration->shouldReceive('getName')->once()->andReturn('user');
+        $this->configuration->shouldReceive('getOptions')
+            ->once()
+            ->andReturn(array('authenticatedUser' => true));
         $this->token->shouldReceive('getUser')->andReturn('anon.');
         $this->converter->apply($this->request, $this->configuration);
     }
@@ -77,8 +80,11 @@ class AuthenticatedUserConverterTest extends MockeryTestCase
         $user = new User();
         $this->request->attributes = new ParameterBag();
         $this->configuration->shouldReceive('getName')->once()->andReturn('user');
+        $this->configuration->shouldReceive('getOptions')
+            ->once()
+            ->andReturn(array('authenticatedUser' => true));
         $this->token->shouldReceive('getUser')->andReturn($user);
-        $this->assertEquals(true, $this->converter->apply($this->request, $this->configuration));
+        $this->assertTrue($this->converter->apply($this->request, $this->configuration));
         $this->assertEquals($user, $this->request->attributes->get('user'));
     }
 }

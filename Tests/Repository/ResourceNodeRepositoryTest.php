@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
 
-//can be rewritter for ResourceNode only ?
 class ResourceNodeRepositoryTest extends RepositoryTestCase
 {
     private static $repo;
@@ -201,8 +200,8 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
     {
         $mimeTypes = self::$repo->findMimeTypesWithMostResources(10);
         $this->assertEquals(3, count($mimeTypes));
-        $this->assertEquals('directory/mime', $mimeTypes[0]['mimeType']);
-        $this->assertEquals('file/mime', $mimeTypes[2]['mimeType']);
+        $this->assertEquals('directory/mime', $mimeTypes[0]['type']);
+        $this->assertEquals('file/mime', $mimeTypes[2]['type']);
         $this->assertEquals(5, $mimeTypes[0]['total']);
         $this->assertEquals(1, $mimeTypes[2]['total']);
     }

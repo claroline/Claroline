@@ -58,6 +58,7 @@ class AuthenticatedUserConverter implements ParamConverterInterface
         }
 
         $options = $configuration->getOptions();
+
         if ($options['authenticatedUser'] === true) {
             if (($user = $this->securityContext->getToken()->getUser()) instanceof User) {
                 $request->attributes->set($parameter, $user);

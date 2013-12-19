@@ -18,6 +18,8 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Doctrine\Common\Collections\ArrayCollection;
+use org\bovigo\vfs\vfsStream;
+use Mockery as m;
 
 class AdministrationControllerTest extends MockeryTestCase
 {
@@ -34,6 +36,7 @@ class AdministrationControllerTest extends MockeryTestCase
     private $translator;
     private $request;
     private $mailManager;
+    private $router;
 
     protected function setUp()
     {
@@ -51,6 +54,7 @@ class AdministrationControllerTest extends MockeryTestCase
         $this->translator = $this->mock('Symfony\Component\Translation\Translator');
         $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
         $this->mailManager = $this->mock('Claroline\CoreBundle\Manager\MailManager');
+        $this->router = $this->mock('Symfony\Component\Routing\RouterInterface');
     }
 
     public function testIndexAction()
@@ -546,7 +550,33 @@ class AdministrationControllerTest extends MockeryTestCase
 
     public function testImportUsers()
     {
-        $this->markTestSkipped('Refactoring may be needed');
+        vfsStream::setup('root', null, array('users.txt' => "gg,gg,gg,gg,gg,gg,gg"));
+
+        $form = $this->mock('Symfony\Component\Form\Form');
+
+        $this->formFactory->shouldReceive('create')
+            ->with(FormFactory::TYPE_USER_IMPORT)
+            ->once()
+            ->andReturn($form);
+
+        $form->shouldReceive('handleRequest')
+            ->with($this->request)
+            ->once();
+
+        $form->shouldReceive('isValid')
+            ->with()
+            ->once()
+            ->andReturn(true);
+
+        m::getConfiguration()->allowMockingNonExistentMethods(true);
+        $form->shouldReceive('get->getData')->andReturn(vfsStream::url('root/users.txt'));
+        m::getConfiguration()->allowMockingNonExistentMethods(false);
+        $this->userManager->shouldReceive('importUsers')->once()
+            ->with(array(array('gg', 'gg', 'gg', 'gg', 'gg', 'gg', 'gg')));
+
+        $this->router->shouldReceive('generate')->once()->with('claro_admin_user_list')->andReturn('yolo');
+
+        $this->assertTrue($this->getController()->importUsers() instanceof \Symfony\Component\HttpFoundation\RedirectResponse);
     }
 
     public function testImportUsersIntoGroupFormAction()
@@ -570,7 +600,38 @@ class AdministrationControllerTest extends MockeryTestCase
 
     public function testImportUsersIntoGroupAction()
     {
-        $this->markTestSkipped('Refactoring may be needed');
+        vfsStream::setup('root', null, array('users.txt' => "gg,gg,gg,gg,gg,gg,gg"));
+        $group = $this->mock('Claroline\CoreBundle\Entity\Group');
+        $group->shouldReceive('getId')->andReturn(42);
+
+        $form = $this->mock('Symfony\Component\Form\Form');
+
+        $this->formFactory->shouldReceive('create')
+            ->with(FormFactory::TYPE_USER_IMPORT)
+            ->once()
+            ->andReturn($form);
+
+        $form->shouldReceive('handleRequest')
+            ->with($this->request)
+            ->once();
+
+        $form->shouldReceive('isValid')
+            ->with()
+            ->once()
+            ->andReturn(true);
+
+        m::getConfiguration()->allowMockingNonExistentMethods(true);
+        $form->shouldReceive('get->getData')->andReturn(vfsStream::url('root/users.txt'));
+        m::getConfiguration()->allowMockingNonExistentMethods(false);
+        $users = array(array('gg', 'gg', 'gg', 'gg', 'gg', 'gg', 'gg'));
+        $this->userManager->shouldReceive('importUsers')->once()->with($users);
+        $this->groupManager->shouldReceive('importUsers')->once()->with($group, $users);
+        $this->router->shouldReceive('generate')->once()
+            ->with('claro_admin_user_of_group_list', array('groupId' => 42))
+            ->andReturn('azertyuiop');
+
+        $this->assertTrue($this->getController()->importUsersIntoGroupAction($group)
+            instanceof \Symfony\Component\HttpFoundation\RedirectResponse);
     }
 
     public function testRegistrationManagementActionWithoutSearch()
@@ -1064,7 +1125,8 @@ class AdministrationControllerTest extends MockeryTestCase
                 $this->analyticsManager,
                 $this->translator,
                 $this->request,
-                $this->mailManager
+                $this->mailManager,
+                $this->router
             );
         }
 
@@ -1092,7 +1154,8 @@ class AdministrationControllerTest extends MockeryTestCase
                 $this->analyticsManager,
                 $this->translator,
                 $this->request,
-                $this->mailManager
+                $this->mailManager,
+                $this->router
             )
         );
     }
