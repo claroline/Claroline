@@ -77,7 +77,7 @@ chooseType: Choose type of document to display
 close: Close
 color: Color
 comment: Comment
-compose: Compose
+compose: Answer
 consult_hint: Consult the hint, results in a penalty, do you want to continue
 containSearch: Whose question contains
 correct: Correct
@@ -243,6 +243,7 @@ orders: Instructions
 # P
 paper: Paper
 paper exo:  paper test
+paperLegend: Papers which need manual correction
 paper list: Paper list
 partially: Partially correct
 penalty: Penalty

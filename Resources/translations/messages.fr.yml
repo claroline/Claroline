@@ -77,7 +77,7 @@ chooseType: Choisissez le type de document à afficher
 close: Fermer
 color: Couleur
 comment: Commentaire
-compose: Composer
+compose: Répondre
 consult_hint: Consulter l\'indice entraîne une pénalité, voulez vous continuer
 containSearch: Dont la question contient
 correct: Correcte
@@ -243,6 +243,7 @@ orders: Consignes
 # P
 paper: Passage
 paper exo: Passage d'un test
+paperLegend: Copies nécessitant une correction manuelle
 paper list: Liste des copies
 partially: Partiellement correcte
 penalty: Pénalité
