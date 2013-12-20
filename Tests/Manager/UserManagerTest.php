@@ -26,6 +26,7 @@ class UserManagerTest extends MockeryTestCase
     private $personalWsTemplateFile;
     private $translator;
     private $ch;
+    private $sc;
     private $pagerFactory;
     private $om;
     private $mailManager;
@@ -43,6 +44,7 @@ class UserManagerTest extends MockeryTestCase
         $this->personalWsTemplateFile = 'template';
         $this->translator = $this->mock('Symfony\Component\Translation\Translator');
         $this->ch = $this->mock('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler');
+        $this->sc = $this->mock('Symfony\Component\Security\Core\SecurityContext');
         $this->pagerFactory = $this->mock('Claroline\CoreBundle\Pager\PagerFactory');
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->validator = $this->mock('Symfony\Component\Validator\ValidatorInterface');
@@ -661,17 +663,18 @@ class UserManagerTest extends MockeryTestCase
 
         if (count($mockedMethods) === 0) {
             return new UserManager(
-                $this->roleManager,
-                $this->workspaceManager,
-                $this->toolManager,
-                $this->strictDispatcher,
                 $this->personalWsTemplateFile,
-                $this->translator,
-                $this->ch,
-                $this->pagerFactory,
-                $this->om,
                 $this->mailManager,
-                $this->validator
+                $this->om,
+                $this->pagerFactory,
+                $this->ch,
+                $this->roleManager,
+                $this->sc,
+                $this->strictDispatcher,
+                $this->toolManager,
+                $this->translator,
+                $this->validator,
+                $this->workspaceManager
             );
         }
 
@@ -687,17 +690,18 @@ class UserManagerTest extends MockeryTestCase
         return $this->mock(
             'Claroline\CoreBundle\Manager\UserManager' . $stringMocked,
             array(
-                $this->roleManager,
-                $this->workspaceManager,
-                $this->toolManager,
-                $this->strictDispatcher,
                 $this->personalWsTemplateFile,
-                $this->translator,
-                $this->ch,
-                $this->pagerFactory,
-                $this->om,
                 $this->mailManager,
-                $this->validator
+                $this->om,
+                $this->pagerFactory,
+                $this->ch,
+                $this->roleManager,
+                $this->sc,
+                $this->strictDispatcher,
+                $this->toolManager,
+                $this->translator,
+                $this->validator,
+                $this->workspaceManager
             )
         );
     }

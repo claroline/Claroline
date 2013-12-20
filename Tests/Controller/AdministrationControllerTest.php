@@ -36,6 +36,7 @@ class AdministrationControllerTest extends MockeryTestCase
     private $translator;
     private $request;
     private $mailManager;
+    private $localeManager;
     private $router;
 
     protected function setUp()
@@ -54,6 +55,7 @@ class AdministrationControllerTest extends MockeryTestCase
         $this->translator = $this->mock('Symfony\Component\Translation\Translator');
         $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
         $this->mailManager = $this->mock('Claroline\CoreBundle\Manager\MailManager');
+        $this->localeManager = $this->mock('Claroline\CoreBundle\Manager\LocaleManager');
         $this->router = $this->mock('Symfony\Component\Routing\RouterInterface');
     }
 
@@ -74,8 +76,11 @@ class AdministrationControllerTest extends MockeryTestCase
             ->with($user)
             ->once()
             ->andReturn($roles);
+        $this->localeManager->shouldReceive('getAvailableLocales')
+            ->once()
+            ->andReturn(array('en'));
         $this->formFactory->shouldReceive('create')
-            ->with(FormFactory::TYPE_USER_FULL, array($roles))
+            ->with(FormFactory::TYPE_USER_FULL, array($roles, array('en')))
             ->once()
             ->andReturn($form);
         $this->mailManager
@@ -110,8 +115,11 @@ class AdministrationControllerTest extends MockeryTestCase
             ->with($currentUser)
             ->once()
             ->andReturn($roles);
+        $this->localeManager->shouldReceive('getAvailableLocales')
+            ->once()
+            ->andReturn(array('en'));
         $this->formFactory->shouldReceive('create')
-            ->with(FormFactory::TYPE_USER_FULL, array($roles))
+            ->with(FormFactory::TYPE_USER_FULL, array($roles, array('en')))
             ->once()
             ->andReturn($form);
         $form->shouldReceive('handleRequest')
@@ -1126,6 +1134,7 @@ class AdministrationControllerTest extends MockeryTestCase
                 $this->translator,
                 $this->request,
                 $this->mailManager,
+                $this->localeManager,
                 $this->router
             );
         }
@@ -1155,6 +1164,7 @@ class AdministrationControllerTest extends MockeryTestCase
                 $this->translator,
                 $this->request,
                 $this->mailManager,
+                $this->localeManager,
                 $this->router
             )
         );
