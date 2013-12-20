@@ -39,13 +39,13 @@ class AgendaListener
 
     /**
      * @DI\InjectParams({
-     *      "formFactory"       = @DI\Inject("claroline.form.factory"),
-     *      "templating"        = @DI\Inject("templating"),
-     *      "sc"                = @DI\Inject("security.context"),
-     *     "container"          = @DI\Inject("service_container"),
-     *         "router"         = @DI\Inject("router"),
-     *     "request"            = @DI\Inject("request"),
-     *     "httpKernel"         = @DI\Inject("http_kernel"),
+     *     "formFactory"       = @DI\Inject("claroline.form.factory"),
+     *     "templating"        = @DI\Inject("templating"),
+     *     "sc"                = @DI\Inject("security.context"),
+     *     "container"         = @DI\Inject("service_container"),
+     *     "router"            = @DI\Inject("router"),
+     *     "request"           = @DI\Inject("request"),
+     *     "httpKernel"        = @DI\Inject("http_kernel"),
      * })
      * })
      */
