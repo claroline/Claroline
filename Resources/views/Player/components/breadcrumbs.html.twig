@@ -1,5 +1,5 @@
-{% macro breadcrumbItem(workspace, path, step) %}
-     <li class="lvl-{{ step.lvl + 1 }}">
+{% macro breadcrumbItem(workspace, path, step, class, count) %}
+     <li class="lvl-{{ step.lvl + 1 }} {{ class }} {{ class ~ "-" ~ count }}">
         <a class="step" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
         {{ step.name }}
         </a>
@@ -13,7 +13,7 @@
     {% if step.children is empty %}
         {% set isTerminalClass = "terminal" %}
     {% endif %}
-    
+
     <li class="dropdown lvl-{{ step.lvl + 1 }} {{ isTerminalClass }}">
         <a class="dropdown-label" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: step.id }) }}">
             {{ step.name }}
@@ -73,4 +73,11 @@
             </ul>
         </li>
     {% endif %}
+
+    {# Display previous path #}
+    {% for i, step in ghost %}
+        {{ macros.breadcrumbItem(workspace, path, step, "ghost", i) }}
+    {% endfor %}
 </ul>
+
+

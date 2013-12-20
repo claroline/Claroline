@@ -129,3 +129,13 @@
    border-bottom-right-radius:3px;
    padding-right:5px;
 }
+
+.path-player .breadcrumbs ul > li.ghost {
+    opacity:0.4;   
+}
+
+.path-player .breadcrumbs ul > li.ghost-0{
+    border-top-left-radius:3px;
+    border-bottom-left-radius:3px;
+    margin-left:40px;
+}
