@@ -206,14 +206,14 @@ class DesktopAgendaController extends Controller
      * @EXT\Template("ClarolineCoreBundle:Widget:agenda_widget.html.twig")
      * @EXT\Method({"GET"})
      */
-    public function widget($order = null)
+    public function widgetAction($order = null)
     {
         $em = $this-> get('doctrine.orm.entity_manager');
         $usr = $this->get('security.context')->getToken()->getUser();
         $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, false);
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr, 5);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr, 5, $order);
 
-        return array_merge($listEvents,$listEventsDesktop);
+        return array('listEvents' => array_merge($listEvents,$listEventsDesktop));
     }
 
     private function convertEventoArray($listEvents)

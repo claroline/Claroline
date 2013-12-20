@@ -88,7 +88,6 @@ class AgendaListener
         $em = $this->container->get('doctrine.orm.entity_manager');
         $usr = $this->container->get('security.context')->getToken()->getUser();
         $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr , 5);
-        $this->router->generate('');
         return $this->templating->render(
             'ClarolineCoreBundle:Widget:agenda_widget.html.twig',
             array(
@@ -100,13 +99,13 @@ class AgendaListener
     public function desktopAgenda()
     {
         $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle::DesktopAgenda';
+        $params['_controller'] = 'ClarolineCoreBundle:Tool\DesktopAgenda:widget';
         $subRequest = $this->request->duplicate(
             array(),
             null,
             $params
         );
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        return $response;
+        return $response->getContent();
     }
 } 
