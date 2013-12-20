@@ -51,7 +51,7 @@
                         {% endif %}
                     </td>
                     <td>
-                        {{ path.description | truncate(40, true, ' [...]') }}
+                        {{ path.description | striptags | truncate(40, true, ' [...]') }}
                     </td>
                     <td align="right">
                     {% if path.deployed %}
@@ -94,7 +94,7 @@
                     <tr>
                         <td><strong>{{ path.resourceNode.name }}</strong></td>
                         <td>
-                            {{ path.description | truncate(40, true, ' [...]') }}
+                            {{ path.description | striptags | truncate(40, true, ' [...]') }}
                         </td>
                         <td align="right">
                             <a href="{{ path('innova_path_player_index', {workspaceId: workspace.id, pathId: path.id, stepId: path.getRootStep().id}) }}" data-original-title="{{ 'play' | trans({}, 'innova_tools') }}" class="btn btn-xs btn-default" />

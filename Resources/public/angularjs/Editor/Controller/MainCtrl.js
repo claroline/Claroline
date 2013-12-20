@@ -7,6 +7,16 @@ function MainCtrl($scope, $http, $window, $location, $modal, HistoryFactory, Cli
     // Store symfony base partials route
     $scope.webDir = EditorApp.webDir;
     
+    // Tiny MCE options
+    if (typeof(configTinyMCE) != 'undefined' && null != configTinyMCE && configTinyMCE.length != 0) {
+        // App as a config for tinyMCE => use it
+        $scope.tinymceOptions = configTinyMCE;
+    } 
+    else {
+        // If no config, add default tiny
+        $scope.tinymceOptions = {};
+    }
+    
     // Set active tab
     $scope.activeTab = 'Global';
     $scope.$on('$routeChangeSuccess', function(event, current, previous) {
@@ -28,14 +38,20 @@ function MainCtrl($scope, $http, $window, $location, $modal, HistoryFactory, Cli
     $scope.pathName.isUnique = true;
     
     $scope.initPath = function(path) {
-        $scope.path = path;
-
-        if ($scope.path.steps.length === 0) {
+        if (typeof(path.steps) == 'undefined' || undefined == path.steps || null == path.steps || path.steps.length === 0) {
+            var newPath = jQuery.extend(true, {}, path);
             // Missing root step => add it
             var rootStep = StepFactory.generateNewStep();
-            rootStep.name = $scope.path.name;
-            $scope.path.steps.push(rootStep);
+            rootStep.name = path.name;
+            
+            newPath.steps = [];
+            newPath.steps.push(rootStep);
         }
+        else {
+            newPath = path;
+        }
+        
+        $scope.path = newPath;
 
         // Update History if needed
         if (-1 === HistoryFactory.getHistoryState()) {
