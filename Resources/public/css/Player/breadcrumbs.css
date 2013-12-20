@@ -110,11 +110,11 @@
     right:0;
 }
 
-.path-player .breadcrumbs li > a.step:hover{
+.path-player .breadcrumbs li > a.step:hover {
     text-decoration:underline;
 }
 
-.path-player .breadcrumbs ul > li > a.children{
+.path-player .breadcrumbs ul > li > a.children {
     color:grey;
     text-shadow:0;
     text-shadow:none;
@@ -138,4 +138,8 @@
     border-top-left-radius:3px;
     border-bottom-left-radius:3px;
     margin-left:40px;
+}
+
+.path-player .breadcrumbs ul > li.ghost:hover {
+    opacity:1;   
 }
