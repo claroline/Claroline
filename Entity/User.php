@@ -83,7 +83,7 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     /**
      * @var string
      *
-     * @ORM\Column()
+     * @ORM\Column(nullable=true)
      */
     protected $locale;
 
