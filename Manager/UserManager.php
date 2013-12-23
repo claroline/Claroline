@@ -54,14 +54,14 @@ class UserManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "ch"                     = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "context"                = @DI\Inject("security.context"),
-     *     "ed"                     = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
      *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager"),
      *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
      *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory"),
-     *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
+     *     "ch"                     = @DI\Inject("claroline.config.platform_config_handler"),
      *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
+     *     "context"                = @DI\Inject("security.context"),
+     *     "ed"                     = @DI\Inject("claroline.event.event_dispatcher"),
      *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"             = @DI\Inject("translator"),
      *     "validator"              = @DI\Inject("validator"),
