@@ -130,6 +130,7 @@
    padding-right:5px;
 }
 
+/* GHOST */
 .path-player .breadcrumbs ul > li.ghost {
     opacity:0.4;   
 }
@@ -138,6 +139,10 @@
     border-top-left-radius:3px;
     border-bottom-left-radius:3px;
     margin-left:40px;
+}
+
+.path-player .breadcrumbs ul > li.ghost-0 a{
+    padding-left:16px;
 }
 
 .path-player .breadcrumbs ul > li.ghost:hover {
