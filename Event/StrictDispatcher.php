@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Event;
 
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -35,7 +35,7 @@ class StrictDispatcher
      *     "ed" = @DI\Inject("event_dispatcher")
      * })
      */
-    public function __construct(EventDispatcher $ed)
+    public function __construct(EventDispatcherInterface $ed)
     {
         $this->eventDispatcher = $ed;
     }
