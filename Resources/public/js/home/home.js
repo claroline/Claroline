@@ -146,7 +146,6 @@
 
                     title.value = '';
                     text.value = '';
-                    home.resize(text);
                 } else if (data === 'true') {
 
                     contentPath = 'content/' + id + '/' + type;

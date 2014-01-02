@@ -26,37 +26,37 @@
     </div>
 
     {% if region['header'] is defined %}
-        <div class="region-header clearfix">
+        <div class="content-12 region-header clearfix">
             {{  region['header'] | raw }}
         </div>
     {% endif %}
-    <div class="row">
+    <div>
         {% if region['left'] is defined %}
-            <div class="col-md-3">
-                <div class="row">
+            <div class="content-3">
                     {{ region['left'] | raw }}
-                </div>
             </div>
         {% endif %}
 
         <div class="{% if region['left'] is defined and
-            region['right'] is defined %}col-md-6{% elseif region['left'] is defined or
-            region['rigth'] is defined %}col-md-9{% else %}col-md-12{% endif %}">
+            region['right'] is defined %}content-6{% elseif region['left'] is defined or
+            region['right'] is defined %}content-9{% else %}content-12{% endif %}">
             {% if region['content'] is defined %}
-                <div class="row spacing-right">{{ region['content'] | raw }}</div>
+                {{ region['content'] | raw }}
             {% endif %}
 
             {{ content | raw }}
         </div>
 
         {% if region['right'] is defined %}
-            <div class="col-md-3">
-                <div class="row">{{ region['right'] | raw }}</div>
+            <div class="content-3">
+                {{ region['right'] | raw }}
             </div>
         {% endif %}
     </div>
     {% if region['footer'] is defined %}
-        {{  region['footer'] | raw }}
+        <div class='content-12'>
+            {{  region['footer'] | raw }}
+        </div>
     {% endif %}
 {% endblock %}
 

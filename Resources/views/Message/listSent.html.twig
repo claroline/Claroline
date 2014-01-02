@@ -77,7 +77,15 @@
                     {% for userMessage in  pager.currentPageResults %}
                         <tr class="row-user-message">
                             <td><input class="chk-item" value="{{ userMessage.getId() }}" type="checkbox"></input></td>
-                            <td><a href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}">{{ userMessage.getMessage().getObject() }}</a></td>
+                            <td>
+                                <a href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}">
+                                    {% if userMessage.isRead() %}
+                                        {{ userMessage.getMessage().getObject() }}
+                                    {% else %}
+                                        <b>{{ userMessage.getMessage().getObject() }}</b>
+                                    {% endif %}
+                                </a>
+                            </td>
                             <td>{{ userMessage.getMessage().getTo() }}</td>
                             <td>{{ userMessage.getMessage().getDate()|intl_date_format() }}</td>
                             <td>
