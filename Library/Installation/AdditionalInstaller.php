@@ -47,12 +47,6 @@ class AdditionalInstaller extends BaseInstaller
             $updater020000->setLogger($this->logger);
             $updater020000->preUpdate();
         }
-
-        if (version_compare($currentVersion, '2.5.0', '<')) {
-            $updater020500 = new Updater\Updater020500($this->container);
-            $updater020500->setLogger($this->logger);
-            $updater020500->preUpdate();
-        }
     }
 
     public function postUpdate($currentVersion, $targetVersion)
@@ -91,6 +85,12 @@ class AdditionalInstaller extends BaseInstaller
             $updater020304 = new Updater\Updater020304($this->container);
             $updater020304->setLogger($this->logger);
             $updater020304->postUpdate();
+        }
+
+        if (version_compare($currentVersion, '2.5.0', '<')) {
+            $updater020500 = new Updater\Updater020500($this->container);
+            $updater020500->setLogger($this->logger);
+            $updater020500->postUpdate();
         }
 
         if (version_compare($currentVersion, '2.5.0', '<')) {

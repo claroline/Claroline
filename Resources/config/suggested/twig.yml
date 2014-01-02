@@ -1,7 +1,6 @@
 twig:
     debug:            %kernel.debug%
-    #strict_variables: %kernel.debug%
-    strict_variables: false
+    strict_variables: %kernel.debug%
     globals:
         chosenRangeKeys: %chosenRangeKeys%
     form:
