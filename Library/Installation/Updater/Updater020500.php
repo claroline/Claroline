@@ -75,10 +75,10 @@ class Updater020500
 
             if ($user !== null) {
                 $personalWorkspaceName = $trans . ' - ' . $user->getUsername();
+                $this->log('Renaming ' . $personalWorkspaceName);
                 $workspaceManager->rename($workspace, $personalWorkspaceName);
             }
 
-            $this->log('Renaming ' . $personalWorkspaceName);
             $this->om->persist($workspace);
 
             if ($i % 200 === 0) {
