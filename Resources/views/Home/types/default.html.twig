@@ -1,3 +1,5 @@
+{% if not father is defined %}{% set father = null %}{% endif%}
+{% if not region is defined %}{% set region = null %}{% endif%}
 {% if content != null %}
     <div class="content-element  {{ size }}" data-id="{{ content.id }}" data-type="{{ type }}">
         <div class="panel panel-default relative">
