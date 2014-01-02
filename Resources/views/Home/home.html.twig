@@ -26,7 +26,7 @@
     </div>
 
     {% if region['header'] is defined %}
-        <div class="region-header clearfix">
+        <div class="content-12 region-header clearfix">
             {{  region['header'] | raw }}
         </div>
     {% endif %}
@@ -54,7 +54,9 @@
         {% endif %}
     </div>
     {% if region['footer'] is defined %}
-        {{  region['footer'] | raw }}
+        <div class='content-12'>
+            {{  region['footer'] | raw }}
+        </div>
     {% endif %}
 {% endblock %}
 
