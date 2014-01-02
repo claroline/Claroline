@@ -44,7 +44,7 @@
 {% block section_content %}
     <div class="search-bar row">
         <div class="col-md-8">
-            {{ displayControls(workspace.getId()) }}
+            {{ displayControls() }}
         </div>
         <div class="col-md-4">
              <div class="input-group">
@@ -108,7 +108,7 @@
         </table>
     </div>
     {{ renderPager(search, pager) }}
-    <div>{{ displayControls(workspace.getId()) }}</div>
+    <div>{{ displayControls() }}</div>
 {% endblock %}
 
 {% block javascripts %}
