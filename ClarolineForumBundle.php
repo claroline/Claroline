@@ -31,9 +31,4 @@ class ClarolineForumBundle extends PluginBundle
     {
         return new AdditionalInstaller();
     }
-
-    public function getRequiredFixturesDirectory($environment)
-    {
-        return 'DataFixtures';
-    }
 }
