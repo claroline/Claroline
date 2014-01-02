@@ -234,7 +234,9 @@
             deleteClick(id);
         });
         $('#tasks').on('click','.update-task',function(e) {
+            $('#deleteBtn').show();
             $('#save').hide();
+            $('#updateBtn').show();
             task = 'task';
             var list = e.target.parentElement.children;
             $('#myModal').modal('show');
@@ -426,8 +428,8 @@
                     content:  '<a href="#" data-target="#myModal" role="button" data-toggle="modal" class="launch" data-id='+event.id+'>'+
                         Translator.get('platform' + ':' + 'edit')+'</a>'+
                         ' <div>'+t('agenda_form_start') +' : '+
-                        $.fullCalendar.formatDate(event.start ,'dd-MM-yyyy') + '</div>'+
-                        '<div class="mypopo' + event.id + '">'+t('agenda_form_end') +':'  + $.fullCalendar.formatDate(event.end ,'dd-MM-yyyy') +'</div>' +'<br />Description: ' + event.description,
+                        $.fullCalendar.formatDate(event.start ,'dd-MM-yyyy hh:mm') + '</div>'+
+                        '<div class="mypopo' + event.id + '">'+t('agenda_form_end') +':'  + $.fullCalendar.formatDate(event.end ,'dd-MM-yyyy hh:mm') +'</div>' +'<br />Description: ' + event.description,
                     html:true,
                     container:'body'
                 });
