@@ -132,7 +132,11 @@
 
 /* GHOST */
 .path-player .breadcrumbs ul > li.ghost {
-    opacity:0.4;   
+    opacity:0.25;
+}
+
+.path-player .breadcrumbs ul > li.ghost:hover {
+    opacity:1;   
 }
 
 .path-player .breadcrumbs ul > li.ghost-0{
@@ -143,8 +147,4 @@
 
 .path-player .breadcrumbs ul > li.ghost-0 a{
     padding-left:16px;
-}
-
-.path-player .breadcrumbs ul > li.ghost:hover {
-    opacity:1;   
 }
