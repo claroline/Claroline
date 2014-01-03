@@ -1,3 +1,4 @@
+{% if not father is defined %}{% set father = null %}{% endif%}
 {% if content != null %}
 
     {% if region is not defined or (region is defined and region != 'header' and region != 'footer') %}
