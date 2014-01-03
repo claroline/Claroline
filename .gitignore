@@ -7,6 +7,8 @@ app/build/*
 app/bootstrap*
 app/cache/*
 app/config/bundles.ini
+app/config/is_installed.php
+app/config/operations.xml*
 app/config/parameters.yml
 app/config/platform_options.yml
 app/logs/*
