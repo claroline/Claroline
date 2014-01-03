@@ -24,7 +24,7 @@ Project setup
 
 ### Requirements
 
-- PHP >= 5.3.3
+- PHP >= 5.4.1
 - PHP extensions:
     - fileinfo (for mime type detection)
     - Optionaly:
@@ -55,7 +55,7 @@ Project setup
     - `$ cp composer.dist.json composer.json`
     - `$ composer update --prefer-source`
     - `$ php app/console claroline:update`
-    - `$ php app/console assetic:dump`
+    - `$ php app/console claroline:refresh`
 
 You can then create a first admin user with:
 
@@ -74,7 +74,10 @@ To update your installation to the last stable state, use:
 
 ```sh
 $ composer update --prefer-source
+$ php app/console claroline:update
+$ php app/console claroline:refresh
 ```
+
 
 ### Plugin installation
 
