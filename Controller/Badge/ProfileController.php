@@ -45,33 +45,34 @@ class ProfileController extends Controller
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
+            $flashBag = $this->get('session')->getFlashBag();
+
             if ($form->isValid()) {
-                /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
                 $translator = $this->get('translator');
+
                 try {
-                    /** @var \Doctrine\ORM\EntityManager $entityManager */
                     $entityManager = $this->getDoctrine()->getManager();
-
                     $badgeName = $form->get('badge')->getData();
-
-                    $badge = $entityManager->getRepository('ClarolineCoreBundle:Badge\Badge')->findOneByName($badgeName);
+                    $badge = $entityManager->getRepository('ClarolineCoreBundle:Badge\Badge')
+                        ->findOneByName($badgeName);
 
                     if ($user->hasBadge($badge)) {
-                        $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_already_award_message', array(), 'badge'));
+                        $flashBag->add('error', $translator->trans('badge_already_award_message', array(), 'badge'));
                     } elseif ($user->hasClaimedFor($badge)) {
-                        $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_already_claim_message', array(), 'badge'));
+                        $flashBag->add('error', $translator->trans('badge_already_claim_message', array(), 'badge'));
                     } else {
                         $badgeClaim->setBadge($badge);
-
                         $entityManager->persist($badgeClaim);
                         $entityManager->flush();
-
-                        $this->get('session')->getFlashBag()->add('success', $translator->trans('badge_claim_success_message', array(), 'badge'));
+                        $flashBag->add('success', $translator->trans('badge_claim_success_message', array(), 'badge'));
                     }
                 } catch (NoResultException $exception) {
-                    $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_not_found_with_name', array('%badgeName%' => $badgeName), 'badge'));
+                    $flashBag->add(
+                        'error',
+                        $translator->trans('badge_not_found_with_name', array('%badgeName%' => $badgeName), 'badge')
+                    );
                 } catch (\Exception $exception) {
-                    $this->get('session')->getFlashBag()->add('error', $translator->trans('badge_claim_error_message', array(), 'badge'));
+                    $flashBag->add('error', $translator->trans('badge_claim_error_message', array(), 'badge'));
                 }
 
                 return $this->redirect($this->generateUrl('claro_profile_view_badges'));
@@ -90,15 +91,13 @@ class ProfileController extends Controller
      */
     public function badgeAction(Badge $badge, User $user)
     {
-        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-
         $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
-
-        $badgeRuleValidator = $this->get("claroline.rule.validator");
-        $validateLogs       = $badgeRuleValidator->validate($badge, $user);
-
-        $userBadge = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findOneBy(array('badge' => $badge, 'user' => $user));
+        $validateLogs = $this->get('claroline.rule.validator')
+            ->validate($badge, $user);
+        $userBadge = $this->getDoctrine()
+            ->getRepository('ClarolineCoreBundle:Badge\UserBadge')
+            ->findOneBy(array('badge' => $badge, 'user' => $user));
 
         return array(
             'userBadge'   => $userBadge,

@@ -47,18 +47,22 @@ class PlatformInstallCommand extends ContainerAwareCommand
         $output->writeln('Installing the platform');
         $kernel = $this->getContainer()->get('kernel');
         $baseInstaller = $this->getContainer()->get('claroline.installation.manager');
-        $baseInstaller->setLogger(function ($message) use ($output) {
-           $output->writeln($message);
-        });
+        $baseInstaller->setLogger(
+            function ($message) use ($output) {
+                $output->writeln($message);
+            }
+        );
         $self = $kernel->getBundle('ClarolineCoreBundle');
         $baseInstaller->install($self, !$input->getOption('with-optional-fixtures'));
 
         if ($input->getOption('with-plugins')) {
             $output->writeln('Installing plugins');
             $pluginInstaller = $this->getContainer()->get('claroline.plugin.installer');
-            $pluginInstaller->setLogger(function ($message) use ($output) {
-                $output->writeln("    {$message}");
-            });
+            $pluginInstaller->setLogger(
+                function ($message) use ($output) {
+                    $output->writeln("    {$message}");
+                }
+            );
 
             foreach ($kernel->getBundles() as $bundle) {
                 if ($bundle instanceof PluginBundle) {

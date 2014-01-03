@@ -55,9 +55,11 @@ class InitTestSchemaCommand extends ContainerAwareCommand
     private function createSchema(OutputInterface $output)
     {
         $migrator = $this->getContainer()->get('claroline.migration.manager');
-        $migrator->setLogger(function ($message) use ($output) {
-            $output->writeln($message);
-        });
+        $migrator->setLogger(
+            function ($message) use ($output) {
+                $output->writeln($message);
+            }
+        );
 
         foreach ($this->getContainer()->get('kernel')->getBundles() as $bundle) {
             if (count($migrator->getBundleStatus($bundle)[Migrator::STATUS_AVAILABLE]) > 1) {

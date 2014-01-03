@@ -147,7 +147,7 @@ class DesktopController extends Controller
                     array($config->getWidgetInstance())
                 );
 
-                $widget['config']= $config;
+                $widget['config'] = $config;
                 $widget['content'] = $event->getContent();
                 $widgets[] = $widget;
             }
@@ -248,9 +248,10 @@ class DesktopController extends Controller
                     array($config->getWidgetInstance())
                 );
 
-                $widget['config']= $config;
+                $widget['config'] = $config;
                 $widget['content'] = $event->getContent();
-                $widget['configurable'] = ($config->isLocked() !== true && $config->getWidgetInstance()->getWidget()->isConfigurable());
+                $widget['configurable'] = $config->isLocked() !== true
+                    && $config->getWidgetInstance()->getWidget()->isConfigurable();
                 $widgets[] = $widget;
             }
         }

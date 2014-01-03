@@ -35,24 +35,24 @@ class SimpleTextController extends Controller
             throw new AccessDeniedException();
         }
 
-       $simpleTextConfig = $this->get('claroline.manager.simple_text_manager')->getTextConfig($widget);
-       //wtf !
-       $id = array_pop(array_keys($request->request->all()));
-       $form = $this->get('claroline.form.factory')->create(FormFactory::TYPE_SIMPLE_TEXT, array($id));
-       $form->bind($this->getRequest());
+        $simpleTextConfig = $this->get('claroline.manager.simple_text_manager')->getTextConfig($widget);
+        //wtf !
+        $id = array_pop(array_keys($request->request->all()));
+        $form = $this->get('claroline.form.factory')->create(FormFactory::TYPE_SIMPLE_TEXT, array($id));
+        $form->bind($this->getRequest());
 
-       if ($form->isValid()) {
-           $formDatas = $form->get('content')->getData();
-           $content = is_null($formDatas) ? '' : $formDatas;
+        if ($form->isValid()) {
+            $formDatas = $form->get('content')->getData();
+            $content = is_null($formDatas) ? '' : $formDatas;
 
-           if ($simpleTextConfig) {
-               $simpleTextConfig->setContent($content);
-           } else {
-               $simpleTextConfig = new SimpleTextConfig();
-               $simpleTextConfig->setWidgetInstance($widget);
-               $simpleTextConfig->setContent($content);
-           }
-       } else {
+            if ($simpleTextConfig) {
+                $simpleTextConfig->setContent($content);
+            } else {
+                $simpleTextConfig = new SimpleTextConfig();
+                $simpleTextConfig->setWidgetInstance($widget);
+                $simpleTextConfig->setContent($content);
+            }
+        } else {
             $simpleTextConfig = new SimpleTextConfig();
             $simpleTextConfig->setWidgetInstance($widget);
             $errorForm = $this->container->get('claroline.form.factory')
@@ -63,24 +63,25 @@ class SimpleTextController extends Controller
 
             foreach ($children as $key => $child) {
                 $errors = $child->getErrors();
+
                 foreach ($errors as $error) {
                     $errorChildren[$key]->addError($error);
                 }
             }
 
-           return $$this->render(
-               'ClarolineCoreBundle:Widget:config_simple_text_form.html.twig',
-               array(
-                   'form' => $errorForm->createView(),
-                   'config' => $widget
-               )
-           );
-       }
+            return $$this->render(
+                'ClarolineCoreBundle:Widget:config_simple_text_form.html.twig',
+                array(
+                    'form' => $errorForm->createView(),
+                    'config' => $widget
+                )
+            );
+        }
 
-       $em = $this->get('doctrine.orm.entity_manager');
-       $em->persist($simpleTextConfig);
-       $em->flush();
+        $em = $this->get('doctrine.orm.entity_manager');
+        $em->persist($simpleTextConfig);
+        $em->flush();
 
-       return new Response('success', 204);
+        return new Response('success', 204);
     }
 }

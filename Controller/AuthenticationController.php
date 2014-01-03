@@ -265,7 +265,9 @@ class AuthenticationController
             $user->setPlainPassword($plainPassword);
             $this->om->persist($user);
             $this->om->flush();
-            $this->request->getSession()->getFlashBag()->add('warning', $this->translator->trans('password_ok', array(), 'platform'));
+            $this->request->getSession()
+                ->getFlashBag()
+                ->add('warning', $this->translator->trans('password_ok', array(), 'platform'));
 
             return new RedirectResponse($this->router->generate('claro_security_login'));
         }
@@ -285,7 +287,7 @@ class AuthenticationController
         $formats = array('json', 'xml');
 
         if (!in_array($format, $formats)) {
-            Return new Response(
+            return new Response(
                 "The format {$format} is not supported (supported formats are 'json', 'xml'",
                 400
             );
@@ -299,9 +301,8 @@ class AuthenticationController
             array('message' => $this->translator->trans('login_failure', array(), 'platform')) :
             array();
 
-        switch ($format) {
-            case 'json': return new JsonResponse($content, $status);
-            case 'xml' : return new XmlResponse($content, $status);
-        }
+        return $format === 'json' ?
+            new JsonResponse($content, $status) :
+            new XmlResponse($content, $status);
     }
 }

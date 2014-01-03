@@ -60,9 +60,19 @@ class AdminController extends Controller
             $entityManager->remove($client);
             $entityManager->flush();
 
-            $this->get('session')->getFlashBag()->add('success', $translator->trans('thrid_party_application_delete_success_message', array('%application%' => $client->getName()), 'api'));
+            $message = $translator->trans(
+                'thrid_party_application_delete_success_message',
+                array('%application%' => $client->getName()),
+                'api'
+            );
+            $this->get('session')->getFlashBag()->add('success', $message);
         } catch (\Exception $exception) {
-            $this->get('session')->getFlashBag()->add('error', $translator->trans('thrid_party_application_delete_error_message', array('%application%' => $client->getName()), 'api'));
+            $message = $translator->trans(
+                'thrid_party_application_delete_error_message',
+                array('%application%' => $client->getName()),
+                'api'
+            );
+            $this->get('session')->getFlashBag()->add('error', $message);
         }
 
         return $this->redirect($this->generateUrl('admin_application_list'));

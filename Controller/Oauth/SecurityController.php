@@ -37,7 +37,8 @@ class SecurityController extends Controller
         }
 
         if ($error) {
-            $error = $error->getMessage(); // WARNING! Symfony source code identifies this line as a potential security threat.
+            // WARNING! Symfony source code identifies this line as a potential security threat.
+            $error = $error->getMessage();
         }
 
         $lastUsername = (null === $session) ? '' : $session->get(SecurityContext::LAST_USERNAME);
