@@ -52,10 +52,10 @@ class WidgetManager
     /**
      * Creates a widget instance.
      *
-     * @param \Claroline\CoreBundle\Entity\Widget\Widget $widget
-     * @param boolean $isAdmin
-     * @param boolean $isDesktop
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\Widget\Widget               $widget
+     * @param boolean                                                  $isAdmin
+     * @param boolean                                                  $isDesktop
+     * @param \Claroline\CoreBundle\Entity\User                        $user
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $ws
      *
      * @return \Claroline\CoreBundle\Entity\Widget\WidgetInstance
@@ -167,7 +167,6 @@ class WidgetManager
     public function getAdminDesktopWidgetInstance(array $excludedWidgetInstances)
     {
         if (count($excludedWidgetInstances) === 0) {
-
             return $this->widgetInstanceRepo->findBy(
                 array(
                     'isAdmin' => true,
@@ -190,7 +189,6 @@ class WidgetManager
     public function getAdminWorkspaceWidgetInstance(array $excludedWidgetInstances)
     {
         if (count($excludedWidgetInstances) === 0) {
-
             return $this->widgetInstanceRepo->findBy(
                 array(
                     'isAdmin' => true,
@@ -207,7 +205,7 @@ class WidgetManager
      * @todo define what I do
      *
      * @param \Claroline\CoreBundle\Entity\User $user
-     * @param array $excludedWidgetInstances
+     * @param array                             $excludedWidgetInstances
      *
      * @return \Claroline\CoreBundle\Entity\Widget\WidgetInstance[]
      */
@@ -217,7 +215,6 @@ class WidgetManager
     )
     {
         if (count($excludedWidgetInstances) === 0) {
-
             return $this->widgetInstanceRepo->findBy(
                 array(
                     'user' => $user,
@@ -235,7 +232,7 @@ class WidgetManager
      * @todo define what I do
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param array $excludedWidgetInstances
+     * @param array                                                    $excludedWidgetInstances
      *
      * @return \Claroline\CoreBundle\Entity\Widget\WidgetInstance[]
      */
@@ -245,7 +242,6 @@ class WidgetManager
     )
     {
         if (count($excludedWidgetInstances) === 0) {
-
             return $this->widgetInstanceRepo->findBy(
                 array(
                     'workspace' => $workspace,

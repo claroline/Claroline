@@ -119,7 +119,6 @@ class LogWidgetListener
                     ->getWorkspaceVisibilityForDesktopWidget($instance->getUser(), $workspaces);
             }
 
-
             $workspacesVisibility['amount'] = $config->getAmount();
 
             $form = $this

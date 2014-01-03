@@ -11,10 +11,8 @@
 
 namespace Claroline\CoreBundle\Repository\Log;
 
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Rule\Entity\Rule;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -55,8 +53,7 @@ class LogRepository extends EntityRepository
 
         if ($unique === true) {
             $queryBuilder->select('log.shortDateLog as shortDate, count(DISTINCT log.doer) as total');
-        }
-        else {
+        } else {
             $queryBuilder->select('log.shortDateLog as shortDate, count(log.id) as total');
         }
 
@@ -71,7 +68,7 @@ class LogRepository extends EntityRepository
         if ($resourceNodeIds !== null and count($resourceNodeIds) > 0) {
             $queryBuilder = $this->addResourceFilterToQueryBuilder($queryBuilder, $resourceNodeIds);
         }
-        
+
         return $this->extractChartData($queryBuilder->getQuery()->getResult(), $range);
     }
 
@@ -225,7 +222,7 @@ class LogRepository extends EntityRepository
         return $logs;
     }
 
-    public function topWSByAction ($range, $action, $max)
+    public function topWSByAction($range, $action, $max)
     {
         $queryBuilder = $this
             ->createQueryBuilder('log')
@@ -245,7 +242,7 @@ class LogRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function topMediaByAction ($range, $action, $max)
+    public function topMediaByAction($range, $action, $max)
     {
         $queryBuilder = $this
             ->createQueryBuilder('log')
@@ -268,7 +265,7 @@ class LogRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function topResourcesByAction ($range, $action, $max)
+    public function topResourcesByAction($range, $action, $max)
     {
         $queryBuilder = $this
             ->createQueryBuilder('log')
@@ -313,7 +310,7 @@ class LogRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function activeUsers ()
+    public function activeUsers()
     {
         $queryBuilder = $this
             ->createQueryBuilder('log')
@@ -332,8 +329,7 @@ class LogRepository extends EntityRepository
         if (null !== $actionRestriction) {
             if ('admin' === $actionRestriction) {
                 $queryBuilder->andWhere('log.isDisplayedInAdmin = true');
-            }
-            elseif('workspace' === $actionRestriction) {
+            } elseif ('workspace' === $actionRestriction) {
                 $queryBuilder->andWhere('log.isDisplayedInWorkspace = true');
             }
         }
@@ -441,7 +437,7 @@ class LogRepository extends EntityRepository
     }
 
     /**
-     * @param QueryBuilder $queryBuilder
+     * @param QueryBuilder                                         $queryBuilder
      * @param \Claroline\CoreBundle\Entity\Widget\WidgetInstance[] $configs
      *
      * @return mixed

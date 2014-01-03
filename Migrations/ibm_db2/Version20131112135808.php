@@ -15,7 +15,7 @@ class Version20131112135808 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_content 
+            ALTER TABLE claro_content
             DROP COLUMN generated_content
         ");
     }
@@ -23,7 +23,7 @@ class Version20131112135808 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_content 
+            ALTER TABLE claro_content
             ADD COLUMN generated_content CLOB(1M) DEFAULT NULL
         ");
     }

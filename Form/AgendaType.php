@@ -21,8 +21,8 @@ class AgendaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $recurring = array();
-        for ($i = 0; $i < 10 ; $i++) { 
-            $recurring[$i] = $i; 
+        for ($i = 0; $i < 10 ; $i++) {
+            $recurring[$i] = $i;
         }
         $attr = array();
         $attr['class'] = 'datepicker input-small';

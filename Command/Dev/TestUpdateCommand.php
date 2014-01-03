@@ -83,5 +83,3 @@ class TestUpdateCommand extends ContainerAwareCommand
         $installer->update($bundle, $from, $to);
     }
 }
-
-

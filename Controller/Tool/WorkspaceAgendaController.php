@@ -87,7 +87,7 @@ class WorkspaceAgendaController extends Controller
                 $event->setWorkspace($workspace);
                 $event->setUser($this->security->getToken()->getUser());
                 $this->om->persist($event);
-                if ($event->getRecurring() > 0) {                    
+                if ($event->getRecurring() > 0) {
                     $this->calculRecurrency($event);
                 }
                 $this->om->flush();
@@ -325,17 +325,16 @@ class WorkspaceAgendaController extends Controller
         $usr = $this->security->getToken()->getUser();
         $rm = $this->rm->getManagerRole($workspace);
         $ru = $this->rm->getWorkspaceRolesForUser($usr, $workspace);
-        if( !is_null($event))
-        {
+        if ( !is_null($event)) {
             if ($event->getUser()->getUsername()=== $usr->getUsername()) {
                 return true;
             }
         }
-        foreach ($ru as $role )
-        {
+        foreach ($ru as $role) {
             if ($role->getTranslationKey() === $rm->getTranslationKey()) {
                 return true;
             }
+
             return false;
         }
     }
@@ -344,7 +343,7 @@ class WorkspaceAgendaController extends Controller
     {
         $listEvents =  array();
         // it calculs by day for now
-        for ($i = 1; $i <= $event->getRecurring(); $i++) { 
+        for ($i = 1; $i <= $event->getRecurring(); $i++) {
             $temp = clone $event;
             $newStartDate = $temp->getStart()->getTimestamp()+((3600 * 24 * $i));
             $temp->setStart( new \DateTime(date('d-m-Y H:i', $newStartDate)));

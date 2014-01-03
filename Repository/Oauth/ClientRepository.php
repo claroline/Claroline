@@ -11,11 +11,9 @@
 
 namespace Claroline\CoreBundle\Repository\Oauth;
 
-use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 
 class ClientRepository extends EntityRepository
 {

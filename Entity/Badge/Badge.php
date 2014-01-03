@@ -613,8 +613,7 @@ class Badge extends Rulable
                     ->setName($frName)
                     ->setDescription($frDescription)
                     ->setCriteria($frCriteria);
-            }
-            elseif ($hasEnTranslation) {
+            } elseif ($hasEnTranslation) {
                 $frTranslation
                     ->setLocale('fr')
                     ->setName($enName)

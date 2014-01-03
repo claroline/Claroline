@@ -25,9 +25,9 @@ class Version20131020200726 extends AbstractMigration
     {
         $this->addSql("
             CREATE TABLE claro_workspace_favourite (
-                id INTEGER NOT NULL, 
-                workspace_id INTEGER NOT NULL, 
-                user_id INTEGER NOT NULL, 
+                id INTEGER NOT NULL,
+                workspace_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
@@ -41,11 +41,11 @@ class Version20131020200726 extends AbstractMigration
             CREATE UNIQUE INDEX workspace_favourite_unique_combination ON claro_workspace_favourite (workspace_id, user_id)
         ");
         $this->addSql("
-            ALTER TABLE claro_badge_rule 
+            ALTER TABLE claro_badge_rule
             ADD COLUMN result VARCHAR(255) DEFAULT NULL
         ");
         $this->addSql("
-            ALTER TABLE claro_badge_rule 
+            ALTER TABLE claro_badge_rule
             ADD COLUMN resultComparison INTEGER DEFAULT NULL
         ");
     }
@@ -59,11 +59,11 @@ class Version20131020200726 extends AbstractMigration
             DROP INDEX IDX_805FCB8FF7A2C2FC
         ");
         $this->addSql("
-            CREATE TEMPORARY TABLE __temp__claro_badge_rule AS 
-            SELECT id, 
-            badge_id, 
-            occurrence, 
-            \"action\" 
+            CREATE TEMPORARY TABLE __temp__claro_badge_rule AS
+            SELECT id,
+            badge_id,
+            occurrence,
+            \"action\"
             FROM claro_badge_rule
         ");
         $this->addSql("
@@ -71,24 +71,24 @@ class Version20131020200726 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_badge_rule (
-                id INTEGER NOT NULL, 
-                badge_id INTEGER NOT NULL, 
-                occurrence INTEGER NOT NULL, 
-                \"action\" VARCHAR(255) NOT NULL, 
-                PRIMARY KEY(id), 
-                CONSTRAINT FK_805FCB8FF7A2C2FC FOREIGN KEY (badge_id) 
-                REFERENCES claro_badge (id) 
+                id INTEGER NOT NULL,
+                badge_id INTEGER NOT NULL,
+                occurrence INTEGER NOT NULL,
+                \"action\" VARCHAR(255) NOT NULL,
+                PRIMARY KEY(id),
+                CONSTRAINT FK_805FCB8FF7A2C2FC FOREIGN KEY (badge_id)
+                REFERENCES claro_badge (id)
                 ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
             )
         ");
         $this->addSql("
             INSERT INTO claro_badge_rule (
                 id, badge_id, occurrence, \"action\"
-            ) 
-            SELECT id, 
-            badge_id, 
-            occurrence, 
-            \"action\" 
+            )
+            SELECT id,
+            badge_id,
+            occurrence,
+            \"action\"
             FROM __temp__claro_badge_rule
         ");
         $this->addSql("

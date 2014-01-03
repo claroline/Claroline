@@ -68,4 +68,3 @@ class AdminController extends Controller
         return $this->redirect($this->generateUrl('admin_application_list'));
     }
 }
- 

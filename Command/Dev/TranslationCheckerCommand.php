@@ -58,7 +58,7 @@ class TranslationCheckerCommand extends ContainerAwareCommand
         }
     }
 
-    private function order ($fileInfo)
+    private function order($fileInfo)
     {
         $value = Yaml::parse($fileInfo->getRealPath());
         ksort($value);

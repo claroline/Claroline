@@ -113,7 +113,7 @@ class MailManager
      * @param string $subject
      * @param string $body
      * @param User[] $users
-     * @param User $from
+     * @param User   $from
      *
      * @return boolean
      */
@@ -144,4 +144,3 @@ class MailManager
         return false;
     }
 }
-

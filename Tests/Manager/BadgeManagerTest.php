@@ -27,7 +27,7 @@ class BadgeManagerTest extends MockeryTestCase
     {
         parent::setUp();
 
-        $this->entityManager   = m::mock('Doctrine\ORM\EntityManager', function($mock) {
+        $this->entityManager   = m::mock('Doctrine\ORM\EntityManager', function ($mock) {
             $mock
                 ->shouldReceive('persist')
                 ->andReturn(null)
@@ -39,13 +39,13 @@ class BadgeManagerTest extends MockeryTestCase
 
     public function testAddBadgeTo3Users()
     {
-        $user1     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function($mock) {
+        $user1     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function ($mock) {
             $mock->shouldReceive('hasBadge')->andReturn(false);
         });
-        $user2     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function($mock) {
+        $user2     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function ($mock) {
             $mock->shouldReceive('hasBadge')->andReturn(false);
         });
-        $user3     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function($mock) {
+        $user3     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function ($mock) {
             $mock->shouldReceive('hasBadge')->andReturn(false);
         });
 
@@ -59,13 +59,13 @@ class BadgeManagerTest extends MockeryTestCase
 
     public function testAddBadgeTo0Users()
     {
-        $user1     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function($mock) {
+        $user1     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function ($mock) {
             $mock->shouldReceive('hasBadge')->andReturn(true);
         });
-        $user2     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function($mock) {
+        $user2     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function ($mock) {
             $mock->shouldReceive('hasBadge')->andReturn(true);
         });
-        $user3     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function($mock) {
+        $user3     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function ($mock) {
             $mock->shouldReceive('hasBadge')->andReturn(true);
         });
 
@@ -79,13 +79,13 @@ class BadgeManagerTest extends MockeryTestCase
 
     public function testAddBadgeTo2Users1AlreadyHave()
     {
-        $user1     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function($mock) {
+        $user1     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function ($mock) {
             $mock->shouldReceive('hasBadge')->andReturn(false);
         });
-        $user2     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function($mock) {
+        $user2     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function ($mock) {
             $mock->shouldReceive('hasBadge')->andReturn(true);
         });
-        $user3     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function($mock) {
+        $user3     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function ($mock) {
             $mock->shouldReceive('hasBadge')->andReturn(false);
         });
 

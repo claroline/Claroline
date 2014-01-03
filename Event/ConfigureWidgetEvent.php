@@ -49,7 +49,7 @@ class ConfigureWidgetEvent extends Event implements DataConveyorEventInterface
     {
         return $this->isPopulated;
     }
-    
+
     public function getInstance()
     {
         return $this->instance;

@@ -181,12 +181,12 @@ class LayoutController extends Controller
         $isUserImpersonated = false;
         $workspaceName = '';
         $roleName = '';
-        
+
         foreach ($roles as $role) {
             if (strstr($role, 'ROLE_USURPATE_WORKSPACE_ROLE')) {
                 $isRoleImpersonated = true;
             }
-            
+
             if (strstr($role, 'ROLE_PREVIOUS_ADMIN')) {
                 $isUserImpersonated = true;
             }

@@ -185,7 +185,6 @@ class AuthenticationController
                 $this->om->flush();
 
                 if ($this->mailManager->sendForgotPassword($user)) {
-
                     return array(
                         'user' => $user,
                         'form' => $form->createView()

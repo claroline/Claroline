@@ -48,9 +48,9 @@ class ResourceNodeRepository extends MaterializedPathRepository
     /**
      * Returns the descendants of a resource.
      *
-     * @param ResourceNode     $resource           The resource node to start with
-     * @param boolean          $includeStartNode   Whether the given resource should be included in the result
-     * @param string           $filterResourceType A resource type to filter the results
+     * @param ResourceNode $resource           The resource node to start with
+     * @param boolean      $includeStartNode   Whether the given resource should be included in the result
+     * @param string       $filterResourceType A resource type to filter the results
      *
      * @return array[ResourceNode]
      */
@@ -77,8 +77,8 @@ class ResourceNodeRepository extends MaterializedPathRepository
     /**
      * Returns the immediate children of a resource that are openable by any of the given roles.
      *
-     * @param ResourceNode     $parent The id of the parent of the requested children
-     * @param array[string]    $roles  An array of roles
+     * @param ResourceNode  $parent The id of the parent of the requested children
+     * @param array[string] $roles  An array of roles
      *
      * @throw InvalidArgumentException if the array of roles is empty
      *
@@ -137,6 +137,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
             foreach ($childrenWithMaxRights as $childMaxRights) {
                 $returnedArray[] = $childMaxRights;
             }
+
             return $returnedArray;;
         }
    }

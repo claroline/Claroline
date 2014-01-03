@@ -40,7 +40,7 @@ class DateFormatterExtension extends \Twig_Extension
                  date_default_timezone_get(),
                 \IntlDateFormatter::GREGORIAN
             );
-        } 
+        }
     }
 
     /**
@@ -63,7 +63,7 @@ class DateFormatterExtension extends \Twig_Extension
         } elseif ($date instanceof \DateTime) {
             return $date->format('d-m-Y');
         }
-            
+
         return date('d-m-Y', $date);
     }
 

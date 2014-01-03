@@ -65,7 +65,7 @@ class HomeExtension extends \Twig_Extension
      * @param \DateTime $start The initial time.
      *
      * @return \String
-     * @see Symfony\Component\Translation\Translator
+     *                 @see Symfony\Component\Translation\Translator
      */
     public function timeAgo($start)
     {
@@ -208,8 +208,7 @@ class HomeExtension extends \Twig_Extension
         $toCheck = realpath($webRoot . '/' . $path);
 
         // check if the file exists
-        if (!is_file($toCheck))
-        {
+        if (!is_file($toCheck)) {
             return false;
         }
 

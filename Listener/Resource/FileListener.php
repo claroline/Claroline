@@ -120,7 +120,7 @@ class FileListener implements ContainerAwareInterface
         if (file_exists($pathName)) {
             $event->setFiles(array($pathName));
         }
-        
+
         $event->stopPropagation();
     }
 

@@ -37,7 +37,6 @@ class DesktopController extends Controller
     private $router;
     private $toolManager;
 
-
     /**
      * @DI\InjectParams({
      *     "em"                 = @DI\Inject("doctrine.orm.entity_manager"),

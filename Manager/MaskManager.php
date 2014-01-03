@@ -48,7 +48,7 @@ class MaskManager
     /**
      * Returns an array containing the permission for a mask and a resource type.
      *
-     * @param integer $mask
+     * @param integer                                            $mask
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
      *
      * @return array
@@ -71,7 +71,7 @@ class MaskManager
      *
      * array('open' => true, 'edit' => false, ...)
      *
-     * @param array $perms
+     * @param array                                              $perms
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
      *
      * @return integer
@@ -111,7 +111,7 @@ class MaskManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
-     * @param string $action
+     * @param string                                             $action
      *
      * @return MaskDecoder
      */
@@ -122,7 +122,7 @@ class MaskManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
-     * @param integer $value
+     * @param integer                                            $value
      *
      * @return MaskDecoder
      */
@@ -132,7 +132,7 @@ class MaskManager
     }
 
     /**
-     * @param string $name
+     * @param string                                             $name
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceType $type
      *
      * @return MenuAction

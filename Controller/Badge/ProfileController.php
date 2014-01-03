@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Rule\Validator;
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\UserBadge;
 use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
-use Claroline\CoreBundle\Form\Badge\ClaimBadgeType;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\NoResultException;
 use Pagerfanta\Adapter\DoctrineORMAdapter;

@@ -15,9 +15,9 @@ class Version20131209170424 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_workspace CHANGE is_public is_public BOOLEAN NOT NULL, 
-            CHANGE displayable displayable BOOLEAN NOT NULL, 
-            CHANGE self_registration self_registration BOOLEAN NOT NULL, 
+            ALTER TABLE claro_workspace CHANGE is_public is_public BOOLEAN NOT NULL,
+            CHANGE displayable displayable BOOLEAN NOT NULL,
+            CHANGE self_registration self_registration BOOLEAN NOT NULL,
             CHANGE self_unregistration self_unregistration BOOLEAN NOT NULL
         ");
     }
@@ -25,9 +25,9 @@ class Version20131209170424 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_workspace CHANGE is_public is_public BOOLEAN DEFAULT NULL, 
-            CHANGE displayable displayable BOOLEAN DEFAULT NULL, 
-            CHANGE self_registration self_registration BOOLEAN DEFAULT NULL, 
+            ALTER TABLE claro_workspace CHANGE is_public is_public BOOLEAN DEFAULT NULL,
+            CHANGE displayable displayable BOOLEAN DEFAULT NULL,
+            CHANGE self_registration self_registration BOOLEAN DEFAULT NULL,
             CHANGE self_unregistration self_unregistration BOOLEAN DEFAULT NULL
         ");
     }

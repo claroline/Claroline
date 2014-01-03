@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
 use \Mockery as m;
 use Claroline\CoreBundle\Entity\User;
@@ -28,7 +27,7 @@ class RuleValidatorTest extends MockeryTestCase
     {
         $user                   = new User();
         $badgeRule              = new BadgeRule();
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($badgeRule, $user) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($badgeRule, $user) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())
@@ -44,7 +43,7 @@ class RuleValidatorTest extends MockeryTestCase
         $log                    = new Log();
         $user                   = new User();
         $badgeRule              = new BadgeRule();
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($log, $badgeRule, $user) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())
@@ -61,7 +60,7 @@ class RuleValidatorTest extends MockeryTestCase
         $log2                   = new Log();
         $user                   = new User();
         $badgeRule              = new BadgeRule();
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($badgeRule, $user, $log, $log2) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($badgeRule, $user, $log, $log2) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())
@@ -77,7 +76,7 @@ class RuleValidatorTest extends MockeryTestCase
         $user                   = new User();
         $badgeRule              = new BadgeRule();
         $badgeRule2             = new BadgeRule();
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($badgeRule, $badgeRule2, $user) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($badgeRule, $badgeRule2, $user) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())
@@ -104,7 +103,7 @@ class RuleValidatorTest extends MockeryTestCase
         $user                   = new User();
         $badgeRule              = new BadgeRule();
         $badgeRule2             = new BadgeRule();
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($badgeRule, $badgeRule2, $user) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($badgeRule, $badgeRule2, $user) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())
@@ -132,7 +131,7 @@ class RuleValidatorTest extends MockeryTestCase
         $badgeRule2             = new BadgeRule();
         $log                    = new Log();
         $log2                   = new Log();
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($badgeRule, $badgeRule2, $user, $log, $log2) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($badgeRule, $badgeRule2, $user, $log, $log2) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())
@@ -158,7 +157,7 @@ class RuleValidatorTest extends MockeryTestCase
         $user                   = new User();
         $log                    = new Log();
         $log2                   = new Log();
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($user, $log, $log2) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($user, $log, $log2) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->never();
@@ -176,7 +175,7 @@ class RuleValidatorTest extends MockeryTestCase
         $user                   = new User();
         $badgeRule              = new BadgeRule();
         $restriction            = array('workspace' => new SimpleWorkspace());
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($badgeRule, $user, $restriction) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($badgeRule, $user, $restriction) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, $restriction)
@@ -193,7 +192,7 @@ class RuleValidatorTest extends MockeryTestCase
         $user                   = new User();
         $badgeRule              = new BadgeRule();
         $restriction            = array('workspace' => new SimpleWorkspace());
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user, $restriction) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($log, $badgeRule, $user, $restriction) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, $restriction)
@@ -211,7 +210,7 @@ class RuleValidatorTest extends MockeryTestCase
         $user                   = new User();
         $badgeRule              = new BadgeRule();
         $restriction            = array('workspace' => new SimpleWorkspace());
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($badgeRule, $user, $log, $log2, $restriction) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($badgeRule, $user, $log, $log2, $restriction) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, $restriction)
@@ -229,7 +228,7 @@ class RuleValidatorTest extends MockeryTestCase
         $badgeRule              = new BadgeRule();
         $badgeRule2             = new BadgeRule();
         $restriction            = array('workspace' => $workspace);
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($badgeRule, $badgeRule2, $user, $restriction) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($badgeRule, $badgeRule2, $user, $restriction) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, $restriction)
@@ -259,7 +258,7 @@ class RuleValidatorTest extends MockeryTestCase
         $badgeRule              = new BadgeRule();
         $badgeRule2             = new BadgeRule();
         $restriction            = array('workspace' => $workspace);
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($badgeRule, $badgeRule2, $user, $restriction) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($badgeRule, $badgeRule2, $user, $restriction) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, $restriction)
@@ -291,7 +290,7 @@ class RuleValidatorTest extends MockeryTestCase
         $log                    = new Log();
         $log2                   = new Log();
         $restriction            = array('workspace' => $workspace);
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($badgeRule, $badgeRule2, $user, $log, $log2, $restriction) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($badgeRule, $badgeRule2, $user, $log, $log2, $restriction) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, $restriction)
@@ -325,7 +324,7 @@ class RuleValidatorTest extends MockeryTestCase
             ->setResult('12')
             ->setResultComparison(0);
 
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($log, $badgeRule, $user) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())
@@ -347,7 +346,7 @@ class RuleValidatorTest extends MockeryTestCase
             ->setResult('12')
             ->setResultComparison(0);
 
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($log, $badgeRule, $user) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())
@@ -369,7 +368,7 @@ class RuleValidatorTest extends MockeryTestCase
             ->setResult('12')
             ->setResultComparison(3);
 
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($log, $badgeRule, $user) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())
@@ -391,7 +390,7 @@ class RuleValidatorTest extends MockeryTestCase
             ->setResult('12')
             ->setResultComparison(3);
 
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($log, $badgeRule, $user) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())
@@ -413,7 +412,7 @@ class RuleValidatorTest extends MockeryTestCase
             ->setResult('12')
             ->setResultComparison(4);
 
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($log, $badgeRule, $user) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())
@@ -435,7 +434,7 @@ class RuleValidatorTest extends MockeryTestCase
             ->setResult('12')
             ->setResultComparison(4);
 
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($log, $badgeRule, $user) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())
@@ -457,7 +456,7 @@ class RuleValidatorTest extends MockeryTestCase
             ->setResult('12')
             ->setResultComparison(4);
 
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($log, $badgeRule, $user) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())
@@ -479,7 +478,7 @@ class RuleValidatorTest extends MockeryTestCase
             ->setResult('12')
             ->setResultComparison(1);
 
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($log, $badgeRule, $user) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())
@@ -501,7 +500,7 @@ class RuleValidatorTest extends MockeryTestCase
             ->setResult('12')
             ->setResultComparison(1);
 
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($log, $badgeRule, $user) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())
@@ -523,7 +522,7 @@ class RuleValidatorTest extends MockeryTestCase
             ->setResult('12')
             ->setResultComparison(1);
 
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($log, $badgeRule, $user) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())
@@ -545,7 +544,7 @@ class RuleValidatorTest extends MockeryTestCase
             ->setResult('12')
             ->setResultComparison(2);
 
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($log, $badgeRule, $user) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())
@@ -567,7 +566,7 @@ class RuleValidatorTest extends MockeryTestCase
             ->setResult('12')
             ->setResultComparison(2);
 
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($log, $badgeRule, $user) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())
@@ -589,7 +588,7 @@ class RuleValidatorTest extends MockeryTestCase
             ->setResult('12')
             ->setResultComparison(2);
 
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($log, $badgeRule, $user) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())
@@ -612,7 +611,7 @@ class RuleValidatorTest extends MockeryTestCase
         $badgeRule              = new BadgeRule();
         $badgeRule->setResource($otherResourceNode);
 
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($badgeRule, $user) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($badgeRule, $user) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())
@@ -635,7 +634,7 @@ class RuleValidatorTest extends MockeryTestCase
         $badgeRule              = new BadgeRule();
         $badgeRule->setResource($resourceNode);
 
-        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function($mock) use($log, $badgeRule, $user) {
+        $logRepository    = m::mock('Claroline\CoreBundle\Repository\Log\LogRepository', function ($mock) use ($log, $badgeRule, $user) {
             $mock
                 ->shouldReceive('findByRuleAndUser')
                 ->with($badgeRule, $user, array())

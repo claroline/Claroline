@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\Badge\BadgeAwardType;
-use Claroline\CoreBundle\Form\Badge\BadgeType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -65,6 +64,7 @@ class AdminController extends Controller
             'claim_link'       => 'claro_admin_manage_claim',
             'route_parameters' => array()
         );
+
         return array(
             'parameters'  => $parameters,
             'language'    => $platformConfigHandler->getParameter('locale_language')

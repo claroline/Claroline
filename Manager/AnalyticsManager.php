@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Repository\AbstractResourceRepository;
-use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
@@ -107,7 +106,7 @@ class AnalyticsManager
         return $chartData;
     }
 
-    public function getTopByCriteria ($range = null, $topType = null, $max = 30)
+    public function getTopByCriteria($range = null, $topType = null, $max = 30)
     {
         if ($topType == null) {
             $topType = 'top_users_connections';

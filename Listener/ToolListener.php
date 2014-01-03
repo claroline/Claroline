@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Claroline\CoreBundle\Manager\LogManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -35,7 +34,6 @@ class ToolListener
     private $httpKernel;
     const R_U = "ROLE_USER";
     const R_A = "ROLE_ADMIN";
-
 
     /**
      * @DI\InjectParams({

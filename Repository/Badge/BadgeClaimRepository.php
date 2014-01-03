@@ -58,7 +58,7 @@ class BadgeClaimRepository extends EntityRepository
     /**
      * @param AbstractWorkspace $workspace
      *
-     * @param bool              $executedQuery
+     * @param bool $executedQuery
      *
      * @return array
      */

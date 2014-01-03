@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
-use \Mockery as m;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
@@ -173,7 +172,6 @@ class WorkspaceAgendaControllerTest extends MockeryTestCase
     {
 
         if (count($mockedMethods) === 0) {
-
             return new WorkspaceAgendaController(
                 $this->security,
                 $this->formFactory,

@@ -16,8 +16,8 @@ class JavascriptSafeTransformerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider inputProvider
      *
-     * @param string    $input
-     * @param string    $expectedResult
+     * @param string $input
+     * @param string $expectedResult
      */
     public function testReverseTransform($input, $expectedResult)
     {

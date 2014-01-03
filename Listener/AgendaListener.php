@@ -12,11 +12,8 @@
 namespace Claroline\CoreBundle\Listener;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Entity\Widget\SimpleTextConfig;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
-use Claroline\CoreBundle\Manager\SimpleTextManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -88,6 +85,7 @@ class AgendaListener
         $em = $this->container->get('doctrine.orm.entity_manager');
         $usr = $this->container->get('security.context')->getToken()->getUser();
         $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr , 5);
+
         return $this->templating->render(
             'ClarolineCoreBundle:Widget:agenda_widget.html.twig',
             array(
@@ -106,6 +104,7 @@ class AgendaListener
             $params
         );
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+
         return $response->getContent();
     }
-} 
+}
