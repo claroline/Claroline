@@ -28,7 +28,7 @@ class HomeTab
      */
     protected $id;
 
-   /**
+    /**
      * @ORM\Column(nullable=false)
      */
     protected $name;

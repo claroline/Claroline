@@ -41,12 +41,16 @@ class LogWorkspaceWidgetConfigType extends AbstractType
         $actionChoices = $this->eventManager->getSortedEventsForConfigForm(LogGenericEvent::DISPLAYED_WORKSPACE);
 
         $builder
-            ->add('restrictions', 'choice', array(
-                'choices'   => $actionChoices,
-                'required'  => false,
-                'multiple'  => true,
-                'expanded'  => true
-            ))
+            ->add(
+                'restrictions',
+                'choice',
+                array(
+                    'choices'   => $actionChoices,
+                    'required'  => false,
+                    'multiple'  => true,
+                    'expanded'  => true
+                )
+            )
             ->add(
                 'amount',
                 'choice',
@@ -70,10 +74,6 @@ class LogWorkspaceWidgetConfigType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(
-            array(
-                 'translation_domain' => 'log'
-            )
-        );
+        $resolver->setDefaults(array('translation_domain' => 'log'));
     }
 }

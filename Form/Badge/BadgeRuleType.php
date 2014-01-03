@@ -41,7 +41,10 @@ class BadgeRuleType extends AbstractType
         $actionChoices = $this->eventManager->getSortedEventsForFilter();
 
         $builder
-            ->add('action', 'twolevelselect', array(
+            ->add(
+                'action',
+                'twolevelselect',
+                array(
                     'translation_domain' => 'log',
                     'attr'               => array('class' => 'input-sm'),
                     'choices'            => $actionChoices
@@ -49,9 +52,11 @@ class BadgeRuleType extends AbstractType
             )
             ->add('occurrence', 'integer')
             ->add('result', 'text')
-            ->add('resultComparison', 'choice', array(
-                'choices' => BadgeRule::getResultComparisonTypes()
-            ));
+            ->add(
+                'resultComparison',
+                'choice',
+                array('choices' => BadgeRule::getResultComparisonTypes())
+            );
     }
 
     public function getName()
@@ -61,8 +66,7 @@ class BadgeRuleType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver
-        ->setDefaults(
+        $resolver->setDefaults(
             array(
                 'data_class'         => 'Claroline\CoreBundle\Entity\Badge\BadgeRule',
                 'translation_domain' => 'badge',
