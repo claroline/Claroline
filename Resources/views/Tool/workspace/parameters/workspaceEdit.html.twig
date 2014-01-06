@@ -36,7 +36,7 @@
             </a>
             <hr>
             {{ form_widget(form) }}
-            <a href={{ path('claro_workspace_subscription_url',{'workspace':workspace.getId()}) }}> generer une url pour l'inscription des utilisateur </a>
+            <a href={{ path('claro_workspace_subscription_url',{'workspace':workspace.getId()}) }}> {{ 'generate_url'|trans({}, 'platform') }} </a>
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>

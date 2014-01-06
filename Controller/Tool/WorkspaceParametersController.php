@@ -291,15 +291,15 @@ class WorkspaceParametersController extends Controller
         }
         $this->workspaceManager->addUserAction($workspace, $user);
 
-        return array(
-            'response' => true,
-            'workspace' => $workspace
+        return $this->redirect(
+            $this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(),'toolName' => 'home'))
         );
+
     }
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/subscription/url/generate/anonyme",
+     *     "/{workspace}/subscription/url/generate/anonymous",
      *     name="claro_workspace_subscription_url_generate_anonyme"
      * )
      * @EXT\Method({"GET","POST"})
@@ -310,7 +310,7 @@ class WorkspaceParametersController extends Controller
      *
      * @return Response
      */
-    public function anonymeSubscriptionAction(AbstractWorkspace $workspace)
+    public function anonymousSubscriptionAction(AbstractWorkspace $workspace)
     {
         $form = $this->formFactory->create(
             FormFactory::TYPE_USER_BASE_PROFILE,array($this->localeManager->getAvailableLocales())
@@ -321,7 +321,7 @@ class WorkspaceParametersController extends Controller
             $user = $form->getData();
             $this->userManager->createUser($user);
             $this->workspaceManager->addUserAction($workspace, $user);
-            return $this->redirect($this->generateUrl('claro_index'));
+            return $this->redirect($this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(),'toolName' => 'home')));
         }
 
         return array(
