@@ -17,7 +17,7 @@ use Icap\DropzoneBundle\Event\Log\LogCorrectionEndEvent;
 use Icap\DropzoneBundle\Event\Log\LogCorrectionUpdateEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropEvaluateEvent;
 use Icap\DropzoneBundle\Event\Log\PotentialEvaluationEndInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -36,7 +36,7 @@ class LogDropEvaluateListener
      *     "eventDispatcher" = @DI\Inject("event_dispatcher")
      * })
      */
-    public function __construct(EntityManager $entityManager, EventDispatcher $eventDispatcher)
+    public function __construct(EntityManager $entityManager, EventDispatcherInterface $eventDispatcher)
     {
         $this->entityManager = $entityManager;
         $this->eventDispatcher = $eventDispatcher;
