@@ -14,15 +14,40 @@ namespace Claroline\CoreBundle\Rule\Constraints;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\Log\Log;
+use \Mockery as m;
 
 class ResultConstraintTest extends MockeryTestCase
 {
-    public function testValidateNoLog()
+    public function testIsNotApplicableTo()
+    {
+        $badgeRule        = new BadgeRule();
+        $resultConstraint = new ResultConstraint();
+
+        $this->assertFalse($resultConstraint->isApplicableTo($badgeRule));
+    }
+
+    public function testIsApplicableTo()
     {
         $badgeRule = new BadgeRule();
+        $badgeRule->setResult(rand(0, PHP_INT_MAX));
 
-        $associatedLogs = array();
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $resultConstraint = new ResultConstraint();
+
+        $this->assertTrue($resultConstraint->isApplicableTo($badgeRule));
+    }
+
+    public function testGetQuery()
+    {
+        $query            = m::mock('Doctrine\ORM\QueryBuilder');
+        $resultConstraint = new ResultConstraint();
+
+        $this->assertEquals($query, $resultConstraint->getQuery($query));
+    }
+
+    public function testValidateNoLog()
+    {
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint->setAssociatedLogs(array());
 
         $this->assertFalse($resultConstraint->validate());
     }
@@ -37,8 +62,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log = new Log();
         $log->setDetails(array('result' => 12));
 
-        $associatedLogs = array($log);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertFalse($resultConstraint->validate());
     }
@@ -55,8 +83,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log = new Log();
         $log->setDetails(array('result' => $result));
 
-        $associatedLogs = array($log);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertTrue($resultConstraint->validate());
     }
@@ -76,8 +107,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log2 = new Log();
         $log2->setDetails(array('result' => $result));
 
-        $associatedLogs = array($log, $log2);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log, $log2);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertTrue($resultConstraint->validate());
     }
@@ -92,8 +126,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log = new Log();
         $log->setDetails(array('result' => rand(0, PHP_INT_MAX / 2)));
 
-        $associatedLogs = array($log);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertTrue($resultConstraint->validate());
     }
@@ -111,8 +148,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log2 = new Log();
         $log2->setDetails(array('result' => rand(0, PHP_INT_MAX / 2)));
 
-        $associatedLogs = array($log, $log2);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log, $log2);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertTrue($resultConstraint->validate());
     }
@@ -133,8 +173,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log3 = new Log();
         $log3->setDetails(array('result' => rand(0, PHP_INT_MAX / 2)));
 
-        $associatedLogs = array($log, $log2, $log3);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log, $log2, $log3);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertTrue($resultConstraint->validate());
     }
@@ -155,8 +198,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log3 = new Log();
         $log3->setDetails(array('result' => rand(0, PHP_INT_MAX / 2)));
 
-        $associatedLogs = array($log, $log2, $log3);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log, $log2, $log3);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertFalse($resultConstraint->validate());
     }
@@ -173,8 +219,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log = new Log();
         $log->setDetails(array('result' => $result));
 
-        $associatedLogs = array($log);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertTrue($resultConstraint->validate());
     }
@@ -191,8 +240,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log = new Log();
         $log->setDetails(array('result' => $result));
 
-        $associatedLogs = array($log);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertTrue($resultConstraint->validate());
     }
@@ -212,8 +264,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log2 = new Log();
         $log2->setDetails(array('result' => $result));
 
-        $associatedLogs = array($log, $log2);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log, $log2);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertTrue($resultConstraint->validate());
     }
@@ -236,8 +291,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log3 = new Log();
         $log3->setDetails(array('result' => $result));
 
-        $associatedLogs = array($log, $log2, $log3);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log, $log2, $log3);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertTrue($resultConstraint->validate());
     }
@@ -260,8 +318,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log3 = new Log();
         $log3->setDetails(array('result' => $result));
 
-        $associatedLogs = array($log, $log2, $log3);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log, $log2, $log3);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertFalse($resultConstraint->validate());
     }
@@ -276,8 +337,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log = new Log();
         $log->setDetails(array('result' => rand(PHP_INT_MAX / 2 + 1, PHP_INT_MAX)));
 
-        $associatedLogs = array($log);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertTrue($resultConstraint->validate());
     }
@@ -295,8 +359,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log2 = new Log();
         $log2->setDetails(array('result' => rand(PHP_INT_MAX / 2 + 1, PHP_INT_MAX)));
 
-        $associatedLogs = array($log, $log2);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log, $log2);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertTrue($resultConstraint->validate());
     }
@@ -317,8 +384,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log3 = new Log();
         $log3->setDetails(array('result' => rand(PHP_INT_MAX / 2 + 1, PHP_INT_MAX)));
 
-        $associatedLogs = array($log, $log2, $log3);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log, $log2, $log3);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertTrue($resultConstraint->validate());
     }
@@ -339,8 +409,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log3 = new Log();
         $log3->setDetails(array('result' => rand(PHP_INT_MAX / 2 + 1, PHP_INT_MAX)));
 
-        $associatedLogs = array($log, $log2, $log3);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log, $log2, $log3);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertFalse($resultConstraint->validate());
     }
@@ -357,8 +430,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log = new Log();
         $log->setDetails(array('result' => $result + rand(0, PHP_INT_MAX / 2)));
 
-        $associatedLogs = array($log);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertTrue($resultConstraint->validate());
     }
@@ -375,8 +451,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log = new Log();
         $log->setDetails(array('result' => $result));
 
-        $associatedLogs = array($log);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertTrue($resultConstraint->validate());
     }
@@ -396,8 +475,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log2 = new Log();
         $log2->setDetails(array('result' => $result + rand(0, PHP_INT_MAX / 2)));
 
-        $associatedLogs = array($log, $log2);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log, $log2);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertTrue($resultConstraint->validate());
     }
@@ -420,8 +502,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log3 = new Log();
         $log3->setDetails(array('result' => $result + rand(0, PHP_INT_MAX / 2)));
 
-        $associatedLogs = array($log, $log2, $log3);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log, $log2, $log3);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertTrue($resultConstraint->validate());
     }
@@ -444,8 +529,11 @@ class ResultConstraintTest extends MockeryTestCase
         $log3 = new Log();
         $log3->setDetails(array('result' => $result + rand(0, PHP_INT_MAX / 2)));
 
-        $associatedLogs = array($log, $log2, $log3);
-        $resultConstraint = new ResultConstraint($badgeRule, $associatedLogs);
+        $associatedLogs   = array($log, $log2, $log3);
+        $resultConstraint = new ResultConstraint();
+        $resultConstraint
+            ->setRule($badgeRule)
+            ->setAssociatedLogs($associatedLogs);
 
         $this->assertFalse($resultConstraint->validate());
     }
