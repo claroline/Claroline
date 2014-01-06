@@ -125,7 +125,7 @@
                     contentPath = 'content/' + data + '/' + type;
 
                     var insertElement = function (content) {
-                        $(creatorElement).append(content).hide().fadeIn('slow');
+                        $(creatorElement).next().prepend(content).hide().fadeIn('slow');
                     };
 
                     if (father) {
