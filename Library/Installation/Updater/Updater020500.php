@@ -116,18 +116,25 @@ class Updater020500
 
     private function addAgendaWidget()
     {
-        $this->log('Adding agenda widget...');
+        $existingWidget = $this->om->getRepository('ClarolineCoreBundle:Widget\Widget')
+            ->findOneByName('agenda');
 
-        $widget = new Widget();
-        $widget->setName('agenda');
-        $widget->setConfigurable(false);
-        $widget->setIcon('fake/icon/path');
-        $widget->setPlugin(null);
-        $widget->setExportable(false);
-        $widget->setDisplayableInDesktop(true);
-        $widget->setDisplayableInWorkspace(true);
+        if (!$existingWidget) {
+            $newWidget = new Widget();
+            $newWidget->setName('agenda');
+            $newWidget->setConfigurable(false);
+            $newWidget->setIcon('fake/icon/path');
+            $newWidget->setPlugin(null);
+            $newWidget->setExportable(false);
+            $newWidget->setDisplayableInDesktop(true);
+            $newWidget->setDisplayableInWorkspace(true);
 
-        $this->om->persist($widget);
+            $this->om->persist($newWidget);
+            $this->log("'agenda' widget added.");
+        } else {
+            $this->log("The 'agenda' widget already exists");
+        }
+
         $this->om->flush();
     }
 
