@@ -1,5 +1,0 @@
-mink:
-    base_url: http://localhost/vostro/Claroline/web/app_dev.php
-    browser_name: firefox
-    default_session: selenium2
-    selenium2: ~

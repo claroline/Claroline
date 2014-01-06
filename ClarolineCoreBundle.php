@@ -106,10 +106,6 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             } elseif ($bundle instanceof \Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle) {
                 return $config;
             }
-            
-            if ($environment === 'test' && $bundle instanceof \Behat\MinkBundle\MinkBundle) {
-                return $config->addContainerResource($this->buildPath('mink'));
-            }
         }
 
         return false;

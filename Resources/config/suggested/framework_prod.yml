@@ -11,3 +11,5 @@ framework:
     default_locale: %locale%
     session: ~
       #cookie_lifetime: 15
+    #behat needs it to be run in the prod environment, but it's located in config.yml instead.
+    #test: true

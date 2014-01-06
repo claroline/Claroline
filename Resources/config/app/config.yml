@@ -12,3 +12,6 @@ services:
             - "@claroline.config.platform_config_handler"
             - "@claroline.common.theme_service"
             - %kernel.root_dir%/Resources
+
+framework:
+   test: true
