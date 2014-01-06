@@ -210,7 +210,6 @@ general_parameters: 'General parameters'
 generate_url_subscription: 'Subscription to a workspace for a user'
 generate_url_subscription_anonyme: 'Subscription to a workspace for a anonymous'
 generate_url_subscription_sucsess : 'Vous avez été ajouté à l''espace d''activité'
-
 group: Group
 group_configuration: 'Group configuration'
 group_creation: 'Group creation'

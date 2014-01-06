@@ -94,7 +94,6 @@ class WorkspaceManager
      *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%"),
      *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
      *      "security"       = @DI\Inject("security.context")
-     *
      * })
      */
     public function __construct(
@@ -773,7 +772,6 @@ class WorkspaceManager
     public function addUserAction(AbstractWorkspace $workspace, User $user)
     {
         $role = $this->roleManager->getCollaboratorRole($workspace);
-
         $userRoles = $this->roleManager->getWorkspaceRolesForUser($user, $workspace);
 
         if (count($userRoles) === 0) {

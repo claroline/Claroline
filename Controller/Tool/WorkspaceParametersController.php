@@ -27,7 +27,6 @@ use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\UserManager;
-
 use JMS\DiExtraBundle\Annotation as DI;
 
 class WorkspaceParametersController extends Controller
@@ -41,7 +40,6 @@ class WorkspaceParametersController extends Controller
     private $request;
     private $localeManager;
     private $userManager;
-
 
     /**
      * @DI\InjectParams({
@@ -291,7 +289,6 @@ class WorkspaceParametersController extends Controller
                 )
             );
         }
-
         $this->workspaceManager->addUserAction($workspace, $user);
 
         return array(
@@ -315,7 +312,6 @@ class WorkspaceParametersController extends Controller
      */
     public function anonymeSubscriptionAction(AbstractWorkspace $workspace)
     {
-
         $form = $this->formFactory->create(
             FormFactory::TYPE_USER_BASE_PROFILE,array($this->localeManager->getAvailableLocales())
         );
@@ -325,7 +321,6 @@ class WorkspaceParametersController extends Controller
             $user = $form->getData();
             $this->userManager->createUser($user);
             $this->workspaceManager->addUserAction($workspace, $user);
-
             return $this->redirect($this->generateUrl('claro_index'));
         }
 

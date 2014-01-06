@@ -52,7 +52,7 @@ class FormFactory
     const TYPE_WIDGET_INSTANCE = 'widget_instance';
     const TYPE_RESOURCE_TEXT = 'resource_text';
     const TYPE_USER_FULL = 'user_full';
-    const TYPE_USER_BASE_PROFILE    = 'user_base_profile';
+    const TYPE_USER_BASE_PROFILE = 'user_base_profile';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -195,7 +195,6 @@ class FormFactory
 
     public function create($type, array $typeArgs = array(), $entityVar = null)
     {
-
         if (!isset(self::$types[$type])) {
             throw new UnknownTypeException(
                 "Unknown form type '{$type}' : type must be a TYPE_* class constant"

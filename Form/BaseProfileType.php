@@ -36,7 +36,6 @@ class BaseProfileType extends AbstractType
             ->add('plainPassword', 'repeated', array('type' => 'password', 'invalid_message' => 'password_missmatch'))
             ->add('mail', 'email')
         ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
-
     }
 
     public function getName()
