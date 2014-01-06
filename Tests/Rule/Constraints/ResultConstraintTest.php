@@ -35,14 +35,6 @@ class ResultConstraintTest extends MockeryTestCase
         $this->assertTrue($resultConstraint->isApplicableTo($badgeRule));
     }
 
-    public function testGetQuery()
-    {
-        $query            = $this->mock('Doctrine\ORM\QueryBuilder');
-        $resultConstraint = new ResultConstraint();
-
-        $this->assertEquals($query, $resultConstraint->getQuery($query));
-    }
-
     public function testValidateNoLog()
     {
         $resultConstraint = new ResultConstraint();
