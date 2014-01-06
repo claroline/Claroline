@@ -55,7 +55,7 @@ class HomeExtension extends \Twig_Extension
     {
         return array(
             'isDesktop' => new \Twig_Function_Method($this, 'isDesktop'),
-            'asset_exists' => new \Twig_Function_Method($this, 'asset_exists')
+            'asset_exists' => new \Twig_Function_Method($this, 'assetExists')
         );
     }
 
@@ -202,7 +202,7 @@ class HomeExtension extends \Twig_Extension
         return 'home_extension';
     }
 
-    public function asset_exists($path)
+    public function assetExists($path)
     {
         $webRoot = realpath($this->kernel->getRootDir() . '/../web/');
         $toCheck = realpath($webRoot . '/' . $path);

@@ -141,8 +141,8 @@ class HomeControllerTest extends MockeryTestCase
         $this->eventDispatcher
             ->shouldReceive('dispatch')
             ->with(
-               'widget_widget_name_configuration_workspace',
-               'ConfigureWidgetWorkspace',
+                'widget_widget_name_configuration_workspace',
+                'ConfigureWidgetWorkspace',
                 array($workspace)
             )
             ->once()
@@ -189,8 +189,8 @@ class HomeControllerTest extends MockeryTestCase
         $this->eventDispatcher
             ->shouldReceive('dispatch')
             ->with(
-               'widget_widget_name_configuration_workspace',
-               'ConfigureWidgetWorkspace',
+                'widget_widget_name_configuration_workspace',
+                'ConfigureWidgetWorkspace',
                 array($workspace)
             )
             ->once()
@@ -318,8 +318,8 @@ class HomeControllerTest extends MockeryTestCase
         $this->eventDispatcher
             ->shouldReceive('dispatch')
             ->with(
-               'widget_widget_name_configuration_desktop',
-               'ConfigureWidgetDesktop',
+                'widget_widget_name_configuration_desktop',
+                'ConfigureWidgetDesktop',
                 array($user)
             )
             ->once()
@@ -366,8 +366,8 @@ class HomeControllerTest extends MockeryTestCase
         $this->eventDispatcher
             ->shouldReceive('dispatch')
             ->with(
-               'widget_widget_name_configuration_desktop',
-               'ConfigureWidgetDesktop',
+                'widget_widget_name_configuration_desktop',
+                'ConfigureWidgetDesktop',
                 array($user)
             )
             ->once()

@@ -171,8 +171,12 @@ class MaskManagerTest extends MockeryTestCase
     public function testAddDefaultPerms()
     {
         $type = new \Claroline\CoreBundle\Entity\Resource\ResourceType();
-        $this->om->shouldReceive('persist')->times(5)->with(anInstanceOf('Claroline\CoreBundle\Entity\Resource\MaskDecoder'));
-        $this->om->shouldReceive('persist')->times(5)->with(anInstanceOf('Claroline\CoreBundle\Entity\Resource\MenuAction'));
+        $this->om->shouldReceive('persist')
+            ->times(5)
+            ->with(anInstanceOf('Claroline\CoreBundle\Entity\Resource\MaskDecoder'));
+        $this->om->shouldReceive('persist')
+            ->times(5)
+            ->with(anInstanceOf('Claroline\CoreBundle\Entity\Resource\MenuAction'));
         $this->om->shouldReceive('flush')->once();
         $this->manager->addDefaultPerms($type);
     }

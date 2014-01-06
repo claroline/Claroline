@@ -20,80 +20,49 @@ class BadgeManagerTest extends MockeryTestCase
 {
     /** @var BadgeManager */
     private $manager;
-    private $badgeRepository;
-    private $entityManager;
 
     public function setUp()
     {
         parent::setUp();
-
-        $this->entityManager   = m::mock('Doctrine\ORM\EntityManager', function ($mock) {
-            $mock
-                ->shouldReceive('persist')
-                ->andReturn(null)
-                ->shouldReceive('flush')
-                ->andReturn(null);
-        });
-        $this->manager         = new BadgeManager($this->entityManager);
+        $entityManager = m::mock(
+            'Doctrine\ORM\EntityManager',
+            function ($mock) {
+                $mock->shouldReceive('persist')
+                    ->andReturn(null)
+                    ->shouldReceive('flush')
+                    ->andReturn(null);
+            }
+        );
+        $this->manager = new BadgeManager($entityManager);
     }
 
-    public function testAddBadgeTo3Users()
+    /**
+     * @dataProvider userBadgeProvider
+     *
+     * @param array $users
+     * @param $expectedBadgeAttributionCount
+     */
+    public function testAddBadgeToUsers(array $users, $expectedBadgeAttributionCount)
     {
-        $user1     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function ($mock) {
-            $mock->shouldReceive('hasBadge')->andReturn(false);
-        });
-        $user2     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function ($mock) {
-            $mock->shouldReceive('hasBadge')->andReturn(false);
-        });
-        $user3     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function ($mock) {
-            $mock->shouldReceive('hasBadge')->andReturn(false);
-        });
-
-        $users = array($user1, $user2, $user3);
-
-        /** @var badge $badge */
-        $badge = new Badge();
-
-        $this->assertEquals(3, $this->manager->addBadgeToUsers($badge, $users));
+        $this->assertEquals($expectedBadgeAttributionCount, $this->manager->addBadgeToUsers(new Badge(), $users));
     }
 
-    public function testAddBadgeTo0Users()
+    public function userBadgeProvider()
     {
-        $user1     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function ($mock) {
-            $mock->shouldReceive('hasBadge')->andReturn(true);
-        });
-        $user2     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function ($mock) {
-            $mock->shouldReceive('hasBadge')->andReturn(true);
-        });
-        $user3     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function ($mock) {
-            $mock->shouldReceive('hasBadge')->andReturn(true);
-        });
-
-        $users = array($user1, $user2, $user3);
-
-        /** @var badge $badge */
-        $badge = new Badge();
-
-        $this->assertEquals(0, $this->manager->addBadgeToUsers($badge, $users));
+        return array(
+            array(array($this->mockUser(false), $this->mockUser(false), $this->mockUser(false)), 3),
+            array(array($this->mockUser(true), $this->mockUser(true), $this->mockUser(true)), 0),
+            array(array($this->mockUser(false), $this->mockUser(true), $this->mockUser(false)), 2)
+        );
     }
 
-    public function testAddBadgeTo2Users1AlreadyHave()
+    private function mockUser($hasBadge)
     {
-        $user1     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function ($mock) {
-            $mock->shouldReceive('hasBadge')->andReturn(false);
-        });
-        $user2     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function ($mock) {
-            $mock->shouldReceive('hasBadge')->andReturn(true);
-        });
-        $user3     = m::mock('Claroline\CoreBundle\Entity\User[hasBadge]', function ($mock) {
-            $mock->shouldReceive('hasBadge')->andReturn(false);
-        });
-
-        $users = array($user1, $user2, $user3);
-
-        /** @var badge $badge */
-        $badge = new Badge();
-
-        $this->assertEquals(2, $this->manager->addBadgeToUsers($badge, $users));
+        return m::mock(
+            'Claroline\CoreBundle\Entity\User[hasBadge]',
+            function ($mock) use ($hasBadge) {
+                $mock->shouldReceive('hasBadge')->andReturn($hasBadge);
+            }
+        );
     }
 }

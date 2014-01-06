@@ -31,8 +31,8 @@ class ClientRepository extends EntityRepository
                 'SELECT c, at
                 FROM ClarolineCoreBundle:Oauth\Client c
                 JOIN c.accessTokens at
-                WHERE at.user = :userId
-            ')
+                WHERE at.user = :userId'
+            )
             ->setParameter('userId', $user->getId());
 
         return $executeQuery ? $query->getResult(): $query;

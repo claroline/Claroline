@@ -44,7 +44,16 @@ class LogRepository extends EntityRepository
         return $this->extractChartData($queryBuilder->getQuery()->getResult(), $range);
     }
 
-    public function countByDayFilteredLogs($action, $range, $userSearch, $actionRestriction, $workspaceIds = null, $unique = false, $resourceType = null, $resourceNodeIds = null)
+    public function countByDayFilteredLogs(
+        $action,
+        $range,
+        $userSearch,
+        $actionRestriction,
+        $workspaceIds = null,
+        $unique = false,
+        $resourceType = null,
+        $resourceNodeIds = null
+    )
     {
         $queryBuilder = $this
             ->createQueryBuilder('log')
@@ -111,8 +120,7 @@ class LogRepository extends EntityRepository
     {
         $queryBuilder = $this
             ->createQueryBuilder('log')
-            ->orderBy('log.dateLog', 'DESC')
-        ;
+            ->orderBy('log.dateLog', 'DESC');
 
         $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, $action, $actionsRestriction);
         $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
@@ -296,8 +304,7 @@ class LogRepository extends EntityRepository
             )
             ->leftJoin('log.doer', 'doer')
             ->groupBy('doer')
-            ->orderBy('actions', 'DESC')
-        ;
+            ->orderBy('actions', 'DESC');
 
         if ($max > 1) {
             $queryBuilder->setMaxResults($max);
@@ -411,10 +418,10 @@ class LogRepository extends EntityRepository
         if ($workspaceIds !== null and count($workspaceIds) > 0) {
             $queryBuilder->leftJoin('log.workspace', 'workspace');
             if (count($workspaceIds) == 1) {
-                $queryBuilder->andWhere("workspace.id = :workspaceId");
+                $queryBuilder->andWhere('workspace.id = :workspaceId');
                 $queryBuilder->setParameter('workspaceId', $workspaceIds[0]);
             } else {
-                $queryBuilder->andWhere("workspace.id IN (:workspaceIds)")->setParameter('workspaceIds', $workspaceIds);
+                $queryBuilder->andWhere('workspace.id IN (:workspaceIds)')->setParameter('workspaceIds', $workspaceIds);
             }
         }
 
@@ -426,10 +433,11 @@ class LogRepository extends EntityRepository
         if ($resourceNodeIds !== null and count($resourceNodeIds) > 0) {
             $queryBuilder->leftJoin('log.resourceNode', 'resource');
             if (count($resourceNodeIds) == 1) {
-                $queryBuilder->andWhere("resource.id = :resourceId");
+                $queryBuilder->andWhere('resource.id = :resourceId');
                 $queryBuilder->setParameter('resourceId', $resourceNodeIds[0]);
             } else {
-                $queryBuilder->andWhere("resource.id IN (:resourceNodeIds)")->setParameter('resourceNodeIds', $resourceNodeIds);
+                $queryBuilder->andWhere('resource.id IN (:resourceNodeIds)')
+                    ->setParameter('resourceNodeIds', $resourceNodeIds);
             }
         }
 

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
@@ -584,7 +585,7 @@ class AdministrationControllerTest extends MockeryTestCase
 
         $this->router->shouldReceive('generate')->once()->with('claro_admin_user_list')->andReturn('yolo');
 
-        $this->assertTrue($this->getController()->importUsers() instanceof \Symfony\Component\HttpFoundation\RedirectResponse);
+        $this->assertTrue($this->getController()->importUsers() instanceof RedirectResponse);
     }
 
     public function testImportUsersIntoGroupFormAction()
@@ -638,8 +639,7 @@ class AdministrationControllerTest extends MockeryTestCase
             ->with('claro_admin_user_of_group_list', array('groupId' => 42))
             ->andReturn('azertyuiop');
 
-        $this->assertTrue($this->getController()->importUsersIntoGroupAction($group)
-            instanceof \Symfony\Component\HttpFoundation\RedirectResponse);
+        $this->assertTrue($this->getController()->importUsersIntoGroupAction($group) instanceof RedirectResponse);
     }
 
     public function testRegistrationManagementActionWithoutSearch()

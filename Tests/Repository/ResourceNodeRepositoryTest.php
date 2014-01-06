@@ -78,7 +78,10 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
         $this->assertEquals(1, count(self::$repo->findDescendants(self::get('dir_2')->getResourceNode())));
         $this->assertEquals(6, count(self::$repo->findDescendants(self::get('dir_1')->getResourceNode())));
         $this->assertEquals(7, count(self::$repo->findDescendants(self::get('dir_1')->getResourceNode(), true)));
-        $this->assertEquals(2, count(self::$repo->findDescendants(self::get('dir_3')->getResourceNode(), true, 't_dir')));
+        $this->assertEquals(
+            2,
+            count(self::$repo->findDescendants(self::get('dir_3')->getResourceNode(), true, 't_dir'))
+        );
     }
 
     /**
@@ -155,7 +158,9 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
         $resources = self::$repo->findByCriteria(array('types' => array('t_file')));
         $this->assertEquals(1, count($resources));
 
-        $resources = self::$repo->findByCriteria(array('roots' => array(self::get('dir_1')->getResourceNode()->getPath())));
+        $resources = self::$repo->findByCriteria(
+            array('roots' => array(self::get('dir_1')->getResourceNode()->getPath()))
+        );
         $this->assertEquals(7, count($resources));
 
         $resources = self::$repo->findByCriteria(array('dateFrom' => self::$time));

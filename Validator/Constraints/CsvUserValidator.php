@@ -123,7 +123,7 @@ class CsvUserValidator extends ConstraintValidator
             $l .= $line;
 
             if ($i < $countLines - 1) {
-                $l.= ', ';
+                $l .= ', ';
             }
         }
 

@@ -125,7 +125,10 @@ class AuthenticationControllerTest extends MockeryTestCase
         $this->translator->shouldReceive('trans')->once()->with('login_failure', array(), 'platform')
             ->andReturn('message');
         $response = new $responseClass(array('message' => 'message'), 403);
-        $this->assertEquals($response->getContent(), $this->controller->postAuthenticationAction($format)->getContent());
+        $this->assertEquals(
+            $response->getContent(),
+            $this->controller->postAuthenticationAction($format)->getContent()
+        );
         $this->assertEquals($response->headers->get('content-type'), $header);
     }
 

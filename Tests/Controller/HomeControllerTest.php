@@ -78,7 +78,10 @@ class HomeControllerTest extends MockeryTestCase
     {
         $this->manager->shouldReceive('contentLayout')->once()->andReturn(array('content' => array('type' => 'home')));
         $this->templating->shouldReceive('render')->once();
-        $this->assertEquals('', $this->controller->typeAction($this->type, $this->content, $this->region)->getContent());
+        $this->assertEquals(
+            '',
+            $this->controller->typeAction($this->type, $this->content, $this->region)->getContent()
+        );
     }
 
     public function testTypesAction()
@@ -230,6 +233,9 @@ class HomeControllerTest extends MockeryTestCase
     public function testContentToRegionAction()
     {
         $this->manager->shouldReceive('contentToRegion')->once()->andReturn('true');
-        $this->assertEquals('true', $this->controller->contentToRegionAction($this->region, $this->content)->getContent());
+        $this->assertEquals(
+            'true',
+            $this->controller->contentToRegionAction($this->region, $this->content)->getContent()
+        );
     }
 }

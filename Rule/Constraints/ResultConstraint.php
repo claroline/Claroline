@@ -20,7 +20,7 @@ class ResultConstraint extends AbstractConstraint
      */
     public function validate()
     {
-        $isValid               = true;
+        $isValid = true;
         $resultComparisonTypes = Rule::getResultComparisonTypes();
 
         if (0 === count($this->getAssociatedLogs())) {
@@ -31,7 +31,12 @@ class ResultConstraint extends AbstractConstraint
             $associatedLogDetails = $associatedLog->getDetails();
 
             if (isset($associatedLogDetails['result'])) {
-                $isValid = $isValid && version_compare($associatedLogDetails['result'], $this->getRule()->getResult(), $resultComparisonTypes[$this->getRule()->getResultComparison()]);
+                $isVersionValid = version_compare(
+                    $associatedLogDetails['result'],
+                    $this->getRule()->getResult(),
+                    $resultComparisonTypes[$this->getRule()->getResultComparison()]
+                );
+                $isValid = $isValid && $isVersionValid;
             }
         }
 

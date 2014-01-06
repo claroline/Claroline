@@ -138,7 +138,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
                 $returnedArray[] = $childMaxRights;
             }
 
-            return $returnedArray;;
+            return $returnedArray;
         }
    }
 
@@ -361,10 +361,12 @@ class ResourceNodeRepository extends MaterializedPathRepository
             ->where('resourceNode.workspace = :workspace')
             ->andWhere('resourceNode.resourceType = :resourceType');
 
-        return $results = $qb->getQuery()->execute(array(
-          ':workspace'    => $workspace,
-          ':resourceType' => $resourceType
-        ));
+        return $results = $qb->getQuery()->execute(
+            array(
+                ':workspace'    => $workspace,
+                ':resourceType' => $resourceType
+            )
+        );
     }
 
     private function addFilters(ResourceQueryBuilder $builder,  array $criteria, array $roles = null)
