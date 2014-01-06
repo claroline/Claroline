@@ -1,3 +1,4 @@
+@install
 Feature: Install
     In order to install the platform
     as a user

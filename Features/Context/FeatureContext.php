@@ -7,6 +7,9 @@ use Behat\Symfony2Extension\Context\KernelAwareInterface;
 use Behat\MinkExtension\Context\MinkContext;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Installation\Settings\SettingChecker;
+use Doctrine\Common\DataFixtures\ReferenceRepository;
+use Doctrine\Common\DataFixtures\AbstractFixture;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 //
 // Require 3rd-party libraries here:
@@ -156,4 +159,61 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
             throw new \Exception('The cache directory is not writable');
         }
     }
+
+    /**
+     * @Then /^the platform should have "([^"]*)" "([^"]*)"$/
+     */
+    public function thePlatformShouldHave($count, $entity)
+    {
+        $res = $this->getContainer()->get('claroline.persistence.object_manager')
+            ->count('ClarolineCoreBundle:' . $entity);
+
+        if ($res != $count) {
+            throw new \Exception('The plateform has ' . $res . ' ' . $entity);
+        }
+    }
+
+    /**
+     * @Given /^the database is initialized/
+     */
+    public function theDatabaseIsInitialized()
+    {
+        $start = new \DateTime();
+        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $purger = new \Doctrine\Common\DataFixtures\Purger\ORMPurger(
+            $this->getContainer()->get('doctrine.orm.entity_manager')
+        );
+        $purger->purge();
+
+        //load the required fixture
+        $fixture = new \Claroline\CoreBundle\DataFixtures\Required\LoadRequiredFixturesData();
+        $referenceRepo = new ReferenceRepository($om);
+        $fixture->setReferenceRepository($referenceRepo);
+        $fixture->setContainer($this->getContainer());
+        $fixture->load($om);
+        $end = new \DateTime();
+        $diff = $start->diff($end);
+        $duration = $diff->i > 0 ? $diff->i . 'm ' : '';
+        $duration .= $diff->s . 's';
+    }
+
+    /**
+     * @Given /^the user "([^"]*)" is created$/
+     */
+    public function theUserIsCreated($username)
+    {
+        $user = new \Claroline\CoreBundle\Entity\User();
+        $user->setUsername($username);
+        $user->setPlainPassword($username);
+        $user->setFirstName($username);
+        $user->setLastName($username);
+        $user->setMail($username . '@claroline.net');
+        $this->getContainer()->get('claroline.manager.user_manager')->createUserWithRole($user, 'ROLE_ADMIN');
+    }
+
+    private function loadFixture(AbstractFixture $fixture)
+    {
+
+    }
+
 }

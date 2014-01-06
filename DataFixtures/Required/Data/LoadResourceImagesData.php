@@ -9,28 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\DataFixtures\Required;
+namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
-use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
+use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 
 /**
  * Resource images data fixture.
  */
-class LoadResourceImagesData extends AbstractFixture implements ContainerAwareInterface, OrderedFixtureInterface
+class LoadResourceImagesData implements RequiredFixture
 {
-    /** @var ContainerInterface $container */
-    private $container;
-
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
     /**
      * @param ObjectManager $manager
      */
@@ -70,15 +59,10 @@ class LoadResourceImagesData extends AbstractFixture implements ContainerAwareIn
             $this->container->get('claroline.manager.icon_manager')
                 ->createShortcutIcon($rimg);
         }
-
-        $manager->flush();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getOrder()
+    public function setContainer($container)
     {
-        return 4;
+        $this->container = $container;
     }
 }

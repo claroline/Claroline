@@ -9,24 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\DataFixtures\Required;
+namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
-use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
-use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 
 /**
  * Platform Home tabs data fixture.
  */
-class LoadHomeTabData extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
+class LoadHomeTabData implements \Claroline\CoreBundle\DataFixtures\Required\RequiredFixture
 {
-    private $container;
-
     /**
      * Loads the core Home Tabs.
      *
@@ -64,19 +57,8 @@ class LoadHomeTabData extends AbstractFixture implements OrderedFixtureInterface
         $manager->persist($workspaceHomeTabConfig);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer($container)
     {
         $this->container = $container;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getOrder()
-    {
-        return 9;
     }
 }
