@@ -30,6 +30,8 @@ Project setup
     - Optionaly:
         - [gd][1] (for simple icon creation)
         - [ffmpeg][2] (for video thumbnail creation)
+- A RDBMS like MySQL (>=5.0, recommended) or PostgreSQL (>= 8.0)
+- A web server like Apache or Nginx
 - A global installation of [composer][3] (for dependency management)
 
 ### Development installation
