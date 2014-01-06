@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Rule\Constraints;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\Log\Log;
-use \Mockery as m;
 
 class ResultConstraintTest extends MockeryTestCase
 {
@@ -38,7 +37,7 @@ class ResultConstraintTest extends MockeryTestCase
 
     public function testGetQuery()
     {
-        $query            = m::mock('Doctrine\ORM\QueryBuilder');
+        $query            = $this->mock('Doctrine\ORM\QueryBuilder');
         $resultConstraint = new ResultConstraint();
 
         $this->assertEquals($query, $resultConstraint->getQuery($query));
