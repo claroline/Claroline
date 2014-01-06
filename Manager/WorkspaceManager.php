@@ -93,7 +93,7 @@ class WorkspaceManager
      *     "ut"              = @DI\Inject("claroline.utilities.misc"),
      *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%"),
      *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
-     *      "security"       = @DI\Inject("security.context")
+     *     "security"        = @DI\Inject("security.context")
      * })
      */
     public function __construct(

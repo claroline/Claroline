@@ -667,7 +667,7 @@ class WorkspaceController extends Controller
      */
     public function addUserAction(AbstractWorkspace $workspace, User $user)
     {
-        $user = $this->workspaceManager->addUserAction($workspace, $user);
+        $this->workspaceManager->addUserAction($workspace, $user);
         return new JsonResponse($this->userManager->convertUsersToArray(array($user)));
     }
 

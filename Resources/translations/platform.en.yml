@@ -209,7 +209,7 @@ general: General
 general_parameters: 'General parameters'
 generate_url_subscription: 'Subscription to a workspace for a user'
 generate_url_subscription_anonyme: 'Subscription to a workspace for a anonymous'
-generate_url: 'Generate a subscription a url subscription for the users'
+generate_url: 'Generate a subscription a url for the users'
 generate_url_subscription_sucsess : 'You have been added to the workspace'
 group: Group
 group_configuration: 'Group configuration'

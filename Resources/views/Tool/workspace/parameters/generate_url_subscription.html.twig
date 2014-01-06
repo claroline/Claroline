@@ -5,17 +5,17 @@
 {% block breadcrumb %}
     {{
     macros.workspaceBreadcrumbs(
-    workspace,
-    [
-    {
-    'name': 'parameters'|trans({}, 'platform'),
-    'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
-    },
-    {
-    'name': 'general'|trans({}, 'platform'),
-    'href': ''
-    }
-    ]
+        workspace,
+        [
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'})
+            },
+            {
+                'name': 'general'|trans({}, 'platform'),
+                'href': ''
+            }
+        ]
     )
     }}
 {% endblock %}

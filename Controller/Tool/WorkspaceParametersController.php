@@ -43,14 +43,14 @@ class WorkspaceParametersController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "workspaceManager"    = @DI\Inject("claroline.manager.workspace_manager"),
      *     "workspaceTagManager" = @DI\Inject("claroline.manager.workspace_tag_manager"),
-     *     "security"           = @DI\Inject("security.context"),
-     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
-     *     "router"             = @DI\Inject("router"),
-     *     "localeManager"      = @DI\Inject("claroline.common.locale_manager"),
-     *     "userManager"        = @DI\Inject("claroline.manager.user_manager")
+     *     "security"            = @DI\Inject("security.context"),
+     *     "eventDispatcher"     = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "formFactory"         = @DI\Inject("claroline.form.factory"),
+     *     "router"              = @DI\Inject("router"),
+     *     "localeManager"       = @DI\Inject("claroline.common.locale_manager"),
+     *     "userManager"         = @DI\Inject("claroline.manager.user_manager")
      * })
      */
     public function __construct(
@@ -254,7 +254,8 @@ class WorkspaceParametersController extends Controller
     {
         $url = $this->router->generate(
                 'claro_workspace_subscription_url_generate',
-                array('workspace' => $workspace->getId()),true
+                array('workspace' => $workspace->getId()),
+                true
         );
         return array(
             'workspace' => $workspace,
@@ -281,10 +282,10 @@ class WorkspaceParametersController extends Controller
         if ( $user === 'anon.') {
             return $this->redirect(
                 $this->generateUrl(
-                    'claro_workspace_subscription_url_generate_anonyme',
+                    'claro_workspace_subscription_url_generate_anonymous',
                     array(
                         'workspace' => $workspace->getId(),
-                        'toolName' => 'parameters',
+                        'toolName' => 'home'
                     )
                 )
             );
@@ -292,7 +293,7 @@ class WorkspaceParametersController extends Controller
         $this->workspaceManager->addUserAction($workspace, $user);
 
         return $this->redirect(
-            $this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(),'toolName' => 'home'))
+            $this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'home'))
         );
 
     }
@@ -300,11 +301,11 @@ class WorkspaceParametersController extends Controller
     /**
      * @EXT\Route(
      *     "/{workspace}/subscription/url/generate/anonymous",
-     *     name="claro_workspace_subscription_url_generate_anonyme"
+     *     name="claro_workspace_subscription_url_generate_anonymous"
      * )
      * @EXT\Method({"GET","POST"})
      *
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:generate_url_subscription_anonyme.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:generate_url_subscription_anonymous.html.twig")
      *
      * @param AbstractWorkspace $workspace
      *
@@ -321,7 +322,8 @@ class WorkspaceParametersController extends Controller
             $user = $form->getData();
             $this->userManager->createUser($user);
             $this->workspaceManager->addUserAction($workspace, $user);
-            return $this->redirect($this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(),'toolName' => 'home')));
+            return $this->redirect(
+                $this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'home')));
         }
 
         return array(
