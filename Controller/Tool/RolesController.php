@@ -278,7 +278,7 @@ class RolesController extends Controller
         $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
-        $pager = ($search === '') ?
+        $pager = $search === '' ?
             $this->userManager->getAllUsers($page, $max, $order):
             $this->userManager->getUsersByName($search, $page, $max, $order);
 
