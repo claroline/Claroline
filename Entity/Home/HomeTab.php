@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Entity\Home;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity
@@ -29,7 +28,7 @@ class HomeTab
      */
     protected $id;
 
-   /**
+    /**
      * @ORM\Column(nullable=false)
      */
     protected $name;

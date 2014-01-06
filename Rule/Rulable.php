@@ -20,4 +20,3 @@ abstract class Rulable implements RulableInterface
         return array();
     }
 }
- 

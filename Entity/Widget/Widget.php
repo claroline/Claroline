@@ -120,7 +120,7 @@ class Widget
         return $this->isExportable;
     }
 
-    public function  isDisplayableInWorkspace()
+    public function isDisplayableInWorkspace()
     {
         return $this->isDisplayableInWorkspace;
     }
@@ -130,7 +130,7 @@ class Widget
         $this->isDisplayableInWorkspace = $bool;
     }
 
-    public function  isDisplayableInDesktop()
+    public function isDisplayableInDesktop()
     {
         return $this->isDisplayableInDesktop;
     }

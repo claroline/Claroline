@@ -55,7 +55,7 @@ class LogWidgetConfig
     }
 
     /**
-     * @param  string $amount
+     * @param  string                    $amount
      * @return SimpleTextWorkspaceConfig
      */
     public function setAmount($amount)

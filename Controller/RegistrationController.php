@@ -162,10 +162,9 @@ class RegistrationController extends Controller
             $status = 403;
         }
 
-        switch ($format) {
-            case 'json': return new JsonResponse($content, $status);
-            case 'xml' : return new XmlResponse($content, $status);
-        }
+        return $format === 'json' ?
+            new JsonResponse($content, $status) :
+            new XmlResponse($content, $status);
     }
 
     /**

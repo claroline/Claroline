@@ -20,15 +20,9 @@ class BadgeTranslationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'text', array(
-                'label' => 'badge_form_name'
-            ))
-            ->add('description', 'text', array(
-                'label' => 'badge_form_description'
-            ))
-            ->add('criteria', 'tinymce', array(
-                'label' => 'badge_form_criteria'
-            ))
+            ->add('name', 'text', array('label' => 'badge_form_name'))
+            ->add('description', 'text', array('label' => 'badge_form_description'))
+            ->add('criteria', 'tinymce', array('label' => 'badge_form_criteria'))
             ->add('locale', 'hidden');
     }
 
@@ -39,12 +33,11 @@ class BadgeTranslationType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver
-            ->setDefaults(
-                array(
-                    'data_class'         => 'Claroline\CoreBundle\Entity\Badge\BadgeTranslation',
-                    'translation_domain' => 'badge'
-                )
-            );
+        $resolver->setDefaults(
+            array(
+                'data_class'         => 'Claroline\CoreBundle\Entity\Badge\BadgeTranslation',
+                'translation_domain' => 'badge'
+            )
+        );
     }
 }

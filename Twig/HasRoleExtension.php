@@ -52,7 +52,7 @@ class HasRoleExtension extends \Twig_Extension
 
         return false;
     }
-    
+
     public function isImpersonated()
     {
         foreach ($this->securityContext->getToken()->getRoles() as $role) {

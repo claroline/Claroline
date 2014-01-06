@@ -64,10 +64,10 @@ class RoleManager
     }
 
     /**
-     * @param string $name
-     * @param string $translationKey
+     * @param string                                                   $name
+     * @param string                                                   $translationKey
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param boolean $isReadOnly
+     * @param boolean                                                  $isReadOnly
      *
      * @return \Claroline\CoreBundle\Entity\Role
      */
@@ -87,8 +87,8 @@ class RoleManager
     }
 
     /**
-     * @param string $name
-     * @param string $translationKey
+     * @param string  $name
+     * @param string  $translationKey
      * @param boolean $isReadOnly
      *
      * @return \Claroline\CoreBundle\Entity\Role
@@ -107,8 +107,8 @@ class RoleManager
     }
 
     /**
-     * @param string $name
-     * @param string $translationKey
+     * @param string  $name
+     * @param string  $translationKey
      * @param boolean $isReadOnly
      *
      * @return \Claroline\CoreBundle\Entity\Role
@@ -129,7 +129,7 @@ class RoleManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $ars
-     * @param string $roleName
+     * @param string                                           $roleName
      */
     public function setRoleToRoleSubject(AbstractRoleSubject $ars, $roleName)
     {
@@ -154,7 +154,7 @@ class RoleManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $ars
-     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Role                $role
      */
     public function associateRole(AbstractRoleSubject $ars, Role $role)
     {
@@ -173,7 +173,7 @@ class RoleManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $ars
-     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Role                $role
      */
     public function dissociateRole(AbstractRoleSubject $ars, Role $role)
     {
@@ -192,7 +192,7 @@ class RoleManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $ars
-     * @param \Doctrine\Common\Collections\ArrayCollection $roles
+     * @param \Doctrine\Common\Collections\ArrayCollection     $roles
      */
     public function associateRoles(AbstractRoleSubject $ars, ArrayCollection $roles)
     {
@@ -234,9 +234,9 @@ class RoleManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $subject
+     * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject         $subject
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Role                        $role
      */
     public function dissociateWorkspaceRole(AbstractRoleSubject $subject, AbstractWorkspace $workspace, Role $role)
     {
@@ -245,7 +245,7 @@ class RoleManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $subject
+     * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject         $subject
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      */
     public function resetWorkspaceRolesForSubject(AbstractRoleSubject $subject, AbstractWorkspace $workspace)
@@ -265,7 +265,7 @@ class RoleManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $subjects
+     * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject         $subjects
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      */
     public function resetWorkspaceRoleForSubjects(array $subjects, $workspace)
@@ -280,7 +280,7 @@ class RoleManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Role $roles
+     * @param \Claroline\CoreBundle\Entity\Role                        $roles
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      *
      * @return \Claroline\CoreBundle\Entity\Role
@@ -323,8 +323,8 @@ class RoleManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject  $subjects
-     * @param \Claroline\CoreBundle\Entity\Role[] $roles
+     * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $subjects
+     * @param \Claroline\CoreBundle\Entity\Role[]              $roles
      */
     public function associateRolesToSubjects(array $subjects, array $roles)
     {
@@ -340,9 +340,9 @@ class RoleManager
     }
 
     /**
-     * @param  AbstractRoleSubject[] $subjects
-     * @param  Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param  \Claroline\CoreBundle\Entity\Role[] $roles
+     * @param AbstractRoleSubject[]                                   $subjects
+     * @param Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Role[]                     $roles
      *
      * @throws \LogicException
      */
@@ -432,7 +432,7 @@ class RoleManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User                        $user
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      *
      * @return \Claroline\CoreBundle\Entity\Role[]
@@ -444,7 +444,7 @@ class RoleManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
+     * @param \Claroline\CoreBundle\Entity\Tool\Tool                   $tool
      *
      * @return \Claroline\CoreBundle\Entity\Role[]
      */
@@ -510,7 +510,7 @@ class RoleManager
     }
 
     /**
-     * @param string $key The translation key
+     * @param string                                                   $key       The translation key
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      *
      * @return \Claroline\CoreBundle\Entity\Role
@@ -559,7 +559,7 @@ class RoleManager
 
     /**
      * @param string $roleName
-     * 
+     *
      * @return string
      */
     public function getRoleBaseName($roleName)

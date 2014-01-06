@@ -17,11 +17,8 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Claroline\CoreBundle\Form\DataTransformer\DateRangeToTextTransformer;
-use Claroline\CoreBundle\Form\Log\WorkspaceLogFilterType;
-use Claroline\CoreBundle\Form\Log\AdminLogFilterType;
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
@@ -75,7 +72,13 @@ class LogManager
         }
 
         $defaultInstance = $em->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')->findOneBy(
-            array('widget' => $instance->getWidget(), 'isAdmin' => true, 'workspace' => null, 'user' => null, 'isDesktop' => false)
+            array(
+                'widget' => $instance->getWidget(),
+                'isAdmin' => true,
+                'workspace' => null,
+                'user' => null,
+                'isDesktop' => false
+            )
         );
 
         $defaultConfig = $this->getLogConfig($defaultInstance);
@@ -111,10 +114,11 @@ class LogManager
 
         // Remove configs which hasAllRestriction
         $configsCleaned = array();
+        $events = $this->container->get('claroline.event.manager')
+            ->getEvents(LogGenericEvent::DISPLAYED_WORKSPACE);
 
         foreach ($configs as $config) {
-            if ($config->hasAllRestriction($this->container->get('claroline.event.manager')
-                ->getEvents(LogGenericEvent::DISPLAYED_WORKSPACE)) === false) {
+            if ($config->hasAllRestriction($events) === false) {
                 $configsCleaned[] = $config;
             }
         }

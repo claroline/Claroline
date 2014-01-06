@@ -62,7 +62,6 @@ class ToolRepository extends EntityRepository
                 $query->setParameter('role_'.$key, $role);
             }
 
-
         } else {
             $dql = '
                 SELECT tool

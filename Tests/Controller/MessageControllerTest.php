@@ -46,7 +46,7 @@ class MessageControllerTest extends MockeryTestCase
         $this->workspaceManager = $this->mock('Claroline\CoreBundle\Manager\WorkspaceManager');
         $this->sc = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
         $this->utils = $this->mock('Claroline\CoreBundle\Library\Security\Utilities');
-        $this->pagerFactory =  $this->mock('Claroline\CoreBundle\Pager\PagerFactory');
+        $this->pagerFactory = $this->mock('Claroline\CoreBundle\Pager\PagerFactory');
 
         $this->controller = $this->mock(
             'Claroline\CoreBundle\Controller\MessageController[checkAccess]',

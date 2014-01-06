@@ -13,14 +13,8 @@ namespace Claroline\CoreBundle\Controller\Badge;
 
 use Claroline\CoreBundle\Rule\Validator;
 use Claroline\CoreBundle\Entity\Badge\Badge;
-use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
 use Doctrine\ORM\QueryBuilder;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Exception\NotValidCurrentPageException;
-use Pagerfanta\Pagerfanta;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BadgeController extends Controller
 {
@@ -33,7 +27,10 @@ class BadgeController extends Controller
         $badgeRepository = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge');
 
         /** @var QueryBuilder $badgeQueryBuilder */
-        $badgeQueryBuilder = $badgeRepository->findOrderedByName($platformConfigHandler->getParameter('locale_language'), false);
+        $badgeQueryBuilder = $badgeRepository->findOrderedByName(
+            $platformConfigHandler->getParameter('locale_language'),
+            false
+        );
 
         if (isset($parameters['workspace']) && null !== $parameters['workspace']) {
             $badgeQueryBuilder
@@ -41,18 +38,18 @@ class BadgeController extends Controller
                 ->setParameter('workspace', $parameters['workspace']);
 
             $badgeClaimsWorkspace = $parameters['workspace'];
-        }
-        else {
+        } else {
             $badgeQueryBuilder->andWhere('badge.workspace IS NULL');
             $badgeClaimsWorkspace = null;
         }
 
-        $badgeClaimQuery    = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')->findByWorkspace($badgeClaimsWorkspace, false);
-        $language           = $platformConfigHandler->getParameter('locale_language');
-        /** @var \Claroline\CoreBundle\Pager\PagerFactory $pagerFactory */
-        $pagerFactory       = $this->get('claroline.pager.pager_factory');
-        $badgePager         = $pagerFactory->createPager($badgeQueryBuilder->getQuery(), $parameters['badgePage'], 10);
-        $claimPager         = $pagerFactory->createPager($badgeClaimQuery, $parameters['claimPage'], 10);
+        $badgeClaimQuery = $this->getDoctrine()
+            ->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')
+            ->findByWorkspace($badgeClaimsWorkspace, false);
+        $language = $platformConfigHandler->getParameter('locale_language');
+        $pagerFactory = $this->get('claroline.pager.pager_factory');
+        $badgePager = $pagerFactory->createPager($badgeQueryBuilder->getQuery(), $parameters['badgePage'], 10);
+        $claimPager = $pagerFactory->createPager($badgeClaimQuery, $parameters['claimPage'], 10);
         $badgeRuleValidator = $this->get("claroline.rule.validator");
 
         return $this->render(

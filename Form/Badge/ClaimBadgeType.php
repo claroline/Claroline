@@ -37,14 +37,19 @@ class ClaimBadgeType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('badge', 'simpleautocomplete', array(
+        $builder->add(
+            'badge',
+            'simpleautocomplete',
+            array(
                 'entity_reference' => 'badge',
                 'required'         => false,
                 'format'           => 'jsonp',
                 'mapped'           => false,
-                'extraDatas'       => array('locale' => $this->platformConfigHandler->getParameter('locale_language'))
-            ));
+                'extraDatas'       => array(
+                    'locale' => $this->platformConfigHandler->getParameter('locale_language')
+                )
+            )
+        );
     }
 
     public function getName()
@@ -54,12 +59,11 @@ class ClaimBadgeType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver
-            ->setDefaults(
-                array(
-                    'data_class'         => 'Claroline\CoreBundle\Entity\Badge\BadgeClaim',
-                    'translation_domain' => 'badge'
-                )
-            );
+        $resolver->setDefaults(
+            array(
+                'data_class'         => 'Claroline\CoreBundle\Entity\Badge\BadgeClaim',
+                'translation_domain' => 'badge'
+            )
+        );
     }
 }

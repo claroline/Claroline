@@ -101,10 +101,10 @@ class RightsManager
     }
 
     /**
-     * @param integer $permissions the permission mask
-     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param integer                                            $permissions the permission mask
+     * @param \Claroline\CoreBundle\Entity\Role                  $role
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
-     * @param boolean $isRecursive
+     * @param boolean                                            $isRecursive
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceRight[] $arRights
      */
@@ -134,10 +134,10 @@ class RightsManager
     }
 
     /**
-     * @param array $resourceTypes
-     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param array                                              $resourceTypes
+     * @param \Claroline\CoreBundle\Entity\Role                  $role
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
-     * @param boolean $isRecursive
+     * @param boolean                                            $isRecursive
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceRight[] $arRights
      */
@@ -234,7 +234,7 @@ class RightsManager
      * array('open' => true, 'edit' => false, ...)
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceRights $rights
-     * @param array $permissions
+     * @param array                                                $permissions
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights
      */
@@ -274,7 +274,7 @@ class RightsManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Role                  $role
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights $resourceRights
@@ -293,7 +293,7 @@ class RightsManager
     }
 
     /**
-     * @param string[] $roles
+     * @param string[]                                           $roles
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      *
      * @return array
@@ -313,10 +313,10 @@ class RightsManager
     }
 
     /**
-     * @param integer|array $permissions
-     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param integer|array                                      $permissions
+     * @param \Claroline\CoreBundle\Entity\Role                  $role
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
-     * @param array $creations
+     * @param array                                              $creations
      */
     public function recursiveCreation(
         $permissions,
@@ -339,10 +339,10 @@ class RightsManager
     }
 
     /**
-     * @param integer|array $permissions
-     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param integer|array                                      $permissions
+     * @param \Claroline\CoreBundle\Entity\Role                  $role
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
-     * @param array $creations
+     * @param array                                              $creations
      */
     public function nonRecursiveCreation(
         $permissions,
@@ -399,7 +399,7 @@ class RightsManager
     }
 
     /**
-     * @param array $roles
+     * @param array                                              $roles
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      *
      * @return type
@@ -410,7 +410,7 @@ class RightsManager
     }
 
     /**
-     * @param string[] $roles
+     * @param string[]                                           $roles
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      *
      * @return array

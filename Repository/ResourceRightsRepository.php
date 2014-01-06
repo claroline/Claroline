@@ -48,7 +48,7 @@ class ResourceRightsRepository extends EntityRepository
         }
 
         //add the role anonymous for everyone !
-        $dql.= " OR  resource.id = {$resource->getId()} and role.name = 'ROLE_ANONYMOUS'";
+        $dql .= " OR  resource.id = {$resource->getId()} and role.name = 'ROLE_ANONYMOUS'";
 
         $query = $this->_em->createQuery($dql);
         $results = $query->getResult();

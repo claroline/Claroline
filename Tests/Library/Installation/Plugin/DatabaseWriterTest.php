@@ -56,7 +56,9 @@ class DatabaseWriterTest extends MockeryTestCase
         $decoderRepo = $this->mock('Doctrine\ORM\EntityRepository');
         $decoderRepo->shouldReceive('findBy')->with(array('resourceType' => $resourceType))
             ->andReturn(array($decoder));
-        $decoderRepo->shouldReceive('findOneBy')->with(array('name' => 'open', 'resourceType' => $resourceType))->andReturn($decoder);
+        $decoderRepo->shouldReceive('findOneBy')
+            ->with(array('name' => 'open', 'resourceType' => $resourceType))
+            ->andReturn($decoder);
         $this->em->shouldReceive('persist')->once();
     }
 

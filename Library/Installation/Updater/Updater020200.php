@@ -30,7 +30,9 @@ class Updater020200
             ->findAll();
 
         foreach ($resourceTypes as $resourceType) {
-            $decoder = $em->getRepository('ClarolineCoreBundle:Resource\MenuAction')->findOneBy(array('resourceType' => $resourceType, 'name' => 'open-tracking'));
+            $decoder = $em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
+                ->findOneBy(array('resourceType' => $resourceType, 'name' => 'open-tracking'));
+
             if (!$decoder) {
                 $trackingMenuAction = new MenuAction();
                 $trackingMenuAction->setValue(pow(2, 3));
@@ -41,13 +43,21 @@ class Updater020200
                 $trackingMenuAction->setIsCustom(false);
 
                 $em->persist($trackingMenuAction);
-                $this->log("Adding 'open-tracking' menu for resource type '".$resourceType->getName()."'");
+                $this->log(
+                    "Adding 'open-tracking' menu for resource type '"
+                    . $resourceType->getName()
+                    . "'"
+                );
             } else {
-                $this->log("The 'open-tracking' permissions for resource type '".$resourceType->getName()."' already exists");
+                $this->log(
+                    "The 'open-tracking' permissions for resource type '"
+                    . $resourceType->getName()
+                    . "' already exists"
+                );
             }
         }
-        $em->flush();
 
+        $em->flush();
     }
 
     public function setLogger($logger)

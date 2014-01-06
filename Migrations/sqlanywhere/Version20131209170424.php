@@ -15,9 +15,9 @@ class Version20131209170424 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_workspace ALTER is_public BIT NOT NULL, 
-            ALTER displayable BIT NOT NULL, 
-            ALTER self_registration BIT NOT NULL, 
+            ALTER TABLE claro_workspace ALTER is_public BIT NOT NULL,
+            ALTER displayable BIT NOT NULL,
+            ALTER self_registration BIT NOT NULL,
             ALTER self_unregistration BIT NOT NULL
         ");
     }
@@ -25,9 +25,9 @@ class Version20131209170424 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_workspace ALTER is_public BIT NULL DEFAULT NULL, 
-            ALTER displayable BIT NULL DEFAULT NULL, 
-            ALTER self_registration BIT NULL DEFAULT NULL, 
+            ALTER TABLE claro_workspace ALTER is_public BIT NULL DEFAULT NULL,
+            ALTER displayable BIT NULL DEFAULT NULL,
+            ALTER self_registration BIT NULL DEFAULT NULL,
             ALTER self_unregistration BIT NULL DEFAULT NULL
         ");
     }

@@ -110,7 +110,7 @@ class LogWidgetListener
             $workspaces = array();
             $workspacesVisibility = array();
             if (!$instance->isAdmin()) {
-               $workspaces = $this->workspaceManager->getWorkspacesByUserAndRoleNames(
+                $workspaces = $this->workspaceManager->getWorkspacesByUserAndRoleNames(
                     $instance->getUser(),
                     array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER')
                 );
@@ -118,7 +118,6 @@ class LogWidgetListener
                     ->logManager
                     ->getWorkspaceVisibilityForDesktopWidget($instance->getUser(), $workspaces);
             }
-
 
             $workspacesVisibility['amount'] = $config->getAmount();
 

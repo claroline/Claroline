@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use \Mockery as m;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Doctrine\Common\Collections\ArrayCollection;

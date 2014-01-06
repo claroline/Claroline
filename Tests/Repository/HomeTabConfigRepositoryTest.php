@@ -229,7 +229,6 @@ class HomeTabConfigRepositoryTest extends RepositoryTestCase
         $this->assertEquals(self::get('adhtc_4'), $homeTabConfigs[3]);
     }
 
-
     public function testFindAdminWorkspaceHomeTabConfigs()
     {
         $homeTabConfigs = self::$repo->findAdminWorkspaceHomeTabConfigs();
