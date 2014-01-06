@@ -101,8 +101,8 @@ class ThemeService
     }
 
     /**
-     * @param array $filter The array that is used to filter an entity (example: array('id' => 3, 'name' => 'Claroline'))
-     *
+     * @param array $filter The array that is used to filter an entity
+     *                      (example: array('id' => 3, 'name' => 'Claroline'))
      * @return Theme|null
      */
     public function findTheme(array $filter)

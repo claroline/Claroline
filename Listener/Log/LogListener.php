@@ -212,10 +212,14 @@ class LogListener
 
                 if ($oldSignature == $event->getLogSignature()) {
                     $diff = ($now - $oldTime);
-                    $notRepeatableLogTimeInSeconds = $this->container->getParameter('non_repeatable_log_time_in_seconds');
+                    $notRepeatableLogTimeInSeconds = $this->container->getParameter(
+                        'non_repeatable_log_time_in_seconds'
+                    );
+
                     if ($event->getIsWorkspaceEnterEvent()) {
                         $notRepeatableLogTimeInSeconds = $notRepeatableLogTimeInSeconds * 3;
                     }
+
                     if ($diff > $notRepeatableLogTimeInSeconds) {
                         $is = false;
                     } else {

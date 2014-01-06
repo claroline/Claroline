@@ -57,7 +57,10 @@ class EventManager
             if (file_exists($bundleEventLogDirectory)) {
                 $finder = new Finder();
                 $finder->files()->in($bundleEventLogDirectory)->sortByName();
-                $events = array_merge($events, $this->getEventsByBundle($finder, $bundle->getNamespace(), $suffixLogNamespace, $restriction));
+                $events = array_merge(
+                    $events,
+                    $this->getEventsByBundle($finder, $bundle->getNamespace(), $suffixLogNamespace, $restriction)
+                );
             }
         }
 
@@ -79,7 +82,8 @@ class EventManager
         $events             = array();
 
         foreach ($bundles as $bundle) {
-            if (0 === strpos($resourceClass, $bundle->getNamespace()) || 0 === strpos(get_class($this), $bundle->getNamespace())) {
+            if (0 === strpos($resourceClass, $bundle->getNamespace())
+                || 0 === strpos(get_class($this), $bundle->getNamespace())) {
                 if (0 !== strpos(get_class($this), $bundle->getNamespace())) {
                     array_push($events, null);
                 }
@@ -87,7 +91,10 @@ class EventManager
                 if (file_exists($bundleEventLogDirectory)) {
                     $finder = new Finder();
                     $finder->files()->in($bundleEventLogDirectory)->sortByName();
-                    $events = array_merge($events, $this->getEventsByBundle($finder, $bundle->getNamespace(), $suffixLogNamespace, $restriction));
+                    $events = array_merge(
+                        $events,
+                        $this->getEventsByBundle($finder, $bundle->getNamespace(), $suffixLogNamespace, $restriction)
+                    );
                 }
             }
         }
@@ -109,7 +116,11 @@ class EventManager
 
         /** @var \Symfony\Component\Finder\SplFileInfo $file */
         foreach ($finder as $file) {
-            $classNamespace = $bundleNamespace . $suffixLogNamespace . '\\' . $file->getBasename('.' . $file->getExtension());
+            $classNamespace = $bundleNamespace
+                . $suffixLogNamespace
+                . '\\'
+                . $file->getBasename('.' . $file->getExtension());
+
             if (in_array('Claroline\CoreBundle\Event\Log\LogGenericEvent', class_parents($classNamespace))) {
                 $events = array_merge($events, $this->getActionConstantsForClass($classNamespace, $restriction));
             }
@@ -171,40 +182,57 @@ class EventManager
 
         foreach ($textEvents as $textEvent) {
             $explodeTextEvents = explode('-', $textEvent);
-            if ($explodeTextEvents[0]=='resource') {
-                //$sortedEvents[$this->translator->trans($explodeTextEvents[0], array(), 'platform')][$this->translator->trans('all', array(), 'log')][$explodeTextEvents[0]] = $this->translator->trans('all', array(), 'log');
-                $tempResourceEvents['all'][$explodeTextEvents[0]]=$this->translator->trans('all', array(), 'log');
+            $shortTextEvent = $explodeTextEvents[0] . '-' . $explodeTextEvents[1];
+            $eventTrans = $this->translator->trans($explodeTextEvents[0], array(), 'platform');
+
+            if ($explodeTextEvents[0] === 'resource') {
+                $tempResourceEvents['all'][$explodeTextEvents[0]] = $this->translator->trans('all', array(), 'log');
             } else {
-                $sortedEvents[$this->translator->trans($explodeTextEvents[0], array(), 'platform')][$explodeTextEvents[0]] = $this->translator->trans('all', array(), 'log');
+                $sortedEvents[$eventTrans][$explodeTextEvents[0]] = $this->translator->trans('all', array(), 'log');
             }
 
-            if ($explodeTextEvents[0]=='resource') {
+            if ($explodeTextEvents[0] === 'resource') {
                 if (isset($explodeTextEvents[2])) {
-                    //$sortedEvents[$this->translator->trans($explodeTextEvents[0], array(), 'platform')][$this->translator->trans($explodeTextEvents[1], array(), 'resource')][$explodeTextEvents[0] . '-[[' . $explodeTextEvents[1] . ']]-all'] = $this->translator->trans('all', array(), 'log');
-                    //$sortedEvents[$this->translator->trans($explodeTextEvents[0], array(), 'platform')][$this->translator->trans($explodeTextEvents[1], array(), 'resource')][$explodeTextEvents[0] . '-' . $explodeTextEvents[1] . '-' . $explodeTextEvents[2]] = $this->translator->trans('log_' . $explodeTextEvents[0] . '-' . $explodeTextEvents[1] . '-' . $explodeTextEvents[2] . '_filter', array(), 'log');
-                    $tempResourceEvents[$explodeTextEvents[1]][$explodeTextEvents[0] . '-' . $explodeTextEvents[1] . '-' . $explodeTextEvents[2]] = $this->translator->trans('log_' . $explodeTextEvents[0] . '-' . $explodeTextEvents[1] . '-' . $explodeTextEvents[2] . '_filter', array(), 'log');
+                    $tempResourceEvents[$explodeTextEvents[1]][$textEvent] = $this->translator->trans(
+                        'log_' . $textEvent . '_filter', array(), 'log'
+                    );
                 } else {
-                    $genericResourceEvents[$explodeTextEvents[1]] = $explodeTextEvents[0] . '-' . $explodeTextEvents[1];
+                    $genericResourceEvents[$explodeTextEvents[1]] = $shortTextEvent;
                 }
             } elseif (isset($explodeTextEvents[2])) {
-                $sortedEvents[$this->translator->trans($explodeTextEvents[0], array(), 'platform')][$explodeTextEvents[0] . '-' . $explodeTextEvents[1] . '-' . $explodeTextEvents[2]] = $this->translator->trans('log_' . $explodeTextEvents[0] . '-' . $explodeTextEvents[1] . '-' . $explodeTextEvents[2] . '_filter', array(), 'log');
+                $sortedEvents[$eventTrans][$textEvent] = $this->translator->trans(
+                    'log_' . $textEvent . '_filter', array(), 'log'
+                );
             } else {
-                $sortedEvents[$this->translator->trans($explodeTextEvents[0], array(), 'platform')][$explodeTextEvents[0] . '-' . $explodeTextEvents[1]] = $this->translator->trans('log_' . $explodeTextEvents[0] . '-' . $explodeTextEvents[1] . '_filter', array(), 'log');
+                $sortedEvents[$eventTrans][$shortTextEvent] = $this->translator->trans(
+                    'log_' . $shortTextEvent . '_filter', array(), 'log'
+                );
             }
         }
 
+        $resourceTrans = $this->translator->trans('resource', array(), 'platform');
+
         foreach ($tempResourceEvents as $sortedKey => $sortedEvent) {
+            $keyTrans = $this->translator->trans($sortedKey, array(), 'resource');
+            $logTrans = $this->translator->trans(
+                $genericEvent === 'all' ? $genericEvent : 'log_' . $genericEvent . '_filter',
+                array(),
+                'log'
+            );
+
             foreach ($genericResourceEvents as $genericKey => $genericEvent) {
                 if ($sortedKey !== 'all') {
-                    $sortedEvents[$this->translator->trans('resource', array(), 'platform')][$this->translator->trans($sortedKey, array(), 'resource')]['[[' . $sortedKey . ']]' . $genericEvent] = $this->translator->trans(($genericEvent === 'all')?$genericEvent:('log_' . $genericEvent . '_filter'), array(), 'log');
+                    $sortedEvents[$resourceTrans][$keyTrans]['[[' . $sortedKey . ']]' . $genericEvent] = $logTrans;
                 } else {
-                    $sortedEvents[$this->translator->trans('resource', array(), 'platform')][$this->translator->trans($sortedKey, array(), 'log')][$genericEvent] = $this->translator->trans(($genericEvent === 'all')?$genericEvent:('log_' . $genericEvent . '_filter'), array(), 'log');
+                    $altLogTrans = $this->translator->trans($sortedKey, array(), 'log');
+                    $sortedEvents[$resourceTrans][$altLogTrans][$genericEvent] = $logTrans;
                 }
             }
+
             if ($sortedKey !== 'all') {
                 foreach ($tempResourceEvents[$sortedKey] as $resourceEventKey => $resourceEventValue) {
-                    $sortedEvents[$this->translator->trans('resource', array(), 'platform')][$this->translator->trans($sortedKey, array(), 'resource')]['null'] = null;
-                    $sortedEvents[$this->translator->trans('resource', array(), 'platform')][$this->translator->trans($sortedKey, array(), 'resource')][$resourceEventKey] = $resourceEventValue;
+                    $sortedEvents[$resourceTrans][$keyTrans]['null'] = null;
+                    $sortedEvents[$resourceTrans][$keyTrans][$resourceEventKey] = $resourceEventValue;
                 }
             }
         }

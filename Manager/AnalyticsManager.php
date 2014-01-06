@@ -82,7 +82,12 @@ class AnalyticsManager
         return array($startDate->getTimestamp(), $endDate->getTimestamp());
     }
 
-    public function getDailyActionNumberForDateRange($range = null, $action = null, $unique = false, $workspaceIds = null)
+    public function getDailyActionNumberForDateRange(
+        $range = null,
+        $action = null,
+        $unique = false,
+        $workspaceIds = null
+    )
     {
         if ($action === null) {
             $action = '';

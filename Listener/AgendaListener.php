@@ -84,7 +84,7 @@ class AgendaListener
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $usr = $this->container->get('security.context')->getToken()->getUser();
-        $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr , 5);
+        $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr, 5);
 
         return $this->templating->render(
             'ClarolineCoreBundle:Widget:agenda_widget.html.twig',

@@ -371,7 +371,13 @@ class GroupManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getOutsidersByWorkspaceRolesAndName(array $roles, $name, AbstractWorkspace $workspace, $page = 1, $max = 50)
+    public function getOutsidersByWorkspaceRolesAndName(
+        array $roles,
+        $name,
+        AbstractWorkspace $workspace,
+        $page = 1,
+        $max = 50
+    )
     {
         $query = $this->groupRepo->findOutsidersByWorkspaceRolesAndName($roles, $name, $workspace, true);
 

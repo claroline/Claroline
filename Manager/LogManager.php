@@ -72,7 +72,13 @@ class LogManager
         }
 
         $defaultInstance = $em->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')->findOneBy(
-            array('widget' => $instance->getWidget(), 'isAdmin' => true, 'workspace' => null, 'user' => null, 'isDesktop' => false)
+            array(
+                'widget' => $instance->getWidget(),
+                'isAdmin' => true,
+                'workspace' => null,
+                'user' => null,
+                'isDesktop' => false
+            )
         );
 
         $defaultConfig = $this->getLogConfig($defaultInstance);
@@ -108,10 +114,11 @@ class LogManager
 
         // Remove configs which hasAllRestriction
         $configsCleaned = array();
+        $events = $this->container->get('claroline.event.manager')
+            ->getEvents(LogGenericEvent::DISPLAYED_WORKSPACE);
 
         foreach ($configs as $config) {
-            if ($config->hasAllRestriction($this->container->get('claroline.event.manager')
-                ->getEvents(LogGenericEvent::DISPLAYED_WORKSPACE)) === false) {
+            if ($config->hasAllRestriction($events) === false) {
                 $configsCleaned[] = $config;
             }
         }

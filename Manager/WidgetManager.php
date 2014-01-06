@@ -62,7 +62,13 @@ class WidgetManager
      *
      * @throws \Exception
      */
-    public function createInstance(Widget $widget, $isAdmin, $isDesktop, User $user = null, AbstractWorkspace $ws = null)
+    public function createInstance(
+        Widget $widget,
+        $isAdmin,
+        $isDesktop,
+        User $user = null,
+        AbstractWorkspace $ws = null
+    )
     {
         if (!$widget->isDisplayableInDesktop()) {
             if ($isDesktop || $user) {
