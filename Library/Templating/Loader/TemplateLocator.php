@@ -35,7 +35,11 @@ class TemplateLocator extends baseTemplateLocator
      * @param ThemeService                 $themeService  Claroline theme service
      * @param string                       $cacheDir      The cache path
      */
-    public function __construct(FileLocatorInterface $locator, PlatformConfigurationHandler $configHandler, ThemeService $themeService, $cacheDir = null)
+    public function __construct(
+        FileLocatorInterface $locator,
+        PlatformConfigurationHandler $configHandler,
+        ThemeService $themeService, $cacheDir = null
+    )
     {
         if (null !== $cacheDir && is_file($cache = $cacheDir.'/templates.php')) {
             $this->cache = require $cache;
@@ -100,7 +104,11 @@ class TemplateLocator extends baseTemplateLocator
         $controller  = $template->get('controller');
 
         if (null !== $theme) {
-            $controller = sprintf("%s/%s", strtolower(str_replace(' ', '', $theme->getName())), $template->get('controller'));
+            $controller = sprintf(
+                '%s/%s',
+                strtolower(str_replace(' ', '', $theme->getName())),
+                $template->get('controller')
+            );
         }
 
         $newTemplate

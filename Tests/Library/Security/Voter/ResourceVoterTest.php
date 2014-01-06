@@ -60,8 +60,10 @@ class ResourceVoterTest extends MockeryTestCase
         $nodes[0]->shouldReceive('getResourceType')->andReturn($type);
         $nodes[0]->shouldReceive('getPathForDisplay')->andReturn('/path/to/dir');
         $this->ut->shouldReceive('getRoles')->with($token)->andReturn(array());
-        //the following line doesn't work (why ?)
-//        $this->maskManager->shouldReceive('getDecoder')->with($type, $parameters[0])->andReturn($decoder);
+
+        /* the following line doesn't work (why ?)
+        $this->maskManager->shouldReceive('getDecoder')->with($type, $parameters[0])->andReturn($decoder);
+        */
         $this->maskManager->shouldReceive('getDecoder')->with()->andReturn($decoder);
         $decoder->shouldReceive('getValue')->andReturn($decoderValue);
         $this->repository->shouldReceive('findMaximumRights')->with(array(), $nodes[0])->andReturn($maskValue);

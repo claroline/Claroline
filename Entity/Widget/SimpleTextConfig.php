@@ -51,7 +51,7 @@ class SimpleTextConfig
     /**
      * Set amount
      *
-     * @param  string $content
+     * @param  string                    $content
      * @return SimpleTextWorkspaceConfig
      */
     public function setContent($content)

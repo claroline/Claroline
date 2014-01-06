@@ -21,9 +21,11 @@ class AgendaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $recurring = array();
-        for ($i = 0; $i < 10 ; $i++) { 
-            $recurring[$i] = $i; 
+
+        for ($i = 0; $i < 10; $i++) {
+            $recurring[$i] = $i;
         }
+
         $attr = array();
         $attr['class'] = 'datepicker input-small';
         $attr['data-date-format'] = 'dd-mm-yyyy';
@@ -38,15 +40,13 @@ class AgendaType extends AbstractType
                     'widget'        => 'single_text',
                     'format'        => 'dd-MM-yyyy HH:mm',
                     'attr'          => $attr,
-               )
+                )
             )
             ->add(
                 'startHours',
                 'text',
-                array(
-                    'attr' => array('class' => 'hours')
-                    )
-                )
+                array('attr' => array('class' => 'hours'))
+            )
             ->add(
                 'end',
                 'datepicker',
@@ -60,12 +60,10 @@ class AgendaType extends AbstractType
             ->add(
                 'endHours',
                 'text',
-                array(
-                    'attr' => array('class' => 'hours')
-                    )
-                )
-            ->add('allDay','checkbox')
-            ->add('description','tinymce')
+                array('attr' => array('class' => 'hours'))
+            )
+            ->add('allDay', 'checkbox')
+            ->add('description', 'tinymce')
             ->add(
                 'priority',
                 'choice',

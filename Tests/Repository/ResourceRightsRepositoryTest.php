@@ -50,7 +50,10 @@ class ResourceRightsRepositoryTest extends RepositoryTestCase
     {
         $creationRights = self::$repo->findCreationRights(array('ROLE_1'), self::get('dir_1')->getResourceNode());
         $this->assertEquals(0, count($creationRights));
-        $creationRights = self::$repo->findCreationRights(array('ROLE_1', 'ROLE_2'), self::get('dir_1')->getResourceNode());
+        $creationRights = self::$repo->findCreationRights(
+            array('ROLE_1', 'ROLE_2'),
+            self::get('dir_1')->getResourceNode()
+        );
         $this->assertEquals(1, count($creationRights));
         $this->assertEquals('t_dir', $creationRights[0]['name']);
     }
@@ -68,7 +71,10 @@ class ResourceRightsRepositoryTest extends RepositoryTestCase
 
     public function testFindRecursiveByResourceAndRole()
     {
-        $rights = self::$repo->findRecursiveByResourceAndRole(self::get('dir_1')->getResourceNode(), self::get('ROLE_1'));
+        $rights = self::$repo->findRecursiveByResourceAndRole(
+            self::get('dir_1')->getResourceNode(),
+            self::get('ROLE_1')
+        );
         $this->assertEquals(2, count($rights));
     }
 }

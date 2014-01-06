@@ -206,7 +206,7 @@ class RoleManagerTest extends MockeryTestCase
     /**
      * @expectedException Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException
      */
-    public function testCheckWorkspaceRoleEditionThrowsExceptionForUser( )
+    public function testCheckWorkspaceRoleEditionThrowsExceptionForUser()
     {
         $roleManager = $this->getManager(array('getManagerRole'));
         $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;

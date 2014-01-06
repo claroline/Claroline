@@ -279,7 +279,7 @@ class TextController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function OpenAction(Text $text)
+    public function openAction(Text $text)
     {
         $revisionRepo = $this->getDoctrine()->getManager()
             ->getRepository('ClarolineCoreBundle:Resource\Revision');

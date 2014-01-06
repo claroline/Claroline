@@ -58,7 +58,7 @@ class ResourceVoter implements VoterInterface
 
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-       $object = $object instanceof AbstractResource ? $object->getResourceNode(): $object;
+        $object = $object instanceof AbstractResource ? $object->getResourceNode(): $object;
 
         if ($object instanceof ResourceCollection) {
             $errors = array();

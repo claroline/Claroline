@@ -38,14 +38,13 @@ class UserBadgeRepository extends EntityRepository
     public function findByUser(User $user, $executeQuery = true)
     {
         $query = $this->getEntityManager()
-            ->createQuery('
-                SELECT ub, b
+            ->createQuery(
+                'SELECT ub, b
                 FROM ClarolineCoreBundle:Badge\UserBadge ub
                 JOIN ub.badge b
                 WHERE ub.user = :userId'
             )
-            ->setParameter('userId', $user->getId())
-        ;
+            ->setParameter('userId', $user->getId());
 
         return $executeQuery ? $query->getResult(): $query;
     }

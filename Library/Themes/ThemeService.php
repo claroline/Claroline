@@ -101,8 +101,8 @@ class ThemeService
     }
 
     /**
-     * @param array $filter The array that is used to filter an entity (example: array('id' => 3, 'name' => 'Claroline'))
-     *
+     * @param array $filter The array that is used to filter an entity
+     *                      (example: array('id' => 3, 'name' => 'Claroline'))
      * @return Theme|null
      */
     public function findTheme(array $filter)
@@ -193,8 +193,8 @@ class ThemeService
     /**
      * Compile Less Themes that are defined in a twig file with lessphp filter
      *
-     * @param mixed $themes An array of Theme entities or a string of the template with following syntax:
-     *                      'ClarolineCoreBundle:less:bootstrap-default/theme.html.twig'
+     * @param mixed  $themes  An array of Theme entities or a string of the template with following syntax:
+     *                        'ClarolineCoreBundle:less:bootstrap-default/theme.html.twig'
      * @param string $webPath
      *
      * @todo Find something better for web path

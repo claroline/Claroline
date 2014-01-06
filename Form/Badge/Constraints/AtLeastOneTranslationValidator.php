@@ -34,9 +34,10 @@ class AtLeastOneTranslationValidator extends ConstraintValidator
         $enDescription = $enTranslation->getDescription();
         $enCriteria    = $enTranslation->getCriteria();
 
-        //Have to put all method call in variable because of empty doesn't support result of method as parameter (prior to PHP 5.5)
-        $hasFrTranslation = (!empty($frName) && !empty($frDescription) && !empty($frCriteria)) ? true : false;
-        $hasEnTranslation = (!empty($enName) && !empty($enDescription) && !empty($enCriteria)) ? true : false;
+        // Have to put all method call in variable because of empty doesn't
+        // support result of method as parameter (prior to PHP 5.5)
+        $hasFrTranslation = !empty($frName) && !empty($frDescription) && !empty($frCriteria);
+        $hasEnTranslation = !empty($enName) && !empty($enDescription) && !empty($enCriteria);
 
         if (!$hasFrTranslation && !$hasEnTranslation) {
             $this->context->addViolation($constraint->message);

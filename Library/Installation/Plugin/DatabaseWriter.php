@@ -250,8 +250,9 @@ class DatabaseWriter
 
     private function updateResourceTypes($resource, $pluginEntity, $plugin)
     {
-        $resourceType           = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName($resource['name']);
-        $isExistResourceType    = true;
+        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->findOneByName($resource['name']);
+        $isExistResourceType = true;
 
         if (null === $resourceType) {
             $resourceType = new ResourceType();
@@ -355,7 +356,7 @@ class DatabaseWriter
         $newDecoders      = array();
 
         foreach ($actions as $action) {
-            $decoder = $decoderRepo->findOneBy(array('name'=> $action['name'], 'resourceType' => $resourceType));
+            $decoder = $decoderRepo->findOneBy(array('name' => $action['name'], 'resourceType' => $resourceType));
 
             if (!$decoder) {
                 if (array_key_exists($action['name'], $newDecoders)) {
@@ -389,7 +390,7 @@ class DatabaseWriter
         $newDecoders      = array();
 
         foreach ($actions as $action) {
-            $decoder = $decoderRepo->findOneBy(array('name'=> $action['name'], 'resourceType' => $resourceType));
+            $decoder = $decoderRepo->findOneBy(array('name' => $action['name'], 'resourceType' => $resourceType));
 
             if (!$decoder) {
                 if (array_key_exists($action['name'], $newDecoders)) {
@@ -408,7 +409,8 @@ class DatabaseWriter
             }
 
             if (isset($action['menu_name'])) {
-                $menuAction = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')->findOneByName($action['menu_name']);
+                $menuAction = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
+                    ->findOneByName($action['menu_name']);
 
                 if (null === $menuAction) {
                     $menuAction = new MenuAction();

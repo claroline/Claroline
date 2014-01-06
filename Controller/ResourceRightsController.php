@@ -82,7 +82,7 @@ class ResourceRightsController
      *
      * Displays the resource rights form.
      *
-     * @param ResourceNode $node
+     * @param ResourceNode                      $node
      * @param \Claroline\CoreBundle\Entity\Role $role
      *
      * @return Response

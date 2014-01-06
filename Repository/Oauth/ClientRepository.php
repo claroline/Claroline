@@ -11,11 +11,9 @@
 
 namespace Claroline\CoreBundle\Repository\Oauth;
 
-use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 
 class ClientRepository extends EntityRepository
 {
@@ -33,8 +31,8 @@ class ClientRepository extends EntityRepository
                 'SELECT c, at
                 FROM ClarolineCoreBundle:Oauth\Client c
                 JOIN c.accessTokens at
-                WHERE at.user = :userId
-            ')
+                WHERE at.user = :userId'
+            )
             ->setParameter('userId', $user->getId());
 
         return $executeQuery ? $query->getResult(): $query;

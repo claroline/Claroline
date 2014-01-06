@@ -15,7 +15,7 @@ class Version20131220162356 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_user ALTER locale 
+            ALTER TABLE claro_user ALTER locale
             DROP NOT NULL
         ");
     }
@@ -23,8 +23,8 @@ class Version20131220162356 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_user ALTER locale 
-            SET 
+            ALTER TABLE claro_user ALTER locale
+            SET
                 NOT NULL
         ");
     }

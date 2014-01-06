@@ -222,7 +222,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     {
         $isDisplayedByRestriction = false;
 
-        switch($restriction) {
+        switch ($restriction) {
             case self::DISPLAYED_ADMIN:
                 $isDisplayedByRestriction = $this->getIsDisplayedInAdmin();
                 break;

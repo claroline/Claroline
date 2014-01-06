@@ -628,5 +628,4 @@ class Log
         return $this->isDisplayedInWorkspace;
     }
 
-
 }

@@ -47,4 +47,3 @@ class LoadThemeData extends AbstractFixture implements OrderedFixtureInterface
         return 8;
     }
 }
-

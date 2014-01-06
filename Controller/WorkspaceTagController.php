@@ -1029,7 +1029,8 @@ class WorkspaceTagController extends Controller
                     );
                     $msg .= ' [' . $tag->getName() . ']';
                     $this->get('session')->getFlashBag()->add('success', $msg);
-                } else {// Set success flashbag message
+                } else {
+                    // Set success flashbag message
                     $msg = $this->translator->trans(
                         'the_workspace',
                         array(),
@@ -1101,7 +1102,8 @@ class WorkspaceTagController extends Controller
                     );
                     $msg .= ' [' . $tag->getName() . ']';
                     $this->get('session')->getFlashBag()->add('success', $msg);
-                } else {// Set success flashbag message
+                } else {
+                    // Set success flashbag message
                     $msg = $this->translator->trans(
                         'the_workspace',
                         array(),

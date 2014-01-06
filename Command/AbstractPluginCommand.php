@@ -80,9 +80,11 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
     protected function getPluginInstaller(OutputInterface $output)
     {
         $installer = $this->getContainer()->get('claroline.plugin.installer');
-        $installer->setLogger(function ($message) use ($output) {
-            $output->writeln($message);
-        });
+        $installer->setLogger(
+            function ($message) use ($output) {
+                $output->writeln($message);
+            }
+        );
 
         return $installer;
     }

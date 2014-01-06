@@ -138,7 +138,7 @@ class Updater020000
             WHERE parent_id IS NOT NULL
             AND instance.is_desktop = false
         ";
-        $rows =  $this->conn->query($select);
+        $rows = $this->conn->query($select);
 
         foreach ($rows as $row) {
             $wsId = $row['workspace_id'] ? $row['workspace_id']: 'null';
@@ -155,14 +155,10 @@ class Updater020000
     private function migrateWorkspaceTextWidgetData()
     {
         $this->log('Migrating workspace text widgets configuration...');
-        $result = $this->conn->query(
-            "SELECT id FROM claro_widget WHERE name = 'simple_text'
-        ");
+        $result = $this->conn->query("SELECT id FROM claro_widget WHERE name = 'simple_text'");
         $widget = $result->fetch();
         $widgetId = $widget['id'];
-        $configs = $this->conn->query(
-            "SELECT * FROM simple_text_workspace_widget_config"
-        );
+        $configs = $this->conn->query("SELECT * FROM simple_text_workspace_widget_config");
 
         foreach ($configs as $config) {
             if (!$config['is_default']) {
@@ -197,7 +193,7 @@ class Updater020000
             AND type <> 'admin_desktop'
             ORDER BY id
         ";
-        $rows =  $this->conn->query($widgetHomeTabConfigsReq);
+        $rows = $this->conn->query($widgetHomeTabConfigsReq);
 
         foreach ($rows as $row) {
             $widgetHomeTabConfigId = $row['id'];
@@ -284,7 +280,10 @@ class Updater020000
                 $em->flush();
             }
         } catch (MappingException $e) {
-            $this->log('A MappingException has been thrown while trying to get HomeTabConfig or WidgetHomeTabConfig repository');
+            $this->log(
+                'A MappingException has been thrown while trying to get HomeTabConfig'
+                . ' or WidgetHomeTabConfig repository'
+            );
         }
     }
 
@@ -317,7 +316,7 @@ class Updater020000
             $tabConfig->setUser($user);
             $em->persist($tabConfig);
 
-            for ($i = 0; $i < count($widgets); ++$i) {
+            for ($i = 0, $count = count($widgets); $i < $count; ++$i) {
                 $widget = $widgetRepo->findOneByName($widgets[$i]);
                 $instance = new WidgetInstance($widget);
                 $instance->setName($this->translator->trans($widget->getName(), array(), 'widget'));

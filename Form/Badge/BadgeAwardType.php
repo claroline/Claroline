@@ -20,16 +20,23 @@ class BadgeAwardType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('group', 'simpleautocomplete', array(
-                'entity_reference' => 'group',
-                'required'         => false
-            ))
-            ->add('user', 'simpleautocomplete', array(
-                'entity_reference' => 'user',
-                'required'         => false,
-                'with_vendors'     => false
-            ))
-        ;
+            ->add(
+                'group',
+                'simpleautocomplete',
+                array(
+                    'entity_reference' => 'group',
+                    'required'         => false
+                )
+            )
+            ->add(
+                'user',
+                'simpleautocomplete',
+                array(
+                    'entity_reference' => 'user',
+                    'required'         => false,
+                    'with_vendors'     => false
+                )
+            );
     }
 
     public function getName()
@@ -39,11 +46,6 @@ class BadgeAwardType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver
-        ->setDefaults(
-            array(
-                'translation_domain' => 'badge'
-            )
-        );
+        $resolver->setDefaults(array('translation_domain' => 'badge'));
     }
 }

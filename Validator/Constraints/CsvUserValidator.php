@@ -114,7 +114,8 @@ class CsvUserValidator extends ConstraintValidator
         }
     }
 
-    private function getLines($lines) {
+    private function getLines($lines)
+    {
         $countLines = count($lines);
         $l = '';
 
@@ -122,7 +123,7 @@ class CsvUserValidator extends ConstraintValidator
             $l .= $line;
 
             if ($i < $countLines - 1) {
-                $l.= ', ';
+                $l .= ', ';
             }
         }
 

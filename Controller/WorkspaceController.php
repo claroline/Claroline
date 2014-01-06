@@ -805,7 +805,7 @@ class WorkspaceController extends Controller
      *
      * Removes an user from a workspace.
      *
-     * @param AbstractWorkspace $workspace
+     * @param AbstractWorkspace                 $workspace
      * @param \Claroline\CoreBundle\Entity\User $user
      *
      * @return Response
@@ -832,8 +832,7 @@ class WorkspaceController extends Controller
             $this->security->setToken($token);
 
             return new Response('success', 204);
-        }
-        catch (LastManagerDeleteException $e) {
+        } catch (LastManagerDeleteException $e) {
             return new Response(
                 'cannot_delete_unique_manager',
                 200,
@@ -861,7 +860,7 @@ class WorkspaceController extends Controller
      * Renders the workspace list associate to a tag in a pager for registation.
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\WorkspaceTag $workspaceTag
-     * @param int $page
+     * @param int                                                 $page
      *
      * @return Response
      */
@@ -912,8 +911,8 @@ class WorkspaceController extends Controller
      *
      * Renders the workspace list in a pager for registration.
      *
-     * @param string    $search
-     * @param int       $page
+     * @param string $search
+     * @param int    $page
      *
      * @return Response
      */

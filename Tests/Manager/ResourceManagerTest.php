@@ -275,29 +275,29 @@ class ResourceManagerTest extends MockeryTestCase
         $manager->createRights($res, $rights);
     }
 
-//    /**
-//     * @dataProvider areAncestorsDirectoryProvider
-//     */
-//    public function testAreAncestorsDirectory($ancestors, $expected)
-//    {
-//        $this->markTestSkipped('Something wrong with the data provider...');
-//
-//        $result = $this->getManager()->areAncestorsDirectory($ancestors);
-//        $this->assertEquals($expected, $result);
-//    }
+    /**
+     * @dataProvider areAncestorsDirectoryProvider
+     */
+    public function testAreAncestorsDirectory($ancestors, $expected)
+    {
+        $this->markTestSkipped('Something wrong with the data provider...');
 
-//    /**
-//     * @dataProvider isPathValidProvider
-//     */
-//    public function testIsPathValid($breadcrumbs, $expectedResult)
-//    {
-//        $this->markTestSkipped('Something wrong with the data provider...');
-//
-//        $manager = $this->getManager(array('hasLinkTo'));
-//        $manager->shouldReceive('hasLinkTo')->andReturn($expectedResult);
-//        $result = $manager->isPathValid($breadcrumbs);
-//        $this->assertEquals($result, $expectedResult);
-//    }
+        $result = $this->getManager()->areAncestorsDirectory($ancestors);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @dataProvider isPathValidProvider
+     */
+    public function testIsPathValid($breadcrumbs, $expectedResult)
+    {
+        $this->markTestSkipped('Something wrong with the data provider...');
+
+        $manager = $this->getManager(array('hasLinkTo'));
+        $manager->shouldReceive('hasLinkTo')->andReturn($expectedResult);
+        $result = $manager->isPathValid($breadcrumbs);
+        $this->assertEquals($result, $expectedResult);
+    }
 
     public function testBuildSearchArray()
     {
@@ -718,9 +718,30 @@ class ResourceManagerTest extends MockeryTestCase
         $oldNext = new \Claroline\CoreBundle\Entity\Resource\ResourceNode();
 
         return array(
-            array('previous' => $previous, 'next' => $next, 'oldPrev' => $oldPrev ,'oldNext' => $oldNext, 'rmNext' => 1, 'rmPrev' => 3),
-            array('previous' => $previous, 'next' => null, 'oldPrev' => null, 'oldNext' => $oldNext, 'rmNext' => 1, 'rmPrev' => 1),
-            array('previous' => null, 'next' => $next, 'oldPrev' => $oldPrev, 'oldNext' => $oldNext, 'rmNext' => 0, 'rmPrev' => 3),
+            array(
+                'previous' => $previous,
+                'next' => $next,
+                'oldPrev' => $oldPrev,
+                'oldNext' => $oldNext,
+                'rmNext' => 1,
+                'rmPrev' => 3
+            ),
+            array(
+                'previous' => $previous,
+                'next' => null,
+                'oldPrev' => null,
+                'oldNext' => $oldNext,
+                'rmNext' => 1,
+                'rmPrev' => 1
+            ),
+            array(
+                'previous' => null,
+                'next' => $next,
+                'oldPrev' => $oldPrev,
+                'oldNext' => $oldNext,
+                'rmNext' => 0,
+                'rmPrev' => 3
+            )
         );
     }
 

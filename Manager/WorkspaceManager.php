@@ -136,7 +136,7 @@ class WorkspaceManager
      * Rename a workspace.
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param string $name
+     * @param string                                                   $name
      */
     public function rename(AbstractWorkspace $workspace, $name)
     {
@@ -152,7 +152,7 @@ class WorkspaceManager
      * Creates a workspace.
      *
      * @param \Claroline\CoreBundle\Library\Workspace\Configuration $config
-     * @param \Claroline\CoreBundle\Entity\User $manager
+     * @param \Claroline\CoreBundle\Entity\User                     $manager
      *
      * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      *
@@ -288,7 +288,7 @@ class WorkspaceManager
      * Creates a workspace template.
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param string $configName
+     * @param string                                                   $configName
      *
      * @throws \Exception
      */
@@ -399,7 +399,7 @@ class WorkspaceManager
      * Generate the array concerning the tool content for a workspace template config.
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param \ZipArchive $archive
+     * @param \ZipArchive                                              $archive
      *
      * @return array
      */
@@ -454,7 +454,7 @@ class WorkspaceManager
      * Adds a favourite workspace.
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User                        $user
      */
     public function addFavourite(AbstractWorkspace $workspace, User $user)
     {
@@ -523,7 +523,7 @@ class WorkspaceManager
 
     /**
      * @param string[] $roleNames
-     * @param integer $page
+     * @param integer  $page
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -540,8 +540,8 @@ class WorkspaceManager
 
     /**
      * @param string[] $roleNames
-     * @param string $search
-     * @param integer $page
+     * @param string   $search
+     * @param integer  $page
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -563,7 +563,7 @@ class WorkspaceManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\User $user
-     * @param string[] $roleNames
+     * @param string[]                          $roleNames
      *
      * @return integer[]
      */
@@ -574,7 +574,7 @@ class WorkspaceManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\User $user
-     * @param string[] $roleNames
+     * @param string[]                          $roleNames
      *
      * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[]
      */
@@ -585,8 +585,8 @@ class WorkspaceManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\User $user
-     * @param string[] $roleNames
-     * @param integer[] $restrictionIds
+     * @param string[]                          $roleNames
+     * @param integer[]                         $restrictionIds
      *
      * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[]
      */
@@ -603,8 +603,8 @@ class WorkspaceManager
      * Returns an array containing
      *
      * @param \Claroline\CoreBundle\Entity\User $user
-     * @param array $roles
-     * @param integer $max
+     * @param array                             $roles
+     * @param integer                           $max
      *
      * @return array
      */
@@ -674,7 +674,7 @@ class WorkspaceManager
     }
 
     /**
-     * @param string $search
+     * @param string  $search
      * @param integer $page
      *
      * @return \PagerFanta\PagerFanta
@@ -688,7 +688,7 @@ class WorkspaceManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Role[] $roles
-     * @param integer $page
+     * @param integer                             $page
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -702,7 +702,7 @@ class WorkspaceManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param \Claroline\CoreBundle\Entity\Role[] $roles
+     * @param \Claroline\CoreBundle\Entity\Role[]                      $roles
      *
      * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[]
      */
@@ -738,7 +738,7 @@ class WorkspaceManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User                        $user
      *
      * @return \Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite
      */
