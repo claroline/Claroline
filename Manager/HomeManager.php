@@ -465,10 +465,6 @@ class HomeManager
      */
     public function isValidUrl($url)
     {
-        if (filter_var($url, FILTER_VALIDATE_URL)) {
-            return true;
-        }
-
-        return false;
+        return (filter_var($url, FILTER_VALIDATE_URL) !== false);
     }
 }
