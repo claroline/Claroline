@@ -12,14 +12,15 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Claroline\CoreBundle\Library\PluginBundle;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Checker used to validate the routing of a plugin.
+ *
+ * @todo Remove or rewrite this checker (multiple routing formats, prefix checking, etc.)
  *
  * @DI\Service("claroline.plugin.routing_checker")
  */
@@ -34,28 +35,25 @@ class RoutingChecker implements CheckerInterface
 
     private $router;
     private $yamlParser;
-    private $mainPluginRoutingFile;
     private $plugin;
     private $pluginFqcn;
     private $errors;
 
     /**
+     * @DI\InjectParams({
+     *     "router"     = @DI\Inject("router"),
+     *     "yamlParser" = @DI\Inject("claroline.symfony_yaml")
+     * })
+     *
      * Constructor.
      *
      * @param Router $router
-     * @param Yaml   $yamlParser
-     *
-     * @DI\InjectParams({
-     *     "router"                 = @DI\Inject("router"),
-     *     "yamlParser"             = @DI\Inject("claroline.symfony_yaml"),
-     *     "mainPluginRoutingFile"  = @DI\Inject("%kernel.root_dir%/config/local/plugin/routing.yml")
-     * })
+     * @param \Symfony\Component\Yaml\Parser $yamlParser
      */
-    public function __construct(Router $router, Yaml $yamlParser, $mainPluginRoutingFile)
+    public function __construct(Router $router, Parser $yamlParser)
     {
         $this->router = $router;
         $this->yamlParser = $yamlParser;
-        $this->mainPluginRoutingFile = $mainPluginRoutingFile;
     }
 
     /**

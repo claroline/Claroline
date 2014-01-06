@@ -188,7 +188,7 @@ class RolesControllerTest extends MockeryTestCase
 
         $this->security
             ->shouldReceive('isGranted')
-            ->with('parameters', $workspace)
+            ->with('users', $workspace)
             ->once()
             ->andReturn(true);
         $this->formFactory
@@ -255,13 +255,18 @@ class RolesControllerTest extends MockeryTestCase
      * @dataProvider userListProvider
      * @todo test the $call method parameters
      */
-    public function testUsersListAction($isUnregistered, $search, $call)
+    public function testUsersListAction($search, $call)
     {
         $wsRole = new \Claroline\CoreBundle\Entity\Role;
-        $role = new \Claroline\CoreBundle\Entity\Role;
         $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+
+        $this->security
+            ->shouldReceive('isGranted')
+            ->with('users', $workspace)
+            ->once()
+            ->andReturn(true);
+
         $wsRoles = array($wsRole);
-        $roles = array($role);
         $page = 1;
         $this->roleManager->shouldReceive('getRolesByWorkspace')->once()->with($workspace)->andReturn($wsRoles);
         $this->userManager->shouldReceive($call)->once()->andReturn('pager');
@@ -270,12 +275,12 @@ class RolesControllerTest extends MockeryTestCase
             'pager' => 'pager',
             'search' => $search,
             'wsRoles' => $wsRoles,
-            'roles' => $roles,
-            'withUnregistered' => $isUnregistered
+            'max' => 50,
+            'order' => 'id'
         );
         $this->assertEquals(
             $expected,
-            $this->controller->usersListAction($workspace, $page, $search, $isUnregistered, $roles)
+            $this->controller->usersListAction($workspace, $page, $search, 50, 'id')
         );
     }
 
@@ -283,7 +288,7 @@ class RolesControllerTest extends MockeryTestCase
      * @dataProvider groupListProvider
      * @todo test the $call method parameters
      */
-    public function testRegisteredGroupsListAction($isUnregistered, $search, $call)
+    public function testRegisteredGroupsListAction($search, $call)
     {
         $wsRole = new \Claroline\CoreBundle\Entity\Role;
         $role = new \Claroline\CoreBundle\Entity\Role;
@@ -291,6 +296,13 @@ class RolesControllerTest extends MockeryTestCase
         $wsRoles = array($wsRole);
         $roles = array($role);
         $page = 1;
+
+        $this->security
+            ->shouldReceive('isGranted')
+            ->with('users', $workspace)
+            ->once()
+            ->andReturn(true);
+
         $this->roleManager->shouldReceive('getRolesByWorkspace')->once()->with($workspace)->andReturn($wsRoles);
         $this->groupManager->shouldReceive($call)->once()->andReturn('pager');
         $expected = array(
@@ -298,37 +310,33 @@ class RolesControllerTest extends MockeryTestCase
             'pager' => 'pager',
             'search' => $search,
             'wsRoles' => $wsRoles,
-            'roles' => $roles,
-            'withUnregistered' => $isUnregistered
+            'max' => 50,
+            'order' => 'id'
         );
         $this->assertEquals(
             $expected,
-            $this->controller->groupsListAction($workspace, $page, $search, $isUnregistered, $roles)
+            $this->controller->groupsListAction($workspace, $page, $search, 50, 'id')
         );
     }
 
     private function checkAccess(\Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace)
     {
-        $this->security->shouldReceive('isGranted')->with('parameters', $workspace)->once()->andReturn(true);
+        $this->security->shouldReceive('isGranted')->with('users', $workspace)->once()->andReturn(true);
     }
 
     public function userListProvider()
     {
         return array(
-            array('isUnregistered' => '1', 'search' => '', 'call' => 'getOutsidersByWorkspaceRoles'),
-            array('isUnregistered' => '1', 'search' => 'zorglub', 'call' => 'getOutsidersByWorkspaceRolesAndName'),
-            array('isUnregistered' => '0', 'search' => '', 'call' => 'getUsersByRoles'),
-            array('isUnregistered' => '0', 'search' => 'zorglub', 'call' => 'getUsersByRolesAndName')
+            array('search' => '', 'call' => 'getByRolesIncludingGroups'),
+            array('search' => 'zorglub', 'call' => 'getByRolesAndNameIncludingGroups')
         );
     }
 
     public function groupListProvider()
     {
         return array(
-            array('isUnregistered' => '1', 'search' => '', 'call' => 'getOutsidersByWorkspaceRoles'),
-            array('isUnregistered' => '1', 'search' => 'zorglub', 'call' => 'getOutsidersByWorkspaceRolesAndName'),
-            array('isUnregistered' => '0', 'search' => '', 'call' => 'getGroupsByRoles'),
-            array('isUnregistered' => '0', 'search' => 'zorglub', 'call' => 'getGroupsByRolesAndName')
+            array('search' => '', 'call' => 'getGroupsByRoles'),
+            array('search' => 'zorglub', 'call' => 'getGroupsByRolesAndName')
         );
     }
 }

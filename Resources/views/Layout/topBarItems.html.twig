@@ -39,7 +39,7 @@
     {% block rightSide %}
         {% import _self as topbar %}
         {% if isInAWorkspace %}
-            {% set workspacesName = currentWorkspace.getName() ~ ' (' ~ currentWorkspace.getCode() ~ ')' %}
+            {% set workspacesName = currentWorkspace.getName() | length > 16 ? currentWorkspace.getName() | slice(0, 16) ~ '...' : currentWorkspace.getName() %}
         {% else %}
             {% set workspacesName =  'workspaces' %}
         {% endif %}
@@ -57,7 +57,8 @@
 
     {% block logged %}
         {% import _self as topbar %}
-        {{ topbar.item(username, null, 'user', '/profile', null, block('dropdownLogged')) }}
+        {% set user = username | length > 16 ? username | slice(0, 16) ~ '...' : username %}
+        {{ topbar.item(user, null, 'user', '/profile', null, block('dropdownLogged')) }}
     {% endblock logged %}
 
     {% block dropdownWorkspace %}
@@ -104,7 +105,7 @@
         {{ topbar.item('my_agenda', path('claro_desktop_open_tool', {'toolName': 'agenda' }), 'calendar') }}
         {{ topbar.item('my_resources', path('claro_desktop_open_tool', {'toolName': 'resource_manager'}) ~ '#resources/0', 'folder-close') }}
         {{ topbar.item('my_badges', path('claro_profile_view_badges'), 'trophy') }}
-        {{ topbar.item('my_applications', path('claro_profile_applications'), 'windows') }}
+        {{ topbar.item('my_applications', path('claro_profile_applications'), 'puzzle-piece') }}
         <li class="divider"></li>
         {% if isImpersonated %}
             {% set logoutPath = path('claro_desktop_open', {'_switch': '_exit'}) %}

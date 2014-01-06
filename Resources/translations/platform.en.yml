@@ -1,6 +1,7 @@
 'Add a logo': 'Add a logo'
 'Audience/user visits': 'Audience/user visits'
 'Choose a logo': 'Choose a logo'
+'Select a Language': 'Select a Language'
 404: 'Page Not found'
 Action List: 'Action List'
 Actions per day: 'Actions per day'
@@ -8,6 +9,7 @@ Choose visible actions in the widget: 'Choose visible actions in the widget'
 Choose workspaces displayed in the widget: 'Choose workspaces displayed in the widget'
 Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the graph to zoom, double-click to cancel'
 Filter actions: 'Filter actions'
+Language: 'Language'
 Last action: '{1} Last action|[1,Inf] Last %logAmount% actions'
 None: 'None'
 Overview of all recent activities in %workspaceName% : 'Overview of all recent activities in %workspaceName%'
@@ -42,7 +44,6 @@ add_widget_to_home_tab: 'Add widget to Home tab'
 add_workspace: 'Add workspace'
 admin: Administrator
 admin_analytics: 'Platform analytics'
-admin_third_party_application: 'Third-party applications'
 admin_form_firstName : 'first name'
 admin_form_lastName : 'Lastname'
 admin_form_mail : 'Email adress'
@@ -51,6 +52,7 @@ admin_form_plainPassword_second : 'Repeat your password'
 admin_form_username : 'Username'
 admin_home_tabs_configuration: 'Home tabs configuration'
 admin_logs: 'Platform logs'
+admin_third_party_application: 'Third-party applications'
 admin_workspace_tag_form_name: Name
 administration: Administration
 administrative_code: 'Administrative code'
@@ -72,8 +74,8 @@ at_least_one_category_has_to_be_selected: 'At least one category has to be selec
 available_widgets: 'Available widgets'
 available_workspaces: 'Available workspaces'
 back: 'Back'
-badges_management: 'Badges management'
 bad_request: The request is incorrect. If you arrived at this page via an internal link, please report the problem to the platform administrator.
+badges_management: 'Badges management'
 by: by
 canCopy: 'Right to copy'
 canCreate: 'Create %type%'
@@ -93,6 +95,7 @@ category_root: 'Root categories'
 category_structure: 'Category structure'
 change_view : 'Change the display'
 choose_resource_form_type: 'Resource type'
+classify_my_workspaces: 'Classify my workspaces'
 classify_workspaces: 'Classify workspaces'
 close: Close
 code: Code
@@ -169,6 +172,7 @@ directory_form_shareType: Sharable
 display: 'Display'
 display_options: 'Display options'
 done_on: 'done on'
+down: 'Down'
 download: Download
 downloads: Downloads
 drag_file_here: Drag the file here
@@ -192,7 +196,7 @@ file_form_shareType_0: Yes
 file_form_shareType_1: false
 files: Files
 filter: Filter
-find_workspaces: 'Find workspaces'
+find_workspaces: 'All workspaces'
 firstName: 'First name'
 firstName: First name
 first_name: 'First name'
@@ -247,9 +251,9 @@ lastName: Last name
 last_30_days_activity: 'Activity over the last 30 days'
 last_name: 'Last name'
 left: 'Left'
+line_number: 'Line %line%:'
 line_per_page: 'Row per page'
 link: Link
-line_number: 'Line %line%:'
 link_outdated : 'link is no more valid'
 list_groups: 'List groups'
 list_users: 'List users'
@@ -303,8 +307,8 @@ month.September: "September"
 move: Move
 my_account: 'My account'
 my_agenda: 'My agenda'
+my_applications: "My applications"
 my_badges: 'My badges'
-my_applications: "Mes applications"
 my_contacts: 'My contacts'
 my_favourite_workspaces: 'My favourite workspaces'
 my_notes: 'My notes'
@@ -357,7 +361,7 @@ platform_parameters: 'Platform parameters'
 platform_parameters_form_defaultRole: 'Default role'
 platform_parameters_form_footer: 'Footer'
 platform_parameters_form_icon: 'Platform Icon'
-platform_parameters_form_localLanguage: Langue
+platform_parameters_form_localLanguage: 'Default Language'
 platform_parameters_form_name: 'Name of the platform'
 platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_theme: Theme
@@ -502,8 +506,8 @@ text_form_content: Content
 text_form_name: Name
 text_form_shareType: Sharable
 text_form_text: Text
-the_workspace: Workspace
 the_following_users_were_not_imported: The following users were not imported.
+the_workspace: Workspace
 this_page_requires_authentication: 'This page requires authentication. Please login.'
 to: To
 to_message: To
@@ -537,6 +541,7 @@ unregistered_groups: 'Unregistered groups'
 unregistered_users: 'Unregistered users'
 unwritable_file_exception: "You don't have the permission to write in the file %path%."
 unwritable_file_exception: 'The file %path% is not writable.'
+up: 'Up'
 upload: 'upload'
 upload_denied: "Permission denied"
 upload_fail: 'Upload failed'

@@ -58,14 +58,14 @@ abstract class AbstractWorkspace
     protected $code;
 
     /**
-     * @ORM\Column(name="is_public", type="boolean", nullable=true)
+     * @ORM\Column(name="is_public", type="boolean")
      */
     protected $isPublic = true;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean")
      */
-    protected $displayable;
+    protected $displayable = false;
 
     /**
      * @ORM\OneToMany(
@@ -124,14 +124,14 @@ abstract class AbstractWorkspace
     protected $guid;
 
     /**
-     * @ORM\Column(name="self_registration", type="boolean", nullable=true)
+     * @ORM\Column(name="self_registration", type="boolean")
      */
-    protected $selfRegistration;
+    protected $selfRegistration = false;
 
     /**
-     * @ORM\Column(name="self_unregistration", type="boolean", nullable=true)
+     * @ORM\Column(name="self_unregistration", type="boolean")
      */
-    protected $selfUnregistration;
+    protected $selfUnregistration = false;
 
     public function __construct()
     {

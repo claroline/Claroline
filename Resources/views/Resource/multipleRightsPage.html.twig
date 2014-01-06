@@ -104,18 +104,20 @@
                     </tbody>
                 </table>
             </div>
-            <div>
+
             {% if isDir %}
                 <input name="isRecursive" type="checkbox"/> {{ 'recursive_dir_action'|trans({}, 'platform')}}
             {% endif %}
-            <input id="submit-default-rights-form-button" type="submit" value="{{ 'ok'|trans({}, 'platform') }}" class="btn btn-primary pull-right" />
-            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
+                <button id="submit-default-rights-form-button" type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
             </div>
         </form>
     </div>
     <div class="tab-pane" id="advanced">
-        <input type="text" id="role-search-text" value={{search}}/>
-        <input type="submit" value="{{ 'search'|trans({}, 'platform') }}" class="btn btn-default search-role-btn">
+        <input type="text" id="role-search-text" value="{{ search }}"/>
+        <input type="submit" value="{{ 'search'|trans({}, 'platform') }}" class="btn btn-primary search-role-btn">
         <div id="advanced-pane-content">
             <div id="role-list"></div>
             <div id="form-right-wrapper"></div>
@@ -153,7 +155,10 @@
                                         <div class="accordion-inner">
                                             <ul>
                                                 {% for role in workspaceRoles[workspace.getCode()] %}
-                                                    <a class="workspace-role-item" href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">{{ role.getTranslationKey() }}</a><br/>
+                                                    <a class="workspace-role-item"
+                                                       href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
+                                                        {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                                    </a><br/>
                                                 {% endfor %}
                                             </ul>
                                         </div>

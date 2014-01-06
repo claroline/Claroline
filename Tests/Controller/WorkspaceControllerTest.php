@@ -11,14 +11,13 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\CoreBundle\Event\Log\LogRoleSubscribeEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Mockery as m;
 
 class WorkspaceControllerTest extends MockeryTestCase
 {
@@ -35,6 +34,9 @@ class WorkspaceControllerTest extends MockeryTestCase
     private $utils;
     private $formFactory;
     private $tokenUpdater;
+    private $widgetManager;
+    private $request;
+    private $templateDir;
 
     protected function setUp()
     {
@@ -52,10 +54,15 @@ class WorkspaceControllerTest extends MockeryTestCase
         $this->utils = $this->mock('Claroline\CoreBundle\Library\Security\Utilities');
         $this->formFactory = $this->mock('Claroline\CoreBundle\Form\Factory\FormFactory');
         $this->tokenUpdater = $this->mock('Claroline\CoreBundle\Library\Security\TokenUpdater');
+        $this->widgetManager = $this->mock('Claroline\CoreBundle\Manager\WidgetManager');
+        $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
+        $this->templateDir = 'path/to/templates';
     }
 
     public function testListAction()
     {
+        $user = new User();
+
         $datas = array(
             'workspaces' => 'workspaces',
             'tags' => 'tags',
@@ -68,7 +75,7 @@ class WorkspaceControllerTest extends MockeryTestCase
 
         $this->tagManager
             ->shouldReceive('getDatasForWorkspaceList')
-            ->with(false)
+            ->with(false, $user)
             ->once()
             ->andReturn($datas);
 
@@ -79,17 +86,20 @@ class WorkspaceControllerTest extends MockeryTestCase
                 'tagWorkspaces' => $datas['tagWorkspaces'],
                 'hierarchy' => $datas['hierarchy'],
                 'rootTags' => $datas['rootTags'],
-                'displayable' => $datas['displayable']
+                'displayable' => $datas['displayable'],
+                'workspaceRoles' => $datas['workspaceRoles']
             ),
-            $this->getController()->listAction()
+            $this->getController()->listAction($user)
         );
     }
 
     public function testListWorkspacesByUserAction()
     {
         $controller = $this->getController(array('assertIsGranted'));
+        $workspace = new \Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace();
+
         $datas = array(
-            'workspaces' => 'workspaces',
+            'workspaces' => array($workspace),
             'tags' => 'tags',
             'tagWorkspaces' => 'tagWorkspaces',
             'hierarchy' => 'hierarchy',
@@ -99,6 +109,7 @@ class WorkspaceControllerTest extends MockeryTestCase
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $user = new User();
         $roles = array('ROLE_A', 'ROLE_B');
+        $favourites = array();
 
         $this->security
             ->shouldReceive('isGranted')
@@ -113,16 +124,19 @@ class WorkspaceControllerTest extends MockeryTestCase
             ->with($user, $roles)
             ->once()
             ->andReturn($datas);
+        $this->workspaceManager->shouldReceive('getFavouriteWorkspacesByUser')->once()->with($user)
+            ->andReturn($favourites);
 
         $this->assertEquals(
             array(
                 'user' => $user,
-                'workspaces' => 'workspaces',
+                'workspaces' => array($workspace),
                 'tags' => 'tags',
                 'tagWorkspaces' => 'tagWorkspaces',
                 'hierarchy' => 'hierarchy',
                 'rootTags' => 'rootTags',
-                'displayable' => 'displayable'
+                'displayable' => 'displayable',
+                'favourites' => array()
             ),
             $controller->listWorkspacesByUserAction()
         );
@@ -152,7 +166,6 @@ class WorkspaceControllerTest extends MockeryTestCase
 
         $this->assertEquals(
             array(
-                'user' => $user,
                 'workspaces' => $datas['workspaces'],
                 'tags' => $datas['tags'],
                 'tagWorkspaces' => $datas['tagWorkspaces'],
@@ -186,7 +199,26 @@ class WorkspaceControllerTest extends MockeryTestCase
 
     public function testCreateAction()
     {
-        $this->markTestSkipped('Cannot test because of some method calls');
+        $this->markTestSkipped();
+        $controller = $this->getController(array('assertIsGranted'));
+        $form = $this->mock('Symfony\Component\Form\Form');
+
+        $this->security
+            ->shouldReceive('isGranted')
+            ->with('ROLE_WS_CREATOR', null)
+            ->once()
+            ->andReturn(true);
+        $this->formFactory
+            ->shouldReceive('create')
+            ->with(FormFactory::TYPE_WORKSPACE)
+            ->once()
+            ->andReturn($form);
+        $form->shouldReceive('handleRequest')->once()->with($this->request);
+        $form->shouldReceive('isValid')->once()->andReturn(true);
+
+
+        $controller->createAction();
+
     }
 
     public function testDeleteAction()
@@ -312,14 +344,17 @@ class WorkspaceControllerTest extends MockeryTestCase
                 array($workspace, $toolName)
             )
             ->once();
+        $this->eventDispatcher
+            ->shouldReceive('dispatch')
+            ->with(
+                'log',
+                'Log\LogWorkspaceEnter',
+                array($workspace)
+            )
+            ->once();
         $event->shouldReceive('getContent')->once()->andReturn('content');
 
         $this->assertEquals('content', $controller->openToolAction($toolName, $workspace)->getContent());
-    }
-
-    public function testWidgetsAction()
-    {
-        $this->markTestSkipped('Maybe after refactoring of widget manager');
     }
 
     public function testOpenActionAdmin()
@@ -697,7 +732,10 @@ class WorkspaceControllerTest extends MockeryTestCase
                 $this->router,
                 $this->utils,
                 $this->formFactory,
-                $this->tokenUpdater
+                $this->tokenUpdater,
+                $this->widgetManager,
+                $this->request,
+                $this->templateDir
             );
         }
 
@@ -725,7 +763,10 @@ class WorkspaceControllerTest extends MockeryTestCase
                 $this->router,
                 $this->utils,
                 $this->formFactory,
-                $this->tokenUpdater
+                $this->tokenUpdater,
+                $this->widgetManager,
+                $this->request,
+                $this->templateDir
             )
         );
     }

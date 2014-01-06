@@ -193,9 +193,27 @@ class DesktopAgendaController extends Controller
     public function tasksAction()
     {
         $usr = $this->get('security.context')->getToken()->getUser();
-        $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, 1);
+        $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
 
         return  array('listEvents' => $listEvents );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/widget/{order}",
+     *     name="claro_desktop_agenda_widget"
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Widget:agenda_widget.html.twig")
+     * @EXT\Method({"GET"})
+     */
+    public function widgetAction($order = null)
+    {
+        $em = $this-> get('doctrine.orm.entity_manager');
+        $usr = $this->get('security.context')->getToken()->getUser();
+        $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, false);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr, 5, $order);
+
+        return array('listEvents' => array_merge($listEvents,$listEventsDesktop));
     }
 
     private function convertEventoArray($listEvents)

@@ -19,6 +19,8 @@ use JMS\DiExtraBundle\Annotation as DI;
  * perform checks, access some of its methods, etc.) while it is not yet
  * known by the application kernel.
  *
+ * @todo Remove to this class or move it to the installation bundle
+ *
  * @DI\Service("claroline.plugin.loader")
  */
 class Loader

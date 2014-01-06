@@ -169,9 +169,9 @@ class ToolListener
         $em = $this->container->get('doctrine.orm.entity_manager');
         $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, 1);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, true);
         $usr = $this->container->get('security.context')->getToken()->getUser();
-        $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr);
+        $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr ,0 );
         $owner = array();
         foreach ($owners as $o) {
             $temp = $o->getUser()->getUserName();
@@ -228,8 +228,8 @@ class ToolListener
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
         $em = $this->container-> get('doctrine.orm.entity_manager');
         $usr = $this->container->get('security.context')->getToken()->getUser();
-        $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, 1);
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
+        $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, false);
         $cours = array();
         $translator = $this->container->get('translator');
 
@@ -247,7 +247,7 @@ class ToolListener
             'ClarolineCoreBundle:Tool/desktop/agenda:agenda.html.twig',
             array(
                 'form' => $form->createView(),
-                'listEvents' => $listEvents,
+                'listEvents' => $listEventsDesktop,
                 'cours' => array_unique($cours)
             )
         );

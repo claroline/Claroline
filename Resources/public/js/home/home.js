@@ -68,22 +68,6 @@
 
     };
 
-    /**
-     * This function resize the height of a textarea relative of their content.
-     *
-     * @param [Textarea Obj] Obj The textarea to resize.
-     */
-    home.resize = function (obj)
-    {
-        var lineheight = $(obj).css('line-height').substr(0, $(obj).css('line-height').indexOf('px'));
-        var lines = $(obj).val().split('\n').length;
-
-        lineheight = parseInt(lineheight, 10) + 4;
-
-        $(obj).css('height', ((lines + 1) * lineheight) + 'px');
-    };
-
-
     home.findUrls = function (text)
     {
         var source = (text || '').toString();
@@ -162,7 +146,6 @@
 
                     title.value = '';
                     text.value = '';
-                    home.resize(text);
                 } else if (data === 'true') {
 
                     contentPath = 'content/' + id + '/' + type;

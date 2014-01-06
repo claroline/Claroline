@@ -184,16 +184,23 @@
                     if ($('.node-thumbnail').get(0) !== undefined) {
                         var zoom = event.currentTarget.getAttribute('id');
                         var currentZoom = $('.node-thumbnail').get(0).className.match(/\bzoom\d+/g);
+                        this.parameters.resourceZoom = zoom;
 
-                        $('.dropdown-menu.zoom li').removeClass('active');
-                        $(event.currentTarget).parent().addClass('active');
-                        $('.node-thumbnail').each(function () {
-                            for (var i in currentZoom) {
-                                if (currentZoom.hasOwnProperty(i)) {
-                                    $(this).removeClass(currentZoom[i]);
-                                }
+                        $.ajax({
+                            url: Routing.generate('claro_resource_change_zoom', {'zoom': zoom}),
+                            type: 'GET',
+                            success: function () {
+                                $('.dropdown-menu.zoom li').removeClass('active');
+                                $(event.currentTarget).parent().addClass('active');
+                                $('.node-thumbnail').each(function () {
+                                    for (var i in currentZoom) {
+                                        if (currentZoom.hasOwnProperty(i)) {
+                                            $(this).removeClass(currentZoom[i]);
+                                        }
+                                    }
+                                    $(this).addClass(zoom);
+                                });
                             }
-                            $(this).addClass(zoom);
                         });
                     }
                 },
@@ -387,7 +394,7 @@
                 this.setButtonEnabledState(this.$('a.delete'), false);
                 this.setButtonEnabledState(this.$('a.download'), false);
             },
-            render: function (directory, creatableTypes, isSearchMode, searchParameters) {
+            render: function (directory, creatableTypes, isSearchMode, searchParameters, resourceZoom) {
                 this.currentDirectory = directory;
 
                 if (isSearchMode && !this.isSearchMode) {
@@ -401,11 +408,13 @@
                     this.filters.currentDirectory = directory;
                 }
 
+
                 var parameters = _.extend({}, this.parameters);
                 parameters.searchedName = searchParameters ? searchParameters.name : null;
                 parameters.creatableTypes = creatableTypes;
                 parameters.isPasteAllowed = this.isReadyToPaste && !this.isSearchMode && directory.id !== '0';
                 parameters.isSearchMode = this.isSearchMode;
+                parameters.resourceZoom = this.parameters.resourceZoom;
                 parameters.isCreateAllowed = parameters.isAddAllowed = directory.id !== 0 &&
                     _.size(creatableTypes) > 0 &&
                     (this.parameters.isPickerMode || !this.isSearchMode);
@@ -444,7 +453,7 @@
             }
         }),
         Thumbnail: Backbone.View.extend({
-            className: 'node-thumbnail node zoom100 ui-state-default',
+            className: 'node-thumbnail node ui-state-default',
             tagName: 'li',
             events: {
                 'click .node-menu-action': function (event) {
@@ -472,6 +481,7 @@
             },
             render: function (node, isSelectionAllowed, hasMenu) {
                 this.el.id = node.id;
+                $(this.el).addClass(this.parameters.resourceZoom);
                 node.displayableName = Claroline.Utilities.formatText(node.name, 20, 2);
                 this.el.innerHTML = Twig.render(ResourceManagerThumbnail, {
                     'node': node,
@@ -769,10 +779,11 @@
             'create': function (event) {
                 this.create(event.action, event.data, event.nodeId);
             },
-            'delete': function () {
+            'delete': function (event) {
                 var ids = [];
-                $('.node-thumbnail input[type=checkbox]:checked').each(function () {
-                    ids.push($($(this).parents('.node-thumbnail').get(0)).attr('id'));
+
+                $(event.ids).each(function (index) {
+                    ids.push(event.ids[index]);
                 });
 
                 if (ids.length >= 1) {
@@ -1230,6 +1241,7 @@
         parameters.appPath = parameters.appPath || '';
         parameters.webPath = parameters.webPath || '';
         parameters.filterState = parameters.filterState || 'none';
+        parameters.resourceZoom = parameters.resourceZoom || 'zoom100';
         manager.Controller.initialize(parameters);
     };
     /**

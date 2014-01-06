@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Library\Installation\Settings;
 
 class SettingChecker
 {
-    const REQUIRED_PHP_VERSION = '5.3.3';
+    const REQUIRED_PHP_VERSION = '5.4.1';
 
     private $categories = array();
 
@@ -61,21 +61,6 @@ class SettingChecker
             array('version' => self::REQUIRED_PHP_VERSION, 'installed_version' => $phpVersion),
             version_compare($phpVersion, self::REQUIRED_PHP_VERSION, '>=')
         );
-        $category->addRequirement(
-            'PHP version 5.3.16 has known bugs which will prevent the application from working properly',
-            array(),
-            version_compare($phpVersion, '5.3.16', '!=')
-        );
-        $category->addRecommendation(
-            'PHP versions prior to 5.3.8 have known bugs which may prevent the application from working properly',
-            array(),
-            version_compare($phpVersion, '5.3.8', '>=')
-        );
-        $category->addRecommendation(
-            'PHP version 5.4.0 has known bugs which may prevent the application from working properly',
-            array(),
-            version_compare($phpVersion, '5.4.0', '!=')
-        );
 
         $this->categories[] = $category;
     }
@@ -113,8 +98,8 @@ class SettingChecker
 
         $category->addRecommendation(
             'Parameter %parameter% should be equal or greater than %value% in your php.ini',
-            array('parameter' => 'memory_limit', 'value' => '128M'),
-            $this->isGreaterOrEqual(ini_get('memory_limit'), '128M')
+            array('parameter' => 'memory_limit', 'value' => '256M'),
+            $this->isGreaterOrEqual(ini_get('memory_limit'), '256M')
         );
 
         $recommendedSettings = array(

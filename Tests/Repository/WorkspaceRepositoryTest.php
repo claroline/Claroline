@@ -39,9 +39,9 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
         self::createWorkspaceTool(self::get('tool_1'), self::get('ws_1'), array(self::get('ROLE_ANONYMOUS')), 1);
         self::createWorkspaceTool(self::get('tool_2'), self::get('ws_2'), array(self::get('ROLE_2')), 1);
         self::createUser('john', array(self::get('ROLE_1'), self::get('ROLE_2')), self::get('ws_1'));
-        self::createLog(self::get('john'), 'ws_tool_read', self::get('ws_1'));
+        self::createLog(self::get('john'), 'workspace-tool-read', self::get('ws_1'));
         self::sleep(1); // dates involved
-        self::createLog(self::get('john'), 'ws_tool_read', self::get('ws_2'));
+        self::createLog(self::get('john'), 'workspace-tool-read', self::get('ws_2'));
         self::createResourceType('t_dir');
         self::createDirectory('dir_1', self::get('t_dir'), self::get('john'), self::get('ws_2'));
     }
@@ -143,7 +143,7 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
 
     public function testFindWorkspacesWithSelfRegistration()
     {
-        $workspaces = self::$repo->findWorkspacesWithSelfRegistration();
+        $workspaces = self::$repo->findWorkspacesWithSelfRegistration(self::get('john'));
         $this->assertEquals(2, count($workspaces));
         $this->assertEquals(self::get('ws_3'), $workspaces[0]);
         $this->assertEquals(self::get('ws_5'), $workspaces[1]);

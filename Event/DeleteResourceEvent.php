@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 class DeleteResourceEvent extends Event implements MandatoryEventInterface
 {
     private $resource;
+    private $files = array();
 
     /**
      * Constructor.
@@ -40,5 +41,20 @@ class DeleteResourceEvent extends Event implements MandatoryEventInterface
     public function getResource()
     {
         return $this->resource;
+    }
+
+    /**
+     * Set an array of files wich are going to be removed by the kernel.
+     *
+     * @param array $files
+     */
+    public function setFiles(array $files)
+    {
+        $this->files = $files;
+    }
+
+    public function getFiles()
+    {
+        return $this->files;
     }
 }

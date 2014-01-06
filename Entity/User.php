@@ -83,6 +83,13 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     /**
      * @var string
      *
+     * @ORM\Column(nullable=true)
+     */
+    protected $locale;
+
+    /**
+     * @var string
+     *
      * @ORM\Column()
      */
     protected $salt;
@@ -303,6 +310,15 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
     /**
      * @return string
      */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+
+    /**
+     * @return string
+     */
     public function getSalt()
     {
         return $this->salt;
@@ -359,6 +375,19 @@ class User extends AbstractRoleSubject implements Serializable, UserInterface, E
 
         return $this;
     }
+
+    /**
+     * @param string $password
+     *
+     * @return User
+     */
+    public function setlocale($locale)
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
+
 
     /**
      * @param string $plainPassword

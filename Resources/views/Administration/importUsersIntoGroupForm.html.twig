@@ -70,6 +70,7 @@
                     <li>{{ 'phone'|trans({}, 'platform') }}</li>
                 </ul>
             </div>
+            {% form_theme form 'ClarolineCoreBundle::form_theme_error_list.html.twig' %}
             {{ form_widget(form) }}
         </div>
         <div class="panel-footer">

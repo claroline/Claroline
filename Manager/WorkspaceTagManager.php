@@ -400,9 +400,9 @@ class WorkspaceTagManager
         return $this->tagHierarchyRepo->findBy(array('tag' => $tag));
     }
 
-    public function getDatasForWorkspaceList($withRoles = true)
+    public function getDatasForWorkspaceList($withRoles = true, User $currentUser = null)
     {
-        $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
+        $workspaces = $this->workspaceRepo->findDisplayableWorkspaces($currentUser);
         $tags = $this->getNonEmptyAdminTags();
         $relTagWorkspace = $this->getTagRelationsByAdmin();
         $tagWorkspaces = array();
@@ -545,9 +545,9 @@ class WorkspaceTagManager
      * Returns all datas necessary to display the list of all workspaces visible for all users
      * that are open for self-registration.
      */
-    public function getDatasForSelfRegistrationWorkspaceList()
+    public function getDatasForSelfRegistrationWorkspaceList(User $user)
     {
-        $workspaces = $this->workspaceRepo->findWorkspacesWithSelfRegistration();
+        $workspaces = $this->workspaceRepo->findWorkspacesWithSelfRegistration($user);
         $tags = $this->getNonEmptyAdminTags();
 
         try {
@@ -601,15 +601,15 @@ class WorkspaceTagManager
             $tagWorkspacePager[$key] = $this->pagerFactory->createPagerFromArray($content, 1);
         }
 
-        $datas = array();
-        $datas['workspaces'] = $this->pagerFactory->createPagerFromArray($workspaces, 1);
-        $datas['tags'] = $tags;
-        $datas['tagWorkspaces'] = $tagWorkspacePager;
-        $datas['hierarchy'] = $hierarchy;
-        $datas['rootTags'] = $rootTags;
-        $datas['displayable'] = $displayable;
-
-        return $datas;
+        return array(
+            'user' => $user,
+            'workspaces' => $this->pagerFactory->createPagerFromArray($workspaces, 1),
+            'tags' => $tags,
+            'tagWorkspaces' => $tagWorkspacePager,
+            'hierarchy' => $hierarchy,
+            'rootTags' => $rootTags,
+            'displayable' => $displayable
+        );
     }
 
     /**
@@ -666,9 +666,9 @@ class WorkspaceTagManager
         return $this->pagerFactory->createPagerFromArray($workspaces, $page);
     }
 
-    public function getPagerAllWorkspacesWithSelfReg($page = 1)
+    public function getPagerAllWorkspacesWithSelfReg(User $user, $page = 1)
     {
-        $workspaces = $this->workspaceRepo->findWorkspacesWithSelfRegistration();
+        $workspaces = $this->workspaceRepo->findWorkspacesWithSelfRegistration($user);
 
         return $this->pagerFactory->createPagerFromArray($workspaces, $page);
     }

@@ -20,17 +20,11 @@
 {% endif %}
 
 {% for workspace in workspaces.currentPageResults %}
-    {% set hasRole = has_role_in_workspace(workspace.getId(), app.security.getToken()) %}
     <div class="list-group-item row-workspace row-workspace-id-{{ workspace.getId() }}">
         <i class="icon-book"></i>
         {{ workspace.getName() }}
         <span><small>({{ workspace.getCode() }})</small></span>
 
-        {% if hasRole %}
-        <span class="pull-right label label-success">
-            {{ 'registered'|trans({}, 'platform') }}
-        </span>
-        {% else %}
         <span class="pull-right pointer-hand label label-primary register-user-to-workspace register-button-{{ workspace.getId() }}"
             data-workspace-id="{{ workspace.getId() }}"
             data-workspace-name="{{ workspace.getName() }}"
@@ -38,7 +32,6 @@
             <i class="icon-plus-sign"></i>
             {{ 'register'|trans({}, 'platform') }}
         </span>
-        {% endif %}
     </div>
 {% endfor %}
 

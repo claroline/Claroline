@@ -11,7 +11,9 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-class RecorderTest extends \PHPUnit_Framework_TestCase
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+
+class RecorderTest extends MockeryTestCase
 {
     private $recorder;
     private $plugin;
@@ -19,37 +21,26 @@ class RecorderTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->plugin = $this->getMock('Claroline\CoreBundle\Library\PluginBundle');
-        $this->dbWriter =
-            $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\DatabaseWriter')
-            ->disableOriginalConstructor()
-            ->getMock();
-
+        $this->plugin = $this->mock('Claroline\CoreBundle\Library\PluginBundle');
+        $this->dbWriter = $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\DatabaseWriter');
         $this->recorder = new Recorder($this->dbWriter);
     }
 
     public function testRecorderProperlyDelegatesToWritersOnRegister()
     {
-        $this->dbWriter->expects($this->once())
-            ->method('insert')
-            ->with($this->plugin);
+        $this->dbWriter->shouldReceive('insert')->once()->with($this->plugin, array());
         $this->recorder->register($this->plugin, array());
     }
 
     public function testRecorderProperlyDelegatesToWritersOnUnregister()
     {
-        $this->dbWriter->expects($this->once())
-            ->method('delete')
-            ->with(get_class($this->plugin));
+        $this->dbWriter->shouldReceive('delete')->once()->with(get_class($this->plugin));
         $this->recorder->unregister($this->plugin);
     }
 
     public function testIsRecordedReturnsExpectedValues()
     {
-        $this->dbWriter->expects($this->any())
-            ->method('isSaved')
-            ->with($this->plugin)
-            ->will($this->returnValue(true));
+        $this->dbWriter->shouldReceive('isSaved')->andReturn(true);
         $this->assertTrue($this->recorder->isRegistered($this->plugin));
     }
 }

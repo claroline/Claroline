@@ -196,9 +196,6 @@
             .done(function (data) {
                 $(element).replaceWith(data);
 
-                $('.creator textarea').each(function () {
-                    home.resize(this);
-                });
                 $('.contents').trigger('ContentModified');
             })
             .error(function () {
@@ -245,19 +242,6 @@
         }
     });
 
-    $('.creator textarea').each(function () {
-        home.resize(this);
-    });
-
-    $('body').on('keyup', '.creator textarea', function (event) {
-
-        if (event && event.keyCode) {
-            if (event.keyCode === 13 || event.keyCode === 86 || event.keyCode === 8 || event.keyCode === 46) {
-                home.resize(this);
-            }
-        }
-    });
-
     $('body').on('click', '.creator .addlink', function () {
         var element = $(event.target).parents('.creator').get(0);
 
@@ -280,10 +264,6 @@
         } else {
             $('.form-group', modal).addClass('has-error');
         }
-    });
-
-    $('body').on('click', '.generated .close', function (event) {
-        $(event.target).parent().html('');
     });
 
     $('.contents').sortable({

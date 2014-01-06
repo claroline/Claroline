@@ -1,6 +1,7 @@
 'Add a logo': 'Ajouter un logo'
 'Audience/user visits': 'Audience/Visites utilisateurs'
 'Choose a logo': 'Choisir un logo'
+'Select a Language': 'Sélectionnez une langue'
 404 : 'La page que vous cherchez n''existe pas.'
 Action List: 'Liste des actions'
 Actions per day: 'Nombre d''actions par jour'
@@ -8,6 +9,7 @@ Choose visible actions in the widget: 'Choisissez les actions visibles dans le w
 Choose workspaces displayed in the widget: 'Choisissez les espaces de travail affichés par le widget'
 Draw an area on the graph to zoom, double-click to cancel: 'Tracez une zone sur le graphique pour zoomer; double cliquez pour annuler'
 Filter actions: 'Filtrer les actions'
+Language: 'Langue'
 Last action: '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
 None: 'Aucun'
 Overview of all recent activities in %workspaceName%: 'Aperçu de toutes les activités récentes de %workspaceName%'
@@ -43,7 +45,6 @@ add_widget_to_home_tab: 'Ajouter un widget à l''onglet'
 add_workspace: 'Ajouter un espace d''activités'
 admin: Administrateur
 admin_analytics: 'Statistiques plateforme'
-admin_third_party_application: 'Applications tierces'
 admin_form_firstName : 'Prénom'
 admin_form_lastName : 'Nom de famille'
 admin_form_mail : 'Adresse email'
@@ -52,6 +53,7 @@ admin_form_plainPassword_second : 'Répétez votre mot de passe'
 admin_form_username : 'Nom d''utilisateur'
 admin_home_tabs_configuration: 'Configuration des onglets pour les pages d''accueil'
 admin_logs: 'Suivi plateforme'
+admin_third_party_application: 'Applications tierces'
 admin_workspace_tag_form_name: Nom
 administration: Administration
 administrative_code: 'Code administratif'
@@ -73,8 +75,8 @@ at_least_one_category_has_to_be_selected: 'Au moins une catégorie doit être se
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espaces d''activités disponibles'
 back: 'Retour'
-badges_management: 'Gestion des badges'
 bad_request: La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l''administrateur de la plateforme.
+badges_management: 'Gestion des badges'
 by: par
 canCopy: 'Droit de copier'
 canCreate: 'Creation de %type%'
@@ -94,7 +96,8 @@ category_root: 'Catégories de base'
 category_structure: 'Structure des catégories'
 change_view : 'Changer l''affichage'
 choose_resource_form_type: 'Type de ressource'
-classify_workspaces: 'Classer les espaces d''activités'
+classify_my_workspaces: 'Classer mes espaces'
+classify_workspaces: 'Classer les espaces'
 close: Fermer
 code: Code
 collaborator: Collaborateur
@@ -170,6 +173,7 @@ directory_form_shareType: Redistribution
 display: 'Afficher'
 display_options: 'Options d''affichage'
 done_on: 'effectuée sur'
+down: 'Descendre'
 download: Télécharger
 downloads: 'Nb tchgr.'
 drag_file_here: Déplacez le fichier ici
@@ -246,9 +250,9 @@ lastName: Nom
 last_30_days_activity: 'Activités des 30 derniers jours'
 last_name: Nom
 left: 'Gauche'
+line_number: 'Ligne %line%:'
 line_per_page: 'Lignes par page'
 link: Lien
-line_number: 'Ligne %line%:'
 link_outdated : 'le lien n''est plus valide'
 list_groups: 'Lister les groupes'
 list_users: 'Lister les utilisateurs'
@@ -302,8 +306,8 @@ month.September: "Septembre"
 move: Déplacer
 my_account: 'Mon compte'
 my_agenda: 'Mon agenda'
-my_badges: 'Mes badges'
 my_applications: "Mes applications"
+my_badges: 'Mes badges'
 my_contacts: 'Mes contacts'
 my_favourite_workspaces: 'Mes espaces d''activités favoris'
 my_notes: 'Mes notes'
@@ -355,7 +359,7 @@ platform_parameters: 'Paramètres de la plateforme'
 platform_parameters_form_defaultRole: 'Rôle par défaut'
 platform_parameters_form_footer: 'Pied de page'
 platform_parameters_form_icon: 'Icône de la plateforme'
-platform_parameters_form_localLanguage: Langue
+platform_parameters_form_localLanguage: 'Langue par défaut'
 platform_parameters_form_name: 'Nom de la plateforme'
 platform_parameters_form_selfRegistration: Auto-inscription
 platform_parameters_form_theme: Thème
@@ -383,12 +387,12 @@ profile_form_userName: 'Nom d''utilisateur'
 profile_form_username: 'Nom d''utilisateur'
 properties: Propriétés
 public: Public
-public_workspace_empty: 'Il n''y a aucun espace d''activité publique.'
-public_workspaces: 'Espaces d''activités publiques'
+public_workspace_empty: 'Il n''y a aucun espace d''activités public.'
+public_workspaces: 'Espaces d''activités publics'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 register: Inscription
-register_to_a_public_workspace: 'Inscription à un espace d''activités publique'
-register_to_a_workspace: 'S''inscrire à un espace d''activités'
+register_to_a_public_workspace: 'Inscription à un espace d''activités public'
+register_to_a_workspace: 'M''inscrire à un espace'
 registered: 'Inscrit'
 registered_groups: 'Groupes enregistrés'
 registered_users: 'Utilisateurs enregistrés'
@@ -408,8 +412,8 @@ rename_tool: 'Renommage d''un outil'
 rename_widget_instance: 'Renommage du Widget'
 reset: Réinitialiser
 reset_password: 'Réinitialiser mot de passe'
-reset_password_txt: 'Vous avez demandé la réinitiation de votre mot de passe. Si vous n''êtes pas l''origine de ce message, veuillez l''ignorer.'
 reset_password_message: 'Etes vous sur de vouloir réinitialiser le mot de passe ?'
+reset_password_txt: 'Vous avez demandé la réinitiation de votre mot de passe. Si vous n''êtes pas l''origine de ce message, veuillez l''ignorer.'
 reset_pwd: 'Réinitialisation de votre mot de passe'
 reset_pwd_form_plainPassword_first: 'Nouveau mot de passe'
 reset_pwd_form_plainPassword_second : 'Répétez le mot de passe'
@@ -498,8 +502,8 @@ text_form_content: Contenu
 text_form_name: Nom
 text_form_shareType: Redistribution
 text_form_text: Texte
-the_workspace: 'L''espace d''activités'
 the_following_users_were_not_imported: 'Les utilisateurs suivant n''ont pas pu être importés:'
+the_workspace: 'L''espace d''activités'
 this_page_requires_authentication: 'Cette page requiert une authentification. Veuillez vous identifier.'
 to: Jusque
 to_message: A
@@ -527,11 +531,12 @@ type_s: Type(s)
 unauthorized : 'Vous n''êtes pas autorisé à consulter cette page.'
 unique connections: 'Nb Cnx. uniques'
 unregister: Désinscription
-unregister_from_a_workspace: 'Désinscription d''un espace d''activités'
+unregister_from_a_workspace: 'Me désinscrire d''un espace'
 unregistered: 'Non inscrit'
 unregistered_groups: 'Groupes non enregistrés'
 unregistered_users: 'Utilisateurs non enregistrés'
 unwritable_file_exception: "Vous n'avez pas la permission d'écrire dans le fichier %path%."
+up: 'Monter'
 upload: 'Téléchargement'
 upload_denied: "Vous n'avez pas la permission de créer une ressource à cet endroit"
 upload_fail: 'Echec du téléchargement'
@@ -584,12 +589,12 @@ workspace_delete: 'Supprimer l''espace d''activités'
 workspace_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cet espace d''activités ?'
 workspace_delete_confirm_title: 'Confirmation de suppression'
 workspace_edit_form_code: Code
-workspace_edit_form_displayable: Publique
+workspace_edit_form_displayable: Public
 workspace_edit_form_name: Nom
 workspace_edit_form_selfRegistration: 'Inscription publique'
 workspace_edit_form_selfUnregistration: 'Désinscription publique'
 workspace_form_code: Code
-workspace_form_displayable: Publique
+workspace_form_displayable: Public
 workspace_form_name: Nom
 workspace_form_selfRegistration: 'Inscription publique'
 workspace_form_selfUnregistration: 'Désinscription publique'

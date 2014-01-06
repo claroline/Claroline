@@ -687,59 +687,24 @@ abstract class RepositoryTestCase extends WebTestCase
         self::$om->flush();
     }
 
-    protected static function createAdminWidgetDisplayConfig(
-        $name,
+    protected static function createWidgetInstance(
         Widget $widget,
-        $isVisible,
-        $isLocked,
+        AbstractWorkspace $workspace,
+        $name,
+        $workspace,
+        $widget,
+        $isAdmin,
         $isDesktop
     )
     {
-        $widgetDisplayConfig = new WidgetInstance();
-        $widgetDisplayConfig->setWidget($widget);
-        $widgetDisplayConfig->setVisible($isVisible);
-        $widgetDisplayConfig->setLock($isLocked);
-        $widgetDisplayConfig->setDesktop($isDesktop);
+        $instance = new WidgetInstance();
+        $instance->setIsAdmin($isAdmin);
+        $instance->setIsDesktop($isDesktop);
+        $instance->setName($name);
+        $instance->setWorkspace($workspace);
+        $instance->setWidget($widget);
 
-        self::create($name, $widgetDisplayConfig);
-        self::$om->flush();
-    }
-
-    protected static function createUserWidgetDisplayConfig(
-        WidgetInstance $parent,
-        Widget $widget,
-        User $user,
-        $isVisible
-    )
-    {
-        $widgetDisplayConfig = new WidgetInstance();
-        $widgetDisplayConfig->setParent($parent);
-        $widgetDisplayConfig->setWidget($widget);
-        $widgetDisplayConfig->setUser($user);
-        $widgetDisplayConfig->setVisible($isVisible);
-        $widgetDisplayConfig->setLock(false);
-        $widgetDisplayConfig->setDesktop(true);
-
-        self::$om->persist($widgetDisplayConfig);
-        self::$om->flush();
-    }
-
-    protected static function createWorkspaceWidgetDisplayConfig(
-        WidgetInstance $parent,
-        Widget $widget,
-        AbstractWorkspace $workspace,
-        $isVisible
-    )
-    {
-        $widgetDisplayConfig = new WidgetInstance();
-        $widgetDisplayConfig->setParent($parent);
-        $widgetDisplayConfig->setWidget($widget);
-        $widgetDisplayConfig->setWorkspace($workspace);
-        $widgetDisplayConfig->setVisible($isVisible);
-        $widgetDisplayConfig->setLock(false);
-        $widgetDisplayConfig->setDesktop(false);
-
-        self::$om->persist($widgetDisplayConfig);
+        self::$om->persist($instance);
         self::$om->flush();
     }
 

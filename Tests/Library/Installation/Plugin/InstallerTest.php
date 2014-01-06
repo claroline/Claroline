@@ -11,159 +11,110 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-class InstallerTest extends \PHPUnit_Framework_TestCase
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+
+class InstallerTest extends MockeryTestCase
 {
     private $plugin;
-    private $loader;
     private $validator;
-    private $migrator;
     private $recorder;
-    private $kernel;
+    private $baseInstaller;
     private $installer;
-    private $container;
-    private $mappingLoader;
-    private $fixtureLoader;
 
     protected function setUp()
     {
-        $this->markTestSkipped('This test case must be refactored');
-        $this->plugin = $this->getMock('Claroline\CoreBundle\Library\PluginBundle');
-        $this->loader = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\Loader')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->validator = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\Validator')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->migrator = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\Migrator')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->recorder = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\Plugin\Recorder')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->mappingLoader = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\MappingLoader')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->fixtureLoader = $this->getMockBuilder('Claroline\CoreBundle\Library\Installation\FixtureLoader')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->container = $this->getMockForAbstractClass('Symfony\Component\DependencyInjection\ContainerInterface');
-        $this->kernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\KernelInterface');
-
+        parent::setUp();
+        $this->plugin = $this->mock('Claroline\CoreBundle\Library\PluginBundle');
+        $this->validator = $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\Validator');
+        $this->recorder = $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\Recorder');
+        $this->baseInstaller = $this->mock('Claroline\InstallationBundle\Manager\InstallationManager');
         $this->installer = new Installer(
-            $this->loader,
             $this->validator,
-            $this->migrator,
             $this->recorder,
-            $this->kernel
+            $this->baseInstaller
         );
     }
 
     public function testInstallProperlyDelegatesToHelpers()
     {
-        $this->recorder->expects($this->once())
-            ->method('isRegistered')
-            ->with(get_class($this->plugin))
-            ->will($this->returnValue(false));
-        $this->loader->expects($this->once())
-            ->method('load')
-            ->with(get_class($this->plugin), 'plugin/path')
-            ->will($this->returnValue($this->plugin));
-        $this->validator->expects($this->any())
-            ->method('getPluginConfiguration')
-            ->will($this->returnValue(array()));
-        $this->migrator->expects($this->once())
-            ->method('install')
+        $this->recorder->shouldReceive('isRegistered')
+            ->once()
+            ->with($this->plugin)
+            ->andReturn(false);
+        $this->validator->shouldReceive('validate')
+            ->once()
+            ->with($this->plugin)
+            ->andReturn(array());
+        $this->validator->shouldReceive('getPluginConfiguration')
+            ->andReturn(array('foo' => 'bar'));
+        $this->baseInstaller->shouldReceive('install')
+            ->once()
             ->with($this->plugin);
-        $this->recorder->expects($this->once())
-            ->method('register')
-            ->with($this->plugin, array());
-        $this->kernel->expects($this->once())
-            ->method('shutdown');
-        $this->kernel->expects($this->once())
-            ->method('boot');
-        $this->kernel->expects($this->once())
-            ->method('getContainer')
-            ->will($this->returnValue($this->container));
-        $this->container->expects($this->at(0))
-            ->method('get')
-            ->with('claroline.installation.mapping_loader')
-            ->will($this->returnValue($this->mappingLoader));
-        $this->container->expects($this->at(1))
-            ->method('get')
-            ->with('claroline.installation.fixture_loader')
-            ->will($this->returnValue($this->fixtureLoader));
-        $this->mappingLoader->expects($this->once())
-            ->method('registerMapping')
-            ->with($this->plugin);
-        $this->fixtureLoader->expects($this->once())
-            ->method('load')
-            ->with($this->plugin);
+        $this->recorder->shouldReceive('register')
+            ->with($this->plugin, array('foo' => 'bar'));
 
-        $this->installer->install(get_class($this->plugin), 'plugin/path');
+        $this->installer->install($this->plugin);
     }
 
+    /**
+     * @expectedException LogicException
+     */
     public function testInstallThrowsAnExceptionIfPluginIsAlreadyRegistered()
     {
-        $this->setExpectedException('LogicException');
-
-        $pluginFQCN = 'Imaginary\Fake\Plugin';
-
-        $this->recorder->expects($this->once())
-            ->method('isRegistered')
-            ->with($pluginFQCN)
-            ->will($this->returnValue(true));
-
-        $this->installer->install($pluginFQCN, 'plugin/path');
+        $this->recorder->shouldReceive('isRegistered')
+            ->once()
+            ->with($this->plugin)
+            ->andReturn(true);
+        $this->installer->install($this->plugin);
     }
 
     public function testUninstallProperlyDelegatesToHelpers()
     {
-        $this->recorder->expects($this->once())
-            ->method('isRegistered')
-            ->with(get_class($this->plugin))
-            ->will($this->returnValue(true));
-        $this->loader->expects($this->once())
-            ->method('load')
-            ->with(get_class($this->plugin))
-            ->will($this->returnValue($this->plugin));
-        $this->recorder->expects($this->once())
-            ->method('unregister')
+        $this->recorder->shouldReceive('isRegistered')
+            ->once()
+            ->with($this->plugin)
+            ->andReturn(true);
+        $this->baseInstaller->shouldReceive('uninstall')
+            ->once()
             ->with($this->plugin);
-        $this->migrator->expects($this->once())
-            ->method('remove')
+        $this->recorder->shouldReceive('unregister')
             ->with($this->plugin);
 
-        $this->installer->uninstall(get_class($this->plugin));
+        $this->installer->uninstall($this->plugin);
     }
 
+    /**
+     * @expectedException LogicException
+     */
     public function testUninstallThrowsAnExceptionIfPluginIsNotRegistered()
     {
-        $this->setExpectedException('LogicException');
-
-        $pluginFQCN = 'Imaginary\Fake\Plugin';
-
-        $this->recorder->expects($this->once())
-            ->method('isRegistered')
-            ->with($pluginFQCN)
-            ->will($this->returnValue(false));
-
-        $this->installer->uninstall($pluginFQCN);
+        $this->recorder->shouldReceive('isRegistered')
+            ->once()
+            ->with($this->plugin)
+            ->andReturn(false);
+        $this->installer->uninstall($this->plugin);
     }
 
-    public function testMigrate()
+    public function testUpdate()
     {
-        $this->recorder->expects($this->once())
-            ->method('isRegistered')
-            ->with(get_class($this->plugin))
-            ->will($this->returnValue(true));
-        $this->loader->expects($this->once())
-            ->method('load')
-            ->with(get_class($this->plugin))
-            ->will($this->returnValue($this->plugin));
-        $this->migrator->expects($this->once())
-            ->method('migrate')
-            ->with($this->plugin);
+        $this->recorder->shouldReceive('isRegistered')
+            ->once()
+            ->with($this->plugin)
+            ->andReturn(true);
+        $this->validator->shouldReceive('activeUpdateMode')->once();
+        $this->validator->shouldReceive('validate')
+            ->once()
+            ->with($this->plugin)
+            ->andReturn(array());
+        $this->validator->shouldReceive('deactivateUpdateMode')->once();
+        $this->validator->shouldReceive('getPluginConfiguration')
+            ->andReturn(array('foo' => 'bar'));
+        $this->baseInstaller->shouldReceive('update')
+            ->once()
+            ->with($this->plugin, '1.0', '2.0');
+        $this->recorder->shouldReceive('update')
+            ->with($this->plugin, array('foo' => 'bar'));
 
-        $this->installer->migrate(get_class($this->plugin), '123');
+        $this->installer->update($this->plugin, '1.0', '2.0');
     }
 }

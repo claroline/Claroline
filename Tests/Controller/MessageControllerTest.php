@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Message;
+use Claroline\CoreBundle\Entity\UserMessage;
 
 class MessageControllerTest extends MockeryTestCase
 {
@@ -28,6 +29,9 @@ class MessageControllerTest extends MockeryTestCase
     private $userManager;
     private $workspaceManager;
     private $controller;
+    private $sc;
+    private $utils;
+    private $pagerFactory;
 
     protected function setUp()
     {
@@ -40,6 +44,10 @@ class MessageControllerTest extends MockeryTestCase
         $this->groupManager = $this->mock('Claroline\CoreBundle\Manager\GroupManager');
         $this->userManager = $this->mock('Claroline\CoreBundle\Manager\UserManager');
         $this->workspaceManager = $this->mock('Claroline\CoreBundle\Manager\WorkspaceManager');
+        $this->sc = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
+        $this->utils = $this->mock('Claroline\CoreBundle\Library\Security\Utilities');
+        $this->pagerFactory =  $this->mock('Claroline\CoreBundle\Pager\PagerFactory');
+
         $this->controller = $this->mock(
             'Claroline\CoreBundle\Controller\MessageController[checkAccess]',
             array(
@@ -49,7 +57,10 @@ class MessageControllerTest extends MockeryTestCase
                 $this->messageManager,
                 $this->groupManager,
                 $this->userManager,
-                $this->workspaceManager
+                $this->workspaceManager,
+                $this->sc,
+                $this->utils,
+                $this->pagerFactory
             )
         );
     }
@@ -156,7 +167,10 @@ class MessageControllerTest extends MockeryTestCase
             $this->messageManager,
             $this->groupManager,
             $this->userManager,
-            $this->workspaceManager
+            $this->workspaceManager,
+            $this->sc,
+            $this->utils,
+            $this->pagerFactory
         );
 
         $user = $this->mock('Claroline\CoreBundle\Entity\User');
@@ -199,10 +213,10 @@ class MessageControllerTest extends MockeryTestCase
     public function testActOnMessages($controllerAction, $managerMethod)
     {
         $user = new User();
-        $messages = array('foo');
+        $messages = array(new UserMessage());
         $this->messageManager->shouldReceive($managerMethod)
             ->once()
-            ->with($user, $messages);
+            ->with($messages);
         $response = $this->controller->{"{$controllerAction}Action"}($user, $messages);
         $this->assertEquals(204, $response->getStatusCode());
     }

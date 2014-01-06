@@ -20,6 +20,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
@@ -61,6 +62,8 @@ class WorkspaceController extends Controller
     private $formFactory;
     private $tokenUpdater;
     private $widgetManager;
+    private $request;
+    private $templateDir;
 
     /**
      * @DI\InjectParams({
@@ -77,7 +80,9 @@ class WorkspaceController extends Controller
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "tokenUpdater"       = @DI\Inject("claroline.security.token_updater"),
-     *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
+     *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager"),
+     *     "request"            = @DI\Inject("request"),
+     *     "templateDir"        = @DI\Inject("%claroline.param.templates_directory%")
      * })
      */
     public function __construct(
@@ -94,7 +99,9 @@ class WorkspaceController extends Controller
         Utilities $utils,
         FormFactory $formFactory,
         TokenUpdater $tokenUpdater,
-        WidgetManager $widgetManager
+        WidgetManager $widgetManager,
+        Request $request,
+        $templateDir
     )
     {
         $this->homeTabManager = $homeTabManager;
@@ -111,6 +118,8 @@ class WorkspaceController extends Controller
         $this->formFactory = $formFactory;
         $this->tokenUpdater = $tokenUpdater;
         $this->widgetManager = $widgetManager;
+        $this->request = $request;
+        $this->templateDir = $templateDir;
     }
 
     /**
@@ -120,25 +129,18 @@ class WorkspaceController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
-     *
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = false})
      * @EXT\Template()
      *
      * Renders the workspace list page with its claroline layout.
      *
      * @return Response
      */
-    public function listAction()
+    public function listAction($currentUser)
     {
-        $datas = $this->tagManager->getDatasForWorkspaceList(false);
+        $user = $currentUser instanceof User ? $currentUser : null;
 
-        return array(
-            'workspaces' => $datas['workspaces'],
-            'tags' => $datas['tags'],
-            'tagWorkspaces' => $datas['tagWorkspaces'],
-            'hierarchy' => $datas['hierarchy'],
-            'rootTags' => $datas['rootTags'],
-            'displayable' => $datas['displayable']
-        );
+        return $this->tagManager->getDatasForWorkspaceList(false, $user);
     }
 
     /**
@@ -162,27 +164,21 @@ class WorkspaceController extends Controller
         $user = $token->getUser();
         $roles = $this->utils->getRoles($token);
 
-        $datas = $this->tagManager->getDatasForWorkspaceListByUser($user, $roles);
+        $data = $this->tagManager->getDatasForWorkspaceListByUser($user, $roles);
         $favouriteWorkspaces = $this->workspaceManager
             ->getFavouriteWorkspacesByUser($user);
         $favourites = array();
 
-        foreach ($datas['workspaces'] as $workspace) {
+        foreach ($data['workspaces'] as $workspace) {
             if (isset($favouriteWorkspaces[$workspace->getId()])) {
                 $favourites[$workspace->getId()] = $workspace;
             }
         }
 
-        return array(
-            'user' => $user,
-            'workspaces' => $datas['workspaces'],
-            'tags' => $datas['tags'],
-            'tagWorkspaces' => $datas['tagWorkspaces'],
-            'hierarchy' => $datas['hierarchy'],
-            'rootTags' => $datas['rootTags'],
-            'displayable' => $datas['displayable'],
-            'favourites' => $favourites
-        );
+        $data['user'] = $user;
+        $data['favourites'] = $favourites;
+
+        return $data;
     }
 
     /**
@@ -202,19 +198,9 @@ class WorkspaceController extends Controller
     public function listWorkspacesWithSelfRegistrationAction()
     {
         $this->assertIsGranted('ROLE_USER');
-        $token = $this->security->getToken();
-        $user = $token->getUser();
-        $datas = $this->tagManager->getDatasForSelfRegistrationWorkspaceList();
+        $user = $this->security->getToken()->getUser();
 
-        return array(
-            'user' => $user,
-            'workspaces' => $datas['workspaces'],
-            'tags' => $datas['tags'],
-            'tagWorkspaces' => $datas['tagWorkspaces'],
-            'hierarchy' => $datas['hierarchy'],
-            'rootTags' => $datas['rootTags'],
-            'displayable' => $datas['displayable']
-        );
+        return $this->tagManager->getDatasForSelfRegistrationWorkspaceList($user);
     }
 
     /**
@@ -285,16 +271,16 @@ class WorkspaceController extends Controller
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE);
-        $form->handleRequest($this->getRequest());
-
-        $templateDir = $this->container->getParameter('claroline.param.templates_directory');
+        $form->handleRequest($this->request);
         $ds = DIRECTORY_SEPARATOR;
 
         if ($form->isValid()) {
             $type = $form->get('type')->getData() == 'simple' ?
                 Configuration::TYPE_SIMPLE :
                 Configuration::TYPE_AGGREGATOR;
-            $config = Configuration::fromTemplate($templateDir.$ds.$form->get('template')->getData()->getHash());
+            $config = Configuration::fromTemplate(
+                $this->templateDir . $ds . $form->get('template')->getData()->getHash()
+            );
             $config->setWorkspaceType($type);
             $config->setWorkspaceName($form->get('name')->getData());
             $config->setWorkspaceCode($form->get('code')->getData());
@@ -797,11 +783,17 @@ class WorkspaceController extends Controller
      *
      * Renders the workspace list with self-registration in a pager.
      *
+     * @param int $page
+     *
      * @return Response
      */
     public function workspaceCompleteListWithSelfRegPagerAction($page = 1)
     {
-        $workspaces = $this->tagManager->getPagerAllWorkspacesWithSelfReg($page);
+        $this->assertIsGranted('ROLE_USER');
+        $workspaces = $this->tagManager->getPagerAllWorkspacesWithSelfReg(
+            $this->security->getToken()->getUser(),
+            $page
+        );
 
         return array('workspaces' => $workspaces);
     }
@@ -829,7 +821,7 @@ class WorkspaceController extends Controller
      * Removes an user from a workspace.
      *
      * @param AbstractWorkspace $workspace
-     * @param User              $userId
+     * @param \Claroline\CoreBundle\Entity\User $user
      *
      * @return Response
      */
@@ -883,6 +875,9 @@ class WorkspaceController extends Controller
      *
      * Renders the workspace list associate to a tag in a pager for registation.
      *
+     * @param \Claroline\CoreBundle\Entity\Workspace\WorkspaceTag $workspaceTag
+     * @param int $page
+     *
      * @return Response
      */
     public function workspaceListByTagRegistrationPagerAction(WorkspaceTag $workspaceTag, $page = 1)
@@ -908,6 +903,8 @@ class WorkspaceController extends Controller
      *
      * Renders the workspace list in a pager for registration.
      *
+     * @param int $page
+     *
      * @return Response
      */
     public function workspaceCompleteListRegistrationPagerAction($page = 1)
@@ -929,6 +926,9 @@ class WorkspaceController extends Controller
      * @EXT\Template()
      *
      * Renders the workspace list in a pager for registration.
+     *
+     * @param string    $search
+     * @param int       $page
      *
      * @return Response
      */

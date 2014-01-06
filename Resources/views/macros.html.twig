@@ -85,7 +85,7 @@
                 'href': path('claro_workspace_by_user')
             },
             {
-                'name': workspace.getName() ~ ' - ' ~  workspace.getCode(),
+                'name': workspace.getName() ~ ' (' ~  workspace.getCode() ~ ') ',
                 'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
             }
         ]
