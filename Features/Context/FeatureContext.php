@@ -65,7 +65,7 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     }
 
     /**
-     * @Given /^the database is empty$/
+     * @Given /^the database does not exists$/
      */
     public function theDatabaseIsEmpty()
     {

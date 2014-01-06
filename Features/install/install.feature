@@ -1,10 +1,10 @@
 Feature: Install
     In order to install the platform
     as a user
-    I need to do
+    I need to use the installer
 
     Background:
-        Given the database is empty
+        Given the database does not exists
         And operation.xml is initialized
         And base url is web
         And installation directories are writable
@@ -24,6 +24,6 @@ Feature: Install
         And I fill in "email" with "root@root.net"
         And I press "Next"
         And I follow "Skip"
-        And I press "do-install"
+        And I press "Launch installation now"
         Then database should exists
         And user "root" should exists
