@@ -207,6 +207,9 @@ from: Depuis
 from_message: De
 general: Général
 general_parameters: 'Paramètres généraux'
+generate_url_subscription: 'Inscription à l''espace d''activité par un utilisateur'
+generate_url_subscription_anonyme: 'Inscription à l''espace d''activité par un anonyme'
+generate_url_subscription_sucsess : 'You have been added to the workspace'
 group: Groupe
 group_configuration: 'Configuration du groupe'
 group_creation: 'Création d''un groupe'

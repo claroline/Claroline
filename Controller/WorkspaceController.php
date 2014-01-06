@@ -667,22 +667,7 @@ class WorkspaceController extends Controller
      */
     public function addUserAction(AbstractWorkspace $workspace, User $user)
     {
-        $role = $this->roleManager->getCollaboratorRole($workspace);
-
-        $userRoles = $this->roleManager->getWorkspaceRolesForUser($user, $workspace);
-
-        if (count($userRoles) === 0) {
-            $this->roleManager->associateRole($user, $role);
-            $this->eventDispatcher->dispatch(
-                'log',
-                'Log\LogRoleSubscribe',
-                array($role, $user)
-            );
-        }
-
-        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $this->security->setToken($token);
-
+        $user = $this->workspaceManager->addUserAction($workspace, $user);
         return new JsonResponse($this->userManager->convertUsersToArray(array($user)));
     }
 

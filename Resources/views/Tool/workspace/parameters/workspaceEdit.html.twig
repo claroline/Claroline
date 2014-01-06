@@ -36,8 +36,9 @@
             </a>
             <hr>
 
-
             {{ form_widget(form) }}
+            <a href={{ path('claro_workspace_subscription_url',{'workspace':workspace.getId()}) }}> generer une url pour l'inscription des utilisateur </a>
+
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
@@ -46,9 +47,6 @@
             </a>
         </div>
     </form>
-
-    <div id="twig-workspace-id" data-workspaceId="{{workspace.getId()}}">
-    </div>
 
     <div id="delete-ws-validation-box" class="modal fade">
         <div class="modal-dialog">
@@ -67,6 +65,11 @@
             </div>
         </div>
     </div>
+
+
+    <div id="twig-workspace-id" data-workspaceId="{{workspace.getId()}}">
+    </div>
+
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}

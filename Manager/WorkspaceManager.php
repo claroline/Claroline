@@ -32,6 +32,9 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\UnknownToolException;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -74,6 +77,7 @@ class WorkspaceManager
     /** @var PagerFactory */
     private $pagerFactory;
     private $workspaceFavouriteRepo;
+    private $security;
 
     /**
      * Constructor.
@@ -88,7 +92,9 @@ class WorkspaceManager
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "ut"              = @DI\Inject("claroline.utilities.misc"),
      *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory")
+     *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
+     *      "security"       = @DI\Inject("security.context")
+     *
      * })
      */
     public function __construct(
@@ -101,7 +107,8 @@ class WorkspaceManager
         ObjectManager $om,
         ClaroUtilities $ut,
         $templateDir,
-        PagerFactory $pagerFactory
+        PagerFactory $pagerFactory,
+        SecurityContextInterface $security
     )
     {
         $this->homeTabManager = $homeTabManager;
@@ -123,6 +130,7 @@ class WorkspaceManager
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
         $this->workspaceFavouriteRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceFavourite');
         $this->pagerFactory = $pagerFactory;
+        $this->security = $security;
     }
 
     /**
@@ -754,5 +762,31 @@ class WorkspaceManager
         $user = $this->userRepo->findBy(array('personalWorkspace' => $workspace));
 
         return (count($user) === 1) ? $user[0]: null;
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @return \Claroline\CoreBundle\Entity\User
+     */
+    public function addUserAction(AbstractWorkspace $workspace, User $user)
+    {
+        $role = $this->roleManager->getCollaboratorRole($workspace);
+
+        $userRoles = $this->roleManager->getWorkspaceRolesForUser($user, $workspace);
+
+        if (count($userRoles) === 0) {
+            $this->roleManager->associateRole($user, $role);
+            $this->dispatcher->dispatch(
+                'log',
+                'Log\LogRoleSubscribe',
+                array($role, $user)
+            );
+        }
+        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+        $this->security->setToken($token);
+
+        return $user;
     }
 }
