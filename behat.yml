@@ -1,0 +1,19 @@
+default:
+#  context:
+#    class: Behat\MinkExtension\Context\MinkContext
+#    class: Claroline\CoreBundle\Features\Context\FeatureContext.php
+  extensions:
+    Behat\MinkExtension\Extension:
+      base_url: http://localhost/vostro/Claroline/web/app.php/
+      default_session: selenium2
+      selenium2: ~
+
+core-bundle:
+  extensions:
+    Behat\Symfony2Extension\Extension:
+      bundle: ClarolineCoreBundle
+      kernel:
+        env: prod
+#      context:
+#        path_suffix: Features
+#        class_suffix: Features/Context/FeatureContext.php
