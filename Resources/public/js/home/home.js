@@ -125,7 +125,7 @@
                     contentPath = 'content/' + data + '/' + type;
 
                     var insertElement = function (content) {
-                        $(creatorElement).next().prepend(content).hide().fadeIn('slow');
+                        $(creatorElement).append(content).hide().fadeIn('slow');
                     };
 
                     if (father) {
@@ -188,6 +188,18 @@
         .error(function () {
             if (error) {
                 home.modal('content/error');
+            }
+        });
+    };
+
+    home.isValidURL = function (url, action)
+    {
+        $.post(home.path + 'isvalidurl', {
+            'url': url
+        })
+        .done(function (data) {
+            if (data.trim() === 'true') {
+                action(data);
             }
         });
     };
