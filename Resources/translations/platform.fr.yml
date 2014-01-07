@@ -211,6 +211,7 @@ generate_url_subscription: 'Inscription à l''espace d''activité par un utilisa
 generate_url_subscription_anonyme: 'Inscription à l''espace d''activité par un anonyme'
 generate_url: 'Générer une url pour l''inscription des utilisateurs'
 generate_url_subscription_sucsess : 'Vous avez été ajouté à l''espace d''activité'
+generate_url_subscription_fail : 'Vous devez d''abord cochez la case de l''inscription publique avant de pouvoir voir l''url'
 group: Groupe
 group_configuration: 'Configuration du groupe'
 group_creation: 'Création d''un groupe'

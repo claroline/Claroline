@@ -252,14 +252,18 @@ class WorkspaceParametersController extends Controller
      */
     public function urlSubscriptionAction(AbstractWorkspace $workspace)
     {
-        $url = $this->router->generate(
-                'claro_workspace_subscription_url_generate',
-                array('workspace' => $workspace->getId()),
-                true
-        );
+         if ($workspace->getSelfRegistration()) {
+             $url = $this->router->generate(
+                 'claro_workspace_subscription_url_generate',
+                 array('workspace' => $workspace->getId()),
+                 true
+             );
+         } else {
+             $url = '';
+         }
         return array(
             'workspace' => $workspace,
-            'url' => $url
+            'url' => $url,
         );
     }
 
