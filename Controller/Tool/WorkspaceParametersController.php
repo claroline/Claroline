@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -154,9 +155,20 @@ class WorkspaceParametersController extends Controller
         $this->checkAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
 
+        if ($workspace->getSelfRegistration()) {
+            $url = $this->router->generate(
+                'claro_workspace_subscription_url_generate',
+                array('workspace' => $workspace->getId()),
+                true
+            );
+        } else {
+            $url = '';
+        }
+
         return array(
             'form' => $form->createView(),
-            'workspace' => $workspace
+            'workspace' => $workspace,
+            'url' => $url
         );
     }
 
@@ -210,7 +222,7 @@ class WorkspaceParametersController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'workspace' => $workspace
+            'workspace' => $workspace,
         );
     }
 
@@ -239,36 +251,6 @@ class WorkspaceParametersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/subscription/url",
-     *     name="claro_workspace_subscription_url"
-     * )
-     * @EXT\Method("GET")
-     *
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:generate_url_subscription.html.twig")
-     *
-     * @param AbstractWorkspace $workspace
-     *
-     * @return Response
-     */
-    public function urlSubscriptionAction(AbstractWorkspace $workspace)
-    {
-         if ($workspace->getSelfRegistration()) {
-             $url = $this->router->generate(
-                 'claro_workspace_subscription_url_generate',
-                 array('workspace' => $workspace->getId()),
-                 true
-             );
-         } else {
-             $url = '';
-         }
-        return array(
-            'workspace' => $workspace,
-            'url' => $url,
-        );
-    }
-
-    /**
-     * @EXT\Route(
      *     "/{workspace}/subscription/url/generate",
      *     name="claro_workspace_subscription_url_generate"
      * )
@@ -282,23 +264,25 @@ class WorkspaceParametersController extends Controller
      */
     public function urlSubscriptionGenerateAction(AbstractWorkspace $workspace)
     {
-        $user = $this->security->getToken()->getUser();
-        if ( $user === 'anon.') {
-            return $this->redirect(
-                $this->generateUrl(
-                    'claro_workspace_subscription_url_generate_anonymous',
-                    array(
-                        'workspace' => $workspace->getId(),
-                        'toolName' => 'home'
-                    )
-                )
-            );
-        }
-        $this->workspaceManager->addUserAction($workspace, $user);
+            $user = $this->security->getToken()->getUser();
 
-        return $this->redirect(
-            $this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'home'))
-        );
+            if ( $user === 'anon.') {
+                return $this->redirect(
+                    $this->generateUrl(
+                        'claro_workspace_subscription_url_generate_anonymous',
+                        array(
+                            'workspace' => $workspace->getId(),
+                            'toolName' => 'home'
+                        )
+                    )
+                );
+            }
+
+            $this->workspaceManager->addUserAction($workspace, $user);
+
+            return $this->redirect(
+                $this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'home'))
+            );
 
     }
 
@@ -317,6 +301,9 @@ class WorkspaceParametersController extends Controller
      */
     public function anonymousSubscriptionAction(AbstractWorkspace $workspace)
     {
+        if (!$workspace->getSelfRegistration()) {
+            throw new AccessDeniedHttpException();
+        }
         $form = $this->formFactory->create(
             FormFactory::TYPE_USER_BASE_PROFILE,array($this->localeManager->getAvailableLocales())
         );

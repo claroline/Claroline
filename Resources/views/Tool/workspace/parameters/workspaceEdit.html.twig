@@ -36,8 +36,15 @@
             </a>
             <hr>
             {{ form_widget(form) }}
-            <a href={{ path('claro_workspace_subscription_url',{'workspace':workspace.getId()}) }}> {{ 'generate_url'|trans({}, 'platform') }} </a>
-        </div>
+            <hr />
+            <h3 class="panel-title">{{ 'generate_url'|trans({}, 'platform') }}</h3> <br />
+            {% if url is empty %}
+                <div class="alert alert-danger">  {{ 'generate_url_subscription_fail'|trans({}, 'platform') }} </div>
+            {% else %}
+            <div class="alert alert-info">
+                {{ url }}
+            </div>
+            {% endif %}
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
             <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
