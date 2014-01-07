@@ -35,10 +35,16 @@
                 <i class="icon-save"></i> {{ 'save_as_template'|trans({}, 'platform') }}
             </a>
             <hr>
-
-
             {{ form_widget(form) }}
-        </div>
+            <hr />
+            <h3 class="panel-title">{{ 'generate_url'|trans({}, 'platform') }}</h3> <br />
+            {% if url is empty %}
+                <div class="alert alert-danger">  {{ 'generate_url_subscription_fail'|trans({}, 'platform') }} </div>
+            {% else %}
+            <div class="alert alert-info">
+                {{ url }}
+            </div>
+            {% endif %}
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
             <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
@@ -46,10 +52,6 @@
             </a>
         </div>
     </form>
-
-    <div id="twig-workspace-id" data-workspaceId="{{workspace.getId()}}">
-    </div>
-
     <div id="delete-ws-validation-box" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -67,6 +69,9 @@
             </div>
         </div>
     </div>
+    <div id="twig-workspace-id" data-workspaceId="{{workspace.getId()}}">
+    </div>
+
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}

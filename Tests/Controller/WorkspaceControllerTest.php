@@ -602,51 +602,6 @@ class WorkspaceControllerTest extends MockeryTestCase
         );
     }
 
-    public function testAddUserAction()
-    {
-        $user = new User();
-        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
-        $role = new Role();
-
-        $this->roleManager
-            ->shouldReceive('getCollaboratorRole')
-            ->with($workspace)
-            ->once()
-            ->andReturn($role);
-        $this->roleManager
-            ->shouldReceive('getWorkspaceRolesForUser')
-            ->with($user, $workspace)
-            ->once()
-            ->andReturn(array());
-        $this->roleManager
-            ->shouldReceive('associateRole')
-            ->with($user, $role)
-            ->once();
-        $this->eventDispatcher
-            ->shouldReceive('dispatch')
-            ->with(
-                'log',
-                'Log\LogRoleSubscribe',
-                array($role, $user)
-            )
-            ->once();
-        $this->security->shouldReceive('setToken')
-            ->with(anInstanceOf('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken'))
-            ->once();
-        $this->userManager
-            ->shouldReceive('convertUsersToArray')
-            ->with(array($user))
-            ->once()
-            ->andReturn(array('user' => 'user'));
-
-        $response = new JsonResponse(array('user' => 'user'));
-
-        $this->assertEquals(
-            $response->getContent(),
-            $this->getController()->addUserAction($workspace, $user)->getContent()
-        );
-    }
-
     public function testRemoveUserAction()
     {
         $user = $this->mock('Claroline\CoreBundle\Entity\User');

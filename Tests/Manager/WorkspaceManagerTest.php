@@ -37,6 +37,7 @@ class WorkspaceManagerTest extends MockeryTestCase
     private $pagerFactory;
     private $homeTabManager;
     private $workpaceFavouriteRepo;
+    private $security;
 
     public function setUp()
     {
@@ -62,6 +63,7 @@ class WorkspaceManagerTest extends MockeryTestCase
         $this->templateDir = vfsStream::url('template');
         $this->pagerFactory = $this->mock('Claroline\CoreBundle\Pager\PagerFactory');
         $this->maskManager = $this->mock('Claroline\CoreBundle\Manager\MaskManager');
+        $this->security = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
     }
 
     public function testCreate()
@@ -652,6 +654,50 @@ class WorkspaceManagerTest extends MockeryTestCase
         );
     }
 
+    public function testAddUserAction()
+    {
+        $user = new User();
+        $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace');
+        $role = new Role();
+        $userManager = $this->mock('Claroline\CoreBundle\Manager\UserManager');
+
+        $this->roleManager
+            ->shouldReceive('getCollaboratorRole')
+            ->with($workspace)
+            ->once()
+            ->andReturn($role);
+        $this->roleManager
+            ->shouldReceive('getWorkspaceRolesForUser')
+            ->with($user, $workspace)
+            ->once()
+            ->andReturn(array());
+        $this->roleManager
+            ->shouldReceive('associateRole')
+            ->with($user, $role)
+            ->once();
+        $this->strictDispatcher
+            ->shouldReceive('dispatch')
+            ->with(
+                'log',
+                'Log\LogRoleSubscribe',
+                array($role, $user)
+            )
+            ->once();
+        $this->security->shouldReceive('setToken')
+            ->with(anInstanceOf('Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken'))
+            ->once();
+        $userManager
+            ->shouldReceive('convertUsersToArray')
+            ->with(array($user))
+            ->once()
+            ->andReturn(array('user' => 'user'));
+
+        $this->assertEquals(
+            $user,
+            $this->getManager()->addUserAction($workspace, $user)
+        );
+    }
+
     private function getManager(array $mockedMethods = array())
     {
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Resource\ResourceType')
@@ -682,7 +728,8 @@ class WorkspaceManagerTest extends MockeryTestCase
                 $this->om,
                 $this->ut,
                 $this->templateDir,
-                $this->pagerFactory
+                $this->pagerFactory,
+                $this->security
             );
         } else {
             $stringMocked = '[';
@@ -706,7 +753,8 @@ class WorkspaceManagerTest extends MockeryTestCase
                     $this->om,
                     $this->ut,
                     $this->templateDir,
-                    $this->pagerFactory
+                    $this->pagerFactory,
+                    $this->security
                 )
             );
         }
