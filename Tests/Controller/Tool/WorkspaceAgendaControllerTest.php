@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
-use \Mockery as m;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
@@ -118,7 +117,9 @@ class WorkspaceAgendaControllerTest extends MockeryTestCase
         $this->security->shouldReceive('getToken')->once()->andReturn($token);
         $token->shouldReceive('getUser')->once()->andReturn($user);
         $this->request->request = $parameterBag;
-        $parameterBag->shouldReceive('all')->once()->andReturn(array('id' => '8', 'agenda_form' => array('allDay' => true)));
+        $parameterBag->shouldReceive('all')
+            ->once()
+            ->andReturn(array('id' => '8', 'agenda_form' => array('allDay' => true)));
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Event')->andReturn($eventRepo);
         $eventRepo->shouldReceive('find')->with('8')->andReturn($event);
         $form = $this->mock('Symfony\Component\Form\Form');
@@ -171,16 +172,13 @@ class WorkspaceAgendaControllerTest extends MockeryTestCase
 
     private function getController (array $mockedMethods = array())
     {
-
         if (count($mockedMethods) === 0) {
-
             return new WorkspaceAgendaController(
                 $this->security,
                 $this->formFactory,
                 $this->om,
                 $this->request,
                 $this->roleManager
-
             );
         } else {
             $stringMocked = '[';

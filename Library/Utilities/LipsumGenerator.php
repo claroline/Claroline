@@ -54,7 +54,6 @@ class LipsumGenerator
                 $nextPart .= ' '.$words[array_rand($words)];
             }
 
-
             if ((strlen($content) + strlen($nextPart)) < $maxChar - 1) {
                 $content .= $nextPart;
             }

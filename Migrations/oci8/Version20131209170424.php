@@ -16,9 +16,9 @@ class Version20131209170424 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_workspace MODIFY (
-                is_public NUMBER(1) NOT NULL, 
-                displayable NUMBER(1) NOT NULL, 
-                self_registration NUMBER(1) NOT NULL, 
+                is_public NUMBER(1) NOT NULL,
+                displayable NUMBER(1) NOT NULL,
+                self_registration NUMBER(1) NOT NULL,
                 self_unregistration NUMBER(1) NOT NULL
             )
         ");
@@ -28,9 +28,9 @@ class Version20131209170424 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_workspace MODIFY (
-                is_public NUMBER(1) DEFAULT NULL, 
-                displayable NUMBER(1) DEFAULT NULL, 
-                self_registration NUMBER(1) DEFAULT NULL, 
+                is_public NUMBER(1) DEFAULT NULL,
+                displayable NUMBER(1) DEFAULT NULL,
+                self_registration NUMBER(1) DEFAULT NULL,
                 self_unregistration NUMBER(1) DEFAULT NULL
             )
         ");

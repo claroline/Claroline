@@ -24,8 +24,20 @@ class CreateClientCommand extends ContainerAwareCommand
         $this
             ->setName('claroline:client:create')
             ->setDescription('Creates a new client')
-            ->addOption('redirect-uri', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Sets redirect uri for client. Use this option multiple times to set multiple redirect URIs.', null)
-            ->addOption('grant-type', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Sets allowed grant type for client. Use this option multiple times to set multiple grant types..', null)
+            ->addOption(
+                'redirect-uri',
+                null,
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                'Sets redirect uri for client. Use this option multiple times to set multiple redirect URIs.',
+                null
+            )
+            ->addOption(
+                'grant-type',
+                null,
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                'Sets allowed grant type for client. Use this option multiple times to set multiple grant types..',
+                null
+            )
             ->addArgument('client-name', InputArgument::REQUIRED, 'Sets name for client.', null)
             ->setHelp(
                 <<<EOT

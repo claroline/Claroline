@@ -1,5 +1,7 @@
+{% if not father is defined %}{% set father = null %}{% endif%}
+{% if not region is defined %}{% set region = null %}{% endif%}
 {% if content != null %}
-    <div class="content-element  {% if region is defined %}content-12{% else %}{{ size }}{% endif %}" data-id="{{ content.id }}" data-type="{{ type }}">
+    <div class="content-element  {{ size }}" data-id="{{ content.id }}" data-type="{{ type }}">
         <div class="panel panel-default relative">
             {% render controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'father': father, 'region': region }) %}
 
@@ -12,7 +14,7 @@
                 {% if content.content is defined and content.content != "" %}
                     <div class="text">{{ content.content | raw }}</div>
                 {% endif %}
-                <i class="text-muted">{{ content.created | timeAgo }}</i>
+                {% if not region is defined %}<i class="text-muted">{{ content.created | timeAgo }}</i>{% endif %}
             </div>
         </div>
     </div>

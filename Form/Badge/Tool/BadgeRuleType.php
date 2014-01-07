@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Manager\EventManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -42,7 +41,10 @@ class BadgeRuleType extends AbstractType
         $actionChoices = $this->eventManager->getSortedEventsForFilter();
 
         $builder
-            ->add('action', 'twolevelselect', array(
+            ->add(
+                'action',
+                'twolevelselect',
+                array(
                     'translation_domain' => 'log',
                     'attr'               => array('class' => 'input-sm'),
                     'choices'            => $actionChoices
@@ -50,9 +52,13 @@ class BadgeRuleType extends AbstractType
             )
             ->add('occurrence', 'integer')
             ->add('result', 'text')
-            ->add('resultComparison', 'choice', array(
-                'choices' => BadgeRule::getResultComparisonTypes()
-            ));
+            ->add(
+                'resultComparison',
+                'choice',
+                array(
+                    'choices' => BadgeRule::getResultComparisonTypes()
+                )
+            );
     }
 
     public function getName()
@@ -62,8 +68,7 @@ class BadgeRuleType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver
-        ->setDefaults(
+        $resolver->setDefaults(
             array(
                 'data_class'         => 'Claroline\CoreBundle\Entity\Badge\BadgeRule',
                 'translation_domain' => 'badge',

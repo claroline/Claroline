@@ -168,7 +168,7 @@ class ResourcePropertiesController extends Controller
 
             $this->resourceManager->rename($node, $name);
             $nodesArray[] = $this->resourceManager->toArray($node);
-            
+
             return new JsonResponse($nodesArray);
         }
 

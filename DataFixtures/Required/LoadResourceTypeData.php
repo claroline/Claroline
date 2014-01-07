@@ -81,7 +81,7 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
         $activityMenu->setResourceType($types['activity']);
         $activityMenu->setIsForm(false);
         $manager->persist($activityMenu);
-        
+
         $updateTextDecoder = new MaskDecoder();
         $updateTextDecoder->setValue(pow(2, 6));
         $updateTextDecoder->setName('write');
@@ -99,4 +99,3 @@ class LoadResourceTypeData extends AbstractFixture implements ContainerAwareInte
         return 2;
     }
 }
-

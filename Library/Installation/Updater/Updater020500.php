@@ -18,26 +18,46 @@ class Updater020500
 {
     private $container;
     private $logger;
+    private $om;
 
     public function __construct($container)
     {
         $this->container = $container;
+        $this->om = $container->get('claroline.persistence.object_manager');
     }
 
-    public function preUpdate()
+    public function postUpdate()
     {
-        $this->log('updating workspaced names...');
-        $this->log('This operation may take a while.');
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $this->updateWorkspaceNames();
+        $this->updateMimeTypes();
+        $this->addAgendaWidget();
+        $this->addAnalyticsWorkspaceTool();
+    }
+
+    public function setLogger($logger)
+    {
+        $this->logger = $logger;
+    }
+
+    private function log($message)
+    {
+        if ($log = $this->logger) {
+            $log('    ' . $message);
+        }
+    }
+
+    private function updateWorkspaceNames()
+    {
+        $this->log('Updating workspace names...');
+
         $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
         $translator = $this->container->get('translator');
-        $workspaces = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findAll();
-        $batchSize = 200;
-        $i = 0;
+        $workspaces = $this->om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findAll();
         $trans = $translator->trans('personal_workspace', array(), 'platform');
-        $om->startFlushSuite();
+        $this->om->startFlushSuite();
 
-        foreach ($workspaces as $workspace) {
+        for ($i = 0, $count = count($workspaces); $i < $count; ++$i) {
+            $workspace = $workspaces[$i];
 
             if ($workspace->isDisplayable() === null) {
                 $workspace->setDisplayable(false);
@@ -55,60 +75,74 @@ class Updater020500
 
             if ($user !== null) {
                 $personalWorkspaceName = $trans . ' - ' . $user->getUsername();
-                $this->container->get('claroline.manager.workspace_manager')->rename($workspace, $personalWorkspaceName);
+                $this->log('Renaming ' . $personalWorkspaceName);
+                $workspaceManager->rename($workspace, $personalWorkspaceName);
             }
 
-            $this->log('Renaming ' . $personalWorkspaceName);
-            $om->persist($workspace);
-            $i++;
+            $this->om->persist($workspace);
 
-            if ($i % $batchSize === 0) {
-                $this->log('flushing database...');
-                $om->endFlushSuite();
-                $om->startFlushSuite();
+            if ($i % 200 === 0) {
+                $this->om->endFlushSuite();
+                $this->om->startFlushSuite();
             }
         }
 
-        $om->endFlushSuite();
+        $this->om->endFlushSuite();
+    }
 
-        $this->log('Adding agenda widget...');
-        $widget = new Widget();
-        $widget->setName('agenda');
-        $widget->setConfigurable(false);
-        $widget->setIcon('fake/icon/path');
-        $widget->setPlugin(null);
-        $widget->setExportable(false);
-        $widget->setDisplayableInDesktop(true);
-        $widget->setDisplayableInWorkspace(true);
-        $om->persist($widget);
-        $om->flush();
-
+    private function updateMimeTypes()
+    {
         $this->log('Setting known default file mime types...');
-        $this->log('This operation may take a while');
 
-        $fileType = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('file');
-        $fileNodes = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findBy(array('resourceType' => $fileType));
+        $guesser = $this->container->get('claroline.utilities.mime_type_guesser');
+        $fileType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('file');
+        $fileNodes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findBy(
+            array('resourceType' => $fileType)
+        );
 
-        foreach ($fileNodes as $node) {
-            if  ($node->getMimeType() === null) {
-                $nameParts = explode('.', $node->getName());
+        for ($i = 0, $count = count($fileNodes); $i < $count; ++$i) {
+            if ($fileNodes[$i]->getMimeType() === null) {
+                $nameParts = explode('.', $fileNodes[$i]->getName());
                 $extension = array_pop($nameParts);
-                $node->setMimeType($this->container->get('claroline.utilities.mime_type_guesser')->guess($extension));
-                $om->persist($node);
+                $fileNodes[$i]->setMimeType($guesser->guess($extension));
+                $this->om->persist($fileNodes[$i]);
 
-                if ($i % $batchSize === 0) {
-                    $om->flush();
+                if ($i % 200 === 0) {
+                    $this->om->flush();
                 }
             }
         }
-
-        $om->flush();
     }
 
-    public function postUpdate()
+    private function addAgendaWidget()
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $decoder = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneBy(array('name' => 'analytics'));
+        $existingWidget = $this->om->getRepository('ClarolineCoreBundle:Widget\Widget')
+            ->findOneByName('agenda');
+
+        if (!$existingWidget) {
+            $newWidget = new Widget();
+            $newWidget->setName('agenda');
+            $newWidget->setConfigurable(false);
+            $newWidget->setIcon('fake/icon/path');
+            $newWidget->setPlugin(null);
+            $newWidget->setExportable(false);
+            $newWidget->setDisplayableInDesktop(true);
+            $newWidget->setDisplayableInWorkspace(true);
+
+            $this->om->persist($newWidget);
+            $this->log("'agenda' widget added.");
+        } else {
+            $this->log("The 'agenda' widget already exists");
+        }
+
+        $this->om->flush();
+    }
+
+    private function addAnalyticsWorkspaceTool()
+    {
+        $decoder = $this->om->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findOneBy(array('name' => 'analytics'));
+
         if (!$decoder) {
             $wsTool = new Tool();
             $wsTool->setName('analytics');
@@ -121,24 +155,12 @@ class Updater020500
             $wsTool->setIsConfigurableInWorkspace(false);
             $wsTool->setIsConfigurableInDesktop(false);
 
-            $em->persist($wsTool);
+            $this->om->persist($wsTool);
             $this->log("Adding 'analytics' tool in workspaces");
         } else {
             $this->log("The 'analytics' tool already exists");
         }
 
-        $em->flush();
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
+        $this->om->flush();
     }
 }

@@ -33,8 +33,8 @@ class BadgeClaimRepository extends EntityRepository
                 FROM ClarolineCoreBundle:Badge\BadgeClaim bc
                 JOIN bc.badge b
                 JOIN b.translations bt
-                WHERE bc.user = :userId
-            ')
+                WHERE bc.user = :userId'
+            )
             ->setParameter('userId', $user->getId());
 
         return ($getQuery) ? $query: $query->getResult();
@@ -50,15 +50,15 @@ class BadgeClaimRepository extends EntityRepository
                 'SELECT bc, b, bt
                 FROM ClarolineCoreBundle:Badge\BadgeClaim bc
                 JOIN bc.badge b
-                JOIN b.translations bt
-            ')
+                JOIN b.translations bt'
+            )
             ->getResult();
     }
 
     /**
      * @param AbstractWorkspace $workspace
      *
-     * @param bool              $executedQuery
+     * @param bool $executedQuery
      *
      * @return array
      */
@@ -76,7 +76,8 @@ class BadgeClaimRepository extends EntityRepository
                 FROM ClarolineCoreBundle:Badge\BadgeClaim bc
                 JOIN bc.badge b
                 JOIN b.translations bt
-                WHERE ' . $workspaceConstraint);
+                WHERE ' . $workspaceConstraint
+            );
 
         if (null !== $workspace) {
             $query->setParameter('workspace', $workspace);

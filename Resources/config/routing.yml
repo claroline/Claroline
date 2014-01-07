@@ -201,11 +201,6 @@ claro_activity:
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
 
-claro_install:
-    resource: "@ClarolineCoreBundle/Controller/InstallController.php"
-    type: annotation
-    prefix: install
-
 claro_file:
     resource: "@ClarolineCoreBundle/Controller/FileController.php"
     type: annotation

@@ -127,9 +127,9 @@ class ToolManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
-     * @param integer $position
-     * @param string $name
+     * @param \Claroline\CoreBundle\Entity\Tool\Tool                   $tool
+     * @param integer                                                  $position
+     * @param string                                                   $name
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      *
      * @return \Claroline\CoreBundle\Entity\Tool\OrderedTool
@@ -161,8 +161,8 @@ class ToolManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
-     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Tool\Tool                   $tool
+     * @param \Claroline\CoreBundle\Entity\Role                        $role
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      */
     public function addRole(Tool $tool, Role $role, AbstractWorkspace $workspace)
@@ -175,7 +175,7 @@ class ToolManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Tool\OrderedTool $otr
-     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Role             $role
      */
     public function addRoleToOrderedTool(OrderedTool $otr, Role $role)
     {
@@ -185,8 +185,8 @@ class ToolManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
-     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Tool\Tool                   $tool
+     * @param \Claroline\CoreBundle\Entity\Role                        $role
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      */
     public function removeRole(Tool $tool, Role $role, AbstractWorkspace $workspace)
@@ -199,7 +199,7 @@ class ToolManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Tool\OrderedTool $otr
-     * @param \Claroline\CoreBundle\Entity\Role $role
+     * @param \Claroline\CoreBundle\Entity\Role             $role
      */
     public function removeRoleFromOrderedTool(OrderedTool $otr, Role $role)
     {
@@ -372,7 +372,7 @@ class ToolManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User      $user
      *
      * @throws UnremovableToolException
      */
@@ -389,9 +389,9 @@ class ToolManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @param integer $position
-     * @param string $name
+     * @param \Claroline\CoreBundle\Entity\User      $user
+     * @param integer                                $position
+     * @param string                                 $name
      *
      * @throws ToolPositionAlreadyOccupiedException
      */
@@ -413,9 +413,9 @@ class ToolManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
-     * @param integer $position
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\Tool\Tool                   $tool
+     * @param integer                                                  $position
+     * @param \Claroline\CoreBundle\Entity\User                        $user
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      */
     public function move(Tool $tool, $position, User $user = null, AbstractWorkspace $workspace = null)
@@ -462,7 +462,7 @@ class ToolManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $ws
-     * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
+     * @param \Claroline\CoreBundle\Entity\Tool\Tool                   $tool
      *
      * @return \Claroline\CoreBundle\Entity\Tool\OrderedTool
      */
@@ -526,7 +526,7 @@ class ToolManager
      * Extract the files from a the template configuration array
      *
      * @param string $archpath
-     * @param array $confTools
+     * @param array  $confTools
      *
      * @return array
      */
@@ -548,7 +548,7 @@ class ToolManager
     }
 
     /**
-     * @param string[] $roles
+     * @param string[]                                                 $roles
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      *
      * @return \Claroline\CoreBundle\Entity\Tool\OrderedTool
@@ -559,7 +559,7 @@ class ToolManager
     }
 
     /**
-     * @param string[] $roles
+     * @param string[]                                                 $roles
      * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
      *
      * @return \Claroline\CoreBundle\Entity\Tool\Tool

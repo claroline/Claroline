@@ -146,7 +146,6 @@
 
                     title.value = '';
                     text.value = '';
-                    home.resize(text);
                 } else if (data === 'true') {
 
                     contentPath = 'content/' + id + '/' + type;
@@ -189,6 +188,18 @@
         .error(function () {
             if (error) {
                 home.modal('content/error');
+            }
+        });
+    };
+
+    home.isValidURL = function (url, action)
+    {
+        $.post(home.path + 'isvalidurl', {
+            'url': url
+        })
+        .done(function (data) {
+            if (data.trim() === 'true') {
+                action(data);
             }
         });
     };

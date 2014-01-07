@@ -147,7 +147,7 @@ class WorkspaceRepository extends EntityRepository
      * and whose name matches the given search string.
      *
      * @param array[string] $roleNames
-     * @param string $search
+     * @param string        $search
      *
      * @return array[AbstractWorkspace]
      */

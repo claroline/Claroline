@@ -15,12 +15,12 @@ class Version20131112135808 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            CREATE TEMPORARY TABLE __temp__claro_content AS 
-            SELECT id, 
-            title, 
-            content, 
-            created, 
-            modified 
+            CREATE TEMPORARY TABLE __temp__claro_content AS
+            SELECT id,
+            title,
+            content,
+            created,
+            modified
             FROM claro_content
         ");
         $this->addSql("
@@ -28,23 +28,23 @@ class Version20131112135808 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_content (
-                id INTEGER NOT NULL, 
-                title VARCHAR(255) DEFAULT NULL, 
-                content CLOB DEFAULT NULL, 
-                created DATETIME NOT NULL, 
-                modified DATETIME NOT NULL, 
+                id INTEGER NOT NULL,
+                title VARCHAR(255) DEFAULT NULL,
+                content CLOB DEFAULT NULL,
+                created DATETIME NOT NULL,
+                modified DATETIME NOT NULL,
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
             INSERT INTO claro_content (
                 id, title, content, created, modified
-            ) 
-            SELECT id, 
-            title, 
-            content, 
-            created, 
-            modified 
+            )
+            SELECT id,
+            title,
+            content,
+            created,
+            modified
             FROM __temp__claro_content
         ");
         $this->addSql("
@@ -55,7 +55,7 @@ class Version20131112135808 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_content 
+            ALTER TABLE claro_content
             ADD COLUMN generated_content CLOB DEFAULT NULL
         ");
     }

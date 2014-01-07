@@ -120,8 +120,10 @@
         });
     });
 
-    $('.theme-value .btn').colorpicker().on('changeColor', function (event) {
-        $('input', this.parentNode.parentNode).val(event.color.toHex());
+    $('.theme-value .btn').each(function () {
+        $(this).colorpicker().on('changeColor', function (event) {
+            $('input', this.parentNode.parentNode).val(event.color.toHex());
+        });
     });
 
     $('.theme-value .btn').on('click', function () {

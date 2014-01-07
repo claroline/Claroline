@@ -15,9 +15,9 @@ class Version20131209170424 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_workspace CHANGE is_public is_public TINYINT(1) NOT NULL, 
-            CHANGE displayable displayable TINYINT(1) NOT NULL, 
-            CHANGE self_registration self_registration TINYINT(1) NOT NULL, 
+            ALTER TABLE claro_workspace CHANGE is_public is_public TINYINT(1) NOT NULL,
+            CHANGE displayable displayable TINYINT(1) NOT NULL,
+            CHANGE self_registration self_registration TINYINT(1) NOT NULL,
             CHANGE self_unregistration self_unregistration TINYINT(1) NOT NULL
         ");
     }
@@ -25,9 +25,9 @@ class Version20131209170424 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_workspace CHANGE is_public is_public TINYINT(1) DEFAULT NULL, 
-            CHANGE displayable displayable TINYINT(1) DEFAULT NULL, 
-            CHANGE self_registration self_registration TINYINT(1) DEFAULT NULL, 
+            ALTER TABLE claro_workspace CHANGE is_public is_public TINYINT(1) DEFAULT NULL,
+            CHANGE displayable displayable TINYINT(1) DEFAULT NULL,
+            CHANGE self_registration self_registration TINYINT(1) DEFAULT NULL,
             CHANGE self_unregistration self_unregistration TINYINT(1) DEFAULT NULL
         ");
     }

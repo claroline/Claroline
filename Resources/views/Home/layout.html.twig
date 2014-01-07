@@ -1,10 +1,11 @@
+{% if not father is defined %}{% set father = null %}{% endif%}
 {% if content != null %}
 
     {% if region is not defined or (region is defined and region != 'header' and region != 'footer') %}
         {% render controller("ClarolineCoreBundle:Home:creator", { 'type': type, 'id': null, 'content': null, 'father': father }) %}
     {% endif %}
 
-    {% if father is not defined %}
+    {% if father is empty %}
         <div class="contents">
             {{ content | raw }}
         </div>

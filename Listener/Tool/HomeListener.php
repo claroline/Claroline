@@ -15,8 +15,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\ExportToolEvent;
 use Claroline\CoreBundle\Event\ImportToolEvent;
-use Claroline\CoreBundle\Event\ConfigureWorkspaceToolEvent;
-use Claroline\CoreBundle\Event\ConfigureDesktopToolEvent;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Symfony\Component\HttpFoundation\Response;

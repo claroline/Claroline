@@ -44,7 +44,7 @@
 {% block section_content %}
     <div class="search-bar row">
         <div class="col-md-8">
-            {{ displayControls(workspace.getId()) }}
+            {{ displayControls() }}
         </div>
         <div class="col-md-4">
              <div class="input-group">
@@ -74,7 +74,15 @@
                     {% for userMessage in pager.currentPageResults %}
                         <tr class="row-user-message">
                             <td><input class="chk-item" value="{{ userMessage.getId() }}" type="checkbox"></input></td>
-                            <td><a href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}">{{ userMessage.getMessage().getObject() }}</a></td>
+                            <td>
+                                <a href="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}">
+                                    {% if userMessage.isRead() %}
+                                        {{ userMessage.getMessage().getObject() }}
+                                    {% else %}
+                                        <b>{{ userMessage.getMessage().getObject() }}</b>
+                                    {% endif %}
+                                </a>
+                            </td>
                             <td>{{ userMessage.getMessage().getSenderUsername() }}</td>
                             <td>{{ userMessage.getMessage().getDate()|intl_date_format }}</td>
                             <td>
@@ -97,7 +105,7 @@
         </table>
     </div>
     {{ renderPager(search, pager) }}
-    <div>{{ displayControls(workspace.getId()) }}</div>
+    <div>{{ displayControls() }}</div>
 {% endblock %}
 
 {% block javascripts %}

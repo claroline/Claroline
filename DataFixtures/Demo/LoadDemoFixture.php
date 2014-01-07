@@ -303,7 +303,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         );
     }
 
-     private function createShortcuts()
+    private function createShortcuts()
     {
         $collaboratorRole = $this->manager->getRepository('ClarolineCoreBundle:Role')
             ->findCollaboratorRole($this->getReference('user/Jane Doe')->getPersonalWorkspace());
@@ -388,15 +388,17 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
             );
         }
 
-            //The widget API changed.
-//        if ($kernel->isClassInActiveBundle('Claroline\RssReaderBundle\Entity\Config')) {
-//            $rssConfig = new \Claroline\RssReaderBundle\Entity\Config();
-//            $rssConfig->setUrl('http://www.lesoir.be/feed/Actualit%C3%A9/Vie%20du%20net/destination_principale_block');
-//            $rssConfig->setDefault(true);
-//            $rssConfig->setDesktop(true);
-//            $this->manager->persist($rssConfig);
-//            $this->manager->flush();
-//        }
+        /*
+          //The widget API changed.
+        if ($kernel->isClassInActiveBundle('Claroline\RssReaderBundle\Entity\Config')) {
+            $rssConfig = new \Claroline\RssReaderBundle\Entity\Config();
+            $rssConfig->setUrl('http://www.lesoir.be/feed/Actualit%C3%A9/Vie%20du%20net/destination_principale_block');
+            $rssConfig->setDefault(true);
+            $rssConfig->setDesktop(true);
+            $this->manager->persist($rssConfig);
+            $this->manager->flush();
+        }
+        */
     }
 
     private function getFirstNames()

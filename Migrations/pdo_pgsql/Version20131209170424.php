@@ -15,23 +15,23 @@ class Version20131209170424 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_workspace ALTER is_public 
-            SET 
+            ALTER TABLE claro_workspace ALTER is_public
+            SET
                 NOT NULL
         ");
         $this->addSql("
-            ALTER TABLE claro_workspace ALTER displayable 
-            SET 
+            ALTER TABLE claro_workspace ALTER displayable
+            SET
                 NOT NULL
         ");
         $this->addSql("
-            ALTER TABLE claro_workspace ALTER self_registration 
-            SET 
+            ALTER TABLE claro_workspace ALTER self_registration
+            SET
                 NOT NULL
         ");
         $this->addSql("
-            ALTER TABLE claro_workspace ALTER self_unregistration 
-            SET 
+            ALTER TABLE claro_workspace ALTER self_unregistration
+            SET
                 NOT NULL
         ");
     }
@@ -39,19 +39,19 @@ class Version20131209170424 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_workspace ALTER is_public 
+            ALTER TABLE claro_workspace ALTER is_public
             DROP NOT NULL
         ");
         $this->addSql("
-            ALTER TABLE claro_workspace ALTER displayable 
+            ALTER TABLE claro_workspace ALTER displayable
             DROP NOT NULL
         ");
         $this->addSql("
-            ALTER TABLE claro_workspace ALTER self_registration 
+            ALTER TABLE claro_workspace ALTER self_registration
             DROP NOT NULL
         ");
         $this->addSql("
-            ALTER TABLE claro_workspace ALTER self_unregistration 
+            ALTER TABLE claro_workspace ALTER self_unregistration
             DROP NOT NULL
         ");
     }

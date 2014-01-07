@@ -29,32 +29,41 @@ class ResourceLogFilterType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $actionChoices = $this->eventManager->getResourceEventsForFilter(LogGenericEvent::DISPLAYED_WORKSPACE, $options['data']['resourceClass']);
+        $actionChoices = $this->eventManager->getResourceEventsForFilter(
+            LogGenericEvent::DISPLAYED_WORKSPACE,
+            $options['data']['resourceClass']
+        );
 
         $builder
             ->add(
-                'action', 'choice', array(
-                    'label'              => 'Show actions for',
-                    'attr'               => array('class' => 'input-sm'),
+                'action',
+                'choice',
+                array(
+                    'label'         => 'Show actions for',
+                    'attr'          => array('class' => 'input-sm'),
                     'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3'),
-                    'choices'            => $actionChoices
+                    'choices'       => $actionChoices
                 )
             )
             ->add(
-                'range', 'daterange', array(
-                    'label'    => 'for period',
-                    'required' => false,
-                    'attr'     => array('class' => 'input-sm'),
+                'range',
+                'daterange',
+                array(
+                    'label'         => 'for period',
+                    'required'      => false,
+                    'attr'          => array('class' => 'input-sm'),
                     'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3')
                 )
             )
             ->add(
-                'user', 'simpleautocomplete', array(
+                'user',
+                'simpleautocomplete',
+                array(
                     'label'            => 'for user',
                     'entity_reference' => 'user',
                     'required'         => false,
                     'attr'             => array('class' => 'input-sm'),
-                    'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3')
+                    'theme_options'    => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3')
                 )
             );
     }
@@ -66,11 +75,6 @@ class ResourceLogFilterType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver
-            ->setDefaults(
-                array(
-                    'translation_domain' => 'log'
-                )
-            );
+        $resolver->setDefaults(array('translation_domain' => 'log'));
     }
 }

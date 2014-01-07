@@ -43,7 +43,11 @@
                     </h3>
                 </div>
                 <form novalidate="novalidate"
-                    action="{{ path('claro_message_send', {'parentId': message.getId()}) }}"
+                    {% if message is empty %}
+                        action="{{ path('claro_message_send', {'parentId': null}) }}"
+                    {% else %}
+                        action="{{ path('claro_message_send', {'parentId': message.getId()}) }}"
+                    {% endif %}
                     method="post" {{ form_enctype(form) }}
                     id="generic-form"
                     class="form-horizontal">

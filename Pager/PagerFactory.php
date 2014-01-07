@@ -45,8 +45,7 @@ class PagerFactory
 
         try {
             $pager->setCurrentPage($currentPage);
-        }
-        catch (OutOfRangeCurrentPageException $e) {
+        } catch (OutOfRangeCurrentPageException $e) {
             $pager->setCurrentPage(1);
         }
 

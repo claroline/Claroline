@@ -1,7 +1,9 @@
+{% if not father is defined %}{% set father = null %}{% endif%}
+{% if not region is defined %}{% set region = null %}{% endif%}
 {% if content != null %}
 
     {% if father is not defined or (father is defined and father is empty) %}
-        <div class="content-element relative {% if region is defined and (region == 'left' or region == 'right') %}col-md-12{% else %}{{ size }}{% endif %}" data-id="{{ content.id }}" data-type="{{ type }}">
+        <div class="content-element relative {{ size }}" data-id="{{ content.id }}" data-type="{{ type }}">
             {% if region is defined and (region == "header" or region == "footer") %}
                 <ul class="nav nav-pills relative{% if is_granted('ROLE_ADMIN') %} admin{% endif %}">
                     {% render controller("ClarolineCoreBundle:Home:type", { 'type': type, 'father': content.id, 'region': region }) %}

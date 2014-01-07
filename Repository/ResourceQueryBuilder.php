@@ -212,7 +212,7 @@ class ResourceQueryBuilder
             "({$eol}" .
             "    SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw{$eol}" .
             "    JOIN aw.roles r{$eol}" .
-            "    WHERE r IN (SELECT r2 FROM Claroline\CoreBundle\Entity\Role r2 {$eol}". 
+            "    WHERE r IN (SELECT r2 FROM Claroline\CoreBundle\Entity\Role r2 {$eol}".
             "       LEFT JOIN r2.users u {$eol}" .
             "       LEFT JOIN r2.groups g {$eol}" .
             "       LEFT JOIN g.users u2 {$eol}" .

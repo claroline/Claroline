@@ -186,36 +186,36 @@ class Event
         return $this->priority;
     }
 
-    public function setPriority( $priority)
+    public function setPriority($priority)
     {
         $this->priority = $priority;
     }
-    public function getRecurring() 
+    public function getRecurring()
     {
         return $this->recurring;
     }
 
-    public function setRecurring($recurring) 
+    public function setRecurring($recurring)
     {
         $this->recurring = $recurring;
     }
-    
-    public function getStartHours() 
+
+    public function getStartHours()
     {
         return $this->startHours;
     }
 
-    public function setStartHours($startHours) 
+    public function setStartHours($startHours)
     {
         $this->startHours = $startHours;
     }
 
-    public function getEndHours() 
+    public function getEndHours()
     {
         return $this->endHours;
     }
 
-    public function setEndHours($endHours) 
+    public function setEndHours($endHours)
     {
         $this->endHours = $endHours;
     }

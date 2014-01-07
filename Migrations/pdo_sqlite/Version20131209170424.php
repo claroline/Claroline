@@ -27,22 +27,22 @@ class Version20131209170424 extends AbstractMigration
             DROP INDEX IDX_D9028545727ACA70
         ");
         $this->addSql("
-            CREATE TEMPORARY TABLE __temp__claro_workspace AS 
-            SELECT id, 
-            parent_id, 
-            user_id, 
-            name, 
-            code, 
-            is_public, 
-            displayable, 
-            guid, 
-            self_registration, 
-            self_unregistration, 
-            discr, 
-            lft, 
-            lvl, 
-            rgt, 
-            root 
+            CREATE TEMPORARY TABLE __temp__claro_workspace AS
+            SELECT id,
+            parent_id,
+            user_id,
+            name,
+            code,
+            is_public,
+            displayable,
+            guid,
+            self_registration,
+            self_unregistration,
+            discr,
+            lft,
+            lvl,
+            rgt,
+            root
             FROM claro_workspace
         ");
         $this->addSql("
@@ -50,52 +50,52 @@ class Version20131209170424 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_workspace (
-                id INTEGER NOT NULL, 
-                parent_id INTEGER DEFAULT NULL, 
-                user_id INTEGER DEFAULT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                code VARCHAR(255) NOT NULL, 
-                guid VARCHAR(255) NOT NULL, 
-                discr VARCHAR(255) NOT NULL, 
-                lft INTEGER DEFAULT NULL, 
-                lvl INTEGER DEFAULT NULL, 
-                rgt INTEGER DEFAULT NULL, 
-                root INTEGER DEFAULT NULL, 
-                is_public BOOLEAN NOT NULL, 
-                displayable BOOLEAN NOT NULL, 
-                self_registration BOOLEAN NOT NULL, 
-                self_unregistration BOOLEAN NOT NULL, 
-                PRIMARY KEY(id), 
-                CONSTRAINT FK_D9028545727ACA70 FOREIGN KEY (parent_id) 
-                REFERENCES claro_workspace (id) 
-                ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE, 
-                CONSTRAINT FK_D9028545A76ED395 FOREIGN KEY (user_id) 
-                REFERENCES claro_user (id) 
+                id INTEGER NOT NULL,
+                parent_id INTEGER DEFAULT NULL,
+                user_id INTEGER DEFAULT NULL,
+                name VARCHAR(255) NOT NULL,
+                code VARCHAR(255) NOT NULL,
+                guid VARCHAR(255) NOT NULL,
+                discr VARCHAR(255) NOT NULL,
+                lft INTEGER DEFAULT NULL,
+                lvl INTEGER DEFAULT NULL,
+                rgt INTEGER DEFAULT NULL,
+                root INTEGER DEFAULT NULL,
+                is_public BOOLEAN NOT NULL,
+                displayable BOOLEAN NOT NULL,
+                self_registration BOOLEAN NOT NULL,
+                self_unregistration BOOLEAN NOT NULL,
+                PRIMARY KEY(id),
+                CONSTRAINT FK_D9028545727ACA70 FOREIGN KEY (parent_id)
+                REFERENCES claro_workspace (id)
+                ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE,
+                CONSTRAINT FK_D9028545A76ED395 FOREIGN KEY (user_id)
+                REFERENCES claro_user (id)
                 ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE
             )
         ");
         $this->addSql("
             INSERT INTO claro_workspace (
-                id, parent_id, user_id, name, code, 
-                is_public, displayable, guid, self_registration, 
-                self_unregistration, discr, lft, 
+                id, parent_id, user_id, name, code,
+                is_public, displayable, guid, self_registration,
+                self_unregistration, discr, lft,
                 lvl, rgt, root
-            ) 
-            SELECT id, 
-            parent_id, 
-            user_id, 
-            name, 
-            code, 
-            is_public, 
-            displayable, 
-            guid, 
-            self_registration, 
-            self_unregistration, 
-            discr, 
-            lft, 
-            lvl, 
-            rgt, 
-            root 
+            )
+            SELECT id,
+            parent_id,
+            user_id,
+            name,
+            code,
+            is_public,
+            displayable,
+            guid,
+            self_registration,
+            self_unregistration,
+            discr,
+            lft,
+            lvl,
+            rgt,
+            root
             FROM __temp__claro_workspace
         ");
         $this->addSql("
@@ -130,22 +130,22 @@ class Version20131209170424 extends AbstractMigration
             DROP INDEX IDX_D9028545727ACA70
         ");
         $this->addSql("
-            CREATE TEMPORARY TABLE __temp__claro_workspace AS 
-            SELECT id, 
-            user_id, 
-            parent_id, 
-            name, 
-            code, 
-            is_public, 
-            displayable, 
-            guid, 
-            self_registration, 
-            self_unregistration, 
-            discr, 
-            lft, 
-            lvl, 
-            rgt, 
-            root 
+            CREATE TEMPORARY TABLE __temp__claro_workspace AS
+            SELECT id,
+            user_id,
+            parent_id,
+            name,
+            code,
+            is_public,
+            displayable,
+            guid,
+            self_registration,
+            self_unregistration,
+            discr,
+            lft,
+            lvl,
+            rgt,
+            root
             FROM claro_workspace
         ");
         $this->addSql("
@@ -153,52 +153,52 @@ class Version20131209170424 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_workspace (
-                id INTEGER NOT NULL, 
-                user_id INTEGER DEFAULT NULL, 
-                parent_id INTEGER DEFAULT NULL, 
-                name VARCHAR(255) NOT NULL, 
-                code VARCHAR(255) NOT NULL, 
-                guid VARCHAR(255) NOT NULL, 
-                discr VARCHAR(255) NOT NULL, 
-                lft INTEGER DEFAULT NULL, 
-                lvl INTEGER DEFAULT NULL, 
-                rgt INTEGER DEFAULT NULL, 
-                root INTEGER DEFAULT NULL, 
-                is_public BOOLEAN DEFAULT NULL, 
-                displayable BOOLEAN DEFAULT NULL, 
-                self_registration BOOLEAN DEFAULT NULL, 
-                self_unregistration BOOLEAN DEFAULT NULL, 
-                PRIMARY KEY(id), 
-                CONSTRAINT FK_D9028545A76ED395 FOREIGN KEY (user_id) 
-                REFERENCES claro_user (id) 
-                ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE, 
-                CONSTRAINT FK_D9028545727ACA70 FOREIGN KEY (parent_id) 
-                REFERENCES claro_workspace (id) 
+                id INTEGER NOT NULL,
+                user_id INTEGER DEFAULT NULL,
+                parent_id INTEGER DEFAULT NULL,
+                name VARCHAR(255) NOT NULL,
+                code VARCHAR(255) NOT NULL,
+                guid VARCHAR(255) NOT NULL,
+                discr VARCHAR(255) NOT NULL,
+                lft INTEGER DEFAULT NULL,
+                lvl INTEGER DEFAULT NULL,
+                rgt INTEGER DEFAULT NULL,
+                root INTEGER DEFAULT NULL,
+                is_public BOOLEAN DEFAULT NULL,
+                displayable BOOLEAN DEFAULT NULL,
+                self_registration BOOLEAN DEFAULT NULL,
+                self_unregistration BOOLEAN DEFAULT NULL,
+                PRIMARY KEY(id),
+                CONSTRAINT FK_D9028545A76ED395 FOREIGN KEY (user_id)
+                REFERENCES claro_user (id)
+                ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE,
+                CONSTRAINT FK_D9028545727ACA70 FOREIGN KEY (parent_id)
+                REFERENCES claro_workspace (id)
                 ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE
             )
         ");
         $this->addSql("
             INSERT INTO claro_workspace (
-                id, user_id, parent_id, name, code, 
-                is_public, displayable, guid, self_registration, 
-                self_unregistration, discr, lft, 
+                id, user_id, parent_id, name, code,
+                is_public, displayable, guid, self_registration,
+                self_unregistration, discr, lft,
                 lvl, rgt, root
-            ) 
-            SELECT id, 
-            user_id, 
-            parent_id, 
-            name, 
-            code, 
-            is_public, 
-            displayable, 
-            guid, 
-            self_registration, 
-            self_unregistration, 
-            discr, 
-            lft, 
-            lvl, 
-            rgt, 
-            root 
+            )
+            SELECT id,
+            user_id,
+            parent_id,
+            name,
+            code,
+            is_public,
+            displayable,
+            guid,
+            self_registration,
+            self_unregistration,
+            discr,
+            lft,
+            lvl,
+            rgt,
+            root
             FROM __temp__claro_workspace
         ");
         $this->addSql("
