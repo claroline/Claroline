@@ -2,8 +2,8 @@
 
 {% block title %}{{ _resource.resourceNode.name }}{% endblock %}
 
+{% set blogOptions = _resource.options %}
 {% block content %}
-    {% set blogOptions = _resource.options %}
         {% if is_granted('ROLE_ADMIN') or is_granted('EDIT', _resource) %}
         <div class="btn-toolbar">
             {% if is_granted('ROLE_ADMIN') %}

@@ -165,4 +165,24 @@ class Comment extends Statusable
     {
         return $this->post;
     }
+
+    /**
+     * @param \Datetime $publicationDate
+     *
+     * @return Comment
+     */
+    public function setPublicationDate($publicationDate)
+    {
+        $this->publicationDate = $publicationDate;
+
+        return $this;
+    }
+
+    /**
+     * @return \Datetime
+     */
+    public function getPublicationDate()
+    {
+        return $this->publicationDate;
+    }
 }

@@ -44,7 +44,8 @@
 
                         <ul class="list-inline">
                             {% set authorPicture = comment.author.picture %}
-                            <li>{% if authorPicture is null %}<span class="icon-user"></span>{% else %}<img src="{{ asset('uploads/pictures/') ~ authorPicture }}" alt="{{ author.firstname ~ ' ' ~ author.lastname }}" class="img-rounded user_picture">{% endif %}&nbsp;{% if null == comment.author %}{{ 'anonymous'|trans({}, 'platform') }}{% else %}<a href="{{ path('claro_profile_view', {'userId': comment.author.id}) }}" title="{{ comment.author.firstname ~ ' ' ~ comment.author.lastname }}">{{ comment.author.firstname ~ ' ' ~ comment.author.lastname }}</a>{% endif %}</li>
+                            {% set author = (null == comment.author) ? 'anonymous'|trans({}, 'platform') : comment.author.firstname ~ ' ' ~ comment.author.lastname %}
+                            <li>{% if authorPicture is null %}<span class="icon-user"></span>{% else %}<img src="{{ asset('uploads/pictures/') ~ authorPicture }}" alt="{{ author }}" class="img-rounded user_picture">{% endif %}&nbsp;{% if null == comment.author %}{{ author }}{% else %}<a href="{{ path('claro_profile_view', {'userId': comment.author.id}) }}" title="{{ author }}">{{ author }}</a>{% endif %}</li>
                             {% if isPublished %}<li><span class="icon-calendar"></span>  {{ comment.publicationDate|date('date_format'|trans({}, 'platform')) }}</li>{% endif %}
                         </ul>
                     </div>

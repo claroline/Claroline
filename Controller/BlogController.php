@@ -172,6 +172,8 @@ class BlogController extends Controller
 
         $blogOptions = $blog->getOptions();
 
+        $user = $this->get('security.context')->getToken()->getUser();
+
         $form = $this->createForm(new BlogOptionsType(), $blogOptions);
 
         if ("POST" === $request->getMethod()) {
@@ -204,7 +206,8 @@ class BlogController extends Controller
             '_resource'  => $blog,
             'bannerForm' => $this->getBannerForm($blog->getOptions()),
             'form'       => $form->createView(),
-            'archives'   => $this->getArchiveDatas($blog)
+            'archives'   => $this->getArchiveDatas($blog),
+            'user'       => $user
         );
     }
 
