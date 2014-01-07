@@ -22,7 +22,7 @@
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js') }}"></script>
 
-{% if actionName is empty %}
+{% if actionName is not defined or actionName is empty %}
 <legend>{{ 'Actions per day'|trans({}, 'platform') }}</legend>
 {% else %}
 <legend>{{ actionName|trans({}, 'platform') }}</legend>

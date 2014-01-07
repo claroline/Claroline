@@ -215,10 +215,11 @@ class LogManager
         return array(
             'logs' => $logs,
             'listItemViews' => $views,
-            'chartData' => $chartData,
-            'workspace' => $workspace,
-            'logAmount' => $config->getAmount(),
-            'title' => $title
+            'chartData'     => $chartData,
+            'workspace'     => $workspace,
+            'logAmount'     => $config->getAmount(),
+            'title'         => $title,
+            'isDesktop'     => false
         );
     }
 

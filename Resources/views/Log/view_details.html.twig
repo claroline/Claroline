@@ -14,7 +14,7 @@
         <div class="panel-body">
             <p>
                 {% block logDetailsSubtitle %}
-                    {% include 'ClarolineCoreBundle:Log:view_list_item.html.twig' %}
+                    {% include 'ClarolineCoreBundle:Log:view_list_item.html.twig' with {'isDesktop': isDesktop} %}
                 {% endblock %}
             </p>
         </div>
