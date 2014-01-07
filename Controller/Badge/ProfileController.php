@@ -96,6 +96,7 @@ class ProfileController extends Controller
 
         $badge->setLocale($platformConfigHandler->getParameter('locale_language'));
 
+        /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
         $badgeRuleValidator = $this->get("claroline.rule.validator");
         $validateLogs       = $badgeRuleValidator->validate($badge, $user);
 
@@ -133,7 +134,8 @@ class ProfileController extends Controller
         return array(
             'pager'         => $pager,
             'badgeClaims'   => $badgeClaims,
-            'language'      => $platformConfigHandler->getParameter('locale_language')
+            'language'      => $platformConfigHandler->getParameter('locale_language'),
+            'user'          => $user
         );
     }
 }

@@ -11,7 +11,10 @@
 
 namespace Claroline\CoreBundle\Rule;
 
+use Claroline\CoreBundle\Rule\Constraints\ActionConstraint;
+use Claroline\CoreBundle\Rule\Constraints\DoerConstraint;
 use Claroline\CoreBundle\Rule\Constraints\OccurenceConstraint;
+use Claroline\CoreBundle\Rule\Constraints\ReceiverConstraint;
 use Claroline\CoreBundle\Rule\Constraints\ResourceConstraint;
 use Claroline\CoreBundle\Rule\Constraints\ResultConstraint;
 use Claroline\CoreBundle\Rule\Entity\Rule;
@@ -60,7 +63,7 @@ class Validator
      *
      * @return array|bool
      */
-    protected function validateRules(array $rules, User $user, array $restriction)
+    protected function validateRules($rules, User $user, array $restriction)
     {
         $return    = array();
         $isChecked = true;
@@ -96,32 +99,33 @@ class Validator
     public function validateRule(Rule $rule, array $restrictions = array())
     {
         $isValid            = true;
-        /** @var \Claroline\CoreBundle\Rule\Constraints\AbstractConstraint[] $constraints */
-        $constraints        = array();
+        /** @var \Claroline\CoreBundle\Rule\Constraints\AbstractConstraint[] $usedConstraints */
+        $usedConstraints    = array();
         /** @var \Claroline\CoreBundle\Rule\Constraints\AbstractConstraint[] $existedConstraints */
         $existedConstraints = array(
             new OccurenceConstraint(),
             new ResultConstraint(),
-            new ResourceConstraint()
+            new ResourceConstraint(),
+            new DoerConstraint(),
+            new ReceiverConstraint(),
+            new ActionConstraint()
         );
 
         foreach ($existedConstraints as $existedConstraint) {
             if ($existedConstraint->isApplicableTo($rule)) {
-                $constraints[] = $existedConstraint;
+                $usedConstraints[] = $existedConstraint->setRule($rule);
             }
         }
 
-        $queryBuilder = $this->buildQuery($constraints, $restrictions);
+        $queryBuilder = $this->buildQuery($usedConstraints, $restrictions);
 
         /** @var \Claroline\CoreBundle\Entity\Log\Log[] $associatedLogs */
         $associatedLogs = $queryBuilder->getQuery()->getResult();
 
-        foreach ($constraints as $constraint) {
-            $constraint
-                ->setRule($rule)
-                ->setAssociatedLogs($associatedLogs);
+        foreach ($usedConstraints as $usedConstraint) {
+            $usedConstraint->setAssociatedLogs($associatedLogs);
 
-            $isValid = $isValid && $constraint->validate();
+            $isValid = $isValid && $usedConstraint->validate();
         }
 
         return ($isValid) ? $associatedLogs : $isValid;

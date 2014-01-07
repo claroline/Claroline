@@ -11,15 +11,20 @@
 
 namespace Claroline\CoreBundle\Event\Log;
 
+use Claroline\CoreBundle\Entity\Badge\Badge;
+
 class LogBadgeAwardEvent extends LogGenericEvent
 {
     const ACTION = 'badge-awarding';
 
-    public function __construct($receiverGroup, $receiver)
+    public function __construct(Badge $badge, $receiver)
     {
         parent::__construct(
             self::ACTION,
             array(
+                'badge' => array(
+                    'id' => $badge->getId()
+                ),
                 'receiverUser' => array(
                     'lastName'  => $receiver->getLastName(),
                     'firstName' => $receiver->getFirstName()

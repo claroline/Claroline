@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block section_body %}
-    {{ render(controller('ClarolineCoreBundle:Badge/Badge:list', {'parameters': parameters, 'badgeClaims': badgeClaims})) }}
+    {{ render(controller('ClarolineCoreBundle:Badge/Badge:list', {'parameters': parameters})) }}
 {% endblock %}
 
 {% block javascripts %}

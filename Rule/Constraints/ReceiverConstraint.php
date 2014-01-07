@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Rule\Entity\Rule;
 use Doctrine\ORM\QueryBuilder;
 
-class DoerConstraint extends AbstractConstraint
+class ReceiverConstraint extends AbstractConstraint
 {
     /**
      * @return bool
@@ -37,7 +37,9 @@ class DoerConstraint extends AbstractConstraint
      */
     public function isApplicableTo(Rule $rule)
     {
-        return true;
+        $userTypes = Rule::getUserTypes();
+
+        return (null !== $rule->getUser() && Rule::RECEIVER_USER === $userTypes[$rule->getUserType()]);
     }
 
     /**
@@ -48,7 +50,7 @@ class DoerConstraint extends AbstractConstraint
     public function getQuery(QueryBuilder $queryBuilder)
     {
         return $queryBuilder
-                ->andWhere('l.doer = :doer')
-                ->setParameter('doer', $this->getRule()->getUser());
+                ->andWhere('l.receiver = :receiver')
+                ->setParameter('receiver', $this->getRule()->getUser());
     }
 }

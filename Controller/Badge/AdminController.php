@@ -51,8 +51,8 @@ class AdminController extends Controller
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
         $parameters = array(
-            'badgePage'    => $badgePage,
-            'claimPage'    => $claimPage,
+            'badgePage'        => $badgePage,
+            'claimPage'        => $claimPage,
             'add_link'         => 'claro_admin_badges_add',
             'edit_link'        => array(
                 'url'    => 'claro_admin_badges_edit',

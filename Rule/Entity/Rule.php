@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Rule\Entity;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
@@ -30,6 +31,9 @@ abstract class Rule
     const RESULT_INFERIOR_EQUAL = '<=';
     const RESULT_SUPERIOR       = '>';
     const RESULT_SUPERIOR_EQUAL = '>=';
+
+    const DOER_USER             = 'doer';
+    const RECEIVER_USER         = 'receiver';
 
     /**
      * @var integer
@@ -81,6 +85,14 @@ abstract class Rule
      * @Expose
      */
     protected $resource;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="smallint", nullable=false)
+     * @Expose
+     */
+    protected $userType;
 
     /**
      * @var \Claroline\CoreBundle\Entity\User
@@ -156,7 +168,7 @@ abstract class Rule
     }
 
     /**
-     * @param string $resultComparison
+     * @param integer $resultComparison
      *
      * @return BadgeRule
      */
@@ -168,7 +180,7 @@ abstract class Rule
     }
 
     /**
-     * @return string
+     * @return integer
      */
     public function getResultComparison()
     {
@@ -212,7 +224,7 @@ abstract class Rule
      *
      * @return Rule
      */
-    public function setUser($user)
+    public function setUser(User $user)
     {
         $this->user = $user;
 
@@ -229,5 +241,34 @@ abstract class Rule
             throw new \RuntimeException("No user given to the rule. Rule inevitably apply to a user, neither it's a doer or a receiver.");
         }
         return $this->user;
+    }
+
+    /**
+     * @param integer $userType
+     *
+     * @return Rule
+     */
+    public function setUserType($userType)
+    {
+        $this->userType = $userType;
+
+        return $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getUserType()
+    {
+        return $this->userType;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getUserTypes()
+    {
+        return array(self::DOER_USER,
+                     self::RECEIVER_USER);
     }
 }

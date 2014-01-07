@@ -32,7 +32,7 @@ abstract class AbstractConstraint implements ConstraintInterface
      */
     public function getRule()
     {
-        if (null === $this->associatedLogs) {
+        if (null === $this->rule) {
             throw new \RuntimeException("No rule given to the constraint. How can it validate something without rule to validate?");
         }
 
