@@ -4,7 +4,7 @@
         <tr>
             <th> {{ 'agenda_form_title'|trans({}, 'agenda') }} <i class="icon-resize-vertical"></i></th>
             <th> {{ 'workspace'|trans({}, 'agenda') }} <i class="icon-resize-vertical"></i></th>
-            <th> {{ 'length'|trans({}, 'agenda') }} <i class="icon-resize-vertical"></th>
+            <th> {{ 'length'|trans({}, 'agenda') }} <i class="icon-resize-vertical"></i></th>
             <th> {{ 'agenda_form_description'|trans({}, 'agenda') }} </th>
             <th> {{ 'agenda_form_priority'|trans({}, 'agenda') }} <i class="icon-resize-vertical"></i></th>
         </tr>
@@ -13,7 +13,13 @@
     {% for e in listEvents  %}
     <tr>
         <td> <h5 style="color:{{ e.priority }}"> {{ e.title }} </h5> </td>
-        <td> {{  e.getWorkspace().getName() }} </td>
+        <td>
+            {% if e.getWorkspace() is not empty %}
+                {{ e.getWorkspace().getName() }}
+            {% else %}
+                {{ 'desktop'|trans({}, 'platform') }}
+            {% endif %}
+        </td>
         <td> {{ e.start|date("d/m/Y g:i")}}  -> {{ e.end|date("d/m/Y g:i") }} </td>
         <td>
             {% if e.description is not empty %}
