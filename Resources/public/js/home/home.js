@@ -192,4 +192,16 @@
         });
     };
 
+    home.isValidURL = function (url, action)
+    {
+        $.post(home.path + 'isvalidurl', {
+            'url': url
+        })
+        .done(function (data) {
+            if (data.trim() === 'true') {
+                action(data);
+            }
+        });
+    };
+
 }());

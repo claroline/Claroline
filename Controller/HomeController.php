@@ -467,6 +467,23 @@ class HomeController
     }
 
     /**
+     * Check if a string is a valid URL
+     *
+     * @Route("/isvalidurl", name="claroline_is_valid_url")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function isValidUrl()
+    {
+        if ($this->manager->isValidUrl($this->request->get('url'))) {
+
+            return new Response('true');
+        }
+
+        return new Response('false'); //useful in ajax
+    }
+
+    /**
      * Extends templating render
      *
      * @return Symfony\Component\HttpFoundation\Response

@@ -5,7 +5,7 @@
         {% render controller("ClarolineCoreBundle:Home:creator", { 'type': type, 'id': null, 'content': null, 'father': father }) %}
     {% endif %}
 
-    {% if father is not defined %}
+    {% if father is empty %}
         <div class="contents">
             {{ content | raw }}
         </div>
