@@ -31,9 +31,9 @@ class LoadRequiredFixturesData extends AbstractFixture implements ContainerAware
      */
     public function load(ObjectManager $manager)
     {
-        $start = new \DateTime();
         $fixturesDir = __DIR__ . DIRECTORY_SEPARATOR . 'Data';
         $om = $this->container->get('claroline.persistence.object_manager');
+        $om->startFlushSuite();
 
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($fixturesDir),
@@ -62,12 +62,6 @@ class LoadRequiredFixturesData extends AbstractFixture implements ContainerAware
             }
         }
 
-        $om->flush();
-        $end = new \DateTime();
-        $diff = $start->diff($end);
-        $duration = $diff->i > 0 ? $diff->i . 'm ' : '';
-        $duration .= $diff->s . 's';
-
-        echo "Total fixture loading duration: {$duration}\n";
+        $om->endFlushSuite();
     }
 }

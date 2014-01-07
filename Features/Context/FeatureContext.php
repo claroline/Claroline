@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Claroline\CoreBundle\Features\Context;
 
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -7,16 +16,6 @@ use Behat\Symfony2Extension\Context\KernelAwareInterface;
 use Behat\MinkExtension\Context\MinkContext;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Installation\Settings\SettingChecker;
-use Doctrine\Common\DataFixtures\ReferenceRepository;
-use Doctrine\Common\DataFixtures\AbstractFixture;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-
-//
-// Require 3rd-party libraries here:
-//
-//require_once 'PHPUnit/Autoload.php';
-//require_once 'PHPUnit/Framework/Assert/Functions.php';
-//
 
 /**
  * Feature context.
@@ -57,14 +56,7 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
      */
     public function iHaveAUser($username)
     {
-        $userManager = $this->getContainer()->get('claroline.manager.user_manager');
-        $user = new User();
-        $user->setUsername($username);
-        $user->setPassword($username);
-        $user->setFirstName($username);
-        $user->setLastName($username);
-        $user->setMail($username . '@claroline.net');
-        $userManager->createUser($user);
+        $this->visit($this->getBaseUrl() . "/app_dev.php/dev/create/user/{$username}/ROLE_ADMIN");
     }
 
     /**
@@ -107,7 +99,15 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
      */
     public function baseUrlIsWeb()
     {
-        $this->setMinkParameter('base_url', 'http://localhost/vostro/Claroline/web/');
+        $this->setMinkParameter('base_url', $this->getBaseUrl());
+    }
+
+    /**
+     * @Given /^the platform is initialized$/
+     */
+    public function thePlatformIsInitialized()
+    {
+        $this->visit($this->getBaseUrl() . '/app_dev.php/dev/reinstall');
     }
 
     /**
@@ -153,7 +153,7 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
         //throw new \Behat\Behat\Exception\PendingException('Does not work');
 
         $dir = $this->kernel->getRootDir() . '/cache/prod/jms_diextra/metadata';
-        $res = is_writeable($dir);;
+        $res = is_writeable($dir);
 
         if (!$res) {
             throw new \Exception('The cache directory is not writable');
@@ -174,30 +174,6 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     }
 
     /**
-     * @Given /^the database is initialized/
-     */
-    public function theDatabaseIsInitialized()
-    {
-        $start = new \DateTime();
-        $om = $this->getContainer()->get('claroline.persistence.object_manager');
-        $purger = new \Doctrine\Common\DataFixtures\Purger\ORMPurger(
-            $this->getContainer()->get('doctrine.orm.entity_manager')
-        );
-        $purger->purge();
-
-        //load the required fixture
-        $fixture = new \Claroline\CoreBundle\DataFixtures\Required\LoadRequiredFixturesData();
-        $referenceRepo = new ReferenceRepository($om);
-        $fixture->setReferenceRepository($referenceRepo);
-        $fixture->setContainer($this->getContainer());
-        $fixture->load($om);
-        $end = new \DateTime();
-        $diff = $start->diff($end);
-        $duration = $diff->i > 0 ? $diff->i . 'm ' : '';
-        $duration .= $diff->s . 's';
-    }
-
-    /**
      * @Given /^the user "([^"]*)" is created$/
      */
     public function theUserIsCreated($username)
@@ -211,9 +187,8 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
         $this->getContainer()->get('claroline.manager.user_manager')->createUserWithRole($user, 'ROLE_ADMIN');
     }
 
-    private function loadFixture(AbstractFixture $fixture)
+    private function getBaseUrl()
     {
-
+        return 'http://localhost/vostro/Claroline/web/';
     }
-
 }

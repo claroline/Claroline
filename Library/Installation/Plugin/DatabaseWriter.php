@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
-use Doctrine\ORM\EntityManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Library\PluginBundle;
@@ -49,7 +49,7 @@ class DatabaseWriter
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "em"             = @DI\Inject("claroline.persistence.object_manager"),
      *     "im"             = @DI\Inject("claroline.manager.icon_manager"),
      *     "mm"             = @DI\Inject("claroline.manager.mask_manager"),
      *     "fileSystem"     = @DI\Inject("filesystem"),
@@ -58,7 +58,7 @@ class DatabaseWriter
      * })
      */
     public function __construct(
-        EntityManager $em,
+        ObjectManager $em,
         IconManager $im,
         Filesystem $fileSystem,
         KernelInterface $kernel,
@@ -492,7 +492,6 @@ class DatabaseWriter
         }
 
         $this->em->persist($toolEntity);
-        $this->em->flush();
 
         if ($tool['is_displayable_in_workspace'] && $this->modifyTemplate) {
             $this->templateBuilder->addTool($tool['name'], $tool['name']);

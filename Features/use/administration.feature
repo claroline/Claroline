@@ -3,7 +3,7 @@ Feature: Administration
 
     Background:
         Given the cache directory is writable
-        And the database is initialized
+        And the platform is initialized
         And the user "root" is created
         And I am on "/login"
         And I fill in "username" with "root"
@@ -30,28 +30,292 @@ Feature: Administration
         And I fill in "Password" with "password"
         And I fill in "Verification" with "password"
         And I fill in "Administrative code" with "code"
-        And I fill in "Mail" with "mail@clar.oline"
+        And I fill in "Mail" with "mailline"
         And I press "Ok"
+        Then the platform should have "1" "User"
+
+    Scenario: Sucessfully create users from csv
+    Scenario: Fails to create users from csv
+    Scenario: Sucessfully create group
+    Scenario: Fail to create group
+    Scenario: Fail to edit group settings
+    Scenario: Sucessfully edit group settings
+    Scenario: Sucessfully edit user properties
+    Scenario: Fail to edit user properties
+    Scenario: Display the plateform users
+    Scenario: Search the plateform users
+    Scenario: Display the plateform groups
+    Scenario: Search the plateform groups
+    Scenario: Display the group's users
+    Scenario: Search the group's users
+    Scenario: Sucessfully edit the platform options
+    Scenario: Sucessfully delete group
+    Scenario: delete users
+    Scenario: Sucessfully create users from csv
+    Scenario: Fails to create users from csv
+    Scenario: Sucessfully create group
+    Scenario: Fail to create group
+    Scenario: Fail to edit group settings
+    Scenario: Sucessfully edit group settings
+    Scenario: Sucessfully edit user properties
+    Scenario: Fail to edit user properties
+    Scenario: Display the plateform users
+    Scenario: Search the plateform users
+    Scenario: Display the plateform groups
+    Scenario: Search the plateform groups
+    Scenario: Display the group's users
+    Scenario: Search the group's users
+    Scenario: Sucessfully edit the platform options
+    Scenario: Sucessfully delete group
+    Scenario: delete users    Scenario: Sucessfully create users from csv
+    Scenario: Fails to create users from csv
+    Scenario: Sucessfully create group
+    Scenario: Fail to create group
+    Scenario: Fail to edit group settings
+    Scenario: Sucessfully edit group settings
+    Scenario: Sucessfully edit user properties
+    Scenario: Fail to edit user properties
+    Scenario: Display the plateform users
+    Scenario: Search the plateform users
+    Scenario: Display the plateform groups
+    Scenario: Search the plateform groups
+    Scenario: Display the group's users
+    Scenario: Search the group's users
+    Scenario: Sucessfully edit the platform options
+    Scenario: Sucessfully delete group
+    Scenario: delete users    Scenario: Sucessfully create users from csv
+    Scenario: Fails to create users from csv
+    Scenario: Sucessfully create group
+    Scenario: Fail to create group
+    Scenario: Fail to edit group settings
+    Scenario: Sucessfully edit group settings
+    Scenario: Sucessfully edit user properties
+    Scenario: Fail to edit user properties
+    Scenario: Display the plateform users
+    Scenario: Search the plateform users
+    Scenario: Display the plateform groups
+    Scenario: Search the plateform groups
+    Scenario: Display the group's users
+    Scenario: Search the group's users
+    Scenario: Sucessfully edit the platform options
+    Scenario: Sucessfully delete group
+    Scenario: delete users    Scenario: Sucessfully create users from csv
+    Scenario: Fails to create users from csv
+    Scenario: Sucessfully create group
+    Scenario: Fail to create group
+    Scenario: Fail to edit group settings
+    Scenario: Sucessfully edit group settings
+    Scenario: Sucessfully edit user properties
+    Scenario: Fail to edit user properties
+    Scenario: Display the plateform users
+    Scenario: Search the plateform users
+    Scenario: Display the plateform groups
+    Scenario: Search the plateform groups
+    Scenario: Display the group's users
+    Scenario: Search the group's users
+    Scenario: Sucessfully edit the platform options
+    Scenario: Sucessfully delete group
+    Scenario: delete users    Scenario: Sucessfully create users from csv
+    Scenario: Fails to create users from csv
+    Scenario: Sucessfully create group
+    Scenario: Fail to create group
+    Scenario: Fail to edit group settings
+    Scenario: Sucessfully edit group settings
+    Scenario: Sucessfully edit user properties
+    Scenario: Fail to edit user properties
+    Scenario: Display the plateform users
+    Scenario: Search the plateform users
+    Scenario: Display the plateform groups
+    Scenario: Search the plateform groups
+    Scenario: Display the group's users
+    Scenario: Search the group's users
+    Scenario: Sucessfully edit the platform options
+    Scenario: Sucessfully delete group
+    Scenario: delete users    Scenario: Sucessfully create users from csv
+    Scenario: Fails to create users from csv
+    Scenario: Sucessfully create group
+    Scenario: Fail to create group
+    Scenario: Fail to edit group settings
+    Scenario: Sucessfully edit group settings
+    Scenario: Sucessfully edit user properties
+    Scenario: Fail to edit user properties
+    Scenario: Display the plateform users
+    Scenario: Search the plateform users
+    Scenario: Display the plateform groups
+    Scenario: Search the plateform groups
+    Scenario: Display the group's users
+    Scenario: Search the group's users
+    Scenario: Sucessfully edit the platform options
+    Scenario: Sucessfully delete group
+    Scenario: delete users    Scenario: Sucessfully create users from csv
+    Scenario: Fails to create users from csv
+    Scenario: Sucessfully create group
+    Scenario: Fail to create group
+    Scenario: Fail to edit group settings
+    Scenario: Sucessfully edit group settings
+    Scenario: Sucessfully edit user properties
+    Scenario: Fail to edit user properties
+    Scenario: Display the plateform users
+    Scenario: Search the plateform users
+    Scenario: Display the plateform groups
+    Scenario: Search the plateform groups
+    Scenario: Display the group's users
+    Scenario: Search the group's users
+    Scenario: Sucessfully edit the platform options
+    Scenario: Sucessfully delete group
+    Scenario: delete users    Scenario: Sucessfully create users from csv
+    Scenario: Fails to create users from csv
+    Scenario: Sucessfully create group
+    Scenario: Fail to create group
+    Scenario: Fail to edit group settings
+    Scenario: Sucessfully edit group settings
+    Scenario: Sucessfully edit user properties
+    Scenario: Fail to edit user properties
+    Scenario: Display the plateform users
+    Scenario: Search the plateform users
+    Scenario: Display the plateform groups
+    Scenario: Search the plateform groups
+    Scenario: Display the group's users
+    Scenario: Search the group's users
+    Scenario: Sucessfully edit the platform options
+    Scenario: Sucessfully delete group
+    Scenario: delete users    Scenario: Sucessfully create users from csv
+    Scenario: Fails to create users from csv
+    Scenario: Sucessfully create group
+    Scenario: Fail to create group
+    Scenario: Fail to edit group settings
+    Scenario: Sucessfully edit group settings
+    Scenario: Sucessfully edit user properties
+    Scenario: Fail to edit user properties
+    Scenario: Display the plateform users
+    Scenario: Search the plateform users
+    Scenario: Display the plateform groups
+    Scenario: Search the plateform groups
+    Scenario: Display the group's users
+    Scenario: Search the group's users
+    Scenario: Sucessfully edit the platform options
+    Scenario: Sucessfully delete group
+    Scenario: delete users    Scenario: Sucessfully create users from csv
+    Scenario: Fails to create users from csv
+    Scenario: Sucessfully create group
+    Scenario: Fail to create group
+    Scenario: Fail to edit group settings
+    Scenario: Sucessfully edit group settings
+    Scenario: Sucessfully edit user properties
+    Scenario: Fail to edit user properties
+    Scenario: Display the plateform users
+    Scenario: Search the plateform users
+    Scenario: Display the plateform groups
+    Scenario: Search the plateform groups
+    Scenario: Display the group's users
+    Scenario: Search the group's users
+    Scenario: Sucessfully edit the platform options
+    Scenario: Sucessfully delete group
+    Scenario: delete users    Scenario: Sucessfully create users from csv
+    Scenario: Fails to create users from csv
+    Scenario: Sucessfully create group
+    Scenario: Fail to create group
+    Scenario: Fail to edit group settings
+    Scenario: Sucessfully edit group settings
+    Scenario: Sucessfully edit user properties
+    Scenario: Fail to edit user properties
+    Scenario: Display the plateform users
+    Scenario: Search the plateform users
+    Scenario: Display the plateform groups
+    Scenario: Search the plateform groups
+    Scenario: Display the group's users
+    Scenario: Search the group's users
+    Scenario: Sucessfully edit the platform options
+    Scenario: Sucessfully delete group
+    Scenario: delete users    Scenario: Sucessfully create users from csv
+    Scenario: Fails to create users from csv
+    Scenario: Sucessfully create group
+    Scenario: Fail to create group
+    Scenario: Fail to edit group settings
+    Scenario: Sucessfully edit group settings
+    Scenario: Sucessfully edit user properties
+    Scenario: Fail to edit user properties
+    Scenario: Display the plateform users
+    Scenario: Search the plateform users
+    Scenario: Display the plateform groups
+    Scenario: Search the plateform groups
+    Scenario: Display the group's users
+    Scenario: Search the group's users
+    Scenario: Sucessfully edit the platform options
+    Scenario: Sucessfully delete group
+    Scenario: delete users    Scenario: Sucessfully create users from csv
+    Scenario: Fails to create users from csv
+    Scenario: Sucessfully create group
+    Scenario: Fail to create group
+    Scenario: Fail to edit group settings
+    Scenario: Sucessfully edit group settings
+    Scenario: Sucessfully edit user properties
+    Scenario: Fail to edit user properties
+    Scenario: Display the plateform users
+    Scenario: Search the plateform users
+    Scenario: Display the plateform groups
+    Scenario: Search the plateform groups
+    Scenario: Display the group's users
+    Scenario: Search the group's users
+    Scenario: Sucessfully edit the platform options
+    Scenario: Sucessfully delete group
+    Scenario: delete users    Scenario: Sucessfully create users from csv
+    Scenario: Fails to create users from csv
+    Scenario: Sucessfully create group
+    Scenario: Fail to create group
+    Scenario: Fail to edit group settings
+    Scenario: Sucessfully edit group settings
+    Scenario: Sucessfully edit user properties
+    Scenario: Fail to edit user properties
+    Scenario: Display the plateform users
+    Scenario: Search the plateform users
+    Scenario: Display the plateform groups
+    Scenario: Search the plateform groups
+    Scenario: Display the group's users
+    Scenario: Search the group's users
+    Scenario: Sucessfully edit the platform options
+    Scenario: Sucessfully delete group
+    Scenario: delete users
+    Scenario: Sucessfully create users from csv
+    Scenario: Fails to create users from csv
+    Scenario: Sucessfully create group
+    Scenario: Fail to create group
+    Scenario: Fail to edit group settings
+    Scenario: Sucessfully edit group settings
+    Scenario: Sucessfully edit user properties
+    Scenario: Fail to edit user properties
+    Scenario: Display the plateform users
+    Scenario: Search the plateform users
+    Scenario: Display the plateform groups
+    Scenario: Search the plateform groups
+    Scenario: Display the group's users
+    Scenario: Search the group's users
+    Scenario: Sucessfully edit the platform options
+    Scenario: Sucessfully delete group
+    Scenario: delete users
 
 
 
-   # Scenario: Sucessfully create users from csv
-   # Scenario: Fails to create users from csv
-   # Scenario: Sucessfully create group
-   # Scenario: Fail to create group
-   # Scenario: Fail to edit group settings
-   # Scenario: Sucessfully edit group settings
-   # Scenario: Sucessfully edit user properties
-   # Scenario: Fail to edit user properties
-   # Scenario: Display the plateform users
-   # Scenario: Search the plateform users
-   # Scenario: Display the plateform groups
-   # Scenario: Search the plateform groups
-   # Scenario: Display the group's users
-   # Scenario: Search the group's users
-   # Scenario: Sucessfully edit the platform options
-   # Scenario: Sucessfully delete group
-   # Scenario: delete users
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
