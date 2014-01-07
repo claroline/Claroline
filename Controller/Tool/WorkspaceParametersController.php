@@ -264,26 +264,25 @@ class WorkspaceParametersController extends Controller
      */
     public function urlSubscriptionGenerateAction(AbstractWorkspace $workspace)
     {
-            $user = $this->security->getToken()->getUser();
+        $user = $this->security->getToken()->getUser();
 
-            if ( $user === 'anon.') {
-                return $this->redirect(
-                    $this->generateUrl(
-                        'claro_workspace_subscription_url_generate_anonymous',
-                        array(
-                            'workspace' => $workspace->getId(),
-                            'toolName' => 'home'
-                        )
-                    )
-                );
-            }
-
-            $this->workspaceManager->addUserAction($workspace, $user);
-
+        if ( $user === 'anon.') {
             return $this->redirect(
-                $this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'home'))
+                $this->generateUrl(
+                    'claro_workspace_subscription_url_generate_anonymous',
+                    array(
+                        'workspace' => $workspace->getId(),
+                        'toolName' => 'home'
+                    )
+                )
             );
+        }
 
+        $this->workspaceManager->addUserAction($workspace, $user);
+
+        return $this->redirect(
+            $this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'home'))
+        );
     }
 
     /**
