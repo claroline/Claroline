@@ -189,6 +189,6 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
 
     private function getBaseUrl()
     {
-        return 'http://localhost/vostro/Claroline/web/';
+        return str_replace('app.php/', '', $this->getMinkParameter('base_url'));
     }
 }

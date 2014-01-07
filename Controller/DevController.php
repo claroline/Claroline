@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Entity\User;
 
 class DevController extends Controller
 {
@@ -65,6 +66,7 @@ class DevController extends Controller
         $diff = $start->diff($end);
         $duration = $diff->i > 0 ? $diff->i . 'm ' : '';
         $duration .= $diff->s . 's';
+
         return new Response('duration :' . $duration);
     }
 
@@ -82,11 +84,13 @@ class DevController extends Controller
         $userManager = $this->getContainer()->get('claroline.manager.user_manager');
         $user = new User();
         $user->setUsername($username);
-        $user->setPassword($username);
+        $user->setPlainPassword($username);
         $user->setFirstName($username);
         $user->setLastName($username);
         $user->setMail($username . '@claroline.net');
         $userManager->createUserWithRole($user, $role);
+
+        return new Response('done');
     }
 
     private function getContainer()
