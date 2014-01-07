@@ -1,0 +1,14 @@
+default:
+  extensions:
+    Behat\MinkExtension\Extension:
+      base_url: http://YOUR-URL/web/app.php/
+      default_session: selenium2
+      selenium2: ~
+      files_path: /path/to/vendor/claroline/core-bundle/Claroline/CoreBundle/Tests/Stub
+
+core-bundle:
+  extensions:
+    Behat\Symfony2Extension\Extension:
+      bundle: ClarolineCoreBundle
+      kernel:
+        env: prod
