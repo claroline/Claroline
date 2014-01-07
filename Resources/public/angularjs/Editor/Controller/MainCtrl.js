@@ -13,8 +13,40 @@ function MainCtrl($scope, $http, $window, $location, $modal, HistoryFactory, Cli
         $scope.tinymceOptions = configTinyMCE;
     } 
     else {
+        var home = window.Claroline.Home;
+
+        var language = home.locale.trim();
+        var contentCSS = home.asset + 'bundles/clarolinecore/css/tinymce/tinymce.css';
+        
         // If no config, add default tiny
-        $scope.tinymceOptions = {};
+        $scope.tinymceOptions = {
+            relative_urls: false,
+            theme: 'modern',
+            language: language,
+            browser_spellcheck : true,
+            autoresize_min_height: 100,
+            autoresize_max_height: 500,
+            content_css: contentCSS,
+            plugins: [
+                'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
+                'searchreplace wordcount visualblocks visualchars fullscreen',
+                'insertdatetime media nonbreaking save table directionality',
+                'template paste textcolor emoticons code'
+            ],
+            toolbar1: 'styleselect | bold italic | alignleft aligncenter alignright alignjustify | preview fullscreen resourcePicker',
+            toolbar2: 'undo redo | forecolor backcolor emoticons | bullist numlist outdent indent | link image media print code',
+            paste_preprocess: function (plugin, args) {
+                var link = $('<div>' + args.content + '</div>').text().trim(); //inside div because a bug of jquery
+                var url = link.match(/^(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)|((mailto:)?[_.\w-]+@([\w][\w\-]+\.)+[a-zA-Z]{2,3})$/);
+
+                if (url) {
+                    args.content = '<a href="' + link + '">' + link + '</a>';
+                    home.generatedContent(link, function (data) {
+                        insertContent(data);
+                    }, false);
+                }
+            }
+        };
     }
     
     // Set active tab
